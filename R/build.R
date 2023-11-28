@@ -1,4 +1,4 @@
-build_heatmap <- function(x) {
+ggheat_build <- function(x) {
     # prepare data for ggplot2
     matrix <- x$matrix
     row_nms <- rownames(matrix)
@@ -20,13 +20,20 @@ build_heatmap <- function(x) {
             ggplot2::aes(fill = .data$values),
             width = 1L, height = 1L
         ) + ggplot2::labs(fill = x$name)
+        if (inherits(x$draw_fn, "Scale")) {
+            if (any(x$draw_fn$aesthetics == "fill")) {
+                p <- p + x$draw_fn
+            } else {
+                cli::cli_abort(
+                    "{.arg .fn} must be a {.cls Scale} for {.field fill} aesthetics"
+                )
+            }
+        }
     }
-    if (!is.null(x$draw_fn)) {
-        p <- rlang::inject(x$ggfn(p, !!!x$draw_params))
+    if (is.function(x$draw_fn)) {
+        p <- rlang::inject(x$draw_fn(p, !!!x$draw_params))
         if (!ggplot2::is.ggplot(p)) {
-            cli::cli_abort(
-                "{.arg .fn} must return a {.cls ggplot2} object."
-            )
+            cli::cli_abort("{.arg .fn} must return a {.cls ggplot2} object.")
         }
     }
 
