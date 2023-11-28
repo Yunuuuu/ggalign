@@ -136,8 +136,8 @@ recycle_scalar <- function(x, length, arg = rlang::caller_arg(x)) {
     }
 }
 
-allow_lambda <- function(x) {
-    if (rlang::is_formula(x)) {
+build_function <- function(x) {
+    if (rlang::is_formula(x) || rlang::is_string(x)) {
         rlang::as_function(x)
     } else {
         x

@@ -1,7 +1,7 @@
 ggheat <- function(.matrix, .fn = NULL, ..., row_title = NULL, column_title = NULL, .blank = FALSE, .name = NULL) {
     matrix <- build_matrix(.matrix)
     name <- build_name(.name)
-    draw_fn <- allow_lambda(.fn)
+    draw_fn <- build_function(.fn)
     assert_bool(.blank)
     structure(list(
         name = name,

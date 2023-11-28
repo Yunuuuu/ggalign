@@ -34,7 +34,7 @@ geom_draw <- function(draw = grid::nullGrob(), ...,
                       mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       na.rm = FALSE, inherit.aes = TRUE) {
-    draw <- allow_lambda(draw)
+    draw <- build_function(draw)
     ggplot2::layer(
         data = data,
         mapping = mapping,
