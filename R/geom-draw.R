@@ -34,7 +34,7 @@ geom_draw <- function(draw = grid::nullGrob(), ...,
                       mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       na.rm = FALSE, inherit.aes = TRUE) {
-    draw <- build_function(draw)
+    draw <- allow_lambda(draw)
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -67,7 +67,6 @@ GeomDraw <- ggplot2::ggproto(
             draw
         } else {
             coords <- coord$transform(data, panel_params)
-            draw <- rlang::as_function(draw)
             rlang::inject(draw(coords, !!!draw_params))
         }
     }

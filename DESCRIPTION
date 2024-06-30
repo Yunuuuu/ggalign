@@ -8,10 +8,12 @@ Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1.9000
+Depends:
+    ggplot2
 Imports: 
     cli,
-    ggplot2,
     grid,
     rlang (>= 1.1.0),
-    tibble
+    tibble,
+    tidyr

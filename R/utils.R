@@ -1,23 +1,30 @@
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-pkg_nm <- function() {
-    utils::packageName(topenv(environment()))
-}
+pkg_nm <- function() utils::packageName(topenv(environment()))
 
 #' Build matrix for heatmap and anno_cluster
 #' @param matrix A matrix, if it is a simple vector, it will be converted to a
 #' one-column matrix. Data.frame will also be coerced into matrix.
-build_matrix <- function(matrix, arg = rlang::caller_arg(matrix)) {
+build_matrix <- function(
+    matrix, id = "V1",
+    arg = rlang::caller_arg(matrix),
+    call = rlang::caller_env()) {
+    assert_string(id, call = call)
     if (inherits(matrix, "data.frame")) {
         matrix <- as.matrix(matrix)
-    } else if (!is.matrix(matrix)) {
-        if (is.atomic(matrix)) {
-            cli::cli_alert_info("convert simple vector {.arg {arg}} to one-column {.cls matrix}")
-            matrix <- matrix(matrix, ncol = 1L)
-            colnames(matrix) <- "V1"
-        } else {
-            cli::cli_abort("{.arg {arg}} must be a {.cls matrix}, a simple vector, or a {.cls data.frame}.")
-        }
+    } else if (is.matrix(matrix)) {
+
+    } else if (is.atomic(matrix)) {
+        cli::cli_alert_info(
+            "convert simple vector {.arg {arg}} to one-column {.cls matrix}"
+        )
+        matrix <- matrix(matrix, ncol = 1L)
+        colnames(matrix) <- id
+    } else {
+        cli::cli_abort(paste(
+            "{.arg {arg}} must be a {.cls matrix},",
+            "a simple vector, or a {.cls data.frame}."
+        ), call = call)
     }
     matrix
 }
@@ -26,14 +33,23 @@ build_matrix <- function(matrix, arg = rlang::caller_arg(matrix)) {
 #' @param data A data.frame, if it is a simple vector, it will be converted to a
 #' one-column data.frame with "V1" as column name. Matrix will also be coerced
 #' into data.frame.
-build_tibble <- function(data, arg = rlang::caller_arg(data)) {
+build_tibble <- function(
+    data, id = "V1",
+    arg = rlang::caller_arg(data),
+    call = rlang::caller_env()) {
+    assert_string(id)
     if (is.matrix(data)) {
-        data <- as_tibble0(data)
+        data <- as_tibble0(data, rownames = id)
     } else if (is.atomic(data)) {
-        cli::cli_alert_info("convert simple vector {.arg {arg}} to one-column {.cls data.frame}")
-        data <- tibble::as_tibble_col(data, column_name = "V1")
+        cli::cli_alert_info(
+            "convert simple vector {.arg {arg}} to one-column {.cls data.frame}"
+        )
+        data <- tibble::as_tibble_col(data, column_name = id)
     } else if (!inherits(data, "data.frame")) {
-        cli::cli_abort("{.arg {arg}} must be a {.cls data.frame}, a simple vector, or a {.cls matrix}.")
+        cli::cli_abort(paste(
+            "{.arg {arg}} must be a {.cls data.frame},",
+            "a simple vector, or a {.cls matrix}."
+        ), call = call)
     }
     data
 }
@@ -64,8 +80,8 @@ tibble0 <- function(...) {
     tibble::tibble(..., .name_repair = "minimal")
 }
 
-as_tibble0 <- function(data) {
-    tibble::as_tibble(data, .name_repair = "minimal")
+as_tibble0 <- function(data, ...) {
+    tibble::as_tibble(data, ..., .name_repair = "minimal")
 }
 
 imap <- function(.x, .f, ...) {
@@ -83,26 +99,24 @@ pindex <- function(array, ...) {
     if (length(dim(array)) != ...length()) {
         cli::cli_abort("Indexing must have as many as the number of dimentions of array")
     }
-    dots <- list(...)
+    dots <- rlang::list2(...)
     # all index must be atomic
-    is_right <- vapply(dots, function(x) {
+    right <- vapply(dots, function(x) {
         is.atomic(x) && !is.null(x) && !is.matrix(x)
     }, logical(1L))
-    if (!all(is_right)) {
+    if (!all(right)) {
         cli::cli_abort("All elements in {.arg ...} must be atomic")
     }
-    dots_lenghs <- lengths(dots)
-    if (any(dots_lenghs == 0L)) {
+    l <- lengths(dots)
+    if (any(l == 0L)) {
         cli::cli_abort("Empty index is not allowed")
     }
-    expected_len <- max(dots_lenghs)
-    if (any(dots_lenghs > 1L & dots_lenghs < expected_len)) {
+    expected_len <- max(l)
+    if (any(l > 1L & l < expected_len)) {
         cli::cli_abort("Only length one are recycled")
     }
     if (expected_len != 1L) {
-        dots[dots_lenghs == 1L] <- lapply(dots[dots_lenghs == 1L], function(x) {
-            rep_len(x, expected_len)
-        })
+        dots <- lapply(dots, rep_len, length.out = expected_len)
     }
     array[do.call("cbind", dots)]
 }
@@ -110,7 +124,7 @@ pindex <- function(array, ...) {
 recycle_dots <- function(..., length = NULL, args = NULL) {
     args <- args %||%
         unlist(lapply(substitute(...()), as.character), use.names = FALSE)
-    lst <- list(...)
+    lst <- rlang::list2(...)
     l <- lengths(lst)
     expected_len <- length %||% max(l)
     if (!all(l == 1L | l == expected_len)) {
@@ -136,7 +150,7 @@ recycle_scalar <- function(x, length, arg = rlang::caller_arg(x)) {
     }
 }
 
-build_function <- function(x) {
+allow_lambda <- function(x) {
     if (rlang::is_formula(x) || rlang::is_string(x)) {
         rlang::as_function(x)
     } else {
@@ -185,6 +199,8 @@ reverse_trans <- function(x) {
     "xmin", "xintercept", "y", "yend", "ymax", "ymin", "yintercept", "z"
 )
 
+is_scalar <- function(x) length(x) == 1L
+
 is_scalar_numeric <- function(x) {
     length(x) == 1L && is.numeric(x)
 }
@@ -193,27 +209,23 @@ is_discrete <- function(x) {
     is.factor(x) || is.character(x) || is.logical(x)
 }
 
-trace_data <- function(
-    name,
-    has_fn = function(env, name) {
-        exists(name, envir = env, inherits = FALSE)
-    },
-    return_fn = function(env, name) {
-        get(name, envir = env, inherits = FALSE)
-    },
-    pos = 2L, return_env = FALSE, all = FALSE) {
-    n <- sys.nframe()
-    while (pos <= n) {
-        env <- parent.frame(pos)
-        if (has_fn(env, name)) {
-            out <- return_fn(env, name)
-            if (return_env) {
-                return(env)
-            } else {
-                return(out)
-            }
-        }
-        pos <- pos + 1L
+transpose <- function(.l) {
+    if (!length(.l)) return(.l) # styler: off
+    inner_names <- names(.l[[1L]])
+    if (is.null(inner_names)) {
+        fields <- seq_along(.l[[1L]])
+    } else {
+        fields <- inner_names
+        names(fields) <- fields
+        .l <- lapply(.l, function(x) {
+            if (is.null(names(x))) names(x) <- inner_names # styler: off
+            x
+        })
     }
-    FALSE
+
+    # This way missing fields are subsetted as `NULL` instead of causing
+    # an error
+    .l <- lapply(.l, as.list)
+
+    lapply(fields, function(i) lapply(.l, .subset2, i))
 }
