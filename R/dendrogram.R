@@ -255,11 +255,10 @@ dendrogram_data <- function(tree, center = FALSE,
             }
             last_branch <<- branch
 
-            node <- data.frame(
+            node <- tibble0(
                 index = index, label = label,
                 x = x, y = y, branch = branch,
-                leaf = TRUE,
-                stringsAsFactors = FALSE
+                leaf = TRUE
             )
             list(
                 # all leaves, used to calculate midpoint when `center = TRUE`
@@ -319,14 +318,14 @@ dendrogram_data <- function(tree, center = FALSE,
             }
             # there is no node data in dendrogram root
             if (!from_root) {
-                node <- rbind(node, data.frame(
+                node <- rbind(node, tibble0(
                     index = NA_integer_, label = NA_character_,
                     x = x, y = y, branch = branch, leaf = FALSE
                 ))
             }
             if (rectangle) {
                 span_branch <- c(direct_leaves_branch, rep_len(branch, 2L))
-                added_edge <- data.frame(
+                added_edge <- tibble0(
                     # 2 vertical lines + 2 horizontal lines
                     x = rep(direct_leaves_x, times = 2L),
                     xend = c(direct_leaves_x, rep_len(x, 2L)),
@@ -351,7 +350,7 @@ dendrogram_data <- function(tree, center = FALSE,
                 )
             } else {
                 span_branch <- rep_len(branch, 2L)
-                added_edge <- data.frame(
+                added_edge <- tibble0(
                     x = direct_leaves_x,
                     xend = rep(x, 2L),
                     y = direct_leaves_y,
@@ -382,7 +381,6 @@ dendrogram_data <- function(tree, center = FALSE,
     # 1. remove rownames to keep data tidy
     # 2. branch should be a factor ordered by x if it exists
     lapply(ans, function(df) {
-        rownames(df) <- NULL
         df$branch <- factor(.subset2(df, "branch"), branch_levels)
         df
     })
