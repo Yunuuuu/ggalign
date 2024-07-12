@@ -60,6 +60,8 @@ default values for aesthetics.
 and ymin and ymax values. It can potentially set other values as well.
 }
 
+See also the \href{https://ggplot2-book.org/extensions#sec-new-geoms}{new geoms section} of the online ggplot2 book.
+
 }
 
 \section{Coordinate systems}{
@@ -110,6 +112,8 @@ manipulate the plot data. Should return list of data frames.
 system to manipulate the \code{layout} data frame which assigns
 data to panels and scales.
 }
+
+See also the \href{https://ggplot2-book.org/extensions#sec-new-coords}{new coords section} of the online ggplot2 book.
 
 }
 

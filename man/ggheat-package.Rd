@@ -2,7 +2,6 @@
 % Please edit documentation in R/ggheat-package.R
 \docType{package}
 \name{ggheat-package}
-\alias{ggheat}
 \alias{ggheat-package}
 \title{ggheat: What the Package Does (One Line, Title Case)}
 \description{

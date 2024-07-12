@@ -4,37 +4,39 @@ print.ggheatmap <- function(x, ...) {
     print(p)
 }
 
-ggheat_build <- function(x) {
-    mat <- .subset2(x, "matrix")
-    params <- .subset2(x, "params")
+ggscale_map <- function(plot, scale, value) {
+    build <- ggplot2::ggplot_build(plot)
+    if (!is.null(scale <- build$plot$scales$get_scales(scale))) {
+        scale$map(value)
+    } else {
+        cli::cli_abort("Cannot find {.field {scale}}")
+    }
+}
+
+ggheat_build <- function(x) UseMethod("ggheat_build")
+
+#' @export
+ggheat_build.ggheatmap <- function(x) {
+    mat <- slot(x, "matrix")
+    params <- slot(x, "params")
 
     # prepare data for plot -------------------------------
-    row_nms <- rownames(mat)
-    col_nms <- colnames(mat)
-    data <- as_tibble0(mat, rownames = NULL)
-    colnames(data) <- seq_len(ncol(data))
-    data$.row_index <- seq_len(nrow(data))
-    data <- tidyr::pivot_longer(data,
-        cols = !".row_index", names_to = ".column_index",
-        values_to = "value"
-    )
-    data$.column_index <- as.integer(data$.column_index)
-    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
-    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    data <- melt_matrix(mat)
 
     # contruct the final plot ----------------------------
-    p <- .subset2(x, "heatmap")
+    p <- slot(x, "heatmap")
     p$data <- data
     p <- p +
         ggplot2::geom_tile(
-            ggplot2::aes(.data$.column_index, .data$.row_index,
+            ggplot2::aes(
+                .data$.column_index, .data$.row_index,
                 fill = .data$value
             ),
             width = 1L, height = 1L,
             data = data
         )
-    xlabels <- .subset2(x, "xlabels") %||% col_nms
-    ylabels <- .subset2(x, "ylabels") %||% row_nms
+    xlabels <- .subset2(params, "xlabels") %||% colnames(mat)
+    ylabels <- .subset2(params, "ylabels") %||% rownames(mat)
 
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
     # There are multiple ways to set labels in a plot, which take different
@@ -61,3 +63,6 @@ ggheat_build <- function(x) {
             expand = ggplot2::expansion()
         )
 }
+
+#' @export
+gganno_build <- function(x) UseMethod("gganno_build")

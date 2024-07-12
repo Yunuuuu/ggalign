@@ -29,17 +29,6 @@ deactivate.ggheatmap <- function(x) {
 
 #' @export
 #' @rdname activate
-activate.ggannotation <- function(x, what) {
-    assert_string(what, empty_ok = FALSE)
-    if (!any(what == names(x))) {
-        cli::cli_abort("Cannot find {what} in annotation.")
-    }
-    active(x) <- what
-    x
-}
-
-#' @export
-#' @rdname activate
 deactivate.ggannotation <- function(x) {
     cli::cli_abort("Cannot deactivate a {.cls ggannotation} object.")
 }
@@ -48,15 +37,33 @@ deactivate.ggannotation <- function(x) {
 #' - `active`: A string of current active context.
 #' @export
 #' @rdname activate
-active <- function(x) attr(x, "active")
+active <- function(x) UseMethod("active")
+
+#' @export
+#' @rdname activate
+active.default <- function(x) attr(x, "active")
+
+#' @export
+#' @rdname activate
+active.ggheat <- function(x) x@active
 
 #' @return
 #' - `active<-`: The same with `activate`, but won't check the arguments.
 #' @export
 #' @rdname activate
-#' @keywords internal
-`active<-` <- function(x, value) {
+`active<-` <- function(x, value) UseMethod("active<-")
+
+#' @export
+#' @rdname activate
+`active<-.default` <- function(x, value) {
     attr(x, "active") <- value
+    x
+}
+
+#' @export
+#' @rdname activate
+`active<-.ggheat` <- function(x, value) {
+    slot(x, "active") <- value
     x
 }
 

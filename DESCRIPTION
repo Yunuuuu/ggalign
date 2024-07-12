@@ -8,12 +8,31 @@ Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1.9000
+RoxygenNote: 7.3.2
 Depends:
     ggplot2
 Imports: 
     cli,
     grid,
+    methods,
     rlang (>= 1.1.0),
     tibble,
     tidyr
+Collate: 
+    'activate.R'
+    'dendrogram.R'
+    'geom-draw.R'
+    'ggheat.R'
+    'gganno.R'
+    'ggheat-package.R'
+    'htanno-.R'
+    'htanno-dendrogram.R'
+    'htanno.R'
+    'import-standalone-assert.R'
+    'import-standalone-cli.R'
+    'import-standalone-obj-type.R'
+    'patchwork.R'
+    'plot-build.R'
+    'utils-assert.R'
+    'utils-grid.R'
+    'utils.R'
