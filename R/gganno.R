@@ -19,6 +19,17 @@ gganno <- function(position, mapping = aes(),
     )
 }
 
+#' @export
+#' @keywords internal
+plot.ggannotation <- function(x, ...) {
+    cli::cli_abort("You cannot plot {.cls ggannotation} object")
+}
+
+#' @export
+methods::setMethod("show", "ggannotation", function(object) {
+    "A ggannotation object"
+})
+
 #' @include ggheat.R
 #' @keywords internal
 methods::setClass(

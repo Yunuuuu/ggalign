@@ -12,4 +12,3 @@ is.ggheatmap(x)
 \description{
 Reports whether x is a ggheatmap object
 }
-\keyword{internal}

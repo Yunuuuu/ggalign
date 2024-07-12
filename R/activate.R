@@ -27,12 +27,6 @@ deactivate.ggheatmap <- function(x) {
     x
 }
 
-#' @export
-#' @rdname activate
-deactivate.ggannotation <- function(x) {
-    cli::cli_abort("Cannot deactivate a {.cls ggannotation} object.")
-}
-
 #' @return
 #' - `active`: A string of current active context.
 #' @export

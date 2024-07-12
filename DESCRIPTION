@@ -33,6 +33,7 @@ Collate:
     'import-standalone-obj-type.R'
     'patchwork.R'
     'plot-build.R'
+    'plot-construction.R.R'
     'utils-assert.R'
     'utils-grid.R'
     'utils.R'

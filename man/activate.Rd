@@ -5,7 +5,6 @@
 \alias{deactivate}
 \alias{activate.ggheatmap}
 \alias{deactivate.ggheatmap}
-\alias{deactivate.ggannotation}
 \alias{active}
 \alias{active.default}
 \alias{active.ggheat}
@@ -21,8 +20,6 @@ deactivate(x)
 \method{activate}{ggheatmap}(x, what)
 
 \method{deactivate}{ggheatmap}(x)
-
-\method{deactivate}{ggannotation}(x)
 
 active(x)
 
