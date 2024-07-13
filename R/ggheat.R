@@ -3,6 +3,7 @@
 #' @param data A matrix, if it is a simple vector, it will be converted to a
 #' one-column matrix. Data.frame will also be coerced into matrix.
 #' @importFrom ggplot2 aes
+#' @param ... Additional arguments.
 #' @export
 ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")
 

@@ -1,6 +1,13 @@
+#' Build `htanno` object
+#' 
+#' `htanno` is a special annotation, which can act with the main heatmap.
+#' Especially control the order of the main heatmap or split the heatmap into
+#' different slices.
+#' @param htanno A `HtannoProto` object
 new_htanno <- function(htanno, data = NULL,
                        position = NULL,
-                       params = list(), size = unit(10, "mm"),
+                       params = list(), 
+                       size = unit(10, "mm"),
                        active = NULL, name = NULL, order = NULL,
                        check.param = TRUE) {
     assert_s3_class(htanno, "HtannoProto")

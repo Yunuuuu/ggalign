@@ -1,6 +1,12 @@
-#' Add components to ggheat
+#' Add components to `ggheatmap`
 #'
-#' @name ggheat-add
+#' @param e1 A [ggheatmap][ggheat] object.
+#' @param e2 An object to be added to the plot, including
+#' [gg][ggplot2::+.gg] elements, [ggannotation][gganno] object, or [htanno]
+#' object.
+#' @return A modified `ggheatmap` object.
+#' @name ggheatmap-add
+#' @aliases +.ggheatmap
 #' @export
 methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
     if (missing(e2)) {
@@ -15,11 +21,11 @@ methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
     ggheatmap_add(e2, e1, e2name)
 })
 
-#' Add custom objects to ggheatmap
+#' Add custom objects to `ggheatmap`
 #'
 #' @param plot A `ggheatmap` object
 #' @inheritParams ggplot2::ggplot_add
-#' @return A modified `ggheatmap` object.
+#' @inherit ggheatmap-add return
 #' @export
 ggheatmap_add <- function(object, plot, object_name) UseMethod("ggheatmap_add")
 
@@ -111,7 +117,7 @@ ggheatmap_add.htanno <- function(object, plot, object_name) {
     )
     slot(object, "statistics") <- statistics
 
-    # group heatmap into slice ---------------------------
+    # group row or column into slice ---------------------
     axis <- to_axis(position)
     old_slice <- slot(plot, paste0(axis, "_slice"))
     new_slice <- rlang::inject(

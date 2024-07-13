@@ -16,3 +16,4 @@ new_gganno(
 \description{
 Used by both gganno and htanno ------------------------------
 }
+\keyword{internal}

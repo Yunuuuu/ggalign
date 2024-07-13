@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-construction.R.R
 \name{ggheatmap_add}
 \alias{ggheatmap_add}
-\title{Add custom objects to ggheatmap}
+\title{Add custom objects to \code{ggheatmap}}
 \usage{
 ggheatmap_add(object, plot, object_name)
 }
@@ -17,5 +17,5 @@ ggheatmap_add(object, plot, object_name)
 A modified \code{ggheatmap} object.
 }
 \description{
-Add custom objects to ggheatmap
+Add custom objects to \code{ggheatmap}
 }

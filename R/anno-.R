@@ -1,4 +1,5 @@
 #' Used by both gganno and htanno ------------------------------
+#' @keywords internal
 new_gganno <- function(Class, ..., data = NULL,
                        position = NULL, size = unit(10, "mm"),
                        order = NULL) {
