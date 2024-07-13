@@ -10,8 +10,9 @@ ggdendrogram(
   ...,
   center = FALSE,
   type = "rectangle",
-  cutree_k = NULL,
-  cutree_height = NULL,
+  k = NULL,
+  h = NULL,
+  plot_cut_height = FALSE,
   leaf_braches = NULL,
   branch_gap = NULL,
   root = NULL,
@@ -20,11 +21,9 @@ ggdendrogram(
 )
 }
 \arguments{
-\item{tree}{A \link[stats:hclust]{hclust} or a \link[stats:dendrogram]{dendrogram}
-object.}
+\item{tree}{A \link[stats:hclust]{hclust} object.}
 
-\item{mapping}{Additional aesthetic mappings to be added into
-\link[ggplot2:geom_segment]{geom_segment}.}
+\item{mapping}{Default list of aesthetic mappings to use for plot.}
 
 \item{...}{Additional arguments passed to
 \link[ggplot2:geom_segment]{geom_segment}}
@@ -35,10 +34,24 @@ middle of all direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
+\item{k}{An integer scalar indicates the desired number of groups.}
+
+\item{h}{A numeric scalar indicates heights where the tree should be cut.}
+
+\item{plot_cut_height}{A boolean value indicates whether plot the cut height.}
+
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
 number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
 
+\item{branch_gap}{A numeric value indicates the gap between different
+branches. If a \link{unit} object is provided, it'll convert into \code{native} values.}
+
 \item{root}{A length one string or numeric indicates the root branch.}
+
+\item{leaf_label}{A boolean value indicates whether plot the leaf labels.}
+
+\item{leaf_guide}{A function used to create the leaf label guide.  Passed to
+\link[ggplot2:scale_continuous]{scale_x_continuous}.}
 }
 \value{
 A \link[ggplot2:ggplot]{ggplot} object.
@@ -49,6 +62,7 @@ Dendrogram plot
 \examples{
 hc <- hclust(dist(USArrests), "ave")
 ggdendrogram(hc)
+ggdendrogram(hc, aes(color = branch), h = 80)
 ggdendrogram(hc, leaf_label = FALSE)
 ggdendrogram(hc, aes(color = branch),
     leaf_braches = cutree(hc, 4L), type = "t"

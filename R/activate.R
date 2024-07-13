@@ -1,10 +1,9 @@
-#' Determine the context of subsequent manipulations
-#' @param x A [ggheatmap][ggheat] or [ggannotation][gganno] object.
-#' @param what What should get activated?
-#' - `ggheatmap`: Possible values are "top", "left", "bottom", and "right".
-#' - `ggannotation`: A string of name in the annotation.
-#' @return
-#' - `activate`: A object with the same class of `x`.
+#' Activate the context of subsequent manipulations
+#' @param x A [ggheatmap][ggheat] object.
+#' @param what What should get activated? Possible values are `"top"`, `"left"`,
+#'` "bottom"`, and `"right"`.
+#' @return A object with the same class of `x`, whose active context will be set
+#' or unset.
 #' @export
 activate <- function(x, what) UseMethod("activate")
 
@@ -27,10 +26,11 @@ deactivate.ggheatmap <- function(x) {
     x
 }
 
+#' Determine the context of subsequent manipulations
+#' @param x A [ggheatmap][ggheat] or `ggAnnotationList`object.
 #' @return
 #' - `active`: A string of current active context.
 #' @export
-#' @rdname activate
 active <- function(x) UseMethod("active")
 
 #' @export
@@ -47,10 +47,12 @@ active.ggheatmap <- function(x) slot(x, "active")
 #' @export
 active.ggAnnotationList <- function(x) attr(x, "active")
 
+#' @param value What should get activated? Possible values are `"top"`,
+#' `"left"`, `"bottom"`, and `"right"`.
 #' @return
-#' - `active<-`: The same with `activate`, but won't check the arguments.
+#' - `active<-`: The same with [activate], but won't check the arguments.
 #' @export
-#' @rdname activate
+#' @rdname active
 `active<-` <- function(x, value) UseMethod("active<-")
 
 #' @export
@@ -59,12 +61,14 @@ active.ggAnnotationList <- function(x) attr(x, "active")
 }
 
 #' @export
+#' @rdname active
 `active<-.ggheatmap` <- function(x, value) {
     slot(x, "active") <- value
     x
 }
 
 #' @export
+#' @rdname active
 `active<-.ggAnnotationList` <- function(x, value) {
     attr(x, "active") <- value
     x

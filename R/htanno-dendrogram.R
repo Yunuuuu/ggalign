@@ -1,15 +1,8 @@
-htanno_group <- function(group, position = NULL, active = TRUE,
-                         name = NULL, check.param = TRUE) {
-    htanno(
-        HtannoGroup,
-        position = position,
-        params = list(group = group),
-        active = active, name = name, order = NULL,
-        check.param = check.param
-    )
+htanno_dendro <- function() {
+
 }
 
-HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
+HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     setup_params = function(self, data, position, params) {
         if (nrow(data) != length(group <- .subset2(params, "group"))) {
             cli::cli_abort(paste(

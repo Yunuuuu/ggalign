@@ -15,6 +15,7 @@ Imports:
     cli,
     grid,
     methods,
+    patchwork,
     rlang (>= 1.1.0),
     tibble,
     tidyr
@@ -23,6 +24,7 @@ Collate:
     'ggheat.R'
     'anno-.R'
     'anno-add_gg.R'
+    'anno-build.R'
     'anno-setup_data.R'
     'dendrogram.R'
     'geom-draw.R'

@@ -10,6 +10,8 @@ ggheat(data, mapping = aes(), ...)
 \item{data}{A matrix, if it is a simple vector, it will be converted to a
 one-column matrix. Data.frame will also be coerced into matrix.}
 
+\item{mapping}{Default list of aesthetic mappings to use for plot.}
+
 \item{...}{Additional arguments.}
 }
 \description{

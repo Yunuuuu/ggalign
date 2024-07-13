@@ -80,15 +80,22 @@ hclust2 <- function(matrix,
 
 #' Dendrogram plot
 #'
-#' @param mapping Additional aesthetic mappings to be added into
-#' [geom_segment][ggplot2::geom_segment].
+#' @param tree A [hclust][stats::hclust] object.
+#' @param mapping Default list of aesthetic mappings to use for plot.
 #' @param ... Additional arguments passed to
 #' [geom_segment][ggplot2::geom_segment]
+#' @param k An integer scalar indicates the desired number of groups.
+#' @param h A numeric scalar indicates heights where the tree should be cut.
+#' @param plot_cut_height A boolean value indicates whether plot the cut height.
 #' @inheritParams dendrogram_data
+#' @param leaf_label A boolean value indicates whether plot the leaf labels.
+#' @param leaf_guide A function used to create the leaf label guide.  Passed to
+#' [scale_x_continuous][ggplot2::scale_x_continuous].
 #' @return A [ggplot][ggplot2::ggplot] object.
 #' @examples
 #' hc <- hclust(dist(USArrests), "ave")
 #' ggdendrogram(hc)
+#' ggdendrogram(hc, aes(color = branch), h = 80)
 #' ggdendrogram(hc, leaf_label = FALSE)
 #' ggdendrogram(hc, aes(color = branch),
 #'     leaf_braches = cutree(hc, 4L), type = "t"
@@ -100,13 +107,30 @@ hclust2 <- function(matrix,
 #' @export
 ggdendrogram <- function(tree, mapping = NULL, ...,
                          center = FALSE, type = "rectangle",
-                         cutree_k = NULL, cutree_height = NULL,
+                         k = NULL, h = NULL,
+                         plot_cut_height = FALSE,
                          leaf_braches = NULL, branch_gap = NULL, root = NULL,
                          leaf_label = TRUE, leaf_guide = waiver()) {
     assert_s3_class(tree, "hclust")
-    if (is.null(leaf_braches) &&
-        (!is.null(cutree_k) || !is.null(cutree_height))) {
-        leaf_braches <- stats::cutree(tree, k = cutree_k, h = cutree_height)
+    assert_bool(plot_cut_height)
+    assert_bool(leaf_label)
+    if (is.null(leaf_braches)) {
+        if (!is.null(k)) {
+            if (!is_scalar(k)) {
+                cli::cli_abort("{.arg k} must be a single number")
+            }
+            height <- cutree_k_to_h(k)
+            leaf_braches <- stats::cutree(tree, h = height)
+        } else if (!is.null(h)) {
+            if (!is_scalar(height <- h)) {
+                cli::cli_abort("{.arg h} must be a single number")
+            }
+            leaf_braches <- stats::cutree(tree, h = height)
+        } else {
+            height <- NULL
+        }
+    } else {
+        height <- cutree_k_to_h(tree, length(unique(leaf_braches)))
     }
     data <- dendrogram_data(tree,
         center = center,
@@ -139,6 +163,9 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
             data = edge
         ) +
         ggplot2::labs(y = "height")
+    if (plot_cut_height && !is.null(height)) {
+        p <- p + ggplot2::geom_hline(yintercept = height, linetype = "dashed")
+    }
     if (leaf_label) {
         leaves <- node[.subset2(node, "leaf"), , drop = FALSE]
         leaves <- leaves[order(.subset2(leaves, "x")), , drop = FALSE]
@@ -150,6 +177,19 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
         )
     }
     p
+}
+
+cutree_k_to_h <- function(tree, k) {
+    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
+        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
+    }
+    n <- n1 + 1
+    if (is.unsorted(tree$height)) {
+        cli::cli_abort(
+            "the 'height' component of 'tree' is not sorted (increasingly)"
+        )
+    }
+    mean(tree$height[c(n - k, n - k + 1L)])
 }
 
 #' Dengrogram x and y coordinates
@@ -164,9 +204,13 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
 #' of the number of observations in `tree`.
 #' @param leaf_braches Branches of the leaf node. Must be the same length of the
 #' number of observations in `tree`. Usually come from [cutree][stats::cutree].
+#' @param branch_gap A numeric value indicates the gap between different
+#' branches. If a [unit] object is provided, it'll convert into `native` values.
 #' @param root A length one string or numeric indicates the root branch.
 #' @return A list of 2 data.frame. One for node coordinates, another for edge
 #' coordinates.
+#' @examples
+#' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @export
 dendrogram_data <- function(tree, center = FALSE,
                             type = "rectangle",
@@ -329,9 +373,9 @@ dendrogram_data <- function(tree, center = FALSE,
                 added_edge <- tibble0(
                     # 2 vertical lines + 2 horizontal lines
                     x = rep(direct_leaves_x, times = 2L),
-                    xend = c(direct_leaves_x, rep_len(x, 2L)),
+                    xend = c(direct_leaves_x, rep_len(.env$x, 2L)),
                     y = c(direct_leaves_y, y, y),
-                    yend = rep_len(y, 4L),
+                    yend = rep_len(.env$y, 4L),
                     branch = rep(direct_leaves_branch, times = 2L),
 
                     # we add `span` indicating whether this segment span
@@ -353,9 +397,9 @@ dendrogram_data <- function(tree, center = FALSE,
                 span_branch <- rep_len(branch, 2L)
                 added_edge <- tibble0(
                     x = direct_leaves_x,
-                    xend = rep(x, 2L),
+                    xend = rep_len(.env$x, 2L),
                     y = direct_leaves_y,
-                    yend = rep_len(y, 2L),
+                    yend = rep_len(.env$y, 2L),
                     branch = direct_leaves_branch,
                 )
             }

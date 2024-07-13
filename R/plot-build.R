@@ -15,6 +15,11 @@ ggscale_map <- function(plot, scale, value) {
 
 ggheat_build <- function(x, ...) UseMethod("ggheat_build")
 
+#' @export
+ggheat_build.default <- function(x, ...) {
+    cli::cli_abort("{.arg x} must be a {.cls ggheatmap} object")
+}
+
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
 #' @export
@@ -45,8 +50,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # 2. The scale name.
     # 3. The `labs()` function.
     # 4. The captured expression in aes().
-    # So we should update position scale label here since scale name has higher
-    # priority than `labs()` function
     xscale <- ggplot2::scale_x_continuous(
         name = .subset2(params, "xlab"),
         # limits = c(0.5, ncol(mat) + 0.5),
@@ -70,7 +73,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
         } # styler: off
         plots <- lapply(
             annotations,
-            ggheat_build,
+            anno_build,
             coords = switch_position(position, row_coords, column_coords),
             position = position,
             scale = switch_position(position, yscale, xscale),
@@ -111,8 +114,8 @@ ggheat_build.ggheatmap <- function(x, ...) {
     })
     names(annotations) <- GGHEAT_ELEMENTS
     annotations <- transpose(annotations)
-    annotation_sizes <- .subset2(annotations, 2L)
-    annotations <- .subset2(annotations, 1L)
+    annotation_sizes <- .subset2(annotations, 2L) # annotation size
+    annotations <- .subset2(annotations, 1L) # the annotation plot itself
 
     # prepare data for plot -------------------------------
     data <- ggheat_build_data(mat, row_coords, column_coords)
@@ -185,30 +188,6 @@ trim_area <- function(area) {
     area
 }
 
-#' @export
-ggheat_build.ggannotation <- function(x, coords, scale, facet, position) {
-    data <- anno_build_data(slot(x, "data"), coords, position)
-    plot <- slot(x, "plot")
-    plot$data <- data
-    anno_add_default_mapping(plot, position) + scale + facet
-}
-
-#' @export
-ggheat_build.htanno <- function(x, coords, scale, facet, position) {
-    data <- anno_build_data(slot(x, "data"), coords, position)
-    htanno <- slot(x, "htanno")
-    plot <- rlang::inject(
-        htanno$draw(
-            data, position, slot(x, "statistics"),
-            !!!htanno$reorder_params
-        )
-    )
-    if (is.ggplot(plot)) {
-        plot <- anno_add_default_mapping(plot, position) + scale + facet
-    }
-    plot
-}
-
 ggheat_build_coords <- function(n, slice, order) {
     order <- order %||% seq_len(n)
     if (is.null(slice)) {
@@ -224,37 +203,6 @@ ggheat_build_coords <- function(n, slice, order) {
     )
 }
 
-anno_build_data <- function(data, coords, position) {
-    if (is.matrix(data)) {
-        data <- melt_matrix(data)
-    } else {
-        data <- as_tibble0(data, rownames = ".row_names")
-        data$.row_index <- seq_len(nrow(data))
-    }
-    coords <- rename(
-        coords,
-        switch_position(position, c(.coord = ".y"), c(.coord = ".x"))
-    )
-    merge(data, coords,
-        by.x = ".row_index", by.y = ".index",
-        sort = FALSE, all = TRUE
-    )
-}
-
-anno_add_default_mapping <- function(p, position) {
-    default_mapping <- switch_position(
-        position,
-        ggplot2::aes(y = .data$.y),
-        ggplot2::aes(x = .data$.x)
-    )
-    mapping <- .subset2(p, "mapping")
-    for (nm in names(mapping)) {
-        default_mapping[[nm]] <- .subset2(mapping, nm)
-    }
-    p$mapping <- default_mapping
-    p
-}
-
 ggheat_build_data <- function(matrix, row_coords, column_coords) {
     row_coords <- rename(
         row_coords,
@@ -266,10 +214,6 @@ ggheat_build_data <- function(matrix, row_coords, column_coords) {
     )
     coords <- merge(column_coords, row_coords,
         by = NULL, sort = FALSE, all = TRUE
-    )
-    coords$.panel <- paste0(
-        "r", .subset2(coords, ".row_slice"),
-        "c", .subset2(coords, ".column_slice")
     )
     ans <- melt_matrix(matrix)
     merge(ans, coords, by = intersect(names(ans), names(coords)), all = TRUE)

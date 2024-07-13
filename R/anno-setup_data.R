@@ -48,12 +48,7 @@ anno_setup_data.function <- function(data, position, heatmap_matrix,
 }
 
 anno_data_from_heatmap <- function(position, heatmap_matrix) {
-    switch(position,
-        top = ,
-        bottom = t(heatmap_matrix),
-        left = ,
-        right = heatmap_matrix
-    )
+    switch_position(position, heatmap_matrix, t(heatmap_matrix))
 }
 
 msg_anno_incompatible_data <- function(object_name) {

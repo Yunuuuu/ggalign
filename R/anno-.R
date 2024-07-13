@@ -1,19 +1,37 @@
-#' Used by both gganno and htanno ------------------------------
-#' @keywords internal
+#' Create a gganno object.
+#'
+#' @param Class Sub-class of `gganno`.
+#' @param ... Additional components of the sub-class.
+#' @inheritParams ggheat
+#' @param position A string of the annotation position, Possible values are
+#' `"top"`, `"left"`, ` "bottom"`, and `"right"`.
+#' @param size Annotation size, must be a [unit][grid::unit] object.
+#' @param name A string of the annotation name.
+#' @param active A logical value of length `1` or `2`.
+#' @param order Annotation order, must be an single integer.
+#' @return A new `Class` object.
+#' @export
 new_gganno <- function(Class, ..., data = NULL,
                        position = NULL, size = unit(10, "mm"),
-                       order = NULL) {
+                       active = NULL, name = NULL, order = NULL) {
     data <- allow_lambda(data)
     if (!is.null(position)) position <- match.arg(position, GGHEAT_ELEMENTS)
     if (is.na(size) || is.null(size)) size <- unit(1, "null")
     if (!is.unit(size)) size <- unit(size, "null")
-    order <- order %||% NA_integer_
-    methods::new(Class,
+    if (is.numeric(order)) {
+        order <- as.integer(order)
+    } else if (is.null(order)) {
+        order <- NA_integer_
+    }
+    methods::new(
+        Class = Class,
         data = data,
-        order = order,
-        size = size,
         position = position,
-        ...
+        size = size,
+        ...,
+        active = active %||% TRUE, 
+        name = name,
+        order = order
     )
 }
 

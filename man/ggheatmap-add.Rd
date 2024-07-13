@@ -3,6 +3,7 @@
 \name{ggheatmap-add}
 \alias{ggheatmap-add}
 \alias{+.ggheatmap}
+\alias{+,ggheatmap,ANY-method}
 \title{Add components to \code{ggheatmap}}
 \usage{
 \S4method{+}{ggheatmap,ANY}(e1, e2)

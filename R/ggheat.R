@@ -2,8 +2,9 @@
 #'
 #' @param data A matrix, if it is a simple vector, it will be converted to a
 #' one-column matrix. Data.frame will also be coerced into matrix.
-#' @importFrom ggplot2 aes
+#' @param mapping Default list of aesthetic mappings to use for plot.
 #' @param ... Additional arguments.
+#' @importFrom ggplot2 aes
 #' @export
 ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")
 

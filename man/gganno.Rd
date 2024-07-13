@@ -37,6 +37,14 @@ must be supplied in each layer added to the plot.}
 \item{position}{Possible values are \code{"top"}, \code{"left"}, \code{"bottom"}, and
 \code{"right"}.}
 
+\item{size}{Annotation size, must be a \link[grid:unit]{unit} object.}
+
+\item{active}{A logical value of length \code{1} or \code{2}.}
+
+\item{name}{A string of the annotation name.}
+
+\item{order}{Annotation order, must be an single integer.}
+
 \item{...}{Other arguments passed on to methods. Not currently used.}
 }
 \description{

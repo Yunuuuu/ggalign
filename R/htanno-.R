@@ -1,20 +1,25 @@
 #' Build `htanno` object
-#' 
+#'
 #' `htanno` is a special annotation, which can act with the main heatmap.
 #' Especially control the order of the main heatmap or split the heatmap into
 #' different slices.
 #' @param htanno A `HtannoProto` object
-new_htanno <- function(htanno, data = NULL,
-                       position = NULL,
-                       params = list(), 
-                       size = unit(10, "mm"),
-                       active = NULL, name = NULL, order = NULL,
-                       check.param = TRUE) {
+#' @inheritParams new_gganno
+#' @param params A list of parameters passed  to `htanno`.
+#' @param check.param A boolean value indicates whether to check the supplied
+#' parameters and warn.
+#' @return A `htanno` object.
+htanno <- function(htanno, data = NULL,
+                   position = NULL,
+                   params = list(),
+                   size = unit(10, "mm"),
+                   active = NULL, name = NULL, order = NULL,
+                   check.param = TRUE) {
     assert_s3_class(htanno, "HtannoProto")
+    assert_bool(check.param)
     # Warn about extra params and aesthetics
     all <- htanno$parameters()
-    extra_param <- setdiff(names(params), all)
-    if (check.param && length(extra_param)) {
+    if (check.param && length(extra_param <- setdiff(names(params), all))) {
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
     }
     new_gganno(
@@ -81,6 +86,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
             "{.fn {snake_class(self)}} cannot add {.cls ggplot2} elements"
         )
     },
+
     # Following fields should be defined for the new Htanno object.
     # argument name in the initial function doesn't matter.
     compute = function(data, position) NULL,

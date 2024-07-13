@@ -7,6 +7,9 @@
 #' @return A modified `ggheatmap` object.
 #' @name ggheatmap-add
 #' @aliases +.ggheatmap
+NULL
+
+#' @rdname ggheatmap-add
 #' @export
 methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
     if (missing(e2)) {

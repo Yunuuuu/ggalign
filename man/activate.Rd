@@ -5,9 +5,7 @@
 \alias{deactivate}
 \alias{activate.ggheatmap}
 \alias{deactivate.ggheatmap}
-\alias{active}
-\alias{active<-}
-\title{Determine the context of subsequent manipulations}
+\title{Activate the context of subsequent manipulations}
 \usage{
 activate(x, what)
 
@@ -16,33 +14,17 @@ deactivate(x)
 \method{activate}{ggheatmap}(x, what)
 
 \method{deactivate}{ggheatmap}(x)
-
-active(x)
-
-active(x) <- value
 }
 \arguments{
-\item{x}{A \link[=ggheat]{ggheatmap} or \link[=gganno]{ggannotation} object.}
+\item{x}{A \link[=ggheat]{ggheatmap} object.}
 
-\item{what}{What should get activated?
-\itemize{
-\item \code{ggheatmap}: Possible values are "top", "left", "bottom", and "right".
-\item \code{ggannotation}: A string of name in the annotation.
-}}
+\item{what}{What should get activated? Possible values are \code{"top"}, \code{"left"},
+\code{ "bottom"}, and \code{"right"}.}
 }
 \value{
-\itemize{
-\item \code{activate}: A object with the same class of \code{x}.
-}
-
-\itemize{
-\item \code{active}: A string of current active context.
-}
-
-\itemize{
-\item \verb{active<-}: The same with \code{activate}, but won't check the arguments.
-}
+A object with the same class of \code{x}, whose active context will be set
+or unset.
 }
 \description{
-Determine the context of subsequent manipulations
+Activate the context of subsequent manipulations
 }

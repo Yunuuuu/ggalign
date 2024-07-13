@@ -5,6 +5,7 @@
 #' @inheritParams ggplot2::ggplot
 #' @importFrom ggplot2 aes
 #' @importFrom grid is.unit unit
+#' @inheritParams new_gganno
 #' @export
 gganno <- function(mapping = aes(), data = NULL,
                    position = NULL, size = unit(10, "mm"),
