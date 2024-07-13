@@ -6,11 +6,7 @@
 \alias{activate.ggheatmap}
 \alias{deactivate.ggheatmap}
 \alias{active}
-\alias{active.default}
-\alias{active.ggheat}
 \alias{active<-}
-\alias{active<-.default}
-\alias{active<-.ggheat}
 \title{Determine the context of subsequent manipulations}
 \usage{
 activate(x, what)
@@ -23,15 +19,7 @@ deactivate(x)
 
 active(x)
 
-\method{active}{default}(x)
-
-\method{active}{ggheat}(x)
-
 active(x) <- value
-
-\method{active}{default}(x) <- value
-
-\method{active}{ggheat}(x) <- value
 }
 \arguments{
 \item{x}{A \link[=ggheat]{ggheatmap} or \link[=gganno]{ggannotation} object.}

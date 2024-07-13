@@ -34,12 +34,18 @@ deactivate.ggheatmap <- function(x) {
 active <- function(x) UseMethod("active")
 
 #' @export
-#' @rdname activate
-active.default <- function(x) attr(x, "active")
+active.default <- function(x) {
+    cli::cli_abort(paste(
+        "{.arg x} must be a {.cls ggheatmap}",
+        "or a {.cls ggAnnotationList} object"
+    ))
+}
 
 #' @export
-#' @rdname activate
-active.ggheat <- function(x) x@active
+active.ggheatmap <- function(x) slot(x, "active")
+
+#' @export
+active.ggAnnotationList <- function(x) attr(x, "active")
 
 #' @return
 #' - `active<-`: The same with `activate`, but won't check the arguments.
@@ -48,16 +54,19 @@ active.ggheat <- function(x) x@active
 `active<-` <- function(x, value) UseMethod("active<-")
 
 #' @export
-#' @rdname activate
 `active<-.default` <- function(x, value) {
-    attr(x, "active") <- value
+    cli::cli_abort("{.arg x} must be a {.cls ggheatmap} object")
+}
+
+#' @export
+`active<-.ggheatmap` <- function(x, value) {
+    slot(x, "active") <- value
     x
 }
 
 #' @export
-#' @rdname activate
-`active<-.ggheat` <- function(x, value) {
-    slot(x, "active") <- value
+`active<-.ggAnnotationList` <- function(x, value) {
+    attr(x, "active") <- value
     x
 }
 

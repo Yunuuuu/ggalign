@@ -12,6 +12,17 @@ allow_lambda <- function(x) {
     }
 }
 
+switch_position <- function(position, row, column) {
+    switch(position,
+        top = ,
+        bottom = column,
+        left = ,
+        right = row
+    )
+}
+
+to_axis <- function(position) switch_position(position, "row", "column")
+
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
     col_nms <- colnames(matrix)
@@ -130,3 +141,22 @@ transpose <- function(.l) {
 
     lapply(fields, function(i) lapply(.l, .subset2, i))
 }
+
+# Use chartr() for safety since toupper() fails to convert i to I in Turkish locale
+lower_ascii <- "abcdefghijklmnopqrstuvwxyz"
+upper_ascii <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+to_lower_ascii <- function(x) chartr(upper_ascii, lower_ascii, x)
+to_upper_ascii <- function(x) chartr(lower_ascii, upper_ascii, x)
+snakeize <- function(x) {
+    x <- gsub("([A-Za-z])([A-Z])([a-z])", "\\1_\\2\\3", x)
+    x <- gsub(".", "_", x, fixed = TRUE)
+    x <- gsub("([a-z])([A-Z])", "\\1_\\2", x)
+    to_lower_ascii(x)
+}
+
+firstUpper <- function(s) {
+    paste0(to_upper_ascii(substring(s, 1L, 1L)), substring(s, 2L))
+}
+
+snake_class <- function(x) snakeize(fclass(x))
+fclass <- function(x) .subset(class(x), 1L)

@@ -22,12 +22,13 @@
 #'  - [dist][stats::dist]
 #'  - [hclust][stats::hclust]
 #' @return A [hclust][stats::hclust] object.
+#' @importFrom rlang is_string
 #' @export
 hclust2 <- function(matrix,
                     distance = "euclidean",
                     method = "complete",
                     use_missing = "pairwise.complete.obs") {
-    if (rlang::is_string(distance)) {
+    if (is_string(distance)) {
         distance <- match.arg(
             distance, c(
                 "euclidean", "maximum", "manhattan", "canberra",
@@ -61,7 +62,7 @@ hclust2 <- function(matrix,
             "object, or a {.cls function} return {.cls dist}"
         ))
     }
-    if (rlang::is_string(method)) {
+    if (is_string(method)) {
         ans <- stats::hclust(d, method = method)
     } else if (is.function(method)) {
         ans <- method(d)

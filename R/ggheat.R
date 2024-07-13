@@ -11,7 +11,8 @@ ggheat.matrix <- function(data, mapping = aes(), ...) {
     methods::new("ggheatmap",
         matrix = data,
         params = rlang::list2(...),
-        heatmap = ggplot2::ggplot(mapping = mapping)
+        heatmap = ggplot2::ggplot(mapping = mapping),
+        active = NULL
     )
 }
 
@@ -40,15 +41,11 @@ ggheat.NULL <- function(data, mapping = aes(), ...) {
     cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
 }
 
-methods::setOldClass(c("gg", "ggplot"))
-
 #' @keywords internal
-methods::setClass("ggheat",
-    list(active = "ANY"),
-    prototype = list(active = NULL)
-)
+methods::setClass("ggheat", list(active = "ANY"))
 
-# Here we create S4 object to override the double dispatch of `+.gg` method
+# https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
+# Here we use S4 object to override the double dispatch of `+.gg` method
 #' @keywords internal
 methods::setClass(
     "ggheatmap",
@@ -56,23 +53,38 @@ methods::setClass(
     list(
         matrix = "matrix",
         params = "list",
-        row_order = "ANY",
         row_slice = "ANY",
-        column_order = "ANY",
+        row_order = "ANY",
         column_slice = "ANY",
-        heatmap = "ggplot",
+        column_order = "ANY",
+        heatmap = "ANY",
         top = "ANY", left = "ANY",
         bottom = "ANY", right = "ANY"
     ),
     prototype = list(
-        row_order = NULL,
         row_slice = NULL,
-        column_order = NULL,
         column_slice = NULL,
         top = NULL, left = NULL,
         bottom = NULL, right = NULL
     )
 )
+
+#' @importFrom ggplot2 is.ggplot
+#' @importFrom rlang is_string
+methods::setValidity("ggheatmap", function(object) {
+    if (!is.ggplot(slot(object, "heatmap"))) {
+        cli::cli_abort("@heatmap must be a {.cls ggplot} object")
+    }
+    active <- slot(object, "active")
+    if (!is.null(active) &&
+        (!is_string(active) || !any(active == GGHEAT_ELEMENTS))) {
+        cli::cli_abort(sprintf(
+            "@active must be a string of %s",
+            oxford_comma(GGHEAT_ELEMENTS, final = "or")
+        ))
+    }
+    TRUE
+})
 
 #' @importFrom methods show
 #' @export
