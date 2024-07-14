@@ -92,9 +92,12 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     compute = function(data, position) NULL,
 
     # group heamap row/column
+    # the factor levels should always follow the index (reordr method) if you
+    # don't want the panel levels break the index
     make_panels = function(data, statistics, panels, position) panels,
 
     # reorder heatmap row/column
+    # the index will be reformat to follow the panel levels.
     reorder = function(data, statistics, panels, position) NULL,
 
     # draw plot
