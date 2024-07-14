@@ -11,6 +11,7 @@ ggheat_build.default <- function(x, ...) {
     cli::cli_abort("{.arg x} must be a {.cls ggheatmap} object")
 }
 
+#' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
@@ -42,7 +43,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # add heatmap filling in the first layer
     p$layers <- append(p$layers,
         ggplot2::geom_tile(
-            ggplot2::aes(.data$.x, .data$.y, fill = .data$value),
+            aes(.data$.x, .data$.y, fill = .data$value),
             width = 1L, height = 1L
         ),
         after = 0L
@@ -192,6 +193,8 @@ ggheat_build.ggheatmap <- function(x, ...) {
     ggheatmap_patchwork(ans, sizes)
 }
 
+#' @importFrom patchwork area
+#' @importFrom grid unit.c
 ggheatmap_patchwork <- function(plots, sizes) {
     n_top <- length(.subset2(plots, "top"))
     n_left <- length(.subset2(plots, "left"))
@@ -244,6 +247,7 @@ trim_area <- function(area) {
     area
 }
 
+#' @importFrom rlang is_empty
 ggheat_extract_scales <- function(scale_name, plot, n, facet_scales) {
     single_scale <- plot$scales$get_scales(scale_name)
     if (!is.null(facet_scales)) {

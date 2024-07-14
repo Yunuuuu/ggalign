@@ -23,6 +23,7 @@ htanno_dendro <- function(mapping = aes(), ...,
     )
 }
 
+#' @importFrom ggplot2 aes
 HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     setup_params = function(self, data, position, params) {
         assert_number(.subset2(params, "k"), null_ok = TRUE, arg = "k")
@@ -78,7 +79,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         node <- .subset2(data, "node")
         plot$data <- node
         edge <- .subset2(data, "edge")
-        edge_mapping <- ggplot2::aes(
+        edge_mapping <- aes(
             x = .data$x, y = .data$y,
             xend = .data$xend, yend = .data$yend
         )
@@ -92,10 +93,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             after = 0L
         )
         plot + ggplot2::labs(y = "height") +
-            # ggbreak::scale_x_cut(
-            #     breaks = breaks[-length(breaks)],
-            #     scales = abs(diff(c(1, breaks)))
-            # ) +
             ggplot2::coord_cartesian(clip = "off") +
             ggplot2::theme(
                 axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L),

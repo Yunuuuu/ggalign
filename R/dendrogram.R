@@ -103,7 +103,7 @@ hclust2 <- function(matrix,
 #' ggdendrogram(hc, aes(color = branch),
 #'     leaf_braches = cutree(hc, 4L), type = "r"
 #' )
-#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 waiver aes
 #' @export
 ggdendrogram <- function(tree, mapping = NULL, ...,
                          center = FALSE, type = "rectangle",
@@ -142,8 +142,8 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
 
     node <- .subset2(data, "node")
     edge <- .subset2(data, "edge")
-    default_mapping <- ggplot2::aes(x = .data$x, y = .data$y)
-    edge_mapping <- ggplot2::aes(xend = .data$xend, yend = .data$yend)
+    default_mapping <- aes(x = .data$x, y = .data$y)
+    edge_mapping <- aes(xend = .data$xend, yend = .data$yend)
     if (inherits(mapping, "uneval")) {
         for (nm in names(mapping)) {
             edge_mapping[[nm]] <- .subset2(mapping, nm)

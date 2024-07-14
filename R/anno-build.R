@@ -55,11 +55,12 @@ anno_build.htanno <- function(x, index, panels, scales, facet, position) {
     plot
 }
 
+#' @importFrom ggplot2 aes
 anno_add_default_mapping <- function(plot, position) {
     default_mapping <- switch_position(
         position,
-        ggplot2::aes(y = .data$.y),
-        ggplot2::aes(x = .data$.x)
+        aes(y = .data$.y),
+        aes(x = .data$.x)
     )
     mapping <- .subset2(plot, "mapping")
     for (nm in names(mapping)) {
