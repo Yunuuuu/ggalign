@@ -82,7 +82,8 @@ ggheat_build.ggheatmap <- function(x, ...) {
             .subset2(user_xscales, i),
             .subset2(default_xscales, i)
         )
-        # we copy the expand from into the default for usage of annotation
+        # we copy the expand from user input 
+        #   into the default for usage of annotation
         default_xscales[[i]]$expand <- .subset2(user_xscales, i)$expand
     }
 

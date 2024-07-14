@@ -63,7 +63,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     panels, scales, facet, position,
                     plot, height, plot_cut_height, center, type,
                     root, params) {
-        # restore original panels
         data <- dendrogram_data(
             statistics,
             center = center,
