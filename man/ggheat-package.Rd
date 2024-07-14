@@ -3,9 +3,9 @@
 \docType{package}
 \name{ggheat-package}
 \alias{ggheat-package}
-\title{ggheat: What the Package Does (One Line, Title Case)}
+\title{ggheat: Create Complex Heatmap Using the Grammar of Graphics}
 \description{
-What the package does (one paragraph).
+Creating Heatmap using ggplot2 syntax.
 }
 \author{
 \strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
