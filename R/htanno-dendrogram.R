@@ -72,13 +72,17 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             leaf_braches = panels,
             root = root
         )
-        data <- lapply(data, rename, c(panel = ".panels"))
-        breaks <- vapply(split(seq_along(index), panels[index]), function(x) {
-            max(x)
-        }, numeric(1L))
+
         node <- .subset2(data, "node")
-        plot$data <- node
         edge <- .subset2(data, "edge")
+        leaves <- node[.subset2(node, "leaf"), ]
+        ranges <- split(.subset2(leaves, "x"), .subset2(leaves, "panel"))
+        ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
+        edge <- tree_edge_double(edge, ranges)
+        edge <- rename(edge, c(ggpanel = ".panels"))
+        node <- rename(node, c(ggpanel = ".panels"))
+        plot$data <- node
+
         edge_mapping <- aes(
             x = .data$x, y = .data$y,
             xend = .data$xend, yend = .data$yend
@@ -93,10 +97,97 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             after = 0L
         )
         plot + ggplot2::labs(y = "height") +
-            ggplot2::coord_cartesian(clip = "off") +
-            ggplot2::theme(
-                axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L),
-                panel.background = ggplot2::element_blank()
-            )
+            ggplot2::coord_cartesian(clip = "off")
     }
 )
+
+tree_edge_double <- function(edge, ranges) {
+    # we draw horizontal lines twice
+    #     if one of the node is out of the panel
+    double_index <- (is.na(.subset2(edge, "panel1")) |
+        is.na(.subset2(edge, "panel2")) |
+        .subset2(edge, "panel1") != .subset2(edge, "panel2")) &
+        (.subset2(edge, "x") != .subset2(edge, "xend")) &
+        (.subset2(edge, "y") == .subset2(edge, "yend"))
+    doubled_edge <- edge[double_index, ]
+    doubled_edge$panel1 <- as.character(doubled_edge$panel1)
+    doubled_edge$panel2 <- as.character(doubled_edge$panel2)
+    doubled_edge <- .mapply(
+        function(x, xend, y, yend, branch, panel1, panel2, ranges, ...) {
+            if (is.na(panel1) && is.na(panel2)) {
+                x0 <- (x + xend) / 2L
+                midpoint <- tree_find_panel(ranges, x0)
+                if (is.na(panel0 <- .subset2(panel0, "panel"))) {
+                    panel0 <- .subset2(midpoint, "right")
+                }
+                panel <- .subset2(tree_find_panel(ranges, x), "left")
+                panel_end <- .subset2(tree_find_panel(ranges, xend), "right")
+                data_frame0(
+                    x = c(x, x0, x0, xend),
+                    xend = c(x0, x, xend, x0),
+                    y = y, yend = yend,
+                    branch = branch,
+                    ggpanel = c(panel, panel0, panel0, panel_end)
+                )
+            } else if (is.na(panel1)) {
+                panel <- .subset2(tree_find_panel(ranges, x), "left")
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    ggpanel = c(panel, panel2)
+                )
+            } else if (is.na(panel2)) {
+                panel <- .subset2(tree_find_panel(ranges, xend), "right")
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    ggpanel = c(panel1, panel)
+                )
+            } else {
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    ggpanel = c(panel1, panel2)
+                )
+            }
+        }, doubled_edge, list(ranges = ranges)
+    )
+    edge <- edge[!double_index, ]
+    edge <- edge[, c("x", "xend", "y", "yend", "branch", "ggpanel")]
+    do.call(rbind, c(list(edge), doubled_edge))
+}
+
+tree_find_panel <- function(ranges, x) {
+    panels <- names(ranges)
+    # not possible in the right most, but we also provide this option
+    left_panel <- .subset(panels, length(panels))
+    panel <- right_panel <- NA
+    for (i in seq_along(ranges)) {
+        if (x < min(.subset2(ranges, i))) {
+            panel <- NA
+            if (i == 1L) {
+                left_panel <- NA
+            } else {
+                left_panel <- .subset(panels, i - 1L)
+            }
+            right_panel <- .subset(panels, i)
+            break
+        } else if (x <= max(.subset2(ranges, i))) {
+            panel <- .subset(panels, i)
+            if (i == 1L) {
+                left_panel <- NA
+            } else {
+                left_panel <- .subset(panels, i - 1L)
+            }
+            right_panel <- .subset(panels, i + 1L)
+            break
+        }
+    }
+    list(panel = panel, left = left_panel, right = right_panel)
+}

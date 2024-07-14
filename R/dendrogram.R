@@ -281,7 +281,7 @@ dendrogram_data <- function(tree, center = FALSE,
     i <- 0L # leaf index
     branch_levels <- root
     last_branch <- root
-    total_gap <- 0
+    total_gap <- 0 # will made x always be numeric
     .dendrogram_data <- function(dend, from_root = TRUE) {
         if (stats::is.leaf(dend)) { # base version
             index <- as.integer(dend) # the column index of the original data
@@ -304,19 +304,19 @@ dendrogram_data <- function(tree, center = FALSE,
             }
             last_branch <<- branch
 
-            node <- tibble0(
+            node <- data_frame0(
                 index = index, label = label,
                 x = x, y = y, branch = branch,
-                leaf = TRUE, panel = branch
+                leaf = TRUE, panel = branch,
+                ggpanel = branch
             )
             list(
-                # all leaves, used to calculate midpoint when `center = TRUE`
-                children_leaves = x,
                 # current node
                 node = node, edge = NULL,
                 x = x, y = y,
                 branch = branch,
-                panel = branch
+                panel = branch,
+                ggpanel = branch
             )
         } else if (inherits(dend, "dendrogram")) { # recursive version
             # the parent height  -------------------------------------
@@ -332,10 +332,7 @@ dendrogram_data <- function(tree, center = FALSE,
             # all x coordinate for children nodes --------------------
             # used if center is `TRUE`, we'll calculate the center position
             # among all children nodes
-            children_leaves <- unlist(
-                .subset2(data, "children_leaves"),
-                recursive = FALSE, use.names = FALSE
-            )
+            leaves <- node[.subset2(node, "leaf"), ]
 
             # all coordinate for direct children nodes -------------
             # following should be length 2
@@ -355,73 +352,86 @@ dendrogram_data <- function(tree, center = FALSE,
                 .subset2(data, "panel"),
                 recursive = FALSE, use.names = FALSE
             )
+            direct_leaves_ggpanel <- unlist(
+                .subset2(data, "ggpanel"),
+                recursive = FALSE, use.names = FALSE
+            )
 
             # prepare node data ------------------------------------
             # x coordinate for current branch: the midpoint
             if (center) {
-                x <- sum(range(children_leaves)) / 2L
+                x <- sum(range(.subset2(leaves, "x"))) / 2L
             } else {
                 x <- sum(direct_leaves_x) / 2L
             }
-            if (is.null(leaf_braches)) {
-                panel <- branch <- root # only one panel
+            if (is.null(leaf_braches)) { # only one panel
+                ggpanel <- panel <- branch <- root
             } else {
                 branch <- unique(direct_leaves_branch)
                 # if two children leaves are different, this branch should be
                 # root
                 if (length(branch) > 1L) branch <- root
-                panel <- unique(direct_leaves_panel)
-                # always regard the right hand as the node panel
-                if (length(panel) > 1L) panel <- .subset(panel, 2L)
+
+                # we check the panel of current branch (used by ggplot2)
+                left_panel <- .subset(direct_leaves_panel, 1L)
+                right_panel <- .subset(direct_leaves_panel, 2L)
+                if (anyNA(direct_leaves_panel) || left_panel != right_panel) {
+                    ranges <- split(
+                        .subset2(leaves, "x"),
+                        .subset2(leaves, "panel")
+                    )
+                    ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
+                    panel <- NA
+                    for (panel in names(ranges)) {
+                        if (x < min(.subset2(ranges, panel))) {
+                            panel <- NA
+                            break
+                        } else if (x <= max(.subset2(ranges, panel))) {
+                            break
+                        }
+                    }
+                } else {
+                    panel <- left_panel
+                }
+                # above is the real panel, but for ggplot2, NA value will create
+                #     another panel, so patchwork align won't work
+                #     here we always using the right panel
+                if (is.na(ggpanel <- panel)) {
+                    # if the real panel is NA, we choose the right panel
+                    ggpanel <- .subset(direct_leaves_ggpanel, 2L)
+                }
             }
             # there is no node data in dendrogram root
             if (!from_root) {
-                node <- rbind(node, tibble0(
+                node <- rbind(node, data_frame0(
                     index = NA_integer_, label = NA_character_,
                     x = x, y = y, branch = branch, leaf = FALSE,
-                    panel = panel
+                    panel = panel, ggpanel = ggpanel
                 ))
             }
             if (rectangle) {
-                span_branch <- c(direct_leaves_branch, rep_len(branch, 2L))
-                added_edge <- tibble0(
+                added_edge <- data_frame0(
                     # 2 vertical lines + 2 horizontal lines
-                    x = c(direct_leaves_x, rep_len(.env$x, 2L)),
+                    x = c(direct_leaves_x, rep_len(x, 2L)),
                     xend = rep(direct_leaves_x, times = 2L),
                     y = c(direct_leaves_y, y, y),
-                    yend = rep_len(.env$y, 4L),
+                    yend = rep_len(y, 4L),
                     branch = rep(direct_leaves_branch, times = 2L),
-                    panel = rep(direct_leaves_panel, times = 2L),
-                    # we add `span` indicating whether this segment span
-                    # multiple panels
-                    #
-                    # for vertical lines, we chech the children branch only
-                    # since vertical lines should only have one branch,
-                    # if it's `root` then the line should span multiple
-                    # panels.
-                    #
-                    # For horizontal liens, we check the parent branch,
-                    # since horizontal lines should have two branch points,
-                    # and the parent branch will be more highest, if it's
-                    # `root`, then the horizontal lines should span multiple
-                    # panels.
-                    span = span_branch == root
+                    ggpanel = c(direct_leaves_ggpanel, rep_len(ggpanel, 2L)),
+                    panel1 = c(direct_leaves_panel, rep_len(panel, 2L)),
+                    panel2 = rep(direct_leaves_panel, times = 2L)
                 )
             } else {
-                span_branch <- rep_len(branch, 2L)
-                added_edge <- tibble0(
-                    x = rep_len(.env$x, 2L),
+                added_edge <- data_frame0(
+                    x = rep_len(x, 2L),
                     xend = direct_leaves_x,
                     y = direct_leaves_y,
-                    yend = rep_len(.env$y, 2L),
+                    yend = rep_len(y, 2L),
                     branch = direct_leaves_branch,
-                    panel = direct_leaves_panel
+                    ggpanel = rep_len(ggpanel, 2L),
+                    panel1 = rep_len(panel, 2L),
+                    panel2 = direct_leaves_panel
                 )
-            }
-            if (is.null(leaf_braches)) { # all nodes should be root node
-                added_edge$span <- FALSE
-            } else {
-                added_edge$span <- span_branch == root
             }
             if (is.null(edge)) {
                 edge <- added_edge
@@ -429,10 +439,9 @@ dendrogram_data <- function(tree, center = FALSE,
                 edge <- rbind(edge, added_edge)
             }
             list(
-                children_leaves = children_leaves,
                 node = node, edge = edge,
                 x = x, y = y, branch = branch,
-                panel = panel
+                panel = panel, ggpanel = ggpanel
             )
         } else {
             cli::cli_abort("{.arg dend} must be a {.cls dendrogram} object")
@@ -440,13 +449,27 @@ dendrogram_data <- function(tree, center = FALSE,
     }
     ans <- .subset(.dendrogram_data(dend), c("node", "edge"))
 
-    # 1. remove rownames to keep data tidy
-    # 2. branch should be a factor ordered by x if it exists
-    lapply(ans, function(df) {
+    # set factor levels
+    panel_levels <- setdiff(branch_levels, root)
+    ans <- lapply(ans, function(df) {
         df$branch <- factor(.subset2(df, "branch"), branch_levels)
-        df$panel <- factor(.subset2(df, "panel"), setdiff(branch_levels, root))
+        df$ggpanel <- factor(.subset2(df, "ggpanel"), panel_levels)
+        rownames(df) <- NULL
         df
     })
+    ans$node$panel <- factor(
+        .subset2(.subset2(ans, "node"), "panel"),
+        panel_levels
+    )
+    ans$edge$panel1 <- factor(
+        .subset2(.subset2(ans, "edge"), "panel1"),
+        panel_levels
+    )
+    ans$edge$panel2 <- factor(
+        .subset2(.subset2(ans, "edge"), "panel2"),
+        panel_levels
+    )
+    ans
 }
 
 check_tree <- function(tree, arg = rlang::caller_arg(tree),

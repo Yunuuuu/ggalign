@@ -47,6 +47,13 @@ tibble0 <- function(...) {
     tibble::tibble(..., .name_repair = "minimal")
 }
 
+data_frame0 <- function(...) {
+    data.frame(...,
+        check.names = FALSE,
+        fix.empty.names = FALSE, stringsAsFactors = FALSE
+    )
+}
+
 as_tibble0 <- function(data, ...) {
     tibble::as_tibble(data, ..., .name_repair = "minimal")
 }
