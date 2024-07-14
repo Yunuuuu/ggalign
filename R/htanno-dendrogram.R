@@ -3,9 +3,9 @@ htanno_dendro <- function(mapping = aes(), ...,
                           method = "complete",
                           use_missing = "pairwise.complete.obs",
                           k = NULL, h = NULL,
-                          plot_cut_height = FALSE, root = NULL,
+                          plot_cut_height = NULL, root = NULL,
                           center = FALSE, type = "rectangle", data = NULL,
-                          position = NULL, size = unit(10, "mm"),
+                          position = NULL, size = NULL,
                           active = TRUE, name = NULL, order = NULL,
                           check.param = TRUE) {
     htanno(
@@ -23,17 +23,38 @@ htanno_dendro <- function(mapping = aes(), ...,
     )
 }
 
+htanno_dendro_add_gg <- function(object, plot, object_name) {
+    UseMethod("htanno_dendro_add_gg")
+}
+
+#' @export
+htanno_dendro_add_gg.default <- function(object, plot, object_name) {
+    ggplot2::ggplot_add(object, plot, object_name)
+}
+
+#' @export
+htanno_dendro_add_gg.Coord <- function(object, plot, object_name) {
+    if (!inherits(object, "CoordCartesian")) {
+        cli::cli_abort("Only Cartesian coordinate is supported for dendrogram")
+    }
+    NextMethod()
+}
+
 #' @importFrom ggplot2 aes
 HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     setup_params = function(self, data, position, params) {
         assert_number(.subset2(params, "k"), null_ok = TRUE, arg = "k")
         assert_number(.subset2(params, "h"), null_ok = TRUE, arg = "h")
+        assert_bool(
+            .subset2(params, "plot_cut_height"),
+            null_ok = TRUE,
+            arg = "plot_cut_height"
+        )
         params
     },
     add_gg = function(self, gg, object_name) {
-        self$draw_params$plot <- ggplot2::ggplot_add(
-            gg, .subset2(self$draw_params, "plot"), object_name
-        )
+        plot <- .subset2(self$draw_params, "plot")
+        self$draw_params$plot <- htanno_dendro_add_gg(gg, plot, object_name)
         self
     },
     compute = function(data, position, distance, method, use_missing) {
@@ -65,6 +86,15 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     panels, scales, facet, position,
                     plot, height, plot_cut_height, center, type,
                     root, params) {
+        if (nlevels(panels) > 1L && type == "triangle") {
+            cli::cli_warn(c(
+                paste(
+                    "{.arg type} of {.arg triangle}",
+                    "is not well support for facet dendrogram"
+                ),
+                i = "will use {.filed rectangle} dendrogram instead"
+            ))
+        }
         data <- dendrogram_data(
             statistics,
             center = center,
@@ -96,8 +126,17 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             )),
             after = 0L
         )
-        plot + ggplot2::labs(y = "height") +
-            ggplot2::coord_cartesian(clip = "off")
+        plot_cut_height <- plot_cut_height %||% !is.null(height)
+        if (plot_cut_height && !is.null(height)) {
+            plot <- plot +
+                ggplot2::geom_hline(yintercept = height, linetype = "dashed")
+        }
+        if (isTRUE(plot$coordinates$default)) {
+            plot$coordinates <- ggplot2::coord_cartesian(clip = "off")
+        } else {
+            plot$coordinates$clip <- "off"
+        }
+        plot + ggplot2::labs(y = "height")
     }
 )
 
