@@ -9,7 +9,7 @@ htanno(
   data = NULL,
   position = NULL,
   params = list(),
-  size = unit(10, "mm"),
+  size = NULL,
   active = NULL,
   name = NULL,
   order = NULL,
@@ -27,7 +27,7 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 
 \item{params}{A list of parameters passed  to \code{htanno}.}
 
-\item{size}{Annotation size, must be a \link[grid:unit]{unit} object.}
+\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
 \item{active}{A logical value of length \code{1} or \code{2}.}
 

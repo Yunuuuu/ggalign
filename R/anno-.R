@@ -5,19 +5,17 @@
 #' @inheritParams ggheat
 #' @param position A string of the annotation position, Possible values are
 #' `"top"`, `"left"`, ` "bottom"`, and `"right"`.
-#' @param size Annotation size, must be a [unit][grid::unit] object.
+#' @param size Annotation size, can be a [unit][grid::unit] object.
 #' @param name A string of the annotation name.
 #' @param active A logical value of length `1` or `2`.
 #' @param order Annotation order, must be an single integer.
 #' @return A new `Class` object.
 #' @export
 new_anno <- function(Class, ..., data = NULL,
-                     position = NULL, size = unit(10, "mm"),
+                     position = NULL, size = NULL,
                      active = NULL, name = NULL, order = NULL) {
     data <- allow_lambda(data)
     if (!is.null(position)) position <- match.arg(position, GGHEAT_ELEMENTS)
-    if (is.na(size) || is.null(size)) size <- unit(1, "null")
-    if (!is.unit(size)) size <- unit(size, "null")
     if (is.numeric(order)) {
         order <- as.integer(order)
     } else if (is.null(order)) {
@@ -27,7 +25,7 @@ new_anno <- function(Class, ..., data = NULL,
         Class = Class,
         data = data,
         position = position,
-        size = size,
+        size = set_size(size),
         ...,
         active = active %||% TRUE,
         name = name,

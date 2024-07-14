@@ -8,7 +8,7 @@
 #' @inheritParams new_anno
 #' @export
 gganno <- function(mapping = aes(), data = NULL,
-                   position = NULL, size = unit(10, "mm"),
+                   position = NULL, size = NULL,
                    active = TRUE, name = NULL, order = NULL) {
     new_anno("gganno",
         data = data,

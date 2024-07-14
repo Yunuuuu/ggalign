@@ -31,13 +31,20 @@ anno_setup_data.NULL <- function(data, position, heatmap_matrix,
 }
 
 #' @export
-anno_setup_data.atomic <- function(data, position, heatmap_matrix,
-                                   object_name) {
-    data <- matrix(matrix, ncol = 1L)
+anno_setup_data.numeric <- function(data, position, heatmap_matrix,
+                                    object_name) {
+    anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
+    if (nrow(anno_matrix) != NROW(data)) {
+        cli::cli_abort(msg_anno_incompatible_data(object_name))
+    }
+    data <- matrix(data, ncol = 1L)
     colnames(data) <- "V1"
     if (rlang::is_named(data)) rownames(data) <- names(matrix)
-    anno_setup_data(data, position, heatmap_matrix, object_name)
+    data
 }
+
+#' @export
+anno_setup_data.character <- anno_setup_data.numeric
 
 #' @export
 anno_setup_data.function <- function(data, position, heatmap_matrix,

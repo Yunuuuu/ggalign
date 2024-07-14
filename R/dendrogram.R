@@ -211,6 +211,7 @@ cutree_k_to_h <- function(tree, k) {
 #' coordinates.
 #' @examples
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
+#' @importFrom grid is.unit
 #' @export
 dendrogram_data <- function(tree, center = FALSE,
                             type = "rectangle",
@@ -250,7 +251,7 @@ dendrogram_data <- function(tree, center = FALSE,
     }
     # branch_gap must be a numeric value
     # and the length must be equal to `length(unique(leaf_braches)) - 1L`
-    if (grid::is.unit(branch_gap)) {
+    if (is.unit(branch_gap)) {
         branch_gap <- grid::convertUnit(branch_gap, "native", valueOnly = TRUE)
     } else if (is.numeric(branch_gap)) {
         if (!is_scalar(branch_gap) &&

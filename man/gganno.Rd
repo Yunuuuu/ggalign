@@ -12,7 +12,7 @@ gganno(
   mapping = aes(),
   data = NULL,
   position = NULL,
-  size = unit(10, "mm"),
+  size = NULL,
   active = TRUE,
   name = NULL,
   order = NULL
@@ -37,7 +37,7 @@ must be supplied in each layer added to the plot.}
 \item{position}{Possible values are \code{"top"}, \code{"left"}, \code{"bottom"}, and
 \code{"right"}. If \code{NULL}, the active context of the ggheatmap will be used.}
 
-\item{size}{Annotation size, must be a \link[grid:unit]{unit} object.}
+\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
 \item{active}{A logical value of length \code{1} or \code{2}.}
 

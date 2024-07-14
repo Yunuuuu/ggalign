@@ -17,6 +17,7 @@ ggheat_build.default <- function(x, ...) {
 #' @export
 ggheat_build.ggheatmap <- function(x, ...) {
     mat <- slot(x, "matrix")
+    params <- slot(x, "params")
     row_index <- slot(x, "row_index") %||% seq_len(nrow(mat))
     row_panels <- slot(x, "row_panels") %||%
         factor(rep_len(1L, length(row_index)))
@@ -82,7 +83,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
             .subset2(user_xscales, i),
             .subset2(default_xscales, i)
         )
-        # we copy the expand from user input 
+        # we copy the expand from user input
         #   into the default for usage of annotation
         default_xscales[[i]]$expand <- .subset2(user_xscales, i)$expand
     }
@@ -170,18 +171,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
         plots <- .subset(plots, keep)
         if (length(plots) == 0L) return(list(NULL, NULL)) # styler: off
         sizes <- sizes[keep]
-        list(
-            switch_position(
-                position,
-                patchwork::wrap_plots(plots,
-                    nrow = 1L, widths = sizes
-                ),
-                patchwork::wrap_plots(plots,
-                    ncol = 1L, heights = sizes
-                )
-            ),
-            sum(sizes)
-        )
+        list(plots, sizes)
     })
     names(annotations) <- GGHEAT_ELEMENTS
     annotations <- transpose(annotations)
@@ -191,26 +181,52 @@ ggheat_build.ggheatmap <- function(x, ...) {
     heatmap <- p + ggplot2::theme(
         axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
     )
-    layout <- list(
-        top = area(1, 2),
-        left = area(2, 1),
-        bottom = area(3, 2),
-        right = area(2, 3),
-        heatmap = area(2, 2)
+    ans <- c(annotations, list(heatmap = list(heatmap)))
+    sizes <- c(
+        annotation_sizes,
+        list(
+            heatmap_width = .subset2(params, "width"),
+            heatmap_height = .subset2(params, "height")
+        )
     )
-    ans <- c(annotations, list(heatmap = heatmap))
-    sizes <- c(annotation_sizes, list(heatmap = unit(1, "null")))
+    ggheatmap_patchwork(ans, sizes)
+}
+
+ggheatmap_patchwork <- function(plots, sizes) {
+    n_top <- length(.subset2(plots, "top"))
+    n_left <- length(.subset2(plots, "left"))
+    n_bottom <- length(.subset2(plots, "bottom"))
+    n_right <- length(.subset2(plots, "right"))
+    # nolint start
+    top_area <- lapply(seq_len(n_top), function(t) area(t, n_left + 1L))
+    left_area <- lapply(seq_len(n_left), function(l) area(n_top + 1L, l))
+    heatmap_area <- list(area(n_top + 1L, n_left + 1L))
+    right_area <- lapply(seq_len(n_right), function(r) {
+        area(n_top + 1L, n_left + 1L + r)
+    })
+    bottom_area <- lapply(seq_len(n_bottom), function(b) {
+        area(n_top + 1L + b, n_left + 1L)
+    })
+    # nolint end
+    # flatten plots and layout
+    plots <- unlist(plots, recursive = FALSE, use.names = FALSE)
+    layout <- lapply(
+        paste0(c(GGHEAT_ELEMENTS, "heatmap"), "_area"), function(area) {
+            eval(as.symbol(area))
+        }
+    )
+    layout <- unlist(layout, recursive = FALSE, use.names = FALSE)
+    layout <- do.call(c, layout)
     sizes <- lapply(list(
-        heights = c("top", "heatmap", "bottom"),
-        widths = c("left", "heatmap", "right")
+        heights = c("top", "heatmap_height", "bottom"),
+        widths = c("left", "heatmap_width", "right")
     ), function(nms) {
-        sizes <- .subset(.subset(sizes, nms), lengths(.subset(ans, nms)) > 0L)
+        sizes <- .subset(sizes, nms)
+        sizes <- sizes[lengths(sizes) > 0L]
         do.call(unit.c, sizes)
     })
-    keep <- lengths(ans) > 0L
-
-    layout <- trim_area(do.call(c, layout[keep]))
-    patchwork::wrap_plots(ans[keep],
+    patchwork::wrap_plots(
+        plots,
         design = layout,
         heights = .subset2(sizes, "heights"),
         widths = .subset2(sizes, "widths"),

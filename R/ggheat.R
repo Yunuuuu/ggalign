@@ -9,10 +9,14 @@
 ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")
 
 #' @export
-ggheat.matrix <- function(data, mapping = aes(), ...) {
+ggheat.matrix <- function(data, mapping = aes(),
+                          width = NULL, height = NULL, ...) {
     methods::new("ggheatmap",
         matrix = data,
-        params = rlang::list2(...),
+        params = rlang::list2(
+            width = set_size(width), 
+            height = set_size(height)
+        ),
         heatmap = ggplot2::ggplot(mapping = mapping),
         active = NULL
     )
@@ -65,7 +69,7 @@ methods::setClass(
         bottom = "ANY", right = "ANY"
     ),
     prototype = list(
-        row_index = NULL, 
+        row_index = NULL,
         row_panels = NULL,
         column_panels = NULL,
         column_index = NULL,

@@ -9,7 +9,7 @@ new_anno(
   ...,
   data = NULL,
   position = NULL,
-  size = unit(10, "mm"),
+  size = NULL,
   active = NULL,
   name = NULL,
   order = NULL
@@ -26,7 +26,7 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 \item{position}{A string of the annotation position, Possible values are
 \code{"top"}, \code{"left"}, \code{ "bottom"}, and \code{"right"}.}
 
-\item{size}{Annotation size, must be a \link[grid:unit]{unit} object.}
+\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
 \item{active}{A logical value of length \code{1} or \code{2}.}
 

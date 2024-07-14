@@ -12,7 +12,7 @@
 htanno <- function(htanno, data = NULL,
                    position = NULL,
                    params = list(),
-                   size = unit(10, "mm"),
+                   size = NULL,
                    active = NULL, name = NULL, order = NULL,
                    check.param = TRUE) {
     assert_s3_class(htanno, "HtannoProto")
