@@ -1,16 +1,16 @@
 #' Heatmap Annotation
 #'
 #' @param position Possible values are `"top"`, `"left"`, `"bottom"`, and
-#' `"right"`.
+#' `"right"`. If `NULL`, the active context of the ggheatmap will be used.
 #' @inheritParams ggplot2::ggplot
 #' @importFrom ggplot2 aes
 #' @importFrom grid is.unit unit
-#' @inheritParams new_gganno
+#' @inheritParams new_anno
 #' @export
 gganno <- function(mapping = aes(), data = NULL,
                    position = NULL, size = unit(10, "mm"),
                    active = TRUE, name = NULL, order = NULL) {
-    new_gganno("ggannotation",
+    new_anno("gganno",
         data = data,
         order = order,
         size = size,
@@ -22,21 +22,21 @@ gganno <- function(mapping = aes(), data = NULL,
 
 #' @export
 #' @keywords internal
-plot.ggannotation <- function(x, ...) {
-    cli::cli_abort("You cannot plot {.cls ggannotation} object")
+plot.gganno <- function(x, ...) {
+    cli::cli_abort("You cannot plot {.cls gganno} object")
 }
 
 #' @include anno-.R
 #' @keywords internal
 methods::setClass(
-    "ggannotation",
-    contains = "gganno",
+    "gganno",
+    contains = "anno",
     list(plot = "ANY")
 )
 
 #' @export
-methods::setMethod("show", "ggannotation", function(object) {
-    print("A ggannotation object")
+methods::setMethod("show", "gganno", function(object) {
+    print("A gganno object")
     invisible(object)
 })
 

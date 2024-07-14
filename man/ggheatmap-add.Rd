@@ -12,7 +12,7 @@
 \item{e1}{A \link[=ggheat]{ggheatmap} object.}
 
 \item{e2}{An object to be added to the plot, including
-\link[ggplot2:gg-add]{gg} elements, \link[=gganno]{ggannotation} object, or \link{htanno}
+\link[ggplot2:gg-add]{gg} elements, \link{gganno} object, or \link{htanno}
 object.}
 }
 \value{

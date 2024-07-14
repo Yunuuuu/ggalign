@@ -119,7 +119,7 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
             if (!is_scalar(k)) {
                 cli::cli_abort("{.arg k} must be a single number")
             }
-            height <- cutree_k_to_h(k)
+            height <- cutree_k_to_h(tree, k)
             leaf_braches <- stats::cutree(tree, h = height)
         } else if (!is.null(h)) {
             if (!is_scalar(height <- h)) {

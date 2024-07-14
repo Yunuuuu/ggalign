@@ -55,17 +55,20 @@ methods::setClass(
     list(
         matrix = "matrix",
         params = "list",
-        row_slice = "ANY",
-        row_order = "ANY",
-        column_slice = "ANY",
-        column_order = "ANY",
+        row_panels = "ANY",
+        row_index = "ANY",
+        column_panels = "ANY",
+        column_index = "ANY",
         heatmap = "ANY",
+        facetted_pos_scales = "ANY",
         top = "ANY", left = "ANY",
         bottom = "ANY", right = "ANY"
     ),
     prototype = list(
-        row_slice = NULL,
-        column_slice = NULL,
+        row_index = NULL, 
+        row_panels = NULL,
+        column_panels = NULL,
+        column_index = NULL,
         top = NULL, left = NULL,
         bottom = NULL, right = NULL
     )

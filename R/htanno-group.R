@@ -20,11 +20,10 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
                 )
             ))
         }
-        params$group <- factor(group)
         params
     },
-    make_slice = function(data, position, statistics, old_group, group) {
-        if (!is.null(old_group)) {
+    make_panels = function(data, statistics, slice, position, group) {
+        if (!is.null(slice)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_axis(position)} already exists"

@@ -152,6 +152,36 @@ assert_bool <- function(
     FALSE
 }
 
+assert_number <- function(
+    x, na_ok = FALSE, show_length = TRUE, ...,
+    arg = rlang::caller_arg(x),
+    call = rlang::caller_env()) {
+    what <- "a number"
+    if (na_ok) {
+        what <- c(what, style_code("NA"))
+    }
+    assert_(
+        x = x,
+        assert_fn = function(x) {
+            .rlang_check_is_number(x, na_ok = na_ok)
+        }, what = what,
+        show_length = show_length,
+        ...,
+        arg = arg,
+        call = call
+    )
+}
+
+.rlang_check_is_number <- function(x, na_ok) {
+    if (is.numeric(x) && length(x) == 1L) {
+        return(TRUE)
+    }
+    if (na_ok && identical(x, NA)) {
+        return(TRUE)
+    }
+    FALSE
+}
+
 # atomic vector ------------------------------------
 is_character <- function(x, empty_ok = TRUE, na_ok = TRUE) {
     out <- is.character(x)

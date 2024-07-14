@@ -21,6 +21,8 @@ switch_position <- function(position, row, column) {
     )
 }
 
+is.waiver <- function(x) inherits(x, "waiver")
+
 to_axis <- function(position) switch_position(position, "row", "column")
 
 melt_matrix <- function(matrix) {

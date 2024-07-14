@@ -13,6 +13,7 @@ Depends:
     ggplot2
 Imports: 
     cli,
+    ggh4x,
     grid,
     methods,
     patchwork,
@@ -23,13 +24,15 @@ Collate:
     'activate.R'
     'ggheat.R'
     'anno-.R'
-    'anno-add_gg.R'
+    'anno-add.R'
     'anno-build.R'
+    'anno-initialize.R'
     'anno-setup_data.R'
     'dendrogram.R'
     'geom-draw.R'
     'gganno-.R'
     'ggheat-package.R'
+    'heatmap-add.R'
     'htanno-.R'
     'htanno-dendrogram.R'
     'htanno-group.R'

@@ -4,7 +4,7 @@
 #' Especially control the order of the main heatmap or split the heatmap into
 #' different slices.
 #' @param htanno A `HtannoProto` object
-#' @inheritParams new_gganno
+#' @inheritParams new_anno
 #' @param params A list of parameters passed  to `htanno`.
 #' @param check.param A boolean value indicates whether to check the supplied
 #' parameters and warn.
@@ -19,17 +19,17 @@ htanno <- function(htanno, data = NULL,
     assert_bool(check.param)
     # Warn about extra params and aesthetics
     all <- htanno$parameters()
-    if (check.param && length(extra_param <- setdiff(names(params), all))) {
+    if (check.param &&
+        length(extra_param <- setdiff(names(params), all))) { # nolint
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
     }
-    new_gganno(
+    new_anno(
         "htanno",
-        data = data, order = order,
-        size = size,
-        htanno = htanno,
+        data = data, order = order, size = size, htanno = htanno,
         params = params[intersect(names(params), all)],
         # following attributes were used by `ggheatmap_add`
-        name = name, position = position, active = active %||% c(TRUE, FALSE)
+        name = name, position = position,
+        active = active
     )
 }
 
@@ -37,7 +37,7 @@ htanno <- function(htanno, data = NULL,
 #' @keywords internal
 methods::setClass(
     "htanno",
-    contains = "gganno",
+    contains = "anno",
     list(htanno = "ANY", statistics = "ANY", params = "list"),
     prototype = list(statistics = NULL, params = list())
 )
@@ -52,33 +52,33 @@ methods::setMethod("show", "htanno", function(object) {
 
 HtannoProto <- ggplot2::ggproto("HtannoProto",
     compute_params = NULL,
-    slice_params = NULL,
+    panel_params = NULL,
     reorder_params = NULL,
     draw_params = NULL,
     parameters = function(self) {
         c(
             htanno_method_params(self$compute, 2L),
-            htanno_method_params(self$make_slice, 4L),
+            htanno_method_params(self$make_panels, 4L),
             htanno_method_params(self$reorder, 4L),
-            htanno_method_params(self$draw, 3L),
+            htanno_method_params(self$draw, 7L),
             self$extra_params
         )
     },
     extra_params = character(),
-    setup_params = function(data, position, params) params,
+    setup_params = function(data, params, position) params,
     split_params = function(self, params) {
-        # Split up params between stat, reorder, make_slice, and draw
+        # Split up params between stat, reorder, make_panels, and draw
         self$compute_params <- params[
             intersect(names(params), htanno_method_params(self$compute, 2L))
         ]
-        self$slice_params <- params[
-            intersect(names(params), htanno_method_params(self$make_slice, 4L))
+        self$panel_params <- params[
+            intersect(names(params), htanno_method_params(self$make_panels, 4L))
         ]
         self$reorder_params <- params[
             intersect(names(params), htanno_method_params(self$reorder, 4L))
         ]
         self$draw_params <- params[
-            intersect(names(params), htanno_method_params(self$draw, 3L))
+            intersect(names(params), htanno_method_params(self$draw, 7L))
         ]
     },
     add_gg = function(gg, object_name) {
@@ -90,9 +90,18 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     # Following fields should be defined for the new Htanno object.
     # argument name in the initial function doesn't matter.
     compute = function(data, position) NULL,
-    make_slice = function(data, position, statistics, slice) slice,
-    reorder = function(data, position, statistics, slice) NULL,
-    draw = function(data, position, statistics) NULL
+
+    # group heamap row/column
+    make_panels = function(data, statistics, panels, position) panels,
+
+    # reorder heatmap row/column
+    reorder = function(data, statistics, panels, position) NULL,
+
+    # draw plot
+    draw = function(data, statistics, index,
+                    panels, scales, facet, position) {
+        NULL
+    }
 )
 
 ggproto_formals <- function(x) formals(environment(x)$f)

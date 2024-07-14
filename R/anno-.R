@@ -1,6 +1,6 @@
-#' Create a gganno object.
+#' Create a anno object.
 #'
-#' @param Class Sub-class of `gganno`.
+#' @param Class Sub-class of `anno`.
 #' @param ... Additional components of the sub-class.
 #' @inheritParams ggheat
 #' @param position A string of the annotation position, Possible values are
@@ -11,9 +11,9 @@
 #' @param order Annotation order, must be an single integer.
 #' @return A new `Class` object.
 #' @export
-new_gganno <- function(Class, ..., data = NULL,
-                       position = NULL, size = unit(10, "mm"),
-                       active = NULL, name = NULL, order = NULL) {
+new_anno <- function(Class, ..., data = NULL,
+                     position = NULL, size = unit(10, "mm"),
+                     active = NULL, name = NULL, order = NULL) {
     data <- allow_lambda(data)
     if (!is.null(position)) position <- match.arg(position, GGHEAT_ELEMENTS)
     if (is.na(size) || is.null(size)) size <- unit(1, "null")
@@ -29,7 +29,7 @@ new_gganno <- function(Class, ..., data = NULL,
         position = position,
         size = size,
         ...,
-        active = active %||% TRUE, 
+        active = active %||% TRUE,
         name = name,
         order = order
     )
@@ -38,21 +38,22 @@ new_gganno <- function(Class, ..., data = NULL,
 #' @include ggheat.R
 #' @keywords internal
 methods::setClass(
-    "gganno",
+    "anno",
     contains = "ggheat",
     list(
         data = "ANY",
+        facetted_pos_scales = "ANY",
         order = "integer",
         size = "ANY",
         name = "ANY",
-        position = "character",
+        position = "ANY",
         active = "logical"
     )
 )
 
 #' @importFrom grid is.unit
 #' @importFrom rlang is_string is_bool
-methods::setValidity("gganno", function(object) {
+methods::setValidity("anno", function(object) {
     active <- slot(object, "active")
     if (length(active) != 1L && length(active) != 2L) {
         cli::cli_abort("@active must be of length 1 or 2")

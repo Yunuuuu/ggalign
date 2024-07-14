@@ -35,7 +35,7 @@ will be converted to one by \code{\link[ggplot2:fortify]{fortify()}}. If not spe
 must be supplied in each layer added to the plot.}
 
 \item{position}{Possible values are \code{"top"}, \code{"left"}, \code{"bottom"}, and
-\code{"right"}.}
+\code{"right"}. If \code{NULL}, the active context of the ggheatmap will be used.}
 
 \item{size}{Annotation size, must be a \link[grid:unit]{unit} object.}
 
