@@ -108,11 +108,11 @@ hclust2 <- function(matrix,
 ggdendrogram <- function(tree, mapping = NULL, ...,
                          center = FALSE, type = "rectangle",
                          k = NULL, h = NULL,
-                         plot_cut_height = FALSE,
+                         plot_cut_height = NULL,
                          leaf_braches = NULL, branch_gap = NULL, root = NULL,
                          leaf_label = TRUE, leaf_guide = waiver()) {
     assert_s3_class(tree, "hclust")
-    assert_bool(plot_cut_height)
+    assert_bool(plot_cut_height, null_ok = TRUE)
     assert_bool(leaf_label)
     if (is.null(leaf_braches)) {
         if (!is.null(k)) {
@@ -132,6 +132,7 @@ ggdendrogram <- function(tree, mapping = NULL, ...,
     } else {
         height <- cutree_k_to_h(tree, length(unique(leaf_braches)))
     }
+    plot_cut_height <- plot_cut_height %||% !is.null(height)
     data <- dendrogram_data(tree,
         center = center,
         type = type, leaf_pos = NULL,

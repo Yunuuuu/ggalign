@@ -12,7 +12,7 @@ ggdendrogram(
   type = "rectangle",
   k = NULL,
   h = NULL,
-  plot_cut_height = FALSE,
+  plot_cut_height = NULL,
   leaf_braches = NULL,
   branch_gap = NULL,
   root = NULL,
