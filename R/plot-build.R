@@ -135,13 +135,13 @@ ggheat_build.ggheatmap <- function(x, ...) {
             if (do_row_facet) {
                 ggplot2::facet_grid(
                     rows = ggplot2::vars(.data$.panels),
-                    scales = "free_y"
+                    scales = "free_y", space = "free_y"
                 )
             },
             if (do_column_facet) {
                 ggplot2::facet_grid(
                     cols = ggplot2::vars(.data$.panels),
-                    scales = "free_x"
+                    scales = "free_x", space = "free_x"
                 )
             }
         )

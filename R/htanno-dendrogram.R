@@ -54,7 +54,8 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             height <- NULL
         }
         self$draw_params$height <- height
-        panels
+        # reorder panel factor levels to following the dendrogram order
+        factor(panels, unique(panels[statistics$order]))
     },
     reorder = function(data, statistics, panels, position) {
         statistics$order
@@ -70,6 +71,10 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             leaf_braches = panels,
             root = root
         )
+        data <- lapply(data, rename, c(panel = ".panels"))
+        breaks <- vapply(split(seq_along(index), panels[index]), function(x) {
+            max(x)
+        }, numeric(1L))
         node <- .subset2(data, "node")
         plot$data <- node
         edge <- .subset2(data, "edge")
@@ -86,12 +91,15 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             )),
             after = 0L
         )
-        plot <- plot + ggplot2::labs(y = "height")
-        plot <- anno_add_default_mapping(plot, position) +
-            combine_scales(scales)
-        # plot <- anno_set_scale(plot, scale, .subset2(coords, ".index"))
-        plot + ggplot2::theme(
-            axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
-        )
+        plot + ggplot2::labs(y = "height") +
+            # ggbreak::scale_x_cut(
+            #     breaks = breaks[-length(breaks)],
+            #     scales = abs(diff(c(1, breaks)))
+            # ) +
+            ggplot2::coord_cartesian(clip = "off") +
+            ggplot2::theme(
+                axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L),
+                panel.background = ggplot2::element_blank()
+            )
     }
 )

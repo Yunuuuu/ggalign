@@ -38,12 +38,21 @@ anno_build_data <- function(data, index, panels, position) {
 anno_build.htanno <- function(x, index, panels, scales, facet, position) {
     htanno <- slot(x, "htanno")
     # let `htanno` to determine how to draw
-    rlang::inject(htanno$draw(
+    plot <- rlang::inject(htanno$draw(
         slot(x, "data"),
         slot(x, "statistics"),
         index, panels, scales, facet, position,
         !!!htanno$draw_params
     ))
+    if (is.ggplot(plot)) {
+        plot <- anno_add_default_mapping(plot, position)
+        plot <- anno_set_scales_and_facet(
+            plot,
+            slot(x, "facetted_pos_scales"),
+            position, scales, facet
+        )
+    }
+    plot
 }
 
 anno_add_default_mapping <- function(plot, position) {
@@ -72,7 +81,7 @@ anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
             .subset2(user_scales, i),
             .subset2(scales, i)
         )
-        # we always remove labels and breaks of current annotation.
+        # we always remove labels and breaks of annotation.
         scale$labels <- NULL
         scale$breaks <- NULL
         user_scales[[i]] <- scale
@@ -91,7 +100,7 @@ anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
     plot
 }
 
-combine_scales <- function(scales) {
+anno_combine_scales <- function(scales) {
     ans <- .subset2(scales, 1L)$clone()
     components <- lapply(scales, function(scale) {
         list(
@@ -102,7 +111,10 @@ combine_scales <- function(scales) {
     })
     components <- transpose(components)
     ans$limits <- range(unlist(.subset2(components, "limits"), FALSE, FALSE))
-    ans$breaks <- unlist(.subset2(components, "breaks"), FALSE, FALSE)
-    ans$labels <- unlist(.subset2(components, "labels"), FALSE, FALSE)
+    # we always remove labels and breaks of annotation.
+    ans$breaks <- NULL
+    ans$labels <- NULL
+    # ans$breaks <- unlist(.subset2(components, "breaks"), FALSE, FALSE)
+    # ans$labels <- unlist(.subset2(components, "labels"), FALSE, FALSE)
     ans
 }

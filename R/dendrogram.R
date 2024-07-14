@@ -279,6 +279,7 @@ dendrogram_data <- function(tree, center = FALSE,
     i <- 0L # leaf index
     branch_levels <- root
     last_branch <- root
+    total_gap <- 0
     .dendrogram_data <- function(dend, from_root = TRUE) {
         if (stats::is.leaf(dend)) { # base version
             index <- as.integer(dend) # the column index of the original data
@@ -291,26 +292,29 @@ dendrogram_data <- function(tree, center = FALSE,
                 branch <- .subset(leaf_braches, index)
             }
 
-            x <- .subset(leaf_pos, i)
+            x <- .subset(leaf_pos, i) + total_gap
             # for every new branch, we saved the branch for later use, in order
             # to order the branch levels, and we add a gap between two branch
             if (branch != last_branch) {
                 branch_levels <<- c(branch_levels, branch)
                 x <- x + branch_gap
+                total_gap <<- total_gap + branch_gap
             }
             last_branch <<- branch
 
             node <- tibble0(
                 index = index, label = label,
                 x = x, y = y, branch = branch,
-                leaf = TRUE
+                leaf = TRUE, panel = branch
             )
             list(
                 # all leaves, used to calculate midpoint when `center = TRUE`
                 children_leaves = x,
                 # current node
                 node = node, edge = NULL,
-                x = x, y = y, branch = branch
+                x = x, y = y,
+                branch = branch,
+                panel = branch
             )
         } else if (inherits(dend, "dendrogram")) { # recursive version
             # the parent height  -------------------------------------
@@ -345,6 +349,10 @@ dendrogram_data <- function(tree, center = FALSE,
                 .subset2(data, "branch"),
                 recursive = FALSE, use.names = FALSE
             )
+            direct_leaves_panel <- unlist(
+                .subset2(data, "panel"),
+                recursive = FALSE, use.names = FALSE
+            )
 
             # prepare node data ------------------------------------
             # x coordinate for current branch: the midpoint
@@ -354,30 +362,34 @@ dendrogram_data <- function(tree, center = FALSE,
                 x <- sum(direct_leaves_x) / 2L
             }
             if (is.null(leaf_braches)) {
-                branch <- root
+                panel <- branch <- root # only one panel
             } else {
                 branch <- unique(direct_leaves_branch)
                 # if two children leaves are different, this branch should be
                 # root
                 if (length(branch) > 1L) branch <- root
+                panel <- unique(direct_leaves_panel)
+                # always regard the right hand as the node panel
+                if (length(panel) > 1L) panel <- .subset(panel, 2L)
             }
             # there is no node data in dendrogram root
             if (!from_root) {
                 node <- rbind(node, tibble0(
                     index = NA_integer_, label = NA_character_,
-                    x = x, y = y, branch = branch, leaf = FALSE
+                    x = x, y = y, branch = branch, leaf = FALSE,
+                    panel = panel
                 ))
             }
             if (rectangle) {
                 span_branch <- c(direct_leaves_branch, rep_len(branch, 2L))
                 added_edge <- tibble0(
                     # 2 vertical lines + 2 horizontal lines
-                    x = rep(direct_leaves_x, times = 2L),
-                    xend = c(direct_leaves_x, rep_len(.env$x, 2L)),
+                    x = c(direct_leaves_x, rep_len(.env$x, 2L)),
+                    xend = rep(direct_leaves_x, times = 2L),
                     y = c(direct_leaves_y, y, y),
                     yend = rep_len(.env$y, 4L),
                     branch = rep(direct_leaves_branch, times = 2L),
-
+                    panel = rep(direct_leaves_panel, times = 2L),
                     # we add `span` indicating whether this segment span
                     # multiple panels
                     #
@@ -396,11 +408,12 @@ dendrogram_data <- function(tree, center = FALSE,
             } else {
                 span_branch <- rep_len(branch, 2L)
                 added_edge <- tibble0(
-                    x = direct_leaves_x,
-                    xend = rep_len(.env$x, 2L),
+                    x = rep_len(.env$x, 2L),
+                    xend = direct_leaves_x,
                     y = direct_leaves_y,
                     yend = rep_len(.env$y, 2L),
                     branch = direct_leaves_branch,
+                    panel = direct_leaves_panel
                 )
             }
             if (is.null(leaf_braches)) { # all nodes should be root node
@@ -416,17 +429,20 @@ dendrogram_data <- function(tree, center = FALSE,
             list(
                 children_leaves = children_leaves,
                 node = node, edge = edge,
-                x = x, y = y, branch = branch
+                x = x, y = y, branch = branch,
+                panel = panel
             )
         } else {
             cli::cli_abort("{.arg dend} must be a {.cls dendrogram} object")
         }
     }
     ans <- .subset(.dendrogram_data(dend), c("node", "edge"))
+
     # 1. remove rownames to keep data tidy
     # 2. branch should be a factor ordered by x if it exists
     lapply(ans, function(df) {
         df$branch <- factor(.subset2(df, "branch"), branch_levels)
+        df$panel <- factor(.subset2(df, "panel"), setdiff(branch_levels, root))
         df
     })
 }
