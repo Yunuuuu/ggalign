@@ -2,7 +2,8 @@
 #'
 #' @param x A [ggheatmap][ggheat] object.
 #' @param what What should get activated? Possible values are `"top"`, `"left"`,
-#' ` "bottom"`, and `"right"`.
+#' ` "bottom"`, and `"right"`. For `active`, this can be also `NULL`, which
+#' means set active context into the `heatmap` itself.
 #' @return
 #' - `activate`/`deactivate`: A object with the same class of `x`, whose active
 #'                            context will be `set` or `unset`.

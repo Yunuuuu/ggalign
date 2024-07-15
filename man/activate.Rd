@@ -16,7 +16,8 @@ active(what = NULL)
 \item{x}{A \link[=ggheat]{ggheatmap} object.}
 
 \item{what}{What should get activated? Possible values are \code{"top"}, \code{"left"},
-\code{ "bottom"}, and \code{"right"}.}
+\code{ "bottom"}, and \code{"right"}. For \code{active}, this can be also \code{NULL}, which
+means set active context into the \code{heatmap} itself.}
 }
 \value{
 \itemize{
