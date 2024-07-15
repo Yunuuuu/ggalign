@@ -24,7 +24,8 @@ ggheat(data, mapping = aes(), ...)
   guides = "collect",
   axes = NULL,
   axis_titles = axes,
-  ...
+  ...,
+  environment = parent.frame()
 )
 
 \method{ggheat}{data.frame}(data, mapping = aes(), ...)
@@ -86,6 +87,8 @@ or duplicated y-axes in the rows respectively.}
 remove duplicated titles in one direction and merge titles in the opposite
 direction. \code{'collect_x'} and \code{'collect_y'} control this for x-axis titles
 and y-axis titles respectively.}
+
+\item{environment}{Used by \link[ggplot2:ggplot_build]{ggplot_build}.}
 
 \item{object}{A \code{ggheatmap} object.}
 }

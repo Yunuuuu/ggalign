@@ -20,6 +20,7 @@
 #' length `ncol(data)/nrow(data)`, to nudge each text label away from the
 #' center. If `waiver()`, it means `0`. If `NULL`, no breaks, in this way labels
 #' will be removed too.
+#' @param environment Used by [ggplot_build][ggplot2::ggplot_build].
 #' @inheritParams patchwork::plot_layout
 #' @return A `ggheatmap` object.
 #' @importFrom ggplot2 aes
@@ -36,7 +37,8 @@ ggheat.matrix <- function(data, mapping = aes(),
                           xlabels_nudge = waiver(),
                           ylabels_nudge = waiver(),
                           guides = "collect",
-                          axes = NULL, axis_titles = axes, ...) {
+                          axes = NULL, axis_titles = axes, ...,
+                          environment = parent.frame()) {
     xlabels <- set_labels(xlabels, "column", colnames(data))
     xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data))
     ylabels <- set_labels(ylabels, "row", rownames(data))
@@ -55,7 +57,8 @@ ggheat.matrix <- function(data, mapping = aes(),
             axis_titles = axis_titles
         ),
         heatmap = ggplot2::ggplot(mapping = mapping),
-        active = NULL
+        active = NULL,
+        plot_env = environment
     )
 }
 
@@ -155,7 +158,8 @@ methods::setClass(
         heatmap = "ANY", active = "ANY",
         facetted_pos_scales = "ANY",
         top = "ANY", left = "ANY",
-        bottom = "ANY", right = "ANY"
+        bottom = "ANY", right = "ANY",
+        plot_env = "environment"
     ),
     prototype = list(
         row_index = NULL,
@@ -166,6 +170,17 @@ methods::setClass(
         bottom = NULL, right = NULL
     )
 )
+
+#' Subset a `ggheatmap` object
+#' 
+#' Used by [ggplot_build][ggplot2::ggplot_build]
+#' 
+#' @param x A ggheatmap object
+#' @param name A string of slot name in `ggheatmap` object.
+#' @keywords internal
+methods::setMethod("$", "ggheatmap", function(x, name) {
+    slot(x, name)
+})
 
 #' @importFrom ggplot2 is.ggplot
 #' @importFrom rlang is_string

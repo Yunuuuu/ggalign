@@ -4,6 +4,13 @@ print.ggheatmap <- function(x, ...) {
     print(p)
 }
 
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.ggheatmap <- function(plot) {
+    plot <- ggheat_build(plot)
+    ggplot_build(plot)
+}
+
 ggheat_build <- function(x, ...) UseMethod("ggheat_build")
 
 #' @export
