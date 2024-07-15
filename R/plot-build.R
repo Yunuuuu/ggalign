@@ -26,12 +26,14 @@ ggheat_build.default <- function(x, ...) {
 ggheat_build.ggheatmap <- function(x, ...) {
     mat <- slot(x, "matrix")
     params <- slot(x, "params")
-    row_index <- slot(x, "row_index") %||% seq_len(nrow(mat))
     row_panels <- slot(x, "row_panels") %||%
-        factor(rep_len(1L, length(row_index)))
-    column_index <- slot(x, "column_index") %||% seq_len(ncol(mat))
+        factor(rep_len(1L, nrow(mat)))
+    row_index <- slot(x, "row_index") %||%
+        reorder_index(row_panels)
     column_panels <- slot(x, "column_panels") %||%
-        factor(rep_len(1L, length(column_index)))
+        factor(rep_len(1L, ncol(mat)))
+    column_index <- slot(x, "column_index") %||%
+        reorder_index(column_panels)
 
     # read the plot ---------------------------------------
     p <- slot(x, "heatmap")
@@ -183,10 +185,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
     annotation_sizes <- .subset2(annotations_list, 2L) # annotation size
     annotations <- .subset2(annotations_list, 1L) # the annotation plot itself
 
-    heatmap <- p + ggplot2::theme(
-        axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
-    )
-    ans <- c(annotations, list(heatmap = list(heatmap)))
+    ans <- c(annotations, list(heatmap = list(p)))
     sizes <- c(
         annotation_sizes,
         list(

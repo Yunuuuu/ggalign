@@ -56,7 +56,10 @@ ggheat.matrix <- function(data, mapping = aes(),
             axes = axes,
             axis_titles = axis_titles
         ),
-        heatmap = ggplot2::ggplot(mapping = mapping),
+        heatmap = ggplot2::ggplot(mapping = mapping) +
+            ggplot2::theme(
+                axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
+            ),
         active = NULL,
         plot_env = environment
     )
@@ -172,9 +175,9 @@ methods::setClass(
 )
 
 #' Subset a `ggheatmap` object
-#' 
+#'
 #' Used by [ggplot_build][ggplot2::ggplot_build]
-#' 
+#'
 #' @param x A ggheatmap object
 #' @param name A string of slot name in `ggheatmap` object.
 #' @keywords internal

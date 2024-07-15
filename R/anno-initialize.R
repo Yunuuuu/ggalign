@@ -134,6 +134,7 @@ htanno_layout <- function(htanno, old_panels, old_index,
     list(new_panels, new_index)
 }
 
-reorder_index <- function(panels, index) {
+reorder_index <- function(panels, index = NULL) {
+    index <- index %||% seq_along(panels)
     unlist(split(index, panels[index]), recursive = FALSE, use.names = FALSE)
 }
