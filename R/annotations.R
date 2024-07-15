@@ -40,6 +40,7 @@ annotations_add.anno <- function(object, annotations, set_context,
     new_annotations(c(annotations, new), anno_active)
 }
 
+#' @importFrom rlang is_empty
 annotations_build <- function(annotations, panels, index, scales,
                               facet, position) {
     plots <- lapply(annotations, function(x) {
@@ -71,7 +72,7 @@ annotations_build <- function(annotations, panels, index, scales,
     # combine all annotations
     keep <- lengths(plots) > 0L
     plots <- .subset(plots, keep)
-    if (length(plots) == 0L) {
+    if (is_empty(plots)) {
         return(list(NULL, NULL))
     }
     sizes <- sizes[keep]

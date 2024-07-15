@@ -143,7 +143,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # plot annotations ---------------------------------
     annotations_list <- lapply(GGHEAT_ELEMENTS, function(position) {
         annotations <- slot(x, position)
-        if (length(annotations) == 0L) {
+        if (is_empty(annotations)) {
             return(list(NULL, NULL))
         }
         panels <- switch_position(position, row_panels, column_panels)
