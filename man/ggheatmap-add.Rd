@@ -21,3 +21,6 @@ A modified \code{ggheatmap} object.
 \description{
 Add components to \code{ggheatmap}
 }
+\seealso{
+ggheatmap_add
+}

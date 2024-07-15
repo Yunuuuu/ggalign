@@ -1,10 +1,12 @@
-htanno_group <- function(group, position = NULL, active = TRUE,
-                         name = NULL, check.param = TRUE) {
+htanno_group <- function(group, position = NULL,
+                         set_context = NULL, name = NULL,
+                         check.param = TRUE) {
     htanno(
         HtannoGroup,
         position = position,
         params = list(group = group),
-        active = active, name = name, order = NULL,
+        set_context = set_context %||% c(TRUE, FALSE),
+        name = name, order = NULL,
         check.param = check.param
     )
 }

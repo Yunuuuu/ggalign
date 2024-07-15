@@ -1,33 +1,38 @@
-#' Create a anno object.
+#' Create a heatmap annotation object
 #'
 #' @param Class Sub-class of `anno`.
 #' @param ... Additional components of the sub-class.
 #' @inheritParams ggheat
 #' @param position A string of the annotation position, Possible values are
-#' `"top"`, `"left"`, ` "bottom"`, and `"right"`.
+#' `"top"`, `"left"`, ` "bottom"`, and `"right"`. If `NULL`, the active context
+#' of the [ggheatmap][ggheat] will be used.
 #' @param size Annotation size, can be a [unit][grid::unit] object.
 #' @param name A string of the annotation name.
-#' @param active A logical value of length `1` or `2`.
+#' @param set_context A logical value of length `2` indicates whether to set the
+#' active context to the `position` for the [ggheatmap][ggheat] and whether to
+#' set the active context to current annotation for the annotation list in
+#' [ggheatmap][ggheat] when added.
 #' @param order Annotation order, must be an single integer.
 #' @return A new `Class` object.
 #' @export
-new_anno <- function(Class, ..., data = NULL,
-                     position = NULL, size = NULL,
-                     active = NULL, name = NULL, order = NULL) {
+anno <- function(Class, ..., data = NULL,
+                 position = NULL, size = NULL,
+                 set_context = NULL, order = NULL, name = NULL) {
     data <- allow_lambda(data)
-    if (!is.null(position)) position <- match.arg(position, GGHEAT_ELEMENTS)
+    position <- match_context(position)
     if (is.numeric(order)) {
         order <- as.integer(order)
     } else if (is.null(order)) {
         order <- NA_integer_
     }
+    set_context <- set_context %||% TRUE
     methods::new(
         Class = Class,
         data = data,
         position = position,
         size = set_size(size),
         ...,
-        active = active %||% TRUE,
+        set_context = rep_len(set_context, 2L),
         name = name,
         order = order
     )
@@ -40,21 +45,34 @@ methods::setClass(
     contains = "ggheat",
     list(
         data = "ANY",
-        facetted_pos_scales = "ANY",
-        order = "integer",
         size = "ANY",
         name = "ANY",
+        facetted_pos_scales = "ANY",
         position = "ANY",
-        active = "logical"
+        order = "integer",
+        set_context = "logical"
     )
 )
 
+#' @export
+#' @rdname anno
+methods::setMethod("show", "anno", function(object) {
+    print(sprintf("A %s object", fclass(object)))
+    invisible(object)
+})
+
+#' @export
+#' @keywords internal
+plot.anno <- function(x, ...) {
+    cli::cli_abort("You cannot plot {.cls {fclass(x)}} object")
+}
+
+#' @importFrom methods slot
 #' @importFrom grid is.unit
-#' @importFrom rlang is_string is_bool
+#' @importFrom rlang is_string
 methods::setValidity("anno", function(object) {
-    active <- slot(object, "active")
-    if (length(active) != 1L && length(active) != 2L) {
-        cli::cli_abort("@active must be of length 1 or 2")
+    if (length(slot(object, "set_context")) != 2L) {
+        cli::cli_abort("@set_context must be of length 2")
     }
     name <- slot(object, "name")
     if (!is.null(name) && (!is_string(name) || name == "")) {

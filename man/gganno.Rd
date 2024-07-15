@@ -6,16 +6,16 @@
 \alias{gganno_bottom}
 \alias{gganno_left}
 \alias{gganno_right}
-\title{Heatmap Annotation}
+\title{Heatmap annotation of \code{gganno}}
 \usage{
 gganno(
   mapping = aes(),
   data = NULL,
   position = NULL,
   size = NULL,
-  active = TRUE,
-  name = NULL,
-  order = NULL
+  set_context = TRUE,
+  order = NULL,
+  name = NULL
 )
 
 gganno_top(...)
@@ -34,19 +34,26 @@ If not specified, must be supplied in each layer added to the plot.}
 will be converted to one by \code{\link[ggplot2:fortify]{fortify()}}. If not specified,
 must be supplied in each layer added to the plot.}
 
-\item{position}{Possible values are \code{"top"}, \code{"left"}, \code{"bottom"}, and
-\code{"right"}. If \code{NULL}, the active context of the ggheatmap will be used.}
+\item{position}{A string of the annotation position, Possible values are
+\code{"top"}, \code{"left"}, \code{ "bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of the \link[=ggheat]{ggheatmap} will be used.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
-\item{active}{A logical value of length \code{1} or \code{2}.}
-
-\item{name}{A string of the annotation name.}
+\item{set_context}{A logical value of length \code{2} indicates whether to set the
+active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to
+set the active context to current annotation for the annotation list in
+\link[=ggheat]{ggheatmap} when added.}
 
 \item{order}{Annotation order, must be an single integer.}
 
-\item{...}{Other arguments passed on to methods. Not currently used.}
+\item{name}{A string of the annotation name.}
+
+\item{...}{Additional arguments passed to \code{gganno}.}
+}
+\value{
+A \code{gganno} object.
 }
 \description{
-Heatmap Annotation
+Heatmap annotation of \code{gganno}
 }

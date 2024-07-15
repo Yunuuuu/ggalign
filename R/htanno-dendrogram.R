@@ -6,7 +6,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                           plot_cut_height = NULL, root = NULL,
                           center = FALSE, type = "rectangle", data = NULL,
                           position = NULL, size = NULL,
-                          active = TRUE, name = NULL, order = NULL,
+                          set_context = NULL, order = NULL, name = NULL,
                           check.param = TRUE) {
     htanno(
         HtannoDendro,
@@ -18,7 +18,7 @@ htanno_dendro <- function(mapping = aes(), ...,
             params = rlang::list2(...),
             center = center, type = type, root = root
         ),
-        active = active, name = name, order = NULL,
+        set_context = set_context, name = name, order = NULL,
         size = size, check.param = check.param
     )
 }

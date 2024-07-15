@@ -1,9 +1,11 @@
-#' Activate the context of subsequent manipulations
+#' Determine the context of subsequent manipulations
+#'
 #' @param x A [ggheatmap][ggheat] object.
 #' @param what What should get activated? Possible values are `"top"`, `"left"`,
-#'` "bottom"`, and `"right"`.
-#' @return A object with the same class of `x`, whose active context will be set
-#' or unset.
+#' ` "bottom"`, and `"right"`.
+#' @return
+#' - `activate`/`deactivate`: A object with the same class of `x`, whose active
+#'                            context will be `set` or `unset`.
 #' @export
 activate <- function(x, what) UseMethod("activate")
 
@@ -12,66 +14,52 @@ activate <- function(x, what) UseMethod("activate")
 deactivate <- function(x) UseMethod("deactivate")
 
 #' @export
-#' @rdname activate
 activate.ggheatmap <- function(x, what) {
     what <- match.arg(what, GGHEAT_ELEMENTS)
-    active(x) <- what
-    x
+    set_context(x, what)
 }
 
+#' @export
+deactivate.ggheatmap <- function(x) {
+    set_context(x, NULL)
+}
+
+#' @return
+#' - `active`: A `active` object which can be added into [ggheatmap][ggheat].
 #' @export
 #' @rdname activate
-deactivate.ggheatmap <- function(x) {
-    active(x) <- NULL
-    x
+active <- function(what = NULL) {
+    context <- match_context(what)
+    structure(context %||% "heatmap", class = c("active", "ggheat"))
 }
 
-#' Determine the context of subsequent manipulations
-#' @param x A [ggheatmap][ggheat] or `ggAnnotationList`object.
-#' @return
-#' - `active`: A string of current active context.
-#' @export
-active <- function(x) UseMethod("active")
-
-#' @export
-active.default <- function(x) {
-    cli::cli_abort(paste(
-        "{.arg x} must be a {.cls ggheatmap}",
-        "or a {.cls ggAnnotationList} object"
-    ))
-}
-
-#' @export
-active.ggheatmap <- function(x) slot(x, "active")
-
-#' @export
-active.ggAnnotationList <- function(x) attr(x, "active")
-
-#' @param value What should get activated? Possible values are `"top"`,
-#' `"left"`, `"bottom"`, and `"right"`.
-#' @return
-#' - `active<-`: The same with [activate], but won't check the arguments.
-#' @export
-#' @rdname active
-`active<-` <- function(x, value) UseMethod("active<-")
-
-#' @export
-`active<-.default` <- function(x, value) {
-    cli::cli_abort("{.arg x} must be a {.cls ggheatmap} object")
-}
-
-#' @export
-#' @rdname active
-`active<-.ggheatmap` <- function(x, value) {
-    slot(x, "active") <- value
-    x
-}
-
-#' @export
-#' @rdname active
-`active<-.ggAnnotationList` <- function(x, value) {
-    attr(x, "active") <- value
-    x
+match_context <- function(what) {
+    if (!is.null(what)) what <- match.arg(what, GGHEAT_ELEMENTS)
+    what
 }
 
 GGHEAT_ELEMENTS <- c("top", "left", "bottom", "right")
+
+#' @keywords internal
+set_context <- function(x, context) UseMethod("set_context")
+
+#' @export
+set_context.ggheatmap <- function(x, context) {
+    slot(x, "active") <- context
+    x
+}
+
+#' @export
+set_context.ggAnnotationList <- function(x, context) {
+    attr(x, "active") <- context
+    x
+}
+
+#' @keywords internal
+get_context <- function(x) UseMethod("get_context")
+
+#' @export
+get_context.ggheatmap <- function(x) slot(x, "get_context")
+
+#' @export
+get_context.ggAnnotationList <- function(x) attr(x, "get_context")

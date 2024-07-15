@@ -1,35 +1,36 @@
-#' Build `htanno` object
+#' Heatmap annotation of `htanno`
 #'
 #' `htanno` is a special annotation, which can act with the main heatmap.
 #' Especially control the order of the main heatmap or split the heatmap into
 #' different slices.
-#' @param htanno A `HtannoProto` object
-#' @inheritParams new_anno
+#'
+#' @inheritParams anno
 #' @param params A list of parameters passed  to `htanno`.
-#' @param check.param A boolean value indicates whether to check the supplied
-#' parameters and warn.
+#' @param check.param A single boolean value indicates whether to check the
+#' supplied parameters and warn.
+#' @param htanno A `HtannoProto` object
 #' @return A `htanno` object.
-htanno <- function(htanno, data = NULL,
-                   position = NULL,
+htanno <- function(data = NULL,
                    params = list(),
-                   size = NULL,
-                   active = NULL, name = NULL, order = NULL,
-                   check.param = TRUE) {
+                   position = NULL, size = NULL,
+                   set_context = NULL, order = NULL, name = NULL,
+                   check.param = TRUE,
+                   htanno_class = HtannoProto) {
     assert_s3_class(htanno, "HtannoProto")
     assert_bool(check.param)
-    # Warn about extra params and aesthetics
+    # Warn about extra params
     all <- htanno$parameters()
     if (check.param &&
         length(extra_param <- setdiff(names(params), all))) { # nolint
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
     }
-    new_anno(
+    anno(
         "htanno",
         data = data, order = order, size = size, htanno = htanno,
         params = params[intersect(names(params), all)],
         # following attributes were used by `ggheatmap_add`
         name = name, position = position,
-        active = active
+        set_context = set_context
     )
 }
 
@@ -43,12 +44,6 @@ methods::setClass(
 )
 
 is.htanno <- function(x) methods::is(x, "htanno")
-
-#' @export
-methods::setMethod("show", "htanno", function(object) {
-    print("A htanno object")
-    invisible(object)
-})
 
 HtannoProto <- ggplot2::ggproto("HtannoProto",
     compute_params = NULL,

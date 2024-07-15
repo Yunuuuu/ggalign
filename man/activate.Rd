@@ -3,17 +3,14 @@
 \name{activate}
 \alias{activate}
 \alias{deactivate}
-\alias{activate.ggheatmap}
-\alias{deactivate.ggheatmap}
-\title{Activate the context of subsequent manipulations}
+\alias{active}
+\title{Determine the context of subsequent manipulations}
 \usage{
 activate(x, what)
 
 deactivate(x)
 
-\method{activate}{ggheatmap}(x, what)
-
-\method{deactivate}{ggheatmap}(x)
+active(what = NULL)
 }
 \arguments{
 \item{x}{A \link[=ggheat]{ggheatmap} object.}
@@ -22,9 +19,15 @@ deactivate(x)
 \code{ "bottom"}, and \code{"right"}.}
 }
 \value{
-A object with the same class of \code{x}, whose active context will be set
-or unset.
+\itemize{
+\item \code{activate}/\code{deactivate}: A object with the same class of \code{x}, whose active
+context will be \code{set} or \code{unset}.
+}
+
+\itemize{
+\item \code{active}: A \code{active} object which can be added into \link[=ggheat]{ggheatmap}.
+}
 }
 \description{
-Activate the context of subsequent manipulations
+Determine the context of subsequent manipulations
 }

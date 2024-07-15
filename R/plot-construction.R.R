@@ -7,6 +7,7 @@
 #' @return A modified `ggheatmap` object.
 #' @name ggheatmap-add
 #' @aliases +.ggheatmap
+#' @seealso ggheatmap_add
 NULL
 
 #' @rdname ggheatmap-add
@@ -36,11 +37,11 @@ ggheatmap_add <- function(object, plot, object_name) UseMethod("ggheatmap_add")
 #' @export
 ggheatmap_add.default <- function(object, plot, object_name) {
     # if no active context, we directly add it into the main heatmap
-    if (is.null(position <- active(plot))) {
+    if (is.null(position <- get_context(plot))) {
         plot <- heatmap_add(object, plot, object_name)
         # we check if annotation has been initialized
     } else if (is.null(annotations <- slot(plot, position)) ||
-        is.null(active_anno <- active(annotations))) {
+        is.null(active_anno <- get_context(annotations))) {
         cli::cli_abort(c(
             "Cannot add {object_name} to {position} annotation",
             i = "Did you forget to initialize it with {.fn gganno_{position}}?"
@@ -60,7 +61,7 @@ ggheatmap_add.NULL <- function(object, plot, object_name) plot
 ggheatmap_add.anno <- function(object, plot, object_name) {
     position <- slot(object, "position")
     if (is.null(position)) {
-        if (is.null(position <- active(plot))) {
+        if (is.null(position <- get_context(plot))) {
             cli::cli_abort(
                 "No active annotation",
                 i = "try to provide {.arg position} argument in {object_name}"
@@ -79,5 +80,14 @@ ggheatmap_add.anno <- function(object, plot, object_name) {
     slot(object, "data") <- data
 
     # initialize annotation ---------------------
-    anno_initialize(object, plot, object_name)
+    initialize_anno(object, plot, object_name)
+}
+
+#' @export
+ggheatmap_add.active <- function(object, plot, object_name) {
+    if (object == "heatmap") {
+        set_context(plot, NULL)
+    } else {
+        set_context(plot, object)
+    }
 }

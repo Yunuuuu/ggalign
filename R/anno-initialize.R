@@ -1,14 +1,14 @@
-anno_initialize <- function(object, plot, object_name) {
-    UseMethod("anno_initialize")
+initialize_anno <- function(object, plot, object_name) {
+    UseMethod("initialize_anno")
 }
 
 #' @export
-anno_initialize.default <- function(object, plot, object_name) {
+initialize_anno.default <- function(object, plot, object_name) {
     position <- slot(object, "position")
 
     # setting active position for the plot ---------------
-    active <- rep_len(slot(object, "active"), 2L)
-    if (.subset(active, 1L)) active(plot) <- position
+    set_context <- slot(object, "set_context")
+    if (.subset(set_context, 1L)) plot <- set_context(plot, position)
 
     # add annotation -------------------------------------
     annotations <- slot(plot, position) %||% list()
@@ -25,10 +25,10 @@ anno_initialize.default <- function(object, plot, object_name) {
         }
         names(new) <- name
     }
-    if (.subset(active, 2L)) {
+    if (.subset(set_context, 2L)) {
         anno_active <- length(annotations) + 1L
     } else {
-        anno_active <- active(annotations)
+        anno_active <- get_context(annotations)
     }
     slot(plot, position) <- structure(
         c(annotations, new),
@@ -39,7 +39,7 @@ anno_initialize.default <- function(object, plot, object_name) {
 }
 
 #' @export
-anno_initialize.htanno <- function(object, plot, object_name) {
+initialize_anno.htanno <- function(object, plot, object_name) {
     data <- slot(object, "data")
     position <- slot(object, "position")
     axis <- to_axis(position)
