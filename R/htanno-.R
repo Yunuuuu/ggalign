@@ -16,17 +16,17 @@ htanno <- function(data = NULL,
                    set_context = NULL, order = NULL, name = NULL,
                    check.param = TRUE,
                    htanno_class = HtannoProto) {
-    assert_s3_class(htanno, "HtannoProto")
+    assert_s3_class(htanno_class, "HtannoProto")
     assert_bool(check.param)
     # Warn about extra params
-    all <- htanno$parameters()
+    all <- htanno_class$parameters()
     if (check.param &&
         length(extra_param <- setdiff(names(params), all))) { # nolint
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
     }
     anno(
         "htanno",
-        data = data, order = order, size = size, htanno = htanno,
+        data = data, order = order, size = size, htanno = htanno_class,
         params = params[intersect(names(params), all)],
         # following attributes were used by `ggheatmap_add`
         name = name, position = position,

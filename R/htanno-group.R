@@ -2,7 +2,7 @@ htanno_group <- function(group, position = NULL,
                          set_context = NULL, name = NULL,
                          check.param = TRUE) {
     htanno(
-        HtannoGroup,
+        htanno_class = HtannoGroup,
         position = position,
         params = list(group = group),
         set_context = set_context %||% c(TRUE, FALSE),

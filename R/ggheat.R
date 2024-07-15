@@ -48,7 +48,7 @@ ggheat.NULL <- function(data, mapping = aes(), ...) {
 }
 
 #' @keywords internal
-methods::setClass("ggheat", list(active = "ANY"))
+methods::setClass("ggheat")
 
 # https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
 # Here we use S4 object to override the double dispatch of `+.gg` method
@@ -63,7 +63,7 @@ methods::setClass(
         row_index = "ANY",
         column_panels = "ANY",
         column_index = "ANY",
-        heatmap = "ANY",
+        heatmap = "ANY", active = "ANY",
         facetted_pos_scales = "ANY",
         top = "ANY", left = "ANY",
         bottom = "ANY", right = "ANY"

@@ -9,7 +9,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                           set_context = NULL, order = NULL, name = NULL,
                           check.param = TRUE) {
     htanno(
-        HtannoDendro,
+        htanno_class = HtannoDendro,
         position = position,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
