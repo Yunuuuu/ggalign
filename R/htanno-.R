@@ -76,10 +76,9 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
             intersect(names(params), htanno_method_params(self$draw, 7L))
         ]
     },
-    add_gg = function(gg, object_name) {
-        cli::cli_abort(
-            "{.fn {snake_class(self)}} cannot add {.cls ggplot2} elements"
-        )
+
+    add = function(object, object_name) {
+        cli::cli_abort("cannot add {object_name} to {.fn {snake_class(self)}}")
     },
 
     # Following fields should be defined for the new Htanno object.

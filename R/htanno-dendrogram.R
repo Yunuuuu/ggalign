@@ -23,17 +23,17 @@ htanno_dendro <- function(mapping = aes(), ...,
     )
 }
 
-htanno_dendro_add_gg <- function(object, plot, object_name) {
-    UseMethod("htanno_dendro_add_gg")
+htanno_dendro_add <- function(object, plot, object_name) {
+    UseMethod("htanno_dendro_add")
 }
 
 #' @export
-htanno_dendro_add_gg.default <- function(object, plot, object_name) {
+htanno_dendro_add.gg <- function(object, plot, object_name) {
     ggplot2::ggplot_add(object, plot, object_name)
 }
 
 #' @export
-htanno_dendro_add_gg.Coord <- function(object, plot, object_name) {
+htanno_dendro_add.Coord <- function(object, plot, object_name) {
     if (!inherits(object, "CoordCartesian")) {
         cli::cli_abort("Only Cartesian coordinate is supported for dendrogram")
     }
@@ -52,9 +52,9 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         )
         params
     },
-    add_gg = function(self, gg, object_name) {
+    add = function(self, object, object_name) {
         plot <- .subset2(self$draw_params, "plot")
-        self$draw_params$plot <- htanno_dendro_add_gg(gg, plot, object_name)
+        self$draw_params$plot <- htanno_dendro_add(object, plot, object_name)
         self
     },
     compute = function(data, position, distance, method, use_missing) {
