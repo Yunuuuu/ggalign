@@ -100,8 +100,8 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         ranges <- split(.subset2(leaves, "x"), .subset2(leaves, "panel"))
         ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
         edge <- tree_edge_double(edge, ranges)
-        edge <- rename(edge, c(ggpanel = ".panels"))
-        node <- rename(node, c(ggpanel = ".panels"))
+        edge <- rename(edge, c(ggpanel = ".panel"))
+        node <- rename(node, c(ggpanel = ".panel"))
         plot$data <- node
 
         edge_mapping <- aes(

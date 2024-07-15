@@ -25,7 +25,7 @@ anno_build_data <- function(data, index, panels, position) {
         data <- as_tibble0(data, rownames = ".row_names")
         data$.row_index <- seq_len(nrow(data))
     }
-    coords <- tibble0(.panels = panels[index], .index = index)
+    coords <- tibble0(.panel = panels[index], .index = index)
     coords[[switch_position(position, ".y", ".x")]] <- seq_along(index)
     merge(data, coords,
         by.x = ".row_index", by.y = ".index",

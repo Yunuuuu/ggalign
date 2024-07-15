@@ -96,15 +96,15 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.row_panels),
-            cols = ggplot2::vars(.data$.column_panels),
+            rows = ggplot2::vars(.data$.row_panel),
+            cols = ggplot2::vars(.data$.column_panel),
             scales = "free", space = "free"
         )
         p <- p + ggheat_melt_facet(p$facet, default_facet) +
             ggh4x::facetted_pos_scales(x = user_xscales, y = user_yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.row_panels),
+            rows = ggplot2::vars(.data$.row_panel),
             scales = "free_y", space = "free_y"
         )
         p <- p + ggheat_melt_facet(p$facet, default_facet) +
@@ -112,7 +112,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
             ggh4x::facetted_pos_scales(x = NULL, y = user_yscales)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            cols = ggplot2::vars(.data$.column_panels),
+            cols = ggplot2::vars(.data$.column_panel),
             scales = "free_x", space = "free_x"
         )
         p <- p + ggheat_melt_facet(p$facet, default_facet) +
@@ -132,13 +132,13 @@ ggheat_build.ggheatmap <- function(x, ...) {
             position,
             if (do_row_facet) {
                 ggplot2::facet_grid(
-                    rows = ggplot2::vars(.data$.panels),
+                    rows = ggplot2::vars(.data$.panel),
                     scales = "free_y", space = "free_y"
                 )
             },
             if (do_column_facet) {
                 ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$.panels),
+                    cols = ggplot2::vars(.data$.panel),
                     scales = "free_x", space = "free_x"
                 )
             }
@@ -338,12 +338,12 @@ ggheat_default_scale <- function(scale_name, panels, index, labels) {
 ggheat_build_data <- function(matrix, row_panels, row_index,
                               column_panels, column_index) {
     row_coords <- tibble0(
-        .row_panels = row_panels[row_index],
+        .row_panel = row_panels[row_index],
         .row_index = row_index,
         .y = seq_along(.data$.row_index)
     )
     column_coords <- tibble0(
-        .column_panels = column_panels[column_index],
+        .column_panel = column_panels[column_index],
         .column_index = column_index,
         .x = seq_along(.data$.column_index)
     )
