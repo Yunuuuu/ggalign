@@ -50,7 +50,10 @@ anno_setup_data.character <- anno_setup_data.numeric
 anno_setup_data.function <- function(data, position, heatmap_matrix,
                                      object_name) {
     anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
-    data <- data(anno_matrix)
+    fn <- data
+    # fix R CMD check note: Found the following calls to data() loading into the
+    # global environment
+    data <- fn(anno_matrix)
     anno_setup_data(data, position, heatmap_matrix, object_name)
 }
 

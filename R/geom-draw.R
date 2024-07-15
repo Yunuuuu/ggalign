@@ -12,6 +12,7 @@
 #'   data in the plot scales.
 #' @param ... Other arguments passed to `draw`.
 #' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
 #' @details If you want to combine the functionality of multiple geoms it can
 #'   usually be achieved by preparing the data for each of the geoms inside the
 #'   `draw_*()` call and send it off to the different geoms, collecting the

@@ -95,12 +95,14 @@ methods::setValidity("ggheatmap", function(object) {
     TRUE
 })
 
+#' @param object A `ggheatmap` object.
 #' @importFrom methods show
 #' @export
+#' @rdname ggheat
 methods::setMethod("show", "ggheatmap", function(object) print(object))
 
 #' Reports whether x is a ggheatmap object
 #'
 #' @param x An object to test
 #' @export
-is.ggheatmap <- function(x) inherits(x, "ggheatmap")
+is.ggheatmap <- function(x) methods::is(x, "ggheatmap")

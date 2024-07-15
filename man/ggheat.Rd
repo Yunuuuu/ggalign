@@ -2,9 +2,12 @@
 % Please edit documentation in R/ggheat.R
 \name{ggheat}
 \alias{ggheat}
+\alias{show,ggheatmap-method}
 \title{Heatmap with ggplot2}
 \usage{
 ggheat(data, mapping = aes(), ...)
+
+\S4method{show}{ggheatmap}(object)
 }
 \arguments{
 \item{data}{A matrix, if it is a simple vector, it will be converted to a
@@ -13,6 +16,8 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot.}
 
 \item{...}{Additional arguments.}
+
+\item{object}{A \code{ggheatmap} object.}
 }
 \description{
 Heatmap with ggplot2
