@@ -15,11 +15,11 @@ htanno_dendro <- function(mapping = aes(), ...,
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
             plot = ggplot2::ggplot(mapping = mapping),
-            params = rlang::list2(...),
+            segment_params = rlang::list2(...),
             center = center, type = type, root = root
         ),
         set_context = set_context, name = name, order = NULL,
-        size = size, check.param = check.param
+        size = size, check.param = check.param, data = data
     )
 }
 
@@ -30,14 +30,6 @@ htanno_dendro_add <- function(object, plot, object_name) {
 #' @export
 htanno_dendro_add.gg <- function(object, plot, object_name) {
     ggplot2::ggplot_add(object, plot, object_name)
-}
-
-#' @export
-htanno_dendro_add.Coord <- function(object, plot, object_name) {
-    if (!inherits(object, "CoordCartesian")) {
-        cli::cli_abort("Only Cartesian coordinate is supported for dendrogram")
-    }
-    NextMethod()
 }
 
 #' @importFrom ggplot2 aes
@@ -60,7 +52,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     compute = function(data, position, distance, method, use_missing) {
         hclust2(data, distance, method, use_missing)
     },
-    make_panels = function(self, data, statistics, panels, position, k, h) {
+    layout = function(self, data, statistics, panels, index, position, k, h) {
         if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
@@ -76,16 +68,14 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             height <- NULL
         }
         self$draw_params$height <- height
+        index <- statistics$order
         # reorder panel factor levels to following the dendrogram order
-        factor(panels, unique(panels[statistics$order]))
+        panels <- factor(panels, unique(panels[index]))
+        list(panels, index)
     },
-    reorder = function(data, statistics, panels, position) {
-        statistics$order
-    },
-    draw = function(self, data, statistics, index,
-                    panels, scales, facet, position,
-                    plot, height, plot_cut_height, center, type,
-                    root, params) {
+    draw = function(self, data, statistics, panels, index,
+                    position, plot, height, plot_cut_height, center, type,
+                    root, segment_params) {
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
@@ -94,6 +84,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 ),
                 i = "will use {.filed rectangle} dendrogram instead"
             ))
+            type <- "rectangle"
         }
         data <- dendrogram_data(
             statistics,
@@ -120,7 +111,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot$layers <- append(plot$layers,
             rlang::inject(ggplot2::geom_segment(
                 mapping = edge_mapping,
-                !!!params,
+                !!!segment_params,
                 stat = "identity",
                 data = edge
             )),
@@ -131,11 +122,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             plot <- plot +
                 ggplot2::geom_hline(yintercept = height, linetype = "dashed")
         }
-        if (isTRUE(plot$coordinates$default)) {
-            plot$coordinates <- ggplot2::coord_cartesian(clip = "off")
-        } else {
-            plot$coordinates$clip <- "off"
-        }
+        plot$coordinates$clip <- "off"
         plot + ggplot2::labs(y = "height")
     }
 )

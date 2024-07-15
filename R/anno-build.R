@@ -41,7 +41,7 @@ anno_build.htanno <- function(x, index, panels, scales, facet, position) {
     plot <- rlang::inject(htanno$draw(
         slot(x, "data"),
         slot(x, "statistics"),
-        index, panels, scales, facet, position,
+        panels, index, position,
         !!!htanno$draw_params
     ))
     if (is.ggplot(plot)) {

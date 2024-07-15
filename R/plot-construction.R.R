@@ -79,8 +79,8 @@ ggheatmap_add.anno <- function(object, plot, object_name) {
     )
     slot(object, "data") <- data
 
-    # initialize annotation ---------------------
-    initialize_anno(object, plot, object_name)
+    # add annotation -----------------------------
+    add_anno(object, plot, object_name)
 }
 
 #' @export

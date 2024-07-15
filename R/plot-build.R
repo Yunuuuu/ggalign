@@ -26,10 +26,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     column_panels <- slot(x, "column_panels") %||%
         factor(rep_len(1L, length(column_index)))
 
-    # reset index based on the panels
-    row_index <- ggheat_index(row_panels, row_index)
-    column_index <- ggheat_index(column_panels, column_index)
-
     # read the plot ---------------------------------------
     p <- slot(x, "heatmap")
 
@@ -356,8 +352,4 @@ ggheat_build_data <- function(matrix, row_panels, row_index,
     )
     ans <- melt_matrix(matrix)
     merge(ans, coords, by = intersect(names(ans), names(coords)), all = TRUE)
-}
-
-ggheat_index <- function(panels, index) {
-    unlist(split(index, panels[index]), recursive = FALSE, use.names = FALSE)
 }

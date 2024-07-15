@@ -13,7 +13,7 @@
 #' set the active context to current annotation for the annotation list in
 #' [ggheatmap][ggheat] when added.
 #' @param order Annotation order, must be an single integer.
-#' @return A new `Class` object.
+#' @return A new `Class` object, ``.
 #' @export
 anno <- function(Class, ..., data = NULL,
                  position = NULL, size = NULL,
@@ -54,6 +54,7 @@ methods::setClass(
     )
 )
 
+#' @param object A `anno` object.
 #' @export
 #' @rdname anno
 methods::setMethod("show", "anno", function(object) {

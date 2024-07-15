@@ -22,11 +22,11 @@ Imports:
     tidyr
 Collate: 
     'activate.R'
+    'add-anno.R'
     'ggheat.R'
     'anno-.R'
     'anno-add.R'
     'anno-build.R'
-    'anno-initialize.R'
     'anno-setup_data.R'
     'dendrogram.R'
     'geom-draw.R'

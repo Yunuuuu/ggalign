@@ -24,13 +24,13 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
         }
         params
     },
-    make_panels = function(data, statistics, slice, position, group) {
-        if (!is.null(slice)) {
+    layout = function(self, data, statistics, panels, index, position, group) {
+        if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_axis(position)} already exists"
             ))
         }
-        group
+        list(group, index)
     }
 )

@@ -40,9 +40,11 @@ set the active context to current annotation for the annotation list in
 \item{order}{Annotation order, must be an single integer.}
 
 \item{name}{A string of the annotation name.}
+
+\item{object}{A \code{anno} object.}
 }
 \value{
-A new \code{Class} object.
+A new \code{Class} object, ``.
 }
 \description{
 Create a heatmap annotation object

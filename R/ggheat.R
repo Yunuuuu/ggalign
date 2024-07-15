@@ -14,7 +14,7 @@ ggheat.matrix <- function(data, mapping = aes(),
     methods::new("ggheatmap",
         matrix = data,
         params = rlang::list2(
-            width = set_size(width), 
+            width = set_size(width),
             height = set_size(height)
         ),
         heatmap = ggplot2::ggplot(mapping = mapping),
