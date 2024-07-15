@@ -14,6 +14,8 @@ htanno(
   params = list(),
   position = NULL,
   size = NULL,
+  labels = NULL,
+  labels_nudge = NULL,
   set_context = NULL,
   order = NULL,
   name = NULL,
@@ -32,6 +34,25 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 of the \link[=ggheat]{ggheatmap} will be used.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
+
+\item{labels}{Labels for axis parallelly with heatmap, the default will use
+the rownames of the \code{data}. One of:
+\itemize{
+\item \code{NULL} for no labels
+\item \code{waiver()} for the default labels
+\item A character vector giving labels (must be same length as the heatmap
+axis)
+\item An expression vector (must be the same length as heatmap axis). See
+\code{?plotmath} for details.
+\item A function that takes the default labels as the input and returns labels
+as output. Also accepts rlang \link[rlang:as_function]{lambda} function
+notation.
+}}
+
+\item{labels_nudge}{A single numeric or a numeric value of length
+\code{nrow(data)}, to nudge each text label away from the center. If \code{waiver()},
+will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels will
+be removed too.}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to

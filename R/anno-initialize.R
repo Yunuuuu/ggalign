@@ -1,48 +1,53 @@
-add_anno <- function(object, plot, object_name) {
-    UseMethod("add_anno")
+anno_initialize <- function(object, plot, object_name) {
+    UseMethod("anno_initialize")
 }
 
 #' @export
-add_anno.default <- function(object, plot, object_name) {
+anno_initialize.anno <- function(object, plot, object_name) {
     position <- slot(object, "position")
+    axis <- to_matrix_axis(position)
 
-    # setting active position for the plot ---------------
-    set_context <- slot(object, "set_context")
-    if (.subset(set_context, 1L)) plot <- set_context(plot, position)
-
-    # add annotation -------------------------------------
-    annotations <- slot(plot, position) %||% list()
-    new <- list(object)
-
-    # check annotation name is unique
-    if (!is.null(name <- slot(object, "name"))) {
-        if (any(rlang::names2(annotations) == name)) {
-            cli::cli_warn(paste(
-                "{object_name}: {name} annotation is already present",
-                "in the {position} annotation of the heatmap"
-            ))
-            annotations[[name]] <- NULL
-        }
-        names(new) <- name
-    }
-    if (.subset(set_context, 2L)) {
-        anno_active <- length(annotations) + 1L
-    } else {
-        anno_active <- get_context(annotations)
-    }
-    slot(plot, position) <- structure(
-        c(annotations, new),
-        active = anno_active,
-        class = c("ggAnnotationList", "ggheat")
+    # prepare data -------------------------------
+    data <- anno_setup_data(
+        slot(object, "data"),
+        position = position,
+        heatmap_matrix = slot(plot, "matrix"),
+        object_name = object_name,
+        call = slot(object, "call")
     )
-    plot
+    slot(object, "data") <- data
+
+    # setup labels and labels nudge --------------
+    labels <- set_labels(
+        slot(object, "labels"),
+        axis,
+        rownames(data),
+        arg = "labels",
+        call = slot(object, "call")
+    )
+    slot(object, "labels") <- labels
+
+    # if waiver, will inherit from the heatmap
+    labels_nudge <- set_nudge(
+        slot(object, "labels_nudge"),
+        nrow(data), axis
+    ) %|w|% .subset2(
+        slot(plot, "params"),
+        paste0(to_coord_axis(position), "labels_nudge")
+    )
+    slot(object, "labels_nudge") <- labels_nudge
+    list(plot, object)
 }
 
 #' @export
-add_anno.htanno <- function(object, plot, object_name) {
+anno_initialize.htanno <- function(object, plot, object_name) {
+    ans <- NextMethod()
+    plot <- .subset2(ans, 1L)
+    object <- .subset2(ans, 2L)
+
     data <- slot(object, "data")
     position <- slot(object, "position")
-    axis <- to_axis(position)
+    axis <- to_matrix_axis(position)
     old_panels <- slot(plot, paste0(axis, "_panels"))
     old_index <- slot(plot, paste0(axis, "_index"))
 
@@ -72,7 +77,7 @@ add_anno.htanno <- function(object, plot, object_name) {
 
     # add annotation -------------------------------------
     slot(object, "htanno") <- htanno
-    NextMethod()
+    list(plot, object)
 }
 
 htanno_layout <- function(htanno, old_panels, old_index,

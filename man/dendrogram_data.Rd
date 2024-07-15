@@ -38,6 +38,25 @@ branches. If a \link{unit} object is provided, it'll convert into \code{native} 
 \value{
 A list of 2 data.frame. One for node coordinates, another for edge
 coordinates.
+\code{node} and tree segments \code{edge} contains following columns:
+\itemize{
+\item \code{index}: the original index in the tree for the current node
+\item \code{label}: node label text
+\item \code{x} and \code{y}: x-axis and y-axis coordinates for current node or the start
+node of the current edge.
+\item \code{xend} and \code{yend}: the x-axis and y-axis coordinates of the terminal node
+for current edge.
+\item \code{branch}: which branch current node is. You can use this column to color
+different groups.
+\item \code{panel}: which panel current node is, if we split the plot into panels
+using \link[ggplot2:facet_grid]{facet_grid}, this column will show
+which panel current node or edge is from. Note: some nodes
+may fall outside panels, so there are possible \code{NA} values in
+this column. we also provide \code{ggpanel} column, which always
+regard the right branch for the out-sided \code{node}.
+\item \code{ggpanel}: See \code{panel}.
+\item \code{leaf}: A logical value indicates whether current node is a leaf.
+}
 }
 \description{
 Dengrogram x and y coordinates

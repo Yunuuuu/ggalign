@@ -5,6 +5,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                           k = NULL, h = NULL,
                           plot_cut_height = NULL, root = NULL,
                           center = FALSE, type = "rectangle", data = NULL,
+                          labels = NULL, labels_nudge = NULL,
                           position = NULL, size = NULL,
                           set_context = NULL, order = NULL, name = NULL,
                           check.param = TRUE) {
@@ -18,6 +19,7 @@ htanno_dendro <- function(mapping = aes(), ...,
             segment_params = rlang::list2(...),
             center = center, type = type, root = root
         ),
+        labels = labels, labels_nudge = labels_nudge,
         set_context = set_context, name = name, order = NULL,
         size = size, check.param = check.param, data = data
     )
@@ -56,7 +58,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
-                i = "group of heatmap {to_axis(position)} already exists"
+                i = "group of heatmap {to_matrix_axis(position)} already exists"
             ))
         }
         if (!is.null(k)) {

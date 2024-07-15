@@ -43,7 +43,7 @@ ggheatmap_add.default <- function(object, plot, object_name) {
     } else if (is.null(annotations <- slot(plot, position)) ||
         is.null(active_anno <- get_context(annotations))) {
         cli::cli_abort(c(
-            "Cannot add {object_name} to {position} annotation",
+            "Cannot add {.code {object_name}} to {position} annotation",
             i = "Did you forget to initialize it with {.fn gganno_{position}}?"
         ))
     } else {
@@ -62,25 +62,35 @@ ggheatmap_add.anno <- function(object, plot, object_name) {
     position <- slot(object, "position")
     if (is.null(position)) {
         if (is.null(position <- get_context(plot))) {
-            cli::cli_abort(
+            cli::cli_abort(c(
                 "No active annotation",
-                i = "try to provide {.arg position} argument in {object_name}"
-            )
+                i = paste(
+                    "try to provide {.arg position} argument in",
+                    "{.code {object_name}}"
+                )
+            ), call = slot(object, "call"))
         }
         slot(object, "position") <- position
     }
 
-    # prepare data -------------------------------
-    data <- anno_setup_data(
-        slot(object, "data"),
-        position = position,
-        heatmap_matrix = slot(plot, "matrix"),
-        object_name = object_name
-    )
-    slot(object, "data") <- data
+    # setting active position for the plot ---------------
+    set_context <- slot(object, "set_context")
+    if (.subset(set_context, 1L)) plot <- set_context(plot, position)
+
+    # initialize annotation -----------------------------
+    # this step the annotation will act with the heatmap
+    # group heatmap into panels or reorder heatmap rows/columns
+    ans <- anno_initialize(object, plot, object_name)
+    plot <- .subset2(ans, 1L)
+    object <- .subset2(ans, 2L)
 
     # add annotation -----------------------------
-    add_anno(object, plot, object_name)
+    annotations <- slot(plot, position)
+    slot(plot, position) <- annotations_add(
+        object, annotations, .subset(set_context, 2L),
+        object_name
+    )
+    plot
 }
 
 #' @export

@@ -51,7 +51,7 @@ set_context.ggheatmap <- function(x, context) {
 }
 
 #' @export
-set_context.ggAnnotationList <- function(x, context) {
+set_context.annotations <- function(x, context) {
     attr(x, "active") <- context
     x
 }
@@ -63,4 +63,4 @@ get_context <- function(x) UseMethod("get_context")
 get_context.ggheatmap <- function(x) slot(x, "active")
 
 #' @export
-get_context.ggAnnotationList <- function(x) attr(x, "active")
+get_context.annotations <- function(x) attr(x, "active")

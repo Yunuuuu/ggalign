@@ -1,21 +1,43 @@
-anno_build <- function(x, index, panels, scales, facet, position) {
+anno_build <- function(x, panels, index, scales, facet, position) {
     UseMethod("anno_build")
 }
 
 #' @export
-anno_build.gganno <- function(x, index, panels, scales, facet, position) {
-    data <- anno_build_data(slot(x, "data"), index, panels, position)
+anno_build.gganno <- function(x, panels, index, scales, facet, position) {
+    data <- anno_build_data(slot(x, "data"), panels, index, position)
     plot <- slot(x, "plot")
     plot$data <- data
     plot <- anno_add_default_mapping(plot, position)
     anno_set_scales_and_facet(
         plot,
         slot(x, "facetted_pos_scales"),
-        position, scales, facet
+        position, scales, facet,
+        type = "gganno"
     )
 }
 
-anno_build_data <- function(data, index, panels, position) {
+#' @importFrom ggplot2 is.ggplot
+#' @export
+anno_build.htanno <- function(x, panels, index, scales, facet, position) {
+    htanno <- slot(x, "htanno")
+    # let `htanno` to determine how to draw
+    plot <- rlang::inject(htanno$draw(
+        slot(x, "data"),
+        slot(x, "statistics"),
+        panels, index, position,
+        !!!htanno$draw_params
+    ))
+    if (is.null(plot)) return(plot) # styler: off
+    plot <- anno_add_default_mapping(plot, position)
+    anno_set_scales_and_facet(
+        plot,
+        slot(x, "facetted_pos_scales"),
+        position, scales, facet,
+        type = "htanno"
+    )
+}
+
+anno_build_data <- function(data, panels, index, position) {
     # annotation accepts two class of data
     # matrix: will be reshaped to the long-format data.frame
     # data.frame: won't do any thing special
@@ -26,33 +48,11 @@ anno_build_data <- function(data, index, panels, position) {
         data$.row_index <- seq_len(nrow(data))
     }
     coords <- tibble0(.panel = panels[index], .index = index)
-    coords[[switch_position(position, ".y", ".x")]] <- seq_along(index)
+    coords[[paste0(".", to_coord_axis(position))]] <- seq_along(index)
     merge(data, coords,
         by.x = ".row_index", by.y = ".index",
         sort = FALSE, all = TRUE
     )
-}
-
-#' @importFrom ggplot2 is.ggplot
-#' @export
-anno_build.htanno <- function(x, index, panels, scales, facet, position) {
-    htanno <- slot(x, "htanno")
-    # let `htanno` to determine how to draw
-    plot <- rlang::inject(htanno$draw(
-        slot(x, "data"),
-        slot(x, "statistics"),
-        panels, index, position,
-        !!!htanno$draw_params
-    ))
-    if (is.ggplot(plot)) {
-        plot <- anno_add_default_mapping(plot, position)
-        plot <- anno_set_scales_and_facet(
-            plot,
-            slot(x, "facetted_pos_scales"),
-            position, scales, facet
-        )
-    }
-    plot
 }
 
 #' @importFrom ggplot2 aes
@@ -71,24 +71,25 @@ anno_add_default_mapping <- function(plot, position) {
 }
 
 anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
-                                      position, scales, facet) {
+                                      position, default_scales, default_facet,
+                                      type) {
+    axis <- to_coord_axis(position)
     user_scales <- ggheat_extract_scales(
-        switch_position(position, "y", "x"),
-        plot = plot, n = length(scales),
+        axis,
+        plot = plot, n = length(default_scales),
         facet_scales = facetted_pos_scales
     )
-    for (i in seq_along(scales)) {
+    for (i in seq_along(default_scales)) {
         scale <- ggheat_melt_scale(
+            axis,
             .subset2(user_scales, i),
-            .subset2(scales, i)
+            .subset2(default_scales, i),
+            type = type
         )
-        # we always remove labels and breaks of annotation.
-        scale$labels <- NULL
-        scale$breaks <- NULL
         user_scales[[i]] <- scale
     }
-    user_facet <- ggheat_melt_facet(.subset2(plot, "facet"), facet)
-    if (is.null(facet)) { # no panels
+    user_facet <- ggheat_melt_facet(.subset2(plot, "facet"), default_facet)
+    if (is.null(default_facet)) { # no panels
         plot <- plot + user_scales + user_facet
     } else {
         plot <- plot + user_facet +
@@ -99,23 +100,4 @@ anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
             )
     }
     plot
-}
-
-anno_combine_scales <- function(scales) {
-    ans <- .subset2(scales, 1L)$clone()
-    components <- lapply(scales, function(scale) {
-        list(
-            limits = scale$limits,
-            breaks = scale$breaks,
-            labels = scale$labels
-        )
-    })
-    components <- transpose(components)
-    ans$limits <- range(unlist(.subset2(components, "limits"), FALSE, FALSE))
-    # we always remove labels and breaks of annotation.
-    ans$breaks <- NULL
-    ans$labels <- NULL
-    # ans$breaks <- unlist(.subset2(components, "breaks"), FALSE, FALSE)
-    # ans$labels <- unlist(.subset2(components, "labels"), FALSE, FALSE)
-    ans
 }

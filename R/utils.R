@@ -2,7 +2,9 @@
 
 `%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
 
-pkg_nm <- function() utils::packageName(topenv(environment()))
+pkg_nm <- function(call = NULL) {
+    utils::packageName(topenv(call %||% environment()))
+}
 
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) {
@@ -11,6 +13,8 @@ allow_lambda <- function(x) {
         x
     }
 }
+
+is.waiver <- function(x) inherits(x, "waiver")
 
 switch_position <- function(position, row, column) {
     switch(position,
@@ -21,9 +25,8 @@ switch_position <- function(position, row, column) {
     )
 }
 
-is.waiver <- function(x) inherits(x, "waiver")
-
-to_axis <- function(position) switch_position(position, "row", "column")
+to_coord_axis <- function(position) switch_position(position, "y", "x")
+to_matrix_axis <- function(position) switch_position(position, "row", "column")
 
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)

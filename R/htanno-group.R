@@ -17,8 +17,8 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
             cli::cli_abort(paste(
                 "{.arg group} of {.fn {snake_class(self)}} must be ",
                 sprintf(
-                    "the same length of heatmap {to_axis(position)} axis (%d)",
-                    nrow(data)
+                    "the same length of heatmap %s axis (%d)",
+                    to_matrix_axis(position), nrow(data)
                 )
             ))
         }
@@ -28,7 +28,7 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
         if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
-                i = "group of heatmap {to_axis(position)} already exists"
+                i = "group of heatmap {to_matrix_axis(position)} already exists"
             ))
         }
         list(group, index)

@@ -13,6 +13,7 @@
 htanno <- function(data = NULL,
                    params = list(),
                    position = NULL, size = NULL,
+                   labels = NULL, labels_nudge = NULL,
                    set_context = NULL, order = NULL, name = NULL,
                    check.param = TRUE,
                    htanno_class = HtannoProto) {
@@ -28,9 +29,9 @@ htanno <- function(data = NULL,
         "htanno",
         data = data, order = order, size = size, htanno = htanno_class,
         params = params[intersect(names(params), all)],
-        # following attributes were used by `ggheatmap_add`
         name = name, position = position,
-        set_context = set_context
+        set_context = set_context,
+        labels = labels, labels_nudge = labels_nudge
     )
 }
 

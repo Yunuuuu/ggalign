@@ -59,10 +59,14 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # 4. The captured expression in aes().
     # following scales are templates used by both heatmap and annotation
     default_xscales <- ggheat_default_scale(
-        "x", column_panels, column_index, colnames(mat)
+        "x", column_panels, column_index,
+        .subset2(params, "xlabels"),
+        nudge = .subset2(params, "xlabels_nudge")
     )
     default_yscales <- ggheat_default_scale(
-        "y", row_panels, row_index, rownames(mat)
+        "y", row_panels, row_index,
+        .subset2(params, "ylabels"),
+        nudge = .subset2(params, "ylabels_nudge")
     )
 
     # we extract user provided scales
@@ -77,8 +81,10 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # here we set default value for user scales
     for (i in seq_along(default_xscales)) {
         user_xscales[[i]] <- ggheat_melt_scale(
+            scale_name = "x",
             .subset2(user_xscales, i),
-            .subset2(default_xscales, i)
+            .subset2(default_xscales, i),
+            "ggheat"
         )
         # we copy the expand from user input
         #   into the default for usage of annotation
@@ -87,9 +93,13 @@ ggheat_build.ggheatmap <- function(x, ...) {
 
     for (i in seq_along(default_yscales)) {
         user_yscales[[i]] <- ggheat_melt_scale(
+            scale_name = "y",
             .subset2(user_yscales, i),
-            .subset2(default_yscales, i)
+            .subset2(default_yscales, i),
+            "ggheat"
         )
+        # we copy the expand from user input
+        #   into the default for usage of annotation
         default_yscales[[i]]$expand <- .subset2(user_yscales, i)$expand
     }
 
@@ -123,10 +133,14 @@ ggheat_build.ggheatmap <- function(x, ...) {
             ggheat_melt_facet(p$facet, NULL)
     }
 
-    # prepare annotations ---------------------------------
-    annotations <- lapply(GGHEAT_ELEMENTS, function(position) {
+    # plot annotations ---------------------------------
+    annotations_list <- lapply(GGHEAT_ELEMENTS, function(position) {
         annotations <- slot(x, position)
-        if (length(annotations) == 0L) return(list(NULL, NULL)) # styler: off
+        if (length(annotations) == 0L) {
+            return(list(NULL, NULL))
+        }
+        panels <- switch_position(position, row_panels, column_panels)
+        index <- switch_position(position, row_index, column_index)
         # default facet for annotation
         anno_facet <- switch_position(
             position,
@@ -143,37 +157,24 @@ ggheat_build.ggheatmap <- function(x, ...) {
                 )
             }
         )
-        plots <- lapply(
-            annotations,
-            anno_build,
-            index = switch_position(position, row_index, column_index),
-            panels = switch_position(position, row_panels, column_panels),
-            position = position,
-            scales = switch_position(
-                position,
-                default_yscales,
-                default_xscales
-            ),
-            facet = anno_facet
+        anno_scales <- switch_position(
+            position,
+            default_yscales,
+            default_xscales
         )
-
-        # we reorder annotation based on the `order` slot
-        index <- order(vapply(annotations, slot, integer(1L), name = "order"))
-        sizes <- lapply(annotations, slot, name = "size")
-        sizes <- do.call(unit.c, sizes[index])
-        plots <- .subset(plots, index)
-
-        # combine all annotations
-        keep <- lengths(plots) > 0L
-        plots <- .subset(plots, keep)
-        if (length(plots) == 0L) return(list(NULL, NULL)) # styler: off
-        sizes <- sizes[keep]
-        list(plots, sizes)
+        annotations_build(
+            annotations = annotations,
+            panels = panels,
+            index = index,
+            scales = anno_scales,
+            facet = anno_facet,
+            position = position
+        )
     })
-    names(annotations) <- GGHEAT_ELEMENTS
-    annotations <- transpose(annotations)
-    annotation_sizes <- .subset2(annotations, 2L) # annotation size
-    annotations <- .subset2(annotations, 1L) # the annotation plot itself
+    names(annotations_list) <- GGHEAT_ELEMENTS
+    annotations_list <- transpose(annotations_list)
+    annotation_sizes <- .subset2(annotations_list, 2L) # annotation size
+    annotations <- .subset2(annotations_list, 1L) # the annotation plot itself
 
     heatmap <- p + ggplot2::theme(
         axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
@@ -186,12 +187,16 @@ ggheat_build.ggheatmap <- function(x, ...) {
             heatmap_height = .subset2(params, "height")
         )
     )
-    ggheatmap_patchwork(ans, sizes)
+    ggheatmap_patchwork(ans, sizes,
+        guides = .subset2(params, "guides"),
+        axes = .subset2(params, "axes"),
+        axis_titles = .subset2(params, "axis_titles")
+    )
 }
 
 #' @importFrom patchwork area
 #' @importFrom grid unit.c
-ggheatmap_patchwork <- function(plots, sizes) {
+ggheatmap_patchwork <- function(plots, sizes, guides, axes, axis_titles) {
     n_top <- length(.subset2(plots, "top"))
     n_left <- length(.subset2(plots, "left"))
     n_bottom <- length(.subset2(plots, "bottom"))
@@ -224,13 +229,16 @@ ggheatmap_patchwork <- function(plots, sizes) {
         sizes <- sizes[lengths(sizes) > 0L]
         do.call(unit.c, sizes)
     })
-    patchwork::wrap_plots(
-        plots,
-        design = layout,
-        heights = .subset2(sizes, "heights"),
-        widths = .subset2(sizes, "widths"),
-        guides = "collect"
-    )
+
+    Reduce(`+`, plots, init = patchwork:::plot_filler()) +
+        patchwork::plot_layout(
+            design = layout,
+            heights = .subset2(sizes, "heights"),
+            widths = .subset2(sizes, "widths"),
+            guides = guides,
+            axes = axes,
+            axis_titles = axis_titles
+        )
 }
 
 trim_area <- function(area) {
@@ -252,9 +260,7 @@ ggheat_extract_scales <- function(scale_name, plot, n, facet_scales) {
             if (is_empty(scales)) {
                 scales <- vector("list", n)
             } else if (length(scales) < n) {
-                cli::cli_warn(
-                    "Not enough facetted {.field {scale_name}} scales"
-                )
+                cli::cli_warn("No enough facetted {.field {scale_name}} scales")
             } else {
                 scales <- .subset(scales, n)
             }
@@ -269,7 +275,7 @@ ggheat_extract_scales <- function(scale_name, plot, n, facet_scales) {
             ))
             scales <- list(NULL)
         }
-        # filling scales with normal scale
+        # filling scales with user normal scale
         lapply(scales, function(scale) scale %||% single_scale)
     } else {
         rep_len(list(single_scale), n)
@@ -300,39 +306,89 @@ ggheat_melt_facet <- function(user_facet, default_facet) {
     user_facet
 }
 
-ggheat_melt_scale <- function(user_scale, default_scale) {
+ggheat_melt_scale <- function(scale_name, user_scale, default_scale, type) {
     if (is.null(user_scale)) {
-        default_scale$clone()
+        ans <- default_scale$clone()
     } else {
-        # always reset the limits, breaks, and labels
-        #  it's not possible for user to know the limits and breaks
+        ans <- user_scale$clone()
+        # always reset the limits
+        # should we merge user provided limits for heatmap only?
+        # and all annotation will use this limits too.
+        ans$limits <- default_scale$limits
+
+        #  it's not possible for user to know the `breaks` or `labels`
         #  since a heatmap often reorder columns or rows.
-        user_scale$limits <- default_scale$limits
-        user_scale$breaks <- default_scale$breaks
-        user_scale$labels <- default_scale$labels
-        if (is.waiver(user_scale$expand)) {
-            user_scale$expand <- default_scale$expand
+        #  so we always set the breaks or labels into the default if user not
+        #  remove it.
+        if (!is.null(ans$breaks) && !is.waiver(ans$breaks)) {
+            cli::cli_warn(c(
+                "{.arg breaks} will be ignored",
+                i = sprintf(
+                    "try to set {.arg {%s}labels_nudge}",
+                    if (type == "ggheat") scale_name,
+                    "in {.fn %s}", type
+                )
+            ), call = ans$call)
         }
-        user_scale
+        if (!is.null(ans$breaks)) {
+            ans$breaks <- default_scale$breaks
+        }
+
+        if (!is.null(ans$labels) && !is.waiver(ans$labels)) {
+            cli::cli_warn(c(
+                "{.arg labels} will be ignored",
+                i = sprintf(
+                    "try to set {.arg {%s}labels}",
+                    if (type == "ggheat") scale_name,
+                    "in {.fn %s}", type
+                )
+            ), call = ans$call)
+        }
+
+        if (!is.null(ans$labels)) {
+            ans$labels <- default_scale$labels
+        }
+
+        # for heatmap, we only set the default expand when it's waiver.
+        # for annotation, we always override the expand
+        if (type != "ggheat" || is.waiver(ans$expand)) {
+            ans$expand <- default_scale$expand
+        }
     }
+    ans
 }
 
-ggheat_default_scale <- function(scale_name, panels, index, labels) {
+ggheat_default_scale <- function(scale_name, panels, index, labels, nudge,
+                                 expand = ggplot2::expansion()) {
+    if (is.numeric(nudge)) {
+        nudge <- nudge[index]
+    } else if (is.waiver(nudge)) {
+        nudge <- rep_len(0, length(index))
+    }
     panels <- panels[index]
     labels <- labels[index]
     fn <- switch(scale_name,
         x = ggplot2::scale_x_continuous,
         y = ggplot2::scale_y_continuous
     )
-    lapply(split(seq_along(index), panels), function(x) { # heatmap coords
+    data <- split(seq_along(index), panels)
+    if (!is.list(expand)) expand <- rep_len(list(expand), length(data))
+    .mapply(function(x, expand) {
+        if (is.null(nudge)) {
+            breaks <- NULL
+            labels <- NULL
+        } else {
+            breaks <- x + nudge[x]
+            labels <- labels[x]
+        }
         fn(
             name = NULL, # we by default always remove the annotation name
             limits = range(x) + c(-0.5, 0.5),
-            breaks = x,
-            labels = labels[x],
+            breaks = breaks,
+            labels = labels,
             expand = ggplot2::expansion()
         )
-    })
+    }, list(x = data, expand = expand), NULL)
 }
 
 ggheat_build_data <- function(matrix, row_panels, row_index,
@@ -340,12 +396,12 @@ ggheat_build_data <- function(matrix, row_panels, row_index,
     row_coords <- tibble0(
         .row_panel = row_panels[row_index],
         .row_index = row_index,
-        .y = seq_along(.data$.row_index)
+        .y = seq_along(row_index)
     )
     column_coords <- tibble0(
         .column_panel = column_panels[column_index],
         .column_index = column_index,
-        .x = seq_along(.data$.column_index)
+        .x = seq_along(column_index)
     )
     coords <- merge(column_coords, row_coords,
         by = NULL, sort = FALSE, all = TRUE

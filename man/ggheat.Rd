@@ -2,10 +2,38 @@
 % Please edit documentation in R/ggheat.R
 \name{ggheat}
 \alias{ggheat}
+\alias{ggheat.matrix}
+\alias{ggheat.data.frame}
+\alias{ggheat.numeric}
+\alias{ggheat.character}
+\alias{ggheat.default}
 \alias{show,ggheatmap-method}
 \title{Heatmap with ggplot2}
 \usage{
 ggheat(data, mapping = aes(), ...)
+
+\method{ggheat}{matrix}(
+  data,
+  mapping = aes(),
+  width = NULL,
+  height = NULL,
+  xlabels = waiver(),
+  ylabels = waiver(),
+  xlabels_nudge = waiver(),
+  ylabels_nudge = waiver(),
+  guides = "collect",
+  axes = NULL,
+  axis_titles = axes,
+  ...
+)
+
+\method{ggheat}{data.frame}(data, mapping = aes(), ...)
+
+\method{ggheat}{numeric}(data, mapping = aes(), ...)
+
+\method{ggheat}{character}(data, mapping = aes(), ...)
+
+\method{ggheat}{default}(data, mapping = aes(), ...)
 
 \S4method{show}{ggheatmap}(object)
 }
@@ -17,7 +45,52 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 
 \item{...}{Additional arguments.}
 
+\item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
+
+\item{xlabels, ylabels}{Labels for x/y, the default will use
+the colnames/rownames of the \code{data}. One of:
+\itemize{
+\item \code{NULL} for no labels
+\item \code{waiver()} for the default labels
+\item A character vector giving labels (must be same length as the heatmap
+axis)
+\item An expression vector (must be the same length as heatmap axis). See
+\code{?plotmath} for details.
+\item A function that takes the default labels as the input and returns labels
+as output. Also accepts rlang \link[rlang:as_function]{lambda} function
+notation.
+}}
+
+\item{xlabels_nudge, ylabels_nudge}{A single numeric or a numeric value of
+length \code{ncol(data)/nrow(data)}, to nudge each text label away from the
+center. If \code{waiver()}, it means \code{0}. If \code{NULL}, no breaks, in this way labels
+will be removed too.}
+
+\item{guides}{A string specifying how guides should be treated in the layout.
+\code{'collect'} will collect guides below to the given nesting level, removing
+duplicates. \code{'keep'} will stop collection at this level and let guides be
+placed alongside their plot. \code{auto} will allow guides to be collected if a
+upper level tries, but place them alongside the plot if not.  If you modify
+default guide "position" with \link[ggplot2:theme]{theme(legend.position=...)}
+while also collecting guides you must apply that change to the overall
+patchwork (see example).}
+
+\item{axes}{A string specifying how axes should be treated. \code{'keep'} will
+retain all axes in individual plots. \code{'collect'} will remove duplicated
+axes when placed in the same run of rows or columns of the layout.
+\code{'collect_x'} and \code{'collect_y'} will remove duplicated x-axes in the columns
+or duplicated y-axes in the rows respectively.}
+
+\item{axis_titles}{A string specifying how axis titltes should be treated.
+\code{'keep'} will retain all axis titles in individual plots. \code{'collect'} will
+remove duplicated titles in one direction and merge titles in the opposite
+direction. \code{'collect_x'} and \code{'collect_y'} control this for x-axis titles
+and y-axis titles respectively.}
+
 \item{object}{A \code{ggheatmap} object.}
+}
+\value{
+A \code{ggheatmap} object.
 }
 \description{
 Heatmap with ggplot2
