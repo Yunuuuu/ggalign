@@ -16,8 +16,6 @@ annotations_add.default <- function(object, annotations, set_context,
 #' @export
 annotations_add.anno <- function(object, annotations, set_context,
                                  object_name) {
-    annotations <- annotations %||% list()
-
     # add annotation -------------------------------------
     new <- list(object)
 

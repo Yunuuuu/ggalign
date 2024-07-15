@@ -15,23 +15,23 @@ hclust2(
 \item{matrix}{A numeric matrix, or data frame.}
 
 \item{distance}{A string of distance measure to be used. This must be one of
-"euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
-Correlation coefficient can be also used, including "pearson", "spearman" or
-"kendall". In this way, \code{1 - cor} will be used as the distance. In addition,
-you can also provide a \link[stats:dist]{dist} object directly or a function
-return a \link[stats:dist]{dist} object.}
+\code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"}, \code{"binary"} or
+\code{"minkowski"}.  Correlation coefficient can be also used, including
+\code{"pearson"}, \code{"spearman"} or \code{"kendall"}. In this way, \code{1 - cor} will be used
+as the distance. In addition, you can also provide a \link[stats:dist]{dist}
+object directly or a function return a \link[stats:dist]{dist} object.}
 
 \item{method}{A string of the agglomeration method to be used. This should be
-(an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single",
-"complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or
-"centroid" (= UPGMC). you can also provide a function which returns a
-\link[stats:hclust]{hclust} object.}
+(an unambiguous abbreviation of) one of \code{"ward.D"}, \code{"ward.D2"}, \code{"single"},
+\code{"complete"}, \code{"average"} (= UPGMA), \code{"mcquitty"} (= WPGMA), \code{"median"} (=
+WPGMC) or \code{"centroid"} (= UPGMC). you can also provide a function which
+returns a \link[stats:hclust]{hclust} object.}
 
 \item{use_missing}{An optional character string giving a method for computing
 covariances in the presence of missing values. This must be (an abbreviation
-of) one of the strings "everything", "all.obs", "complete.obs",
-"na.or.complete", or "pairwise.complete.obs". Only used when \code{distance} is a
-correlation coefficient string.}
+of) one of the strings \code{"everything"}, \code{"all.obs"}, \code{"complete.obs"},
+\code{"na.or.complete"}, or \code{"pairwise.complete.obs"}. Only used when \code{distance}
+is a correlation coefficient string.}
 }
 \value{
 A \link[stats:hclust]{hclust} object.

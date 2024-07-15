@@ -2,21 +2,21 @@
 #'
 #' @param matrix A numeric matrix, or data frame.
 #' @param distance A string of distance measure to be used. This must be one of
-#' "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
-#' Correlation coefficient can be also used, including "pearson", "spearman" or
-#' "kendall". In this way, `1 - cor` will be used as the distance. In addition,
-#' you can also provide a [dist][stats::dist] object directly or a function
-#' return a [dist][stats::dist] object.
+#' `"euclidean"`, `"maximum"`, `"manhattan"`, `"canberra"`, `"binary"` or
+#' `"minkowski"`.  Correlation coefficient can be also used, including
+#' `"pearson"`, `"spearman"` or `"kendall"`. In this way, `1 - cor` will be used
+#' as the distance. In addition, you can also provide a [dist][stats::dist]
+#' object directly or a function return a [dist][stats::dist] object.
 #' @param method A string of the agglomeration method to be used. This should be
-#' (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single",
-#' "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or
-#' "centroid" (= UPGMC). you can also provide a function which returns a
-#' [hclust][stats::hclust] object.
+#' (an unambiguous abbreviation of) one of `"ward.D"`, `"ward.D2"`, `"single"`,
+#' `"complete"`, `"average"` (= UPGMA), `"mcquitty"` (= WPGMA), `"median"` (=
+#' WPGMC) or `"centroid"` (= UPGMC). you can also provide a function which
+#' returns a [hclust][stats::hclust] object.
 #' @param use_missing An optional character string giving a method for computing
 #' covariances in the presence of missing values. This must be (an abbreviation
-#' of) one of the strings "everything", "all.obs", "complete.obs",
-#' "na.or.complete", or "pairwise.complete.obs". Only used when `distance` is a
-#' correlation coefficient string.
+#' of) one of the strings `"everything"`, `"all.obs"`, `"complete.obs"`,
+#' `"na.or.complete"`, or `"pairwise.complete.obs"`. Only used when `distance`
+#' is a correlation coefficient string.
 #' @seealso
 #'  - [cor][stats::cor]
 #'  - [dist][stats::dist]

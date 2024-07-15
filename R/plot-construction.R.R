@@ -85,7 +85,8 @@ ggheatmap_add.anno <- function(object, plot, object_name) {
     object <- .subset2(ans, 2L)
 
     # add annotation -----------------------------
-    annotations <- slot(plot, position)
+    annotations <- slot(plot, position) %||%
+        new_annotations(list(), NULL)
     slot(plot, position) <- annotations_add(
         object, annotations, .subset(set_context, 2L),
         object_name
