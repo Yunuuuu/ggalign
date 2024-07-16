@@ -7,8 +7,16 @@
 \description{
 Creating Heatmap using ggplot2 syntax.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/Yunuuuu/ggheat}
+  \item Report bugs at \url{https://github.com/Yunuuuu/ggheat/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Yun Peng \email{yunyunp96@163.com} (\href{https://orcid.org/0000-0003-2801-3332}{ORCID})
 
 }
 \keyword{internal}
