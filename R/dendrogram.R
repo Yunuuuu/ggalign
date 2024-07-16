@@ -472,9 +472,6 @@ dendrogram_data <- function(tree,
     )
 }
 
-tree_edge_double <- function(edge, ranges) {
-}
-
 check_tree <- function(tree, arg = rlang::caller_arg(tree),
                        call = caller_call()) {
     if (inherits(tree, "hclust")) {
