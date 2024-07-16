@@ -29,3 +29,8 @@ heatmap_add.CoordFlip <- function(object, plot, object_name) {
         "Can't add {.var {object_name}} to a {.cls ggheatmap} object"
     )
 }
+
+#' @export
+heatmap_add.labels <- function(object, plot, object_name) {
+    heatmap_add.gg(object, plot, object_name)
+}

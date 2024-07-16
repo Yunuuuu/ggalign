@@ -109,3 +109,11 @@ ggheatmap_add.CoordFlip <- function(object, plot, object_name) {
         "Can't add {.var {object_name}} to a {.cls ggheatmap} object"
     )
 }
+
+#' @export
+ggheatmap_add.list <- function(object, plot, object_name) {
+    for (o in object) {
+        plot <- plot + o
+    }
+    plot
+}

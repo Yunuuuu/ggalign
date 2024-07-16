@@ -42,6 +42,11 @@ htanno_dendro_add.gg <- function(object, plot, object_name, self) {
 }
 
 #' @export
+htanno_dendro_add.labels <- function(object, plot, object_name, self) {
+    htanno_dendro_add.gg(object, plot, object_name, self)
+}
+
+#' @export
 htanno_dendro_add.CoordFlip <- function(object, plot, object_name, self) {
     cli::cli_abort(paste(
         "Can't add {.var {object_name}} to a",

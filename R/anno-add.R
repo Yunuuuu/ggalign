@@ -39,6 +39,11 @@ gganno_add.gg <- function(object, anno, object_name) {
 }
 
 #' @export
+gganno_add.labels <- function(object, anno, object_name) {
+    gganno_add.gg(object, anno, object_name)
+}
+
+#' @export
 gganno_add.CoordFlip <- function(object, anno, object_name) {
     cli::cli_abort(paste(
         "Can't add {.var {object_name}} to a",
