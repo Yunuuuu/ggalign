@@ -55,6 +55,9 @@ node of the current edge.
 for current edge.
 \item \code{branch}: which branch current node is. You can use this column to color
 different groups.
+\item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
+functionality as panel, but they are specifically for the \code{edge} data and
+correspond to both nodes of each edge.
 \item \code{panel}: which panel current node is, if we split the plot into panels
 using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes

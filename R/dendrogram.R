@@ -122,6 +122,9 @@ cutree_k_to_h <- function(tree, k) {
 #'                        for current edge.
 #'   - `branch`: which branch current node is. You can use this column to color
 #'               different groups.
+#'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
+#'     functionality as panel, but they are specifically for the `edge` data and
+#'     correspond to both nodes of each edge. 
 #'   - `panel`: which panel current node is, if we split the plot into panels
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes
@@ -312,6 +315,9 @@ dendrogram_data <- function(tree,
                     }
                 }
                 if (is.na(ggpanel <- panel)) {
+                    # it's not possible for an branch node live outside the
+                    # all panels, the left or right most. So `i` won't be 1 or
+                    # length(ranges). we don't need to check the argument
                     ggpanel <- switch(priority,
                         left = .subset(panels, i - 1L),
                         right = .subset(panels, i)
