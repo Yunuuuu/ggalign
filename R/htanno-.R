@@ -19,8 +19,11 @@ htanno <- function(data = NULL,
                    htanno_class = HtannoProto) {
     assert_s3_class(htanno_class, "HtannoProto")
     assert_bool(check.param)
+    # always make a clone of `htanno_class`, otherwise, the params will be
+    # reused across different annotation.
+    htanno <- ggproto_clone(htanno_class)
     # Warn about extra params
-    all <- htanno_class$parameters()
+    all <- htanno$parameters()
     if (check.param &&
         length(extra_param <- setdiff(names(params), all))) { # nolint
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
@@ -31,7 +34,8 @@ htanno <- function(data = NULL,
     }
     anno(
         "htanno",
-        data = data, order = order, size = size, htanno = htanno_class,
+        data = data, order = order, size = size,
+        htanno = htanno,
         params = params[intersect(names(params), all)],
         name = name, position = position,
         set_context = set_context,
