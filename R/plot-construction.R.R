@@ -102,3 +102,10 @@ ggheatmap_add.active <- function(object, plot, object_name) {
         set_context(plot, object)
     }
 }
+
+#' @export
+ggheatmap_add.CoordFlip <- function(object, plot, object_name) {
+    cli::cli_abort(
+        "Can't add {.var {object_name}} to a {.cls ggheatmap} object"
+    )
+}

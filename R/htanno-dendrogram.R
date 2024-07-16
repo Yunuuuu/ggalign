@@ -32,13 +32,21 @@ htanno_dendro <- function(mapping = aes(), ...,
     )
 }
 
-htanno_dendro_add <- function(object, plot, object_name) {
+htanno_dendro_add <- function(object, plot, object_name, self) {
     UseMethod("htanno_dendro_add")
 }
 
 #' @export
-htanno_dendro_add.gg <- function(object, plot, object_name) {
+htanno_dendro_add.gg <- function(object, plot, object_name, self) {
     ggplot2::ggplot_add(object, plot, object_name)
+}
+
+#' @export
+htanno_dendro_add.CoordFlip <- function(object, plot, object_name, self) {
+    cli::cli_abort(paste(
+        "Can't add {.var {object_name}} to a",
+        "{.fn {snake_class(self)}} annotation"
+    ), call = self$call)
 }
 
 #' @importFrom ggplot2 aes
@@ -60,7 +68,9 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     },
     add = function(self, object, object_name) {
         plot <- .subset2(self$draw_params, "plot")
-        self$draw_params$plot <- htanno_dendro_add(object, plot, object_name)
+        self$draw_params$plot <- htanno_dendro_add(
+            object, plot, object_name, self
+        )
         self
     },
     compute = function(data, position, distance, method, use_missing) {

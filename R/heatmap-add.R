@@ -22,3 +22,10 @@ heatmap_add.facetted_pos_scales <- function(object, plot, object_name) {
     slot(plot, "facetted_pos_scales") <- object
     plot
 }
+
+#' @export
+heatmap_add.CoordFlip <- function(object, plot, object_name) {
+    cli::cli_abort(
+        "Can't add {.var {object_name}} to a {.cls ggheatmap} object"
+    )
+}

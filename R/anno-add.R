@@ -21,13 +21,13 @@ htanno_add <- function(object, anno, object_name) {
     UseMethod("htanno_add")
 }
 
-# Following methods are used to add elements to gganno object
+# Following methods are used to add elements to `gganno` object
 #' @export
 gganno_add.default <- function(object, anno, object_name) {
     cli::cli_abort(paste(
         "Can't add {.var {object_name}} to a",
         "{.cls gganno} annotation"
-    ))
+    ), call = slot(anno, "call"))
 }
 
 #' @export
@@ -38,16 +38,24 @@ gganno_add.gg <- function(object, anno, object_name) {
     anno
 }
 
-# htanno will have sub-class, so we'll re-dispatch to call `htanno` add method
 #' @export
-htanno_add.default <- function(object, anno, object_name) {
-    slot(anno, "htanno")$add(object, object_name)
-    anno
+gganno_add.CoordFlip <- function(object, anno, object_name) {
+    cli::cli_abort(paste(
+        "Can't add {.var {object_name}} to a",
+        "{.cls gganno} annotation"
+    ), call = slot(anno, "call"))
 }
 
 #' @export
 gganno_add.facetted_pos_scales <- function(object, anno, object_name) {
     slot(anno, "facetted_pos_scales") <- object
+    anno
+}
+
+# htanno will have sub-class, so we'll re-dispatch to call `htanno` add method
+#' @export
+htanno_add.default <- function(object, anno, object_name) {
+    slot(anno, "htanno")$add(object, object_name)
     anno
 }
 
