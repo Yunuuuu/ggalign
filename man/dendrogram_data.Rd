@@ -20,7 +20,8 @@ dendrogram_data(
 object.}
 
 \item{double_spanned_horizontal}{A boolean value indicates whether double the
-horizontal lines span across multiple panels.}
+horizontal lines span across multiple panels. This is useful if you want to
+do facet operation in \code{ggplot2}.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to the leaves in the branch. Otherwise (default), plot them in the

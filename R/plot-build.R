@@ -30,13 +30,8 @@ ggheat_build.ggheatmap <- function(x, ...) {
         factor(rep_len(1L, nrow(mat)))
 
     # we have reverse the panel order for heatmap rows
-    row_index <- slot(x, "row_index")
-
-    # the ggplot2 reorder panels from the top to bottom
-    # it's not necessary to reverse the panels
-    row_index <- reorder_index(row_panels, row_index)
-    # row_index <- rev(row_index)
-    # row_panels <- factor(row_panels, rev(levels(row_panels)))
+    row_index <- slot(x, "row_index") %||%
+        reorder_index(row_panels)
 
     column_panels <- slot(x, "column_panels") %||%
         factor(rep_len(1L, ncol(mat)))

@@ -159,32 +159,3 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot + ggplot2::labs(y = "height")
     }
 )
-
-tree_find_panel <- function(ranges, x) {
-    panels <- names(ranges)
-    # not possible in the right most, but we also provide this option
-    left_panel <- .subset(panels, length(panels))
-    panel <- right_panel <- NA
-    for (i in seq_along(ranges)) {
-        if (x < min(.subset2(ranges, i))) {
-            panel <- NA
-            if (i == 1L) {
-                left_panel <- NA
-            } else {
-                left_panel <- .subset(panels, i - 1L)
-            }
-            right_panel <- .subset(panels, i)
-            break
-        } else if (x <= max(.subset2(ranges, i))) {
-            panel <- .subset(panels, i)
-            if (i == 1L) {
-                left_panel <- NA
-            } else {
-                left_panel <- .subset(panels, i - 1L)
-            }
-            right_panel <- .subset(panels, i + 1L)
-            break
-        }
-    }
-    list(panel = panel, left = left_panel, right = right_panel)
-}

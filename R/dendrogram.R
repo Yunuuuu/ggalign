@@ -96,7 +96,8 @@ cutree_k_to_h <- function(tree, k) {
 #' @param tree A [hclust][stats::hclust] or a [dendrogram][stats::as.dendrogram]
 #' object.
 #' @param double_spanned_horizontal A boolean value indicates whether double the
-#' horizontal lines span across multiple panels.
+#' horizontal lines span across multiple panels. This is useful if you want to
+#' do facet operation in `ggplot2`.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
 #' respect to the leaves in the branch. Otherwise (default), plot them in the
 #' middle of all direct child nodes.
@@ -472,6 +473,35 @@ tree_edge_double <- function(edge, ranges) {
     )
     edge <- edge[!double_index, ]
     do.call(rbind, c(list(edge), doubled_edge))
+}
+
+tree_find_panel <- function(ranges, x) {
+    panels <- names(ranges)
+    # not possible in the right most, but we also provide this option
+    left_panel <- .subset(panels, length(panels))
+    panel <- right_panel <- NA
+    for (i in seq_along(ranges)) {
+        if (x < min(.subset2(ranges, i))) {
+            panel <- NA
+            if (i == 1L) {
+                left_panel <- NA
+            } else {
+                left_panel <- .subset(panels, i - 1L)
+            }
+            right_panel <- .subset(panels, i)
+            break
+        } else if (x <= max(.subset2(ranges, i))) {
+            panel <- .subset(panels, i)
+            if (i == 1L) {
+                left_panel <- NA
+            } else {
+                left_panel <- .subset(panels, i - 1L)
+            }
+            right_panel <- .subset(panels, i + 1L)
+            break
+        }
+    }
+    list(panel = panel, left = left_panel, right = right_panel)
 }
 
 check_tree <- function(tree, arg = rlang::caller_arg(tree),
