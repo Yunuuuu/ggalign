@@ -45,5 +45,6 @@ Collate:
     'utils-assert.R'
     'utils-grid.R'
     'utils.R'
+ByteCompile: true
 URL: https://github.com/Yunuuuu/ggheat
 BugReports: https://github.com/Yunuuuu/ggheat/issues
