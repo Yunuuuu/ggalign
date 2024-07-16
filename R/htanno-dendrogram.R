@@ -176,13 +176,25 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot_cut_height <- plot_cut_height %||% !is.null(height)
         if (plot_cut_height && !is.null(height)) {
             plot <- plot +
-                ggplot2::geom_hline(yintercept = height, linetype = "dashed")
+                switch_position(
+                    position,
+                    ggplot2::geom_vline(
+                        xintercept = height, linetype = "dashed"
+                    ),
+                    ggplot2::geom_hline(
+                        yintercept = height, linetype = "dashed"
+                    )
+                )
         }
         if (!identical(plot$coordinates$clip, "off")) {
             coord <- ggproto_clone(plot$coordinates)
             coord$clip <- "off" # this'll change the input of user.
             plot$coordinates <- coord
         }
-        plot + ggplot2::labs(y = "height")
+        plot + switch_position(
+            position,
+            ggplot2::labs(x = "height"),
+            ggplot2::labs(y = "height")
+        )
     }
 )
