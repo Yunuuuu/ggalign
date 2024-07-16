@@ -1,5 +1,5 @@
-#' Heatmap dendrogram 
-#' 
+#' Heatmap dendrogram
+#'
 #' @inheritParams hclust2
 #' @inheritParams ggdendrogram
 #' @inheritParams htanno
@@ -44,12 +44,17 @@ htanno_dendro_add.gg <- function(object, plot, object_name) {
 #' @importFrom ggplot2 aes
 HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     setup_params = function(self, data, position, params) {
-        assert_number(.subset2(params, "k"), null_ok = TRUE, arg = "k")
-        assert_number(.subset2(params, "h"), null_ok = TRUE, arg = "h")
+        assert_number(.subset2(params, "k"),
+            null_ok = TRUE, arg = "k",
+            call = self$call
+        )
+        assert_number(.subset2(params, "h"),
+            null_ok = TRUE, arg = "h", call = self$call
+        )
         assert_bool(
             .subset2(params, "plot_cut_height"),
             null_ok = TRUE,
-            arg = "plot_cut_height"
+            arg = "plot_cut_height", call = self$call
         )
         params
     },
@@ -66,7 +71,13 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_matrix_axis(position)} already exists"
-            ))
+            ), call = self$call)
+        }
+        if (!is.null(index)) {
+            cli::cli_warn(
+                "{.fn {snake_class(self)}} will break the index into pieces",
+                call = self$call
+            )
         }
         if (!is.null(k)) {
             height <- cutree_k_to_h(statistics, k)
@@ -92,7 +103,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     "is not well support for facet dendrogram"
                 ),
                 i = "will use {.filed rectangle} dendrogram instead"
-            ))
+            ), call = self$call)
             type <- "rectangle"
         }
         data <- dendrogram_data(
@@ -141,7 +152,8 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
 
 tree_edge_double <- function(edge, ranges) {
     # we draw horizontal lines twice
-    #     if one of the node is out of the panel
+    #     if one of the node is out of the panel or if the horizontal lines span
+    #     across different panels.
     double_index <- (is.na(.subset2(edge, "panel1")) |
         is.na(.subset2(edge, "panel2")) |
         .subset2(edge, "panel1") != .subset2(edge, "panel2")) &

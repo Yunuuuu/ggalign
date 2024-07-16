@@ -5,9 +5,6 @@
 \alias{htanno}
 \alias{HtannoProto}
 \title{Heatmap annotation of \code{htanno}}
-\format{
-An object of class \code{HtannoProto} (inherits from \code{ggproto}, \code{gg}) of length 11.
-}
 \usage{
 htanno(
   data = NULL,

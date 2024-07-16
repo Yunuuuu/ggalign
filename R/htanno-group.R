@@ -20,7 +20,7 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
                     "the same length of heatmap %s axis (%d)",
                     to_matrix_axis(position), nrow(data)
                 )
-            ))
+            ), call = self$call)
         }
         params
     },
@@ -29,7 +29,13 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_matrix_axis(position)} already exists"
-            ))
+            ), call = self$call)
+        }
+        if (!is.null(index)) {
+            cli::cli_warn(
+                "{.fn {snake_class(self)}} will break the index into pieces",
+                call = self$call
+            )
         }
         list(group, index)
     }

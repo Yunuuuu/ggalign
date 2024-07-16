@@ -53,6 +53,7 @@ anno_initialize.htanno <- function(object, plot, object_name) {
 
     # initialize annotation of htanno --------------------
     htanno <- slot(object, "htanno")
+    htanno$call <- slot(object, "call") # add call into htanno for message usage
 
     # prepare and check parameters ----------------------
     params <- htanno$setup_params(data, position, slot(object, "params"))

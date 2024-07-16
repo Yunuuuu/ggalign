@@ -21,7 +21,7 @@
 #' @param labels_nudge A single numeric or a numeric value of length
 #' `nrow(data)`, to nudge each text label away from the center. If `waiver()`,
 #' will inherit from the heatmap. If `NULL`, no breaks, in this way labels will
-#' be removed too. 
+#' be removed too.
 #' @param set_context A logical value of length `2` indicates whether to set the
 #' active context to the `position` for the [ggheatmap][ggheat] and whether to
 #' set the active context to current annotation for the annotation list in
@@ -60,11 +60,15 @@ anno <- function(Class, ..., data = NULL,
     )
 }
 
+#' @importFrom utils packageName
 anno_override_call <- function(call = NULL) {
     if (is.null(call) || is.function(call[[1]])) {
         return(TRUE)
     }
-    !identical(pkg_nm(call), pkg_nm())
+    !identical(
+        packageName(environment(eval(.subset2(call, 1L)))),
+        pkg_nm()
+    )
 }
 
 #' @include ggheat.R

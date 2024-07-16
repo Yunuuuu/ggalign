@@ -2,9 +2,8 @@
 
 `%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
 
-pkg_nm <- function(call = NULL) {
-    utils::packageName(topenv(call %||% environment()))
-}
+#' @importFrom utils packageName
+pkg_nm <- function() packageName(topenv(environment()))
 
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) {

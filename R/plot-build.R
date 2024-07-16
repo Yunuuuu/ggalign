@@ -236,7 +236,7 @@ ggheatmap_patchwork <- function(plots, sizes, guides, axes, axis_titles) {
         do.call(unit.c, sizes)
     })
 
-    Reduce(`+`, plots, init = patchwork:::plot_filler()) +
+    Reduce(`+`, plots) +
         patchwork::plot_layout(
             design = layout,
             heights = .subset2(sizes, "heights"),

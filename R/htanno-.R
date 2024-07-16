@@ -25,13 +25,18 @@ htanno <- function(data = NULL,
         length(extra_param <- setdiff(names(params), all))) { # nolint
         cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
     }
+    call <- caller_call()
+    if (anno_override_call(call)) {
+        call <- current_call()
+    }
     anno(
         "htanno",
         data = data, order = order, size = size, htanno = htanno_class,
         params = params[intersect(names(params), all)],
         name = name, position = position,
         set_context = set_context,
-        labels = labels, labels_nudge = labels_nudge
+        labels = labels, labels_nudge = labels_nudge,
+        call = call
     )
 }
 
@@ -60,9 +65,11 @@ methods::setClass(
 #'    reorder heamtap rows/columns.
 #'  - `draw`: A method used to draw the plot.
 #' @export
+#' @format NULL
 #' @usage NULL
 #' @rdname htanno
 HtannoProto <- ggplot2::ggproto("HtannoProto",
+    call = NULL,
     compute_params = NULL,
     layout_params = NULL,
     draw_params = NULL,
@@ -95,7 +102,10 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     # this method must modify the HtannoProto object itself, no results will be
     # assign.
     add = function(self, object, object_name) {
-        cli::cli_abort("cannot add {object_name} to {.fn {snake_class(self)}}")
+        cli::cli_abort(
+            "cannot add {object_name} to {.fn {snake_class(self)}}",
+            call = self$call
+        )
     },
 
     # Following fields should be defined for the new Htanno object.
