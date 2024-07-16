@@ -11,6 +11,11 @@ ggplot_build.ggheatmap <- function(plot) {
     ggplot_build(plot)
 }
 
+#' Build ggheatmap for rendering.
+#' @param x A `ggheatmap` object.
+#' @param ... Not used currently.
+#' @export
+#' @return A `patchwork` object.
 ggheat_build <- function(x, ...) UseMethod("ggheat_build")
 
 #' @export
