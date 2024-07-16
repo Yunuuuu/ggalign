@@ -339,7 +339,7 @@ ggheat_melt_scale <- function(scale_name, user_scale, default_scale, type) {
                     if (type == "ggheat") scale_name,
                     "in {.fn %s}", type
                 )
-            ), call = ans$call)
+            ))
         }
         if (!is.null(ans$breaks)) {
             ans$breaks <- default_scale$breaks
@@ -353,7 +353,7 @@ ggheat_melt_scale <- function(scale_name, user_scale, default_scale, type) {
                     if (type == "ggheat") scale_name,
                     "in {.fn %s}", type
                 )
-            ), call = ans$call)
+            ))
         }
 
         if (!is.null(ans$labels)) {

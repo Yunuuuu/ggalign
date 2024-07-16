@@ -3,19 +3,18 @@ new_annotations <- function(list, active) {
 }
 
 #' @keywords internal
-annotations_add <- function(object, annotations, set_context, object_name) {
+annotations_add <- function(object, annotations, object_name) {
     UseMethod("annotations_add")
 }
 
 #' @export
-annotations_add.default <- function(object, annotations, set_context,
+annotations_add.default <- function(object, annotations,
                                     object_name) {
     cli::cli_abort("Cannot add {.code {object_name}} into annotations")
 }
 
 #' @export
-annotations_add.anno <- function(object, annotations, set_context,
-                                 object_name) {
+annotations_add.anno <- function(object, annotations, object_name) {
     # add annotation -------------------------------------
     new <- list(object)
 
@@ -30,7 +29,7 @@ annotations_add.anno <- function(object, annotations, set_context,
         }
         names(new) <- name
     }
-    if (set_context) {
+    if (.subset(slot(object, "set_context"), 2L)) {
         anno_active <- length(annotations) + 1L
     } else {
         anno_active <- get_context(annotations)

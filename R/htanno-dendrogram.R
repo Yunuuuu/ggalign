@@ -90,8 +90,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         }
         if (!is.null(index)) {
             cli::cli_warn(
-                "{.fn {snake_class(self)}} will break the original order",
-                call = self$call
+                "{.fn {snake_class(self)}} will break the original order"
             )
         }
         if (!is.null(k)) {
@@ -120,7 +119,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     "is not well support for facet dendrogram"
                 ),
                 i = "will use {.filed rectangle} dendrogram instead"
-            ), call = self$call)
+            ))
             type <- "rectangle"
         }
         if (!identical(statistics$order, index)) {
