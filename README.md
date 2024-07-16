@@ -22,12 +22,8 @@ devtools::install_github("Yunuuuu/ggheat")
 ```
 
 ``` r
-library(ggheat)
-#> Loading required package: ggplot2
-```
-
-``` r
 library(ggplot2)
+library(ggheat)
 ```
 
 Let’s begin by creating some example data
@@ -35,6 +31,8 @@ Let’s begin by creating some example data
 ``` r
 set.seed(123)
 small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
 ## `ggheat`
