@@ -110,7 +110,8 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         list(panels, index)
     },
     draw = function(self, data, statistics, panels, index,
-                    position, plot, height, plot_cut_height, center, type,
+                    position, scales, facet,
+                    plot, height, plot_cut_height, center, type,
                     root, segment_params) {
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
@@ -121,6 +122,14 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 i = "will use {.filed rectangle} dendrogram instead"
             ))
             type <- "rectangle"
+        }
+        for (scale in scales) {
+            if (any(.subset2(scale, "expand") > 0L)) {
+                cli::cli_warn(
+                    "adding axis expand in a dendrogram will break the layout"
+                )
+                break
+            }
         }
         if (!identical(statistics$order, index)) {
             cli::cli_abort(c(

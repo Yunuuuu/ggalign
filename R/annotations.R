@@ -48,7 +48,7 @@ annotations_build <- function(annotations, panels, index, scales,
             panels = panels, index = index,
             labels = slot(x, "labels"),
             nudge = slot(x, "labels_nudge"),
-            lapply(scales, function(scale) scale$expand)
+            lapply(scales, function(scale) .subset2(scale, "expand"))
         )
         anno_build(
             x = x,

@@ -81,7 +81,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
         c(
             htanno_method_params(self$compute, 2L),
             htanno_method_params(self$layout, 5L),
-            htanno_method_params(self$draw, 5L),
+            htanno_method_params(self$draw, 7L),
             self$extra_params
         )
     },
@@ -100,7 +100,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
             intersect(names(params), htanno_method_params(self$layout, 5L))
         ]
         self$draw_params <- params[
-            intersect(names(params), htanno_method_params(self$draw, 5L))
+            intersect(names(params), htanno_method_params(self$draw, 7L))
         ]
     },
     # this method must modify the HtannoProto object itself, no results will be
@@ -128,7 +128,9 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     },
 
     # draw plot
-    draw = function(data, statistics, panels, index, position) NULL
+    draw = function(data, statistics, panels, index, position, scales, facet) {
+        NULL
+    }
 )
 
 ggproto_formals <- function(x) formals(environment(x)$f)

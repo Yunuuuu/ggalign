@@ -244,42 +244,26 @@ ggheatmap_patchwork <- function(plots, sizes, guides, axes, axis_titles) {
 trim_area <- function(area) {
     w <- min(.subset2(area, "l"), .subset2(area, "r"))
     h <- min(.subset2(area, "t"), .subset2(area, "b"))
-    area$l <- .subset2(area, "l") - w + 1
-    area$r <- .subset2(area, "r") - w + 1
-    area$t <- .subset2(area, "t") - h + 1
-    area$b <- .subset2(area, "b") - h + 1
+    area$l <- .subset2(area, "l") - w + 1L
+    area$r <- .subset2(area, "r") - w + 1L
+    area$t <- .subset2(area, "t") - h + 1L
+    area$b <- .subset2(area, "b") - h + 1L
     area
 }
 
 #' @importFrom rlang is_empty
 ggheat_extract_scales <- function(scale_name, plot, n, facet_scales) {
     single_scale <- plot$scales$get_scales(scale_name)
-    if (!is.null(facet_scales)) {
-        scales <- .subset2(facet_scales, scale_name)
-        if (n > 1L) {
-            if (is_empty(scales)) {
-                scales <- vector("list", n)
-            } else if (length(scales) < n) {
-                cli::cli_warn("No enough facetted {.field {scale_name}} scales")
-            } else {
-                scales <- .subset(scales, n)
-            }
-        } else if (length(scales) > 1L) { # if not
-            axis <- switch(scale_name,
-                x = "column",
-                y = "row"
-            )
-            cli::cli_warn(sprintf(
-                "heatmap {%s} is not splitted, won't use facet {%s} scale",
-                axis, scale_name
-            ))
-            scales <- list(NULL)
+    if (n > 1 &&
+        !is.null(facet_scales) &&
+        !is_empty(ans <- .subset2(facet_scales, scale_name))) {
+        for (i in seq_len(n)) {
+            ans[i] <- list(.subset2(ans, i) %||% single_scale)
         }
-        # filling scales with user normal scale
-        lapply(scales, function(scale) scale %||% single_scale)
     } else {
-        rep_len(list(single_scale), n)
+        ans <- rep_len(list(single_scale), n)
     }
+    ans
 }
 
 ggheat_melt_facet <- function(user_facet, default_facet) {
@@ -391,7 +375,7 @@ ggheat_default_scale <- function(scale_name, panels, index, labels, nudge,
             limits = range(x) + c(-0.5, 0.5),
             breaks = breaks,
             labels = labels,
-            expand = ggplot2::expansion()
+            expand = expand
         )
     }, list(x = data, expand = expand), NULL)
 }
