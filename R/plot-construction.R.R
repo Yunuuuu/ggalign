@@ -117,3 +117,10 @@ ggheatmap_add.list <- function(object, plot, object_name) {
     }
     plot
 }
+
+#' @export
+ggheatmap_add.data.frame <- function(object, plot, object_name) {
+    cli::cli_abort(
+        "Can't add {.var {object_name}} to a {.cls ggheatmap} object"
+    )
+}
