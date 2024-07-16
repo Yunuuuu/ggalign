@@ -37,10 +37,10 @@ anno_setup_data.numeric <- function(data, position, heatmap_matrix,
     if (nrow(anno_matrix) != NROW(data)) {
         cli::cli_abort(msg_anno_incompatible_data(object_name), call = call)
     }
-    data <- matrix(data, ncol = 1L)
-    colnames(data) <- "V1"
-    if (rlang::is_named(data)) rownames(data) <- names(matrix)
-    data
+    ans <- matrix(data, ncol = 1L)
+    colnames(ans) <- "V1"
+    if (rlang::is_named(data)) rownames(ans) <- names(data)
+    ans
 }
 
 #' @export
