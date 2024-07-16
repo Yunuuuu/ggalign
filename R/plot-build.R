@@ -48,15 +48,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     )
     p$data <- data # change the default data.frame
 
-    # add heatmap filling in the first layer
-    p$layers <- append(p$layers,
-        ggplot2::geom_tile(
-            aes(.data$.x, .data$.y, fill = .data$value),
-            width = 1L, height = 1L
-        ),
-        after = 0L
-    )
-
     # add scales ---------------------------------------
     do_row_facet <- nlevels(row_panels) > 1L
     do_column_facet <- nlevels(column_panels) > 1L

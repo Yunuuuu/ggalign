@@ -2,7 +2,8 @@
 #'
 #' @param data A matrix, if it is a simple vector, it will be converted to a
 #' one-column matrix. Data.frame will also be coerced into matrix.
-#' @param mapping Default list of aesthetic mappings to use for plot.
+#' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
+#' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments.
 #' @param width,height Heatmap width/height, can be a [unit][grid::unit] object.
 #' @param xlabels,ylabels Labels for x/y, the default will use
@@ -20,8 +21,10 @@
 #' length `ncol(data)/nrow(data)`, to nudge each text label away from the
 #' center. If `waiver()`, it means `0`. If `NULL`, no breaks, in this way labels
 #' will be removed too.
-#' @param environment Used by [ggplot_build][ggplot2::ggplot_build].
 #' @inheritParams patchwork::plot_layout
+#' @param filling A boolean value indicates whether filling the heatmap. If you
+#' want to custom the filling style, you can set to `FALSE`.
+#' @param environment Used by [ggplot_build][ggplot2::ggplot_build].
 #' @return A `ggheatmap` object.
 #' @importFrom ggplot2 aes
 #' @export
@@ -30,19 +33,36 @@ ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")
 #' @importFrom ggplot2 waiver
 #' @export
 #' @rdname ggheat
-ggheat.matrix <- function(data, mapping = aes(),
+ggheat.matrix <- function(data, mapping = NULL,
                           width = NULL, height = NULL,
                           xlabels = waiver(),
                           ylabels = waiver(),
                           xlabels_nudge = waiver(),
                           ylabels_nudge = waiver(),
                           guides = "collect",
-                          axes = NULL, axis_titles = axes, ...,
+                          axes = NULL, axis_titles = axes,
+                          filling = TRUE, ...,
                           environment = parent.frame()) {
+    assert_bool(filling)
     xlabels <- set_labels(xlabels, "column", colnames(data))
     xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data))
     ylabels <- set_labels(ylabels, "row", rownames(data))
     ylabels_nudge <- set_nudge(ylabels_nudge, ncol(data))
+    mapping <- mapping %||% aes(.data$.x, .data$.y)
+    heatmap <- ggplot2::ggplot(mapping = mapping)
+    if (ncol(data) > 10L) {
+        heatmap <- heatmap + ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
+        )
+    }
+    if (filling) {
+        # add heatmap filling in the first layer
+        heatmap <- heatmap +
+            ggplot2::geom_tile(
+                aes(.data$.x, .data$.y, fill = .data$value),
+                width = 1L, height = 1L
+            )
+    }
     methods::new("ggheatmap",
         matrix = data,
         params = rlang::list2(
@@ -54,12 +74,10 @@ ggheat.matrix <- function(data, mapping = aes(),
             ylabels_nudge = ylabels_nudge,
             guides = guides,
             axes = axes,
-            axis_titles = axis_titles
+            axis_titles = axis_titles,
+            filling = filling
         ),
-        heatmap = ggplot2::ggplot(mapping = mapping) +
-            ggplot2::theme(
-                axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
-            ),
+        heatmap = heatmap,
         active = NULL,
         plot_env = environment
     )
@@ -120,10 +138,10 @@ ggheat.data.frame <- function(data, mapping = aes(), ...) {
 #' @export
 #' @rdname ggheat
 ggheat.numeric <- function(data, mapping = aes(), ...) {
-    data <- matrix(matrix, ncol = 1L)
-    colnames(data) <- "V1"
-    if (rlang::is_named(matrix)) rownames(data) <- names(matrix)
-    ggheat(data = data, mapping = mapping, ...)
+    ans <- matrix(data, ncol = 1L)
+    colnames(ans) <- "V1"
+    if (rlang::is_named(data)) rownames(ans) <- names(data)
+    ggheat(data = ans, mapping = mapping, ...)
 }
 
 #' @export

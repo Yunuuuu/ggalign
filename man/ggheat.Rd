@@ -14,7 +14,7 @@ ggheat(data, mapping = aes(), ...)
 
 \method{ggheat}{matrix}(
   data,
-  mapping = aes(),
+  mapping = NULL,
   width = NULL,
   height = NULL,
   xlabels = waiver(),
@@ -24,6 +24,7 @@ ggheat(data, mapping = aes(), ...)
   guides = "collect",
   axes = NULL,
   axis_titles = axes,
+  filling = TRUE,
   ...,
   environment = parent.frame()
 )
@@ -42,7 +43,8 @@ ggheat(data, mapping = aes(), ...)
 \item{data}{A matrix, if it is a simple vector, it will be converted to a
 one-column matrix. Data.frame will also be coerced into matrix.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.}
+\item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
+will using \code{aes(.data$.x, .data$.y)}.}
 
 \item{...}{Additional arguments.}
 
@@ -87,6 +89,9 @@ or duplicated y-axes in the rows respectively.}
 remove duplicated titles in one direction and merge titles in the opposite
 direction. \code{'collect_x'} and \code{'collect_y'} control this for x-axis titles
 and y-axis titles respectively.}
+
+\item{filling}{A boolean value indicates whether filling the heatmap. If you
+want to custom the filling style, you can set to \code{FALSE}.}
 
 \item{environment}{Used by \link[ggplot2:ggplot_build]{ggplot_build}.}
 
