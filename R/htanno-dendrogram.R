@@ -116,7 +116,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         }
         data <- dendrogram_data(
             statistics,
-            double_spanned_horizontal = nlevels(panels) > 1L,
+            priority = switch_position(position, "left", "right"),
             center = center,
             type = type,
             leaf_braches = panels,

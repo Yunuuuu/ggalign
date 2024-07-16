@@ -6,7 +6,7 @@
 \usage{
 dendrogram_data(
   tree,
-  double_spanned_horizontal = FALSE,
+  priority = "right",
   center = FALSE,
   type = "rectangle",
   leaf_pos = NULL,
@@ -19,9 +19,11 @@ dendrogram_data(
 \item{tree}{A \link[stats:hclust]{hclust} or a \link[stats:dendrogram]{dendrogram}
 object.}
 
-\item{double_spanned_horizontal}{A boolean value indicates whether double the
-horizontal lines span across multiple panels. This is useful if you want to
-do facet operation in \code{ggplot2}.}
+\item{priority}{A string of "left" or "right". if we draw from right to left,
+the left will override the right, so we take the \code{"left"} as the priority. If
+we draw from \code{left} to \code{right}, the right will override the left, so we take
+the \code{"right"} as priority. This is used by the \link{htanno_dendro} to provide
+support of facet operation in ggplot2.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to the leaves in the branch. Otherwise (default), plot them in the
