@@ -143,8 +143,9 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 ggplot2::geom_hline(yintercept = height, linetype = "dashed")
         }
         if (!identical(plot$coordinates$clip, "off")) {
-            # Shoule we clone the coordinates.
-            plot$coordinates$clip <- "off" # this'll change the input of user.
+            coord <- ggproto_clone(plot$coordinates)
+            coord$clip <- "off" # this'll change the input of user.
+            plot$coordinates <- coord
         }
         plot + ggplot2::labs(y = "height")
     }

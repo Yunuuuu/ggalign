@@ -294,9 +294,11 @@ ggheat_melt_facet <- function(user_facet, default_facet) {
         if (inherits(user_facet, "FacetNull")) return(user_facet) # styler: off
         return(ggplot2::facet_null())
     }
-
     # we only support `FacetGrid` if there have multiple panels
     if (!inherits(user_facet, "FacetGrid")) return(default_facet) # styler: off
+
+    # will change the user input, so we must use `ggproto_clone`
+    user_facet <- ggproto_clone(user_facet)
     # we always fix the grid rows and cols
     user_facet$params$rows <- default_facet$params$rows
     user_facet$params$cols <- default_facet$params$cols

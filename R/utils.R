@@ -15,6 +15,13 @@ allow_lambda <- function(x) {
 
 is.waiver <- function(x) inherits(x, "waiver")
 
+#' @importFrom rlang env_clone
+ggproto_clone <- function(ggproto) {
+  ans <- env_clone(ggproto)
+  class(ans) <- class(ggproto)
+  ans
+}
+
 switch_position <- function(position, row, column) {
     switch(position,
         top = ,
