@@ -81,7 +81,6 @@ anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
     )
     for (i in seq_along(default_scales)) {
         scale <- ggheat_melt_scale(
-            axis,
             .subset2(user_scales, i),
             .subset2(default_scales, i),
             type = type

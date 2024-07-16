@@ -84,7 +84,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # here we set default value for user scales
     for (i in seq_along(default_xscales)) {
         user_xscales[[i]] <- ggheat_melt_scale(
-            scale_name = "x",
             .subset2(user_xscales, i),
             .subset2(default_xscales, i),
             "ggheat"
@@ -96,7 +95,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
 
     for (i in seq_along(default_yscales)) {
         user_yscales[[i]] <- ggheat_melt_scale(
-            scale_name = "y",
             .subset2(user_yscales, i),
             .subset2(default_yscales, i),
             "ggheat"
@@ -292,7 +290,7 @@ ggheat_melt_facet <- function(user_facet, default_facet) {
     user_facet
 }
 
-ggheat_melt_scale <- function(scale_name, user_scale, default_scale, type) {
+ggheat_melt_scale <- function(user_scale, default_scale, type) {
     if (is.null(user_scale)) {
         ans <- default_scale$clone()
     } else {
@@ -306,29 +304,8 @@ ggheat_melt_scale <- function(scale_name, user_scale, default_scale, type) {
         #  since a heatmap often reorder columns or rows.
         #  so we always set the breaks or labels into the default if user not
         #  remove it.
-        if (!is.null(ans$breaks) && !is.waiver(ans$breaks)) {
-            cli::cli_warn(c(
-                "{.arg breaks} will be ignored",
-                i = sprintf(
-                    "try to set {.arg {%s}labels_nudge}",
-                    if (type == "ggheat") scale_name,
-                    "in {.fn %s}", type
-                )
-            ))
-        }
         if (!is.null(ans$breaks)) {
             ans$breaks <- default_scale$breaks
-        }
-
-        if (!is.null(ans$labels) && !is.waiver(ans$labels)) {
-            cli::cli_warn(c(
-                "{.arg labels} will be ignored",
-                i = sprintf(
-                    "try to set {.arg {%s}labels}",
-                    if (type == "ggheat") scale_name,
-                    "in {.fn %s}", type
-                )
-            ))
         }
 
         if (!is.null(ans$labels)) {
