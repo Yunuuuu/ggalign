@@ -87,7 +87,7 @@ set_nudge <- function(nudge, n, axis,
 
 set_labels <- function(labels, axis, axis_names,
                        arg = rlang::caller_arg(labels),
-                       call = rlang::caller_env()) {
+                       call = caller_call()) {
     labels <- allow_lambda(labels)
     if (is.waiver(labels)) {
         return(axis_names)

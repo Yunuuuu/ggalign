@@ -1,3 +1,9 @@
+#' Group Heatmap rows/columns
+#' @param group A character define the heatmap groups, this will split the
+#' heatmap into different panels.
+#' @inheritParams htanno
+#' @inherit htanno return
+#' @export
 htanno_group <- function(group, position = NULL,
                          set_context = NULL, name = NULL,
                          check.param = TRUE) {

@@ -3,7 +3,7 @@
 #' @inheritParams hclust2
 #' @inheritParams ggdendrogram
 #' @inheritParams htanno
-#' @return A `htanno` object.
+#' @inherit htanno return
 #' @export
 htanno_dendro <- function(mapping = aes(), ...,
                           distance = "euclidean",
