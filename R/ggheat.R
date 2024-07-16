@@ -44,9 +44,9 @@ ggheat.matrix <- function(data, mapping = NULL,
                           filling = TRUE, ...,
                           environment = parent.frame()) {
     assert_bool(filling)
-    xlabels <- set_labels(xlabels, "column", colnames(data))
+    xlabels <- set_labels(xlabels, "column", colnames(data), ncol(data))
     xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data))
-    ylabels <- set_labels(ylabels, "row", rownames(data))
+    ylabels <- set_labels(ylabels, "row", rownames(data), nrow(data))
     ylabels_nudge <- set_nudge(ylabels_nudge, ncol(data))
     mapping <- mapping %||% aes(.data$.x, .data$.y)
     heatmap <- ggplot2::ggplot(mapping = mapping)
@@ -57,11 +57,10 @@ ggheat.matrix <- function(data, mapping = NULL,
     }
     if (filling) {
         # add heatmap filling in the first layer
-        heatmap <- heatmap +
-            ggplot2::geom_tile(
-                aes(.data$.x, .data$.y, fill = .data$value),
-                width = 1L, height = 1L
-            )
+        heatmap <- heatmap + ggplot2::geom_tile(
+            aes(.data$.x, .data$.y, fill = .data$value),
+            width = 1L, height = 1L
+        )
     }
     methods::new("ggheatmap",
         matrix = data,
@@ -103,12 +102,12 @@ set_nudge <- function(nudge, n, axis,
     nudge
 }
 
-set_labels <- function(labels, axis, axis_names,
+set_labels <- function(labels, axis, default, n,
                        arg = rlang::caller_arg(labels),
                        call = caller_call()) {
     labels <- allow_lambda(labels)
     if (is.waiver(labels)) {
-        return(axis_names)
+        return(default)
     } else if (is.null(labels)) {
         return(NULL)
     } else if (identical(labels, NA)) {
@@ -117,9 +116,9 @@ set_labels <- function(labels, axis, axis_names,
             i = "Use {.code NULL}, not {.code NA}"
         ), call = call)
     } else if (is.function(labels)) {
-        labels <- labels(axis_names)
+        labels <- labels(default)
     }
-    if (is.atomic(labels) && length(axis_names) != length(labels)) {
+    if (is.atomic(labels) && n != length(labels)) {
         cli::cli_abort(
             "{.arg {arg}} must have the same length of heatmap {axis}.",
             call = call

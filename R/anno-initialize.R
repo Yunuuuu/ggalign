@@ -22,6 +22,7 @@ anno_initialize.anno <- function(object, plot, object_name) {
         slot(object, "labels"),
         axis,
         rownames(data),
+        nrow(data),
         arg = "labels",
         call = slot(object, "call")
     )
