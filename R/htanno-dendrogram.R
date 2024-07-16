@@ -155,7 +155,11 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             node <- rename(node, c(x = "y", y = "x"))
         }
         plot$data <- node
-
+        plot <- anno_add_default_mapping(plot, position, switch_position(
+            position,
+            aes(y = .data$y),
+            aes(x = .data$x)
+        ))
         edge_mapping <- aes(
             x = .data$x, y = .data$y,
             xend = .data$xend, yend = .data$yend

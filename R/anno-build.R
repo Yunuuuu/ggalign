@@ -7,7 +7,11 @@ anno_build.gganno <- function(x, panels, index, scales, facet, position) {
     data <- anno_build_data(slot(x, "data"), panels, index, position)
     plot <- slot(x, "plot")
     plot$data <- data
-    plot <- anno_add_default_mapping(plot, position)
+    plot <- anno_add_default_mapping(plot, position, switch_position(
+        position,
+        aes(y = .data$.y),
+        aes(x = .data$.x)
+    ))
     anno_set_scales_and_facet(
         plot,
         slot(x, "facetted_pos_scales"),
@@ -28,7 +32,6 @@ anno_build.htanno <- function(x, panels, index, scales, facet, position) {
         !!!htanno$draw_params
     ))
     if (is.null(plot)) return(plot) # styler: off
-    plot <- anno_add_default_mapping(plot, position)
     anno_set_scales_and_facet(
         plot,
         slot(x, "facetted_pos_scales"),
@@ -56,12 +59,7 @@ anno_build_data <- function(data, panels, index, position) {
 }
 
 #' @importFrom ggplot2 aes
-anno_add_default_mapping <- function(plot, position) {
-    default_mapping <- switch_position(
-        position,
-        aes(y = .data$.y),
-        aes(x = .data$.x)
-    )
+anno_add_default_mapping <- function(plot, position, default_mapping) {
     mapping <- .subset2(plot, "mapping")
     for (nm in names(mapping)) {
         default_mapping[[nm]] <- .subset2(mapping, nm)
