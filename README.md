@@ -278,6 +278,7 @@ and `deactivate` for function call foramt).
 
 ``` r
 ggheat(small_mat) +
+  scale_fill_viridis_c(guide = "none") +
   htanno_dendro(aes(color = branch), position = "top", k = 3) +
   gganno(data = rowSums) +
   geom_bar(aes(y = value, fill = .panel), stat = "identity") +
@@ -289,6 +290,7 @@ ggheat(small_mat) +
     stat = "identity",
     orientation = "y"
   ) +
+  scale_fill_brewer(palette = "Set1", guide = "none") +
   scale_x_reverse()
 ```
 
@@ -300,13 +302,14 @@ For convenient, we also provide `gganno_*` function for 4 positions.
 ggheat(small_mat) +
   gganno_top(aes(y = value), data = rowSums) +
   geom_bar(stat = "identity", aes(fill = factor(.panel))) +
-  scale_fill_brewer(name = NULL, palette = "Dark2") +
+  scale_fill_brewer(name = NULL, palette = "Dark2", guide = "none") +
   gganno_left(aes(x = value), data = rowSums) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
     stat = "identity",
     orientation = "y"
   ) +
+  scale_fill_brewer(palette = "Set1") +
   scale_x_reverse()
 ```
 
@@ -343,6 +346,7 @@ ggheat(small_mat) +
     stat = "identity",
     orientation = "y"
   ) +
+  scale_fill_brewer(palette = "Set1", guide = "none") +
   scale_x_reverse()
 ```
 
@@ -383,6 +387,7 @@ pp <- ggheat(small_mat) +
     stat = "identity",
     orientation = "y"
   ) +
+  scale_fill_brewer(palette = "Set1", guide = "none") +
   scale_x_reverse()
 pp
 ```
