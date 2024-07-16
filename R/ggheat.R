@@ -45,9 +45,9 @@ ggheat.matrix <- function(data, mapping = NULL,
                           environment = parent.frame()) {
     assert_bool(filling)
     xlabels <- set_labels(xlabels, "column", colnames(data), ncol(data))
-    xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data))
+    xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data), xlabels, "column")
     ylabels <- set_labels(ylabels, "row", rownames(data), nrow(data))
-    ylabels_nudge <- set_nudge(ylabels_nudge, ncol(data))
+    ylabels_nudge <- set_nudge(ylabels_nudge, ncol(data), ylabels, "row")
     mapping <- mapping %||% aes(.data$.x, .data$.y)
     heatmap <- ggplot2::ggplot(mapping = mapping)
     if (ncol(data) > 10L) {
@@ -82,9 +82,11 @@ ggheat.matrix <- function(data, mapping = NULL,
     )
 }
 
-set_nudge <- function(nudge, n, axis,
+set_nudge <- function(nudge, n, names, axis,
                       arg = rlang::caller_arg(nudge),
                       call = caller_call()) {
+    # if no names, default to
+    if (is.waiver(nudge) && is.null(names)) return(NULL) # styler: off
     if (is.numeric(nudge)) {
         if (!is_scalar(nudge) && length(nudge) != n) {
             cli::cli_abort(paste(

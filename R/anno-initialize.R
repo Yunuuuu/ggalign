@@ -31,7 +31,8 @@ anno_initialize.anno <- function(object, plot, object_name) {
     # if waiver, will inherit from the heatmap
     labels_nudge <- set_nudge(
         slot(object, "labels_nudge"),
-        nrow(data), axis
+        nrow(data), labels,
+        axis
     ) %|w|% .subset2(
         slot(plot, "params"),
         paste0(to_coord_axis(position), "labels_nudge")
