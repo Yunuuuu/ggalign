@@ -3,3 +3,6 @@
 ^\.radian_history$
 ^Scratch\.RConsole$
 ^LICENSE\.md$
+^README\.Rmd$
+^README\.html$
+^\.github$
