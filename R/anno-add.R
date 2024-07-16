@@ -10,7 +10,7 @@ anno_add.gganno <- function(anno, object, object_name) {
 
 #' @export
 anno_add.htanno <- function(anno, object, object_name) {
-    htanno_add(anno, object, object_name)
+    htanno_add(object, anno, object_name)
 }
 
 gganno_add <- function(object, anno, object_name) {
@@ -30,18 +30,18 @@ gganno_add.default <- function(object, anno, object_name) {
     ))
 }
 
-# htanno will have sub-class, so we'll re-dispatch to call `htanno` add method
-#' @export
-htanno_add.default <- function(object, anno, object_name) {
-    slot(anno, "htanno")$add(object, object_name)
-    anno
-}
-
 #' @export
 gganno_add.gg <- function(object, anno, object_name) {
     slot(anno, "plot") <- ggplot2::ggplot_add(
         object, slot(anno, "plot"), object_name
     )
+    anno
+}
+
+# htanno will have sub-class, so we'll re-dispatch to call `htanno` add method
+#' @export
+htanno_add.default <- function(object, anno, object_name) {
+    slot(anno, "htanno")$add(object, object_name)
     anno
 }
 

@@ -75,7 +75,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         }
         if (!is.null(index)) {
             cli::cli_warn(
-                "{.fn {snake_class(self)}} will break the index into pieces",
+                "{.fn {snake_class(self)}} will break the original order",
                 call = self$call
             )
         }
@@ -85,12 +85,14 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         } else if (!is.null(h)) {
             panels <- stats::cutree(statistics, h = height <- h)
         } else {
+            panels <- NULL
             height <- NULL
         }
-        self$draw_params$height <- height
+        # fix error height not supplied to `$draw()` method
+        self$draw_params["height"] <- list(height)
         index <- statistics$order
         # reorder panel factor levels to following the dendrogram order
-        panels <- factor(panels, unique(panels[index]))
+        if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
     draw = function(self, data, statistics, panels, index,
@@ -106,22 +108,29 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             ), call = self$call)
             type <- "rectangle"
         }
+        if (!identical(statistics$order, index)) {
+            cli::cli_abort(c(
+                "Cannot draw the dendrogram",
+                i = "the node order has been changed"
+            ), call = self$call)
+        }
         data <- dendrogram_data(
             statistics,
+            double_spanned_horizontal = nlevels(panels) > 1L,
             center = center,
             type = type,
             leaf_braches = panels,
             root = root
         )
-
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
-        leaves <- node[.subset2(node, "leaf"), ]
-        ranges <- split(.subset2(leaves, "x"), .subset2(leaves, "panel"))
-        ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
-        edge <- tree_edge_double(edge, ranges)
-        edge <- rename(edge, c(ggpanel = ".panel"))
-        node <- rename(node, c(ggpanel = ".panel"))
+        if (to_coord_axis(position) == "y") {
+            edge <- rename(
+                edge,
+                c(x = "y", xend = "yend", y = "x", yend = "xend")
+            )
+            node <- rename(node, c(x = "y", y = "x"))
+        }
         plot$data <- node
 
         edge_mapping <- aes(
@@ -150,69 +159,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot + ggplot2::labs(y = "height")
     }
 )
-
-tree_edge_double <- function(edge, ranges) {
-    # we draw horizontal lines twice
-    #     if one of the node is out of the panel or if the horizontal lines span
-    #     across different panels.
-    double_index <- (is.na(.subset2(edge, "panel1")) |
-        is.na(.subset2(edge, "panel2")) |
-        .subset2(edge, "panel1") != .subset2(edge, "panel2")) &
-        (.subset2(edge, "x") != .subset2(edge, "xend")) &
-        (.subset2(edge, "y") == .subset2(edge, "yend"))
-    doubled_edge <- edge[double_index, ]
-    doubled_edge$panel1 <- as.character(doubled_edge$panel1)
-    doubled_edge$panel2 <- as.character(doubled_edge$panel2)
-    doubled_edge <- .mapply(
-        function(x, xend, y, yend, branch, panel1, panel2, ranges, ...) {
-            if (is.na(panel1) && is.na(panel2)) {
-                x0 <- (x + xend) / 2L
-                midpoint <- tree_find_panel(ranges, x0)
-                if (is.na(panel0 <- .subset2(panel0, "panel"))) {
-                    panel0 <- .subset2(midpoint, "right")
-                }
-                panel <- .subset2(tree_find_panel(ranges, x), "left")
-                panel_end <- .subset2(tree_find_panel(ranges, xend), "right")
-                data_frame0(
-                    x = c(x, x0, x0, xend),
-                    xend = c(x0, x, xend, x0),
-                    y = y, yend = yend,
-                    branch = branch,
-                    ggpanel = c(panel, panel0, panel0, panel_end)
-                )
-            } else if (is.na(panel1)) {
-                panel <- .subset2(tree_find_panel(ranges, x), "left")
-                data_frame0(
-                    x = c(x, xend),
-                    xend = c(xend, x),
-                    y = y, yend = yend,
-                    branch = branch,
-                    ggpanel = c(panel, panel2)
-                )
-            } else if (is.na(panel2)) {
-                panel <- .subset2(tree_find_panel(ranges, xend), "right")
-                data_frame0(
-                    x = c(x, xend),
-                    xend = c(xend, x),
-                    y = y, yend = yend,
-                    branch = branch,
-                    ggpanel = c(panel1, panel)
-                )
-            } else {
-                data_frame0(
-                    x = c(x, xend),
-                    xend = c(xend, x),
-                    y = y, yend = yend,
-                    branch = branch,
-                    ggpanel = c(panel1, panel2)
-                )
-            }
-        }, doubled_edge, list(ranges = ranges)
-    )
-    edge <- edge[!double_index, ]
-    edge <- edge[, c("x", "xend", "y", "yend", "branch", "ggpanel")]
-    do.call(rbind, c(list(edge), doubled_edge))
-}
 
 tree_find_panel <- function(ranges, x) {
     panels <- names(ranges)

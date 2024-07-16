@@ -136,9 +136,5 @@ methods::setValidity("anno", function(object) {
             call = call
         )
     }
-    assert_(
-        slot(object, "labels_nudge"), is.numeric, "a numeric",
-        null_ok = TRUE
-    )
     TRUE
 })

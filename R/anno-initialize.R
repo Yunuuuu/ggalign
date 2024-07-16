@@ -93,36 +93,50 @@ htanno_layout <- function(htanno, old_panels, old_index,
     if (!is.null(new_panels)) {
         if (anyNA(new_panels)) {
             cli::cli_abort(
-                "{.fn {snake_class(htanno)}}: find `NA` in layout panels"
+                "{.fn {snake_class(htanno)}}: find `NA` in layout panels",
+                call = htanno$call
             )
         } else if (!is.atomic(new_panels)) {
-            cli::cli_abort(c(
-                "{.fn {snake_class(htanno)}}: invalid layout panels",
-                i = "layout panels must be an atomic vector"
-            ))
+            cli::cli_abort(
+                c(
+                    "{.fn {snake_class(htanno)}}: invalid layout panels",
+                    i = "layout panels must be an atomic vector"
+                ),
+                call = htanno$call
+            )
         } else if (length(new_panels) != nrow(data)) {
-            cli::cli_abort(paste(
-                "{.fn layout} panels of {.fn {snake_class(htanno)}}",
-                "is not compatible with heatmap {axis}"
-            ))
+            cli::cli_abort(
+                paste(
+                    "{.fn layout} panels of {.fn {snake_class(htanno)}}",
+                    "is not compatible with heatmap {axis}"
+                ),
+                call = htanno$call
+            )
         }
     }
     new_index <- .subset2(new, 2L)
     if (!is.null(new_index)) {
         if (anyNA(new_index)) {
             cli::cli_abort(
-                "{.fn {snake_class(htanno)}}: find `NA` in layout index"
+                "{.fn {snake_class(htanno)}}: find `NA` in layout index",
+                call = htanno$call
             )
         } else if (!is.integer(new_index)) {
-            cli::cli_abort(c(
-                "{.fn {snake_class(htanno)}}: invalid layout index",
-                i = "layout index must be integer"
-            ))
+            cli::cli_abort(
+                c(
+                    "{.fn {snake_class(htanno)}}: invalid layout index",
+                    i = "layout index must be integer"
+                ),
+                call = htanno$call
+            )
         } else if (length(new_index) != nrow(data)) {
-            cli::cli_abort(paste(
-                "layout index of {.fn {snake_class(htanno)}}",
-                "is not compatible with heatmap {axis}"
-            ))
+            cli::cli_abort(
+                paste(
+                    "layout index of {.fn {snake_class(htanno)}}",
+                    "is not compatible with heatmap {axis}"
+                ),
+                call = htanno$call
+            )
         }
     }
     # the panel factor level determine the group order
@@ -135,7 +149,8 @@ htanno_layout <- function(htanno, old_panels, old_index,
     list(new_panels, new_index)
 }
 
-reorder_index <- function(panels, index = NULL) {
+reorder_index <- function(panels, index = NULL, reverse = FALSE) {
     index <- index %||% seq_along(panels)
-    unlist(split(index, panels[index]), recursive = FALSE, use.names = FALSE)
+    ans <- split(index, panels[index])
+    unlist(ans, recursive = FALSE, use.names = FALSE)
 }

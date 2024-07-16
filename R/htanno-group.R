@@ -39,7 +39,7 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
         }
         if (!is.null(index)) {
             cli::cli_warn(
-                "{.fn {snake_class(self)}} will break the index into pieces",
+                "{.fn {snake_class(self)}} will break the original order",
                 call = self$call
             )
         }

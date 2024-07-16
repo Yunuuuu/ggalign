@@ -6,6 +6,7 @@
 \usage{
 dendrogram_data(
   tree,
+  double_spanned_horizontal = FALSE,
   center = FALSE,
   type = "rectangle",
   leaf_pos = NULL,
@@ -17,6 +18,9 @@ dendrogram_data(
 \arguments{
 \item{tree}{A \link[stats:hclust]{hclust} or a \link[stats:dendrogram]{dendrogram}
 object.}
+
+\item{double_spanned_horizontal}{A boolean value indicates whether double the
+horizontal lines span across multiple panels.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to the leaves in the branch. Otherwise (default), plot them in the
@@ -52,9 +56,9 @@ different groups.
 using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes
 may fall outside panels, so there are possible \code{NA} values in
-this column. we also provide \code{ggpanel} column, which always
+this column. we also provide \code{.panel} column, which always
 regard the right branch for the out-sided \code{node}.
-\item \code{ggpanel}: See \code{panel}.
+\item \code{.panel}: See \code{panel}.
 \item \code{leaf}: A logical value indicates whether current node is a leaf.
 }
 }

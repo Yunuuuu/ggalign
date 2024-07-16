@@ -95,6 +95,8 @@ cutree_k_to_h <- function(tree, k) {
 #'
 #' @param tree A [hclust][stats::hclust] or a [dendrogram][stats::as.dendrogram]
 #' object.
+#' @param double_spanned_horizontal A boolean value indicates whether double the
+#' horizontal lines span across multiple panels.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
 #' respect to the leaves in the branch. Otherwise (default), plot them in the
 #' middle of all direct child nodes.
@@ -121,15 +123,16 @@ cutree_k_to_h <- function(tree, k) {
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes
 #'              may fall outside panels, so there are possible `NA` values in
-#'              this column. we also provide `ggpanel` column, which always
+#'              this column. we also provide `.panel` column, which always
 #'              regard the right branch for the out-sided `node`.
-#'   - `ggpanel`: See `panel`.
+#'   - `.panel`: See `panel`.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #' @examples
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
 #' @export
-dendrogram_data <- function(tree, center = FALSE,
+dendrogram_data <- function(tree, double_spanned_horizontal = FALSE,
+                            center = FALSE,
                             type = "rectangle",
                             leaf_pos = NULL,
                             leaf_braches = NULL,
@@ -148,7 +151,7 @@ dendrogram_data <- function(tree, center = FALSE,
         )
     }
 
-    # if no branches provided, all branch will be regarded as the root branch
+    # if no branches provided, all branch will be regarded as the `root`
     if (is.null(leaf_braches)) {
         root <- root %||% "root"
     } else if (anyNA(leaf_braches)) {
@@ -309,7 +312,7 @@ dendrogram_data <- function(tree, center = FALSE,
                     panel <- left_panel
                 }
                 # above is the real panel, but for ggplot2, NA value will create
-                #     another panel, so patchwork align won't work
+                #     another panel, in this way, patchwork align won't work.
                 #     here we always using the right panel
                 if (is.na(ggpanel <- panel)) {
                     # if the real panel is NA, we choose the right panel
@@ -332,9 +335,9 @@ dendrogram_data <- function(tree, center = FALSE,
                     y = c(direct_leaves_y, y, y),
                     yend = rep_len(y, 4L),
                     branch = rep(direct_leaves_branch, times = 2L),
-                    ggpanel = c(direct_leaves_ggpanel, rep_len(ggpanel, 2L)),
                     panel1 = c(direct_leaves_panel, rep_len(panel, 2L)),
-                    panel2 = rep(direct_leaves_panel, times = 2L)
+                    panel2 = rep(direct_leaves_panel, times = 2L),
+                    ggpanel = c(direct_leaves_ggpanel, rep_len(ggpanel, 2L))
                 )
             } else {
                 added_edge <- data_frame0(
@@ -343,9 +346,9 @@ dendrogram_data <- function(tree, center = FALSE,
                     y = direct_leaves_y,
                     yend = rep_len(y, 2L),
                     branch = direct_leaves_branch,
-                    ggpanel = rep_len(ggpanel, 2L),
                     panel1 = rep_len(panel, 2L),
-                    panel2 = direct_leaves_panel
+                    panel2 = direct_leaves_panel,
+                    ggpanel = rep_len(ggpanel, 2L)
                 )
             }
             if (is.null(edge)) {
@@ -362,29 +365,113 @@ dendrogram_data <- function(tree, center = FALSE,
             cli::cli_abort("{.arg dend} must be a {.cls dendrogram} object")
         }
     }
-    ans <- .subset(.dendrogram_data(dend), c("node", "edge"))
+    ans <- .dendrogram_data(dend)
+    node <- .subset2(ans, "node")
+    edge <- .subset2(ans, "edge")
+    if (double_spanned_horizontal) {
+        leaves <- node[.subset2(node, "leaf"), ]
+        ranges <- split(.subset2(leaves, "x"), .subset2(leaves, "panel"))
+        ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
+        edge <- tree_edge_double(edge, ranges)
+    }
 
-    # set factor levels
+    # set factor levels for branch and panel ---------------
     panel_levels <- setdiff(branch_levels, root)
-    ans <- lapply(ans, function(df) {
-        df$branch <- factor(.subset2(df, "branch"), branch_levels)
-        df$ggpanel <- factor(.subset2(df, "ggpanel"), panel_levels)
-        rownames(df) <- NULL
-        df
-    })
-    ans$node$panel <- factor(
-        .subset2(.subset2(ans, "node"), "panel"),
-        panel_levels
+    node$panel <- factor(.subset2(node, "panel"), panel_levels)
+    node$branch <- factor(.subset2(node, "branch"), branch_levels)
+    node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_levels)
+    rownames(node) <- NULL
+
+    edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_levels)
+    edge$panel1 <- factor(.subset2(edge, "panel1"), panel_levels)
+    edge$panel2 <- factor(.subset2(edge, "panel2"), panel_levels)
+    edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
+    rownames(node) <- NULL
+
+    # we rename `ggpanel` into the finale name `.panel`
+    list(
+        node = rename(node, c(ggpanel = ".panel")),
+        edge = rename(edge, c(ggpanel = ".panel"))
     )
-    ans$edge$panel1 <- factor(
-        .subset2(.subset2(ans, "edge"), "panel1"),
-        panel_levels
+}
+
+tree_edge_double <- function(edge, ranges) {
+    # we draw horizontal lines twice
+    #     if one of the node is out of the panel or if the horizontal lines span
+    #     across different panels.
+    double_index <- (is.na(.subset2(edge, "panel1")) |
+        is.na(.subset2(edge, "panel2")) |
+        .subset2(edge, "panel1") != .subset2(edge, "panel2")) &
+        (.subset2(edge, "x") != .subset2(edge, "xend")) &
+        (.subset2(edge, "y") == .subset2(edge, "yend"))
+    doubled_edge <- edge[double_index, ]
+
+    # convert factor into character, it'll cause wrong result.
+    # doubled_edge$panel1 <- as.character(doubled_edge$panel1)
+    # doubled_edge$panel2 <- as.character(doubled_edge$panel2)
+    doubled_edge <- .mapply(
+        function(x, xend, y, yend, branch, panel1, panel2, ranges, ...) {
+            if (is.na(panel1) && is.na(panel2)) {
+                # both node are outside panels,
+                # we choose the midpoint as the another node and draw the
+                # horizontal lines
+                midpoint <- (x + xend) / 2L
+                midpoint_panels <- tree_find_panel(ranges, midpoint)
+                ggpanel_midpoint <- panel_midpoint <-
+                    .subset2(midpoint_panels, "panel")
+                if (is.na(ggpanel_midpoint)) {
+                    ggpanel_midpoint <- .subset2(midpoint_panels, "right")
+                }
+                ggpanel1 <- .subset2(tree_find_panel(ranges, x), "left")
+                ggpanel2 <- .subset2(tree_find_panel(ranges, xend), "right")
+                data_frame0(
+                    x = c(x, midpoint, midpoint, xend),
+                    xend = c(midpoint, x, xend, midpoint),
+                    y = y, yend = yend,
+                    branch = branch,
+                    panel1 = c(panel1, rep_len(panel_midpoint, 2L), panel2),
+                    panel2 = c(panel_midpoint, panel1, panel2, panel_midpoint),
+                    ggpanel = c(
+                        ggpanel1, rep_len(ggpanel_midpoint, 2L), ggpanel2
+                    )
+                )
+            } else if (is.na(panel1)) {
+                ggpanel1 <- .subset2(tree_find_panel(ranges, x), "left")
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    panel1 = c(panel1, panel2),
+                    panel2 = c(panel2, panel1),
+                    ggpanel = c(ggpanel1, panel2)
+                )
+            } else if (is.na(panel2)) {
+                ggpanel2 <- .subset2(tree_find_panel(ranges, xend), "right")
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    panel1 = c(panel1, panel2),
+                    panel2 = c(panel2, panel1),
+                    ggpanel = c(panel1, ggpanel2)
+                )
+            } else {
+                data_frame0(
+                    x = c(x, xend),
+                    xend = c(xend, x),
+                    y = y, yend = yend,
+                    branch = branch,
+                    panel1 = c(panel1, panel2),
+                    panel2 = c(panel2, panel1),
+                    ggpanel = c(panel1, panel2)
+                )
+            }
+        }, doubled_edge, list(ranges = ranges)
     )
-    ans$edge$panel2 <- factor(
-        .subset2(.subset2(ans, "edge"), "panel2"),
-        panel_levels
-    )
-    ans
+    edge <- edge[!double_index, ]
+    do.call(rbind, c(list(edge), doubled_edge))
 }
 
 check_tree <- function(tree, arg = rlang::caller_arg(tree),

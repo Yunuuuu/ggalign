@@ -17,9 +17,9 @@ is.waiver <- function(x) inherits(x, "waiver")
 
 #' @importFrom rlang env_clone
 ggproto_clone <- function(ggproto) {
-  ans <- env_clone(ggproto)
-  class(ans) <- class(ggproto)
-  ans
+    ans <- env_clone(ggproto)
+    class(ans) <- class(ggproto)
+    ans
 }
 
 switch_position <- function(position, row, column) {
@@ -51,16 +51,21 @@ melt_matrix <- function(matrix) {
     data
 }
 
+fct_rev <- function(x) factor(x, levels = rev(levels(x)))
+
 # Since ggplot2 always use tibble, we'll use it too.
 tibble0 <- function(...) {
     tibble::tibble(..., .name_repair = "minimal")
 }
 
 data_frame0 <- function(...) {
-    data.frame(...,
-        check.names = FALSE,
-        fix.empty.names = FALSE, stringsAsFactors = FALSE
-    )
+    quickdf(list(...))
+}
+
+quickdf <- function(l) {
+    class(l) <- "data.frame"
+    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
+    l
 }
 
 as_tibble0 <- function(data, ...) {

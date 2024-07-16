@@ -28,8 +28,16 @@ ggheat_build.ggheatmap <- function(x, ...) {
     params <- slot(x, "params")
     row_panels <- slot(x, "row_panels") %||%
         factor(rep_len(1L, nrow(mat)))
-    row_index <- slot(x, "row_index") %||%
-        reorder_index(row_panels)
+
+    # we have reverse the panel order for heatmap rows
+    row_index <- slot(x, "row_index")
+
+    # the ggplot2 reorder panels from the top to bottom
+    # it's not necessary to reverse the panels
+    row_index <- reorder_index(row_panels, row_index)
+    # row_index <- rev(row_index)
+    # row_panels <- factor(row_panels, rev(levels(row_panels)))
+
     column_panels <- slot(x, "column_panels") %||%
         factor(rep_len(1L, ncol(mat)))
     column_index <- slot(x, "column_index") %||%
@@ -115,7 +123,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.row_panel),
+            rows = ggplot2::vars(fct_rev(.data$.row_panel)),
             cols = ggplot2::vars(.data$.column_panel),
             scales = "free", space = "free"
         )
@@ -123,7 +131,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
             ggh4x::facetted_pos_scales(x = user_xscales, y = user_yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.row_panel),
+            rows = ggplot2::vars(fct_rev(.data$.row_panel)),
             scales = "free_y", space = "free_y"
         )
         p <- p + ggheat_melt_facet(p$facet, default_facet) +
@@ -155,7 +163,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
             position,
             if (do_row_facet) {
                 ggplot2::facet_grid(
-                    rows = ggplot2::vars(.data$.panel),
+                    rows = ggplot2::vars(fct_rev(.data$.panel)),
                     scales = "free_y", space = "free_y"
                 )
             },
@@ -374,6 +382,9 @@ ggheat_default_scale <- function(scale_name, panels, index, labels, nudge,
         nudge <- rep_len(0, length(index))
     }
     panels <- panels[index]
+    # For row, ggplot arrange panels from top to bottom,
+    # we always choose to reverse the panel order
+    if (scale_name == "y") panels <- fct_rev(panels)
     labels <- labels[index]
     fn <- switch(scale_name,
         x = ggplot2::scale_x_continuous,
