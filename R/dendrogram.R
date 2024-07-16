@@ -311,7 +311,12 @@ dendrogram_data <- function(tree,
                         break
                     }
                 }
-                if (is.na(ggpanel <- panel)) ggpanel <- .subset(panels, i - 1L)
+                if (is.na(ggpanel <- panel)) {
+                    ggpanel <- switch(priority,
+                        left = .subset(panels, i - 1L),
+                        right = .subset(panels, i)
+                    )
+                }
             }
 
             # there is no node data in dendrogram root
