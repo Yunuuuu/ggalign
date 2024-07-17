@@ -88,7 +88,7 @@ notation.
 will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels will
 be removed too.}
 
-\item{position}{A string of the annotation position, Possible values are
+\item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}

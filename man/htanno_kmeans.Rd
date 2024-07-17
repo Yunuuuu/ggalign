@@ -35,7 +35,7 @@ htanno_kmeans(
     tracing information on the progress of the algorithm is
     produced.  Higher values may produce more tracing information.}
 
-\item{position}{A string of the annotation position, Possible values are
+\item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the

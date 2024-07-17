@@ -3,7 +3,7 @@
 #' @param Class Sub-class of `anno`.
 #' @param ... Additional components of the sub-class.
 #' @inheritParams ggheat
-#' @param position A string of the annotation position, Possible values are
+#' @param position A string of the annotation position, possible values are
 #' `"top"`, `"left"`, `"bottom"`, and `"right"`.
 #' @param size Annotation size, can be a [unit][grid::unit] object.
 #' @param labels Labels for axis parallelly with heatmap, the default will use

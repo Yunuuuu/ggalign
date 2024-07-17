@@ -26,7 +26,7 @@ one-column matrix. Data.frame will also be coerced into matrix.}
 
 \item{params}{A list of parameters passed  to \code{htanno}.}
 
-\item{position}{A string of the annotation position, Possible values are
+\item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}

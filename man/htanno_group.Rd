@@ -16,7 +16,7 @@ htanno_group(
 \item{group}{A character define the heatmap groups, this will split the
 heatmap into different panels.}
 
-\item{position}{A string of the annotation position, Possible values are
+\item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the

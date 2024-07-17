@@ -29,7 +29,7 @@ anno(
 \item{data}{A matrix, if it is a simple vector, it will be converted to a
 one-column matrix. Data.frame will also be coerced into matrix.}
 
-\item{position}{A string of the annotation position, Possible values are
+\item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
