@@ -195,13 +195,23 @@ methods::setClass(
 
 #' Subset a `ggheatmap` object
 #'
-#' Used by [ggplot_build][ggplot2::ggplot_build]
+#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
 #'
 #' @param x A ggheatmap object
 #' @param name A string of slot name in `ggheatmap` object.
 #' @keywords internal
 methods::setMethod("$", "ggheatmap", function(x, name) {
-    slot(x, name)
+    # https://github.com/tidyverse/ggplot2/issues/6002
+    if (name == "theme") {
+        slot(x, "heatmap")$theme
+    } else if (name == "plot_env") {
+        slot(x, "plot_env")
+    } else {
+        cli::cli_abort(c(
+            "`$` is just for internal usage for ggplot2 methods",
+            i = "try to use `@` method instead"
+        ))
+    }
 })
 
 #' @importFrom ggplot2 is.ggplot

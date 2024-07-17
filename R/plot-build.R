@@ -4,6 +4,12 @@ print.ggheatmap <- function(x, ...) {
     print(p)
 }
 
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.ggheat <- function(x, ...) {
+    print(x, ...)
+}
+
 #' @importFrom ggplot2 ggplot_build
 #' @export
 ggplot_build.ggheatmap <- function(plot) {

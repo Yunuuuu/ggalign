@@ -12,6 +12,6 @@
 \item{name}{A string of slot name in \code{ggheatmap} object.}
 }
 \description{
-Used by \link[ggplot2:ggplot_build]{ggplot_build}
+Used by \link[ggplot2:ggplot_build]{ggplot_build} and \link[ggplot2:ggsave]{ggsave}
 }
 \keyword{internal}
