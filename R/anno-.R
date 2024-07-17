@@ -137,3 +137,7 @@ methods::setValidity("anno", function(object) {
     }
     TRUE
 })
+
+anno_default_theme <- function() {
+    ggplot2::theme(strip.text = ggplot2::element_blank())
+}

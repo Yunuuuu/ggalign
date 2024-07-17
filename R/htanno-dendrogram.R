@@ -22,7 +22,8 @@ htanno_dendro <- function(mapping = aes(), ...,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
-            plot = ggplot2::ggplot(mapping = mapping),
+            plot = ggplot2::ggplot(mapping = mapping) +
+                anno_default_theme(),
             segment_params = rlang::list2(...),
             center = center, type = type, root = root,
             # initialize height value

@@ -18,7 +18,8 @@ gganno <- function(mapping = aes(), data = NULL,
         data = data,
         order = order,
         size = size,
-        plot = ggplot2::ggplot(mapping = mapping),
+        plot = ggplot2::ggplot(mapping = mapping) +
+            anno_default_theme(),
         name = name, position = position, set_context = set_context,
         labels = labels, labels_nudge = labels_nudge,
         call = call
