@@ -38,11 +38,11 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
             ), call = self$call)
         }
         if (!is.null(index)) {
-            cli::cli_warn(sprintf(
+            cli::cli_abort(sprintf(
                 "{.fn {snake_class(self)}} will disrupt the previously %s %s",
                 "established order of the heatmap",
                 to_matrix_axis(position)
-            ))
+            ), call = self$call)
         }
         list(group, index)
     }
