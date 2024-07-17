@@ -22,8 +22,8 @@ object.}
 \item{priority}{A string of "left" or "right". if we draw from right to left,
 the left will override the right, so we take the \code{"left"} as the priority. If
 we draw from \code{left} to \code{right}, the right will override the left, so we take
-the \code{"right"} as priority. This is used by the \link{htanno_dendro} to provide
-support of facet operation in ggplot2.}
+the \code{"right"} as priority. This is used by \link{htanno_dendro} to provide support
+of facet operation in ggplot2.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to the leaves in the branch. Otherwise (default), plot them in the
@@ -37,8 +37,8 @@ of the number of observations in \code{tree}.}
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
 number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
 
-\item{branch_gap}{A numeric value indicates the gap between different
-branches. If a \link{unit} object is provided, it'll convert into \code{native} values.}
+\item{branch_gap}{A single numeric value indicates the gap between different
+branches.}
 
 \item{root}{A length one string or numeric indicates the root branch.}
 }

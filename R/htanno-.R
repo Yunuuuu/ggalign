@@ -74,6 +74,7 @@ methods::setClass(
 #' @rdname htanno
 HtannoProto <- ggplot2::ggproto("HtannoProto",
     call = NULL,
+    # each function can modify these parameters
     compute_params = NULL,
     layout_params = NULL,
     draw_params = NULL,

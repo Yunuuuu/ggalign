@@ -43,8 +43,8 @@ middle of all direct child nodes.}
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
 number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
 
-\item{branch_gap}{A numeric value indicates the gap between different
-branches. If a \link{unit} object is provided, it'll convert into \code{native} values.}
+\item{branch_gap}{A single numeric value indicates the gap between different
+branches.}
 
 \item{root}{A length one string or numeric indicates the root branch.}
 

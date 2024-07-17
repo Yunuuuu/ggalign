@@ -78,19 +78,6 @@ hclust2 <- function(matrix,
     ans
 }
 
-cutree_k_to_h <- function(tree, k) {
-    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
-        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
-    }
-    n <- n1 + 1
-    if (is.unsorted(tree$height)) {
-        cli::cli_abort(
-            "the 'height' component of 'tree' is not sorted (increasingly)"
-        )
-    }
-    mean(tree$height[c(n - k, n - k + 1L)])
-}
-
 #' Dengrogram x and y coordinates
 #'
 #' @param tree A [hclust][stats::hclust] or a [dendrogram][stats::as.dendrogram]
@@ -98,8 +85,8 @@ cutree_k_to_h <- function(tree, k) {
 #' @param priority A string of "left" or "right". if we draw from right to left,
 #' the left will override the right, so we take the `"left"` as the priority. If
 #' we draw from `left` to `right`, the right will override the left, so we take
-#' the `"right"` as priority. This is used by the [htanno_dendro] to provide
-#' support of facet operation in ggplot2.
+#' the `"right"` as priority. This is used by [htanno_dendro] to provide support
+#' of facet operation in ggplot2.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
 #' respect to the leaves in the branch. Otherwise (default), plot them in the
 #' middle of all direct child nodes.
@@ -108,8 +95,8 @@ cutree_k_to_h <- function(tree, k) {
 #' of the number of observations in `tree`.
 #' @param leaf_braches Branches of the leaf node. Must be the same length of the
 #' number of observations in `tree`. Usually come from [cutree][stats::cutree].
-#' @param branch_gap A numeric value indicates the gap between different
-#' branches. If a [unit] object is provided, it'll convert into `native` values.
+#' @param branch_gap A single numeric value indicates the gap between different
+#' branches.
 #' @param root A length one string or numeric indicates the root branch.
 #' @return A list of 2 data.frame. One for node coordinates, another for edge
 #' coordinates.
@@ -124,7 +111,7 @@ cutree_k_to_h <- function(tree, k) {
 #'               different groups.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as panel, but they are specifically for the `edge` data and
-#'     correspond to both nodes of each edge. 
+#'     correspond to both nodes of each edge.
 #'   - `panel`: which panel current node is, if we split the plot into panels
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes
@@ -145,7 +132,7 @@ dendrogram_data <- function(tree,
                             leaf_braches = NULL,
                             branch_gap = NULL,
                             root = NULL) {
-    dend <- check_tree(tree)
+    dend <- check_dendrogram(tree)
     assert_bool(center)
     type <- match.arg(type, c("rectangle", "triangle"))
     priority <- match.arg(priority, c("left", "right"))
@@ -178,16 +165,9 @@ dendrogram_data <- function(tree,
     }
     # branch_gap must be a numeric value
     # and the length must be equal to `length(unique(leaf_braches)) - 1L`
-    if (is.unit(branch_gap)) {
-        branch_gap <- grid::convertUnit(branch_gap, "native", valueOnly = TRUE)
-    } else if (is.numeric(branch_gap)) {
-        if (!is_scalar(branch_gap) &&
-            !is.null(leaf_braches) &&
-            length(branch_gap) != (length(unique(leaf_braches)) - 1L)) {
-            cli::cli_abort(paste(
-                "{.arg branch_gap} must be of length",
-                "{.code length(unique(leaf_braches)) - 1}"
-            ))
+    if (is.numeric(branch_gap)) {
+        if (!is_scalar(branch_gap)) {
+            cli::cli_abort("{.arg branch_gap} must be of length 1")
         }
     } else if (is.null(branch_gap)) {
         branch_gap <- 0
@@ -195,6 +175,7 @@ dendrogram_data <- function(tree,
         cli::cli_abort("{.arg branch_gap} must be numeric value.")
     }
 
+    # the root value shouldn't be the same of leaf branches.
     if (!is_scalar(root)) {
         cli::cli_abort("{.arg root} must be of length 1")
     } else if (anyNA(root)) {
@@ -204,10 +185,12 @@ dendrogram_data <- function(tree,
             "{.arg root} cannot contain value in {.arg leaf_braches}"
         )
     }
+
+    # initialize values
     i <- 0L # leaf index
     branch_levels <- root
     last_branch <- root
-    total_gap <- 0 # will made x always be numeric
+    total_gap <- 0
     .dendrogram_data <- function(dend, from_root = TRUE) {
         if (stats::is.leaf(dend)) { # base version
             index <- as.integer(dend) # the column index of the original data
@@ -348,9 +331,8 @@ dendrogram_data <- function(tree,
                     ggpanel = direct_leaves_ggpanel
                 )
                 # 2 horizontal lines
-                # we double the left line and the right line
-                # when there is a node is not in a panel, or the node
-                # is not
+                # we double the left line and the right line when a node is not
+                # in a panel, or the edge spaned across different panels.
                 if (anyNA(direct_leaves_panel) ||
                     .subset(direct_leaves_panel, 1L) !=
                         .subset(direct_leaves_panel, 2L)
@@ -472,8 +454,59 @@ dendrogram_data <- function(tree,
     )
 }
 
-check_tree <- function(tree, arg = rlang::caller_arg(tree),
-                       call = caller_call()) {
+cutree_k_to_h <- function(tree, k) {
+    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
+        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
+    }
+    n <- n1 + 1
+    if (is.unsorted(tree$height)) {
+        cli::cli_abort(
+            "the 'height' component of 'tree' is not sorted (increasingly)"
+        )
+    }
+    mean(tree$height[c(n - k, n - k + 1L)])
+}
+
+# this function won't set the right `midpoint`, but out plot function won't use
+# it, so, it has no hurt to use.
+merge_dendrogram <- function(parent, children) {
+    children_heights <- vapply(children, attr, numeric(1L), "height")
+    parent_branch_heights <- tree_branch_heights(parent)
+    cutoff_height <- max(children_heights) + min(parent_branch_heights) * 0.5
+    .merge_dendrogram <- function(dend) {
+        if (stats::is.leaf(dend)) { # base version
+            .subset2(children, dend)
+        } else { # for a branch, we should update the members, height
+            attrs <- attributes(dend)
+            # we recursively run for each node of current branch
+            dend <- lapply(dend, .merge_dendrogram)
+            heights <- vapply(dend, attr, numeric(1L), "height")
+            n_members <- vapply(dend, attr, integer(1L), "members")
+            # we update height and members, in addition, midpoint
+            attrs$height <- .subset2(attrs, "height") + max(heights)
+            attrs$members <- sum(n_members)
+            attributes(dend) <- attrs
+            dend
+        }
+    }
+    ans <- .merge_dendrogram(parent)
+    attr(ans, "cutoff_height") <- cutoff_height
+    ans
+}
+
+tree_branch_heights <- function(dend) {
+    if (stats::is.leaf(dend)) {
+        return(NULL)
+    } else {
+        c(
+            attr(dend, "height"),
+            unlist(lapply(dend, tree_branch_heights), FALSE, FALSE)
+        )
+    }
+}
+
+check_dendrogram <- function(tree, arg = rlang::caller_arg(tree),
+                             call = caller_call()) {
     if (inherits(tree, "hclust")) {
         stats::as.dendrogram(tree)
     } else if (inherits(tree, "dendrogram")) {
@@ -482,6 +515,14 @@ check_tree <- function(tree, arg = rlang::caller_arg(tree),
         cli::cli_abort(paste(
             "{.arg {arg}} must be a {.cls hclust}",
             "or a {.cls dendrogram} object."
-        ))
+        ), call = call)
     }
 }
+
+order2 <- function(x) UseMethod("order2")
+
+#' @export
+order2.hclust <- function(x) x$order
+
+#' @export
+order2.dendrogram <- function(x) stats::order.dendrogram(x)

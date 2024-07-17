@@ -24,7 +24,9 @@ htanno_dendro <- function(mapping = aes(), ...,
             k = k, h = h, plot_cut_height = plot_cut_height,
             plot = ggplot2::ggplot(mapping = mapping),
             segment_params = rlang::list2(...),
-            center = center, type = type, root = root
+            center = center, type = type, root = root,
+            # initialize height value
+            height = NULL
         ),
         labels = labels, labels_nudge = labels_nudge,
         set_context = set_context, name = name, order = NULL,
@@ -85,30 +87,93 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         )
         self
     },
-    compute = function(data, panels, index, position,
-                       distance, method, use_missing) {
+    compute = function(self, data, panels, index, position,
+                       distance, method, use_missing, k, h) {
+        # what if the old panels exist, we should do sub-clustering
+        if (!is.null(panels)) {
+            # if the heatmap has established groups,
+            # `k` and `h` must be NULL, and we'll do sub-clustering
+            if (!is.null(k) || !is.null(h)) {
+                cli::cli_abort(sprintf(
+                    "Cannot cut tree since the heatmap %s %s",
+                    to_matrix_axis(position), "has been splitted"
+                ))
+            }
+            children <- vector("list", nlevels(panels))
+            names(children) <- levels(panels)
+            labels <- rownames(data)
+            # we do clustering within each group
+            for (g in levels(panels)) {
+                index <- which(panels == g)
+                gdata <- data[index, , drop = FALSE]
+                if (nrow(gdata) == 1L) {
+                    children[[g]] <- structure(
+                        index,
+                        class = "dendrogram",
+                        leaf = TRUE,
+                        height = 0,
+                        label = .subset(labels, index),
+                        members = 1L
+                    )
+                } else {
+                    child <- stats::as.dendrogram(self$compute(
+                        data = gdata,
+                        panels = NULL,
+                        distance = distance,
+                        method = method,
+                        use_missing = use_missing
+                    ))
+                    # we restore the actual index of the original matrix
+                    child <- stats::dendrapply(child, function(x) {
+                        if (stats::is.leaf(x)) {
+                            ans <- .subset(index, x)
+                            attributes(ans) <- attributes(x)
+                            ans
+                        } else {
+                            x
+                        }
+                    })
+                    children[[g]] <- child
+                }
+            }
+            if (nlevels(panels) == 1L) { # only one parent
+                ans <- .subset2(children, 1L)
+            } else {
+                parent_data <- t(sapply(levels(panels), function(g) {
+                    colMeans(data[panels == g, , drop = FALSE])
+                }))
+                rownames(parent_data) <- levels(panels)
+                parent <- stats::as.dendrogram(self$compute(
+                    data = parent_data,
+                    panels = NULL,
+                    distance = distance,
+                    method = method,
+                    use_missing = use_missing
+                ))
+                ans <- merge_dendrogram(parent, children)
+                self$draw_params$height <- attr(ans, "cutoff_height")
+            }
+            return(ans)
+        }
         hclust2(data, distance, method, use_missing)
     },
-    layout = function(self, data, statistics, panels, index, position, k, h) {
-        if (!is.null(index)) {
-            cli::cli_warn(sprintf(
-                "{.fn {snake_class(self)}} will disrupt the previously %s %s",
-                "established order of the heatmap",
+    layout = function(self, data, statistics, panels, old_index,
+                      position, k, h) {
+        # we'll always reorder the dendrogram
+        index <- order2(statistics)
+        if (!is.null(old_index) && !identical(index, old_index)) {
+            cli::cli_abort(sprintf(
+                "You cannot reorder the heatmap %s twice",
                 to_matrix_axis(position)
-            ))
+            ), call = self$call)
         }
         if (!is.null(k)) {
             panels <- stats::cutree(statistics, k = k)
-            height <- cutree_k_to_h(statistics, k)
+            self$draw_params$height <- cutree_k_to_h(statistics, k)
         } else if (!is.null(h)) {
-            panels <- stats::cutree(statistics, h = height <- h)
-        } else {
-            panels <- NULL
-            height <- NULL
+            panels <- stats::cutree(statistics, h = h)
+            self$draw_params$height <- h
         }
-        # fix error height not supplied to `$draw()` method
-        self$draw_params["height"] <- list(height)
-        index <- statistics$order
         # reorder panel factor levels to following the dendrogram order
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
@@ -117,7 +182,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     # other argumentds
                     plot, height, plot_cut_height, center, type,
                     root, segment_params) {
-        if (!identical(statistics$order, index)) {
+        if (!identical(order2(statistics), index)) {
             cli::cli_abort(c(
                 "Cannot draw the dendrogram",
                 i = "the node order has been changed"

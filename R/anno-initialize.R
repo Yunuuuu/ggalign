@@ -70,7 +70,10 @@ anno_initialize.htanno <- function(object, plot, object_name) {
 
     # compute statistics ---------------------------------
     statistics <- rlang::inject(
-        htanno$compute(data, position, !!!htanno$compute_params)
+        htanno$compute(
+            data, old_panels, old_index, position,
+            !!!htanno$compute_params
+        )
     )
     slot(object, "statistics") <- statistics
 

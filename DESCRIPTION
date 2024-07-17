@@ -37,6 +37,7 @@ Collate:
     'htanno-.R'
     'htanno-dendrogram.R'
     'htanno-group.R'
+    'htanno-kmeans.R'
     'import-standalone-assert.R'
     'import-standalone-cli.R'
     'import-standalone-obj-type.R'
@@ -48,3 +49,6 @@ Collate:
 ByteCompile: true
 URL: https://github.com/Yunuuuu/ggheat
 BugReports: https://github.com/Yunuuuu/ggheat/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
