@@ -429,7 +429,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] ggheat_0.0.0.9000 ggplot2_3.5.1    
+#> [1] ggheat_0.0.1  ggplot2_3.5.1
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] gtable_0.3.5       dplyr_1.1.4        compiler_4.4.0     highr_0.11        
