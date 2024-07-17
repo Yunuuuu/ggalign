@@ -91,7 +91,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
         user_xscales[[i]] <- ggheat_melt_scale(
             .subset2(user_xscales, i),
             .subset2(default_xscales, i),
-            "ggheat"
+            set_expand = FALSE
         )
         # we copy the `expand` from user input into the default for usage of
         # annotation
@@ -102,7 +102,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
         user_yscales[[i]] <- ggheat_melt_scale(
             .subset2(user_yscales, i),
             .subset2(default_yscales, i),
-            "ggheat"
+            set_expand = FALSE
         )
         # we copy the expand from user input
         #   into the default for usage of annotation
@@ -295,7 +295,7 @@ ggheat_melt_facet <- function(user_facet, default_facet) {
     user_facet
 }
 
-ggheat_melt_scale <- function(user_scale, default_scale, type) {
+ggheat_melt_scale <- function(user_scale, default_scale, set_expand) {
     if (is.null(user_scale)) {
         ans <- default_scale$clone()
     } else {
@@ -319,7 +319,7 @@ ggheat_melt_scale <- function(user_scale, default_scale, type) {
 
         # for heatmap, we only set the default expand when it's waiver.
         # for annotation, we always override the expand
-        if (type != "ggheat" || is.waiver(ans$expand)) {
+        if (set_expand || is.waiver(ans$expand)) {
             ans$expand <- default_scale$expand
         }
     }
