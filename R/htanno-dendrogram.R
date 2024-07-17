@@ -56,7 +56,7 @@ htanno_dendro_add.CoordFlip <- function(object, plot, object_name, self) {
 
 #' @importFrom ggplot2 aes
 HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
-    setup_params = function(self, data, position, params) {
+    setup_params = function(self, data, params, position) {
         assert_number(.subset2(params, "k"),
             null_ok = TRUE, arg = "k",
             call = self$call
@@ -71,6 +71,13 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         )
         params
     },
+    setup_data = function(self, data, params, position) {
+        ans <- as.matrix(data)
+        assert_(ans, function(x) is.numeric(x),
+            arg = "data", call = self$call
+        )
+        ans
+    },
     add = function(self, object, object_name) {
         plot <- .subset2(self$draw_params, "plot")
         self$draw_params$plot <- htanno_dendro_add(
@@ -78,24 +85,21 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         )
         self
     },
-    compute = function(data, position, distance, method, use_missing) {
+    compute = function(data, panels, index, position,
+                       distance, method, use_missing) {
         hclust2(data, distance, method, use_missing)
     },
     layout = function(self, data, statistics, panels, index, position, k, h) {
-        if (!is.null(panels)) {
-            cli::cli_abort(c(
-                "{.fn {snake_class(self)}} cannot do sub-split",
-                i = "group of heatmap {to_matrix_axis(position)} already exists"
-            ), call = self$call)
-        }
         if (!is.null(index)) {
-            cli::cli_warn(
-                "{.fn {snake_class(self)}} will break the original order"
-            )
+            cli::cli_warn(sprintf(
+                "{.fn {snake_class(self)}} will disrupt the previously %s %s",
+                "established order of the heatmap",
+                to_matrix_axis(position)
+            ))
         }
         if (!is.null(k)) {
+            panels <- stats::cutree(statistics, k = k)
             height <- cutree_k_to_h(statistics, k)
-            panels <- stats::cutree(statistics, h = height)
         } else if (!is.null(h)) {
             panels <- stats::cutree(statistics, h = height <- h)
         } else {
@@ -109,10 +113,16 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
-    draw = function(self, data, statistics, panels, index,
-                    position, scales, facet,
+    draw = function(self, data, statistics, panels, index, position,
+                    # other argumentds
                     plot, height, plot_cut_height, center, type,
                     root, segment_params) {
+        if (!identical(statistics$order, index)) {
+            cli::cli_abort(c(
+                "Cannot draw the dendrogram",
+                i = "the node order has been changed"
+            ), call = self$call)
+        }
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
@@ -122,20 +132,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 i = "will use {.filed rectangle} dendrogram instead"
             ))
             type <- "rectangle"
-        }
-        for (scale in scales) {
-            if (any(.subset2(scale, "expand") > 0L)) {
-                cli::cli_warn(
-                    "adding axis expand in a dendrogram will break the layout"
-                )
-                break
-            }
-        }
-        if (!identical(statistics$order, index)) {
-            cli::cli_abort(c(
-                "Cannot draw the dendrogram",
-                i = "the node order has been changed"
-            ), call = self$call)
         }
         data <- dendrogram_data(
             statistics,

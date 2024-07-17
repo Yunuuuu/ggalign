@@ -4,8 +4,7 @@
 #' @param ... Additional components of the sub-class.
 #' @inheritParams ggheat
 #' @param position A string of the annotation position, Possible values are
-#' `"top"`, `"left"`, ` "bottom"`, and `"right"`. If `NULL`, the active context
-#' of the [ggheatmap][ggheat] will be used.
+#' `"top"`, `"left"`, `"bottom"`, and `"right"`.
 #' @param size Annotation size, can be a [unit][grid::unit] object.
 #' @param labels Labels for axis parallelly with heatmap, the default will use
 #' the rownames of the `data`. One of:
@@ -38,7 +37,7 @@ anno <- function(Class, ..., data = NULL,
                  set_context = NULL, order = NULL, name = NULL,
                  call = caller_call()) {
     data <- allow_lambda(data)
-    position <- match_context(position)
+    position <- match.arg(position, GGHEAT_ELEMENTS)
     if (is.numeric(order)) {
         order <- as.integer(order)
     } else if (is.null(order)) {

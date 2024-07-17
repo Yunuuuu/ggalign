@@ -81,9 +81,21 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
         c(
             htanno_method_params(self$compute, 2L),
             htanno_method_params(self$layout, 5L),
-            htanno_method_params(self$draw, 7L),
+            htanno_method_params(self$draw, 5L),
             self$extra_params
         )
+    },
+    split_params = function(self, params) {
+        # Split up params between compute, layout, and draw
+        self$compute_params <- params[
+            intersect(names(params), htanno_method_params(self$compute, 4L))
+        ]
+        self$layout_params <- params[
+            intersect(names(params), htanno_method_params(self$layout, 5L))
+        ]
+        self$draw_params <- params[
+            intersect(names(params), htanno_method_params(self$draw, 5L))
+        ]
     },
     # Most parameters for the `HtannoProto` are taken automatically from
     # `compute()`, `layout()` and `draw()`. However, some additional
@@ -91,18 +103,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     # paramters here, otherwise, they won't be collected.
     extra_params = character(),
     setup_params = function(data, params, position) params,
-    split_params = function(self, params) {
-        # Split up params between compute, layout, and draw
-        self$compute_params <- params[
-            intersect(names(params), htanno_method_params(self$compute, 2L))
-        ]
-        self$layout_params <- params[
-            intersect(names(params), htanno_method_params(self$layout, 5L))
-        ]
-        self$draw_params <- params[
-            intersect(names(params), htanno_method_params(self$draw, 7L))
-        ]
-    },
+    setup_data = function(data, params, position) data,
     # this method must modify the HtannoProto object itself, no results will be
     # assign.
     add = function(self, object, object_name) {
@@ -114,7 +115,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
 
     # Following fields should be defined for the new Htanno object.
     # argument name in the initial function doesn't matter.
-    compute = function(data, position) NULL,
+    compute = function(data, panels, index, position) NULL,
 
     # Group heamap row/column and reorder, Must return a list of 2:
     #  - the first one should be the groups for heatmap row/column, the factor
@@ -128,7 +129,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     },
 
     # draw plot
-    draw = function(data, statistics, panels, index, position, scales, facet) {
+    draw = function(data, statistics, panels, index, position) {
         NULL
     }
 )

@@ -58,8 +58,12 @@ anno_initialize.htanno <- function(object, plot, object_name) {
     htanno$call <- slot(object, "call") # add call into htanno for message usage
 
     # prepare and check parameters ----------------------
-    params <- htanno$setup_params(data, position, slot(object, "params"))
+    params <- htanno$setup_params(data, slot(object, "params"), position)
     # slot(object, "params") <- params # Not used anymore
+
+    # prepare data --------------------------------------
+    data <- htanno$setup_data(data, params, position)
+    slot(object, "data") <- data
 
     # split parameters -----------------------------------
     htanno$split_params(params)

@@ -28,7 +28,7 @@ anno_build.htanno <- function(x, panels, index, scales, facet, position) {
     plot <- rlang::inject(htanno$draw(
         slot(x, "data"),
         slot(x, "statistics"),
-        panels, index, position, scales, facet,
+        panels, index, position,
         !!!htanno$draw_params
     ))
     if (is.null(plot)) return(plot) # styler: off

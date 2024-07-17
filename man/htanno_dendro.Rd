@@ -89,8 +89,7 @@ will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels wil
 be removed too.}
 
 \item{position}{A string of the annotation position, Possible values are
-\code{"top"}, \code{"left"}, \code{ "bottom"}, and \code{"right"}. If \code{NULL}, the active context
-of the \link[=ggheat]{ggheatmap} will be used.}
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
