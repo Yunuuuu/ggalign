@@ -41,6 +41,7 @@ Collate:
     'htanno-dendrogram.R'
     'htanno-group.R'
     'htanno-kmeans.R'
+    'htanno-reorder.R'
     'import-standalone-assert.R'
     'import-standalone-cli.R'
     'import-standalone-obj-type.R'

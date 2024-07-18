@@ -17,7 +17,8 @@ htanno_group(
 heatmap into different panels.}
 
 \item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of the \code{ggheatmap} will be used.}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to

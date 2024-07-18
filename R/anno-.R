@@ -2,9 +2,20 @@
 #'
 #' @param Class Sub-class of `anno`.
 #' @param ... Additional components of the sub-class.
-#' @inheritParams ggheat
+#' @param data A matrix, a data frame, or even a simple vector that will be
+#' converted into a one-column matrix. If the `data` argument is set to `NULL`,
+#' the function will use the heatmap matrix. Additionally, the `data` argument
+#' can also accept a function (purrr-like lambda is also okay), which will be
+#' applied with the heatmap matrix.
+#'
+#' It is important to note that all annotations consider the `rows` as the
+#' observations. It means the `NROW` function must return the same number as the
+#' heatmap parallel axis. So for column annotation, the heatmap matrix will be
+#' transposed before using (If data is a `function`, it will be applied with the
+#' transposed matrix).
 #' @param position A string of the annotation position, possible values are
-#' `"top"`, `"left"`, `"bottom"`, and `"right"`.
+#' `"top"`, `"left"`, `"bottom"`, and `"right"`. If `NULL`, the active context
+#' of the `ggheatmap` will be used.
 #' @param size Annotation size, can be a [unit][grid::unit] object.
 #' @param labels Labels for axis parallelly with heatmap, the default will use
 #' the rownames of the `data`. One of:
@@ -37,7 +48,7 @@ anno <- function(Class, ..., data = NULL,
                  set_context = NULL, order = NULL, name = NULL,
                  call = caller_call()) {
     data <- allow_lambda(data)
-    position <- match.arg(position, GGHEAT_ELEMENTS)
+    position <- match_context(position)
     if (is.numeric(order)) {
         order <- as.integer(order)
     } else if (is.null(order)) {

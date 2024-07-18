@@ -17,9 +17,9 @@ htanno_dendro(
   root = NULL,
   center = FALSE,
   type = "rectangle",
-  data = NULL,
   labels = NULL,
   labels_nudge = NULL,
+  data = NULL,
   position = NULL,
   size = NULL,
   set_context = NULL,
@@ -71,9 +71,6 @@ middle of all direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
-\item{data}{A matrix, if it is a simple vector, it will be converted to a
-one-column matrix. Data.frame will also be coerced into matrix.}
-
 \item{labels}{Labels for axis parallelly with heatmap, the default will use
 the rownames of the \code{data}. One of:
 \itemize{
@@ -93,8 +90,21 @@ notation.
 will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels will
 be removed too.}
 
+\item{data}{A matrix, a data frame, or even a simple vector that will be
+converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
+the function will use the heatmap matrix. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the heatmap matrix.
+
+It is important to note that all annotations consider the \code{rows} as the
+observations. It means the \code{NROW} function must return the same number as the
+heatmap parallel axis. So for column annotation, the heatmap matrix will be
+transposed before using (If data is a \code{function}, it will be applied with the
+transposed matrix).}
+
 \item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of the \code{ggheatmap} will be used.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 

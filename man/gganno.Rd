@@ -37,7 +37,8 @@ will be converted to one by \code{\link[ggplot2:fortify]{fortify()}}. If not spe
 must be supplied in each layer added to the plot.}
 
 \item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of the \code{ggheatmap} will be used.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 

@@ -21,13 +21,23 @@ htanno(
 )
 }
 \arguments{
-\item{data}{A matrix, if it is a simple vector, it will be converted to a
-one-column matrix. Data.frame will also be coerced into matrix.}
+\item{data}{A matrix, a data frame, or even a simple vector that will be
+converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
+the function will use the heatmap matrix. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the heatmap matrix.
+
+It is important to note that all annotations consider the \code{rows} as the
+observations. It means the \code{NROW} function must return the same number as the
+heatmap parallel axis. So for column annotation, the heatmap matrix will be
+transposed before using (If data is a \code{function}, it will be applied with the
+transposed matrix).}
 
 \item{params}{A list of parameters passed  to \code{htanno}.}
 
 \item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.}
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of the \code{ggheatmap} will be used.}
 
 \item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 

@@ -15,9 +15,9 @@ htanno_dendro <- function(mapping = aes(), ...,
                           reorder_group = FALSE,
                           k = NULL, h = NULL,
                           plot_cut_height = NULL, root = NULL,
-                          center = FALSE, type = "rectangle", data = NULL,
+                          center = FALSE, type = "rectangle",
                           labels = NULL, labels_nudge = NULL,
-                          position = NULL, size = NULL,
+                          data = NULL, position = NULL, size = NULL,
                           set_context = NULL, order = NULL, name = NULL,
                           check.param = TRUE) {
     assert_bool(reorder_group)

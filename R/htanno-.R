@@ -24,9 +24,10 @@ htanno <- function(data = NULL,
     htanno <- ggproto_clone(htanno_class)
     # Warn about extra params
     all <- htanno$parameters()
-    if (check.param &&
-        length(extra_param <- setdiff(names(params), all))) { # nolint
-        cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
+    if (check.param) {
+        if (length(extra_param <- setdiff(names(params), all))) { # nolint
+            cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
+        }
     }
     call <- caller_call()
     if (anno_override_call(call)) {
@@ -154,9 +155,9 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     #    allows reordering between groups (it provide `reorder_group` argument),
     #    so the new panels levels may be not the same with old panels
     #
-    #    For `HtannoProto` object, only reordering the heatmap rows/columns only
-    #    usually we provide a `strict` argument, to allow reorder heatmap within
-    #    group only. See `HtannoReorder`
+    #    For `HtannoProto` object reordering the heatmap rows/columns.  usually
+    #    we provide a `strict` argument, to allow reorder heatmap within group
+    #    only. See `HtannoReorder`.
     #
     # 3. old index is not `NULL`, no matter whether old panels is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old

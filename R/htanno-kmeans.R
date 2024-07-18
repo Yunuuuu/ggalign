@@ -8,7 +8,7 @@ htanno_kmeans <- function(centers, iter.max = 10, nstart = 1,
                               "Hartigan-Wong", "Lloyd", "Forgy",
                               "MacQueen"
                           ), trace = FALSE,
-                          position = NULL,
+                          data = NULL, position = NULL,
                           set_context = NULL, name = NULL,
                           check.param = TRUE) {
     algorithm <- match.arg(algorithm)
