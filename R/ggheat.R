@@ -24,7 +24,6 @@
 #' @inheritParams patchwork::plot_layout
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
-#' @param environment Used by [ggplot_build][ggplot2::ggplot_build].
 #' @return A `ggheatmap` object.
 #' @importFrom ggplot2 aes
 #' @export
@@ -41,8 +40,7 @@ ggheat.matrix <- function(data, mapping = NULL,
                           ylabels_nudge = waiver(),
                           guides = "collect",
                           axes = NULL, axis_titles = axes,
-                          filling = TRUE, ...,
-                          environment = parent.frame()) {
+                          filling = TRUE, ...) {
     assert_bool(filling)
     xlabels <- set_labels(xlabels, "column", colnames(data), ncol(data))
     xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data), xlabels, "column")
@@ -77,8 +75,7 @@ ggheat.matrix <- function(data, mapping = NULL,
             filling = filling
         ),
         heatmap = heatmap,
-        active = NULL,
-        plot_env = environment
+        active = NULL
     )
 }
 
@@ -178,8 +175,7 @@ methods::setClass(
         heatmap = "ANY", active = "ANY",
         facetted_pos_scales = "ANY",
         top = "ANY", left = "ANY",
-        bottom = "ANY", right = "ANY",
-        plot_env = "environment"
+        bottom = "ANY", right = "ANY"
     ),
     prototype = list(
         row_index = NULL,
@@ -203,7 +199,7 @@ methods::setMethod("$", "ggheatmap", function(x, name) {
     if (name == "theme") {
         slot(x, "heatmap")$theme
     } else if (name == "plot_env") {
-        slot(x, "plot_env")
+        slot(x, "heatmap")$plot_env
     } else {
         cli::cli_abort(c(
             "`$` is just for internal usage for ggplot2 methods",

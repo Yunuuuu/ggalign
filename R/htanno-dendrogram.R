@@ -156,10 +156,11 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             if (nlevels(panels) == 1L) { # only one parent
                 self$statistics <- .subset2(self$statistics, 1L)
             } else if (reorder_group) {
-                parent_data <- t(sapply(levels(panels), function(g) {
+                parent_levels <- levels(panels)
+                parent_data <- t(sapply(parent_levels, function(g) {
                     colMeans(data[panels == g, , drop = FALSE])
                 }))
-                rownames(parent_data) <- levels(panels)
+                rownames(parent_data) <- parent_levels
                 parent <- stats::as.dendrogram(self$compute(
                     data = parent_data,
                     panels = NULL,
@@ -167,8 +168,12 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     method = method,
                     use_missing = use_missing
                 ))
-                panels <- factor(panels, stats::order.dendrogram(parent))
+                # reorder parent based on the parent tree
+                panels <- factor(
+                    panels, parent_levels[stats::order.dendrogram(parent)]
+                )
                 self$statistics <- merge_dendrogram(parent, self$statistics)
+                # we don't cutree
                 # self$draw_params$height <- attr(ans, "cutoff_height")
             } else {
                 self$statistics <- Reduce(merge, self$statistics)

@@ -5,6 +5,14 @@
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
+save_png <- function(code, width = 400L, height = 400L) {
+    path <- tempfile(fileext = ".png")
+    grDevices::png(path, width = width, height = height)
+    on.exit(grDevices::dev.off())
+    print(code)
+    path
+}
+
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) {
         rlang::as_function(x)

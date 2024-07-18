@@ -25,8 +25,7 @@ ggheat(data, mapping = aes(), ...)
   axes = NULL,
   axis_titles = axes,
   filling = TRUE,
-  ...,
-  environment = parent.frame()
+  ...
 )
 
 \method{ggheat}{data.frame}(data, mapping = aes(), ...)
@@ -92,8 +91,6 @@ and y-axis titles respectively.}
 
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
-
-\item{environment}{Used by \link[ggplot2:ggplot_build]{ggplot_build}.}
 
 \item{object}{A \code{ggheatmap} object.}
 }

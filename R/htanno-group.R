@@ -18,7 +18,7 @@ htanno_group <- function(group, position = NULL,
 }
 
 HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
-    setup_params = function(self, data, position, params) {
+    setup_params = function(self, data, params, position) {
         if (nrow(data) != length(group <- .subset2(params, "group"))) {
             cli::cli_abort(paste(
                 "{.arg group} of {.fn {snake_class(self)}} must be ",

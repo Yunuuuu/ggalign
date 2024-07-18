@@ -16,6 +16,12 @@ deactivate <- function(x) UseMethod("deactivate")
 
 #' @export
 activate.ggheatmap <- function(x, what) {
+    if (is.null(what)) {
+        cli::cli_abort(paste(
+            "{.arg what} must be a string of ",
+            oxford_comma(GGHEAT_ELEMENTS, final = "or")
+        ))
+    }
     what <- match.arg(what, GGHEAT_ELEMENTS)
     set_context(x, what)
 }
