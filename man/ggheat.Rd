@@ -46,7 +46,7 @@ one column matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments passed to matrix method.}
 
 \item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
 

@@ -17,6 +17,7 @@ Imports:
     methods,
     patchwork,
     rlang (>= 1.1.0),
+    stats,
     tibble,
     tidyr
 Collate: 

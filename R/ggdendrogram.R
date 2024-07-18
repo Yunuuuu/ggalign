@@ -1,4 +1,3 @@
-
 #' Dendrogram plot
 #'
 #' @param tree A [hclust][stats::hclust] object.

@@ -234,18 +234,14 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             node <- rename(node, c(x = "y", y = "x"))
         }
         plot$data <- node
-        plot <- anno_add_default_mapping(
-            plot, position,
-            aes(x = .data$x, y = .data$y)
-        )
-        edge_mapping <- aes(
-            # x = .data$x, y = .data$y,
-            xend = .data$xend, yend = .data$yend
-        )
+        plot <- anno_add_default_mapping(plot, aes(x = .data$x, y = .data$y))
         # edge layer should be in the first
         plot$layers <- append(plot$layers,
             rlang::inject(ggplot2::geom_segment(
-                mapping = edge_mapping,
+                mapping = aes(
+                    x = .data$x, y = .data$y,
+                    xend = .data$xend, yend = .data$yend
+                ),
                 !!!segment_params,
                 stat = "identity",
                 data = edge

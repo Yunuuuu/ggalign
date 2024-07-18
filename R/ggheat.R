@@ -5,7 +5,7 @@
 #' one column matrix.
 #' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
 #' will using `aes(.data$.x, .data$.y)`.
-#' @param ... Additional arguments.
+#' @param ... Additional arguments passed to matrix method.
 #' @param width,height Heatmap width/height, can be a [unit][grid::unit] object.
 #' @param xlabels,ylabels Labels for x/y, the default will use
 #' the colnames/rownames of the `data`. One of:
@@ -260,5 +260,8 @@ methods::setMethod("show", "ggheatmap", function(object) print(object))
 #' Reports whether x is a ggheatmap object
 #'
 #' @param x An object to test
+#' @return A boolean value
+#' @examples 
+#' is.ggheatmap(ggheat(1:10))
 #' @export
 is.ggheatmap <- function(x) methods::is(x, "ggheatmap")

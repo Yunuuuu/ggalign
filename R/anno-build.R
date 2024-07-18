@@ -7,7 +7,7 @@ anno_build.gganno <- function(x, panels, index, scales, facet, position) {
     data <- anno_build_data(slot(x, "data"), panels, index, position)
     plot <- slot(x, "plot")
     plot$data <- data
-    plot <- anno_add_default_mapping(plot, position, switch_position(
+    plot <- anno_add_default_mapping(plot, switch_position(
         position,
         aes(y = .data$.y),
         aes(x = .data$.x)
@@ -58,7 +58,7 @@ anno_build_data <- function(data, panels, index, position) {
 }
 
 #' @importFrom ggplot2 aes
-anno_add_default_mapping <- function(plot, position, default_mapping) {
+anno_add_default_mapping <- function(plot, default_mapping) {
     mapping <- .subset2(plot, "mapping")
     for (nm in names(mapping)) {
         default_mapping[[nm]] <- .subset2(mapping, nm)

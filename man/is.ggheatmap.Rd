@@ -9,6 +9,12 @@ is.ggheatmap(x)
 \arguments{
 \item{x}{An object to test}
 }
+\value{
+A boolean value
+}
 \description{
 Reports whether x is a ggheatmap object
+}
+\examples{
+is.ggheatmap(ggheat(1:10))
 }

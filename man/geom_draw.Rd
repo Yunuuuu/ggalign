@@ -20,12 +20,12 @@ geom_draw(
 purrr-style) which accepts two arguments (\code{data} and \code{coords})
 and returns a \link[grid:grid.grob]{grob}.
 
-\cr \cr when \code{draw} is a function, it is used as the \code{draw_group} function
+when \code{draw} is a function, it is used as the \code{draw_group} function
 in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object. So One should always call
 \code{coord$transform(data, panel_params)} in function \code{draw} to get transformed
 data in the plot scales.}
 
-\item{...}{Other arguments passed to \code{draw}.}
+\item{...}{Additional arguments passed to \code{draw}.}
 
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
