@@ -85,8 +85,6 @@ ggheat.matrix <- function(data, mapping = NULL,
 set_nudge <- function(nudge, n, names, axis,
                       arg = rlang::caller_arg(nudge),
                       call = caller_call()) {
-    # if no names, default to
-    if (is.waiver(nudge) && is.null(names)) return(NULL) # styler: off
     if (is.numeric(nudge)) {
         if (!is_scalar(nudge) && length(nudge) != n) {
             cli::cli_abort(paste(

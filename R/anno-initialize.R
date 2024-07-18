@@ -124,6 +124,13 @@ htanno_layout <- function(htanno, old_panels, old_index,
         }
     }
     new_index <- .subset2(new, 2L)
+    if (!is.null(old_index) && !all(old_index == new_index)) {
+        cli::cli_abort(sprintf(
+            "{.fn {snake_class(htanno)}} disrupt the previously %s %s",
+            "established order of the heatmap",
+            to_matrix_axis(position)
+        ), call = htanno$call)
+    }
     if (!is.null(new_index)) {
         if (anyNA(new_index)) {
             cli::cli_abort(

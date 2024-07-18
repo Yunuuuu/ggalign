@@ -162,12 +162,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                       position, k, h) {
         # we'll always reorder the dendrogram
         index <- order2(statistics)
-        if (!is.null(old_index) && !identical(index, old_index)) {
-            cli::cli_abort(sprintf(
-                "You cannot reorder the heatmap %s twice",
-                to_matrix_axis(position)
-            ), call = self$call)
-        }
         if (!is.null(k)) {
             panels <- stats::cutree(statistics, k = k)
             self$draw_params$height <- cutree_k_to_h(statistics, k)
@@ -183,12 +177,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     # other argumentds
                     plot, height, plot_cut_height, center, type,
                     root, segment_params) {
-        if (!identical(order2(statistics), index)) {
-            cli::cli_abort(c(
-                "Cannot draw the dendrogram",
-                i = "the node order has been changed"
-            ), call = self$call)
-        }
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
