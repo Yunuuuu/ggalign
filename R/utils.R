@@ -62,10 +62,10 @@ data_frame0 <- function(...) {
     quickdf(list(...))
 }
 
-quickdf <- function(l) {
-    class(l) <- "data.frame"
-    attr(l, "row.names") <- .set_row_names(length(l[[1]]))
-    l
+quickdf <- function(x) {
+    class(x) <- "data.frame"
+    attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
+    x
 }
 
 as_tibble0 <- function(data, ...) {

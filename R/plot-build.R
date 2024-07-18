@@ -370,12 +370,12 @@ ggheat_default_scale <- function(scale_name, panels, index, labels, nudge,
 
 ggheat_build_data <- function(matrix, row_panels, row_index,
                               column_panels, column_index) {
-    row_coords <- tibble0(
+    row_coords <- data_frame0(
         .row_panel = row_panels[row_index],
         .row_index = row_index,
         .y = seq_along(row_index)
     )
-    column_coords <- tibble0(
+    column_coords <- data_frame0(
         .column_panel = column_panels[column_index],
         .column_index = column_index,
         .x = seq_along(column_index)

@@ -100,9 +100,11 @@ methods::setClass(
     )
 )
 
+#' Show `anno` object
 #' @param object A `anno` object.
+#' @importFrom methods show
 #' @export
-#' @rdname anno
+#' @keywords internal
 methods::setMethod("show", "anno", function(object) {
     print(sprintf("A %s object", fclass(object)))
     invisible(object)

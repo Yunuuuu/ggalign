@@ -2,7 +2,6 @@
 % Please edit documentation in R/anno-.R
 \name{anno}
 \alias{anno}
-\alias{show,anno-method}
 \title{Create a heatmap annotation object}
 \usage{
 anno(
@@ -18,8 +17,6 @@ anno(
   name = NULL,
   call = caller_call()
 )
-
-\S4method{show}{anno}(object)
 }
 \arguments{
 \item{Class}{Sub-class of \code{anno}.}
@@ -73,8 +70,6 @@ set the active context to current annotation for the annotation list in
 \item{name}{A string of the annotation name.}
 
 \item{call}{The \code{call} used to construct the scale for reporting messages.}
-
-\item{object}{A \code{anno} object.}
 }
 \value{
 A new \code{Class} object.
