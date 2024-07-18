@@ -121,6 +121,9 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
         )
     },
 
+    # provide method for `&` to modify the annotation
+    and = function(self, object, object_name) NULL,
+
     # Following fields should be defined for the new `Htanno` object.
     # argument name in the initial function doesn't matter.
     compute = function(data, panels, index, position) NULL,
@@ -161,6 +164,11 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     layout = function(data, panels, index, position) {
         list(panels, index)
     },
+
+    # Used to modify `HtannoProto` object after layout has been applied, but
+    # before rendering. The default is to not modify anything. Use this hook to
+    # add initial ggplot elements but want to let user override it.
+    finish_initialize = function(data, panels, index, position) NULL,
 
     # draw plot, you cannot modify `HtannoProto` object when drawing, since all
     # of above process will only run once

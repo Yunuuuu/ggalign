@@ -76,6 +76,14 @@ anno_initialize.htanno <- function(object, plot, object_name) {
     slot(plot, paste0(axis, "_panels")) <- .subset2(layout, 1L)
     slot(plot, paste0(axis, "_index")) <- .subset2(layout, 2L)
 
+    # in the finally, we let htanno modify after make layout -----------
+    htanno$finish_initialize(
+        data,
+        .subset2(layout, 1L), 
+        .subset2(layout, 2L),
+        position
+    )
+
     # add annotation -------------------------------------
     slot(object, "htanno") <- htanno
     list(plot, object)

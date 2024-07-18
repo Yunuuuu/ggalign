@@ -92,7 +92,9 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         self$draw_params$plot <- htanno_dendro_add(
             object, plot, object_name, self
         )
-        self
+    },
+    and = function(self, object, object_name) {
+        self$add(object, object_name)
     },
     compute = function(self, data, panels, index, position,
                        distance, method, use_missing, k, h) {
@@ -183,6 +185,18 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
+    finish_layout = function(self, data, panels, index, position) {
+        edge_mapping <- aes(
+            x = .data$x, y = .data$y,
+            xend = .data$xend, yend = .data$yend
+        )
+        self$draw_params$plot <- self$draw_params$plot +
+            switch_position(
+                position,
+                ggplot2::labs(x = "height"),
+                ggplot2::labs(y = "height")
+            )
+    },
     draw = function(self, data, panels, index, position,
                     # other argumentds
                     plot, height, plot_cut_height, center, type,
@@ -224,6 +238,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             x = .data$x, y = .data$y,
             xend = .data$xend, yend = .data$yend
         )
+        # edge layer should be in the first
         plot$layers <- append(plot$layers,
             rlang::inject(ggplot2::geom_segment(
                 mapping = edge_mapping,
@@ -233,6 +248,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             )),
             after = 0L
         )
+
         plot_cut_height <- plot_cut_height %||% !is.null(height)
         if (plot_cut_height && !is.null(height)) {
             plot <- plot +
@@ -251,10 +267,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             coord$clip <- "off" # this'll change the input of user.
             plot$coordinates <- coord
         }
-        plot + switch_position(
-            position,
-            ggplot2::labs(x = "height"),
-            ggplot2::labs(y = "height")
-        )
+        plot
     }
 )

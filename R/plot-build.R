@@ -261,11 +261,11 @@ trim_area <- function(area) {
 }
 
 #' @importFrom rlang is_empty
-ggheat_extract_scales <- function(scale_name, plot, n, facet_scales) {
-    single_scale <- plot$scales$get_scales(scale_name)
+ggheat_extract_scales <- function(axis, plot, n, facet_scales) {
+    single_scale <- plot$scales$get_scales(axis)
     if (n > 1 &&
         !is.null(facet_scales) &&
-        !is_empty(ans <- .subset2(facet_scales, scale_name))) {
+        !is_empty(ans <- .subset2(facet_scales, axis))) {
         for (i in seq_len(n)) {
             ans[i] <- list(.subset2(ans, i) %||% single_scale)
         }
