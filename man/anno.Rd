@@ -77,3 +77,6 @@ A new \code{Class} object.
 \description{
 Create a heatmap annotation object
 }
+\examples{
+anno("htanno")
+}

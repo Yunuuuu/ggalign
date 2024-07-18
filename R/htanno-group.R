@@ -3,6 +3,13 @@
 #' heatmap into different panels.
 #' @inheritParams htanno
 #' @inherit htanno return
+#' @examples
+#' small_mat <- matrix(rnorm(81), nrow = 9)
+#' ggheat(small_mat) +
+#'     htanno_group(
+#'         sample(letters[1:4], ncol(small_mat), replace = TRUE),
+#'         position = "top"
+#'     )
 #' @export
 htanno_group <- function(group, position = NULL,
                          set_context = NULL, name = NULL,

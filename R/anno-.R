@@ -40,6 +40,8 @@
 #' @param name A string of the annotation name.
 #' @param call The `call` used to construct the scale for reporting messages.
 #' @return A new `Class` object.
+#' @examples 
+#' anno("htanno")
 #' @importFrom rlang caller_call current_call
 #' @export
 anno <- function(Class, ..., data = NULL,

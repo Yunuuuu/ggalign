@@ -77,12 +77,11 @@ anno_set_scales_and_facet <- function(plot, facetted_pos_scales,
         facet_scales = facetted_pos_scales
     )
     for (i in seq_along(default_scales)) {
-        scale <- ggheat_melt_scale(
+        user_scales[[i]] <- ggheat_melt_scale(
             .subset2(user_scales, i),
             .subset2(default_scales, i),
             set_expand = TRUE
         )
-        user_scales[[i]] <- scale
     }
     user_facet <- ggheat_melt_facet(.subset2(plot, "facet"), default_facet)
     if (is.null(default_facet)) { # no panels

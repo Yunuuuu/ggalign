@@ -17,3 +17,6 @@ A \code{patchwork} object.
 \description{
 Build ggheatmap for rendering.
 }
+\examples{
+ggheat_build(ggheat(matrix(rnorm(100L), nrow = 10L)))
+}

@@ -36,3 +36,11 @@ A \code{htanno} object.
 \description{
 Group Heatmap rows/columns
 }
+\examples{
+small_mat <- matrix(rnorm(81), nrow = 9)
+ggheat(small_mat) +
+    htanno_group(
+        sample(letters[1:4], ncol(small_mat), replace = TRUE),
+        position = "top"
+    )
+}

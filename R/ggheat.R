@@ -1,7 +1,8 @@
 #' Heatmap with ggplot2
 #'
-#' @param data A matrix, if it is a simple vector, it will be converted to a
-#' one-column matrix. Data.frame will also be coerced into matrix.
+#' @param data A numeric or character vector, a data frame, and any other data
+#' which can be converted into a matrix. Simple vector will be converted into a
+#' one column matrix.
 #' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
 #' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments.
@@ -24,7 +25,32 @@
 #' @inheritParams patchwork::plot_layout
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
+#'
+#' @section ggplot2 details:
+#' The data input in `ggheat` will be converted into the long formated data
+#' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
+#' you can use `mapping` argument to control it. The data in the underlying
+#' ggplot object contains following columns:
+#'
+#'  - `.row_panel` or `.column_panl` instead of a column `.panel` since
+#'  annotation can only have one facet axiss: the row panel
+#'
+#'  - `.column_panel`: the column panel
+#'
+#'  - `.row_names` and `.column_names`: the row and column names of the original
+#'    matrix (only applicable when names exist).
+#'
+#'  - `.row_index` and `.column_index`: the row and column index of the original
+#'    matrix.
+#'
+#'  - `.x` and `.y`: the `x` and `y` coordinates
+#'
+#'  - `value`: the actual matrix value.
+#'
 #' @return A `ggheatmap` object.
+#' @examples 
+#' ggheat(1:10)
+#' ggheat(letters)
 #' @importFrom ggplot2 aes
 #' @export
 ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")

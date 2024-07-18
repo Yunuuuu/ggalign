@@ -78,3 +78,8 @@ A \code{gganno} object.
 \description{
 Heatmap annotation of \code{gganno}
 }
+\examples{
+ggheat(matrix(rnorm(81), nrow = 9)) +
+  gganno(position = "top") +
+  geom_point(aes(y = value))
+}

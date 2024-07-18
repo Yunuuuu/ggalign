@@ -19,3 +19,10 @@ A modified \code{ggheatmap} object.
 \description{
 Add custom objects to \code{ggheatmap}
 }
+\examples{
+ggheatmap_add(
+    geom_point(aes(y = value)),
+    ggheat(matrix(rnorm(81), nrow = 9)),
+    deparse(quote(geom_point(aes(y = value))))
+)
+}

@@ -5,6 +5,10 @@
 #' [gg][ggplot2::+.gg] elements, [gganno][gganno] object, or [htanno]
 #' object.
 #' @return A modified `ggheatmap` object.
+#' @examples
+#' ggheat(matrix(rnorm(81), nrow = 9)) +
+#'     gganno(position = "top") +
+#'     geom_point(aes(y = value))
 #' @name ggheatmap-add
 #' @aliases +.ggheatmap
 #' @seealso ggheatmap_add
@@ -30,6 +34,12 @@ methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
 #' @param plot A `ggheatmap` object
 #' @inheritParams ggplot2::ggplot_add
 #' @inherit ggheatmap-add return
+#' @examples
+#' ggheatmap_add(
+#'     geom_point(aes(y = value)),
+#'     ggheat(matrix(rnorm(81), nrow = 9)),
+#'     deparse(quote(geom_point(aes(y = value))))
+#' )
 #' @export
 ggheatmap_add <- function(object, plot, object_name) UseMethod("ggheatmap_add")
 

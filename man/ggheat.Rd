@@ -39,8 +39,9 @@ ggheat(data, mapping = aes(), ...)
 \S4method{show}{ggheatmap}(object)
 }
 \arguments{
-\item{data}{A matrix, if it is a simple vector, it will be converted to a
-one-column matrix. Data.frame will also be coerced into matrix.}
+\item{data}{A numeric or character vector, a data frame, and any other data
+which can be converted into a matrix. Simple vector will be converted into a
+one column matrix.}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
@@ -99,4 +100,27 @@ A \code{ggheatmap} object.
 }
 \description{
 Heatmap with ggplot2
+}
+\section{ggplot2 details}{
+
+The data input in \code{ggheat} will be converted into the long formated data
+frame when drawing. The default mapping will use \code{aes(.data$.x, .data$.y)},
+you can use \code{mapping} argument to control it. The data in the underlying
+ggplot object contains following columns:
+\itemize{
+\item \code{.row_panel} or \code{.column_panl} instead of a column \code{.panel} since
+annotation can only have one facet axiss: the row panel
+\item \code{.column_panel}: the column panel
+\item \code{.row_names} and \code{.column_names}: the row and column names of the original
+matrix (only applicable when names exist).
+\item \code{.row_index} and \code{.column_index}: the row and column index of the original
+matrix.
+\item \code{.x} and \code{.y}: the \code{x} and \code{y} coordinates
+\item \code{value}: the actual matrix value.
+}
+}
+
+\examples{
+ggheat(1:10)
+ggheat(letters)
 }

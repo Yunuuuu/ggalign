@@ -68,3 +68,7 @@ A \code{htanno} object.
 \description{
 Group Heatmap rows/columns by kmeans
 }
+\examples{
+ggheat(matrix(rnorm(81), nrow = 9)) +
+    htanno_kmeans(3L, position = "top")
+}

@@ -7,6 +7,10 @@
 #' @inheritParams ggdendrogram
 #' @inheritParams htanno
 #' @inherit htanno return
+#' @examples
+#' ggheat(matrix(rnorm(81), nrow = 9)) + htanno_dendro(position = "top")
+#' ggheat(matrix(rnorm(81), nrow = 9)) +
+#'     htanno_dendro(position = "top", k = 3L)
 #' @export
 htanno_dendro <- function(mapping = aes(), ...,
                           distance = "euclidean",
@@ -191,10 +195,6 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         list(panels, index)
     },
     finish_layout = function(self, data, panels, index, position) {
-        edge_mapping <- aes(
-            x = .data$x, y = .data$y,
-            xend = .data$xend, yend = .data$yend
-        )
         self$draw_params$plot <- self$draw_params$plot +
             switch_position(
                 position,
@@ -234,13 +234,12 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             node <- rename(node, c(x = "y", y = "x"))
         }
         plot$data <- node
-        plot <- anno_add_default_mapping(plot, position, switch_position(
-            position,
-            aes(y = .data$y),
-            aes(x = .data$x)
-        ))
+        plot <- anno_add_default_mapping(
+            plot, position,
+            aes(x = .data$x, y = .data$y)
+        )
         edge_mapping <- aes(
-            x = .data$x, y = .data$y,
+            # x = .data$x, y = .data$y,
             xend = .data$xend, yend = .data$yend
         )
         # edge layer should be in the first

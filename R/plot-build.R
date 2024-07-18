@@ -20,6 +20,8 @@ ggplot_build.ggheatmap <- function(plot) {
 #' Build ggheatmap for rendering.
 #' @param x A `ggheatmap` object.
 #' @param ... Not used currently.
+#' @examples 
+#' ggheat_build(ggheat(matrix(rnorm(100L), nrow = 10L)))
 #' @export
 #' @return A `patchwork` object.
 ggheat_build <- function(x, ...) UseMethod("ggheat_build")
@@ -52,6 +54,22 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # read the plot ---------------------------------------
     p <- slot(x, "heatmap")
 
+    # always remove default labels ------------------------
+    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
+    # There are multiple ways to set labels in a plot, which take different
+    # priorities. Here are the priorities from highest to lowest.
+    # 1. The guide title.
+    # 2. The scale name.
+    # 3. The `labs()` function.
+    # 4. The captured expression in aes().
+    # following scales are templates used by both heatmap and annotation
+    if (identical(.subset2(.subset2(p, "labels"), "x"), ".x")) {
+        p$labels$x <- NULL
+    }
+    if (identical(.subset2(.subset2(p, "labels"), "y"), ".y")) {
+        p$labels$y <- NULL
+    }
+
     # set the default data -------------------------------
     data <- ggheat_build_data(
         mat, row_panels, row_index,
@@ -64,14 +82,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     do_column_facet <- nlevels(column_panels) > 1L
 
     # here is the default scales
-    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
-    # There are multiple ways to set labels in a plot, which take different
-    # priorities. Here are the priorities from highest to lowest.
-    # 1. The guide title.
-    # 2. The scale name.
-    # 3. The `labs()` function.
-    # 4. The captured expression in aes().
-    # following scales are templates used by both heatmap and annotation
     default_xscales <- ggheat_default_scale(
         "x", column_panels, column_index,
         .subset2(params, "xlabels"),
@@ -359,7 +369,6 @@ ggheat_default_scale <- function(scale_name, panels, index, labels, nudge,
             labels <- labels[x]
         }
         fn(
-            name = NULL, # we by default always remove the annotation name
             limits = range(x) + c(-0.5, 0.5),
             breaks = breaks,
             labels = labels,

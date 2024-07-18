@@ -39,6 +39,9 @@ A \link[stats:hclust]{hclust} object.
 \description{
 Generate Tree Structures with Hierarchical Clustering
 }
+\examples{
+hclust(dist(USArrests), "ave")
+}
 \seealso{
 \itemize{
 \item \link[stats:cor]{cor}

@@ -18,12 +18,12 @@ You can install the development version of ggheat from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Yunuuuu/ggheat")
+pak::pkg_install("Yunuuuu/ggheat")
 ```
 
 ``` r
-library(ggplot2)
 library(ggheat)
+#> Loading required package: ggplot2
 ```
 
 Let’s begin by creating some example data
@@ -37,9 +37,9 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 ## `ggheat`
 
-The main function is `ggheat`, it’s just like the ggplot function, which
-set the default data and mapping. Using `ggheat`, it is effortless to
-create a simple Heatmap.
+The core function in the `ggheat` package is `ggheat`, which sets the
+default data and mapping for the heatmap. Creating a simple heatmap is
+effortless with the `ggheat` function
 
 ``` r
 ggheat(small_mat)
@@ -51,8 +51,9 @@ The data can be a numeric or character vector, a data frame, and any
 other data which can be converted into a matrix. Simple vector will be
 converted into a one column matrix. They will all converted into the
 long formated data frame when drawing. The default mapping will use
-`aes(.data$.x, .data$.y)`, you can use `mapping` argument to control it.
-The data contains following columns:
+`aes(.data$.x, .data$.y)`, but can be controlled using `mapping`
+argument. The data in the underlying ggplot object contains following
+columns:
 
 - `.row_panel` or `.column_panl` instead of a column `.panel` since
   annotation can only have one facet axiss: the row panel
@@ -69,9 +70,6 @@ The data contains following columns:
 
 - `value`: the actual matrix value.
 
-You can then add all other ggplot2 elements like `geoms`, `scales` and
-`facets`.
-
 ``` r
 ggheat(letters)
 ```
@@ -84,8 +82,11 @@ ggheat(1:10)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
+You can then add all other ggplot2 elements like `geoms`, `scales` and
+`facets`.
+
 ``` r
-ggheat(small_mat) + scale_fill_viridis_c()
+ggheat(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
@@ -100,181 +101,272 @@ ggheat(small_mat, filling = FALSE) +
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-The position scales and facets are partial support.
+Heatmap annotation works by adding additional information for heatmap
+rows/columns. Heatmap annotations can be positioned at the `top`,
+`left`, `bottom`, or `right` of the heatmap. This is referred to as the
+active context in `ggheat`.
 
-For position scales, you cannot set `limits`, `breaks`, `labels`, and
-they are just ignored. `limits` cannot be touched, and the internal will
-always reset it as the default. This is required by heatmap annotations.
-But you can set `labels` or `breaks` in `ggheat()` function. See
-`xlabels/ylabels` and `xlabels_nudge/ylabels_nudge`. All of these
-arguments should be provided in the original order of the raw matrix.
-Even if we’ll use heatmap annotation to reorder the heatmap
-rows/columns.
-
-``` r
-ggheat(small_mat) + scale_x_continuous(limits = c(0, 0))
-#> Scale for x is already present.
-#> Adding another scale for x, which will replace the existing scale.
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
-
-``` r
-ggheat(small_mat) + scale_x_continuous(labels = "a")
-#> Scale for x is already present.
-#> Adding another scale for x, which will replace the existing scale.
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
-
-``` r
-ggheat(small_mat, xlabels = rep_len("AA", ncol(small_mat)))
-```
-
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
-
-When working with facets, manual configuration of panels using the
-`facet_*` function is not possible. However, the `facet_*` function can
-still be used to control the `facet` looks.
-
-To move forward with the subsequent procedures, it is necessary to
-introduce the heatmap annotation first. Heatmap annotations are
-essential components that contribute to the usability of a heatmap.
+> `ggheat` offers two primary annotations: `htanno` and `gganno`.
 
 ## `htanno`
-
-`ggheat` offers two primary annotations: `htanno` and `gganno`.
 
 `htanno` is a special annotation that can interact with the main
 heatmap. It particularly allows for controlling the order of the main
 heatmap or dividing the heatmap into sections based on rows/columns.
+Some of them can also adding plot.
 
-Heatmap annotations can be positioned at the `top`, `left`, `bottom`, or
-`right` of the heatmap. This is referred to as the active component in
-`ggheat`. Each annotation function provides a position argument to
-control the placement of the annotation.
+Currently, there are four sub-classes of `htanno`: `htanno_group`,
+`htanno_reorder`, `htanno_kmeans` and `htanno_dendro`.
 
-Currently, there are only two classes available for `htanno`:
-`htanno_dendro` and `htanno_group`. The `htanno_dendro` class allows the
-addition of a dendrogram near the heatmap. This is primarily useful when
-working with heatmap plots. The primary purpose of a dendrogram is to
-facilitate clustering and it can also reorder the heatmap.
+### `htanno_group`
+
+`htanno_group` just group heatmap rows/columns into different panels.
+
+By default, the `ggheat` function does not initialize any active
+context, so if you want to add annotations, you need to specify the
+`position` argument. We can omit it if there is any active context in
+the heatmap (we’ll introduce how to set the active context after for
+details).
+
+``` r
+ggheat(small_mat) +
+  htanno_group(
+    sample(letters[1:4], ncol(small_mat), replace = TRUE),
+    position = "top"
+  )
+```
+
+<img src="man/figures/README-htanno_group_top-1.png" width="100%" />
+
+``` r
+ggheat(small_mat) +
+  htanno_group(
+    sample(letters[1:4], nrow(small_mat), replace = TRUE),
+    position = "left"
+  )
+```
+
+<img src="man/figures/README-htanno_group_left-1.png" width="100%" />
+
+### `htanno_reorder`
+
+`htanno_reorder` reorder heatmap rows/columns based on a summary
+function.
+
+``` r
+ggheat(small_mat) + htanno_reorder(rowMeans, position = "left")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+Some annotation function includes a `data` argument to specify the
+annotation data. This argument can accept a matrix, a data frame, or
+even a simple vector that will be converted into a one-column matrix. If
+the `data` argument is set to `NULL`, the function will use the heatmap
+matrix, as shown in the previous example. Additionally, the `data`
+argument can also accept a function (purrr-like lambda is also okay),
+which will be applied with the heatmap matrix.
+
+> It is important to note that all annotations consider the rows as the
+> observations. It means the `NROW` function must return the same number
+> as the heatmap parallel axis. So for column annotation, the heatmap
+> will be transposed before using (If `data` is a function, it will be
+> applied with the transposed matrix).
+
+So even for top and bottom annotation, we can also use the `rowMeans` to
+calculate the mean value for all columns.
+
+``` r
+ggheat(small_mat) + htanno_reorder(rowMeans, position = "top")
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+### `htanno_kmeans`
+
+`htanno_kmeans` group heatmap rows/columns by kmeans.
+
+``` r
+ggheat(small_mat) + htanno_kmeans(3L, position = "t")
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+It is important to note that both `htanno_group` and `htanno_kmeans`
+cannot do sub-groups. It means when there has been any groups exist. You
+cannot use them
+
+``` r
+ggheat(small_mat) +
+  htanno_group(
+    sample(letters[1:4], ncol(small_mat), replace = TRUE),
+    position = "t"
+  ) +
+  htanno_kmeans(3L)
+#> Error in `htanno_kmeans()`:
+#> ! `htann_kmeans()` cannot do sub-split
+#> ℹ group of heatmap column already exists
+```
+
+``` r
+ggheat(small_mat) +
+  htanno_kmeans(3L, position = "t") +
+  htanno_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+#> Error in `htanno_group()`:
+#> ! `htanno_group()` cannot do sub-split
+#> ℹ group of heatmap column already exists
+```
+
+You may have noticed that the `htanno_group` function does not
+explicitly set the `position` argument after `htanno_kmeans`. When
+adding an annotation, we can set the active context using the
+`set_context` argument. This argument requires a boolean value of length
+`2`. It will be recycled for a single value.
+
+- The first value determines whether the active context is set to the
+  annotation `position`.
+- The second value will determine whether the active context of the
+  annotation list in this position should be set as current annotation.
+
+In the case of `htanno_kmeans`, the default `set_context` value is
+`c(TRUE, FALSE)`, implying that the active context is already set by
+`htanno_kmeans`.
+
+### htanno_dendro
+
+`htanno_dendro` class the addition of a dendrogram near the heatmap and
+and it can also reorder the heatmap. This is primarily useful when
+working with heatmap plots.
 
 ``` r
 ggheat(small_mat) + htanno_dendro(position = "top")
 ```
 
-<img src="man/figures/README-htanno_dendro-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
-One another useful function of dendrogram is cut the columns/rows into
+You can use the `distance` and `method` argument to control the
+dendrogram builind proce.
+
+``` r
+ggheat(small_mat) + htanno_dendro(position = "top", method = "ward.D2")
+```
+
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+
+One useful function of dendrogram is to cut the columns/rows into
 groups. You can specify `k` or `h`, which works the same with `cutree`.
 
 ``` r
 ggheat(small_mat) + htanno_dendro(position = "top", k = 3)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
 
-`htanno_dendro` will create a default `node` and `edge` data for the
-ggplot. See `?dendrogram_data` for details. `node` data have been set as
-the default data of the ggplot object, and `edge` data has been added
-into the `geom_segment` layer which drawing the dendrogram tree, so you
-cannot control the dendrogram by geom function, but you can control all
-of the behaviour in `htanno_dendro`. The default mapping can be
-controled via `mapping` argument, which is the same with `ggheat` and
-all other annotation function. One useful variable in the data is
-`branch` column, which corresponding to the `cutree` result.
-
-``` r
-ggheat(small_mat) + htanno_dendro(aes(color = branch), position = "top", k = 3)
-```
-
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
-
-All annotation functions include a `set_context` argument that
-determines whether to set the active component when adding the
-annotation. This argument requires a boolean value of length `2`. If a
-scalar value is provided, it will be recycled. The first value
-determines whether the active component is set to the annotation
-position. The second value will determine whether the active component
-of annotation list in this position should be set as current annotation.
-In the code mentioned above, the active component of the heatmap is set
-to the `top` and the active component of the top annotation list will be
-set to the dendrogram plot since `htanno_dendro` has a default
-`set_context` value of `TRUE`. So you can easily add more `geoms` with
-the default `node` data.
+In contrast to `htanno_group`, `htanno_kmeans`, and `htanno_reorder`,
+`htanno_dendro` is capable of drawing plot components. Therefore, it has
+a default `set_context` value of `c(TRUE, TRUE)`, we can directly add
+ggplot elements after `htanno_dendro` function.
 
 ``` r
 ggheat(small_mat) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
+  htanno_dendro(position = "top") +
   geom_point(aes(y = y))
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
 
-By default, all annotation functions automatically create a default
-mapping for the axis parallel to the heatmap. Therefore, when utilizing
-these functions, you only need to provide the mapping for the other
-axis.
-
-As mentioned above, `facet_*` function won’t work, since the internal
-will always use the row/column groups controlled by heatmap annotation,
-but you can also provide `facet_grid` or `facet_null` (if no panels) to
-control the non-layout arguments, like `labeller`.
+`htanno_dendro` will create a default `node` data for the ggplot. See
+`?dendrogram_data` for details. In addition, `edge` data has been added
+into the `geom_segment` layer directly which was used to draw the
+dendrogram tree. One useful variable in both `node` and edge `data` is
+`branch` column, which corresponding to the `cutree` result.
 
 ``` r
 ggheat(small_mat) +
   htanno_dendro(aes(color = branch), position = "top", k = 3) +
-  geom_point(aes(y = y)) +
-  facet_grid(labeller = labeller(.panel = function(x) letters[as.integer(x)]))
+  geom_point(aes(color = branch, y = y))
 ```
 
-<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
 
-Each annotation function includes a `data` argument to specify the
-annotation data. This argument can accept a matrix, a data frame, or
-even a simple vector that will be converted into a one-column matrix. If
-the `data` argument is set to `NULL`, the function will use the heatmap
-matrix, as shown in the previous examples. Additionally, the data
-argument can also accept a function(purrr-like lambda is also okay), to
-manipulate the heatmap matrix. It is important to note that all
-annotations consider the rows as the observations. It means the `NROW`
-function must return the same number as the heatmap parallel axis. So
-for column annotation, the heatmap will be transposed before using (If
-`data` is a function, it will be applied with the transposed matrix).
+`htanno_dendro` is also capable of performing clustering between groups.
+This means that you can use it even if there are already existing groups
+present in the heatmap.
 
-Since `htanno_dendro` has set the active context for the `top` position,
-we can add more annotations without specifying the position arguments.
+``` r
+column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
+ggheat(small_mat) +
+  htanno_group(column_groups, "t") +
+  htanno_dendro(aes(color = branch))
+```
+
+<img src="man/figures/README-unnamed-chunk-18-1.png" width="100%" />
+
+You can reorder the groups by setting `reorder_group = TRUE`.
 
 ``` r
 ggheat(small_mat) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
-  # since the heatmap matrix will be transposed before using, we should to
-  # rowSums to calculate the column sums of the original matrix
-  gganno(data = rowSums) +
-  # again: the default mapping will be made for the parallel axis of heatmap
-  geom_bar(aes(y = value, fill = .panel), stat = "identity") +
-  scale_fill_brewer(palette = "Dark2")
+  htanno_group(column_groups, "t") +
+  htanno_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-19-1.png" width="100%" />
+
+You can see the difference.
+
+``` r
+ggheat(small_mat) +
+  htanno_group(column_groups, "t") +
+  htanno_dendro(aes(color = branch), reorder_group = TRUE) +
+  htanno_dendro(aes(color = branch), reorder_group = FALSE, position = "b")
+```
+
+<img src="man/figures/README-unnamed-chunk-20-1.png" width="100%" />
+
+It is important to understand that when `reorder_group = FALSE` is used,
+the reordering of the heatmap occurs within each group. As long as the
+ordering within each group remains the same, these two dendrograms can
+be placed on the same axis of the heatmap. This is why adding a
+dendrogram with`reorder_group = FALSE` behind a dendrogram with
+`reorder_group = TRUE` is acceptable, as the second `htanno_dendro` will
+follow the group ordering established by the first one. However, it is
+not possible to add a dendrogram with `reorder_group = TRUE` behind a
+dendrogram with `reorder_group = FALSE` because the second dendrogram
+would not be able to conform to the grouping order followed by the first
+dendrogram.
+
+``` r
+ggheat(small_mat) +
+  htanno_group(column_groups, "t") +
+  htanno_dendro(aes(color = branch), reorder_group = FALSE) +
+  htanno_dendro(aes(color = branch), reorder_group = TRUE, position = "b")
+#> Error in `htanno_dendro()`:
+#> ! `htanno_dendro()` disrupt the previously established order of the
+#>   heatmap column
+```
+
+> `ggheat` always prevent user from reordering the heatmap twice.
 
 ## `gganno`
 
 `gganno` is similar to `ggheat` and `ggplot` in that it initializes a
-`ggplot` data and `mapping`. Before drawing, specific operations are
-performed to prepare for the visualization. The matrix (including a
-simple vector) is converted into a long-format data frame, similar to
-the process utilized in ggheat. However, the data frame does not contain
-.row_panel or .column_panel columns, as annotations can only have one
-facet axis. In the case where the input data is already a data frame,
-three additional columns-`.row_names`, `.row_index`, and `.panel`—are
-added to the data frame.
+`ggplot` data and `mapping`. The data input can be a matrix, a data
+frame, or a simple vector that will be converted into a one-column
+matrix, and can inherit from the heatmap matrix. But for ggplot usage,
+matrix (including a simple vector) data is converted into a long-format
+data frame, similar to the process utilized in `ggheat`. But note that
+the long-format data frame does not contain `.row_panel` or
+`.column_panel` column, as annotations can only have one facet axis. In
+the case where the input data is already a data frame, three additional
+columns-`.row_names`, `.row_index`, and `.panel`—are added to the data
+frame.
 
 Let’s add more annotations to different position. Since we want to add
 annotation into another position, we must specify the `position`
 argument or we can add an `active` object (we also provide `activate`
 and `deactivate` for function call foramt).
+
+For convenient, we also provide `gganno_*` function for 4 positions.
 
 ``` r
 ggheat(small_mat) +
@@ -283,63 +375,6 @@ ggheat(small_mat) +
   gganno(data = rowSums) +
   geom_bar(aes(y = value, fill = .panel), stat = "identity") +
   scale_fill_brewer(palette = "Dark2") +
-  active("left") +
-  gganno(aes(x = value), data = rowSums) +
-  geom_bar(
-    aes(y = .y, fill = factor(.y)),
-    stat = "identity",
-    orientation = "y"
-  ) +
-  scale_fill_brewer(palette = "Set1", guide = "none") +
-  scale_x_reverse()
-```
-
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
-
-For convenient, we also provide `gganno_*` function for 4 positions.
-
-``` r
-ggheat(small_mat) +
-  gganno_top(aes(y = value), data = rowSums) +
-  geom_bar(stat = "identity", aes(fill = factor(.panel))) +
-  scale_fill_brewer(name = NULL, palette = "Dark2", guide = "none") +
-  gganno_left(aes(x = value), data = rowSums) +
-  geom_bar(
-    aes(y = .y, fill = factor(.y)),
-    stat = "identity",
-    orientation = "y"
-  ) +
-  scale_fill_brewer(palette = "Set1") +
-  scale_x_reverse()
-```
-
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
-
-## `htanno_group`
-
-Another `htanno_group` class provides convenient way to split heatmap
-`rows/columns` into different panels with a group vairables. It won’t
-draw anything.
-
-``` r
-ggheat(small_mat) +
-  htanno_group(
-    sample(letters[1:3], nrow(small_mat), replace = TRUE),
-    position = "left"
-  )
-```
-
-<img src="man/figures/README-unnamed-chunk-18-1.png" width="100%" />
-
-You can combine `htanno_dendro` and `htanno_group` in different axis.
-
-``` r
-ggheat(small_mat) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
-  htanno_group(
-    sample(letters[1:3], nrow(small_mat), replace = TRUE),
-    position = "left"
-  ) +
   gganno_left(aes(x = value), data = rowSums) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
@@ -350,20 +385,7 @@ ggheat(small_mat) +
   scale_x_reverse()
 ```
 
-<img src="man/figures/README-unnamed-chunk-19-1.png" width="100%" />
-
-But you cannot mix them in the same axis.
-
-``` r
-ggheat(small_mat) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
-  htanno_group(sample(letters[1:3], ncol(small_mat), replace = TRUE))
-#> Error in `htanno_group()`:
-#> ! `htanno_group()` cannot do sub-split
-#> ℹ group of heatmap column already exists
-```
-
-I’ll add support of sub-clustering for `htanno_dendro`.
+<img src="man/figures/README-unnamed-chunk-22-1.png" width="100%" />
 
 ## Control size
 
@@ -377,7 +399,7 @@ provide a unit object) width and height. All annotation function have a
 annotation) or height (top and bottom annotation).
 
 ``` r
-pp <- ggheat(small_mat) +
+ggheat(small_mat) +
   scale_fill_viridis_c() +
   gganno_top(data = rowSums, size = unit(10, "mm")) +
   geom_bar(aes(y = value, fill = .x), stat = "identity") +
@@ -389,21 +411,83 @@ pp <- ggheat(small_mat) +
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   scale_x_reverse()
-pp
 ```
 
-<img src="man/figures/README-unnamed-chunk-21-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-23-1.png" width="100%" />
 
-Internally, the `ggheat_build` function was used to construct and merge
-all the `ggplot` objects into a single `patchwork` object. But usually
-there is no need to manually perform this combination since much of the
-arguments can be controlled within the `ggheat` function and the
-annotation functions.
+## active
+
+An alternative method to modify the active context is by adding an
+`active` object.
 
 ``` r
-class(ggheat_build(pp))
-#> [1] "patchwork" "gg"        "ggplot"
+ggheat(small_mat) +
+  active("top") +
+  htanno_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
+
+<img src="man/figures/README-active_top-1.png" width="100%" />
+
+``` r
+ggheat(small_mat) +
+  active("top") +
+  htanno_dendro(aes(color = branch), k = 3) +
+  ylab("I'm top annotation") +
+  active(NULL) +
+  ylab("I'm the main heatmap")
+```
+
+<img src="man/figures/README-active_null-1.png" width="100%" />
+
+## restriction
+
+The position scales and facets are partial support.
+
+For position scales, you cannot set `limits`, `breaks`, `labels`, and
+they are just ignored. `limits` cannot be touched, and the internal will
+always reset it as the default. This is required to match the heatmap
+and annotation limits. But you can set `labels` or `breaks` in
+`ggheat()` function. See `xlabels/ylabels` and
+`xlabels_nudge/ylabels_nudge`. All of these arguments should be provided
+in the original order of the raw matrix. Even if we use heatmap
+annotation to reorder the heatmap rows/columns.
+
+``` r
+ggheat(small_mat) + scale_x_continuous(limits = c(0, 0))
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
+```
+
+<img src="man/figures/README-unnamed-chunk-24-1.png" width="100%" />
+
+``` r
+ggheat(small_mat) + scale_x_continuous(labels = "a")
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
+```
+
+<img src="man/figures/README-unnamed-chunk-25-1.png" width="100%" />
+
+``` r
+ggheat(small_mat, xlabels = rep_len("AA", ncol(small_mat)))
+```
+
+<img src="man/figures/README-unnamed-chunk-26-1.png" width="100%" />
+
+When working with facets, manual configuration of panels using the
+`facet_*` function is not possible since the internal will use
+`facet_grid` to set the row/column groups controlled by heatmap
+annotation. However, you can also provide `facet_grid` or `facet_null`
+(if no panels) to control the non-layout arguments, like `labeller`.
+
+``` r
+ggheat(small_mat) +
+  facet_grid(labeller = labeller(.panel = function(x) letters[as.integer(x)])) +
+  htanno_dendro(aes(color = branch), position = "top", k = 3) +
+  geom_point(aes(y = y))
+```
+
+<img src="man/figures/README-unnamed-chunk-27-1.png" width="100%" />
 
 ## Session information
 

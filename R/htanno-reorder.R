@@ -10,6 +10,9 @@
 #' decreasing?
 #' @inheritParams htanno
 #' @inherit htanno return
+#' @examples 
+#' ggheat(matrix(rnorm(81), nrow = 9)) +
+#'     htanno_reorder(position = "top")
 #' @export
 htanno_reorder <- function(fun = rowMeans, ..., strict = TRUE,
                            decreasing = FALSE,

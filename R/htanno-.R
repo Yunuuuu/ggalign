@@ -169,7 +169,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     # Used to modify `HtannoProto` object after layout has been applied, but
     # before rendering. The default is to not modify anything. Use this hook to
     # add initial ggplot elements but want to let user override it.
-    finish_initialize = function(data, panels, index, position) NULL,
+    finish_layout = function(data, panels, index, position) NULL,
 
     # draw plot, you cannot modify `HtannoProto` object when drawing, since all
     # of above process will only run once

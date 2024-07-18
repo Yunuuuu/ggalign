@@ -57,3 +57,7 @@ A \code{htanno} object.
 \description{
 Reorder Heatmap rows/columns
 }
+\examples{
+ggheat(matrix(rnorm(81), nrow = 9)) +
+    htanno_reorder(position = "top")
+}

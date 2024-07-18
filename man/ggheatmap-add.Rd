@@ -21,6 +21,11 @@ A modified \code{ggheatmap} object.
 \description{
 Add components to \code{ggheatmap}
 }
+\examples{
+ggheat(matrix(rnorm(81), nrow = 9)) +
+    gganno(position = "top") +
+    geom_point(aes(y = value))
+}
 \seealso{
 ggheatmap_add
 }

@@ -2,6 +2,9 @@
 #' @inheritParams stats::kmeans
 #' @inheritParams htanno
 #' @inherit htanno return
+#' @examples
+#' ggheat(matrix(rnorm(81), nrow = 9)) +
+#'     htanno_kmeans(3L, position = "top")
 #' @export
 htanno_kmeans <- function(centers, iter.max = 10, nstart = 1,
                           algorithm = c(

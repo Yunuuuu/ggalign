@@ -55,8 +55,6 @@ annotations_build <- function(annotations, panels, index, scales,
             panels = panels,
             index = index,
             scales = default_scales,
-            # the facet maybe used by different ggplot, should we clone the
-            # facet?
             facet = facet,
             position = position
         )

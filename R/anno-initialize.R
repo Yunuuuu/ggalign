@@ -77,7 +77,7 @@ anno_initialize.htanno <- function(object, plot, object_name) {
     slot(plot, paste0(axis, "_index")) <- .subset2(layout, 2L)
 
     # in the finally, we let htanno modify after make layout -----------
-    htanno$finish_initialize(
+    htanno$finish_layout(
         data,
         .subset2(layout, 1L), 
         .subset2(layout, 2L),

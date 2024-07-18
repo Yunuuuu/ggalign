@@ -126,3 +126,8 @@ A \code{htanno} object.
 \description{
 Heatmap dendrogram
 }
+\examples{
+ggheat(matrix(rnorm(81), nrow = 9)) + htanno_dendro(position = "top")
+ggheat(matrix(rnorm(81), nrow = 9)) +
+    htanno_dendro(position = "top", k = 3L)
+}

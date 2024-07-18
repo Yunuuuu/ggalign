@@ -4,6 +4,10 @@
 #' @importFrom ggplot2 aes
 #' @inheritParams anno
 #' @return A `gganno` object.
+#' @examples 
+#' ggheat(matrix(rnorm(81), nrow = 9)) +
+#'   gganno(position = "top") +
+#'   geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
 gganno <- function(mapping = aes(), data = NULL,
