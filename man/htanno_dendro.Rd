@@ -10,6 +10,7 @@ htanno_dendro(
   distance = "euclidean",
   method = "complete",
   use_missing = "pairwise.complete.obs",
+  reorder_group = FALSE,
   k = NULL,
   h = NULL,
   plot_cut_height = NULL,
@@ -51,6 +52,10 @@ covariances in the presence of missing values. This must be (an abbreviation
 of) one of the strings \code{"everything"}, \code{"all.obs"}, \code{"complete.obs"},
 \code{"na.or.complete"}, or \code{"pairwise.complete.obs"}. Only used when \code{distance}
 is a correlation coefficient string.}
+
+\item{reorder_group}{A single boolean value, indicates whether we should do
+Hierarchical Clustering between groups, only used when previous groups have
+been established.}
 
 \item{k}{An integer scalar indicates the desired number of groups.}
 

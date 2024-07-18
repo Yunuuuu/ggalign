@@ -84,11 +84,16 @@ override one or more of the following:
 \item \code{setup_params}: Prepare parameter or check parameters used by this
 annotation.
 \item \code{add}: A method used to add other components into this annotation. Usually
-\code{gg} components.
+\code{gg} components. Must modify the \code{HtannoProto} object itself, no results
+will be assign.
 \item \code{compute}: A method used to compute statistics.
 \item \code{layout}: A method used to group heamap rows/columns into panels or
 reorder heamtap rows/columns.
-\item \code{draw}: A method used to draw the plot.
+\item \code{draw}: A method used to draw the plot. You must not modify the
+\code{HtannoProto} object itself when drawing since all of calculating process
+will run only once when be added into the heatmap. It allows \code{htanno} to
+make layout of the heatmap when be added, and we can then check other
+annotation won't modifying the heatmap layout.
 }
 }
 

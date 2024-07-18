@@ -30,7 +30,7 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
         }
         params
     },
-    layout = function(self, data, statistics, panels, index, position, group) {
+    layout = function(self, data, panels, index, position, group) {
         if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",

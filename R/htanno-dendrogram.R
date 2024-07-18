@@ -1,6 +1,9 @@
 #' Heatmap dendrogram
 #'
 #' @inheritParams hclust2
+#' @param reorder_group A single boolean value, indicates whether we should do
+#' Hierarchical Clustering between groups, only used when previous groups have
+#' been established.
 #' @inheritParams ggdendrogram
 #' @inheritParams htanno
 #' @inherit htanno return
@@ -9,6 +12,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                           distance = "euclidean",
                           method = "complete",
                           use_missing = "pairwise.complete.obs",
+                          reorder_group = FALSE,
                           k = NULL, h = NULL,
                           plot_cut_height = NULL, root = NULL,
                           center = FALSE, type = "rectangle", data = NULL,
@@ -16,6 +20,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                           position = NULL, size = NULL,
                           set_context = NULL, order = NULL, name = NULL,
                           check.param = TRUE) {
+    assert_bool(reorder_group)
     htanno(
         htanno_class = HtannoDendro,
         position = position,
@@ -26,6 +31,7 @@ htanno_dendro <- function(mapping = aes(), ...,
                 anno_default_theme(),
             segment_params = rlang::list2(...),
             center = center, type = type, root = root,
+            reorder_group = reorder_group,
             # initialize height value
             height = NULL
         ),
@@ -90,7 +96,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
     },
     compute = function(self, data, panels, index, position,
                        distance, method, use_missing, k, h) {
-        # what if the old panels exist, we should do sub-clustering
+        # what if the old panels exist, we do sub-clustering
         if (!is.null(panels)) {
             # if the heatmap has established groups,
             # `k` and `h` must be NULL, and we'll do sub-clustering
@@ -105,15 +111,15 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             labels <- rownames(data)
             # we do clustering within each group
             for (g in levels(panels)) {
-                index <- which(panels == g)
-                gdata <- data[index, , drop = FALSE]
+                i <- which(panels == g)
+                gdata <- data[i, , drop = FALSE]
                 if (nrow(gdata) == 1L) {
                     children[[g]] <- structure(
-                        index,
+                        i,
                         class = "dendrogram",
                         leaf = TRUE,
                         height = 0,
-                        label = .subset(labels, index),
+                        label = .subset(labels, i),
                         members = 1L
                     )
                 } else {
@@ -127,7 +133,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     # we restore the actual index of the original matrix
                     child <- stats::dendrapply(child, function(x) {
                         if (stats::is.leaf(x)) {
-                            ans <- .subset(index, x)
+                            ans <- .subset(i, x)
                             attributes(ans) <- attributes(x)
                             ans
                         } else {
@@ -137,9 +143,17 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     children[[g]] <- child
                 }
             }
+            return(children)
+        }
+        hclust2(data, distance, method, use_missing)
+    },
+    layout = function(self, data, panels, old_index, position,
+                      distance, method, use_missing,
+                      reorder_group, k, h) {
+        if (!is.null(panels)) {
             if (nlevels(panels) == 1L) { # only one parent
-                ans <- .subset2(children, 1L)
-            } else {
+                self$statistics <- .subset2(self$statistics, 1L)
+            } else if (reorder_group) {
                 parent_data <- t(sapply(levels(panels), function(g) {
                     colMeans(data[panels == g, , drop = FALSE])
                 }))
@@ -151,29 +165,25 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     method = method,
                     use_missing = use_missing
                 ))
-                ans <- merge_dendrogram(parent, children)
-                self$draw_params$height <- attr(ans, "cutoff_height")
+                panels <- factor(panels, stats::order.dendrogram(parent))
+                self$statistics <- merge_dendrogram(parent, self$statistics)
+                # self$draw_params$height <- attr(ans, "cutoff_height")
+            } else {
+                self$statistics <- Reduce(merge, self$statistics)
             }
-            return(ans)
-        }
-        hclust2(data, distance, method, use_missing)
-    },
-    layout = function(self, data, statistics, panels, old_index,
-                      position, k, h) {
-        # we'll always reorder the dendrogram
-        index <- order2(statistics)
-        if (!is.null(k)) {
-            panels <- stats::cutree(statistics, k = k)
-            self$draw_params$height <- cutree_k_to_h(statistics, k)
+        } else if (!is.null(k)) {
+            panels <- stats::cutree(self$statistics, k = k)
+            self$draw_params$height <- cutree_k_to_h(self$statistics, k)
         } else if (!is.null(h)) {
-            panels <- stats::cutree(statistics, h = h)
+            panels <- stats::cutree(self$statistics, h = h)
             self$draw_params$height <- h
         }
+        index <- order2(self$statistics)
         # reorder panel factor levels to following the dendrogram order
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
-    draw = function(self, data, statistics, panels, index, position,
+    draw = function(self, data, panels, index, position,
                     # other argumentds
                     plot, height, plot_cut_height, center, type,
                     root, segment_params) {
@@ -188,7 +198,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             type <- "rectangle"
         }
         data <- dendrogram_data(
-            statistics,
+            self$statistics,
             priority = switch_position(position, "left", "right"),
             center = center,
             type = type,

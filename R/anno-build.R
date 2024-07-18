@@ -27,7 +27,6 @@ anno_build.htanno <- function(x, panels, index, scales, facet, position) {
     # let `htanno` to determine how to draw
     plot <- rlang::inject(htanno$draw(
         slot(x, "data"),
-        slot(x, "statistics"),
         panels, index, position,
         !!!htanno$draw_params
     ))

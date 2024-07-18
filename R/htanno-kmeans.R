@@ -40,13 +40,13 @@ HtannKmeans <- ggplot2::ggproto("HtannKmeans", HtannoProto,
                        centers, iter.max, nstart, algorithm, trace) {
         stats::kmeans(data, centers, iter.max, nstart, algorithm, trace)
     },
-    layout = function(self, data, statistics, panels, index, position) {
+    layout = function(self, data, panels, index, position) {
         if (!is.null(panels)) {
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_matrix_axis(position)} already exists"
             ), call = self$call)
         }
-        list(statistics$cluster, index)
+        list(self$statistics$cluster, index)
     }
 )

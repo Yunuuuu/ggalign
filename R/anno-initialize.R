@@ -68,19 +68,10 @@ anno_initialize.htanno <- function(object, plot, object_name) {
     # split parameters -----------------------------------
     htanno$split_params(params)
 
-    # compute statistics ---------------------------------
-    statistics <- rlang::inject(
-        htanno$compute(
-            data, old_panels, old_index, position,
-            !!!htanno$compute_params
-        )
-    )
-    slot(object, "statistics") <- statistics
-
     # group row or column into panels ---------------------
     layout <- htanno_layout(
-        htanno, old_panels, old_index,
-        data, statistics, position, axis
+        htanno, data, old_panels, old_index,
+        position, axis
     )
     slot(plot, paste0(axis, "_panels")) <- .subset2(layout, 1L)
     slot(plot, paste0(axis, "_index")) <- .subset2(layout, 2L)
@@ -90,11 +81,19 @@ anno_initialize.htanno <- function(object, plot, object_name) {
     list(plot, object)
 }
 
-htanno_layout <- function(htanno, old_panels, old_index,
-                          data, statistics, position, axis) {
+htanno_layout <- function(htanno, data, old_panels, old_index,
+                          position, axis) {
+    # compute statistics ---------------------------------
+    htanno$statistics <- rlang::inject(
+        htanno$compute(
+            data, old_panels, old_index, position,
+            !!!htanno$compute_params
+        )
+    )
+    # make layout ---------------------------------------
     new <- rlang::inject(
         htanno$layout(
-            data, statistics, old_panels, old_index, position,
+            data, old_panels, old_index, position,
             !!!htanno$layout_params
         )
     )
@@ -123,14 +122,12 @@ htanno_layout <- function(htanno, old_panels, old_index,
             )
         }
     }
-    new_index <- .subset2(new, 2L)
-    if (!is.null(old_index) && !all(old_index == new_index)) {
-        cli::cli_abort(sprintf(
-            "{.fn {snake_class(htanno)}} disrupt the previously %s %s",
-            "established order of the heatmap",
-            to_matrix_axis(position)
-        ), call = htanno$call)
+    # the panel factor level determine the group order
+    if (!is.null(new_panels) && !is.factor(new_panels)) {
+        new_panels <- factor(new_panels)
     }
+
+    new_index <- .subset2(new, 2L)
     if (!is.null(new_index)) {
         if (anyNA(new_index)) {
             cli::cli_abort(
@@ -155,18 +152,27 @@ htanno_layout <- function(htanno, old_panels, old_index,
             )
         }
     }
-    # the panel factor level determine the group order
-    if (!is.null(new_panels) && !is.factor(new_panels)) {
-        new_panels <- factor(new_panels)
-    }
+    # we always make the index following the panel
     if (!is.null(new_panels) && !is.null(new_index)) {
         new_index <- reorder_index(new_panels, new_index)
+    }
+
+    # here we check situation 3:
+    # we always prevent from reordering heatmap twice.
+    # in this way, htanno even cannot make groups after creating heatmap order
+    if (!is.null(old_index)) {
+        if (!all(old_index == new_index)) {
+            cli::cli_abort(sprintf(
+                "{.fn {snake_class(htanno)}} disrupt the previously %s %s",
+                "established order of the heatmap",
+                to_matrix_axis(position)
+            ), call = htanno$call)
+        }
     }
     list(new_panels, new_index)
 }
 
 reorder_index <- function(panels, index = NULL, reverse = FALSE) {
     index <- index %||% seq_along(panels)
-    ans <- split(index, panels[index])
-    unlist(ans, recursive = FALSE, use.names = FALSE)
+    unlist(split(index, panels[index]), recursive = FALSE, use.names = FALSE)
 }

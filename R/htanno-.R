@@ -49,8 +49,8 @@ htanno <- function(data = NULL,
 methods::setClass(
     "htanno",
     contains = "anno",
-    list(htanno = "ANY", statistics = "ANY", params = "list"),
-    prototype = list(statistics = NULL, params = list())
+    list(htanno = "ANY", params = "list"),
+    prototype = list(htanno = NULL, params = list())
 )
 
 #' @section HtannoProto:
@@ -63,26 +63,33 @@ methods::setClass(
 #'  - `setup_params`: Prepare parameter or check parameters used by this
 #'    annotation.
 #'  - `add`: A method used to add other components into this annotation. Usually
-#'    `gg` components.
+#'    `gg` components. Must modify the `HtannoProto` object itself, no results
+#'    will be assign.
 #'  - `compute`: A method used to compute statistics.
 #'  - `layout`: A method used to group heamap rows/columns into panels or
 #'    reorder heamtap rows/columns.
-#'  - `draw`: A method used to draw the plot.
+#'  - `draw`: A method used to draw the plot. You must not modify the
+#'    `HtannoProto` object itself when drawing since all of calculating process
+#'    will run only once when be added into the heatmap. It allows `htanno` to
+#'    make layout of the heatmap when be added, and we can then check other
+#'    annotation won't modifying the heatmap layout.
 #' @export
 #' @format NULL
 #' @usage NULL
 #' @rdname htanno
 HtannoProto <- ggplot2::ggproto("HtannoProto",
     call = NULL,
-    # each function can modify these parameters
+    # each function can modify these parameters and statistics using methods
+    # `compute`, `layout`, and `draw`.
     compute_params = NULL,
     layout_params = NULL,
     draw_params = NULL,
+    statistics = NULL,
     parameters = function(self) {
         c(
-            htanno_method_params(self$compute, 2L),
-            htanno_method_params(self$layout, 5L),
-            htanno_method_params(self$draw, 5L),
+            htanno_method_params(self$compute, 4L),
+            htanno_method_params(self$layout, 4L),
+            htanno_method_params(self$draw, 4L),
             self$extra_params
         )
     },
@@ -92,10 +99,10 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
             intersect(names(params), htanno_method_params(self$compute, 4L))
         ]
         self$layout_params <- params[
-            intersect(names(params), htanno_method_params(self$layout, 5L))
+            intersect(names(params), htanno_method_params(self$layout, 4L))
         ]
         self$draw_params <- params[
-            intersect(names(params), htanno_method_params(self$draw, 5L))
+            intersect(names(params), htanno_method_params(self$draw, 4L))
         ]
     },
     # Most parameters for the `HtannoProto` are taken automatically from
@@ -105,8 +112,8 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     extra_params = character(),
     setup_params = function(data, params, position) params,
     setup_data = function(data, params, position) data,
-    # this method must modify the HtannoProto object itself, no results will be
-    # assign.
+    # this method must modify the `HtannoProto` object itself, no results will
+    # be assign.
     add = function(self, object, object_name) {
         cli::cli_abort(
             "cannot add {object_name} to {.fn {snake_class(self)}}",
@@ -114,7 +121,7 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
         )
     },
 
-    # Following fields should be defined for the new Htanno object.
+    # Following fields should be defined for the new `Htanno` object.
     # argument name in the initial function doesn't matter.
     compute = function(data, panels, index, position) NULL,
 
@@ -125,12 +132,39 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     #    `HtannoDendro` for example.
     #  - the second one should be the heatmap row/column order index, and will
     #    determine the order in each grouped panels.
-    layout = function(data, statistics, panels, index, position) {
+    #
+    # See `htanno_layout` function for details
+    # There will have following situations (the input is old index and old
+    # panels):
+    #
+    # 1. old index is NULL and old panels is NULL, there is nothing wrong to
+    #    define any new index or panels
+    # 2. old index is `NULL` and old panels is not `NULL`, in this way, new
+    #    index must follow the old panels.
+    #
+    #    For new `HtannoProto` object, which can do clustering, we must abort,
+    #    if it can not do sub-clustering, if it can do sub-clustering, we should
+    #    know if we want to change the order between the groups (panel levels).
+    #
+    #    Please check `HtannoGroup` object and `HtannoProto` object
+    #    For dendrogram, it can do sub-clustering within each group, it also
+    #    allows reordering between groups (it provide `reorder_group` argument),
+    #    so the new panels levels may be not the same with old panels
+    #
+    #    For `HtannoProto` object, only reordering the heatmap rows/columns only
+    #    usually we provide a `strict` argument, to allow reorder heatmap within
+    #    group only. See `HtannoReorder`
+    #
+    # 3. old index is not `NULL`, no matter whether old panels is `NULL` or not,
+    #    in this way, we should always ensure the new index won't change the old
+    #    index, this will be checked in `htanno_layout` function.
+    layout = function(data, panels, index, position) {
         list(panels, index)
     },
 
-    # draw plot
-    draw = function(data, statistics, panels, index, position) {
+    # draw plot, you cannot modify `HtannoProto` object when drawing, since all
+    # of above process will only run once
+    draw = function(data, panels, index, position) {
         NULL
     }
 )
