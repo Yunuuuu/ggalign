@@ -7,6 +7,11 @@ testthat::test_that("`htanno_group` works well", {
     expect_error(p + htanno_group(1:4, "t"))
     expect_error(p + htanno_group(row_group, "t"))
 
+    # cannot do sub-group
+    expect_error(p + htanno_group(row_group, "t") + htanno_group(row_group))
+
+    testthat::skip_on_cran()
+    testthat::skip_on_ci()
     expect_snapshot_file(
         save_png(p + htanno_group(column_group, "t")), "group_top.png"
     )
@@ -19,8 +24,6 @@ testthat::test_that("`htanno_group` works well", {
     expect_snapshot_file(
         save_png(p + htanno_group(row_group, "r")), "group_right.png"
     )
-    # cannot do sub-group
-    expect_error(p + htanno_group(row_group, "t") + htanno_group(row_group))
 })
 
 testthat::test_that("`htanno_reorder` works well", {
@@ -28,6 +31,9 @@ testthat::test_that("`htanno_reorder` works well", {
     p <- ggheat(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
+    expect_error(p + htanno_group(column_group, "t") + htanno_reorder())
+    testthat::skip_on_cran()
+    testthat::skip_on_ci()
     expect_snapshot_file(
         save_png(p + htanno_reorder(position = "t")), "reorder_top.png"
     )
@@ -40,7 +46,6 @@ testthat::test_that("`htanno_reorder` works well", {
     expect_snapshot_file(
         save_png(p + htanno_reorder(position = "r")), "reorder_right.png"
     )
-    expect_error(p + htanno_group(column_group, "t") + htanno_reorder())
     expect_snapshot_file(
         save_png(p + htanno_group(column_group, "t") +
             htanno_reorder(strict = FALSE)),
@@ -61,6 +66,12 @@ testthat::test_that("`htanno_kmeans` works well", {
     p <- ggheat(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
+
+    expect_error(p + htanno_group(column_group, "t") + htanno_kmeans(3L))
+    expect_error(p + htanno_group(row_group, "l") + htanno_kmeans(3L))
+
+    testthat::skip_on_cran()
+    testthat::skip_on_ci()
     expect_snapshot_file(
         save_png(p + htanno_kmeans(3L, position = "t")), "kmeans_top.png"
     )
@@ -73,8 +84,6 @@ testthat::test_that("`htanno_kmeans` works well", {
     expect_snapshot_file(
         save_png(p + htanno_kmeans(2L, position = "r")), "kmeans_right.png"
     )
-    expect_error(p + htanno_group(column_group, "t") + htanno_kmeans(3L))
-    expect_error(p + htanno_group(row_group, "l") + htanno_kmeans(3L))
 })
 
 testthat::test_that("`htanno_dendro` works well", {
@@ -82,14 +91,17 @@ testthat::test_that("`htanno_dendro` works well", {
     p <- ggheat(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
+    expect_error(p + htanno_group(column_group, "t") + htanno_dendro(k = 3L))
+    expect_error(p + htanno_group(column_group, "t") + htanno_dendro(h = 3L))
+
+    testthat::skip_on_cran()
+    testthat::skip_on_ci()
     expect_snapshot_file(
         save_png(p + htanno_dendro(position = "t")), "dendro.png"
     )
     expect_snapshot_file(
         save_png(p + htanno_dendro(k = 3L, position = "t")), "dendro_cutree.png"
     )
-    expect_error(p + htanno_group(column_group, "t") + htanno_dendro(k = 3L))
-    expect_error(p + htanno_group(column_group, "t") + htanno_dendro(h = 3L))
     expect_snapshot_file(
         save_png(p + htanno_group(column_group, "t") + htanno_dendro()),
         "dendro_top_between_group.png"
