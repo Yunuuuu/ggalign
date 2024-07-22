@@ -54,9 +54,9 @@ HtannoReorder <- ggplot2::ggproto("HtannoReorder", HtannoProto,
         weights <- rlang::inject(fun(data, !!!fun_params))
         if (nrow(data) != length(weights)) {
             cli::cli_abort(paste(
-                "{.arg fun} of {.fn {snake_class(self)}} must return an",
+                "{.arg fun} of {.fn {snake_class(self)}} must return an atomic",
                 sprintf(
-                    "integer with the same length of heatmap %s axis (%d)",
+                    "vector with the same length of heatmap %s axis (%d)",
                     to_matrix_axis(position), nrow(data)
                 )
             ), call = .subset2(self, "call"))
