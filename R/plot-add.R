@@ -118,7 +118,7 @@ ggheatmap_add.gg <- function(object, heatmap, object_name) {
         is.null(active_anno <- get_context(annotations))) {
         cli::cli_abort(c(
             "Cannot add {.code {object_name}} to {position} annotation",
-            i = "Did you forget to initialize it with {.fn htanno_*_{position}}?"
+            i = "Did you forget to initialize it with {.fn gganno_{position}}?"
         ))
     } else {
         anno <- .subset2(annotations, active_anno)
