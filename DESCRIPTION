@@ -35,6 +35,7 @@ Collate:
     'htanno-group.R'
     'htanno-kmeans.R'
     'htanno-reorder.R'
+    'htanno-title.R'
     'import-standalone-assert.R'
     'import-standalone-cli.R'
     'import-standalone-obj-type.R'

@@ -81,6 +81,7 @@ ggheat.matrix <- function(data, mapping = NULL,
         theme(
             plot.background = element_blank(),
             panel.border = element_blank(),
+            strip.text = element_blank(),
             strip.background = element_blank()
         )
     if (ncol(data) > 10L) {

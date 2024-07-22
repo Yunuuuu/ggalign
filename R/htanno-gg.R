@@ -44,7 +44,7 @@ gganno_left <- function(...) htanno_gg(position = "left", ...)
 gganno_right <- function(...) htanno_gg(position = "right", ...)
 
 HtannoGG <- ggplot2::ggproto("HtannoGG", HtannoProto,
-    ggplot = function(self, panels, index, mapping) {
+    ggplot = function(self, mapping) {
         ans <- ggplot2::ggplot(mapping = mapping) +
             ggplot2::theme_bw()
 

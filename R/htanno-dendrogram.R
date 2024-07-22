@@ -179,7 +179,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
-    ggplot = function(self, panels, index, mapping, segment_params) {
+    ggplot = function(self, mapping, segment_params) {
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(

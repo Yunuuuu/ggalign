@@ -169,9 +169,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
     ggplot_params <- params[
         intersect(names(params), htanno_method_params(object$ggplot))
     ]
-    p <- rlang::inject(
-        object$ggplot(new_panels, new_index, !!!ggplot_params)
-    )
+    p <- rlang::inject(object$ggplot(!!!ggplot_params))
     # set the default theme for all annotation
     if (ggplot2::is.ggplot(p)) {
         p <- p + theme(
