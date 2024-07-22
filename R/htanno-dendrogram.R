@@ -180,6 +180,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         list(panels, index)
     },
     ggplot = function(self, mapping, segment_params) {
+        position <- .subset2(self, "position")
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
@@ -189,6 +190,11 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 !!!segment_params,
                 stat = "identity"
             )) +
+            switch_position(
+                position,
+                ggplot2::labs(x = "height"),
+                ggplot2::labs(y = "height")
+            ) +
             ggplot2::theme_bw()
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
