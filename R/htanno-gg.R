@@ -44,6 +44,18 @@ gganno_left <- function(...) htanno_gg(position = "left", ...)
 gganno_right <- function(...) htanno_gg(position = "right", ...)
 
 HtannoGG <- ggplot2::ggproto("HtannoGG", HtannoProto,
+    setup_data = function(self) {
+        data <- .subset2(self, "data")
+        # matrix: will be reshaped to the long-format data.frame
+        # data.frame: won't do any thing special
+        if (is.matrix(data)) {
+            data <- melt_matrix(data)
+        } else {
+            data <- as_tibble0(data, rownames = ".row_names")
+            data$.row_index <- seq_len(nrow(data))
+        }
+        data
+    },
     ggplot = function(self, mapping) {
         ans <- ggplot2::ggplot(mapping = mapping) +
             ggplot2::theme_bw()
@@ -57,14 +69,6 @@ HtannoGG <- ggplot2::ggproto("HtannoGG", HtannoProto,
     draw = function(self, panels, index) {
         data <- .subset2(self, "data")
         axis <- to_coord_axis(.subset2(self, "position"))
-        # matrix: will be reshaped to the long-format data.frame
-        # data.frame: won't do any thing special
-        if (is.matrix(data)) {
-            data <- melt_matrix(data)
-        } else {
-            data <- as_tibble0(data, rownames = ".row_names")
-            data$.row_index <- seq_len(nrow(data))
-        }
         coords <- data_frame0(.panel = panels[index], .index = index)
         coords[[paste0(".", axis)]] <- seq_along(index)
         data <- merge(data, coords,

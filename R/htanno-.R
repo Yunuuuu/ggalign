@@ -188,7 +188,10 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
     # otherwise, they won't be collected.
     extra_params = character(),
     setup_params = function(self) .subset2(self, "params"),
-    setup_data = function(self) .subset2(self, "data"),
+
+    # use `NULL`, if you don't need any data from the heatmap
+    # use `.subset2(self, "data")` if you want to attach the matrix
+    setup_data = function(self) NULL,
 
     # Following fields should be defined for the new `Htanno` object.
     # argument name in the function doesn't matter.

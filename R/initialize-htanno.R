@@ -66,9 +66,12 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
     params <- object$setup_params()
     object$params <- params
 
-    # prepare data --------------------------------------
-    data <- object$setup_data()
-    object$data <- data
+    # rows are observations, this data came from `htanno_setup_data`, which can
+    # be used to check the axis dimention
+    data <- .subset2(object, "data")
+
+    # set up data --------------------------------------
+    object$data <- object$setup_data()
 
     # prepare old layout --------------------------------
     old_panels <- slot(heatmap, paste0(axis, "_panels"))

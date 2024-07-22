@@ -38,6 +38,7 @@ htanno_reorder <- function(fun = rowMeans, ..., strict = TRUE,
 }
 
 HtannoReorder <- ggplot2::ggproto("HtannoReorder", HtannoProto,
+    setup_data = function(self) .subset2(self, "data"),
     compute = function(self, panels, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
         position <- .subset2(self, "position")
