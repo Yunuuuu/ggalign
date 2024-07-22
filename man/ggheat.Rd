@@ -66,8 +66,13 @@ notation.
 
 \item{xlabels_nudge, ylabels_nudge}{A single numeric or a numeric value of
 length \code{ncol(data)/nrow(data)}, to nudge each text label away from the
-center. If \code{waiver()}, it means \code{0}. If \code{NULL}, no breaks, in this way labels
-will be removed too.}
+center. One of:
+\itemize{
+\item \code{NULL} for no breaks
+\item \code{waiver()}: if \code{xlabels}/\code{ylabels} is \code{NULL}, then
+\code{xlabels_nudge}/\code{ylabels_nudge} will be \code{NULL}, otherwise \code{0}.
+\item A numeric.
+}}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
 \code{'collect'} will collect guides below to the given nesting level, removing

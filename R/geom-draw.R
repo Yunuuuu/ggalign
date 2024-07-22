@@ -5,7 +5,7 @@
 #' @param draw Either a [grob][grid::grob] object or a function (can be
 #'   purrr-style) which accepts two arguments (\code{data} and \code{coords})
 #'   and returns a [grob][grid::grob].
-#'   
+#'
 #'   when `draw` is a function, it is used as the `draw_group` function
 #'   in a [Geom][ggplot2::Geom] `ggproto` object. So One should always call
 #'   `coord$transform(data, panel_params)` in function `draw` to get transformed

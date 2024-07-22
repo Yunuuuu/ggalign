@@ -22,30 +22,25 @@ Imports:
     tidyr
 Collate: 
     'activate.R'
-    'ggheat.R'
-    'anno-.R'
-    'anno-add.R'
-    'anno-and.R'
-    'anno-build.R'
-    'anno-initialize.R'
-    'anno-setup_data.R'
-    'annotations.R'
+    'add-methods.R'
+    'build-methods.R'
     'dendrogram.R'
     'geom-draw.R'
-    'gganno-.R'
     'ggdendrogram.R'
     'ggheat-package.R'
-    'ggheatmap-add.R'
-    'ggheatmap-and.R'
-    'heatmap-add.R'
+    'ggheat.R'
     'htanno-.R'
     'htanno-dendrogram.R'
+    'htanno-gg.R'
     'htanno-group.R'
     'htanno-kmeans.R'
     'htanno-reorder.R'
     'import-standalone-assert.R'
     'import-standalone-cli.R'
     'import-standalone-obj-type.R'
+    'initialize-htanno.R'
+    'plot-add.R'
+    'plot-and_add.R'
     'plot-build.R'
     'utils-assert.R'
     'utils-grid.R'
@@ -54,5 +49,8 @@ ByteCompile: true
 URL: https://github.com/Yunuuuu/ggheat
 BugReports: https://github.com/Yunuuuu/ggheat/issues
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr

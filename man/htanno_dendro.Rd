@@ -18,14 +18,13 @@ htanno_dendro(
   center = FALSE,
   type = "rectangle",
   labels = NULL,
-  labels_nudge = NULL,
-  data = NULL,
-  position = NULL,
+  labels_nudge = waiver(),
   size = NULL,
+  data = NULL,
   set_context = NULL,
   order = NULL,
   name = NULL,
-  check.param = TRUE
+  position = NULL
 )
 }
 \arguments{
@@ -86,9 +85,15 @@ notation.
 }}
 
 \item{labels_nudge}{A single numeric or a numeric value of length
-\code{nrow(data)}, to nudge each text label away from the center. If \code{waiver()},
-will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels will
-be removed too.}
+\code{nrow(data)}, to nudge each text label away from the center. One of:
+\itemize{
+\item \code{NULL} for no breaks
+\item \code{waiver()}: if \code{labels} is \code{NULL}, then \code{labels_nudge} will be \code{NULL},
+otherwise it will inherit from the heatmap.
+\item A numeric.
+}}
+
+\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
@@ -97,16 +102,10 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the heatmap matrix.
 
 It is important to note that all annotations consider the \code{rows} as the
-observations. It means the \code{NROW} function must return the same number as the
-heatmap parallel axis. So for column annotation, the heatmap matrix will be
-transposed before using (If data is a \code{function}, it will be applied with the
-transposed matrix).}
-
-\item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
-of the \code{ggheatmap} will be used.}
-
-\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
+observations. It means the \code{NROW} function must return the same number with
+the heatmap parallel axis. So for column annotation, the heatmap matrix will
+be transposed before using (If data is a \code{function}, it will be applied with
+the transposed matrix).}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to
@@ -117,11 +116,12 @@ set the active context to current annotation for the annotation list in
 
 \item{name}{A string of the annotation name.}
 
-\item{check.param}{A single boolean value indicates whether to check the
-supplied parameters and warn.}
+\item{position}{A string of the annotation position, possible values are
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of \code{ggheatmap} will be used.}
 }
 \value{
-A \code{htanno} object.
+A new \code{Class} object.
 }
 \description{
 Heatmap dendrogram

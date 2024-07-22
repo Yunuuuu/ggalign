@@ -20,8 +20,11 @@
 #'     notation.
 #' @param xlabels_nudge,ylabels_nudge A single numeric or a numeric value of
 #' length `ncol(data)/nrow(data)`, to nudge each text label away from the
-#' center. If `waiver()`, it means `0`. If `NULL`, no breaks, in this way labels
-#' will be removed too.
+#' center. One of:
+#'   - `NULL` for no breaks
+#'   - `waiver()`: if `xlabels`/`ylabels` is `NULL`, then
+#'     `xlabels_nudge`/`ylabels_nudge` will be `NULL`, otherwise `0`.
+#'   - A numeric.
 #' @inheritParams patchwork::plot_layout
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
@@ -48,14 +51,14 @@
 #'  - `value`: the actual matrix value.
 #'
 #' @return A `ggheatmap` object.
-#' @examples 
+#' @examples
 #' ggheat(1:10)
 #' ggheat(letters)
 #' @importFrom ggplot2 aes
 #' @export
 ggheat <- function(data, mapping = aes(), ...) UseMethod("ggheat")
 
-#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 waiver theme
 #' @export
 #' @rdname ggheat
 ggheat.matrix <- function(data, mapping = NULL,
@@ -71,16 +74,21 @@ ggheat.matrix <- function(data, mapping = NULL,
     xlabels <- set_labels(xlabels, "column", colnames(data), ncol(data))
     xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data), xlabels, "column")
     ylabels <- set_labels(ylabels, "row", rownames(data), nrow(data))
-    ylabels_nudge <- set_nudge(ylabels_nudge, ncol(data), ylabels, "row")
+    ylabels_nudge <- set_nudge(ylabels_nudge, nrow(data), ylabels, "row")
     mapping <- mapping %||% aes(.data$.x, .data$.y)
-    heatmap <- ggplot2::ggplot(mapping = mapping)
+    heatmap <- ggplot2::ggplot(mapping = mapping) +
+        ggplot2::theme_bw() +
+        theme(
+            panel.border = element_blank(),
+            strip.background = element_blank()
+        )
     if (ncol(data) > 10L) {
-        heatmap <- heatmap + ggplot2::theme(
+        heatmap <- heatmap + theme(
             axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
         )
     }
+    # add heatmap filling in the first layer
     if (filling) {
-        # add heatmap filling in the first layer
         heatmap <- heatmap + ggplot2::geom_tile(
             aes(.data$.x, .data$.y, fill = .data$value),
             width = 1L, height = 1L
@@ -105,7 +113,7 @@ ggheat.matrix <- function(data, mapping = NULL,
     )
 }
 
-set_nudge <- function(nudge, n, names, axis,
+set_nudge <- function(nudge, n, labels, axis,
                       arg = rlang::caller_arg(nudge),
                       call = caller_call()) {
     if (is.numeric(nudge)) {
@@ -116,7 +124,9 @@ set_nudge <- function(nudge, n, names, axis,
             ), call = call)
         }
         nudge <- rep_len(nudge, n)
-    } else if (!is.waiver(nudge) && !is.null(nudge)) {
+    } else if (is.waiver(nudge)) {
+        if (is.null(labels)) nudge <- NULL else nudge <- rep_len(0, n)
+    } else if (!is.null(nudge)) {
         cli::cli_abort(
             "{.arg {arg}} must be `waiver()`, `NULL` or a numeric",
             call = call
@@ -261,7 +271,7 @@ methods::setMethod("show", "ggheatmap", function(object) print(object))
 #'
 #' @param x An object to test
 #' @return A boolean value
-#' @examples 
+#' @examples
 #' is.ggheatmap(ggheat(1:10))
 #' @export
 is.ggheatmap <- function(x) methods::is(x, "ggheatmap")

@@ -4,21 +4,11 @@
 \alias{htanno_group}
 \title{Group Heatmap rows/columns}
 \usage{
-htanno_group(
-  group,
-  position = NULL,
-  set_context = NULL,
-  name = NULL,
-  check.param = TRUE
-)
+htanno_group(group, set_context = NULL, name = NULL, position = NULL)
 }
 \arguments{
 \item{group}{A character define the heatmap groups, this will split the
 heatmap into different panels.}
-
-\item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
-of the \code{ggheatmap} will be used.}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to
@@ -27,11 +17,12 @@ set the active context to current annotation for the annotation list in
 
 \item{name}{A string of the annotation name.}
 
-\item{check.param}{A single boolean value indicates whether to check the
-supplied parameters and warn.}
+\item{position}{A string of the annotation position, possible values are
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of \code{ggheatmap} will be used.}
 }
 \value{
-A \code{htanno} object.
+A new \code{Class} object.
 }
 \description{
 Group Heatmap rows/columns

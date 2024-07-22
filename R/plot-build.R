@@ -20,7 +20,7 @@ ggplot_build.ggheatmap <- function(plot) {
 #' Build ggheatmap for rendering.
 #' @param x A `ggheatmap` object.
 #' @param ... Not used currently.
-#' @examples 
+#' @examples
 #' ggheat_build(ggheat(matrix(rnorm(100L), nrow = 10L)))
 #' @export
 #' @return A `patchwork` object.
@@ -62,7 +62,6 @@ ggheat_build.ggheatmap <- function(x, ...) {
     # 2. The scale name.
     # 3. The `labs()` function.
     # 4. The captured expression in aes().
-    # following scales are templates used by both heatmap and annotation
     if (identical(.subset2(.subset2(p, "labels"), "x"), ".x")) {
         p$labels$x <- NULL
     }
@@ -81,6 +80,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
     do_row_facet <- nlevels(row_panels) > 1L
     do_column_facet <- nlevels(column_panels) > 1L
 
+    # following scales are templates used by both heatmap and annotation
     # here is the default scales
     default_xscales <- ggheat_default_scale(
         "x", column_panels, column_index,
@@ -110,7 +110,7 @@ ggheat_build.ggheatmap <- function(x, ...) {
             set_expand = FALSE
         )
         # we copy the `expand` from user input into the default for usage of
-        # annotation
+        # annotation scales
         default_xscales[[i]]$expand <- .subset2(user_xscales, i)$expand
     }
 

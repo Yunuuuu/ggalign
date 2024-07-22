@@ -4,42 +4,28 @@
 \name{htanno}
 \alias{htanno}
 \alias{HtannoProto}
-\title{Heatmap annotation of \code{htanno}}
+\title{Create a ggheatmap annotation object}
 \usage{
 htanno(
-  data = NULL,
-  params = list(),
+  htanno_class,
+  params,
   position = NULL,
-  size = NULL,
+  mapping = NULL,
   labels = NULL,
-  labels_nudge = NULL,
+  labels_nudge = waiver(),
+  size = NULL,
+  data = NULL,
   set_context = NULL,
   order = NULL,
   name = NULL,
   check.param = TRUE,
-  htanno_class = HtannoProto
+  call = caller_call()
 )
 }
 \arguments{
-\item{data}{A matrix, a data frame, or even a simple vector that will be
-converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the function will use the heatmap matrix. Additionally, the \code{data} argument
-can also accept a function (purrr-like lambda is also okay), which will be
-applied with the heatmap matrix.
-
-It is important to note that all annotations consider the \code{rows} as the
-observations. It means the \code{NROW} function must return the same number as the
-heatmap parallel axis. So for column annotation, the heatmap matrix will be
-transposed before using (If data is a \code{function}, it will be applied with the
-transposed matrix).}
-
-\item{params}{A list of parameters passed  to \code{htanno}.}
-
 \item{position}{A string of the annotation position, possible values are
 \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
-of the \code{ggheatmap} will be used.}
-
-\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
+of \code{ggheatmap} will be used.}
 
 \item{labels}{Labels for axis parallelly with heatmap, the default will use
 the rownames of the \code{data}. One of:
@@ -56,9 +42,27 @@ notation.
 }}
 
 \item{labels_nudge}{A single numeric or a numeric value of length
-\code{nrow(data)}, to nudge each text label away from the center. If \code{waiver()},
-will inherit from the heatmap. If \code{NULL}, no breaks, in this way labels will
-be removed too.}
+\code{nrow(data)}, to nudge each text label away from the center. One of:
+\itemize{
+\item \code{NULL} for no breaks
+\item \code{waiver()}: if \code{labels} is \code{NULL}, then \code{labels_nudge} will be \code{NULL},
+otherwise it will inherit from the heatmap.
+\item A numeric.
+}}
+
+\item{size}{Annotation size, can be a \link[grid:unit]{unit} object.}
+
+\item{data}{A matrix, a data frame, or even a simple vector that will be
+converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
+the function will use the heatmap matrix. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the heatmap matrix.
+
+It is important to note that all annotations consider the \code{rows} as the
+observations. It means the \code{NROW} function must return the same number with
+the heatmap parallel axis. So for column annotation, the heatmap matrix will
+be transposed before using (If data is a \code{function}, it will be applied with
+the transposed matrix).}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to
@@ -72,15 +76,13 @@ set the active context to current annotation for the annotation list in
 \item{check.param}{A single boolean value indicates whether to check the
 supplied parameters and warn.}
 
-\item{htanno_class}{A \code{HtannoProto} object}
+\item{call}{The \code{call} used to construct the scale for reporting messages.}
 }
 \value{
-A \code{htanno} object.
+A new \code{Class} object.
 }
 \description{
-\code{htanno} is a special annotation, which can act with the main heatmap.
-Especially control the order of the main heatmap or split the heatmap into
-different slices.
+Create a ggheatmap annotation object
 }
 \section{HtannoProto}{
 
@@ -93,18 +95,13 @@ override one or more of the following:
 \itemize{
 \item \code{setup_params}: Prepare parameter or check parameters used by this
 annotation.
-\item \code{add}: A method used to add other components into this annotation. Usually
-\code{gg} components. Must modify the \code{HtannoProto} object itself, no results
-will be assign.
+\item \code{setup_data}: Prepare data used by this annotation.
 \item \code{compute}: A method used to compute statistics.
 \item \code{layout}: A method used to group heamap rows/columns into panels or
 reorder heamtap rows/columns.
-\item \code{draw}: A method used to draw the plot. You must not modify the
-\code{HtannoProto} object itself when drawing since all of calculating process
-will run only once when be added into the heatmap. It allows \code{htanno} to
-make layout of the heatmap when be added, and we can then check other
-annotation won't modifying the heatmap layout.
+\item \code{draw}: A method used to draw the plot. Must return a \code{ggplot} object.
 }
 }
 
 \keyword{datasets}
+\keyword{internal}

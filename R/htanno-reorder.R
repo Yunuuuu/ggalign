@@ -10,14 +10,15 @@
 #' decreasing?
 #' @inheritParams htanno
 #' @inherit htanno return
-#' @examples 
+#' @examples
 #' ggheat(matrix(rnorm(81), nrow = 9)) +
 #'     htanno_reorder(position = "top")
 #' @export
 htanno_reorder <- function(fun = rowMeans, ..., strict = TRUE,
                            decreasing = FALSE,
-                           data = NULL, position = NULL,
-                           set_context = NULL, name = NULL) {
+                           data = NULL,
+                           set_context = NULL, name = NULL,
+                           position = NULL) {
     fun <- rlang::as_function(fun)
     assert_bool(strict)
     assert_bool(decreasing)
@@ -32,22 +33,23 @@ htanno_reorder <- function(fun = rowMeans, ..., strict = TRUE,
         ),
         set_context = set_context %||% c(TRUE, FALSE),
         name = name, order = NULL,
-        check.param = TRUE
+        check.param = TRUE, data = data
     )
 }
 
 HtannoReorder <- ggplot2::ggproto("HtannoReorder", HtannoProto,
-    layout = function(self, data, panels, index, position,
-                      fun, fun_params, strict, decreasing) {
-        axis <- to_matrix_axis(position)
+    compute = function(self, panels, index, fun, fun_params, strict) {
+        data <- .subset2(self, "data")
+        position <- .subset2(self, "position")
         if (!is.null(panels) && strict) {
+            axis <- to_matrix_axis(position)
             cli::cli_abort(c(
                 paste(
                     "{.fn {snake_class(self)}} cannot reordering heatmap",
                     "since group of heatmap {axis} exists"
                 ),
                 i = "try to set `strict = FALSE` to reorder within each group"
-            ), call = self$call)
+            ), call = .subset2(self, "call"))
         }
         weights <- rlang::inject(fun(data, !!!fun_params))
         if (nrow(data) != length(weights)) {
@@ -57,8 +59,14 @@ HtannoReorder <- ggplot2::ggproto("HtannoReorder", HtannoProto,
                     "integer with the same length of heatmap %s axis (%d)",
                     to_matrix_axis(position), nrow(data)
                 )
-            ), call = self$call)
+            ), call = .subset2(self, "call"))
         }
-        list(panels, order(weights, decreasing = decreasing))
+        weights
+    },
+    layout = function(self, panels, index, decreasing) {
+        list(
+            panels,
+            order(.subset2(self, "statistics"), decreasing = decreasing)
+        )
     }
 )

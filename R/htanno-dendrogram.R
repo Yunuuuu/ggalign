@@ -11,6 +11,7 @@
 #' ggheat(matrix(rnorm(81), nrow = 9)) + htanno_dendro(position = "top")
 #' ggheat(matrix(rnorm(81), nrow = 9)) +
 #'     htanno_dendro(position = "top", k = 3L)
+#' @importFrom ggplot2 element_blank
 #' @export
 htanno_dendro <- function(mapping = aes(), ...,
                           distance = "euclidean",
@@ -20,118 +21,100 @@ htanno_dendro <- function(mapping = aes(), ...,
                           k = NULL, h = NULL,
                           plot_cut_height = NULL, root = NULL,
                           center = FALSE, type = "rectangle",
-                          labels = NULL, labels_nudge = NULL,
-                          data = NULL, position = NULL, size = NULL,
+                          labels = NULL, labels_nudge = waiver(),
+                          size = NULL, data = NULL,
                           set_context = NULL, order = NULL, name = NULL,
-                          check.param = TRUE) {
+                          position = NULL) {
     assert_bool(reorder_group)
+    assert_mapping(mapping)
     htanno(
         htanno_class = HtannoDendro,
-        position = position,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
-            plot = ggplot2::ggplot(mapping = mapping) +
-                anno_default_theme(),
             segment_params = rlang::list2(...),
             center = center, type = type, root = root,
             reorder_group = reorder_group,
-            # initialize height value
-            height = NULL
+            mapping = mapping
         ),
+        position = position,
         labels = labels, labels_nudge = labels_nudge,
-        set_context = set_context, name = name, order = NULL,
-        size = size, check.param = check.param, data = data
+        set_context = set_context, name = name, order = order,
+        size = size, data = data
     )
 }
 
-htanno_dendro_add <- function(object, plot, object_name, self) {
-    UseMethod("htanno_dendro_add")
-}
-
-#' @export
-htanno_dendro_add.gg <- function(object, plot, object_name, self) {
-    ggplot2::ggplot_add(object, plot, object_name)
-}
-
-#' @export
-htanno_dendro_add.labels <- function(object, plot, object_name, self) {
-    htanno_dendro_add.gg(object, plot, object_name, self)
-}
-
-#' @export
-htanno_dendro_add.CoordFlip <- function(object, plot, object_name, self) {
-    cli::cli_abort(paste(
-        "Can't add {.var {object_name}} to a",
-        "{.fn {snake_class(self)}} annotation"
-    ), call = self$call)
-}
-
-#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes theme
 HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
-    setup_params = function(self, data, params, position) {
+    setup_params = function(self) {
+        params <- .subset2(self, "params")
+        call <- .subset2(self, "call")
         assert_number(.subset2(params, "k"),
             null_ok = TRUE, arg = "k",
-            call = self$call
+            call = call
         )
         assert_number(.subset2(params, "h"),
-            null_ok = TRUE, arg = "h", call = self$call
+            null_ok = TRUE, arg = "h", call = call
         )
         assert_bool(
             .subset2(params, "plot_cut_height"),
             null_ok = TRUE,
-            arg = "plot_cut_height", call = self$call
+            arg = "plot_cut_height", call = call
         )
         params
     },
-    setup_data = function(self, data, params, position) {
-        ans <- as.matrix(data)
-        assert_(ans, function(x) is.numeric(x),
-            arg = "data", call = self$call
+    setup_data = function(self) {
+        ans <- as.matrix(.subset2(self, "data"))
+        assert_(
+            ans, function(x) is.numeric(x),
+            arg = "data",
+            call = .subset2(self, "call")
         )
         ans
     },
-    add = function(self, object, object_name) {
-        plot <- .subset2(self$draw_params, "plot")
-        self$draw_params$plot <- htanno_dendro_add(
-            object, plot, object_name, self
-        )
-    },
-    and = function(self, object, object_name) {
-        self$add(object, object_name)
-    },
-    compute = function(self, data, panels, index, position,
-                       distance, method, use_missing, k, h) {
+    compute = function(self, panels, index,
+                       distance, method, use_missing, reorder_group,
+                       k = NULL, h = NULL) {
+        data <- .subset2(self, "data")
+        if (nrow(data) < 2L) {
+            cli::cli_abort(
+                c(
+                    "Cannot do Hierarchical Clustering",
+                    i = "must have >= 2 observations to cluster"
+                ),
+                call = .subset2(self, "call")
+            )
+        }
         # what if the old panels exist, we do sub-clustering
         if (!is.null(panels)) {
             # if the heatmap has established groups,
             # `k` and `h` must be NULL, and we'll do sub-clustering
             if (!is.null(k) || !is.null(h)) {
-                cli::cli_abort(sprintf(
-                    "Cannot cut tree since the heatmap %s %s",
-                    to_matrix_axis(position), "has been splitted"
-                ))
+                cli::cli_abort(
+                    c(
+                        paste(
+                            "{.fn {snake_class(self)}} cannot cut tree since ",
+                            "heatmap",
+                            to_matrix_axis(.subset2(self, "position")),
+                            "has been splitted"
+                        ),
+                        i = "{.arg k} and {.arg h} must be `NULL`"
+                    ),
+                    call = .subset2(self, "call")
+                )
             }
             children <- vector("list", nlevels(panels))
             names(children) <- levels(panels)
             labels <- rownames(data)
-            # we do clustering within each group
+            # we do clustering within each group ---------------
             for (g in levels(panels)) {
                 i <- which(panels == g)
                 gdata <- data[i, , drop = FALSE]
                 if (nrow(gdata) == 1L) {
-                    children[[g]] <- structure(
-                        i,
-                        class = "dendrogram",
-                        leaf = TRUE,
-                        height = 0,
-                        label = .subset(labels, i),
-                        members = 1L
-                    )
+                    children[[g]] <- tree_one_node(i, .subset(labels, i))
                 } else {
-                    child <- stats::as.dendrogram(self$compute(
-                        data = gdata,
-                        panels = NULL,
+                    child <- stats::as.dendrogram(hclust2(
+                        gdata,
                         distance = distance,
                         method = method,
                         use_missing = use_missing
@@ -149,25 +132,18 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     children[[g]] <- child
                 }
             }
-            return(children)
-        }
-        hclust2(data, distance, method, use_missing)
-    },
-    layout = function(self, data, panels, old_index, position,
-                      distance, method, use_missing,
-                      reorder_group, k, h) {
-        if (!is.null(panels)) {
+
+            # merge children tree ------------------------------
             if (nlevels(panels) == 1L) { # only one parent
-                self$statistics <- .subset2(self$statistics, 1L)
+                ans <- .subset2(children, 1L)
             } else if (reorder_group) {
                 parent_levels <- levels(panels)
                 parent_data <- t(sapply(parent_levels, function(g) {
                     colMeans(data[panels == g, , drop = FALSE])
                 }))
                 rownames(parent_data) <- parent_levels
-                parent <- stats::as.dendrogram(self$compute(
-                    data = parent_data,
-                    panels = NULL,
+                parent <- stats::as.dendrogram(hclust2(
+                    parent_data,
                     distance = distance,
                     method = method,
                     use_missing = use_missing
@@ -176,36 +152,51 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 panels <- factor(
                     panels, parent_levels[stats::order.dendrogram(parent)]
                 )
-                self$statistics <- merge_dendrogram(parent, self$statistics)
+                ans <- merge_dendrogram(parent, children)
                 # we don't cutree
                 # self$draw_params$height <- attr(ans, "cutoff_height")
             } else {
-                self$statistics <- Reduce(merge, self$statistics)
+                ans <- Reduce(merge, children)
             }
-        } else if (!is.null(k)) {
-            panels <- stats::cutree(self$statistics, k = k)
-            self$draw_params$height <- cutree_k_to_h(self$statistics, k)
-        } else if (!is.null(h)) {
-            panels <- stats::cutree(self$statistics, h = h)
-            self$draw_params$height <- h
+            self$panels <- panels
+            return(ans)
         }
-        index <- order2(self$statistics)
+        hclust2(data, distance, method, use_missing)
+    },
+    layout = function(self, panels, index, k, h) {
+        statistics <- .subset2(self, "statistics")
+        if (!is.null(panels)) { # we have do sub-clustering
+            panels <- .subset2(self, "panels")
+        } else if (!is.null(k)) {
+            panels <- stats::cutree(statistics, k = k)
+            self$height <- cutree_k_to_h(statistics, k)
+        } else if (!is.null(h)) {
+            panels <- stats::cutree(statistics, h = h)
+            self$height <- h
+        }
+        index <- order2(statistics)
         # reorder panel factor levels to following the dendrogram order
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
-    finish_layout = function(self, data, panels, index, position) {
-        self$draw_params$plot <- self$draw_params$plot +
-            switch_position(
-                position,
-                ggplot2::labs(x = "height"),
-                ggplot2::labs(y = "height")
-            )
+    ggplot = function(self, panels, index, mapping, segment_params) {
+        ans <- ggplot2::ggplot(mapping = mapping) +
+            rlang::inject(ggplot2::geom_segment(
+                mapping = aes(
+                    x = .data$x, y = .data$y,
+                    xend = .data$xend, yend = .data$yend
+                ),
+                !!!segment_params,
+                stat = "identity"
+            )) +
+            ggplot2::theme_bw()
+        add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
-    draw = function(self, data, panels, index, position,
+    draw = function(self, panels, index,
                     # other argumentds
-                    plot, height, plot_cut_height, center, type,
+                    plot_cut_height, center, type,
                     root, segment_params) {
+        position <- .subset2(self, "position")
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
@@ -217,7 +208,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             type <- "rectangle"
         }
         data <- dendrogram_data(
-            self$statistics,
+            .subset2(self, "statistics"),
             priority = switch_position(position, "left", "right"),
             center = center,
             type = type,
@@ -233,22 +224,11 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
             )
             node <- rename(node, c(x = "y", y = "x"))
         }
+        plot <- .subset2(self, "plot")
         plot$data <- node
-        plot <- anno_add_default_mapping(plot, aes(x = .data$x, y = .data$y))
         # edge layer should be in the first
-        plot$layers <- append(plot$layers,
-            rlang::inject(ggplot2::geom_segment(
-                mapping = aes(
-                    x = .data$x, y = .data$y,
-                    xend = .data$xend, yend = .data$yend
-                ),
-                !!!segment_params,
-                stat = "identity",
-                data = edge
-            )),
-            after = 0L
-        )
-
+        plot$layers[[1L]]$data <- edge
+        height <- .subset2(self, "height")
         plot_cut_height <- plot_cut_height %||% !is.null(height)
         if (plot_cut_height && !is.null(height)) {
             plot <- plot +
@@ -262,6 +242,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     )
                 )
         }
+        # always turn off clip, this is what dendrogram dependends on
         if (!identical(plot$coordinates$clip, "off")) {
             coord <- ggproto_clone(plot$coordinates)
             coord$clip <- "off" # this'll change the input of user.
@@ -270,3 +251,14 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot
     }
 )
+
+tree_one_node <- function(index, label) {
+    structure(
+        index,
+        class = "dendrogram",
+        leaf = TRUE,
+        height = 0,
+        label = label,
+        members = 1L
+    )
+}

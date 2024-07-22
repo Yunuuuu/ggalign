@@ -26,29 +26,39 @@ methods::setMethod("&", c("ggheatmap", "ANY"), function(e1, e2) {
 
 # we use `ggheatmap_and_add` instead of `ggheatmap_and` since `ggheatmap_and` is
 # too similar with `ggheatmap_and` in the name.
-#' Add custom objects to `ggheatmap`
+#' Add custom objects to ggheatmap and heatmap annotations
 #'
-#' @param plot A `ggheatmap` object
+#' @param heatmap A `ggheatmap` object
 #' @inheritParams ggplot2::ggplot_add
 #' @inherit ggheatmap-and return
-#' @export
-ggheatmap_and_add <- function(object, plot, object_name) {
+#' @noRd
+ggheatmap_and_add <- function(object, heatmap, object_name) {
     UseMethod("ggheatmap_and_add")
 }
 
 #' @export
-ggheatmap_and_add.gg <- function(object, plot, object_name) {
-    plot <- heatmap_add(object, plot, object_name)
+ggheatmap_and_add.default <- function(object, heatmap, object_name) {
+    cli::cli_abort(
+        "Cannot add {.code {object_name}} to heatmap and annotations"
+    )
+}
+
+#' @export
+ggheatmap_and_add.gg <- function(object, heatmap, object_name) {
+    heatmap <- heatmap_add(object, heatmap, object_name)
     for (position in GGHEAT_ELEMENTS) {
-        annotations <- slot(plot, position)
+        annotations <- slot(heatmap, position)
         if (is.null(annotations)) next
         context <- get_context(annotations)
         annotations <- lapply(annotations, function(annotation) {
-            anno_and_add(annotation, object, object_name)
+            if (is.null(.subset2(annotation, "plot"))) {
+                return(annotation)
+            }
+            htanno_add(object, annotation, object_name)
         })
-        slot(plot, position) <- new_annotations(annotations, context)
+        slot(heatmap, position) <- new_annotations(annotations, context)
     }
-    plot
+    heatmap
 }
 
 #' @export

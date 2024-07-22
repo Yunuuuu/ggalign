@@ -11,34 +11,37 @@
 #'         position = "top"
 #'     )
 #' @export
-htanno_group <- function(group, position = NULL,
-                         set_context = NULL, name = NULL,
-                         check.param = TRUE) {
+htanno_group <- function(group, set_context = NULL, name = NULL,
+                         position = NULL) {
     htanno(
         htanno_class = HtannoGroup,
         position = position,
         params = list(group = group),
         set_context = set_context %||% c(TRUE, FALSE),
         name = name, order = NULL,
-        check.param = check.param
+        check.param = TRUE
     )
 }
 
 HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
-    setup_params = function(self, data, params, position) {
+    setup_params = function(self) {
+        data <- .subset2(self, "data")
+        params <- .subset2(self, "params")
         if (nrow(data) != length(group <- .subset2(params, "group"))) {
             cli::cli_abort(paste(
                 "{.arg group} of {.fn {snake_class(self)}} must be ",
                 sprintf(
                     "the same length of heatmap %s axis (%d)",
-                    to_matrix_axis(position), nrow(data)
+                    to_matrix_axis(.subset2(self, "position")),
+                    nrow(data)
                 )
-            ), call = self$call)
+            ), call = .subset2(self, "call"))
         }
         params
     },
-    layout = function(self, data, panels, index, position, group) {
+    layout = function(self, panels, index, group) {
         if (!is.null(panels)) {
+            position <- .subset2(self, position)
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = "group of heatmap {to_matrix_axis(position)} already exists"

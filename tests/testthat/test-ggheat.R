@@ -7,7 +7,7 @@ testthat::test_that("`ggheat` works well", {
     expect_snapshot_file(save_png(ggheat(1:10)), "numeric.png")
     expect_snapshot_file(save_png(ggheat(letters)), "character.png")
     expect_snapshot_file(save_png(ggheat(matrix(1:9, nrow = 3L))), "matrix.png")
-    expect_snapshot_file(save_png(ggheat(data.frame(1:10))), "data_rame.png")
+    expect_snapshot_file(save_png(ggheat(data.frame(1:10))), "data_frame.png")
 })
 
 testthat::test_that("`ggheat_build` works well", {

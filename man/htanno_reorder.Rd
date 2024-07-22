@@ -10,9 +10,9 @@ htanno_reorder(
   strict = TRUE,
   decreasing = FALSE,
   data = NULL,
-  position = NULL,
   set_context = NULL,
-  name = NULL
+  name = NULL,
+  position = NULL
 )
 }
 \arguments{
@@ -35,14 +35,10 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the heatmap matrix.
 
 It is important to note that all annotations consider the \code{rows} as the
-observations. It means the \code{NROW} function must return the same number as the
-heatmap parallel axis. So for column annotation, the heatmap matrix will be
-transposed before using (If data is a \code{function}, it will be applied with the
-transposed matrix).}
-
-\item{position}{A string of the annotation position, possible values are
-\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
-of the \code{ggheatmap} will be used.}
+observations. It means the \code{NROW} function must return the same number with
+the heatmap parallel axis. So for column annotation, the heatmap matrix will
+be transposed before using (If data is a \code{function}, it will be applied with
+the transposed matrix).}
 
 \item{set_context}{A logical value of length \code{2} indicates whether to set the
 active context to the \code{position} for the \link[=ggheat]{ggheatmap} and whether to
@@ -50,9 +46,13 @@ set the active context to current annotation for the annotation list in
 \link[=ggheat]{ggheatmap} when added.}
 
 \item{name}{A string of the annotation name.}
+
+\item{position}{A string of the annotation position, possible values are
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}. If \code{NULL}, the active context
+of \code{ggheatmap} will be used.}
 }
 \value{
-A \code{htanno} object.
+A new \code{Class} object.
 }
 \description{
 Reorder Heatmap rows/columns
