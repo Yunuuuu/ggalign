@@ -79,6 +79,7 @@ ggheat.matrix <- function(data, mapping = NULL,
     heatmap <- ggplot2::ggplot(mapping = mapping) +
         ggplot2::theme_bw() +
         theme(
+            plot.background = element_blank(),
             panel.border = element_blank(),
             strip.background = element_blank()
         )

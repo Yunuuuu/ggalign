@@ -175,6 +175,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
     # set the default theme for all annotation
     if (ggplot2::is.ggplot(p)) {
         p <- p + theme(
+            plot.background = element_blank(),
             panel.border = element_blank(),
             strip.text = element_blank(),
             strip.background = element_blank()
