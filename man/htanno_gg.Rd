@@ -103,6 +103,33 @@ A \code{HtannoGG} object.
 \description{
 Heatmap annotation with \code{HtannoGG}
 }
+\section{ggplot2 details}{
+
+\code{gganno} is similar to \code{ggheat} and \code{ggplot} in that it initializes a
+\code{ggplot} data and \code{mapping}. The data input can be a matrix, a data frame, or
+a simple vector that will be converted into a one-column matrix, and can
+inherit from the heatmap matrix.
+
+But for ggplot usage, matrix (including a simple vector) data is converted
+into a long-format data frame, similar to the process utilized in \code{ggheat}.
+But note that the long-format data frame does not contain \code{.row_panel} or
+\code{.column_panel} column, as annotations can only have one facet axis. In the
+case where the input data is already a data frame, three additional
+columns-\code{.row_names}, \code{.row_index}, and \code{.panel}—are added to the data frame.
+
+The data in the underlying ggplot object contains following columns:
+\itemize{
+\item \code{.panel}: the panel for current annotation
+\item \code{.row_names} and \code{.row_index}: the row names and row index of the original
+matrix or data frame.
+\item \code{.column_names} and \code{.column_index}: the row and column index of the
+original matrix (only applicable if \code{data} is a \code{matrix}).
+\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
+\item \code{value}: the actual matrix value  (only applicable if \code{data} is a
+\code{matrix}).
+}
+}
+
 \examples{
 ggheat(matrix(rnorm(81), nrow = 9)) +
     gganno(position = "top") +

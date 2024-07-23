@@ -3,6 +3,35 @@
 #' @inheritParams htanno
 #' @importFrom ggplot2 aes
 #' @inheritParams ggplot2::ggplot
+#'
+#' @section ggplot2 details:
+#' `gganno` is similar to `ggheat` and `ggplot` in that it initializes a
+#' `ggplot` data and `mapping`. The data input can be a matrix, a data frame, or
+#' a simple vector that will be converted into a one-column matrix, and can
+#' inherit from the heatmap matrix.
+#'
+#' But for ggplot usage, matrix (including a simple vector) data is converted
+#' into a long-format data frame, similar to the process utilized in `ggheat`.
+#' But note that the long-format data frame does not contain `.row_panel` or
+#' `.column_panel` column, as annotations can only have one facet axis. In the
+#' case where the input data is already a data frame, three additional
+#' columns-`.row_names`, `.row_index`, and `.panel`—are added to the data frame.
+#'
+#' The data in the underlying ggplot object contains following columns:
+#'
+#'  - `.panel`: the panel for current annotation
+#'
+#'  - `.row_names` and `.row_index`: the row names and row index of the original
+#'    matrix or data frame.
+#'
+#'  - `.column_names` and `.column_index`: the row and column index of the
+#'    original matrix (only applicable if `data` is a `matrix`).
+#'
+#'  - `.x` or `.y`: the `x` or `y` coordinates
+#'
+#'  - `value`: the actual matrix value  (only applicable if `data` is a
+#'    `matrix`).
+#'
 #' @return A `HtannoGG` object.
 #' @examples
 #' ggheat(matrix(rnorm(81), nrow = 9)) +

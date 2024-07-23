@@ -35,8 +35,7 @@
 #' you can use `mapping` argument to control it. The data in the underlying
 #' ggplot object contains following columns:
 #'
-#'  - `.row_panel` or `.column_panl` instead of a column `.panel` since
-#'  annotation can only have one facet axiss: the row panel
+#'  - `.row_panel`: the row panel
 #'
 #'  - `.column_panel`: the column panel
 #'
