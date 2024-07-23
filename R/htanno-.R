@@ -246,7 +246,9 @@ HtannoProto <- ggplot2::ggproto("HtannoProto",
 #' @export
 `$<-.HtannoProto` <- function(x, name, value) {
     if (.subset2(x, "isLock")) {
-        cli::cli_abort("{.fn {snake_class(x)}} is locked", call = x$call)
+        cli::cli_abort("{.fn {snake_class(x)}} is locked",
+            call = .subset2(x, "call")
+        )
     }
     assign(x = name, value = value, envir = x)
     invisible(x)
