@@ -23,7 +23,7 @@ htanno_group <- function(group, set_context = NULL, name = NULL,
     )
 }
 
-HtannoGroup <- ggplot2::ggproto("HtannoGroup", HtannoProto,
+HtannoGroup <- ggplot2::ggproto("HtannoGroup", Align,
     setup_params = function(self) {
         data <- .subset2(self, "data")
         params <- .subset2(self, "params")

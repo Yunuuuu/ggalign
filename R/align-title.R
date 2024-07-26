@@ -31,7 +31,7 @@ htanno_title <- function(titles = NULL, ..., mapping = aes(),
     )
 }
 
-HtannoTitle <- ggplot2::ggproto("HtannoTitle", HtannoProto,
+HtannoTitle <- ggplot2::ggproto("HtannoTitle", Align,
     ggplot = function(self, mapping, text_params) {
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_text(!!!text_params)) +

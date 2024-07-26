@@ -46,7 +46,7 @@ htanno_build <- function(htanno, panels, index, scales, facet) {
     # 2. add plot data
     params <- .subset2(htanno, "params")
     draw_params <- params[
-        intersect(names(params), htanno_method_params(htanno$draw))
+        intersect(names(params), align_method_params(htanno$draw))
     ]
     ans <- rlang::inject(htanno$draw(panels, index, !!!draw_params))
     # remove the title of axis parallelly with heatmap

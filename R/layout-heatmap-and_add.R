@@ -8,10 +8,9 @@
 #' @seealso ggheatmap_and_add
 NULL
 
-#' @include ggheat.R
 #' @rdname ggheatmap-and
 #' @export
-methods::setMethod("&", c("ggheatmap", "ANY"), function(e1, e2) {
+methods::setMethod("&", c("LayoutHeatmap", "ANY"), function(e1, e2) {
     if (missing(e2)) {
         cli::cli_abort(c(
             "Cannot use {.code &} with a single argument.",
@@ -21,7 +20,7 @@ methods::setMethod("&", c("ggheatmap", "ANY"), function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
-    ggheatmap_and_add(e2, e1, e2name)
+    layout_heatmap_and_add(e2, e1, e2name)
 })
 
 # we use `ggheatmap_and_add` instead of `ggheatmap_and` since `ggheatmap_and` is
@@ -32,19 +31,19 @@ methods::setMethod("&", c("ggheatmap", "ANY"), function(e1, e2) {
 #' @inheritParams ggplot2::ggplot_add
 #' @inherit ggheatmap-and return
 #' @noRd
-ggheatmap_and_add <- function(object, heatmap, object_name) {
-    UseMethod("ggheatmap_and_add")
+layout_heatmap_and_add <- function(object, heatmap, object_name) {
+    UseMethod("layout_heatmap_and_add")
 }
 
 #' @export
-ggheatmap_and_add.default <- function(object, heatmap, object_name) {
+layout_heatmap_and_add.default <- function(object, heatmap, object_name) {
     cli::cli_abort(
         "Cannot add {.code {object_name}} to heatmap and annotations"
     )
 }
 
 #' @export
-ggheatmap_and_add.gg <- function(object, heatmap, object_name) {
+layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
     heatmap <- heatmap_add(object, heatmap, object_name)
     for (position in GGHEAT_ELEMENTS) {
         annotations <- slot(heatmap, position)
@@ -54,7 +53,7 @@ ggheatmap_and_add.gg <- function(object, heatmap, object_name) {
             if (is.null(.subset2(annotation, "plot"))) {
                 return(annotation)
             }
-            htanno_add(object, annotation, object_name)
+            align_add(object, annotation, object_name)
         })
         slot(heatmap, position) <- new_annotations(annotations, context)
     }
@@ -62,10 +61,10 @@ ggheatmap_and_add.gg <- function(object, heatmap, object_name) {
 }
 
 #' @export
-ggheatmap_and_add.labels <- ggheatmap_and_add.gg
+layout_heatmap_and_add.labels <- layout_heatmap_and_add.gg
 
 #' @export
-ggheatmap_and_add.facetted_pos_scales <- ggheatmap_and_add.gg
+layout_heatmap_and_add.facetted_pos_scales <- layout_heatmap_and_add.gg
 
 #' @export
-ggheatmap_and_add.NULL <- ggheatmap_add.NULL
+layout_heatmap_and_add.NULL <- layout_heatmap_add.NULL

@@ -21,7 +21,7 @@
 #'  - [cor][stats::cor]
 #'  - [dist][stats::dist]
 #'  - [hclust][stats::hclust]
-#' @examples 
+#' @examples
 #' hclust(dist(USArrests), "ave")
 #' @return A [hclust][stats::hclust] object.
 #' @importFrom rlang is_string
@@ -507,7 +507,8 @@ tree_branch_heights <- function(dend) {
     }
 }
 
-check_dendrogram <- function(tree, arg = rlang::caller_arg(tree),
+#' @importFrom rlang caller_arg caller_env
+check_dendrogram <- function(tree, arg = caller_arg(tree),
                              call = caller_call()) {
     if (inherits(tree, "hclust")) {
         stats::as.dendrogram(tree)

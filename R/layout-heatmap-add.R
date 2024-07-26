@@ -26,7 +26,7 @@ methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
-    ggheatmap_add(e2, e1, e2name)
+    layout_heatmap_add(e2, e1, e2name)
 })
 
 #' Add custom objects to `ggheatmap`
@@ -35,44 +35,32 @@ methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
 #' @inheritParams ggplot2::ggplot_add
 #' @inherit ggheatmap-add return
 #' @examples
-#' ggheatmap_add(
+#' layout_heatmap_add(
 #'     geom_point(aes(y = value)),
 #'     ggheat(matrix(rnorm(81), nrow = 9)),
 #'     deparse(quote(geom_point(aes(y = value))))
 #' )
 #' @export
-ggheatmap_add <- function(object, heatmap, object_name) {
-    UseMethod("ggheatmap_add")
+layout_heatmap_add <- function(object, heatmap, object_name) {
+    UseMethod("layout_heatmap_add")
 }
 
 #' @export
-ggheatmap_add.default <- function(object, heatmap, object_name) {
+layout_heatmap_add.default <- function(object, heatmap, object_name) {
     cli::cli_abort("Cannot add {.code {object_name}} to {.cls ggheatmap}")
 }
 
 #' @export
-ggheatmap_add.NULL <- function(object, heatmap, object_name) heatmap
+layout_heatmap_add.NULL <- function(object, heatmap, object_name) heatmap
 
 #' @export
-ggheatmap_add.HtannoProto <- function(object, heatmap, object_name) {
-    position <- .subset2(object, "position")
-    if (is.null(position)) {
-        if (is.null(position <- get_context(heatmap))) {
-            cli::cli_abort(c(
-                "No active annotation",
-                i = paste(
-                    "try to provide {.arg position} argument in",
-                    "{.code {object_name}}"
-                )
-            ), call = .subset2(object, "call"))
-        }
-        object$position <- position
+layout_heatmap_add.Align <- function(object, heatmap, object_name) {
+    if (is.null(position <- get_context(heatmap))) {
+        cli::cli_abort(c("No active annotation",
+            i = "try to activate an annotation with {.fn active}"
+        ), call = .subset2(object, "call"))
     }
-
-    # setting active position for the plot ---------------
-    if (.subset(.subset2(object, "set_context"), 1L)) {
-        heatmap <- set_context(heatmap, position)
-    }
+    object$direction <- switch_position(position, "vertical", "horizontal")
 
     # initialize annotation -----------------------------
     # this step the annotation will act with the heatmap
@@ -89,7 +77,7 @@ ggheatmap_add.HtannoProto <- function(object, heatmap, object_name) {
 }
 
 #' @export
-ggheatmap_add.active <- function(object, heatmap, object_name) {
+layout_heatmap_add.active <- function(object, heatmap, object_name) {
     if (object == "heatmap") {
         set_context(heatmap, NULL)
     } else {
@@ -98,7 +86,7 @@ ggheatmap_add.active <- function(object, heatmap, object_name) {
 }
 
 #' @export
-ggheatmap_add.list <- function(object, heatmap, object_name) {
+layout_heatmap_add.list <- function(object, heatmap, object_name) {
     for (o in object) {
         heatmap <- heatmap + o
     }
@@ -109,7 +97,7 @@ ggheatmap_add.list <- function(object, heatmap, object_name) {
 # Add elements for heatmap or annotation
 #' @importFrom methods slot slot<-
 #' @export
-ggheatmap_add.gg <- function(object, heatmap, object_name) {
+layout_heatmap_add.gg <- function(object, heatmap, object_name) {
     # if no active context, we directly add it into the main heatmap
     if (is.null(position <- get_context(heatmap))) {
         heatmap <- heatmap_add(object, heatmap, object_name)
@@ -122,29 +110,51 @@ ggheatmap_add.gg <- function(object, heatmap, object_name) {
         ))
     } else {
         anno <- .subset2(annotations, active_anno)
-        annotations[[active_anno]] <- htanno_add(object, anno, object_name)
+        annotations[[active_anno]] <- align_add(object, anno, object_name)
         slot(heatmap, position) <- annotations
     }
     heatmap
 }
 
 #' @export
-ggheatmap_add.labels <- ggheatmap_add.gg
+layout_heatmap_add.labels <- layout_heatmap_add.gg
 
 #' @export
-ggheatmap_add.facetted_pos_scales <- ggheatmap_add.gg
+layout_heatmap_add.facetted_pos_scales <- layout_heatmap_add.gg
 
 ##############################################################
 # Preventing from adding following elements
 #' @export
-ggheatmap_add.CoordFlip <- function(object, heatmap, object_name) {
+layout_heatmap_add.CoordFlip <- function(object, heatmap, object_name) {
     cli::cli_abort("Can't flip axis in {.cls ggheatmap} object")
 }
 
 #' @export
-ggheatmap_add.matrix <- function(object, heatmap, object_name) {
+layout_heatmap_add.matrix <- function(object, heatmap, object_name) {
     cli::cli_abort("Can't change data in {.cls ggheatmap} object")
 }
 
 #' @export
-ggheatmap_add.data.frame <- ggheatmap_add.matrix
+layout_heatmap_add.data.frame <- layout_heatmap_add.matrix
+
+#######################################################
+# used to add elements for heatmap
+#' @keywords internal
+heatmap_add <- function(object, heatmap, object_name) UseMethod("heatmap_add")
+
+#' @export
+heatmap_add.gg <- function(object, heatmap, object_name) {
+    heatmap@plot <- ggplot2::ggplot_add(
+        object, slot(heatmap, "plot"), object_name
+    )
+    heatmap
+}
+
+#' @export
+heatmap_add.labels <- heatmap_add.gg
+
+#' @export
+heatmap_add.facetted_pos_scales <- function(object, heatmap, object_name) {
+    slot(heatmap, "facetted_pos_scales") <- object
+    heatmap
+}

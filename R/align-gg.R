@@ -32,47 +32,31 @@
 #'  - `value`: the actual matrix value  (only applicable if `data` is a
 #'    `matrix`).
 #'
-#' @return A `HtannoGG` object.
+#' @return A `AlignGG` object.
 #' @examples
 #' ggheat(matrix(rnorm(81), nrow = 9)) +
 #'     gganno(position = "top") +
 #'     geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
-htanno_gg <- function(mapping = aes(), data = NULL, size = NULL,
-                      labels = NULL, labels_nudge = NULL,
-                      set_context = TRUE, order = NULL, name = NULL,
-                      position = NULL) {
+align_gg <- function(mapping = aes(), data = NULL, size = NULL,
+                     labels = NULL, labels_nudge = NULL,
+                     set_context = TRUE, order = NULL, name = NULL,
+                     position = NULL) {
     assert_mapping(mapping)
-    htanno(HtannoGG,
+    htanno(AlignGG,
         params = list(mapping = mapping),
         labels = labels, labels_nudge = labels_nudge,
-        position = position, size = size, data = data,
+        size = size, data = data,
         set_context = set_context, order = order, name = name
     )
 }
 
 #' @export
-#' @rdname htanno_gg
-gganno <- htanno_gg
+#' @rdname align_gg
+gganno <- align_gg
 
-#' @export
-#' @rdname htanno_gg
-gganno_top <- function(...) htanno_gg(position = "top", ...)
-
-#' @export
-#' @rdname htanno_gg
-gganno_bottom <- function(...) htanno_gg(position = "bottom", ...)
-
-#' @export
-#' @rdname htanno_gg
-gganno_left <- function(...) htanno_gg(position = "left", ...)
-
-#' @export
-#' @rdname htanno_gg
-gganno_right <- function(...) htanno_gg(position = "right", ...)
-
-HtannoGG <- ggplot2::ggproto("HtannoGG", HtannoProto,
+AlignGG <- ggplot2::ggproto("AlignGG", Align,
     setup_data = function(self) {
         data <- .subset2(self, "data")
         # matrix: will be reshaped to the long-format data.frame

@@ -30,17 +30,72 @@ ggproto_clone <- function(ggproto) {
     ans
 }
 
-switch_position <- function(position, row, column) {
+#' @importFrom rlang caller_arg caller_env
+set_nudge <- function(nudge, n, labels, axis, arg = caller_arg(nudge),
+                      call = caller_call()) {
+    if (is.numeric(nudge)) {
+        if (!is_scalar(nudge) && length(nudge) != n) {
+            cli::cli_abort(paste(
+                "{.arg {arg}} must be of length 1 or",
+                "the same length of heatmap {axis}"
+            ), call = call)
+        }
+        nudge <- rep_len(nudge, n)
+    } else if (is.waiver(nudge)) {
+        if (is.null(labels)) nudge <- NULL else nudge <- rep_len(0, n)
+    } else if (!is.null(nudge)) {
+        cli::cli_abort(
+            "{.arg {arg}} must be `waiver()`, `NULL` or a numeric",
+            call = call
+        )
+    }
+    nudge
+}
+
+#' @importFrom rlang caller_arg caller_env
+set_labels <- function(labels, default, axis, arg = caller_arg(labels),
+                       call = caller_call()) {
+    labels <- allow_lambda(labels)
+    if (is.waiver(labels)) {
+        return(default)
+    } else if (is.null(labels)) {
+        return(NULL)
+    } else if (identical(labels, NA)) {
+        cli::cli_abort(c(
+            "Invalid {.arg {arg}} specification.",
+            i = "Use {.code NULL}, not {.code NA}"
+        ), call = call)
+    } else if (is.function(labels)) {
+        labels <- labels(default)
+    }
+    if (is.atomic(labels) && length(default) != length(labels)) {
+        cli::cli_abort(
+            "{.arg {arg}} must have the same length of {axis}-axis",
+            call = call
+        )
+    }
+    labels
+}
+
+switch_direction <- function(direction, h, v) {
+    if (direction == "horizontal") {
+        h
+    } else {
+        v
+    }
+}
+to_coord_axis <- function(position) switch_direction(position, "y", "x")
+to_matrix_axis <- function(position) switch_direction(position, "row", "column")
+
+switch_position <- function(position, x, y) {
     switch(position,
         top = ,
-        bottom = column,
+        bottom = x,
         left = ,
-        right = row
+        right = y
     )
 }
 
-to_coord_axis <- function(position) switch_position(position, "y", "x")
-to_matrix_axis <- function(position) switch_position(position, "row", "column")
 
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
@@ -59,11 +114,9 @@ melt_matrix <- function(matrix) {
     data
 }
 
-fct_rev <- function(x) factor(x, levels = rev(levels(x)))
-
-# Since ggplot2 always use tibble, we'll use it too.
-tibble0 <- function(...) {
-    tibble::tibble(..., .name_repair = "minimal")
+fct_rev <- function(x) {
+    ans <- as.factor(x)
+    factor(ans, levels = rev(levels(ans)))
 }
 
 data_frame0 <- function(...) {
@@ -74,6 +127,10 @@ quickdf <- function(x) {
     class(x) <- "data.frame"
     attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
     x
+}
+
+tibble0 <- function(...) {
+    tibble::tibble(..., .name_repair = "minimal")
 }
 
 as_tibble0 <- function(data, ...) {
@@ -131,16 +188,7 @@ rename <- function(x, replace) {
 
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
 
-# List of all aesthetics known to ggplot
-# (In the future, .all_aesthetics should be removed in favor
-# of direct assignment to ggplot_global$all_aesthetics, see below.)
-.all_aesthetics <- c(
-    "adj", "alpha", "angle", "bg", "cex", "col", "color",
-    "colour", "fg", "fill", "group", "hjust", "label", "linetype", "lower",
-    "lty", "lwd", "max", "middle", "min", "pch", "radius", "sample", "shape",
-    "size", "srt", "upper", "vjust", "weight", "width", "x", "xend", "xmax",
-    "xmin", "xintercept", "y", "yend", "ymax", "ymin", "yintercept", "z"
-)
+fclass <- function(x) .subset(class(x), 1L)
 
 is_scalar <- function(x) length(x) == 1L
 
@@ -173,6 +221,17 @@ transpose <- function(.l) {
     lapply(fields, function(i) lapply(.l, .subset2, i))
 }
 
+# List of all aesthetics known to ggplot
+# (In the future, .all_aesthetics should be removed in favor
+# of direct assignment to ggplot_global$all_aesthetics, see below.)
+.all_aesthetics <- c(
+    "adj", "alpha", "angle", "bg", "cex", "col", "color",
+    "colour", "fg", "fill", "group", "hjust", "label", "linetype", "lower",
+    "lty", "lwd", "max", "middle", "min", "pch", "radius", "sample", "shape",
+    "size", "srt", "upper", "vjust", "weight", "width", "x", "xend", "xmax",
+    "xmin", "xintercept", "y", "yend", "ymax", "ymin", "yintercept", "z"
+)
+
 # Use chartr() for safety since toupper() fails to convert i to I in Turkish locale
 lower_ascii <- "abcdefghijklmnopqrstuvwxyz"
 upper_ascii <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -190,4 +249,3 @@ firstUpper <- function(s) {
 }
 
 snake_class <- function(x) snakeize(fclass(x))
-fclass <- function(x) .subset(class(x), 1L)

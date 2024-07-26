@@ -8,27 +8,28 @@
 #' @inheritParams htanno
 #' @inherit htanno return
 #' @examples
-#' ggheat(matrix(rnorm(81), nrow = 9)) + htanno_dendro(position = "top")
-#' ggheat(matrix(rnorm(81), nrow = 9)) +
-#'     htanno_dendro(position = "top", k = 3L)
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     heatmap_active("top") +
+#'     align_dendro()
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     align_dendro(k = 3L)
 #' @importFrom ggplot2 element_blank
 #' @export
-htanno_dendro <- function(mapping = aes(), ...,
-                          distance = "euclidean",
-                          method = "complete",
-                          use_missing = "pairwise.complete.obs",
-                          reorder_group = FALSE,
-                          k = NULL, h = NULL,
-                          plot_cut_height = NULL, root = NULL,
-                          center = FALSE, type = "rectangle",
-                          labels = NULL, labels_nudge = waiver(),
-                          size = NULL, data = NULL,
-                          set_context = NULL, order = NULL, name = NULL,
-                          position = NULL) {
+align_dendro <- function(mapping = aes(), ...,
+                         distance = "euclidean",
+                         method = "complete",
+                         use_missing = "pairwise.complete.obs",
+                         reorder_group = FALSE,
+                         k = NULL, h = NULL,
+                         plot_cut_height = NULL, root = NULL,
+                         center = FALSE, type = "rectangle",
+                         labels = NULL, labels_nudge = waiver(),
+                         size = NULL, data = NULL,
+                         set_context = NULL, order = NULL, name = NULL) {
     assert_bool(reorder_group)
     assert_mapping(mapping)
-    htanno(
-        htanno_class = HtannoDendro,
+    align(
+        align_class = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
@@ -37,7 +38,6 @@ htanno_dendro <- function(mapping = aes(), ...,
             reorder_group = reorder_group,
             mapping = mapping
         ),
-        position = position,
         labels = labels, labels_nudge = labels_nudge,
         set_context = set_context, name = name, order = order,
         size = size, data = data
@@ -45,7 +45,7 @@ htanno_dendro <- function(mapping = aes(), ...,
 }
 
 #' @importFrom ggplot2 aes theme
-HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
+AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
     setup_params = function(self) {
         params <- .subset2(self, "params")
         call <- .subset2(self, "call")
@@ -67,6 +67,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         ans <- as.matrix(.subset2(self, "data"))
         assert_(
             ans, function(x) is.numeric(x),
+            "numeric",
             arg = "data",
             call = .subset2(self, "call")
         )
@@ -180,7 +181,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         list(panels, index)
     },
     ggplot = function(self, mapping, segment_params) {
-        position <- .subset2(self, "position")
+        direction <- .subset2(self, "direction")
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
@@ -190,10 +191,10 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                 !!!segment_params,
                 stat = "identity"
             )) +
-            switch_position(
-                position,
-                ggplot2::labs(x = "height"),
-                ggplot2::labs(y = "height")
+            switch_direction(
+                direction,
+                ggplot2::labs(y = "height"),
+                ggplot2::labs(x = "height")
             ) +
             ggplot2::theme_bw()
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
@@ -202,7 +203,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
                     # other argumentds
                     plot_cut_height, center, type,
                     root, segment_params) {
-        position <- .subset2(self, "position")
+        direction <- .subset2(self, "direction")
         if (nlevels(panels) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
@@ -215,7 +216,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         }
         data <- dendrogram_data(
             .subset2(self, "statistics"),
-            priority = switch_position(position, "left", "right"),
+            priority = switch_direction(direction, "left", "right"),
             center = center,
             type = type,
             leaf_braches = panels,
@@ -223,7 +224,7 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         )
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
-        if (to_coord_axis(position) == "y") {
+        if (to_coord_axis(direction) == "y") {
             edge <- rename(
                 edge,
                 c(x = "y", xend = "yend", y = "x", yend = "xend")
@@ -238,8 +239,8 @@ HtannoDendro <- ggplot2::ggproto("HtannoDendro", HtannoProto,
         plot_cut_height <- plot_cut_height %||% !is.null(height)
         if (plot_cut_height && !is.null(height)) {
             plot <- plot +
-                switch_position(
-                    position,
+                switch_direction(
+                    direction,
                     ggplot2::geom_vline(
                         xintercept = height, linetype = "dashed"
                     ),

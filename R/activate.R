@@ -5,39 +5,34 @@
 #' `"bottom"`, and `"right"`. For `active`, this can be also `NULL`, which
 #' means set active context into the `heatmap` itself.
 #' @return
-#' - `activate`/`deactivate`: A object with the same class of `x`, whose active
-#'                            context will be `set` or `unset`.
+#' - `activate`: A object with the same class of `x`, whose active context will
+#'               be `set`.
 #' @export
 activate <- function(x, what) UseMethod("activate")
 
 #' @export
-#' @rdname activate
-deactivate <- function(x) UseMethod("deactivate")
-
-#' @export
-activate.ggheatmap <- function(x, what) {
-    if (is.null(what)) {
-        cli::cli_abort(paste(
-            "{.arg what} must be a string of ",
-            oxford_comma(GGHEAT_ELEMENTS, final = "or")
-        ))
-    }
-    what <- match.arg(what, GGHEAT_ELEMENTS)
+activate.LayoutHeatmap <- function(x, what) {
+    what <- match_context(what)
     set_context(x, what)
 }
 
+#' @return
+#' - `heatmap_active`: A `active` object which can be added into
+#'   [LayoutHeatmap][layout_heatmap].
 #' @export
-deactivate.ggheatmap <- function(x) {
-    set_context(x, NULL)
+#' @rdname activate
+heatmap_active <- function(what = NULL) {
+    context <- match_context(what)
+    structure(context %||% "plot", class = c("heatmap_active", "active"))
 }
 
 #' @return
-#' - `active`: A `active` object which can be added into [ggheatmap][ggheat].
+#' - `stack_active`: A `active` object which can be added into
+#'   [LayoutStack][layout_stack].
 #' @export
 #' @rdname activate
-active <- function(what = NULL) {
-    context <- match_context(what)
-    structure(context %||% "heatmap", class = c("active", "ggheat"))
+stack_active <- function(what) {
+    structure(what, class = c("stack_active", "active"))
 }
 
 match_context <- function(what) {
@@ -51,7 +46,7 @@ GGHEAT_ELEMENTS <- c("top", "left", "bottom", "right")
 set_context <- function(x, context) UseMethod("set_context")
 
 #' @export
-set_context.ggheatmap <- function(x, context) {
+set_context.LayoutHeatmap <- function(x, context) {
     slot(x, "active") <- context
     x
 }
@@ -66,7 +61,7 @@ set_context.annotations <- function(x, context) {
 get_context <- function(x) UseMethod("get_context")
 
 #' @export
-get_context.ggheatmap <- function(x) slot(x, "active")
+get_context.LayoutHeatmap <- function(x) slot(x, "active")
 
 #' @export
 get_context.annotations <- function(x) attr(x, "active")

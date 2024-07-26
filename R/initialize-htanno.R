@@ -79,7 +79,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
 
     # compute statistics ---------------------------------
     compute_params <- params[
-        intersect(names(params), htanno_method_params(object$compute))
+        intersect(names(params), align_method_params(object$compute))
     ]
     object$statistics <- rlang::inject(
         object$compute(old_panels, old_index, !!!compute_params)
@@ -87,7 +87,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
 
     # make the new layout -------------------------------
     layout_params <- params[
-        intersect(names(params), htanno_method_params(object$layout))
+        intersect(names(params), align_method_params(object$layout))
     ]
     layout <- rlang::inject(
         object$layout(old_panels, old_index, !!!layout_params)
@@ -170,7 +170,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
     # in the finally, Let us initialize the annotation plot -----
     # must return a ggplot object
     ggplot_params <- params[
-        intersect(names(params), htanno_method_params(object$ggplot))
+        intersect(names(params), align_method_params(object$ggplot))
     ]
     p <- rlang::inject(object$ggplot(!!!ggplot_params))
     # set the default theme for all annotation

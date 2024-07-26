@@ -1,22 +1,20 @@
 #' Group Heatmap rows/columns by kmeans
 #' @inheritParams stats::kmeans
-#' @inheritParams htanno
-#' @inherit htanno return
+#' @inheritParams align
+#' @inherit align return
 #' @examples
 #' ggheat(matrix(rnorm(81), nrow = 9)) +
-#'     htanno_kmeans(3L, position = "top")
+#'     align_kmeans(3L, position = "top")
 #' @export
-htanno_kmeans <- function(centers, iter.max = 10, nstart = 1,
-                          algorithm = c(
-                              "Hartigan-Wong", "Lloyd", "Forgy",
-                              "MacQueen"
-                          ), trace = FALSE,
-                          data = NULL, set_context = NULL, name = NULL,
-                          position = NULL) {
+align_kmeans <- function(centers, iter.max = 10, nstart = 1,
+                         algorithm = c(
+                             "Hartigan-Wong", "Lloyd", "Forgy",
+                             "MacQueen"
+                         ), trace = FALSE,
+                         data = NULL, set_context = FALSE, name = NULL) {
     algorithm <- match.arg(algorithm)
-    htanno(
-        htanno_class = HtannKmeans,
-        position = position,
+    align(
+        align_class = AlignKmeans,
         params = list(
             centers = centers,
             iter.max = iter.max,
@@ -24,18 +22,17 @@ htanno_kmeans <- function(centers, iter.max = 10, nstart = 1,
             algorithm = algorithm,
             trace = trace
         ),
-        set_context = set_context %||% c(TRUE, FALSE),
+        set_context = set_context,
         name = name, order = NULL, data = data
     )
 }
 
-HtannKmeans <- ggplot2::ggproto("HtannKmeans", HtannoProto,
+AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
     setup_data = function(self) {
         ans <- as.matrix(.subset2(self, "data"))
         assert_(
-            ans, function(x) is.numeric(x),
-            arg = "data",
-            call = .subset2(self, "call")
+            ans, is.numeric, "a numeric matrix",
+            arg = "data", call = .subset2(self, "call")
         )
         ans
     },
