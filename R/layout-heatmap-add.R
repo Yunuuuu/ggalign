@@ -11,7 +11,7 @@
 #'     gganno() +
 #'     geom_point(aes(y = value))
 #' @name heatmap-add
-#' @aliases +.heatmap
+#' @aliases +.ggheatmap +.LayoutHeatmap
 #' @seealso layout_heatmap_add
 NULL
 
@@ -41,8 +41,7 @@ methods::setMethod("+", c("LayoutHeatmap", "ANY"), function(e1, e2) {
 #'     ggheatmap(matrix(rnorm(81), nrow = 9))
 #' )
 #' @export
-layout_heatmap_add <- function(object, heatmap,
-                               object_name = deparse(substitute(object))) {
+layout_heatmap_add <- function(object, heatmap, object_name) {
     UseMethod("layout_heatmap_add")
 }
 

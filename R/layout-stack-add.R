@@ -10,7 +10,7 @@
 #'     gganno() +
 #'     geom_point(aes(y = value))
 #' @name stack-add
-#' @aliases +.stack
+#' @aliases +.ggstack +.LayoutStack
 #' @seealso layout_stack_add
 NULL
 
@@ -169,6 +169,9 @@ layout_stack_add.labels <- layout_stack_add.gg
 
 #' @export
 layout_stack_add.facetted_pos_scales <- layout_stack_add.gg
+
+#' @export
+layout_stack_add.NULL <- function(object, stack, object_name) stack
 
 #' @export
 layout_stack_add.default <- function(object, stack, object_name) {

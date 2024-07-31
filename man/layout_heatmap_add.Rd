@@ -4,7 +4,7 @@
 \alias{layout_heatmap_add}
 \title{Add custom objects to \code{LayoutHeatmap}}
 \usage{
-layout_heatmap_add(object, heatmap, object_name = deparse(substitute(object)))
+layout_heatmap_add(object, heatmap, object_name)
 }
 \arguments{
 \item{object}{An object to add to the plot}

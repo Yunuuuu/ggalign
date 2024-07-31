@@ -1,14 +1,14 @@
 #' Add components to heatmap and heatmap annotations
 #'
-#' @param e1 A [ggheatmap][ggheat] object.
+#' @param e1 A [LayoutHeatmap][layout_heatmap] object.
 #' @param e2 An object to be added to the plot.
-#' @return A modified `ggheatmap` object.
-#' @name ggheatmap-and
-#' @aliases &.ggheatmap
-#' @seealso ggheatmap_and_add
+#' @inherit heatmap-add return
+#' @name heatmap-and
+#' @aliases &.LayoutHeatmap &.ggheatmap
+#' @seealso [layout_heatmap_and_add]
 NULL
 
-#' @rdname ggheatmap-and
+#' @rdname heatmap-and
 #' @export
 methods::setMethod("&", c("LayoutHeatmap", "ANY"), function(e1, e2) {
     if (missing(e2)) {
@@ -23,14 +23,14 @@ methods::setMethod("&", c("LayoutHeatmap", "ANY"), function(e1, e2) {
     layout_heatmap_and_add(e2, e1, e2name)
 })
 
-# we use `ggheatmap_and_add` instead of `ggheatmap_and` since `ggheatmap_and` is
-# too similar with `ggheatmap_and` in the name.
-#' Add custom objects to ggheatmap and heatmap annotations
+# we use `layout_heatmap_and_add` instead of `layout_heatmap_and` since
+# `layout_heatmap_and` is too similar with `layout_heatmap_and` in the name.
+#' Add custom objects to heatmap and heatmap annotations
 #'
-#' @param heatmap A `ggheatmap` object
+#' @param heatmap A [LayoutHeatmap][layout_heatmap] object
 #' @inheritParams ggplot2::ggplot_add
-#' @inherit ggheatmap-and return
-#' @noRd
+#' @inherit heatmap-add return
+#' @export
 layout_heatmap_and_add <- function(object, heatmap, object_name) {
     UseMethod("layout_heatmap_and_add")
 }
@@ -48,16 +48,9 @@ layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
     for (position in GGHEAT_ELEMENTS) {
         stack <- slot(heatmap, position)
         if (is.null(stack)) next
-        slot(stack, "plots") <- lapply(
-            slot(stack, "plots"),
-            function(plot) {
-                if (is.null(.subset2(plot, "plot"))) {
-                    return(plot)
-                }
-                align_add(object, plot, object_name)
-            }
+        slot(heatmap, position) <- layout_stack_and_add(
+            object, stack, object_name
         )
-        slot(heatmap, position) <- stack
     }
     heatmap
 }

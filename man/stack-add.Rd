@@ -2,7 +2,8 @@
 % Please edit documentation in R/layout-stack-add.R
 \name{stack-add}
 \alias{stack-add}
-\alias{+.stack}
+\alias{+.ggstack}
+\alias{+.LayoutStack}
 \alias{+,LayoutStack,ANY-method}
 \title{Add components to \code{LayoutStack}}
 \usage{

@@ -2,7 +2,8 @@
 % Please edit documentation in R/layout-heatmap-add.R
 \name{heatmap-add}
 \alias{heatmap-add}
-\alias{+.heatmap}
+\alias{+.ggheatmap}
+\alias{+.LayoutHeatmap}
 \alias{+,LayoutHeatmap,ANY-method}
 \title{Add components to \code{LayoutHeatmap}}
 \usage{
