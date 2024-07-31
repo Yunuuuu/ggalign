@@ -25,10 +25,11 @@ build_patchwork.LayoutHeatmap <- function(layout) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- slot(layout, "params")
-    patchwork::wrap_plots(plots[keep],
+    patchwork::wrap_plots(
+        plots[keep],
         design = design,
-        heights = .subset2(sizes, "heights"),
-        widths = .subset2(sizes, "widths"),
+        heights = .subset2(sizes, "height"),
+        widths = .subset2(sizes, "width"),
         guides = .subset2(params, "guides")
     )
 }

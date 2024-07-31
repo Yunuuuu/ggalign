@@ -28,11 +28,11 @@ build_patchwork.default <- function(layout) {
 
 # ** Not implemented yet
 #' @keywords internal
-methods::setClass(
-    "LayoutGrid",
-    contains = "Layout",
-    list(panel_list = "list", index_list = "list")
-)
+# methods::setClass(
+#     "LayoutGrid",
+#     contains = "Layout",
+#     list(panel_list = "list", index_list = "list")
+# )
 
 # utils function ----------------------------------------
 get_panels <- function(x, ...) UseMethod("get_panels")

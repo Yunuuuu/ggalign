@@ -8,10 +8,8 @@
 #' @examples
 #' small_mat <- matrix(rnorm(81), nrow = 9)
 #' ggheatmap(small_mat) +
-#'     heatmap_active("top") +
-#'     align_group(
-#'         sample(letters[1:4], ncol(small_mat), replace = TRUE)
-#'     ) +
+#'     hmanno("t") +
+#'     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
 #'     align_title()
 #' @export
 align_title <- function(titles = NULL, ..., mapping = aes(),
@@ -35,15 +33,15 @@ AlignTitle <- ggplot2::ggproto("AlignTitle", Align,
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_text(!!!text_params)) +
             ggplot2::theme_void()
-        add_default_mapping(ans, switch_position(
-            .subset2(self, "position"),
+        add_default_mapping(ans, switch_direction(
+            .subset2(self, "direction"),
             aes(x = 0L, y = .data$.y, label = .data$.label),
             aes(y = 0L, x = .data$.x, label = .data$.label)
         ))
     },
     draw = function(self, panels, index, titles) {
-        position <- .subset2(self, "position")
-        axis <- to_coord_axis(position)
+        direction <- .subset2(self, "direction")
+        axis <- to_coord_axis(direction)
         coords <- data_frame0(.panel = panels[index], .index = index)
         coords[[paste0(".", axis)]] <- seq_along(index)
         formula <- rlang::new_formula(
