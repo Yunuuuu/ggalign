@@ -1,4 +1,4 @@
-Package: ggheat
+Package: ggalign
 Title: Create Complex Heatmap Using the Grammar of Graphics
 Version: 0.0.1
 Authors@R: 
@@ -20,35 +20,9 @@ Imports:
     stats,
     tibble,
     tidyr
-Collate: 
-    'activate.R'
-    'add-methods.R'
-    'build-methods.R'
-    'dendrogram.R'
-    'geom-draw.R'
-    'ggdendrogram.R'
-    'ggheat-package.R'
-    'ggheat.R'
-    'htanno-.R'
-    'htanno-dendrogram.R'
-    'htanno-gg.R'
-    'htanno-group.R'
-    'htanno-kmeans.R'
-    'htanno-reorder.R'
-    'htanno-title.R'
-    'import-standalone-assert.R'
-    'import-standalone-cli.R'
-    'import-standalone-obj-type.R'
-    'initialize-htanno.R'
-    'plot-add.R'
-    'plot-and_add.R'
-    'plot-build.R'
-    'utils-assert.R'
-    'utils-grid.R'
-    'utils.R'
 ByteCompile: true
-URL: https://github.com/Yunuuuu/ggheat
-BugReports: https://github.com/Yunuuuu/ggheat/issues
+URL: https://github.com/Yunuuuu/ggalign
+BugReports: https://github.com/Yunuuuu/ggalign/issues
 Suggests: 
     knitr,
     rmarkdown,

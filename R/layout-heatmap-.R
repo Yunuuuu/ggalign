@@ -1,4 +1,6 @@
-#' Heatmap with ggplot2
+#' Heatmap layout
+#'
+#' `ggheatmap` is an alias of `layout_heatmap`.
 #'
 #' @param data A numeric or character vector, a data frame, and any other data
 #' which can be converted into a matrix. Simple vector will be converted into a
@@ -33,7 +35,7 @@
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
 #' you can use `mapping` argument to control it. The data in the underlying
-#' ggplot object contains following columns:
+#' `ggplot` object contains following columns:
 #'
 #'  - `.row_panel`: the row panel
 #'
@@ -49,15 +51,54 @@
 #'
 #'  - `value`: the actual matrix value.
 #'
-#' @return A `ggheatmap` object.
+#' @return A `LayoutHeatmap` object.
 #' @examples
 #' ggheatmap(1:10)
 #' ggheatmap(letters)
 #' @importFrom ggplot2 aes
 #' @export
-layout_heatmap <- function(data, mapping = aes(), ...) {
+layout_heatmap <- function(data = NULL, mapping = aes(), ...) {
     UseMethod("layout_heatmap")
 }
+
+# used to create the heatmap layout
+#' @keywords internal
+methods::setClass(
+    "LayoutHeatmap",
+    contains = "Layout",
+    list(
+        data = "matrix",
+        plot = "ANY",
+        facetted_pos_scales = "ANY",
+        params = "list",
+        # Used by the layout,
+        # top, left, bottom, right must be a LayoutStack object.
+        top = "ANY", left = "ANY",
+        bottom = "ANY", right = "ANY",
+        panel_list = "list", index_list = "list"
+    ),
+    prototype = list(
+        top = NULL, left = NULL,
+        bottom = NULL, right = NULL,
+        panel_list = list(), index_list = list()
+    )
+)
+
+# We can remove the validation, since the object won't be exported for user.
+#' @importFrom methods slot
+#' @importFrom ggplot2 is.ggplot
+#' @importFrom rlang is_string
+methods::setValidity("LayoutHeatmap", function(object) {
+    active <- slot(object, "active")
+    if (!is.null(active) &&
+        (!is_string(active) || !any(active == GGHEAT_ELEMENTS))) {
+        cli::cli_abort(sprintf(
+            "@active must be a string of %s",
+            oxford_comma(GGHEAT_ELEMENTS, final = "or")
+        ))
+    }
+    TRUE
+})
 
 #' @export
 #' @rdname layout_heatmap
@@ -66,21 +107,29 @@ ggheatmap <- layout_heatmap
 #' @importFrom ggplot2 waiver theme
 #' @export
 #' @rdname layout_heatmap
-layout_heatmap.matrix <- function(data, mapping = NULL,
+layout_heatmap.matrix <- function(data, mapping = aes(),
                                   width = NULL, height = NULL,
                                   xlabels = waiver(),
                                   ylabels = waiver(),
                                   xlabels_nudge = waiver(),
                                   ylabels_nudge = waiver(),
                                   guides = "collect",
-                                  axes = NULL, axis_titles = axes,
                                   filling = TRUE, ...) {
     assert_bool(filling)
     xlabels <- set_labels(xlabels, colnames(data), "x")
-    xlabels_nudge <- set_nudge(xlabels_nudge, ncol(data), xlabels, "x")
+    xlabels_nudge <- set_nudge(
+        xlabels_nudge,
+        n = ncol(data),
+        labels = xlabels,
+        axis = "x"
+    )
     ylabels <- set_labels(ylabels, rownames(data), "y")
-    ylabels_nudge <- set_nudge(ylabels_nudge, nrow(data), ylabels, "y")
-    mapping <- mapping %||% aes(.data$.x, .data$.y)
+    ylabels_nudge <- set_nudge(
+        ylabels_nudge,
+        n = nrow(data),
+        labels = ylabels,
+        axis = "y"
+    )
     plot <- ggplot2::ggplot(mapping = mapping) +
         ggplot2::theme_bw() +
         theme(
@@ -89,6 +138,7 @@ layout_heatmap.matrix <- function(data, mapping = NULL,
             strip.text = element_blank(),
             strip.background = element_blank()
         )
+    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
     if (ncol(data) > 10L) {
         plot <- plot + theme(
             axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
@@ -101,6 +151,7 @@ layout_heatmap.matrix <- function(data, mapping = NULL,
             width = 1L, height = 1L
         )
     }
+    # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
         "LayoutHeatmap",
         data = data,
@@ -113,9 +164,7 @@ layout_heatmap.matrix <- function(data, mapping = NULL,
             # following parameters are used by patchwork
             width = set_size(width),
             height = set_size(height),
-            guides = guides,
-            axes = axes,
-            axis_titles = axis_titles
+            guides = guides
         ),
         plot = plot
     )
@@ -175,36 +224,17 @@ methods::setMethod("$", "LayoutHeatmap", function(x, name) {
     }
 })
 
-# We can remove the validation
-#' @importFrom methods slot
-#' @importFrom ggplot2 is.ggplot
-#' @importFrom rlang is_string
-methods::setValidity("LayoutHeatmap", function(object) {
-    if (!is.ggplot(slot(object, "plot"))) {
-        cli::cli_abort("@plot must be a {.cls ggplot} object")
-    }
-    active <- slot(object, "active")
-    if (!is.null(active) &&
-        (!is_string(active) || !any(active == GGHEAT_ELEMENTS))) {
-        cli::cli_abort(sprintf(
-            "@active must be a string of %s",
-            oxford_comma(GGHEAT_ELEMENTS, final = "or")
-        ))
-    }
-    TRUE
-})
-
 #' @param object A `LayoutHeatmap` object.
 #' @importFrom methods show
 #' @export
-#' @rdname ggheat
+#' @rdname layout_heatmap
 methods::setMethod("show", "LayoutHeatmap", function(object) print(object))
 
-#' Reports whether x is a `LayoutHeatmap` object
+#' Reports whether `x` is a `LayoutHeatmap` object
 #'
 #' @param x An object to test
 #' @return A boolean value
 #' @examples
-#' is.ggheatmap(ggheat(1:10))
+#' is.ggheatmap(ggheatmap(1:10))
 #' @export
 is.ggheatmap <- function(x) methods::is(x, "LayoutHeatmap")

@@ -2,32 +2,16 @@
 % Please edit documentation in R/activate.R
 \name{activate}
 \alias{activate}
-\alias{deactivate}
-\alias{active}
 \title{Determine the context of subsequent manipulations}
 \usage{
 activate(x, what)
-
-deactivate(x)
-
-active(what = NULL)
 }
 \arguments{
 \item{x}{A \link[=ggheat]{ggheatmap} object.}
-
-\item{what}{What should get activated? Possible values are \code{"top"}, \code{"left"},
-\code{"bottom"}, and \code{"right"}. For \code{active}, this can be also \code{NULL}, which
-means set active context into the \code{heatmap} itself.}
 }
 \value{
-\itemize{
-\item \code{activate}/\code{deactivate}: A object with the same class of \code{x}, whose active
-context will be \code{set} or \code{unset}.
-}
-
-\itemize{
-\item \code{active}: A \code{active} object which can be added into \link[=ggheat]{ggheatmap}.
-}
+A object with the same class of \code{x}, whose active context will be
+\code{set}.
 }
 \description{
 Determine the context of subsequent manipulations

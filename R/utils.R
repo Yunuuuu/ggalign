@@ -21,7 +21,26 @@ allow_lambda <- function(x) {
     }
 }
 
+trim_area <- function(area) {
+    w <- min(.subset2(area, "l"), .subset2(area, "r"))
+    h <- min(.subset2(area, "t"), .subset2(area, "b"))
+    area$l <- .subset2(area, "l") - w + 1L
+    area$r <- .subset2(area, "r") - w + 1L
+    area$t <- .subset2(area, "t") - h + 1L
+    area$b <- .subset2(area, "b") - h + 1L
+    area
+}
+
 is.waiver <- function(x) inherits(x, "waiver")
+
+add_default_mapping <- function(plot, default_mapping) {
+    mapping <- .subset2(plot, "mapping")
+    for (nm in names(mapping)) {
+        default_mapping[[nm]] <- .subset2(mapping, nm)
+    }
+    plot$mapping <- default_mapping
+    plot
+}
 
 #' @importFrom rlang env_clone
 ggproto_clone <- function(ggproto) {
@@ -31,18 +50,21 @@ ggproto_clone <- function(ggproto) {
 }
 
 #' @importFrom rlang caller_arg caller_env
-set_nudge <- function(nudge, n, labels, axis, arg = caller_arg(nudge),
+set_nudge <- function(nudge, n, labels,
+                      default = rep_len(0, n),
+                      axis,
+                      arg = caller_arg(nudge),
                       call = caller_call()) {
     if (is.numeric(nudge)) {
         if (!is_scalar(nudge) && length(nudge) != n) {
             cli::cli_abort(paste(
                 "{.arg {arg}} must be of length 1 or",
-                "the same length of heatmap {axis}"
+                "the same length of {axis}-axis"
             ), call = call)
         }
         nudge <- rep_len(nudge, n)
     } else if (is.waiver(nudge)) {
-        if (is.null(labels)) nudge <- NULL else nudge <- rep_len(0, n)
+        if (is.null(labels)) nudge <- NULL else nudge <- default
     } else if (!is.null(nudge)) {
         cli::cli_abort(
             "{.arg {arg}} must be `waiver()`, `NULL` or a numeric",
@@ -77,16 +99,6 @@ set_labels <- function(labels, default, axis, arg = caller_arg(labels),
     labels
 }
 
-switch_direction <- function(direction, h, v) {
-    if (direction == "horizontal") {
-        h
-    } else {
-        v
-    }
-}
-to_coord_axis <- function(position) switch_direction(position, "y", "x")
-to_matrix_axis <- function(position) switch_direction(position, "row", "column")
-
 switch_position <- function(position, x, y) {
     switch(position,
         top = ,
@@ -96,6 +108,26 @@ switch_position <- function(position, x, y) {
     )
 }
 
+to_direction <- function(position) {
+    switch_position(position, "vertical", "horizontal")
+}
+
+is_vertical <- function(direction) direction == "vertical"
+is_horizontal <- function(direction) direction == "horizontal"
+switch_direction <- function(direction, h, v) {
+    if (is_horizontal(direction)) {
+        h
+    } else {
+        v
+    }
+}
+to_coord_axis <- function(direction) {
+    switch_direction(direction, "y", "x")
+}
+
+to_matrix_axis <- function(direction) {
+    switch_direction(direction, "row", "column")
+}
 
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)

@@ -15,3 +15,11 @@ set_size <- function(x) {
     }
     x
 }
+
+#' @importFrom grid unitType absolute.size
+is_absolute_unit <- function(x) {
+    identical(unitType(absolute.size(x)), unitType(x))
+}
+
+#' @importFrom grid unitType
+is_null_unit <- function(x) identical(unitType(x), "null")

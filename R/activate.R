@@ -1,12 +1,8 @@
 #' Determine the context of subsequent manipulations
 #'
 #' @param x A [ggheatmap][ggheat] object.
-#' @param what What should get activated? Possible values are `"top"`, `"left"`,
-#' `"bottom"`, and `"right"`. For `active`, this can be also `NULL`, which
-#' means set active context into the `heatmap` itself.
-#' @return
-#' - `activate`: A object with the same class of `x`, whose active context will
-#'               be `set`.
+#' @return A object with the same class of `x`, whose active context will be
+#' `set`.
 #' @export
 activate <- function(x, what) UseMethod("activate")
 
@@ -16,22 +12,42 @@ activate.LayoutHeatmap <- function(x, what) {
     set_context(x, what)
 }
 
+#' Determine the context of subsequent manipulations
+#'
+#' @param what What should get activated?
+#'  - `hmanno`: Possible values are follows:
+#'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
+#'    * `NULL`: means set the active context into the `heatmap` itself.
+#'    * `missing` or `NA`: don't change the context, but set the size of the
+#'      current active context.
+#'  - `active`:
+#' @param size A [unit][grid::unit] object to set the size of the heatmap
+#' annotation. Only be used if `what` is a string of `"top"`, `"left"`,
+#' `"bottom"`, or `"right"`.
 #' @return
-#' - `heatmap_active`: A `active` object which can be added into
+#' - `hmanno`: A `active` object which can be added into
 #'   [LayoutHeatmap][layout_heatmap].
 #' @export
-#' @rdname activate
-heatmap_active <- function(what = NULL) {
-    context <- match_context(what)
-    structure(context %||% "plot", class = c("heatmap_active", "active"))
+hmanno <- function(what, size = NULL) {
+    if (missing(what)) {
+        what <- NA_character_
+    } else if (is.null(what)) { # activate
+        what <- "plot"
+    } else if (is_scalar(what) && is.na(what)) {
+        what <- as.character(what)
+    } else {
+        what <- match.arg(what, GGHEAT_ELEMENTS)
+    }
+    if (!is.null(size)) size <- set_size(size)
+    structure(what, size = size, class = c("heatmap_active", "active"))
 }
 
 #' @return
-#' - `stack_active`: A `active` object which can be added into
+#' - `active`: A `active` object which can be added into
 #'   [LayoutStack][layout_stack].
 #' @export
-#' @rdname activate
-stack_active <- function(what) {
+#' @rdname hmanno
+active <- function(what) {
     structure(what, class = c("stack_active", "active"))
 }
 
@@ -45,23 +61,17 @@ GGHEAT_ELEMENTS <- c("top", "left", "bottom", "right")
 #' @keywords internal
 set_context <- function(x, context) UseMethod("set_context")
 
+#' @importFrom methods slot<-
 #' @export
-set_context.LayoutHeatmap <- function(x, context) {
+set_context.Layout <- function(x, context) {
     slot(x, "active") <- context
-    x
-}
-
-#' @export
-set_context.annotations <- function(x, context) {
-    attr(x, "active") <- context
     x
 }
 
 #' @keywords internal
 get_context <- function(x) UseMethod("get_context")
 
+#' @importFrom methods slot
 #' @export
-get_context.LayoutHeatmap <- function(x) slot(x, "active")
+get_context.Layout <- function(x) slot(x, "active")
 
-#' @export
-get_context.annotations <- function(x) attr(x, "active")

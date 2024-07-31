@@ -38,7 +38,7 @@ and mapping for the heatmap. Creating a simple heatmap is effortless with the
 `ggheat` function 
 
 ```{r}
-ggheat(small_mat)
+ggheatmap(small_mat)
 ```
 
 The data can be a numeric or character vector, a data frame, and any other data
@@ -63,23 +63,22 @@ contains following columns:
   - `value`: the actual matrix value.
 
 ```{r}
-ggheat(letters)
+ggheatmap(letters)
 ```
 
 ```{r}
-ggheat(1:10)
+ggheatmap(1:10)
 ```
 
 You can then add all other ggplot2 elements like `geoms`, `scales` and `facets`.
 
 ```{r}
-ggheat(small_mat) + geom_point() + scale_fill_viridis_c()
+ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
 You can turn off the default filling by setting `filling = FALSE`
 ```{r}
-ggheat(small_mat, filling = FALSE) +
-  scale_fill_viridis_c() +
+ggheatmap(small_mat, filling = FALSE) +
   geom_text(aes(label = sprintf("%d * %d", .row_index, .column_index)))
 ```
 
@@ -97,37 +96,35 @@ particularly allows for controlling the order of the main heatmap or dividing
 the heatmap into sections based on rows/columns. Some of them can also adding
 plot.
 
-Currently, there are four sub-classes of `htanno`: `htanno_group`,
-`htanno_reorder`, `htanno_kmeans` and `htanno_dendro`.
+Currently, there are four sub-classes of `htanno`: `align_group`,
+`align_reorder`, `align_kmeans` and `align_dendro`.
 
-### `htanno_group`
+### `align_group`
 
-`htanno_group` just group heatmap rows/columns into different panels.
+`align_group` just group heatmap rows/columns into different panels.
 
 By default, the `ggheat` function does not initialize any active context, so if
 you want to add annotations, you need to specify the `position` argument. We can
 omit it if there is any active context in the heatmap (we'll introduce how to
 set the active context after for details). 
-```{r htanno_group_top}
-ggheat(small_mat) +
-  htanno_group(
-    sample(letters[1:4], ncol(small_mat), replace = TRUE),
-    position = "top"
-  )
+```{r align_group_top}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
 
-```{r htanno_group_left}
-ggheat(small_mat) +
-  htanno_group(
-    sample(letters[1:4], nrow(small_mat), replace = TRUE),
-    position = "left"
-  )
+```{r align_group_left}
+ggheatmap(small_mat) +
+  hmanno("l") +
+  align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
 ```
 
-### `htanno_reorder`
-`htanno_reorder` reorder heatmap rows/columns based on a summary function.
+### `align_reorder`
+`align_reorder` reorder heatmap rows/columns based on a summary function.
 ```{r}
-ggheat(small_mat) + htanno_reorder(rowMeans, position = "left")
+ggheatmap(small_mat) +
+  hmanno("l") +
+  align_reorder(rowMeans)
 ```
 
 Some annotation function includes a `data` argument to specify the annotation
@@ -147,35 +144,38 @@ So even for top and bottom annotation, we can also use the `rowMeans` to calcula
 the mean value for all columns.
 
 ```{r}
-ggheat(small_mat) + htanno_reorder(rowMeans, position = "top")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_reorder(rowMeans)
 ```
 
-### `htanno_kmeans`
-`htanno_kmeans` group heatmap rows/columns by kmeans.
+### `align_kmeans`
+`align_kmeans` group heatmap rows/columns by kmeans.
 ```{r}
-ggheat(small_mat) + htanno_kmeans(3L, position = "t")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_kmeans(3L)
 ```
 
-It is important to note that both `htanno_group` and `htanno_kmeans` cannot do
+It is important to note that both `align_group` and `align_kmeans` cannot do
 sub-groups. It means when there has been any groups exist. You cannot use them
 
 ```{r error=TRUE}
-ggheat(small_mat) +
-  htanno_group(
-    sample(letters[1:4], ncol(small_mat), replace = TRUE),
-    position = "t"
-  ) +
-  htanno_kmeans(3L)
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
+  align_kmeans(3L)
 ```
 
 ```{r error=TRUE}
-ggheat(small_mat) +
-  htanno_kmeans(3L, position = "t") +
-  htanno_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_kmeans(3L) +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
 
-You may have noticed that the `htanno_group` function does not explicitly set
-the `position` argument after `htanno_kmeans`. When adding an annotation, we can
+You may have noticed that the `align_group` function does not explicitly set
+the `position` argument after `align_kmeans`. When adding an annotation, we can
 set the active context using the `set_context` argument. This argument requires
 a boolean value of length `2`. It will be recycled for a single value.
 
@@ -184,79 +184,91 @@ a boolean value of length `2`. It will be recycled for a single value.
  - The second value will determine whether the active context of the annotation
    list in this position should be set as current annotation.
 
-In the case of `htanno_kmeans`, the default `set_context` value is `c(TRUE,
-FALSE)`, implying that the active context is already set by `htanno_kmeans`. 
+In the case of `align_kmeans`, the default `set_context` value is `c(TRUE,
+FALSE)`, implying that the active context is already set by `align_kmeans`. 
 
-### htanno_dendro
-`htanno_dendro` class the addition of a dendrogram near the heatmap and and it
+### align_dendro
+`align_dendro` class the addition of a dendrogram near the heatmap and and it
 can also reorder the heatmap. This is primarily useful when working with
 heatmap plots.
 
 ```{r}
-ggheat(small_mat) + htanno_dendro(position = "top")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro()
 ```
 
 You can use the `distance` and `method` argument to control the dendrogram
 builind proce. 
 
 ```{r}
-ggheat(small_mat) + htanno_dendro(position = "top", method = "ward.D2")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(method = "ward.D2")
 ```
 
 One useful function of dendrogram is to cut the columns/rows into groups. You
 can specify `k` or `h`, which works the same with `cutree`.
 
 ```{r}
-ggheat(small_mat) + htanno_dendro(position = "top", k = 3)
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(k = 3L)
 ```
 
-In contrast to `htanno_group`, `htanno_kmeans`, and `htanno_reorder`,
-`htanno_dendro` is capable of drawing plot components. Therefore, it has a
+In contrast to `align_group`, `align_kmeans`, and `align_reorder`,
+`align_dendro` is capable of drawing plot components. Therefore, it has a
 default `set_context` value of `c(TRUE, TRUE)`, we can directly add ggplot
-elements after `htanno_dendro` function. 
+elements after `align_dendro` function. 
 
 ```{r}
-ggheat(small_mat) +
-  htanno_dendro(position = "top") +
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro() +
   geom_point(aes(y = y))
 ```
 
-`htanno_dendro` will create a default `node` data for the ggplot. See
+`align_dendro` will create a default `node` data for the ggplot. See
 `?dendrogram_data` for details. In addition, `edge` data has been added into the
 `geom_segment` layer directly which was used to draw the dendrogram tree. One
 useful variable in both `node` and edge `data` is `branch` column, which
 corresponding to the `cutree` result.
 
 ```{r}
-ggheat(small_mat) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3) +
   geom_point(aes(color = branch, y = y))
 ```
 
-`htanno_dendro` is also capable of performing clustering between groups. This
+`align_dendro` is also capable of performing clustering between groups. This
 means that you can use it even if there are already existing groups present in
 the heatmap.
 
 ```{r}
 column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
-ggheat(small_mat) +
-  htanno_group(column_groups, position = "t") +
-  htanno_dendro(aes(color = branch))
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch))
 ```
 
 You can reorder the groups by setting `reorder_group = TRUE`.
 ```{r}
-ggheat(small_mat) +
-  htanno_group(column_groups, position = "t") +
-  htanno_dendro(aes(color = branch), reorder_group = TRUE)
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
 You can see the difference.
 ```{r}
-ggheat(small_mat) +
-  htanno_group(column_groups, position = "t") +
-  htanno_dendro(aes(color = branch), reorder_group = TRUE) +
-  htanno_dendro(aes(color = branch), reorder_group = FALSE, position = "b")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = TRUE) +
+  hmanno("b") +
+  align_dendro(aes(color = branch), reorder_group = FALSE)
 ```
 
 It is important to understand that when `reorder_group = FALSE` is used, the
@@ -264,17 +276,19 @@ reordering of the heatmap occurs within each group. As long as the ordering
 within each group remains the same, these two dendrograms can be placed on the
 same axis of the heatmap. This is why adding a dendrogram with` reorder_group =
 FALSE` behind a dendrogram with `reorder_group = TRUE` is acceptable, as the
-second `htanno_dendro` will follow the group ordering established by the first
+second `align_dendro` will follow the group ordering established by the first
 one. However, it is not possible to add a dendrogram with `reorder_group = TRUE`
 behind a dendrogram with `reorder_group = FALSE` because the second dendrogram
 would not be able to conform to the grouping order followed by the first
 dendrogram.
 
 ```{r error=TRUE}
-ggheat(small_mat) +
-  htanno_group(column_groups, position = "t") +
-  htanno_dendro(aes(color = branch), reorder_group = FALSE) +
-  htanno_dendro(aes(color = branch), reorder_group = TRUE, position = "b")
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = FALSE) +
+  hmanno("b") +
+  align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
 >`ggheat` always prevent user from reordering the heatmap twice.
@@ -296,22 +310,22 @@ annotation into another position, we must specify the `position` argument or we
 can add an `active` object (we also provide `activate` and `deactivate`
 for function call foramt).
 
-For convenient, we also provide `gganno_*` function for 4 positions.
-
 ```{r}
-ggheat(small_mat) +
+ggheatmap(small_mat) +
   scale_fill_viridis_c(guide = "none") +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
-  gganno(data = rowSums) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3) +
+  ggalign(data = rowSums) +
   geom_bar(aes(y = value, fill = .panel), stat = "identity") +
   scale_fill_brewer(palette = "Dark2") +
-  gganno_left(aes(x = value), data = rowSums) +
+  hmanno("l") +
+  ggalign(aes(x = value), data = rowSums) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
     stat = "identity",
     orientation = "y"
   ) +
-  scale_fill_brewer(palette = "Set1", guide = "none") +
+  scale_fill_brewer(palette = "Set1") +
   scale_x_reverse()
 ```
 
@@ -326,11 +340,13 @@ to control the relative width (left and right annotation) or height (top and
 bottom annotation).
 
 ```{r}
-ggheat(small_mat) +
+ggheatmap(small_mat) +
   scale_fill_viridis_c() +
-  gganno_top(data = rowSums, size = unit(10, "mm")) +
+  hmanno("t", size = unit(20, "mm")) +
+  ggalign(data = rowSums) +
   geom_bar(aes(y = value, fill = .x), stat = "identity") +
-  gganno_left(aes(x = value), data = rowSums, size = 0.5) +
+  hmanno("l", size = 0.2) +
+  ggalign(aes(x = value), data = rowSums) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
     stat = "identity",
@@ -340,45 +356,26 @@ ggheat(small_mat) +
   scale_x_reverse()
 ```
 
-## active
-An alternative method to modify the active context is by adding an `active`
-object.
-
-```{r active_top}
-ggheat(small_mat) +
-  active("top") +
-  htanno_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
-```
-
-```{r active_null}
-ggheat(small_mat) +
-  active("top") +
-  htanno_dendro(aes(color = branch), k = 3) +
-  ylab("I'm top annotation") +
-  active(NULL) +
-  ylab("I'm the main heatmap")
-```
-
 ## restriction
 The position scales and facets are partial support.
 
 For position scales, you cannot set `limits`, `breaks`, `labels`, and they are
 just ignored. `limits` cannot be touched, and the internal will always reset it
 as the default. This is required to match the heatmap and annotation limits. But
-you can set `labels` or `breaks` in `ggheat()` function. See `xlabels/ylabels`
+you can set `labels` or `breaks` in `ggheatmap()` function. See `xlabels/ylabels`
 and `xlabels_nudge/ylabels_nudge`. All of these arguments should be provided in
 the original order of the raw matrix. Even if we use heatmap annotation to
 reorder the heatmap rows/columns. 
 ```{r}
-ggheat(small_mat) + scale_x_continuous(limits = c(0, 0))
+ggheatmap(small_mat) + scale_x_continuous(limits = c(0, 0))
 ```
 
 ```{r}
-ggheat(small_mat) + scale_x_continuous(labels = "a")
+ggheatmap(small_mat) + scale_x_continuous(labels = "a")
 ```
 
 ```{r}
-ggheat(small_mat, xlabels = rep_len("AA", ncol(small_mat)))
+ggheatmap(small_mat, xlabels = rep_len("AA", ncol(small_mat)))
 ```
 
 When working with facets, manual configuration of panels using the `facet_*`
@@ -388,9 +385,10 @@ provide `facet_grid` or `facet_null` (if no panels) to control the non-layout
 arguments, like `labeller`.
 
 ```{r}
-ggheat(small_mat) +
+ggheatmap(small_mat) +
   facet_grid(labeller = labeller(.panel = function(x) letters[as.integer(x)])) +
-  htanno_dendro(aes(color = branch), position = "top", k = 3) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3) +
   geom_point(aes(y = y))
 ```
 

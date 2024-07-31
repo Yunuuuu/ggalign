@@ -8,37 +8,36 @@
 #' heatmap rows/columns in each group.
 #' @param decreasing A boolean value. Should the sort order be increasing or
 #' decreasing?
-#' @inheritParams htanno
-#' @inherit htanno return
+#' @inheritParams align
+#' @inherit align return
 #' @examples
-#' ggheat(matrix(rnorm(81), nrow = 9)) +
-#'     htanno_reorder(position = "top")
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("l") +
+#'     align_reorder()
 #' @export
-htanno_reorder <- function(fun = rowMeans, ..., strict = TRUE,
-                           decreasing = FALSE,
-                           data = NULL,
-                           set_context = NULL, name = NULL,
-                           position = NULL) {
+align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
+                          decreasing = FALSE,
+                          data = NULL,
+                          set_context = FALSE, name = NULL) {
     fun <- rlang::as_function(fun)
     assert_bool(strict)
     assert_bool(decreasing)
-    htanno(
-        htanno_class = HtannoReorder,
-        position = position,
+    align(
+        align_class = AlignReorder,
         params = list(
             fun = fun,
             fun_params = rlang::list2(...),
             decreasing = decreasing,
             strict = strict
         ),
-        set_context = set_context %||% c(TRUE, FALSE),
+        set_context = set_context,
         name = name, order = NULL,
         check.param = TRUE, data = data
     )
 }
 
-HtannoReorder <- ggplot2::ggproto("HtannoReorder", Align,
-    setup_data = function(self) .subset2(self, "data"),
+AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
+    setup_data = function(self, data, params) data,
     compute = function(self, panels, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
         position <- .subset2(self, "position")

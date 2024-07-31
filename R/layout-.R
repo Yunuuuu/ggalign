@@ -6,11 +6,46 @@
 #' A `Layout` object defines how to place the plots.
 #'
 #' @keywords internal
-methods::setClass("Layout")
+methods::setClass("Layout", list(active = "ANY"),
+    prototype = list(active = NULL)
+)
 
-# ggalign has three main layouts ----------------------------
-# Used to place multiple objects in two axis ----------------
-# Not implemented yet
+#' @export
+print.Layout <- function(x, ...) {
+    p <- ggalign_build(x)
+    print(p, ...)
+}
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.Layout <- function(x, ...) {
+    print(x, ...)
+}
+
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.Layout <- function(plot) {
+    plot <- ggalign_build(plot)
+    ggplot_build(plot)
+}
+
+is.layout <- function(x) methods::is(x, "Layout")
+
+#' Build `Layout` object for rendering.
+#'
+#' @param layout A `Layout` object.
+#' @examples
+#' ggalign_build(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
+#' @export
+#' @return A `patchwork` object.
+ggalign_build <- function(layout) UseMethod("ggalign_build")
+
+#' @export
+ggalign_build.default <- function(layout) {
+    cli::cli_abort("{.arg x} must be a {.cls Layout} object")
+}
+
+# ** Not implemented yet
 #' @keywords internal
 methods::setClass(
     "LayoutGrid",
@@ -18,41 +53,99 @@ methods::setClass(
     list(panel_list = "list", index_list = "list")
 )
 
-# Used to place multiple objects in one axis ----------------
-# usually the heatmap annotations
-#' @keywords internal
-methods::setClass(
-    "LayoutStack",
-    contains = "Layout",
-    list(
-        plots = "list",
-        active = "ANY",
-        direction = "character",
-        panels = "ANY",
-        index = "ANY"
-    )
-)
+# utils function ----------------------------------------
+get_panels <- function(x, ...) UseMethod("get_panels")
 
-# used to create the heatmap layout -------------------------
-#' @keywords internal
-methods::setClass(
-    "LayoutHeatmap",
-    contains = "Layout",
-    list(
-        data = "matrix",
-        plot = "ANY",
-        facetted_pos_scales = "ANY",
-        params = "list",
-        # Used by the layout
-        top = "ANY", left = "ANY",
-        bottom = "ANY", right = "ANY",
-        panel_list = "list", index_list = "list",
-        active = "ANY"
-    ),
-    prototype = list(
-        top = NULL, left = NULL,
-        bottom = NULL, right = NULL,
-        panel_list = NULL, index_list = NULL,
-        active = NULL
+#' @importFrom methods slot
+#' @export
+get_panels.LayoutHeatmap <- function(x, axis, ...) {
+    .subset2(slot(x, "panel_list"), axis)
+}
+
+#' @importFrom methods slot
+#' @export
+get_panels.LayoutStack <- function(x, ...) {
+    slot(x, "panels")
+}
+
+set_panels <- function(x, ...) UseMethod("set_panels")
+
+#' @export
+set_panels.NULL <- function(x, ...) x
+
+#' @export
+set_panels.Align <- function(x, ...) x
+
+#' @importFrom methods slot slot<-
+#' @export
+set_panels.LayoutHeatmap <- function(x, axis, panels, ...) {
+    slot(x, "panel_list")[[axis]] <- panels
+    if (axis == "x") {
+        slot(x, "top") <- set_panels(slot(x, "top"), panels)
+        slot(x, "bottom") <- set_panels(slot(x, "bottom"), panels)
+    } else {
+        slot(x, "left") <- set_panels(slot(x, "left"), panels)
+        slot(x, "right") <- set_panels(slot(x, "right"), panels)
+    }
+    x
+}
+
+#' @importFrom methods slot slot<-
+#' @export
+set_panels.LayoutStack <- function(x, panels, ...) {
+    slot(x, "panels") <- panels
+    axis <- to_coord_axis(slot(x, "direction"))
+    slot(x, "plots") <- lapply(slot(x, "plots"),
+        set_panels,
+        axis = axis, panels = panels
     )
-)
+    x
+}
+
+get_index <- function(x, ...) UseMethod("get_index")
+
+#' @importFrom methods slot
+#' @export
+get_index.LayoutHeatmap <- function(x, axis, ...) {
+    .subset2(slot(x, "index_list"), axis)
+}
+
+#' @importFrom methods slot
+#' @export
+get_index.LayoutStack <- function(x, ...) {
+    slot(x, "index")
+}
+
+set_index <- function(x, ...) UseMethod("set_index")
+
+#' @export
+set_index.NULL <- function(x, ...) x
+
+#' @export
+set_index.Align <- function(x, ...) x
+
+#' @importFrom methods slot slot<-
+#' @export
+set_index.LayoutHeatmap <- function(x, axis, index, ...) {
+    slot(x, "index_list")[[axis]] <- index
+    if (axis == "x") {
+        slot(x, "top") <- set_index(slot(x, "top"), index)
+        slot(x, "bottom") <- set_index(slot(x, "bottom"), index)
+    } else {
+        slot(x, "left") <- set_index(slot(x, "left"), index)
+        slot(x, "right") <- set_index(slot(x, "right"), index)
+    }
+    x
+}
+
+#' @importFrom methods slot slot<-
+#' @export
+set_index.LayoutStack <- function(x, index, ...) {
+    slot(x, "index") <- index
+    axis <- to_coord_axis(slot(x, "direction"))
+    slot(x, "plots") <- lapply(slot(x, "plots"),
+        set_index,
+        axis = axis, index = index
+    )
+    x
+}

@@ -5,8 +5,8 @@
 #' Hierarchical Clustering between groups, only used when previous groups have
 #' been established.
 #' @inheritParams ggdendrogram
-#' @inheritParams htanno
-#' @inherit htanno return
+#' @inheritParams align
+#' @inherit align return
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     heatmap_active("top") +
@@ -25,7 +25,7 @@ align_dendro <- function(mapping = aes(), ...,
                          center = FALSE, type = "rectangle",
                          labels = NULL, labels_nudge = waiver(),
                          size = NULL, data = NULL,
-                         set_context = NULL, order = NULL, name = NULL) {
+                         set_context = TRUE, order = NULL, name = NULL) {
     assert_bool(reorder_group)
     assert_mapping(mapping)
     align(
@@ -46,8 +46,7 @@ align_dendro <- function(mapping = aes(), ...,
 
 #' @importFrom ggplot2 aes theme
 AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
-    setup_params = function(self) {
-        params <- .subset2(self, "params")
+    setup_params = function(self, data, params) {
         call <- .subset2(self, "call")
         assert_number(.subset2(params, "k"),
             null_ok = TRUE, arg = "k",
@@ -63,8 +62,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         )
         params
     },
-    setup_data = function(self) {
-        ans <- as.matrix(.subset2(self, "data"))
+    setup_data = function(self, data, params) {
+        ans <- as.matrix(data)
         assert_(
             ans, function(x) is.numeric(x),
             "numeric",
@@ -86,7 +85,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                 call = .subset2(self, "call")
             )
         }
-        # what if the old panels exist, we do sub-clustering
+        # if the old panels exist, we do sub-clustering
         if (!is.null(panels)) {
             # if the heatmap has established groups,
             # `k` and `h` must be NULL, and we'll do sub-clustering
@@ -94,9 +93,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                 cli::cli_abort(
                     c(
                         paste(
-                            "{.fn {snake_class(self)}} cannot cut tree since ",
-                            "heatmap",
-                            to_matrix_axis(.subset2(self, "position")),
+                            "{.fn {snake_class(self)}} cannot cut tree since",
+                            .subset2(self, "direction"), "direction",
                             "has been splitted"
                         ),
                         i = "{.arg k} and {.arg h} must be `NULL`"
@@ -193,8 +191,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             )) +
             switch_direction(
                 direction,
-                ggplot2::labs(y = "height"),
-                ggplot2::labs(x = "height")
+                ggplot2::labs(x = "height"),
+                ggplot2::labs(y = "height")
             ) +
             ggplot2::theme_bw()
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
@@ -224,7 +222,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         )
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
-        if (to_coord_axis(direction) == "y") {
+        if (is_horizontal(direction)) {
             edge <- rename(
                 edge,
                 c(x = "y", xend = "yend", y = "x", yend = "xend")

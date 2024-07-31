@@ -1,38 +1,32 @@
-#' Group Heatmap rows/columns
-#' @param group A character define the heatmap groups, this will split the
+#' Group rows/columns
+#' @param group A character define the groups, this will split the
 #' heatmap into different panels.
-#' @inheritParams htanno
-#' @inherit htanno return
+#' @inheritParams align
+#' @inherit align return
 #' @examples
 #' small_mat <- matrix(rnorm(81), nrow = 9)
-#' ggheat(small_mat) +
-#'     htanno_group(
-#'         sample(letters[1:4], ncol(small_mat), replace = TRUE),
-#'         position = "top"
-#'     )
+#' ggheatmap(small_mat) +
+#'   hmanno("top") +
+#'   align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 #' @export
-htanno_group <- function(group, set_context = NULL, name = NULL,
-                         position = NULL) {
-    htanno(
-        htanno_class = HtannoGroup,
-        position = position,
+align_group <- function(group, set_context = FALSE, name = NULL) {
+    align(
+        align_class = AlignGroup,
         params = list(group = group),
-        set_context = set_context %||% c(TRUE, FALSE),
+        set_context = set_context,
         name = name, order = NULL,
         check.param = TRUE
     )
 }
 
-HtannoGroup <- ggplot2::ggproto("HtannoGroup", Align,
-    setup_params = function(self) {
-        data <- .subset2(self, "data")
-        params <- .subset2(self, "params")
+AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
+    setup_params = function(self, data, params) {
         if (nrow(data) != length(group <- .subset2(params, "group"))) {
             cli::cli_abort(paste(
                 "{.arg group} of {.fn {snake_class(self)}} must be ",
                 sprintf(
                     "the same length of heatmap %s axis (%d)",
-                    to_matrix_axis(.subset2(self, "position")),
+                    to_matrix_axis(.subset2(self, "direction")),
                     nrow(data)
                 )
             ), call = .subset2(self, "call"))
@@ -41,10 +35,13 @@ HtannoGroup <- ggplot2::ggproto("HtannoGroup", Align,
     },
     layout = function(self, panels, index, group) {
         if (!is.null(panels)) {
-            position <- .subset2(self, position)
+            direction <- .subset2(self, "direction")
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
-                i = "group of heatmap {to_matrix_axis(position)} already exists"
+                i = sprintf(
+                    "group of heatmap %s already exists",
+                    to_matrix_axis(direction)
+                )
             ), call = self$call)
         }
         list(group, index)

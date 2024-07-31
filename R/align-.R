@@ -100,15 +100,22 @@ align <- function(align_class, params,
         NULL,
         align_class,
         isLock = FALSE,
+        # Following fields will be initialzed when added into the layout
+        # and will be saved and accessed across the plot rendering process
         statistics = NULL,
         direction = NULL,
         plot = NULL,
-        data = data,
+        data = NULL,
+        params = NULL,
+
+        # user input -------------------------------
         size = size,
         name = name,
         order = order,
         set_context = set_context,
-        params = params[intersect(names(params), all)], # collect parameters
+        input_data = data,
+        # collect parameters
+        input_params = params[intersect(names(params), all)],
         facetted_pos_scales = NULL,
         # used to control the labels and breaks of
         # the axis parallelly with the heatmap
@@ -136,6 +143,8 @@ plot.Align <- function(x, ...) {
     cli::cli_abort("You cannot plot {.obj_type_friendly x} object directly")
 }
 
+is.align <- function(x) inherits(x, "Align")
+
 #' @section Align:
 #' Each of the `Align*` objects is just a [ggproto()][ggplot2::ggproto] object,
 #' descended from the top-level `Align`, and each implements various
@@ -155,13 +164,11 @@ plot.Align <- function(x, ...) {
 #' @usage NULL
 #' @rdname align
 Align <- ggplot2::ggproto("Align",
-
-    # prepare parameters
     parameters = function(self) {
         c(
             align_method_params(self$compute),
             align_method_params(self$layout),
-            align_method_params(self$ggplot),
+            align_method_params(self$ggplot, character()),
             align_method_params(self$draw),
             self$extra_params
         )
@@ -173,16 +180,13 @@ Align <- ggplot2::ggproto("Align",
         assign("isLock", value = FALSE, envir = self)
     },
 
-    # Most parameters for the `Align` are taken automatically from
-    # `compute()`, `layout()` and `draw()`. However, some additional parameters
-    # may be removed when setup parameters. You should put these paramters here,
+    # Most parameters for the `Align` are taken automatically from `compute()`,
+    # `layout()` and `draw()`. However, some additional parameters may be
+    # removed when in `setup_params`. You should put these paramters here,
     # otherwise, they won't be collected.
     extra_params = character(),
-    setup_params = function(self) .subset2(self, "params"),
-
-    # use `NULL`, if you don't need any data from the heatmap
-    # use `.subset2(self, "data")` if you want to attach the matrix
-    setup_data = function(self) NULL,
+    setup_params = function(data, params) params,
+    setup_data = function(data, params) NULL,
 
     # Following fields should be defined for the new `Align` object.
     # argument name in the function doesn't matter.
@@ -224,8 +228,9 @@ Align <- ggplot2::ggproto("Align",
     #    index, this will be checked in `align_layout` function.
     layout = function(self, panels, index) list(panels, index),
 
-    # initialize the ggplot object, if `NULL`, no plot area will be added.
-    # other ggplot elements will be added for this plot
+    # initialize the ggplot object, if `NULL`, no plot area will be added.  we
+    # must separate this method with draw method, since other ggplot elements
+    # will be added for this plot.
     ggplot = function(self) NULL,
 
     # Following methods will be executed when building plot with the final
@@ -248,6 +253,6 @@ Align <- ggplot2::ggproto("Align",
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
-align_method_params <- function(f, n) {
-    setdiff(names(ggproto_formals(f)), c("self", "panels", "index"))
+align_method_params <- function(f, remove = c("panels", "index")) {
+    setdiff(names(ggproto_formals(f)), c("self", remove))
 }

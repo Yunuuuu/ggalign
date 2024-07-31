@@ -1,18 +1,30 @@
 #' object is an environment, it won't be copied, and will modify in place
 #' @noRd
-initialize_htanno <- function(object, heatmap, object_name) {
-    object <- initialize_htanno_data(object, heatmap, object_name)
-    initialize_htanno_layout(object, heatmap, object_name)
+initialize_align <- function(object, direction,
+                             layout_data,
+                             layout_labels, layout_nudge,
+                             layout_panels, layout_index,
+                             object_name) {
+    object$direction <- direction
+    object <- initialize_align_params(
+        object, direction, layout_data,
+        layout_labels, layout_nudge, object_name
+    )
+    initialize_align_layout(
+        object, direction, layout_panels, layout_index, object_name
+    )
 }
 
-initialize_htanno_data <- function(object, heatmap, object_name) {
-    position <- .subset2(object, "position")
-    axis <- to_matrix_axis(position)
+initialize_align_params <- function(object, direction,
+                                    layout_data,
+                                    layout_labels, layout_nudge,
+                                    object_name) {
+    axis <- to_coord_axis(direction)
+
     # prepare data -------------------------------
-    data <- htanno_setup_data(
-        .subset2(object, "data"),
-        position = position,
-        heatmap_matrix = slot(heatmap, "matrix"),
+    data <- align_setup_data(
+        .subset2(object, "input_data"),
+        layout_data,
         object_name = object_name,
         call = .subset2(object, "call")
     )
@@ -21,68 +33,48 @@ initialize_htanno_data <- function(object, heatmap, object_name) {
     # setup labels and labels nudge --------------
     labels <- set_labels(
         .subset2(object, "labels"),
+        rownames(data) %||% layout_labels,
         axis,
-        rownames(data),
-        nrow(data),
         arg = "labels",
         call = .subset2(object, "call")
     )
     object$labels <- labels
 
-    # if waiver, will inherit from the heatmap if labels exist
-    labels_nudge <- .subset2(object, "labels_nudge")
-    if (is.numeric(labels_nudge)) {
-        if (!is_scalar(labels_nudge) && length(labels_nudge) != nrow(data)) {
-            cli::cli_abort(paste(
-                "{.arg labels_nudge} must be of length 1 or",
-                "the same length of heatmap {axis}"
-            ), call = .subset2(object, "call"))
-        }
-        labels_nudge <- rep_len(labels_nudge, nrow(data))
-    } else if (is.waiver(labels_nudge)) {
-        if (is.null(labels)) {
-            labels_nudge <- NULL
-        } else {
-            labels_nudge <- .subset2(
-                slot(heatmap, "params"),
-                paste0(axis, "labels_nudge")
-            )
-        }
-    } else if (!is.null(labels_nudge)) {
-        cli::cli_abort(
-            "{.arg labels_nudge} must be `waiver()`, `NULL` or a numeric",
-            call = .subset2(object, "call")
-        )
-    }
-    object$labels_nudge <- labels_nudge
+    # if waiver, will inherit from the layout if labels exist
+    object$labels_nudge <- set_nudge(
+        .subset2(object, "labels_nudge"),
+        n = nrow(data),
+        labels = labels,
+        default = layout_nudge,
+        axis = axis,
+        arg = "labels_nudge",
+        call = .subset2(object, "call")
+    )
     object
 }
 
-initialize_htanno_layout <- function(object, heatmap, object_name) {
-    axis <- to_matrix_axis(.subset2(object, "position"))
+initialize_align_layout <- function(object, direction,
+                                    layout_panels, layout_index,
+                                    object_name) {
+    axis <- to_coord_axis(direction)
 
     # prepare and check parameters ----------------------
     call <- .subset2(object, "call")
-    params <- object$setup_params()
+    data <- .subset2(object, "data")
+    n <- nrow(data) # number of observations
+    params <- .subset2(object, "input_params")
+    params <- object$setup_params(data, params)
     object$params <- params
 
-    # rows are observations, this data came from `htanno_setup_data`, which can
-    # be used to check the axis dimention
-    data <- .subset2(object, "data")
-
     # set up data --------------------------------------
-    object$data <- object$setup_data()
-
-    # prepare old layout --------------------------------
-    old_panels <- slot(heatmap, paste0(axis, "_panels"))
-    old_index <- slot(heatmap, paste0(axis, "_index"))
+    object$data <- object$setup_data(data, params)
 
     # compute statistics ---------------------------------
     compute_params <- params[
         intersect(names(params), align_method_params(object$compute))
     ]
     object$statistics <- rlang::inject(
-        object$compute(old_panels, old_index, !!!compute_params)
+        object$compute(layout_panels, layout_index, !!!compute_params)
     )
 
     # make the new layout -------------------------------
@@ -90,7 +82,7 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
         intersect(names(params), align_method_params(object$layout))
     ]
     layout <- rlang::inject(
-        object$layout(old_panels, old_index, !!!layout_params)
+        object$layout(layout_panels, layout_index, !!!layout_params)
     )
 
     new_panels <- .subset2(layout, 1L)
@@ -108,11 +100,11 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
                 ),
                 call = call
             )
-        } else if (length(new_panels) != nrow(data)) {
+        } else if (length(new_panels) != n) {
             cli::cli_abort(
                 paste(
                     "{.fn layout} panels of {.fn {snake_class(object)}}",
-                    "is not compatible with heatmap {axis}"
+                    "is not compatible with {axis}-axis"
                 ),
                 call = call
             )
@@ -139,11 +131,11 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
                 ),
                 call = call
             )
-        } else if (length(new_index) != nrow(data)) {
+        } else if (length(new_index) != n) {
             cli::cli_abort(
                 paste(
                     "layout index of {.fn {snake_class(object)}}",
-                    "is not compatible with heatmap {axis}"
+                    "is not compatible with {axis}-axis"
                 ),
                 call = call
             )
@@ -157,8 +149,8 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
 
     # we always prevent from reordering heatmap twice.
     # in this way, htanno even cannot make groups after creating heatmap order
-    if (!is.null(old_index)) {
-        if (!all(old_index == new_index)) {
+    if (!is.null(layout_index)) {
+        if (!all(layout_index == new_index)) {
             cli::cli_abort(sprintf(
                 "{.fn {snake_class(object)}} disrupt the previously %s %s",
                 "established order of the heatmap",
@@ -170,12 +162,20 @@ initialize_htanno_layout <- function(object, heatmap, object_name) {
     # in the finally, Let us initialize the annotation plot -----
     # must return a ggplot object
     ggplot_params <- params[
-        intersect(names(params), align_method_params(object$ggplot))
+        intersect(
+            names(params),
+            align_method_params(object$ggplot, character())
+        )
     ]
     p <- rlang::inject(object$ggplot(!!!ggplot_params))
     # set the default theme for all annotation
     if (ggplot2::is.ggplot(p)) {
-        p <- p + theme(
+        # remove the title of axis parallelly with layout
+        p <- p + switch_direction(
+            direction,
+            theme(axis.title.y = element_blank()),
+            theme(axis.title.x = element_blank())
+        ) + theme(
             plot.background = element_blank(),
             panel.border = element_blank(),
             strip.text = element_blank(),
@@ -195,43 +195,30 @@ reorder_index <- function(panels, index = NULL, reverse = FALSE) {
 
 ####################################################################
 #' @keywords internal
-htanno_setup_data <- function(data, position, heatmap_matrix,
-                              object_name, call) {
-    UseMethod("htanno_setup_data")
+align_setup_data <- function(data, layout_data, object_name, call) {
+    UseMethod("align_setup_data")
 }
 
 #' @export
-htanno_setup_data.data.frame <- function(data, position, heatmap_matrix,
-                                         object_name, call) {
-    anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
-    if (nrow(anno_matrix) != NROW(data)) {
-        cli::cli_abort(msg_anno_incompatible_data(object_name), call = call)
+align_setup_data.data.frame <- function(data, layout_data, object_name, call) {
+    if (nrow(layout_data) != NROW(data)) {
+        cli::cli_abort(msg_align_incompatible_data(object_name), call = call)
     }
     data
 }
 
 #' @export
-htanno_setup_data.matrix <- function(data, position, heatmap_matrix,
-                                     object_name, call) {
-    anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
-    if (nrow(anno_matrix) != NROW(data)) {
-        cli::cli_abort(msg_anno_incompatible_data(object_name), call = call)
-    }
-    data
+align_setup_data.matrix <- align_setup_data.data.frame
+
+#' @export
+align_setup_data.NULL <- function(data, layout_data, object_name, call) {
+    layout_data
 }
 
 #' @export
-htanno_setup_data.NULL <- function(data, position, heatmap_matrix,
-                                   object_name, call) {
-    anno_data_from_heatmap(position, heatmap_matrix)
-}
-
-#' @export
-htanno_setup_data.numeric <- function(data, position, heatmap_matrix,
-                                      object_name, call) {
-    anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
-    if (nrow(anno_matrix) != NROW(data)) {
-        cli::cli_abort(msg_anno_incompatible_data(object_name), call = call)
+align_setup_data.numeric <- function(data, layout_data, object_name, call) {
+    if (nrow(layout_data) != NROW(data)) {
+        cli::cli_abort(msg_align_incompatible_data(object_name), call = call)
     }
     ans <- matrix(data, ncol = 1L)
     colnames(ans) <- "V1"
@@ -240,24 +227,18 @@ htanno_setup_data.numeric <- function(data, position, heatmap_matrix,
 }
 
 #' @export
-htanno_setup_data.character <- htanno_setup_data.numeric
+align_setup_data.character <- align_setup_data.numeric
 
 #' @export
-htanno_setup_data.function <- function(data, position, heatmap_matrix,
-                                       object_name, call) {
-    anno_matrix <- anno_data_from_heatmap(position, heatmap_matrix)
-    fn <- data
+align_setup_data.function <- function(data, layout_data, object_name, call) {
     # fix R CMD check note: Found the following calls to data() loading into the
     # global environment
-    data <- fn(anno_matrix)
-    htanno_setup_data(data, position, heatmap_matrix, object_name, call = call)
+    fn <- data
+    data <- fn(layout_data)
+    align_setup_data(data, layout_data, object_name, call)
 }
 
-anno_data_from_heatmap <- function(position, heatmap_matrix) {
-    switch_position(position, heatmap_matrix, t(heatmap_matrix))
-}
-
-msg_anno_incompatible_data <- function(object_name) {
+msg_align_incompatible_data <- function(object_name) {
     sprintf(
         "%s from %s must have %s",
         style_arg("data"), object_name,

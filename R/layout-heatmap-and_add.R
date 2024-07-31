@@ -46,16 +46,18 @@ layout_heatmap_and_add.default <- function(object, heatmap, object_name) {
 layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
     heatmap <- heatmap_add(object, heatmap, object_name)
     for (position in GGHEAT_ELEMENTS) {
-        annotations <- slot(heatmap, position)
-        if (is.null(annotations)) next
-        context <- get_context(annotations)
-        annotations <- lapply(annotations, function(annotation) {
-            if (is.null(.subset2(annotation, "plot"))) {
-                return(annotation)
+        stack <- slot(heatmap, position)
+        if (is.null(stack)) next
+        slot(stack, "plots") <- lapply(
+            slot(stack, "plots"),
+            function(annotation) {
+                if (is.null(.subset2(annotation, "plot"))) {
+                    return(annotation)
+                }
+                align_add(object, annotation, object_name)
             }
-            align_add(object, annotation, object_name)
-        })
-        slot(heatmap, position) <- new_annotations(annotations, context)
+        )
+        slot(heatmap, position) <- stack
     }
     heatmap
 }

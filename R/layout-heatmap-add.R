@@ -1,22 +1,23 @@
-#' Add components to `ggheatmap`
+#' Add components to `LayoutHeatmap`
 #'
-#' @param e1 A [ggheatmap][ggheat] object.
+#' @param e1 A [LayoutHeatmap][layout_heatmap] object.
 #' @param e2 An object to be added to the plot, including
 #' [gg][ggplot2::+.gg] elements, [gganno][gganno] object, or [htanno]
 #' object.
-#' @return A modified `ggheatmap` object.
+#' @return A modified `LayoutHeatmap` object.
 #' @examples
-#' ggheat(matrix(rnorm(81), nrow = 9)) +
-#'     gganno(position = "top") +
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("t") +
+#'     gganno() +
 #'     geom_point(aes(y = value))
-#' @name ggheatmap-add
-#' @aliases +.ggheatmap
-#' @seealso ggheatmap_add
+#' @name heatmap-add
+#' @aliases +.heatmap
+#' @seealso layout_heatmap_add
 NULL
 
-#' @rdname ggheatmap-add
+#' @rdname heatmap-add
 #' @export
-methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
+methods::setMethod("+", c("LayoutHeatmap", "ANY"), function(e1, e2) {
     if (missing(e2)) {
         cli::cli_abort(c(
             "Cannot use {.code +} with a single argument.",
@@ -29,19 +30,19 @@ methods::setMethod("+", c("ggheatmap", "ANY"), function(e1, e2) {
     layout_heatmap_add(e2, e1, e2name)
 })
 
-#' Add custom objects to `ggheatmap`
+#' Add custom objects to `LayoutHeatmap`
 #'
-#' @param heatmap A `ggheatmap` object
+#' @param heatmap A `LayoutHeatmap` object
 #' @inheritParams ggplot2::ggplot_add
-#' @inherit ggheatmap-add return
+#' @inherit heatmap-add return
 #' @examples
 #' layout_heatmap_add(
 #'     geom_point(aes(y = value)),
-#'     ggheat(matrix(rnorm(81), nrow = 9)),
-#'     deparse(quote(geom_point(aes(y = value))))
+#'     ggheatmap(matrix(rnorm(81), nrow = 9))
 #' )
 #' @export
-layout_heatmap_add <- function(object, heatmap, object_name) {
+layout_heatmap_add <- function(object, heatmap,
+                               object_name = deparse(substitute(object))) {
     UseMethod("layout_heatmap_add")
 }
 
@@ -56,33 +57,57 @@ layout_heatmap_add.NULL <- function(object, heatmap, object_name) heatmap
 #' @export
 layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
-        cli::cli_abort(c("No active annotation",
-            i = "try to activate an annotation with {.fn active}"
+        cli::cli_abort(c("No active heatmap annotation",
+            i = "try to activate an annotation with {.fn hmanno}"
         ), call = .subset2(object, "call"))
     }
-    object$direction <- switch_position(position, "vertical", "horizontal")
-
-    # initialize annotation -----------------------------
-    # this step the annotation will act with the heatmap
-    # group heatmap into panels or reorder heatmap rows/columns
-    layout <- initialize_htanno(object, heatmap, object_name)
-    axis <- to_matrix_axis(position)
-    slot(heatmap, paste0(axis, "_panels")) <- .subset2(layout, 1L)
-    slot(heatmap, paste0(axis, "_index")) <- .subset2(layout, 2L)
+    direction <- to_direction(position)
+    # we'll always override the direction of `Align` object when adding it into
+    # a layout object.
+    object$direction <- direction
 
     # add annotation -----------------------------
-    annotations <- slot(heatmap, position) %||% new_annotations(list(), NULL)
-    slot(heatmap, position) <- annotations_add(object, annotations, object_name)
+    stack <- layout_stack_add(object, slot(heatmap, position), object_name)
+    slot(heatmap, position) <- stack
+
+    # set the panels and index for the heatmap
+    axis <- to_coord_axis(direction)
+    heatmap <- set_panels(heatmap, axis, get_panels(stack))
+    get_panels(heatmap, axis)
+    heatmap <- set_index(heatmap, axis, get_index(stack))
     heatmap
 }
 
 #' @export
-layout_heatmap_add.active <- function(object, heatmap, object_name) {
-    if (object == "heatmap") {
-        set_context(heatmap, NULL)
-    } else {
-        set_context(heatmap, object)
+layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
+    size <- attr(object, "size")
+    if (is.na(object)) object <- get_context(heatmap) %||% "plot"
+    if (object == "plot") {
+        return(set_context(heatmap, NULL))
     }
+    heatmap <- set_context(heatmap, object)
+    # initialize the annotation stack ------------
+    if (is.null(stack <- slot(heatmap, object))) {
+        direction <- to_direction(object)
+        axis <- to_coord_axis(direction)
+        params <- slot(heatmap, "params")
+        stack <- layout_stack(
+            switch_direction(
+                direction,
+                slot(heatmap, "data"),
+                t(slot(heatmap, "data"))
+            ),
+            direction = direction,
+            labels = .subset2(params, paste0(axis, "labels")),
+            labels_nudge = .subset2(params, paste0(axis, "labels_nudge")),
+            guides = NULL
+        )
+        stack <- set_panels(stack, get_panels(heatmap, axis))
+        stack <- set_index(stack, get_index(heatmap, axis))
+    }
+    if (!is.null(size)) slot(stack, "size") <- size
+    slot(heatmap, object) <- stack
+    heatmap
 }
 
 #' @export
@@ -101,17 +126,11 @@ layout_heatmap_add.gg <- function(object, heatmap, object_name) {
     # if no active context, we directly add it into the main heatmap
     if (is.null(position <- get_context(heatmap))) {
         heatmap <- heatmap_add(object, heatmap, object_name)
-        # we check if annotation has been initialized
-    } else if (is.null(annotations <- slot(heatmap, position)) ||
-        is.null(active_anno <- get_context(annotations))) {
-        cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to {position} annotation",
-            i = "Did you forget to initialize it with {.fn gganno_{position}}?"
-        ))
     } else {
-        anno <- .subset2(annotations, active_anno)
-        annotations[[active_anno]] <- align_add(object, anno, object_name)
-        slot(heatmap, position) <- annotations
+        slot(heatmap, position) <- layout_stack_add_gg(
+            object, slot(heatmap, position), object_name,
+            sprintf("%s annotation", position)
+        )
     }
     heatmap
 }

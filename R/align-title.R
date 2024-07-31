@@ -3,35 +3,34 @@
 #' of heatmap rows/columns panels.
 #' @param ... Additional arguments passed to [geom_text][ggplot2::geom_text].
 #' @inheritParams ggplot2::ggplot
-#' @inheritParams htanno
-#' @inherit htanno return
+#' @inheritParams align
+#' @inherit align return
 #' @examples
 #' small_mat <- matrix(rnorm(81), nrow = 9)
-#' ggheat(small_mat) +
-#'     htanno_group(
-#'         sample(letters[1:4], ncol(small_mat), replace = TRUE),
-#'         position = "top"
+#' ggheatmap(small_mat) +
+#'     heatmap_active("top") +
+#'     align_group(
+#'         sample(letters[1:4], ncol(small_mat), replace = TRUE)
 #'     ) +
-#'     htanno_title()
+#'     align_title()
 #' @export
-htanno_title <- function(titles = NULL, ..., mapping = aes(),
-                         size = unit(1, "cm"),
-                         set_context = TRUE, order = NULL, name = NULL,
-                         position = NULL) {
+align_title <- function(titles = NULL, ..., mapping = aes(),
+                        size = unit(1, "cm"),
+                        set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
-    htanno(HtannoTitle,
+    align(AlignTitle,
         params = list(
             mapping = mapping, titles = titles,
             text_params = rlang::list2(...)
         ),
         labels = NULL, labels_nudge = NULL,
-        position = position, size = size, data = NULL,
+        size = size, data = NULL,
         set_context = set_context,
         order = order, name = name
     )
 }
 
-HtannoTitle <- ggplot2::ggproto("HtannoTitle", Align,
+AlignTitle <- ggplot2::ggproto("AlignTitle", Align,
     ggplot = function(self, mapping, text_params) {
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_text(!!!text_params)) +

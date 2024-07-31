@@ -1,104 +1,192 @@
-#' @importFrom rlang is_empty
-annotations_build <- function(annotations, panels, index, scales,
-                              facet, position) {
-    scale_name <- to_coord_axis(position)
-    plots <- lapply(annotations, function(x) {
-        # we merge anno `labels` and `labels_nudge`
-        # we also extract the expand from the heatmap
-        default_scales <- ggheat_default_scale(
-            scale_name = scale_name, panels = panels, index = index,
-            labels = .subset2(x, "labels"),
-            nudge = .subset2(x, "labels_nudge"),
-            expand = lapply(scales, function(scale) .subset2(scale, "expand"))
-        )
-        htanno_build(
-            htanno = x,
-            panels = panels,
-            index = index,
-            scales = default_scales,
-            facet = facet
-        )
-    })
-
-    # we reorder annotation based on the `order` slot
-    index <- order(vapply(annotations, .subset2, integer(1L), name = "order"))
-    plots <- .subset(plots, index)
-
-    # combine all annotations
-    keep <- lengths(plots) > 0L
-    plots <- .subset(plots, keep)
-    if (is_empty(plots)) return(list(NULL, NULL)) # styler: off
-
-    sizes <- lapply(.subset(annotations, index), .subset2, name = "size")
-    sizes <- do.call(unit.c, sizes)
-    sizes <- sizes[keep]
-    list(plots, sizes)
-}
-
-##################################################################
 #' @importFrom ggplot2 theme element_blank
-htanno_build <- function(htanno, panels, index, scales, facet) {
-    if (is.null(.subset2(htanno, "plot"))) return(NULL) # styler: off
-    htanno$lock()
-    on.exit(htanno$unlock())
-    # let `htanno` to determine how to draw
+#' @export
+align_build <- function(x, panels, index) {
+    ans <- list(size = .subset2(x, "size"))
+    if (is.null(.subset2(x, "plot"))) {
+        return(c(list(plot = NULL), ans))
+    }
+    direction <- .subset2(x, "direction")
+    # set up default scale and facet
+    if (nlevels(panels) > 1L) {
+        default_facet <- switch_direction(
+            direction,
+            ggplot2::facet_grid(
+                rows = ggplot2::vars(fct_rev(.data$.panel)),
+                scales = "free_y", space = "free_y"
+            ),
+            ggplot2::facet_grid(
+                cols = ggplot2::vars(.data$.panel),
+                scales = "free_x", space = "free_x"
+            )
+        )
+    } else {
+        # No facet
+        default_facet <- NULL
+    }
+    # we merge `labels` and `labels_nudge`
+    default_scales <- set_default_scales(
+        scale_name = to_coord_axis(direction),
+        panels = panels,
+        index = index,
+        labels = .subset2(x, "labels"),
+        nudge = .subset2(x, "labels_nudge")
+    )
+    x$lock()
+    on.exit(x$unlock())
+    # let `align` to determine how to draw
     # 1. add default layer
     # 2. add plot data
-    params <- .subset2(htanno, "params")
+    params <- .subset2(x, "params")
     draw_params <- params[
-        intersect(names(params), align_method_params(htanno$draw))
+        intersect(names(params), align_method_params(x$draw))
     ]
-    ans <- rlang::inject(htanno$draw(panels, index, !!!draw_params))
-    # remove the title of axis parallelly with heatmap
-    ans <- ans + switch_position(
-        .subset2(htanno, "position"),
-        theme(axis.title.y = element_blank()),
-        theme(axis.title.x = element_blank())
+    plot <- rlang::inject(x$draw(panels, index, !!!draw_params))
+
+    # in the finally, we ensure the scale limits is the same across all plots
+    plot <- align_set_scales_and_facet(
+        plot = plot, direction,
+        .subset2(x, "facetted_pos_scales"),
+        default_scales, default_facet
     )
-    # in the finally, we ensure the scale limits is the same with heatmap
-    htanno_set_scales_and_facet(
-        plot = ans,
-        .subset2(htanno, "facetted_pos_scales"),
-        .subset2(htanno, "position"),
-        scales, facet
-    )
+    c(list(plot = plot), ans)
 }
 
-add_default_mapping <- function(plot, default_mapping) {
-    mapping <- .subset2(plot, "mapping")
-    for (nm in names(mapping)) {
-        default_mapping[[nm]] <- .subset2(mapping, nm)
-    }
-    plot$mapping <- default_mapping
-    plot
-}
-
-htanno_set_scales_and_facet <- function(plot, facetted_pos_scales,
-                                        position, default_scales,
-                                        default_facet) {
-    axis <- to_coord_axis(position)
-    user_scales <- ggheat_extract_scales(
-        axis,
-        plot = plot, n = length(default_scales),
+align_set_scales_and_facet <- function(plot, direction,
+                                       facetted_pos_scales,
+                                       default_scales,
+                                       default_facet) {
+    user_scales <- extract_scales(
+        plot = plot, to_coord_axis(direction),
+        n_panels = length(default_scales),
         facet_scales = facetted_pos_scales
     )
     for (i in seq_along(default_scales)) {
-        user_scales[[i]] <- ggheat_melt_scale(
+        user_scales[[i]] <- melt_scale(
             .subset2(user_scales, i),
-            .subset2(default_scales, i),
-            set_expand = TRUE
+            .subset2(default_scales, i)
         )
     }
-    user_facet <- ggheat_melt_facet(.subset2(plot, "facet"), default_facet)
+    user_facet <- melt_facet(.subset2(plot, "facet"), default_facet)
     if (is.null(default_facet)) { # no panels
+        user_scales[[1L]]$aesthetics
         plot <- plot + user_scales + user_facet
     } else {
         plot <- plot + user_facet +
-            switch_position(
-                position,
+            switch_direction(
+                direction,
                 ggh4x::facetted_pos_scales(y = user_scales),
                 ggh4x::facetted_pos_scales(x = user_scales)
             )
     }
     plot
+}
+
+melt_scale <- function(user_scale, default_scale) {
+    if (is.null(user_scale)) {
+        ans <- default_scale$clone()
+    } else {
+        ans <- user_scale$clone()
+        # always reset the limits
+        ans$limits <- default_scale$limits
+
+        # it's not possible for user to know the `breaks` or `labels`
+        # since we'll reorder the observations.
+        # so we always set the breaks or labels into the default if user not
+        # remove it.
+        if (!is.null(ans$breaks)) {
+            ans$breaks <- default_scale$breaks
+        }
+
+        if (!is.null(ans$labels)) {
+            ans$labels <- default_scale$labels
+        }
+
+        # if user provides expand, we'll use it, otherwise, use the default
+        if (is.waiver(ans$expand)) {
+            ans$expand <- default_scale$expand
+        }
+    }
+    ans
+}
+
+#' @return A list of scales for each panel
+#' @noRd
+set_default_scales <- function(scale_name, panels, index, labels, nudge,
+                               expand = ggplot2::expansion()) {
+    if (is.numeric(nudge)) {
+        nudge <- nudge[index]
+    } else if (is.waiver(nudge)) {
+        nudge <- rep_len(0, length(index))
+    }
+    panels <- panels[index]
+    # For y-axis, ggplot arrange panels from top to bottom,
+    # we always choose to reverse the panel order
+    if (scale_name == "y") panels <- fct_rev(panels)
+    labels <- labels[index]
+    fn <- switch(scale_name,
+        x = ggplot2::scale_x_continuous,
+        y = ggplot2::scale_y_continuous
+    )
+    data <- split(seq_along(index), panels)
+    if (!is.list(expand)) expand <- rep_len(list(expand), length(data))
+    .mapply(function(x, expand) {
+        if (is.null(nudge)) {
+            breaks <- NULL
+            labels <- NULL # if breaks is `NULL`, `labels` cannot be set
+        } else {
+            breaks <- x + nudge[x]
+            labels <- labels[x]
+        }
+        fn(
+            limits = range(x) + c(-0.5, 0.5),
+            breaks = breaks,
+            labels = labels,
+            expand = expand
+        )
+    }, list(x = data, expand = expand), NULL)
+}
+
+#' @importFrom rlang is_empty
+extract_scales <- function(plot, axis, n_panels, facet_scales) {
+    # if no facets, or if no facet scales
+    if (n_panels > 1L && !is.null(facet_scales) &&
+        !is_empty(ans <- .subset2(facet_scales, axis))) {
+        # we don't allow the usage of formula in ggalign package
+        if (rlang::is_formula(.subset2(ans, 1L))) {
+            cli::cli_warn(paste(
+                "{.fn facetted_pos_scales} formula is not supported in",
+                "{.pkg ggalign}"
+            ))
+            ans <- rep_len(list(plot$scales$get_scales(axis)), n_panels)
+        }
+    } else {
+        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panels)
+    }
+    ans
+}
+
+melt_facet <- function(user_facet, default_facet) {
+    if (is.null(default_facet)) { # no panels
+        # we only support `FacetNull` if there have no panels
+        if (inherits(user_facet, "FacetNull")) return(user_facet) # styler: off
+        return(ggplot2::facet_null())
+    }
+    # we only support `FacetGrid` if there have multiple panels
+    if (!inherits(user_facet, "FacetGrid")) return(default_facet) # styler: off
+
+    # will change the user input, so we must use `ggproto_clone`
+    user_facet <- ggproto_clone(user_facet)
+    # we always fix the grid rows and cols
+    user_facet$params$rows <- default_facet$params$rows
+    user_facet$params$cols <- default_facet$params$cols
+    # if the default is free, it must be free
+    user_facet$params$free$x <- user_facet$params$free$x ||
+        default_facet$params$free$x
+    user_facet$params$space_free$x <- user_facet$params$space_free$x ||
+        default_facet$params$space_free$x
+    user_facet$params$free$y <- user_facet$params$free$y ||
+        default_facet$params$free$y
+    user_facet$params$space_free$y <- user_facet$params$space_free$x ||
+        default_facet$params$space_free$y
+    user_facet
 }

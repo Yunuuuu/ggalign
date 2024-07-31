@@ -28,8 +28,8 @@ align_kmeans <- function(centers, iter.max = 10, nstart = 1,
 }
 
 AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
-    setup_data = function(self) {
-        ans <- as.matrix(.subset2(self, "data"))
+    setup_data = function(self, data, params) {
+        ans <- as.matrix(data)
         assert_(
             ans, is.numeric, "a numeric matrix",
             arg = "data", call = .subset2(self, "call")
@@ -43,10 +43,13 @@ AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
     },
     layout = function(self, panels, index) {
         if (!is.null(panels)) {
-            position <- .subset2(self, "position")
+            direction <- .subset2(self, "direction")
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
-                i = "group of heatmap {to_matrix_axis(position)} already exists"
+                i = sprintf(
+                    "group of heatmap %s already exists",
+                    to_matrix_axis(direction)
+                )
             ), call = self$call)
         }
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
