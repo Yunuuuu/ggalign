@@ -37,23 +37,6 @@ layout_stack_add <- function(object, stack, object_name) {
 #' @importFrom methods slot slot<-
 #' @export
 layout_stack_add.Align <- function(object, stack, object_name) {
-    # make layout ----------------------------------------
-    # this step the object will act with the stack layout
-    # group rows into panels or reorder rows
-    params <- slot(stack, "params")
-    layout <- initialize_align(
-        object,
-        slot(stack, "direction"),
-        layout_data = slot(stack, "data"),
-        layout_labels = .subset2(params, "labels"),
-        layout_nudge = .subset2(params, "labels_nudge"),
-        layout_panels = get_panels(stack),
-        layout_index = get_index(stack)
-    )
-    stack <- set_panels(stack, .subset2(layout, 1L))
-    stack <- set_index(stack, .subset2(layout, 2L))
-
-    # add annotation -------------------------------------
     new <- list(object)
     plots <- slot(stack, "plots")
 
@@ -70,19 +53,80 @@ layout_stack_add.Align <- function(object, stack, object_name) {
     } else {
         active_index <- get_context(stack)
     }
+
+    # make layout ----------------------------------------
+    # this step the object will act with the stack layout
+    # group rows into panels or reorder rows
+    params <- slot(stack, "params")
+    layout <- initialize_align(
+        object,
+        slot(stack, "direction"),
+        layout_data = slot(stack, "data"),
+        layout_labels = .subset2(params, "labels"),
+        layout_nudge = .subset2(params, "labels_nudge"),
+        layout_panels = get_panels(stack),
+        layout_index = get_index(stack)
+    )
+
+    # add annotation -------------------------------------
     slot(stack, "plots") <- c(plots, new)
     slot(stack, "active") <- active_index
+
+    # set the layout -------------------------------------
+    stack <- set_panels(stack, .subset2(layout, 1L))
+    stack <- set_index(stack, .subset2(layout, 2L))
     stack
 }
 
-layout_stack_add.gg <- function(object, stack, object_name) {
-    layout_stack_add_gg(object, stack, object_name, "the stack layout")
+#' @importFrom methods slot
+#' @export
+layout_stack_add.LayoutHeatmap <- function(object, stack, object_name) {
+    axis <- to_coord_axis(slot(stack, "direction"))
+
+    heatmap_panels <- get_panels(object, axis)
+    stack_panels <- get_panels(stack)
+    if (is.null(heatmap_panels)) {
+        panels <- stack_panels
+    } else if (is.null(stack_panels)) {
+        panels <- heatmap_panels
+    } else if (!identical(heatmap_panels, stack_panels)) {
+        cli::cli_abort(paste(
+            "{.code {object_name}} disrupt the previously",
+            "established layout panels of the stack"
+        ))
+    } else {
+        panels <- stack_panels
+    }
+    heatmap_index <- get_index(object, axis)
+    stack_index <- get_index(stack)
+    if (is.null(heatmap_index)) {
+        index <- stack_index
+    } else if (is.null(stack_index)) {
+        index <- heatmap_index
+    } else if (!identical(heatmap_index, stack_index)) {
+        cli::cli_abort(paste(
+            "{.code {object_name}} disrupt the previously",
+            "established layout index of the stack"
+        ))
+    } else {
+        index <- stack_index
+    }
+
+    # add annotation -------------------------------------
+    # we won't change the active context for heatmap
+    slot(stack, "plots") <- c(slot(stack, "plots"), list(object))
+
+    # set the layout -------------------------------------
+    stack <- set_panels(stack, panels)
+    stack <- set_index(stack, index)
+    stack
 }
 
-layout_stack_add_gg <- function(object, stack, object_name, name) {
+stack_add_ggelement <- function(object, stack, object_name, name) {
     if (is.null(active_plot <- get_context(stack))) {
         cli::cli_abort(c(
             sprintf("Cannot add {.code {object_name}} to %s", name),
+            i = "No active {.cls ggplot} object",
             i = paste(
                 "Did you forget to initialize a {.cls ggplot} object",
                 "with {.fn align_*}?"
@@ -97,6 +141,27 @@ layout_stack_add_gg <- function(object, stack, object_name, name) {
     }
     slot(stack, "plots")[[active_plot]] <- plot
     stack
+}
+
+# Not used currently
+stack_add_heatmap_element <- function(object, stack, object_name) {
+    if (is.null(active_plot <- get_context(stack)) ||
+        !is.ggheatmap(plot <- slot(stack, "plots")[[active_plot]])) {
+        cli::cli_abort(c(
+            "Cannot add {.code {object_name}}",
+            i = "No active {.cls LayoutHeatmap} object",
+            i = "Did you forget to add a {.fn layout_heatmap}?"
+        ))
+    }
+    plot <- layout_heatmap_add(object, plot, object_name)
+    slot(stack, "plots")[[active_plot]] <- plot
+    # we should also set up the layout for the stack
+    stack
+}
+
+#' @export
+layout_stack_add.gg <- function(object, stack, object_name) {
+    stack_add_ggelement(object, stack, object_name, "the stack layout")
 }
 
 #' @export

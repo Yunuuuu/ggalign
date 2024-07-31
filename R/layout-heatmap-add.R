@@ -73,7 +73,6 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     # set the panels and index for the heatmap
     axis <- to_coord_axis(direction)
     heatmap <- set_panels(heatmap, axis, get_panels(stack))
-    get_panels(heatmap, axis)
     heatmap <- set_index(heatmap, axis, get_index(stack))
     heatmap
 }
@@ -127,7 +126,7 @@ layout_heatmap_add.gg <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
         heatmap <- heatmap_add(object, heatmap, object_name)
     } else {
-        slot(heatmap, position) <- layout_stack_add_gg(
+        slot(heatmap, position) <- stack_add_ggelement(
             object, slot(heatmap, position), object_name,
             sprintf("%s annotation", position)
         )

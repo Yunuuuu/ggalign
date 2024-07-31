@@ -2,40 +2,26 @@
 % Please edit documentation in R/activate.R
 \name{hmanno}
 \alias{hmanno}
-\alias{active}
 \title{Determine the context of subsequent manipulations}
 \usage{
 hmanno(what, size = NULL)
-
-active(what)
 }
 \arguments{
-\item{what}{What should get activated?
-\itemize{
-\item \code{hmanno}: Possible values are follows:
+\item{what}{What should get activated? Possible values are follows:
 \itemize{
 \item A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \item \code{NULL}: means set the active context into the \code{heatmap} itself.
-\item \code{missing} or \code{NA}: don't change the context, but set the size of the
-current active context.
-}
-\item \code{active}:
+\item \code{missing} or \code{NA}: don't change the context, but set the size of current
+active context.
 }}
 
 \item{size}{A \link[grid:unit]{unit} object to set the size of the heatmap
-annotation. Only be used if \code{what} is a string of \code{"top"}, \code{"left"},
-\code{"bottom"}, or \code{"right"}.}
+annotation. This will only be used if \code{what} is a string of \code{"top"},
+\code{"left"}, \code{"bottom"}, or \code{"right"}.}
 }
 \value{
-\itemize{
-\item \code{hmanno}: A \code{active} object which can be added into
+A \code{active} object which can be added into
 \link[=layout_heatmap]{LayoutHeatmap}.
-}
-
-\itemize{
-\item \code{active}: A \code{active} object which can be added into
-\link[=layout_stack]{LayoutStack}.
-}
 }
 \description{
 Determine the context of subsequent manipulations

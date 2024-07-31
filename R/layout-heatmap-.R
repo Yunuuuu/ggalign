@@ -61,6 +61,25 @@ layout_heatmap <- function(data = NULL, mapping = aes(), ...) {
     UseMethod("layout_heatmap")
 }
 
+#' @export
+print.LayoutHeatmap <- function(x, ...) {
+    p <- build_patchwork(x)
+    print(p, ...)
+}
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.LayoutHeatmap <- function(x, ...) {
+    print(x, ...)
+}
+
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.LayoutHeatmap <- function(plot) {
+    plot <- build_patchwork(plot)
+    ggplot_build(plot)
+}
+
 # used to create the heatmap layout
 #' @keywords internal
 methods::setClass(

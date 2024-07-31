@@ -10,38 +10,19 @@ methods::setClass("Layout", list(active = "ANY"),
     prototype = list(active = NULL)
 )
 
-#' @export
-print.Layout <- function(x, ...) {
-    p <- ggalign_build(x)
-    print(p, ...)
-}
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.Layout <- function(x, ...) {
-    print(x, ...)
-}
-
-#' @importFrom ggplot2 ggplot_build
-#' @export
-ggplot_build.Layout <- function(plot) {
-    plot <- ggalign_build(plot)
-    ggplot_build(plot)
-}
-
 is.layout <- function(x) methods::is(x, "Layout")
 
 #' Build `Layout` object for rendering.
 #'
 #' @param layout A `Layout` object.
 #' @examples
-#' ggalign_build(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
+#' build_patchwork(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
 #' @export
 #' @return A `patchwork` object.
-ggalign_build <- function(layout) UseMethod("ggalign_build")
+build_patchwork <- function(layout) UseMethod("build_patchwork")
 
 #' @export
-ggalign_build.default <- function(layout) {
+build_patchwork.default <- function(layout) {
     cli::cli_abort("{.arg x} must be a {.cls Layout} object")
 }
 

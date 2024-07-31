@@ -1,7 +1,7 @@
 #' @importFrom patchwork area
 #' @importFrom grid unit.c
 #' @export
-ggalign_build.LayoutHeatmap <- function(layout) {
+build_patchwork.LayoutHeatmap <- function(layout) {
     patches <- heatmap_build(layout)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")

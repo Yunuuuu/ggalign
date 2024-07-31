@@ -50,11 +50,11 @@ layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
         if (is.null(stack)) next
         slot(stack, "plots") <- lapply(
             slot(stack, "plots"),
-            function(annotation) {
-                if (is.null(.subset2(annotation, "plot"))) {
-                    return(annotation)
+            function(plot) {
+                if (is.null(.subset2(plot, "plot"))) {
+                    return(plot)
                 }
-                align_add(object, annotation, object_name)
+                align_add(object, plot, object_name)
             }
         )
         slot(heatmap, position) <- stack

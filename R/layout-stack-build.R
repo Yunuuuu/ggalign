@@ -1,8 +1,9 @@
 #' @export
-ggalign_build.LayoutStack <- function(layout) {
+build_patchwork.LayoutStack <- function(layout) {
     .subset2(stack_build(layout), "plot")
 }
 
+#' @importFrom grid unit.c
 #' @importFrom patchwork area
 #' @importFrom rlang is_empty
 stack_build <- function(x) {
@@ -21,6 +22,9 @@ stack_build <- function(x) {
     }, integer(1L)))
     plots <- .subset(plots, stack_index)
     patches <- stack_patch(direction)
+    params <- slot(x, "params")
+    has_top <- FALSE
+    has_bottom <- FALSE
     for (plot in plots) {
         if (is.align(plot)) {
             patch <- align_build(plot, panels = panels, index = index)
@@ -31,17 +35,25 @@ stack_build <- function(x) {
             )
         } else if (is.ggheatmap(plot)) {
             patch <- heatmap_build(plot)
+            heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
-                patches,
-                .subset2(patch, "plots"),
+                patches, heatmap_plots,
                 .subset2(patch, "sizes")
             )
+            if (is_horizontal(direction)) {
+                has_top <- has_top || !is.null(.subset2(heatmap_plots, "top"))
+                has_bottom <- has_bottom ||
+                    !is.null(.subset2(heatmap_plots, "bottom"))
+            } else {
+                has_top <- has_top || !is.null(.subset2(heatmap_plots, "left"))
+                has_bottom <- has_bottom ||
+                    !is.null(.subset2(heatmap_plots, "right"))
+            }
         }
     }
     if (is_empty(.subset2(patches, "plots"))) {
         return(list(plot = NULL, size = NULL))
     }
-    params <- slot(x, "params")
     plot <- patchwork::wrap_plots(
         .subset2(patches, "plots"),
         design = area(
@@ -52,17 +64,13 @@ stack_build <- function(x) {
         ),
         widths = switch_direction(
             direction,
-            attr(patches, "rel_sizes"),
-            .subset2(params, "rel_sizes")[
-                sort(unique(.subset2(patches, "r")))
-            ]
+            do.call(unit.c, attr(patches, "rel_sizes")),
+            .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)]
         ),
         heights = switch_direction(
             direction,
-            .subset2(params, "rel_sizes")[
-                sort(unique(.subset2(patches, "b")))
-            ],
-            attr(patches, "rel_sizes")
+            .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)],
+            do.call(unit.c, attr(patches, "rel_sizes"))
         ),
         guides = .subset2(params, "guides")
     )

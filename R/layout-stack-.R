@@ -18,6 +18,25 @@ layout_stack <- function(data, direction = NULL,
     UseMethod("layout_stack")
 }
 
+#' @export
+print.LayoutStack <- function(x, ...) {
+    p <- build_patchwork(x)
+    print(p, ...)
+}
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.LayoutStack <- function(x, ...) {
+    print(x, ...)
+}
+
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.LayoutStack <- function(plot) {
+    plot <- build_patchwork(plot)
+    ggplot_build(plot)
+}
+
 # Used to place multiple objects in one axis
 # usually the heatmap annotations
 #' @keywords internal
@@ -32,7 +51,7 @@ methods::setClass(
         direction = "character",
         panels = "ANY",
         index = "ANY",
-        size = "ANY" # used by layout_heatmap only
+        size = "ANY" # used by `layout_heatmap` only
     ),
     prototype = list(
         panels = NULL, index = NULL,
@@ -52,14 +71,12 @@ layout_stack.matrix <- function(data, direction = NULL,
     if (is.null(rel_sizes)) {
         rel_sizes <- rep_len(1L, 3L)
     } else if (length(rel_sizes) != 3L ||
-        !is.unit(rel_sizes) ||
-        !is.numeric(rel_sizes)) {
+        (!is.unit(rel_sizes) && !is.numeric(rel_sizes))) {
         cli::cli_abort(paste(
             "{.arg rel_sizes} must be",
             "a numeric or unit object of length 3"
         ))
     }
-
     methods::new("LayoutStack",
         data = data, direction = direction,
         params = list(
@@ -95,6 +112,30 @@ layout_stack.NULL <- function(data, direction = NULL,
                               rel_sizes = NULL, guides = "collect") {
     cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
 }
+
+#' Subset a `LayoutStack` object
+#'
+#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
+#'
+#' @param x A `LayoutStack` object
+#' @param name A string of slot name in `LayoutStack` object.
+#' @importFrom methods slot
+#' @keywords internal
+methods::setMethod("$", "LayoutStack", function(x, name) {
+    # https://github.com/tidyverse/ggplot2/issues/6002
+    if (name == "theme") {
+        p <- ggplot2::ggplot()
+        p$theme
+    } else if (name == "plot_env") {
+        p <- ggplot2::ggplot()
+        p$plot_env
+    } else {
+        cli::cli_abort(c(
+            "`$` is just for internal ggplot2 methods",
+            i = "try to use `@` method instead"
+        ))
+    }
+})
 
 #' Reports whether `x` is a `LayoutStack` object
 #'

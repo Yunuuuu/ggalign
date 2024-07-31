@@ -14,19 +14,16 @@ activate.LayoutHeatmap <- function(x, what) {
 
 #' Determine the context of subsequent manipulations
 #'
-#' @param what What should get activated?
-#'  - `hmanno`: Possible values are follows:
+#' @param what What should get activated? Possible values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#'    * `missing` or `NA`: don't change the context, but set the size of the
-#'      current active context.
-#'  - `active`:
+#'    * `missing` or `NA`: don't change the context, but set the size of current
+#'      active context.
 #' @param size A [unit][grid::unit] object to set the size of the heatmap
-#' annotation. Only be used if `what` is a string of `"top"`, `"left"`,
-#' `"bottom"`, or `"right"`.
-#' @return
-#' - `hmanno`: A `active` object which can be added into
-#'   [LayoutHeatmap][layout_heatmap].
+#' annotation. This will only be used if `what` is a string of `"top"`,
+#' `"left"`, `"bottom"`, or `"right"`.
+#' @return A `active` object which can be added into
+#' [LayoutHeatmap][layout_heatmap].
 #' @export
 hmanno <- function(what, size = NULL) {
     if (missing(what)) {
@@ -42,14 +39,14 @@ hmanno <- function(what, size = NULL) {
     structure(what, size = size, class = c("heatmap_active", "active"))
 }
 
-#' @return
-#' - `active`: A `active` object which can be added into
-#'   [LayoutStack][layout_stack].
-#' @export
-#' @rdname hmanno
-active <- function(what) {
-    structure(what, class = c("stack_active", "active"))
-}
+# #' @return
+# #' - `active`: A `active` object which can be added into
+# #'   [LayoutStack][layout_stack].
+# #' @export
+# #' @rdname hmanno
+# active <- function(what) {
+#     structure(what, class = c("stack_active", "active"))
+# }
 
 match_context <- function(what) {
     if (!is.null(what)) what <- match.arg(what, GGHEAT_ELEMENTS)
@@ -74,4 +71,3 @@ get_context <- function(x) UseMethod("get_context")
 #' @importFrom methods slot
 #' @export
 get_context.Layout <- function(x) slot(x, "active")
-
