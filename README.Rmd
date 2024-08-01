@@ -21,3 +21,6 @@ You can install the development version of `ggalign` from [GitHub](https://githu
 # install.packages("devtools")
 pak::pkg_install("Yunuuuu/ggalign")
 ```
+
+```{r child = "vignettes/Introduction.Rmd"}
+```
