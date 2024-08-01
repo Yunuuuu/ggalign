@@ -3,9 +3,9 @@
 \docType{package}
 \name{ggalign-package}
 \alias{ggalign-package}
-\title{ggalign: Create Complex Heatmap Using the Grammar of Graphics}
+\title{ggalign: Align Multiple 'ggplot' Objects}
 \description{
-Creating Heatmap using ggplot2 syntax.
+This package is an extension of ggplot2 that aligns multiple ggplot objects along their axes in the same order. It is highly beneficial for organizing plots that involve changing the order of data.
 }
 \seealso{
 Useful links:

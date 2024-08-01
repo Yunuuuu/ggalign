@@ -1,9 +1,11 @@
 Package: ggalign
-Title: Create Complex Heatmap Using the Grammar of Graphics
+Title: Align Multiple 'ggplot' Objects
 Version: 0.0.1
 Authors@R: 
     person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2801-3332"))
-Description: Creating Heatmap using ggplot2 syntax.
+Description: This package is an extension of ggplot2 that aligns multiple ggplot objects
+    along their axes in the same order. It is highly beneficial for organizing plots
+    that involve changing the order of data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

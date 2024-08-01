@@ -30,6 +30,7 @@
 #' )
 #' ggplot2::ggplot(data.frame(x = 1, y = 2)) +
 #'     geom_draw(ggdraw_text)
+#' @return A ggplot2 layer.
 #' @export
 geom_draw <- function(draw = grid::nullGrob(), ...,
                       mapping = NULL, data = NULL,
