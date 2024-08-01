@@ -609,9 +609,12 @@ padding-top: 0px;
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">&quot;Yunuuuu/ggalign&quot;</span>)</span></code></pre></div>
 <h1 id="ggalign">ggalign</h1>
-<p>This package is an extension of ggplot2 that aligns multiple ggplot
-objects along their axes in the same order. It is highly beneficial for
-organizing plots that involve changing the order of data.</p>
+<p>This package extends ggplot2 and provides numerous benefits for
+organizing and arranging plots. It is specifically designed to align a
+specific axis of multiple ggplot objects in a consistent order. This
+functionality is particularly useful for plots that require manipulation
+of data order. A common plot combination that can be effectively
+organized using this package includes a dendrogram and a heatmap.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(ggalign)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
 <p>Let’s begin by creating some example data</p>
@@ -619,7 +622,7 @@ organizing plots that involve changing the order of data.</p>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>small_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">81</span>), <span class="at">nrow =</span> <span class="dv">9</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">rownames</span>(small_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;row&quot;</span>, <span class="fu">seq_len</span>(<span class="fu">nrow</span>(small_mat)))</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">colnames</span>(small_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;column&quot;</span>, <span class="fu">seq_len</span>(<span class="fu">ncol</span>(small_mat)))</span></code></pre></div>
-<p><code>ggalign</code> provids two layout to build plots:</p>
+<p><code>ggalign</code> provids two layouts to build plots:</p>
 <ul>
 <li><code>layout_heatmap</code>: heatmap layout</li>
 <li><code>layout_stack</code>: align plots vertically or
