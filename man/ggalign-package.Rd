@@ -5,7 +5,7 @@
 \alias{ggalign-package}
 \title{ggalign: Align Multiple 'ggplot' Objects}
 \description{
-This package is an extension of ggplot2 that aligns multiple ggplot objects along their axes in the same order. It is highly beneficial for organizing plots that involve changing the order of data.
+This package extends ggplot2 and provides numerous benefits for organizing and arranging plots. It is specifically designed to align a specific axis of multiple ggplot objects in a consistent order. This functionality is particularly useful for plots that require manipulation of data order. A common plot combination that can be effectively organized using this package includes a dendrogram and a heatmap.
 }
 \seealso{
 Useful links:
