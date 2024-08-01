@@ -39,7 +39,6 @@ build_patchwork.LayoutHeatmap <- function(layout) {
 #' @importFrom rlang is_empty
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
-#' @export
 heatmap_build <- function(heatmap) {
     mat <- slot(heatmap, "data")
     params <- slot(heatmap, "params")

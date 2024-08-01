@@ -7,6 +7,8 @@
 #' @inheritParams layout_heatmap
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
+#' @param labels,labels_nudge Default `labels`/`labels_nudge` for axis
+#' parallelly with the layout.
 #' @param rel_sizes A numeric or [unit][grid::unit] object of length `3`
 #' indicates the relative widths (`direction = "vertical"`) / heights
 #' (`direction = "vertical"`).

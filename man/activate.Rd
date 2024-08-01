@@ -7,7 +7,13 @@
 activate(x, what)
 }
 \arguments{
-\item{x}{A \link[=ggheat]{ggheatmap} object.}
+\item{x}{A \link{ggheatmap} object.}
+
+\item{what}{What should get activated? Possible values are follows:
+\itemize{
+\item A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
+\item \code{NULL}: means set the active context into the \code{heatmap} itself.
+}}
 }
 \value{
 A object with the same class of \code{x}, whose active context will be

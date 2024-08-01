@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-dendrogram.R
 \name{align_dendro}
 \alias{align_dendro}
-\title{Heatmap dendrogram}
+\title{Dendrogram plot}
 \usage{
 align_dendro(
   mapping = aes(),
@@ -27,10 +27,10 @@ align_dendro(
 )
 }
 \arguments{
-\item{mapping}{Default list of aesthetic mappings to use for plot.}
+\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
 \item{...}{Additional arguments passed to
-\link[ggplot2:geom_segment]{geom_segment}}
+\link[ggplot2:geom_segment]{geom_segment()}.}
 
 \item{distance}{A string of distance measure to be used. This must be one of
 \code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"}, \code{"binary"} or
@@ -96,13 +96,13 @@ otherwise it will inherit from the \code{layout} object.
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the \code{Align} object will use the \code{layout} data. Additionally, the \code{data}
-argument can also accept a function (purrr-like lambda is also okay), which
-will be applied with the \code{layout} data,
+the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the \code{layout} data,
 
-It is important to note that all \code{Align} objects consider the \code{rows} as the
-observations. It means the \code{NROW(data)} must return the same number with the
-parallel \code{layout} axis.
+It is important to note that all \verb{align_*} functions consider the \code{rows} as
+the observations. It means the \code{NROW(data)} must return the same number with
+the parallel \code{layout} axis.
 \itemize{
 \item \code{layout_heatmap}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
@@ -124,12 +124,53 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Heatmap dendrogram
+Dendrogram plot
 }
+\section{ggplot2 details}{
+
+\code{align_dendro} initializes a \code{ggplot} data and \code{mapping}.
+
+The internal will always use a default mapping of \code{aes(x = .data$x, y = .data$y)}.
+
+The default ggplot data is the \code{node} coordinates, in addition, a
+\link[ggplot2:geom_segment]{geom_segment} layer with a data of the tree segments
+\code{edge} coordinates will be added.
+
+\code{node} and tree segments \code{edge} coordinates contains following columns:
+\itemize{
+\item \code{index}: the original index in the tree for the current node
+\item \code{label}: node label text
+\item \code{x} and \code{y}: x-axis and y-axis coordinates for current node or the start
+node of the current edge.
+\item \code{xend} and \code{yend}: the x-axis and y-axis coordinates of the terminal node
+for current edge.
+\item \code{branch}: which branch current node or edge is. You can use this column
+to color different groups.
+\item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
+functionality as \code{panel}, but they are specifically for the \code{edge} data
+and correspond to both nodes of each edge.
+\item \code{panel}: which panel current node is, if we split the plot into panels
+using \link[ggplot2:facet_grid]{facet_grid}, this column will show
+which panel current node or edge is from. Note: some nodes
+may fall outside panels, so there are possible \code{NA} values in
+this column. We also provide \code{.panel} column, which always
+give the right branch for usage of the ggplot facet.
+\item \code{.panel}: See \code{panel}.
+\item \code{leaf}: A logical value indicates whether current node is a leaf.
+}
+}
+
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
-    heatmap_active("top") +
+    hmanno("top") +
     align_dendro()
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    hmanno("top") +
     align_dendro(k = 3L)
+}
+\seealso{
+\itemize{
+\item \code{\link[=dendrogram_data]{dendrogram_data()}}
+\item \code{\link[=hclust2]{hclust2()}}
+}
 }

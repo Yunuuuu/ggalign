@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-You can install the development version of ggheat from [GitHub](https://github.com/) with:
+You can install the development version of `ggalign` from [GitHub](https://github.com/) with:
 
 ```{r, eval=FALSE}
 # install.packages("devtools")
-pak::pkg_install("Yunuuuu/ggheat")
+pak::pkg_install("Yunuuuu/ggalign")
 ```

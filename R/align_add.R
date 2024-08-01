@@ -18,7 +18,7 @@ align_add.gg <- function(object, align, object_name) {
 align_add.labels <- align_add.gg
 
 #' @export
-align_add.facetted_pos_scales <- function(object, htanno, object_name) {
-    htanno$facetted_pos_scales <- object
-    htanno
+align_add.facetted_pos_scales <- function(object, align, object_name) {
+    align$facetted_pos_scales <- object
+    align
 }

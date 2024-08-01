@@ -42,9 +42,7 @@ Draw Heatmap rows/columns titles
 \examples{
 small_mat <- matrix(rnorm(81), nrow = 9)
 ggheatmap(small_mat) +
-    heatmap_active("top") +
-    align_group(
-        sample(letters[1:4], ncol(small_mat), replace = TRUE)
-    ) +
+    hmanno("t") +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
     align_title()
 }

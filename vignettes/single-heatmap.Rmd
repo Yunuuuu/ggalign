@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-We'll use ggheat to draw all the heatmap in
+We'll use ggalign to draw all the heatmap in
 <https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html>
 
 ```{r setup}
-library(ggheat)
+library(ggalign)
 ```
 
 ```{r}
@@ -54,9 +54,11 @@ colnames(mat) <- paste0("column", seq_len(nc))
 ```
 
 ```{r}
-ggheat(mat) +
+ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
-  htanno_dendro(position = "r", size = unit(15, "mm")) +
-  htanno_dendro(position = "t", size = unit(15, "mm")) &
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
   theme(plot.margin = margin())
 ```

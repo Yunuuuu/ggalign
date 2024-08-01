@@ -1,14 +1,13 @@
 #' Add components to `LayoutStack`
 #'
 #' @param e1 A [LayoutStack][layout_stack] object.
-#' @param e2 An object to be added to the plot, including
-#' [gg][ggplot2::+.gg] elements, [gganno][gganno] object, or [htanno]
-#' object.
+#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
+#' elements, [align] object, or [layout_heatmap] object.
 #' @return A modified `LayoutStack` object.
 #' @examples
 #' layout_stack(matrix(rnorm(81), nrow = 9)) +
-#'     gganno() +
-#'     geom_point(aes(y = value))
+#'     ggalign() +
+#'     geom_point(aes(x = value))
 #' @name stack-add
 #' @aliases +.ggstack +.LayoutStack
 #' @seealso layout_stack_add
@@ -113,6 +112,10 @@ layout_stack_add.LayoutHeatmap <- function(object, stack, object_name) {
     }
 
     # add annotation -------------------------------------
+    if (identical(slot(object, "params")$guides, "collect") &&
+        identical(slot(stack, "params")$guides, "collect")) {
+        slot(object, "params")$guides <- NULL
+    }
     # we won't change the active context for heatmap
     slot(stack, "plots") <- c(slot(stack, "plots"), list(object))
 

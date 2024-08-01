@@ -12,9 +12,8 @@
 \arguments{
 \item{e1}{A \link[=layout_heatmap]{LayoutHeatmap} object.}
 
-\item{e2}{An object to be added to the plot, including
-\link[ggplot2:gg-add]{gg} elements, \link{gganno} object, or \link{htanno}
-object.}
+\item{e2}{An object to be added to the plot, including \link[ggplot2:gg-add]{gg}
+elements or \link{align} object.}
 }
 \value{
 A modified \code{LayoutHeatmap} object.
@@ -25,7 +24,7 @@ Add components to \code{LayoutHeatmap}
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     hmanno("t") +
-    gganno() +
+    ggalign() +
     geom_point(aes(y = value))
 }
 \seealso{

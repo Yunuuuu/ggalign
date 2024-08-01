@@ -2,13 +2,13 @@
 % Please edit documentation in R/align-group.R
 \name{align_group}
 \alias{align_group}
-\title{Group rows/columns}
+\title{Group axis into panels}
 \usage{
 align_group(group, set_context = FALSE, name = NULL)
 }
 \arguments{
 \item{group}{A character define the groups, this will split the
-heatmap into different panels.}
+axis into different panels.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
@@ -20,11 +20,11 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Group rows/columns
+Group axis into panels
 }
 \examples{
 small_mat <- matrix(rnorm(81), nrow = 9)
 ggheatmap(small_mat) +
-  hmanno("top") +
-  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+    hmanno("top") +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 }

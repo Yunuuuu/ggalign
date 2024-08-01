@@ -3,7 +3,7 @@
 \name{align_gg}
 \alias{align_gg}
 \alias{ggalign}
-\title{Heatmap annotation with \code{AlignGG}}
+\title{Create ggplot object in the layout}
 \usage{
 align_gg(
   mapping = aes(),
@@ -28,18 +28,17 @@ ggalign(
 )
 }
 \arguments{
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the \code{Align} object will use the \code{layout} data. Additionally, the \code{data}
-argument can also accept a function (purrr-like lambda is also okay), which
-will be applied with the \code{layout} data,
+the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the \code{layout} data,
 
-It is important to note that all \code{Align} objects consider the \code{rows} as the
-observations. It means the \code{NROW(data)} must return the same number with the
-parallel \code{layout} axis.
+It is important to note that all \verb{align_*} functions consider the \code{rows} as
+the observations. It means the \code{NROW(data)} must return the same number with
+the parallel \code{layout} axis.
 \itemize{
 \item \code{layout_heatmap}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
@@ -86,21 +85,22 @@ will be added into this \code{Align} object.}
 A \code{AlignGG} object.
 }
 \description{
-Heatmap annotation with \code{AlignGG}
+\code{ggalign} is just an alias of \code{align_gg}.
 }
 \section{ggplot2 details}{
 
-\code{align_gg} initializes a \code{ggplot} data and \code{mapping}. The data input can be a
-matrix, a data frame, or a simple vector that will be converted into a
-one-column matrix, and can inherit from the heatmap matrix.
+\code{align_gg} initializes a \code{ggplot} data and \code{mapping}.
 
-But for ggplot usage, matrix (including a simple vector) data is converted
-into a long-format data frame, similar to the process utilized in
-\code{ggheatmap}.  But note that the long-format data frame does not contain
-\code{.row_panel} or \code{.column_panel} column, as annotations can only have one
-facet axis. In the case where the input data is already a data frame, three
-additional columns-(\code{.row_names}, \code{.row_index}, and \code{.panel})—are added to
-the data frame.
+The internal will always use a default mapping of \code{aes(y = .data$.y)} or
+\code{aes(x = .data$.x)}.
+
+For ggplot usage, matrix (including a simple vector) data is converted into a
+long-format data frame, similar to the process utilized in \code{ggheatmap}. But
+note that the long-format data frame does not contain \code{.row_panel} or
+\code{.column_panel} column, as \code{align_gg} can only have one facet axis. In the
+case where the input data is already a data frame, three additional
+columns-(\code{.row_names}, \code{.row_index}, and \code{.panel})—are added to the data
+frame.
 
 The data in the underlying \code{ggplot} object contains following columns:
 \itemize{
@@ -118,6 +118,6 @@ original matrix (only applicable if \code{data} is a \code{matrix}).
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     hmanno("top") +
-    gganno() +
+    ggalign() +
     geom_point(aes(y = value))
 }

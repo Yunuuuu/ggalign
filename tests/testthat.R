@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(ggheat)
+library(ggalign)
 
-test_check("ggheat")
+test_check("ggalign")

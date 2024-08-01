@@ -31,6 +31,9 @@ one column matrix.}
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
 
+\item{labels, labels_nudge}{Default \code{labels}/\code{labels_nudge} for axis
+parallelly with the layout.}
+
 \item{rel_sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3}
 indicates the relative widths (\code{direction = "vertical"}) / heights
 (\code{direction = "vertical"}).}

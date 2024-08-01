@@ -22,8 +22,8 @@ object.}
 \item{priority}{A string of "left" or "right". if we draw from right to left,
 the left will override the right, so we take the \code{"left"} as the priority. If
 we draw from \code{left} to \code{right}, the right will override the left, so we take
-the \code{"right"} as priority. This is used by \link{htanno_dendro} to provide support
-of facet operation in ggplot2.}
+the \code{"right"} as priority. This is used by \code{\link[=align_dendro]{align_dendro()}} to provide
+support of facet operation in ggplot2.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to the leaves in the branch. Otherwise (default), plot them in the
@@ -45,7 +45,7 @@ branches.}
 \value{
 A list of 2 data.frame. One for node coordinates, another for edge
 coordinates.
-\code{node} and tree segments \code{edge} contains following columns:
+\code{node} and tree segments \code{edge} coordinates contains following columns:
 \itemize{
 \item \code{index}: the original index in the tree for the current node
 \item \code{label}: node label text
@@ -53,18 +53,18 @@ coordinates.
 node of the current edge.
 \item \code{xend} and \code{yend}: the x-axis and y-axis coordinates of the terminal node
 for current edge.
-\item \code{branch}: which branch current node is. You can use this column to color
-different groups.
+\item \code{branch}: which branch current node or edge is. You can use this column
+to color different groups.
 \item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
-functionality as panel, but they are specifically for the \code{edge} data and
-correspond to both nodes of each edge.
+functionality as \code{panel}, but they are specifically for the \code{edge} data
+and correspond to both nodes of each edge.
 \item \code{panel}: which panel current node is, if we split the plot into panels
 using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes
 may fall outside panels, so there are possible \code{NA} values in
-this column. we also provide \code{.panel} column, which always
-regard the right branch for the out-sided \code{node}.
-\item \code{.panel}: See \code{panel}.
+this column. We also provide \code{ggpanel} column, which always
+give the right branch for usage of the ggplot facet.
+\item \code{ggpanel}: See \code{panel}.
 \item \code{leaf}: A logical value indicates whether current node is a leaf.
 }
 }

@@ -1,6 +1,9 @@
 #' Determine the context of subsequent manipulations
 #'
-#' @param x A [ggheatmap][ggheat] object.
+#' @param x A [ggheatmap][ggheatmap] object.
+#' @param what What should get activated? Possible values are follows:
+#'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
+#'    * `NULL`: means set the active context into the `heatmap` itself.
 #' @return A object with the same class of `x`, whose active context will be
 #' `set`.
 #' @export

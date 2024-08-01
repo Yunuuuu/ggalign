@@ -1,14 +1,13 @@
 #' Add components to `LayoutHeatmap`
 #'
 #' @param e1 A [LayoutHeatmap][layout_heatmap] object.
-#' @param e2 An object to be added to the plot, including
-#' [gg][ggplot2::+.gg] elements, [gganno][gganno] object, or [htanno]
-#' object.
+#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
+#' elements or [align] object.
 #' @return A modified `LayoutHeatmap` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("t") +
-#'     gganno() +
+#'     ggalign() +
 #'     geom_point(aes(y = value))
 #' @name heatmap-add
 #' @aliases +.ggheatmap +.LayoutHeatmap
@@ -127,7 +126,7 @@ layout_heatmap_add.gg <- function(object, heatmap, object_name) {
     } else {
         slot(heatmap, position) <- stack_add_ggelement(
             object, slot(heatmap, position), object_name,
-            sprintf("%s annotation", position)
+            sprintf("the heatmap %s annotation", position)
         )
     }
     heatmap

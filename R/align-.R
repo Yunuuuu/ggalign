@@ -6,13 +6,13 @@
 #'
 #' @param data A matrix, a data frame, or even a simple vector that will be
 #' converted into a one-column matrix. If the `data` argument is set to `NULL`,
-#' the `Align` object will use the `layout` data. Additionally, the `data`
-#' argument can also accept a function (purrr-like lambda is also okay), which
-#' will be applied with the `layout` data,
+#' the `align_*` will use the `layout` data. Additionally, the `data` argument
+#' can also accept a function (purrr-like lambda is also okay), which will be
+#' applied with the `layout` data,
 #'
-#' It is important to note that all `Align` objects consider the `rows` as the
-#' observations. It means the `NROW(data)` must return the same number with the
-#' parallel `layout` axis.
+#' It is important to note that all `align_*` functions consider the `rows` as
+#' the observations. It means the `NROW(data)` must return the same number with
+#' the parallel `layout` axis.
 #'
 #'  - `layout_heatmap`: for column annotation, the `layout` data will be
 #'  transposed before using (If data is a `function`, it will be applied with

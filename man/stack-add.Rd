@@ -12,9 +12,8 @@
 \arguments{
 \item{e1}{A \link[=layout_stack]{LayoutStack} object.}
 
-\item{e2}{An object to be added to the plot, including
-\link[ggplot2:gg-add]{gg} elements, \link{gganno} object, or \link{htanno}
-object.}
+\item{e2}{An object to be added to the plot, including \link[ggplot2:gg-add]{gg}
+elements, \link{align} object, or \link{layout_heatmap} object.}
 }
 \value{
 A modified \code{LayoutStack} object.
@@ -24,8 +23,8 @@ Add components to \code{LayoutStack}
 }
 \examples{
 layout_stack(matrix(rnorm(81), nrow = 9)) +
-    gganno() +
-    geom_point(aes(y = value))
+    ggalign() +
+    geom_point(aes(x = value))
 }
 \seealso{
 layout_stack_add

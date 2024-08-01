@@ -44,8 +44,8 @@ hclust(dist(USArrests), "ave")
 }
 \seealso{
 \itemize{
-\item \link[stats:cor]{cor}
-\item \link[stats:dist]{dist}
-\item \link[stats:hclust]{hclust}
+\item \link[stats:cor]{cor()}
+\item \link[stats:dist]{dist()}
+\item \link[stats:hclust]{hclust()}
 }
 }

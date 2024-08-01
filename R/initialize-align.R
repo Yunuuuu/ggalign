@@ -148,7 +148,6 @@ initialize_align_layout <- function(object, direction,
     }
 
     # we always prevent from reordering heatmap twice.
-    # in this way, htanno even cannot make groups after creating heatmap order
     if (!is.null(layout_index)) {
         if (!all(layout_index == new_index)) {
             cli::cli_abort(sprintf(
@@ -170,17 +169,19 @@ initialize_align_layout <- function(object, direction,
     p <- rlang::inject(object$ggplot(!!!ggplot_params))
     # set the default theme for all annotation
     if (ggplot2::is.ggplot(p)) {
-        # remove the title of axis parallelly with layout
-        p <- p + switch_direction(
-            direction,
-            theme(axis.title.y = element_blank()),
-            theme(axis.title.x = element_blank())
-        ) + theme(
-            plot.background = element_blank(),
-            panel.border = element_blank(),
-            strip.text = element_blank(),
-            strip.background = element_blank()
-        )
+        p <- p +
+            ggplot2::theme_bw() +
+            # remove the title of axis parallelly with layout
+            switch_direction(
+                direction,
+                theme(axis.title.y = element_blank()),
+                theme(axis.title.x = element_blank())
+            ) + theme(
+                plot.background = element_blank(),
+                panel.border = element_blank(),
+                strip.text = element_blank(),
+                strip.background = element_blank()
+            )
     }
     object$plot <- p
 

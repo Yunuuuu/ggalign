@@ -1,5 +1,18 @@
-#' @importFrom ggplot2 theme element_blank
+#' Build `Layout` object for rendering.
+#'
+#' @param layout A [layout_heatmap()] or [layout_stack()] object.
+#' @examples
+#' build_patchwork(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
 #' @export
+#' @return A `patchwork` object.
+build_patchwork <- function(layout) UseMethod("build_patchwork")
+
+#' @export
+build_patchwork.default <- function(layout) {
+    cli::cli_abort("{.arg x} must be a {.cls Layout} object")
+}
+
+#' @importFrom ggplot2 theme element_blank
 align_build <- function(x, panels, index) {
     ans <- list(size = .subset2(x, "size"))
     if (is.null(.subset2(x, "plot"))) {

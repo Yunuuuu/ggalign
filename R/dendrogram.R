@@ -18,9 +18,9 @@
 #' `"na.or.complete"`, or `"pairwise.complete.obs"`. Only used when `distance`
 #' is a correlation coefficient string.
 #' @seealso
-#'  - [cor][stats::cor]
-#'  - [dist][stats::dist]
-#'  - [hclust][stats::hclust]
+#'  - [cor()][stats::cor]
+#'  - [dist()][stats::dist]
+#'  - [hclust()][stats::hclust]
 #' @examples
 #' hclust(dist(USArrests), "ave")
 #' @return A [hclust][stats::hclust] object.
@@ -30,6 +30,7 @@ hclust2 <- function(matrix,
                     distance = "euclidean",
                     method = "complete",
                     use_missing = "pairwise.complete.obs") {
+    distance <- allow_lambda(distance)
     if (is_string(distance)) {
         distance <- match.arg(
             distance, c(
@@ -64,6 +65,7 @@ hclust2 <- function(matrix,
             "object, or a {.cls function} return {.cls dist}"
         ))
     }
+    method <- allow_lambda(method)
     if (is_string(method)) {
         ans <- stats::hclust(d, method = method)
     } else if (is.function(method)) {
@@ -87,8 +89,8 @@ hclust2 <- function(matrix,
 #' @param priority A string of "left" or "right". if we draw from right to left,
 #' the left will override the right, so we take the `"left"` as the priority. If
 #' we draw from `left` to `right`, the right will override the left, so we take
-#' the `"right"` as priority. This is used by [htanno_dendro] to provide support
-#' of facet operation in ggplot2.
+#' the `"right"` as priority. This is used by [align_dendro()] to provide
+#' support of facet operation in ggplot2.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
 #' respect to the leaves in the branch. Otherwise (default), plot them in the
 #' middle of all direct child nodes.
@@ -102,25 +104,25 @@ hclust2 <- function(matrix,
 #' @param root A length one string or numeric indicates the root branch.
 #' @return A list of 2 data.frame. One for node coordinates, another for edge
 #' coordinates.
-#' `node` and tree segments `edge` contains following columns:
+#' `node` and tree segments `edge` coordinates contains following columns:
 #'   - `index`: the original index in the tree for the current node
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
 #'                  node of the current edge.
 #'   - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
 #'                        for current edge.
-#'   - `branch`: which branch current node is. You can use this column to color
-#'               different groups.
+#'   - `branch`: which branch current node or edge is. You can use this column
+#'               to color different groups.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
-#'     functionality as panel, but they are specifically for the `edge` data and
-#'     correspond to both nodes of each edge.
+#'     functionality as `panel`, but they are specifically for the `edge` data
+#'     and correspond to both nodes of each edge.
 #'   - `panel`: which panel current node is, if we split the plot into panels
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes
 #'              may fall outside panels, so there are possible `NA` values in
-#'              this column. we also provide `.panel` column, which always
-#'              regard the right branch for the out-sided `node`.
-#'   - `.panel`: See `panel`.
+#'              this column. We also provide `ggpanel` column, which always
+#'              give the right branch for usage of the ggplot facet.
+#'   - `ggpanel`: See `panel`.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #' @examples
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
@@ -301,7 +303,7 @@ dendrogram_data <- function(tree,
                 }
                 if (is.na(ggpanel <- panel)) {
                     # it's not possible for an branch node live outside the
-                    # all panels, the left or right most. So `i` won't be 1 or
+                    # all panels - the left or right most. So `i` won't be 1 or
                     # length(ranges). we don't need to check the argument
                     ggpanel <- switch(priority,
                         left = .subset(panels, i - 1L),
@@ -450,10 +452,7 @@ dendrogram_data <- function(tree,
     rownames(node) <- NULL
 
     # we rename `ggpanel` into the finale name `.panel`
-    list(
-        node = rename(node, c(ggpanel = ".panel")),
-        edge = rename(edge, c(ggpanel = ".panel"))
-    )
+    list(node = node, edge = edge)
 }
 
 cutree_k_to_h <- function(tree, k) {

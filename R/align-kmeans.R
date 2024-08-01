@@ -3,8 +3,9 @@
 #' @inheritParams align
 #' @inherit align return
 #' @examples
-#' ggheat(matrix(rnorm(81), nrow = 9)) +
-#'     align_kmeans(3L, position = "top")
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("t") +
+#'     align_kmeans(3L)
 #' @export
 align_kmeans <- function(centers, iter.max = 10, nstart = 1,
                          algorithm = c(

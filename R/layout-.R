@@ -12,19 +12,12 @@ methods::setClass("Layout", list(active = "ANY"),
 
 is.layout <- function(x) methods::is(x, "Layout")
 
-#' Build `Layout` object for rendering.
-#'
-#' @param layout A `Layout` object.
-#' @examples
-#' build_patchwork(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
+#' Print Layout object
+#' @param object A [layout_heatmap()] or [layout_stack()] object.
 #' @export
-#' @return A `patchwork` object.
-build_patchwork <- function(layout) UseMethod("build_patchwork")
-
-#' @export
-build_patchwork.default <- function(layout) {
-    cli::cli_abort("{.arg x} must be a {.cls Layout} object")
-}
+methods::setMethod("show", "Layout", function(object) {
+    print(object)
+})
 
 # ** Not implemented yet
 #' @keywords internal

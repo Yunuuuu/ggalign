@@ -1,21 +1,25 @@
-#' Heatmap annotation with `AlignGG`
+#' Create ggplot object in the layout
 #'
+#' `ggalign` is just an alias of `align_gg`.
+#'
+#' @param mapping Additional default list of aesthetic mappings to use for plot.
 #' @inheritParams align
 #' @importFrom ggplot2 aes
 #' @inheritParams ggplot2::ggplot
 #'
 #' @section ggplot2 details:
-#' `align_gg` initializes a `ggplot` data and `mapping`. The data input can be a
-#' matrix, a data frame, or a simple vector that will be converted into a
-#' one-column matrix, and can inherit from the heatmap matrix.
+#' `align_gg` initializes a `ggplot` data and `mapping`.
 #'
-#' But for ggplot usage, matrix (including a simple vector) data is converted
-#' into a long-format data frame, similar to the process utilized in
-#' `ggheatmap`.  But note that the long-format data frame does not contain
-#' `.row_panel` or `.column_panel` column, as annotations can only have one
-#' facet axis. In the case where the input data is already a data frame, three
-#' additional columns-(`.row_names`, `.row_index`, and `.panel`)—are added to
-#' the data frame.
+#' The internal will always use a default mapping of `aes(y = .data$.y)` or
+#' `aes(x = .data$.x)`.
+#' 
+#' For ggplot usage, matrix (including a simple vector) data is converted into a
+#' long-format data frame, similar to the process utilized in `ggheatmap`. But
+#' note that the long-format data frame does not contain `.row_panel` or
+#' `.column_panel` column, as `align_gg` can only have one facet axis. In the
+#' case where the input data is already a data frame, three additional
+#' columns-(`.row_names`, `.row_index`, and `.panel`)—are added to the data
+#' frame.
 #'
 #' The data in the underlying `ggplot` object contains following columns:
 #'
@@ -36,7 +40,7 @@
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
-#'     gganno() +
+#'     ggalign() +
 #'     geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
@@ -69,8 +73,7 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
         data
     },
     ggplot = function(self, mapping) {
-        ans <- ggplot2::ggplot(mapping = mapping) +
-            ggplot2::theme_bw()
+        ans <- ggplot2::ggplot(mapping = mapping)
 
         add_default_mapping(ans, switch_direction(
             .subset2(self, "direction"),

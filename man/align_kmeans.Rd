@@ -36,13 +36,13 @@ align_kmeans(
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the \code{Align} object will use the \code{layout} data. Additionally, the \code{data}
-argument can also accept a function (purrr-like lambda is also okay), which
-will be applied with the \code{layout} data,
+the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the \code{layout} data,
 
-It is important to note that all \code{Align} objects consider the \code{rows} as the
-observations. It means the \code{NROW(data)} must return the same number with the
-parallel \code{layout} axis.
+It is important to note that all \verb{align_*} functions consider the \code{rows} as
+the observations. It means the \code{NROW(data)} must return the same number with
+the parallel \code{layout} axis.
 \itemize{
 \item \code{layout_heatmap}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
@@ -65,6 +65,7 @@ A new \code{Align} object.
 Group Heatmap rows/columns by kmeans
 }
 \examples{
-ggheat(matrix(rnorm(81), nrow = 9)) +
-    align_kmeans(3L, position = "top")
+ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    hmanno("t") +
+    align_kmeans(3L)
 }

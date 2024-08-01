@@ -1,19 +1,60 @@
-#' Heatmap dendrogram
+#' Dendrogram plot
 #'
+#' @inheritParams align_gg
+#' @param ... Additional arguments passed to
+#' [geom_segment()][ggplot2::geom_segment].
 #' @inheritParams hclust2
+#' @inheritParams dendrogram_data
 #' @param reorder_group A single boolean value, indicates whether we should do
 #' Hierarchical Clustering between groups, only used when previous groups have
 #' been established.
-#' @inheritParams ggdendrogram
+#' @param k An integer scalar indicates the desired number of groups.
+#' @param h A numeric scalar indicates heights where the tree should be cut.
+#' @param plot_cut_height A boolean value indicates whether plot the cut height.
 #' @inheritParams align
+#' @section ggplot2 details:
+#' `align_dendro` initializes a `ggplot` data and `mapping`.
+#'
+#' The internal will always use a default mapping of `aes(x = .data$x, y =
+#' .data$y)`.
+#'
+#' The default ggplot data is the `node` coordinates, in addition, a
+#' [geom_segment][ggplot2::geom_segment] layer with a data of the tree segments
+#' `edge` coordinates will be added.
+#'
+#' `node` and tree segments `edge` coordinates contains following columns:
+#'   - `index`: the original index in the tree for the current node
+#'   - `label`: node label text
+#'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
+#'                  node of the current edge.
+#'   - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
+#'                        for current edge.
+#'   - `branch`: which branch current node or edge is. You can use this column
+#'               to color different groups.
+#'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
+#'     functionality as `panel`, but they are specifically for the `edge` data
+#'     and correspond to both nodes of each edge.
+#'   - `panel`: which panel current node is, if we split the plot into panels
+#'              using [facet_grid][ggplot2::facet_grid], this column will show
+#'              which panel current node or edge is from. Note: some nodes
+#'              may fall outside panels, so there are possible `NA` values in
+#'              this column. We also provide `.panel` column, which always
+#'              give the right branch for usage of the ggplot facet.
+#'   - `.panel`: See `panel`.
+#'   - `leaf`: A logical value indicates whether current node is a leaf.
+#'
 #' @inherit align return
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     heatmap_active("top") +
+#'     hmanno("top") +
 #'     align_dendro()
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("top") +
 #'     align_dendro(k = 3L)
 #' @importFrom ggplot2 element_blank
+#' @seealso
+#' - [dendrogram_data()]
+#' - [hclust2()]
 #' @export
 align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
@@ -193,8 +234,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                 direction,
                 ggplot2::labs(x = "height"),
                 ggplot2::labs(y = "height")
-            ) +
-            ggplot2::theme_bw()
+            )
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
     draw = function(self, panels, index,
@@ -222,6 +262,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         )
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
+        node <- rename(node, c(ggpanel = ".panel"))
+        edge <- rename(edge, c(ggpanel = ".panel"))
         if (is_horizontal(direction)) {
             edge <- rename(
                 edge,
