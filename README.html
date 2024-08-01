@@ -619,6 +619,12 @@ organizing plots that involve changing the order of data.</p>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>small_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">81</span>), <span class="at">nrow =</span> <span class="dv">9</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">rownames</span>(small_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;row&quot;</span>, <span class="fu">seq_len</span>(<span class="fu">nrow</span>(small_mat)))</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">colnames</span>(small_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;column&quot;</span>, <span class="fu">seq_len</span>(<span class="fu">ncol</span>(small_mat)))</span></code></pre></div>
+<p><code>ggalign</code> provids two layout to build plots:</p>
+<ul>
+<li><code>layout_heatmap</code>: heatmap layout</li>
+<li><code>layout_stack</code>: align plots vertically or
+horizontally</li>
+</ul>
 <h2 id="layout_heatmap"><code>layout_heatmap</code></h2>
 <p><code>layout_heatmap</code> utilizes the grammar of graphics to
 construct the heatmap and heatmap annotations. You can also use the
