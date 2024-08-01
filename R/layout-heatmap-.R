@@ -179,7 +179,6 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
             xlabels_nudge = xlabels_nudge,
             ylabels = ylabels,
             ylabels_nudge = ylabels_nudge,
-            filling = filling,
             # following parameters are used by patchwork
             width = set_size(width),
             height = set_size(height),
