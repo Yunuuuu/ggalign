@@ -1,0 +1,227 @@
+---
+title: "single-heatmap"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{single-heatmap}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this thread, We'll use `ggalign` to draw all the heatmap in
+<https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#colors>
+
+```{r setup}
+library(ggalign)
+```
+
+```{r}
+set.seed(123)
+nr1 <- 4
+nr2 <- 8
+nr3 <- 6
+nr <- nr1 + nr2 + nr3
+nc1 <- 6
+nc2 <- 8
+nc3 <- 10
+nc <- nc1 + nc2 + nc3
+mat <- cbind(
+  rbind(
+    matrix(rnorm(nr1 * nc1, mean = 1, sd = 0.5), nrow = nr1),
+    matrix(rnorm(nr2 * nc1, mean = 0, sd = 0.5), nrow = nr2),
+    matrix(rnorm(nr3 * nc1, mean = 0, sd = 0.5), nrow = nr3)
+  ),
+  rbind(
+    matrix(rnorm(nr1 * nc2, mean = 0, sd = 0.5), nrow = nr1),
+    matrix(rnorm(nr2 * nc2, mean = 1, sd = 0.5), nrow = nr2),
+    matrix(rnorm(nr3 * nc2, mean = 0, sd = 0.5), nrow = nr3)
+  ),
+  rbind(
+    matrix(rnorm(nr1 * nc3, mean = 0.5, sd = 0.5), nrow = nr1),
+    matrix(rnorm(nr2 * nc3, mean = 0.5, sd = 0.5), nrow = nr2),
+    matrix(rnorm(nr3 * nc3, mean = 1, sd = 0.5), nrow = nr3)
+  )
+)
+mat <- mat[sample(nr, nr), sample(nc, nc)]
+rownames(mat) <- paste0("row", seq_len(nr))
+colnames(mat) <- paste0("column", seq_len(nc))
+```
+
+Because the `ComplexHeatmap` will reorder the dendrogram by default, but
+`align_dendro` won't change the tree layout. In following codes, we hypothesized
+that the arguments `row_dend_reorder` and `column_dend_reorder` of
+`ComplexHeatmap::Heatmap` is `FALSE`.  
+
+It is important to note that `ggalign` considers the left-bottom as the starting
+point, while `ComplexHeatmap` considers the left-top as the starting point. 
+
+
+```{r}
+ggheatmap(mat) +
+  scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+# ComplexHeatmap::Heatmap(mat,
+#   row_dend_reorder = FALSE,
+#   column_dend_reorder = FALSE
+# )
+```
+
+```{r}
+ggheatmap(mat) +
+  scale_fill_gradient2(low = "green", high = "red") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+mat2 <- mat
+mat2[1, 1] <- 100000
+ggheatmap(mat2) +
+  scale_fill_gradient2(
+    low = "green", high = "red",
+    limits = c(-2, 2),
+    oob = scales::squish
+  ) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+h1 <- ggheatmap(mat) +
+  scale_fill_gradient2(name = "mat", low = "green", high = "red") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+
+h2 <- ggheatmap(mat / 4) +
+  scale_fill_gradient2(
+    name = "mat/4", limits = c(-2, 2L),
+    oob = scales::squish,
+    low = "green", high = "red"
+  ) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+
+h3 <- ggheatmap(abs(mat)) +
+  scale_fill_gradient2(name = "abs(mat)", low = "green", high = "red") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+
+patchwork::wrap_plots(
+  build_patchwork(h1),
+  build_patchwork(h2),
+  build_patchwork(h3),
+  ncol = 2L
+)
+```
+
+```{r}
+ggheatmap(mat) +
+  scale_fill_gradientn(colors = rev(rainbow(10))) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+discrete_mat <- matrix(sample(1:4, 100, replace = TRUE), 10, 10)
+colors <- structure(1:4, names = c("1", "2", "3", "4")) # black, red, green, blue
+ggheatmap(discrete_mat, filling = FALSE) +
+  geom_tile(aes(fill = factor(value))) +
+  scale_fill_manual(values = colors) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+discrete_mat <- matrix(sample(letters[1:4], 100, replace = TRUE), 10, 10)
+colors <- structure(1:4, names = letters[1:4])
+ggheatmap(discrete_mat) +
+  scale_fill_manual(values = colors)
+```
+
+```{r}
+mat_with_na <- mat
+na_index <- sample(c(TRUE, FALSE),
+  nrow(mat) * ncol(mat),
+  replace = TRUE, prob = c(1, 9)
+)
+mat_with_na[na_index] <- NA
+ggheatmap(mat_with_na) +
+  scale_fill_gradient2(
+    low = "#2600D1FF",
+    high = "#EE3F3FFF",
+    na.value = "black"
+  ) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+We won't compare the LAB and RGB space.
+
+```{r}
+ggheatmap(mat) +
+  scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  theme(panel.border = element_rect(linetype = "dashed", fill = NA)) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat, filling = FALSE) +
+  geom_tile(aes(fill = value), width = 0.95, height = 0.95) +
+  scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat, filling = FALSE) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
