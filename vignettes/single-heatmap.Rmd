@@ -62,3 +62,50 @@ ggheatmap(mat) +
   align_dendro() &
   theme(plot.margin = margin())
 ```
+
+```{r}
+ggheatmap(mat) +
+  scale_fill_gradient2(low = "green", high = "red") +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+mat2 <- mat
+mat2[1, 1] <- 100000
+ggheatmap(mat2) +
+  scale_fill_gradient2(
+    low = "green", high = "red",
+    limits = c(-2, 2),
+    oob = scales::squish
+  ) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
+
+```{r}
+mat_with_na <- mat
+na_index <- sample(c(TRUE, FALSE),
+  nrow(mat) * ncol(mat),
+  replace = TRUE, prob = c(1, 9)
+)
+mat_with_na[na_index] <- NA
+ggheatmap(mat_with_na) +
+  scale_fill_gradient2(
+    low = "#2600D1FF",
+    high = "#EE3F3FFF",
+    na.value = "black"
+  ) +
+  hmanno("r", size = unit(15, "mm")) +
+  align_dendro() +
+  hmanno("t", size = unit(15, "mm")) +
+  align_dendro() &
+  theme(plot.margin = margin())
+```
