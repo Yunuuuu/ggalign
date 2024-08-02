@@ -165,7 +165,7 @@ ggheatmap(small_mat) +
 ```
 
 It is important to note that both `align_group` and `align_kmeans` cannot do
-sub-groups. It means when there has been any groups exist. You cannot use them
+sub-groups. It means you cannot use them when there has been any groups exist.
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +

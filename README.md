@@ -7,8 +7,8 @@ You can install the development version of `ggalign` from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-pak::pkg_install("Yunuuuu/ggalign")
+# install.packages("remotes")
+remotes::install_github("Yunuuuu/ggalign")
 ```
 
 # ggalign
@@ -195,8 +195,8 @@ ggheatmap(small_mat) +
 <img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
 
 It is important to note that both `align_group` and `align_kmeans`
-cannot do sub-groups. It means when there has been any groups exist. You
-cannot use them
+cannot do sub-groups. It means you cannot use them when there has been
+any groups exist.
 
 ``` r
 ggheatmap(small_mat) +
