@@ -31,16 +31,17 @@
 #'                        for current edge.
 #'   - `branch`: which branch current node or edge is. You can use this column
 #'               to color different groups.
+#'   - `panel`: which panel current node is, if we split the plot into panels
+#'              using [facet_grid][ggplot2::facet_grid], this column will show
+#'              which panel current node or edge is from. Note: some nodes may
+#'              fall outside panels (between two panels), so there are possible
+#'              `NA` values in this column. We also provide `.panel` column,
+#'              which always give the right branch for usage of the ggplot
+#'              facet.
+#'   - `.panel`: See `panel`, this is what we often used.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
 #'     and correspond to both nodes of each edge.
-#'   - `panel`: which panel current node is, if we split the plot into panels
-#'              using [facet_grid][ggplot2::facet_grid], this column will show
-#'              which panel current node or edge is from. Note: some nodes
-#'              may fall outside panels, so there are possible `NA` values in
-#'              this column. We also provide `.panel` column, which always
-#'              give the right branch for usage of the ggplot facet.
-#'   - `.panel`: See `panel`.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
 #' @inherit align return

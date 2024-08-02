@@ -256,8 +256,9 @@ ggheatmap(small_mat) +
 
 In contrast to `align_group`, `align_kmeans`, and `align_reorder`,
 `align_dendro` is capable of drawing plot components. Therefore, it has
-a default `set_context` value of `c(TRUE, TRUE)`, we can directly add
-ggplot elements after `align_dendro` function.
+a default `set_context` value of `TRUE`, which indicates whether to set
+the active context to current Align object. we can directly add ggplot
+elements after `align_dendro` function.
 
 ``` r
 ggheatmap(small_mat) +
@@ -345,7 +346,7 @@ ggheatmap(small_mat) +
 #>   heatmap x
 ```
 
-> `ggalign` always prevent user from reordering the layout axis twice.
+> `ggalign` always prevent users from reordering the layout axis twice.
 
 ## `align_gg`
 
@@ -360,7 +361,7 @@ annotations can only have one facet axis. In the case where the input
 data is already a data frame, three additional columns-`.row_names`,
 `.row_index`, and `.panel`—are added to the data frame.
 
-You can also use `gganno` which is an alias of `align_gg`.
+You can also use `ggalign` which is an alias of `align_gg`.
 
 ``` r
 ggheatmap(small_mat) +

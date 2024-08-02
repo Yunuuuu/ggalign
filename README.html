@@ -789,7 +789,8 @@ the same with <code>cutree</code>.</p>
 <p>In contrast to <code>align_group</code>, <code>align_kmeans</code>,
 and <code>align_reorder</code>, <code>align_dendro</code> is capable of
 drawing plot components. Therefore, it has a default
-<code>set_context</code> value of <code>c(TRUE, TRUE)</code>, we can
+<code>set_context</code> value of <code>TRUE</code>, which indicates
+whether to set the active context to current Align object. we can
 directly add ggplot elements after <code>align_dendro</code>
 function.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">ggheatmap</span>(small_mat) <span class="sc">+</span></span>
@@ -861,7 +862,7 @@ dendrogram.</p>
 <span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="co">#&gt; ! `align_dendro()` disrupt the previously established order of the</span></span>
 <span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a><span class="co">#&gt;   heatmap x</span></span></code></pre></div>
 <blockquote>
-<p><code>ggalign</code> always prevent user from reordering the layout
+<p><code>ggalign</code> always prevent users from reordering the layout
 axis twice.</p>
 </blockquote>
 <h2 id="align_gg"><code>align_gg</code></h2>
@@ -877,7 +878,7 @@ column, as annotations can only have one facet axis. In the case where
 the input data is already a data frame, three additional
 columns-<code>.row_names</code>, <code>.row_index</code>, and
 <code>.panel</code>—are added to the data frame.</p>
-<p>You can also use <code>gganno</code> which is an alias of
+<p>You can also use <code>ggalign</code> which is an alias of
 <code>align_gg</code>.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">ggheatmap</span>(small_mat) <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
