@@ -1,8 +1,8 @@
 ---
-title: "single-heatmap"
+title: "Single-Heatmap-Colors"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{single-heatmap}
+  %\VignetteIndexEntry{Single-Heatmap-Colors}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
