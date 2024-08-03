@@ -18,7 +18,9 @@
 A modified \code{LayoutHeatmap} object.
 }
 \description{
-Add components to heatmap and heatmap annotations
+If the active context is the heatmap body, this will add the object for
+heatmap and all annotations. Otherwise, it'll add the object for current
+active context only.
 }
 \seealso{
 \link{layout_heatmap_and_add}

@@ -495,14 +495,18 @@ sessionInfo()
 #> [1] ggalign_0.0.1 ggplot2_3.5.1
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] gtable_0.3.5       dplyr_1.1.4        compiler_4.4.0     highr_0.11        
-#>  [5] tidyselect_1.2.1   tidyr_1.3.1        scales_1.3.0       yaml_2.3.8        
-#>  [9] fastmap_1.2.0      ggh4x_0.2.8        R6_2.5.1           labeling_0.4.3    
-#> [13] generics_0.1.3     patchwork_1.2.0    knitr_1.47         tibble_3.2.1      
-#> [17] munsell_0.5.1      pillar_1.9.0       RColorBrewer_1.1-3 rlang_1.1.4       
-#> [21] utf8_1.2.4         xfun_0.45          viridisLite_0.4.2  cli_3.6.3         
-#> [25] withr_3.0.0        magrittr_2.0.3     digest_0.6.36      grid_4.4.0        
-#> [29] lifecycle_1.0.4    vctrs_0.6.5        evaluate_0.24.0    glue_1.7.0        
-#> [33] farver_2.1.2       fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.27    
-#> [37] purrr_1.0.2        tools_4.4.0        pkgconfig_2.0.3    htmltools_0.5.8.1
+#>  [1] gtable_0.3.5         dplyr_1.1.4          compiler_4.4.0      
+#>  [4] highr_0.11           tidyselect_1.2.1     tidyr_1.3.1         
+#>  [7] scales_1.3.0         yaml_2.3.8           fastmap_1.2.0       
+#> [10] ggh4x_0.2.8          R6_2.5.1             labeling_0.4.3      
+#> [13] generics_0.1.3       patchwork_1.2.0.9000 knitr_1.47          
+#> [16] tibble_3.2.1         munsell_0.5.1        pillar_1.9.0        
+#> [19] RColorBrewer_1.1-3   rlang_1.1.4          utf8_1.2.4          
+#> [22] xfun_0.45            viridisLite_0.4.2    cli_3.6.3           
+#> [25] withr_3.0.0          magrittr_2.0.3       digest_0.6.36       
+#> [28] grid_4.4.0           lifecycle_1.0.4      vctrs_0.6.5         
+#> [31] evaluate_0.24.0      glue_1.7.0           farver_2.1.2        
+#> [34] fansi_1.0.6          colorspace_2.1-0     rmarkdown_2.27      
+#> [37] purrr_1.0.2          tools_4.4.0          pkgconfig_2.0.3     
+#> [40] htmltools_0.5.8.1
 ```
