@@ -1,5 +1,6 @@
 #' Add components to heatmap and heatmap annotations
 #'
+#' @inherit layout_heatmap_and_add description
 #' @param e1 A [LayoutHeatmap][layout_heatmap] object.
 #' @param e2 An object to be added to the plot.
 #' @inherit heatmap-add return
@@ -27,6 +28,10 @@ methods::setMethod("&", c("LayoutHeatmap", "ANY"), function(e1, e2) {
 # `layout_heatmap_and` is too similar with `layout_heatmap_and` in the name.
 #' Add custom objects to heatmap and heatmap annotations
 #'
+#' If the active context is the heatmap body, this will add the object for
+#' heatmap and all annotations. Otherwise, it'll add the object for current
+#' active context only.
+#'
 #' @param heatmap A [LayoutHeatmap][layout_heatmap] object
 #' @inheritParams ggplot2::ggplot_add
 #' @inherit heatmap-add return
@@ -44,8 +49,11 @@ layout_heatmap_and_add.default <- function(object, heatmap, object_name) {
 
 #' @export
 layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
-    heatmap <- heatmap_add(object, heatmap, object_name)
-    for (position in GGHEAT_ELEMENTS) {
+    if (is.null(set <- get_context(heatmap))) {
+        heatmap <- heatmap_add(object, heatmap, object_name)
+        set <- GGHEAT_ELEMENTS
+    }
+    for (position in set) {
         stack <- slot(heatmap, position)
         if (is.null(stack)) next
         slot(heatmap, position) <- layout_stack_and_add(

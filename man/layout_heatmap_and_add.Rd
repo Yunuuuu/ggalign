@@ -17,5 +17,7 @@ layout_heatmap_and_add(object, heatmap, object_name)
 A modified \code{LayoutHeatmap} object.
 }
 \description{
-Add custom objects to heatmap and heatmap annotations
+If the active context is the heatmap body, this will add the object for
+heatmap and all annotations. Otherwise, it'll add the object for current
+active context only.
 }
