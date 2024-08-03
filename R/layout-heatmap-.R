@@ -27,7 +27,16 @@
 #'   - `waiver()`: if `xlabels`/`ylabels` is `NULL`, then
 #'     `xlabels_nudge`/`ylabels_nudge` will be `NULL`, otherwise `0`.
 #'   - A numeric.
-#' @inheritParams patchwork::plot_layout
+#' @param guides A string specifying how guides should be treated in the layout.
+#' `"collect"` will collect guides below to the given nesting level, removing
+#' duplicates. `"keep` will stop collection at this level and let guides be
+#' placed alongside their plot. `"auto"` will allow guides to be collected if a
+#' upper level tries, but place them alongside the plot if not. If you modify
+#' default guide `"position"` with `theme(legend.position=...)` while also
+#' collecting guides you must apply that change to the overall layout.
+#' @param align_axis_title A boolean value or a character of the axis position
+#' (`"t"`, `"l"`, `"b"`, `"r"`) indicates how to align the axis title. By
+#' default, all axis title won't be aligned.
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
 #'
@@ -132,7 +141,8 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
                                   ylabels = waiver(),
                                   xlabels_nudge = waiver(),
                                   ylabels_nudge = waiver(),
-                                  guides = "collect",
+                                  guides = NULL,
+                                  align_axis_title = NULL,
                                   filling = TRUE, ...) {
     assert_bool(filling)
     xlabels <- set_labels(xlabels, colnames(data), "x")
@@ -182,7 +192,8 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
             # following parameters are used by patchwork
             width = set_size(width),
             height = set_size(height),
-            guides = guides
+            guides = guides %||% "collect",
+            align_axis_title = align_axis_title %||% FALSE
         ),
         plot = plot
     )

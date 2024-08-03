@@ -72,7 +72,8 @@ stack_build <- function(x) {
             .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "rel_sizes"))
         ),
-        guides = .subset2(params, "guides")
+        guides = .subset2(params, "guides"),
+        align_axis_title = .subset2(params, "align_axis_title")
     )
     list(plot = plot, size = slot(x, "size"))
 }

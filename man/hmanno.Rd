@@ -4,20 +4,34 @@
 \alias{hmanno}
 \title{Determine the context of subsequent manipulations}
 \usage{
-hmanno(what, size = NULL)
+hmanno(what, size = NULL, guides = NULL, align_axis_title = NULL)
 }
 \arguments{
 \item{what}{What should get activated? Possible values are follows:
 \itemize{
 \item A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \item \code{NULL}: means set the active context into the \code{heatmap} itself.
-\item \code{missing} or \code{NA}: don't change the context, but set the size of current
-active context.
-}}
+\item \code{missing} or \code{NA}: don't change the context, use current active context.
+}
+
+If the active context is a string of \code{"top"}, \code{"left"}, \code{"bottom"}, or
+\code{"right"}. We can also set the stack (heatmap annotation) \code{size}, \code{guides}
+and \code{align_axis_title}.}
 
 \item{size}{A \link[grid:unit]{unit} object to set the size of the heatmap
-annotation. This will only be used if \code{what} is a string of \code{"top"},
-\code{"left"}, \code{"bottom"}, or \code{"right"}.}
+annotation.}
+
+\item{guides}{A string specifying how guides should be treated in the layout.
+\code{"collect"} will collect guides below to the given nesting level, removing
+duplicates. \verb{"keep} will stop collection at this level and let guides be
+placed alongside their plot. \code{"auto"} will allow guides to be collected if a
+upper level tries, but place them alongside the plot if not. If you modify
+default guide \code{"position"} with \code{theme(legend.position=...)} while also
+collecting guides you must apply that change to the overall layout.}
+
+\item{align_axis_title}{A boolean value or a character of the axis position
+(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
+default, all axis title won't be aligned.}
 }
 \value{
 A \code{active} object which can be added into

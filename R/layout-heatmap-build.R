@@ -30,7 +30,8 @@ build_patchwork.LayoutHeatmap <- function(layout) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(params, "guides")
+        guides = .subset2(params, "guides"),
+        align_axis_title = .subset2(params, "align_axis_title")
     )
 }
 

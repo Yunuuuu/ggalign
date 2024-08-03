@@ -24,7 +24,8 @@ ggheatmap(data = NULL, mapping = aes(), ...)
   ylabels = waiver(),
   xlabels_nudge = waiver(),
   ylabels_nudge = waiver(),
-  guides = "collect",
+  guides = NULL,
+  align_axis_title = NULL,
   filling = TRUE,
   ...
 )
@@ -76,13 +77,16 @@ center. One of:
 }}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
-\code{'collect'} will collect guides below to the given nesting level, removing
-duplicates. \code{'keep'} will stop collection at this level and let guides be
-placed alongside their plot. \code{auto} will allow guides to be collected if a
-upper level tries, but place them alongside the plot if not.  If you modify
-default guide "position" with \link[ggplot2:theme]{theme(legend.position=...)}
-while also collecting guides you must apply that change to the overall
-patchwork (see example).}
+\code{"collect"} will collect guides below to the given nesting level, removing
+duplicates. \verb{"keep} will stop collection at this level and let guides be
+placed alongside their plot. \code{"auto"} will allow guides to be collected if a
+upper level tries, but place them alongside the plot if not. If you modify
+default guide \code{"position"} with \code{theme(legend.position=...)} while also
+collecting guides you must apply that change to the overall layout.}
+
+\item{align_axis_title}{A boolean value or a character of the axis position
+(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
+default, all axis title won't be aligned.}
 
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}

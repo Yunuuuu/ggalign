@@ -77,7 +77,6 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
 
 #' @export
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
-    size <- attr(object, "size")
     if (is.na(object)) object <- get_context(heatmap) %||% "plot"
     if (object == "plot") {
         return(set_context(heatmap, NULL))
@@ -97,12 +96,20 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
             direction = direction,
             labels = .subset2(params, paste0(axis, "labels")),
             labels_nudge = .subset2(params, paste0(axis, "labels_nudge")),
-            guides = NULL
+            guides = "auto",
+            align_axis_title = .subset2(params, "align_axis_title")
         )
         stack <- set_panels(stack, get_panels(heatmap, axis))
         stack <- set_index(stack, get_index(heatmap, axis))
     }
-    if (!is.null(size)) slot(stack, "size") <- size
+
+    if (!is.null(size <- attr(object, "size"))) slot(stack, "size") <- size
+    if (!is.null(guides <- attr(object, "guides"))) {
+        slot(stack, "params")$guides <- guides
+    }
+    if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
+        slot(stack, "guides")$align_axis_title <- align_axis_title
+    }
     slot(heatmap, object) <- stack
     heatmap
 }

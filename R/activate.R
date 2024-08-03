@@ -20,15 +20,19 @@ activate.LayoutHeatmap <- function(x, what) {
 #' @param what What should get activated? Possible values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#'    * `missing` or `NA`: don't change the context, but set the size of current
-#'      active context.
+#'    * `missing` or `NA`: don't change the context, use current active context.
+#'
+#' If the active context is a string of `"top"`, `"left"`, `"bottom"`, or
+#' `"right"`. We can also set the stack (heatmap annotation) `size`, `guides`
+#' and `align_axis_title`.
+#'
 #' @param size A [unit][grid::unit] object to set the size of the heatmap
-#' annotation. This will only be used if `what` is a string of `"top"`,
-#' `"left"`, `"bottom"`, or `"right"`.
+#' annotation.
+#' @inheritParams layout_heatmap
 #' @return A `active` object which can be added into
 #' [LayoutHeatmap][layout_heatmap].
 #' @export
-hmanno <- function(what, size = NULL) {
+hmanno <- function(what, size = NULL, guides = NULL, align_axis_title = NULL) {
     if (missing(what)) {
         what <- NA_character_
     } else if (is.null(what)) { # activate
@@ -39,7 +43,12 @@ hmanno <- function(what, size = NULL) {
         what <- match.arg(what, GGHEAT_ELEMENTS)
     }
     if (!is.null(size)) size <- set_size(size)
-    structure(what, size = size, class = c("heatmap_active", "active"))
+    structure(what,
+        size = size,
+        guides = guides,
+        align_axis_title = align_axis_title,
+        class = c("heatmap_active", "active")
+    )
 }
 
 # #' @return

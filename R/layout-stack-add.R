@@ -112,10 +112,6 @@ layout_stack_add.LayoutHeatmap <- function(object, stack, object_name) {
     }
 
     # add annotation -------------------------------------
-    if (identical(slot(object, "params")$guides, "collect") &&
-        identical(slot(stack, "params")$guides, "collect")) {
-        slot(object, "params")$guides <- NULL
-    }
     # we won't change the active context for heatmap
     slot(stack, "plots") <- c(slot(stack, "plots"), list(object))
 
