@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-reorder.R
 \name{align_reorder}
 \alias{align_reorder}
-\title{Reorder Heatmap rows/columns}
+\title{Reorder layout observations}
 \usage{
 align_reorder(
   fun = rowMeans,
@@ -16,13 +16,13 @@ align_reorder(
 }
 \arguments{
 \item{fun}{A summary function. It should take a data and return the weights
-for the heatmap rows/columns.}
+for the layout observations.}
 
 \item{...}{Additional arguments passed to \code{fun}.}
 
 \item{strict}{A boolean value indicates whether the order should be strict.
-If previous groups exist, and strict is \code{FALSE}, this will reorder the
-heatmap rows/columns in each group.}
+If previous groups has been established, and strict is \code{FALSE}, this will
+reorder the observations in each group.}
 
 \item{decreasing}{A boolean value. Should the sort order be increasing or
 decreasing?}
@@ -55,7 +55,7 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Reorder Heatmap rows/columns
+Reorder layout observations
 }
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +

@@ -1,4 +1,4 @@
-#' Group axis into panels
+#' Group layout axis into panels
 #'
 #' @param group A character define the groups, this will split the
 #' axis into different panels.

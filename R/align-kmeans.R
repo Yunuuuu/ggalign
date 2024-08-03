@@ -1,4 +1,5 @@
-#' Group Heatmap rows/columns by kmeans
+#' Group layout observations by kmeans
+#' 
 #' @inheritParams stats::kmeans
 #' @inheritParams align
 #' @inherit align return

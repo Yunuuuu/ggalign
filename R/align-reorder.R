@@ -1,11 +1,11 @@
-#' Reorder Heatmap rows/columns
+#' Reorder layout observations
 #'
 #' @param fun A summary function. It should take a data and return the weights
-#' for the heatmap rows/columns.
+#' for the layout observations.
 #' @param ... Additional arguments passed to `fun`.
 #' @param strict A boolean value indicates whether the order should be strict.
-#' If previous groups exist, and strict is `FALSE`, this will reorder the
-#' heatmap rows/columns in each group.
+#' If previous groups has been established, and strict is `FALSE`, this will
+#' reorder the observations in each group.
 #' @param decreasing A boolean value. Should the sort order be increasing or
 #' decreasing?
 #' @inheritParams align
