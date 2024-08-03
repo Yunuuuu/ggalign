@@ -40,27 +40,12 @@ AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
     setup_data = function(self, data, params) data,
     compute = function(self, panels, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
-        direction <- .subset2(self, "direction")
-        if (!is.null(panels) && strict) {
-            axis <- to_matrix_axis(direction)
-            cli::cli_abort(c(
-                paste(
-                    "{.fn {snake_class(self)}} cannot reordering {axis}-axis",
-                    "since group of layout {axis}-axis exists"
-                ),
-                i = "try to set `strict = FALSE` to reorder within each group"
-            ), call = .subset2(self, "call"))
-        }
+        assert_reorder(self, panels, strict)
         weights <- rlang::inject(fun(data, !!!fun_params))
-        if (nrow(data) != length(weights)) {
-            cli::cli_abort(paste(
-                "{.arg fun} of {.fn {snake_class(self)}} must return an atomic",
-                sprintf(
-                    "vector with the same length of %s-axis (%d)",
-                    to_matrix_axis(direction), nrow(data)
-                )
-            ), call = .subset2(self, "call"))
-        }
+        assert_mismatch_nobs(self,
+            nrow(data), length(weights),
+            msg = "must return an atomic vector"
+        )
         weights
     },
     layout = function(self, panels, index, decreasing) {

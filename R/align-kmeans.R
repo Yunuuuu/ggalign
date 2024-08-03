@@ -43,16 +43,7 @@ AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
         stats::kmeans(data, centers, iter.max, nstart, algorithm, trace)
     },
     layout = function(self, panels, index) {
-        if (!is.null(panels)) {
-            direction <- .subset2(self, "direction")
-            cli::cli_abort(c(
-                "{.fn {snake_class(self)}} cannot do sub-split",
-                i = sprintf(
-                    "group of layout %s-axis already exists",
-                    to_matrix_axis(direction)
-                )
-            ), call = self$call)
-        }
+        assert_sub_split(self, panels)
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
     }
 )

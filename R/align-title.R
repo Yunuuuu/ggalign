@@ -54,10 +54,11 @@ AlignTitle <- ggplot2::ggproto("AlignTitle", Align,
             titles <- as.character(data$.panel)
         } else if (length(titles) != nlevels(panels)) {
             cli::cli_abort(
-                sprintf(
-                    "{.arg titles} must be of length of %s %s %s (%d)",
-                    "the same number with heatmap",
-                    to_matrix_axis(position), "panels", nlevels(panels)
+                paste(
+                    "{.arg titles} must be of length of",
+                    "the same number of the layout",
+                    to_matrix_axis(direction), "-axis panels (",
+                    nlevels(panels), ")"
                 ),
                 call = .subset2(self, "call")
             )

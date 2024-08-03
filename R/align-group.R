@@ -22,29 +22,15 @@ align_group <- function(group, set_context = FALSE, name = NULL) {
 
 AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
     setup_params = function(self, data, params) {
-        if (nrow(data) != length(group <- .subset2(params, "group"))) {
-            cli::cli_abort(paste(
-                "{.arg group} of {.fn {snake_class(self)}} must be",
-                sprintf(
-                    "the same length of layout %s-axis (%d)",
-                    to_matrix_axis(.subset2(self, "direction")),
-                    nrow(data)
-                )
-            ), call = .subset2(self, "call"))
-        }
+        assert_mismatch_nobs(self, nrow(data),
+            length(.subset2(params, "group")),
+            arg = "group", 
+            msg = "must be an atomic vector"
+        )
         params
     },
     layout = function(self, panels, index, group) {
-        if (!is.null(panels)) {
-            direction <- .subset2(self, "direction")
-            cli::cli_abort(c(
-                "{.fn {snake_class(self)}} cannot do sub-split",
-                i = sprintf(
-                    "group of layout %s-axis already exists",
-                    to_matrix_axis(direction)
-                )
-            ), call = self$call)
-        }
+        assert_sub_split(self, panels)
         list(group, index)
     }
 )
