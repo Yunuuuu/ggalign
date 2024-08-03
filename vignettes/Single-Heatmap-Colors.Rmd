@@ -61,6 +61,7 @@ that the arguments `row_dend_reorder` and `column_dend_reorder` of
 It is important to note that `ggalign` considers the left-bottom as the starting
 point, while `ComplexHeatmap` considers the left-top as the starting point. 
 
+The `scale_fill_*` function in ggplot2 makes it easy to modify colors.
 
 ```{r}
 ggheatmap(mat) +
@@ -68,7 +69,8 @@ ggheatmap(mat) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 # ComplexHeatmap::Heatmap(mat,
 #   row_dend_reorder = FALSE,
@@ -82,9 +84,13 @@ ggheatmap(mat) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
+
+`oob` argument in the `scale_fill_*` function can be used to deal with the
+outliers.
 
 ```{r}
 mat2 <- mat
@@ -99,7 +105,8 @@ ggheatmap(mat2) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -110,7 +117,8 @@ h1 <- ggheatmap(mat) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 
 h2 <- ggheatmap(mat / 4) +
@@ -123,7 +131,8 @@ h2 <- ggheatmap(mat / 4) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 
 h3 <- ggheatmap(abs(mat)) +
@@ -132,7 +141,8 @@ h3 <- ggheatmap(abs(mat)) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 
 patchwork::wrap_plots(
@@ -149,7 +159,8 @@ ggheatmap(mat) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -162,7 +173,8 @@ ggheatmap(discrete_mat, filling = FALSE) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -189,7 +201,8 @@ ggheatmap(mat_with_na) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -197,8 +210,8 @@ We won't compare the LAB and RGB space. If you want to convert color between
 different color space, try to use (farver)[https://farver.data-imaginist.com/]
 pacakge.
 
-Heatmap border, in ggplot2, you can use `panel.border` argument in `theme()`
-function to control the border.
+In ggplot2, you can use `panel.border` argument in `theme()` function to control
+the Heatmap border.
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
@@ -206,7 +219,8 @@ ggheatmap(mat) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -219,7 +233,8 @@ ggheatmap(mat, filling = FALSE) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
 
@@ -228,6 +243,7 @@ ggheatmap(mat, filling = FALSE) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
-  align_dendro() &
+  align_dendro() +
+  hmanno(NULL) &
   theme(plot.margin = margin())
 ```
