@@ -21,9 +21,7 @@ purrr-style) which accepts two arguments (\code{data} and \code{coords})
 and returns a \link[grid:grid.grob]{grob}.
 
 when \code{draw} is a function, it is used as the \code{draw_group} function
-in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object. So One should always call
-\code{coord$transform(data, panel_params)} in function \code{draw} to get transformed
-data in the plot scales.}
+in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object.}
 
 \item{...}{Additional arguments passed to \code{draw}.}
 

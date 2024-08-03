@@ -7,9 +7,7 @@
 #'   and returns a [grob][grid::grob].
 #'
 #'   when `draw` is a function, it is used as the `draw_group` function
-#'   in a [Geom][ggplot2::Geom] `ggproto` object. So One should always call
-#'   `coord$transform(data, panel_params)` in function `draw` to get transformed
-#'   data in the plot scales.
+#'   in a [Geom][ggplot2::Geom] `ggproto` object.
 #' @param ... Additional arguments passed to `draw`.
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
