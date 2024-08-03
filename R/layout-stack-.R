@@ -4,7 +4,7 @@
 #'
 #' `ggstack` is an alias of `layout_stack`.
 #'
-#' @inheritParams layout_heatmap
+#' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
 #' @param labels,labels_nudge Default `labels`/`labels_nudge` for axis
@@ -12,6 +12,7 @@
 #' @param rel_sizes A numeric or [unit][grid::unit] object of length `3`
 #' indicates the relative widths (`direction = "vertical"`) / heights
 #' (`direction = "vertical"`).
+#' @inheritParams layout_heatmap
 #' @return A `LayoutStack` object.
 #' @export
 layout_stack <- function(data, direction = NULL,

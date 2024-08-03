@@ -24,9 +24,7 @@ ggstack(
 )
 }
 \arguments{
-\item{data}{A numeric or character vector, a data frame, and any other data
-which can be converted into a matrix. Simple vector will be converted into a
-one column matrix.}
+\item{data}{A numeric or character vector, a data frame, or a matrix.}
 
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
