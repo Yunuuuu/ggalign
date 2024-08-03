@@ -48,7 +48,7 @@ AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = sprintf(
-                    "group of heatmap %s already exists",
+                    "group of layout %s-axis already exists",
                     to_matrix_axis(direction)
                 )
             ), call = self$call)

@@ -40,13 +40,13 @@ AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
     setup_data = function(self, data, params) data,
     compute = function(self, panels, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
-        position <- .subset2(self, "position")
+        direction <- .subset2(self, "direction")
         if (!is.null(panels) && strict) {
-            axis <- to_matrix_axis(position)
+            axis <- to_matrix_axis(direction)
             cli::cli_abort(c(
                 paste(
-                    "{.fn {snake_class(self)}} cannot reordering heatmap",
-                    "since group of heatmap {axis} exists"
+                    "{.fn {snake_class(self)}} cannot reordering {axis}-axis",
+                    "since group of layout {axis}-axis exists"
                 ),
                 i = "try to set `strict = FALSE` to reorder within each group"
             ), call = .subset2(self, "call"))
@@ -56,8 +56,8 @@ AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
             cli::cli_abort(paste(
                 "{.arg fun} of {.fn {snake_class(self)}} must return an atomic",
                 sprintf(
-                    "vector with the same length of heatmap %s axis (%d)",
-                    to_matrix_axis(position), nrow(data)
+                    "vector with the same length of %s-axis (%d)",
+                    to_matrix_axis(direction), nrow(data)
                 )
             ), call = .subset2(self, "call"))
         }

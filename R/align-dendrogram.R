@@ -136,8 +136,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                     c(
                         paste(
                             "{.fn {snake_class(self)}} cannot cut tree since",
-                            .subset2(self, "direction"), "direction",
-                            "has been splitted"
+                            "the layout", .subset2(self, "direction"),
+                            "direction", "has been splitted"
                         ),
                         i = "{.arg k} and {.arg h} must be `NULL`"
                     ),

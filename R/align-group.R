@@ -24,9 +24,9 @@ AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
     setup_params = function(self, data, params) {
         if (nrow(data) != length(group <- .subset2(params, "group"))) {
             cli::cli_abort(paste(
-                "{.arg group} of {.fn {snake_class(self)}} must be ",
+                "{.arg group} of {.fn {snake_class(self)}} must be",
                 sprintf(
-                    "the same length of heatmap %s axis (%d)",
+                    "the same length of layout %s-axis (%d)",
                     to_matrix_axis(.subset2(self, "direction")),
                     nrow(data)
                 )
@@ -40,7 +40,7 @@ AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
             cli::cli_abort(c(
                 "{.fn {snake_class(self)}} cannot do sub-split",
                 i = sprintf(
-                    "group of heatmap %s already exists",
+                    "group of layout %s-axis already exists",
                     to_matrix_axis(direction)
                 )
             ), call = self$call)
