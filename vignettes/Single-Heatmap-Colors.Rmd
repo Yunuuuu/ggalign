@@ -193,8 +193,12 @@ ggheatmap(mat_with_na) +
   theme(plot.margin = margin())
 ```
 
-We won't compare the LAB and RGB space.
+We won't compare the LAB and RGB space. If you want to convert color between
+different color space, try to use (farver)[https://farver.data-imaginist.com/]
+pacakge.
 
+Heatmap border, in ggplot2, you can use `panel.border` argument in `theme()`
+function to control the border.
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
@@ -206,6 +210,8 @@ ggheatmap(mat) +
   theme(plot.margin = margin())
 ```
 
+Heatmap cell border, we just decrease the cell width and height. You can also
+use color aesthetic to specify the cell border color.
 ```{r}
 ggheatmap(mat, filling = FALSE) +
   geom_tile(aes(fill = value), width = 0.95, height = 0.95) +
