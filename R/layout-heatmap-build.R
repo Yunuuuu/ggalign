@@ -103,9 +103,6 @@ heatmap_build <- function(heatmap) {
             .subset2(user_xscales, i),
             .subset2(default_xscales, i)
         )
-        # we copy the `expand` from user input into the default for usage of
-        # annotation scales
-        default_xscales[[i]]$expand <- .subset2(user_xscales, i)$expand
     }
 
     for (i in seq_along(default_yscales)) {
@@ -113,9 +110,6 @@ heatmap_build <- function(heatmap) {
             .subset2(user_yscales, i),
             .subset2(default_yscales, i)
         )
-        # we copy the expand from user input
-        #   into the default for usage of annotation
-        default_yscales[[i]]$expand <- .subset2(user_yscales, i)$expand
     }
 
     # then we add facet -----------------------------------
