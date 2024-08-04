@@ -469,8 +469,8 @@ cutree_k_to_h <- function(tree, k) {
     mean(tree$height[c(n - k, n - k + 1L)])
 }
 
-# this function won't set the right `midpoint`, but out plot function won't use
-# it, so, it has no hurt to use.
+# this function won't set the right `midpoint`, but `dendrogram_data` function
+# won't use it, so, it has no hurt to use.
 merge_dendrogram <- function(parent, children) {
     children_heights <- vapply(children, attr, numeric(1L), "height")
     parent_branch_heights <- tree_branch_heights(parent)
