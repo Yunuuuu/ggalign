@@ -100,11 +100,6 @@ layout_heatmap_add.facetted_pos_scales <- layout_heatmap_add.gg
 ##############################################################
 # Preventing from adding following elements
 #' @export
-layout_heatmap_add.CoordFlip <- function(object, heatmap, object_name) {
-    cli::cli_abort("Can't flip axis in {.cls ggheatmap} object")
-}
-
-#' @export
 layout_heatmap_add.matrix <- function(object, heatmap, object_name) {
     cli::cli_abort("Can't change data in {.cls ggheatmap} object")
 }
