@@ -1,45 +1,4 @@
-#' Add components to `LayoutHeatmap`
-#'
-#' @param e1 A [LayoutHeatmap][layout_heatmap] object.
-#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
-#' elements or [align] object.
-#' @return A modified `LayoutHeatmap` object.
-#' @examples
-#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("t") +
-#'     ggalign() +
-#'     geom_point(aes(y = value))
-#' @name heatmap-add
-#' @aliases +.ggheatmap +.LayoutHeatmap
-#' @seealso layout_heatmap_add
-NULL
-
-#' @rdname heatmap-add
-#' @export
-methods::setMethod("+", c("LayoutHeatmap", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code +} with a single argument.",
-            "i" = "Did you accidentally put {.code +} on a new line?"
-        ))
-    }
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    layout_heatmap_add(e2, e1, e2name)
-})
-
-#' Add custom objects to `LayoutHeatmap`
-#'
-#' @param heatmap A `LayoutHeatmap` object
-#' @inheritParams ggplot2::ggplot_add
-#' @inherit heatmap-add return
-#' @examples
-#' layout_heatmap_add(
-#'     geom_point(aes(y = value)),
-#'     ggheatmap(matrix(rnorm(81), nrow = 9))
-#' )
-#' @export
+#' @keywords internal
 layout_heatmap_add <- function(object, heatmap, object_name) {
     UseMethod("layout_heatmap_add")
 }

@@ -6,27 +6,111 @@
 #' A `Layout` object defines how to place the plots.
 #'
 #' @keywords internal
-methods::setClass("Layout", list(active = "ANY"),
-    prototype = list(active = NULL)
+methods::setClass("Layout",
+    list(
+        active = "ANY",
+        `_namespace` = "ANY"
+    ),
+    prototype = list(active = NULL, `_namespace` = function() NULL)
 )
 
 is.layout <- function(x) methods::is(x, "Layout")
 
 #' Print Layout object
+#'
 #' @param object A [layout_heatmap()] or [layout_stack()] object.
 #' @export
 methods::setMethod("show", "Layout", function(object) {
     print(object)
 })
 
-# ** Not implemented yet
-#' @keywords internal
-# methods::setClass(
-#     "LayoutGrid",
-#     contains = "Layout",
-#     list(panel_list = "list", index_list = "list")
-# )
+#############################################################
+#' Add components to `Layout`
+#'
+#' @param e1 A [layout_heatmap()] or [layout_stack()] object.
+#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
+#' elements or [align] object.
+#' @return A modified `Layout` object.
+#' @examples
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("t") +
+#'     ggalign() +
+#'     geom_point(aes(y = value))
+#' @name layout-add
+#' @aliases +.Layout +.LayoutHeatmap +.ggheatmap +.LayoutStack +.ggstack
+NULL
 
+#' @rdname layout-add
+#' @export
+methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
+    if (missing(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code +} with a single argument.",
+            "i" = "Did you accidentally put {.code +} on a new line?"
+        ))
+    }
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_add(e1, e2, e2name)
+})
+
+#' @keywords internal
+layout_add <- function(layout, object, object_name) {
+    UseMethod("layout_add")
+}
+
+#' @export
+layout_add.LayoutHeatmap <- function(layout, object, object_name) {
+    layout_heatmap_add(object, layout, object_name)
+}
+
+#' @export
+layout_add.LayoutStack <- function(layout, object, object_name) {
+    layout_stack_add(object, layout, object_name)
+}
+
+#########################################################
+#' Add components to all plots
+#'
+#' @param e1 A [layout_heatmap()] or [layout_stack()] object.
+#' @param e2 An object to be added to the plot.
+#' @return A modified `Layout` object.
+#' @name layout-and
+#' @aliases &.Layout &.LayoutHeatmap &.ggheatmap &.LayoutStack &.ggstack
+NULL
+
+#' @rdname layout-and
+#' @export
+methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
+    if (missing(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code &} with a single argument.",
+            "i" = "Did you accidentally put {.code &} on a new line?"
+        ))
+    }
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_and_add(e1, e2, e2name)
+})
+
+#' @keywords internal
+layout_and_add <- function(layout, object, object_name) {
+    UseMethod("layout_and_add")
+}
+
+#' @export
+layout_and_add.LayoutHeatmap <- function(layout, object, object_name) {
+    layout_heatmap_and_add(object, layout, object_name)
+}
+
+#' @export
+layout_and_add.LayoutStack <- function(layout, object, object_name) {
+    layout_stack_and_add(object, layout, object_name)
+}
+
+#########################################################
 # utils function ----------------------------------------
 get_panels <- function(x, ...) UseMethod("get_panels")
 

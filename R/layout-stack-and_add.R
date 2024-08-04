@@ -1,36 +1,4 @@
-#' Add components to all stack plots
-#'
-#' @param e1 A [Layoutstack][layout_stack] object.
-#' @param e2 An object to be added to the plot.
-#' @inherit stack-add return
-#' @name stack-and
-#' @aliases &.Layoutstack &.ggstack
-#' @seealso [layout_stack_and_add]
-NULL
-
-#' @rdname stack-and
-#' @export
-methods::setMethod("&", c("LayoutStack", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code &} with a single argument.",
-            "i" = "Did you accidentally put {.code &} on a new line?"
-        ))
-    }
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    layout_stack_and_add(e2, e1, e2name)
-})
-
-# we use `layout_stack_and_add` instead of `layout_stack_and` since
-# `layout_stack_and` is too similar with `layout_stack_and` in the name.
-#' Add custom objects to all stack plots
-#'
-#' @param stack A [Layoutstack][layout_stack] object
-#' @inheritParams ggplot2::ggplot_add
-#' @inherit stack-add return
-#' @export
+#' @keywords internal
 layout_stack_and_add <- function(object, stack, object_name) {
     UseMethod("layout_stack_and_add")
 }

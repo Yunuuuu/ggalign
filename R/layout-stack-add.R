@@ -1,33 +1,3 @@
-#' Add components to `LayoutStack`
-#'
-#' @param e1 A [LayoutStack][layout_stack] object.
-#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
-#' elements, [align] object, or [layout_heatmap] object.
-#' @return A modified `LayoutStack` object.
-#' @examples
-#' layout_stack(matrix(rnorm(81), nrow = 9)) +
-#'     ggalign() +
-#'     geom_point(aes(x = value))
-#' @name stack-add
-#' @aliases +.ggstack +.LayoutStack
-#' @seealso layout_stack_add
-NULL
-
-#' @rdname stack-add
-#' @export
-methods::setMethod("+", c("LayoutStack", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code +} with a single argument.",
-            "i" = "Did you accidentally put {.code +} on a new line?"
-        ))
-    }
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    layout_stack_add(e2, e1, e2name)
-})
-
 #' @keywords internal
 layout_stack_add <- function(object, stack, object_name) {
     UseMethod("layout_stack_add")
