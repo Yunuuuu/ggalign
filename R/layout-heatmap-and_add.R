@@ -27,6 +27,14 @@ layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
 }
 
 #' @export
+layout_heatmap_and_add.ggplot <- function(object, heatmap, object_name) {
+    cli::cli_abort(c(
+        "Cannot add {.code {object_name}} into the heatmap layout",
+        i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"
+    ))
+}
+
+#' @export
 layout_heatmap_and_add.labels <- layout_heatmap_and_add.gg
 
 #' @export

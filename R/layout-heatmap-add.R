@@ -113,7 +113,7 @@ layout_heatmap_add.matrix <- function(object, heatmap, object_name) {
 layout_heatmap_add.data.frame <- layout_heatmap_add.matrix
 
 #' @export
-layout_heatmap_add.ggplot <- function(object, stack, object_name) {
+layout_heatmap_add.ggplot <- function(object, heatmap, object_name) {
     cli::cli_abort(c(
         "Cannot add {.code {object_name}} into the heatmap layout",
         i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"

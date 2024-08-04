@@ -28,6 +28,14 @@ layout_stack_and_add.gg <- function(object, stack, object_name) {
 }
 
 #' @export
+layout_stack_and_add.ggplot <- function(object, stack, object_name) {
+    cli::cli_abort(c(
+        "Cannot add {.code {object_name}} into the stack layout",
+        i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"
+    ))
+}
+
+#' @export
 layout_stack_and_add.labels <- layout_stack_and_add.gg
 
 #' @export
