@@ -142,7 +142,7 @@ set_default_scales <- function(scale_name, panels, index, labels, nudge,
     )
     data <- split(seq_along(index), panels)
     if (!is.list(expand)) expand <- rep_len(list(expand), length(data))
-    .mapply(function(x, expand) {
+    .mapply(function(x, e) {
         if (is.null(nudge)) {
             breaks <- NULL
             labels <- NULL # if breaks is `NULL`, `labels` cannot be set
@@ -154,24 +154,18 @@ set_default_scales <- function(scale_name, panels, index, labels, nudge,
             limits = range(x) + c(-0.5, 0.5),
             breaks = breaks,
             labels = labels,
-            expand = expand
+            expand = e
         )
-    }, list(x = data, expand = expand), NULL)
+    }, list(x = data, e = expand), NULL)
 }
 
 #' @importFrom rlang is_empty
 extract_scales <- function(plot, axis, n_panels, facet_scales) {
-    # if no facets, or if no facet scales
-    if (n_panels > 1L && !is.null(facet_scales) &&
+    # if no facets, or if no facet scales, we replicate the single scale
+    # object to match the panel numbers
+    if (n_panels > 1L &&
+        !is.null(facet_scales) &&
         !is_empty(ans <- .subset2(facet_scales, axis))) {
-        # we don't allow the usage of formula in ggalign package
-        if (rlang::is_formula(.subset2(ans, 1L))) {
-            cli::cli_warn(paste(
-                "{.fn facetted_pos_scales} formula is not supported in",
-                "{.pkg ggalign}"
-            ))
-            ans <- rep_len(list(plot$scales$get_scales(axis)), n_panels)
-        }
     } else {
         ans <- rep_len(list(plot$scales$get_scales(axis)), n_panels)
     }
@@ -189,6 +183,7 @@ melt_facet <- function(user_facet, default_facet) {
 
     # will change the user input, so we must use `ggproto_clone`
     user_facet <- ggproto_clone(user_facet)
+
     # we always fix the grid rows and cols
     user_facet$params$rows <- default_facet$params$rows
     user_facet$params$cols <- default_facet$params$cols

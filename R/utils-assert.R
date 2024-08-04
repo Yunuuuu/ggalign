@@ -14,6 +14,22 @@ assert_mapping <- function(mapping, arg = caller_arg(mapping),
     }
 }
 
+assert_facetted_scales <- function(object, object_name, plot_name,
+                                   call = caller_call()) {
+    if (any(vapply(object, rlang::is_formula, logical(1L)))) {
+        cli::cli_abort(
+            c(
+                "Cannot add {.code {object_name}} into {plot_name}",
+                paste(
+                    "{.fn facetted_pos_scales} formula is not supported in",
+                    "{.pkg ggalign}"
+                )
+            ),
+            call = call
+        )
+    }
+}
+
 assert_mismatch_nobs <- function(align, n, nobs, msg, arg) {
     if (n != nobs) {
         cli::cli_abort(paste(

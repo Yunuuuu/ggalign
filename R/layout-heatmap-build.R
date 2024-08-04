@@ -75,8 +75,7 @@ heatmap_build <- function(heatmap) {
     do_row_facet <- nlevels(ypanels) > 1L
     do_column_facet <- nlevels(xpanels) > 1L
 
-    # following scales are templates used by both heatmap and annotation
-    # here is the default scales
+    # here is the default scales -----------------------
     default_xscales <- set_default_scales(
         "x", xpanels, xindex,
         .subset2(params, "xlabels"),

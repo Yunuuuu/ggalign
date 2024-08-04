@@ -133,6 +133,7 @@ heatmap_add.labels <- heatmap_add.gg
 
 #' @export
 heatmap_add.facetted_pos_scales <- function(object, heatmap, object_name) {
+    assert_facetted_scales(object, object_name, "the heatmap layout")
     slot(heatmap, "facetted_pos_scales") <- object
     heatmap
 }
