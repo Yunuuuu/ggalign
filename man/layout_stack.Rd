@@ -3,7 +3,7 @@
 \name{layout_stack}
 \alias{layout_stack}
 \alias{ggstack}
-\title{Stack layout}
+\title{Put plots horizontally or vertically}
 \usage{
 layout_stack(
   data,
@@ -33,7 +33,7 @@ direction of the stack layout.}
 parallelly with the layout.}
 
 \item{rel_sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3}
-indicates the relative widths (\code{direction = "vertical"}) / heights
+indicates the relative widths (\code{direction = "horizontal"}) / heights
 (\code{direction = "vertical"}).}
 
 \item{guides}{A string specifying how guides should be treated in the layout.

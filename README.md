@@ -36,8 +36,10 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 `ggalign` provids two layouts to build plots:
 
-- `layout_heatmap`: heatmap layout
-- `layout_stack`: align plots vertically or horizontally
+- `layout_heatmap`: heatmap layout, annotation can be put in “top”,
+  “left”, “bottom” and “right”.
+- `layout_stack`: align plots vertically or horizontally (You can also
+  add layout_heatmap).
 
 ## `layout_heatmap`
 
@@ -418,6 +420,50 @@ ggheatmap(small_mat) +
 
 <img src="man/figures/README-unnamed-chunk-28-1.png" width="100%" />
 
+## `layout_stack`
+
+`layout_stack` put plots horizontally or vertically. You can also use
+the alias `ggstack`.
+
+``` r
+set.seed(123)
+mat1 <- matrix(rnorm(80, 2), 8, 10)
+mat1 <- rbind(mat1, matrix(rnorm(40, -2), 4, 10))
+rownames(mat1) <- paste0("R", 1:12)
+colnames(mat1) <- paste0("C", 1:10)
+
+mat2 <- matrix(runif(60, max = 3, min = 1), 6, 10)
+mat2 <- rbind(mat2, matrix(runif(60, max = 2, min = 0), 6, 10))
+rownames(mat2) <- paste0("R", 1:12)
+colnames(mat2) <- paste0("C", 1:10)
+
+le <- sample(letters[1:3], 12, replace = TRUE)
+names(le) <- paste0("R", 1:12)
+
+ind <- sample(12, 12)
+mat1 <- mat1[ind, ]
+mat2 <- mat2[ind, ]
+le <- le[ind]
+ht1 <- ggheatmap(mat1, width = 1) +
+  scale_fill_viridis_c() +
+  hmanno("t") +
+  align_dendro(k = 3L) +
+  scale_y_continuous(expand = expansion()) +
+  hmanno(NULL)
+ht2 <- ggheatmap(mat2, width = 1)
+ggstack(mat1, rel_sizes = c(0.2, 1, 1)) +
+  align_dendro(size = 0.2) +
+  scale_x_reverse() +
+  ht1 +
+  ht2 +
+  ggalign(data = le, size = 0.2) +
+  geom_tile(aes(x = .column_index, fill = value)) +
+  scale_x_continuous(name = NULL, labels = NULL, breaks = NULL) &
+  theme(plot.margin = margin())
+```
+
+<img src="man/figures/README-unnamed-chunk-29-1.png" width="100%" />
+
 ## restriction
 
 The position scales and facets are partial support.
@@ -436,7 +482,7 @@ ggheatmap(small_mat) + scale_x_continuous(limits = c(0, 0))
 #> Adding another scale for x, which will replace the existing scale.
 ```
 
-<img src="man/figures/README-unnamed-chunk-29-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-30-1.png" width="100%" />
 
 ``` r
 ggheatmap(small_mat) + scale_x_continuous(labels = "a")
@@ -444,13 +490,13 @@ ggheatmap(small_mat) + scale_x_continuous(labels = "a")
 #> Adding another scale for x, which will replace the existing scale.
 ```
 
-<img src="man/figures/README-unnamed-chunk-30-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-31-1.png" width="100%" />
 
 ``` r
 ggheatmap(small_mat, xlabels = rep_len("AA", ncol(small_mat)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-31-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
 
 When working with facets, manual configuration of panels using the
 `facet_*` function is not possible since the internal will use
@@ -466,7 +512,7 @@ ggheatmap(small_mat) +
   geom_point(aes(y = y))
 ```
 
-<img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
 
 ## Session information
 

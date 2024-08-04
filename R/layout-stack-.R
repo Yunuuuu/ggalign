@@ -1,6 +1,6 @@
 ####################################################################
 # add annotation into annotation list
-#' Stack layout
+#' Put plots horizontally or vertically
 #'
 #' `ggstack` is an alias of `layout_stack`.
 #'
@@ -10,7 +10,7 @@
 #' @param labels,labels_nudge Default `labels`/`labels_nudge` for axis
 #' parallelly with the layout.
 #' @param rel_sizes A numeric or [unit][grid::unit] object of length `3`
-#' indicates the relative widths (`direction = "vertical"`) / heights
+#' indicates the relative widths (`direction = "horizontal"`) / heights
 #' (`direction = "vertical"`).
 #' @inheritParams layout_heatmap
 #' @return A `LayoutStack` object.
