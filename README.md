@@ -27,6 +27,12 @@ library(ggalign)
 
 ## `Examples`
 
+Following examples are all from
+[ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html#add-more-information-for-gene-expression-matrix)
+package.
+
+### Add more information for gene expression matrix
+
 ``` r
 expr <- readRDS(system.file(package = "ComplexHeatmap", "extdata", "gene_expression.rds"))
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
@@ -59,7 +65,6 @@ ggstack(data = mat_scaled) +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
     scale_x_continuous(expand = expansion(), breaks = NULL) +
     scale_fill_brewer(palette = "Dark2", guide = "none") +
-    theme_bw() +
     theme(axis.title.y = element_blank()) +
     hmanno(NULL)) +
   ggalign(data = expr$length, size = unit(2, "cm")) +
@@ -85,6 +90,39 @@ ggstack(data = mat_scaled) +
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+### The measles vaccine heatmap
+
+``` r
+mat <- readRDS(system.file("extdata", "measles.rds",
+  package =
+    "ComplexHeatmap"
+))
+ggheatmap(mat, filling = FALSE) +
+  geom_tile(aes(fill = value), color = "white") +
+  scale_fill_gradientn(
+    colours = c("white", "cornflowerblue", "yellow", "red"),
+    values = scales::rescale(c(0, 800, 1000, 127000), c(0, 1))
+  ) +
+  hmanno("r") +
+  align_dendro(plot_dendrogram = FALSE) +
+  hmanno("t", size = unit(2, "cm")) +
+  ggalign(data = rowSums) +
+  geom_bar(aes(y = value), fill = "#FFE200", stat = "identity") +
+  scale_y_continuous(expand = expansion()) +
+  ggtitle("Measles cases in US states 1930-2001\nVaccine introduced 1961") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  hmanno("r", size = unit(2, "cm")) +
+  ggalign(data = rowSums) +
+  geom_bar(aes(x = value),
+    fill = "#FFE200", stat = "identity",
+    orientation = "y"
+  ) +
+  scale_x_continuous(expand = expansion()) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 ## Session information
 

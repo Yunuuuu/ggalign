@@ -13,6 +13,7 @@ align_dendro(
   reorder_group = FALSE,
   k = NULL,
   h = NULL,
+  plot_dendrogram = TRUE,
   plot_cut_height = NULL,
   root = NULL,
   center = FALSE,
@@ -57,6 +58,9 @@ been established.}
 \item{k}{An integer scalar indicates the desired number of groups.}
 
 \item{h}{A numeric scalar indicates heights where the tree should be cut.}
+
+\item{plot_dendrogram}{A boolean value indicates whether plot the dendrogram
+tree.}
 
 \item{plot_cut_height}{A boolean value indicates whether plot the cut height.}
 

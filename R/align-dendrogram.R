@@ -10,6 +10,8 @@
 #' been established.
 #' @param k An integer scalar indicates the desired number of groups.
 #' @param h A numeric scalar indicates heights where the tree should be cut.
+#' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
+#' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
 #' @inheritParams align
 #' @section ggplot2 details:
@@ -63,11 +65,13 @@ align_dendro <- function(mapping = aes(), ...,
                          use_missing = "pairwise.complete.obs",
                          reorder_group = FALSE,
                          k = NULL, h = NULL,
+                         plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
                          size = NULL, data = NULL, plot_data = waiver(),
                          set_context = TRUE, order = NULL, name = NULL) {
     assert_bool(reorder_group)
+    assert_bool(plot_dendrogram)
     assert_mapping(mapping)
     align(
         align_class = AlignDendro,
@@ -77,7 +81,8 @@ align_dendro <- function(mapping = aes(), ...,
             segment_params = rlang::list2(...),
             center = center, type = type, root = root,
             reorder_group = reorder_group,
-            mapping = mapping
+            mapping = mapping,
+            plot_dendrogram = plot_dendrogram
         ),
         set_context = set_context, name = name, order = order,
         size = size, data = data
@@ -218,7 +223,10 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
         list(panels, index)
     },
-    ggplot = function(self, mapping, segment_params) {
+    ggplot = function(self, plot_dendrogram, mapping, segment_params) {
+        if (!plot_dendrogram) {
+            return(NULL)
+        }
         direction <- .subset2(self, "direction")
         ans <- ggplot2::ggplot(mapping = mapping) +
             rlang::inject(ggplot2::geom_segment(
