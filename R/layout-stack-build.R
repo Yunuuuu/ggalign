@@ -34,7 +34,7 @@ stack_build <- function(x, plot_data = NULL,
         if (is.align(plot)) {
             patch <- align_build(plot,
                 panels = panels, index = index,
-                extra_panels = extra_panels, 
+                extra_panels = extra_panels,
                 extra_index = extra_index,
                 plot_data = plot_data
             )
@@ -146,9 +146,7 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 area$b <- .subset2(area, "b") + 1L
                 attr(area, "align") <- attr(area, "align") + 1L
             }
-            if (is_null_unit(size)) {
-                top <- patchwork::wrap_plots(top, heights = size)
-            } else {
+            if (!is_null_unit(size)) {
                 top <- patchwork::wrap_plots(
                     patchwork::plot_spacer(),
                     top,
@@ -161,8 +159,6 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
             size <- .subset2(sizes, "bottom")
             if (is_null_unit(size)) {
-                bottom <- patchwork::wrap_plots(bottom, heights = size)
-            } else {
                 bottom <- patchwork::wrap_plots(
                     bottom,
                     patchwork::plot_spacer(),
@@ -197,8 +193,6 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (is_null_unit(size)) {
-                left <- patchwork::wrap_plots(left, heights = size)
-            } else {
                 left <- patchwork::wrap_plots(
                     patchwork::plot_spacer(),
                     left,
@@ -211,8 +205,6 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         if (!is.null(right <- .subset2(plots, "right"))) {
             size <- .subset2(sizes, "right")
             if (is_null_unit(size)) {
-                right <- patchwork::wrap_plots(right, heights = size)
-            } else {
                 right <- patchwork::wrap_plots(
                     right,
                     patchwork::plot_spacer(),

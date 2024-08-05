@@ -52,6 +52,7 @@ ggstack(data = mat_scaled) +
     hmanno(NULL)) +
   (ggheatmap(base_mean, width = unit(2, "cm")) +
     scale_y_continuous(breaks = NULL) +
+    scale_x_continuous(name = "base mean", breaks = FALSE) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
     hmanno("t", size = unit(2, "cm")) +
     ggalign() +
@@ -63,12 +64,14 @@ ggstack(data = mat_scaled) +
     hmanno(NULL)) +
   ggalign(data = expr$length, size = unit(2, "cm")) +
   geom_point(aes(x = value)) +
+  labs(x = "length") +
   theme(
     panel.border = element_rect(fill = NA),
     axis.text.x = element_text(angle = -60, hjust = 0)
   ) +
   (ggheatmap(expr$type, width = unit(2, "cm")) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
+    scale_x_continuous(breaks = NULL, name = "gene type") +
     hmanno("t") +
     ggalign(limits = FALSE) +
     geom_bar(
@@ -76,6 +79,7 @@ ggstack(data = mat_scaled) +
       position = position_fill()
     ) +
     scale_x_discrete() +
+    scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")) &
   theme(plot.margin = margin())
 ```
