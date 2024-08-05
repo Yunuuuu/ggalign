@@ -1,0 +1,65 @@
+---
+title: "layout-stack"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{layout-stack}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggalign)
+```
+
+# `layout_stack`
+`layout_stack` put plots horizontally or vertically. You can also use the alias
+`ggstack`.
+
+```{r}
+set.seed(123)
+mat1 <- matrix(rnorm(80, 2), 8, 10)
+mat1 <- rbind(mat1, matrix(rnorm(40, -2), 4, 10))
+rownames(mat1) <- paste0("R", 1:12)
+colnames(mat1) <- paste0("C", 1:10)
+
+mat2 <- matrix(runif(60, max = 3, min = 1), 6, 10)
+mat2 <- rbind(mat2, matrix(runif(60, max = 2, min = 0), 6, 10))
+rownames(mat2) <- paste0("R", 1:12)
+colnames(mat2) <- paste0("C", 1:10)
+
+le <- sample(letters[1:3], 12, replace = TRUE)
+names(le) <- paste0("R", 1:12)
+
+ind <- sample(12, 12)
+mat1 <- mat1[ind, ]
+mat2 <- mat2[ind, ]
+le <- le[ind]
+ht1 <- ggheatmap(mat1, width = 1) +
+  scale_fill_viridis_c() +
+  hmanno("t") +
+  align_dendro(k = 3L) +
+  scale_y_continuous(expand = expansion()) +
+  hmanno(NULL)
+ht2 <- ggheatmap(mat2, width = 1)
+ggstack(mat1, rel_sizes = c(0.2, 1, 1)) +
+  align_dendro(size = 0.2) +
+  scale_x_reverse() +
+  ht1 +
+  ht2 +
+  ggalign(data = le, size = 0.2) +
+  geom_tile(aes(x = .column_index, fill = value)) +
+  scale_x_continuous(name = NULL, labels = NULL, breaks = NULL) &
+  theme(plot.margin = margin())
+```
+
+## Session information
+```{r}
+sessionInfo()
+```

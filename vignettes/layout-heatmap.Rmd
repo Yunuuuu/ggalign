@@ -1,0 +1,252 @@
+---
+title: "layout-heatmap"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{layout-heatmap}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# `layout_heatmap`
+```{r setup}
+library(ggalign)
+```
+
+`layout_heatmap` utilizes the grammar of graphics to construct the heatmap and
+heatmap annotations. You can also use the alias `ggheatmap`.
+
+## Input data 
+The data input can be a numeric or character vector, a data frame, and any other
+data which can be converted into a matrix. Simple vector will be converted into
+a one column matrix. 
+
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
+```{r character}
+ggheatmap(letters)
+```
+
+```{r numeric}
+ggheatmap(1:10)
+```
+
+```{r matrix}
+ggheatmap(small_mat)
+```
+
+## Heatmap body
+For `ggplot2` usage, the matrix input will be converted into a long formated
+data frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
+but can be controlled using `mapping` argument. The data in the underlying
+ggplot object contains following columns:
+
+  - `.row_panel`: the row panel
+
+  - `.column_panel`: the column panel
+
+  - `.row_names` and `.column_names`: the row and column names of the original
+    matrix (only applicable when names exist).
+
+  - `.row_index` and `.column_index`: the row and column index of the original
+    matrix.
+
+  - `.x` and `.y`: the `x` and `y` coordinates
+
+  - `value`: the actual matrix value.
+
+If `filling = TRUE`, the following layer will be added automatically:
+```{r}
+geom_tile(
+  aes(.data$.x, .data$.y, fill = .data$value),
+  width = 1L, height = 1L
+)
+```
+
+If you set `filling = FALSE`, a blank heamtap will be drawn.
+```{r}
+ggheatmap(small_mat, filling = FALSE)
+```
+
+You can treat the `LayerHeatmap` object as a normal ggplot2 object with a
+default `mapping` and `data`. You can add `ggplot2` elements as usual.
+```{r}
+ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
+```
+
+For position scales, `limits` cannot be setted, and the internal will always
+reset it as the default. This is required to align the heatmap and annotation.
+```{r}
+ggheatmap(small_mat) + scale_x_continuous(limits = c(0, 0))
+```
+
+`breaks` and `labels` in the position scales are handled in a similar manner of
+discrete scale, thought you can provide as a continuous scale.
+
+`breaks`, value should be one of:
+
+    - `NULL` for no breaks
+
+    - `waiver()` for the default breaks (the full data index or `NULL` if no
+    data names and `labels` is `waiver()`)
+
+    - A character vector of breaks.
+
+    - A numeric vector of data index.
+
+    - A function that takes the data limits or the data index as input and
+    returns breaks as output. Also accepts rlang lambda function notation. 
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous(breaks = NULL)
+```
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous()
+```
+
+```{r}
+no_names <- small_mat
+colnames(no_names) <- NULL
+ggheatmap(no_names) + scale_x_continuous()
+```
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous(breaks = c("column3", "column5"))
+```
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous(breaks = 5:6)
+```
+
+`labels` should be one of:
+    - `NULL` for no labels
+
+    - `waiver()` for the default labels (data names)
+
+    - A character vector giving labels (must be same length as breaks)
+
+    - An expression vector (must be the same length as breaks). See `?plotmath`
+    for details. 
+
+    - A function that takes the data names (or breaks if data has no names) as
+    input and returns labels as output. Also accepts rlang lambda function
+    notation.
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous(labels = NULL)
+```
+
+```{r}
+ggheatmap(small_mat) + scale_x_continuous()
+```
+
+```{r}
+ggheatmap(small_mat) +
+  scale_x_continuous(labels = letters[seq_len(ncol(small_mat))])
+```
+
+```{r}
+ggheatmap(small_mat) +
+  scale_x_continuous(breaks = c(3, 5), labels = c("a", "b"))
+```
+
+You can use discrete scale or continuous scale, both argument will work the
+same. But note it's hard to match all discrete scale limits, for sometimes, you
+should manually specify the `expand` argument.
+```{r}
+ggheatmap(small_mat) +
+  scale_x_discrete(breaks = c(3, 5), labels = c("a", "b"))
+```
+
+Both arguments should be provided in the original scale of the raw matrix, the
+internal will reorder them accordingly if you reorder the heatmap rows/columns.
+
+Here I'll use a heatmap annotation to reorder the heatmap, if you are unfamiliar
+with adding heatmap annotations, there is no need to worry. I will provide a
+more comprehensive explanation in the following section.
+
+```{r}
+index <- sample(ncol(small_mat))
+xlabels <- letters[seq_len(ncol(small_mat))]
+print(xlabels[index])
+# we provide the labels in the original order, the layout will reorder them.
+ggheatmap(small_mat) +
+  scale_x_continuous(labels = xlabels) +
+  hmanno("t") +
+  align_reorder(~ seq_along(index)[order(index)])
+```
+
+When working with facets, manual configuration of panels using the `facet_*`
+function is not possible since the internal will use `facet_grid` to set the
+row/column groups controlled by heatmap annotation. However, you can provide
+`facet_grid` or `facet_null` (if no panels) to control the other arguments
+except `rows` and `cols`. A common usage case is to change the panel strip text.
+
+THe default theme in `ggalign` removed the panel strip text, you can override
+the behaviour with `theme(strip.text = element_text())`. This allows us to add
+the panel title appropriately in heatmaps or any heatmap annotation.
+```{r}
+ggheatmap(small_mat) +
+  facet_grid(labeller = labeller(.column_panel = function(x) letters[as.integer(x)])) +
+  theme(strip.text = element_text()) +
+  hmanno("t") +
+  align_kmeans(centers = 3L)
+```
+
+## Heatmap annotations
+Heatmap annotation works by adding additional information for heatmap
+rows/columns. Heatmap annotations can be positioned at the `top`, `left`,
+`bottom`, or `right` of the heatmap. This is referred to as the active context
+in `ggheatmap`. We can add annotation with `align_*` functions.
+
+By default, the `ggheatmap` function does not initialize any active context, so
+if you want to add heatmap annotations, you need to use `hmanno` to specify
+where the annotation should be added.
+
+
+## Control size
+The different ggplot objects were combined using the `patchwork` package.
+Internally, the `build_patchwork` function was used to construct and merge all
+the `ggplot` objects into a single `patchwork` object. 
+
+`ggheatmap` has `width` and `height` to control the relative (you can also
+provide a unit object) width and height of the heatmap body. `hmanno` function
+have a `size` argument to control the relative width (left and right annotation)
+or height (top and bottom annotation) of the whole annotation. `anno_*` function
+has a `size` argument to control the relative width (left and right annotation)
+or height (top and bottom annotation) of the single annotation in the whole
+annotation.
+
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  hmanno("t", size = unit(20, "mm")) +
+  ggalign(data = rowSums) +
+  geom_bar(aes(y = value, fill = .x), stat = "identity") +
+  hmanno("l", size = 0.2) +
+  ggalign(aes(x = value), data = rowSums) +
+  geom_bar(
+    aes(y = .y, fill = factor(.y)),
+    stat = "identity",
+    orientation = "y"
+  ) +
+  scale_fill_brewer(palette = "Set1", guide = "none") +
+  scale_x_reverse()
+```
+
+## Session information
+```{r}
+sessionInfo()
+```
