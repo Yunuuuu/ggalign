@@ -89,7 +89,7 @@ ggstack(data = mat_scaled) +
 ```
 
 ### The measles vaccine heatmap
-```{r}
+```{r fig.dim = c(12, 12)}
 mat <- readRDS(system.file("extdata", "measles.rds",
   package =
     "ComplexHeatmap"
