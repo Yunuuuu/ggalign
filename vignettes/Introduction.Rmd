@@ -28,7 +28,7 @@ library(ggalign)
 
 ## `Examples`
 
-```{r}
+```{r fig.dim = c(12, 10)}
 expr <- readRDS(system.file(package = "ComplexHeatmap", "extdata", "gene_expression.rds"))
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
 base_mean <- rowMeans(mat)
@@ -39,7 +39,7 @@ ggstack(data = mat_scaled) +
   align_kmeans(centers = 5L) +
   ggpanels(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
-  scale_fill_brewer(palette = "Dark2", guide = "none") +
+  scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
   scale_x_continuous(breaks = NULL, name = NULL) +
   (ggheatmap(mat_scaled) +
     scale_y_continuous(breaks = NULL) +
@@ -77,7 +77,7 @@ ggstack(data = mat_scaled) +
       position = position_fill()
     ) +
     scale_x_discrete() +
-    scale_fill_brewer(palette = "Set3", name = "gene type")) &
+    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")) &
   theme(plot.margin = margin())
 ```
 
