@@ -12,7 +12,7 @@
 #'
 #' The internal will always use a default mapping of `aes(y = .data$.y)` or
 #' `aes(x = .data$.x)`.
-#' 
+#'
 #' For ggplot usage, matrix (including a simple vector) data is converted into a
 #' long-format data frame, similar to the process utilized in `ggheatmap`. But
 #' note that the long-format data frame does not contain `.row_panel` or
@@ -45,12 +45,10 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_gg <- function(mapping = aes(), data = NULL, size = NULL,
-                     labels = NULL, labels_nudge = NULL,
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
-        labels = labels, labels_nudge = labels_nudge,
         size = size, data = data,
         set_context = set_context, order = order, name = name
     )

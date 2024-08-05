@@ -46,7 +46,6 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (is.null(stack <- slot(heatmap, object))) {
         direction <- to_direction(object)
         axis <- to_coord_axis(direction)
-        params <- slot(heatmap, "params")
         stack <- layout_stack(
             switch_direction(
                 direction,
@@ -54,8 +53,6 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
                 t(slot(heatmap, "data"))
             ),
             direction = direction,
-            labels = .subset2(params, paste0(axis, "labels")),
-            labels_nudge = .subset2(params, paste0(axis, "labels_nudge")),
             guides = NULL
         )
         stack <- set_panels(stack, get_panels(heatmap, axis))

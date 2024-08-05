@@ -36,16 +36,10 @@ align_build <- function(x, panels, index) {
         # No facet
         default_facet <- NULL
     }
-    # we merge `labels` and `labels_nudge`
-    default_scales <- set_default_scales(
-        scale_name = to_coord_axis(direction),
-        panels = panels,
-        index = index,
-        labels = .subset2(x, "labels"),
-        nudge = .subset2(x, "labels_nudge")
-    )
+
     x$lock()
     on.exit(x$unlock())
+
     # let `align` to determine how to draw
     # 1. add default layer
     # 2. add plot data
@@ -55,108 +49,246 @@ align_build <- function(x, panels, index) {
     ]
     plot <- rlang::inject(x$draw(panels, index, !!!draw_params))
 
+    # we set up the scale limits, breaks and labels
+    scales <- set_scales(
+        plot = plot,
+        scale_name = to_coord_axis(direction),
+        panels = panels,
+        index = index,
+        layout_labels = .subset2(x, "labels"),
+        facet_scales = .subset2(x, "facetted_pos_scales")
+    )
+
+    # this will modify plot in place
+    remove_scales(plot, .subset2(scales, 1L)$aesthetics)
+
     # in the finally, we ensure the scale limits is the same across all plots
     plot <- align_set_scales_and_facet(
-        plot = plot, direction,
-        .subset2(x, "facetted_pos_scales"),
-        default_scales, default_facet
+        plot = plot, direction = direction,
+        scales, default_facet
     )
     c(list(plot = plot), ans)
 }
 
-align_set_scales_and_facet <- function(plot, direction,
-                                       facetted_pos_scales,
-                                       default_scales,
-                                       default_facet) {
-    user_scales <- extract_scales(
-        plot = plot, to_coord_axis(direction),
-        n_panels = length(default_scales),
-        facet_scales = facetted_pos_scales
-    )
-    for (i in seq_along(default_scales)) {
-        user_scales[[i]] <- melt_scale(
-            .subset2(user_scales, i),
-            .subset2(default_scales, i)
-        )
-    }
-    user_facet <- melt_facet(.subset2(plot, "facet"), default_facet)
+align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {
+    facet <- melt_facet(.subset2(plot, "facet"), default_facet)
     if (is.null(default_facet)) { # no panels
-        user_scales[[1L]]$aesthetics
-        plot <- plot + user_scales + user_facet
+        plot <- plot + scales + facet
     } else {
-        plot <- plot + user_facet +
+        plot <- plot + facet +
             switch_direction(
                 direction,
-                ggh4x::facetted_pos_scales(y = user_scales),
-                ggh4x::facetted_pos_scales(x = user_scales)
+                ggh4x::facetted_pos_scales(y = scales),
+                ggh4x::facetted_pos_scales(x = scales)
             )
     }
     plot
 }
 
-melt_scale <- function(user_scale, default_scale) {
-    if (is.null(user_scale)) {
-        ans <- default_scale$clone()
-    } else {
-        ans <- user_scale$clone()
-        # always reset the limits
-        ans$limits <- default_scale$limits
-
-        # it's not possible for user to know the `breaks` or `labels`
-        # since we'll reorder the observations.
-        # so we always set the breaks or labels into the default if user not
-        # remove it.
-        if (!is.null(ans$breaks)) {
-            ans$breaks <- default_scale$breaks
-        }
-
-        if (!is.null(ans$labels)) {
-            ans$labels <- default_scale$labels
-        }
-
-        # if user provides expand, we'll use it, otherwise, use the default
-        if (is.waiver(ans$expand)) {
-            ans$expand <- default_scale$expand
-        }
-    }
-    ans
-}
-
+#' @param layout_labels A character of the data names.
 #' @return A list of scales for each panel
 #' @noRd
-set_default_scales <- function(scale_name, panels, index, labels, nudge,
-                               expand = ggplot2::expansion()) {
-    if (is.numeric(nudge)) {
-        nudge <- nudge[index]
-    } else if (is.waiver(nudge)) {
-        nudge <- rep_len(0, length(index))
-    }
+set_scales <- function(plot, scale_name, panels, index,
+                       layout_labels, facet_scales,
+                       expand = ggplot2::expansion()) {
     panels <- panels[index]
+
     # For y-axis, ggplot arrange panels from top to bottom,
     # we always choose to reverse the panel order
     if (scale_name == "y") panels <- fct_rev(panels)
-    labels <- labels[index]
-    fn <- switch(scale_name,
-        x = ggplot2::scale_x_continuous,
-        y = ggplot2::scale_y_continuous
-    )
-    data <- split(seq_along(index), panels)
-    if (!is.list(expand)) expand <- rep_len(list(expand), length(data))
-    .mapply(function(x, e) {
-        if (is.null(nudge)) {
-            breaks <- NULL
-            labels <- NULL # if breaks is `NULL`, `labels` cannot be set
-        } else {
-            breaks <- x + nudge[x]
-            labels <- labels[x]
+    n_panels <- nlevels(panels)
+
+    # By default we'll use the continuous scale
+    use_discrete <- FALSE
+
+    # the single scale control the labels and breaks
+    # and determine the global theme
+    if (!is.null(global_scale <- plot$scales$get_scales(scale_name))) {
+        use_discrete <- global_scale$is_discrete()
+    }
+
+    user_scales <- rep_len(list(NULL), n_panels)
+    if (n_panels > 1L &&
+        !is.null(facet_scales) &&
+        !is_empty(user_scales <- .subset2(facet_scales, scale_name))) {
+        # if the global scale was not provided,
+        # we test if the first facetted scale is discrete
+        if (is.null(global_scale)) {
+            for (scale in user_scales) {
+                if (inherits(scale, "Scale")) {
+                    use_discrete <- scale$is_discrete()
+                    break
+                }
+            }
         }
-        fn(
-            limits = range(x) + c(-0.5, 0.5),
-            breaks = breaks,
-            labels = labels,
-            expand = e
-        )
-    }, list(x = data, e = expand), NULL)
+    }
+
+    # set the default global scale
+    if (is.null(global_scale)) {
+        if (use_discrete) {
+            global_scale <- switch(scale_name,
+                x = ggplot2::scale_x_discrete(),
+                y = ggplot2::scale_y_discrete()
+            )
+        } else {
+            global_scale <- switch(scale_name,
+                x = ggplot2::scale_x_continuous(),
+                y = ggplot2::scale_y_continuous()
+            )
+        }
+    }
+
+    # we always use the discrete scale to determine labels and breaks
+    # https://github.com/tidyverse/ggplot2/blob/7fb4c382f9ea332844d469663a8047355a88dd7a/R/scale-.R#L927
+    if (is.null(layout_labels) &&
+        is.waive(global_scale$labels) &&
+        is.waive(global_scale$breaks)) {
+        # special case for data have no layout labels
+        # By default we remove breaks and labels
+        breaks <- NULL
+        labels <- NULL
+    } else {
+        breaks <- get_breaks(global_scale, seq_along(index), layout_labels)
+        labels <- get_labels(global_scale, breaks, layout_labels)
+    }
+
+    # fill NULL with the global scale --------------------
+    if (is.null(names(user_scales))) {
+        ids <- seq_len(nlevels(panels))
+    } else {
+        ids <- levels(panels)
+    }
+    for (id in ids) {
+        if (is.null(scale <- .subset2(user_scales, id))) {
+            user_scales[[id]] <- global_scale$clone()
+        } else {
+            user_scales[[id]] <- scale$clone()
+        }
+    }
+    if (!is.list(expand)) expand <- rep_len(list(expand), n_panels)
+    # we always reset the limits of the user provided scales
+    .mapply(function(scale, data, e) {
+        data_index <- .subset2(data, "index")
+        plot_coord <- .subset2(data, "coord")
+
+        # setup limits -------------------------------
+        # always reset the limits
+        if (use_discrete) {
+            # the labels of `plot_coord` is the data index
+            # See `heatmap_build_data`
+            scale$limits <- plot_coord
+        } else {
+            scale$limits <- range(plot_coord) + c(-0.5, 0.5)
+        }
+
+        # setup breaks and labels --------------------
+        in_domain <- match(data_index, breaks)
+        keep <- !is.na(in_domain)
+        scale$breaks <- plot_coord[keep]
+        scale$labels <- labels[in_domain[keep]]
+
+        # if user provides expand, we'll use it, otherwise, use the default
+        if (is.waive(scale$expand)) scale$expand <- e
+        scale
+    }, list(
+        scale = user_scales,
+        data = split(
+            data_frame0(coord = seq_along(index), index = index),
+            panels
+        ),
+        e = expand
+    ), NULL)
+}
+
+get_breaks <- function(scale, layout_limits, layout_labels) {
+    breaks <- scale$breaks
+    if (identical(breaks, NA)) {
+        cli::cli_abort(c(
+            "Invalid {.arg breaks} specification.",
+            i = "Use {.code NULL}, not {.code NA}."
+        ), call = scale$call)
+    }
+    if (is.null(breaks)) {
+        return(NULL)
+    }
+
+    if (is.waive(breaks)) {
+        breaks <- layout_limits
+    } else {
+        if (is.function(breaks)) {
+            breaks <- breaks(layout_labels %||% layout_limits)
+        }
+
+        if (is.factor(breaks) || is.character(breaks)) {
+            # we interpreted the character breaks as the names of the original
+            # matrix data.
+            breaks <- layout_limits[
+                match(as.character(breaks), layout_labels %||% layout_limits)
+            ]
+        } else if (is.numeric(breaks)) {
+            # we interpreted the numeric breaks as the index of the original
+            # matrix data
+            breaks <- as.integer(breaks)
+        } else {
+            return(NULL)
+        }
+    }
+
+    # Breaks only occur only on values in domain
+    in_domain <- intersect(breaks, layout_limits)
+    structure(in_domain, pos = match(in_domain, breaks))
+}
+
+#' @importFrom rlang is_empty
+get_labels <- function(scale, breaks, layout_labels) {
+    labels <- scale$labels
+    if (is_empty(breaks)) { # if no breaks, no labels
+        return(NULL)
+    }
+
+    if (is.null(labels)) {
+        return(NULL)
+    }
+
+    if (identical(labels, NA)) {
+        cli::cli_abort(c(
+            "Invalid {.arg labels} specification.",
+            i = "Use {.code NULL}, not {.code NA}."
+        ), call = scale$call)
+    }
+
+    # if layout have no names, use the breaks directly
+    if (!is.null(layout_labels)) {
+        user_breaks <- layout_labels[breaks]
+    } else {
+        user_breaks <- breaks
+    }
+
+    if (is.waive(labels)) {
+        user_breaks
+    } else if (is.function(labels)) {
+        labels(user_breaks)
+    } else if (!is.null(names(labels))) {
+        # If labels have names, use them to match with breaks
+        map <- match(names(labels), user_breaks, nomatch = 0L)
+        user_breaks[map] <- labels[map != 0L]
+        user_breaks
+    } else {
+        # Need to ensure that if breaks were dropped, corresponding labels
+        # are too
+        if (!is.null(pos <- attr(breaks, "pos"))) {
+            labels <- labels[pos]
+        }
+        labels
+    }
+}
+
+remove_scales <- function(plot, scale_aesthetics) {
+    # `scales` is an environment we can just modify it directly
+    scales <- .subset2(plot, "scales")
+    if (any(prev_aes <- scales$find(scale_aesthetics))) {
+        scales$scales <- scales$scales[!prev_aes]
+    }
 }
 
 #' @importFrom rlang is_empty

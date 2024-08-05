@@ -9,24 +9,6 @@
 #' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to matrix method.
 #' @param width,height Heatmap width/height, can be a [unit][grid::unit] object.
-#' @param xlabels,ylabels Labels for x/y, the default will use
-#' the colnames/rownames of the `data`. One of:
-#'   - `NULL` for no labels
-#'   - `waiver()` for the default labels
-#'   - A character vector giving labels (must be same length as the heatmap
-#'     axis)
-#'   - An expression vector (must be the same length as heatmap axis). See
-#'     `?plotmath` for details.
-#'   - A function that takes the default labels as the input and returns labels
-#'     as output. Also accepts rlang [lambda][rlang::as_function()] function
-#'     notation.
-#' @param xlabels_nudge,ylabels_nudge A single numeric or a numeric value of
-#' length `ncol(data)/nrow(data)`, to nudge each text label away from the
-#' center. One of:
-#'   - `NULL` for no breaks
-#'   - `waiver()`: if `xlabels`/`ylabels` is `NULL`, then
-#'     `xlabels_nudge`/`ylabels_nudge` will be `NULL`, otherwise `0`.
-#'   - A numeric.
 #' @inheritParams patchwork::plot_layout
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
@@ -128,27 +110,9 @@ ggheatmap <- layout_heatmap
 #' @rdname layout_heatmap
 layout_heatmap.matrix <- function(data, mapping = aes(),
                                   width = NULL, height = NULL,
-                                  xlabels = waiver(),
-                                  ylabels = waiver(),
-                                  xlabels_nudge = waiver(),
-                                  ylabels_nudge = waiver(),
                                   guides = "collect",
                                   filling = TRUE, ...) {
     assert_bool(filling)
-    xlabels <- set_labels(xlabels, colnames(data), "x")
-    xlabels_nudge <- set_nudge(
-        xlabels_nudge,
-        n = ncol(data),
-        labels = xlabels,
-        axis = "x"
-    )
-    ylabels <- set_labels(ylabels, rownames(data), "y")
-    ylabels_nudge <- set_nudge(
-        ylabels_nudge,
-        n = nrow(data),
-        labels = ylabels,
-        axis = "y"
-    )
     plot <- ggplot2::ggplot(mapping = mapping) +
         ggplot2::theme_bw() +
         theme(
@@ -175,10 +139,6 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
         "LayoutHeatmap",
         data = data,
         params = rlang::list2(
-            xlabels = xlabels,
-            xlabels_nudge = xlabels_nudge,
-            ylabels = ylabels,
-            ylabels_nudge = ylabels_nudge,
             # following parameters are used by patchwork
             width = set_size(width),
             height = set_size(height),

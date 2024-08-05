@@ -9,8 +9,6 @@ align_gg(
   mapping = aes(),
   data = NULL,
   size = NULL,
-  labels = NULL,
-  labels_nudge = NULL,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -20,8 +18,6 @@ ggalign(
   mapping = aes(),
   data = NULL,
   size = NULL,
-  labels = NULL,
-  labels_nudge = NULL,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -49,29 +45,6 @@ plots along a single axis.
 }}
 
 \item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
-
-\item{labels}{Labels for axis parallelly with the layout, the default will
-use the rownames of the \code{data}. One of:
-\itemize{
-\item \code{NULL} for no labels
-\item \code{waiver()} for the default labels
-\item A character vector giving labels (must be same length as the layout
-axis). Note the labels will be reordered based on the layout.
-\item An expression vector (must be the same length as layout axis). See
-\code{?plotmath} for details.
-\item A function that takes the default labels as the input and returns labels
-as output. Also accepts rlang \link[rlang:as_function]{lambda} function
-notation.
-}}
-
-\item{labels_nudge}{A single numeric or a numeric value of length
-\code{nrow(data)}, to nudge each text label away from the center. One of:
-\itemize{
-\item \code{NULL} for no breaks
-\item \code{waiver()}: if \code{labels} is \code{NULL}, then \code{labels_nudge} will be \code{NULL},
-otherwise it will inherit from the \code{layout} object.
-\item A numeric.
-}}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements

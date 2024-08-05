@@ -26,15 +26,13 @@ layout_stack_add.Align <- function(object, stack, object_name) {
     # make layout ----------------------------------------
     # this step the object will act with the stack layout
     # group rows into panels or reorder rows
-    params <- slot(stack, "params")
     layout <- initialize_align(
         object,
         slot(stack, "direction"),
         layout_data = slot(stack, "data"),
-        layout_labels = .subset2(params, "labels"),
-        layout_nudge = .subset2(params, "labels_nudge"),
         layout_panels = get_panels(stack),
-        layout_index = get_index(stack)
+        layout_index = get_index(stack),
+        object_name = object_name
     )
 
     # add annotation -------------------------------------

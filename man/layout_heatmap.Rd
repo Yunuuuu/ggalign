@@ -20,10 +20,6 @@ ggheatmap(data = NULL, mapping = aes(), ...)
   mapping = aes(),
   width = NULL,
   height = NULL,
-  xlabels = waiver(),
-  ylabels = waiver(),
-  xlabels_nudge = waiver(),
-  ylabels_nudge = waiver(),
   guides = "collect",
   filling = TRUE,
   ...
@@ -50,30 +46,6 @@ will using \code{aes(.data$.x, .data$.y)}.}
 \item{...}{Additional arguments passed to matrix method.}
 
 \item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
-
-\item{xlabels, ylabels}{Labels for x/y, the default will use
-the colnames/rownames of the \code{data}. One of:
-\itemize{
-\item \code{NULL} for no labels
-\item \code{waiver()} for the default labels
-\item A character vector giving labels (must be same length as the heatmap
-axis)
-\item An expression vector (must be the same length as heatmap axis). See
-\code{?plotmath} for details.
-\item A function that takes the default labels as the input and returns labels
-as output. Also accepts rlang \link[rlang:as_function]{lambda} function
-notation.
-}}
-
-\item{xlabels_nudge, ylabels_nudge}{A single numeric or a numeric value of
-length \code{ncol(data)/nrow(data)}, to nudge each text label away from the
-center. One of:
-\itemize{
-\item \code{NULL} for no breaks
-\item \code{waiver()}: if \code{xlabels}/\code{ylabels} is \code{NULL}, then
-\code{xlabels_nudge}/\code{ylabels_nudge} will be \code{NULL}, otherwise \code{0}.
-\item A numeric.
-}}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
 \code{'collect'} will collect guides below to the given nesting level, removing

@@ -2,65 +2,31 @@
 #' @noRd
 initialize_align <- function(object, direction,
                              layout_data,
-                             layout_labels, layout_nudge,
                              layout_panels, layout_index,
                              object_name) {
     object$direction <- direction
-    object <- initialize_align_params(
-        object, direction, layout_data,
-        layout_labels, layout_nudge, object_name
-    )
-    initialize_align_layout(
-        object, direction, layout_panels, layout_index, object_name
-    )
-}
 
-initialize_align_params <- function(object, direction,
-                                    layout_data,
-                                    layout_labels, layout_nudge,
-                                    object_name) {
-    axis <- to_coord_axis(direction)
-
-    # prepare data -------------------------------
+    # prepare the data -------------------------------
     data <- align_setup_data(
         .subset2(object, "input_data"),
         layout_data,
         object_name = object_name,
         call = .subset2(object, "call")
     )
-    object$data <- data
-
-    # setup labels and labels nudge --------------
-    labels <- set_labels(
-        .subset2(object, "labels"),
-        rownames(data) %||% layout_labels,
-        axis,
-        arg = "labels",
-        call = .subset2(object, "call")
+    object$labels <- rownames(data)
+    initialize_align_layout(
+        object, data, direction,
+        layout_panels, layout_index, object_name
     )
-    object$labels <- labels
-
-    # if waiver, will inherit from the layout if labels exist
-    object$labels_nudge <- set_nudge(
-        .subset2(object, "labels_nudge"),
-        n = nrow(data),
-        labels = labels,
-        default = layout_nudge,
-        axis = axis,
-        arg = "labels_nudge",
-        call = .subset2(object, "call")
-    )
-    object
 }
 
-initialize_align_layout <- function(object, direction,
+initialize_align_layout <- function(object, data, direction,
                                     layout_panels, layout_index,
                                     object_name) {
     axis <- to_coord_axis(direction)
 
     # prepare and check parameters ----------------------
     call <- .subset2(object, "call")
-    data <- .subset2(object, "data")
     n <- nrow(data) # number of observations
     params <- .subset2(object, "input_params")
     params <- object$setup_params(data, params)
@@ -171,11 +137,19 @@ initialize_align_layout <- function(object, direction,
     if (ggplot2::is.ggplot(p)) {
         p <- p +
             ggplot2::theme_bw() +
-            # remove the title of axis parallelly with layout
+            # remove the title and text of axis parallelly with layout
             switch_direction(
                 direction,
-                theme(axis.title.y = element_blank()),
-                theme(axis.title.x = element_blank())
+                theme(
+                    axis.title.y = element_blank(),
+                    axis.text.y = element_blank(),
+                    axis.ticks.y = element_blank()
+                ),
+                theme(
+                    axis.title.x = element_blank(),
+                    axis.text.x = element_blank(),
+                    axis.ticks.x = element_blank()
+                )
             ) + theme(
                 plot.background = element_blank(),
                 panel.border = element_blank(),

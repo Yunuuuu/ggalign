@@ -31,7 +31,7 @@ trim_area <- function(area) {
     area
 }
 
-is.waiver <- function(x) inherits(x, "waiver")
+is.waive <- function(x) inherits(x, "waiver")
 
 add_default_mapping <- function(plot, default_mapping) {
     mapping <- .subset2(plot, "mapping")
@@ -63,7 +63,7 @@ set_nudge <- function(nudge, n, labels,
             ), call = call)
         }
         nudge <- rep_len(nudge, n)
-    } else if (is.waiver(nudge)) {
+    } else if (is.waive(nudge)) {
         if (is.null(labels)) nudge <- NULL else nudge <- default
     } else if (!is.null(nudge)) {
         cli::cli_abort(
@@ -78,7 +78,7 @@ set_nudge <- function(nudge, n, labels,
 set_labels <- function(labels, default, axis, arg = caller_arg(labels),
                        call = caller_call()) {
     labels <- allow_lambda(labels)
-    if (is.waiver(labels)) {
+    if (is.waive(labels)) {
         return(default)
     } else if (is.null(labels)) {
         return(NULL)

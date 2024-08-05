@@ -23,23 +23,6 @@
 #'    plots along a single axis.
 #'
 #' @param size Plot size, can be a [unit][grid::unit] object.
-#' @param labels Labels for axis parallelly with the layout, the default will
-#' use the rownames of the `data`. One of:
-#'   - `NULL` for no labels
-#'   - `waiver()` for the default labels
-#'   - A character vector giving labels (must be same length as the layout
-#'     axis). Note the labels will be reordered based on the layout.
-#'   - An expression vector (must be the same length as layout axis). See
-#'     `?plotmath` for details.
-#'   - A function that takes the default labels as the input and returns labels
-#'     as output. Also accepts rlang [lambda][rlang::as_function()] function
-#'     notation.
-#' @param labels_nudge A single numeric or a numeric value of length
-#' `nrow(data)`, to nudge each text label away from the center. One of:
-#'   - `NULL` for no breaks
-#'   - `waiver()`: if `labels` is `NULL`, then `labels_nudge` will be `NULL`,
-#'     otherwise it will inherit from the `layout` object.
-#'   - A numeric.
 #' @param set_context A single boolean value indicates whether to set the active
 #' context to current `Align` object. If `TRUE`, all subsequent ggplot elements
 #' will be added into this `Align` object.
@@ -53,7 +36,6 @@
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
-                  labels = NULL, labels_nudge = waiver(),
                   size = NULL, data = NULL,
                   set_context = TRUE, order = NA_integer_, name = NULL,
                   check.param = TRUE, call = caller_call()) {
@@ -117,10 +99,10 @@ align <- function(align_class, params,
         # collect parameters
         input_params = params[intersect(names(params), all)],
         facetted_pos_scales = NULL,
-        # used to control the labels and breaks of
-        # the axis parallelly with the heatmap
-        labels = labels,
-        labels_nudge = labels_nudge,
+
+        # used to control the labels parallelly with the heatmap
+        labels = NULL,
+
         # used to provide error message
         call = call
     )

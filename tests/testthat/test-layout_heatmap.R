@@ -1,4 +1,4 @@
-testthat::test_that("`ggheat` works well", {
+testthat::test_that("`ggheatmap` works well", {
     expect_identical(ncol(ggheatmap(1:10)@data), 1L)
     expect_identical(ncol(ggheatmap(letters)@data), 1L)
     expect_error(ggheatmap(NULL))

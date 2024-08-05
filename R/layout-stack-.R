@@ -7,8 +7,6 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
-#' @param labels,labels_nudge Default `labels`/`labels_nudge` for axis
-#' parallelly with the layout.
 #' @param rel_sizes A numeric or [unit][grid::unit] object of length `3`
 #' indicates the relative widths (`direction = "horizontal"`) / heights
 #' (`direction = "vertical"`).
@@ -16,7 +14,6 @@
 #' @return A `LayoutStack` object.
 #' @export
 layout_stack <- function(data, direction = NULL,
-                         labels = waiver(), labels_nudge = waiver(),
                          rel_sizes = NULL, guides = "collect") {
     UseMethod("layout_stack")
 }
@@ -68,7 +65,6 @@ ggstack <- layout_stack
 
 #' @export
 layout_stack.matrix <- function(data, direction = NULL,
-                                labels = waiver(), labels_nudge = waiver(),
                                 rel_sizes = NULL, guides = "collect") {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     if (is.null(rel_sizes)) {
@@ -82,10 +78,7 @@ layout_stack.matrix <- function(data, direction = NULL,
     }
     methods::new("LayoutStack",
         data = data, direction = direction,
-        params = list(
-            labels = labels, labels_nudge = labels_nudge,
-            rel_sizes = rel_sizes, guides = guides
-        )
+        params = list(rel_sizes = rel_sizes, guides = guides)
     )
 }
 
@@ -94,14 +87,12 @@ layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
 layout_stack.numeric <- function(data, direction = NULL,
-                                 labels = waiver(), labels_nudge = waiver(),
                                  rel_sizes = NULL, guides = "collect") {
     ans <- matrix(data, ncol = 1L)
     colnames(ans) <- "V1"
     if (rlang::is_named(data)) rownames(ans) <- names(data)
     layout_stack(
         data = ans, direction = direction,
-        labels = labels, labels_nudge = labels_nudge,
         rel_sizes = rel_sizes, guides = guides
     )
 }
@@ -111,7 +102,6 @@ layout_stack.character <- layout_stack.numeric
 
 #' @export
 layout_stack.NULL <- function(data, direction = NULL,
-                              labels = waiver(), labels_nudge = waiver(),
                               rel_sizes = NULL, guides = "collect") {
     cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
 }

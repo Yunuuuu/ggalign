@@ -21,7 +21,6 @@ align_title <- function(titles = NULL, ..., mapping = aes(),
             mapping = mapping, titles = titles,
             text_params = rlang::list2(...)
         ),
-        labels = NULL, labels_nudge = NULL,
         size = size, data = NULL,
         set_context = set_context,
         order = order, name = name

@@ -41,7 +41,6 @@ build_patchwork.LayoutHeatmap <- function(layout) {
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap) {
     mat <- slot(heatmap, "data")
-    params <- slot(heatmap, "params")
 
     xpanels <- get_panels(heatmap, "x") %||% factor(rep_len(1L, ncol(mat)))
     xindex <- get_index(heatmap, "x") %||% reorder_index(xpanels)
@@ -71,45 +70,32 @@ heatmap_build <- function(heatmap) {
     data <- heatmap_build_data(mat, ypanels, yindex, xpanels, xindex)
     p$data <- data # change the default data.frame
 
-    # add scales ---------------------------------------
+    # setup the scales -----------------------------------
     do_row_facet <- nlevels(ypanels) > 1L
     do_column_facet <- nlevels(xpanels) > 1L
 
-    # here is the default scales -----------------------
-    default_xscales <- set_default_scales(
-        "x", xpanels, xindex,
-        .subset2(params, "xlabels"),
-        nudge = .subset2(params, "xlabels_nudge")
-    )
-    default_yscales <- set_default_scales(
-        "y", ypanels, yindex,
-        .subset2(params, "ylabels"),
-        nudge = .subset2(params, "ylabels_nudge")
-    )
-
-    # we extract user provided scales
     facet_scales <- slot(heatmap, "facetted_pos_scales")
-    user_xscales <- extract_scales(
-        p, "x", nlevels(xpanels), facet_scales
+    xscales <- set_scales(
+        plot = p,
+        scale_name = "x",
+        panels = xpanels,
+        index = xindex,
+        layout_labels = colnames(mat),
+        facet_scales = facet_scales
     )
-    user_yscales <- extract_scales(
-        p, "y", nlevels(ypanels), facet_scales
+    # this will modify `p` in place
+    remove_scales(p, .subset2(xscales, 1L)$aesthetics)
+
+    yscales <- set_scales(
+        plot = p,
+        scale_name = "y",
+        panels = ypanels,
+        index = yindex,
+        layout_labels = rownames(mat),
+        facet_scales = facet_scales
     )
-
-    # here we set default value for user scales
-    for (i in seq_along(default_xscales)) {
-        user_xscales[[i]] <- melt_scale(
-            .subset2(user_xscales, i),
-            .subset2(default_xscales, i)
-        )
-    }
-
-    for (i in seq_along(default_yscales)) {
-        user_yscales[[i]] <- melt_scale(
-            .subset2(user_yscales, i),
-            .subset2(default_yscales, i)
-        )
-    }
+    # this will modify `p` in place
+    remove_scales(p, .subset2(yscales, 1L)$aesthetics)
 
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
@@ -119,25 +105,25 @@ heatmap_build <- function(heatmap) {
             scales = "free", space = "free"
         )
         p <- p + melt_facet(p$facet, default_facet) +
-            ggh4x::facetted_pos_scales(x = user_xscales, y = user_yscales)
+            ggh4x::facetted_pos_scales(x = xscales, y = yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(fct_rev(.data$.row_panel)),
             scales = "free_y", space = "free_y"
         )
         p <- p + melt_facet(p$facet, default_facet) +
-            user_xscales +
-            ggh4x::facetted_pos_scales(x = NULL, y = user_yscales)
+            xscales +
+            ggh4x::facetted_pos_scales(x = NULL, y = yscales)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.column_panel),
             scales = "free_x", space = "free_x"
         )
         p <- p + melt_facet(p$facet, default_facet) +
-            user_yscales +
-            ggh4x::facetted_pos_scales(x = user_xscales, y = NULL)
+            yscales +
+            ggh4x::facetted_pos_scales(x = xscales, y = NULL)
     } else {
-        p <- p + user_xscales + user_yscales + melt_facet(p$facet, NULL)
+        p <- p + xscales + yscales + melt_facet(p$facet, NULL)
     }
 
     # plot heatmap annotations ----------------------------
@@ -155,6 +141,7 @@ heatmap_build <- function(heatmap) {
     sizes <- .subset2(stack_list, 2L) # annotation size
 
     plots <- c(plots, list(heatmap = p))
+    params <- slot(heatmap, "params")
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
 }
