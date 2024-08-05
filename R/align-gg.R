@@ -15,26 +15,30 @@
 #'
 #' For ggplot usage, matrix (including a simple vector) data is converted into a
 #' long-format data frame, similar to the process utilized in `ggheatmap`. But
-#' note that the long-format data frame does not contain `.row_panel` or
-#' `.column_panel` column, as `align_gg` can only have one facet axis. In the
-#' case where the input data is already a data frame, three additional
-#' columns-(`.row_names`, `.row_index`, and `.panel`)—are added to the data
-#' frame.
+#' note that the long-format data frame does not contain `.xpanel` or `.ypanel`
+#' column, as `align_gg` can only have one facet axis. In the case where the
+#' input data is already a data frame, three additional columns-(`.row_names`,
+#' `.row_index`, and `.panel`)—are added to the data frame.
 #'
 #' The data in the underlying `ggplot` object contains following columns:
 #'
-#'  - `.panel`: the panel for current annotation
+#'  - `.panel`: the panel for current layout axis.
+#'
+#'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
 #'  - `.row_names` and `.row_index`: the row names and row index of the original
 #'    matrix or data frame.
 #'
-#'  - `.column_names` and `.column_index`: the row and column index of the
-#'    original matrix (only applicable if `data` is a `matrix`).
-#'
-#'  - `.x` or `.y`: the `x` or `y` coordinates
+#'  - `.column_names` and `.column_index`: the column names and column index of
+#'    the original matrix (only applicable if `data` is a `matrix`).
 #'
 #'  - `value`: the actual matrix value  (only applicable if `data` is a
 #'    `matrix`).
+#'
+#' if data is inherit from the heatmap layout, an additional column will be
+#' added.
+#'
+#'  - `.extra_panel`: the panel for the layout axis vertically with the layout.
 #'
 #' @return A `AlignGG` object.
 #' @examples
@@ -45,11 +49,12 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_gg <- function(mapping = aes(), data = NULL, size = NULL,
+                     plot_data = waiver(),
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data,
+        size = size, data = data, plot_data = plot_data,
         set_context = set_context, order = order, name = name
     )
 }
@@ -79,15 +84,37 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
             aes(x = .data$.x)
         ))
     },
-    draw = function(self, panels, index) {
+    draw = function(self, panels, index, extra_panels, extra_index) {
         data <- .subset2(self, "data")
-        axis <- to_coord_axis(.subset2(self, "direction"))
-        coords <- data_frame0(.panel = panels[index], .index = index)
-        coords[[paste0(".", axis)]] <- seq_along(index)
-        data <- merge(data, coords,
-            by.x = ".row_index", by.y = ".index",
-            sort = FALSE, all = TRUE
-        )
+        direction <- .subset2(self, "direction")
+        axis <- to_coord_axis(direction)
+        if (.subset2(self, "data_from_layout") && !is.null(extra_panels)) {
+            # Align object always regard row as the observations
+            row_coords <- data_frame0(
+                .panel = panels[index],
+                .index = index
+            )
+            row_coords[[paste0(".", axis)]] <- seq_along(index)
+            column_coords <- data_frame0(
+                .extra_panel = extra_panels[extra_index],
+                .extra_index = extra_index
+            )
+            coords <- merge(column_coords, row_coords,
+                by = NULL, sort = FALSE, all = TRUE
+            )
+            data <- merge(data, coords,
+                by.x = c(".column_index", ".row_index"),
+                by.y = c(".extra_index", ".index"),
+                sort = FALSE, all = TRUE
+            )
+        } else {
+            coords <- data_frame0(.panel = panels[index], .index = index)
+            coords[[paste0(".", axis)]] <- seq_along(index)
+            data <- merge(data, coords,
+                by.x = ".row_index", by.y = ".index",
+                sort = FALSE, all = TRUE
+            )
+        }
         plot <- .subset2(self, "plot")
         plot$data <- data
         plot

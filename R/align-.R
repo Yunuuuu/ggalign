@@ -67,6 +67,13 @@ align <- function(align_class, params,
         )
     }
 
+    plot_data <- allow_lambda(plot_data)
+    if (!is.waive(plot_data) &&
+        !is.null(plot_data) &&
+        !is.function(plot_data)) {
+        cli::cli_abort("{.arg plot_data} must be a function", call = call)
+    }
+
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
     if (isTRUE(check.param)) {
@@ -105,6 +112,7 @@ align <- function(align_class, params,
 
         # used to control the labels parallelly with the heatmap
         labels = NULL,
+        data_from_layout = FALSE,
 
         # used to provide error message
         call = call
@@ -154,7 +162,10 @@ Align <- ggplot2::ggproto("Align",
             align_method_params(self$compute),
             align_method_params(self$layout),
             align_method_params(self$ggplot, character()),
-            align_method_params(self$draw),
+            align_method_params(
+                self$draw,
+                c("panels", "index", "extra_panels", "extra_index")
+            ),
             self$extra_params
         )
     },
@@ -221,7 +232,7 @@ Align <- ggplot2::ggproto("Align",
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
-    draw = function(self, panels, index) self$plot
+    draw = function(self, panels, index, extra_panels, extra_index) self$plot
 )
 
 # Used to lock the `Align` object

@@ -24,17 +24,15 @@
 #' you can use `mapping` argument to control it. The data in the underlying
 #' `ggplot` object contains following columns:
 #'
-#'  - `.row_panel`: the row panel
+#'  - `.xpanel` and `.ypanel`: the column and row panel
 #'
-#'  - `.column_panel`: the column panel
+#'  - `.x` and `.y`: the `x` and `y` coordinates
 #'
 #'  - `.row_names` and `.column_names`: the row and column names of the original
 #'    matrix (only applicable when names exist).
 #'
 #'  - `.row_index` and `.column_index`: the row and column index of the original
 #'    matrix.
-#'
-#'  - `.x` and `.y`: the `x` and `y` coordinates
 #'
 #'  - `value`: the actual matrix value.
 #'

@@ -65,7 +65,7 @@ align_dendro <- function(mapping = aes(), ...,
                          k = NULL, h = NULL,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
-                         size = NULL, data = NULL,
+                         size = NULL, data = NULL, plot_data = waiver(),
                          set_context = TRUE, order = NULL, name = NULL) {
     assert_bool(reorder_group)
     assert_mapping(mapping)
@@ -236,7 +236,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             )
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
-    draw = function(self, panels, index,
+    draw = function(self, panels, index, extra_panels, extra_index,
                     # other argumentds
                     plot_cut_height, center, type,
                     root, segment_params) {

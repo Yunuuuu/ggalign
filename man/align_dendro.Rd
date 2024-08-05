@@ -19,6 +19,7 @@ align_dendro(
   type = "rectangle",
   size = NULL,
   data = NULL,
+  plot_data = waiver(),
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -86,6 +87,12 @@ heatmap columns as observations, but we need rows.
 \item \code{layout_stack}: the \code{layout} data will be used as it is since we place all
 plots along a single axis.
 }}
+
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. Used to modify the data
+after layout preparation has been applied, but before the data is handled of
+to the ggplot2 for rendering. The default is to not modify the data. Use this
+hook if the you needs change the default data for all \code{geoms}.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements

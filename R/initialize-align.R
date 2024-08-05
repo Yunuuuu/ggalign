@@ -7,12 +7,13 @@ initialize_align <- function(object, direction,
     object$direction <- direction
 
     # prepare the data -------------------------------
+    input_data <- .subset2(object, "input_data")
     data <- align_setup_data(
-        .subset2(object, "input_data"),
-        layout_data,
+        input_data, layout_data,
         object_name = object_name,
         call = .subset2(object, "call")
     )
+    object$data_from_layout <- is.null(input_data)
     object$labels <- rownames(data)
     initialize_align_layout(
         object, data, direction,

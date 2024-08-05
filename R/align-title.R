@@ -38,7 +38,7 @@ AlignTitle <- ggplot2::ggproto("AlignTitle", Align,
             aes(y = 0L, x = .data$.x, label = .data$.label)
         ))
     },
-    draw = function(self, panels, index, titles) {
+    draw = function(self, panels, index, extra_panels, extra_index, titles) {
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coords <- data_frame0(.panel = panels[index], .index = index)

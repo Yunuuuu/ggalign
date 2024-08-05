@@ -9,6 +9,7 @@ align_gg(
   mapping = aes(),
   data = NULL,
   size = NULL,
+  plot_data = waiver(),
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -18,6 +19,7 @@ ggalign(
   mapping = aes(),
   data = NULL,
   size = NULL,
+  plot_data = waiver(),
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -46,6 +48,12 @@ plots along a single axis.
 
 \item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
 
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. Used to modify the data
+after layout preparation has been applied, but before the data is handled of
+to the ggplot2 for rendering. The default is to not modify the data. Use this
+hook if the you needs change the default data for all \code{geoms}.}
+
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
 will be added into this \code{Align} object.}
@@ -69,22 +77,27 @@ The internal will always use a default mapping of \code{aes(y = .data$.y)} or
 
 For ggplot usage, matrix (including a simple vector) data is converted into a
 long-format data frame, similar to the process utilized in \code{ggheatmap}. But
-note that the long-format data frame does not contain \code{.row_panel} or
-\code{.column_panel} column, as \code{align_gg} can only have one facet axis. In the
-case where the input data is already a data frame, three additional
-columns-(\code{.row_names}, \code{.row_index}, and \code{.panel})—are added to the data
-frame.
+note that the long-format data frame does not contain \code{.xpanel} or \code{.ypanel}
+column, as \code{align_gg} can only have one facet axis. In the case where the
+input data is already a data frame, three additional columns-(\code{.row_names},
+\code{.row_index}, and \code{.panel})—are added to the data frame.
 
 The data in the underlying \code{ggplot} object contains following columns:
 \itemize{
-\item \code{.panel}: the panel for current annotation
+\item \code{.panel}: the panel for current layout axis.
+\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 \item \code{.row_names} and \code{.row_index}: the row names and row index of the original
 matrix or data frame.
-\item \code{.column_names} and \code{.column_index}: the row and column index of the
-original matrix (only applicable if \code{data} is a \code{matrix}).
-\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
+\item \code{.column_names} and \code{.column_index}: the column names and column index of
+the original matrix (only applicable if \code{data} is a \code{matrix}).
 \item \code{value}: the actual matrix value  (only applicable if \code{data} is a
 \code{matrix}).
+}
+
+if data is inherit from the heatmap layout, an additional column will be
+added.
+\itemize{
+\item \code{.extra_panel}: the panel for the layout axis vertically with the layout.
 }
 }
 

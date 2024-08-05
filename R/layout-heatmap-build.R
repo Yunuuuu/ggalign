@@ -2,7 +2,7 @@
 #' @importFrom grid unit.c
 #' @export
 build_patchwork.LayoutHeatmap <- function(layout) {
-    patches <- heatmap_build(layout, plot_data = NULL)
+    patches <- heatmap_build(layout)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
     design <- list(
@@ -39,7 +39,7 @@ build_patchwork.LayoutHeatmap <- function(layout) {
 #' @importFrom rlang is_empty
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, plot_data) {
+heatmap_build <- function(heatmap, plot_data = NULL) {
     mat <- slot(heatmap, "data")
 
     xpanels <- get_panels(heatmap, "x") %||% factor(rep_len(1L, ncol(mat)))
@@ -101,15 +101,15 @@ heatmap_build <- function(heatmap, plot_data) {
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(fct_rev(.data$.row_panel)),
-            cols = ggplot2::vars(.data$.column_panel),
+            rows = ggplot2::vars(fct_rev(.data$.ypanel)),
+            cols = ggplot2::vars(.data$.xpanel),
             scales = "free", space = "free"
         )
         p <- p + melt_facet(p$facet, default_facet) +
             ggh4x::facetted_pos_scales(x = xscales, y = yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(fct_rev(.data$.row_panel)),
+            rows = ggplot2::vars(fct_rev(.data$.ypanel)),
             scales = "free_y", space = "free_y"
         )
         p <- p + melt_facet(p$facet, default_facet) +
@@ -117,7 +117,7 @@ heatmap_build <- function(heatmap, plot_data) {
             ggh4x::facetted_pos_scales(x = NULL, y = yscales)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            cols = ggplot2::vars(.data$.column_panel),
+            cols = ggplot2::vars(.data$.xpanel),
             scales = "free_x", space = "free_x"
         )
         p <- p + melt_facet(p$facet, default_facet) +
@@ -132,9 +132,15 @@ heatmap_build <- function(heatmap, plot_data) {
         if (is_empty(stack <- slot(heatmap, position))) {
             return(list(plot = NULL, size = NULL))
         }
-        # we only allow add `Align` object into the heatmap annotation
-        # although the stack layout can add `layout_heatmap`
-        stack_build(stack, plot_data)
+        # special case for `align_gg` to operate the vertical axis
+        if (is_horizontal(to_direction(position))) {
+            panels <- xpanels
+            index <- xindex
+        } else {
+            panels <- ypanels
+            index <- yindex
+        }
+        stack_build(stack, plot_data, panels, index)
     })
     names(stack_list) <- GGHEAT_ELEMENTS
     stack_list <- transpose(stack_list)
@@ -155,19 +161,21 @@ plot_filler <- function() {
 
 heatmap_build_data <- function(matrix, row_panels, row_index,
                                column_panels, column_index) {
-    row_coords <- data_frame0(
-        .row_panel = row_panels[row_index],
-        .row_index = row_index,
+    ycoords <- data_frame0(
+        .ypanel = row_panels[row_index],
+        .yindex = row_index,
         .y = seq_along(row_index)
     )
-    column_coords <- data_frame0(
-        .column_panel = column_panels[column_index],
-        .column_index = column_index,
+    xcoords <- data_frame0(
+        .xpanel = column_panels[column_index],
+        .xindex = column_index,
         .x = seq_along(column_index)
     )
-    coords <- merge(column_coords, row_coords,
-        by = NULL, sort = FALSE, all = TRUE
-    )
+    coords <- merge(xcoords, ycoords, by = NULL, sort = FALSE, all = TRUE)
     ans <- melt_matrix(matrix)
-    merge(ans, coords, by = intersect(names(ans), names(coords)), all = TRUE)
+    merge(ans, coords,
+        by.x = c(".column_index", ".row_index"),
+        by.y = c(".xindex", ".yindex"),
+        sort = FALSE, all = TRUE
+    )
 }

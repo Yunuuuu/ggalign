@@ -81,13 +81,12 @@ frame when drawing. The default mapping will use \code{aes(.data$.x, .data$.y)},
 you can use \code{mapping} argument to control it. The data in the underlying
 \code{ggplot} object contains following columns:
 \itemize{
-\item \code{.row_panel}: the row panel
-\item \code{.column_panel}: the column panel
+\item \code{.xpanel} and \code{.ypanel}: the column and row panel
+\item \code{.x} and \code{.y}: the \code{x} and \code{y} coordinates
 \item \code{.row_names} and \code{.column_names}: the row and column names of the original
 matrix (only applicable when names exist).
 \item \code{.row_index} and \code{.column_index}: the row and column index of the original
 matrix.
-\item \code{.x} and \code{.y}: the \code{x} and \code{y} coordinates
 \item \code{value}: the actual matrix value.
 }
 }

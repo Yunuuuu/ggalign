@@ -114,7 +114,8 @@ layout_stack.character <- layout_stack.numeric
 
 #' @export
 layout_stack.NULL <- function(data, direction = NULL,
-                              rel_sizes = NULL, guides = "collect") {
+                              rel_sizes = NULL, guides = "collect",
+                              plot_data = waiver()) {
     cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
 }
 

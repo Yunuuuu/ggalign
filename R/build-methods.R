@@ -13,12 +13,14 @@ build_patchwork.default <- function(layout) {
 }
 
 #' @importFrom ggplot2 theme element_blank
-align_build <- function(x, panels, index, plot_data) {
+align_build <- function(x, panels, index,
+                        extra_panels, extra_index, plot_data) {
     ans <- list(size = .subset2(x, "size"))
     if (is.null(.subset2(x, "plot"))) {
         return(c(list(plot = NULL), ans))
     }
     direction <- .subset2(x, "direction")
+
     # set up default scale and facet
     if (nlevels(panels) > 1L) {
         default_facet <- switch_direction(
@@ -45,9 +47,18 @@ align_build <- function(x, panels, index, plot_data) {
     # 2. add plot data
     params <- .subset2(x, "params")
     draw_params <- params[
-        intersect(names(params), align_method_params(x$draw))
+        intersect(
+            names(params),
+            align_method_params(
+                x$draw,
+                c("panels", "index", "extra_panels", "extra_index")
+            )
+        )
     ]
-    plot <- rlang::inject(x$draw(panels, index, !!!draw_params))
+    plot <- rlang::inject(x$draw(
+        panels, index, extra_panels, extra_index,
+        !!!draw_params
+    ))
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 

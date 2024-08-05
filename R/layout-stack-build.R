@@ -1,27 +1,31 @@
 #' @export
 build_patchwork.LayoutStack <- function(layout) {
-    .subset2(stack_build(layout, NULL), "plot")
+    .subset2(stack_build(layout), "plot")
 }
 
+#' @param panels,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom patchwork area
 #' @importFrom rlang is_empty
-stack_build <- function(x, plot_data) {
+#' @noRd
+stack_build <- function(x, plot_data = NULL,
+                        extra_panels = NULL, extra_index = NULL) {
+    direction <- slot(x, "direction")
     panels <- get_panels(x) %||% factor(rep_len(1L, nrow(slot(x, "data"))))
     index <- get_index(x) %||% reorder_index(panels)
-    direction <- slot(x, "direction")
+
     plots <- slot(x, "plots")
     plot_data <- slot(x, "plot_data") %|w|% plot_data
 
     # we reorder the plots based on the `order` slot
-    stack_index <- order(vapply(plots, function(plot) {
+    plot_index <- order(vapply(plots, function(plot) {
         if (is.align(plot)) {
             .subset2(plot, "order")
         } else {
             NA_integer_
         }
     }, integer(1L)))
-    plots <- .subset(plots, stack_index)
+    plots <- .subset(plots, plot_index)
     patches <- stack_patch(direction)
     params <- slot(x, "params")
     has_top <- FALSE
@@ -30,6 +34,8 @@ stack_build <- function(x, plot_data) {
         if (is.align(plot)) {
             patch <- align_build(plot,
                 panels = panels, index = index,
+                extra_panels = extra_panels, 
+                extra_index = extra_index,
                 plot_data = plot_data
             )
             patches <- stack_patch_add_align(
