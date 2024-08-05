@@ -25,10 +25,11 @@ activate.LayoutHeatmap <- function(x, what) {
 #' @param size A [unit][grid::unit] object to set the size of the heatmap
 #' annotation. This will only be used if `what` is a string of `"top"`,
 #' `"left"`, `"bottom"`, or `"right"`.
+#' @inheritParams layout_stack
 #' @return A `active` object which can be added into
 #' [LayoutHeatmap][layout_heatmap].
 #' @export
-hmanno <- function(what, size = NULL) {
+hmanno <- function(what, size = NULL, plot_data = waiver()) {
     if (missing(what)) {
         what <- NA_character_
     } else if (is.null(what)) { # activate
@@ -39,7 +40,10 @@ hmanno <- function(what, size = NULL) {
         what <- match.arg(what, GGHEAT_ELEMENTS)
     }
     if (!is.null(size)) size <- set_size(size)
-    structure(what, size = size, class = c("heatmap_active", "active"))
+    structure(what,
+        size = size, plot_data = plot_data,
+        class = c("heatmap_active", "active")
+    )
 }
 
 # #' @return

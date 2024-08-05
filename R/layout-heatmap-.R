@@ -12,6 +12,11 @@
 #' @inheritParams patchwork::plot_layout
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
+#' @param plot_data A function used to transform the plot data before rendering.
+#' By default, it'll inherit from the parent layout. Used to modify the data
+#' after layout preparation has been applied, but before the data is handled of
+#' to the ggplot2 for rendering. The default is to not modify the data. Use this
+#' hook if the you needs change the default data for all `geoms`.
 #'
 #' @section ggplot2 details:
 #' The data input in `ggheatmap` will be converted into the long formated data
@@ -111,7 +116,8 @@ ggheatmap <- layout_heatmap
 layout_heatmap.matrix <- function(data, mapping = aes(),
                                   width = NULL, height = NULL,
                                   guides = "collect",
-                                  filling = TRUE, ...) {
+                                  filling = TRUE, plot_data = waiver(),
+                                  ...) {
     assert_bool(filling)
     plot <- ggplot2::ggplot(mapping = mapping) +
         ggplot2::theme_bw() +
@@ -134,6 +140,14 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
             width = 1L, height = 1L
         )
     }
+
+    plot_data <- allow_lambda(plot_data)
+    if (!is.waive(plot_data) &&
+        !is.null(plot_data) &&
+        !is.function(plot_data)) {
+        cli::cli_abort("{.arg plot_data} must be a function")
+    }
+
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
         "LayoutHeatmap",
@@ -144,7 +158,8 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
             height = set_size(height),
             guides = guides
         ),
-        plot = plot
+        plot = plot,
+        plot_data = plot_data
     )
 }
 

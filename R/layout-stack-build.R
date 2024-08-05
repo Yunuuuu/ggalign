@@ -1,16 +1,17 @@
 #' @export
 build_patchwork.LayoutStack <- function(layout) {
-    .subset2(stack_build(layout), "plot")
+    .subset2(stack_build(layout, NULL), "plot")
 }
 
 #' @importFrom grid unit.c
 #' @importFrom patchwork area
 #' @importFrom rlang is_empty
-stack_build <- function(x) {
+stack_build <- function(x, plot_data) {
     panels <- get_panels(x) %||% factor(rep_len(1L, nrow(slot(x, "data"))))
     index <- get_index(x) %||% reorder_index(panels)
     direction <- slot(x, "direction")
     plots <- slot(x, "plots")
+    plot_data <- slot(x, "plot_data") %|w|% plot_data
 
     # we reorder the plots based on the `order` slot
     stack_index <- order(vapply(plots, function(plot) {
@@ -27,14 +28,17 @@ stack_build <- function(x) {
     has_bottom <- FALSE
     for (plot in plots) {
         if (is.align(plot)) {
-            patch <- align_build(plot, panels = panels, index = index)
+            patch <- align_build(plot,
+                panels = panels, index = index,
+                plot_data = plot_data
+            )
             patches <- stack_patch_add_align(
                 patches,
                 .subset2(patch, "plot"),
                 .subset2(patch, "size")
             )
         } else if (is.ggheatmap(plot)) {
-            patch <- heatmap_build(plot)
+            patch <- heatmap_build(plot, plot_data = plot_data)
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
                 patches, heatmap_plots,

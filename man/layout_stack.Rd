@@ -5,9 +5,21 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-layout_stack(data, direction = NULL, rel_sizes = NULL, guides = "collect")
+layout_stack(
+  data,
+  direction = NULL,
+  rel_sizes = NULL,
+  guides = "collect",
+  plot_data = NULL
+)
 
-ggstack(data, direction = NULL, rel_sizes = NULL, guides = "collect")
+ggstack(
+  data,
+  direction = NULL,
+  rel_sizes = NULL,
+  guides = "collect",
+  plot_data = NULL
+)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -27,6 +39,12 @@ upper level tries, but place them alongside the plot if not.  If you modify
 default guide "position" with \link[ggplot2:theme]{theme(legend.position=...)}
 while also collecting guides you must apply that change to the overall
 patchwork (see example).}
+
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. Used to modify the data
+after layout preparation has been applied, but before the data is handled of
+to the ggplot2 for rendering. The default is to not modify the data. Use this
+hook if the you needs change the default data for all \code{geoms}.}
 }
 \value{
 A \code{LayoutStack} object.

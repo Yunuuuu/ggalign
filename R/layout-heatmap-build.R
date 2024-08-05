@@ -2,7 +2,7 @@
 #' @importFrom grid unit.c
 #' @export
 build_patchwork.LayoutHeatmap <- function(layout) {
-    patches <- heatmap_build(layout)
+    patches <- heatmap_build(layout, plot_data = NULL)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
     design <- list(
@@ -39,7 +39,7 @@ build_patchwork.LayoutHeatmap <- function(layout) {
 #' @importFrom rlang is_empty
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap) {
+heatmap_build <- function(heatmap, plot_data) {
     mat <- slot(heatmap, "data")
 
     xpanels <- get_panels(heatmap, "x") %||% factor(rep_len(1L, ncol(mat)))
@@ -68,7 +68,8 @@ heatmap_build <- function(heatmap) {
 
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanels, yindex, xpanels, xindex)
-    p$data <- data # change the default data.frame
+    plot_data <- slot(heatmap, "plot_data") %|w|% plot_data
+    p <- finish_plot_data(p, plot_data, data = data)
 
     # setup the scales -----------------------------------
     do_row_facet <- nlevels(ypanels) > 1L
@@ -133,7 +134,7 @@ heatmap_build <- function(heatmap) {
         }
         # we only allow add `Align` object into the heatmap annotation
         # although the stack layout can add `layout_heatmap`
-        stack_build(stack)
+        stack_build(stack, plot_data)
     })
     names(stack_list) <- GGHEAT_ELEMENTS
     stack_list <- transpose(stack_list)

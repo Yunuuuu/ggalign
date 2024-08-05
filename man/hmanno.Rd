@@ -4,7 +4,7 @@
 \alias{hmanno}
 \title{Determine the context of subsequent manipulations}
 \usage{
-hmanno(what, size = NULL)
+hmanno(what, size = NULL, plot_data = waiver())
 }
 \arguments{
 \item{what}{What should get activated? Possible values are follows:
@@ -18,6 +18,12 @@ active context.
 \item{size}{A \link[grid:unit]{unit} object to set the size of the heatmap
 annotation. This will only be used if \code{what} is a string of \code{"top"},
 \code{"left"}, \code{"bottom"}, or \code{"right"}.}
+
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. Used to modify the data
+after layout preparation has been applied, but before the data is handled of
+to the ggplot2 for rendering. The default is to not modify the data. Use this
+hook if the you needs change the default data for all \code{geoms}.}
 }
 \value{
 A \code{active} object which can be added into

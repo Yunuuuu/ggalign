@@ -22,6 +22,7 @@ ggheatmap(data = NULL, mapping = aes(), ...)
   height = NULL,
   guides = "collect",
   filling = TRUE,
+  plot_data = waiver(),
   ...
 )
 
@@ -58,6 +59,12 @@ patchwork (see example).}
 
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
+
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. Used to modify the data
+after layout preparation has been applied, but before the data is handled of
+to the ggplot2 for rendering. The default is to not modify the data. Use this
+hook if the you needs change the default data for all \code{geoms}.}
 
 \item{object}{A \code{LayoutHeatmap} object.}
 }

@@ -13,7 +13,7 @@ build_patchwork.default <- function(layout) {
 }
 
 #' @importFrom ggplot2 theme element_blank
-align_build <- function(x, panels, index) {
+align_build <- function(x, panels, index, plot_data) {
     ans <- list(size = .subset2(x, "size"))
     if (is.null(.subset2(x, "plot"))) {
         return(c(list(plot = NULL), ans))
@@ -48,6 +48,8 @@ align_build <- function(x, panels, index) {
         intersect(names(params), align_method_params(x$draw))
     ]
     plot <- rlang::inject(x$draw(panels, index, !!!draw_params))
+    plot_data <- .subset2(x, "plot_data") %|w|% plot_data
+    plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
     # we set up the scale limits, breaks and labels
     scales <- set_scales(
@@ -68,6 +70,23 @@ align_build <- function(x, panels, index) {
         scales, default_facet
     )
     c(list(plot = plot), ans)
+}
+
+finish_plot_data <- function(plot, plot_data,
+                             data = .subset2(plot, "data"),
+                             call = caller_call()) {
+    if (!is.null(plot_data)) {
+        if (!is.data.frame(data <- plot_data(data))) {
+            cli::cli_abort(
+                "{.arg plot_data} must return a {.cls data.frame}",
+                call = call
+            )
+        }
+        plot$data <- data
+    } else {
+        plot$data <- data
+    }
+    plot
 }
 
 align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {

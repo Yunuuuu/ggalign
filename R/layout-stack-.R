@@ -14,7 +14,8 @@
 #' @return A `LayoutStack` object.
 #' @export
 layout_stack <- function(data, direction = NULL,
-                         rel_sizes = NULL, guides = "collect") {
+                         rel_sizes = NULL, guides = "collect",
+                         plot_data = NULL) {
     UseMethod("layout_stack")
 }
 
@@ -65,7 +66,8 @@ ggstack <- layout_stack
 
 #' @export
 layout_stack.matrix <- function(data, direction = NULL,
-                                rel_sizes = NULL, guides = "collect") {
+                                rel_sizes = NULL, guides = "collect",
+                                plot_data = waiver()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     if (is.null(rel_sizes)) {
         rel_sizes <- rep_len(1L, 3L)
@@ -76,9 +78,17 @@ layout_stack.matrix <- function(data, direction = NULL,
             "a numeric or unit object of length 3"
         ))
     }
+    plot_data <- allow_lambda(plot_data)
+    if (!is.waive(plot_data) &&
+        !is.null(plot_data) &&
+        !is.function(plot_data)) {
+        cli::cli_abort("{.arg plot_data} must be a function")
+    }
+
     methods::new("LayoutStack",
         data = data, direction = direction,
-        params = list(rel_sizes = rel_sizes, guides = guides)
+        params = list(rel_sizes = rel_sizes, guides = guides),
+        plot_data = plot_data
     )
 }
 
@@ -87,13 +97,15 @@ layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
 layout_stack.numeric <- function(data, direction = NULL,
-                                 rel_sizes = NULL, guides = "collect") {
+                                 rel_sizes = NULL, guides = "collect",
+                                 plot_data = waiver()) {
     ans <- matrix(data, ncol = 1L)
     colnames(ans) <- "V1"
     if (rlang::is_named(data)) rownames(ans) <- names(data)
     layout_stack(
         data = ans, direction = direction,
-        rel_sizes = rel_sizes, guides = guides
+        rel_sizes = rel_sizes, guides = guides,
+        plot_data = plot_data
     )
 }
 

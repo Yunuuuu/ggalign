@@ -23,6 +23,7 @@
 #'    plots along a single axis.
 #'
 #' @param size Plot size, can be a [unit][grid::unit] object.
+#' @inheritParams layout_heatmap
 #' @param set_context A single boolean value indicates whether to set the active
 #' context to current `Align` object. If `TRUE`, all subsequent ggplot elements
 #' will be added into this `Align` object.
@@ -36,7 +37,7 @@
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
-                  size = NULL, data = NULL,
+                  size = NULL, data = NULL, plot_data = waiver(),
                   set_context = TRUE, order = NA_integer_, name = NULL,
                   check.param = TRUE, call = caller_call()) {
     call <- call %||% current_call()
@@ -96,6 +97,8 @@ align <- function(align_class, params,
         order = order,
         set_context = set_context,
         input_data = data,
+        plot_data = plot_data,
+
         # collect parameters
         input_params = params[intersect(names(params), all)],
         facetted_pos_scales = NULL,

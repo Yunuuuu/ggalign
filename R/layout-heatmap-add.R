@@ -36,7 +36,6 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
 
 #' @export
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
-    size <- attr(object, "size")
     if (is.na(object)) object <- get_context(heatmap) %||% "plot"
     if (object == "plot") {
         return(set_context(heatmap, NULL))
@@ -58,7 +57,10 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack <- set_panels(stack, get_panels(heatmap, axis))
         stack <- set_index(stack, get_index(heatmap, axis))
     }
+    size <- attr(object, "size")
+    plot_data <- attr(object, "plot_data")
     if (!is.null(size)) slot(stack, "size") <- size
+    if (!is.waive(plot_data)) slot(stack, "plot_data") <- plot_data
     slot(heatmap, object) <- stack
     heatmap
 }

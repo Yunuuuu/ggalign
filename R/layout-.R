@@ -8,7 +8,7 @@
 #' @keywords internal
 methods::setClass("Layout",
     list(
-        active = "ANY",
+        active = "ANY", plot_data = "ANY",
         `_namespace` = "ANY"
     ),
     prototype = list(active = NULL, `_namespace` = function() NULL)
