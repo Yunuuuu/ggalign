@@ -62,24 +62,28 @@ align_build <- function(x, panels, index,
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
-    # we set up the scale limits, breaks and labels
-    scales <- set_scales(
-        plot = plot,
-        scale_name = to_coord_axis(direction),
-        panels = panels,
-        index = index,
-        layout_labels = .subset2(x, "labels"),
-        facet_scales = .subset2(x, "facetted_pos_scales")
-    )
+    # only when user use the internal facet, we'll
+    # set up the scale limits, breaks and labels
+    if (.subset2(x, "facet")) {
+        scales <- set_scales(
+            plot = plot,
+            scale_name = to_coord_axis(direction),
+            panels = panels,
+            index = index,
+            layout_labels = .subset2(x, "labels"),
+            facet_scales = .subset2(x, "facetted_pos_scales"),
+            set_limits = .subset2(x, "limits")
+        )
 
-    # this will modify plot in place
-    remove_scales(plot, .subset2(scales, 1L)$aesthetics)
+        plot <- remove_scales(plot, .subset2(scales, 1L)$aesthetics)
 
-    # in the finally, we ensure the scale limits is the same across all plots
-    plot <- align_set_scales_and_facet(
-        plot = plot, direction = direction,
-        scales, default_facet
-    )
+        # in the finally, we ensure the scale limits is the same across all
+        # plots
+        plot <- align_set_scales_and_facet(
+            plot = plot, direction = direction,
+            scales = scales, default_facet = default_facet
+        )
+    }
     c(list(plot = plot), ans)
 }
 
@@ -120,6 +124,7 @@ align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {
 #' @noRd
 set_scales <- function(plot, scale_name, panels, index,
                        layout_labels, facet_scales,
+                       set_limits = TRUE,
                        expand = ggplot2::expansion()) {
     panels <- panels[index]
 
@@ -202,13 +207,15 @@ set_scales <- function(plot, scale_name, panels, index,
         plot_coord <- .subset2(data, "coord")
 
         # setup limits -------------------------------
-        # always reset the limits
-        if (use_discrete) {
-            # the labels of `plot_coord` is the data index
-            # See `heatmap_build_data`
-            scale$limits <- plot_coord
-        } else {
-            scale$limits <- range(plot_coord) + c(-0.5, 0.5)
+        if (set_limits) {
+            # always reset the limits
+            if (use_discrete) {
+                # the labels of `plot_coord` is the data index
+                # See `heatmap_build_data`
+                scale$limits <- plot_coord
+            } else {
+                scale$limits <- range(plot_coord) + c(-0.5, 0.5)
+            }
         }
 
         # setup breaks and labels --------------------
@@ -314,11 +321,12 @@ get_labels <- function(scale, breaks, layout_labels) {
 }
 
 remove_scales <- function(plot, scale_aesthetics) {
-    # `scales` is an environment we can just modify it directly
-    scales <- .subset2(plot, "scales")
+    scales <- .subset2(plot, "scales")$clone()
     if (any(prev_aes <- scales$find(scale_aesthetics))) {
         scales$scales <- scales$scales[!prev_aes]
     }
+    plot$scales <- scales
+    plot
 }
 
 #' @importFrom rlang is_empty

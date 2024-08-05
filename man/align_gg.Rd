@@ -10,6 +10,8 @@ align_gg(
   data = NULL,
   size = NULL,
   plot_data = waiver(),
+  limits = TRUE,
+  facet = TRUE,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -20,6 +22,8 @@ ggalign(
   data = NULL,
   size = NULL,
   plot_data = waiver(),
+  limits = TRUE,
+  facet = TRUE,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -53,6 +57,12 @@ By default, it'll inherit from the parent layout. Used to modify the data
 after layout preparation has been applied, but before the data is handled of
 to the ggplot2 for rendering. The default is to not modify the data. Use this
 hook if the you needs change the default data for all \code{geoms}.}
+
+\item{limits}{A boolean value indicates whether to set the layout limtis for
+the plot.}
+
+\item{facet}{A boolean value indicates whether to set the layout facet for
+the plot. If this is \code{FALSE}, \code{limits} will always be \code{FALSE} too.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements

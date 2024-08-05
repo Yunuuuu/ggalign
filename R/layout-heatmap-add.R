@@ -52,15 +52,22 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
                 t(slot(heatmap, "data"))
             ),
             direction = direction,
-            guides = NULL
+            guides = "auto"
         )
         stack <- set_panels(stack, get_panels(heatmap, axis))
         stack <- set_index(stack, get_index(heatmap, axis))
     }
-    size <- attr(object, "size")
-    plot_data <- attr(object, "plot_data")
-    if (!is.null(size)) slot(stack, "size") <- size
-    if (!is.waive(plot_data)) slot(stack, "plot_data") <- plot_data
+
+    if (!is.null(size <- attr(object, "size"))) slot(stack, "size") <- size
+    if (!is.null(guides <- attr(object, "guides"))) {
+        slot(stack, "params")$guides <- guides
+    }
+    if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
+        slot(stack, "guides")$align_axis_title <- align_axis_title
+    }
+    if (!is.na(plot_data <- attr(object, "plot_data"))) {
+        slot(stack, "plot_data") <- plot_data
+    }
     slot(heatmap, object) <- stack
     heatmap
 }

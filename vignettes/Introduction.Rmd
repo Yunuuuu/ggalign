@@ -26,23 +26,6 @@ dendrogram and a heatmap.
 library(ggalign)
 ```
 
-Let's begin by creating some example data
-
-```{r setup_data}
-set.seed(123)
-small_mat <- matrix(rnorm(81), nrow = 9)
-rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-```
-
-`ggalign` provids two layouts to build plots:
-
-  - `layout_heatmap`: the heatmap layout, annotation can be put in "top", "left",
-  "bottom" and "right". See `vignette("layout-heatmap")` for more details.
-  - `layout_stack`: align plots vertically or horizontally (You can also add
-  layout_heatmap). See `vignette("layout-stack")` for more details (not
-  completed).
-
 ## `Examples`
 
 ```{r}
@@ -50,7 +33,6 @@ expr <- readRDS(system.file(package = "ComplexHeatmap", "extdata", "gene_express
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
 base_mean <- rowMeans(mat)
 mat_scaled <- t(apply(mat, 1, scale))
-
 type <- gsub("s\\d+_", "", colnames(mat))
 
 ggstack(data = mat_scaled) +
@@ -72,17 +54,31 @@ ggstack(data = mat_scaled) +
   (ggheatmap(base_mean, width = unit(2, "cm")) +
     scale_y_continuous(breaks = NULL) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
-    hmanno("t") +
-    ggalign(size = unit(2, "cm")) +
+    hmanno("t", size = unit(2, "cm")) +
+    ggalign() +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
+    scale_x_continuous(expand = expansion(), breaks = NULL) +
     scale_fill_brewer(palette = "Dark2", guide = "none") +
-    theme_bw()) +
-  ggalign()
-```
-
-```{r}
-# gset <- GEOquery::getGEO("GSE36278")
-# gset <- gset[[1L]]
+    theme_bw() +
+    theme(axis.title.y = element_blank()) +
+    hmanno(NULL)) +
+  ggalign(data = expr$length, size = unit(2, "cm")) +
+  geom_point(aes(x = value)) +
+  theme(
+    panel.border = element_rect(fill = NA),
+    axis.text.x = element_text(angle = -60, hjust = 0)
+  ) +
+  (ggheatmap(expr$type, width = unit(2, "cm")) +
+    scale_fill_brewer(palette = "Set3", name = "gene type") +
+    hmanno("t") +
+    ggalign(limits = FALSE) +
+    geom_bar(
+      aes(.extra_panel, fill = factor(value)),
+      position = position_fill()
+    ) +
+    scale_x_discrete() +
+    scale_fill_brewer(palette = "Set3", name = "gene type")) &
+  theme(plot.margin = margin())
 ```
 
 ## Session information

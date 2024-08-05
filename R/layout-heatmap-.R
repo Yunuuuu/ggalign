@@ -9,7 +9,16 @@
 #' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to matrix method.
 #' @param width,height Heatmap width/height, can be a [unit][grid::unit] object.
-#' @inheritParams patchwork::plot_layout
+#' @param guides A string specifying how guides should be treated in the layout.
+#' `"collect"` will collect guides below to the given nesting level, removing
+#' duplicates. `"keep` will stop collection at this level and let guides be
+#' placed alongside their plot. `"auto"` will allow guides to be collected if a
+#' upper level tries, but place them alongside the plot if not. If you modify
+#' default guide `"position"` with `theme(legend.position=...)` while also
+#' collecting guides you must apply that change to the overall layout.
+#' @param align_axis_title A boolean value or a character of the axis position
+#' (`"t"`, `"l"`, `"b"`, `"r"`) indicates how to align the axis title. By
+#' default, all axis title won't be aligned.
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
 #' @param plot_data A function used to transform the plot data before rendering.
@@ -113,9 +122,9 @@ ggheatmap <- layout_heatmap
 #' @rdname layout_heatmap
 layout_heatmap.matrix <- function(data, mapping = aes(),
                                   width = NULL, height = NULL,
-                                  guides = "collect",
-                                  filling = TRUE, plot_data = waiver(),
-                                  ...) {
+                                  guides = NULL, align_axis_title = NULL,
+                                  plot_data = waiver(),
+                                  filling = TRUE, ...) {
     assert_bool(filling)
     plot <- ggplot2::ggplot(mapping = mapping) +
         ggplot2::theme_bw() +
@@ -154,7 +163,8 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
             # following parameters are used by patchwork
             width = set_size(width),
             height = set_size(height),
-            guides = guides
+            guides = guides,
+            align_axis_title = align_axis_title %||% FALSE
         ),
         plot = plot,
         plot_data = plot_data

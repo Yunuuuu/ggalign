@@ -30,7 +30,8 @@ build_patchwork.LayoutHeatmap <- function(layout) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(params, "guides")
+        guides = .subset2(params, "guides") %||% "collect",
+        align_axis_title = .subset2(params, "align_axis_title") %||% FALSE
     )
 }
 
@@ -85,7 +86,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
         facet_scales = facet_scales
     )
     # this will modify `p` in place
-    remove_scales(p, .subset2(xscales, 1L)$aesthetics)
+    p <- remove_scales(p, .subset2(xscales, 1L)$aesthetics)
 
     yscales <- set_scales(
         plot = p,
@@ -96,7 +97,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
         facet_scales = facet_scales
     )
     # this will modify `p` in place
-    remove_scales(p, .subset2(yscales, 1L)$aesthetics)
+    p <- remove_scales(p, .subset2(yscales, 1L)$aesthetics)
 
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {

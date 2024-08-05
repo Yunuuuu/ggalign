@@ -14,8 +14,9 @@
 #' @return A `LayoutStack` object.
 #' @export
 layout_stack <- function(data, direction = NULL,
-                         rel_sizes = NULL, guides = "collect",
-                         plot_data = NULL) {
+                         rel_sizes = NULL, guides = NULL,
+                         align_axis_title = NULL,
+                         plot_data = waiver()) {
     UseMethod("layout_stack")
 }
 
@@ -66,7 +67,8 @@ ggstack <- layout_stack
 
 #' @export
 layout_stack.matrix <- function(data, direction = NULL,
-                                rel_sizes = NULL, guides = "collect",
+                                rel_sizes = NULL, guides = NULL,
+                                align_axis_title = NULL,
                                 plot_data = waiver()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     if (is.null(rel_sizes)) {
@@ -87,7 +89,10 @@ layout_stack.matrix <- function(data, direction = NULL,
 
     methods::new("LayoutStack",
         data = data, direction = direction,
-        params = list(rel_sizes = rel_sizes, guides = guides),
+        params = list(
+            rel_sizes = rel_sizes, guides = guides,
+            align_axis_title = align_axis_title
+        ),
         plot_data = plot_data
     )
 }
@@ -97,7 +102,8 @@ layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
 layout_stack.numeric <- function(data, direction = NULL,
-                                 rel_sizes = NULL, guides = "collect",
+                                 rel_sizes = NULL, guides = NULL,
+                                 align_axis_title = NULL,
                                  plot_data = waiver()) {
     ans <- matrix(data, ncol = 1L)
     colnames(ans) <- "V1"
@@ -105,6 +111,7 @@ layout_stack.numeric <- function(data, direction = NULL,
     layout_stack(
         data = ans, direction = direction,
         rel_sizes = rel_sizes, guides = guides,
+        align_axis_title = align_axis_title,
         plot_data = plot_data
     )
 }
@@ -114,7 +121,8 @@ layout_stack.character <- layout_stack.numeric
 
 #' @export
 layout_stack.NULL <- function(data, direction = NULL,
-                              rel_sizes = NULL, guides = "collect",
+                              rel_sizes = NULL, guides = NULL,
+                              align_axis_title = NULL,
                               plot_data = waiver()) {
     cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
 }

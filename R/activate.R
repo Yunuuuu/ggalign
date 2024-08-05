@@ -20,16 +20,21 @@ activate.LayoutHeatmap <- function(x, what) {
 #' @param what What should get activated? Possible values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#'    * `missing` or `NA`: don't change the context, but set the size of current
-#'      active context.
+#'    * `missing` or `NA`: don't change the context, use current active context.
+#'
+#' If the active context is a string of `"top"`, `"left"`, `"bottom"`, or
+#' `"right"`. We can also set the stack (heatmap annotation) `size`, `guides`
+#' `align_axis_title` and `plot_data`.
+#'
 #' @param size A [unit][grid::unit] object to set the size of the heatmap
 #' annotation. This will only be used if `what` is a string of `"top"`,
 #' `"left"`, `"bottom"`, or `"right"`.
-#' @inheritParams layout_stack
+#' @inheritParams layout_heatmap
 #' @return A `active` object which can be added into
 #' [LayoutHeatmap][layout_heatmap].
 #' @export
-hmanno <- function(what, size = NULL, plot_data = waiver()) {
+hmanno <- function(what, size = NULL, guides = NULL, align_axis_title = NULL,
+                   plot_data) {
     if (missing(what)) {
         what <- NA_character_
     } else if (is.null(what)) { # activate
@@ -40,8 +45,24 @@ hmanno <- function(what, size = NULL, plot_data = waiver()) {
         what <- match.arg(what, GGHEAT_ELEMENTS)
     }
     if (!is.null(size)) size <- set_size(size)
+    if (missing(plot_data)) {
+        plot_data <- NA
+    } else {
+        plot_data <- allow_lambda(plot_data)
+        if (!is.waive(plot_data) &&
+            !is.null(plot_data) &&
+            !is.function(plot_data)) {
+            cli::cli_abort(paste(
+                "{.arg plot_data} must be a function,",
+                "{.code NULL} or {.fn waiver()}"
+            ))
+        }
+    }
     structure(what,
-        size = size, plot_data = plot_data,
+        size = size,
+        guides = guides,
+        align_axis_title = align_axis_title,
+        plot_data = plot_data,
         class = c("heatmap_active", "active")
     )
 }

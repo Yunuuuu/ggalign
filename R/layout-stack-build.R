@@ -82,7 +82,8 @@ stack_build <- function(x, plot_data = NULL,
             .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "rel_sizes"))
         ),
-        guides = .subset2(params, "guides")
+        guides = .subset2(params, "guides") %||% "collect",
+        align_axis_title = .subset2(params, "align_axis_title") %||% FALSE
     )
     list(plot = plot, size = slot(x, "size"))
 }
@@ -152,7 +153,7 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                     patchwork::plot_spacer(),
                     top,
                     ncol = 1L,
-                    heights = unit.c(unit(1L, "npc") - size, size)
+                    heights = unit.c(unit(1L, "null"), size)
                 )
             }
             area <- stack_patch_add_plot(area, top, t = 1L, l = l)
@@ -166,7 +167,7 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                     bottom,
                     patchwork::plot_spacer(),
                     ncol = 1L,
-                    heights = unit.c(unit(1L, "npc") - size, size)
+                    heights = unit.c(size, unit(1L, "null"))
                 )
             }
             area <- stack_patch_add_plot(area, top, t = 3L, l = l)
@@ -202,7 +203,7 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                     patchwork::plot_spacer(),
                     left,
                     nrow = 1L,
-                    heights = unit.c(unit(1L, "npc") - size, size)
+                    heights = unit.c(unit(1L, "null"), size)
                 )
             }
             area <- stack_patch_add_plot(area, left, t = t, l = 1L)
@@ -216,7 +217,7 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                     right,
                     patchwork::plot_spacer(),
                     ncol = 1L,
-                    heights = unit.c(unit(1L, "npc") - size, size)
+                    heights = unit.c(size, unit(1L, "null"))
                 )
             }
             area <- stack_patch_add_plot(area, top, t = t, l = 3L)

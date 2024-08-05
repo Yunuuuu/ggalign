@@ -28,6 +28,13 @@ capability to add plots.
 Currently, there are four primary `align_*` functions: `align_group`,
 `align_reorder`, `align_kmeans` and `align_dendro`.
 
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
 ## `align_group`
 
 `align_group` just group along a layout axis into different panels. It won't add

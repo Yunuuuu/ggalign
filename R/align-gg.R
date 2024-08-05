@@ -49,12 +49,13 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_gg <- function(mapping = aes(), data = NULL, size = NULL,
-                     plot_data = waiver(),
+                     plot_data = waiver(), limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
         size = size, data = data, plot_data = plot_data,
+        facet = facet, limits = limits,
         set_context = set_context, order = order, name = name
     )
 }

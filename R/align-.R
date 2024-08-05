@@ -24,6 +24,10 @@
 #'
 #' @param size Plot size, can be a [unit][grid::unit] object.
 #' @inheritParams layout_heatmap
+#' @param limits A boolean value indicates whether to set the layout limtis for
+#' the plot.
+#' @param facet A boolean value indicates whether to set the layout facet for
+#' the plot. If this is `FALSE`, `limits` will always be `FALSE` too.
 #' @param set_context A single boolean value indicates whether to set the active
 #' context to current `Align` object. If `TRUE`, all subsequent ggplot elements
 #' will be added into this `Align` object.
@@ -38,6 +42,7 @@
 #' @keywords internal
 align <- function(align_class, params,
                   size = NULL, data = NULL, plot_data = waiver(),
+                  limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NA_integer_, name = NULL,
                   check.param = TRUE, call = caller_call()) {
     call <- call %||% current_call()
@@ -49,6 +54,8 @@ align <- function(align_class, params,
         )
     }
     data <- allow_lambda(data)
+    assert_bool(facet, call = call)
+    assert_bool(limits, call = call)
     assert_bool(set_context, call = call)
 
     if (is.null(order)) {
@@ -105,6 +112,8 @@ align <- function(align_class, params,
         set_context = set_context,
         input_data = data,
         plot_data = plot_data,
+        facet = facet,
+        limits = limits,
 
         # collect parameters
         input_params = params[intersect(names(params), all)],

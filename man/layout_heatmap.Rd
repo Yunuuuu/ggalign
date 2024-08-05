@@ -20,9 +20,10 @@ ggheatmap(data = NULL, mapping = aes(), ...)
   mapping = aes(),
   width = NULL,
   height = NULL,
-  guides = "collect",
-  filling = TRUE,
+  guides = NULL,
+  align_axis_title = NULL,
   plot_data = waiver(),
+  filling = TRUE,
   ...
 )
 
@@ -49,22 +50,25 @@ will using \code{aes(.data$.x, .data$.y)}.}
 \item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
-\code{'collect'} will collect guides below to the given nesting level, removing
-duplicates. \code{'keep'} will stop collection at this level and let guides be
-placed alongside their plot. \code{auto} will allow guides to be collected if a
-upper level tries, but place them alongside the plot if not.  If you modify
-default guide "position" with \link[ggplot2:theme]{theme(legend.position=...)}
-while also collecting guides you must apply that change to the overall
-patchwork (see example).}
+\code{"collect"} will collect guides below to the given nesting level, removing
+duplicates. \verb{"keep} will stop collection at this level and let guides be
+placed alongside their plot. \code{"auto"} will allow guides to be collected if a
+upper level tries, but place them alongside the plot if not. If you modify
+default guide \code{"position"} with \code{theme(legend.position=...)} while also
+collecting guides you must apply that change to the overall layout.}
 
-\item{filling}{A boolean value indicates whether filling the heatmap. If you
-want to custom the filling style, you can set to \code{FALSE}.}
+\item{align_axis_title}{A boolean value or a character of the axis position
+(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
+default, all axis title won't be aligned.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. Used to modify the data
 after layout preparation has been applied, but before the data is handled of
 to the ggplot2 for rendering. The default is to not modify the data. Use this
 hook if the you needs change the default data for all \code{geoms}.}
+
+\item{filling}{A boolean value indicates whether filling the heatmap. If you
+want to custom the filling style, you can set to \code{FALSE}.}
 
 \item{object}{A \code{LayoutHeatmap} object.}
 }
