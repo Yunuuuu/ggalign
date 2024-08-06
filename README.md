@@ -11,6 +11,13 @@ You can install the development version of `ggalign` from
 remotes::install_github("Yunuuuu/ggalign")
 ```
 
+This package now depends on some un-merged characteristics of patchwork.
+Please see <https://github.com/thomasp85/patchwork/pull/373>. If you
+want to try it, you should install patchwork with
+`pak::pkg_install(Yunuuuu/patchwork@align_axis_title)`.
+
+The documentation for `ggalign` is currently in progress.
+
 # ggalign
 
 This package extends ggplot2 and provides numerous benefits for
