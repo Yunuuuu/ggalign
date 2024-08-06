@@ -175,17 +175,24 @@ internal will reorder them accordingly if you reorder the heatmap rows/columns.
 
 Here I'll use a heatmap annotation to reorder the heatmap, if you are unfamiliar
 with adding heatmap annotations, there is no need to worry. I will provide a
-more comprehensive explanation in the following section.
+more comprehensive explanation in the following section. If you want to learn
+more about the `align_*` functions, try to see `vignette("align")`.
+
+`hmanno` indicates where the annotation was added. In this example, "top" and
+"bottom" should be the same, since `align_reorder` won't add any plot region.
+
+`align_reorder` will reorder the heatmap rows/columns based on the weights
+returned from `fun` argument. Here we reorder the heatmap columns by the means.
 
 ```{r}
-index <- sample(ncol(small_mat))
+index <- order(colMeans(small_mat))
 xlabels <- letters[seq_len(ncol(small_mat))]
 print(xlabels[index])
 # we provide the labels in the original order, the layout will reorder them.
 ggheatmap(small_mat) +
   scale_x_continuous(labels = xlabels) +
   hmanno("t") +
-  align_reorder(~ seq_along(index)[order(index)])
+  align_reorder()
 ```
 
 When working with facets, manual configuration of panels using the `facet_*`
@@ -196,12 +203,12 @@ except `rows` and `cols`. A common usage case is to change the panel strip text.
 
 THe default theme in `ggalign` removed the panel strip text, you can override
 the behaviour with `theme(strip.text = element_text())`. This allows us to add
-the panel title appropriately in heatmaps or any heatmap annotation.
+the panel title appropriately in heatmaps or any heatmap annotation with plot.
 ```{r}
 ggheatmap(small_mat) +
   facet_grid(labeller = labeller(.column_panel = function(x) letters[as.integer(x)])) +
   theme(strip.text = element_text()) +
-  hmanno("t") +
+  hmanno("top") +
   align_kmeans(centers = 3L)
 ```
 
@@ -214,7 +221,6 @@ in `ggheatmap`. We can add annotation with `align_*` functions.
 By default, the `ggheatmap` function does not initialize any active context, so
 if you want to add heatmap annotations, you need to use `hmanno` to specify
 where the annotation should be added.
-
 
 ## Control size
 The different ggplot objects were combined using the `patchwork` package.
