@@ -22,11 +22,12 @@
 #' @param filling A boolean value indicates whether filling the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
 #' @param plot_data A function used to transform the plot data before rendering.
-#' By default, it'll inherit from the parent layout. Used to modify the data
-#' after layout preparation has been applied, but before the data is handled of
-#' to the ggplot2 for rendering. The default is to not modify the data. Use this
-#' hook if the you needs change the default data for all `geoms`.
-#'
+#' By default, it'll inherit from the parent layout. If no parent layout, the
+#' default is to not modify the data. Use `NULL`, if you don't want to modify
+#' anything. Used to modify the data after layout preparation has been applied,
+#' but before the data is handled of to the ggplot2 for rendering. Use this hook
+#' if the you needs change the default data for all `geoms`.
+#' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' @section ggplot2 details:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -99,7 +100,6 @@ methods::setClass(
 
 # We can remove the validation, since the object won't be exported for user.
 #' @importFrom methods slot
-#' @importFrom ggplot2 is.ggplot
 #' @importFrom rlang is_string
 methods::setValidity("LayoutHeatmap", function(object) {
     active <- slot(object, "active")
@@ -127,34 +127,17 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
                                   filling = TRUE, ...) {
     assert_bool(filling)
     plot <- ggplot2::ggplot(mapping = mapping) +
-        ggplot2::theme_bw() +
-        theme(
-            plot.background = element_blank(),
-            panel.border = element_blank(),
-            strip.text = element_blank(),
-            strip.background = element_blank()
-        )
+        heatmap_theme()
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
-    if (ncol(data) > 10L) {
-        plot <- plot + theme(
-            axis.text.x = ggplot2::element_text(angle = -60, hjust = 0L)
-        )
-    }
+
     # add heatmap filling in the first layer
     if (filling) {
         plot <- plot + ggplot2::geom_tile(
             aes(.data$.x, .data$.y, fill = .data$value),
-            width = 1L, height = 1L
+            width = 1L, height = 1L, ...
         )
     }
-
-    plot_data <- allow_lambda(plot_data)
-    if (!is.waive(plot_data) &&
-        !is.null(plot_data) &&
-        !is.function(plot_data)) {
-        cli::cli_abort("{.arg plot_data} must be a function")
-    }
-
+    plot_data <- check_plot_data(plot_data)
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
         "LayoutHeatmap",
@@ -182,7 +165,6 @@ layout_heatmap.data.frame <- function(data, mapping = aes(), ...) {
 #' @rdname layout_heatmap
 layout_heatmap.numeric <- function(data, mapping = aes(), ...) {
     ans <- matrix(data, ncol = 1L)
-    colnames(ans) <- "V1"
     if (rlang::is_named(data)) rownames(ans) <- names(data)
     layout_heatmap(data = ans, mapping = mapping, ...)
 }

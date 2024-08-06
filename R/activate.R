@@ -48,15 +48,7 @@ hmanno <- function(what, size = NULL, guides = NULL, align_axis_title = NULL,
     if (missing(plot_data)) {
         plot_data <- NA
     } else {
-        plot_data <- allow_lambda(plot_data)
-        if (!is.waive(plot_data) &&
-            !is.null(plot_data) &&
-            !is.function(plot_data)) {
-            cli::cli_abort(paste(
-                "{.arg plot_data} must be a function,",
-                "{.code NULL} or {.fn waiver()}"
-            ))
-        }
+        plot_data <- check_plot_data(plot_data)
     }
     structure(what,
         size = size,

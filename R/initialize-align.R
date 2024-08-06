@@ -134,29 +134,8 @@ initialize_align_layout <- function(object, data, direction,
         )
     ]
     p <- rlang::inject(object$ggplot(!!!ggplot_params))
-    # set the default theme for all annotation
     if (ggplot2::is.ggplot(p)) {
-        p <- p +
-            ggplot2::theme_bw() +
-            # remove the title and text of axis parallelly with layout
-            switch_direction(
-                direction,
-                theme(
-                    axis.title.y = element_blank(),
-                    axis.text.y = element_blank(),
-                    axis.ticks.y = element_blank()
-                ),
-                theme(
-                    axis.title.x = element_blank(),
-                    axis.text.x = element_blank(),
-                    axis.ticks.x = element_blank()
-                )
-            ) + theme(
-                plot.background = element_blank(),
-                panel.border = element_blank(),
-                strip.text = element_blank(),
-                strip.background = element_blank()
-            )
+        p <- p + align_theme(direction)
     }
     object$plot <- p
 
@@ -197,7 +176,6 @@ align_setup_data.numeric <- function(data, layout_data, object_name, call) {
         cli::cli_abort(msg_align_incompatible_data(object_name), call = call)
     }
     ans <- matrix(data, ncol = 1L)
-    colnames(ans) <- "V1"
     if (rlang::is_named(data)) rownames(ans) <- names(data)
     ans
 }

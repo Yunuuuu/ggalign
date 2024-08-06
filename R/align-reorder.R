@@ -16,8 +16,7 @@
 #'     align_reorder()
 #' @export
 align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
-                          decreasing = FALSE,
-                          data = NULL,
+                          decreasing = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
     fun <- rlang::as_function(fun)
     assert_bool(strict)

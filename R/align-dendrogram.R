@@ -54,7 +54,6 @@
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
 #'     align_dendro(k = 3L)
-#' @importFrom ggplot2 element_blank
 #' @seealso
 #' - [dendrogram_data()]
 #' - [hclust2()]
@@ -89,7 +88,7 @@ align_dendro <- function(mapping = aes(), ...,
     )
 }
 
-#' @importFrom ggplot2 aes theme
+#' @importFrom ggplot2 aes
 AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
     setup_params = function(self, data, params) {
         call <- .subset2(self, "call")

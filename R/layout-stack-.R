@@ -106,7 +106,6 @@ layout_stack.numeric <- function(data, direction = NULL,
                                  align_axis_title = NULL,
                                  plot_data = waiver()) {
     ans <- matrix(data, ncol = 1L)
-    colnames(ans) <- "V1"
     if (rlang::is_named(data)) rownames(ans) <- names(data)
     layout_stack(
         data = ans, direction = direction,

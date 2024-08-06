@@ -45,7 +45,7 @@ one column matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
 
-\item{...}{Additional arguments passed to matrix method.}
+\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.}
 
 \item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
 
@@ -62,10 +62,11 @@ collecting guides you must apply that change to the overall layout.}
 default, all axis title won't be aligned.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. Used to modify the data
-after layout preparation has been applied, but before the data is handled of
-to the ggplot2 for rendering. The default is to not modify the data. Use this
-hook if the you needs change the default data for all \code{geoms}.}
+By default, it'll inherit from the parent layout. If no parent layout, the
+default is to not modify the data. Use \code{NULL}, if you don't want to modify
+anything. Used to modify the data after layout preparation has been applied,
+but before the data is handled of to the ggplot2 for rendering. Use this hook
+if the you needs change the default data for all \code{geoms}.}
 
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}

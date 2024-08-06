@@ -12,32 +12,12 @@ build_patchwork.default <- function(layout) {
     cli::cli_abort("{.arg x} must be a {.cls Layout} object")
 }
 
-#' @importFrom ggplot2 theme element_blank
 align_build <- function(x, panels, index,
                         extra_panels, extra_index, plot_data) {
-    ans <- list(size = .subset2(x, "size"))
     if (is.null(.subset2(x, "plot"))) {
-        return(c(list(plot = NULL), ans))
+        return(list(plot = NULL, size = NULL))
     }
     direction <- .subset2(x, "direction")
-
-    # set up default scale and facet
-    if (nlevels(panels) > 1L) {
-        default_facet <- switch_direction(
-            direction,
-            ggplot2::facet_grid(
-                rows = ggplot2::vars(fct_rev(.data$.panel)),
-                scales = "free_y", space = "free_y"
-            ),
-            ggplot2::facet_grid(
-                cols = ggplot2::vars(.data$.panel),
-                scales = "free_x", space = "free_x"
-            )
-        )
-    } else {
-        # No facet
-        default_facet <- NULL
-    }
 
     x$lock()
     on.exit(x$unlock())
@@ -65,6 +45,23 @@ align_build <- function(x, panels, index,
     # only when user use the internal facet, we'll
     # set up the scale limits, breaks and labels
     if (.subset2(x, "facet")) {
+        # set up scales and facet
+        if (nlevels(panels) > 1L) {
+            default_facet <- switch_direction(
+                direction,
+                ggplot2::facet_grid(
+                    rows = ggplot2::vars(fct_rev(.data$.panel)),
+                    scales = "free_y", space = "free_y"
+                ),
+                ggplot2::facet_grid(
+                    cols = ggplot2::vars(.data$.panel),
+                    scales = "free_x", space = "free_x"
+                )
+            )
+        } else {
+            # No facet
+            default_facet <- NULL
+        }
         scales <- set_scales(
             plot = plot,
             scale_name = to_coord_axis(direction),
@@ -74,17 +71,13 @@ align_build <- function(x, panels, index,
             facet_scales = .subset2(x, "facetted_pos_scales"),
             set_limits = .subset2(x, "limits")
         )
-
         plot <- remove_scales(plot, .subset2(scales, 1L)$aesthetics)
-
-        # in the finally, we ensure the scale limits is the same across all
-        # plots
         plot <- align_set_scales_and_facet(
             plot = plot, direction = direction,
             scales = scales, default_facet = default_facet
         )
     }
-    c(list(plot = plot), ans)
+    list(plot = plot, size = .subset2(x, "size"))
 }
 
 finish_plot_data <- function(plot, plot_data,

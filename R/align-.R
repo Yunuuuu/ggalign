@@ -73,13 +73,7 @@ align <- function(align_class, params,
             call = call
         )
     }
-
-    plot_data <- allow_lambda(plot_data)
-    if (!is.waive(plot_data) &&
-        !is.null(plot_data) &&
-        !is.function(plot_data)) {
-        cli::cli_abort("{.arg plot_data} must be a function", call = call)
-    }
+    plot_data <- check_plot_data(plot_data)
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()

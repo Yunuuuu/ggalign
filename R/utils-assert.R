@@ -66,3 +66,17 @@ assert_reorder <- function(align, panels, strict) {
         ), call = .subset2(align, "call"))
     }
 }
+
+check_plot_data <- function(plot_data, arg = caller_arg(plot_data),
+                            call = caller_call()) {
+    plot_data <- allow_lambda(plot_data)
+    if (!is.waive(plot_data) &&
+        !is.null(plot_data) &&
+        !is.function(plot_data)) {
+        cli::cli_abort(paste(
+            "{.arg {arg}} must be a function,",
+            "{.code NULL} or {.fn waiver()}"
+        ), call = call)
+    }
+    plot_data
+}

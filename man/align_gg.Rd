@@ -6,8 +6,8 @@
 \title{Create ggplot object in the layout}
 \usage{
 align_gg(
-  mapping = aes(),
   data = NULL,
+  mapping = aes(),
   size = NULL,
   plot_data = waiver(),
   limits = TRUE,
@@ -18,8 +18,8 @@ align_gg(
 )
 
 ggalign(
-  mapping = aes(),
   data = NULL,
+  mapping = aes(),
   size = NULL,
   plot_data = waiver(),
   limits = TRUE,
@@ -30,8 +30,6 @@ ggalign(
 )
 }
 \arguments{
-\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
-
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
 the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
@@ -50,13 +48,16 @@ heatmap columns as observations, but we need rows.
 plots along a single axis.
 }}
 
+\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
+
 \item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. Used to modify the data
-after layout preparation has been applied, but before the data is handled of
-to the ggplot2 for rendering. The default is to not modify the data. Use this
-hook if the you needs change the default data for all \code{geoms}.}
+By default, it'll inherit from the parent layout. If no parent layout, the
+default is to not modify the data. Use \code{NULL}, if you don't want to modify
+anything. Used to modify the data after layout preparation has been applied,
+but before the data is handled of to the ggplot2 for rendering. Use this hook
+if the you needs change the default data for all \code{geoms}.}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}
