@@ -104,6 +104,8 @@ align <- function(align_class, params,
 
         # user input -------------------------------
         size = size,
+        # should we allow user switch between different annotation with a string
+        # name ?
         name = name,
         order = order,
         set_context = set_context,

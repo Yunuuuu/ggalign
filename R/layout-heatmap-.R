@@ -28,6 +28,7 @@
 #' but before the data is handled of to the ggplot2 for rendering. Use this hook
 #' if the you needs change the default data for all `geoms`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
+#' Only used when `filling = TRUE`.
 #' @section ggplot2 details:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,

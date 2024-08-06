@@ -61,7 +61,8 @@ if the you needs change the default data for all \code{geoms}.}
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
 
-\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.}
+\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
+Only used when \code{filling = TRUE}.}
 }
 \value{
 A \code{LayoutHeatmap} object.
