@@ -100,6 +100,7 @@ ggheatmap(mat, filling = FALSE) +
     colours = c("white", "cornflowerblue", "yellow", "red"),
     values = scales::rescale(c(0, 800, 1000, 127000), c(0, 1))
   ) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r") +
   align_dendro(plot_dendrogram = FALSE) +
   hmanno("t", size = unit(2, "cm")) +
