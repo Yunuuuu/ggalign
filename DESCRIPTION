@@ -24,7 +24,7 @@ Imports:
     tibble,
     tidyr
 ByteCompile: true
-URL: https://github.com/Yunuuuu/ggalign
+URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Suggests: 
     ComplexHeatmap,
