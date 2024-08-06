@@ -24,6 +24,7 @@ layout_stack <- function(data, direction = NULL,
 print.LayoutStack <- function(x, ...) {
     p <- build_patchwork(x)
     print(p, ...)
+    invisible(x)
 }
 
 #' @importFrom grid grid.draw
@@ -105,10 +106,8 @@ layout_stack.numeric <- function(data, direction = NULL,
                                  rel_sizes = NULL, guides = NULL,
                                  align_axis_title = NULL,
                                  plot_data = waiver()) {
-    ans <- matrix(data, ncol = 1L)
-    if (rlang::is_named(data)) rownames(ans) <- names(data)
     layout_stack(
-        data = ans, direction = direction,
+        data = as.matrix(data), direction = direction,
         rel_sizes = rel_sizes, guides = guides,
         align_axis_title = align_axis_title,
         plot_data = plot_data
@@ -119,11 +118,17 @@ layout_stack.numeric <- function(data, direction = NULL,
 layout_stack.character <- layout_stack.numeric
 
 #' @export
-layout_stack.NULL <- function(data, direction = NULL,
-                              rel_sizes = NULL, guides = NULL,
-                              align_axis_title = NULL,
-                              plot_data = waiver()) {
-    cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
+layout_stack.default <- function(data, direction = NULL,
+                                 rel_sizes = NULL, guides = NULL,
+                                 align_axis_title = NULL,
+                                 plot_data = waiver()) {
+    cli::cli_abort(c(
+        paste(
+            "{.arg data} must be a numeric or character vector,",
+            "a data frame, or a matrix."
+        ),
+        i = "You have provided {.obj_type_friendly {data}}"
+    ))
 }
 
 #' Subset a `LayoutStack` object

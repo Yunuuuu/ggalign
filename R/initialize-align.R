@@ -175,9 +175,7 @@ align_setup_data.numeric <- function(data, layout_data, object_name, call) {
     if (nrow(layout_data) != NROW(data)) {
         cli::cli_abort(msg_align_incompatible_data(object_name), call = call)
     }
-    ans <- matrix(data, ncol = 1L)
-    if (rlang::is_named(data)) rownames(ans) <- names(data)
-    ans
+    as.matrix(data)
 }
 
 #' @export
@@ -195,7 +193,7 @@ align_setup_data.function <- function(data, layout_data, object_name, call) {
 msg_align_incompatible_data <- function(object_name) {
     sprintf(
         "%s from %s must have %s",
-        style_arg("data"), object_name,
-        "compatible observations with the heatmap"
+        style_arg("data"), style_code(object_name),
+        "compatible observations with the layout"
     )
 }

@@ -3,19 +3,9 @@
 \name{layout_heatmap}
 \alias{layout_heatmap}
 \alias{ggheatmap}
-\alias{layout_heatmap.matrix}
-\alias{layout_heatmap.data.frame}
-\alias{layout_heatmap.numeric}
-\alias{layout_heatmap.character}
-\alias{layout_heatmap.default}
-\alias{show,LayoutHeatmap-method}
 \title{Heatmap layout}
 \usage{
-layout_heatmap(data = NULL, mapping = aes(), ...)
-
-ggheatmap(data = NULL, mapping = aes(), ...)
-
-\method{layout_heatmap}{matrix}(
+layout_heatmap(
   data,
   mapping = aes(),
   width = NULL,
@@ -27,15 +17,17 @@ ggheatmap(data = NULL, mapping = aes(), ...)
   ...
 )
 
-\method{layout_heatmap}{data.frame}(data, mapping = aes(), ...)
-
-\method{layout_heatmap}{numeric}(data, mapping = aes(), ...)
-
-\method{layout_heatmap}{character}(data, mapping = aes(), ...)
-
-\method{layout_heatmap}{default}(data, mapping = aes(), ...)
-
-\S4method{show}{LayoutHeatmap}(object)
+ggheatmap(
+  data,
+  mapping = aes(),
+  width = NULL,
+  height = NULL,
+  guides = NULL,
+  align_axis_title = NULL,
+  plot_data = waiver(),
+  filling = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, and any other data
@@ -44,8 +36,6 @@ one column matrix.}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
-
-\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.}
 
 \item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
 
@@ -71,7 +61,7 @@ if the you needs change the default data for all \code{geoms}.}
 \item{filling}{A boolean value indicates whether filling the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
 
-\item{object}{A \code{LayoutHeatmap} object.}
+\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.}
 }
 \value{
 A \code{LayoutHeatmap} object.

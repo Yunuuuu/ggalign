@@ -52,7 +52,11 @@
 #' ggheatmap(letters)
 #' @importFrom ggplot2 aes
 #' @export
-layout_heatmap <- function(data = NULL, mapping = aes(), ...) {
+layout_heatmap <- function(data, mapping = aes(),
+                           width = NULL, height = NULL,
+                           guides = NULL, align_axis_title = NULL,
+                           plot_data = waiver(),
+                           filling = TRUE, ...) {
     UseMethod("layout_heatmap")
 }
 
@@ -60,6 +64,7 @@ layout_heatmap <- function(data = NULL, mapping = aes(), ...) {
 print.LayoutHeatmap <- function(x, ...) {
     p <- build_patchwork(x)
     print(p, ...)
+    invisible(x)
 }
 
 #' @importFrom grid grid.draw
@@ -98,28 +103,12 @@ methods::setClass(
     )
 )
 
-# We can remove the validation, since the object won't be exported for user.
-#' @importFrom methods slot
-#' @importFrom rlang is_string
-methods::setValidity("LayoutHeatmap", function(object) {
-    active <- slot(object, "active")
-    if (!is.null(active) &&
-        (!is_string(active) || !any(active == GGHEAT_ELEMENTS))) {
-        cli::cli_abort(sprintf(
-            "@active must be a string of %s",
-            oxford_comma(GGHEAT_ELEMENTS, final = "or")
-        ))
-    }
-    TRUE
-})
-
 #' @export
 #' @rdname layout_heatmap
 ggheatmap <- layout_heatmap
 
 #' @importFrom ggplot2 waiver theme
 #' @export
-#' @rdname layout_heatmap
 layout_heatmap.matrix <- function(data, mapping = aes(),
                                   width = NULL, height = NULL,
                                   guides = NULL, align_axis_title = NULL,
@@ -155,34 +144,18 @@ layout_heatmap.matrix <- function(data, mapping = aes(),
 }
 
 #' @export
-#' @rdname layout_heatmap
-layout_heatmap.data.frame <- function(data, mapping = aes(), ...) {
-    data <- as.matrix(data)
-    layout_heatmap(data = data, mapping = mapping, ...)
-}
-
-#' @export
-#' @rdname layout_heatmap
-layout_heatmap.numeric <- function(data, mapping = aes(), ...) {
-    ans <- matrix(data, ncol = 1L)
-    if (rlang::is_named(data)) rownames(ans) <- names(data)
-    layout_heatmap(data = ans, mapping = mapping, ...)
-}
-
-#' @export
-#' @rdname layout_heatmap
-layout_heatmap.character <- layout_heatmap.numeric
-
-#' @export
-#' @rdname layout_heatmap
-layout_heatmap.default <- function(data, mapping = aes(), ...) {
-    data <- as.matrix(data)
-    layout_heatmap(data = data, mapping = mapping, ...)
-}
-
-#' @export
-layout_heatmap.NULL <- function(data, mapping = aes(), ...) {
-    cli::cli_abort("{.arg data} must be a matrix-like object instead of `NULL`")
+layout_heatmap.default <- function(data, ...) {
+    call <- current_call()
+    data <- tryCatch(
+        as.matrix(data),
+        error = function(cnd) {
+            cli::cli_abort(paste(
+                "{.arg data} must be a matrix-like object but you provide",
+                "{.obj_type_friendly {data}}"
+            ), call = call)
+        }
+    )
+    layout_heatmap(data = data, ...)
 }
 
 #' Subset a `LayoutHeatmap` object
@@ -207,10 +180,11 @@ methods::setMethod("$", "LayoutHeatmap", function(x, name) {
     }
 })
 
+#' Show `LayoutHeatmap`
+#'
 #' @param object A `LayoutHeatmap` object.
 #' @importFrom methods show
 #' @export
-#' @rdname layout_heatmap
 methods::setMethod("show", "LayoutHeatmap", function(object) print(object))
 
 #' Reports whether `x` is a `LayoutHeatmap` object

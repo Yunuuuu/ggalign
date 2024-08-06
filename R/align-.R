@@ -45,7 +45,10 @@ align <- function(align_class, params,
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NA_integer_, name = NULL,
                   check.param = TRUE, call = caller_call()) {
-    call <- call %||% current_call()
+    if (align_override_call(call)) {
+        call <- current_call()
+    }
+
     # check arguments ---------------------------------------------
     size <- set_size(size)
     if (!is_scalar(size) || !is.unit(size)) {
@@ -136,7 +139,7 @@ align_override_call <- function(call = NULL) {
 #' @export
 #' @keywords internal
 plot.Align <- function(x, ...) {
-    cli::cli_abort("You cannot plot {.obj_type_friendly x} object directly")
+    cli::cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 
 is.align <- function(x) inherits(x, "Align")
