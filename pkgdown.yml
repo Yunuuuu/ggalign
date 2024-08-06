@@ -1,0 +1,13 @@
+pandoc: 3.1.11
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  align: align.html
+  Introduction: Introduction.html
+  layout-heatmap: layout-heatmap.html
+  layout-stack: layout-stack.html
+  Single-Heatmap-Colors: Single-Heatmap-Colors.html
+last_built: 2024-08-06T09:08Z
+urls:
+  reference: https://yunuuuu.github.io/ggalign/reference
+  article: https://yunuuuu.github.io/ggalign/articles
