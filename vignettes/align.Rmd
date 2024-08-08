@@ -1,5 +1,5 @@
 ---
-title: "Setup layout order and panel and Add plot into layout"
+title: "Setup layout order and panel"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{align}
