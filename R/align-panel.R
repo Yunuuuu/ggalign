@@ -1,4 +1,4 @@
-#' Create ggplot object in the layout panel
+#' Create ggplot object with layout panel data
 #'
 #' This is similar with `ggalign()` function, but it will always use the layout
 #' panel data. `ggpanel` is just an alias of `align_panel`.

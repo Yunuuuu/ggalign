@@ -3,7 +3,7 @@
 \name{align_panel}
 \alias{align_panel}
 \alias{ggpanel}
-\title{Create ggplot object in the layout panel}
+\title{Create ggplot object with layout panel data}
 \usage{
 align_panel(
   mapping = aes(),
