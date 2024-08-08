@@ -42,8 +42,8 @@ The documentation for `ggalign` is currently in progress.
 - `align_group()`: Group layout axis into panel with a group variable.
 - `align_kmeans()`: Group layout axis into panel by kmeans
 - `align_reorder()`: Reorder layout observations
-- `align_dendro()`: Reorder or Group layout based on Hierarchical
-  Clustering
+- `align_dendro()`: Reorder or Group layout based on hierarchical
+  clustering
 
 In addition, `Align` objects can also add plot into the layout:
 
