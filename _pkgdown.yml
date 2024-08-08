@@ -17,7 +17,7 @@ reference:
   - layout-and
   - build_patchwork
 
-- subtitle: Active context
+- subtitle: Activate context
   desc: >
     A `Layout` object may have multiple plots, you can choose where to add ggplot2 
     elements with following functions.

@@ -1,5 +1,5 @@
 ---
-title: "align"
+title: "Setup layout order and panel and Add plot into layout"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{align}
@@ -18,12 +18,10 @@ knitr::opts_chunk$set(
 library(ggalign)
 ```
 
-# `align_*`
-The `ggalign` package provides a range of `align_*` functions that enable
-control over the layout. Specifically, these functions allow for the
-manipulation of axis order in the layout, as well as partitioning along a single
-axis into multiple panel. Additionally, some of these functions have the
-capability to add plots. 
+The package provides a range of `align_*` functions that enable control over the
+layout. Specifically, these functions allow for the manipulation of axis order
+in the layout, as well as partitioning along a single axis into multiple panel.
+Additionally, some of these functions have the capability to add plots. 
 
 Currently, there are four primary `align_*` functions: `align_group`,
 `align_reorder`, `align_kmeans` and `align_dendro`.
