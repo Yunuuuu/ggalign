@@ -2,8 +2,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/404.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/LICENSE-text.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/LICENSE.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/Introduction.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/Single-Heatmap-Colors.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/ComplexHeatmap-Single-Heatmap.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/ComplexHeatmap-gene-expression-matrix.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/layout-heatmap.html</loc></url>
@@ -13,17 +13,17 @@
 <url><loc>https://yunuuuu.github.io/ggalign/news/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Layout-class.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/activate.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/active.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_dendro.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_gg.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_group.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_kmeans.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/align_panels.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/align_panel.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_reorder.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/align_title.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/build_patchwork.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/cash-LayoutHeatmap-method.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/cash-LayoutStack-method.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/cash-HeatmapLayout-method.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/cash-StackLayout-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/dendrogram_data.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/geom_draw.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign-package.html</loc></url>
@@ -39,6 +39,5 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/layout_stack.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/reexports.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/show-Layout-method.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/show-LayoutHeatmap-method.html</loc></url>
 </urlset>
 
