@@ -37,14 +37,16 @@ The documentation for `ggalign` is currently in progress.
 - `layout_stack()`/`ggstack()`: Arrange ggplot vertically or
   horizontally. See `vignette("layout-stack")` for details.
 
-`ggalign` provides `Align` objects to reordering or set panels for
-layout, in addition, `Align` objects can also add plot into the layout:
+`ggalign` provides `Align` objects to reorder or set panels for layout:
 
 - `align_group()`: Group layout axis into panel
 - `align_kmeans()`: Group layout observations by kmeans
 - `align_reorder()`: Reorder layout observations
 - `align_dendro()`: Reorder or Group layout based on Hierarchical
   Clustering
+
+In addition, `Align` objects can also add plot into the layout:
+
 - `align_gg()`/`ggalign()`: Create ggplot object in the layout
 - `align_panel()`/`ggpanel()`: Create ggplot object based on the layout
   panel data.
