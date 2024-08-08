@@ -10,7 +10,7 @@ build_patchwork(layout)
 \item{layout}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
 }
 \value{
-A \code{patchwork} object.
+A \code{patchwork} object or \code{NULL} if no plots.
 }
 \description{
 Build \code{Layout} object for rendering.

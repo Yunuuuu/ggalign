@@ -33,10 +33,10 @@
 #'                        for current edge.
 #'   - `branch`: which branch current node or edge is. You can use this column
 #'               to color different groups.
-#'   - `panel`: which panel current node is, if we split the plot into panels
+#'   - `panel`: which panel current node is, if we split the plot into panel
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes may
-#'              fall outside panels (between two panels), so there are possible
+#'              fall outside panel (between two panel), so there are possible
 #'              `NA` values in this column. We also provide `.panel` column,
 #'              which always give the right branch for usage of the ggplot
 #'              facet.
@@ -84,13 +84,13 @@ align_dendro <- function(mapping = aes(), ...,
             plot_dendrogram = plot_dendrogram
         ),
         set_context = set_context, name = name, order = order,
-        size = size, data = data
+        size = size, data = data %||% waiver()
     )
 }
 
 #' @importFrom ggplot2 aes
 AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
-    setup_params = function(self, data, params) {
+    setup_params = function(self, nobs, params) {
         call <- .subset2(self, "call")
         assert_number(.subset2(params, "k"),
             null_ok = TRUE, arg = "k",
@@ -106,7 +106,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         )
         params
     },
-    setup_data = function(self, data, params) {
+    setup_data = function(self, params, data) {
         ans <- as.matrix(data)
         assert_(
             ans, function(x) is.numeric(x),
@@ -116,7 +116,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         )
         ans
     },
-    compute = function(self, panels, index,
+    compute = function(self, panel, index,
                        distance, method, use_missing, reorder_group,
                        k = NULL, h = NULL) {
         data <- .subset2(self, "data")
@@ -129,8 +129,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                 call = .subset2(self, "call")
             )
         }
-        # if the old panels exist, we do sub-clustering
-        if (!is.null(panels)) {
+        # if the old panel exist, we do sub-clustering
+        if (!is.null(panel)) {
             # if the heatmap has established groups,
             # `k` and `h` must be NULL, and we'll do sub-clustering
             if (!is.null(k) || !is.null(h)) {
@@ -146,12 +146,12 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                     call = .subset2(self, "call")
                 )
             }
-            children <- vector("list", nlevels(panels))
-            names(children) <- levels(panels)
+            children <- vector("list", nlevels(panel))
+            names(children) <- levels(panel)
             labels <- rownames(data)
             # we do clustering within each group ---------------
-            for (g in levels(panels)) {
-                i <- which(panels == g)
+            for (g in levels(panel)) {
+                i <- which(panel == g)
                 gdata <- data[i, , drop = FALSE]
                 if (nrow(gdata) == 1L) {
                     children[[g]] <- tree_one_node(i, .subset(labels, i))
@@ -177,12 +177,12 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             }
 
             # merge children tree ------------------------------
-            if (nlevels(panels) == 1L) { # only one parent
+            if (nlevels(panel) == 1L) { # only one parent
                 ans <- .subset2(children, 1L)
             } else if (reorder_group) {
-                parent_levels <- levels(panels)
+                parent_levels <- levels(panel)
                 parent_data <- t(sapply(parent_levels, function(g) {
-                    colMeans(data[panels == g, , drop = FALSE])
+                    colMeans(data[panel == g, , drop = FALSE])
                 }))
                 rownames(parent_data) <- parent_levels
                 parent <- stats::as.dendrogram(hclust2(
@@ -192,8 +192,8 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
                     use_missing = use_missing
                 ))
                 # reorder parent based on the parent tree
-                panels <- factor(
-                    panels, parent_levels[stats::order.dendrogram(parent)]
+                panel <- factor(
+                    panel, parent_levels[stats::order.dendrogram(parent)]
                 )
                 ans <- merge_dendrogram(parent, children)
                 # we don't cutree
@@ -201,26 +201,26 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             } else {
                 ans <- Reduce(merge, children)
             }
-            self$panels <- panels
+            self$panel <- panel
             return(ans)
         }
         hclust2(data, distance, method, use_missing)
     },
-    layout = function(self, panels, index, k, h) {
+    layout = function(self, panel, index, k, h) {
         statistics <- .subset2(self, "statistics")
-        if (!is.null(panels)) { # we have do sub-clustering
-            panels <- .subset2(self, "panels")
+        if (!is.null(panel)) { # we have do sub-clustering
+            panel <- .subset2(self, "panel")
         } else if (!is.null(k)) {
-            panels <- stats::cutree(statistics, k = k)
+            panel <- stats::cutree(statistics, k = k)
             self$height <- cutree_k_to_h(statistics, k)
         } else if (!is.null(h)) {
-            panels <- stats::cutree(statistics, h = h)
+            panel <- stats::cutree(statistics, h = h)
             self$height <- h
         }
         index <- order2(statistics)
         # reorder panel factor levels to following the dendrogram order
-        if (!is.null(panels)) panels <- factor(panels, unique(panels[index]))
-        list(panels, index)
+        if (!is.null(panel)) panel <- factor(panel, unique(panel[index]))
+        list(panel, index)
     },
     ggplot = function(self, plot_dendrogram, mapping, segment_params) {
         if (!plot_dendrogram) {
@@ -243,12 +243,11 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             )
         add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
-    draw = function(self, panels, index, extra_panels, extra_index,
+    draw = function(self, panel, index, extra_panel, extra_index,
                     # other argumentds
-                    plot_cut_height, center, type,
-                    root, segment_params) {
+                    plot_cut_height, center, type, root) {
         direction <- .subset2(self, "direction")
-        if (nlevels(panels) > 1L && type == "triangle") {
+        if (nlevels(panel) > 1L && type == "triangle") {
             cli::cli_warn(c(
                 paste(
                     "{.arg type} of {.arg triangle}",
@@ -263,7 +262,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             priority = switch_direction(direction, "left", "right"),
             center = center,
             type = type,
-            leaf_braches = panels,
+            leaf_braches = panel,
             root = root
         )
         node <- .subset2(data, "node")

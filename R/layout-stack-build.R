@@ -1,21 +1,25 @@
 #' @export
-build_patchwork.LayoutStack <- function(layout) {
+build_patchwork.StackLayout <- function(layout) {
     .subset2(stack_build(layout), "plot")
 }
 
-#' @param panels,index layout of the axis vertically with the stack.
+#' @param panel,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom patchwork area
 #' @importFrom rlang is_empty
 #' @noRd
 stack_build <- function(x, plot_data = NULL,
-                        extra_panels = NULL, extra_index = NULL) {
+                        extra_panel = NULL, extra_index = NULL) {
+    if (is.na(nobs <- get_nobs(x))) { # no plots
+        return(list(plot = NULL, size = NULL))
+    }
     direction <- slot(x, "direction")
-    panels <- get_panels(x) %||% factor(rep_len(1L, nrow(slot(x, "data"))))
-    index <- get_index(x) %||% reorder_index(panels)
+    params <- slot(x, "params")
+    panel <- get_panel(x) %||% factor(rep_len(1L, nobs))
+    index <- get_index(x) %||% reorder_index(panel)
 
     plots <- slot(x, "plots")
-    plot_data <- slot(x, "plot_data") %|w|% plot_data
+    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
 
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
@@ -27,14 +31,13 @@ stack_build <- function(x, plot_data = NULL,
     }, integer(1L)))
     plots <- .subset(plots, plot_index)
     patches <- stack_patch(direction)
-    params <- slot(x, "params")
     has_top <- FALSE
     has_bottom <- FALSE
     for (plot in plots) {
         if (is.align(plot)) {
             patch <- align_build(plot,
-                panels = panels, index = index,
-                extra_panels = extra_panels,
+                panel = panel, index = index,
+                extra_panel = extra_panel,
                 extra_index = extra_index,
                 plot_data = plot_data
             )
@@ -74,18 +77,18 @@ stack_build <- function(x, plot_data = NULL,
         ),
         widths = switch_direction(
             direction,
-            do.call(unit.c, attr(patches, "rel_sizes")),
-            .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)]
+            do.call(unit.c, attr(patches, "sizes")),
+            .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)]
         ),
         heights = switch_direction(
             direction,
-            .subset2(params, "rel_sizes")[c(has_top, TRUE, has_bottom)],
-            do.call(unit.c, attr(patches, "rel_sizes"))
+            .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
+            do.call(unit.c, attr(patches, "sizes"))
         ),
         guides = .subset2(params, "guides") %||% "collect",
         align_axis_title = .subset2(params, "align_axis_title") %||% FALSE
     )
-    list(plot = plot, size = slot(x, "size"))
+    list(plot = plot, size = .subset2(params, "size"))
 }
 
 stack_patch <- function(direction) {
@@ -93,7 +96,7 @@ stack_patch <- function(direction) {
         t = integer(), l = integer(), b = integer(), r = integer(),
         plots = list()
     )
-    structure(ans, direction = direction, align = 1L, rel_sizes = list())
+    structure(ans, direction = direction, align = 1L, sizes = list())
 }
 
 stack_patch_add_plot <- function(area, plot, t, l, b = t, r = l) {
@@ -121,7 +124,7 @@ stack_patch_add_align <- function(area, plot, size) {
         t <- max(b_border) + 1L
         l <- attr(area, "align")
     }
-    attr(area, "rel_sizes") <- c(attr(area, "rel_sizes"), list(size))
+    attr(area, "sizes") <- c(attr(area, "sizes"), list(size))
     stack_patch_add_plot(area, plot, t, l)
 }
 

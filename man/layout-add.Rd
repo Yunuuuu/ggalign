@@ -3,9 +3,9 @@
 \name{layout-add}
 \alias{layout-add}
 \alias{+.Layout}
-\alias{+.LayoutHeatmap}
+\alias{+.HeatmapLayout}
 \alias{+.ggheatmap}
-\alias{+.LayoutStack}
+\alias{+.StackLayout}
 \alias{+.ggstack}
 \alias{+,Layout,ANY-method}
 \title{Add components to \code{Layout}}

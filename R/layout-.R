@@ -7,10 +7,7 @@
 #'
 #' @keywords internal
 methods::setClass("Layout",
-    list(
-        active = "ANY", plot_data = "ANY",
-        `_namespace` = "ANY"
-    ),
+    list(active = "ANY", `_namespace` = "ANY"),
     prototype = list(active = NULL, `_namespace` = function() NULL)
 )
 
@@ -19,6 +16,7 @@ is.layout <- function(x) methods::is(x, "Layout")
 #' Print Layout object
 #'
 #' @param object A [layout_heatmap()] or [layout_stack()] object.
+#' @importFrom methods show
 #' @export
 methods::setMethod("show", "Layout", function(object) {
     print(object)
@@ -37,7 +35,7 @@ methods::setMethod("show", "Layout", function(object) {
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #' @name layout-add
-#' @aliases +.Layout +.LayoutHeatmap +.ggheatmap +.LayoutStack +.ggstack
+#' @aliases +.Layout +.HeatmapLayout +.ggheatmap +.StackLayout +.ggstack
 NULL
 
 #' @rdname layout-add
@@ -61,12 +59,12 @@ layout_add <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_add.LayoutHeatmap <- function(layout, object, object_name) {
+layout_add.HeatmapLayout <- function(layout, object, object_name) {
     layout_heatmap_add(object, layout, object_name)
 }
 
 #' @export
-layout_add.LayoutStack <- function(layout, object, object_name) {
+layout_add.StackLayout <- function(layout, object, object_name) {
     layout_stack_add(object, layout, object_name)
 }
 
@@ -77,7 +75,7 @@ layout_add.LayoutStack <- function(layout, object, object_name) {
 #' @param e2 An object to be added to the plot.
 #' @return A modified `Layout` object.
 #' @name layout-and
-#' @aliases &.Layout &.LayoutHeatmap &.ggheatmap &.LayoutStack &.ggstack
+#' @aliases &.Layout &.HeatmapLayout &.ggheatmap &.StackLayout &.ggstack
 NULL
 
 #' @rdname layout-and
@@ -101,109 +99,172 @@ layout_and_add <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_and_add.LayoutHeatmap <- function(layout, object, object_name) {
+layout_and_add.HeatmapLayout <- function(layout, object, object_name) {
     layout_heatmap_and_add(object, layout, object_name)
 }
 
 #' @export
-layout_and_add.LayoutStack <- function(layout, object, object_name) {
+layout_and_add.StackLayout <- function(layout, object, object_name) {
     layout_stack_and_add(object, layout, object_name)
 }
 
 #########################################################
 # utils function ----------------------------------------
-get_panels <- function(x, ...) UseMethod("get_panels")
+get_panel <- function(x, ...) UseMethod("get_panel")
 
 #' @importFrom methods slot
 #' @export
-get_panels.LayoutHeatmap <- function(x, axis, ...) {
+get_panel.HeatmapLayout <- function(x, axis, ...) {
     .subset2(slot(x, "panel_list"), axis)
 }
 
 #' @importFrom methods slot
 #' @export
-get_panels.LayoutStack <- function(x, ...) {
-    slot(x, "panels")
+get_panel.StackLayout <- function(x, ...) {
+    slot(x, "panel")
 }
 
-set_panels <- function(x, ...) UseMethod("set_panels")
-
-#' @export
-set_panels.NULL <- function(x, ...) x
-
-#' @export
-set_panels.Align <- function(x, ...) x
+set_panel <- function(x, ...) UseMethod("set_panel")
 
 #' @importFrom methods slot slot<-
 #' @export
-set_panels.LayoutHeatmap <- function(x, axis, panels, ...) {
-    slot(x, "panel_list")[[axis]] <- panels
+set_panel.HeatmapLayout <- function(x, axis, panel, ...) {
+    slot(x, "panel_list")[[axis]] <- panel
     if (axis == "x") {
-        slot(x, "top") <- set_panels(slot(x, "top"), panels)
-        slot(x, "bottom") <- set_panels(slot(x, "bottom"), panels)
+        if (!is.null(top <- slot(x, "top"))) {
+            slot(x, "top") <- set_panel(top, panel)
+        }
+        if (!is.null(bottom <- slot(x, "bottom"))) {
+            slot(x, "bottom") <- set_panel(bottom, panel)
+        }
     } else {
-        slot(x, "left") <- set_panels(slot(x, "left"), panels)
-        slot(x, "right") <- set_panels(slot(x, "right"), panels)
+        if (!is.null(left <- slot(x, "left"))) {
+            slot(x, "left") <- set_panel(left, panel)
+        }
+        if (!is.null(right <- slot(x, "right"))) {
+            slot(x, "right") <- set_panel(right, panel)
+        }
     }
     x
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-set_panels.LayoutStack <- function(x, panels, ...) {
-    slot(x, "panels") <- panels
+set_panel.StackLayout <- function(x, panel, ...) {
+    slot(x, "panel") <- panel
     axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"),
-        set_panels,
-        axis = axis, panels = panels
-    )
+    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
+        if (is.ggheatmap(plot)) {
+            set_panel(plot, axis = axis, panel = panel)
+        } else {
+            plot
+        }
+    })
     x
 }
 
+############################################################
 get_index <- function(x, ...) UseMethod("get_index")
 
 #' @importFrom methods slot
 #' @export
-get_index.LayoutHeatmap <- function(x, axis, ...) {
+get_index.HeatmapLayout <- function(x, axis, ...) {
     .subset2(slot(x, "index_list"), axis)
 }
 
 #' @importFrom methods slot
 #' @export
-get_index.LayoutStack <- function(x, ...) {
+get_index.StackLayout <- function(x, ...) {
     slot(x, "index")
 }
 
 set_index <- function(x, ...) UseMethod("set_index")
 
-#' @export
-set_index.NULL <- function(x, ...) x
-
-#' @export
-set_index.Align <- function(x, ...) x
-
 #' @importFrom methods slot slot<-
 #' @export
-set_index.LayoutHeatmap <- function(x, axis, index, ...) {
+set_index.HeatmapLayout <- function(x, axis, index, ...) {
     slot(x, "index_list")[[axis]] <- index
     if (axis == "x") {
-        slot(x, "top") <- set_index(slot(x, "top"), index)
-        slot(x, "bottom") <- set_index(slot(x, "bottom"), index)
+        if (!is.null(top <- slot(x, "top"))) {
+            slot(x, "top") <- set_index(top, index)
+        }
+        if (!is.null(bottom <- slot(x, "bottom"))) {
+            slot(x, "bottom") <- set_index(bottom, index)
+        }
     } else {
-        slot(x, "left") <- set_index(slot(x, "left"), index)
-        slot(x, "right") <- set_index(slot(x, "right"), index)
+        if (!is.null(left <- slot(x, "left"))) {
+            slot(x, "left") <- set_index(left, index)
+        }
+        if (!is.null(right <- slot(x, "right"))) {
+            slot(x, "right") <- set_index(right, index)
+        }
     }
     x
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-set_index.LayoutStack <- function(x, index, ...) {
+set_index.StackLayout <- function(x, index, ...) {
     slot(x, "index") <- index
     axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"),
-        set_index,
-        axis = axis, index = index
-    )
+    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
+        if (is.ggheatmap(plot)) {
+            set_index(plot, axis = axis, index = index)
+        } else {
+            plot
+        }
+    })
+    x
+}
+
+##########################################################
+get_nobs <- function(x, ...) UseMethod("get_nobs")
+
+#' @importFrom methods slot
+#' @export
+get_nobs.HeatmapLayout <- function(x, axis, ...) {
+    .subset2(slot(x, "nobs_list"), axis)
+}
+
+#' @importFrom methods slot
+#' @export
+get_nobs.StackLayout <- function(x, ...) slot(x, "nobs")
+
+set_nobs <- function(x, ...) UseMethod("set_nobs")
+
+#' @importFrom methods slot slot<-
+#' @export
+set_nobs.HeatmapLayout <- function(x, axis, nobs, ...) {
+    slot(x, "nobs_list")[[axis]] <- nobs
+    if (axis == "x") {
+        if (!is.null(top <- slot(x, "top"))) {
+            slot(x, "top") <- set_nobs(top, nobs)
+        }
+        if (!is.null(bottom <- slot(x, "bottom"))) {
+            slot(x, "bottom") <- set_nobs(bottom, nobs)
+        }
+    } else {
+        if (!is.null(left <- slot(x, "left"))) {
+            slot(x, "left") <- set_nobs(left, nobs)
+        }
+        if (!is.null(right <- slot(x, "right"))) {
+            slot(x, "right") <- set_nobs(right, nobs)
+        }
+    }
+    x
+}
+
+#' @importFrom methods slot slot<-
+#' @export
+set_nobs.StackLayout <- function(x, nobs, ...) {
+    slot(x, "nobs") <- nobs
+    axis <- to_coord_axis(slot(x, "direction"))
+    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
+        if (is.ggheatmap(plot)) {
+            set_nobs(plot, axis = axis, nobs = nobs)
+        } else {
+            plot
+        }
+    })
     x
 }

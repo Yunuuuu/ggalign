@@ -54,7 +54,8 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data, plot_data = plot_data,
+        size = size, data = data %||% waiver(),
+        plot_data = plot_data,
         facet = facet, limits = limits,
         set_context = set_context, order = order, name = name
     )
@@ -65,7 +66,7 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
 ggalign <- align_gg
 
 AlignGG <- ggplot2::ggproto("AlignGG", Align,
-    setup_data = function(self, data, params) {
+    setup_data = function(self, params, data) {
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
         if (is.matrix(data)) {
@@ -85,19 +86,19 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
             aes(x = .data$.x)
         ))
     },
-    draw = function(self, panels, index, extra_panels, extra_index) {
+    draw = function(self, panel, index, extra_panel, extra_index) {
         data <- .subset2(self, "data")
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
-        if (.subset2(self, "data_from_layout") && !is.null(extra_panels)) {
+        if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # Align object always regard row as the observations
             row_coords <- data_frame0(
-                .panel = panels[index],
+                .panel = panel[index],
                 .index = index
             )
             row_coords[[paste0(".", axis)]] <- seq_along(index)
             column_coords <- data_frame0(
-                .extra_panel = extra_panels[extra_index],
+                .extra_panel = extra_panel[extra_index],
                 .extra_index = extra_index
             )
             coords <- merge(column_coords, row_coords,
@@ -109,7 +110,7 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
                 sort = FALSE, all = TRUE
             )
         } else {
-            coords <- data_frame0(.panel = panels[index], .index = index)
+            coords <- data_frame0(.panel = panel[index], .index = index)
             coords[[paste0(".", axis)]] <- seq_along(index)
             data <- merge(data, coords,
                 by.x = ".row_index", by.y = ".index",

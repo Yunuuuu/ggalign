@@ -11,6 +11,7 @@ This package extends ggplot2 and provides numerous benefits for organizing and a
 Useful links:
 \itemize{
   \item \url{https://github.com/Yunuuuu/ggalign}
+  \item \url{https://yunuuuu.github.io/ggalign/}
   \item Report bugs at \url{https://github.com/Yunuuuu/ggalign/issues}
 }
 

@@ -195,10 +195,10 @@ ggheatmap(small_mat) +
   align_reorder()
 ```
 
-When working with facets, manual configuration of panels using the `facet_*`
+When working with facets, manual configuration of panel using the `facet_*`
 function is not possible since the internal will use `facet_grid` to set the
 row/column groups controlled by heatmap annotation. However, you can provide
-`facet_grid` or `facet_null` (if no panels) to control the other arguments
+`facet_grid` or `facet_null` (if no panel) to control the other arguments
 except `rows` and `cols`. A common usage case is to change the panel strip text.
 
 THe default theme in `ggalign` removed the panel strip text, you can override

@@ -22,7 +22,7 @@ library(ggalign)
 The `ggalign` package provides a range of `align_*` functions that enable
 control over the layout. Specifically, these functions allow for the
 manipulation of axis order in the layout, as well as partitioning along a single
-axis into multiple panels. Additionally, some of these functions have the
+axis into multiple panel. Additionally, some of these functions have the
 capability to add plots. 
 
 Currently, there are four primary `align_*` functions: `align_group`,
@@ -37,7 +37,7 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 ## `align_group`
 
-`align_group` just group along a layout axis into different panels. It won't add
+`align_group` just group along a layout axis into different panel. It won't add
 any plot area.
 
 ```{r align_group_top}

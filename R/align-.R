@@ -43,7 +43,7 @@
 align <- function(align_class, params,
                   size = NULL, data = NULL, plot_data = waiver(),
                   limits = TRUE, facet = TRUE,
-                  set_context = TRUE, order = NA_integer_, name = NULL,
+                  set_context = TRUE, order = NULL, name = NULL,
                   check.param = TRUE, call = caller_call()) {
     if (align_override_call(call)) {
         call <- current_call()
@@ -61,7 +61,7 @@ align <- function(align_class, params,
     assert_bool(limits, call = call)
     assert_bool(set_context, call = call)
 
-    if (is.null(order)) {
+    if (is.null(order) || is.na(order)) {
         order <- NA_integer_
     } else if (!is_scalar(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
@@ -101,6 +101,7 @@ align <- function(align_class, params,
         plot = NULL,
         data = NULL,
         params = NULL,
+        labels = NULL,
 
         # user input -------------------------------
         size = size,
@@ -109,6 +110,8 @@ align <- function(align_class, params,
         name = name,
         order = order,
         set_context = set_context,
+        # use `NULL` if this align don't require any data
+        # use `waiver()` to inherit from the layout data
         input_data = data,
         plot_data = plot_data,
         facet = facet,
@@ -117,10 +120,6 @@ align <- function(align_class, params,
         # collect parameters
         input_params = params[intersect(names(params), all)],
         facetted_pos_scales = NULL,
-
-        # used to control the labels parallelly with the heatmap
-        labels = NULL,
-        data_from_layout = FALSE,
 
         # used to provide error message
         call = call
@@ -157,7 +156,7 @@ is.align <- function(x) inherits(x, "Align")
 #'    annotation.
 #'  - `setup_data`: Prepare data used by this annotation.
 #'  - `compute`: A method used to compute statistics.
-#'  - `layout`: A method used to group heamap rows/columns into panels or
+#'  - `layout`: A method used to group heamap rows/columns into panel or
 #'    reorder heamtap rows/columns.
 #'  - `draw`: A method used to draw the plot. Must return a `ggplot` object.
 #' @export
@@ -172,7 +171,7 @@ Align <- ggplot2::ggproto("Align",
             align_method_params(self$ggplot, character()),
             align_method_params(
                 self$draw,
-                c("panels", "index", "extra_panels", "extra_index")
+                c("panel", "index", "extra_panel", "extra_index")
             ),
             self$extra_params
         )
@@ -186,15 +185,20 @@ Align <- ggplot2::ggproto("Align",
 
     # Most parameters for the `Align` are taken automatically from `compute()`,
     # `layout()` and `draw()`. However, some additional parameters may be
-    # removed when in `setup_params`. You should put these paramters here,
-    # otherwise, they won't be collected.
+    # removed in `setup_params`. You should put these paramters here, otherwise,
+    # they won't be collected.
     extra_params = character(),
-    setup_params = function(data, params) params,
-    setup_data = function(data, params) NULL,
+    setup_params = function(nobs, params) params,
+    setup_data = function(params, data) data,
+
+    # You must provide `nobs()` function or data shouldn't be `NULL`
+    nobs = function(params) {
+        cli::cli_abort("Not implement currently")
+    },
 
     # Following fields should be defined for the new `Align` object.
     # argument name in the function doesn't matter.
-    compute = function(self, panels, index) NULL,
+    compute = function(self, panel, index) NULL,
 
     # Group heamap row/column and reorder, Must return a list of 2:
     #  - the first one should be the groups for heatmap row/column, the factor
@@ -202,16 +206,16 @@ Align <- ggplot2::ggproto("Align",
     #    index if you don't want the panel levels break the index. See
     #    `AlignDendro` for example.
     #  - the second one should be the heatmap row/column order index, and will
-    #    determine the order in each grouped panels.
+    #    determine the order in each grouped panel.
     #
     # See `align_layout` function for details
     # There will have following situations (the input is old index and old
-    # panels):
+    # panel):
     #
-    # 1. old index is NULL and old panels is NULL, there is nothing wrong to
-    #    define any new index or panels
-    # 2. old index is `NULL` and old panels is not `NULL`, in this way, new
-    #    index must follow the old panels.
+    # 1. old index is NULL and old panel is NULL, there is nothing wrong to
+    #    define any new index or panel
+    # 2. old index is `NULL` and old panel is not `NULL`, in this way, new
+    #    index must follow the old panel.
     #
     #    For new `Align` object, which can do clustering, we must
     #    abort, if it can not do sub-clustering, if it can do sub-clustering, we
@@ -221,16 +225,16 @@ Align <- ggplot2::ggproto("Align",
     #    Please check `AlignGroup` object and `Align` object
     #    For dendrogram, it can do sub-clustering within each group, it also
     #    allows reordering between groups (it provide `reorder_group` argument),
-    #    so the new panels levels may be not the same with old panels
+    #    so the new panel levels may be not the same with old panel
     #
     #    For `Align` object reordering the heatmap rows/columns.
     #    usually we provide a `strict` argument, to allow reorder heatmap within
     #    group only. See `AlignReorder`.
     #
-    # 3. old index is not `NULL`, no matter whether old panels is `NULL` or not,
+    # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
     #    index, this will be checked in `align_layout` function.
-    layout = function(self, panels, index) list(panels, index),
+    layout = function(self, panel, index) list(panel, index),
 
     # initialize the ggplot object, if `NULL`, no plot area will be added.  we
     # must separate this method with draw method, since other ggplot elements
@@ -240,7 +244,7 @@ Align <- ggplot2::ggproto("Align",
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
-    draw = function(self, panels, index, extra_panels, extra_index) self$plot
+    draw = function(self, panel, index, extra_panel, extra_index) self$plot
 )
 
 # Used to lock the `Align` object
@@ -257,6 +261,6 @@ Align <- ggplot2::ggproto("Align",
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
-align_method_params <- function(f, remove = c("panels", "index")) {
+align_method_params <- function(f, remove = c("panel", "index")) {
     setdiff(names(ggproto_formals(f)), c("self", remove))
 }

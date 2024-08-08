@@ -113,10 +113,10 @@ hclust2 <- function(matrix,
 #'                        for current edge.
 #'   - `branch`: which branch current node or edge is. You can use this column
 #'               to color different groups.
-#'   - `panel`: which panel current node is, if we split the plot into panels
+#'   - `panel`: which panel current node is, if we split the plot into panel
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes may
-#'              fall outside panels (between two panels), so there are possible
+#'              fall outside panel (between two panels), so there are possible
 #'              `NA` values in this column. We also provide `ggpanel` column,
 #'              which always give the right branch for usage of the ggplot
 #'              facet.
@@ -291,14 +291,14 @@ dendrogram_data <- function(tree,
                     .subset2(leaves, "panel")
                 )
                 ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
-                panels <- names(ranges)
+                full_panel <- names(ranges)
                 panel <- NA
                 for (i in seq_along(ranges)) {
                     if (x < min(.subset2(ranges, i))) {
                         panel <- NA
                         break
                     } else if (x <= max(.subset2(ranges, i))) {
-                        panel <- .subset2(panels, i)
+                        panel <- .subset2(full_panel, i)
                         break
                     }
                 }
@@ -307,8 +307,8 @@ dendrogram_data <- function(tree,
                     # all panels - the left or right most. So `i` won't be 1 or
                     # length(ranges). we don't need to check the argument
                     ggpanel <- switch(priority,
-                        left = .subset(panels, i - 1L),
-                        right = .subset(panels, i)
+                        left = .subset(full_panel, i - 1L),
+                        right = .subset(full_panel, i)
                     )
                 }
             }

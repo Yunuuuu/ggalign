@@ -15,7 +15,7 @@ align(
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
-  order = NA_integer_,
+  order = NULL,
   name = NULL,
   check.param = TRUE,
   call = caller_call()
@@ -89,7 +89,7 @@ override one or more of the following:
 annotation.
 \item \code{setup_data}: Prepare data used by this annotation.
 \item \code{compute}: A method used to compute statistics.
-\item \code{layout}: A method used to group heamap rows/columns into panels or
+\item \code{layout}: A method used to group heamap rows/columns into panel or
 reorder heamtap rows/columns.
 \item \code{draw}: A method used to draw the plot. Must return a \code{ggplot} object.
 }

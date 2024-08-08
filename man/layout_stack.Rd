@@ -6,18 +6,18 @@
 \title{Put plots horizontally or vertically}
 \usage{
 layout_stack(
-  data,
+  data = NULL,
   direction = NULL,
-  rel_sizes = NULL,
+  sizes = NULL,
   guides = NULL,
   align_axis_title = NULL,
   plot_data = waiver()
 )
 
 ggstack(
-  data,
+  data = NULL,
   direction = NULL,
-  rel_sizes = NULL,
+  sizes = NULL,
   guides = NULL,
   align_axis_title = NULL,
   plot_data = waiver()
@@ -29,9 +29,8 @@ ggstack(
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
 
-\item{rel_sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3}
-indicates the relative widths (\code{direction = "horizontal"}) / heights
-(\code{direction = "vertical"}).}
+\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
+the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
 \code{"collect"} will collect guides below to the given nesting level, removing
@@ -53,7 +52,7 @@ but before the data is handled of to the ggplot2 for rendering. Use this hook
 if the you needs change the default data for all \code{geoms}.}
 }
 \value{
-A \code{LayoutStack} object.
+A \code{StackLayout} object.
 }
 \description{
 \code{ggstack} is an alias of \code{layout_stack}.

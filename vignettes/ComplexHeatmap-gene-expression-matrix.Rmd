@@ -14,24 +14,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggalign
-This package extends ggplot2 and provides numerous benefits for organizing and
-arranging plots. It is specifically designed to align a specific axis of
-multiple ggplot objects in a consistent order. This functionality is
-particularly useful for plots that require manipulation of data order. A common
-plot combination that can be effectively organized using this package includes a
-dendrogram and a heatmap.
-
 ```{r setup}
 library(ggalign)
 ```
 
-## `Examples`
-Following examples are all from
-[ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html#add-more-information-for-gene-expression-matrix)
-package. 
+In this thread, We'll use `ggalign` to draw all the heatmap in
+[ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html#add-more-information-for-gene-expression-matrix). 
 
-### Add more information for gene expression matrix
+# Add more information for gene expression matrix
 ```{r fig.dim = c(12, 10)}
 expr <- readRDS(system.file(package = "ComplexHeatmap", "extdata", "gene_expression.rds"))
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
@@ -41,31 +31,34 @@ type <- gsub("s\\d+_", "", colnames(mat))
 
 ggstack(data = mat_scaled) +
   align_kmeans(centers = 5L) +
-  ggpanels(size = unit(1, "cm")) +
+  ggpanel(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
   scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
   scale_x_continuous(breaks = NULL, name = NULL) +
-  (ggheatmap(mat_scaled) +
-    scale_y_continuous(breaks = NULL) +
-    scale_fill_viridis_c() +
-    hmanno("t") +
-    align_dendro() +
-    ggalign(data = type, size = unit(1, "cm")) +
-    geom_tile(aes(y = 1, fill = factor(value))) +
-    scale_y_continuous(breaks = NULL, name = NULL) +
-    scale_fill_brewer(palette = "Set1", name = "type") +
-    hmanno(NULL)) +
-  (ggheatmap(base_mean, width = unit(2, "cm")) +
-    scale_y_continuous(breaks = NULL) +
-    scale_x_continuous(name = "base mean", breaks = FALSE) +
-    scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
-    hmanno("t", size = unit(2, "cm")) +
-    ggalign() +
-    geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
-    scale_x_continuous(expand = expansion(), breaks = NULL) +
-    scale_fill_brewer(palette = "Dark2", guide = "none") +
-    theme(axis.title.y = element_blank()) +
-    hmanno(NULL)) +
+  ggheatmap() +
+  scale_y_continuous(breaks = NULL) +
+  scale_fill_viridis_c() +
+  hmanno("t") +
+  align_dendro() +
+  ggalign(data = type, size = unit(1, "cm")) +
+  geom_tile(aes(y = 1, fill = factor(value))) +
+  scale_y_continuous(breaks = NULL, name = NULL) +
+  scale_fill_brewer(palette = "Set1", name = "type") +
+  hmanno() +
+  ggheatmap(base_mean, width = unit(2, "cm")) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(name = "base mean", breaks = FALSE) +
+  scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
+  hmanno("t", size = unit(4, "cm")) +
+  ggalign() +
+  geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
+  scale_x_continuous(expand = expansion(), breaks = NULL) +
+  scale_fill_brewer(palette = "Dark2", guide = "none") +
+  theme(axis.title.y = element_blank()) +
+  # we reset heatmap context into heatmap body, in this way,
+  # `&` will add elemnets for this heatmap and heatmap annotation simutaneously
+  hmanno() +
+  active() +
   ggalign(data = expr$length, size = unit(2, "cm")) +
   geom_point(aes(x = value)) +
   labs(x = "length") +
@@ -73,22 +66,22 @@ ggstack(data = mat_scaled) +
     panel.border = element_rect(fill = NA),
     axis.text.x = element_text(angle = -60, hjust = 0)
   ) +
-  (ggheatmap(expr$type, width = unit(2, "cm")) +
-    scale_fill_brewer(palette = "Set3", name = "gene type") +
-    scale_x_continuous(breaks = NULL, name = "gene type") +
-    hmanno("t") +
-    ggalign(limits = FALSE) +
-    geom_bar(
-      aes(.extra_panel, fill = factor(value)),
-      position = position_fill()
-    ) +
-    scale_x_discrete() +
-    scale_y_continuous(expand = expansion()) +
-    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")) &
+  ggheatmap(expr$type, width = unit(2, "cm")) +
+  scale_fill_brewer(palette = "Set3", name = "gene type") +
+  scale_x_continuous(breaks = NULL, name = "gene type") +
+  hmanno("t") +
+  ggalign(limits = FALSE) +
+  geom_bar(
+    aes(.extra_panel, fill = factor(value)),
+    position = position_fill()
+  ) +
+  scale_x_discrete() +
+  scale_y_continuous(expand = expansion()) +
+  scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") &
   theme(plot.margin = margin())
 ```
 
-### The measles vaccine heatmap
+# The measles vaccine heatmap
 ```{r fig.dim = c(12, 12)}
 mat <- readRDS(system.file("extdata", "measles.rds",
   package =
@@ -119,7 +112,7 @@ ggheatmap(mat, filling = FALSE) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
-## Session information
+# Session information
 ```{r}
 sessionInfo()
 ```

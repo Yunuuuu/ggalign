@@ -48,11 +48,12 @@ ht1 <- ggheatmap(mat1, width = 1) +
   scale_y_continuous(expand = expansion()) +
   hmanno(NULL)
 ht2 <- ggheatmap(mat2, width = 1)
-ggstack(mat1, rel_sizes = c(0.2, 1, 1)) +
+ggstack(mat1, sizes = c(0.2, 1, 1)) +
   align_dendro(size = 0.2) +
   scale_x_reverse() +
   ht1 +
   ht2 +
+  active() +
   ggalign(data = le, size = 0.2) +
   geom_tile(aes(x = .column_index, fill = value)) +
   scale_x_continuous(name = NULL, labels = NULL, breaks = NULL) &

@@ -14,59 +14,92 @@ layout_heatmap_add.NULL <- function(object, heatmap, object_name) heatmap
 #' @export
 layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
-        cli::cli_abort(c("No active heatmap annotation",
+        cli::cli_abort(c(
+            "Cannot add {.code {object_name}}",
+            i = "No active heatmap annotation",
             i = "try to activate an annotation with {.fn hmanno}"
-        ), call = .subset2(object, "call"))
+        ))
     }
-    direction <- to_direction(position)
-    # we'll always override the direction of `Align` object when adding it into
-    # a layout object.
-    object$direction <- direction
 
     # add annotation -----------------------------
     stack <- layout_stack_add(object, slot(heatmap, position), object_name)
     slot(heatmap, position) <- stack
 
-    # set the panels and index for the heatmap
+    # set the panel and index for the heatmap
+    direction <- to_direction(position)
     axis <- to_coord_axis(direction)
-    heatmap <- set_panels(heatmap, axis, get_panels(stack))
+    heatmap <- set_panel(heatmap, axis, get_panel(stack))
     heatmap <- set_index(heatmap, axis, get_index(stack))
+    heatmap <- set_nobs(heatmap, axis, get_nobs(stack))
     heatmap
 }
 
 #' @export
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
-    if (is.na(object)) object <- get_context(heatmap) %||% "plot"
-    if (object == "plot") {
-        return(set_context(heatmap, NULL))
-    }
-    heatmap <- set_context(heatmap, object)
-    # initialize the annotation stack ------------
-    if (is.null(stack <- slot(heatmap, object))) {
-        direction <- to_direction(object)
-        axis <- to_coord_axis(direction)
-        stack <- layout_stack(
-            switch_direction(
-                direction,
-                slot(heatmap, "data"),
-                t(slot(heatmap, "data"))
-            ),
-            direction = direction,
-            guides = "auto"
-        )
-        stack <- set_panels(stack, get_panels(heatmap, axis))
-        stack <- set_index(stack, get_index(heatmap, axis))
+    if (is.na(object)) {
+        heatmap <- set_context(heatmap, NULL)
+        if (!is.null(guides <- attr(object, "guides"))) {
+            slot(heatmap, "params")$guides <- guides
+        }
+        if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
+            slot(heatmap, "params")$align_axis_title <- align_axis_title
+        }
+        if (!is.null(width <- attr(object, "width"))) {
+            slot(heatmap, "params")$width <- width
+        }
+        if (!is.null(height <- attr(object, "height"))) {
+            slot(heatmap, "params")$height <- height
+        }
+        if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
+            slot(heatmap, "params")$plot_data <- plot_data
+        }
+        return(heatmap)
     }
 
-    if (!is.null(size <- attr(object, "size"))) slot(stack, "size") <- size
+    heatmap <- set_context(heatmap, object)
+    direction <- to_direction(object)
+    axis <- to_coord_axis(direction)
+
+    if (is.null(get_nobs(heatmap, axis))) {
+        cli::cli_abort(c(
+            "{.arg data} of heatmap layout is not initialized",
+            i = "Did you want to add this heatmap in a stack layout?"
+        ))
+    }
+
+    # initialize the annotation stack ------------
+    if (is.null(stack <- slot(heatmap, object))) {
+        data <- slot(heatmap, "data")
+        if (!is_horizontal(direction)) data <- t(data)
+        stack <- layout_stack(
+            data = data,
+            direction = direction,
+            guides = "auto",
+            align_axis_title = slot(heatmap, "params")$align_axis_title
+        )
+        stack <- set_panel(stack, get_panel(heatmap, axis))
+        stack <- set_index(stack, get_index(heatmap, axis))
+
+        # Initialize the stack size
+        # it is the total size of the stack in the stack direction.
+        # In `params` slot, we'll also have a `sizes` indicates the relative
+        # size of the vertical direction with this stack, which won't be used by
+        # heatmap annotation, since heatmap annotation only allow `Align`
+        # object.
+        slot(stack, "params")$size <- unit(1, "null")
+    }
+
+    if (!is.null(size <- attr(object, "size"))) {
+        slot(stack, "params")$size <- size
+    }
     if (!is.null(guides <- attr(object, "guides"))) {
         slot(stack, "params")$guides <- guides
     }
     if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
-        slot(stack, "guides")$align_axis_title <- align_axis_title
+        slot(stack, "params")$align_axis_title <- align_axis_title
     }
-    if (!is.na(plot_data <- attr(object, "plot_data"))) {
-        slot(stack, "plot_data") <- plot_data
+    if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
+        slot(stack, "params")$plot_data <- plot_data
     }
     slot(heatmap, object) <- stack
     heatmap

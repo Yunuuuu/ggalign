@@ -7,6 +7,7 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
+library(vdiffr)
 library(ggalign)
 
 test_check("ggalign")

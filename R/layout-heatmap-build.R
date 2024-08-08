@@ -1,7 +1,7 @@
 #' @importFrom patchwork area
 #' @importFrom grid unit.c
 #' @export
-build_patchwork.LayoutHeatmap <- function(layout) {
+build_patchwork.HeatmapLayout <- function(layout) {
     patches <- heatmap_build(layout)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
@@ -35,19 +35,25 @@ build_patchwork.LayoutHeatmap <- function(layout) {
     )
 }
 
-
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = NULL) {
+    params <- slot(heatmap, "params")
     mat <- slot(heatmap, "data")
+    x_nobs <- get_nobs(heatmap, "x")
+    y_nobs <- get_nobs(heatmap, "y")
+    if (is.null(x_nobs) || is.null(y_nobs)) {
+        cli::cli_abort(
+            "You must provide {.arg data} argument to plot the heatmap"
+        )
+    }
+    xpanel <- get_panel(heatmap, "x") %||% factor(rep_len(1L, x_nobs))
+    xindex <- get_index(heatmap, "x") %||% reorder_index(xpanel)
 
-    xpanels <- get_panels(heatmap, "x") %||% factor(rep_len(1L, ncol(mat)))
-    xindex <- get_index(heatmap, "x") %||% reorder_index(xpanels)
-
-    ypanels <- get_panels(heatmap, "y") %||% factor(rep_len(1L, nrow(mat)))
-    yindex <- get_index(heatmap, "y") %||% reorder_index(ypanels)
+    ypanel <- get_panel(heatmap, "y") %||% factor(rep_len(1L, y_nobs))
+    yindex <- get_index(heatmap, "y") %||% reorder_index(ypanel)
 
     # read the plot ---------------------------------------
     p <- slot(heatmap, "plot")
@@ -68,19 +74,19 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
     }
 
     # set the default data -------------------------------
-    data <- heatmap_build_data(mat, ypanels, yindex, xpanels, xindex)
-    plot_data <- slot(heatmap, "plot_data") %|w|% plot_data
+    data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
+    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     p <- finish_plot_data(p, plot_data, data = data)
 
     # setup the scales -----------------------------------
-    do_row_facet <- nlevels(ypanels) > 1L
-    do_column_facet <- nlevels(xpanels) > 1L
+    do_row_facet <- nlevels(ypanel) > 1L
+    do_column_facet <- nlevels(xpanel) > 1L
 
     facet_scales <- slot(heatmap, "facetted_pos_scales")
     xscales <- set_scales(
         plot = p,
         scale_name = "x",
-        panels = xpanels,
+        panel = xpanel,
         index = xindex,
         layout_labels = colnames(mat),
         facet_scales = facet_scales
@@ -91,7 +97,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
     yscales <- set_scales(
         plot = p,
         scale_name = "y",
-        panels = ypanels,
+        panel = ypanel,
         index = yindex,
         layout_labels = rownames(mat),
         facet_scales = facet_scales
@@ -135,13 +141,13 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
         }
         # special case for `align_gg` to operate the vertical axis
         if (is_horizontal(to_direction(position))) {
-            panels <- xpanels
+            panel <- xpanel
             index <- xindex
         } else {
-            panels <- ypanels
+            panel <- ypanel
             index <- yindex
         }
-        stack_build(stack, plot_data, panels, index)
+        stack_build(stack, plot_data, panel, index)
     })
     names(stack_list) <- GGHEAT_ELEMENTS
     stack_list <- transpose(stack_list)
@@ -149,7 +155,6 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
     sizes <- .subset2(stack_list, 2L) # annotation size
 
     plots <- c(plots, list(heatmap = p))
-    params <- slot(heatmap, "params")
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
 }
@@ -160,15 +165,15 @@ plot_filler <- function() {
     p
 }
 
-heatmap_build_data <- function(matrix, row_panels, row_index,
-                               column_panels, column_index) {
+heatmap_build_data <- function(matrix, row_panel, row_index,
+                               column_panel, column_index) {
     ycoords <- data_frame0(
-        .ypanel = row_panels[row_index],
+        .ypanel = row_panel[row_index],
         .yindex = row_index,
         .y = seq_along(row_index)
     )
     xcoords <- data_frame0(
-        .xpanel = column_panels[column_index],
+        .xpanel = column_panel[column_index],
         .xindex = column_index,
         .x = seq_along(column_index)
     )

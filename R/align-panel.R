@@ -1,7 +1,7 @@
-#' Create ggplot object in the layout panels
+#' Create ggplot object in the layout panel
 #'
 #' This is similar with `ggalign()` function, but it will always use the layout
-#' panels data. `ggpanels` is just an alias of `align_panels`.
+#' panel data. `ggpanel` is just an alias of `align_panel`.
 #'
 #' @param mapping Additional default list of aesthetic mappings to use for plot.
 #' @inheritParams align
@@ -9,7 +9,7 @@
 #' @inheritParams ggplot2::ggplot
 #'
 #' @section ggplot2 details:
-#' `align_panels` initializes a `ggplot` data and `mapping`.
+#' `align_panel` initializes a `ggplot` data and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(y = .data$.y)` or
 #' `aes(x = .data$.x)`.
@@ -22,7 +22,7 @@
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
-#' @return A `AlignPanels` object.
+#' @return A `Alignpanel` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
@@ -30,10 +30,10 @@
 #'     geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
-align_panels <- function(mapping = aes(), size = NULL, plot_data = waiver(),
-                         set_context = TRUE, order = NULL, name = NULL) {
+align_panel <- function(mapping = aes(), size = NULL, plot_data = waiver(),
+                        set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
-    align(AlignPanels,
+    align(Alignpanel,
         params = list(mapping = mapping),
         size = size, data = NULL, plot_data = plot_data,
         set_context = set_context, order = order, name = name
@@ -41,11 +41,17 @@ align_panels <- function(mapping = aes(), size = NULL, plot_data = waiver(),
 }
 
 #' @export
-#' @rdname align_panels
-ggpanels <- align_panels
+#' @rdname align_panel
+ggpanel <- align_panel
 
-AlignPanels <- ggplot2::ggproto("AlignPanels", Align,
-    setup_data = function(self, data, params) NULL,
+Alignpanel <- ggplot2::ggproto("Alignpanel", Align,
+    nobs = function(self) {
+        axis <- to_coord_axis(.subset2(self, "direction"))
+        cli::cli_abort(c(
+            "You cannot add {.fn {snake_class(self)}}",
+            i = "layout {axis}-axis is not initialized"
+        ), call = .subset2(self, "call"))
+    },
     ggplot = function(self, mapping) {
         ans <- ggplot2::ggplot(mapping = mapping)
 
@@ -55,9 +61,9 @@ AlignPanels <- ggplot2::ggproto("AlignPanels", Align,
             aes(x = .data$.x)
         ))
     },
-    draw = function(self, panels, index, extra_panels, extra_index) {
+    draw = function(self, panel, index, extra_panel, extra_index) {
         axis <- to_coord_axis(.subset2(self, "direction"))
-        data <- data_frame0(.panel = panels[index], .index = index)
+        data <- data_frame0(.panel = panel[index], .index = index)
         data[[paste0(".", axis)]] <- seq_along(index)
         plot <- .subset2(self, "plot")
         plot$data <- data

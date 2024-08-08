@@ -7,37 +7,38 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
-#' @param rel_sizes A numeric or [unit][grid::unit] object of length `3`
-#' indicates the relative widths (`direction = "horizontal"`) / heights
-#' (`direction = "vertical"`).
+#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
+#' the relative widths (`direction = "horizontal"`) / heights (`direction =
+#' "vertical"`).
 #' @inheritParams layout_heatmap
-#' @return A `LayoutStack` object.
+#' @return A `StackLayout` object.
 #' @export
-layout_stack <- function(data, direction = NULL,
-                         rel_sizes = NULL, guides = NULL,
+layout_stack <- function(data = NULL, direction = NULL,
+                         sizes = NULL, guides = NULL,
                          align_axis_title = NULL,
                          plot_data = waiver()) {
     UseMethod("layout_stack")
 }
 
 #' @export
-print.LayoutStack <- function(x, ...) {
+print.StackLayout <- function(x, ...) {
     p <- build_patchwork(x)
-    print(p, ...)
+    if (!is.null(p)) print(p, ...)
     invisible(x)
 }
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.LayoutStack <- function(x, ...) {
+grid.draw.StackLayout <- function(x, ...) {
     print(x, ...)
 }
 
 #' @importFrom ggplot2 ggplot_build
 #' @export
-ggplot_build.LayoutStack <- function(plot) {
-    plot <- build_patchwork(plot)
-    ggplot_build(plot)
+ggplot_build.StackLayout <- function(plot) {
+    p <- build_patchwork(plot)
+    if (is.null(p)) return(NULL) # styler: off
+    ggplot_build(p)
 }
 
 # Used to place multiple objects in one axis
@@ -45,21 +46,18 @@ ggplot_build.LayoutStack <- function(plot) {
 #' @keywords internal
 #' @importFrom grid unit
 methods::setClass(
-    "LayoutStack",
+    "StackLayout",
     contains = "Layout",
     list(
         data = "ANY",
         plots = "list",
         params = "list",
         direction = "character",
-        panels = "ANY",
+        panel = "ANY",
         index = "ANY",
-        size = "ANY" # used by `layout_heatmap` only
+        nobs = "ANY"
     ),
-    prototype = list(
-        panels = NULL, index = NULL,
-        size = unit(1, "null")
-    )
+    prototype = list(panel = NULL, index = NULL, nobs = NULL)
 )
 
 #' @export
@@ -67,50 +65,19 @@ methods::setClass(
 ggstack <- layout_stack
 
 #' @export
-layout_stack.matrix <- function(data, direction = NULL,
-                                rel_sizes = NULL, guides = NULL,
-                                align_axis_title = NULL,
-                                plot_data = waiver()) {
-    direction <- match.arg(direction, c("horizontal", "vertical"))
-    if (is.null(rel_sizes)) {
-        rel_sizes <- rep_len(1L, 3L)
-    } else if (length(rel_sizes) != 3L ||
-        (!is.unit(rel_sizes) && !is.numeric(rel_sizes))) {
-        cli::cli_abort(paste(
-            "{.arg rel_sizes} must be",
-            "a numeric or unit object of length 3"
-        ))
-    }
-    plot_data <- allow_lambda(plot_data)
-    if (!is.waive(plot_data) &&
-        !is.null(plot_data) &&
-        !is.function(plot_data)) {
-        cli::cli_abort("{.arg plot_data} must be a function")
-    }
-
-    methods::new("LayoutStack",
-        data = data, direction = direction,
-        params = list(
-            rel_sizes = rel_sizes, guides = guides,
-            align_axis_title = align_axis_title
-        ),
-        plot_data = plot_data
-    )
+layout_stack.matrix <- function(data, ...) {
+    .layout_stack(data = data, nobs = nrow(data), ..., call = current_call())
 }
 
 #' @export
 layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
-layout_stack.numeric <- function(data, direction = NULL,
-                                 rel_sizes = NULL, guides = NULL,
-                                 align_axis_title = NULL,
-                                 plot_data = waiver()) {
-    layout_stack(
-        data = as.matrix(data), direction = direction,
-        rel_sizes = rel_sizes, guides = guides,
-        align_axis_title = align_axis_title,
-        plot_data = plot_data
+layout_stack.numeric <- function(data, ...) {
+    .layout_stack(
+        data = as.matrix(data),
+        nobs = length(data), ...,
+        call = current_call()
     )
 }
 
@@ -118,8 +85,37 @@ layout_stack.numeric <- function(data, direction = NULL,
 layout_stack.character <- layout_stack.numeric
 
 #' @export
+layout_stack.NULL <- function(data = NULL, ...) {
+    .layout_stack(data = data, nobs = NULL, ..., call = current_call())
+}
+
+#' @importFrom grid unit
+.layout_stack <- function(data, nobs, direction = NULL,
+                          sizes = NULL, guides = NULL,
+                          align_axis_title = NULL,
+                          plot_data = waiver(),
+                          call = caller_call()) {
+    direction <- match.arg(direction, c("horizontal", "vertical"))
+    if (is.null(sizes)) {
+        sizes <- unit(rep_len(1L, 3L), "null")
+    } else {
+        sizes <- check_stack_sizes(sizes, call = call)
+    }
+    plot_data <- check_plot_data(plot_data, call = call)
+    methods::new("StackLayout",
+        data = data, direction = direction,
+        params = list(
+            sizes = set_size(sizes),
+            guides = guides, plot_data = plot_data,
+            align_axis_title = align_axis_title
+        ),
+        nobs = nobs
+    )
+}
+
+#' @export
 layout_stack.default <- function(data, direction = NULL,
-                                 rel_sizes = NULL, guides = NULL,
+                                 sizes = NULL, guides = NULL,
                                  align_axis_title = NULL,
                                  plot_data = waiver()) {
     cli::cli_abort(c(
@@ -131,15 +127,15 @@ layout_stack.default <- function(data, direction = NULL,
     ))
 }
 
-#' Subset a `LayoutStack` object
+#' Subset a `StackLayout` object
 #'
 #' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
 #'
-#' @param x A `LayoutStack` object
-#' @param name A string of slot name in `LayoutStack` object.
+#' @param x A `StackLayout` object
+#' @param name A string of slot name in `StackLayout` object.
 #' @importFrom methods slot
 #' @keywords internal
-methods::setMethod("$", "LayoutStack", function(x, name) {
+methods::setMethod("$", "StackLayout", function(x, name) {
     # https://github.com/tidyverse/ggplot2/issues/6002
     if (name == "theme") {
         p <- ggplot2::ggplot()
@@ -150,16 +146,16 @@ methods::setMethod("$", "LayoutStack", function(x, name) {
     } else {
         cli::cli_abort(c(
             "`$` is just for internal ggplot2 methods",
-            i = "try to use `@` method instead"
+            i = "try to use `@` function instead"
         ))
     }
 })
 
-#' Reports whether `x` is a `LayoutStack` object
+#' Reports whether `x` is a `StackLayout` object
 #'
 #' @param x An object to test
 #' @return A boolean value
 #' @examples
 #' is.ggstack(ggstack(1:10))
 #' @export
-is.ggstack <- function(x) methods::is(x, "LayoutStack")
+is.ggstack <- function(x) methods::is(x, "StackLayout")

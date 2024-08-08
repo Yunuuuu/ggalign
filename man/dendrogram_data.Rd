@@ -55,10 +55,10 @@ node of the current edge.
 for current edge.
 \item \code{branch}: which branch current node or edge is. You can use this column
 to color different groups.
-\item \code{panel}: which panel current node is, if we split the plot into panels
+\item \code{panel}: which panel current node is, if we split the plot into panel
 using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes may
-fall outside panels (between two panels), so there are possible
+fall outside panel (between two panels), so there are possible
 \code{NA} values in this column. We also provide \code{ggpanel} column,
 which always give the right branch for usage of the ggplot
 facet.

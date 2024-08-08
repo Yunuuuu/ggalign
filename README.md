@@ -49,7 +49,7 @@ type <- gsub("s\\d+_", "", colnames(mat))
 
 ggstack(data = mat_scaled) +
   align_kmeans(centers = 5L) +
-  ggpanels(size = unit(1, "cm")) +
+  ggpanel(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
   scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
   scale_x_continuous(breaks = NULL, name = NULL) +

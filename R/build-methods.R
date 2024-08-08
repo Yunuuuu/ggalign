@@ -4,7 +4,7 @@
 #' @examples
 #' build_patchwork(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
 #' @export
-#' @return A `patchwork` object.
+#' @return A `patchwork` object or `NULL` if no plots.
 build_patchwork <- function(layout) UseMethod("build_patchwork")
 
 #' @export
@@ -12,8 +12,8 @@ build_patchwork.default <- function(layout) {
     cli::cli_abort("{.arg x} must be a {.cls Layout} object")
 }
 
-align_build <- function(x, panels, index,
-                        extra_panels, extra_index, plot_data) {
+align_build <- function(x, panel, index,
+                        extra_panel, extra_index, plot_data) {
     if (is.null(.subset2(x, "plot"))) {
         return(list(plot = NULL, size = NULL))
     }
@@ -31,12 +31,12 @@ align_build <- function(x, panels, index,
             names(params),
             align_method_params(
                 x$draw,
-                c("panels", "index", "extra_panels", "extra_index")
+                c("panel", "index", "extra_panel", "extra_index")
             )
         )
     ]
     plot <- rlang::inject(x$draw(
-        panels, index, extra_panels, extra_index,
+        panel, index, extra_panel, extra_index,
         !!!draw_params
     ))
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data
@@ -46,7 +46,7 @@ align_build <- function(x, panels, index,
     # set up the scale limits, breaks and labels
     if (.subset2(x, "facet")) {
         # set up scales and facet
-        if (nlevels(panels) > 1L) {
+        if (nlevels(panel) > 1L) {
             default_facet <- switch_direction(
                 direction,
                 ggplot2::facet_grid(
@@ -65,7 +65,7 @@ align_build <- function(x, panels, index,
         scales <- set_scales(
             plot = plot,
             scale_name = to_coord_axis(direction),
-            panels = panels,
+            panel = panel,
             index = index,
             layout_labels = .subset2(x, "labels"),
             facet_scales = .subset2(x, "facetted_pos_scales"),
@@ -99,7 +99,7 @@ finish_plot_data <- function(plot, plot_data,
 
 align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {
     facet <- melt_facet(.subset2(plot, "facet"), default_facet)
-    if (is.null(default_facet)) { # no panels
+    if (is.null(default_facet)) { # no panel
         plot <- plot + scales + facet
     } else {
         plot <- plot + facet +
@@ -115,16 +115,16 @@ align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {
 #' @param layout_labels A character of the data names.
 #' @return A list of scales for each panel
 #' @noRd
-set_scales <- function(plot, scale_name, panels, index,
+set_scales <- function(plot, scale_name, panel, index,
                        layout_labels, facet_scales,
                        set_limits = TRUE,
                        expand = ggplot2::expansion()) {
-    panels <- panels[index]
+    panel <- panel[index]
 
-    # For y-axis, ggplot arrange panels from top to bottom,
+    # For y-axis, ggplot arrange panel from top to bottom,
     # we always choose to reverse the panel order
-    if (scale_name == "y") panels <- fct_rev(panels)
-    n_panels <- nlevels(panels)
+    if (scale_name == "y") panel <- fct_rev(panel)
+    n_panel <- nlevels(panel)
 
     # By default we'll use the continuous scale
     use_discrete <- FALSE
@@ -135,8 +135,8 @@ set_scales <- function(plot, scale_name, panels, index,
         use_discrete <- global_scale$is_discrete()
     }
 
-    user_scales <- rep_len(list(NULL), n_panels)
-    if (n_panels > 1L &&
+    user_scales <- rep_len(list(NULL), n_panel)
+    if (n_panel > 1L &&
         !is.null(facet_scales) &&
         !is_empty(user_scales <- .subset2(facet_scales, scale_name))) {
         # if the global scale was not provided,
@@ -182,9 +182,9 @@ set_scales <- function(plot, scale_name, panels, index,
 
     # fill NULL with the global scale --------------------
     if (is.null(names(user_scales))) {
-        ids <- seq_len(nlevels(panels))
+        ids <- seq_len(nlevels(panel))
     } else {
-        ids <- levels(panels)
+        ids <- levels(panel)
     }
     for (id in ids) {
         if (is.null(scale <- .subset2(user_scales, id))) {
@@ -193,7 +193,7 @@ set_scales <- function(plot, scale_name, panels, index,
             user_scales[[id]] <- scale$clone()
         }
     }
-    if (!is.list(expand)) expand <- rep_len(list(expand), n_panels)
+    if (!is.list(expand)) expand <- rep_len(list(expand), n_panel)
     # we always reset the limits of the user provided scales
     .mapply(function(scale, data, e) {
         data_index <- .subset2(data, "index")
@@ -224,7 +224,7 @@ set_scales <- function(plot, scale_name, panels, index,
         scale = user_scales,
         data = split(
             data_frame0(coord = seq_along(index), index = index),
-            panels
+            panel
         ),
         e = expand
     ), NULL)
@@ -323,25 +323,25 @@ remove_scales <- function(plot, scale_aesthetics) {
 }
 
 #' @importFrom rlang is_empty
-extract_scales <- function(plot, axis, n_panels, facet_scales) {
+extract_scales <- function(plot, axis, n_panel, facet_scales) {
     # if no facets, or if no facet scales, we replicate the single scale
     # object to match the panel numbers
-    if (n_panels > 1L &&
+    if (n_panel > 1L &&
         !is.null(facet_scales) &&
         !is_empty(ans <- .subset2(facet_scales, axis))) {
     } else {
-        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panels)
+        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
     }
     ans
 }
 
 melt_facet <- function(user_facet, default_facet) {
-    if (is.null(default_facet)) { # no panels
-        # we only support `FacetNull` if there have no panels
+    if (is.null(default_facet)) { # no panel
+        # we only support `FacetNull` if there have no panel
         if (inherits(user_facet, "FacetNull")) return(user_facet) # styler: off
         return(ggplot2::facet_null())
     }
-    # we only support `FacetGrid` if there have multiple panels
+    # we only support `FacetGrid` if there have multiple panel
     if (!inherits(user_facet, "FacetGrid")) return(default_facet) # styler: off
 
     # will change the user input, so we must use `ggproto_clone`

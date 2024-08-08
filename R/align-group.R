@@ -1,7 +1,7 @@
-#' Group layout axis into panels
+#' Group layout axis into panel
 #'
 #' @param group A character define the groups, this will split the
-#' axis into different panels.
+#' axis into different panel.
 #' @inheritParams align
 #' @inherit align return
 #' @examples
@@ -21,16 +21,19 @@ align_group <- function(group, set_context = FALSE, name = NULL) {
 }
 
 AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
-    setup_params = function(self, data, params) {
-        assert_mismatch_nobs(self, nrow(data),
+    nobs = function(self, params) {
+        length(.subset2(params, "group"))
+    },
+    setup_params = function(self, nobs, params) {
+        assert_mismatch_nobs(self, nobs,
             length(.subset2(params, "group")),
             arg = "group", 
             msg = "must be an atomic vector"
         )
         params
     },
-    layout = function(self, panels, index, group) {
-        assert_sub_split(self, panels)
+    layout = function(self, panel, index, group) {
+        assert_sub_split(self, panel)
         list(group, index)
     }
 )

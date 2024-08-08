@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-stack-.R
 \name{is.ggstack}
 \alias{is.ggstack}
-\title{Reports whether \code{x} is a \code{LayoutStack} object}
+\title{Reports whether \code{x} is a \code{StackLayout} object}
 \usage{
 is.ggstack(x)
 }
@@ -13,7 +13,7 @@ is.ggstack(x)
 A boolean value
 }
 \description{
-Reports whether \code{x} is a \code{LayoutStack} object
+Reports whether \code{x} is a \code{StackLayout} object
 }
 \examples{
 is.ggstack(ggstack(1:10))

@@ -8,7 +8,8 @@
 #' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
 #' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to matrix method.
-#' @param width,height Heatmap width/height, can be a [unit][grid::unit] object.
+#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
+#' object.
 #' @param guides A string specifying how guides should be treated in the layout.
 #' `"collect"` will collect guides below to the given nesting level, removing
 #' duplicates. `"keep` will stop collection at this level and let guides be
@@ -19,7 +20,7 @@
 #' @param align_axis_title A boolean value or a character of the axis position
 #' (`"t"`, `"l"`, `"b"`, `"r"`) indicates how to align the axis title. By
 #' default, all axis title won't be aligned.
-#' @param filling A boolean value indicates whether filling the heatmap. If you
+#' @param filling A boolean value indicates whether to fill the heatmap. If you
 #' want to custom the filling style, you can set to `FALSE`.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
@@ -29,6 +30,7 @@
 #' if the you needs change the default data for all `geoms`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
+#' @inheritParams align
 #' @section ggplot2 details:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -47,22 +49,22 @@
 #'
 #'  - `value`: the actual matrix value.
 #'
-#' @return A `LayoutHeatmap` object.
+#' @return A `HeatmapLayout` object.
 #' @examples
 #' ggheatmap(1:10)
 #' ggheatmap(letters)
 #' @importFrom ggplot2 aes
 #' @export
-layout_heatmap <- function(data, mapping = aes(),
+layout_heatmap <- function(data = NULL, mapping = aes(),
                            width = NULL, height = NULL,
                            guides = NULL, align_axis_title = NULL,
-                           plot_data = waiver(),
-                           filling = TRUE, ...) {
+                           plot_data = waiver(), filling = TRUE,
+                           ..., set_context = TRUE, order = NULL, name = NULL) {
     UseMethod("layout_heatmap")
 }
 
 #' @export
-print.LayoutHeatmap <- function(x, ...) {
+print.HeatmapLayout <- function(x, ...) {
     p <- build_patchwork(x)
     print(p, ...)
     invisible(x)
@@ -70,13 +72,13 @@ print.LayoutHeatmap <- function(x, ...) {
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.LayoutHeatmap <- function(x, ...) {
+grid.draw.HeatmapLayout <- function(x, ...) {
     print(x, ...)
 }
 
 #' @importFrom ggplot2 ggplot_build
 #' @export
-ggplot_build.LayoutHeatmap <- function(plot) {
+ggplot_build.HeatmapLayout <- function(plot) {
     plot <- build_patchwork(plot)
     ggplot_build(plot)
 }
@@ -84,23 +86,27 @@ ggplot_build.LayoutHeatmap <- function(plot) {
 # used to create the heatmap layout
 #' @keywords internal
 methods::setClass(
-    "LayoutHeatmap",
+    "HeatmapLayout",
     contains = "Layout",
     list(
-        data = "matrix",
+        data = "ANY",
         plot = "ANY",
         facetted_pos_scales = "ANY",
         params = "list",
+        set_context = "logical",
+        order = "integer",
+        name = "character",
         # Used by the layout,
-        # top, left, bottom, right must be a LayoutStack object.
+        # top, left, bottom, right must be a StackLayout object.
         top = "ANY", left = "ANY",
         bottom = "ANY", right = "ANY",
-        panel_list = "list", index_list = "list"
+        panel_list = "list", index_list = "list", nobs_list = "list"
     ),
     prototype = list(
         top = NULL, left = NULL,
         bottom = NULL, right = NULL,
-        panel_list = list(), index_list = list()
+        panel_list = list(), index_list = list(),
+        nobs_list = list()
     )
 )
 
@@ -110,39 +116,31 @@ ggheatmap <- layout_heatmap
 
 #' @importFrom ggplot2 waiver theme
 #' @export
-layout_heatmap.matrix <- function(data, mapping = aes(),
-                                  width = NULL, height = NULL,
-                                  guides = NULL, align_axis_title = NULL,
-                                  plot_data = waiver(),
-                                  filling = TRUE, ...) {
-    assert_bool(filling)
-    plot <- ggplot2::ggplot(mapping = mapping) +
-        heatmap_theme()
-    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
-
-    # add heatmap filling in the first layer
-    if (filling) {
-        plot <- plot + ggplot2::geom_tile(
-            aes(.data$.x, .data$.y, fill = .data$value),
-            width = 1L, height = 1L, ...
-        )
-    }
-    plot_data <- check_plot_data(plot_data)
-    # Here we use S4 object to override the double dispatch of `+.gg` method
-    methods::new(
-        "LayoutHeatmap",
-        data = data,
-        params = rlang::list2(
-            # following parameters are used by patchwork
-            width = set_size(width),
-            height = set_size(height),
-            guides = guides,
-            align_axis_title = align_axis_title %||% FALSE
-        ),
-        plot = plot,
-        plot_data = plot_data
+layout_heatmap.matrix <- function(data, ...) {
+    .layout_heatmap(
+        data = data, ...,
+        call = current_call()
     )
 }
+
+#' @export
+layout_heatmap.NULL <- function(data = NULL, ...) {
+    .layout_heatmap(
+        data = data, nobs_list = list(),
+        ..., call = current_call()
+    )
+}
+
+#' @export
+layout_heatmap.formula <- function(data = NULL, ...) {
+    .layout_heatmap(
+        data = allow_lambda(data), nobs_list = list(),
+        ..., call = current_call()
+    )
+}
+
+#' @export
+layout_heatmap.functon <- layout_heatmap.NULL
 
 #' @export
 layout_heatmap.default <- function(data, ...) {
@@ -156,18 +154,77 @@ layout_heatmap.default <- function(data, ...) {
             ), call = call)
         }
     )
-    layout_heatmap(data = data, ...)
+    .layout_heatmap(data = data, ..., call = call)
 }
 
-#' Subset a `LayoutHeatmap` object
+.layout_heatmap <- function(data,
+                            nobs_list = list(x = ncol(data), y = nrow(data)),
+                            mapping = aes(),
+                            width = NULL, height = NULL,
+                            guides = NULL, align_axis_title = NULL,
+                            plot_data = waiver(),
+                            filling = TRUE, ...,
+                            set_context = TRUE, order = NULL, name = NULL,
+                            call = caller_call()) {
+    assert_bool(filling, call = call)
+    plot <- ggplot2::ggplot(mapping = mapping) +
+        heatmap_theme()
+    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
+
+    # add heatmap filling in the first layer
+    if (filling) {
+        plot <- plot + ggplot2::geom_tile(
+            aes(.data$.x, .data$.y, fill = .data$value),
+            width = 1L, height = 1L, ...
+        )
+    }
+    assert_bool(set_context, call = call)
+
+    if (is.null(order) || is.na(order)) {
+        order <- NA_integer_
+    } else if (!is_scalar(order)) {
+        cli::cli_abort("{.arg order} must be a single number", call = call)
+    } else if (is.double(order)) {
+        order <- as.integer(order)
+    } else if (!is.integer(order)) {
+        cli::cli_abort("{.arg order} must be a single number", call = call)
+    }
+    if (!is.null(name) && (!is_string(name) || name == "")) {
+        cli::cli_abort(
+            "{.arg name} must be a single non-empty string",
+            call = call
+        )
+    }
+    plot_data <- check_plot_data(plot_data)
+
+    # Here we use S4 object to override the double dispatch of `+.gg` method
+    methods::new(
+        "HeatmapLayout",
+        data = data,
+        params = list(
+            # following parameters can be controlled by `active` object.
+            width = set_size(width),
+            height = set_size(height),
+            guides = guides,
+            align_axis_title = align_axis_title,
+            plot_data = plot_data
+        ),
+        set_context = set_context,
+        order = order, name = name %||% NA_character_,
+        plot = plot,
+        nobs_list = nobs_list
+    )
+}
+
+#' Subset a `HeatmapLayout` object
 #'
 #' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
 #'
-#' @param x A `LayoutHeatmap` object
-#' @param name A string of slot name in `LayoutHeatmap` object.
+#' @param x A `HeatmapLayout` object
+#' @param name A string of slot name in `HeatmapLayout` object.
 #' @importFrom methods slot
 #' @keywords internal
-methods::setMethod("$", "LayoutHeatmap", function(x, name) {
+methods::setMethod("$", "HeatmapLayout", function(x, name) {
     # https://github.com/tidyverse/ggplot2/issues/6002
     if (name == "theme") {
         slot(x, "plot")$theme
@@ -181,18 +238,11 @@ methods::setMethod("$", "LayoutHeatmap", function(x, name) {
     }
 })
 
-#' Show `LayoutHeatmap`
-#'
-#' @param object A `LayoutHeatmap` object.
-#' @importFrom methods show
-#' @export
-methods::setMethod("show", "LayoutHeatmap", function(object) print(object))
-
-#' Reports whether `x` is a `LayoutHeatmap` object
+#' Reports whether `x` is a `HeatmapLayout` object
 #'
 #' @param x An object to test
 #' @return A boolean value
 #' @examples
 #' is.ggheatmap(ggheatmap(1:10))
 #' @export
-is.ggheatmap <- function(x) methods::is(x, "LayoutHeatmap")
+is.ggheatmap <- function(x) methods::is(x, "HeatmapLayout")

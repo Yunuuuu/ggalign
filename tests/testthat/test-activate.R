@@ -14,5 +14,5 @@ testthat::test_that("`hmanno` adding works well", {
         expect_no_error(p2 <- p + hmanno(position))
         expect_identical(c(get_context(p2)), position)
     }
-    expect_identical(get_context(p2 + hmanno(NULL)), NULL)
+    expect_identical(get_context(p2 + hmanno()), NULL)
 })

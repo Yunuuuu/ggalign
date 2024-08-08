@@ -31,15 +31,16 @@ align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
         ),
         set_context = set_context,
         name = name, order = NULL,
-        check.param = TRUE, data = data
+        check.param = TRUE, 
+        data = data %||% waiver()
     )
 }
 
 AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
-    setup_data = function(self, data, params) data,
-    compute = function(self, panels, index, fun, fun_params, strict) {
+    setup_data = function(self, params, data) data,
+    compute = function(self, panel, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
-        assert_reorder(self, panels, strict)
+        assert_reorder(self, panel, strict)
         weights <- rlang::inject(fun(data, !!!fun_params))
         assert_mismatch_nobs(self,
             nrow(data), length(weights),
@@ -47,9 +48,9 @@ AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
         )
         weights
     },
-    layout = function(self, panels, index, decreasing) {
+    layout = function(self, panel, index, decreasing) {
         list(
-            panels,
+            panel,
             order(.subset2(self, "statistics"), decreasing = decreasing)
         )
     }

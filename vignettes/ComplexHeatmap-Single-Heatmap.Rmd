@@ -1,8 +1,8 @@
 ---
-title: "Single-Heatmap-Colors"
+title: "ComplexHeamtap-Single-Heatmap"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Single-Heatmap-Colors}
+  %\VignetteIndexEntry{ComplexHeamtap-Single-Heatmap}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -53,6 +53,7 @@ rownames(mat) <- paste0("row", seq_len(nr))
 colnames(mat) <- paste0("column", seq_len(nc))
 ```
 
+# Colors
 Because the `ComplexHeatmap` will reorder the dendrogram by default, but
 `align_dendro` won't change the tree layout. In following codes, we hypothesized
 that the arguments `row_dend_reorder` and `column_dend_reorder` of
@@ -64,6 +65,7 @@ point, while `ComplexHeatmap` considers the left-top as the starting point.
 The `scale_fill_*` function in ggplot2 makes it easy to modify colors.
 
 ```{r}
+dim(mat)
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
   hmanno("r", size = unit(15, "mm")) +

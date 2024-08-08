@@ -2,25 +2,47 @@
 % Please edit documentation in R/activate.R
 \name{hmanno}
 \alias{hmanno}
-\title{Determine the context of subsequent manipulations}
+\title{Determine the active context of heatmap layout}
 \usage{
-hmanno(what, size = NULL, guides = NULL, align_axis_title = NULL, plot_data)
+hmanno(
+  position = NULL,
+  size = NULL,
+  what = waiver(),
+  width = NULL,
+  height = NULL,
+  guides = NULL,
+  align_axis_title = NULL,
+  plot_data = NA
+)
 }
 \arguments{
-\item{what}{What should get activated? Possible values are follows:
+\item{position}{Which heatmap annotation should get activated? Possible
+values are follows:
 \itemize{
 \item A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \item \code{NULL}: means set the active context into the \code{heatmap} itself.
-\item \code{missing} or \code{NA}: don't change the context, use current active context.
-}
+}}
 
-If the active context is a string of \code{"top"}, \code{"left"}, \code{"bottom"}, or
-\code{"right"}. We can also set the stack (heatmap annotation) \code{size}, \code{guides}
-\code{align_axis_title} and \code{plot_data}.}
-
-\item{size}{A \link[grid:unit]{unit} object to set the size of the heatmap
+\item{size}{A \link[grid:unit]{unit} object to set the total size of the heatmap
 annotation. This will only be used if \code{what} is a string of \code{"top"},
-\code{"left"}, \code{"bottom"}, or \code{"right"}.}
+\code{"left"}, \code{"bottom"}, or \code{"right"}.
+\itemize{
+\item If position is \code{"top"} or \code{"bottom"}, \code{size} set the total height of the
+annotation, otherwise.
+\item If position is \code{"left"} or \code{"right"}, \code{size} set the total width of the
+annotation.
+}}
+
+\item{what}{What should get activated for the stack layout? Possible values
+are follows:
+\itemize{
+\item A single number or string of the plot elements in the stack layout.
+\item \code{NULL}: means set the active context into the last \code{Align} object. In
+this way, we can add other \code{Align} objects into the \code{StackLayout}.
+}}
+
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
+object.}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
 \code{"collect"} will collect guides below to the given nesting level, removing
@@ -43,8 +65,8 @@ if the you needs change the default data for all \code{geoms}.}
 }
 \value{
 A \code{active} object which can be added into
-\link[=layout_heatmap]{LayoutHeatmap}.
+\link[=layout_heatmap]{HeatmapLayout}.
 }
 \description{
-Determine the context of subsequent manipulations
+Determine the active context of heatmap layout
 }

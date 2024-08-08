@@ -2,13 +2,13 @@
 % Please edit documentation in R/align-group.R
 \name{align_group}
 \alias{align_group}
-\title{Group layout axis into panels}
+\title{Group layout axis into panel}
 \usage{
 align_group(group, set_context = FALSE, name = NULL)
 }
 \arguments{
 \item{group}{A character define the groups, this will split the
-axis into different panels.}
+axis into different panel.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
@@ -20,7 +20,7 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Group layout axis into panels
+Group layout axis into panel
 }
 \examples{
 small_mat <- matrix(rnorm(81), nrow = 9)

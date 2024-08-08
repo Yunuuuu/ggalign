@@ -6,7 +6,7 @@
 \title{Heatmap layout}
 \usage{
 layout_heatmap(
-  data,
+  data = NULL,
   mapping = aes(),
   width = NULL,
   height = NULL,
@@ -14,11 +14,14 @@ layout_heatmap(
   align_axis_title = NULL,
   plot_data = waiver(),
   filling = TRUE,
-  ...
+  ...,
+  set_context = TRUE,
+  order = NULL,
+  name = NULL
 )
 
 ggheatmap(
-  data,
+  data = NULL,
   mapping = aes(),
   width = NULL,
   height = NULL,
@@ -26,7 +29,10 @@ ggheatmap(
   align_axis_title = NULL,
   plot_data = waiver(),
   filling = TRUE,
-  ...
+  ...,
+  set_context = TRUE,
+  order = NULL,
+  name = NULL
 )
 }
 \arguments{
@@ -37,7 +43,8 @@ one column matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
 
-\item{width, height}{Heatmap width/height, can be a \link[grid:unit]{unit} object.}
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
+object.}
 
 \item{guides}{A string specifying how guides should be treated in the layout.
 \code{"collect"} will collect guides below to the given nesting level, removing
@@ -58,14 +65,22 @@ anything. Used to modify the data after layout preparation has been applied,
 but before the data is handled of to the ggplot2 for rendering. Use this hook
 if the you needs change the default data for all \code{geoms}.}
 
-\item{filling}{A boolean value indicates whether filling the heatmap. If you
+\item{filling}{A boolean value indicates whether to fill the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
 
 \item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
 Only used when \code{filling = TRUE}.}
+
+\item{set_context}{A single boolean value indicates whether to set the active
+context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
+will be added into this \code{Align} object.}
+
+\item{order}{An single integer for the layout order.}
+
+\item{name}{A string of the object name.}
 }
 \value{
-A \code{LayoutHeatmap} object.
+A \code{HeatmapLayout} object.
 }
 \description{
 \code{ggheatmap} is an alias of \code{layout_heatmap}.

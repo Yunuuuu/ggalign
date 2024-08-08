@@ -1,5 +1,5 @@
 #' Group layout observations by kmeans
-#' 
+#'
 #' @inheritParams stats::kmeans
 #' @inheritParams align
 #' @inherit align return
@@ -25,12 +25,13 @@ align_kmeans <- function(centers, iter.max = 10, nstart = 1,
             trace = trace
         ),
         set_context = set_context,
-        name = name, order = NULL, data = data
+        name = name, order = NULL, 
+        data = data %||% waiver()
     )
 }
 
 AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
-    setup_data = function(self, data, params) {
+    setup_data = function(self, params, data) {
         ans <- as.matrix(data)
         assert_(
             ans, is.numeric, "a numeric matrix",
@@ -38,13 +39,13 @@ AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
         )
         ans
     },
-    compute = function(self, panels, index,
+    compute = function(self, panel, index,
                        centers, iter.max, nstart, algorithm, trace) {
         data <- .subset2(self, "data")
         stats::kmeans(data, centers, iter.max, nstart, algorithm, trace)
     },
-    layout = function(self, panels, index) {
-        assert_sub_split(self, panels)
+    layout = function(self, panel, index) {
+        assert_sub_split(self, panel)
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
     }
 )
