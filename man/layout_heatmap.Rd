@@ -3,7 +3,7 @@
 \name{layout_heatmap}
 \alias{layout_heatmap}
 \alias{ggheatmap}
-\title{Heatmap layout}
+\title{Put plots around a Heatmap}
 \usage{
 layout_heatmap(
   data = NULL,

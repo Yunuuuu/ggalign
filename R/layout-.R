@@ -18,6 +18,7 @@ is.layout <- function(x) methods::is(x, "Layout")
 #' @param object A [layout_heatmap()] or [layout_stack()] object.
 #' @importFrom methods show
 #' @export
+#' @keywords internal
 methods::setMethod("show", "Layout", function(object) {
     print(object)
 })

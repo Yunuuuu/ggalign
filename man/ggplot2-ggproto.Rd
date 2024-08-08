@@ -120,4 +120,4 @@ See also the \href{https://ggplot2-book.org/extensions#sec-new-coords}{new coord
 \seealso{
 ggproto
 }
-\keyword{datasets}
+\keyword{internal}

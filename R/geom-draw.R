@@ -56,6 +56,7 @@ geom_draw <- function(draw = grid::nullGrob(), ...,
 #' @usage NULL
 #' @aliases GeomDraw
 #' @export
+#' @keywords internal
 GeomDraw <- ggplot2::ggproto(
     "GeomDraw", ggplot2::Geom,
     ## No required_aes

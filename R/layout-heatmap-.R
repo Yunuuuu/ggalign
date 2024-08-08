@@ -1,4 +1,4 @@
-#' Heatmap layout
+#' Put plots around a Heatmap
 #'
 #' `ggheatmap` is an alias of `layout_heatmap`.
 #'

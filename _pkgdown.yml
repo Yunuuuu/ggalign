@@ -1,4 +1,57 @@
 url: https://yunuuuu.github.io/ggalign/
+
 template:
   bootstrap: 5
   light-switch: true
+
+reference:
+- title: Building plot
+- subtitle: Adding elemnt
+  desc: >
+    All plots begin with a call to `ggheatmap()` or `ggstack`, supplying default 
+    data and aesthetic mappings, specified by `aes()`. You then add reordering 
+    the layout, or group the layout into panels, and add plots, layers, scales,
+    coords with `+`. To save a plot to disk, use `ggsave()`.
+  contents:
+  - layout-add
+  - layout-and
+  - build_patchwork
+
+- subtitle: Active context
+  desc: >
+    A Layout object may have multiple plots, you can choose where to add ggplot2 
+    elements with following functions.
+  contents:
+  - hmanno
+  - active
+  - activate
+
+- title: Plot Layout
+  desc: A Layout object defines how to place the plots.
+  contents:
+  - layout_heatmap
+  - layout_stack
+
+- title: Plot basics
+  desc: Add plots to layout
+  contents:
+  - ggalign
+  - ggpanel
+
+- title: Setup Layout
+  desc: Reordering obervations or Group into panels
+  contents:
+  - starts_with("align")
+
+- title: Extending ggplot2
+  desc: New ggplot2 geoms, stats, scales, and facets
+  contents:
+  - geom_draw
+
+- title: helpers
+  desc: A handful of helpers
+  contents:
+  - hclust2
+  - dendrogram_data
+  - is.ggheatmap
+  - is.ggstack

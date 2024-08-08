@@ -85,6 +85,7 @@ default `mapping` and `data`. You can add `ggplot2` elements as usual.
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
+### Position scales
 For position scales, `limits` cannot be setted, and the internal will always
 reset it as the default. This is required to align the heatmap and annotation.
 ```{r}
@@ -195,13 +196,14 @@ ggheatmap(small_mat) +
   align_reorder()
 ```
 
+### Facets and Panel titles
 When working with facets, manual configuration of panel using the `facet_*`
 function is not possible since the internal will use `facet_grid` to set the
 row/column groups controlled by heatmap annotation. However, you can provide
 `facet_grid` or `facet_null` (if no panel) to control the other arguments
 except `rows` and `cols`. A common usage case is to change the panel strip text.
 
-THe default theme in `ggalign` removed the panel strip text, you can override
+The default theme in `ggalign` removed the panel strip text, you can override
 the behaviour with `theme(strip.text = element_text())`. This allows us to add
 the panel title appropriately in heatmaps or any heatmap annotation with plot.
 ```{r}
