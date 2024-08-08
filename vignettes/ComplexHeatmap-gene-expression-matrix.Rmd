@@ -1,8 +1,8 @@
 ---
-title: "Introduction"
+title: "ComplexHeatmap-gene-expression-matrix"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{ComplexHeatmap-gene-expression-matrix}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
