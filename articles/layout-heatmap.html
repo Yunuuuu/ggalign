@@ -151,6 +151,9 @@ usual.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-heatmap_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="section level4">
+<h4 id="position-scales">Position scales<a class="anchor" aria-label="anchor" href="#position-scales"></a>
+</h4>
 <p>For position scales, <code>limits</code> cannot be setted, and the
 internal will always reset it as the default. This is required to align
 the heatmap and annotation.</p>
@@ -248,6 +251,10 @@ reorder the heatmap columns by the means.</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-heatmap_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+</div>
+<div class="section level4">
+<h4 id="facets-and-panel-titles">Facets and Panel titles<a class="anchor" aria-label="anchor" href="#facets-and-panel-titles"></a>
+</h4>
 <p>When working with facets, manual configuration of panel using the
 <code>facet_*</code> function is not possible since the internal will
 use <code>facet_grid</code> to set the row/column groups controlled by
@@ -255,7 +262,7 @@ heatmap annotation. However, you can provide <code>facet_grid</code> or
 <code>facet_null</code> (if no panel) to control the other arguments
 except <code>rows</code> and <code>cols</code>. A common usage case is
 to change the panel strip text.</p>
-<p>THe default theme in <code>ggalign</code> removed the panel strip
+<p>The default theme in <code>ggalign</code> removed the panel strip
 text, you can override the behaviour with
 <code>theme(strip.text = element_text())</code>. This allows us to add
 the panel title appropriately in heatmaps or any heatmap annotation with
@@ -267,6 +274,7 @@ plot.</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"top"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span>centers <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-heatmap_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="heatmap-annotations">Heatmap annotations<a class="anchor" aria-label="anchor" href="#heatmap-annotations"></a>
