@@ -113,15 +113,15 @@ use <code>aes(.data$.x, .data$.y)</code>, but can be controlled using
 <code>mapping</code> argument. The data in the underlying ggplot object
 contains following columns:</p>
 <ul>
-<li><p><code>.row_panel</code>: the row panel</p></li>
-<li><p><code>.column_panel</code>: the column panel</p></li>
+<li><p><code>.xpanel</code> and <code>.ypanel</code>: the column and row
+panel</p></li>
+<li><p><code>.x</code> and <code>.y</code>: the <code>x</code> and
+<code>y</code> coordinates</p></li>
 <li><p><code>.row_names</code> and <code>.column_names</code>: the row
 and column names of the original matrix (only applicable when names
 exist).</p></li>
 <li><p><code>.row_index</code> and <code>.column_index</code>: the row
 and column index of the original matrix.</p></li>
-<li><p><code>.x</code> and <code>.y</code>: the <code>x</code> and
-<code>y</code> coordinates</p></li>
 <li><p><code>value</code>: the actual matrix value.</p></li>
 </ul>
 <p>If <code>filling = TRUE</code>, the following layer will be added
@@ -363,11 +363,11 @@ argument that controls whether it sets the active context to the
 <code>Align</code> object when added to the stack layout:</p>
 <ul>
 <li>For <code>align_*</code> functions that draw something (e.g.,
-<code>align_dendro</code>, <code><a href="../reference/align_gg.html">ggalign()</a></code>),
+<code><a href="../reference/align_dendro.html">align_dendro()</a></code>, <code><a href="../reference/align_gg.html">ggalign()</a></code>),
 <code>set_context</code> is set to <code>TRUE</code> by default.</li>
-<li>For <code>align_*</code> functions that do not draw (e.g.,
+<li>For <code>align_*</code> functions that do not draw anything (e.g.,
 <code><a href="../reference/align_group.html">align_group()</a></code>, <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>),
-<code>set_context</code> is set to <code>FALSE</code>.</li>
+<code>set_context</code> is set to <code>FALSE</code> by default.</li>
 </ul>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
