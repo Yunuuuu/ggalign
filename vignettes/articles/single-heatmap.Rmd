@@ -1,10 +1,6 @@
 ---
-title: "ComplexHeamtap-Single-Heatmap"
+title: "ComplexHeatmap: single-heatmap"
 output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{ComplexHeamtap-Single-Heatmap}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

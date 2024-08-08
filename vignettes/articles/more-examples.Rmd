@@ -1,10 +1,6 @@
 ---
-title: "ComplexHeatmap-gene-expression-matrix"
+title: "ComplexHeatmap: more examples"
 output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{ComplexHeatmap-gene-expression-matrix}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -19,7 +15,8 @@ library(ggalign)
 ```
 
 In this thread, We'll use `ggalign` to draw all the heatmap in
-[ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html#add-more-information-for-gene-expression-matrix). 
+<https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html>. 
+
 
 # Add more information for gene expression matrix
 ```{r fig.dim = c(12, 10)}

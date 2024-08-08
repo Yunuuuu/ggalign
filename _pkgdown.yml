@@ -58,3 +58,17 @@ reference:
   - dendrogram_data
   - is.ggheatmap
   - is.ggstack
+
+articles:
+- title: Building plots
+  navbar: ~
+  contents:
+  - layout-heatmap
+  - align
+  - layout-stack
+
+- title: ComplexHeatmap
+  navbar: ComplexHeatmap
+  contents:
+  - articles/single-heatmap
+  - articles/more-examples
