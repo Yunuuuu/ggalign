@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 ```
 
 In this thread, We'll use `ggalign` to draw all the heatmap in
-<https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#colors>
+<https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html>
 
 ```{r setup}
 library(ggalign)
