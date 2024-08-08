@@ -1,5 +1,5 @@
 ---
-title: "layout-heatmap"
+title: "Heatmap Layout"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{layout-heatmap}

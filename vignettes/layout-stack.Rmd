@@ -1,5 +1,5 @@
 ---
-title: "layout-stack"
+title: "Stack Layout"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{layout-stack}
@@ -14,13 +14,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+`layout_stack` put plots horizontally or vertically. You can also use the alias
+`ggstack`.
+
 ```{r setup}
 library(ggalign)
 ```
-
-# `layout_stack`
-`layout_stack` put plots horizontally or vertically. You can also use the alias
-`ggstack`.
 
 ```{r}
 set.seed(123)
