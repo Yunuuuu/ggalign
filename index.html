@@ -64,7 +64,11 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level2">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="ggalign">ggalign<a class="anchor" aria-label="anchor" href="#ggalign"></a>
+</h1></div>
+<p>This package extends ggplot2 and provides numerous benefits for organizing and arranging plots. It is specifically designed to align a specific axis of multiple ggplot objects in a consistent order. This functionality is particularly useful for plots that require manipulation of data order. A common plot combination that can be effectively organized using this package includes a dendrogram and a heatmap.</p>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of <code>ggalign</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
@@ -74,10 +78,6 @@
 <p>This package now depends on some un-merged features of patchwork. Please see <a href="https://github.com/thomasp85/patchwork/pull/373" class="external-link uri">https://github.com/thomasp85/patchwork/pull/373</a>. If you want to try it, you should install patchwork with <code>pak::pkg_install(Yunuuuu/patchwork@align_axis_title)</code>.</p>
 <p>The documentation for <code>ggalign</code> is currently in progress.</p>
 </div>
-<div class="section level1">
-<div class="page-header"><h1 id="ggalign">ggalign<a class="anchor" aria-label="anchor" href="#ggalign"></a>
-</h1></div>
-<p>This package extends ggplot2 and provides numerous benefits for organizing and arranging plots. It is specifically designed to align a specific axis of multiple ggplot objects in a consistent order. This functionality is particularly useful for plots that require manipulation of data order. A common plot combination that can be effectively organized using this package includes a dendrogram and a heatmap.</p>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
@@ -97,9 +97,9 @@
 <li>
 <code><a href="reference/align_dendro.html">align_dendro()</a></code>: Reorder or Group layout based on Hierarchical Clustering</li>
 <li>
-<code><a href="reference/align_gg.html">align_gg()</a></code>/<code>ggalign</code>: Create ggplot object in the layout</li>
+<code><a href="reference/align_gg.html">align_gg()</a></code>/<code><a href="reference/align_gg.html">ggalign()</a></code>: Create ggplot object in the layout</li>
 <li>
-<code><a href="reference/align_panel.html">align_panel()</a></code>/<code>ggalign</code>: Create ggplot object based on the layout panel data.</li>
+<code><a href="reference/align_panel.html">align_panel()</a></code>: Create ggplot object based on the layout panel data.</li>
 </ul>
 <p>See <code><a href="articles/align.html">vignette("align")</a></code> for details.</p>
 </div>
@@ -112,7 +112,6 @@
 </h2>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
