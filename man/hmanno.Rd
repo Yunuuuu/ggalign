@@ -28,7 +28,7 @@ annotation. This will only be used if \code{what} is a string of \code{"top"},
 \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \itemize{
 \item If position is \code{"top"} or \code{"bottom"}, \code{size} set the total height of the
-annotation, otherwise.
+annotation.
 \item If position is \code{"left"} or \code{"right"}, \code{size} set the total width of the
 annotation.
 }}

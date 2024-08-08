@@ -194,9 +194,9 @@ ggheatmap(small_mat) +
   scale_x_discrete(expand = expansion(add = 0.5))
 ```
 
-Indeed, you can use the default scale for the dendrogram directly. `ggalign` always
-sets the appropriate limits for the continuous scale, which is also the default
-scale.
+Indeed, you can use the default scale for the dendrogram directly. The layout
+always sets the appropriate limits for the continuous scale, which is also the
+default scale.
 
 ```{r}
 ggheatmap(small_mat) +
@@ -212,11 +212,13 @@ use the continuous scale. So you must manually provide an `orientation` argument
 for these geoms or manually set the discrete scale in horizontal layout
 (including left and right heatmap annotation).
 
-`ggalign` is similar to `ggplot` in that it initializes a `ggplot` data and
+`ggalign()` is similar to `ggplot` in that it initializes a plot data and
 `mapping`. The data input can be a matrix, a data frame, or a simple vector that
 will be converted into a one-column matrix, and can inherit from the layout
-data.
+data. When an plot is initialized, we can add other ggplot2 elements for it. You
+can see `?ggalign` for the default plot data.
 
+In the following example, `geom_bar` won't work since the ambiguous orientation.
 ```{r}
 ggheatmap(small_mat) +
   hmanno("l") +
@@ -240,8 +242,9 @@ ggheatmap(small_mat) +
   scale_y_discrete()
 ```
 
-Both arguments should be provided in the original scale of the raw matrix, the
-internal will reorder them accordingly if you reorder the heatmap rows/columns.
+Both `breaks` and `labels` should be provided in the original scale of the raw
+matrix, the internal will reorder them accordingly if you reorder the heatmap
+rows/columns.
 
 `align_reorder` will reorder the heatmap rows/columns based on the weights
 returned from `fun` argument. Here we reorder the heatmap columns by the means.
@@ -261,12 +264,13 @@ ggheatmap(small_mat) +
 When working with facets, manual configuration of panel using the `facet_*`
 function is not possible since the internal will use `facet_grid` to set the
 row/column groups controlled by heatmap annotation. However, you can provide
-`facet_grid` or `facet_null` (if no panel) to control the other arguments
+`facet_grid()` or `facet_null()` (if no panel) to control other arguments
 except `rows` and `cols`. A common usage case is to change the panel strip text.
 
-The default theme in `ggalign` removed the panel strip text, you can override
-the behaviour with `theme(strip.text = element_text())`. This allows us to add
-the panel title appropriately in heatmaps or any heatmap annotation with plot.
+The default theme in this package will always remove the panel strip text, you
+can override this behaviour with `theme(strip.text = element_text())`. This
+allows us to add the panel title in heatmaps or any heatmap annotation with
+plot.
 ```{r}
 ggheatmap(small_mat) +
   facet_grid(labeller = labeller(.column_panel = function(x) letters[as.integer(x)])) +
@@ -276,27 +280,73 @@ ggheatmap(small_mat) +
 ```
 
 ## Heatmap annotations
-Heatmap annotation works by adding additional information for heatmap
-rows/columns. Heatmap annotations can be positioned at the `top`, `left`,
-`bottom`, or `right` of the heatmap. This is referred to as the active context
-in `ggheatmap`. We can add annotation with `align_*` functions.
+Heatmap annotations add extra information to the rows or columns of your
+heatmap. Annotations can be positioned at the `top`, `left`, `bottom`, or
+`right` of the heatmap, and this positioning is referred to as the active
+context in `ggheatmap()`. 
 
-By default, the `ggheatmap` function does not initialize any active context, so
-if you want to add heatmap annotations, you need to use `hmanno()` to specify
-where the annotation should be added.
+By default, the `ggheatmap()` won't initialize any active context, so if you
+want to add something into the heatmap annotations, you need to use `hmanno()`
+to specify where the annotation should be added.
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_kmeans(3L)
+```
+
+When you set an active context with `hmanno()`, all subsequent additions will be
+directed to this annotation. This allows you to customize the heatmap by adding
+different types of plots. Annotation is represented as `layout_stack()` object,
+which can contain multiple plots. You can also specify which plot context of the
+annotation to use with the `what` argument in `hmanno()`. However, this is
+usually not necessary as the `align_*` functions handle context settings
+automatically. 
+
+Each `align_*` function has a `set_context` argument that controls whether it sets
+the active context to the `Align` object when added to the stack layout: 
+
+- For `align_*` functions that draw something (e.g., `align_dendro`,
+  `ggalign()`), `set_context` is set to `TRUE` by default. 
+- For `align_*` functions that do not draw (e.g., `align_group()`,
+  `align_kmeans()`), `set_context` is set to `FALSE`.
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("r") +
+  align_dendro(k = 3L) +
+  geom_point(aes(color = factor(branch)))
+```
+
+In this example:
+
+ - `hmanno("r")` specifies that the annotation should be positioned on the right of the heatmap.
+ - `align_dendro(k = 3L)` adds a dendrogram to this right-side annotation context
+   and sets it as the active plot in the annotation stack. 
+ - `geom_point(aes(color = factor(branch)))` is then added to this active plot within
+   the annotation stack, allowing you to include additional visual elements. 
+
+If you set `set_context = FALSE`, this will be an error, since no active ggplot
+object can be found.
+```{r error = TRUE}
+ggheatmap(small_mat) +
+  hmanno("r") +
+  align_dendro(k = 3L, set_context = FALSE) +
+  geom_point(aes(color = factor(branch)))
+```
 
 ## Control size
 The different ggplot objects were combined using the `patchwork` package.
 Internally, the `build_patchwork()` function was used to construct and merge all
 the `ggplot` objects into a single `patchwork` object. 
 
-`ggheatmap` has `width` and `height` to control the relative (you can also
-provide a unit object) width and height of the heatmap body. `hmanno` function
+`ggheatmap()` has `width` and `height` to control the relative (you can also
+provide a unit object) width and height of the heatmap body. `hmanno()` function
 have a `size` argument to control the relative width (left and right annotation)
 or height (top and bottom annotation) of the whole annotation. `anno_*` function
 has a `size` argument to control the relative width (left and right annotation)
 or height (top and bottom annotation) of the single annotation in the whole
-annotation.
+annotation stack.
 
 ```{r}
 ggheatmap(small_mat) +

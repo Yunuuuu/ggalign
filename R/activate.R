@@ -61,7 +61,7 @@ active <- function(what = NULL, sizes = NULL, guides = NULL,
 #' annotation. This will only be used if `what` is a string of `"top"`,
 #' `"left"`, `"bottom"`, or `"right"`.
 #'  - If position is `"top"` or `"bottom"`, `size` set the total height of the
-#' annotation, otherwise.
+#' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
 #' @inheritParams layout_heatmap
