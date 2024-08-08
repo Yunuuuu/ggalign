@@ -31,11 +31,11 @@ The documentation for `ggalign` is currently in progress.
 
 `ggalign` provides two layout to arrange ggplot objects:
 
-- Heatmap layout: Arrange ggplot into a Heatmap. See
+- `layout_heatmap()`/`ggheamtap()`: Arrange ggplot into a Heatmap. See
   `vignette("layout-heatmap")` for details.
 
-- Stack layout: Arrange ggplot vertically or horizontally. See
-  `vignette("layout-stack")` for details.
+- `layout_stack()`/`ggstack()`: Arrange ggplot vertically or
+  horizontally. See `vignette("layout-stack")` for details.
 
 `ggalign` provides `Align` objects to reordering or set panels for
 layout, in addition, `Align` objects can also add plot into the layout:
@@ -46,7 +46,8 @@ layout, in addition, `Align` objects can also add plot into the layout:
 - `align_dendro()`: Reorder or Group layout based on Hierarchical
   Clustering
 - `align_gg()`/`ggalign()`: Create ggplot object in the layout
-- `align_panel()`: Create ggplot object based on the layout panel data.
+- `align_panel()`/`ggpanel()`: Create ggplot object based on the layout
+  panel data.
 
 See `vignette("align")` for details.
 
