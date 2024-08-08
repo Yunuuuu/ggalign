@@ -51,17 +51,15 @@ data frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
 but can be controlled using `mapping` argument. The data in the underlying
 ggplot object contains following columns:
 
-  - `.row_panel`: the row panel
+  - `.xpanel` and `.ypanel`: the column and row panel
 
-  - `.column_panel`: the column panel
+  - `.x` and `.y`: the `x` and `y` coordinates
 
   - `.row_names` and `.column_names`: the row and column names of the original
     matrix (only applicable when names exist).
 
   - `.row_index` and `.column_index`: the row and column index of the original
     matrix.
-
-  - `.x` and `.y`: the `x` and `y` coordinates
 
   - `value`: the actual matrix value.
 
@@ -306,10 +304,10 @@ automatically.
 Each `align_*` function has a `set_context` argument that controls whether it sets
 the active context to the `Align` object when added to the stack layout: 
 
-- For `align_*` functions that draw something (e.g., `align_dendro`,
+- For `align_*` functions that draw something (e.g., `align_dendro()`,
   `ggalign()`), `set_context` is set to `TRUE` by default. 
-- For `align_*` functions that do not draw (e.g., `align_group()`,
-  `align_kmeans()`), `set_context` is set to `FALSE`.
+- For `align_*` functions that do not draw anything (e.g., `align_group()`,
+  `align_kmeans()`), `set_context` is set to `FALSE` by default.
 
 ```{r}
 ggheatmap(small_mat) +
