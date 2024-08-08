@@ -48,8 +48,8 @@ The documentation for `ggalign` is currently in progress.
 
 `ggalign` provides `Align` objects to reorder or set panels for layout:
 
-  - `align_group()`: Group layout axis into panel
-  - `align_kmeans()`: Group layout observations by kmeans
+  - `align_group()`: Group layout axis into panel with a group variable.
+  - `align_kmeans()`: Group layout axis into panel by kmeans
   - `align_reorder()`: Reorder layout observations
   - `align_dendro()`: Reorder or Group layout based on Hierarchical Clustering
 
