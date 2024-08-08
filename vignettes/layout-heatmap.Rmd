@@ -14,13 +14,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# `layout_heatmap`
+`layout_heatmap` utilizes the grammar of graphics to construct the heatmap and
+heatmap annotations. You can also use the alias `ggheatmap`.
+
 ```{r setup}
 library(ggalign)
 ```
-
-`layout_heatmap` utilizes the grammar of graphics to construct the heatmap and
-heatmap annotations. You can also use the alias `ggheatmap`.
 
 ## Input data 
 The data input can be a numeric or character vector, a data frame, and any other
@@ -95,14 +94,14 @@ ggheatmap(small_mat) + scale_x_continuous(limits = c(0, 0))
 `breaks` and `labels` in the position scales are handled in a similar manner of
 discrete scale, thought you can provide as a continuous scale.
 
-`breaks`, value should be one of:
+`breaks` should be one of:
 
     - `NULL` for no breaks
 
     - `waiver()` for the default breaks (the full data index or `NULL` if no
     data names and `labels` is `waiver()`)
 
-    - A character vector of breaks.
+    - A character vector of breaks (rownames / colunames of the matrix).
 
     - A numeric vector of data index.
 
@@ -132,6 +131,7 @@ ggheatmap(small_mat) + scale_x_continuous(breaks = 5:6)
 ```
 
 `labels` should be one of:
+
     - `NULL` for no labels
 
     - `waiver()` for the default labels (data names)
@@ -142,8 +142,8 @@ ggheatmap(small_mat) + scale_x_continuous(breaks = 5:6)
     for details. 
 
     - A function that takes the data names (or breaks if data has no names) as
-    input and returns labels as output. Also accepts rlang lambda function
-    notation.
+    input and returns labels as output. This can be also a rlang lambda
+    function.
 
 ```{r}
 ggheatmap(small_mat) + scale_x_continuous(labels = NULL)
@@ -163,24 +163,85 @@ ggheatmap(small_mat) +
   scale_x_continuous(breaks = c(3, 5), labels = c("a", "b"))
 ```
 
-You can use discrete scale or continuous scale, both argument will work the
-same. But note it's hard to match all discrete scale limits, for sometimes, you
-should manually specify the `expand` argument.
-```{r}
-ggheatmap(small_mat) +
-  scale_x_discrete(breaks = c(3, 5), labels = c("a", "b"))
-```
+`breaks` and `labels` argument will work the same in both discrete scale and
+continuous scale. But note it's hard to match all discrete scale limits, for
+sometimes, you should manually specify the `expand` argument.
 
-Both arguments should be provided in the original scale of the raw matrix, the
-internal will reorder them accordingly if you reorder the heatmap rows/columns.
-
-Here I'll use a heatmap annotation to reorder the heatmap, if you are unfamiliar
+I will provide an example of using a heatmap annotation. If you are unfamiliar
 with adding heatmap annotations, there is no need to worry. I will provide a
 more comprehensive explanation in the following section. If you want to learn
 more about the `align_*` functions, try to see `vignette("align")`.
 
-`hmanno` indicates where the annotation was added. In this example, "top" and
-"bottom" should be the same, since `align_reorder` won't add any plot region.
+`hmanno` indicates where the annotation was added. `align_dendro` will reorder
+the layout based on the hierarchical clustering tree, and it'll also draw the
+tree.
+
+In following example, we must add `expand` argument to match the heatmap and
+the tree.
+```{r}
+ggheatmap(small_mat) +
+  scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
+  hmanno("t") +
+  align_dendro() +
+  scale_x_discrete()
+```
+
+```{r}
+ggheatmap(small_mat) +
+  scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
+  hmanno("t") +
+  align_dendro() +
+  scale_x_discrete(expand = expansion(add = 0.5))
+```
+
+Indeed, you can use the default scale for the dendrogram directly. `ggalign` always
+sets the appropriate limits for the continuous scale, which is also the default
+scale.
+
+```{r}
+ggheatmap(small_mat) +
+  scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
+  hmanno("t") +
+  align_dendro()
+```
+
+One useful function when you should use the discrete scale is the ambiguous
+`orientation` in geoms. Some geoms use the discrete axis as the main orientation
+like `ggplot2::geom_bar()` and `ggplot2::geom_box()`, but by default we always
+use the continuous scale. So you must manually provide an `orientation` argument
+for these geoms or manually set the discrete scale in horizontal layout
+(including left and right heatmap annotation).
+
+`ggalign` is similar to `ggplot` in that it initializes a `ggplot` data and
+`mapping`. The data input can be a matrix, a data frame, or a simple vector that
+will be converted into a one-column matrix, and can inherit from the layout
+data.
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("l") +
+  ggalign() +
+  geom_bar(aes(x = value), stat = "identity")
+```
+
+Try to provide the `orientation` argument or set the scale into discrete.
+```{r}
+ggheatmap(small_mat) +
+  hmanno("l") +
+  ggalign() +
+  geom_bar(aes(x = value), stat = "identity", orientation = "y")
+```
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("l") +
+  ggalign() +
+  geom_bar(aes(x = value), stat = "identity") +
+  scale_y_discrete()
+```
+
+Both arguments should be provided in the original scale of the raw matrix, the
+internal will reorder them accordingly if you reorder the heatmap rows/columns.
 
 `align_reorder` will reorder the heatmap rows/columns based on the weights
 returned from `fun` argument. Here we reorder the heatmap columns by the means.
@@ -221,12 +282,12 @@ rows/columns. Heatmap annotations can be positioned at the `top`, `left`,
 in `ggheatmap`. We can add annotation with `align_*` functions.
 
 By default, the `ggheatmap` function does not initialize any active context, so
-if you want to add heatmap annotations, you need to use `hmanno` to specify
+if you want to add heatmap annotations, you need to use `hmanno()` to specify
 where the annotation should be added.
 
 ## Control size
 The different ggplot objects were combined using the `patchwork` package.
-Internally, the `build_patchwork` function was used to construct and merge all
+Internally, the `build_patchwork()` function was used to construct and merge all
 the `ggplot` objects into a single `patchwork` object. 
 
 `ggheatmap` has `width` and `height` to control the relative (you can also

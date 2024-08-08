@@ -222,8 +222,8 @@ ggheatmap(small_mat) +
 ## `align_gg`
 `align_gg` is similar to `ggplot` in that it initializes a `ggplot` data and
 `mapping`. The data input can be a matrix, a data frame, or a simple vector that
-will be converted into a one-column matrix, and can inherit from the heatmap
-matrix. 
+will be converted into a one-column matrix, and can inherit from the layout
+data.
 
 The internal will always use a default mapping for the parallel axis with layout
 (`aes(y = .data$.y)` or `aes(x = .data$.x)`).
