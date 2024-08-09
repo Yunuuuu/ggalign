@@ -31,6 +31,7 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_panel <- function(mapping = aes(), size = NULL, plot_data = waiver(),
+                        limits = TRUE, facet = TRUE,
                         set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(Alignpanel,
