@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-group.R
 \name{align_group}
 \alias{align_group}
-\title{Group layout axis into panel}
+\title{Group and align layout based on categorical or factor levels.}
 \usage{
 align_group(group, set_context = FALSE, name = NULL)
 }
@@ -20,7 +20,7 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Group layout axis into panel
+Group and align layout based on categorical or factor levels.
 }
 \examples{
 small_mat <- matrix(rnorm(81), nrow = 9)

@@ -1,4 +1,4 @@
-#' Reorder layout observations
+#' Reorders layout observations based on weights or summary statistics.
 #'
 #' @param fun A summary function. It should take a data and return the weights
 #' for the layout observations.

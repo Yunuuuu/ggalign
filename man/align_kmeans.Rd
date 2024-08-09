@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-kmeans.R
 \name{align_kmeans}
 \alias{align_kmeans}
-\title{Group layout observations by kmeans}
+\title{Split layout by k-means clustering groups.}
 \usage{
 align_kmeans(
   centers,
@@ -62,7 +62,7 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Group layout observations by kmeans
+Split layout by k-means clustering groups.
 }
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +

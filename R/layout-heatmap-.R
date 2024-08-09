@@ -1,4 +1,4 @@
-#' Put plots around a Heatmap
+#' Arrange plots around a Heatmap
 #'
 #' `ggheatmap` is an alias of `layout_heatmap`.
 #'
@@ -31,7 +31,7 @@
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
 #' @inheritParams align
-#' @section ggplot2 details:
+#' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
 #' you can use `mapping` argument to control it. The data in the underlying

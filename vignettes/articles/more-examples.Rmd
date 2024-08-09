@@ -27,6 +27,7 @@ mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
 
 ggstack(data = mat_scaled) +
+  # group stack rows into 5 groups
   align_kmeans(centers = 5L) +
   ggpanel(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
@@ -80,10 +81,7 @@ ggstack(data = mat_scaled) +
 
 # The measles vaccine heatmap
 ```{r fig.dim = c(12, 12)}
-mat <- readRDS(system.file("extdata", "measles.rds",
-  package =
-    "ComplexHeatmap"
-))
+mat <- readRDS(system.file("extdata", "measles.rds", package = "ComplexHeatmap"))
 ggheatmap(mat, filling = FALSE) +
   geom_tile(aes(fill = value), color = "white") +
   scale_fill_gradientn(

@@ -1,4 +1,4 @@
-#' Group layout axis into panel
+#' Group and align layout based on categorical or factor levels.
 #'
 #' @param group A character define the groups, this will split the
 #' axis into different panel.

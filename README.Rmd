@@ -14,12 +14,12 @@ knitr::opts_chunk$set(
 ```
 
 # ggalign
-This package extends ggplot2 and provides numerous benefits for organizing and
-arranging plots. It is specifically designed to align a specific axis of
-multiple ggplot objects in a consistent order. This functionality is
-particularly useful for plots that require manipulation of data order. A common
-plot combination that can be effectively organized using this package includes a
-dendrogram and a heatmap.
+This package extends ggplot2 and offers several benefits for organizing and
+arranging plots. It is specifically designed to align the axes of multiple
+ggplot objects consistently. This functionality is particularly useful for plots
+where data order needs to be manipulated. One common application of this package
+is in effectively organizing combinations of plots, such as a dendrogram and a
+heatmap.
 
 ## Installation
 
@@ -38,28 +38,35 @@ should install patchwork with
 The documentation for `ggalign` is currently in progress.
 
 ## Features
-`ggalign` provides two layout to arrange ggplot objects:
+`ggalign` pacakge provides two layout to arrange ggplot objects:
 
-  - `layout_heatmap()`/`ggheamtap()`: Arrange ggplot into a Heatmap. See
+  - `layout_heatmap()`/`ggheamtap()`: Arrange ggplot into a Heatmap layout. See
   `vignette("layout-heatmap")` for details.
 
   - `layout_stack()`/`ggstack()`: Arrange ggplot vertically or horizontally. See
   `vignette("layout-stack")` for details.
 
-`ggalign` provides `Align` objects to reorder or set panels for layout:
+To further customize these layouts, the `ggalign` package offers several `Align`
+objects: 
 
   - `align_group()`: Group layout axis into panel with a group variable.
   - `align_kmeans()`: Group layout axis into panel by kmeans
-  - `align_reorder()`: Reorder layout observations
+  - `align_reorder()`: Reorders layout observations based on weights or summary
+  statistics. 
   - `align_dendro()`: Reorder or Group layout based on hierarchical clustering
 
-In addition, `Align` objects can also add plot into the layout:
+For more detailed instructions on customizing layouts, see the vignette:
+`vignette("align-layout")`. 
 
-  - `align_gg()`/`ggalign()`: Create ggplot object in the layout
-  - `align_panel()`/`ggpanel()`: Create ggplot object based on the layout panel
+Additionally, the following `Align` objects can be used to add plots directly
+into the layout: 
+
+  - `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
+  - `align_panel()`/`ggpanel()`: Create ggplot object with the layout panel
     data.
 
-See `vignette("align")` for details.
+For more information on adding plots, refer to the vignette:
+`vignette("align-plot")`.
 
 ## Examples
 

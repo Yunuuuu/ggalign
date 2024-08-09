@@ -1,4 +1,4 @@
-#' Create ggplot object in the layout
+#' Create ggplot object with a customized data
 #'
 #' `ggalign` is just an alias of `align_gg`.
 #'
@@ -7,7 +7,7 @@
 #' @importFrom ggplot2 aes
 #' @inheritParams ggplot2::ggplot
 #'
-#' @section ggplot2 details:
+#' @section ggplot2 specification:
 #' `align_gg` initializes a `ggplot` data and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(y = .data$.y)` or
@@ -35,8 +35,8 @@
 #'  - `value`: the actual matrix value  (only applicable if `data` is a
 #'    `matrix`).
 #'
-#' if data is inherit from the heatmap layout, an additional column will be
-#' added.
+#' if data is inherit from the [heatmap][ggheatmap] layout, an additional column
+#' will be added.
 #'
 #'  - `.extra_panel`: the panel for the layout axis vertically with the layout.
 #'
@@ -78,10 +78,12 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
         data
     },
     ggplot = function(self, mapping) {
-        ans <- ggplot2::ggplot(mapping = mapping)
+        direction <- .subset2(self, "direction")
+        ans <- ggplot2::ggplot(mapping = mapping) +
+            align_theme(direction)
 
         add_default_mapping(ans, switch_direction(
-            .subset2(self, "direction"),
+            direction,
             aes(y = .data$.y),
             aes(x = .data$.x)
         ))

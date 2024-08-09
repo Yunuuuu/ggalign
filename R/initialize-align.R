@@ -167,9 +167,6 @@ initialize_align_layout <- function(object, nobs, direction,
         )
     ]
     p <- rlang::inject(object$ggplot(!!!ggplot_params))
-    if (ggplot2::is.ggplot(p)) {
-        p <- p + align_theme(direction)
-    }
     object$plot <- p
 
     # add annotation -------------------------------------

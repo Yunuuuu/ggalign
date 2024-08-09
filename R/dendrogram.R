@@ -193,7 +193,7 @@ dendrogram_data <- function(tree,
 
     # initialize values
     i <- 0L # leaf index
-    branch_levels <- root
+    branch_levels <- NULL
     last_branch <- root
     total_gap <- 0
     .dendrogram_data <- function(dend, from_root = TRUE) {
@@ -440,7 +440,8 @@ dendrogram_data <- function(tree,
     edge <- .subset2(ans, "edge")
 
     # set factor levels for branch and panel ---------------
-    panel_levels <- setdiff(branch_levels, root)
+    panel_levels <- branch_levels
+    branch_levels <- c(branch_levels, root)
     node$panel <- factor(.subset2(node, "panel"), panel_levels)
     node$branch <- factor(.subset2(node, "branch"), branch_levels)
     node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_levels)

@@ -3,7 +3,7 @@
 \name{layout_heatmap}
 \alias{layout_heatmap}
 \alias{ggheatmap}
-\title{Put plots around a Heatmap}
+\title{Arrange plots around a Heatmap}
 \usage{
 layout_heatmap(
   data = NULL,
@@ -85,7 +85,7 @@ A \code{HeatmapLayout} object.
 \description{
 \code{ggheatmap} is an alias of \code{layout_heatmap}.
 }
-\section{ggplot2 details}{
+\section{ggplot2 specification}{
 
 The data input in \code{ggheatmap} will be converted into the long formated data
 frame when drawing. The default mapping will use \code{aes(.data$.x, .data$.y)},

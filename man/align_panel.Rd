@@ -50,7 +50,7 @@ A \code{Alignpanel} object.
 This is similar with \code{ggalign()} function, but it will always use the layout
 panel data. \code{ggpanel} is just an alias of \code{align_panel}.
 }
-\section{ggplot2 details}{
+\section{ggplot2 specification}{
 
 \code{align_panel} initializes a \code{ggplot} data and \code{mapping}.
 
@@ -60,7 +60,7 @@ The internal will always use a default mapping of \code{aes(y = .data$.y)} or
 The data in the underlying \code{ggplot} object contains following columns:
 \itemize{
 \item \code{.panel}: the panel for current layout axis.
-\item \code{.index}: the index of the original layout axis.
+\item \code{.index}: the index of the original layout data.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 }
 }

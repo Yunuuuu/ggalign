@@ -110,14 +110,16 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(fct_rev(.data$.ypanel)),
             cols = ggplot2::vars(.data$.xpanel),
-            scales = "free", space = "free"
+            scales = "free", space = "free",
+            drop = FALSE
         )
         p <- p + melt_facet(p$facet, default_facet) +
             ggh4x::facetted_pos_scales(x = xscales, y = yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(fct_rev(.data$.ypanel)),
-            scales = "free_y", space = "free_y"
+            scales = "free_y", space = "free_y",
+            drop = FALSE
         )
         p <- p + melt_facet(p$facet, default_facet) +
             xscales +
@@ -125,7 +127,8 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.xpanel),
-            scales = "free_x", space = "free_x"
+            scales = "free_x", space = "free_x",
+            drop = FALSE
         )
         p <- p + melt_facet(p$facet, default_facet) +
             yscales +

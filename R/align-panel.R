@@ -8,7 +8,7 @@
 #' @importFrom ggplot2 aes
 #' @inheritParams ggplot2::ggplot
 #'
-#' @section ggplot2 details:
+#' @section ggplot2 specification:
 #' `align_panel` initializes a `ggplot` data and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(y = .data$.y)` or
@@ -18,7 +18,7 @@
 #'
 #'  - `.panel`: the panel for current layout axis.
 #'
-#'  - `.index`: the index of the original layout axis.
+#'  - `.index`: the index of the original layout data.
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
@@ -53,10 +53,25 @@ Alignpanel <- ggplot2::ggproto("Alignpanel", Align,
         ), call = .subset2(self, "call"))
     },
     ggplot = function(self, mapping) {
-        ans <- ggplot2::ggplot(mapping = mapping)
+        direction <- .subset2(self, "direction")
+        ans <- ggplot2::ggplot(mapping = mapping) +
+            align_theme(direction) +
+            switch_direction(
+                direction,
+                theme(
+                    axis.title.x = element_blank(),
+                    axis.text.x = element_blank(),
+                    axis.ticks.x = element_blank()
+                ),
+                theme(
+                    axis.title.y = element_blank(),
+                    axis.text.y = element_blank(),
+                    axis.ticks.y = element_blank()
+                )
+            )
 
         add_default_mapping(ans, switch_direction(
-            .subset2(self, "direction"),
+            direction,
             aes(y = .data$.y),
             aes(x = .data$.x)
         ))

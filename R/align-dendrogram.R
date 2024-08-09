@@ -1,4 +1,4 @@
-#' Dendrogram plot
+#' Reorder or Group layout based on hierarchical clustering
 #'
 #' @inheritParams align_gg
 #' @param ... Additional arguments passed to
@@ -14,7 +14,7 @@
 #' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
 #' @inheritParams align
-#' @section ggplot2 details:
+#' @section ggplot2 specification:
 #' `align_dendro` initializes a `ggplot` data and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(x = .data$x, y =
@@ -228,6 +228,7 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
         }
         direction <- .subset2(self, "direction")
         ans <- ggplot2::ggplot(mapping = mapping) +
+            align_theme(direction) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
                     x = .data$x, y = .data$y,

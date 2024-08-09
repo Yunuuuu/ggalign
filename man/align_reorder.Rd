@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-reorder.R
 \name{align_reorder}
 \alias{align_reorder}
-\title{Reorder layout observations}
+\title{Reorders layout observations based on weights or summary statistics.}
 \usage{
 align_reorder(
   fun = rowMeans,
@@ -55,7 +55,7 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Reorder layout observations
+Reorders layout observations based on weights or summary statistics.
 }
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +

@@ -51,11 +51,13 @@ align_build <- function(x, panel, index,
                 direction,
                 ggplot2::facet_grid(
                     rows = ggplot2::vars(fct_rev(.data$.panel)),
-                    scales = "free_y", space = "free_y"
+                    scales = "free_y", space = "free_y",
+                    drop = FALSE
                 ),
                 ggplot2::facet_grid(
                     cols = ggplot2::vars(.data$.panel),
-                    scales = "free_x", space = "free_x"
+                    scales = "free_x", space = "free_x",
+                    drop = FALSE
                 )
             )
         } else {
@@ -350,6 +352,8 @@ melt_facet <- function(user_facet, default_facet) {
     # we always fix the grid rows and cols
     user_facet$params$rows <- default_facet$params$rows
     user_facet$params$cols <- default_facet$params$cols
+    user_facet$params$drop <- default_facet$params$drop
+
     # if the default is free, it must be free
     user_facet$params$free$x <- user_facet$params$free$x ||
         default_facet$params$free$x

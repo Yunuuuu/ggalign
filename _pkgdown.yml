@@ -6,7 +6,6 @@ template:
 
 reference:
 - title: Building plot
-- subtitle: Adding elements
   desc: >
     All plots begin with a call to `ggheatmap()` or `ggstack`, supplying default 
     data and aesthetic mappings, specified by `aes()`. You then reorder the layout, 
@@ -17,7 +16,7 @@ reference:
   - layout-and
   - build_patchwork
 
-- subtitle: Activate context
+- title: Activate context
   desc: >
     A `Layout` object may have multiple plots, you can choose where to add ggplot2 
     elements with following functions.
@@ -26,20 +25,24 @@ reference:
   - active
   - activate
 
-- title: Plot Layout
+- title: Layout Design
   desc: A `Layout` object defines how to place the plots.
   contents:
   - layout_heatmap
   - layout_stack
 
-- title: Plot basics
-  desc: Add plots to layout
+- title: Plot Integration
+  desc: >
+    This section covers essential functions to add individual plots to the layout, 
+    ensuring they align and interact correctly within the defined structure.
   contents:
   - ggalign
   - ggpanel
 
-- title: Setup Layout
-  desc: Reordering obervations or Group into panels
+- title: Layout Customization
+  desc: >
+    Fine-tune the arrangement of plots by reordering or splitting axes into separate panels. 
+    These functions allow for more detailed customization of plot layouts.
   contents:
   - align_dendro
   - align_group
@@ -64,7 +67,8 @@ articles:
   navbar: ~
   contents:
   - layout-heatmap
-  - align
+  - align-layout
+  - align-plot
   - layout-stack
 
 - title: ComplexHeatmap

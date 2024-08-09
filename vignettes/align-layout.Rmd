@@ -1,0 +1,228 @@
+---
+title: "Layout Customization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{align-layout}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The package offers a suite of `align_*` functions designed to give you precise
+control over plot layout. These functions enable you to manipulate axis order
+within the layout and partition along a single axis into multiple panels.
+Additionally, some functions allow for the inclusion of new plots directly
+within the layout. 
+
+Currently, there are four key `align_*` functions available for layout customization:
+
+- **`align_group`**: Group and align plots based on categorical factors.
+- **`align_reorder`**: Reorder plots or split axes into different panels.
+- **`align_kmeans`**: Arrange plots by k-means clustering results.
+- **`align_dendro`**: Align plots according to hierarchical clustering or dendrograms.
+
+```{r setup}
+library(ggalign)
+```
+
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
+## `align_group`
+
+The `align_group()` function allows you to group elements along a layout axis
+into separate panels. It doesn't add a plot area but organizes the existing
+layout into groups. 
+
+```{r align_group_top}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+```
+
+By default, the facet strip text is removed. You can override this behavior with
+`theme(strip.text = element_text())`. Since `align_group()` does not create a
+new plot area, the panel title can only be added to the heatmap plot.
+```{r align_group_left}
+ggheatmap(small_mat) +
+  theme(strip.text = element_text()) +
+  hmanno("l") +
+  align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
+```
+
+## `align_reorder`
+The `align_reorder()` function reorders the rows or columns of the layout based on a
+summary function. Like `align_group()`, it doesn't add a plot area. 
+```{r}
+ggheatmap(small_mat) +
+  hmanno("l") +
+  align_reorder(rowMeans)
+```
+
+Some `align_*` functions accept a `data` argument. This can be a matrix, a data
+frame, or even a simple vector, which will be converted into a one-column
+matrix. If the `data` argument is `NULL`, the function will use the layout data,
+as demonstrated in the previous example. The `data` argument can also accept a
+function (purrr-like lambda syntax is supported), which will be applied to the
+layout data. 
+
+> Note: All `align_*` functions treat rows as observations, meaning the `NROW()`
+function must return the same number as the parallel layout axis. For heatmap
+column annotations, the heatmap matrix is transposed before being used. If `data`
+is a function, it will be applied to the transposed matrix. 
+
+Even for top and bottom annotations, you can use `rowMeans()` to calculate the mean
+value across all columns. 
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_reorder(rowMeans)
+```
+
+## `align_kmeans`
+The `align_kmeans()` function groups heatmap rows or columns based on k-means
+clustering. Like the previous functions, it does not add a plot area. 
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_kmeans(3L)
+```
+
+It's important to note that `align_group()` and `align_kmeans()` cannot handle
+sub-grouping. This means they cannot be used if groups already exist. 
+
+```{r error=TRUE}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
+  align_kmeans(3L)
+```
+
+```{r error=TRUE}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_kmeans(3L) +
+  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+```
+
+## align_dendro
+The `align_dendro()` function adds a dendrogram to the layout and can also
+reorder or split the layout based on hierarchical clustering. This is
+particularly useful for working with heatmap plots. It supports both layout
+customization and the addition of plots within the layout. 
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro()
+```
+
+You can use the `distance` and `method` argument to control the dendrogram
+builind process.
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(method = "ward.D2")
+```
+
+The dendrogram can also be used to cut the columns/rows into groups. You can
+specify `k` or `h`, which work similarly to `cutree()`: 
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(k = 3L)
+```
+
+In contrast to `align_group()`, `align_kmeans()`, and `align_reorder()`,
+`align_dendro()` is capable of drawing plot components. So it has a default
+`set_context` value of `TRUE`, meaning it will set the active context of the stack
+layout. Consequently, any ggplot elements added afterward will be included in
+this plot area. 
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro() +
+  geom_point(aes(y = y))
+```
+
+The `align_dendro()` function creates default `node` data for the ggplot. See
+`ggplot2 specification` in `?align_dendro` for details. Additionally, `edge` data is
+added to the `ggplote::geom_segment()` layer directly, used to draw the
+dendrogram tree. One useful variable in both `node` and `edge` data is the
+`branch` column, corresponding to the `cutree` result: 
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3) +
+  geom_point(aes(color = branch, y = y))
+```
+
+`align_dendro()` can also perform clustering between groups, meaning it can be used
+even if there are existing groups present in the layout: 
+
+```{r}
+column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch))
+```
+
+You can reorder the groups by setting `reorder_group = TRUE`.
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = TRUE)
+```
+
+You can see the difference.
+```{r}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = TRUE) +
+  hmanno("b") +
+  align_dendro(aes(color = branch), reorder_group = FALSE)
+```
+
+> We always prevent users from reordering the layout axis twice.
+
+Note that when `reorder_group = FALSE` is used, reordering of the heatmap occurs
+within each group. As long as the ordering within each group remains consistent,
+these two dendrograms can be placed on the same axis of the heatmap. Adding a
+dendrogram with `reorder_group = FALSE` behind a dendrogram with `reorder_group
+= TRUE` is acceptable because the second `align_dendro()` will follow the group
+ordering established by the first one. However, adding a dendrogram with
+`reorder_group = TRUE` behind a dendrogram with `reorder_group = FALSE` is not
+possible, as the second dendrogram would not conform to the grouping order of
+the first.
+
+```{r error=TRUE}
+ggheatmap(small_mat) +
+  hmanno("t") +
+  align_group(column_groups) +
+  align_dendro(aes(color = branch), reorder_group = FALSE) +
+  hmanno("b") +
+  align_dendro(aes(color = branch), reorder_group = TRUE)
+```
+
+## Session information
+```{r}
+sessionInfo()
+```

@@ -3,7 +3,7 @@
 \name{align_gg}
 \alias{align_gg}
 \alias{ggalign}
-\title{Create ggplot object in the layout}
+\title{Create ggplot object with a customized data}
 \usage{
 align_gg(
   data = NULL,
@@ -79,7 +79,7 @@ A \code{AlignGG} object.
 \description{
 \code{ggalign} is just an alias of \code{align_gg}.
 }
-\section{ggplot2 details}{
+\section{ggplot2 specification}{
 
 \code{align_gg} initializes a \code{ggplot} data and \code{mapping}.
 
@@ -105,8 +105,8 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 \code{matrix}).
 }
 
-if data is inherit from the heatmap layout, an additional column will be
-added.
+if data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column
+will be added.
 \itemize{
 \item \code{.extra_panel}: the panel for the layout axis vertically with the layout.
 }

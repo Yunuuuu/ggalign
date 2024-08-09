@@ -1,4 +1,4 @@
-#' Group layout observations by kmeans
+#' Split layout by k-means clustering groups.
 #'
 #' @inheritParams stats::kmeans
 #' @inheritParams align

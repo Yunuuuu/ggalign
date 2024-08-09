@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`layout_heatmap` utilizes the grammar of graphics to construct the heatmap and
+`layout_heatmap()` utilizes the grammar of graphics to construct the heatmap and
 heatmap annotations. You can also use the alias `ggheatmap`.
 
 ```{r setup}
@@ -168,11 +168,12 @@ sometimes, you should manually specify the `expand` argument.
 I will provide an example of using a heatmap annotation. If you are unfamiliar
 with adding heatmap annotations, there is no need to worry. I will provide a
 more comprehensive explanation in the following section. If you want to learn
-more about the `align_*` functions, try to see `vignette("align")`.
+more about the `align_*` functions, try to see `vignette("align-layout")` and
+`vignette("align-plot")`. 
 
-`hmanno` indicates where the annotation was added. `align_dendro` will reorder
-the layout based on the hierarchical clustering tree, and it'll also draw the
-tree.
+`hmanno()` indicates where the annotation was added. `align_dendro()` will
+reorder the layout based on the hierarchical clustering tree, and it'll also
+draw the dendrogram tree.
 
 In following example, we must add `expand` argument to match the heatmap and
 the tree.
@@ -207,14 +208,14 @@ One useful function when you should use the discrete scale is the ambiguous
 `orientation` in geoms. Some geoms use the discrete axis as the main orientation
 like `ggplot2::geom_bar()` and `ggplot2::geom_box()`, but by default we always
 use the continuous scale. So you must manually provide an `orientation` argument
-for these geoms or manually set the discrete scale in horizontal layout
+for these geoms or manually set the discrete scale in the horizontal layout
 (including left and right heatmap annotation).
 
 `ggalign()` is similar to `ggplot` in that it initializes a plot data and
 `mapping`. The data input can be a matrix, a data frame, or a simple vector that
 will be converted into a one-column matrix, and can inherit from the layout
-data. When an plot is initialized, we can add other ggplot2 elements for it. You
-can see `?ggalign` for the default plot data.
+data. When a plot is initialized, we can add other ggplot2 elements for it. You
+can see `ggplot2 specification` in `?align_gg` for details.
 
 In the following example, `geom_bar` won't work since the ambiguous orientation.
 ```{r}

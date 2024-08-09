@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-dendrogram.R
 \name{align_dendro}
 \alias{align_dendro}
-\title{Dendrogram plot}
+\title{Reorder or Group layout based on hierarchical clustering}
 \usage{
 align_dendro(
   mapping = aes(),
@@ -111,9 +111,9 @@ will be added into this \code{Align} object.}
 A new \code{Align} object.
 }
 \description{
-Dendrogram plot
+Reorder or Group layout based on hierarchical clustering
 }
-\section{ggplot2 details}{
+\section{ggplot2 specification}{
 
 \code{align_dendro} initializes a \code{ggplot} data and \code{mapping}.
 
