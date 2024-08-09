@@ -21,7 +21,8 @@ panel data. ggpanel is just an alias of align_panel."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/layout-heatmap.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/align.html">Setup layout order and panel</a></li>
+    <li><a class="dropdown-item" href="../articles/align-layout.html">Layout Customization</a></li>
+    <li><a class="dropdown-item" href="../articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="../articles/layout-stack.html">Stack Layout</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
@@ -117,14 +118,14 @@ will be added into this <code>Align</code> object.</p></dd>
     <p>A <code>Alignpanel</code> object.</p>
     </div>
     <div class="section level2">
-    <h2 id="ggplot-details">ggplot2 details<a class="anchor" aria-label="anchor" href="#ggplot-details"></a></h2>
+    <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
 
 
 <p><code>align_panel</code> initializes a <code>ggplot</code> data and <code>mapping</code>.</p>
 <p>The internal will always use a default mapping of <code>aes(y = .data$.y)</code> or
 <code>aes(x = .data$.x)</code>.</p>
 <p>The data in the underlying <code>ggplot</code> object contains following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis.</p></li>
-<li><p><code>.index</code>: the index of the original layout axis.</p></li>
+<li><p><code>.index</code>: the index of the original layout data.</p></li>
 <li><p><code>.x</code> or <code>.y</code>: the <code>x</code> or <code>y</code> coordinates</p></li>
 </ul></div>
 

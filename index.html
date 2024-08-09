@@ -36,7 +36,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/layout-heatmap.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="articles/align.html">Setup layout order and panel</a></li>
+    <li><a class="dropdown-item" href="articles/align-layout.html">Layout Customization</a></li>
+    <li><a class="dropdown-item" href="articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="articles/layout-stack.html">Stack Layout</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
@@ -69,7 +70,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="ggalign">ggalign<a class="anchor" aria-label="anchor" href="#ggalign"></a>
 </h1></div>
-<p>This package extends ggplot2 and provides numerous benefits for organizing and arranging plots. It is specifically designed to align a specific axis of multiple ggplot objects in a consistent order. This functionality is particularly useful for plots that require manipulation of data order. A common plot combination that can be effectively organized using this package includes a dendrogram and a heatmap.</p>
+<p>This package extends ggplot2 and offers several benefits for organizing and arranging plots. It is specifically designed to align the axes of multiple ggplot objects consistently. This functionality is particularly useful for plots where data order needs to be manipulated. One common application of this package is in effectively organizing combinations of plots, such as a dendrogram and a heatmap.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -83,12 +84,12 @@
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
-<p><code>ggalign</code> provides two layout to arrange ggplot objects:</p>
+<p><code>ggalign</code> pacakge provides two layout to arrange ggplot objects:</p>
 <ul>
-<li><p><code><a href="reference/layout_heatmap.html">layout_heatmap()</a></code>/<code>ggheamtap()</code>: Arrange ggplot into a Heatmap. See <code><a href="articles/layout-heatmap.html">vignette("layout-heatmap")</a></code> for details.</p></li>
+<li><p><code><a href="reference/layout_heatmap.html">layout_heatmap()</a></code>/<code>ggheamtap()</code>: Arrange ggplot into a Heatmap layout. See <code><a href="articles/layout-heatmap.html">vignette("layout-heatmap")</a></code> for details.</p></li>
 <li><p><code><a href="reference/layout_stack.html">layout_stack()</a></code>/<code><a href="reference/layout_stack.html">ggstack()</a></code>: Arrange ggplot vertically or horizontally. See <code><a href="articles/layout-stack.html">vignette("layout-stack")</a></code> for details.</p></li>
 </ul>
-<p><code>ggalign</code> provides <code>Align</code> objects to reorder or set panels for layout:</p>
+<p>To further customize these layouts, the <code>ggalign</code> package offers several <code>Align</code> objects:</p>
 <ul>
 <li>
 <code><a href="reference/align_group.html">align_group()</a></code>: Group layout axis into panel with a group variable.</li>
@@ -99,14 +100,15 @@
 <li>
 <code><a href="reference/align_dendro.html">align_dendro()</a></code>: Reorder or Group layout based on hierarchical clustering</li>
 </ul>
-<p>In addition, <code>Align</code> objects can also add plot into the layout:</p>
+<p>For more detailed instructions on customizing layouts, see the vignette: <code><a href="articles/align-layout.html">vignette("align-layout")</a></code>.</p>
+<p>Additionally, the following <code>Align</code> objects can be used to add plots directly into the layout:</p>
 <ul>
 <li>
-<code><a href="reference/align_gg.html">align_gg()</a></code>/<code><a href="reference/align_gg.html">ggalign()</a></code>: Create ggplot object in the layout</li>
+<code><a href="reference/align_gg.html">align_gg()</a></code>/<code><a href="reference/align_gg.html">ggalign()</a></code>: Create ggplot object based on a customized data.</li>
 <li>
 <code><a href="reference/align_panel.html">align_panel()</a></code>/<code><a href="reference/align_panel.html">ggpanel()</a></code>: Create ggplot object based on the layout panel data.</li>
 </ul>
-<p>See <code><a href="articles/align.html">vignette("align")</a></code> for details.</p>
+<p>For more information on adding plots, refer to the vignette: <code><a href="articles/align-plot.html">vignette("align-plot")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>

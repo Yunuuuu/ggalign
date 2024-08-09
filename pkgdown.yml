@@ -2,12 +2,13 @@ pandoc: 3.1.11
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
-  align: align.html
+  align-layout: align-layout.html
+  align-plot: align-plot.html
   layout-heatmap: layout-heatmap.html
   layout-stack: layout-stack.html
   articles/more-examples: more-examples.html
   articles/single-heatmap: single-heatmap.html
-last_built: 2024-08-08T21:44Z
+last_built: 2024-08-09T09:53Z
 urls:
   reference: https://yunuuuu.github.io/ggalign/reference
   article: https://yunuuuu.github.io/ggalign/articles

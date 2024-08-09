@@ -34,7 +34,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/layout-heatmap.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/align.html">Setup layout order and panel</a></li>
+    <li><a class="dropdown-item" href="../articles/align-layout.html">Layout Customization</a></li>
+    <li><a class="dropdown-item" href="../articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="../articles/layout-stack.html">Stack Layout</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
@@ -79,7 +80,7 @@
 
     
     
-<p><code>layout_heatmap</code> utilizes the grammar of graphics to
+<p><code><a href="../reference/layout_heatmap.html">layout_heatmap()</a></code> utilizes the grammar of graphics to
 construct the heatmap and heatmap annotations. You can also use the
 alias <code>ggheatmap</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -225,10 +226,12 @@ specify the <code>expand</code> argument.</p>
 unfamiliar with adding heatmap annotations, there is no need to worry. I
 will provide a more comprehensive explanation in the following section.
 If you want to learn more about the <code>align_*</code> functions, try
-to see <code><a href="../articles/align.html">vignette("align")</a></code>.</p>
-<p><code>hmanno</code> indicates where the annotation was added.
-<code>align_dendro</code> will reorder the layout based on the
-hierarchical clustering tree, and it’ll also draw the tree.</p>
+to see <code><a href="../articles/align-layout.html">vignette("align-layout")</a></code> and
+<code><a href="../articles/align-plot.html">vignette("align-plot")</a></code>.</p>
+<p><code><a href="../reference/hmanno.html">hmanno()</a></code> indicates where the annotation was added.
+<code><a href="../reference/align_dendro.html">align_dendro()</a></code> will reorder the layout based on the
+hierarchical clustering tree, and it’ll also draw the dendrogram
+tree.</p>
 <p>In following example, we must add <code>expand</code> argument to
 match the heatmap and the tree.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -260,14 +263,15 @@ axis as the main orientation like <code><a href="https://ggplot2.tidyverse.org/r
 <code>ggplot2::geom_box()</code>, but by default we always use the
 continuous scale. So you must manually provide an
 <code>orientation</code> argument for these geoms or manually set the
-discrete scale in horizontal layout (including left and right heatmap
-annotation).</p>
+discrete scale in the horizontal layout (including left and right
+heatmap annotation).</p>
 <p><code><a href="../reference/align_gg.html">ggalign()</a></code> is similar to <code>ggplot</code> in that it
 initializes a plot data and <code>mapping</code>. The data input can be
 a matrix, a data frame, or a simple vector that will be converted into a
-one-column matrix, and can inherit from the layout data. When an plot is
+one-column matrix, and can inherit from the layout data. When a plot is
 initialized, we can add other ggplot2 elements for it. You can see
-<code><a href="../reference/align_gg.html">?ggalign</a></code> for the default plot data.</p>
+<code>ggplot2 specification</code> in <code><a href="../reference/align_gg.html">?align_gg</a></code> for
+details.</p>
 <p>In the following example, <code>geom_bar</code> won’t work since the
 ambiguous orientation.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">

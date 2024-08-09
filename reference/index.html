@@ -19,7 +19,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/layout-heatmap.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/align.html">Setup layout order and panel</a></li>
+    <li><a class="dropdown-item" href="../articles/align-layout.html">Layout Customization</a></li>
+    <li><a class="dropdown-item" href="../articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="../articles/layout-stack.html">Stack Layout</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
@@ -50,12 +51,6 @@
     <div class="section level2">
       <h2 id="building-plot">Building plot<a class="anchor" aria-label="anchor" href="#building-plot"></a></h2>
 
-
-
-
-    </div><div class="section level2">
-
-      <h3 id="adding-elements">Adding elements<a class="anchor" aria-label="anchor" href="#adding-elements"></a></h3>
       <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> or <code>ggstack</code>, supplying default data and aesthetic mappings, specified by <code>aes()</code>. You then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>. To save a plot to disk, use <code>ggsave()</code>.</p></div>
 
 
@@ -83,8 +78,8 @@
         </dt>
         <dd>Build <code>Layout</code> object for rendering.</dd>
       </dl></div><div class="section level2">
+      <h2 id="activate-context">Activate context<a class="anchor" aria-label="anchor" href="#activate-context"></a></h2>
 
-      <h3 id="activate-context">Activate context<a class="anchor" aria-label="anchor" href="#activate-context"></a></h3>
       <div class="section-desc"><p>A <code>Layout</code> object may have multiple plots, you can choose where to add ggplot2 elements with following functions.</p></div>
 
 
@@ -112,7 +107,7 @@
         </dt>
         <dd>Determine the context of subsequent manipulations</dd>
       </dl></div><div class="section level2">
-      <h2 id="plot-layout">Plot Layout<a class="anchor" aria-label="anchor" href="#plot-layout"></a></h2>
+      <h2 id="layout-design">Layout Design<a class="anchor" aria-label="anchor" href="#layout-design"></a></h2>
 
       <div class="section-desc"><p>A <code>Layout</code> object defines how to place the plots.</p></div>
 
@@ -127,7 +122,7 @@
           <code><a href="layout_heatmap.html">layout_heatmap()</a></code> <code><a href="layout_heatmap.html">ggheatmap()</a></code>
 
         </dt>
-        <dd>Put plots around a Heatmap</dd>
+        <dd>Arrange plots around a Heatmap</dd>
       </dl><dl><dt>
 
           <code><a href="layout_stack.html">layout_stack()</a></code> <code><a href="layout_stack.html">ggstack()</a></code>
@@ -135,9 +130,9 @@
         </dt>
         <dd>Put plots horizontally or vertically</dd>
       </dl></div><div class="section level2">
-      <h2 id="plot-basics">Plot basics<a class="anchor" aria-label="anchor" href="#plot-basics"></a></h2>
+      <h2 id="plot-integration">Plot Integration<a class="anchor" aria-label="anchor" href="#plot-integration"></a></h2>
 
-      <div class="section-desc"><p>Add plots to layout</p></div>
+      <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
 
 
     </div><div class="section level2">
@@ -150,7 +145,7 @@
           <code><a href="align_gg.html">align_gg()</a></code> <code><a href="align_gg.html">ggalign()</a></code>
 
         </dt>
-        <dd>Create ggplot object in the layout</dd>
+        <dd>Create ggplot object with a customized data</dd>
       </dl><dl><dt>
 
           <code><a href="align_panel.html">align_panel()</a></code> <code><a href="align_panel.html">ggpanel()</a></code>
@@ -158,9 +153,9 @@
         </dt>
         <dd>Create ggplot object with layout panel data</dd>
       </dl></div><div class="section level2">
-      <h2 id="setup-layout">Setup Layout<a class="anchor" aria-label="anchor" href="#setup-layout"></a></h2>
+      <h2 id="layout-customization">Layout Customization<a class="anchor" aria-label="anchor" href="#layout-customization"></a></h2>
 
-      <div class="section-desc"><p>Reordering obervations or Group into panels</p></div>
+      <div class="section-desc"><p>Fine-tune the arrangement of plots by reordering or splitting axes into separate panels. These functions allow for more detailed customization of plot layouts.</p></div>
 
 
     </div><div class="section level2">
@@ -173,25 +168,25 @@
           <code><a href="align_dendro.html">align_dendro()</a></code>
 
         </dt>
-        <dd>Dendrogram plot</dd>
+        <dd>Reorder or Group layout based on hierarchical clustering</dd>
       </dl><dl><dt>
 
           <code><a href="align_group.html">align_group()</a></code>
 
         </dt>
-        <dd>Group layout axis into panel</dd>
+        <dd>Group and align layout based on categorical or factor levels.</dd>
       </dl><dl><dt>
 
           <code><a href="align_kmeans.html">align_kmeans()</a></code>
 
         </dt>
-        <dd>Group layout observations by kmeans</dd>
+        <dd>Split layout by k-means clustering groups.</dd>
       </dl><dl><dt>
 
           <code><a href="align_reorder.html">align_reorder()</a></code>
 
         </dt>
-        <dd>Reorder layout observations</dd>
+        <dd>Reorders layout observations based on weights or summary statistics.</dd>
       </dl></div><div class="section level2">
       <h2 id="extending-ggplot-">Extending ggplot2<a class="anchor" aria-label="anchor" href="#extending-ggplot-"></a></h2>
 
