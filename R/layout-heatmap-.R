@@ -157,14 +157,15 @@ layout_heatmap.default <- function(data, ...) {
     .layout_heatmap(data = data, ..., call = call)
 }
 
+#' @importFrom ggplot2 aes
 .layout_heatmap <- function(data,
-                            nobs_list = list(x = ncol(data), y = nrow(data)),
                             mapping = aes(),
                             width = NULL, height = NULL,
                             guides = NULL, align_axis_title = NULL,
-                            plot_data = waiver(),
-                            filling = TRUE, ...,
+                            plot_data = waiver(), filling = TRUE,
+                            ...,
                             set_context = TRUE, order = NULL, name = NULL,
+                            nobs_list = list(x = ncol(data), y = nrow(data)),
                             call = caller_call()) {
     assert_bool(filling, call = call)
     plot <- ggplot2::ggplot(mapping = mapping) +
@@ -173,10 +174,12 @@ layout_heatmap.default <- function(data, ...) {
 
     # add heatmap filling in the first layer
     if (filling) {
-        plot <- plot + ggplot2::geom_tile(
-            aes(.data$.x, .data$.y, fill = .data$value),
-            width = 1L, height = 1L, ...
-        )
+        if (is.null(.subset2(plot$mapping, "fill"))) {
+            tile_mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+        } else {
+            tile_mapping <- aes(.data$.x, .data$.y)
+        }
+        plot <- plot + ggplot2::geom_tile(mapping = tile_mapping, ...)
     }
     assert_bool(set_context, call = call)
 

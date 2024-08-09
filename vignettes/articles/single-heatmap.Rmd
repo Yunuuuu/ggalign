@@ -175,8 +175,7 @@ For character matrix, you can use ggplot2 discrete filling scales.
 ```{r}
 discrete_mat <- matrix(sample(1:4, 100, replace = TRUE), 10, 10)
 colors <- structure(1:4, names = c("1", "2", "3", "4")) # black, red, green, blue
-ggheatmap(discrete_mat, filling = FALSE) +
-  geom_tile(aes(fill = factor(value))) +
+ggheatmap(discrete_mat, aes(fill = factor(value))) +
   scale_fill_manual(values = colors) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
@@ -236,25 +235,10 @@ ggheatmap(mat) +
   theme(plot.margin = margin())
 ```
 
-Heatmap cell border, we just decrease the cell width and height. 
-```{r}
-ggheatmap(mat, filling = FALSE) +
-  geom_tile(aes(fill = value), width = 0.95, height = 0.95) +
-  scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  hmanno("r", size = unit(15, "mm")) +
-  align_dendro() +
-  hmanno("t", size = unit(15, "mm")) +
-  align_dendro() +
-  hmanno(NULL) &
-  theme(plot.margin = margin())
-```
-
-You can also use `color` aesthetic to specify the cell border color and
+You can use `color` aesthetic to specify the cell border color and
 `linewidth` aesthetic to specify the border width.
 ```{r}
-ggheatmap(mat, filling = FALSE) +
-  geom_tile(aes(fill = value), color = "white") +
+ggheatmap(mat, color = "white") +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
@@ -265,6 +249,7 @@ ggheatmap(mat, filling = FALSE) +
   theme(plot.margin = margin())
 ```
 
+You can use `filling` argument to turn off the heatmap cell filling.
 ```{r}
 ggheatmap(mat, filling = FALSE) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -275,6 +260,9 @@ ggheatmap(mat, filling = FALSE) +
   hmanno(NULL) &
   theme(plot.margin = margin())
 ```
+
+## Clustering
+
 
 ## Session information
 ```{r}

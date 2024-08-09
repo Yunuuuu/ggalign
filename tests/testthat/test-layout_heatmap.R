@@ -18,6 +18,10 @@ testthat::test_that("`ggheatmap` works well", {
 
     # heatmap with data
     expect_doppelganger("heatmap-numeric", ggheatmap(1:10))
+    expect_doppelganger(
+        "heatmap-numeric-to-factor",
+        ggheatmap(1:10, aes(fill = factor(value)))
+    )
     expect_doppelganger("heatmap-character", ggheatmap(letters))
     expect_doppelganger("heatmap-matrix", ggheatmap(matrix(1:9, nrow = 3L)))
     testthat::skip_on_ci() # I don't know why this will fail in github CI
