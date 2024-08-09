@@ -83,11 +83,15 @@
 <p>The <code>ggalign</code> package offers several <code>align_*</code>
 functions that allow you to precisely control plot layout and integrate
 additional plots. Currently, there are two primary <code>align_*</code>
-functions for adding plots:<br>
-- <code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code>: Create ggplot object
-with a customized data. -
-<code><a href="../reference/align_panel.html">align_panel()</a></code>/<code><a href="../reference/align_panel.html">ggpanel()</a></code>: Create ggplot object
-with the layout panel data.</p>
+functions for adding plots:</p>
+<ul>
+<li>
+<code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code>: Create ggplot object
+with a customized data.</li>
+<li>
+<code><a href="../reference/align_panel.html">align_panel()</a></code>/<code><a href="../reference/align_panel.html">ggpanel()</a></code>: Create ggplot
+object with the layout panel data.</li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
@@ -184,7 +188,7 @@ necessary to disable the automatic setting of limits
 <span>  <span class="co"># the panel is a factor variable, we should use discrete scale.</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-plot_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="align-plot_files/figure-html/unnamed-chunk-4-1.png" width="480"></p>
 <pre><code><span><span class="co">#&gt;   .column_index .row_index      value .extra_panel .panel .x</span></span>
 <span><span class="co">#&gt; 1             1          1 -0.6264538            b      1  1</span></span>
 <span><span class="co">#&gt; 2             2          1  0.1836433            b      1  1</span></span>
