@@ -38,7 +38,8 @@
 #' if data is inherit from the [heatmap][ggheatmap] layout, an additional column
 #' will be added.
 #'
-#'  - `.extra_panel`: the panel for the layout axis vertically with the layout.
+#'  - `.extra_panel`: the panel information for column (left or right
+#'    annotation) or row (top or bottom annotation).
 #'
 #' @return A `AlignGG` object.
 #' @examples

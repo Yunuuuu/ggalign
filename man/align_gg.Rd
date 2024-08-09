@@ -108,7 +108,8 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 if data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column
 will be added.
 \itemize{
-\item \code{.extra_panel}: the panel for the layout axis vertically with the layout.
+\item \code{.extra_panel}: the panel information for column (left or right
+annotation) or row (top or bottom annotation).
 }
 }
 
