@@ -40,7 +40,7 @@ A \link[stats:hclust]{hclust} object.
 Generate Tree Structures with Hierarchical Clustering
 }
 \examples{
-hclust(dist(USArrests), "ave")
+hclust2(dist(USArrests), "ave")
 }
 \seealso{
 \itemize{

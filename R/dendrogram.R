@@ -22,7 +22,7 @@
 #'  - [dist()][stats::dist]
 #'  - [hclust()][stats::hclust]
 #' @examples
-#' hclust(dist(USArrests), "ave")
+#' hclust2(dist(USArrests), "ave")
 #' @return A [hclust][stats::hclust] object.
 #' @importFrom rlang is_string
 #' @export
