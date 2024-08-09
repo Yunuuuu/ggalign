@@ -2,7 +2,7 @@
 title: "Heatmap Layout"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{layout-heatmap}
+  %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

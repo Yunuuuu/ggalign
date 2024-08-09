@@ -42,7 +42,8 @@ To further customize these layouts, the `ggalign` package offers several
 
 - `align_group()`: Group layout axis into panel with a group variable.
 - `align_kmeans()`: Group layout axis into panel by kmeans
-- `align_reorder()`: Reorder layout observations
+- `align_reorder()`: Reorders layout observations based on weights or
+  summary statistics.
 - `align_dendro()`: Reorder or Group layout based on hierarchical
   clustering
 
@@ -52,9 +53,8 @@ For more detailed instructions on customizing layouts, see the vignette:
 Additionally, the following `Align` objects can be used to add plots
 directly into the layout:
 
-- `align_gg()`/`ggalign()`: Create ggplot object based on a customized
-  data.
-- `align_panel()`/`ggpanel()`: Create ggplot object based on the layout
+- `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
+- `align_panel()`/`ggpanel()`: Create ggplot object with the layout
   panel data.
 
 For more information on adding plots, refer to the vignette:

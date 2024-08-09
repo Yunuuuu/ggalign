@@ -2,7 +2,7 @@
 title: "Stack Layout"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{layout-stack}
+  %\VignetteIndexEntry{Stack Layout}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

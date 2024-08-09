@@ -2,7 +2,7 @@
 title: "Plot Integration"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{align-plot}
+  %\VignetteIndexEntry{Plot Integration}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 
 The `ggalign` package offers several `align_*` functions that allow you to
 precisely control plot layout and integrate additional plots. Currently, there
-are two primary `align_*` functions for adding plots:  
+are two primary `align_*` functions for adding plots:
+
   - `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
   - `align_panel()`/`ggpanel()`: Create ggplot object with the layout panel
     data.
@@ -88,7 +89,7 @@ useful if you want to create summary plot using another axis panel. In such
 cases, it's often necessary to disable the automatic setting of limits (`limits =
 FALSE` in `align_gg()`).
 
-```{r}
+```{r fig.dim = c(5, 10)}
 set.seed(1L)
 v <- stats::rnorm(50L)
 split <- sample(letters[1:2], 50L, replace = TRUE)
