@@ -222,7 +222,8 @@ In the following example, `geom_bar` won't work since the ambiguous orientation.
 ggheatmap(small_mat) +
   hmanno("l") +
   ggalign() +
-  geom_bar(aes(x = value), stat = "identity")
+  geom_bar(aes(x = value), stat = "identity") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 Try to provide the `orientation` argument or set the scale into discrete.
@@ -230,7 +231,8 @@ Try to provide the `orientation` argument or set the scale into discrete.
 ggheatmap(small_mat) +
   hmanno("l") +
   ggalign() +
-  geom_bar(aes(x = value), stat = "identity", orientation = "y")
+  geom_bar(aes(x = value), stat = "identity", orientation = "y") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 ```{r}
@@ -238,7 +240,8 @@ ggheatmap(small_mat) +
   hmanno("l") +
   ggalign() +
   geom_bar(aes(x = value), stat = "identity") +
-  scale_y_discrete()
+  scale_y_discrete() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 Both `breaks` and `labels` should be provided in the original scale of the raw
@@ -312,6 +315,7 @@ the active context to the `Align` object when added to the stack layout:
 
 ```{r}
 ggheatmap(small_mat) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r") +
   align_dendro(k = 3L) +
   geom_point(aes(color = factor(branch)))
@@ -361,7 +365,8 @@ ggheatmap(small_mat) +
     orientation = "y"
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
-  scale_x_reverse()
+  scale_x_reverse() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 ## Session information

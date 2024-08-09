@@ -127,7 +127,8 @@ ggheatmap(small_mat) +
   # the default will always use continuous scale, here, we override it, since
   # the panel is a factor variable, we should use discrete scale.
   scale_y_discrete() +
-  scale_fill_brewer(palette = "Dark2", name = "branch")
+  scale_fill_brewer(palette = "Dark2", name = "branch") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 ## `align_panel`
