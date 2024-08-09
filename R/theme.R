@@ -1,8 +1,8 @@
 #' @importFrom ggplot2 theme element_blank
 default_theme <- function(...) {
-    ggplot2::theme_minimal(...) +
+    ggplot2::theme_classic(...) +
         theme(
-            plot.background = element_blank(),
+            axis.line = element_blank(),
             strip.text = element_blank(),
             strip.background = element_blank()
         )
