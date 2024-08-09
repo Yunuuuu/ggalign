@@ -64,6 +64,7 @@ The `scale_fill_*` function in ggplot2 makes it easy to modify colors.
 dim(mat)
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -79,6 +80,7 @@ ggheatmap(mat) +
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "green", high = "red") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -99,6 +101,7 @@ ggheatmap(mat2) +
     limits = c(-2, 2),
     oob = scales::squish
   ) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -113,6 +116,7 @@ arrange them.
 ```{r}
 h1 <- ggheatmap(mat) +
   scale_fill_gradient2(name = "mat", low = "green", high = "red") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -127,6 +131,7 @@ h2 <- ggheatmap(mat / 4) +
     oob = scales::squish,
     low = "green", high = "red"
   ) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -137,6 +142,7 @@ h2 <- ggheatmap(mat / 4) +
 
 h3 <- ggheatmap(abs(mat)) +
   scale_fill_gradient2(name = "abs(mat)", low = "green", high = "red") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -156,6 +162,7 @@ patchwork::wrap_plots(
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradientn(colors = rev(rainbow(10))) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -199,6 +206,7 @@ ggheatmap(mat_with_na) +
     high = "#EE3F3FFF",
     na.value = "black"
   ) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -216,7 +224,10 @@ the Heatmap body border.
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
-  theme(panel.border = element_rect(linetype = "dashed", fill = NA)) +
+  theme(
+    axis.text.x = element_text(angle = -60, hjust = 0),
+    panel.border = element_rect(linetype = "dashed", fill = NA)
+  ) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -230,6 +241,7 @@ Heatmap cell border, we just decrease the cell width and height.
 ggheatmap(mat, filling = FALSE) +
   geom_tile(aes(fill = value), width = 0.95, height = 0.95) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -244,6 +256,7 @@ You can also use `color` aesthetic to specify the cell border color and
 ggheatmap(mat, filling = FALSE) +
   geom_tile(aes(fill = value), color = "white") +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
@@ -254,6 +267,7 @@ ggheatmap(mat, filling = FALSE) +
 
 ```{r}
 ggheatmap(mat, filling = FALSE) +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("r", size = unit(15, "mm")) +
   align_dendro() +
   hmanno("t", size = unit(15, "mm")) +
