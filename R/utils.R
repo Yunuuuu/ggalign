@@ -49,56 +49,6 @@ ggproto_clone <- function(ggproto) {
     ans
 }
 
-#' @importFrom rlang caller_arg caller_env
-set_nudge <- function(nudge, n, labels,
-                      default = rep_len(0, n),
-                      axis,
-                      arg = caller_arg(nudge),
-                      call = caller_call()) {
-    if (is.numeric(nudge)) {
-        if (!is_scalar(nudge) && length(nudge) != n) {
-            cli::cli_abort(paste(
-                "{.arg {arg}} must be of length 1 or",
-                "the same length of {axis}-axis"
-            ), call = call)
-        }
-        nudge <- rep_len(nudge, n)
-    } else if (is.waive(nudge)) {
-        if (is.null(labels)) nudge <- NULL else nudge <- default
-    } else if (!is.null(nudge)) {
-        cli::cli_abort(
-            "{.arg {arg}} must be `waiver()`, `NULL` or a numeric",
-            call = call
-        )
-    }
-    nudge
-}
-
-#' @importFrom rlang caller_arg caller_env
-set_labels <- function(labels, default, axis, arg = caller_arg(labels),
-                       call = caller_call()) {
-    labels <- allow_lambda(labels)
-    if (is.waive(labels)) {
-        return(default)
-    } else if (is.null(labels)) {
-        return(NULL)
-    } else if (identical(labels, NA)) {
-        cli::cli_abort(c(
-            "Invalid {.arg {arg}} specification.",
-            i = "Use {.code NULL}, not {.code NA}"
-        ), call = call)
-    } else if (is.function(labels)) {
-        labels <- labels(default)
-    }
-    if (is.atomic(labels) && length(default) != length(labels)) {
-        cli::cli_abort(
-            "{.arg {arg}} must have the same length of {axis}-axis",
-            call = call
-        )
-    }
-    labels
-}
-
 switch_position <- function(position, x, y) {
     switch(position,
         top = ,
