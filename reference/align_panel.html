@@ -63,6 +63,8 @@ panel data. <code>ggpanel</code> is just an alias of <code>align_panel</code>.</
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -72,6 +74,8 @@ panel data. <code>ggpanel</code> is just an alias of <code>align_panel</code>.</
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -97,6 +101,16 @@ default is to not modify the data. Use <code>NULL</code>, if you don't want to m
 anything. Used to modify the data after layout preparation has been applied,
 but before the data is handled of to the ggplot2 for rendering. Use this hook
 if the you needs change the default data for all <code>geoms</code>.</p></dd>
+
+
+<dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
+<dd><p>A boolean value indicates whether to set the layout limtis for
+the plot.</p></dd>
+
+
+<dt id="arg-facet">facet<a class="anchor" aria-label="anchor" href="#arg-facet"></a></dt>
+<dd><p>A boolean value indicates whether to set the layout facet for
+the plot. If this is <code>FALSE</code>, <code>limits</code> will always be <code>FALSE</code> too.</p></dd>
 
 
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
