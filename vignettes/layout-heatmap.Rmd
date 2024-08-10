@@ -302,11 +302,9 @@ directed to this annotation. This allows you to customize the heatmap by adding
 different types of plots. Annotation is represented as `layout_stack()` object,
 which can contain multiple plots. You can also specify which plot context of the
 annotation to use with the `what` argument in `hmanno()`. However, this is
-usually not necessary as the `align_*` functions handle context settings
-automatically. 
-
-Each `align_*` function has a `set_context` argument that controls whether it sets
-the active context to the `Align` object when added to the stack layout: 
+usually not necessary as each `align_*` function has a `set_context` argument
+that controls whether it sets the active context to the `Align` object when
+added to the stack layout:
 
 - For `align_*` functions that draw something (e.g., `align_dendro()`,
   `ggalign()`), `set_context` is set to `TRUE` by default. 

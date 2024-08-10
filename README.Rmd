@@ -35,8 +35,6 @@ This package now depends on some un-merged features of patchwork. Please see
 should install patchwork with
 `pak::pkg_install(Yunuuuu/patchwork@align_axis_title)`.
 
-The documentation for `ggalign` is currently in progress.
-
 ## Features
 `ggalign` pacakge provides two layout to arrange ggplot objects:
 
@@ -67,6 +65,13 @@ into the layout:
 
 For more information on adding plots, refer to the vignette:
 `vignette("align-plot")`.
+
+## Documentation
+
+- [Heatmap Layout](https://yunuuuu.github.io/ggalign/articles/layout-heatmap.html)
+- [Layout Customization](https://yunuuuu.github.io/ggalign/articles/align-layout.html)
+- [Plot Integration](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
+- [Stack Layout](https://yunuuuu.github.io/ggalign/articles/layout-stack.html)
 
 ## Examples
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)

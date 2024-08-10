@@ -40,8 +40,8 @@ provide data in various formats, including matrices, data frames, or simple
 vectors. This data can be inherited from the layout. 
 
 The function will always use a default mapping for the parallel axes in the
-layout (`aes(y = .data$.y)` or `aes(x = .data$.x)`). See `ggplot2 specification` in
-`?align_gg` for details
+layout (`aes(y = .data$.y)` for horizontal stack or `aes(x = .data$.x)` for
+vertical stack). See `ggplot2 specification` in `?align_gg` for details.
 
 > Note: All align_* functions treat rows as observations, meaning the `NROW()`
 function must return a number equal to the parallel layout axis. For heatmap
@@ -113,7 +113,8 @@ ggheatmap(v) +
   scale_fill_brewer(palette = "Dark2", name = "branch")
 ```
 
-This approach replicates the functionality of `ComplexHeatmap::anno_summary()`,
+This approach replicates the functionality of
+[ComplexHeatmap::anno_summary()](https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#summary-annotation),
 but is versatile enough to be used with any heatmap, not just single-column or
 single-row heatmaps.
 ```{r}
@@ -142,8 +143,8 @@ The data in the underlying `ggplot` object contains following columns:
  - `.index`: the index of the original layout data.
  - `.x` or `.y`: the `x` or `y` coordinates
 
-You can use `align_panel()` to integrate additional elements, such as blocks, into
-your layout.
+You can use `align_panel()` to integrate additional elements, such as block
+annotation or customized panel title, into your layout.
 
 ```{r}
 ggheatmap(small_mat) +
