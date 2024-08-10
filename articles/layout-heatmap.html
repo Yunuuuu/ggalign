@@ -364,11 +364,9 @@ you to customize the heatmap by adding different types of plots.
 Annotation is represented as <code><a href="../reference/layout_stack.html">layout_stack()</a></code> object, which
 can contain multiple plots. You can also specify which plot context of
 the annotation to use with the <code>what</code> argument in
-<code><a href="../reference/hmanno.html">hmanno()</a></code>. However, this is usually not necessary as the
-<code>align_*</code> functions handle context settings
-automatically.</p>
-<p>Each <code>align_*</code> function has a <code>set_context</code>
-argument that controls whether it sets the active context to the
+<code><a href="../reference/hmanno.html">hmanno()</a></code>. However, this is usually not necessary as each
+<code>align_*</code> function has a <code>set_context</code> argument
+that controls whether it sets the active context to the
 <code>Align</code> object when added to the stack layout:</p>
 <ul>
 <li>For <code>align_*</code> functions that draw something (e.g.,

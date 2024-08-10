@@ -111,9 +111,10 @@ allowing you to provide data in various formats, including matrices,
 data frames, or simple vectors. This data can be inherited from the
 layout.</p>
 <p>The function will always use a default mapping for the parallel axes
-in the layout (<code>aes(y = .data$.y)</code> or
-<code>aes(x = .data$.x)</code>). See <code>ggplot2 specification</code>
-in <code><a href="../reference/align_gg.html">?align_gg</a></code> for details</p>
+in the layout (<code>aes(y = .data$.y)</code> for horizontal stack or
+<code>aes(x = .data$.x)</code> for vertical stack). See
+<code>ggplot2 specification</code> in <code><a href="../reference/align_gg.html">?align_gg</a></code> for
+details.</p>
 <blockquote>
 <p>Note: All align_* functions treat rows as observations, meaning the
 <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function must return a number equal to the parallel
@@ -196,10 +197,9 @@ necessary to disable the automatic setting of limits
 <span><span class="co">#&gt; 4             4          1  1.5952808            a      1  1</span></span>
 <span><span class="co">#&gt; 5             5          1  0.3295078            a      1  1</span></span>
 <span><span class="co">#&gt; 6             6          1 -0.8204684            a      1  1</span></span></code></pre>
-<p>This approach replicates the functionality of
-<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/anno_summary.html" class="external-link">ComplexHeatmap::anno_summary()</a></code>, but is versatile enough to
-be used with any heatmap, not just single-column or single-row
-heatmaps.</p>
+<p>This approach replicates the functionality of <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#summary-annotation" class="external-link">ComplexHeatmap::anno_summary()</a>,
+but is versatile enough to be used with any heatmap, not just
+single-column or single-row heatmaps.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -236,7 +236,8 @@ following columns:</p>
 <code>y</code> coordinates</li>
 </ul>
 <p>You can use <code><a href="../reference/align_panel.html">align_panel()</a></code> to integrate additional
-elements, such as blocks, into your layout.</p>
+elements, such as block annotation or customized panel title, into your
+layout.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
