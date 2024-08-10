@@ -215,7 +215,7 @@ ggheatmap(mat_with_na) +
 ```
 
 We won't compare the LAB and RGB space. If you want to convert color between
-different color space, try to use (farver)[https://farver.data-imaginist.com/]
+different color space, try to use [farver](https://farver.data-imaginist.com/)
 pacakge.
 
 In ggplot2, you can use `panel.border` argument in `theme()` function to control
