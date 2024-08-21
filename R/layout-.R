@@ -1,3 +1,7 @@
+# Will ensure serialisation includes a link to the patchwork namespace
+# Copied from patchwork
+ggalign_namespace_link <- function() NULL
+
 # https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
 # Here we use S4 object to override the double dispatch of `+.gg` method
 #
@@ -8,7 +12,7 @@
 #' @keywords internal
 methods::setClass("Layout",
     list(active = "ANY", `_namespace` = "ANY"),
-    prototype = list(active = NULL, `_namespace` = function() NULL)
+    prototype = list(active = NULL, `_namespace` = ggalign_namespace_link)
 )
 
 is.layout <- function(x) methods::is(x, "Layout")
@@ -109,6 +113,61 @@ layout_and_add.StackLayout <- function(layout, object, object_name) {
     layout_stack_and_add(object, layout, object_name)
 }
 
+############################################################
+# layout should be one of index, nobs, panel
+get_layout <- function(x, layout, ...) UseMethod("get_layout")
+
+#' @importFrom methods slot
+#' @export
+get_layout.HeatmapLayout <- function(x, layout, axis, ...) {
+    .subset2(slot(x, paste(layout, "list", sep = "_")), axis)
+}
+
+#' @importFrom methods slot
+#' @export
+get_layout.StackLayout <- function(x, layout, ...) {
+    slot(x, layout)
+}
+
+set_layout <- function(x, layout, ..., value) UseMethod("set_layout")
+
+#' @importFrom methods slot slot<-
+#' @export
+set_layout.HeatmapLayout <- function(x, layout, axis, ..., value) {
+    slot(x, paste(layout, "list", sep = "_"))[[axis]] <- value
+    if (axis == "x") {
+        if (!is.null(top <- slot(x, "top"))) {
+            slot(x, "top") <- set_layout(top, layout, value = value)
+        }
+        if (!is.null(bottom <- slot(x, "bottom"))) {
+            slot(x, "bottom") <- set_layout(bottom, layout, value = value)
+        }
+    } else {
+        if (!is.null(left <- slot(x, "left"))) {
+            slot(x, "left") <- set_layout(left, layout, value = value)
+        }
+        if (!is.null(right <- slot(x, "right"))) {
+            slot(x, "right") <- set_layout(right, layout, value = value)
+        }
+    }
+    x
+}
+
+#' @importFrom methods slot slot<-
+#' @export
+set_layout.StackLayout <- function(x, layout, ..., value) {
+    slot(x, layout) <- value
+    axis <- to_coord_axis(slot(x, "direction"))
+    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
+        if (is.ggheatmap(plot)) {
+            set_layout(plot, layout = layout, axis = axis, value = value)
+        } else {
+            plot
+        }
+    })
+    x
+}
+
 #########################################################
 # utils function ----------------------------------------
 get_panel <- function(x, ...) UseMethod("get_panel")
@@ -164,7 +223,7 @@ set_panel.StackLayout <- function(x, panel, ...) {
     x
 }
 
-############################################################
+##################################################################
 get_index <- function(x, ...) UseMethod("get_index")
 
 #' @importFrom methods slot

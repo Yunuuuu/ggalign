@@ -13,12 +13,24 @@ save_png <- function(code, width = 400L, height = 400L) {
     path
 }
 
+add_class <- function(x, ...) {
+    class(x) <- c(..., class(x))
+    x
+}
+
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) {
         rlang::as_function(x)
     } else {
         x
     }
+}
+
+#' @importFrom gtable gtable_trim
+subset_gt <- function(gt, index, trim = TRUE) {
+    gt$layout <- .subset2(gt, "layout")[index, , drop = FALSE]
+    gt$grobs <- .subset(.subset2(gt, "grobs"), index)
+    if (trim) gtable_trim(gt) else gt
 }
 
 trim_area <- function(area) {
