@@ -22,7 +22,7 @@
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
-#' @return A `Alignpanel` object.
+#' @return A `AlignPanel` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
@@ -34,7 +34,7 @@ align_panel <- function(mapping = aes(), size = NULL, plot_data = waiver(),
                         limits = TRUE, facet = TRUE,
                         set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
-    align(Alignpanel,
+    align(AlignPanel,
         params = list(mapping = mapping),
         size = size, data = NULL, plot_data = plot_data,
         set_context = set_context, order = order, name = name
@@ -45,7 +45,7 @@ align_panel <- function(mapping = aes(), size = NULL, plot_data = waiver(),
 #' @rdname align_panel
 ggpanel <- align_panel
 
-Alignpanel <- ggplot2::ggproto("Alignpanel", Align,
+AlignPanel <- ggplot2::ggproto("AlignPanel", Align,
     nobs = function(self) {
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli::cli_abort(c(

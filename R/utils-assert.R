@@ -67,6 +67,22 @@ assert_reorder <- function(align, panel, strict) {
     }
 }
 
+check_guides <- function(guides, arg = caller_arg(guides),
+                         call = caller_call()) {
+    if (isFALSE(guides) || is.null(guides)) {
+        guides <- character()
+    } else if (isTRUE(guides)) {
+        BORDERS
+    } else if (!all(guides %in% BORDERS)) {
+        cli::cli_abort(sprintf(
+            "only %s are allowed in {.arg {arg}}",
+            oxford_comma(style_val(BORDERS))
+        ), call = call)
+    } else {
+        unique(guides)
+    }
+}
+
 check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
                               call = caller_call()) {
     l <- length(sizes)

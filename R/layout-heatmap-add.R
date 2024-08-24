@@ -38,7 +38,7 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (is.na(object)) {
         heatmap <- set_context(heatmap, NULL)
-        if (!is.null(guides <- attr(object, "guides"))) {
+        if (!identical(guides <- attr(object, "guides"), NA)) {
             slot(heatmap, "params")$guides <- guides
         }
         if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
@@ -74,7 +74,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack <- layout_stack(
             data = data,
             direction = direction,
-            guides = "auto",
+            guides = waiver(),
             align_axis_title = slot(heatmap, "params")$align_axis_title
         )
         stack <- set_panel(stack, get_panel(heatmap, axis))
@@ -92,7 +92,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (!is.null(size <- attr(object, "size"))) {
         slot(stack, "params")$size <- size
     }
-    if (!is.null(guides <- attr(object, "guides"))) {
+    if (!identical(guides <- attr(object, "guides"), NA)) {
         slot(stack, "params")$guides <- guides
     }
     if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {

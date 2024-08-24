@@ -1,7 +1,6 @@
-#' @importFrom patchwork area
 #' @importFrom grid unit.c
 #' @export
-build_patchwork.HeatmapLayout <- function(layout) {
+build_alignpatches.HeatmapLayout <- function(layout) {
     patches <- heatmap_build(layout)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
@@ -25,21 +24,24 @@ build_patchwork.HeatmapLayout <- function(layout) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- slot(layout, "params")
-    patchwork::wrap_plots(
+    plot_grid(
         plots[keep],
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(params, "guides") %||% "collect",
-        align_axis_title = .subset2(params, "align_axis_title") %||% FALSE
+        guides = .subset2(params, "guides") %|w|% TRUE
     )
+}
+
+#' @export
+patch_gtable.HeatmapLayout <- function(patch) {
+    patch_gtable(build_alignpatches(patch))
 }
 
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
-#' @importFrom patchwork area
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, plot_data = NULL) {
+heatmap_build <- function(heatmap, plot_data = NULL, guides = NULL) {
     params <- slot(heatmap, "params")
     mat <- slot(heatmap, "data")
     x_nobs <- get_nobs(heatmap, "x")
@@ -76,6 +78,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
+    guides <- .subset2(params, "guides") %|w|% guides %||% TRUE
     p <- finish_plot_data(p, plot_data, data = data)
 
     # setup the scales -----------------------------------
@@ -150,7 +153,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
             panel <- ypanel
             index <- yindex
         }
-        stack_build(stack, plot_data, panel, index)
+        stack_build(stack, plot_data, guides, panel, index)
     })
     names(stack_list) <- GGHEAT_ELEMENTS
     stack_list <- transpose(stack_list)
@@ -164,8 +167,7 @@ heatmap_build <- function(heatmap, plot_data = NULL) {
 
 plot_filler <- function() {
     p <- ggplot2::ggplot()
-    class(p) <- c("plot_filler", class(p))
-    p
+    add_class(p, "plot_filler")
 }
 
 heatmap_build_data <- function(matrix, row_panel, row_index,

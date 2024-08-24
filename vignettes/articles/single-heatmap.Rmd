@@ -151,10 +151,10 @@ h3 <- ggheatmap(abs(mat)) +
   hmanno(NULL) &
   theme(plot.margin = margin())
 
-patchwork::wrap_plots(
-  build_patchwork(h1),
-  build_patchwork(h2),
-  build_patchwork(h3),
+plot_grid(
+  build_alignpatches(h1),
+  build_alignpatches(h2),
+  build_alignpatches(h3),
   ncol = 2L
 )
 ```

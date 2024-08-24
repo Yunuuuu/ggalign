@@ -17,20 +17,20 @@ Imports:
     cli,
     ggh4x,
     grid,
+    gtable,
     methods,
     patchwork,
     rlang (>= 1.1.0),
     stats,
     tibble,
     tidyr
-Remotes:
-    Yunuuuu/patchwork@align_axis_title
 ByteCompile: true
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Suggests: 
     ComplexHeatmap,
     knitr,
+    ragg,
     rmarkdown,
     scales,
     testthat (>= 3.0.0),

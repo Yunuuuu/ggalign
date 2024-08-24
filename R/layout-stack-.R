@@ -14,7 +14,7 @@
 #' @return A `StackLayout` object.
 #' @export
 layout_stack <- function(data = NULL, direction = NULL,
-                         sizes = NULL, guides = NULL,
+                         sizes = NULL, guides = waiver(),
                          align_axis_title = NULL,
                          plot_data = waiver()) {
     UseMethod("layout_stack")
@@ -22,7 +22,7 @@ layout_stack <- function(data = NULL, direction = NULL,
 
 #' @export
 print.StackLayout <- function(x, ...) {
-    p <- build_patchwork(x)
+    p <- build_alignpatches(x)
     if (!is.null(p)) print(p, ...)
     invisible(x)
 }
@@ -31,14 +31,6 @@ print.StackLayout <- function(x, ...) {
 #' @exportS3Method
 grid.draw.StackLayout <- function(x, ...) {
     print(x, ...)
-}
-
-#' @importFrom ggplot2 ggplot_build
-#' @export
-ggplot_build.StackLayout <- function(plot) {
-    p <- build_patchwork(plot)
-    if (is.null(p)) return(NULL) # styler: off
-    ggplot_build(p)
 }
 
 # Used to place multiple objects in one axis
@@ -91,7 +83,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
 
 #' @importFrom grid unit
 .layout_stack <- function(data, nobs, direction = NULL,
-                          sizes = NULL, guides = NULL,
+                          sizes = NULL, guides = waiver(),
                           align_axis_title = NULL,
                           plot_data = waiver(),
                           call = caller_call()) {
@@ -115,7 +107,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
 
 #' @export
 layout_stack.default <- function(data, direction = NULL,
-                                 sizes = NULL, guides = NULL,
+                                 sizes = NULL, guides = waiver(),
                                  align_axis_title = NULL,
                                  plot_data = waiver()) {
     cli::cli_abort(c(

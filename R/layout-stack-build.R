@@ -1,14 +1,18 @@
 #' @export
-build_patchwork.StackLayout <- function(layout) {
+build_alignpatches.StackLayout <- function(layout) {
     .subset2(stack_build(layout), "plot")
+}
+
+#' @export
+patch_gtable.StackLayout <- function(patch) {
+    patch_gtable(build_alignpatches(patch))
 }
 
 #' @param panel,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
-#' @importFrom patchwork area
 #' @importFrom rlang is_empty
 #' @noRd
-stack_build <- function(x, plot_data = NULL,
+stack_build <- function(x, plot_data = NULL, guides = NULL,
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
@@ -20,6 +24,7 @@ stack_build <- function(x, plot_data = NULL,
 
     plots <- slot(x, "plots")
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
+    guides <- .subset2(params, "guides") %|w|% guides %||% TRUE
 
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
@@ -47,7 +52,7 @@ stack_build <- function(x, plot_data = NULL,
                 .subset2(patch, "size")
             )
         } else if (is.ggheatmap(plot)) {
-            patch <- heatmap_build(plot, plot_data = plot_data)
+            patch <- heatmap_build(plot, plot_data = plot_data, guides = guides)
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
                 patches, heatmap_plots,
@@ -67,7 +72,7 @@ stack_build <- function(x, plot_data = NULL,
     if (is_empty(.subset2(patches, "plots"))) {
         return(list(plot = NULL, size = NULL))
     }
-    plot <- patchwork::wrap_plots(
+    plot <- plot_grid(
         .subset2(patches, "plots"),
         design = area(
             .subset2(patches, "t"),
@@ -85,8 +90,7 @@ stack_build <- function(x, plot_data = NULL,
             .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = .subset2(params, "guides") %||% "collect",
-        align_axis_title = .subset2(params, "align_axis_title") %||% FALSE
+        guides = guides
     )
     list(plot = plot, size = .subset2(params, "size"))
 }
@@ -150,11 +154,12 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (!is_null_unit(size)) {
-                top <- patchwork::wrap_plots(
+                top <- plot_grid(
                     patchwork::plot_spacer(),
                     top,
                     ncol = 1L,
-                    heights = unit.c(unit(1L, "null"), size)
+                    heights = unit.c(unit(1L, "null"), size),
+                    guides = TRUE
                 )
             }
             area <- stack_patch_add_plot(area, top, t = 1L, l = l)
@@ -162,11 +167,12 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
             size <- .subset2(sizes, "bottom")
             if (is_null_unit(size)) {
-                bottom <- patchwork::wrap_plots(
+                bottom <- plot_grid(
                     bottom,
                     patchwork::plot_spacer(),
                     ncol = 1L,
-                    heights = unit.c(size, unit(1L, "null"))
+                    heights = unit.c(size, unit(1L, "null")),
+                    guides = TRUE
                 )
             }
             area <- stack_patch_add_plot(area, top, t = 3L, l = l)
@@ -196,11 +202,12 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (is_null_unit(size)) {
-                left <- patchwork::wrap_plots(
+                left <- plot_grid(
                     patchwork::plot_spacer(),
                     left,
                     nrow = 1L,
-                    heights = unit.c(unit(1L, "null"), size)
+                    heights = unit.c(unit(1L, "null"), size),
+                    guides = TRUE
                 )
             }
             area <- stack_patch_add_plot(area, left, t = t, l = 1L)
@@ -208,11 +215,12 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         if (!is.null(right <- .subset2(plots, "right"))) {
             size <- .subset2(sizes, "right")
             if (is_null_unit(size)) {
-                right <- patchwork::wrap_plots(
+                right <- plot_grid(
                     right,
                     patchwork::plot_spacer(),
                     ncol = 1L,
-                    heights = unit.c(size, unit(1L, "null"))
+                    heights = unit.c(size, unit(1L, "null")),
+                    guides = TRUE
                 )
             }
             area <- stack_patch_add_plot(area, top, t = t, l = 3L)

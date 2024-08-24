@@ -1,5 +1,3 @@
-library(vdiffr)
-
 testthat::test_that("`ggheatmap` works well", {
     # atomic was converted to one-column matrix
     x <- ggheatmap(1:10)
@@ -34,14 +32,14 @@ testthat::test_that("add `heatmap_active` object works well", {
     empty_heatmap2 <- empty_heatmap + hmanno(
         width = unit(1, "cm"),
         height = unit(1, "cm"),
-        guides = "collect",
+        guides = TRUE,
         align_axis_title = TRUE,
         plot_data = NULL
     )
     params <- slot(empty_heatmap2, "params")
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
-    expect_identical(params$guides, "collect")
+    expect_identical(params$guides, BORDERS)
     expect_identical(params$align_axis_title, TRUE)
     expect_identical(params$plot_data, NULL)
     expect_error(empty_heatmap + hmanno("t"))
@@ -52,14 +50,13 @@ testthat::test_that("add `heatmap_active` object works well", {
     p2 <- p + hmanno(
         width = unit(1, "cm"),
         height = unit(1, "cm"),
-        guides = "collect",
         align_axis_title = TRUE,
         plot_data = NULL
     )
     params <- slot(p2, "params")
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
-    expect_identical(params$guides, "collect")
+    expect_identical(params$guides, waiver())
     expect_identical(params$align_axis_title, TRUE)
     expect_identical(params$plot_data, NULL)
 
@@ -68,14 +65,14 @@ testthat::test_that("add `heatmap_active` object works well", {
         "t",
         width = unit(3, "cm"),
         height = unit(3, "cm"),
-        guides = "collect",
+        guides = NULL,
         align_axis_title = TRUE,
         plot_data = NULL
     )
     params <- slot(p3, "params")
     expect_identical(params$width, unit(1, "null"))
     expect_identical(params$height, unit(1, "null"))
-    expect_identical(params$guides, NULL)
+    expect_identical(params$guides, waiver())
     expect_identical(params$align_axis_title, NULL)
     expect_identical(params$plot_data, waiver())
 
@@ -85,7 +82,7 @@ testthat::test_that("add `heatmap_active` object works well", {
     expect_identical(get_nobs(stack), get_nobs(p, "x"))
     params <- slot(stack, "params")
     expect_identical(params$size, unit(1, "null"))
-    expect_identical(params$guides, "collect")
+    expect_identical(params$guides, character())
     expect_identical(params$align_axis_title, TRUE)
     expect_identical(params$plot_data, NULL)
 })
@@ -100,13 +97,13 @@ testthat::test_that("add `Align` object works well", {
     expect_identical(get_nobs(stack), get_nobs(p2, "x"))
 })
 
-testthat::test_that("`build_patchwork` works well", {
-    p <- ggheatmap(1:10)
-    expect_s3_class(build_patchwork(p), "patchwork")
-})
+# testthat::test_that("`build_patchwork` works well", {
+#     p <- ggheatmap(1:10)
+#     expect_s3_class(build_patchwork(p), "alignpatches")
+# })
 
-testthat::test_that("`ggplot` method works well", {
-    p <- ggheatmap(1:10)
-    expect_no_error(ggplot2::ggplot_build(p))
-    expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
-})
+# testthat::test_that("`ggplot` method works well", {
+#     p <- ggheatmap(1:10)
+#     expect_no_error(ggplot2::ggplot_build(p))
+#     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
+# })

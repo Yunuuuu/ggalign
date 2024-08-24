@@ -33,7 +33,7 @@ wrap.formula <- function(x, align = NULL, clip = TRUE) {
         invisible(NULL)
     }
     wrap.grob(gridGraphics::echoGrob(plot_call,
-        name = "alignpatch_base",
+        name = "base_plot",
         device = offscreen_dev()
     ), align, clip)
 }
@@ -52,21 +52,19 @@ offscreen_dev <- function() {
     }
 }
 
-is.wrapped <- function(x) inherits(x, "wrapped_plot")
-
 # For wrapped plot -------------------
 #' @export
 patch_gtable.wrapped_plot <- function(patch) {
     gt <- NextMethod()
     attr(gt, "align") <- attr(patch, "align")
     attr(gt, "clip") <- attr(patch, "clip")
-    add_class(gt, "wrapped_gtable")
+    add_class(gt, "gtable_wrapped")
 }
 
 # wrapped patch has been used by patchwork
 #' @importFrom gtable gtable_add_grob
 #' @export
-patch_build.wrapped_gtable <- function(gt) {
+patch_align.gtable_wrapped <- function(gt, guides) {
     ans <- make_patch()
     align <- attr(gt, "align")
     clip <- attr(gt, "clip")
@@ -84,5 +82,22 @@ patch_build.wrapped_gtable <- function(gt) {
             clip = clip, name = "wrap_panel"
         )
     )
-    add_class(ans, "wrapped_alignpatch", "alignpatch")
+    add_class(ans, "align_wrapped", "alignpatch")
+}
+
+#########################################
+# `patch` from `patchwork`: patchwork::wrap_elements
+#' @export
+patch_gtable.wrapped_patch <- function(patch) {
+    add_class(patch, "gtable_wrapped_patch")
+}
+
+#' @export
+patch_align.gtable_wrapped_patch <- function(gt, guides) {
+    class(gt) <- setdiff(class(gt), "gtable_wrapped_patch")
+    guides <- if (length(guides)) "collect" else "keep"
+    add_class(
+        patchwork::patchGrob(gt, guides = guides),
+        "align_wrapped_patch", "alignpatch"
+    )
 }

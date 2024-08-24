@@ -11,6 +11,8 @@
 #' @export
 patch_gtable.ggplot <- function(plot) {
     ans <- ggplotGrob(plot)
+    ans <- add_strips(ans) # always add strips columns and/or rows
+    ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
     add_class(ans, "gtable_ggplot")
 }
 
@@ -18,20 +20,19 @@ patch_gtable.ggplot <- function(plot) {
 #' @importFrom gtable gtable_add_rows gtable_add_cols
 #' @importFrom grid unit convertWidth convertHeight
 #' @export
-patch_build.gtable_ggplot <- function(gt) {
-    gt <- add_strips(gt) # always add strips columns and/or rows
-    gt <- add_guides(gt) # add guides columns and/or rows for ggplot2 < 3.5.0
+patch_align.gtable_ggplot <- function(gt, guides) {
     panel_pos <- find_panel(gt)
     rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
     cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
 
-    gt <- add_class(gt, "ggplot_alignpatch", "alignpatch")
+    # remove the old class
+    class(gt) <- setdiff(class(gt), "gtable_ggplot")
 
     # For plot with only one panel, we keep the gtable
     if (rows[1L] == rows[2L] &&
         cols[1L] == cols[2L] &&
         !any(startsWith("strip-", .subset2(.subset2(gt, "layout"), "name")))) {
-        ans <- gt
+        add_class(gt, "align_ggplot", "alignpatch")
     } else {
         # I don't quite understand what `simplify_gt` in `patchwork` do
         # I don't know what's the detailed differences between
@@ -42,12 +43,11 @@ patch_build.gtable_ggplot <- function(gt) {
         # `simplif_fixed` will add strips, axes and labels into the panel area
         #
         # Here, we merge multiple panels into one
-        ans <- add_class(
+        add_class(
             merge_panels(gt, rows, cols),
-            "ggplot_nested_alignpatch"
+            "align_panel_nested", "align_ggplot", "alignpatch"
         )
     }
-    ans
 }
 
 #' @importFrom gtable is.gtable gtable_height gtable_width

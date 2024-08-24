@@ -1,5 +1,3 @@
-library(vdiffr)
-
 testthat::test_that("`align_group` works well", {
     set.seed(1L)
     p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))

@@ -1,26 +1,3 @@
-plot_layout <- function(ncol = NULL, nrow = NULL, byrow = NULL, widths = NULL,
-                        heights = NULL, guides = NULL, design = NULL) {
-    if (!is.null(guides)) {
-        guides <- match.arg(guides, c("collect", "keep"))
-    }
-    if (!is.null(design)) design <- as_areas(design)
-    structure(list(
-        ncol = ncol,
-        nrow = nrow,
-        byrow = byrow,
-        widths = widths,
-        heights = heights,
-        guides = guides,
-        design = design
-    ), class = "align_layout")
-}
-
-#########################################################
-default_layout <- plot_layout(
-    byrow = TRUE, widths = NA, heights = NA, guides = "keep"
-)
-
-#########################################################
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
         one_area <- list(
@@ -107,11 +84,7 @@ c.align_area <- function(..., recursive = FALSE) {
     if (...length() == 0L) {
         return(area())
     }
-
     all_areas <- list(...)
-    if (any(!vapply(all_areas, is_area, logical(1L)))) {
-        cli::cli_abort("Areas can only be combined with each other")
-    }
     area(
         unlist(lapply(all_areas, .subset2, "t")),
         unlist(lapply(all_areas, .subset2, "l")),
@@ -132,5 +105,3 @@ print.align_area <- function(x, ...) {
     print(data.frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
     invisible(x)
 }
-
-is_area <- function(x) inherits(x, "align_area")

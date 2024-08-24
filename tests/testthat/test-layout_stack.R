@@ -1,5 +1,3 @@
-library(vdiffr)
-
 testthat::test_that("`ggstack` works well", {
     # atomic was converted to one-column matrix
     x <- ggstack(1:10)
@@ -24,13 +22,13 @@ testthat::test_that("add `stack_active` object works well", {
     # change parameters for heatmap self
     p2 <- p + active(
         sizes = unit(1, "cm"),
-        guides = "collect",
+        guides = TRUE,
         align_axis_title = TRUE,
         plot_data = NULL
     )
     params <- slot(p2, "params")
     expect_identical(params$sizes, unit(rep_len(1L, 3L), "cm"))
-    expect_identical(params$guides, "collect")
+    expect_identical(params$guides, BORDERS)
     expect_identical(params$align_axis_title, TRUE)
     expect_identical(params$plot_data, NULL)
 })

@@ -2,13 +2,13 @@
 #'
 #' @param layout A [layout_heatmap()] or [layout_stack()] object.
 #' @examples
-#' build_patchwork(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
+#' build_alignpatches(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
 #' @export
-#' @return A `patchwork` object or `NULL` if no plots.
-build_patchwork <- function(layout) UseMethod("build_patchwork")
+#' @return A `alignpatches` object or `NULL` if no plots.
+build_alignpatches <- function(layout) UseMethod("build_alignpatches")
 
 #' @export
-build_patchwork.default <- function(layout) {
+build_alignpatches.default <- function(layout) {
     cli::cli_abort("{.arg x} must be a {.cls Layout} object")
 }
 

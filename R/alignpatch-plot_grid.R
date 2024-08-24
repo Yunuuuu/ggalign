@@ -1,9 +1,9 @@
 #' Arrange multiple plots into a grid
 #'
 #' @export
-plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = NULL,
-                      widths = NULL, heights = NULL, guides = NULL,
-                      design = NULL) {
+plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
+                      heights = NA, design = NULL,
+                      guides = NULL, guide_theme = NULL) {
     if (is_valid_patch(..1)) {
         plots <- list(...)
     } else if (is.list(..1)) {
@@ -20,6 +20,10 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = NULL,
             "and/or {.cls grob} objects"
         ))
     }
+    assert_bool(byrow)
+    guides <- check_guides(guides)
+    assert_s3_class(guide_theme, "theme", null_ok = TRUE)
+    if (!is.null(design)) design <- as_areas(design)
     nms <- names(plots)
     if (!is.null(nms) && !is.null(design) && is.character(design)) {
         area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
@@ -31,12 +35,16 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = NULL,
             plots <- plot_list
         }
     }
-    layout <- plot_layout(
-        ncol = ncol, nrow = nrow, byrow = byrow,
-        widths = widths, heights = heights,
-        guides = guides, design = design
-    )
-    new_alignpatches(plots, layout)
+    new_alignpatches(plots, list(
+        ncol = ncol,
+        nrow = nrow,
+        byrow = byrow,
+        widths = widths,
+        heights = heights,
+        guides = guides,
+        guide_theme = guide_theme %||% ggplot2::theme(),
+        design = design
+    ))
 }
 
 new_alignpatches <- function(plots = list(), layout = plot_layout()) {
@@ -47,14 +55,20 @@ new_alignpatches <- function(plots = list(), layout = plot_layout()) {
             # namespace
             `_namespace` = ggalign_namespace_link
         ),
-        class = "alignpatches"
+        class = c("alignpatches", "patch")
     )
 }
 
 #' @importFrom ggplot2 is.ggplot
 #' @importFrom grid is.grob
 is_valid_patch <- function(x) {
-    is.ggplot(x) || is.grob(x) || is.wrapped(x) || is.alignpatches(x)
+    is.ggplot(x) || is.grob(x) || is.wrapped(x) ||
+        is.alignpatches(x) || is.layout(x)
 }
 
 is.alignpatches <- function(x) inherits(x, "alignpatches")
+
+is.wrapped <- function(x) inherits(x, "wrapped_plot")
+
+#' @export
+as.alignpatches <- function(x) UseMethod("as.alignpatches")

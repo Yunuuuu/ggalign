@@ -25,9 +25,11 @@
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
 #' default is to not modify the data. Use `NULL`, if you don't want to modify
-#' anything. Used to modify the data after layout preparation has been applied,
-#' but before the data is handled of to the ggplot2 for rendering. Use this hook
-#' if the you needs change the default data for all `geoms`.
+#' anything.
+#'
+#' Used to modify the data after layout has been created, but before the data is
+#' handled of to the ggplot2 for rendering. Use this hook if the you needs
+#' change the default data for all `geoms`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
 #' @inheritParams align
@@ -57,7 +59,7 @@
 #' @export
 layout_heatmap <- function(data = NULL, mapping = aes(),
                            width = NULL, height = NULL,
-                           guides = NULL, align_axis_title = NULL,
+                           guides = waiver(), align_axis_title = NULL,
                            plot_data = waiver(), filling = TRUE,
                            ..., set_context = TRUE, order = NULL, name = NULL) {
     UseMethod("layout_heatmap")
@@ -65,7 +67,7 @@ layout_heatmap <- function(data = NULL, mapping = aes(),
 
 #' @export
 print.HeatmapLayout <- function(x, ...) {
-    p <- build_patchwork(x)
+    p <- build_alignpatches(x)
     print(p, ...)
     invisible(x)
 }
@@ -74,13 +76,6 @@ print.HeatmapLayout <- function(x, ...) {
 #' @exportS3Method
 grid.draw.HeatmapLayout <- function(x, ...) {
     print(x, ...)
-}
-
-#' @importFrom ggplot2 ggplot_build
-#' @export
-ggplot_build.HeatmapLayout <- function(plot) {
-    plot <- build_patchwork(plot)
-    ggplot_build(plot)
 }
 
 # used to create the heatmap layout
@@ -117,10 +112,7 @@ ggheatmap <- layout_heatmap
 #' @importFrom ggplot2 waiver theme
 #' @export
 layout_heatmap.matrix <- function(data, ...) {
-    .layout_heatmap(
-        data = data, ...,
-        call = current_call()
-    )
+    .layout_heatmap(data = data, ..., call = current_call())
 }
 
 #' @export
@@ -161,7 +153,7 @@ layout_heatmap.default <- function(data, ...) {
 .layout_heatmap <- function(data,
                             mapping = aes(),
                             width = NULL, height = NULL,
-                            guides = NULL, align_axis_title = NULL,
+                            guides = waiver(), align_axis_title = NULL,
                             plot_data = waiver(), filling = TRUE,
                             ...,
                             set_context = TRUE, order = NULL, name = NULL,
@@ -192,12 +184,10 @@ layout_heatmap.default <- function(data, ...) {
     } else if (!is.integer(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
     }
-    if (!is.null(name) && (!is_string(name) || name == "")) {
-        cli::cli_abort(
-            "{.arg name} must be a single non-empty string",
-            call = call
-        )
-    }
+    assert_string(name,
+        empty_ok = FALSE, na_ok = FALSE,
+        null_ok = TRUE, call = call
+    )
     plot_data <- check_plot_data(plot_data)
 
     # Here we use S4 object to override the double dispatch of `+.gg` method

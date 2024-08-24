@@ -33,7 +33,7 @@ activate.StackLayout <- function(x, what) {
 #' @return A `active` object which can be added into
 #' [StackLayout][layout_stack].
 #' @export
-active <- function(what = NULL, sizes = NULL, guides = NULL,
+active <- function(what = NULL, sizes = NULL, guides = NA,
                    align_axis_title = NULL, plot_data = NA) {
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
@@ -41,6 +41,11 @@ active <- function(what = NULL, sizes = NULL, guides = NULL,
         plot_data <- NA
     } else {
         plot_data <- check_plot_data(plot_data)
+    }
+    if (is.na(guides) && is_scalar(guides)) {
+        guides <- NA
+    } else {
+        guides <- check_guides(guides)
     }
     structure(what,
         sizes = sizes,
@@ -71,7 +76,7 @@ active <- function(what = NULL, sizes = NULL, guides = NULL,
 #' @export
 hmanno <- function(position = NULL, size = NULL,
                    what = waiver(), width = NULL, height = NULL,
-                   guides = NULL, align_axis_title = NULL, plot_data = NA) {
+                   guides = NA, align_axis_title = NULL, plot_data = NA) {
     if (is.null(position)) {
         position <- NA
     } else {
@@ -85,6 +90,11 @@ hmanno <- function(position = NULL, size = NULL,
         plot_data <- NA
     } else {
         plot_data <- check_plot_data(plot_data)
+    }
+    if (is.na(guides) && is_scalar(guides)) {
+        guides <- NA
+    } else {
+        guides <- check_guides(guides)
     }
     structure(position,
         what = what, size = size, width = width, height = height,

@@ -8,11 +8,12 @@ plot_grid(
   ...,
   ncol = NULL,
   nrow = NULL,
-  byrow = NULL,
-  widths = NULL,
-  heights = NULL,
+  byrow = TRUE,
+  widths = NA,
+  heights = NA,
+  design = NULL,
   guides = NULL,
-  design = NULL
+  guide_theme = NULL
 )
 }
 \description{
