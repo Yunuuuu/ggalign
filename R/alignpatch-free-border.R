@@ -40,6 +40,7 @@ free_border.default <- function(plot, borders = c("t", "l", "b", "r")) {
 #' @export
 free_border.align_wrapped <- free_border.default
 
+################################################################
 #' @export
 patch_gtable.free_border <- function(patch) {
     gt <- NextMethod()
@@ -59,25 +60,25 @@ make_free_border <- function(gt, guides, borders) {
     UseMethod("make_free_border")
 }
 
+# For normal ggplot obbject ----------------------
 #' @export
 make_free_border.align_ggplot <- function(gt, guides, borders) {
-    class(gt) <- setdiff(class(gt), "align_ggplot")
     ans <- attach_border(gt, guides, borders)
-    add_class(ans, "align_free_border", "align_ggplot")
+    add_class(ans, "align_free_border")
 }
 
+# For `full_patch` obbject ----------------------
+# including both alignpatches and free_align objects
 #' @export
 make_free_border.gtable_ggplot <- function(gt, guides, borders) {
-    class(gt) <- setdiff(class(gt), "gtable_ggplot")
     ans <- attach_border(gt, guides, borders)
-    add_class(ans, "gtable_free_border", "gtable_ggplot")
+    add_class(ans, "gtable_free_border")
 }
 
 #' @export
 make_free_border.gtable_alignpatches <- function(gt, guides, borders) {
-    class(gt) <- setdiff(class(gt), "gtable_alignpatches")
     ans <- attach_border(gt, guides, borders)
-    add_class(ans, "gtable_free_border", "gtable_alignpatches")
+    add_class(ans, "gtable_free_border")
 }
 
 #' @export
@@ -90,6 +91,8 @@ make_free_border.full_patch <- function(gt, guides, borders) {
 }
 
 attach_border <- function(gt, guides, borders) {
+    added_class <- alignpatch_class(gt)
+    class(gt) <- setdiff(class(gt), added_class)
     panel_pos <- find_panel(gt)
     layout <- .subset2(gt, "layout")
     nms <- .subset2(layout, "name")
@@ -180,5 +183,5 @@ attach_border <- function(gt, guides, borders) {
             )
         }
     }
-    gt
+    add_class(gt, added_class)
 }

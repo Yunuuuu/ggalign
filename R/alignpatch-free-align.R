@@ -19,6 +19,7 @@ free_align.alignpatches <- free_align.ggplot
 
 #' @export
 free_align.free_border <- function(plot, axes = c("t", "l", "b", "r")) {
+    # we always add `free_align` behind `free_border`
     free_borders <- attr(plot, "free_borders")
     class(plot) <- setdiff(class(plot), "free_border")
     plot <- NextMethod()

@@ -30,12 +30,8 @@ fix_area.align_ggplot <- function(gt, panel_width, panel_height) {
         panel_height <- h
     } else if (can_set_width) {
         panel_width <- as.numeric(w) / as.numeric(h) * panel_height
-        # gt$widths[PANEL_COL] <- panel_widths[col]
-        # gt$heights[PANEL_ROW] <- panel_heights[row]
     } else if (can_set_height) {
         panel_height <- as.numeric(h) / as.numeric(w) * panel_width
-        # gt$widths[PANEL_COL] <- panel_widths[col]
-        # gt$heights[PANEL_ROW] <- panel_heights[row]
     } else {
         # ratio <- as.numeric(w) / as.numeric(h)
         # actual_ratio <- panel_widths[col] / panel_heights[row]
@@ -70,8 +66,7 @@ fix_area.align_ggplot <- function(gt, panel_width, panel_height) {
 #' @importFrom gtable is.gtable gtable_add_grob
 #' @noRd
 attach_into_panel <- function(gt, borders = c("t", "l", "b", "r")) {
-    # we remove the class and the subclass of "alignpatch" for added later
-    # since the subset of gt shouldn't be a object "alignpatch"
+    # we remove the class and the subclass
     added_class <- alignpatch_class(gt)
     class(gt) <- setdiff(class(gt), added_class)
 

@@ -97,7 +97,7 @@ patch_align <- function(gt, guides) UseMethod("patch_align")
 #' @noRd
 alignpatch_class <- function(x) {
     cls <- class(x)
-    cls[seq_len(which(cls == "alignpatch"))]
+    cls[seq_len(which(cls == "gtable") - 1L)]
 }
 
 #' @export

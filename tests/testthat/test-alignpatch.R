@@ -131,4 +131,12 @@ test_that("`free_border()` works well", {
             p4
         )
     })
+    expect_doppelganger("free_border() mix with free_align", {
+        plot_grid(
+            free_align(free_border(
+                plot_grid(p1, p2, p_f, p4, heights = 1L), "l"
+            ), "t"), p4, p5, patchwork::plot_spacer(),
+            ncol = 2L
+        )
+    })
 })
