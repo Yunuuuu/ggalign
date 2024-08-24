@@ -12,7 +12,8 @@ patch_gtable.StackLayout <- function(patch) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty
 #' @noRd
-stack_build <- function(x, plot_data = NULL, guides = NULL,
+stack_build <- function(x, plot_data = waiver(), guides = waiver(),
+                        free_labs = waiver(),
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
@@ -24,7 +25,8 @@ stack_build <- function(x, plot_data = NULL, guides = NULL,
 
     plots <- slot(x, "plots")
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    guides <- .subset2(params, "guides") %|w|% guides %||% TRUE
+    guides <- .subset2(params, "guides") %|w|% guides
+    free_labs <- .subset2(params, "free_labs") %|w|% free_labs
 
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
@@ -44,7 +46,8 @@ stack_build <- function(x, plot_data = NULL, guides = NULL,
                 panel = panel, index = index,
                 extra_panel = extra_panel,
                 extra_index = extra_index,
-                plot_data = plot_data
+                plot_data = plot_data,
+                free_labs = free_labs
             )
             patches <- stack_patch_add_align(
                 patches,
@@ -52,7 +55,11 @@ stack_build <- function(x, plot_data = NULL, guides = NULL,
                 .subset2(patch, "size")
             )
         } else if (is.ggheatmap(plot)) {
-            patch <- heatmap_build(plot, plot_data = plot_data, guides = guides)
+            patch <- heatmap_build(plot,
+                plot_data = plot_data,
+                guides = guides,
+                free_labs = free_labs
+            )
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
                 patches, heatmap_plots,
@@ -90,7 +97,7 @@ stack_build <- function(x, plot_data = NULL, guides = NULL,
             .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = guides
+        guides = guides %|w|% TRUE
     )
     list(plot = plot, size = .subset2(params, "size"))
 }

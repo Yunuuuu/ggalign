@@ -41,8 +41,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         if (!identical(guides <- attr(object, "guides"), NA)) {
             slot(heatmap, "params")$guides <- guides
         }
-        if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
-            slot(heatmap, "params")$align_axis_title <- align_axis_title
+        if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+            slot(heatmap, "params")$free_labs <- free_labs
         }
         if (!is.null(width <- attr(object, "width"))) {
             slot(heatmap, "params")$width <- width
@@ -75,7 +75,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
             data = data,
             direction = direction,
             guides = waiver(),
-            align_axis_title = slot(heatmap, "params")$align_axis_title
+            free_labs = slot(heatmap, "params")$free_labs
         )
         stack <- set_panel(stack, get_panel(heatmap, axis))
         stack <- set_index(stack, get_index(heatmap, axis))
@@ -95,8 +95,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (!identical(guides <- attr(object, "guides"), NA)) {
         slot(stack, "params")$guides <- guides
     }
-    if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
-        slot(stack, "params")$align_axis_title <- align_axis_title
+    if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+        slot(stack, "params")$free_labs <- free_labs
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         slot(stack, "params")$plot_data <- plot_data

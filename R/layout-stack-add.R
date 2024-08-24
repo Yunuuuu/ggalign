@@ -23,8 +23,8 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!identical(guides <- attr(object, "guides"), NA)) {
         slot(stack, "params")$guides <- guides
     }
-    if (!is.null(align_axis_title <- attr(object, "align_axis_title"))) {
-        slot(stack, "params")$align_axis_title <- align_axis_title
+    if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+        slot(stack, "params")$free_labs <- free_labs
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         slot(stack, "params")$plot_data <- plot_data
@@ -132,7 +132,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         }
     }
     # let the stack determine how to collect the guides
-    slot(object, "params")$guides <- slot(object, "params")$guides %|w|% 
+    slot(object, "params")$guides <- slot(object, "params")$guides %|w|%
         .subset2(slot(stack, "params"), "guides")
 
     # set up context index ------------------------------

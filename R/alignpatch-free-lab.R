@@ -4,6 +4,7 @@ free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
 
 #' @export
 free_lab.ggplot <- function(plot, labs = c("t", "l", "b", "r")) {
+    labs <- check_labs(labs)
     if (length(labs) == 0L) {
         return(plot)
     }
@@ -39,19 +40,19 @@ free_lab.align_wrapped <- free_lab.default
 patch_gtable.free_lab <- function(patch) {
     class(patch) <- setdiff(class(patch), "free_lab")
     gt <- NextMethod()
-    attach_lab(gt, free_labs = attr(patch, "free_labs"))
+    attach_lab(gt, labs = attr(patch, "free_labs"))
 }
 
 #' @importFrom gtable is.gtable gtable_height gtable_width gtable_add_grob
 #' @importFrom grid grobHeight grobWidth viewport
-attach_lab <- function(gt, free_labs) {
+attach_lab <- function(gt, labs) {
     added_class <- alignpatch_class(gt)
     class(gt) <- setdiff(class(gt), added_class)
     panel_pos <- find_panel(gt)
-    for (free_lab in free_labs) {
+    for (lab in labs) {
         layout <- .subset2(gt, "layout")
-        panel_border <- .subset2(panel_pos, free_lab)
-        if (free_lab == "t") {
+        panel_border <- .subset2(panel_pos, lab)
+        if (lab == "t") {
             index <- .subset2(layout, "t") >= (panel_border - 3L) &
                 .subset2(layout, "b") < panel_border &
                 .subset2(layout, "l") >= .subset2(panel_pos, "l") &
@@ -64,7 +65,7 @@ attach_lab <- function(gt, free_labs) {
                 y = 1L, just = "bottom",
                 height = gtable_height(grob)
             )
-        } else if (free_lab == "l") {
+        } else if (lab == "l") {
             index <- .subset2(layout, "r") < panel_border &
                 .subset2(layout, "l") >= (panel_border - 3L) &
                 .subset2(layout, "t") >= .subset2(panel_pos, "t") &
@@ -77,7 +78,7 @@ attach_lab <- function(gt, free_labs) {
                 x = 0L, just = "right",
                 width = gtable_width(grob)
             )
-        } else if (free_lab == "b") {
+        } else if (lab == "b") {
             index <- .subset2(layout, "t") > panel_border &
                 .subset2(layout, "b") <= (panel_border + 3L) &
                 .subset2(layout, "l") >= .subset2(panel_pos, "l") &
@@ -90,7 +91,7 @@ attach_lab <- function(gt, free_labs) {
                 y = 0L, just = "top",
                 height = gtable_height(grob)
             )
-        } else if (free_lab == "r") {
+        } else if (lab == "r") {
             index <- .subset2(layout, "l") > panel_border &
                 .subset2(layout, "r") <= (panel_border + 3L) &
                 .subset2(layout, "t") >= .subset2(panel_pos, "t") &
@@ -114,13 +115,13 @@ attach_lab <- function(gt, free_labs) {
             r = .subset2(panel_pos, "r"),
             z = Inf, clip = "off",
             name = paste(
-                switch(free_lab,
+                switch(lab,
                     t = ,
                     b = "xlab",
                     l = ,
                     r = "ylab"
                 ),
-                "axis", free_lab,
+                "axis", lab,
                 sep = "-"
             )
         )

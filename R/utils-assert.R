@@ -83,6 +83,47 @@ check_guides <- function(guides, arg = caller_arg(guides),
     }
 }
 
+check_labs <- function(labs, arg = caller_arg(labs),
+                       call = caller_call()) {
+    if (is.null(labs) || isFALSE(labs)) {
+        labs <- character()
+    } else if (isTRUE(labs)) {
+        BORDERS
+    } else if (is.character(labs)) {
+        template <- list(
+            t = "t",
+            l = "l",
+            b = "b",
+            r = "r",
+            x = c("t", "b"),
+            xlab = c("t", "b"),
+            xlabs = c("t", "b"),
+            y = c("l", "r"),
+            ylab = c("l", "r"),
+            ylabs = c("l", "r"),
+            `xlab-t` = "t",
+            `xlab-b` = "b",
+            `ylab-l` = "l",
+            `ylab-r` = "r"
+        )
+        labs <- .subset(template, labs)
+        if (any(unknown <- vapply(labs, is.null, logical(1L)))) { # nolint
+            cli::cli_abort("Cannot determine the labs: {unknown}", call = call)
+        }
+        ans <- unique(unlist(labs, FALSE, FALSE))
+        if (length(ans) == 0L) {
+            return(character())
+        } else {
+            return(ans)
+        }
+    } else {
+        cli::cli_abort(
+            "{.arg {arg}} must be a single boolean value or a character",
+            call = call
+        )
+    }
+}
+
 check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
                               call = caller_call()) {
     l <- length(sizes)

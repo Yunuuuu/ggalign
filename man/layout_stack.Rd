@@ -10,7 +10,7 @@ layout_stack(
   direction = NULL,
   sizes = NULL,
   guides = waiver(),
-  align_axis_title = NULL,
+  free_labs = waiver(),
   plot_data = waiver()
 )
 
@@ -19,7 +19,7 @@ ggstack(
   direction = NULL,
   sizes = NULL,
   guides = waiver(),
-  align_axis_title = NULL,
+  free_labs = waiver(),
   plot_data = waiver()
 )
 }
@@ -40,7 +40,7 @@ upper level tries, but place them alongside the plot if not. If you modify
 default guide \code{"position"} with \code{theme(legend.position=...)} while also
 collecting guides you must apply that change to the overall layout.}
 
-\item{align_axis_title}{A boolean value or a character of the axis position
+\item{free_labs}{A boolean value or a character of the axis position
 (\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
 default, all axis title won't be aligned.}
 

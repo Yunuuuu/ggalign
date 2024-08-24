@@ -41,7 +41,8 @@
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
-                  size = NULL, data = NULL, plot_data = waiver(),
+                  size = NULL, data = NULL,
+                  free_labs = waiver(), plot_data = waiver(),
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
                   check.param = TRUE, call = caller_call()) {
@@ -114,6 +115,7 @@ align <- function(align_class, params,
         # use `waiver()` to inherit from the layout data
         input_data = data,
         plot_data = plot_data,
+        free_labs = free_labs,
         facet = facet,
         limits = limits,
 

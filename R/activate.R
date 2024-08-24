@@ -34,23 +34,28 @@ activate.StackLayout <- function(x, what) {
 #' [StackLayout][layout_stack].
 #' @export
 active <- function(what = NULL, sizes = NULL, guides = NA,
-                   align_axis_title = NULL, plot_data = NA) {
+                   free_labs = NA, plot_data = NA) {
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    if (is.na(plot_data) && is_scalar(plot_data)) {
-        plot_data <- NA
-    } else {
-        plot_data <- check_plot_data(plot_data)
-    }
     if (is.na(guides) && is_scalar(guides)) {
         guides <- NA
     } else {
         guides <- check_guides(guides)
     }
+    if (is.na(free_labs) && is_scalar(free_labs)) {
+        free_labs <- NA
+    } else {
+        free_labs <- check_labs(free_labs)
+    }
+    if (is.na(plot_data) && is_scalar(plot_data)) {
+        plot_data <- NA
+    } else {
+        plot_data <- check_plot_data(plot_data)
+    }
     structure(what,
         sizes = sizes,
         guides = guides,
-        align_axis_title = align_axis_title,
+        free_labs = free_labs,
         plot_data = plot_data,
         class = c("stack_active", "active")
     )
@@ -76,7 +81,7 @@ active <- function(what = NULL, sizes = NULL, guides = NA,
 #' @export
 hmanno <- function(position = NULL, size = NULL,
                    what = waiver(), width = NULL, height = NULL,
-                   guides = NA, align_axis_title = NULL, plot_data = NA) {
+                   guides = NA, free_labs = NA, plot_data = NA) {
     if (is.null(position)) {
         position <- NA
     } else {
@@ -86,19 +91,24 @@ hmanno <- function(position = NULL, size = NULL,
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(width)) width <- set_size(width)
     if (!is.null(height)) height <- set_size(height)
-    if (is.na(plot_data) && is_scalar(plot_data)) {
-        plot_data <- NA
-    } else {
-        plot_data <- check_plot_data(plot_data)
-    }
     if (is.na(guides) && is_scalar(guides)) {
         guides <- NA
     } else {
         guides <- check_guides(guides)
     }
+    if (is.na(free_labs) && is_scalar(free_labs)) {
+        free_labs <- NA
+    } else {
+        free_labs <- check_labs(free_labs)
+    }
+    if (is.na(plot_data) && is_scalar(plot_data)) {
+        plot_data <- NA
+    } else {
+        plot_data <- check_plot_data(plot_data)
+    }
     structure(position,
         what = what, size = size, width = width, height = height,
-        guides = guides, align_axis_title = align_axis_title,
+        guides = guides, free_labs = free_labs,
         plot_data = plot_data,
         class = c("heatmap_active", "active")
     )

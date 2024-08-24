@@ -13,7 +13,8 @@ build_alignpatches.default <- function(layout) {
 }
 
 align_build <- function(x, panel, index,
-                        extra_panel, extra_index, plot_data) {
+                        extra_panel, extra_index,
+                        plot_data, free_labs) {
     if (is.null(.subset2(x, "plot"))) {
         return(list(plot = NULL, size = NULL))
     }
@@ -39,7 +40,9 @@ align_build <- function(x, panel, index,
         panel, index, extra_panel, extra_index,
         !!!draw_params
     ))
-    plot_data <- .subset2(x, "plot_data") %|w|% plot_data
+    plot_data <- .subset2(x, "plot_data") %|w|% plot_data %|w|% NULL
+    free_labs <- .subset2(x, "free_labs") %|w|% free_labs %|w|%
+        switch_direction(direction, c("t", "b"), c("l", "r"))
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
     # only when user use the internal facet, we'll
@@ -79,7 +82,7 @@ align_build <- function(x, panel, index,
             scales = scales, default_facet = default_facet
         )
     }
-    list(plot = plot, size = .subset2(x, "size"))
+    list(plot = free_lab(plot, free_labs), size = .subset2(x, "size"))
 }
 
 finish_plot_data <- function(plot, plot_data,

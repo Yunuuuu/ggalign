@@ -41,7 +41,8 @@ patch_gtable.HeatmapLayout <- function(patch) {
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, plot_data = NULL, guides = NULL) {
+heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
+                          free_labs = waiver()) {
     params <- slot(heatmap, "params")
     mat <- slot(heatmap, "data")
     x_nobs <- get_nobs(heatmap, "x")
@@ -78,8 +79,9 @@ heatmap_build <- function(heatmap, plot_data = NULL, guides = NULL) {
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    guides <- .subset2(params, "guides") %|w|% guides %||% TRUE
-    p <- finish_plot_data(p, plot_data, data = data)
+    guides <- .subset2(params, "guides") %|w|% guides
+    free_labs <- .subset2(params, "free_labs") %|w|% free_labs
+    p <- finish_plot_data(p, plot_data %|w|% NULL, data = data)
 
     # setup the scales -----------------------------------
     do_row_facet <- nlevels(ypanel) > 1L
@@ -153,14 +155,14 @@ heatmap_build <- function(heatmap, plot_data = NULL, guides = NULL) {
             panel <- ypanel
             index <- yindex
         }
-        stack_build(stack, plot_data, guides, panel, index)
+        stack_build(stack, plot_data, guides, free_labs, panel, index)
     })
     names(stack_list) <- GGHEAT_ELEMENTS
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
 
-    plots <- c(plots, list(heatmap = p))
+    plots <- c(plots, list(heatmap = free_lab(p, free_labs %|w|% TRUE)))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
 }

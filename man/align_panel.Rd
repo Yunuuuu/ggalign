@@ -8,6 +8,7 @@
 align_panel(
   mapping = aes(),
   size = NULL,
+  free_labs = waiver(),
   plot_data = waiver(),
   limits = TRUE,
   facet = TRUE,
@@ -19,6 +20,7 @@ align_panel(
 ggpanel(
   mapping = aes(),
   size = NULL,
+  free_labs = waiver(),
   plot_data = waiver(),
   limits = TRUE,
   facet = TRUE,
@@ -31,6 +33,10 @@ ggpanel(
 \item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
 \item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
+
+\item{free_labs}{A boolean value or a character of the axis position
+(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
+default, all axis title won't be aligned.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the

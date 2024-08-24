@@ -30,13 +30,15 @@
 #'     geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
-align_panel <- function(mapping = aes(), size = NULL, plot_data = waiver(),
+align_panel <- function(mapping = aes(), size = NULL,
+                        free_labs = waiver(), plot_data = waiver(),
                         limits = TRUE, facet = TRUE,
                         set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignPanel,
         params = list(mapping = mapping),
-        size = size, data = NULL, plot_data = plot_data,
+        size = size, data = NULL,
+        free_labs = free_labs, plot_data = plot_data,
         set_context = set_context, order = order, name = name
     )
 }

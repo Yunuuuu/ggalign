@@ -15,7 +15,7 @@
 #' @export
 layout_stack <- function(data = NULL, direction = NULL,
                          sizes = NULL, guides = waiver(),
-                         align_axis_title = NULL,
+                         free_labs = waiver(),
                          plot_data = waiver()) {
     UseMethod("layout_stack")
 }
@@ -84,7 +84,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
 #' @importFrom grid unit
 .layout_stack <- function(data, nobs, direction = NULL,
                           sizes = NULL, guides = waiver(),
-                          align_axis_title = NULL,
+                          free_labs = waiver(),
                           plot_data = waiver(),
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
@@ -99,7 +99,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
         params = list(
             sizes = set_size(sizes),
             guides = guides, plot_data = plot_data,
-            align_axis_title = align_axis_title
+            free_labs = free_labs
         ),
         nobs = nobs
     )
@@ -108,7 +108,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
 #' @export
 layout_stack.default <- function(data, direction = NULL,
                                  sizes = NULL, guides = waiver(),
-                                 align_axis_title = NULL,
+                                 free_labs = waiver(),
                                  plot_data = waiver()) {
     cli::cli_abort(c(
         paste(

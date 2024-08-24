@@ -17,7 +17,7 @@
 #' upper level tries, but place them alongside the plot if not. If you modify
 #' default guide `"position"` with `theme(legend.position=...)` while also
 #' collecting guides you must apply that change to the overall layout.
-#' @param align_axis_title A boolean value or a character of the axis position
+#' @param free_labs A boolean value or a character of the axis position
 #' (`"t"`, `"l"`, `"b"`, `"r"`) indicates how to align the axis title. By
 #' default, all axis title won't be aligned.
 #' @param filling A boolean value indicates whether to fill the heatmap. If you
@@ -59,7 +59,7 @@
 #' @export
 layout_heatmap <- function(data = NULL, mapping = aes(),
                            width = NULL, height = NULL,
-                           guides = waiver(), align_axis_title = NULL,
+                           guides = waiver(), free_labs = waiver(),
                            plot_data = waiver(), filling = TRUE,
                            ..., set_context = TRUE, order = NULL, name = NULL) {
     UseMethod("layout_heatmap")
@@ -153,7 +153,7 @@ layout_heatmap.default <- function(data, ...) {
 .layout_heatmap <- function(data,
                             mapping = aes(),
                             width = NULL, height = NULL,
-                            guides = waiver(), align_axis_title = NULL,
+                            guides = waiver(), free_labs = waiver(),
                             plot_data = waiver(), filling = TRUE,
                             ...,
                             set_context = TRUE, order = NULL, name = NULL,
@@ -199,7 +199,7 @@ layout_heatmap.default <- function(data, ...) {
             width = set_size(width),
             height = set_size(height),
             guides = guides,
-            align_axis_title = align_axis_title,
+            free_labs = free_labs,
             plot_data = plot_data
         ),
         set_context = set_context,
