@@ -6,9 +6,9 @@ patch_align.gtable_alignpatches <- function(gt, guides) {
 #' @importFrom gtable gtable
 #' @importFrom grid unit
 #' @export
-patch_gtable.alignpatches <- function(x) {
-    plots <- .subset2(x, "plots")
-    layout <- .subset2(x, "layout")
+patch_gtable.alignpatches <- function(patch) {
+    plots <- .subset2(patch, "plots")
+    layout <- .subset2(patch, "layout")
 
     # get the design areas and design dims ------------------
     panel_widths <- .subset2(layout, "widths")
@@ -77,28 +77,28 @@ BuilderAlignPatches <- ggplot2::ggproto(
         if (length(guides)) {
             # this'll also remove guides from `gt_list`
             collected_guides <- self$collect_guides(guides)
-            collected_guides <- compact(collected_guides)
-            # remove duplicated guides
-            collected_guides <- lapply(collected_guides, collapse_guides)
-            collected_guides <- compact(collected_guides)
         } else {
             collected_guides <- NULL
         }
 
         # setup sizes for each row/column -----------------------
-        gt <- self$set_sizes(gt, design, dims, panel_widths, panel_heights)
+        gt <- self$set_sizes(
+            gt, design, guides,
+            dims, panel_widths, panel_heights
+        )
 
         # setup grobs -------------------------------------------
         gt <- self$set_grobs(gt, design)
 
         # setup the output layout -------------------------------
         gt <- self$set_layout(gt, design)
+
         # `attach_guides` will use `align_border_size`
         # here we add the class here for usage of `attach_guides`
         gt <- add_class(gt, "gtable_alignpatches")
 
         # add guides into the final gtable ----------------------
-        p_loc <- list(
+        panel_pos <- list(
             t = PANEL_ROW,
             l = PANEL_COL,
             b = PANEL_ROW + TABLE_ROWS * (dims[1L] - 1L),
@@ -113,7 +113,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
                     gt, guide_pos,
                     guides = .subset2(collected_guides, guide_pos),
                     theme = guide_theme,
-                    p_loc = p_loc
+                    panel_pos = panel_pos
                 )
             }
         }
@@ -121,10 +121,10 @@ BuilderAlignPatches <- ggplot2::ggproto(
         # add panel area ---------------------------------------
         gtable_add_grob(
             gt, zeroGrob(),
-            t = .subset2(p_loc, "t"),
-            l = .subset2(p_loc, "l"),
-            b = .subset2(p_loc, "b"),
-            r = .subset2(p_loc, "r"),
+            t = .subset2(panel_pos, "t"),
+            l = .subset2(panel_pos, "l"),
+            b = .subset2(panel_pos, "b"),
+            r = .subset2(panel_pos, "r"),
             z = -1L,
             name = "panel-area"
         )
@@ -139,7 +139,9 @@ BuilderAlignPatches <- ggplot2::ggproto(
         }
         # save the modified `gt_list`
         self$gt_list <- gt_list
+
         # collapse the guides in the same guide position
+        # remove duplicated guides
         ans <- lapply(BORDERS, function(guide_pos) {
             unlist(
                 lapply(ans, .subset2, guide_pos),
@@ -147,9 +149,11 @@ BuilderAlignPatches <- ggplot2::ggproto(
             )
         })
         names(ans) <- BORDERS
-        ans
+        ans <- compact(ans)
+        ans <- lapply(ans, collapse_guides)
+        compact(ans)
     },
-    set_sizes = function(self, gt, design, dims,
+    set_sizes = function(self, gt, design, guides, dims,
                          panel_widths, panel_heights,
                          gt_list = .subset2(self, "gt_list")) {
         panel_widths <- rep(panel_widths, length.out = dims[2])
@@ -198,6 +202,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
             col <- .subset(cols, i)
             fixed_elements <- fix_area(
                 .subset2(gt_list, i),
+                guides = guides,
                 panel_widths[col],
                 panel_heights[row]
             )
@@ -380,8 +385,8 @@ align_grobs.full_patch <- function(gt, widths, heights, loc) {
     # the second grob should be the original gtable of the
     # `gtable_alignpatches` or `align_free_align` objects
     # see function
-    # - patch_align.alignpatches()
-    # - patch_align.gtable_free_align()
+    # can be `gtable_free_align`, `gtable_alignpatches` or
+    # `gtable_free_borders` objects
     grobs[[2]] <- align_border_size(
         .subset2(grobs, 2L),
         t = t_heights,
@@ -439,7 +444,8 @@ align_border_size.gtable_free_align <- function(gt, t = NULL, l = NULL,
     for (axis in free_axes) {
         assign(x = axis, value = NULL, envir = environment())
     }
-    ans <- NextMethod() # can be `gtable_ggplot` or `gtable_alignpatches`
+    # can be `gtable_ggplot` or `gtable_alignpatches`
+    ans <- NextMethod()
     attr(ans, "free_axes") <- free_axes
     if (!inherits(ans, "gtable_free_align")) {
         ans <- add_class(ans, "gtable_free_align")

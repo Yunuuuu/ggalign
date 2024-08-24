@@ -63,10 +63,10 @@ collect_guides.align_ggplot <- function(gt, guides) {
     guides_loc <- layout[guides_ind, , drop = FALSE]
     collected_guides <- vector("list", length(guides))
     names(collected_guides) <- guides
-    p_loc <- find_panel(gt)
+    panel_pos <- find_panel(gt)
     remove_grobs <- NULL
     for (guide_pos in guides) {
-        panel_border <- .subset2(p_loc, guide_pos)
+        panel_border <- .subset2(panel_pos, guide_pos)
         guide_ind <- switch(guide_pos,
             t = .subset2(guides_loc, "b") < panel_border,
             l = .subset2(guides_loc, "r") < panel_border,
@@ -115,7 +115,7 @@ collect_guides.align_ggplot <- function(gt, guides) {
 #' @importFrom grid unit.c unit
 #' @importFrom ggplot2 calc_element
 attach_guides <- function(table, guide_pos, guides, theme,
-                          p_loc = find_panel(table)) {
+                          panel_pos = find_panel(table)) {
     guides <- assemble_guides(guide_pos, guides = guides, theme = theme)
     spacing <- calc_element("legend.box.spacing", theme) %||% unit(0.2, "cm")
     legend_width <- gtable_width(guides)
@@ -123,50 +123,50 @@ attach_guides <- function(table, guide_pos, guides, theme,
     if (guide_pos == "l") {
         table <- gtable_add_grob(table, guides,
             clip = "off",
-            t = p_loc$t,
-            l = p_loc$l - 5L,
-            b = p_loc$b,
+            t = panel_pos$t,
+            l = panel_pos$l - 5L,
+            b = panel_pos$b,
             name = "guide-box-collected-left"
         )
         table <- align_border_size(table,
             l = unit.c(
-                table$widths[seq_len(p_loc$l - 6)],
+                table$widths[seq_len(panel_pos$l - 6)],
                 legend_width, spacing
             )
         )
     } else if (guide_pos == "r") {
         table <- gtable_add_grob(table, guides,
-            clip = "off", t = p_loc$t,
-            l = p_loc$r + 5L, b = p_loc$b,
+            clip = "off", t = panel_pos$t,
+            l = panel_pos$r + 5L, b = panel_pos$b,
             name = "guide-box-collected-right"
         )
         table <- align_border_size(table,
             r = unit.c(
                 spacing, legend_width,
-                table$widths[seq(p_loc$r + 6L, ncol(table))]
+                table$widths[seq(panel_pos$r + 6L, ncol(table))]
             )
         )
     } else if (guide_pos == "b") {
         table <- gtable_add_grob(table, guides,
-            clip = "off", t = p_loc$b + 5L,
-            l = p_loc$l, r = p_loc$r,
+            clip = "off", t = panel_pos$b + 5L,
+            l = panel_pos$l, r = panel_pos$r,
             name = "guide-box-collected-bottom"
         )
         table <- align_border_size(table,
             b = unit.c(
                 spacing, legend_height,
-                table$heights[seq(p_loc$b + 6L, nrow(table))]
+                table$heights[seq(panel_pos$b + 6L, nrow(table))]
             )
         )
     } else if (guide_pos == "t") {
         table <- gtable_add_grob(table, guides,
-            clip = "off", t = p_loc$t - 5L,
-            l = p_loc$l, r = p_loc$r,
+            clip = "off", t = panel_pos$t - 5L,
+            l = panel_pos$l, r = panel_pos$r,
             name = "guide-box-collected-top"
         )
         table <- align_border_size(table,
             t = unit.c(
-                table$heights[seq_len(p_loc$t - 6L)],
+                table$heights[seq_len(panel_pos$t - 6L)],
                 legend_height, spacing
             )
         )

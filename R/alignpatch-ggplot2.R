@@ -34,14 +34,10 @@ patch_align.gtable_ggplot <- function(gt, guides) {
         !any(startsWith("strip-", .subset2(.subset2(gt, "layout"), "name")))) {
         add_class(gt, "align_ggplot", "alignpatch")
     } else {
-        # I don't quite understand what `simplify_gt` in `patchwork` do
-        # I don't know what's the detailed differences between
-        # `simplif_fixed` and `simplify_free`?
-        #
-        # I guess:
-        # `simplify_free` will merge the multiple panels into one panel
-        # `simplif_fixed` will add strips, axes and labels into the panel area
-        #
+        # we attach the strips, axes and labels into the panel area
+        if (.subset2(gt, "respect")) {
+            gt <- attach_border(gt, guides)
+        }
         # Here, we merge multiple panels into one
         add_class(
             merge_panels(gt, rows, cols),

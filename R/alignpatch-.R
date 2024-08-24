@@ -88,7 +88,6 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
 patch_gtable <- function(patch) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
-# and we extract the size for axis, lab, strip
 #' @return A `align_*` object
 #' @noRd
 patch_align <- function(gt, guides) UseMethod("patch_align")

@@ -48,6 +48,9 @@ free_align.align_wrapped <- free_align.default
 
 #' @export
 patch_gtable.free_align <- function(patch) {
+    class(patch) <- setdiff(class(patch), "free_align")
+
+    # can be `gtable_ggplot` or `gtable_alignpatches`
     gt <- NextMethod()
     attr(gt, "free_axes") <- attr(patch, "free_axes")
     add_class(gt, "gtable_free_align")
