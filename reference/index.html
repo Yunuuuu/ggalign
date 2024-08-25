@@ -71,12 +71,6 @@
 
         </dt>
         <dd>Add components to all plots</dd>
-      </dl><dl><dt>
-
-          <code><a href="build_patchwork.html">build_patchwork()</a></code>
-
-        </dt>
-        <dd>Build <code>Layout</code> object for rendering.</dd>
       </dl></div><div class="section level2">
       <h2 id="activate-context">Activate context<a class="anchor" aria-label="anchor" href="#activate-context"></a></h2>
 
@@ -188,6 +182,53 @@
         </dt>
         <dd>Reorders layout observations based on weights or summary statistics.</dd>
       </dl></div><div class="section level2">
+      <h2 id="plot-composer">Plot composer<a class="anchor" aria-label="anchor" href="#plot-composer"></a></h2>
+
+      <div class="section-desc"><p>This section outlines essential functions for composing plots into a grid, intended for internal use. The core code of plot composer is derived from the <code>patchwork</code> package, with the hope of eventually integrating and merging these functions into the <code>patchwork</code> project.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="plot_grid.html">plot_grid()</a></code>
+
+        </dt>
+        <dd>Arrange multiple plots into a grid</dd>
+      </dl><dl><dt>
+
+          <code><a href="free_align.html">free_align()</a></code>
+
+        </dt>
+        <dd>Free panel axes from alignment</dd>
+      </dl><dl><dt>
+
+          <code><a href="free_border.html">free_border()</a></code>
+
+        </dt>
+        <dd>Free panel border from alignment</dd>
+      </dl><dl><dt>
+
+          <code><a href="free_lab.html">free_lab()</a></code>
+
+        </dt>
+        <dd>Free the axis titles from alignment</dd>
+      </dl><dl><dt>
+
+          <code><a href="free_size.html">free_size()</a></code>
+
+        </dt>
+        <dd>Removing the sizes when aligning</dd>
+      </dl><dl><dt>
+
+          <code><a href="as_patch.html">as_patch()</a></code> <code><a href="as_patch.html">patch_gtable()</a></code> <code><a href="as_patch.html">patch_align()</a></code>
+
+        </dt>
+        <dd>Extends plots to be aligned with <code>plot_grid</code></dd>
+      </dl></div><div class="section level2">
       <h2 id="extending-ggplot-">Extending ggplot2<a class="anchor" aria-label="anchor" href="#extending-ggplot-"></a></h2>
 
       <div class="section-desc"><p>New ggplot2 geoms, stats, scales, and facets</p></div>
@@ -216,6 +257,12 @@
 
 
       <dl><dt>
+
+          <code><a href="ggalignGrob.html">ggalignGrob()</a></code>
+
+        </dt>
+        <dd>Generate a plot grob</dd>
+      </dl><dl><dt>
 
           <code><a href="hclust2.html">hclust2()</a></code>
 

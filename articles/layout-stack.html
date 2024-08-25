@@ -85,47 +85,10 @@ can also use the alias <code>ggstack</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">mat1</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span>, <span class="fl">4</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">60</span>, max <span class="op">=</span> <span class="fl">3</span>, min <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, <span class="fl">6</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">mat2</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">60</span>, max <span class="op">=</span> <span class="fl">2</span>, min <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fl">6</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">le</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="fl">12</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">le</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="va">mat1</span> <span class="op">&lt;-</span> <span class="va">mat1</span><span class="op">[</span><span class="va">ind</span>, <span class="op">]</span></span>
-<span><span class="va">mat2</span> <span class="op">&lt;-</span> <span class="va">mat2</span><span class="op">[</span><span class="va">ind</span>, <span class="op">]</span></span>
-<span><span class="va">le</span> <span class="op">&lt;-</span> <span class="va">le</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span></span>
-<span><span class="va">ht1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat1</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="va">ht2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat2</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/layout_stack.html">ggstack</a></span><span class="op">(</span><span class="va">mat1</span>, sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">ht1</span> <span class="op">+</span></span>
-<span>  <span class="va">ht2</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/active.html">active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">le</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.column_index</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>name <span class="op">=</span> <span class="cn">NULL</span>, labels <span class="op">=</span> <span class="cn">NULL</span>, breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="layout-stack_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -151,23 +114,17 @@ can also use the alias <code>ggstack</code>.</p>
 <span><span class="co">#&gt; [1] ggalign_0.0.1 ggplot2_3.5.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] gtable_0.3.5         jsonlite_1.8.8       highr_0.11          </span></span>
-<span><span class="co">#&gt;  [4] dplyr_1.1.4          compiler_4.4.1       tidyselect_1.2.1    </span></span>
-<span><span class="co">#&gt;  [7] tidyr_1.3.1          jquerylib_0.1.4      systemfonts_1.1.0   </span></span>
-<span><span class="co">#&gt; [10] scales_1.3.0         textshaping_0.4.0    ggh4x_0.2.8         </span></span>
-<span><span class="co">#&gt; [13] yaml_2.3.10          fastmap_1.2.0        R6_2.5.1            </span></span>
-<span><span class="co">#&gt; [16] labeling_0.4.3       generics_0.1.3       patchwork_1.2.0.9000</span></span>
-<span><span class="co">#&gt; [19] knitr_1.48           tibble_3.2.1         desc_1.4.3          </span></span>
-<span><span class="co">#&gt; [22] munsell_0.5.1        bslib_0.8.0          pillar_1.9.0        </span></span>
-<span><span class="co">#&gt; [25] rlang_1.1.4          utf8_1.2.4           cachem_1.1.0        </span></span>
-<span><span class="co">#&gt; [28] xfun_0.46            fs_1.6.4             sass_0.4.9          </span></span>
-<span><span class="co">#&gt; [31] viridisLite_0.4.2    cli_3.6.3            pkgdown_2.1.0       </span></span>
-<span><span class="co">#&gt; [34] withr_3.0.1          magrittr_2.0.3       digest_0.6.36       </span></span>
-<span><span class="co">#&gt; [37] grid_4.4.1           lifecycle_1.0.4      vctrs_0.6.5         </span></span>
-<span><span class="co">#&gt; [40] evaluate_0.24.0      glue_1.7.0           farver_2.1.2        </span></span>
-<span><span class="co">#&gt; [43] ragg_1.3.2           fansi_1.0.6          colorspace_2.1-1    </span></span>
-<span><span class="co">#&gt; [46] purrr_1.0.2          rmarkdown_2.27       tools_4.4.1         </span></span>
-<span><span class="co">#&gt; [49] pkgconfig_2.0.3      htmltools_0.5.8.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] vctrs_0.6.5       cli_3.6.3         knitr_1.48        rlang_1.1.4      </span></span>
+<span><span class="co">#&gt;  [5] xfun_0.47         generics_0.1.3    textshaping_0.4.0 jsonlite_1.8.8   </span></span>
+<span><span class="co">#&gt;  [9] glue_1.7.0        colorspace_2.1-1  htmltools_0.5.8.1 ragg_1.3.2       </span></span>
+<span><span class="co">#&gt; [13] sass_0.4.9        fansi_1.0.6       scales_1.3.0      rmarkdown_2.28   </span></span>
+<span><span class="co">#&gt; [17] grid_4.4.1        tibble_3.2.1      evaluate_0.24.0   munsell_0.5.1    </span></span>
+<span><span class="co">#&gt; [21] jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.10       lifecycle_1.0.4  </span></span>
+<span><span class="co">#&gt; [25] compiler_4.4.1    dplyr_1.1.4       fs_1.6.4          pkgconfig_2.0.3  </span></span>
+<span><span class="co">#&gt; [29] systemfonts_1.1.0 digest_0.6.37     R6_2.5.1          tidyselect_1.2.1 </span></span>
+<span><span class="co">#&gt; [33] utf8_1.2.4        pillar_1.9.0      magrittr_2.0.3    bslib_0.8.0      </span></span>
+<span><span class="co">#&gt; [37] withr_3.0.1       tools_4.4.1       gtable_0.3.5      pkgdown_2.1.0    </span></span>
+<span><span class="co">#&gt; [41] cachem_1.1.0      desc_1.4.3</span></span></code></pre></div>
 </div>
   </main>
 </div>

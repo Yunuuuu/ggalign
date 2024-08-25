@@ -62,6 +62,8 @@ panel data. <code>ggpanel</code> is just an alias of <code>align_panel</code>.</
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_panel</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_sizes <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -73,6 +75,8 @@ panel data. <code>ggpanel</code> is just an alias of <code>align_panel</code>.</
 <span><span class="fu">ggpanel</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_sizes <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -94,13 +98,25 @@ panel data. <code>ggpanel</code> is just an alias of <code>align_panel</code>.</
 <dd><p>Plot size, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 
+<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
+<dd><p>A boolean value or a character of the axis position (<code>"t"</code>,
+<code>"l"</code>, <code>"b"</code>, <code>"r"</code>) indicates which axis title should be free from
+alignment. By default, all axis title won't be aligned.</p></dd>
+
+
+<dt id="arg-free-sizes">free_sizes<a class="anchor" aria-label="anchor" href="#arg-free-sizes"></a></dt>
+<dd><p>A character specifies the ggplot elements which won't
+count space sizes when alignment.</p></dd>
+
+
 <dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
 <dd><p>A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
 default is to not modify the data. Use <code>NULL</code>, if you don't want to modify
-anything. Used to modify the data after layout preparation has been applied,
-but before the data is handled of to the ggplot2 for rendering. Use this hook
-if the you needs change the default data for all <code>geoms</code>.</p></dd>
+anything.</p>
+<p>Used to modify the data after layout has been created, but before the data is
+handled of to the ggplot2 for rendering. Use this hook if the you needs
+change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
@@ -129,7 +145,7 @@ will be added into this <code>Align</code> object.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>Alignpanel</code> object.</p>
+    <p>A <code>AlignPanel</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
