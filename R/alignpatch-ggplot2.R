@@ -73,7 +73,6 @@ patch_align.gtable_ggplot <- function(gt, guides, panel_width, panel_height) {
     } else { # for ggplot with multiple panels, we cannot fix the aspect ratio
         if (respect) {
             gt <- attach_border(gt, guides)
-        } else {
             respect <- FALSE
         }
         gt <- merge_panels(gt, rows, cols)
