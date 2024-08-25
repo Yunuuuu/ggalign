@@ -1,10 +1,3 @@
-#' Build `Layout` object for rendering.
-#'
-#' @param layout A [layout_heatmap()] or [layout_stack()] object.
-#' @examples
-#' build_alignpatches(ggheatmap(matrix(rnorm(100L), nrow = 10L)))
-#' @export
-#' @return A `alignpatches` object or `NULL` if no plots.
 build_alignpatches <- function(layout) UseMethod("build_alignpatches")
 
 #' @export

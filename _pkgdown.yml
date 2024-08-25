@@ -14,7 +14,6 @@ reference:
   contents:
   - layout-add
   - layout-and
-  - build_patchwork
 
 - title: Activate context
   desc: >
@@ -49,6 +48,20 @@ reference:
   - align_kmeans
   - align_reorder
 
+- title: Plot composer
+  desc: >
+    This section outlines essential functions for composing plots into a grid, 
+    intended for internal use. The core code of plot composer is derived from 
+    the `patchwork` package, with the hope of eventually integrating and merging 
+    these functions into the `patchwork` project.
+  contents:
+  - plot_grid
+  - free_align
+  - free_border
+  - free_lab
+  - free_size
+  - as_patch
+
 - title: Extending ggplot2
   desc: New ggplot2 geoms, stats, scales, and facets
   contents:
@@ -57,6 +70,7 @@ reference:
 - title: helpers
   desc: A handful of helpers
   contents:
+  - ggalignGrob
   - hclust2
   - dendrogram_data
   - is.ggheatmap
