@@ -139,6 +139,8 @@ as_patch.patchwork <- function(x) {
     }
     layout <- .subset2(patches, "layout")
     layout$guides <- check_guides(.subset2(layout, "guides"))
+    layout$theme <- .subset2(.subset2(patches, "annotation"), "theme") %||%
+        ggplot2::theme()
     new_alignpatches(plots, layout)
 }
 

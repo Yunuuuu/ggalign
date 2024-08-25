@@ -26,6 +26,17 @@ allow_lambda <- function(x) {
     }
 }
 
+#' @importFrom ggplot2 zeroGrob
+get_grob <- function(x, name) {
+    nms <- .subset2(.subset2(x, "layout"), "name")
+    pattern <- paste0("^", name, "$")
+    ind <- grep(pattern, nms)
+    if (length(ind) == 0) {
+        return(zeroGrob())
+    }
+    .subset2(.subset2(x, "grobs"), grep(pattern, nms))
+}
+
 #' @importFrom gtable gtable_trim
 subset_gt <- function(gt, index, trim = TRUE) {
     gt$layout <- .subset2(gt, "layout")[index, , drop = FALSE]

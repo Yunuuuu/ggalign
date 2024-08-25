@@ -13,7 +13,7 @@ plot_grid(
   heights = NA,
   design = NULL,
   guides = NULL,
-  guide_theme = NULL
+  theme = NULL
 )
 }
 \arguments{
@@ -40,8 +40,8 @@ either be specified as a text string or by concatenating calls to
 or you can specify the string of the guide position to collect. Allowed
 strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{guide_theme}{A \link[ggplot2:theme]{theme()} object to rendering the
-guides.}
+\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides,
+margins and background.}
 }
 \value{
 A \code{alignpatches} object.

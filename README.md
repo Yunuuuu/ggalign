@@ -3,12 +3,9 @@
 
 # ggalign
 
-This package extends ggplot2 and offers several benefits for organizing
-and arranging plots. It is specifically designed to align the axes of
-multiple ggplot objects consistently. This functionality is particularly
-useful for plots where data order needs to be manipulated. One common
-application of this package is in effectively organizing combinations of
-plots, such as a dendrogram and a heatmap.
+This package extends ggplot2, enabling consistent axis alignment across
+multiple plots. It’s particularly useful for plots where data order
+needs to be manipulated, such as aligning a dendrogram with a heatmap.
 
 ## Installation
 

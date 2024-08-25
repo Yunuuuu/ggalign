@@ -17,17 +17,17 @@
 #' @param guides A single boolean value indicates whether to collect the guides,
 #' or you can specify the string of the guide position to collect. Allowed
 #' strings are: `r rd_values(BORDERS)`.
-#' @param guide_theme A [theme()][ggplot2::theme] object to rendering the
-#' guides.
+#' @param theme A [theme()][ggplot2::theme] object to rendering the guides,
+#' margins and background.
 #' @return A `alignpatches` object.
 #' @export
 plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
                       heights = NA, design = NULL,
-                      guides = NULL, guide_theme = NULL) {
+                      guides = NULL, theme = NULL) {
     plots <- rlang::list2(...)
     assert_bool(byrow)
     guides <- check_guides(guides)
-    assert_s3_class(guide_theme, "theme", null_ok = TRUE)
+    assert_s3_class(theme, "theme", null_ok = TRUE)
     if (!is.null(design)) design <- as_areas(design)
     nms <- names(plots)
     if (!is.null(nms) && !is.null(design) && is.character(design)) {
@@ -48,7 +48,7 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
         widths = widths,
         heights = heights,
         guides = guides,
-        guide_theme = guide_theme %||% ggplot2::theme(),
+        theme = theme %||% ggplot2::theme(),
         design = design
     ))
 }
