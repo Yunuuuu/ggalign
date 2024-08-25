@@ -112,7 +112,7 @@ ggheatmap(mat2) +
 ```
 
 We can use `plot_grid()` to arrange them.
-```{r}
+```{r fig.dim = c(10, 10)}
 h1 <- ggheatmap(mat) +
   scale_fill_gradient2(name = "mat", low = "green", high = "red") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
