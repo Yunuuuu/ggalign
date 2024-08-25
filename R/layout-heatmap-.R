@@ -57,12 +57,25 @@
 #' ggheatmap(letters)
 #' @importFrom ggplot2 aes
 #' @export
-layout_heatmap <- function(data = NULL, mapping = aes(),
+layout_heatmap <- function(data, mapping = aes(),
                            width = NULL, height = NULL,
-                           guides = waiver(), free_labs = waiver(),
+                           guides = waiver(),
+                           free_labs = waiver(), free_sizes = waiver(),
                            plot_data = waiver(), filling = TRUE,
                            ..., set_context = TRUE, order = NULL, name = NULL) {
-    UseMethod("layout_heatmap")
+    if (missing(data)) {
+        .layout_heatmap(
+            data = NULL, mapping = mapping,
+            width = width, height = height,
+            guides = guides, free_labs = free_labs,
+            free_sizes = free_sizes, plot_data = plot_data,
+            filling = filling, ..., set_context = set_context,
+            order = order, name = name, nobs_list = list(),
+            call = current_call()
+        )
+    } else {
+        UseMethod("layout_heatmap")
+    }
 }
 
 #' @export
@@ -116,7 +129,7 @@ layout_heatmap.matrix <- function(data, ...) {
 }
 
 #' @export
-layout_heatmap.NULL <- function(data = NULL, ...) {
+layout_heatmap.NULL <- function(data, ...) {
     .layout_heatmap(
         data = data, nobs_list = list(),
         ..., call = current_call()
@@ -124,7 +137,7 @@ layout_heatmap.NULL <- function(data = NULL, ...) {
 }
 
 #' @export
-layout_heatmap.formula <- function(data = NULL, ...) {
+layout_heatmap.formula <- function(data, ...) {
     .layout_heatmap(
         data = allow_lambda(data), nobs_list = list(),
         ..., call = current_call()
@@ -153,25 +166,30 @@ layout_heatmap.default <- function(data, ...) {
 .layout_heatmap <- function(data,
                             mapping = aes(),
                             width = NULL, height = NULL,
-                            guides = waiver(), free_labs = waiver(),
+                            guides = waiver(),
+                            free_labs = waiver(), free_sizes = waiver(),
                             plot_data = waiver(), filling = TRUE,
                             ...,
                             set_context = TRUE, order = NULL, name = NULL,
                             nobs_list = list(x = ncol(data), y = nrow(data)),
                             call = caller_call()) {
     assert_bool(filling, call = call)
-    plot <- ggplot2::ggplot(mapping = mapping) +
-        heatmap_theme()
-    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
 
-    # add heatmap filling in the first layer
-    if (filling) {
-        if (is.null(.subset2(plot$mapping, "fill"))) {
-            tile_mapping <- aes(.data$.x, .data$.y, fill = .data$value)
-        } else {
-            tile_mapping <- aes(.data$.x, .data$.y)
-        }
-        plot <- plot + ggplot2::geom_tile(mapping = tile_mapping, ...)
+    if (!is.waive(free_labs)) {
+        free_labs <- check_layout_labs(free_labs, call = call)
+    }
+    if (!is.waive(free_sizes)) {
+        free_sizes <- check_ggelements(free_sizes, call = call)
+    }
+    if (is.null(width)) {
+        width <- unit(NA, "null")
+    } else {
+        width <- check_size(width)
+    }
+    if (is.null(height)) {
+        height <- unit(NA, "null")
+    } else {
+        height <- check_size(height)
     }
     assert_bool(set_context, call = call)
 
@@ -189,6 +207,19 @@ layout_heatmap.default <- function(data, ...) {
         null_ok = TRUE, call = call
     )
     plot_data <- check_plot_data(plot_data)
+    plot <- ggplot2::ggplot(mapping = mapping) +
+        heatmap_theme()
+    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
+
+    # add heatmap filling in the first layer
+    if (filling) {
+        if (is.null(.subset2(plot$mapping, "fill"))) {
+            tile_mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+        } else {
+            tile_mapping <- aes(.data$.x, .data$.y)
+        }
+        plot <- plot + ggplot2::geom_tile(mapping = tile_mapping, ...)
+    }
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
@@ -196,10 +227,11 @@ layout_heatmap.default <- function(data, ...) {
         data = data,
         params = list(
             # following parameters can be controlled by `active` object.
-            width = set_size(width),
-            height = set_size(height),
+            width = width,
+            height = height,
             guides = guides,
             free_labs = free_labs,
+            free_sizes = free_sizes,
             plot_data = plot_data
         ),
         set_context = set_context,

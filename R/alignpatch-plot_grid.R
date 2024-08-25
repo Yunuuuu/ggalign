@@ -47,7 +47,7 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
     ))
 }
 
-new_alignpatches <- function(plots = list(), layout = plot_layout()) {
+new_alignpatches <- function(plots, layout) {
     structure(
         list(
             plots = plots, layout = layout,

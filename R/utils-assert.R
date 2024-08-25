@@ -73,23 +73,25 @@ check_guides <- function(guides, arg = caller_arg(guides),
         guides <- character()
     } else if (isTRUE(guides)) {
         BORDERS
-    } else if (!all(guides %in% BORDERS)) {
+    } else {
+        check_borders(guides, arg = arg, call = call)
+    }
+}
+
+check_borders <- function(borders, arg = caller_arg(borders),
+                          call = caller_call()) {
+    if (length(borders) == 0L || !all(borders %in% BORDERS)) {
         cli::cli_abort(sprintf(
             "only %s are allowed in {.arg {arg}}",
             oxford_comma(style_val(BORDERS))
         ), call = call)
     } else {
-        unique(guides)
+        unique(borders)
     }
 }
 
-check_labs <- function(labs, arg = caller_arg(labs),
-                       call = caller_call()) {
-    if (is.null(labs) || isFALSE(labs)) {
-        labs <- character()
-    } else if (isTRUE(labs)) {
-        BORDERS
-    } else if (is.character(labs)) {
+check_labs <- function(labs, arg = caller_arg(labs), call = caller_call()) {
+    if (is.character(labs)) {
         template <- list(
             t = "t",
             l = "l",
@@ -106,36 +108,87 @@ check_labs <- function(labs, arg = caller_arg(labs),
             `ylab-l` = "l",
             `ylab-r` = "r"
         )
-        labs <- .subset(template, labs)
-        if (any(unknown <- vapply(labs, is.null, logical(1L)))) { # nolint
-            cli::cli_abort("Cannot determine the labs: {unknown}", call = call)
+        ans <- .subset(template, labs)
+        if (any(unknown <- vapply(ans, is.null, logical(1L)))) { # nolint
+            cli::cli_abort("Cannot determine the labs: {labs[unknown]}",
+                call = call
+            )
         }
-        ans <- unique(unlist(labs, FALSE, FALSE))
-        if (length(ans) == 0L) {
-            return(character())
-        } else {
-            return(ans)
-        }
+        unique(unlist(ans, FALSE, FALSE))
     } else {
-        cli::cli_abort(
-            "{.arg {arg}} must be a single boolean value or a character",
-            call = call
+        cli::cli_abort("{.arg {arg}} must be a character", call = call)
+    }
+}
+
+check_layout_labs <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (is.null(x) || isFALSE(x)) {
+        NULL
+    } else if (isTRUE(x)) {
+        BORDERS
+    } else {
+        check_labs(x, arg = arg, call = call)
+    }
+}
+
+check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (is.character(x)) {
+        template <- list(
+            x = c("xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b"),
+            y = c("ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r"),
+            xlab = c("xlab-t", "xlab-b"),
+            xlabs = c("xlab-t", "xlab-b"),
+            ylab = c("ylab-l", "ylab-r"),
+            ylabs = c("ylab-l", "ylab-r"),
+            lab = c("xlab-t", "xlab-b", "ylab-l", "ylab-r"),
+            axis = c("axis-t", "axis-b", "axis-l", "axis-r"),
+            axes = c("axis-t", "axis-b", "axis-l", "axis-r"),
+            strip = c("strip-t", "strip-b", "strip-l", "strip-r"),
+            strips = c("strip-t", "strip-b", "strip-l", "strip-r")
         )
+        template <- c(GGELEMENTS, template)
+        valid_elements <- unlist(GGELEMENTS,
+            recursive = FALSE, use.names = FALSE
+        )
+        direct <- intersect(x, valid_elements)
+        indirect <- setdiff(x, valid_elements)
+        ans <- .subset(template, indirect)
+        if (any(unknown <- vapply(ans, is.null, logical(1L)))) { # nolint
+            cli::cli_abort(paste(
+                "Cannot determine the ggplot elements:",
+                "{indirect[unknown]}"
+            ), call = call)
+        }
+        union(direct, unlist(ans, FALSE, FALSE))
+    } else {
+        cli::cli_abort("{.arg {arg}} must be a character", call = call)
     }
 }
 
 check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
                               call = caller_call()) {
     l <- length(sizes)
-    if (!(l == 1L || l == 3L) || !(is.unit(sizes) || is.numeric(sizes))) {
+    if (!(l == 1L || l == 3L) ||
+        !(all(is.na(sizes)) || is.numeric(sizes) || is.unit(sizes))) {
         cli::cli_abort(paste(
             "{.arg {arg}} must be",
             "a numeric or unit object of length 3"
         ), call = call)
     }
-    sizes <- set_size(sizes)
     if (l == 1L) sizes <- rep(sizes, times = 3L)
+    if (!is.unit(sizes)) sizes <- unit(sizes, "null")
     sizes
+}
+
+check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
+    if (!is_scalar(size) ||
+        !(is.na(size) || is.numeric(size) || is.unit(size))) {
+        cli::cli_abort(
+            "{.arg {arg}} must be a single numeric or unit object",
+            call = call
+        )
+    }
+    if (!is.unit(size)) size <- unit(size, "null")
+    size
 }
 
 check_plot_data <- function(plot_data, arg = caller_arg(plot_data),

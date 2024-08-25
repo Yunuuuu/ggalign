@@ -6,12 +6,13 @@
 \title{Arrange plots around a Heatmap}
 \usage{
 layout_heatmap(
-  data = NULL,
+  data,
   mapping = aes(),
   width = NULL,
   height = NULL,
   guides = waiver(),
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver(),
   filling = TRUE,
   ...,
@@ -21,12 +22,13 @@ layout_heatmap(
 )
 
 ggheatmap(
-  data = NULL,
+  data,
   mapping = aes(),
   width = NULL,
   height = NULL,
   guides = waiver(),
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver(),
   filling = TRUE,
   ...,

@@ -29,13 +29,16 @@ type <- gsub("s\\d+_", "", colnames(mat))
 ggstack(data = mat_scaled) +
   # group stack rows into 5 groups
   align_kmeans(centers = 5L) +
+  # add a block plot for each group
   ggpanel(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
   scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
   scale_x_continuous(breaks = NULL, name = NULL) +
-  ggheatmap() +
+  # add a heatmap plot
+  ggheatmap(free_sizes = "l") +
   scale_y_continuous(breaks = NULL) +
   scale_fill_viridis_c() +
+  # add dendrogram for this heatmap
   hmanno("t") +
   align_dendro() +
   ggalign(data = type, size = unit(1, "cm")) +
@@ -56,7 +59,9 @@ ggstack(data = mat_scaled) +
   # we reset heatmap context into heatmap body, in this way,
   # `&` will add elemnets for this heatmap and heatmap annotation simutaneously
   hmanno() +
+  # we move into the stack layout
   active() +
+  # add a point plot
   ggalign(data = expr$length, size = unit(2, "cm")) +
   geom_point(aes(x = value)) +
   labs(x = "length") +
@@ -64,7 +69,8 @@ ggstack(data = mat_scaled) +
     panel.border = element_rect(fill = NA),
     axis.text.x = element_text(angle = -60, hjust = 0)
   ) +
-  ggheatmap(expr$type, width = unit(2, "cm")) +
+  # add another heatmap
+  ggheatmap(expr$type, width = unit(2, "cm"), free_sizes = "y") +
   scale_fill_brewer(palette = "Set3", name = "gene type") +
   scale_x_continuous(breaks = NULL, name = "gene type") +
   hmanno("t") +
@@ -75,8 +81,7 @@ ggstack(data = mat_scaled) +
   ) +
   scale_x_discrete() +
   scale_y_continuous(expand = expansion()) +
-  scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") &
-  theme(plot.margin = margin())
+  scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")
 ```
 
 # The measles vaccine heatmap

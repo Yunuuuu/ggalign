@@ -42,7 +42,9 @@
 #' @keywords internal
 align <- function(align_class, params,
                   size = NULL, data = NULL,
-                  free_labs = waiver(), plot_data = waiver(),
+                  free_labs = waiver(),
+                  free_sizes = waiver(),
+                  plot_data = waiver(),
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
                   check.param = TRUE, call = caller_call()) {
@@ -51,13 +53,18 @@ align <- function(align_class, params,
     }
 
     # check arguments ---------------------------------------------
-    size <- set_size(size)
-    if (!is_scalar(size) || !is.unit(size)) {
-        cli::cli_abort("{.arg size} must be a single {.cls unit} object.",
-            call = call
-        )
+    if (is.null(size)) {
+        size <- unit(NA, "null")
+    } else {
+        size <- check_size(size)
     }
     data <- allow_lambda(data)
+    if (!is.waive(free_labs)) {
+        free_labs <- check_layout_labs(free_labs, call = call)
+    }
+    if (!is.waive(free_sizes)) {
+        free_sizes <- check_ggelements(free_sizes, call = call)
+    }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
     assert_bool(set_context, call = call)
@@ -116,6 +123,7 @@ align <- function(align_class, params,
         input_data = data,
         plot_data = plot_data,
         free_labs = free_labs,
+        free_sizes = free_sizes,
         facet = facet,
         limits = limits,
 

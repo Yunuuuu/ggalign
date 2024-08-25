@@ -33,14 +33,14 @@ testthat::test_that("add `heatmap_active` object works well", {
         width = unit(1, "cm"),
         height = unit(1, "cm"),
         guides = TRUE,
-        align_axis_title = TRUE,
+        free_labs = TRUE,
         plot_data = NULL
     )
     params <- slot(empty_heatmap2, "params")
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
     expect_identical(params$guides, BORDERS)
-    expect_identical(params$align_axis_title, TRUE)
+    expect_identical(params$free_labs, BORDERS)
     expect_identical(params$plot_data, NULL)
     expect_error(empty_heatmap + hmanno("t"))
 
@@ -50,14 +50,14 @@ testthat::test_that("add `heatmap_active` object works well", {
     p2 <- p + hmanno(
         width = unit(1, "cm"),
         height = unit(1, "cm"),
-        align_axis_title = TRUE,
+        free_labs = TRUE,
         plot_data = NULL
     )
     params <- slot(p2, "params")
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
     expect_identical(params$guides, waiver())
-    expect_identical(params$align_axis_title, TRUE)
+    expect_identical(params$free_labs, BORDERS)
     expect_identical(params$plot_data, NULL)
 
     # change parameters for heatmap annotation
@@ -66,16 +66,18 @@ testthat::test_that("add `heatmap_active` object works well", {
         width = unit(3, "cm"),
         height = unit(3, "cm"),
         guides = NULL,
-        align_axis_title = TRUE,
+        free_labs = TRUE,
         plot_data = NULL
     )
+    # won't change the params of heatmap
     params <- slot(p3, "params")
-    expect_identical(params$width, unit(1, "null"))
-    expect_identical(params$height, unit(1, "null"))
+    expect_identical(params$width, unit(NA, "null"))
+    expect_identical(params$height, unit(NA, "null"))
     expect_identical(params$guides, waiver())
-    expect_identical(params$align_axis_title, NULL)
+    expect_identical(params$free_labs, waiver())
     expect_identical(params$plot_data, waiver())
 
+    # change the params of stack
     stack <- slot(p3, "top")
     expect_identical(get_panel(stack), get_panel(p, "x"))
     expect_identical(get_index(stack), get_index(p, "x"))
@@ -83,7 +85,7 @@ testthat::test_that("add `heatmap_active` object works well", {
     params <- slot(stack, "params")
     expect_identical(params$size, unit(1, "null"))
     expect_identical(params$guides, character())
-    expect_identical(params$align_axis_title, TRUE)
+    expect_identical(params$free_labs, BORDERS)
     expect_identical(params$plot_data, NULL)
 })
 
@@ -102,8 +104,7 @@ testthat::test_that("add `Align` object works well", {
 #     expect_s3_class(build_patchwork(p), "alignpatches")
 # })
 
-# testthat::test_that("`ggplot` method works well", {
-#     p <- ggheatmap(1:10)
-#     expect_no_error(ggplot2::ggplot_build(p))
-#     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
-# })
+testthat::test_that("`ggplot` method works well", {
+    p <- ggheatmap(1:10)
+    expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
+})

@@ -12,6 +12,7 @@ hmanno(
   height = NULL,
   guides = NA,
   free_labs = NA,
+  free_sizes = NA,
   plot_data = NA
 )
 }

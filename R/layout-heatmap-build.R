@@ -29,6 +29,7 @@ build_alignpatches.HeatmapLayout <- function(layout) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
+        # No parent layout, by default we'll always collect guides
         guides = .subset2(params, "guides") %|w|% TRUE
     )
 }
@@ -42,21 +43,50 @@ patch_gtable.HeatmapLayout <- function(patch) {
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
-                          free_labs = waiver()) {
+                          free_labs = waiver(), free_sizes = waiver()) {
     params <- slot(heatmap, "params")
     mat <- slot(heatmap, "data")
     x_nobs <- get_nobs(heatmap, "x")
     y_nobs <- get_nobs(heatmap, "y")
     if (is.null(x_nobs) || is.null(y_nobs)) {
-        cli::cli_abort(
-            "You must provide {.arg data} argument to plot the heatmap"
-        )
+        cli::cli_abort(c(
+            "You must provide {.arg data} argument to plot the heatmap",
+            i = "Do you want to put this heatmap in a parent stack layout?"
+        ))
     }
     xpanel <- get_panel(heatmap, "x") %||% factor(rep_len(1L, x_nobs))
     xindex <- get_index(heatmap, "x") %||% reorder_index(xpanel)
 
     ypanel <- get_panel(heatmap, "y") %||% factor(rep_len(1L, y_nobs))
     yindex <- get_index(heatmap, "y") %||% reorder_index(ypanel)
+
+    # prepare free_labs and free_sizes
+    heatmap_labs <- .subset2(params, "free_labs") %|w|% free_labs
+
+    if (!is.waive(heatmap_labs)) {
+        # prepare labs for child stack layout
+        horizontal_labs <- intersect(heatmap_labs, c("t", "b"))
+        vertical_labs <- intersect(heatmap_labs, c("l", "r"))
+    } else {
+        # inherit from the parent stack layout, by default we collapse labs
+        heatmap_labs <- BORDERS
+        horizontal_labs <- waiver()
+        vertical_labs <- waiver()
+    }
+
+    # inherit from the parent stack layout
+    heatmap_sizes <- .subset2(params, "free_sizes") %|w|% free_sizes
+    if (!is.waive(heatmap_sizes)) {
+        horizontal_sizes <- get_free_sizes(heatmap_sizes, c("t", "b"))
+        vertical_sizes <- get_free_sizes(heatmap_sizes, c("l", "r"))
+        if (length(horizontal_sizes) == 0L) horizontal_sizes <- NULL
+        if (length(vertical_sizes) == 0L) vertical_sizes <- NULL
+    } else {
+        heatmap_sizes <- NULL
+        # set child stack layout
+        horizontal_sizes <- waiver()
+        vertical_sizes <- waiver()
+    }
 
     # read the plot ---------------------------------------
     p <- slot(heatmap, "plot")
@@ -80,7 +110,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     guides <- .subset2(params, "guides") %|w|% guides
-    free_labs <- .subset2(params, "free_labs") %|w|% free_labs
     p <- finish_plot_data(p, plot_data %|w|% NULL, data = data)
 
     # setup the scales -----------------------------------
@@ -143,26 +172,43 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     }
 
     # plot heatmap annotations ----------------------------
-    stack_list <- lapply(GGHEAT_ELEMENTS, function(position) {
+    stack_list <- lapply(HEATMAP_ANNOTATION_POSITION, function(position) {
         if (is_empty(stack <- slot(heatmap, position))) {
             return(list(plot = NULL, size = NULL))
         }
-        # special case for `align_gg` to operate the vertical axis
         if (is_horizontal(to_direction(position))) {
             panel <- xpanel
             index <- xindex
+            free_sizes <- horizontal_sizes
+            free_labs <- horizontal_labs
         } else {
             panel <- ypanel
             index <- yindex
+            free_sizes <- vertical_sizes
+            free_labs <- vertical_labs
         }
-        stack_build(stack, plot_data, guides, free_labs, panel, index)
+        stack_build(
+            stack, plot_data, guides,
+            free_labs = free_labs,
+            free_sizes = free_sizes,
+            extra_panel = panel,
+            extra_index = index
+        )
     })
-    names(stack_list) <- GGHEAT_ELEMENTS
+    names(stack_list) <- HEATMAP_ANNOTATION_POSITION
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
 
-    plots <- c(plots, list(heatmap = free_lab(p, free_labs %|w|% TRUE)))
+    # By default, we won't remove sizes of the heatmap
+    if (!is.null(heatmap_labs)) {
+        p <- free_lab(p, heatmap_labs)
+    }
+    if (!is.null(heatmap_sizes)) {
+        p <- free_size(p, heatmap_sizes, free_border = TRUE)
+    }
+    # by default, we always collapse the axis title
+    plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
 }

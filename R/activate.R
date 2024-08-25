@@ -34,7 +34,7 @@ activate.StackLayout <- function(x, what) {
 #' [StackLayout][layout_stack].
 #' @export
 active <- function(what = NULL, sizes = NULL, guides = NA,
-                   free_labs = NA, plot_data = NA) {
+                   free_labs = NA, free_sizes = NA, plot_data = NA) {
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     if (is.na(guides) && is_scalar(guides)) {
@@ -45,7 +45,12 @@ active <- function(what = NULL, sizes = NULL, guides = NA,
     if (is.na(free_labs) && is_scalar(free_labs)) {
         free_labs <- NA
     } else {
-        free_labs <- check_labs(free_labs)
+        free_labs <- check_layout_labs(free_labs)
+    }
+    if (is.na(free_sizes) && is_scalar(free_sizes)) {
+        free_sizes <- NA
+    } else {
+        free_sizes <- check_ggelements(free_sizes)
     }
     if (is.na(plot_data) && is_scalar(plot_data)) {
         plot_data <- NA
@@ -56,6 +61,7 @@ active <- function(what = NULL, sizes = NULL, guides = NA,
         sizes = sizes,
         guides = guides,
         free_labs = free_labs,
+        free_sizes = free_sizes,
         plot_data = plot_data,
         class = c("stack_active", "active")
     )
@@ -81,16 +87,17 @@ active <- function(what = NULL, sizes = NULL, guides = NA,
 #' @export
 hmanno <- function(position = NULL, size = NULL,
                    what = waiver(), width = NULL, height = NULL,
-                   guides = NA, free_labs = NA, plot_data = NA) {
+                   guides = NA, free_labs = NA, free_sizes = NA,
+                   plot_data = NA) {
     if (is.null(position)) {
         position <- NA
     } else {
-        position <- match.arg(position, GGHEAT_ELEMENTS)
+        position <- match.arg(position, HEATMAP_ANNOTATION_POSITION)
     }
-    if (!is.null(size)) size <- set_size(size)
+    if (!is.null(size)) size <- check_size(size)
     if (!is.waive(what)) what <- check_stack_context(what)
-    if (!is.null(width)) width <- set_size(width)
-    if (!is.null(height)) height <- set_size(height)
+    if (!is.null(width)) width <- check_size(width)
+    if (!is.null(height)) height <- check_size(height)
     if (is.na(guides) && is_scalar(guides)) {
         guides <- NA
     } else {
@@ -99,7 +106,12 @@ hmanno <- function(position = NULL, size = NULL,
     if (is.na(free_labs) && is_scalar(free_labs)) {
         free_labs <- NA
     } else {
-        free_labs <- check_labs(free_labs)
+        free_labs <- check_layout_labs(free_labs)
+    }
+    if (is.na(free_sizes) && is_scalar(free_sizes)) {
+        free_sizes <- NA
+    } else {
+        free_sizes <- check_ggelements(free_sizes)
     }
     if (is.na(plot_data) && is_scalar(plot_data)) {
         plot_data <- NA
@@ -108,7 +120,7 @@ hmanno <- function(position = NULL, size = NULL,
     }
     structure(position,
         what = what, size = size, width = width, height = height,
-        guides = guides, free_labs = free_labs,
+        guides = guides, free_labs = free_labs, free_sizes = free_sizes,
         plot_data = plot_data,
         class = c("heatmap_active", "active")
     )
@@ -116,11 +128,11 @@ hmanno <- function(position = NULL, size = NULL,
 
 ########################################################
 match_context <- function(what) {
-    if (!is.null(what)) what <- match.arg(what, GGHEAT_ELEMENTS)
+    if (!is.null(what)) what <- match.arg(what, HEATMAP_ANNOTATION_POSITION)
     what
 }
 
-GGHEAT_ELEMENTS <- c("top", "left", "bottom", "right")
+HEATMAP_ANNOTATION_POSITION <- c("top", "left", "bottom", "right")
 
 #' @keywords internal
 set_context <- function(x, context) UseMethod("set_context")

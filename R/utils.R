@@ -75,6 +75,10 @@ trim_area <- function(area) {
 
 is.waive <- function(x) inherits(x, "waiver")
 
+get_free_sizes <- function(ggelements, borders) {
+    intersect(ggelements, unlist(.subset(GGELEMENTS, borders), FALSE, FALSE))
+}
+
 add_default_mapping <- function(plot, default_mapping) {
     mapping <- .subset2(plot, "mapping")
     for (nm in names(mapping)) {

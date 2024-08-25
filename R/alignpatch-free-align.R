@@ -1,5 +1,10 @@
-#' Disable the align of panel axes
+#' Free panel axes from alignment
 #'
+#' [plot_grid] will try to align plots by their panels, if we want to compose
+#' plots without alignment. we can wrap the plot with `free_align`.
+#'
+#' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][plot_grid] object.
+#' @param axes Which axes shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
 #' @export
 free_align <- function(plot, axes = c("t", "l", "b", "r")) {
     UseMethod("free_align")
@@ -7,10 +12,7 @@ free_align <- function(plot, axes = c("t", "l", "b", "r")) {
 
 #' @export
 free_align.ggplot <- function(plot, axes = c("t", "l", "b", "r")) {
-    if (length(axes) == 0L) {
-        return(plot)
-    }
-    attr(plot, "free_axes") <- axes
+    attr(plot, "free_axes") <- check_borders(axes)
     add_class(plot, "free_align")
 }
 
@@ -19,8 +21,8 @@ free_align.alignpatches <- free_align.ggplot
 
 #' @export
 free_align.free_border <- function(plot, axes = c("t", "l", "b", "r")) {
-    # we always add `free_align` behind `free_border`
     free_borders <- attr(plot, "free_borders")
+    # we always add `free_align` behind `free_border`
     class(plot) <- setdiff(class(plot), "free_border")
     plot <- NextMethod()
     free_border(plot, free_borders)
@@ -28,7 +30,13 @@ free_align.free_border <- function(plot, axes = c("t", "l", "b", "r")) {
 
 #' @export
 free_align.free_lab <- function(plot, axes = c("t", "l", "b", "r")) {
-    attr(plot, "free_labs") <- setdiff(attr(plot, "free_labs"), axes)
+    axes <- check_borders(axes)
+    free_labs <- setdiff(attr(plot, "free_labs"), axes)
+    if (length(free_labs) == 0L) {
+        class(plot) <- setdiff(class(plot), "free_lab")
+    } else {
+        attr(plot, "free_labs") <- free_labs
+    }
     NextMethod()
 }
 

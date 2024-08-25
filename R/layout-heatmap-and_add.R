@@ -14,7 +14,7 @@ layout_heatmap_and_add.default <- function(object, heatmap, object_name) {
 layout_heatmap_and_add.gg <- function(object, heatmap, object_name) {
     if (is.null(set <- get_context(heatmap))) {
         heatmap <- heatmap_add(object, heatmap, object_name)
-        set <- GGHEAT_ELEMENTS
+        set <- HEATMAP_ANNOTATION_POSITION
     }
     for (position in set) {
         stack <- slot(heatmap, position)

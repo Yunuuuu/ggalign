@@ -2,10 +2,16 @@
 % Please edit documentation in R/alignpatch-free-align.R
 \name{free_align}
 \alias{free_align}
-\title{Disable the align of panel axes}
+\title{Free panel axes from alignment}
 \usage{
 free_align(plot, axes = c("t", "l", "b", "r"))
 }
+\arguments{
+\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=plot_grid]{alignpatches} object.}
+
+\item{axes}{Which axes shouldn't be aligned? Allowed values: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+}
 \description{
-Disable the align of panel axes
+\link{plot_grid} will try to align plots by their panels, if we want to compose
+plots without alignment. we can wrap the plot with \code{free_align}.
 }

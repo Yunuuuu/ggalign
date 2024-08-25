@@ -6,20 +6,22 @@
 \title{Put plots horizontally or vertically}
 \usage{
 layout_stack(
-  data = NULL,
+  data,
   direction = NULL,
   sizes = NULL,
   guides = waiver(),
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver()
 )
 
 ggstack(
-  data = NULL,
+  data,
   direction = NULL,
   sizes = NULL,
   guides = waiver(),
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver()
 )
 }

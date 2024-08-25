@@ -21,6 +21,7 @@ align_dendro(
   size = NULL,
   data = NULL,
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver(),
   set_context = TRUE,
   order = NULL,

@@ -4,7 +4,14 @@
 \alias{active}
 \title{Determine the active context of stack layout}
 \usage{
-active(what = NULL, sizes = NULL, guides = NA, free_labs = NA, plot_data = NA)
+active(
+  what = NULL,
+  sizes = NULL,
+  guides = NA,
+  free_labs = NA,
+  free_sizes = NA,
+  plot_data = NA
+)
 }
 \arguments{
 \item{what}{What should get activated for the stack layout? Possible values

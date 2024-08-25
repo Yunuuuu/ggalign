@@ -12,6 +12,7 @@ align(
   size = NULL,
   data = NULL,
   free_labs = waiver(),
+  free_sizes = waiver(),
   plot_data = waiver(),
   limits = TRUE,
   facet = TRUE,

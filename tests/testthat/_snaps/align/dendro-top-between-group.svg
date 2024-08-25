@@ -92,13 +92,6 @@
 <line x1='323.14' y1='18.07' x2='141.43' y2='18.07' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='504.86' y1='18.07' x2='323.14' y2='18.07' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='323.14' y1='18.07' x2='504.86' y2='18.07' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<text x='22.97' y='272.96' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='22.97' y='178.23' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='22.97' y='83.50' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>4</text>
-<polyline points='25.16,269.93 27.90,269.93 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='25.16,175.20 27.90,175.20 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='25.16,80.47 27.90,80.47 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text transform='translate(13.05,144.00) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='29.97px' lengthAdjust='spacingAndGlyphs'>height</text>
 </g>
 <defs>
   <clipPath id='cpMjcuOTB8MzQyLjIyfDUuNDh8NS40OA=='>
@@ -117,6 +110,13 @@
 <g clip-path='url(#cpMzQ3LjcwfDY2Mi4wMnw1LjQ4fDUuNDg=)'>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<text x='22.97' y='272.96' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='22.97' y='178.23' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='22.97' y='83.50' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>4</text>
+<polyline points='25.16,269.93 27.90,269.93 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='25.16,175.20 27.90,175.20 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='25.16,80.47 27.90,80.47 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text transform='translate(13.05,144.00) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='29.97px' lengthAdjust='spacingAndGlyphs'>height</text>
 </g>
 <defs>
   <clipPath id='cpMjcuOTB8MzQyLjIyfDI5My40OHw1NzAuNTI='>

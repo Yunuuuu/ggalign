@@ -1,14 +1,14 @@
+#' Free the axis titles from alignment
+#'
+#' @param labs Axis labs to be free.
+#' @return A modified version of `plot` with a `free_lab` class
 free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
     UseMethod("free_lab")
 }
 
 #' @export
 free_lab.ggplot <- function(plot, labs = c("t", "l", "b", "r")) {
-    labs <- check_labs(labs)
-    if (length(labs) == 0L) {
-        return(plot)
-    }
-    attr(plot, "free_labs") <- labs
+    attr(plot, "free_labs") <- check_labs(labs)
     add_class(plot, "free_lab")
 }
 
@@ -16,15 +16,27 @@ free_lab.ggplot <- function(plot, labs = c("t", "l", "b", "r")) {
 free_lab.alignpatches <- free_lab.ggplot
 
 #' @export
+free_lab.free_size <- free_lab.ggplot
+
+#' @export
 free_lab.free_align <- function(plot, labs = c("t", "l", "b", "r")) {
     labs <- setdiff(labs, attr(plot, "free_axes"))
+    if (length(labs) == 0L) return(plot) # styler: off
     NextMethod()
 }
 
 #' @export
 free_lab.free_borders <- function(plot, labs = c("t", "l", "b", "r")) {
     labs <- setdiff(labs, attr(plot, "free_borders"))
+    if (length(labs) == 0L) return(plot) # styler: off
     NextMethod()
+}
+
+#' @export
+free_lab.free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
+    labs <- check_labs(labs)
+    attr(plot, "free_labs") <- union(attr(plot, "free_labs"), labs)
+    plot
 }
 
 #' @export
@@ -43,6 +55,7 @@ patch_gtable.free_lab <- function(patch) {
     attach_lab(gt, labs = attr(patch, "free_labs"))
 }
 
+#' @importFrom ggplot2 find_panel
 #' @importFrom gtable is.gtable gtable_height gtable_width gtable_add_grob
 #' @importFrom grid grobHeight grobWidth viewport
 attach_lab <- function(gt, labs) {

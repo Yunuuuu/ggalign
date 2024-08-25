@@ -20,6 +20,11 @@ p5 <- ggplot(mpg, aes(class)) +
     ylim(0, 65) +
     coord_flip()
 
+p_f <- ggplot(mtcars) +
+    geom_point(aes(hp, disp)) +
+    coord_fixed() +
+    ggtitle("Fixed Aspect")
+
 test_that("The grid can be controlled", {
     expect_doppelganger("Setting ncol", {
         plot_grid(p1, p2, p3, p4, ncol = 3L)
@@ -47,11 +52,6 @@ test_that("The grid can be controlled", {
 })
 
 test_that("Fixed aspect plots behave", {
-    p_f <- ggplot(mtcars) +
-        geom_point(aes(hp, disp)) +
-        coord_fixed() +
-        ggtitle("Fixed Aspect")
-
     expect_doppelganger("FAR optimise space by default 1", {
         plot_grid(p1, p_f, p3, p4)
     })
@@ -90,10 +90,6 @@ test_that("Fixed aspect plots behave", {
 })
 
 test_that("`free_align()` works well", {
-    p_f <- ggplot(mtcars) +
-        geom_point(aes(hp, disp)) +
-        coord_fixed() +
-        ggtitle("Fixed Aspect")
     expect_doppelganger("free_align() with ggplot", {
         plot_grid(free_align(p3, "l"), p5, ncol = 1L)
     })
@@ -112,10 +108,6 @@ test_that("`free_align()` works well", {
 })
 
 test_that("`free_border()` works well", {
-    p_f <- ggplot(mtcars) +
-        geom_point(aes(hp, disp)) +
-        coord_fixed() +
-        ggtitle("Fixed Aspect")
     expect_doppelganger("free_border() with ggplot", {
         plot_grid(free_border(p3, "l"), p5, ncol = 1L)
     })
@@ -138,34 +130,6 @@ test_that("`free_border()` works well", {
     expect_doppelganger("free_border() mix with free_align", {
         plot_grid(
             free_align(free_border(
-                plot_grid(p1, p2, p_f, p4, heights = 1L), "l"
-            ), "t"), p4, p5, patchwork::plot_spacer(),
-            ncol = 2L
-        )
-    })
-})
-
-test_that("`free_lab()` works well", {
-    p_f <- ggplot(mtcars) +
-        geom_point(aes(hp, disp)) +
-        coord_fixed() +
-        ggtitle("Fixed Aspect")
-    expect_doppelganger("free_lab() with ggplot", {
-        plot_grid(free_lab(p3, "l"), p5, ncol = 1L)
-    })
-    expect_doppelganger("free_lab() with FAR", {
-        plot_grid(free_lab(p_f, "l"), p5, ncol = 1L)
-    })
-    expect_doppelganger("free_lab() with nested alignpatches", {
-        plot_grid(
-            free_lab(plot_grid(p1, p2, p_f, p4, heights = 1L), "l"),
-            p5,
-            ncol = 1L
-        )
-    })
-    expect_doppelganger("free_lab() mix with free_align", {
-        plot_grid(
-            free_align(free_lab(
                 plot_grid(p1, p2, p_f, p4, heights = 1L), "l"
             ), "t"), p4, p5, patchwork::plot_spacer(),
             ncol = 2L

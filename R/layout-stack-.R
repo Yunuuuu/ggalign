@@ -13,11 +13,21 @@
 #' @inheritParams layout_heatmap
 #' @return A `StackLayout` object.
 #' @export
-layout_stack <- function(data = NULL, direction = NULL,
+layout_stack <- function(data, direction = NULL,
                          sizes = NULL, guides = waiver(),
-                         free_labs = waiver(),
+                         free_labs = waiver(), free_sizes = waiver(),
                          plot_data = waiver()) {
-    UseMethod("layout_stack")
+    if (missing(data)) {
+        .layout_stack(
+            data = NULL, nobs = NULL,
+            direction = direction, sizes = sizes, guides = guides,
+            free_labs = free_labs, free_sizes = free_sizes,
+            plot_data = plot_data,
+            call = current_call()
+        )
+    } else {
+        UseMethod("layout_stack")
+    }
 }
 
 #' @export
@@ -84,22 +94,28 @@ layout_stack.NULL <- function(data = NULL, ...) {
 #' @importFrom grid unit
 .layout_stack <- function(data, nobs, direction = NULL,
                           sizes = NULL, guides = waiver(),
-                          free_labs = waiver(),
+                          free_labs = waiver(), free_sizes = waiver(),
                           plot_data = waiver(),
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     if (is.null(sizes)) {
-        sizes <- unit(rep_len(1L, 3L), "null")
+        sizes <- unit(rep_len(NA, 3L), "null")
     } else {
         sizes <- check_stack_sizes(sizes, call = call)
+    }
+    if (!is.waive(free_labs)) {
+        free_labs <- check_layout_labs(free_labs, call = call)
+    }
+    if (!is.waive(free_sizes)) {
+        free_sizes <- check_ggelements(free_sizes, call = call)
     }
     plot_data <- check_plot_data(plot_data, call = call)
     methods::new("StackLayout",
         data = data, direction = direction,
         params = list(
-            sizes = set_size(sizes),
+            sizes = sizes,
             guides = guides, plot_data = plot_data,
-            free_labs = free_labs
+            free_labs = free_labs, free_sizes = free_sizes
         ),
         nobs = nobs
     )
@@ -108,7 +124,7 @@ layout_stack.NULL <- function(data = NULL, ...) {
 #' @export
 layout_stack.default <- function(data, direction = NULL,
                                  sizes = NULL, guides = waiver(),
-                                 free_labs = waiver(),
+                                 free_labs = waiver(), free_sizes = waiver(),
                                  plot_data = waiver()) {
     cli::cli_abort(c(
         paste(

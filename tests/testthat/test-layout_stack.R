@@ -23,13 +23,13 @@ testthat::test_that("add `stack_active` object works well", {
     p2 <- p + active(
         sizes = unit(1, "cm"),
         guides = TRUE,
-        align_axis_title = TRUE,
+        free_labs = TRUE,
         plot_data = NULL
     )
     params <- slot(p2, "params")
     expect_identical(params$sizes, unit(rep_len(1L, 3L), "cm"))
     expect_identical(params$guides, BORDERS)
-    expect_identical(params$align_axis_title, TRUE)
+    expect_identical(params$free_labs, BORDERS)
     expect_identical(params$plot_data, NULL)
 })
 

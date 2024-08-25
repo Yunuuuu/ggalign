@@ -4,7 +4,12 @@
 \alias{free_size}
 \title{Removing the sizes when aligning}
 \usage{
-free_size(plot, labs = TRUE, axes = labs)
+free_size(plot, ..., free_border = FALSE)
+}
+\arguments{
+\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=plot_grid]{alignpatches} object.}
+
+\item{...}{What ggplot2 elements to remove?}
 }
 \description{
 Removing the sizes when aligning

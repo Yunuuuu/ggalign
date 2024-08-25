@@ -1,13 +1,18 @@
+#' Free panel border from alignment
+#'
+#' [plot_grid] will try to align every element of a plot. If we want to
+#' compose plots without aligning the panel borders (but still align the
+#' panels themselves), we can wrap the plot with `free_border`.
+#' @inheritParams free_align
+#' @param borders Which border shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
+#' @export
 free_border <- function(plot, borders = c("t", "l", "b", "r")) {
     UseMethod("free_border")
 }
 
 #' @export
 free_border.ggplot <- function(plot, borders = c("t", "l", "b", "r")) {
-    if (length(borders) == 0L) {
-        return(plot)
-    }
-    attr(plot, "free_borders") <- borders
+    attr(plot, "free_borders") <- check_borders(borders)
     add_class(plot, "free_border")
 }
 
@@ -17,17 +22,27 @@ free_border.alignpatches <- free_border.ggplot
 #' @export
 free_border.free_align <- function(plot, borders = c("t", "l", "b", "r")) {
     borders <- setdiff(borders, attr(plot, "free_axes"))
+    if (length(borders) == 0L) {
+        return(plot)
+    }
     NextMethod()
 }
 
 #' @export
 free_border.free_lab <- function(plot, borders = c("t", "l", "b", "r")) {
-    attr(plot, "free_labs") <- setdiff(attr(plot, "free_labs"), borders)
+    borders <- check_borders(borders)
+    free_labs <- setdiff(attr(plot, "free_labs"), borders)
+    if (length(free_labs) == 0L) {
+        class(plot) <- setdiff(class(plot), "free_lab")
+    } else {
+        attr(plot, "free_labs") <- free_labs
+    }
     NextMethod()
 }
 
 #' @export
 free_border.free_border <- function(plot, borders = c("t", "l", "b", "r")) {
+    borders <- check_borders(borders)
     attr(plot, "free_borders") <- union(attr(plot, "free_borders"), borders)
     plot
 }
@@ -61,13 +76,13 @@ make_free_border <- function(gt, guides, borders) {
     UseMethod("make_free_border")
 }
 
-# For normal ggplot obbject ----------------------
+# For normal ggplot object ----------------------
 #' @export
 make_free_border.align_ggplot <- function(gt, guides, borders) {
     attach_border(gt, guides, borders)
 }
 
-# For `full_patch` obbject ----------------------
+# For `full_patch` object ----------------------
 #' @export
 make_free_border.full_patch <- function(gt, guides, borders) {
     # including both `gtable_alignpatches` and `gtable_free_align` objects

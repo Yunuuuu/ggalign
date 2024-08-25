@@ -9,8 +9,8 @@
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob
 #' @export
-patch_gtable.ggplot <- function(plot) {
-    ans <- ggplotGrob(plot)
+patch_gtable.ggplot <- function(patch) {
+    ans <- ggplotGrob(patch)
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
     add_class(ans, "gtable_ggplot")
