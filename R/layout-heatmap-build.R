@@ -63,7 +63,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         horizontal_labs <- intersect(heatmap_labs, c("t", "b"))
         vertical_labs <- intersect(heatmap_labs, c("l", "r"))
     } else {
-        # inherit from the parent stack layout, by default we collapse labs
+        # by default, we always collapse the axis title
         heatmap_labs <- BORDERS
         horizontal_labs <- waiver()
         vertical_labs <- waiver()
@@ -77,6 +77,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         if (length(horizontal_sizes) == 0L) horizontal_sizes <- NULL
         if (length(vertical_sizes) == 0L) vertical_sizes <- NULL
     } else {
+        # By default, we won't remove border sizes of the heatmap
         heatmap_sizes <- NULL
         # set child stack layout
         horizontal_sizes <- waiver()
@@ -120,7 +121,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         layout_labels = colnames(mat),
         facet_scales = facet_scales
     )
-    # this will modify `p` in place
     p <- remove_scales(p, .subset2(xscales, 1L)$aesthetics)
 
     yscales <- set_scales(
@@ -131,7 +131,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         layout_labels = rownames(mat),
         facet_scales = facet_scales
     )
-    # this will modify `p` in place
     p <- remove_scales(p, .subset2(yscales, 1L)$aesthetics)
 
     # then we add facet -----------------------------------
@@ -195,7 +194,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
 
-    # By default, we won't remove sizes of the heatmap
     if (!is.null(heatmap_labs)) {
         p <- free_lab(p, heatmap_labs)
     }
@@ -209,7 +207,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         }
         p <- free_size(p, heatmap_sizes)
     }
-    # by default, we always collapse the axis title
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
