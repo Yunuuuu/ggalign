@@ -251,7 +251,7 @@ ggheatmap(mat, filling = FALSE) +
   theme(plot.margin = margin())
 ```
 
-## Titles
+# Titles
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
@@ -264,7 +264,7 @@ ggheatmap(mat) +
     "I am a row title",
     rot = -90, gp = gpar(fontface = "bold")
   )) +
-  # For column title can be directly added for specific ggplot
+  # column title can be directly added with ggtitle() for specific ggplot
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
   ggtitle("I am a column title") +
@@ -273,10 +273,10 @@ ggheatmap(mat) +
   theme(plot.margin = margin())
 ```
 
-## Clustering
+# Clustering
 
 
-## Session information
+# Session information
 ```{r}
 sessionInfo()
 ```
