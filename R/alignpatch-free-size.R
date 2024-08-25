@@ -4,21 +4,19 @@
 #' @inheritParams free_align
 #' @param ... What ggplot2 elements to remove?
 #' @export
-free_size <- function(plot, ..., free_border = FALSE) {
+free_size <- function(plot, ...) {
     UseMethod("free_size")
 }
 
 #' @export
-free_size.default <- function(plot, ..., free_border = FALSE) {
+free_size.default <- function(plot, ...) {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @export
-free_size.ggplot <- function(plot, ..., free_border = FALSE) {
+free_size.ggplot <- function(plot, ...) {
     if (...length() == 0L) return(plot) # styler: off
-    assert_bool(free_border)
     attr(plot, "free_sizes") <- check_ggelements(c(...), arg = "...")
-    attr(plot, "free_border") <- free_border
     add_class(plot, "free_size")
 }
 
@@ -26,12 +24,10 @@ free_size.ggplot <- function(plot, ..., free_border = FALSE) {
 free_size.free_border <- free_size.ggplot
 
 #' @export
-free_size.free_size <- function(plot, ..., free_border = FALSE) {
+free_size.free_size <- function(plot, ...) {
     if (...length() == 0L) return(plot) # styler: off
-    assert_bool(free_border)
     elements <- check_ggelements(c(...), arg = "...")
     attr(plot, "free_sizes") <- union(attr(plot, "free_sizes"), elements)
-    attr(plot, "free_border") <- free_border
     plot
 }
 
@@ -44,29 +40,17 @@ patch_gtable.free_size <- function(patch) {
     class(patch) <- setdiff(class(patch), "free_size")
     gt <- NextMethod()
     attr(gt, "free_sizes") <- attr(patch, "free_sizes")
-    attr(gt, "free_border") <- attr(patch, "free_border")
     add_class(gt, "gtable_free_size")
 }
 
 #' @export
 patch_align.gtable_free_size <- function(gt, guides) {
     class(gt) <- setdiff(class(gt), "gtable_free_size")
-    ggelements <- attr(gt, "free_sizes")
     ans <- NextMethod()
-    if (attr(gt, "free_border")) {
-        free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, ggelements)) > 0L
-        ]
-        if (length(free_borders)) {
-            # here, we attach the borders into the panel
-            ans <- make_free_border(ans, guides, borders = free_borders)
-        }
-    }
-    remove_border_sizes(ans, ggelements)
+    remove_border_sizes(ans, attr(gt, "free_sizes"))
 }
 
 #' @importFrom ggplot2 find_panel
-#' @export
 remove_border_sizes <- function(gt, ggelements) {
     ggelements <- lapply(GGELEMENTS, intersect, ggelements)
     panel_pos <- find_panel(gt)

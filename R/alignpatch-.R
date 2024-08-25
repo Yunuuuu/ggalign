@@ -82,14 +82,73 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
     add_class(ans, "full_patch", "alignpatch")
 }
 
+#' Extends plots to be aligned with `plot_grid`
+#'
+#' Plots implement `as_patch` method must implement following methods to control
+#' the layout details.
+#' - [as_patch]: Convert a plot object into a `patch` to be aligned, the `patch`
+#'       must implement proper `patch_table` method. `ggalign` has implement
+#'       `patch_table` method for [ggplot][ggplot2::ggplot] and
+#'       [grob][grid::grob] objects.
+#' - [patch_table]: convert the plot into a [gtable()][gtable::gtable].
+#' - [patch_align]: Build a standard [gtable()][gtable::gtable] object.
+#' @return
+#'  - `as_patch`: Any objects implements `patch_table` method.
+#' @export
+as_patch <- function(x) UseMethod("as_patch")
+
+#' @export
+as_patch.default <- function(x) {
+    cli::cli_abort("Cannot arrange {.obj_type_friendly {x}}")
+}
+
+#' @export
+as_patch.ggplot <- function(x) x
+
+#' @export
+as_patch.wrapped_plot <- function(x) x
+
+#' @export
+as_patch.alignpatches <- function(x) x
+
+#' @export
+as_patch.grob <- function(x) x
+
+#' @export
+as_patch.patch <- function(x) x
+
+#' @export
+as_patch.HeatmapLayout <- function(x) build_alignpatches(x)
+
+#' @export
+as_patch.StackLayout <- function(x) build_alignpatches(x)
+
+#' @export
+as_patch.formula <- function(x) wrap(x)
+
+#########################################
+# for patchwork
+#' @export
+as_patch.patchwork <- function(x) {
+    plots <- patchwork:::get_patches(x)
+    layout <- .subset2(plots, "layout")
+    layout$guides <- check_guides(.subset2(layout, "guides"))
+    new_alignpatches(plots, layout)
+}
+
+#########################################
 # convert a plot into a gtable
-#' @return A `gtable_*` object
-#' @noRd
+#' @return
+#' - `patch_gtable`: A `gtable_*` object
+#' @export
+#' @rdname as_patch
 patch_gtable <- function(patch) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
-#' @return A `align_*` object
-#' @noRd
+#' @return
+#' - `patch_align`: A `align_*` object
+#' @export
+#' @rdname as_patch
 patch_align <- function(gt, guides) UseMethod("patch_align")
 
 #' Extract the alignpatch class and it's Child classes
@@ -99,12 +158,14 @@ alignpatch_class <- function(x) {
     cls[seq_len(which(cls == "gtable") - 1L)]
 }
 
+# For an object, already is a alignpatch object, we always return it
 #' @export
 patch_gtable.alignpatch <- function(patch) patch
 
 #' @export
 patch_align.alignpatch <- function(gt, guides) gt
 
+#########################################
 # For grob ---------------------------
 #' @importFrom gtable gtable_add_grob
 #' @export
@@ -117,11 +178,10 @@ patch_gtable.grob <- function(patch) {
     add_class(ans, "align_grob", "alignpatch")
 }
 
+#######################################
 # `patch` from `patchwork`: patchwork::plot_spacer
 #' @export
-patch_gtable.patch <- function(patch) {
-    add_class(patch, "gtable_patch")
-}
+patch_gtable.patch <- function(patch) add_class(patch, "gtable_patch")
 
 #' @export
 patch_align.gtable_patch <- function(gt, guides) {

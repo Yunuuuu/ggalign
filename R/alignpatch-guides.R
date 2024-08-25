@@ -17,6 +17,7 @@ collect_guides.full_patch <- function(gt, guides) {
     split <- collect_guides(.subset2(.subset2(gt, "grobs"), 2L), guides)
     guides <- .subset2(split, "guides")
     gt$grobs[[2L]] <- .subset2(split, "gt")
+    # we remove the guide spaces from the full_patch object
     for (guide_pos in names(guides)) {
         if (is.null(.subset2(guides, guide_pos))) next
         space_pos <- switch(guide_pos,

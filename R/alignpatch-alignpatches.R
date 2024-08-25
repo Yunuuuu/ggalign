@@ -94,7 +94,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
         gt <- self$set_layout(gt, design)
 
         # `attach_guides` will use `align_border_size`
-        # here we add the class here for usage of `attach_guides`
+        # we add the class here for usage of `attach_guides`
         gt <- add_class(gt, "gtable_alignpatches")
 
         # add guides into the final gtable ----------------------

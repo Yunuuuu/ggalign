@@ -16,6 +16,33 @@ plot_grid(
   guide_theme = NULL
 )
 }
+\arguments{
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
+ggplot object.}
+
+\item{ncol, nrow}{The dimensions of the grid to create - if both are \code{NULL} it
+will use the same logic as \link[ggplot2:facet_wrap]{facet_wrap()} to set the
+dimensions}
+
+\item{byrow}{If \code{FALSE} the plots will be filled in in column-major order.}
+
+\item{widths, heights}{The relative widths and heights of each column and row
+in the grid. Will get repeated to match the dimensions of the grid. The
+special value of \verb{NA⁠} will behave as \verb{⁠1null⁠} unless a fixed aspect plot is
+inserted in which case it will allow the dimension to expand or contract to
+match the aspect ratio of the content.}
+
+\item{design}{Specification of the location of areas in the layout. Can
+either be specified as a text string or by concatenating calls to
+\link[patchwork:area]{area()} together.}
+
+\item{guides}{A single boolean value indicates whether to collect the guides,
+or you can specify the string of the guide position to collect. Allowed
+strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+
+\item{guide_theme}{A \link[ggplot2:theme]{theme()} object to rendering the
+guides.}
+}
 \description{
 Arrange multiple plots into a grid
 }

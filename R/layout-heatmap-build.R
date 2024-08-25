@@ -25,18 +25,13 @@ build_alignpatches.HeatmapLayout <- function(layout) {
     design <- trim_area(do.call(c, design[keep]))
     params <- slot(layout, "params")
     plot_grid(
-        plots[keep],
+        !!!plots[keep],
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
         guides = .subset2(params, "guides") %|w|% TRUE
     )
-}
-
-#' @export
-patch_gtable.HeatmapLayout <- function(patch) {
-    patch_gtable(build_alignpatches(patch))
 }
 
 #' @importFrom ggplot2 aes
@@ -205,7 +200,14 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         p <- free_lab(p, heatmap_labs)
     }
     if (!is.null(heatmap_sizes)) {
-        p <- free_size(p, heatmap_sizes, free_border = TRUE)
+        free_borders <- names(GGELEMENTS)[
+            lengths(lapply(GGELEMENTS, intersect, heatmap_sizes)) > 0L
+        ]
+        if (length(free_borders)) {
+            # here, we attach the borders into the panel
+            p <- free_border(p, borders = free_borders)
+        }
+        p <- free_size(p, heatmap_sizes)
     }
     # by default, we always collapse the axis title
     plots <- c(plots, list(heatmap = p))

@@ -1,25 +1,29 @@
 #' Arrange multiple plots into a grid
 #'
+#' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
+#' ggplot object.
+#' @param ncol,nrow The dimensions of the grid to create - if both are `NULL` it
+#' will use the same logic as [facet_wrap()][ggplot2::facet_wrap] to set the
+#' dimensions
+#' @param byrow If `FALSE` the plots will be filled in in column-major order.
+#' @param widths,heights The relative widths and heights of each column and row
+#' in the grid. Will get repeated to match the dimensions of the grid. The
+#' special value of `NA⁠` will behave as `⁠1null⁠` unless a fixed aspect plot is
+#' inserted in which case it will allow the dimension to expand or contract to
+#' match the aspect ratio of the content.
+#' @param design Specification of the location of areas in the layout. Can
+#' either be specified as a text string or by concatenating calls to
+#' [area()][patchwork::area] together.
+#' @param guides A single boolean value indicates whether to collect the guides,
+#' or you can specify the string of the guide position to collect. Allowed
+#' strings are: `r rd_values(BORDERS)`.
+#' @param guide_theme A [theme()][ggplot2::theme] object to rendering the
+#' guides.
 #' @export
 plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
                       heights = NA, design = NULL,
                       guides = NULL, guide_theme = NULL) {
-    if (is_valid_patch(..1)) {
-        plots <- list(...)
-    } else if (is.list(..1)) {
-        plots <- ..1
-    } else {
-        cli::cli_abort(paste(
-            "Can only wrap {.cls ggplot} and/or {.cls grob}",
-            "objects or a list of them"
-        ))
-    }
-    if (!all(vapply(plots, is_valid_patch, logical(1)))) {
-        cli::cli_abort(paste(
-            "Only know how to add {.cls ggplot}",
-            "and/or {.cls grob} objects"
-        ))
-    }
+    plots <- rlang::list2(...)
     assert_bool(byrow)
     guides <- check_guides(guides)
     assert_s3_class(guide_theme, "theme", null_ok = TRUE)
@@ -35,6 +39,7 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
             plots <- plot_list
         }
     }
+    plots <- lapply(plots, as_patch)
     new_alignpatches(plots, list(
         ncol = ncol,
         nrow = nrow,
@@ -58,17 +63,3 @@ new_alignpatches <- function(plots, layout) {
         class = c("alignpatches", "patch")
     )
 }
-
-#' @importFrom ggplot2 is.ggplot
-#' @importFrom grid is.grob
-is_valid_patch <- function(x) {
-    is.ggplot(x) || is.grob(x) || is.wrapped(x) ||
-        is.alignpatches(x) || is.layout(x)
-}
-
-is.alignpatches <- function(x) inherits(x, "alignpatches")
-
-is.wrapped <- function(x) inherits(x, "wrapped_plot")
-
-#' @export
-as.alignpatches <- function(x) UseMethod("as.alignpatches")

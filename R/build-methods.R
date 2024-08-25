@@ -84,7 +84,14 @@ align_build <- function(x, panel, index,
         )
     }
     if (!is.null(free_sizes)) {
-        plot <- free_size(plot, free_sizes, free_border = TRUE)
+        free_borders <- names(GGELEMENTS)[
+            lengths(lapply(GGELEMENTS, intersect, free_sizes)) > 0L
+        ]
+        if (length(free_borders)) {
+            # here, we attach the borders into the panel
+            plot <- free_border(plot, borders = free_borders)
+        }
+        plot <- free_size(plot, free_sizes)
     }
     list(
         plot = free_lab(plot, free_labs),

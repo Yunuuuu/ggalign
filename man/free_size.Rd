@@ -4,7 +4,7 @@
 \alias{free_size}
 \title{Removing the sizes when aligning}
 \usage{
-free_size(plot, ..., free_border = FALSE)
+free_size(plot, ...)
 }
 \arguments{
 \item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=plot_grid]{alignpatches} object.}

@@ -3,11 +3,6 @@ build_alignpatches.StackLayout <- function(layout) {
     .subset2(stack_build(layout), "plot")
 }
 
-#' @export
-patch_gtable.StackLayout <- function(patch) {
-    patch_gtable(build_alignpatches(patch))
-}
-
 #' @param panel,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty
@@ -87,7 +82,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
         return(list(plot = NULL, size = NULL))
     }
     plot <- plot_grid(
-        .subset2(patches, "plots"),
+        !!!.subset2(patches, "plots"),
         design = area(
             .subset2(patches, "t"),
             .subset2(patches, "l"),
