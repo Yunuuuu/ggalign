@@ -111,8 +111,7 @@ ggheatmap(mat2) +
   theme(plot.margin = margin())
 ```
 
-Heatmap can be built into a `patchwork` object, you can use `patchwork` to
-arrange them.
+We can use `plot_grid()` to arrange them.
 ```{r}
 h1 <- ggheatmap(mat) +
   scale_fill_gradient2(name = "mat", low = "green", high = "red") +
@@ -122,7 +121,7 @@ h1 <- ggheatmap(mat) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  hmanno(NULL) 
+  hmanno(NULL)
 
 h2 <- ggheatmap(mat / 4) +
   scale_fill_gradient2(
@@ -136,7 +135,7 @@ h2 <- ggheatmap(mat / 4) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  hmanno(NULL) 
+  hmanno(NULL)
 
 h3 <- ggheatmap(abs(mat)) +
   scale_fill_gradient2(name = "abs(mat)", low = "green", high = "red") +
