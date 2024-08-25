@@ -121,7 +121,8 @@ h1 <- ggheatmap(mat) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  hmanno(NULL)
+  hmanno(NULL) &
+  theme(plot.margin = margin())
 
 h2 <- ggheatmap(mat / 4) +
   scale_fill_gradient2(
@@ -135,7 +136,8 @@ h2 <- ggheatmap(mat / 4) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  hmanno(NULL)
+  hmanno(NULL) &
+  theme(plot.margin = margin())
 
 h3 <- ggheatmap(abs(mat)) +
   scale_fill_gradient2(name = "abs(mat)", low = "green", high = "red") +
@@ -145,7 +147,8 @@ h3 <- ggheatmap(abs(mat)) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  hmanno(NULL)
+  hmanno(NULL) &
+  theme(plot.margin = margin())
 plot_grid(h1, h2, h3, ncol = 2L)
 ```
 
