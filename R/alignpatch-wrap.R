@@ -54,20 +54,11 @@ offscreen_dev <- function() {
 
 # For wrapped plot -------------------
 #' @export
-patch_gtable.wrapped_plot <- function(patch) {
+patch_gtable.wrapped_plot <- function(patch, guides) {
     gt <- NextMethod()
-    attr(gt, "align") <- attr(patch, "align")
-    attr(gt, "clip") <- attr(patch, "clip")
-    add_class(gt, "gtable_wrapped")
-}
-
-# wrapped patch has been used by patchwork
-#' @importFrom gtable gtable_add_grob
-#' @export
-patch_align.gtable_wrapped <- function(gt, guides) {
     ans <- make_patch()
-    align <- attr(gt, "align")
-    clip <- attr(gt, "clip")
+    align <- attr(patch, "align")
+    clip <- attr(patch, "clip")
     ans <- switch(align,
         full = gtable_add_grob(ans,
             list(gt), 1L, 1L, nrow(ans), ncol(ans),
@@ -82,22 +73,5 @@ patch_align.gtable_wrapped <- function(gt, guides) {
             clip = clip, name = "wrap_panel"
         )
     )
-    add_class(ans, "align_wrapped", "alignpatch")
-}
-
-#########################################
-# `patch` from `patchwork`: patchwork::wrap_elements
-#' @export
-patch_gtable.wrapped_patch <- function(patch) {
-    add_class(patch, "gtable_wrapped_patch")
-}
-
-#' @export
-patch_align.gtable_wrapped_patch <- function(gt, guides) {
-    class(gt) <- setdiff(class(gt), "gtable_wrapped_patch")
-    guides <- if (length(guides)) "collect" else "keep"
-    add_class(
-        patchwork::patchGrob(gt, guides = guides),
-        "align_wrapped_patch", "alignpatch"
-    )
+    add_class(gt, "gtable_wrapped")
 }

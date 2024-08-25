@@ -53,51 +53,15 @@ free_border.default <- function(plot, borders = c("t", "l", "b", "r")) {
 }
 
 #' @export
-free_border.align_wrapped <- free_border.default
+free_border.wrapped_plot <- free_border.default
 
 ################################################################
 #' @export
-patch_gtable.free_border <- function(patch) {
+patch_gtable.free_border <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_border")
     gt <- NextMethod()
-    attr(gt, "free_borders") <- attr(patch, "free_borders")
-    add_class(gt, "gtable_free_border")
+    attach_border(gt, guides, attr(patch, "free_borders"))
 }
-
-#' @export
-patch_align.gtable_free_border <- function(gt, guides) {
-    class(gt) <- setdiff(class(gt), "gtable_free_border")
-    ans <- NextMethod()
-    # here, we attach the borders into the panel
-    make_free_border(ans, guides, borders = attr(gt, "free_borders"))
-}
-
-make_free_border <- function(gt, guides, borders) {
-    UseMethod("make_free_border")
-}
-
-# For normal ggplot object ----------------------
-#' @export
-make_free_border.align_ggplot <- function(gt, guides, borders) {
-    attach_border(gt, guides, borders)
-}
-
-# For `full_patch` object ----------------------
-#' @export
-make_free_border.full_patch <- function(gt, guides, borders) {
-    # including both `gtable_alignpatches` and `gtable_free_align` objects
-    gt$grobs[[2L]] <- make_free_border(
-        .subset2(.subset2(gt, "grobs"), 2L),
-        guides, borders
-    )
-    gt
-}
-
-#' @export
-make_free_border.gtable_free_align <- make_free_border.align_ggplot
-
-#' @export
-make_free_border.gtable_alignpatches <- make_free_border.gtable_free_align
 
 #' @importFrom gtable gtable_add_grob gtable_height gtable_width
 #' @importFrom grid unit viewport

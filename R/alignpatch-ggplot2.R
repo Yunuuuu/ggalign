@@ -9,7 +9,7 @@
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob
 #' @export
-patch_gtable.ggplot <- function(patch) {
+patch_gtable.ggplot <- function(patch, guides) {
     ans <- ggplotGrob(patch)
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
@@ -20,30 +20,65 @@ patch_gtable.ggplot <- function(patch) {
 #' @importFrom gtable gtable_add_rows gtable_add_cols
 #' @importFrom grid unit convertWidth convertHeight
 #' @export
-patch_align.gtable_ggplot <- function(gt, guides) {
+patch_align.gtable_ggplot <- function(gt, guides, panel_width, panel_height) {
     panel_pos <- find_panel(gt)
     rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
     cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
+    respect <- .subset2(gt, "respect")
+    if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
+        if (!respect) {
+            gt <- merge_panels(gt, rows, cols)
+        } else {
+            can_set_width <- is.na(as.numeric(panel_width))
+            can_set_height <- is.na(as.numeric(panel_height))
+            w <- .subset2(gt, "widths")[PANEL_COL]
+            h <- .subset2(gt, "heights")[PANEL_ROW]
+            if (can_set_width && can_set_height) {
+                panel_width <- w
+                panel_height <- h
+            } else if (can_set_width) {
+                panel_width <- as.numeric(w) / as.numeric(h) * panel_height
+            } else if (can_set_height) {
+                panel_height <- as.numeric(h) / as.numeric(w) * panel_width
+            } else {
+                # ratio <- as.numeric(w) / as.numeric(h)
+                # actual_ratio <- panel_widths[col] / panel_heights[row]
+                # the plot panel won't be aligned in this ways
+                # # use dplyr::near to compare float number
+                # if (abs(ratio - actual_ratio) < sqrt(.Machine$double.eps)) {
+                #     will_be_fixed <- FALSE
+                # }
+                respect <- FALSE
+                # attach strip, axes and labels into the panel area
+                gt <- attach_border(gt, guides)
 
-    # remove the old class
-    class(gt) <- setdiff(class(gt), "gtable_ggplot")
-
-    # For plot with only one panel, we keep the gtable
-    if (rows[1L] == rows[2L] &&
-        cols[1L] == cols[2L] &&
-        !any(startsWith("strip-", .subset2(.subset2(gt, "layout"), "name")))) {
-        add_class(gt, "align_ggplot", "alignpatch")
-    } else {
-        # we attach the strips, axes and labels into the panel area
-        if (.subset2(gt, "respect")) {
-            gt <- attach_border(gt, guides)
+                # we suspend the panel area to allow the fixed aspect ratio
+                panel <- gt[PANEL_ROW, PANEL_COL]
+                gt <- gt[-PANEL_ROW, -PANEL_COL]
+                gt$respect <- FALSE
+                gt <- gtable_add_rows(gt, unit(1L, "null"), PANEL_ROW - 1L)
+                gt <- gtable_add_cols(gt, unit(1L, "null"), PANEL_COL - 1L)
+                gt <- gtable_add_grob(
+                    gt, list(panel),
+                    t = PANEL_ROW, l = PANEL_COL,
+                    clip = "off",
+                    name = paste0(
+                        .subset2(.subset2(panel, "layout"), "name"),
+                        collapse = ", "
+                    ),
+                    z = 1
+                )
+            }
         }
-        # Here, we merge multiple panels into one
-        add_class(
-            merge_panels(gt, rows, cols),
-            "align_panel_nested", "align_ggplot", "alignpatch"
-        )
+    } else { # for ggplot with multiple panels, we cannot fix the aspect ratio
+        if (respect) {
+            gt <- attach_border(gt, guides)
+        } else {
+            respect <- FALSE
+        }
+        gt <- merge_panels(gt, rows, cols)
     }
+    list(gt = gt, width = panel_width, height = panel_height, respect = respect)
 }
 
 #' @importFrom gtable is.gtable gtable_height gtable_width

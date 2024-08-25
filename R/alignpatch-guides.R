@@ -13,51 +13,13 @@ collect_guides.default <- function(gt, guides) {
 }
 
 #' @export
-collect_guides.full_patch <- function(gt, guides) {
-    split <- collect_guides(.subset2(.subset2(gt, "grobs"), 2L), guides)
-    guides <- .subset2(split, "guides")
-    gt$grobs[[2L]] <- .subset2(split, "gt")
-    # we remove the guide spaces from the full_patch object
-    for (guide_pos in names(guides)) {
-        if (is.null(.subset2(guides, guide_pos))) next
-        space_pos <- switch(guide_pos,
-            t = ,
-            l = 1L,
-            b = ,
-            r = -1L
-        )
-        guide_loc <- switch(guide_pos,
-            t = GUIDE_TOP,
-            l = GUIDE_LEFT,
-            b = GUIDE_BOTTOM,
-            r = GUIDE_RIGHT
-        )
-        if (guide_pos %in% c("r", "l")) {
-            gt$widths[c(guide_loc, guide_loc + space_pos)] <- unit(
-                c(0, 0), "mm"
-            )
-        } else if (guide_pos %in% c("b", "t")) {
-            gt$heights[c(guide_loc, guide_loc + space_pos)] <- unit(
-                c(0, 0), "mm"
-            )
-        }
-    }
-    list(gt = gt, guides = guides)
-}
-
-#' @export
 collect_guides.gtable_alignpatches <- function(gt, guides) {
-    collect_guides.align_ggplot(gt, guides)
-}
-
-#' @export
-collect_guides.gtable_ggplot <- function(gt, guides) {
-    collect_guides.align_ggplot(gt, guides)
+    collect_guides.gtable_ggplot(gt, guides)
 }
 
 #' @importFrom ggplot2 find_panel
 #' @export
-collect_guides.align_ggplot <- function(gt, guides) {
+collect_guides.gtable_ggplot <- function(gt, guides) {
     layout <- .subset2(gt, "layout")
     grobs <- .subset2(gt, "grobs")
     guides_ind <- grep("guide-box", .subset2(layout, "name"))

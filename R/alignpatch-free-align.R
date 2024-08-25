@@ -52,10 +52,10 @@ free_align.default <- function(plot, axes = c("t", "l", "b", "r")) {
 }
 
 #' @export
-free_align.align_wrapped <- free_align.default
+free_align.wrapped_plot <- free_align.default
 
 #' @export
-patch_gtable.free_align <- function(patch) {
+patch_gtable.free_align <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_align")
 
     # can be `gtable_ggplot` or `gtable_alignpatches`
@@ -65,9 +65,13 @@ patch_gtable.free_align <- function(patch) {
 }
 
 #' @export
-patch_align.gtable_free_align <- function(gt, guides) {
-    make_full_patch(gt,
-        clip = "off", name = "free_align-table",
-        borders = setdiff(c("t", "l", "b", "r"), attr(gt, "free_axes"))
+patch_align.gtable_free_align <- function(gt, guides,
+                                          panel_width, panel_height) {
+    list(
+        gt = make_full_patch(gt,
+            clip = "off", name = "free_align-table",
+            borders = setdiff(c("t", "l", "b", "r"), attr(gt, "free_axes"))
+        ),
+        width = panel_width, height = panel_height, respect = FALSE
     )
 }

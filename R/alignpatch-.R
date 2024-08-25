@@ -92,6 +92,7 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
 #'       [grob][grid::grob], and [alignpatches][plot_grid] objects.
 #' - `patch_table`: Convert the plot into a [gtable][gtable::gtable].
 #' - `patch_align`: Build a standard [gtable][gtable::gtable] object.
+#' @param x A plot object.
 #' @return
 #'  - `as_patch`: Any objects implements `patch_table` method.
 #' @export
@@ -111,9 +112,6 @@ as_patch.wrapped_plot <- function(x) x
 #' @export
 as_patch.alignpatches <- function(x) x
 
-#' @export
-as_patch.grob <- function(x) x
-
 # `patch` from `patchwork`: patchwork::plot_spacer
 #' @export
 as_patch.patch <- function(x) x
@@ -123,6 +121,9 @@ as_patch.HeatmapLayout <- function(x) build_alignpatches(x)
 
 #' @export
 as_patch.StackLayout <- function(x) build_alignpatches(x)
+
+#' @export
+as_patch.grob <- function(x) wrap(x)
 
 #' @export
 as_patch.formula <- function(x) wrap(x)
@@ -139,18 +140,30 @@ as_patch.patchwork <- function(x) {
 
 #########################################
 # convert a plot into a gtable
+#' @param patch A `patch` from `as_patch`.
 #' @return
-#' - `patch_gtable`: A `gtable_*` object
+#' - `patch_gtable`: A [gtable][gtable::gtable] object
 #' @export
 #' @rdname as_patch
-patch_gtable <- function(patch) UseMethod("patch_gtable")
+patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
+#' @param gt A [gtable][gtable::gtable] object
 #' @return
-#' - `patch_align`: A `align_*` object
+#' - `patch_align`: A list with following elements
+#'    - `gt`: the standard [gtable][gtable::gtable] object
+#'    - `width`/`height`: the panel width and height.
+#'    - `respect`: A boolean value indicates whether to fix this panel area.
 #' @export
 #' @rdname as_patch
-patch_align <- function(gt, guides) UseMethod("patch_align")
+patch_align <- function(gt, guides, panel_width, panel_height) {
+    UseMethod("patch_align")
+}
+
+#' @export
+patch_align.default <- function(gt, guides, panel_width, panel_height) {
+    list(gt = gt, width = panel_width, height = panel_height, respect = FALSE)
+}
 
 #' Extract the alignpatch class and it's Child classes
 #' @noRd
@@ -159,37 +172,27 @@ alignpatch_class <- function(x) {
     cls[seq_len(which(cls == "gtable") - 1L)]
 }
 
-# For an object, already is a alignpatch object, we always return it
-#' @export
-patch_gtable.alignpatch <- function(patch) patch
-
-#' @export
-patch_align.alignpatch <- function(gt, guides) gt
-
 #########################################
 # For grob ---------------------------
 #' @importFrom gtable gtable_add_grob
 #' @export
-patch_gtable.grob <- function(patch) {
-    ans <- make_patch()
-    ans <- gtable_add_grob(ans,
-        list(patch), PANEL_ROW, PANEL_COL,
-        z = -Inf, name = "panel-grob"
-    )
-    add_class(ans, "align_grob", "alignpatch")
-}
+patch_gtable.grob <- function(patch, guides) patch
 
 #######################################
 # `patch` from `patchwork`: patchwork::plot_spacer
 #' @export
-patch_gtable.patch <- function(patch) add_class(patch, "gtable_patch")
+patch_gtable.patch <- function(patch, guides) {
+    guides <- if (length(guides)) "collect" else "keep"
+    add_class(patchwork::patchGrob(patch, guides = guides), "gtable_patch")
+}
 
+#########################################
+# `patch` from `patchwork`: patchwork::wrap_elements
 #' @export
-patch_align.gtable_patch <- function(gt, guides) {
-    class(gt) <- setdiff(class(gt), "gtable_patch")
+patch_gtable.wrapped_patch <- function(patch, guides) {
     guides <- if (length(guides)) "collect" else "keep"
     add_class(
-        patchwork::patchGrob(gt, guides = guides),
-        "align_patch", "alignpatch"
+        patchwork::patchGrob(patch, guides = guides),
+        "gtable_wrapped_patch"
     )
 }

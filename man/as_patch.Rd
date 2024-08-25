@@ -8,9 +8,16 @@
 \usage{
 as_patch(x)
 
-patch_gtable(patch)
+patch_gtable(patch, guides)
 
-patch_align(gt, guides)
+patch_align(gt, guides, panel_width, panel_height)
+}
+\arguments{
+\item{x}{A plot object.}
+
+\item{patch}{A \code{patch} from \code{as_patch}.}
+
+\item{gt}{A \link[gtable:gtable]{gtable} object}
 }
 \value{
 \itemize{
@@ -18,11 +25,16 @@ patch_align(gt, guides)
 }
 
 \itemize{
-\item \code{patch_gtable}: A \verb{gtable_*} object
+\item \code{patch_gtable}: A \link[gtable:gtable]{gtable} object
 }
 
 \itemize{
-\item \code{patch_align}: A \verb{align_*} object
+\item \code{patch_align}: A list with following elements
+\itemize{
+\item \code{gt}: the standard \link[gtable:gtable]{gtable} object
+\item \code{width}/\code{height}: the panel width and height.
+\item \code{respect}: A boolean value indicates whether to fix this panel area.
+}
 }
 }
 \description{

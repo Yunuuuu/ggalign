@@ -1,12 +1,16 @@
 #' @export
-patch_align.gtable_alignpatches <- function(gt, guides) {
-    make_full_patch(gt, clip = "off", name = "alignpatches-table")
+patch_align.gtable_alignpatches <- function(gt, guides,
+                                            panel_width, panel_height) {
+    list(
+        gt = make_full_patch(gt, clip = "off", name = "alignpatches-table"),
+        width = panel_width, height = panel_height, respect = FALSE
+    )
 }
 
 #' @importFrom gtable gtable
 #' @importFrom grid unit
 #' @export
-patch_gtable.alignpatches <- function(patch) {
+patch_gtable.alignpatches <- function(patch, guides) {
     plots <- .subset2(patch, "plots")
     layout <- .subset2(patch, "layout")
 
@@ -65,13 +69,8 @@ BuilderAlignPatches <- ggplot2::ggproto(
         )
 
         # setup gtable list ----------------------------------
-        # we always build a standard gtable layout for the `patch`
-        self$gt_list <- lapply(plots, patch_gtable) # return a list of gtables
-        # standardize the gtable
-        self$gt_list <- lapply(.subset2(self, "gt_list"),
-            patch_align,
-            guides = guides
-        )
+        # create gtable from the plot
+        self$gt_list <- lapply(plots, patch_gtable, guides = guides)
 
         # collect guides  ---------------------------------------
         if (length(guides)) {
@@ -169,9 +168,9 @@ BuilderAlignPatches <- ggplot2::ggproto(
         # the plot to be fixed must in only one squre of the area
         need_fix <- .subset2(design, "l") == .subset2(design, "r") &
             .subset2(design, "t") == .subset2(design, "b") &
-            # all gtables should be an alignpatch object
-            # Now, only gtable from ggplot2 will have a respect of `TRUE`
-            vapply(gt_list, .subset2, logical(1L), "respect")
+            vapply(gt_list, function(gt) {
+                isTRUE(.subset2(gt, "respect"))
+            }, logical(1L))
 
         # here we respect the aspect ratio when necessary -----
         # if the width or height is NA, we will guess the panel widths or
@@ -193,23 +192,24 @@ BuilderAlignPatches <- ggplot2::ggproto(
             c(table(cols[need_fix]))[as.character(cols)],
             decreasing = TRUE
         )
-        respect_dims <- vector("list", sum(need_fix))
+        respect_dims <- vector("list", length(gt_list))
 
         # For plot cannot be fixed, we always attach strips, axes and labels
         # into the panel area
-        for (i in intersect(gt_index, which(need_fix))) {
+        for (i in gt_index) {
             row <- .subset(rows, i)
             col <- .subset(cols, i)
-            fixed_elements <- fix_area(
-                .subset2(gt_list, i),
+            # we always build a standard gtable layout from the gtable
+            aligned_elements <- patch_align(
+                gt = .subset2(gt_list, i),
                 guides = guides,
-                panel_widths[col],
-                panel_heights[row]
+                panel_width = panel_widths[col],
+                panel_height = panel_heights[row]
             )
-            gt_list[[i]] <- .subset2(fixed_elements, "gt")
-            panel_widths[col] <- .subset2(fixed_elements, "width")
-            panel_heights[row] <- .subset2(fixed_elements, "height")
-            if (.subset2(fixed_elements, "respect")) {
+            gt_list[[i]] <- .subset2(aligned_elements, "gt")
+            panel_widths[col] <- .subset2(aligned_elements, "width")
+            panel_heights[row] <- .subset2(aligned_elements, "height")
+            if (.subset2(aligned_elements, "respect")) {
                 respect_dims[[i]] <- matrix(
                     c(
                         (row - 1L) * TABLE_ROWS + PANEL_ROW,

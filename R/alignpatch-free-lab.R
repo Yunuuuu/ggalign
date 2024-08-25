@@ -45,11 +45,11 @@ free_lab.default <- function(plot, labs = c("t", "l", "b", "r")) {
 }
 
 #' @export
-free_lab.align_wrapped <- free_lab.default
+free_lab.wrapped_plot <- free_lab.default
 
 ####################################################
 #' @export
-patch_gtable.free_lab <- function(patch) {
+patch_gtable.free_lab <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_lab")
     gt <- NextMethod()
     attach_lab(gt, labs = attr(patch, "free_labs"))

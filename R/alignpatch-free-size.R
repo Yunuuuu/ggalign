@@ -32,11 +32,11 @@ free_size.free_size <- function(plot, ...) {
 }
 
 #' @export
-free_size.align_wrapped <- free_size.default
+free_size.wrapped_plot <- free_size.default
 
 ##########################################################
 #' @export
-patch_gtable.free_size <- function(patch) {
+patch_gtable.free_size <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_size")
     gt <- NextMethod()
     attr(gt, "free_sizes") <- attr(patch, "free_sizes")
@@ -44,10 +44,12 @@ patch_gtable.free_size <- function(patch) {
 }
 
 #' @export
-patch_align.gtable_free_size <- function(gt, guides) {
+patch_align.gtable_free_size <- function(gt, guides,
+                                         panel_width, panel_height) {
     class(gt) <- setdiff(class(gt), "gtable_free_size")
     ans <- NextMethod()
-    remove_border_sizes(ans, attr(gt, "free_sizes"))
+    ans$gt <- remove_border_sizes(.subset2(ans, "gt"), attr(gt, "free_sizes"))
+    ans
 }
 
 #' @importFrom ggplot2 find_panel
