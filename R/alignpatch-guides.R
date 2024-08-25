@@ -41,9 +41,6 @@ collect_guides.gtable_ggplot <- function(gt, guides) {
         guide_ind <- .subset(guides_ind, guide_ind)
         remove_grobs <- c(guide_ind, remove_grobs)
         guide_box <- .subset2(grobs, guide_ind)
-        if (!startsWith(.subset2(guide_box, "name"), "guide-box")) {
-            guide_box <- .subset2(.subset2(guide_box, "grobs"), 1L)
-        }
         collected_guides[[guide_pos]] <- .subset(
             .subset2(guide_box, "grobs"),
             grepl("guides", .subset2(.subset2(guide_box, "layout"), "name"))
