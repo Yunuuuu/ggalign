@@ -43,6 +43,9 @@ strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 \item{guide_theme}{A \link[ggplot2:theme]{theme()} object to rendering the
 guides.}
 }
+\value{
+A \code{alignpatches} object.
+}
 \description{
 Arrange multiple plots into a grid
 }

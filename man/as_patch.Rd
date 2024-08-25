@@ -29,11 +29,11 @@ patch_align(gt, guides)
 Plots implement \code{as_patch} method must implement following methods to control
 the layout details.
 \itemize{
-\item \link{as_patch}: Convert a plot object into a \code{patch} to be aligned, the \code{patch}
+\item \code{as_patch}: Convert a plot object into a \code{patch} to be aligned, the \code{patch}
 must implement proper \code{patch_table} method. \code{ggalign} has implement
-\code{patch_table} method for \link[ggplot2:ggplot]{ggplot} and
-\link[grid:grid.grob]{grob} objects.
-\item \link{patch_table}: convert the plot into a \link[gtable:gtable]{gtable()}.
-\item \link{patch_align}: Build a standard \link[gtable:gtable]{gtable()} object.
+\code{patch_table} method for \link[ggplot2:ggplot]{ggplot},
+\link[grid:grid.grob]{grob}, and \link[=plot_grid]{alignpatches} objects.
+\item \code{patch_table}: Convert the plot into a \link[gtable:gtable]{gtable}.
+\item \code{patch_align}: Build a standard \link[gtable:gtable]{gtable} object.
 }
 }

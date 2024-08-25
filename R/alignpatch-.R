@@ -86,12 +86,12 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
 #'
 #' Plots implement `as_patch` method must implement following methods to control
 #' the layout details.
-#' - [as_patch]: Convert a plot object into a `patch` to be aligned, the `patch`
+#' - `as_patch`: Convert a plot object into a `patch` to be aligned, the `patch`
 #'       must implement proper `patch_table` method. `ggalign` has implement
-#'       `patch_table` method for [ggplot][ggplot2::ggplot] and
-#'       [grob][grid::grob] objects.
-#' - [patch_table]: convert the plot into a [gtable()][gtable::gtable].
-#' - [patch_align]: Build a standard [gtable()][gtable::gtable] object.
+#'       `patch_table` method for [ggplot][ggplot2::ggplot],
+#'       [grob][grid::grob], and [alignpatches][plot_grid] objects.
+#' - `patch_table`: Convert the plot into a [gtable][gtable::gtable].
+#' - `patch_align`: Build a standard [gtable][gtable::gtable] object.
 #' @return
 #'  - `as_patch`: Any objects implements `patch_table` method.
 #' @export
@@ -114,6 +114,7 @@ as_patch.alignpatches <- function(x) x
 #' @export
 as_patch.grob <- function(x) x
 
+# `patch` from `patchwork`: patchwork::plot_spacer
 #' @export
 as_patch.patch <- function(x) x
 

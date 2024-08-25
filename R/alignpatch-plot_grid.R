@@ -19,6 +19,7 @@
 #' strings are: `r rd_values(BORDERS)`.
 #' @param guide_theme A [theme()][ggplot2::theme] object to rendering the
 #' guides.
+#' @return A `alignpatches` object.
 #' @export
 plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
                       heights = NA, design = NULL,
@@ -60,6 +61,6 @@ new_alignpatches <- function(plots, layout) {
             # namespace
             `_namespace` = ggalign_namespace_link
         ),
-        class = c("alignpatches", "patch")
+        class = "alignpatches"
     )
 }
