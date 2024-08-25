@@ -148,7 +148,7 @@ as_patch.patchwork <- function(x) {
 patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
-#' @param gt A [gtable][gtable::gtable] object
+#' @param gt A [gtable][gtable::gtable] object from `patch_gtable`.
 #' @return
 #' - `patch_align`: A list with following elements
 #'    - `gt`: the standard [gtable][gtable::gtable] object

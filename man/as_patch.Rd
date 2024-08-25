@@ -17,7 +17,7 @@ patch_align(gt, guides, panel_width, panel_height)
 
 \item{patch}{A \code{patch} from \code{as_patch}.}
 
-\item{gt}{A \link[gtable:gtable]{gtable} object}
+\item{gt}{A \link[gtable:gtable]{gtable} object from \code{patch_gtable}.}
 }
 \value{
 \itemize{
