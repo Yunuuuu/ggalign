@@ -132,8 +132,12 @@ as_patch.formula <- function(x) wrap(x)
 # for patchwork
 #' @export
 as_patch.patchwork <- function(x) {
-    plots <- patchwork:::get_patches(x)
-    layout <- .subset2(plots, "layout")
+    patches <- .subset2(x, "patches")
+    plots <- .subset2(patches, "plots")
+    if (!inherits(x, "plot_filler")) {
+        plots <- c(plots, list(plot))
+    }
+    layout <- .subset2(patches, "layout")
     layout$guides <- check_guides(.subset2(layout, "guides"))
     new_alignpatches(plots, layout)
 }
@@ -141,6 +145,7 @@ as_patch.patchwork <- function(x) {
 #########################################
 # convert a plot into a gtable
 #' @param patch A `patch` from `as_patch`.
+#' @param guides Input guides argument to [plot_grid()]
 #' @return
 #' - `patch_gtable`: A [gtable][gtable::gtable] object
 #' @export
@@ -149,6 +154,8 @@ patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
 #' @param gt A [gtable][gtable::gtable] object from `patch_gtable`.
+#' @param panel_width,panel_height Size of the panel, if the size is `NA`, we
+#' should guess the size from the aspect ratio of the `gt`.
 #' @return
 #' - `patch_align`: A list with following elements
 #'    - `gt`: the standard [gtable][gtable::gtable] object

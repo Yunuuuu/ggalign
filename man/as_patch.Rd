@@ -17,7 +17,12 @@ patch_align(gt, guides, panel_width, panel_height)
 
 \item{patch}{A \code{patch} from \code{as_patch}.}
 
+\item{guides}{Input guides argument to \code{\link[=plot_grid]{plot_grid()}}}
+
 \item{gt}{A \link[gtable:gtable]{gtable} object from \code{patch_gtable}.}
+
+\item{panel_width, panel_height}{Size of the panel, if the size is \code{NA}, we
+should guess the size from the aspect ratio of the \code{gt}.}
 }
 \value{
 \itemize{

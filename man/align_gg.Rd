@@ -56,9 +56,12 @@ plots along a single axis.
 
 \item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
 
-\item{free_labs}{A boolean value or a character of the axis position
-(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
-default, all axis title won't be aligned.}
+\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
+\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
+alignment. By default, all axis title won't be aligned.}
+
+\item{free_sizes}{A character specifies the ggplot elements which won't
+count space sizes when alignment.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the

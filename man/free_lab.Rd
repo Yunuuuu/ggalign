@@ -7,6 +7,8 @@
 free_lab(plot, labs = c("t", "l", "b", "r"))
 }
 \arguments{
+\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=plot_grid]{alignpatches} object.}
+
 \item{labs}{Axis labs to be free.}
 }
 \value{

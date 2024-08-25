@@ -25,17 +25,16 @@ this way, we can add other \code{Align} objects into the \code{StackLayout}.
 \item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
-\item{guides}{A string specifying how guides should be treated in the layout.
-\code{"collect"} will collect guides below to the given nesting level, removing
-duplicates. \verb{"keep} will stop collection at this level and let guides be
-placed alongside their plot. \code{"auto"} will allow guides to be collected if a
-upper level tries, but place them alongside the plot if not. If you modify
-default guide \code{"position"} with \code{theme(legend.position=...)} while also
-collecting guides you must apply that change to the overall layout.}
+\item{guides}{A single boolean value indicates whether to collect the guides,
+or you can specify the string of the guide position to collect. Allowed
+strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{free_labs}{A boolean value or a character of the axis position
-(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}) indicates how to align the axis title. By
-default, all axis title won't be aligned.}
+\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
+\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
+alignment. By default, all axis title won't be aligned.}
+
+\item{free_sizes}{A character specifies the ggplot elements which won't
+count space sizes when alignment.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
