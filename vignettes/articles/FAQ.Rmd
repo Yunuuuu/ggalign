@@ -1,6 +1,5 @@
 ---
 title: "FAQ"
-output: rmarkdown::html_vignette
 ---
 
 ```{r, include = FALSE}
@@ -74,6 +73,6 @@ all(index == new_index)
 h + align_dendro(reorder_group = TRUE)
 ```
 
-To prevent reordering of the layout axis twice, we ensure that the new_index
-matches the index (if index is not NULL). This is done to maintain consistency
-and prevent conflicts in the ordering of the heatmap.
+To prevent reordering of the layout axis twice, we ensure that the `new_index`
+matches the `index` (if `index` is not NULL). This is done to maintain
+consistency and prevent conflicts in the ordering of the heatmap.
