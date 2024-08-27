@@ -87,7 +87,7 @@ articles:
   - scales-and-facets
 
 - title: FAQ
-  navbar: ~
+  navbar: " "
   contents:
   - articles/FAQ
 
