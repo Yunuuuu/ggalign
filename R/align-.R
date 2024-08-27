@@ -1,4 +1,4 @@
-#' Create `Align` object
+#' Create a new `Align` object
 #'
 #' `Align` object will act with the `layout` object, reorder or split the
 #' observations, some of them can also add plot components into the `layout`
@@ -22,17 +22,18 @@
 #'  - `layout_stack`: the `layout` data will be used as it is since we place all
 #'    plots along a single axis.
 #'
-#' @param size Plot size, can be a [unit][grid::unit] object.
-#' @inheritParams layout_heatmap
+#' @param size Plot size, can be an [unit][grid::unit] object.
+#' @inheritParams hmanno
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.
 #' @param facet A boolean value indicates whether to set the layout facet for
 #' the plot. If this is `FALSE`, `limits` will always be `FALSE` too.
 #' @param set_context A single boolean value indicates whether to set the active
-#' context to current `Align` object. If `TRUE`, all subsequent ggplot elements
-#' will be added into this `Align` object.
+#' context to current plot. If `TRUE`, all subsequent ggplot elements will be
+#' added into this plot.
 #' @param order An single integer for the layout order.
-#' @param name A string of the object name.
+#' @param name A string of the plot name. Used to switch the active context in
+#' [hmanno()] or [stack()].
 #' @param check.param A single boolean value indicates whether to check the
 #' supplied parameters and warn.
 #' @param call The `call` used to construct the `Align` for reporting messages.
@@ -41,7 +42,16 @@
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
-                  size = NULL, data = NULL,
+                  # this function is used for adding more `Align` Class
+                  # Not used by the user.
+                  # The data argument is different from the documents in which
+                  # `NULL` means this `Align` object won't need any data,
+                  # and `waiver()` will indicates inherit from the layout.
+                  # So when adding a new `Align` object which user can input
+                  # data, always remember transfrom `NULL` to `waiver()`
+                  #
+                  # Details see `initialize_align()`
+                  data, size = NULL,
                   free_labs = waiver(),
                   free_sizes = waiver(),
                   plot_data = waiver(),
@@ -114,7 +124,7 @@ align <- function(align_class, params,
         # user input -------------------------------
         size = size,
         # should we allow user switch between different annotation with a string
-        # name ?
+        # name? Should I remove "name" argument from user?
         name = name,
         order = order,
         set_context = set_context,

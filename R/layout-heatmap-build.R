@@ -1,7 +1,7 @@
 #' @importFrom grid unit.c
 #' @export
-build_alignpatches.HeatmapLayout <- function(layout) {
-    patches <- heatmap_build(layout)
+ggalign_build.HeatmapLayout <- function(x) {
+    patches <- heatmap_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
     design <- list(
@@ -23,14 +23,15 @@ build_alignpatches.HeatmapLayout <- function(layout) {
     keep <- lengths(plots) > 0L
 
     design <- trim_area(do.call(c, design[keep]))
-    params <- slot(layout, "params")
+    params <- slot(x, "params")
     plot_grid(
         !!!plots[keep],
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(params, "guides") %|w|% TRUE
+        guides = .subset2(params, "guides") %|w|% TRUE,
+        theme = slot(x, "theme")
     )
 }
 

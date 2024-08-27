@@ -1,6 +1,9 @@
+#' @importFrom ggplot2 theme_classic
+default_theme <- function(...) theme_classic(...)
+
 #' @importFrom ggplot2 theme element_blank
-default_theme <- function(...) {
-    ggplot2::theme_classic(...) +
+heatmap_theme <- function(...) {
+    default_theme(...) +
         theme(
             axis.line = element_blank(),
             strip.text = element_blank(),
@@ -8,13 +11,14 @@ default_theme <- function(...) {
         )
 }
 
-heatmap_theme <- function(...) {
-    default_theme(...)
-}
-
 #' @importFrom ggplot2 theme element_blank
 align_theme <- function(direction, ...) {
     default_theme() +
+        theme(
+            axis.line = element_blank(),
+            strip.text = element_blank(),
+            strip.background = element_blank()
+        ) +
         # remove the title and text of axis parallelly with layout
         switch_direction(
             direction,

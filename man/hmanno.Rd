@@ -7,13 +7,14 @@
 hmanno(
   position = NULL,
   size = NULL,
-  what = waiver(),
   width = NULL,
   height = NULL,
   guides = NA,
   free_labs = NA,
   free_sizes = NA,
-  plot_data = NA
+  plot_data = NA,
+  theme = NULL,
+  what = waiver()
 )
 }
 \arguments{
@@ -34,16 +35,8 @@ annotation.
 annotation.
 }}
 
-\item{what}{What should get activated for the stack layout? Possible values
-are follows:
-\itemize{
-\item A single number or string of the plot elements in the stack layout.
-\item \code{NULL}: means set the active context into the last \code{Align} object. In
-this way, we can add other \code{Align} objects into the \code{StackLayout}.
-}}
-
 \item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
-object.}
+object. Only used when \code{position} is \code{NULL}.}
 
 \item{guides}{A single boolean value indicates whether to collect the guides,
 or you can specify the string of the guide position to collect. Allowed
@@ -64,6 +57,20 @@ anything.
 Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
+
+\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, margins and background. Only used when position is \code{NULL}.}
+
+\item{what}{What should get activated for the stack layout? Possible values
+are follows:
+\itemize{
+\item A single number or string of the plot elements in the stack layout.
+Usually you are waive to use this, since the adding procedure can be
+easily changed.
+\item \code{NULL}: Remove any active context, this is useful when the active
+context is a \link[=layout_heatmap]{LayoutHeatmap}, where any \code{Align} objects
+will be added into the heatmap. By removing the active context, we can
+add \code{Align} object into the \code{StackLayout}.
+}}
 }
 \value{
 A \code{active} object which can be added into

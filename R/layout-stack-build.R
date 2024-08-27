@@ -1,6 +1,6 @@
 #' @export
-build_alignpatches.StackLayout <- function(layout) {
-    .subset2(stack_build(layout), "plot")
+ggalign_build.StackLayout <- function(x) {
+    .subset2(stack_build(x), "plot")
 }
 
 #' @param panel,index layout of the axis vertically with the stack.
@@ -99,7 +99,8 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = guides %|w|% TRUE
+        guides = guides %|w|% TRUE,
+        theme = slot(x, "theme")
     )
     list(plot = plot, size = .subset2(params, "size"))
 }

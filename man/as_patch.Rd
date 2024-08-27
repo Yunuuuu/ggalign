@@ -30,7 +30,8 @@ should guess the size from the aspect ratio of the \code{gt}.}
 }
 
 \itemize{
-\item \code{patch_gtable}: A \link[gtable:gtable]{gtable} object
+\item \code{patch_gtable}: A \link[gtable:gtable]{gtable} object, the output panel border
+must be standard.
 }
 
 \itemize{

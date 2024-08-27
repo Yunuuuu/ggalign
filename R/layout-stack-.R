@@ -7,22 +7,19 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
-#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
-#' the relative widths (`direction = "horizontal"`) / heights (`direction =
-#' "vertical"`).
+#' @param ... Not used currently.
 #' @inheritParams layout_heatmap
 #' @return A `StackLayout` object.
+#' @examples
+#' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-layout_stack <- function(data, direction = NULL,
-                         sizes = NULL, guides = waiver(),
-                         free_labs = waiver(), free_sizes = waiver(),
-                         plot_data = waiver()) {
+layout_stack <- function(data, direction = NULL, ...,
+                         environment = parent.frame()) {
     if (missing(data)) {
         .layout_stack(
             data = NULL, nobs = NULL,
-            direction = direction, sizes = sizes, guides = guides,
-            free_labs = free_labs, free_sizes = free_sizes,
-            plot_data = plot_data,
+            direction = direction,
+            environment = environment,
             call = current_call()
         )
     } else {
@@ -32,15 +29,15 @@ layout_stack <- function(data, direction = NULL,
 
 #' @export
 print.StackLayout <- function(x, ...) {
-    p <- build_alignpatches(x)
+    p <- ggalign_build(x)
     if (!is.null(p)) print(p, ...)
     invisible(x)
 }
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.StackLayout <- function(x, ...) {
-    print(x, ...)
+grid.draw.StackLayout <- function(x, recording = TRUE) {
+    grid.draw(ggalign_build(x), recording = recording)
 }
 
 # Used to place multiple objects in one axis
@@ -67,18 +64,22 @@ methods::setClass(
 ggstack <- layout_stack
 
 #' @export
-layout_stack.matrix <- function(data, ...) {
-    .layout_stack(data = data, nobs = nrow(data), ..., call = current_call())
+layout_stack.matrix <- function(data, ..., environment = parent.frame()) {
+    .layout_stack(
+        data = data, nobs = nrow(data), ...,
+        environment = environment,
+        call = current_call()
+    )
 }
 
 #' @export
 layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
-layout_stack.numeric <- function(data, ...) {
+layout_stack.numeric <- function(data, ..., environment = parent.frame()) {
     .layout_stack(
-        data = as.matrix(data),
-        nobs = length(data), ...,
+        data = as.matrix(data), nobs = length(data), ...,
+        environment = environment,
         call = current_call()
     )
 }
@@ -87,45 +88,36 @@ layout_stack.numeric <- function(data, ...) {
 layout_stack.character <- layout_stack.numeric
 
 #' @export
-layout_stack.NULL <- function(data = NULL, ...) {
-    .layout_stack(data = data, nobs = NULL, ..., call = current_call())
+layout_stack.NULL <- function(data, ..., environment = parent.frame()) {
+    .layout_stack(
+        data = data, nobs = NULL, ...,
+        environment = environment,
+        call = current_call()
+    )
 }
 
 #' @importFrom grid unit
 .layout_stack <- function(data, nobs, direction = NULL,
-                          sizes = NULL, guides = waiver(),
-                          free_labs = waiver(), free_sizes = waiver(),
-                          plot_data = waiver(),
+                          environment = parent.frame(),
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
-    if (is.null(sizes)) {
-        sizes <- unit(rep_len(NA, 3L), "null")
-    } else {
-        sizes <- check_stack_sizes(sizes, call = call)
-    }
-    if (!is.waive(free_labs)) {
-        free_labs <- check_layout_labs(free_labs, call = call)
-    }
-    if (!is.waive(free_sizes)) {
-        free_sizes <- check_ggelements(free_sizes, call = call)
-    }
-    plot_data <- check_plot_data(plot_data, call = call)
     methods::new("StackLayout",
         data = data, direction = direction,
         params = list(
-            sizes = sizes,
-            guides = guides, plot_data = plot_data,
-            free_labs = free_labs, free_sizes = free_sizes
+            sizes = unit(rep_len(NA, 3L), "null"),
+            guides = waiver(), plot_data = waiver(),
+            free_labs = waiver(), free_sizes = waiver()
         ),
-        nobs = nobs
+        nobs = nobs,
+        # following parameters are used by ggplot methods
+        # like `ggsave` and `ggplot_build`
+        theme = default_theme(),
+        plot_env = environment
     )
 }
 
 #' @export
-layout_stack.default <- function(data, direction = NULL,
-                                 sizes = NULL, guides = waiver(),
-                                 free_labs = waiver(), free_sizes = waiver(),
-                                 plot_data = waiver()) {
+layout_stack.default <- function(data, ..., environment = parent.frame()) {
     cli::cli_abort(c(
         paste(
             "{.arg data} must be a numeric or character vector,",

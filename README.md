@@ -17,7 +17,7 @@ You can install the development version of `ggalign` from
 remotes::install_github("Yunuuuu/ggalign")
 ```
 
-## Features
+## Overviews
 
 `ggalign` pacakge provides two layout to arrange ggplot objects:
 
@@ -65,5 +65,3 @@ For more information on adding plots, refer to the vignette:
 
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
-
-## Compare with ComplexHeamtap

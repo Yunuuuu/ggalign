@@ -1,11 +1,8 @@
-#' Free panel border from alignment
-#'
-#' [plot_grid] will try to align every element of a plot. If we want to
-#' compose plots without aligning the panel borders (but still align the
-#' panels themselves), we can wrap the plot with `free_border`.
-#' @inheritParams free_align
 #' @param borders Which border shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
+#' @return 
+#' - `free_border`: A modified version of `plot` with a `free_border` class.
 #' @export
+#' @rdname free
 free_border <- function(plot, borders = c("t", "l", "b", "r")) {
     UseMethod("free_border")
 }

@@ -20,7 +20,7 @@ testthat::test_that("`ggstack` works well", {
 testthat::test_that("add `stack_active` object works well", {
     p <- ggstack(matrix(1:9, nrow = 3L))
     # change parameters for heatmap self
-    p2 <- p + active(
+    p2 <- p + stack_active(
         sizes = unit(1, "cm"),
         guides = TRUE,
         free_labs = TRUE,

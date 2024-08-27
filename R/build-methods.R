@@ -1,9 +1,23 @@
-build_alignpatches <- function(layout) UseMethod("build_alignpatches")
+#' Build ggplot for rendering.
+#'
+#' - `ggalign_build`: Build layout into an `alignpatches` object
+#' - `ggalignGrob`: Generate a layout plot grob.
+#' @param x A [HeatmapLayout][layout_heatmap] or [StackLayout][layout_stack]
+#' object.
+#' @export
+ggalign_build <- function(x) UseMethod("ggalign_build")
 
 #' @export
-build_alignpatches.default <- function(layout) {
+ggalign_build.default <- function(x) {
     cli::cli_abort("{.arg x} must be a {.cls Layout} object")
 }
+
+#' @export
+#' @rdname ggalign_build
+ggalignGrob <- function(x) UseMethod("ggalignGrob")
+
+#' @export
+ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
 
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,

@@ -21,52 +21,6 @@ activate.StackLayout <- function(x, what) {
     set_context(x, what)
 }
 
-#' Determine the active context of stack layout
-#'
-#' @param what What should get activated for the stack layout? Possible values
-#' are follows:
-#'    * A single number or string of the plot elements in the stack layout.
-#'    * `NULL`: means set the active context into the last `Align` object. In
-#'      this way, we can add other `Align` objects into the `StackLayout`.
-#'
-#' @inheritParams layout_stack
-#' @return A `active` object which can be added into
-#' [StackLayout][layout_stack].
-#' @export
-active <- function(what = NULL, sizes = NULL, guides = NA,
-                   free_labs = NA, free_sizes = NA, plot_data = NA) {
-    what <- check_stack_context(what)
-    if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    if (is.na(guides) && is_scalar(guides)) {
-        guides <- NA
-    } else {
-        guides <- check_guides(guides)
-    }
-    if (is.na(free_labs) && is_scalar(free_labs)) {
-        free_labs <- NA
-    } else {
-        free_labs <- check_layout_labs(free_labs)
-    }
-    if (is.na(free_sizes) && is_scalar(free_sizes)) {
-        free_sizes <- NA
-    } else {
-        free_sizes <- check_ggelements(free_sizes)
-    }
-    if (is.na(plot_data) && is_scalar(plot_data)) {
-        plot_data <- NA
-    } else {
-        plot_data <- check_plot_data(plot_data)
-    }
-    structure(what,
-        sizes = sizes,
-        guides = guides,
-        free_labs = free_labs,
-        free_sizes = free_sizes,
-        plot_data = plot_data,
-        class = c("stack_active", "active")
-    )
-}
-
 #' Determine the active context of heatmap layout
 #'
 #' @param position Which heatmap annotation should get activated? Possible
@@ -80,15 +34,30 @@ active <- function(what = NULL, sizes = NULL, guides = NA,
 #' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
-#' @inheritParams layout_heatmap
-#' @inheritParams active
+#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
+#' object. Only used when `position` is `NULL`.
+#' @inheritParams plot_grid
+#' @param free_labs A boolean value or a character of the axis position (`"t"`,
+#' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
+#' alignment. By default, all axis title won't be aligned.
+#' @param free_sizes A character specifies the ggplot elements which won't
+#' count space sizes when alignment.
+#' @param plot_data A function used to transform the plot data before rendering.
+#' By default, it'll inherit from the parent layout. If no parent layout, the
+#' default is to not modify the data. Use `NULL`, if you don't want to modify
+#' anything.
+#'
+#' Used to modify the data after layout has been created, but before the data is
+#' handled of to the ggplot2 for rendering. Use this hook if the you needs
+#' change the default data for all `geoms`.
+#' @param theme `r rd_theme()` Only used when position is `NULL`.
+#' @inheritParams stack_active
 #' @return A `active` object which can be added into
 #' [HeatmapLayout][layout_heatmap].
 #' @export
-hmanno <- function(position = NULL, size = NULL,
-                   what = waiver(), width = NULL, height = NULL,
+hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
                    guides = NA, free_labs = NA, free_sizes = NA,
-                   plot_data = NA) {
+                   plot_data = NA, theme = NULL, what = waiver()) {
     if (is.null(position)) {
         position <- NA
     } else {
@@ -100,29 +69,86 @@ hmanno <- function(position = NULL, size = NULL,
     if (!is.null(height)) height <- check_size(height)
     if (is.na(guides) && is_scalar(guides)) {
         guides <- NA
-    } else {
+    } else if (!is.waive(guides)) {
         guides <- check_guides(guides)
     }
     if (is.na(free_labs) && is_scalar(free_labs)) {
         free_labs <- NA
-    } else {
+    } else if (!is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
     if (is.na(free_sizes) && is_scalar(free_sizes)) {
         free_sizes <- NA
-    } else {
+    } else if (!is.waive(free_sizes)) {
         free_sizes <- check_ggelements(free_sizes)
     }
     if (is.na(plot_data) && is_scalar(plot_data)) {
         plot_data <- NA
-    } else {
+    } else if (!is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
     }
+    assert_s3_class(theme, "theme", null_ok = TRUE)
     structure(position,
         what = what, size = size, width = width, height = height,
         guides = guides, free_labs = free_labs, free_sizes = free_sizes,
-        plot_data = plot_data,
+        plot_data = plot_data, theme = theme,
         class = c("heatmap_active", "active")
+    )
+}
+
+#' Determine the active context of stack layout
+#'
+#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
+#' the relative widths (`direction = "horizontal"`) / heights (`direction =
+#' "vertical"`).
+#' @inheritParams hmanno
+#' @inheritParams plot_grid
+#' @param what What should get activated for the stack layout? Possible values
+#' are follows:
+#'    * A single number or string of the plot elements in the stack layout.
+#'      Usually you are waive to use this, since the adding procedure can be
+#'      easily changed.
+#'    * `NULL`: Remove any active context, this is useful when the active
+#'      context is a [LayoutHeatmap][layout_heatmap], where any `Align` objects
+#'      will be added into the heatmap. By removing the active context, we can
+#'      add `Align` object into the `StackLayout`.
+#' @return A `active` object which can be added into
+#' [StackLayout][layout_stack].
+#' @export
+stack_active <- function(sizes = NULL, guides = NA,
+                         free_labs = NA, free_sizes = NA, plot_data = NA,
+                         theme = NULL, what = NULL) {
+    what <- check_stack_context(what)
+    if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
+    if (is.na(guides) && is_scalar(guides)) {
+        guides <- NA
+    } else if (!is.waive(guides)) {
+        guides <- check_guides(guides)
+    }
+    if (is.na(free_labs) && is_scalar(free_labs)) {
+        free_labs <- NA
+    } else if (!is.waive(free_labs)) {
+        free_labs <- check_layout_labs(free_labs)
+    }
+    if (is.na(free_sizes) && is_scalar(free_sizes)) {
+        free_sizes <- NA
+    } else if (!is.waive(free_sizes)) {
+        free_sizes <- check_ggelements(free_sizes)
+    }
+    if (is.na(plot_data) && is_scalar(plot_data)) {
+        plot_data <- NA
+    } else if (!is.waive(plot_data)) {
+        plot_data <- check_plot_data(plot_data)
+    }
+    assert_s3_class(theme, "theme", null_ok = TRUE)
+    structure(what,
+        sizes = sizes,
+        guides = guides,
+        free_labs = free_labs,
+        free_sizes = free_sizes,
+        plot_data = plot_data,
+        theme = theme,
+        class = c("stack_active", "active")
     )
 }
 
@@ -148,12 +174,7 @@ set_context.HeatmapLayout <- function(x, context) {
 #' @export
 set_context.StackLayout <- function(x, context) {
     if (is.na(context)) {
-        context <- which(vapply(x@plots, is.align, logical(1L)))
-        if (is_empty(context)) {
-            context <- NULL
-        } else {
-            context <- max(context)
-        }
+        context <- NULL
     } else if ((l <- length(x@plots)) == 0L) {
         cli::cli_abort("No contexts in the stack layout to be activated")
     } else if (is.character(name <- context)) {
@@ -162,9 +183,11 @@ set_context.StackLayout <- function(x, context) {
             cli::cli_abort("Cannot find {name} plot in this stack layout")
         }
     } else if (context > l) {
-        cli::cli_abort(
-            "Outlier context, the stack layout has only {l} context{?s}"
-        )
+        cli::cli_abort(paste(
+            "Canno determine the context",
+            "the stack layout has only {l} context{?s}",
+            sep = ", "
+        ))
     }
     slot(x, "active") <- context
     x

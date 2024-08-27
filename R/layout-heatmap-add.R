@@ -28,9 +28,9 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     # set the panel and index for the heatmap
     direction <- to_direction(position)
     axis <- to_coord_axis(direction)
-    heatmap <- set_panel(heatmap, axis, get_panel(stack))
-    heatmap <- set_index(heatmap, axis, get_index(stack))
-    heatmap <- set_nobs(heatmap, axis, get_nobs(stack))
+    heatmap <- set_panel(heatmap, axis = axis, value = get_panel(stack))
+    heatmap <- set_index(heatmap, axis = axis, value = get_index(stack))
+    heatmap <- set_nobs(heatmap, axis = axis, value = get_nobs(stack))
     heatmap
 }
 
@@ -56,6 +56,9 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
             slot(heatmap, "params")$plot_data <- plot_data
         }
+        if (!is.null(theme <- attr(object, "theme"))) {
+            slot(heatmap, "theme") <- slot(heatmap, "theme") + theme
+        }
         return(heatmap)
     }
 
@@ -75,8 +78,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         data <- slot(heatmap, "data")
         if (!is_horizontal(direction)) data <- t(data)
         stack <- layout_stack(data = data, direction = direction)
-        stack <- set_panel(stack, get_panel(heatmap, axis))
-        stack <- set_index(stack, get_index(heatmap, axis))
+        stack <- set_panel(stack, value = get_panel(heatmap, axis))
+        stack <- set_index(stack, value = get_index(heatmap, axis))
 
         # Initialize the stack size
         # it is the total size of the stack in the stack direction.
@@ -84,7 +87,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         # size of the vertical direction with this stack, which won't be used by
         # heatmap annotation, since heatmap annotation only allow `Align`
         # object.
-        slot(stack, "params")$size <- unit(1, "null")
+        slot(stack, "params")$size <- unit(NA, "null")
     }
 
     if (!is.null(size <- attr(object, "size"))) {

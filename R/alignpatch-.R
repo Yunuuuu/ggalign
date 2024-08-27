@@ -79,7 +79,7 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
     ans <- gtable_add_grob(ans, list(gt),
         t = 1L, l = 1L, b = nrow(ans), r = ncol(ans), ...
     )
-    add_class(ans, "full_patch", "alignpatch")
+    add_class(ans, "full_patch")
 }
 
 #' Extends plots to be aligned with `plot_grid`
@@ -117,10 +117,10 @@ as_patch.alignpatches <- function(x) x
 as_patch.patch <- function(x) x
 
 #' @export
-as_patch.HeatmapLayout <- function(x) build_alignpatches(x)
+as_patch.HeatmapLayout <- function(x) ggalign_build(x)
 
 #' @export
-as_patch.StackLayout <- function(x) build_alignpatches(x)
+as_patch.StackLayout <- function(x) ggalign_build(x)
 
 #' @export
 as_patch.grob <- function(x) wrap(x)
@@ -149,7 +149,8 @@ as_patch.patchwork <- function(x) {
 #' @param patch A `patch` from `as_patch`.
 #' @param guides Input guides argument to [plot_grid()]
 #' @return
-#' - `patch_gtable`: A [gtable][gtable::gtable] object
+#' - `patch_gtable`: A [gtable][gtable::gtable] object, the output panel border
+#'   must be standard.
 #' @export
 #' @rdname as_patch
 patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
@@ -192,16 +193,10 @@ patch_gtable.grob <- function(patch, guides) patch
 #' @export
 patch_gtable.patch <- function(patch, guides) {
     guides <- if (length(guides)) "collect" else "keep"
-    add_class(patchwork::patchGrob(patch, guides = guides), "gtable_patch")
+    patchwork::patchGrob(patch, guides = guides)
 }
 
 #########################################
 # `patch` from `patchwork`: patchwork::wrap_elements
 #' @export
-patch_gtable.wrapped_patch <- function(patch, guides) {
-    guides <- if (length(guides)) "collect" else "keep"
-    add_class(
-        patchwork::patchGrob(patch, guides = guides),
-        "gtable_wrapped_patch"
-    )
-}
+patch_gtable.wrapped_patch <- patch_gtable.patch

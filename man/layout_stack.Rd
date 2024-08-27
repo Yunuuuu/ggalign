@@ -5,25 +5,9 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-layout_stack(
-  data,
-  direction = NULL,
-  sizes = NULL,
-  guides = waiver(),
-  free_labs = waiver(),
-  free_sizes = waiver(),
-  plot_data = waiver()
-)
+layout_stack(data, direction = NULL, ..., environment = parent.frame())
 
-ggstack(
-  data,
-  direction = NULL,
-  sizes = NULL,
-  guides = waiver(),
-  free_labs = waiver(),
-  free_sizes = waiver(),
-  plot_data = waiver()
-)
+ggstack(data, direction = NULL, ..., environment = parent.frame())
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -31,32 +15,17 @@ ggstack(
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
 
-\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
-the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
+\item{...}{Not used currently.}
 
-\item{guides}{A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
-
-\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
-\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.}
-
-\item{free_sizes}{A character specifies the ggplot elements which won't
-count space sizes when alignment.}
-
-\item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. If no parent layout, the
-default is to not modify the data. Use \code{NULL}, if you don't want to modify
-anything.
-
-Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all \code{geoms}.}
+\item{environment}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Used prior to tidy
+evaluation.}
 }
 \value{
 A \code{StackLayout} object.
 }
 \description{
 \code{ggstack} is an alias of \code{layout_stack}.
+}
+\examples{
+ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 }

@@ -46,7 +46,7 @@ initialize_align <- function(object, direction,
         if (is.na(nobs)) nobs <- object$nobs(input_params)
         params <- object$setup_params(nobs, input_params)
     }
-    # setup parameters and check parameters ----------
+    # save the parameters into the object ------------
     object$params <- params
 
     # prepare the data -------------------------------
@@ -61,8 +61,6 @@ initialize_align_layout <- function(object, nobs, direction,
                                     layout_panel, layout_index,
                                     object_name) {
     axis <- to_coord_axis(direction)
-
-    # prepare and check parameters ----------------------
     call <- .subset2(object, "call")
     params <- .subset2(object, "params")
 
@@ -150,10 +148,10 @@ initialize_align_layout <- function(object, nobs, direction,
     # we always prevent from reordering layout twice.
     if (!is.null(layout_index)) {
         if (!all(layout_index == new_index)) {
-            cli::cli_abort(sprintf(
-                "{.fn {snake_class(object)}} disrupt the previously %s %s-axis",
-                "established order of the layout",
-                axis
+            cli::cli_abort(paste0(
+                "{.fn {snake_class(object)}} disrupt the previously ",
+                "established order of the layout ",
+                axis, "-axis"
             ), call = call)
         }
     }

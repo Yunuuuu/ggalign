@@ -1,9 +1,8 @@
-##########################################################
-#' Removing the sizes when aligning
-#'
-#' @inheritParams free_align
 #' @param ... What ggplot2 elements to remove?
+#' @return
+#' - `free_size`: A modified version of `plot` with a `free_size` class.
 #' @export
+#' @rdname free
 free_size <- function(plot, ...) {
     UseMethod("free_size")
 }
@@ -21,9 +20,6 @@ free_size.ggplot <- function(plot, ...) {
 }
 
 #' @export
-free_size.free_border <- free_size.ggplot
-
-#' @export
 free_size.free_size <- function(plot, ...) {
     if (...length() == 0L) return(plot) # styler: off
     elements <- check_ggelements(c(...), arg = "...")
@@ -39,31 +35,19 @@ free_size.wrapped_plot <- free_size.default
 patch_gtable.free_size <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_size")
     gt <- NextMethod()
-    attr(gt, "free_sizes") <- attr(patch, "free_sizes")
-    add_class(gt, "gtable_free_size")
-}
-
-#' @export
-patch_align.gtable_free_size <- function(gt, guides,
-                                         panel_width, panel_height) {
-    class(gt) <- setdiff(class(gt), "gtable_free_size")
-    ans <- NextMethod()
-    ans$gt <- remove_border_sizes(.subset2(ans, "gt"), attr(gt, "free_sizes"))
-    ans
+    remove_border_sizes(gt, attr(patch, "free_sizes"))
 }
 
 #' @importFrom ggplot2 find_panel
 remove_border_sizes <- function(gt, ggelements) {
+    strip_pos <- find_strip_pos(gt)
     ggelements <- lapply(GGELEMENTS, intersect, ggelements)
     panel_pos <- find_panel(gt)
     for (border in names(ggelements)) {
         elements <- .subset2(ggelements, border)
         if (length(elements) == 0L) next
         pos <- .subset2(panel_pos, border) +
-            .subset(
-                .subset2(GGELEMENTS_RELATIVE_TO_PANEL, border),
-                elements
-            )
+            ggelements_pos(border, ggelements, strip_pos)
         if (border %in% c("t", "b")) {
             gt$heights[pos] <- unit(0, "mm")
         } else {
@@ -80,12 +64,35 @@ GGELEMENTS <- list(
     r = c("ylab-r", "axis-r", "strip-r")
 )
 
-GGELEMENTS_RELATIVE_TO_PANEL <- list(
-    t = c(`axis-t` = -2L, `xlab-t` = -3L, subtitle = -6, title = -7),
-    l = c(`ylab-l` = -3L, `axis-l` = -2L),
-    b = c(`axis-b` = 2L, `xlab-b` = 3L, caption = 6L),
-    r = c(`axis-r` = 2L, `ylab-r` = 3L)
-)
+ggelements_pos <- function(border, ggelements, strip_pos) {
+    to_pos <- list(
+        t = c(
+            `strip-t` = -1L, `axis-t` = -2L, `xlab-t` = -3L,
+            subtitle = -6, title = -7
+        ),
+        l = c(`strip-l` = -1L, `axis-l` = -2L, `ylab-l` = -3L),
+        b = c(`strip-b` = 1L, `axis-b` = 2L, `xlab-b` = 3L, caption = 6L),
+        r = c(`strip-r` = 1L, `axis-r` = 2L, `ylab-r` = 3L)
+    )
+    pos <- .subset2(to_pos, border)
+    if (strip_pos == "outside") {
+        # switch between axis and strip position
+        pos <- rename(
+            pos,
+            structure(
+                c(
+                    paste("strip", c("t", "l", "b", "r"), sep = "-"),
+                    paste("axis", c("t", "l", "b", "r"), sep = "-")
+                ),
+                names = c(
+                    paste("axis", c("t", "l", "b", "r"), sep = "-"),
+                    paste("strip", c("t", "l", "b", "r"), sep = "-")
+                )
+            )
+        )
+    }
+    pos
+}
 
 # top-bottom
 #
@@ -93,8 +100,10 @@ GGELEMENTS_RELATIVE_TO_PANEL <- list(
 # 4: subtitle
 # 5: guide-box-top
 # 7: xlab-t
-# 8: axis-t
+# 8: axis-t/strip-t strip.placement = "inside"
+# 9: strip-t/axis-t strip.placement = "outside"
 # 10: panel
+# 11: strip-b
 # 12: axis-b
 # 13: xlab-b
 # 15: guide-box-bottom

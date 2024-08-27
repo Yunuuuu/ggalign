@@ -7,28 +7,12 @@
 #' one column matrix.
 #' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
 #' will using `aes(.data$.x, .data$.y)`.
-#' @param ... Additional arguments passed to matrix method.
-#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
-#' object.
-#' @inheritParams plot_grid
-#' @param free_labs A boolean value or a character of the axis position (`"t"`,
-#' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
-#' alignment. By default, all axis title won't be aligned.
-#' @param free_sizes A character specifies the ggplot elements which won't
-#' count space sizes when alignment.
-#' @param filling A boolean value indicates whether to fill the heatmap. If you
-#' want to custom the filling style, you can set to `FALSE`.
-#' @param plot_data A function used to transform the plot data before rendering.
-#' By default, it'll inherit from the parent layout. If no parent layout, the
-#' default is to not modify the data. Use `NULL`, if you don't want to modify
-#' anything.
-#'
-#' Used to modify the data after layout has been created, but before the data is
-#' handled of to the ggplot2 for rendering. Use this hook if the you needs
-#' change the default data for all `geoms`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
+#' @param filling A boolean value indicates whether to fill the heatmap. If you
+#' want to custom the filling style, you can set to `FALSE`.
 #' @inheritParams align
+#' @inheritParams ggplot2::ggplot
 #' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -54,20 +38,17 @@
 #' @importFrom ggplot2 aes
 #' @export
 layout_heatmap <- function(data, mapping = aes(),
-                           width = NULL, height = NULL,
-                           guides = waiver(),
-                           free_labs = waiver(), free_sizes = waiver(),
-                           plot_data = waiver(), filling = TRUE,
-                           ..., set_context = TRUE, order = NULL, name = NULL) {
+                           ...,
+                           filling = TRUE,
+                           set_context = TRUE, order = NULL, name = NULL,
+                           environment = parent.frame()) {
     if (missing(data)) {
         .layout_heatmap(
             data = NULL, mapping = mapping,
-            width = width, height = height,
-            guides = guides, free_labs = free_labs,
-            free_sizes = free_sizes, plot_data = plot_data,
-            filling = filling, ..., set_context = set_context,
-            order = order, name = name, nobs_list = list(),
-            call = current_call()
+            ..., filling = filling,
+            environment = environment,
+            set_context = set_context, order = order, name = name,
+            nobs_list = list(), call = current_call()
         )
     } else {
         UseMethod("layout_heatmap")
@@ -76,15 +57,15 @@ layout_heatmap <- function(data, mapping = aes(),
 
 #' @export
 print.HeatmapLayout <- function(x, ...) {
-    p <- build_alignpatches(x)
+    p <- ggalign_build(x)
     print(p, ...)
     invisible(x)
 }
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.HeatmapLayout <- function(x, ...) {
-    print(x, ...)
+grid.draw.HeatmapLayout <- function(x, recording = TRUE) {
+    grid.draw(ggalign_build(x), recording = recording)
 }
 
 # used to create the heatmap layout
@@ -121,7 +102,11 @@ ggheatmap <- layout_heatmap
 #' @importFrom ggplot2 waiver theme
 #' @export
 layout_heatmap.matrix <- function(data, ...) {
-    .layout_heatmap(data = data, ..., call = current_call())
+    .layout_heatmap(
+        data = data, ...,
+        nobs_list = list(x = ncol(data), y = nrow(data)),
+        call = current_call()
+    )
 }
 
 #' @export
@@ -135,8 +120,8 @@ layout_heatmap.NULL <- function(data, ...) {
 #' @export
 layout_heatmap.formula <- function(data, ...) {
     .layout_heatmap(
-        data = allow_lambda(data), nobs_list = list(),
-        ..., call = current_call()
+        data = allow_lambda(data), ...,
+        nobs_list = list(), call = current_call()
     )
 }
 
@@ -155,40 +140,23 @@ layout_heatmap.default <- function(data, ...) {
             ), call = call)
         }
     )
-    .layout_heatmap(data = data, ..., call = call)
+    .layout_heatmap(
+        data = data, ...,
+        nobs_list = list(x = ncol(data), y = nrow(data)),
+        call = call
+    )
 }
 
 #' @importFrom ggplot2 aes
-.layout_heatmap <- function(data,
-                            mapping = aes(),
-                            width = NULL, height = NULL,
-                            guides = waiver(),
-                            free_labs = waiver(), free_sizes = waiver(),
-                            plot_data = waiver(), filling = TRUE,
+.layout_heatmap <- function(data, mapping = aes(),
                             ...,
+                            filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
-                            nobs_list = list(x = ncol(data), y = nrow(data)),
-                            call = caller_call()) {
+                            environment = parent.frame(),
+                            # following parameters are used internally
+                            nobs_list, call = caller_call()) {
     assert_bool(filling, call = call)
-
-    if (!is.waive(free_labs)) {
-        free_labs <- check_layout_labs(free_labs, call = call)
-    }
-    if (!is.waive(free_sizes)) {
-        free_sizes <- check_ggelements(free_sizes, call = call)
-    }
-    if (is.null(width)) {
-        width <- unit(NA, "null")
-    } else {
-        width <- check_size(width)
-    }
-    if (is.null(height)) {
-        height <- unit(NA, "null")
-    } else {
-        height <- check_size(height)
-    }
     assert_bool(set_context, call = call)
-
     if (is.null(order) || is.na(order)) {
         order <- NA_integer_
     } else if (!is_scalar(order)) {
@@ -198,11 +166,6 @@ layout_heatmap.default <- function(data, ...) {
     } else if (!is.integer(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
     }
-    assert_string(name,
-        empty_ok = FALSE, na_ok = FALSE,
-        null_ok = TRUE, call = call
-    )
-    plot_data <- check_plot_data(plot_data)
     plot <- ggplot2::ggplot(mapping = mapping) +
         heatmap_theme()
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
@@ -223,41 +186,22 @@ layout_heatmap.default <- function(data, ...) {
         data = data,
         params = list(
             # following parameters can be controlled by `active` object.
-            width = width,
-            height = height,
-            guides = guides,
-            free_labs = free_labs,
-            free_sizes = free_sizes,
-            plot_data = plot_data
+            width = unit(NA, "null"),
+            height = unit(NA, "null"),
+            guides = waiver(),
+            free_labs = waiver(),
+            free_sizes = waiver(),
+            plot_data = waiver()
         ),
         set_context = set_context,
         order = order, name = name %||% NA_character_,
-        plot = plot,
-        nobs_list = nobs_list
+        plot = plot, nobs_list = nobs_list,
+        # following parameters are used by ggplot methods
+        # like `ggsave` and `ggplot_build`
+        theme = default_theme(),
+        plot_env = environment
     )
 }
-
-#' Subset a `HeatmapLayout` object
-#'
-#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
-#'
-#' @param x A `HeatmapLayout` object
-#' @param name A string of slot name in `HeatmapLayout` object.
-#' @importFrom methods slot
-#' @keywords internal
-methods::setMethod("$", "HeatmapLayout", function(x, name) {
-    # https://github.com/tidyverse/ggplot2/issues/6002
-    if (name == "theme") {
-        slot(x, "plot")$theme
-    } else if (name == "plot_env") {
-        slot(x, "plot")$plot_env
-    } else {
-        cli::cli_abort(c(
-            "`$` is just for internal ggplot2 methods",
-            i = "try to use `@` method instead"
-        ))
-    }
-})
 
 #' Reports whether `x` is a `HeatmapLayout` object
 #'

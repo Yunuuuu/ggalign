@@ -11,7 +11,12 @@ ggalign_namespace_link <- function() NULL
 #'
 #' @keywords internal
 methods::setClass("Layout",
-    list(active = "ANY", `_namespace` = "ANY"),
+    list(
+        active = "ANY",
+        # used by ggplot methods, like `ggsave` and `ggplot_build`
+        theme = "ANY", plot_env = "environment",
+        `_namespace` = "ANY"
+    ),
     prototype = list(active = NULL, `_namespace` = ggalign_namespace_link)
 )
 
@@ -25,6 +30,19 @@ is.layout <- function(x) methods::is(x, "Layout")
 #' @keywords internal
 methods::setMethod("show", "Layout", function(object) {
     print(object)
+})
+
+#' Subset a `Layout` object
+#'
+#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
+#'
+#' @param x A `Layout` object
+#' @param name A string of slot name in `Layout` object.
+#' @importFrom methods slot
+#' @export
+#' @keywords internal
+methods::setMethod("$", "Layout", function(x, name) {
+    slot(x, name)
 })
 
 #############################################################
@@ -92,6 +110,10 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
             "i" = "Did you accidentally put {.code &} on a new line?"
         ))
     }
+    # Should we remove the margins around the layout?
+    if (inherits(e2, "theme")) {
+        slot(e1, "theme") <- slot(e1, "theme") + e2
+    }
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
@@ -114,7 +136,7 @@ layout_and_add.StackLayout <- function(layout, object, object_name) {
 }
 
 ############################################################
-# layout should be one of index, nobs, panel
+# layout should be one of "index", "nobs", "panel"
 get_layout <- function(x, layout, ...) UseMethod("get_layout")
 
 #' @importFrom methods slot
@@ -168,163 +190,24 @@ set_layout.StackLayout <- function(x, layout, ..., value) {
     x
 }
 
-#########################################################
-# utils function ----------------------------------------
-get_panel <- function(x, ...) UseMethod("get_panel")
-
-#' @importFrom methods slot
-#' @export
-get_panel.HeatmapLayout <- function(x, axis, ...) {
-    .subset2(slot(x, "panel_list"), axis)
+get_panel <- function(x, axis) {
+    get_layout(x = x, layout = "panel", axis = axis)
+}
+get_index <- function(x, axis) {
+    get_layout(x = x, layout = "index", axis = axis)
+}
+get_nobs <- function(x, axis) {
+    get_layout(x = x, layout = "nobs", axis = axis)
 }
 
-#' @importFrom methods slot
-#' @export
-get_panel.StackLayout <- function(x, ...) {
-    slot(x, "panel")
+set_panel <- function(x, ..., axis, value) {
+    set_layout(x = x, layout = "panel", ..., axis = axis, value = value)
 }
 
-set_panel <- function(x, ...) UseMethod("set_panel")
-
-#' @importFrom methods slot slot<-
-#' @export
-set_panel.HeatmapLayout <- function(x, axis, panel, ...) {
-    slot(x, "panel_list")[[axis]] <- panel
-    if (axis == "x") {
-        if (!is.null(top <- slot(x, "top"))) {
-            slot(x, "top") <- set_panel(top, panel)
-        }
-        if (!is.null(bottom <- slot(x, "bottom"))) {
-            slot(x, "bottom") <- set_panel(bottom, panel)
-        }
-    } else {
-        if (!is.null(left <- slot(x, "left"))) {
-            slot(x, "left") <- set_panel(left, panel)
-        }
-        if (!is.null(right <- slot(x, "right"))) {
-            slot(x, "right") <- set_panel(right, panel)
-        }
-    }
-    x
+set_index <- function(x, ..., axis, value) {
+    set_layout(x = x, layout = "index", ..., axis = axis, value = value)
 }
 
-#' @importFrom methods slot slot<-
-#' @export
-set_panel.StackLayout <- function(x, panel, ...) {
-    slot(x, "panel") <- panel
-    axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
-        if (is.ggheatmap(plot)) {
-            set_panel(plot, axis = axis, panel = panel)
-        } else {
-            plot
-        }
-    })
-    x
-}
-
-##################################################################
-get_index <- function(x, ...) UseMethod("get_index")
-
-#' @importFrom methods slot
-#' @export
-get_index.HeatmapLayout <- function(x, axis, ...) {
-    .subset2(slot(x, "index_list"), axis)
-}
-
-#' @importFrom methods slot
-#' @export
-get_index.StackLayout <- function(x, ...) {
-    slot(x, "index")
-}
-
-set_index <- function(x, ...) UseMethod("set_index")
-
-#' @importFrom methods slot slot<-
-#' @export
-set_index.HeatmapLayout <- function(x, axis, index, ...) {
-    slot(x, "index_list")[[axis]] <- index
-    if (axis == "x") {
-        if (!is.null(top <- slot(x, "top"))) {
-            slot(x, "top") <- set_index(top, index)
-        }
-        if (!is.null(bottom <- slot(x, "bottom"))) {
-            slot(x, "bottom") <- set_index(bottom, index)
-        }
-    } else {
-        if (!is.null(left <- slot(x, "left"))) {
-            slot(x, "left") <- set_index(left, index)
-        }
-        if (!is.null(right <- slot(x, "right"))) {
-            slot(x, "right") <- set_index(right, index)
-        }
-    }
-    x
-}
-
-#' @importFrom methods slot slot<-
-#' @export
-set_index.StackLayout <- function(x, index, ...) {
-    slot(x, "index") <- index
-    axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
-        if (is.ggheatmap(plot)) {
-            set_index(plot, axis = axis, index = index)
-        } else {
-            plot
-        }
-    })
-    x
-}
-
-##########################################################
-get_nobs <- function(x, ...) UseMethod("get_nobs")
-
-#' @importFrom methods slot
-#' @export
-get_nobs.HeatmapLayout <- function(x, axis, ...) {
-    .subset2(slot(x, "nobs_list"), axis)
-}
-
-#' @importFrom methods slot
-#' @export
-get_nobs.StackLayout <- function(x, ...) slot(x, "nobs")
-
-set_nobs <- function(x, ...) UseMethod("set_nobs")
-
-#' @importFrom methods slot slot<-
-#' @export
-set_nobs.HeatmapLayout <- function(x, axis, nobs, ...) {
-    slot(x, "nobs_list")[[axis]] <- nobs
-    if (axis == "x") {
-        if (!is.null(top <- slot(x, "top"))) {
-            slot(x, "top") <- set_nobs(top, nobs)
-        }
-        if (!is.null(bottom <- slot(x, "bottom"))) {
-            slot(x, "bottom") <- set_nobs(bottom, nobs)
-        }
-    } else {
-        if (!is.null(left <- slot(x, "left"))) {
-            slot(x, "left") <- set_nobs(left, nobs)
-        }
-        if (!is.null(right <- slot(x, "right"))) {
-            slot(x, "right") <- set_nobs(right, nobs)
-        }
-    }
-    x
-}
-
-#' @importFrom methods slot slot<-
-#' @export
-set_nobs.StackLayout <- function(x, nobs, ...) {
-    slot(x, "nobs") <- nobs
-    axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
-        if (is.ggheatmap(plot)) {
-            set_nobs(plot, axis = axis, nobs = nobs)
-        } else {
-            plot
-        }
-    })
-    x
+set_nobs <- function(x, ..., axis, value) {
+    set_layout(x = x, layout = "nobs", ..., axis = axis, value = value)
 }

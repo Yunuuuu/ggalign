@@ -32,6 +32,9 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         slot(stack, "params")$plot_data <- plot_data
     }
+    if (!is.null(theme <- attr(object, "theme"))) {
+        slot(stack, "theme") <- slot(stack, "theme") + theme
+    }
     stack
 }
 
@@ -78,9 +81,9 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         slot(object, "data") <- data
         # we should sync the `nobs` of the vertical axis
         if (is_horizontal(direction)) {
-            object <- set_nobs(object, "x", ncol(data))
+            object <- set_nobs(object, axis = "x", value = ncol(data))
         } else {
-            object <- set_nobs(object, "y", nrow(data))
+            object <- set_nobs(object, axis = "y", value = nrow(data))
         }
     }
 
@@ -161,9 +164,9 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
     slot(stack, "active") <- active_index
 
     # set the layout ------------------------------------
-    stack <- set_panel(stack, panel)
-    stack <- set_index(stack, index)
-    stack <- set_nobs(stack, nobs)
+    stack <- set_panel(stack, value = panel)
+    stack <- set_index(stack, value = index)
+    stack <- set_nobs(stack, value = nobs)
     stack
 }
 
@@ -234,9 +237,9 @@ stack_add_align <- function(object, stack, object_name) {
     slot(stack, "active") <- active_index
 
     # set the layout -------------------------------------
-    stack <- set_panel(stack, .subset2(layout, 1L))
-    stack <- set_index(stack, .subset2(layout, 2L))
-    stack <- set_nobs(stack, .subset2(layout, 3L))
+    stack <- set_panel(stack, value = .subset2(layout, 1L))
+    stack <- set_index(stack, value = .subset2(layout, 2L))
+    stack <- set_nobs(stack, value = .subset2(layout, 3L))
     stack
 }
 
@@ -270,9 +273,9 @@ stack_add_heatmap_element <- function(object, stack, object_name, force,
         plot <- layout_heatmap_add(object, plot, object_name)
         slot(stack, "plots")[[active_index]] <- plot
         axis <- to_coord_axis(slot(stack, "direction"))
-        stack <- set_panel(stack, get_panel(plot, axis))
-        stack <- set_index(stack, get_index(plot, axis))
-        stack <- set_nobs(stack, get_nobs(plot, axis))
+        stack <- set_panel(stack, value = get_panel(plot, axis))
+        stack <- set_index(stack, value = get_index(plot, axis))
+        stack <- set_nobs(stack, value = get_nobs(plot, axis))
     } else if (force) {
         cli::cli_abort(c(
             "Cannot add {.code {object_name}}",

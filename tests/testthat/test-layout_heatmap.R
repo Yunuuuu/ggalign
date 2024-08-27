@@ -83,7 +83,7 @@ testthat::test_that("add `heatmap_active` object works well", {
     expect_identical(get_index(stack), get_index(p, "x"))
     expect_identical(get_nobs(stack), get_nobs(p, "x"))
     params <- slot(stack, "params")
-    expect_identical(params$size, unit(1, "null"))
+    expect_identical(params$size, unit(NA, "null"))
     expect_identical(params$guides, character())
     expect_identical(params$free_labs, BORDERS)
     expect_identical(params$plot_data, NULL)

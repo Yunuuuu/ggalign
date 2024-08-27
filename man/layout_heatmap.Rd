@@ -8,33 +8,23 @@
 layout_heatmap(
   data,
   mapping = aes(),
-  width = NULL,
-  height = NULL,
-  guides = waiver(),
-  free_labs = waiver(),
-  free_sizes = waiver(),
-  plot_data = waiver(),
-  filling = TRUE,
   ...,
+  filling = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL
+  name = NULL,
+  environment = parent.frame()
 )
 
 ggheatmap(
   data,
   mapping = aes(),
-  width = NULL,
-  height = NULL,
-  guides = waiver(),
-  free_labs = waiver(),
-  free_sizes = waiver(),
-  plot_data = waiver(),
-  filling = TRUE,
   ...,
+  filling = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL
+  name = NULL,
+  environment = parent.frame()
 )
 }
 \arguments{
@@ -45,42 +35,23 @@ one column matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
 will using \code{aes(.data$.x, .data$.y)}.}
 
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
-object.}
-
-\item{guides}{A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
-
-\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
-\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.}
-
-\item{free_sizes}{A character specifies the ggplot elements which won't
-count space sizes when alignment.}
-
-\item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. If no parent layout, the
-default is to not modify the data. Use \code{NULL}, if you don't want to modify
-anything.
-
-Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all \code{geoms}.}
+\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
+Only used when \code{filling = TRUE}.}
 
 \item{filling}{A boolean value indicates whether to fill the heatmap. If you
 want to custom the filling style, you can set to \code{FALSE}.}
 
-\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
-Only used when \code{filling = TRUE}.}
-
 \item{set_context}{A single boolean value indicates whether to set the active
-context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
-will be added into this \code{Align} object.}
+context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
+added into this plot.}
 
 \item{order}{An single integer for the layout order.}
 
-\item{name}{A string of the object name.}
+\item{name}{A string of the plot name. Used to switch the active context in
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack]{stack()}}.}
+
+\item{environment}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Used prior to tidy
+evaluation.}
 }
 \value{
 A \code{HeatmapLayout} object.

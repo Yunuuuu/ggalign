@@ -4,13 +4,13 @@
 \name{align}
 \alias{align}
 \alias{Align}
-\title{Create \code{Align} object}
+\title{Create a new \code{Align} object}
 \usage{
 align(
   align_class,
   params,
+  data,
   size = NULL,
-  data = NULL,
   free_labs = waiver(),
   free_sizes = waiver(),
   plot_data = waiver(),
@@ -24,8 +24,6 @@ align(
 )
 }
 \arguments{
-\item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
-
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
 the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
@@ -43,6 +41,8 @@ heatmap columns as observations, but we need rows.
 \item \code{layout_stack}: the \code{layout} data will be used as it is since we place all
 plots along a single axis.
 }}
+
+\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
 \item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
 \code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
@@ -67,12 +67,13 @@ the plot.}
 the plot. If this is \code{FALSE}, \code{limits} will always be \code{FALSE} too.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
-context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
-will be added into this \code{Align} object.}
+context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
+added into this plot.}
 
 \item{order}{An single integer for the layout order.}
 
-\item{name}{A string of the object name.}
+\item{name}{A string of the plot name. Used to switch the active context in
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack]{stack()}}.}
 
 \item{check.param}{A single boolean value indicates whether to check the
 supplied parameters and warn.}

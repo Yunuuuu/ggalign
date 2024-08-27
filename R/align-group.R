@@ -14,7 +14,7 @@ align_group <- function(group, set_context = FALSE, name = NULL) {
     align(
         align_class = AlignGroup,
         params = list(group = group),
-        set_context = set_context,
+        data = NULL, set_context = set_context,
         name = name, order = NULL,
         check.param = TRUE
     )
@@ -27,7 +27,7 @@ AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(self, nobs,
             length(.subset2(params, "group")),
-            arg = "group", 
+            arg = "group",
             msg = "must be an atomic vector"
         )
         params

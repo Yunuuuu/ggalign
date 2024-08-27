@@ -101,7 +101,7 @@ ggheatmap(v) +
   hmanno("t", size = 0.5) +
   ggalign(limits = FALSE) +
   geom_boxplot(aes(.extra_panel, value, fill = .extra_panel),
-    # here, we use print to show the underlying data
+    # here, we use `print()` to show the underlying data
     data = function(data) {
       print(head(data))
       data

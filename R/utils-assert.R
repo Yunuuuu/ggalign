@@ -110,7 +110,8 @@ check_labs <- function(labs, arg = caller_arg(labs), call = caller_call()) {
         )
         ans <- .subset(template, labs)
         if (any(unknown <- vapply(ans, is.null, logical(1L)))) { # nolint
-            cli::cli_abort("Cannot determine the labs: {labs[unknown]}",
+            cli::cli_abort(
+                "Cannot determine the labs: {labs[unknown]}",
                 call = call
             )
         }

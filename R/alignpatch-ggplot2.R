@@ -26,9 +26,7 @@ patch_align.gtable_ggplot <- function(gt, guides, panel_width, panel_height) {
     cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
     respect <- .subset2(gt, "respect")
     if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
-        if (!respect) {
-            gt <- merge_panels(gt, rows, cols)
-        } else {
+        if (respect) {
             can_set_width <- is.na(as.numeric(panel_width))
             can_set_height <- is.na(as.numeric(panel_height))
             w <- .subset2(gt, "widths")[PANEL_COL]
@@ -70,7 +68,10 @@ patch_align.gtable_ggplot <- function(gt, guides, panel_width, panel_height) {
                 )
             }
         }
-    } else { # for ggplot with multiple panels, we cannot fix the aspect ratio
+    } else {
+        # for ggplot with multiple panels, we cannot fix the aspect ratio
+        # we always set respect to `FALSE`, and merge multiple panels into
+        # one
         if (respect) {
             gt <- attach_border(gt, guides)
             respect <- FALSE
@@ -207,8 +208,8 @@ merge_panels <- function(gt, rows, cols) {
         collapse = ", "
     ))
     gtable_add_grob(
-        gt_new, panels, rows[1], cols[1L],
-        clip = "off", name = panel_name, z = 1
+        gt_new, panels, rows[1L], cols[1L],
+        clip = "off", name = panel_name, z = 1L
     )
 }
 

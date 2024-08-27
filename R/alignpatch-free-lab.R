@@ -1,8 +1,7 @@
-#' Free the axis titles from alignment
-#'
-#' @inheritParams free_align
-#' @param labs Axis labs to be free.
-#' @return A modified version of `plot` with a `free_lab` class
+#' @param labs Which axis labs to be free?
+#' @return 
+#' - `free_lab`: A modified version of `plot` with a `free_lab` class.
+#' @rdname free
 free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
     UseMethod("free_lab")
 }

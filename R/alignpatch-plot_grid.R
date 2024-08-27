@@ -17,8 +17,7 @@
 #' @param guides A single boolean value indicates whether to collect the guides,
 #' or you can specify the string of the guide position to collect. Allowed
 #' strings are: `r rd_values(BORDERS)`.
-#' @param theme A [theme()][ggplot2::theme] object to rendering the guides,
-#' margins and background.
+#' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
 #' @export
 plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,

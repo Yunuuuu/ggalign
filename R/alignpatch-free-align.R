@@ -1,11 +1,22 @@
-#' Free panel axes from alignment
+#' Free from alignment
 #'
-#' [plot_grid] will try to align plots by their panels, if we want to compose
-#' plots without alignment. we can wrap the plot with `free_align`.
+#' [plot_grid] will try to align plots by their panels, and align every elements
+#' of the plot, following functions romove this restrictions.
+#' - `free_align`: if we want to compose plots without alignment of some panel
+#' axes (panel won't be aligned). we can wrap the plot with `free_align`.
+#' - `free_border`: If we want to compose plots without alignment of the panel
+#' borders (but still align the panels themselves), we can wrap the plot with
+#' `free_border`.
+#' - `free_lab`: If we want to compose plots without alignment of the axis
+#' title, we can wrap the plot with `free_lab`.
+#' - `free_size`: Removing the ggplot element sizes when aligning
 #'
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][plot_grid] object.
 #' @param axes Which axes shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
 #' @export
+#' @return
+#' - `free_align`: A modified version of `plot` with a `free_align` class.
+#' @rdname free
 free_align <- function(plot, axes = c("t", "l", "b", "r")) {
     UseMethod("free_align")
 }

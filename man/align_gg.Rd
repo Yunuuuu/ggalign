@@ -54,7 +54,7 @@ plots along a single axis.
 
 \item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
-\item{size}{Plot size, can be a \link[grid:unit]{unit} object.}
+\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
 \item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
 \code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
@@ -79,12 +79,13 @@ the plot.}
 the plot. If this is \code{FALSE}, \code{limits} will always be \code{FALSE} too.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
-context to current \code{Align} object. If \code{TRUE}, all subsequent ggplot elements
-will be added into this \code{Align} object.}
+context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
+added into this plot.}
 
 \item{order}{An single integer for the layout order.}
 
-\item{name}{A string of the object name.}
+\item{name}{A string of the plot name. Used to switch the active context in
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack]{stack()}}.}
 }
 \value{
 A \code{AlignGG} object.

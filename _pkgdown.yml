@@ -21,7 +21,7 @@ reference:
     elements with following functions.
   contents:
   - hmanno
-  - active
+  - stack_active
   - activate
 
 - title: Layout Design
