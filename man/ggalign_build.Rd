@@ -3,19 +3,34 @@
 \name{ggalign_build}
 \alias{ggalign_build}
 \alias{ggalignGrob}
+\alias{ggalign_stat}
+\alias{ggalign_stat.HeatmapLayout}
+\alias{ggalign_stat.StackLayout}
 \title{Build ggplot for rendering.}
 \usage{
 ggalign_build(x)
 
 ggalignGrob(x)
+
+ggalign_stat(x, ...)
+
+\method{ggalign_stat}{HeatmapLayout}(x, ..., position, what)
+
+\method{ggalign_stat}{StackLayout}(x, ..., what)
 }
 \arguments{
 \item{x}{A \link[=layout_heatmap]{HeatmapLayout} or \link[=layout_stack]{StackLayout}
 object.}
+
+\item{position}{A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.}
+
+\item{what}{A single number or string of the plot elements in the stack
+layout.}
 }
 \description{
 \itemize{
 \item \code{ggalign_build}: Build layout into an \code{alignpatches} object
 \item \code{ggalignGrob}: Generate a layout plot grob.
+\item \code{ggalign_stat}: Get the statistics from the \code{Align} object.
 }
 }

@@ -85,6 +85,11 @@ articles:
   - align-plot
   - layout-stack
 
+- title: FAQ
+  navbar: ~
+  contents:
+  - articles/FAQ
+
 - title: ComplexHeatmap
   navbar: ComplexHeatmap
   contents:

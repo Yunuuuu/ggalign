@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 The package offers a suite of `align_*` functions designed to give you precise
 control over plot layout. These functions enable you to manipulate axis order
 within the layout and partition along a single axis into multiple panels.
-Additionally, some functions allow for the inclusion of new plots directly
-within the layout. 
 
 Currently, there are four key `align_*` functions available for layout customization:
 
@@ -148,9 +146,9 @@ ggheatmap(small_mat) +
 
 In contrast to `align_group()`, `align_kmeans()`, and `align_reorder()`,
 `align_dendro()` is capable of drawing plot components. So it has a default
-`set_context` value of `TRUE`, meaning it will set the active context of the stack
-layout. Consequently, any ggplot elements added afterward will be included in
-this plot area. 
+`set_context` value of `TRUE`, meaning it will set the active context of the
+stack layout. Consequently, any ggplot elements added afterward will be included
+in this plot area. 
 
 ```{r}
 ggheatmap(small_mat) +
@@ -160,8 +158,8 @@ ggheatmap(small_mat) +
 ```
 
 The `align_dendro()` function creates default `node` data for the ggplot. See
-`ggplot2 specification` in `?align_dendro` for details. Additionally, `edge` data is
-added to the `ggplote::geom_segment()` layer directly, used to draw the
+`ggplot2 specification` in `?align_dendro` for details. Additionally, `edge`
+data is added to the `ggplote::geom_segment()` layer directly, used to draw the
 dendrogram tree. One useful variable in both `node` and `edge` data is the
 `branch` column, corresponding to the `cutree` result: 
 
@@ -191,7 +189,7 @@ ggheatmap(small_mat) +
   align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
-You can see the difference.
+You can see the difference by drawing two dendrogram.
 ```{r}
 ggheatmap(small_mat) +
   hmanno("t") +
@@ -199,27 +197,6 @@ ggheatmap(small_mat) +
   align_dendro(aes(color = branch), reorder_group = TRUE) +
   hmanno("b") +
   align_dendro(aes(color = branch), reorder_group = FALSE)
-```
-
-> We always prevent users from reordering the layout axis twice.
-
-Note that when `reorder_group = FALSE` is used, reordering of the heatmap occurs
-within each group. As long as the ordering within each group remains consistent,
-these two dendrograms can be placed on the same axis of the heatmap. Adding a
-dendrogram with `reorder_group = FALSE` behind a dendrogram with `reorder_group
-= TRUE` is acceptable because the second `align_dendro()` will follow the group
-ordering established by the first one. However, adding a dendrogram with
-`reorder_group = TRUE` behind a dendrogram with `reorder_group = FALSE` is not
-possible, as the second dendrogram would not conform to the grouping order of
-the first.
-
-```{r error=TRUE}
-ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(column_groups) +
-  align_dendro(aes(color = branch), reorder_group = FALSE) +
-  hmanno("b") +
-  align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
 ## Session information

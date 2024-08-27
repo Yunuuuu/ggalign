@@ -33,14 +33,6 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
-```{r character}
-ggheatmap(letters)
-```
-
-```{r numeric}
-ggheatmap(1:10)
-```
-
 ```{r matrix}
 ggheatmap(small_mat)
 ```
@@ -337,17 +329,13 @@ ggheatmap(small_mat) +
 ```
 
 ## Control size
-The different ggplot objects were combined using the `patchwork` package.
-Internally, the `build_patchwork()` function was used to construct and merge all
-the `ggplot` objects into a single `patchwork` object. 
-
-`ggheatmap()` has `width` and `height` to control the relative (you can also
-provide a unit object) width and height of the heatmap body. `hmanno()` function
-have a `size` argument to control the relative width (left and right annotation)
-or height (top and bottom annotation) of the whole annotation. `anno_*` function
-has a `size` argument to control the relative width (left and right annotation)
-or height (top and bottom annotation) of the single annotation in the whole
-annotation stack.
+`hmanno()` has `width` and `height` to control the relative (you can also
+provide a unit object) width and height of the heatmap body. In addition,
+`hmanno()` function have a `size` argument to control the relative width (left
+and right annotation) or height (top and bottom annotation) of the whole
+annotation. `anno_*` function has a `size` argument to control the relative
+width (left and right annotation) or height (top and bottom annotation) of the
+single annotation in the whole annotation stack.
 
 ```{r}
 ggheatmap(small_mat) +
