@@ -22,6 +22,38 @@ GUIDE_LEFT <- 3L
 GUIDE_TOP <- 5L
 GUIDE_BOTTOM <- 15L
 
+# top-bottom
+# 1: margin
+# 2: tag
+# 3: title
+# 4: subtitle
+# 5: guide-box-top
+# 7: xlab-t
+# 8: axis-t/strip-t strip.placement = "inside"
+# 9: strip-t/axis-t strip.placement = "outside"
+# 10: panel
+# 11: strip-b
+# 12: axis-b
+# 13: xlab-b
+# 15: guide-box-bottom
+# 16: caption
+# 17: tag
+# 18: margin
+
+# left-right
+#
+# 1: margin
+# 2: tag
+# 3: guide-box-left
+# 5: ylab-l
+# 6: axis-l
+# 8: panel
+# 10: axis-r
+# 11: ylab-r
+# 13: guide-box-right
+# 14: tag
+# 15: margin
+
 BORDERS <- c("t", "l", "b", "r")
 
 #' @importFrom ggplot2 zeroGrob

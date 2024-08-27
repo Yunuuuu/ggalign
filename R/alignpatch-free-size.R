@@ -93,28 +93,3 @@ ggelements_pos <- function(border, ggelements, strip_pos) {
     }
     pos
 }
-
-# top-bottom
-#
-# 3: title
-# 4: subtitle
-# 5: guide-box-top
-# 7: xlab-t
-# 8: axis-t/strip-t strip.placement = "inside"
-# 9: strip-t/axis-t strip.placement = "outside"
-# 10: panel
-# 11: strip-b
-# 12: axis-b
-# 13: xlab-b
-# 15: guide-box-bottom
-# 16: caption
-
-# left-right
-#
-# 3: guide-box-left
-# 5: ylab-l
-# 6: axis-l
-# 8: panel
-# 10: axis-r
-# 11: ylab-r
-# 13: guide-box-right
