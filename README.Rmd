@@ -64,6 +64,7 @@ For more information on adding plots, refer to the vignette:
 - [Layout Customization](https://yunuuuu.github.io/ggalign/articles/align-layout.html)
 - [Plot Integration](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
 - [Stack Layout](https://yunuuuu.github.io/ggalign/articles/layout-stack.html)
+- [Scales and Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
 
 ## Examples
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)

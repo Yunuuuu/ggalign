@@ -60,6 +60,8 @@ For more information on adding plots, refer to the vignette:
   Integration](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
 - [Stack
   Layout](https://yunuuuu.github.io/ggalign/articles/layout-stack.html)
+- [Scales and
+  Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
 
 ## Examples
 
