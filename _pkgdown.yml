@@ -84,6 +84,7 @@ articles:
   - align-layout
   - align-plot
   - layout-stack
+  - scales-and-facets
 
 - title: FAQ
   navbar: ~
