@@ -3,11 +3,13 @@
 
 ggalign_build: Build layout into an alignpatches object
 ggalignGrob: Generate a layout plot grob.
+ggalign_stat: Get the statistics from the Align object.
 
 "><meta property="og:description" content="
 
 ggalign_build: Build layout into an alignpatches object
 ggalignGrob: Generate a layout plot grob.
+ggalign_stat: Get the statistics from the Align object.
 
 "></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -32,6 +34,8 @@ ggalignGrob: Generate a layout plot grob.
     <li><a class="dropdown-item" href="../articles/align-layout.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="../articles/layout-stack.html">Stack Layout</a></li>
+    <li><a class="dropdown-item" href="../articles/scales-and-facets.html">Scales and Facets</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -64,13 +68,22 @@ ggalignGrob: Generate a layout plot grob.
 
 <ul><li><p><code>ggalign_build</code>: Build layout into an <code>alignpatches</code> object</p></li>
 <li><p><code>ggalignGrob</code>: Generate a layout plot grob.</p></li>
+<li><p><code>ggalign_stat</code>: Get the statistics from the <code>Align</code> object.</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalign_build</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggalign_stat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'HeatmapLayout'</span></span>
+<span><span class="fu">ggalign_stat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, <span class="va">position</span>, <span class="va">what</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'StackLayout'</span></span>
+<span><span class="fu">ggalign_stat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, <span class="va">what</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,6 +93,15 @@ ggalignGrob: Generate a layout plot grob.
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A <a href="layout_heatmap.html">HeatmapLayout</a> or <a href="layout_stack.html">StackLayout</a>
 object.</p></dd>
+
+
+<dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
+<dd><p>A string of <code>"top"</code>, <code>"left"</code>, <code>"bottom"</code>, or <code>"right"</code>.</p></dd>
+
+
+<dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
+<dd><p>A single number or string of the plot elements in the stack
+layout.</p></dd>
 
 </dl></div>
 

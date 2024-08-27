@@ -37,6 +37,8 @@
     <li><a class="dropdown-item" href="../articles/align-layout.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/align-plot.html">Plot Integration</a></li>
     <li><a class="dropdown-item" href="../articles/layout-stack.html">Stack Layout</a></li>
+    <li><a class="dropdown-item" href="../articles/scales-and-facets.html">Scales and Facets</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -83,8 +85,7 @@
 <p>The package offers a suite of <code>align_*</code> functions designed
 to give you precise control over plot layout. These functions enable you
 to manipulate axis order within the layout and partition along a single
-axis into multiple panels. Additionally, some functions allow for the
-inclusion of new plots directly within the layout.</p>
+axis into multiple panels.</p>
 <p>Currently, there are four key <code>align_*</code> functions
 available for layout customization:</p>
 <ul>
@@ -272,7 +273,7 @@ in the layout:</p>
 <span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="align-layout_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
-<p>You can see the difference.</p>
+<p>You can see the difference by drawing two dendrogram.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -281,35 +282,11 @@ in the layout:</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="align-layout_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
-<blockquote>
-<p>We always prevent users from reordering the layout axis twice.</p>
-</blockquote>
-<p>Note that when <code>reorder_group = FALSE</code> is used, reordering
-of the heatmap occurs within each group. As long as the ordering within
-each group remains consistent, these two dendrograms can be placed on
-the same axis of the heatmap. Adding a dendrogram with
-<code>reorder_group = FALSE</code> behind a dendrogram with
-<code>reorder_group = TRUE</code> is acceptable because the second
-<code><a href="../reference/align_dendro.html">align_dendro()</a></code> will follow the group ordering established
-by the first one. However, adding a dendrogram with
-<code>reorder_group = TRUE</code> behind a dendrogram with
-<code>reorder_group = FALSE</code> is not possible, as the second
-dendrogram would not conform to the grouping order of the first.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_dendro()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_dendro()` disrupt the previously established order of the</span></span>
-<span><span class="co">#&gt;   layout x-axis</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
