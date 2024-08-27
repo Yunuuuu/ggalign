@@ -76,3 +76,16 @@ h + align_dendro(reorder_group = TRUE)
 To prevent reordering of the layout axis twice, we ensure that the `new_index`
 matches the `index` (if `index` is not NULL). This is done to maintain
 consistency and prevent conflicts in the ordering of the heatmap.
+
+## Can I change the default data for all geoms?
+All function in `ggalign` requires specific data formats for its operations. If
+you need to transform or filter data for individual `geoms`, you can use the
+`data` argument within each `geom`. However, if you have multiple `geoms` and
+want a consistent transformation applied across all, you can utilize the
+`plot_data` argument in the `ggalign()` or `ggpanel()` function. This allows you
+to transform the default data for all additive geoms.
+
+## Session information
+```{r}
+sessionInfo()
+```
