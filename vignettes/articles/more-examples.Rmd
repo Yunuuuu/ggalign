@@ -29,12 +29,12 @@ type <- gsub("s\\d+_", "", colnames(mat))
 ggstack(data = mat_scaled) +
   # group stack rows into 5 groups
   align_kmeans(centers = 5L) +
-  # add a block plot for each group
+  # add a block plot for each group in the stack
   ggpanel(size = unit(1, "cm")) +
   geom_tile(aes(x = 1, fill = factor(.panel))) +
   scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
   scale_x_continuous(breaks = NULL, name = NULL) +
-  # add a heatmap plot
+  # add a heatmap plot in the stack
   ggheatmap() +
   hmanno(free_sizes = "l") +
   scale_y_continuous(breaks = NULL) +
@@ -42,24 +42,30 @@ ggstack(data = mat_scaled) +
   # add dendrogram for this heatmap
   hmanno("t") +
   align_dendro() +
+  # add a block for the heatmap column
   ggalign(data = type, size = unit(1, "cm")) +
   geom_tile(aes(y = 1, fill = factor(value))) +
   scale_y_continuous(breaks = NULL, name = NULL) +
   scale_fill_brewer(palette = "Set1", name = "type") +
+  # reset the heatmap active context into the heatmap body
   hmanno() +
+  # add another heatmap in the stack
   ggheatmap(base_mean) +
+  # set the heatmap body width
   hmanno(width = unit(2, "cm")) +
   scale_y_continuous(breaks = NULL) +
   scale_x_continuous(name = "base mean", breaks = FALSE) +
   scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
+  # set the active context of the heatmap to the top
+  # and set the size of the top stack 
   hmanno("t", size = unit(4, "cm")) +
+  # add box plot in the heatmap top
   ggalign() +
   geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
   scale_x_continuous(expand = expansion(), breaks = NULL) +
   scale_fill_brewer(palette = "Dark2", guide = "none") +
   theme(axis.title.y = element_blank()) +
-  # we reset heatmap context into heatmap body, in this way,
-  # `&` will add elemnets for this heatmap and heatmap annotation simutaneously
+  # reset heatmap context into heatmap body
   hmanno() +
   # we move into the stack layout
   stack_active() +

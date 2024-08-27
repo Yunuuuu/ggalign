@@ -69,7 +69,7 @@ new_index <- unlist(split(index, panels[index]),
 all(index == new_index)
 ```
 
-```{r error=true}
+```{r error=TRUE}
 h + align_dendro(reorder_group = TRUE)
 ```
 
