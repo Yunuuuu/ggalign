@@ -13,6 +13,10 @@ patch_align.gtable_alignpatches <- function(gt, guides,
 patch_gtable.alignpatches <- function(patch, guides) {
     plots <- .subset2(patch, "plots")
     layout <- .subset2(patch, "layout")
+    # complete the theme object
+    if (!attr(theme <- .subset2(layout, "theme"), "complete")) {
+        theme <- ggplot2::theme_get() + theme
+    }
 
     # get the design areas and design dims ------------------
     panel_widths <- .subset2(layout, "widths")
@@ -51,7 +55,7 @@ patch_gtable.alignpatches <- function(patch, guides) {
         panel_widths = panel_widths,
         panel_heights = panel_heights,
         guides = .subset2(layout, "guides"),
-        theme = .subset2(layout, "theme")
+        theme = theme
     )
 }
 
@@ -104,9 +108,6 @@ BuilderAlignPatches <- ggplot2::ggproto(
             r = PANEL_COL + TABLE_COLS * (dims[2L] - 1L)
         )
         if (length(collected_guides)) {
-            if (!attr(theme, "complete")) {
-                theme <- ggplot2::theme_get() + theme
-            }
             for (guide_pos in names(collected_guides)) {
                 gt <- attach_guides(
                     gt, guide_pos,
