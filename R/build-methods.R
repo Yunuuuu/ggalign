@@ -20,6 +20,7 @@ ggalignGrob <- function(x) UseMethod("ggalignGrob")
 #' @export
 ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
 
+#' @param ... Not used currently.
 #' @export
 #' @rdname ggalign_build
 ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")

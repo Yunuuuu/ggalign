@@ -22,6 +22,8 @@ ggalign_stat(x, ...)
 \item{x}{A \link[=layout_heatmap]{HeatmapLayout} or \link[=layout_stack]{StackLayout}
 object.}
 
+\item{...}{Not used currently.}
+
 \item{position}{A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.}
 
 \item{what}{A single number or string of the plot elements in the stack
