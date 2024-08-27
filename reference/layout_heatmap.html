@@ -59,33 +59,23 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">layout_heatmap</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_sizes <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  environment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggheatmap</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_sizes <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  environment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,36 +94,9 @@ one column matrix.</p></dd>
 will using <code>aes(.data$.x, .data$.y)</code>.</p></dd>
 
 
-<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a>
-object.</p></dd>
-
-
-<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
-
-
-<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
-<dd><p>A boolean value or a character of the axis position (<code>"t"</code>,
-<code>"l"</code>, <code>"b"</code>, <code>"r"</code>) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.</p></dd>
-
-
-<dt id="arg-free-sizes">free_sizes<a class="anchor" aria-label="anchor" href="#arg-free-sizes"></a></dt>
-<dd><p>A character specifies the ggplot elements which won't
-count space sizes when alignment.</p></dd>
-
-
-<dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
-<dd><p>A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. If no parent layout, the
-default is to not modify the data. Use <code>NULL</code>, if you don't want to modify
-anything.</p>
-<p>Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all <code>geoms</code>.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed to <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a>.
+Only used when <code>filling = TRUE</code>.</p></dd>
 
 
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
@@ -141,15 +104,10 @@ change the default data for all <code>geoms</code>.</p></dd>
 want to custom the filling style, you can set to <code>FALSE</code>.</p></dd>
 
 
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a>.
-Only used when <code>filling = TRUE</code>.</p></dd>
-
-
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
 <dd><p>A single boolean value indicates whether to set the active
-context to current <code>Align</code> object. If <code>TRUE</code>, all subsequent ggplot elements
-will be added into this <code>Align</code> object.</p></dd>
+context to current plot. If <code>TRUE</code>, all subsequent ggplot elements will be
+added into this plot.</p></dd>
 
 
 <dt id="arg-order">order<a class="anchor" aria-label="anchor" href="#arg-order"></a></dt>
@@ -157,7 +115,13 @@ will be added into this <code>Align</code> object.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p>A string of the object name.</p></dd>
+<dd><p>A string of the plot name. Used to switch the active context in
+<code><a href="hmanno.html">hmanno()</a></code> or <code><a href="https://rdrr.io/r/utils/stack.html" class="external-link">stack()</a></code>.</p></dd>
+
+
+<dt id="arg-environment">environment<a class="anchor" aria-label="anchor" href="#arg-environment"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Used prior to tidy
+evaluation.</p></dd>
 
 </dl></div>
     <div class="section level2">
