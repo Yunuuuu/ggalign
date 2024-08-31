@@ -112,7 +112,7 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
     }
     # Should we remove the margins around the layout?
     if (inherits(e2, "theme")) {
-        slot(e1, "theme") <- slot(e1, "theme") + e2
+        e1@theme <- e1@theme + e2
     }
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
@@ -158,18 +158,18 @@ set_layout <- function(x, layout, ..., value) UseMethod("set_layout")
 set_layout.HeatmapLayout <- function(x, layout, axis, ..., value) {
     slot(x, paste(layout, "list", sep = "_"))[[axis]] <- value
     if (axis == "x") {
-        if (!is.null(top <- slot(x, "top"))) {
-            slot(x, "top") <- set_layout(top, layout, value = value)
+        if (!is.null(top <- x@top)) {
+            x@top <- set_layout(top, layout, value = value)
         }
-        if (!is.null(bottom <- slot(x, "bottom"))) {
-            slot(x, "bottom") <- set_layout(bottom, layout, value = value)
+        if (!is.null(bottom <- x@bottom)) {
+            x@bottom <- set_layout(bottom, layout, value = value)
         }
     } else {
-        if (!is.null(left <- slot(x, "left"))) {
-            slot(x, "left") <- set_layout(left, layout, value = value)
+        if (!is.null(left <- x@left)) {
+            x@left <- set_layout(left, layout, value = value)
         }
-        if (!is.null(right <- slot(x, "right"))) {
-            slot(x, "right") <- set_layout(right, layout, value = value)
+        if (!is.null(right <- x@right)) {
+            x@right <- set_layout(right, layout, value = value)
         }
     }
     x
@@ -179,8 +179,8 @@ set_layout.HeatmapLayout <- function(x, layout, axis, ..., value) {
 #' @export
 set_layout.StackLayout <- function(x, layout, ..., value) {
     slot(x, layout) <- value
-    axis <- to_coord_axis(slot(x, "direction"))
-    slot(x, "plots") <- lapply(slot(x, "plots"), function(plot) {
+    axis <- to_coord_axis(x@direction)
+    x@plots <- lapply(x@plots, function(plot) {
         if (is.ggheatmap(plot)) {
             set_layout(plot, layout = layout, axis = axis, value = value)
         } else {

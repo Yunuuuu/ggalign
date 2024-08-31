@@ -13,12 +13,12 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
     }
-    direction <- slot(x, "direction")
-    params <- slot(x, "params")
+    direction <- x@direction
+    params <- x@params
     panel <- get_panel(x) %||% factor(rep_len(1L, nobs))
     index <- get_index(x) %||% reorder_index(panel)
 
-    plots <- slot(x, "plots")
+    plots <- x@plots
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     guides <- .subset2(params, "guides") %|w|% guides
 
@@ -100,7 +100,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             do.call(unit.c, attr(patches, "sizes"))
         ),
         guides = guides %|w|% TRUE,
-        theme = slot(x, "theme")
+        theme = x@theme
     )
     list(plot = plot, size = .subset2(params, "size"))
 }

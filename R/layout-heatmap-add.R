@@ -39,25 +39,25 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (is.na(object)) {
         heatmap <- set_context(heatmap, NULL)
         if (!identical(guides <- attr(object, "guides"), NA)) {
-            slot(heatmap, "params")$guides <- guides
+            heatmap@params$guides <- guides
         }
         if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
-            slot(heatmap, "params")$free_labs <- free_labs
+            heatmap@params$free_labs <- free_labs
         }
         if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-            slot(heatmap, "params")$free_sizes <- free_sizes
+            heatmap@params$free_sizes <- free_sizes
         }
         if (!is.null(width <- attr(object, "width"))) {
-            slot(heatmap, "params")$width <- width
+            heatmap@params$width <- width
         }
         if (!is.null(height <- attr(object, "height"))) {
-            slot(heatmap, "params")$height <- height
+            heatmap@params$height <- height
         }
         if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
-            slot(heatmap, "params")$plot_data <- plot_data
+            heatmap@params$plot_data <- plot_data
         }
         if (!is.null(theme <- attr(object, "theme"))) {
-            slot(heatmap, "theme") <- slot(heatmap, "theme") + theme
+            heatmap@theme <- heatmap@theme + theme
         }
         return(heatmap)
     }
@@ -75,7 +75,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
 
     # initialize the annotation stack ------------
     if (is.null(stack <- slot(heatmap, object))) {
-        data <- slot(heatmap, "data")
+        data <- heatmap@data
         if (!is_horizontal(direction)) data <- t(data)
         stack <- layout_stack(data = data, direction = direction)
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
@@ -87,23 +87,23 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         # size of the vertical direction with this stack, which won't be used by
         # heatmap annotation, since heatmap annotation only allow `Align`
         # object.
-        slot(stack, "params")$size <- unit(NA, "null")
+        stack@params$size <- unit(NA, "null")
     }
 
     if (!is.null(size <- attr(object, "size"))) {
-        slot(stack, "params")$size <- size
+        stack@params$size <- size
     }
     if (!identical(guides <- attr(object, "guides"), NA)) {
-        slot(stack, "params")$guides <- guides
+        stack@params$guides <- guides
     }
     if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
-        slot(stack, "params")$free_labs <- free_labs
+        stack@params$free_labs <- free_labs
     }
     if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-        slot(stack, "params")$free_sizes <- free_sizes
+        stack@params$free_sizes <- free_sizes
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
-        slot(stack, "params")$plot_data <- plot_data
+        stack@params$plot_data <- plot_data
     }
     slot(heatmap, object) <- stack
     heatmap
@@ -166,7 +166,7 @@ heatmap_add <- function(object, heatmap, object_name) UseMethod("heatmap_add")
 #' @export
 heatmap_add.gg <- function(object, heatmap, object_name) {
     heatmap@plot <- ggplot2::ggplot_add(
-        object, slot(heatmap, "plot"), object_name
+        object, heatmap@plot, object_name
     )
     heatmap
 }
@@ -177,6 +177,6 @@ heatmap_add.labels <- heatmap_add.gg
 #' @export
 heatmap_add.facetted_pos_scales <- function(object, heatmap, object_name) {
     assert_facetted_scales(object, object_name, "the heatmap layout")
-    slot(heatmap, "facetted_pos_scales") <- object
+    heatmap@facetted_pos_scales <- object
     heatmap
 }

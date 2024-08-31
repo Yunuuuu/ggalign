@@ -7,7 +7,7 @@ rd_values <- function(x, quote = TRUE, sep = ",", final = "and") {
 rd_theme <- function() {
     paste(
         "A [theme()][ggplot2::theme] object to rendering the guides",
-        "margins and background.",
+        "title, subtitle, caption, margins and background.",
         sep = ", "
     )
 }

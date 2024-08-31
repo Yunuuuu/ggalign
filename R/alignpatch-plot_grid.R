@@ -17,12 +17,14 @@
 #' @param guides A single boolean value indicates whether to collect the guides,
 #' or you can specify the string of the guide position to collect. Allowed
 #' strings are: `r rd_values(BORDERS)`.
+#' @inheritParams ggplot2::labs
 #' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
 #' @export
 plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
-                      heights = NA, design = NULL,
-                      guides = NULL, theme = NULL) {
+                      heights = NA, design = NULL, guides = NULL,
+                      title = NULL, subtitle = NULL, caption = NULL,
+                      theme = NULL) {
     plots <- rlang::list2(...)
     assert_bool(byrow)
     guides <- check_guides(guides)
@@ -46,9 +48,9 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
         byrow = byrow,
         widths = widths,
         heights = heights,
-        guides = guides,
+        design = design, guides = guides,
         theme = theme %||% ggplot2::theme(),
-        design = design
+        title = title, subtitle = subtitle, caption = caption
     ))
 }
 

@@ -36,7 +36,7 @@ testthat::test_that("add `heatmap_active` object works well", {
         free_labs = TRUE,
         plot_data = NULL
     )
-    params <- slot(empty_heatmap2, "params")
+    params <- empty_heatmap2@params
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
     expect_identical(params$guides, BORDERS)
@@ -53,7 +53,7 @@ testthat::test_that("add `heatmap_active` object works well", {
         free_labs = TRUE,
         plot_data = NULL
     )
-    params <- slot(p2, "params")
+    params <- p2@params
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
     expect_identical(params$guides, waiver())
@@ -70,7 +70,7 @@ testthat::test_that("add `heatmap_active` object works well", {
         plot_data = NULL
     )
     # won't change the params of heatmap
-    params <- slot(p3, "params")
+    params <- p3@params
     expect_identical(params$width, unit(NA, "null"))
     expect_identical(params$height, unit(NA, "null"))
     expect_identical(params$guides, waiver())
@@ -78,11 +78,11 @@ testthat::test_that("add `heatmap_active` object works well", {
     expect_identical(params$plot_data, waiver())
 
     # change the params of stack
-    stack <- slot(p3, "top")
+    stack <- p3@top
     expect_identical(get_panel(stack), get_panel(p, "x"))
     expect_identical(get_index(stack), get_index(p, "x"))
     expect_identical(get_nobs(stack), get_nobs(p, "x"))
-    params <- slot(stack, "params")
+    params <- stack@params
     expect_identical(params$size, unit(NA, "null"))
     expect_identical(params$guides, character())
     expect_identical(params$free_labs, BORDERS)
@@ -93,7 +93,7 @@ testthat::test_that("add `Align` object works well", {
     p <- ggheatmap(matrix(1:9, nrow = 3L))
     expect_error(p + align_dendro())
     p2 <- p + hmanno("t") + align_dendro()
-    stack <- slot(p2, "top")
+    stack <- p2@top
     expect_identical(get_panel(stack), get_panel(p2, "x"))
     expect_identical(get_index(stack), get_index(p2, "x"))
     expect_identical(get_nobs(stack), get_nobs(p2, "x"))

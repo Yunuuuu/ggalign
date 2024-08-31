@@ -37,7 +37,7 @@ ggalign_stat.HeatmapLayout <- function(x, ..., position, what) {
 #' @export
 #' @rdname ggalign_build
 ggalign_stat.StackLayout <- function(x, ..., what) {
-    .subset2(.subset2(slot(x, "plots"), what), "statistics")
+    .subset2(.subset2(x@plots, what), "statistics")
 }
 
 align_build <- function(x, panel, index,

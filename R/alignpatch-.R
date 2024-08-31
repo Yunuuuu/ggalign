@@ -5,26 +5,27 @@
 # 2. collect guides for each side (should be merged into patchwork).
 # 3. allow collapse axis title and labels (should be merged into patchwork).
 #    see https://github.com/thomasp85/patchwork/pull/373
-TABLE_ROWS <- 18L
-TABLE_COLS <- 15L
-PANEL_ROW <- 10L
-PANEL_COL <- 8L
-PLOT_TOP <- 7L
-PLOT_BOTTOM <- 13L
-PLOT_LEFT <- 5L
-PLOT_RIGHT <- 11L
-TITLE_ROW <- 3L
-SUBTITLE_ROW <- 4L
-CAPTION_ROW <- 16L
+TABLE_ROWS <- 18L # + 2L
+TABLE_COLS <- 15L # + 2L
+PANEL_ROW <- 10L # + 1L
+PANEL_COL <- 8L # + 1L
+PLOT_TOP <- 7L # + 1L
+PLOT_BOTTOM <- 13L # + 1L
+PLOT_LEFT <- 5L # + 1L
+PLOT_RIGHT <- 11L # + 1L
+TITLE_ROW <- 3L # + 1L
+SUBTITLE_ROW <- 4L # + 1L
+CAPTION_ROW <- 16L # + 1L
 
-GUIDE_RIGHT <- 13L
-GUIDE_LEFT <- 3L
-GUIDE_TOP <- 5L
-GUIDE_BOTTOM <- 15L
+GUIDE_RIGHT <- 13L # + 1L
+GUIDE_LEFT <- 3L # + 1L
+GUIDE_TOP <- 5L # + 1L
+GUIDE_BOTTOM <- 15L # + 1L
 
 # top-bottom
 # 1: margin
 # 2: tag
+# feature: insert patch title
 # 3: title
 # 4: subtitle
 # 5: guide-box-top
@@ -37,6 +38,7 @@ GUIDE_BOTTOM <- 15L
 # 13: xlab-b
 # 15: guide-box-bottom
 # 16: caption
+# feature: insert patch title
 # 17: tag
 # 18: margin
 
@@ -44,6 +46,7 @@ GUIDE_BOTTOM <- 15L
 #
 # 1: margin
 # 2: tag
+# feature: insert patch title
 # 3: guide-box-left
 # 5: ylab-l
 # 6: axis-l
@@ -51,6 +54,7 @@ GUIDE_BOTTOM <- 15L
 # 10: axis-r
 # 11: ylab-r
 # 13: guide-box-right
+# feature: insert patch title
 # 14: tag
 # 15: margin
 
@@ -170,9 +174,16 @@ as_patch.patchwork <- function(x) {
         plots <- c(plots, list(plot))
     }
     layout <- .subset2(patches, "layout")
-    layout$guides <- check_guides(.subset2(layout, "guides"))
-    layout$theme <- .subset2(.subset2(patches, "annotation"), "theme") %||%
-        ggplot2::theme()
+    annotation <- .subset2(patches, "annotation")
+    if (.subset2(layout, "guides") == "collect") {
+        layout$guides <- TRUE
+    } else {
+        layout$guides <- FALSE
+    }
+    layout$theme <- .subset2(annotation, "theme") %||% ggplot2::theme()
+    layout$title <- .subset2(annotation, "title")
+    layout$subtitle <- .subset2(annotation, "subtitle")
+    layout$caption <- .subset2(annotation, "caption")
     new_alignpatches(plots, layout)
 }
 
@@ -207,7 +218,7 @@ patch_align.default <- function(gt, guides, panel_width, panel_height) {
     list(gt = gt, width = panel_width, height = panel_height, respect = FALSE)
 }
 
-#' Extract the alignpatch class and it's Child classes
+#' Extract the added classes when building alignpatches
 #' @noRd
 alignpatch_class <- function(x) {
     cls <- class(x)

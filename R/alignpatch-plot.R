@@ -1,3 +1,4 @@
+#' @importFrom grid grid.draw
 #' @export
 print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     if (newpage) grid::grid.newpage()
@@ -33,18 +34,107 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     invisible(x)
 }
 
-#' @importFrom ggplot2 ggplot ggplotGrob calc_element element_render
+#' @importFrom ggplot2 ggplot find_panel element_render theme
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom grid grid.draw
+#' @importFrom rlang arg_match0
 #' @exportS3Method
 grid.draw.alignpatches <- function(x, recording = TRUE) {
-    theme <- .subset2(.subset2(x, "layout"), "theme")
+    layout <- .subset2(x, "layout")
+    theme <- .subset2(layout, "theme")
     # use complete_theme() when ggplot2 release
     if (!attr(theme, "complete")) {
         theme <- ggplot2::theme_get() + theme
         x$layout$theme <- theme
     }
     table <- patch_gtable(x)
+    fix_respect <- is.matrix(.subset2(table, "respect"))
+
+    # Add title, subtitle, and caption -------------------
+    # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
+    title <- element_render(
+        theme, "plot.title", .subset2(layout, "title"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    title_height <- grobHeight(title)
+
+    # Subtitle
+    subtitle <- element_render(
+        theme, "plot.subtitle", .subset2(layout, "subtitle"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    subtitle_height <- grobHeight(subtitle)
+
+    # whole plot annotation
+    caption <- element_render(
+        theme, "plot.caption", .subset2(layout, "caption"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    caption_height <- grobHeight(caption)
+
+    # positioning of title and subtitle is governed by plot.title.position
+    # positioning of caption is governed by plot.caption.position
+    #   "panel" means align to the panel(s)
+    #   "plot" means align to the entire plot (except margins and tag)
+    panel_pos <- find_panel(table)
+    title_pos <- arg_match0(
+        theme$plot.title.position %||% "panel",
+        c("panel", "plot"),
+        arg_nm = "plot.title.position",
+        error_call = quote(theme())
+    )
+
+    caption_pos <- arg_match0(
+        theme$plot.caption.position %||% "panel",
+        values = c("panel", "plot"),
+        arg_nm = "plot.caption.position",
+        error_call = quote(theme())
+    )
+    if (title_pos == "panel") {
+        title_l <- min(panel_pos$l)
+        title_r <- max(panel_pos$r)
+    } else {
+        title_l <- 1L
+        title_r <- ncol(table)
+    }
+    if (caption_pos == "panel") {
+        caption_l <- min(panel_pos$l)
+        caption_r <- max(panel_pos$r)
+    } else {
+        caption_l <- 1L
+        caption_r <- ncol(table)
+    }
+
+    table <- gtable_add_rows(table, subtitle_height, pos = 0)
+    table <- gtable_add_grob(table, subtitle,
+        name = "subtitle",
+        t = 1, b = 1, l = title_l, r = title_r, clip = "off"
+    )
+
+    table <- gtable_add_rows(table, title_height, pos = 0)
+    table <- gtable_add_grob(table, title,
+        name = "title",
+        t = 1, b = 1, l = title_l, r = title_r, clip = "off"
+    )
+
+    table <- gtable_add_rows(table, caption_height, pos = -1)
+    table <- gtable_add_grob(table, caption,
+        name = "caption",
+        t = -1, b = -1, l = caption_l, r = caption_r, clip = "off"
+    )
+    if (fix_respect) {
+        table$respect <- rbind(0L, 0L, table$respect, 0L)
+    }
+
+    # add margins --------------------------------------
+    plot_margin <- calc_element("plot.margin", theme)
+
+    table <- gtable_add_rows(table, plot_margin[1L], 0L)
+    table <- gtable_add_rows(table, plot_margin[3L])
+    if (fix_respect) table$respect <- rbind(0L, table$respect, 0L)
+    table <- gtable_add_cols(table, plot_margin[2L], 0L)
+    table <- gtable_add_cols(table, plot_margin[4L])
+    if (fix_respect) table$respect <- cbind(0L, table$respect, 0L)
 
     # add background -----------------------------------
     if (inherits(theme$plot.background, "element")) {
@@ -60,15 +150,5 @@ grid.draw.alignpatches <- function(x, recording = TRUE) {
         ]
     }
 
-    # add margins --------------------------------------
-    plot_margin <- calc_element("plot.margin", theme)
-    fix_respect <- is.matrix(.subset2(table, "respect"))
-
-    table <- gtable_add_rows(table, plot_margin[1L], 0L)
-    table <- gtable_add_rows(table, plot_margin[3L])
-    if (fix_respect) table$respect <- rbind(0L, table$respect, 0L)
-    table <- gtable_add_cols(table, plot_margin[2L], 0L)
-    table <- gtable_add_cols(table, plot_margin[4L])
-    if (fix_respect) table$respect <- cbind(0L, table$respect, 0L)
     grid.draw(table, recording = recording)
 }

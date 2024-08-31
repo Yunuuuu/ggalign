@@ -13,6 +13,9 @@ plot_grid(
   heights = NA,
   design = NULL,
   guides = NULL,
+  title = NULL,
+  subtitle = NULL,
+  caption = NULL,
   theme = NULL
 )
 }
@@ -40,7 +43,15 @@ either be specified as a text string or by concatenating calls to
 or you can specify the string of the guide position to collect. Allowed
 strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, margins and background.}
+\item{title}{The text for the title.}
+
+\item{subtitle}{The text for the subtitle for the plot which will be
+displayed below the title.}
+
+\item{caption}{The text for the caption which will be displayed in the
+bottom-right of the plot by default.}
+
+\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background.}
 }
 \value{
 A \code{alignpatches} object.

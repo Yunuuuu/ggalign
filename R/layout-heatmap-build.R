@@ -23,7 +23,7 @@ ggalign_build.HeatmapLayout <- function(x) {
     keep <- lengths(plots) > 0L
 
     design <- trim_area(do.call(c, design[keep]))
-    params <- slot(x, "params")
+    params <- x@params
     plot_grid(
         !!!plots[keep],
         design = design,
@@ -31,7 +31,7 @@ ggalign_build.HeatmapLayout <- function(x) {
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
         guides = .subset2(params, "guides") %|w|% TRUE,
-        theme = slot(x, "theme")
+        theme = x@theme
     )
 }
 
@@ -40,8 +40,8 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
                           free_labs = waiver(), free_sizes = waiver()) {
-    params <- slot(heatmap, "params")
-    mat <- slot(heatmap, "data")
+    params <- heatmap@params
+    mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
     y_nobs <- get_nobs(heatmap, "y")
     if (is.null(x_nobs) || is.null(y_nobs)) {
@@ -86,7 +86,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     }
 
     # read the plot ---------------------------------------
-    p <- slot(heatmap, "plot")
+    p <- heatmap@plot
 
     # always remove default axis titles -------------------
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
@@ -113,7 +113,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     do_row_facet <- nlevels(ypanel) > 1L
     do_column_facet <- nlevels(xpanel) > 1L
 
-    facet_scales <- slot(heatmap, "facetted_pos_scales")
+    facet_scales <- heatmap@facetted_pos_scales
     xscales <- set_scales(
         plot = p,
         scale_name = "x",

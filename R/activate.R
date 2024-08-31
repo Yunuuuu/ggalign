@@ -163,14 +163,12 @@ HEATMAP_ANNOTATION_POSITION <- c("top", "left", "bottom", "right")
 #' @keywords internal
 set_context <- function(x, context) UseMethod("set_context")
 
-#' @importFrom methods slot<-
 #' @export
 set_context.HeatmapLayout <- function(x, context) {
-    slot(x, "active") <- context
+    x@active <- context
     x
 }
 
-#' @importFrom methods slot<-
 #' @export
 set_context.StackLayout <- function(x, context) {
     if (is.na(context)) {
@@ -189,13 +187,12 @@ set_context.StackLayout <- function(x, context) {
             sep = ", "
         ))
     }
-    slot(x, "active") <- context
+    x@active <- context
     x
 }
 
 #' @keywords internal
 get_context <- function(x) UseMethod("get_context")
 
-#' @importFrom methods slot
 #' @export
-get_context.Layout <- function(x) slot(x, "active")
+get_context.Layout <- function(x) x@active

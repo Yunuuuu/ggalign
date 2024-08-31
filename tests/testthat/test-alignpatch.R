@@ -49,6 +49,13 @@ test_that("The grid can be controlled", {
     expect_doppelganger("Setting heights as units", {
         plot_grid(p1, p2, p3, p4, heights = grid::unit(3, "cm"))
     })
+
+    expect_doppelganger("Setting annotation", {
+        plot_grid(p1, p2, p3, p4,
+            title = "I'm title", subtitle = "I'm subtitle",
+            caption = "I'm caption"
+        )
+    })
 })
 
 test_that("Fixed aspect plots behave", {

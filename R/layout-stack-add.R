@@ -18,22 +18,22 @@ layout_stack_add.Align <- function(object, stack, object_name) {
 layout_stack_add.stack_active <- function(object, stack, object_name) {
     stack <- set_context(stack, object)
     if (!is.null(sizes <- attr(object, "sizes"))) {
-        slot(stack, "params")$sizes <- sizes
+        stack@params$sizes <- sizes
     }
     if (!identical(guides <- attr(object, "guides"), NA)) {
-        slot(stack, "params")$guides <- guides
+        stack@params$guides <- guides
     }
     if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
-        slot(stack, "params")$free_labs <- free_labs
+        stack@params$free_labs <- free_labs
     }
     if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-        slot(stack, "params")$free_sizes <- free_sizes
+        stack@params$free_sizes <- free_sizes
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
-        slot(stack, "params")$plot_data <- plot_data
+        stack@params$plot_data <- plot_data
     }
     if (!is.null(theme <- attr(object, "theme"))) {
-        slot(stack, "theme") <- slot(stack, "theme") + theme
+        stack@theme <- stack@theme + theme
     }
     stack
 }
@@ -47,13 +47,13 @@ layout_stack_add.heatmap_active <- function(object, stack, object_name) {
 #' @importFrom methods slot
 #' @export
 layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
-    direction <- slot(stack, "direction")
+    direction <- stack@direction
     axis <- to_coord_axis(direction)
 
     # setup heatmap data ----------------------------------
-    heatmap_data <- slot(object, "data")
+    heatmap_data <- object@data
     if (is.null(heatmap_data) || is.function(heatmap_data)) {
-        if (is.null(stack_data <- slot(stack, "data"))) {
+        if (is.null(stack_data <- stack@data)) {
             cli::cli_abort(c(
                 paste(
                     "You must provide {.arg data} argument in",
@@ -78,7 +78,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
                 }
             )
         }
-        slot(object, "data") <- data
+        object@data <- data
         # we should sync the `nobs` of the vertical axis
         if (is_horizontal(direction)) {
             object <- set_nobs(object, axis = "x", value = ncol(data))
@@ -138,19 +138,19 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         }
     }
     # let the stack determine how to collect the guides
-    slot(object, "params")$guides <- slot(object, "params")$guides %|w|%
-        .subset2(slot(stack, "params"), "guides")
+    object@params$guides <- object@params$guides %|w|%
+        .subset2(stack@params, "guides")
 
     # set up context index ------------------------------
-    plots <- slot(stack, "plots")
-    if (slot(object, "set_context")) {
+    plots <- stack@plots
+    if (object@set_context) {
         active_index <- length(plots) + 1L
     } else {
         active_index <- get_context(stack)
     }
 
     # check heatmap name is unique ----------------------
-    if (!is.na(name <- slot(object, "name"))) {
+    if (!is.na(name <- object@name)) {
         if (any(names(plots) == name)) {
             cli::cli_warn("{object_name}: {name} plot is already present")
         }
@@ -160,8 +160,8 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
     }
 
     # add heatmap ---------------------------------------
-    slot(stack, "plots") <- plots
-    slot(stack, "active") <- active_index
+    stack@plots <- plots
+    stack@active <- active_index
 
     # set the layout ------------------------------------
     stack <- set_panel(stack, value = panel)
@@ -200,7 +200,7 @@ layout_stack_add.default <- function(object, stack, object_name) {
 
 #################################################################
 stack_add_align <- function(object, stack, object_name) {
-    plots <- slot(stack, "plots")
+    plots <- stack@plots
 
     # set up context index ------------------------------
     if (.subset2(object, "set_context")) {
@@ -223,9 +223,8 @@ stack_add_align <- function(object, stack, object_name) {
     # this step the object will act with the stack layout
     # group rows into panel or reorder rows
     layout <- initialize_align(
-        object,
-        slot(stack, "direction"),
-        layout_data = slot(stack, "data"),
+        object, stack@direction,
+        layout_data = stack@data,
         layout_panel = get_panel(stack),
         layout_index = get_index(stack),
         nobs = get_nobs(stack),
@@ -233,8 +232,8 @@ stack_add_align <- function(object, stack, object_name) {
     )
 
     # add annotation -------------------------------------
-    slot(stack, "plots") <- plots
-    slot(stack, "active") <- active_index
+    stack@plots <- plots
+    stack@active <- active_index
 
     # set the layout -------------------------------------
     stack <- set_panel(stack, value = .subset2(layout, 1L))
@@ -254,13 +253,13 @@ stack_add_ggelement <- function(object, stack, object_name, layout_name) {
             )
         ))
     }
-    plot <- slot(stack, "plots")[[active_index]]
+    plot <- stack@plots[[active_index]]
     if (is.ggheatmap(plot)) {
         plot <- layout_heatmap_add(object, plot, object_name)
     } else {
         plot <- align_add(object, plot, object_name)
     }
-    slot(stack, "plots")[[active_index]] <- plot
+    stack@plots[[active_index]] <- plot
     stack
 }
 
@@ -269,10 +268,10 @@ stack_add_ggelement <- function(object, stack, object_name, layout_name) {
 stack_add_heatmap_element <- function(object, stack, object_name, force,
                                       stack_add_fun) {
     if (!is.null(active_index <- get_context(stack)) &&
-        is.ggheatmap(plot <- .subset2(slot(stack, "plots"), active_index))) {
+        is.ggheatmap(plot <- .subset2(stack@plots, active_index))) {
         plot <- layout_heatmap_add(object, plot, object_name)
-        slot(stack, "plots")[[active_index]] <- plot
-        axis <- to_coord_axis(slot(stack, "direction"))
+        stack@plots[[active_index]] <- plot
+        axis <- to_coord_axis(stack@direction)
         stack <- set_panel(stack, value = get_panel(plot, axis))
         stack <- set_index(stack, value = get_index(plot, axis))
         stack <- set_nobs(stack, value = get_nobs(plot, axis))

@@ -58,7 +58,7 @@ Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, margins and background. Only used when position is \code{NULL}.}
+\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background. Only used when position is \code{NULL}.}
 
 \item{what}{What should get activated for the stack layout? Possible values
 are follows:
