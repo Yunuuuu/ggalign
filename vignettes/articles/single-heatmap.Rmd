@@ -255,6 +255,7 @@ ggheatmap(mat, filling = FALSE) +
 ```
 
 We can use `patch_titles()` to add titles around each border of the plot.
+
 # Titles
 ```{r}
 ggheatmap(mat) +
