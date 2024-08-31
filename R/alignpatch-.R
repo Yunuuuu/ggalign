@@ -14,22 +14,23 @@ PLOT_TOP <- 7L + 1L
 PLOT_BOTTOM <- 13L + 1L
 PLOT_LEFT <- 5L + 1L
 PLOT_RIGHT <- 11L + 1L
-TITLE_ROW <- 3L + 1L
-SUBTITLE_ROW <- 4L + 1L
-CAPTION_ROW <- 16L + 1L
+TITLE_ROW <- 3L
+SUBTITLE_ROW <- 4L
+CAPTION_ROW <- 16L + 2L
 
-GUIDE_RIGHT <- 13L + 1L
-GUIDE_LEFT <- 3L + 1L
-GUIDE_TOP <- 5L + 1L
-GUIDE_BOTTOM <- 15L + 1L
+GUIDE_TOP <- 5L
+GUIDE_LEFT <- 3L
+GUIDE_BOTTOM <- 15L + 2L
+GUIDE_RIGHT <- 13L + 2L
 
 # top-bottom
 # 1: margin
 # 2: tag
-# feature: insert patch title
 # 3: title
 # 4: subtitle
 # 5: guide-box-top
+# 6: legend.box.spacing
+# feature: insert patch title
 # 7: xlab-t
 # 8: axis-t/strip-t strip.placement = "inside"
 # 9: strip-t/axis-t strip.placement = "outside"
@@ -37,9 +38,10 @@ GUIDE_BOTTOM <- 15L + 1L
 # 11: strip-b
 # 12: axis-b
 # 13: xlab-b
+# feature: insert patch title
+# 14: legend.box.spacing
 # 15: guide-box-bottom
 # 16: caption
-# feature: insert patch title
 # 17: tag
 # 18: margin
 
@@ -47,15 +49,17 @@ GUIDE_BOTTOM <- 15L + 1L
 #
 # 1: margin
 # 2: tag
-# feature: insert patch title
 # 3: guide-box-left
+# 4: legend.box.spacing
+# feature: insert patch title
 # 5: ylab-l
 # 6: axis-l
 # 8: panel
 # 10: axis-r
 # 11: ylab-r
-# 13: guide-box-right
 # feature: insert patch title
+# 12: legend.box.spacing
+# 13: guide-box-right
 # 14: tag
 # 15: margin
 
@@ -241,16 +245,16 @@ patch_gtable.patch <- function(patch, guides) {
     for (border in c("top", "left", "bottom", "right")) {
         panel_pos <- find_panel(table)
         if (border == "top") {
-            h <- .subset2(panel_pos, "t") - 8L # above original title
+            h <- .subset2(panel_pos, "t") - 4L # above original xlab
             table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
         } else if (border == "left") {
-            v <- .subset2(panel_pos, "l") - 6L # left of the guide
+            v <- .subset2(panel_pos, "l") - 4L # left of the ylab
             table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
         } else if (border == "bottom") {
-            h <- .subset2(panel_pos, "b") + 6L # below caption
+            h <- .subset2(panel_pos, "b") + 3L # below original xlab
             table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
         } else if (border == "right") {
-            v <- .subset2(panel_pos, "r") + 5L # right of the guide
+            v <- .subset2(panel_pos, "r") + 3L # right of the ylab
             table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
         }
     }

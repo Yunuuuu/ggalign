@@ -35,6 +35,8 @@ setup_patch_titles <- function(table, patch) {
     )
     theme <- complete_theme(.subset2(patch, "theme"))
     plot_title <- calc_element("plot.title", theme)
+    # always justification by center
+    plot_title$hjust <- 0.5
     for (border in c("top", "left", "bottom", "right")) {
         panel_pos <- find_panel(table)
         patch_title <- .subset2(patch_titles, border)
@@ -49,8 +51,6 @@ setup_patch_titles <- function(table, patch) {
                 bottom = 0,
                 right = -90
             )
-            # always justification by center
-            plot_title$hjust <- 0.5
             el <- calc_element(name, theme) %||% plot_title
             title <- element_grob(el, patch_title,
                 margin_y = TRUE, margin_x = TRUE
@@ -73,7 +73,7 @@ setup_patch_titles <- function(table, patch) {
                 l <- 1L
                 r <- ncol(table)
             }
-            h <- .subset2(panel_pos, "t") - 8L # above original title
+            h <- .subset2(panel_pos, "t") - 4L # above original xlab
             table <- gtable_add_rows(table, height, pos = h)
             table <- gtable_add_grob(table, title,
                 name = "patch-title-top",
@@ -89,7 +89,7 @@ setup_patch_titles <- function(table, patch) {
                 t <- 1L
                 b <- ncol(table)
             }
-            v <- .subset2(panel_pos, "l") - 6L # left of the guide
+            v <- .subset2(panel_pos, "l") - 4L # left of the ylab
             table <- gtable_add_cols(table, width, pos = v)
             table <- gtable_add_grob(table, title,
                 name = "patch-title-left",
@@ -105,7 +105,7 @@ setup_patch_titles <- function(table, patch) {
                 l <- 1L
                 r <- ncol(table)
             }
-            h <- .subset2(panel_pos, "b") + 6L # below caption
+            h <- .subset2(panel_pos, "b") + 3L # below original xlab
             table <- gtable_add_rows(table, height, pos = h)
             table <- gtable_add_grob(table, title,
                 name = "patch-title-bottom",
@@ -121,7 +121,7 @@ setup_patch_titles <- function(table, patch) {
                 t <- 1L
                 b <- ncol(table)
             }
-            v <- .subset2(panel_pos, "r") + 5L # right of the guide
+            v <- .subset2(panel_pos, "r") + 3L # right of the ylab
             table <- gtable_add_cols(table, width, pos = v)
             table <- gtable_add_grob(table, title,
                 name = "patch-title-right",

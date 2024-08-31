@@ -263,10 +263,11 @@ ggheatmap(mat) +
   hmanno("r", size = unit(20, "mm")) +
   align_dendro() +
   patch_titles(right = "I am a row title") +
+  theme(plot.title = element_text(face = "bold")) +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
   patch_titles(top = "I am a column title") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+  theme(plot.title = element_text(face = "bold")) +
   hmanno(NULL) &
   theme(plot.margin = margin())
 ```
