@@ -76,7 +76,7 @@ setup_patch_titles <- function(table, patch) {
             h <- .subset2(panel_pos, "t") - 8L # above original title
             table <- gtable_add_rows(table, height, pos = h)
             table <- gtable_add_grob(table, title,
-                name = "patch_title_top",
+                name = "patch-title-top",
                 t = h + 1L, b = h + 1L, l = l, r = r,
                 clip = "off"
             )
@@ -92,7 +92,7 @@ setup_patch_titles <- function(table, patch) {
             v <- .subset2(panel_pos, "l") - 6L # left of the guide
             table <- gtable_add_cols(table, width, pos = v)
             table <- gtable_add_grob(table, title,
-                name = "patch_title_left",
+                name = "patch-title-left",
                 t = t, b = b, l = v + 1L, r = v + 1L,
                 clip = "off"
             )
@@ -108,7 +108,7 @@ setup_patch_titles <- function(table, patch) {
             h <- .subset2(panel_pos, "b") + 6L # below caption
             table <- gtable_add_rows(table, height, pos = h)
             table <- gtable_add_grob(table, title,
-                name = "patch_title_bottom",
+                name = "patch-title-bottom",
                 t = h + 1L, b = h + 1L, l = l, r = r,
                 clip = "off"
             )
@@ -124,7 +124,7 @@ setup_patch_titles <- function(table, patch) {
             v <- .subset2(panel_pos, "r") + 5L # right of the guide
             table <- gtable_add_cols(table, width, pos = v)
             table <- gtable_add_grob(table, title,
-                name = "patch_title_right",
+                name = "patch-title-right",
                 t = t, b = b, l = v + 1L, r = v + 1L,
                 clip = "off"
             )

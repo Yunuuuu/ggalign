@@ -58,21 +58,33 @@ remove_border_sizes <- function(gt, ggelements) {
 }
 
 GGELEMENTS <- list(
-    t = c("title", "subtitle", "xlab-t", "axis-t", "strip-t"),
-    l = c("ylab-l", "axis-l", "strip-l"),
-    b = c("caption", "xlab-b", "axis-b", "strip-b"),
-    r = c("ylab-r", "axis-r", "strip-r")
+    t = c(
+        "title", "subtitle", "xlab-t", "axis-t", "strip-t",
+        "patch-title-top"
+    ),
+    l = c("ylab-l", "axis-l", "strip-l", "patch-title-left"),
+    b = c("caption", "xlab-b", "axis-b", "strip-b", "patch-title-bottom"),
+    r = c("ylab-r", "axis-r", "strip-r", "patch-title-right")
 )
 
 ggelements_pos <- function(border, ggelements, strip_pos) {
     to_pos <- list(
         t = c(
             `strip-t` = -1L, `axis-t` = -2L, `xlab-t` = -3L,
-            subtitle = -6, title = -7
+            subtitle = -6, title = -7, `patch-title-top` = -8L
         ),
-        l = c(`strip-l` = -1L, `axis-l` = -2L, `ylab-l` = -3L),
-        b = c(`strip-b` = 1L, `axis-b` = 2L, `xlab-b` = 3L, caption = 6L),
-        r = c(`strip-r` = 1L, `axis-r` = 2L, `ylab-r` = 3L)
+        l = c(
+            `strip-l` = -1L, `axis-l` = -2L, `ylab-l` = -3L,
+            `patch-title-left` = -6L
+        ),
+        b = c(
+            `strip-b` = 1L, `axis-b` = 2L, `xlab-b` = 3L, caption = 6L,
+            `patch-title-bottom` = 7L
+        ),
+        r = c(
+            `strip-r` = 1L, `axis-r` = 2L, `ylab-r` = 3L,
+            `patch-title-right` = 6L
+        )
     )
     pos <- .subset2(to_pos, border)
     if (strip_pos == "outside") {

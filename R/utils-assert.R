@@ -144,7 +144,15 @@ check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
             axis = c("axis-t", "axis-b", "axis-l", "axis-r"),
             axes = c("axis-t", "axis-b", "axis-l", "axis-r"),
             strip = c("strip-t", "strip-b", "strip-l", "strip-r"),
-            strips = c("strip-t", "strip-b", "strip-l", "strip-r")
+            strips = c("strip-t", "strip-b", "strip-l", "strip-r"),
+            `patch-titles` = c(
+                "patch-title-top", "patch-title-left",
+                "patch-title-bottom", "patch-title-right"
+            ),
+            `patch-title` = c(
+                "patch-title-top", "patch-title-left",
+                "patch-title-bottom", "patch-title-right"
+            )
         )
         template <- c(GGELEMENTS, template)
         valid_elements <- unlist(GGELEMENTS,
