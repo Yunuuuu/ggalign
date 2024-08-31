@@ -254,23 +254,18 @@ ggheatmap(mat, filling = FALSE) +
   theme(plot.margin = margin())
 ```
 
+We can use `patch_titles()` to add titles around each border of the plot.
 # Titles
 ```{r}
 ggheatmap(mat) +
   scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  # For row title, we can use `annotation_custom` to add a Grob
   hmanno("r", size = unit(20, "mm")) +
   align_dendro() +
-  ggpanel(facet = FALSE, size = unit(5, "mm")) +
-  annotation_custom(grid::textGrob(
-    "I am a row title",
-    rot = -90, gp = gpar(fontface = "bold")
-  )) +
-  # column title can be directly added with ggtitle() for specific ggplot
+  patch_titles(right = "I am a row title") +
   hmanno("t", size = unit(15, "mm")) +
   align_dendro() +
-  ggtitle("I am a column title") +
+  patch_titles(top = "I am a column title") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   hmanno(NULL) &
   theme(plot.margin = margin())

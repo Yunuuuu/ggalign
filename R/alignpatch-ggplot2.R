@@ -13,6 +13,7 @@ patch_gtable.ggplot <- function(patch, guides) {
     ans <- ggplotGrob(patch)
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
+    ans <- setup_patch_titles(ans, patch)
     add_class(ans, "gtable_ggplot")
 }
 
@@ -105,6 +106,7 @@ merge_panels <- function(gt, rows, cols) {
     # add panel area
     gt_new <- gtable_add_rows(gt_new, unit(1L, "null"), rows[1L] - 1L)
     gt_new <- gtable_add_cols(gt_new, unit(1L, "null"), cols[1L] - 1L)
+
     p_cols <- seq(cols[1L], cols[2L])
     if (is_scalar(p_cols)) { # No multiple column panels
         # For elemnents in the top of the panel

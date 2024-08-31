@@ -5,22 +5,23 @@
 # 2. collect guides for each side (should be merged into patchwork).
 # 3. allow collapse axis title and labels (should be merged into patchwork).
 #    see https://github.com/thomasp85/patchwork/pull/373
-TABLE_ROWS <- 18L # + 2L
-TABLE_COLS <- 15L # + 2L
-PANEL_ROW <- 10L # + 1L
-PANEL_COL <- 8L # + 1L
-PLOT_TOP <- 7L # + 1L
-PLOT_BOTTOM <- 13L # + 1L
-PLOT_LEFT <- 5L # + 1L
-PLOT_RIGHT <- 11L # + 1L
-TITLE_ROW <- 3L # + 1L
-SUBTITLE_ROW <- 4L # + 1L
-CAPTION_ROW <- 16L # + 1L
+# 4. Added titles around the plot top, left, bottom, and right
+TABLE_ROWS <- 18L + 2L
+TABLE_COLS <- 15L + 2L
+PANEL_ROW <- 10L + 1L
+PANEL_COL <- 8L + 1L
+PLOT_TOP <- 7L + 1L
+PLOT_BOTTOM <- 13L + 1L
+PLOT_LEFT <- 5L + 1L
+PLOT_RIGHT <- 11L + 1L
+TITLE_ROW <- 3L + 1L
+SUBTITLE_ROW <- 4L + 1L
+CAPTION_ROW <- 16L + 1L
 
-GUIDE_RIGHT <- 13L # + 1L
-GUIDE_LEFT <- 3L # + 1L
-GUIDE_TOP <- 5L # + 1L
-GUIDE_BOTTOM <- 15L # + 1L
+GUIDE_RIGHT <- 13L + 1L
+GUIDE_LEFT <- 3L + 1L
+GUIDE_TOP <- 5L + 1L
+GUIDE_BOTTOM <- 15L + 1L
 
 # top-bottom
 # 1: margin
@@ -236,7 +237,24 @@ patch_gtable.grob <- function(patch, guides) patch
 #' @export
 patch_gtable.patch <- function(patch, guides) {
     guides <- if (length(guides)) "collect" else "keep"
-    patchwork::patchGrob(patch, guides = guides)
+    table <- patchwork::patchGrob(patch, guides = guides)
+    for (border in c("top", "left", "bottom", "right")) {
+        panel_pos <- find_panel(table)
+        if (border == "top") {
+            h <- .subset2(panel_pos, "t") - 8L # above original title
+            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+        } else if (border == "left") {
+            v <- .subset2(panel_pos, "l") - 6L # left of the guide
+            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+        } else if (border == "bottom") {
+            h <- .subset2(panel_pos, "b") + 6L # below caption
+            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+        } else if (border == "right") {
+            v <- .subset2(panel_pos, "r") + 5L # right of the guide
+            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+        }
+    }
+    table
 }
 
 #########################################

@@ -34,3 +34,11 @@ align_theme <- function(direction, ...) {
             )
         )
 }
+
+#' @importFrom ggplot2 theme_get
+complete_theme <- function(theme) {
+    if (is.null(complete <- attr(theme, "complete")) || !complete) {
+        theme <- theme_get() + theme
+    }
+    theme
+}

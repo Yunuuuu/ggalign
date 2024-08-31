@@ -42,12 +42,12 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
 grid.draw.alignpatches <- function(x, recording = TRUE) {
     layout <- .subset2(x, "layout")
     theme <- .subset2(layout, "theme")
+
     # use complete_theme() when ggplot2 release
-    if (!attr(theme, "complete")) {
-        theme <- ggplot2::theme_get() + theme
-        x$layout$theme <- theme
-    }
+    theme <- complete_theme(theme)
+    x$layout$theme <- theme
     table <- patch_gtable(x)
+
     fix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------

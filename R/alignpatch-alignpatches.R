@@ -13,10 +13,9 @@ patch_align.gtable_alignpatches <- function(gt, guides,
 patch_gtable.alignpatches <- function(patch, guides) {
     plots <- .subset2(patch, "plots")
     layout <- .subset2(patch, "layout")
+
     # complete the theme object
-    if (!attr(theme <- .subset2(layout, "theme"), "complete")) {
-        theme <- ggplot2::theme_get() + theme
-    }
+    theme <- complete_theme(.subset2(layout, "theme"))
 
     # get the design areas and design dims ------------------
     panel_widths <- .subset2(layout, "widths")
@@ -237,7 +236,9 @@ BuilderAlignPatches <- ggplot2::ggproto(
         if (any(guess_heights <- is.na(as.numeric(panel_heights)))) {
             panel_heights[guess_heights] <- unit(1L, "null")
         }
+
         # setup sizes for non-panel rows/columns --------------
+
         sizes <- table_sizes(
             lapply(gt_list, .subset2, "widths"),
             lapply(gt_list, .subset2, "heights"),
