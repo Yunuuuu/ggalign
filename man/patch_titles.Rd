@@ -2,7 +2,7 @@
 % Please edit documentation in R/alignpatch-title.R
 \name{patch_titles}
 \alias{patch_titles}
-\title{Add patch titles around the plot}
+\title{Add Patch Titles to Plot Borders}
 \usage{
 patch_titles(
   top = waiver(),
@@ -12,10 +12,24 @@ patch_titles(
 )
 }
 \arguments{
-\item{top, left, bottom, right}{A string of title to be added into top, left,
-bottom, or right.}
+\item{top, left, bottom, right}{A string specifying the title to be added to the top, left, bottom, or right border of the plot.}
 }
 \description{
-You can also use \link[ggplot2:labs]{labs()} to add patch titles in top, left,
-bottom, and right.
+This function extends ggplot2's title functionality, allowing you to add
+titles to each border of the plot: top, left, bottom, and right.
+}
+\details{
+In addition to the main titles, you can use \link[ggplot2:labs]{labs()} to
+specify titles for the top, left, bottom, and right borders of the plot.
+
+The appearance and alignment of these patch titles can be customized using
+\link[ggplot2:theme]{theme()}:
+\itemize{
+\item \verb{plot.patch_title_*}: Controls the text appearance of patch titles.
+Inherits from \code{plot.title} by default.
+\item \code{plot.patch_title_*.position}: Determines the alignment of the patch
+titles. The default value \code{"panel"} aligns the titles with the plot panels.
+Setting this to \code{"plot"} aligns the titles with the entire plot (excluding
+margins and plot tags).
+}
 }

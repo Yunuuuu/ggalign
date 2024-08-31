@@ -1,10 +1,23 @@
-#' Add patch titles around the plot
+#' Add Patch Titles to Plot Borders
 #'
-#' You can also use [labs()][ggplot2::labs] to add patch titles in top, left,
-#' bottom, and right.
+#' This function extends ggplot2's title functionality, allowing you to add
+#' titles to each border of the plot: top, left, bottom, and right.
 #'
-#' @param top,left,bottom,right A string of title to be added into top, left,
-#' bottom, or right.
+#' @details
+#' In addition to the main titles, you can use [labs()][ggplot2::labs] to
+#' specify titles for the top, left, bottom, and right borders of the plot.
+#'
+#' The appearance and alignment of these patch titles can be customized using
+#' [theme()][ggplot2::theme]:
+#' - `plot.patch_title_*`: Controls the text appearance of patch titles.
+#'   Inherits from `plot.title` by default.
+#' - `plot.patch_title_*.position`: Determines the alignment of the patch
+#'   titles. The default value `"panel"` aligns the titles with the plot panels.
+#'   Setting this to `"plot"` aligns the titles with the entire plot (excluding
+#'   margins and plot tags).
+#'
+#' @param top,left,bottom,right A string specifying the title to be added to the
+#' top, left, bottom, and right border of the plot.
 #' @export
 #' @importFrom ggplot2 waiver
 patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
@@ -36,6 +49,7 @@ setup_patch_titles <- function(table, patch) {
                 bottom = 0,
                 right = -90
             )
+            # always justification by center
             plot_title$hjust <- 0.5
             el <- calc_element(name, theme) %||% plot_title
             title <- element_grob(el, patch_title,
