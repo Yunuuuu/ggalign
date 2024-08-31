@@ -12,7 +12,8 @@ patch_titles(
 )
 }
 \arguments{
-\item{top, left, bottom, right}{A string specifying the title to be added to the top, left, bottom, or right border of the plot.}
+\item{top, left, bottom, right}{A string specifying the title to be added to the
+top, left, bottom, and right border of the plot.}
 }
 \description{
 This function extends ggplot2's title functionality, allowing you to add
