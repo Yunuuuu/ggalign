@@ -120,7 +120,21 @@ title, we can wrap the plot with <code>free_lab</code>.</p></li>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>What ggplot2 elements to remove?</p></dd>
+<dd><p>What sizes of the ggplot2 elements to remove? Allowed values are:
+<code>"title"</code>, <code>"subtitle"</code>, <code>"xlab-t"</code>, <code>"axis-t"</code>, <code>"strip-t"</code>,
+<code>"patch-title-top"</code>, <code>"ylab-l"</code>, <code>"axis-l"</code>, <code>"strip-l"</code>,
+<code>"patch-title-left"</code>, <code>"caption"</code>, <code>"xlab-b"</code>, <code>"axis-b"</code>, <code>"strip-b"</code>,
+<code>"patch-title-bottom"</code>, <code>"ylab-r"</code>, <code>"axis-r"</code>, <code>"strip-r"</code>, and,
+<code>"patch-title-right"</code>. Some unions also allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
+"patch-title-top".</p></li>
+<li><p><code>"xlab"/"xlabs"</code>: "xlab-t", "xlab-b".</p></li>
+<li><p><code>"ylab"/"ylabs"</code>: "ylab-l", "ylab-r".</p></li>
+<li><p><code>"lab"/"labs"</code>: "xlab-t", "xlab-b", "ylab-l", "ylab-r".</p></li>
+<li><p><code>"axis"/"axes"</code>: "axis-t", "axis-b", "axis-l", "axis-r".</p></li>
+<li><p><code>"strip"/"strips"</code>: "strip-t", "strip-b", "strip-l", "strip-r".</p></li>
+<li><p><code>"patch-title"</code>/<code>"patch-titles"</code>: "patch-title-top", "patch-title-left",
+"patch-title-bottom", "patch-title-right".</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
