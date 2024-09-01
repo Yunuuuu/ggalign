@@ -49,7 +49,7 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
         widths = widths,
         heights = heights,
         design = design, guides = guides,
-        theme = theme %||% ggplot2::theme(),
+        theme = theme,
         title = title, subtitle = subtitle, caption = caption
     ))
 }

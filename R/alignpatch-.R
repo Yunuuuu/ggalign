@@ -185,7 +185,7 @@ as_patch.patchwork <- function(x) {
     } else {
         layout$guides <- FALSE
     }
-    layout$theme <- .subset2(annotation, "theme") %||% ggplot2::theme()
+    layout$theme <- .subset2(annotation, "theme")
     layout$title <- .subset2(annotation, "title")
     layout$subtitle <- .subset2(annotation, "subtitle")
     layout$caption <- .subset2(annotation, "caption")
@@ -238,6 +238,8 @@ patch_gtable.grob <- function(patch, guides) patch
 
 #######################################
 # `patch` from `patchwork`: patchwork::plot_spacer
+#' @importFrom gtable gtable_add_rows gtable_add_cols
+#' @importFrom ggplot2 find_panel
 #' @export
 patch_gtable.patch <- function(patch, guides) {
     guides <- if (length(guides)) "collect" else "keep"
