@@ -26,12 +26,15 @@ bottom, and right borders of the plot.
 The appearance and alignment of these patch titles can be customized using
 \link[ggplot2:theme]{theme()}:
 \itemize{
-\item \verb{plot.patch_title_*}: Controls the text appearance of patch titles.
-By default, these settings inherit from \code{plot.title}, with the exception of
-the \code{angle} property, which is not inherited.
-\item \code{plot.patch_title_*.position}: Determines the alignment of the patch
-titles. The default value \code{"panel"} aligns the titles with the plot panels.
-Setting this to \code{"plot"} aligns the titles with the entire plot (excluding
-margins and plot tags).
+\item \code{plot.patch_title}/\verb{plot.patch_title.*}: Controls the text appearance of
+patch titles. By default, \code{plot.patch_title} inherit from \code{plot.title}, and
+settings for each border will inherit from \code{plot.patch_title}, with the
+exception of the \code{angle} property, which is not inherited.
+\item \code{plot.patch_title.position}/\verb{plot.patch_title.position.*}: Determines the
+alignment of the patch titles. By default, \code{plot.patch_title.position}
+inherit from \code{plot.title.position}, and settings for each border will
+inherit from \code{plot.patch_title}. The value \code{"panel"} aligns the patch
+titles with the plot panels. Setting this to \code{"plot"} aligns the patch
+title with the entire plot (excluding margins and plot tags).
 }
 }

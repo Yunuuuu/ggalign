@@ -42,3 +42,21 @@ complete_theme <- function(theme) {
     }
     theme
 }
+
+#' @importFrom ggplot2 register_theme_elements el_def
+theme_elements <- function() {
+    register_theme_elements(
+        element_tree = list(
+            plot.patch_title = el_def("element_text", "text"),
+            plot.patch_title.top = el_def("element_text", "text"),
+            plot.patch_title.left = el_def("element_text", "text"),
+            plot.patch_title.bottom = el_def("element_text", "text"),
+            plot.patch_title.right = el_def("element_text", "text"),
+            plot.patch_title.position = el_def("character"),
+            plot.patch_title.position.top = el_def("character"),
+            plot.patch_title.position.left = el_def("character"),
+            plot.patch_title.position.bottom = el_def("character"),
+            plot.patch_title.position.right = el_def("character")
+        )
+    )
+}
