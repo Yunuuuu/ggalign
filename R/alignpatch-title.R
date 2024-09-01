@@ -29,7 +29,7 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
     ggplot2::labs(top = top, left = left, bottom = bottom, right = right)
 }
 
-#' @importFrom ggplot2 find_panel zeroGrob element_grob merge_element
+#' @importFrom ggplot2 find_panel calc_element zeroGrob element_grob merge_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch) {

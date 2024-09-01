@@ -7,7 +7,7 @@
 #    title
 #    caption
 #    guide: can be collected or kept
-#' @importFrom ggplot2 ggplotGrob
+#' @importFrom ggplot2 ggplotGrob calc_element theme
 #' @export
 patch_gtable.ggplot <- function(patch, guides) {
     ans <- ggplotGrob(patch)

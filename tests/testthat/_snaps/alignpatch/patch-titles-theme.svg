@@ -132,7 +132,7 @@
 <text x='195.89' y='562.76' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='21.40px' lengthAdjust='spacingAndGlyphs'>mpg</text>
 <text transform='translate(18.53,292.60) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='20.18px' lengthAdjust='spacingAndGlyphs'>disp</text>
 <text x='43.17' y='20.04' style='font-size: 13.20px; font-family: sans;' textLength='33.76px' lengthAdjust='spacingAndGlyphs'>Plot 1</text>
-<text x='195.89' y='37.35' text-anchor='middle' style='font-size: 13.20px; font-family: sans;' textLength='99.37px' lengthAdjust='spacingAndGlyphs'>I'm top patch title</text>
+<text x='195.89' y='37.35' text-anchor='middle' style='font-size: 13.20px; font-weight: bold; font-family: sans;' textLength='99.37px' lengthAdjust='spacingAndGlyphs'>I'm top patch title</text>
 </g>
 <defs>
   <clipPath id='cpNDAzLjYwfDcwOS4wNHw0NS41N3w1MzkuNjM='>
@@ -201,6 +201,6 @@
 <text x='556.32' y='562.76' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='22.02px' lengthAdjust='spacingAndGlyphs'>gear</text>
 <text transform='translate(378.96,292.60) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='20.18px' lengthAdjust='spacingAndGlyphs'>disp</text>
 <text x='403.60' y='20.04' style='font-size: 13.20px; font-family: sans;' textLength='33.76px' lengthAdjust='spacingAndGlyphs'>Plot 2</text>
-<text transform='translate(368.65,289.86) rotate(-90)' text-anchor='middle' style='font-size: 13.20px; font-family: sans;' textLength='98.63px' lengthAdjust='spacingAndGlyphs'>I'm left patch title</text>
+<text transform='translate(368.65,289.86) rotate(-90)' text-anchor='middle' style='font-size: 13.20px; font-weight: bold; font-family: sans;' textLength='98.63px' lengthAdjust='spacingAndGlyphs'>I'm left patch title</text>
 </g>
 </svg>

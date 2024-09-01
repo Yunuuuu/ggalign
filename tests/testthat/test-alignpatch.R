@@ -68,9 +68,9 @@ test_that("The grid can be controlled", {
     expect_doppelganger("patch titles theme", {
         plot_grid(
             p1 + patch_titles(top = "I'm top patch title") +
-                theme(plot.patch_title_top = element_text(face = "bold")),
+                theme(plot.patch_title.top = element_text(face = "bold")),
             p2 + patch_titles(left = "I'm left patch title") +
-                theme(plot.patch_title_left = element_text(face = "bold"))
+                theme(plot.patch_title.left = element_text(face = "bold"))
         )
     })
 })
