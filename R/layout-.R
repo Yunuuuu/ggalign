@@ -110,14 +110,18 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
             "i" = "Did you accidentally put {.code &} on a new line?"
         ))
     }
-    # Should we remove the margins around the layout?
-    if (inherits(e2, "theme")) {
-        e1@theme <- e1@theme + e2
-    }
+
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
-    layout_and_add(e1, e2, e2name)
+    e1 <- layout_and_add(e1, e2, e2name)
+
+    # we won't remove the margins around the layout
+    if (inherits(e2, "theme")) {
+        e2$plot.margin <- NULL
+        e1@theme <- e1@theme + e2
+    }
+    e1
 })
 
 #' @keywords internal
