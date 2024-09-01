@@ -73,5 +73,5 @@ patch_gtable.wrapped_plot <- function(patch, guides) {
             clip = clip, name = "wrap_panel"
         )
     )
-    add_class(gt, "gtable_wrapped")
+    add_class(gt, "gtable_wrapped_plot")
 }

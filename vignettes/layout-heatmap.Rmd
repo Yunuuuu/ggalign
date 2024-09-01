@@ -131,22 +131,53 @@ ggheatmap(small_mat) +
 ```
 
 ## Control size
-`hmanno()` has `width` and `height` to control the relative (you can also
-provide a unit object) width and height of the heatmap body. In addition,
-`hmanno()` function have a `size` argument to control the relative width (left
-and right annotation) or height (top and bottom annotation) of the whole
-annotation. `anno_*` function has a `size` argument to control the relative
-width (left and right annotation) or height (top and bottom annotation) of the
-single annotation in the whole annotation stack.
+We can use `hmanno()` to control the relative sizes between heatmap body and the
+whole annotation stack.
+
+- when `position` is `NULL`, we can use `width` and `height` arguments to
+control the relative (you can also provide a unit object) width and height of
+the heatmap body.
+- when `position` is not `NULL`, we can use `size` argument to control the
+relative width (left and right annotation) or height (top and bottom annotation)
+of the whole annotation stack.
 
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
-  hmanno("t", size = unit(20, "mm")) +
+  hmanno(height = 1) +
+  hmanno("t", size = 2) +
+  align_dendro() +
   ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity") +
+  geom_bar(aes(y = value, fill = .x), stat = "identity")
+```
+
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  hmanno("t", size = 1) +
+  align_dendro() +
+  ggalign(data = rowSums) +
+  geom_bar(aes(y = value, fill = .x), stat = "identity")
+```
+
+We can use absolute unit to define the size.
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  hmanno("t", size = unit(30, "mm")) +
+  align_dendro() +
+  ggalign(data = rowSums) +
+  geom_bar(aes(y = value, fill = .x), stat = "identity")
+```
+
+All `align_*` function has a `size` argument to control the relative width (left
+and right annotation) or height (top and bottom annotation) of the single
+annotation in the whole annotation stack.
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
   hmanno("l", size = 0.2) +
-  ggalign(aes(x = value), data = rowSums) +
+  ggalign(data = rowSums, aes(x = value), size = unit(10, "mm")) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
     stat = "identity",

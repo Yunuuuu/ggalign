@@ -439,6 +439,56 @@ align_border_size.gtable_alignpatches <- function(gt, t = NULL, l = NULL,
     gt
 }
 
+#' @importFrom gtable gtable_width gtable_height
+#' @importFrom grid viewport
+#' @export
+align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
+                                               b = NULL, r = NULL) {
+    ans <- NextMethod() # call `gtable_alignpatches` method
+
+    # we allow the justifactions by top, left, bottom, and right
+    if (!is.null(just <- attr(ans, "just"))) {
+        # if all plots have absolute sizes or we have set the viewport width or
+        # height, we will make justification
+        horizontal_just <- attr(ans, "horizontal_just")
+        vertical_just <- attr(ans, "vertical_just")
+        if (!is.null(vp_width <- attr(ans, "vp_width")) || horizontal_just) {
+            if (horizontal_just) {
+                # all is absolute size, we should follow this gtable width
+                vp_width <- gtable_width(ans)
+            }
+            if (just == "left") {
+                ans$vp <- viewport(
+                    x = 0L, just = "left",
+                    width = vp_width
+                )
+            } else if (just == "right") {
+                ans$vp <- viewport(
+                    x = 1L, just = "right",
+                    width = vp_width
+                )
+            }
+        }
+        if (!is.null(vp_height <- attr(ans, "vp_height")) || vertical_just) {
+            if (vertical_just) {
+                vp_height <- gtable_height(ans)
+            }
+            if (just == "top") {
+                ans$vp <- viewport(
+                    y = 1L, just = "top",
+                    height = vp_height
+                )
+            } else if (just == "bottom") {
+                ans$vp <- viewport(
+                    y = 0L, just = "bottom",
+                    height = vp_height
+                )
+            }
+        }
+    }
+    ans
+}
+
 #' @export
 align_border_size.gtable_free_align <- function(gt, t = NULL, l = NULL,
                                                 b = NULL, r = NULL) {

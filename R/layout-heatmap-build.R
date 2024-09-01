@@ -182,13 +182,27 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
             free_sizes <- vertical_sizes
             free_labs <- vertical_labs
         }
-        stack_build(
+        ans <- stack_build(
             stack, plot_data, guides,
             free_labs = free_labs,
             free_sizes = free_sizes,
             extra_panel = panel,
             extra_index = index
         )
+        # for heatmap annotation, we should always make them next to
+        # the heatmap body
+        if (!is.null(.subset2(ans, "plot"))) {
+            ans$plot <- plot_just(
+                .subset2(ans, "plot"),
+                just = switch(position,
+                    top = "bottom",
+                    left = "right",
+                    bottom = "top",
+                    right = "left"
+                )
+            )
+        }
+        ans
     })
     names(stack_list) <- HEATMAP_ANNOTATION_POSITION
     stack_list <- transpose(stack_list)

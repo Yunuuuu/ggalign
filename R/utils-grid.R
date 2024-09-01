@@ -8,7 +8,7 @@ grid::unit
 
 #' @importFrom grid unitType absolute.size
 is_absolute_unit <- function(x) {
-    identical(unitType(absolute.size(x)), unitType(x))
+    unitType(absolute.size(x)) != "null"
 }
 
 #' @importFrom grid unitType

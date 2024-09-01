@@ -61,12 +61,27 @@ testthat::test_that("add `HeatmapLayout` object works well", {
                 hmanno("l") +
                 align_kmeans(4))
     )
+
     # we prevent from reordering the layout index
     expect_error(
         ggstack(matrix(seq_len(81), nrow = 9L)) +
             align_dendro() +
-            (ggheatmap(matrix(seq_len(81), nrow = 9L)) +
-                hmanno("l") +
-                align_kmeans(3))
+            ggheatmap(matrix(seq_len(81), nrow = 9L)) +
+            hmanno("l") +
+            align_kmeans(3)
+    )
+    expect_doppelganger(
+        "stack with heatmap annotation of absolute size 1",
+        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
+            ggheatmap() +
+            hmanno("t", size = unit(6, "cm")) +
+            align_dendro()
+    )
+    expect_doppelganger(
+        "stack with heatmap annotation of absolute size 2",
+        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
+            ggheatmap() +
+            hmanno("t", size = unit(6, "cm")) +
+            align_dendro(size = unit(10, "cm"))
     )
 })

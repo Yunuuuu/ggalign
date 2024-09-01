@@ -157,35 +157,23 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         )
         l <- max(.subset2(area, "r"))
         if (!is.null(top <- .subset2(plots, "top"))) {
-            size <- .subset2(sizes, "top")
             if (attr(area, "align") == 1L) {
                 area$t <- .subset2(area, "t") + 1L
                 area$b <- .subset2(area, "b") + 1L
                 attr(area, "align") <- attr(area, "align") + 1L
             }
-            if (!is_null_unit(size)) {
-                top <- plot_grid(
-                    patchwork::plot_spacer(),
-                    top,
-                    ncol = 1L,
-                    heights = unit.c(unit(1L, "null"), size),
-                    guides = TRUE
-                )
+            if (!is_null_unit(size <- .subset2(sizes, "top"))) {
+                attr(top, "height") <- size
             }
             area <- stack_patch_add_plot(area, top, t = 1L, l = l)
         }
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
-            size <- .subset2(sizes, "bottom")
-            if (is_null_unit(size)) {
-                bottom <- plot_grid(
-                    bottom,
-                    patchwork::plot_spacer(),
-                    ncol = 1L,
-                    heights = unit.c(size, unit(1L, "null")),
-                    guides = TRUE
-                )
+            if (!is_null_unit(size <- .subset2(sizes, "bottom"))) {
+                attr(bottom, "height") <- size
             }
-            area <- stack_patch_add_plot(area, top, t = 3L, l = l)
+            area <- stack_patch_add_plot(area, bottom,
+                t = attr(area, "align") + 1L, l = l
+            )
         }
         area <- stack_patch_add_align(
             area,
@@ -205,35 +193,23 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         )
         t <- max(.subset2(area, "b"))
         if (!is.null(left <- .subset2(plots, "left"))) {
-            size <- .subset2(sizes, "left")
             if (attr(area, "align") == 1L) {
                 area$l <- .subset2(area, "l") + 1L
                 area$r <- .subset2(area, "r") + 1L
                 attr(area, "align") <- attr(area, "align") + 1L
             }
-            if (is_null_unit(size)) {
-                left <- plot_grid(
-                    patchwork::plot_spacer(),
-                    left,
-                    nrow = 1L,
-                    heights = unit.c(unit(1L, "null"), size),
-                    guides = TRUE
-                )
+            if (!is_null_unit(size <- .subset2(sizes, "left"))) {
+                attr(left, "width") <- size
             }
             area <- stack_patch_add_plot(area, left, t = t, l = 1L)
         }
         if (!is.null(right <- .subset2(plots, "right"))) {
-            size <- .subset2(sizes, "right")
-            if (is_null_unit(size)) {
-                right <- plot_grid(
-                    right,
-                    patchwork::plot_spacer(),
-                    ncol = 1L,
-                    heights = unit.c(size, unit(1L, "null")),
-                    guides = TRUE
-                )
+            if (!is_null_unit(size <- .subset2(sizes, "right"))) {
+                attr(right, "width") <- size
             }
-            area <- stack_patch_add_plot(area, top, t = t, l = 3L)
+            area <- stack_patch_add_plot(area, right,
+                t = t, l = attr(area, "align") + 1L
+            )
         }
         area <- stack_patch_add_align(
             area,
