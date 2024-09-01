@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 `layout_heatmap()` utilizes the grammar of graphics to construct the heatmap and
-heatmap annotations. You can also use the alias `ggheatmap`.
+heatmap annotations. You can also use the alias `ggheatmap()`.
 
 ```{r setup}
 library(ggalign)
@@ -115,10 +115,11 @@ ggheatmap(small_mat) +
 In this example:
 
  - `hmanno("r")` specifies that the annotation should be positioned on the right of the heatmap.
- - `align_dendro(k = 3L)` adds a dendrogram to this right-side annotation context
-   and sets it as the active plot in the annotation stack. 
- - `geom_point(aes(color = factor(branch)))` is then added to this active plot within
-   the annotation stack, allowing you to include additional visual elements. 
+ - `align_dendro(k = 3L)` adds a dendrogram to this right-side annotation
+ context and sets it as the active plot in the annotation stack. 
+ - `geom_point(aes(color = factor(branch)))` is then added to this active plot
+ within the annotation stack, allowing you to include additional visual
+ elements.
 
 If you set `set_context = FALSE`, this will be an error, since no active ggplot
 object can be found.
