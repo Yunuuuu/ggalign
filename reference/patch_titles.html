@@ -82,11 +82,12 @@ top, left, bottom, and right border of the plot.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>In addition to the main titles, you can use <a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a> to
-specify titles for the top, left, bottom, and right borders of the plot.</p>
+    <p>You can also use <a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a> to specify titles for the top, left,
+bottom, and right borders of the plot.</p>
 <p>The appearance and alignment of these patch titles can be customized using
 <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>:</p><ul><li><p><code>plot.patch_title_*</code>: Controls the text appearance of patch titles.
-Inherits from <code>plot.title</code> by default.</p></li>
+By default, these settings inherit from <code>plot.title</code>, with the exception of
+the <code>angle</code> property, which is not inherited.</p></li>
 <li><p><code>plot.patch_title_*.position</code>: Determines the alignment of the patch
 titles. The default value <code>"panel"</code> aligns the titles with the plot panels.
 Setting this to <code>"plot"</code> aligns the titles with the entire plot (excluding
