@@ -457,12 +457,12 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
                 # all is absolute size, we should follow this gtable width
                 vp_width <- gtable_width(ans)
             }
-            if (just == "left") {
+            if (any(just == "left")) {
                 ans$vp <- viewport(
                     x = 0L, just = "left",
                     width = vp_width
                 )
-            } else if (just == "right") {
+            } else if (any(just == "right")) {
                 ans$vp <- viewport(
                     x = 1L, just = "right",
                     width = vp_width
@@ -473,12 +473,12 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
             if (vertical_just) {
                 vp_height <- gtable_height(ans)
             }
-            if (just == "top") {
+            if (any(just == "top")) {
                 ans$vp <- viewport(
                     y = 1L, just = "top",
                     height = vp_height
                 )
-            } else if (just == "bottom") {
+            } else if (any(just == "bottom")) {
                 ans$vp <- viewport(
                     y = 0L, just = "bottom",
                     height = vp_height
