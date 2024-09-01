@@ -7,14 +7,57 @@
 #    title
 #    caption
 #    guide: can be collected or kept
-#' @importFrom ggplot2 ggplotGrob calc_element theme
+#' @importFrom ggplot2 ggplotGrob
 #' @export
 patch_gtable.ggplot <- function(patch, guides) {
+    patch <- remove_empty_ticks(patch)
     ans <- ggplotGrob(patch)
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
     ans <- setup_patch_titles(ans, patch)
     add_class(ans, "gtable_ggplot")
+}
+
+#' @importFrom ggplot2 calc_element theme
+#' @importFrom grid unit
+remove_empty_ticks <- function(p) {
+    theme <- .subset2(p, "theme")
+    # here: we remove tick length when the tick is blank and the tick length is
+    # not set
+    ticks <- c("x.top", "y.left", "x.bottom", "y.right", "theta", "r")
+    rel_ticks <- rep_len(FALSE, length(ticks))
+    for (axis in c("axis.minor", "axis")) {
+        # For major ticks, we also ensure minor tick length is not relative
+        blank <- vapply(ticks, function(element) {
+            inherits(calc_element(
+                paste(axis, "ticks", element, sep = "."), theme
+            ), "element_blank") &&
+                is.null(.subset2(
+                    theme,
+                    paste(axis, "ticks", "length", element, sep = ".")
+                ))
+        }, logical(1L), USE.NAMES = FALSE) & !rel_ticks
+        if (axis == "axis.minor") {
+            rel_ticks <- vapply(
+                paste(axis, "ticks", "length", ticks, sep = "."),
+                function(element) {
+                    inherits(calc_element(element, theme), "rel")
+                }, logical(1L),
+                USE.NAMES = FALSE
+            )
+        }
+        if (length(blank_ticks <- .subset(ticks, blank))) {
+            empty_ticks <- lapply(seq_along(blank_ticks), function(x) {
+                unit(0, "mm")
+            })
+            names(empty_ticks) <- paste(
+                axis, "ticks", "length", blank_ticks,
+                sep = "."
+            )
+            p <- p + theme(!!!empty_ticks)
+        }
+    }
+    p
 }
 
 #' @importFrom ggplot2 find_panel
