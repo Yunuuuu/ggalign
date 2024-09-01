@@ -1,4 +1,24 @@
-#' @param ... What ggplot2 elements to remove?
+#' @param ... What sizes of the ggplot2 elements to remove? Allowed values are:
+#' `"title"`, `"subtitle"`, `"xlab-t"`, `"axis-t"`, `"strip-t"`,
+#' `"patch-title-top"`, `"ylab-l"`, `"axis-l"`, `"strip-l"`,
+#' `"patch-title-left"`, `"caption"`, `"xlab-b"`, `"axis-b"`, `"strip-b"`,
+#' `"patch-title-bottom"`, `"ylab-r"`, `"axis-r"`, `"strip-r"`, and,
+#' `"patch-title-right"`. Some unions also allowed:
+#' - `"t"/"top`: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
+#'   "patch-title-top".
+#  - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left".
+#  - `"b"/"bottom"`："caption", "xlab-b", "axis-b", "strip-b",
+#    "patch-title-bottom".
+#  - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right".
+#  - `"x"`: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
+#  - `"y"`: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
+#' - `"xlab"/"xlabs"`: "xlab-t", "xlab-b".
+#' - `"ylab"/"ylabs"`: "ylab-l", "ylab-r".
+#' - `"lab"/"labs"`: "xlab-t", "xlab-b", "ylab-l", "ylab-r".
+#' - `"axis"/"axes"`: "axis-t", "axis-b", "axis-l", "axis-r".
+#' - `"strip"/"strips"`: "strip-t", "strip-b", "strip-l", "strip-r".
+#' - `"patch-title"`/`"patch-titles"`: "patch-title-top", "patch-title-left",
+#'   "patch-title-bottom", "patch-title-right".
 #' @return
 #' - `free_size`: A modified version of `plot` with a `free_size` class.
 #' @export

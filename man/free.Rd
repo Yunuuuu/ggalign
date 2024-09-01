@@ -26,7 +26,23 @@ free_size(plot, ...)
 
 \item{labs}{Which axis labs to be free?}
 
-\item{...}{What ggplot2 elements to remove?}
+\item{...}{What sizes of the ggplot2 elements to remove? Allowed values are:
+\code{"title"}, \code{"subtitle"}, \code{"xlab-t"}, \code{"axis-t"}, \code{"strip-t"},
+\code{"patch-title-top"}, \code{"ylab-l"}, \code{"axis-l"}, \code{"strip-l"},
+\code{"patch-title-left"}, \code{"caption"}, \code{"xlab-b"}, \code{"axis-b"}, \code{"strip-b"},
+\code{"patch-title-bottom"}, \code{"ylab-r"}, \code{"axis-r"}, \code{"strip-r"}, and,
+\code{"patch-title-right"}. Some unions also allowed:
+\itemize{
+\item \verb{"t"/"top}: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
+"patch-title-top".
+\item \code{"xlab"/"xlabs"}: "xlab-t", "xlab-b".
+\item \code{"ylab"/"ylabs"}: "ylab-l", "ylab-r".
+\item \code{"lab"/"labs"}: "xlab-t", "xlab-b", "ylab-l", "ylab-r".
+\item \code{"axis"/"axes"}: "axis-t", "axis-b", "axis-l", "axis-r".
+\item \code{"strip"/"strips"}: "strip-t", "strip-b", "strip-l", "strip-r".
+\item \code{"patch-title"}/\code{"patch-titles"}: "patch-title-top", "patch-title-left",
+"patch-title-bottom", "patch-title-right".
+}}
 }
 \value{
 \itemize{

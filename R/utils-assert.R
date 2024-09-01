@@ -141,6 +141,7 @@ check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
             ylab = c("ylab-l", "ylab-r"),
             ylabs = c("ylab-l", "ylab-r"),
             lab = c("xlab-t", "xlab-b", "ylab-l", "ylab-r"),
+            labs = c("xlab-t", "xlab-b", "ylab-l", "ylab-r"),
             axis = c("axis-t", "axis-b", "axis-l", "axis-r"),
             axes = c("axis-t", "axis-b", "axis-l", "axis-r"),
             strip = c("strip-t", "strip-b", "strip-l", "strip-r"),
@@ -154,7 +155,10 @@ check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
                 "patch-title-bottom", "patch-title-right"
             )
         )
-        template <- c(GGELEMENTS, template)
+        template <- c(GGELEMENTS, template, rename(
+            GGELEMENTS,
+            c(t = "top", l = "left", b = "bottom", r = "right")
+        ))
         valid_elements <- unlist(GGELEMENTS,
             recursive = FALSE, use.names = FALSE
         )
