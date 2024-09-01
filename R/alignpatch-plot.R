@@ -34,7 +34,7 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     invisible(x)
 }
 
-#' @importFrom ggplot2 ggplot find_panel element_render theme
+#' @importFrom ggplot2 find_panel element_render theme
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom grid grid.draw
 #' @importFrom rlang arg_match0
