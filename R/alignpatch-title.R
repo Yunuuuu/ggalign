@@ -4,13 +4,14 @@
 #' titles to each border of the plot: top, left, bottom, and right.
 #'
 #' @details
-#' In addition to the main titles, you can use [labs()][ggplot2::labs] to
-#' specify titles for the top, left, bottom, and right borders of the plot.
+#' You can also use [labs()][ggplot2::labs] to specify titles for the top, left,
+#' bottom, and right borders of the plot.
 #'
 #' The appearance and alignment of these patch titles can be customized using
 #' [theme()][ggplot2::theme]:
 #' - `plot.patch_title_*`: Controls the text appearance of patch titles.
-#'   Inherits from `plot.title` by default.
+#'   By default, these settings inherit from `plot.title`, with the exception of
+#'   the `angle` property, which is not inherited.
 #' - `plot.patch_title_*.position`: Determines the alignment of the patch
 #'   titles. The default value `"panel"` aligns the titles with the plot panels.
 #'   Setting this to `"plot"` aligns the titles with the entire plot (excluding
@@ -25,7 +26,7 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
     ggplot2::labs(top = top, left = left, bottom = bottom, right = right)
 }
 
-#' @importFrom ggplot2 find_panel zeroGrob calc_element element_grob
+#' @importFrom ggplot2 find_panel zeroGrob calc_element element_grob merge_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch) {
@@ -33,10 +34,11 @@ setup_patch_titles <- function(table, patch) {
         .subset2(patch, "labels"),
         c("top", "left", "bottom", "right")
     )
+    # complete_theme() will ensure plot_title exists
     theme <- complete_theme(.subset2(patch, "theme"))
-    plot_title <- calc_element("plot.title", theme)
+    old <- calc_element("plot.title", theme)
     # always justification by center
-    plot_title$hjust <- 0.5
+    old$hjust <- 0.5
     for (border in c("top", "left", "bottom", "right")) {
         panel_pos <- find_panel(table)
         patch_title <- .subset2(patch_titles, border)
@@ -45,13 +47,19 @@ setup_patch_titles <- function(table, patch) {
             title <- zeroGrob()
         } else {
             # set the default angle
-            plot_title$angle <- switch(border,
-                top = 0,
-                left = 90,
-                bottom = 0,
-                right = -90
+            old$angle <- switch(border,
+                top = 0L,
+                left = 90L,
+                bottom = 0L,
+                right = -90L
             )
-            el <- calc_element(name, theme) %||% plot_title
+            # we merge the element with plot.title
+            if (is.null(el <- calc_element(name, theme))) {
+                el <- old
+            } else {
+                el <- merge_element(old, el)
+            }
+            # render the patch title grob
             title <- element_grob(el, patch_title,
                 margin_y = TRUE, margin_x = TRUE
             )

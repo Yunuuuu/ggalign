@@ -20,14 +20,15 @@ This function extends ggplot2's title functionality, allowing you to add
 titles to each border of the plot: top, left, bottom, and right.
 }
 \details{
-In addition to the main titles, you can use \link[ggplot2:labs]{labs()} to
-specify titles for the top, left, bottom, and right borders of the plot.
+You can also use \link[ggplot2:labs]{labs()} to specify titles for the top, left,
+bottom, and right borders of the plot.
 
 The appearance and alignment of these patch titles can be customized using
 \link[ggplot2:theme]{theme()}:
 \itemize{
 \item \verb{plot.patch_title_*}: Controls the text appearance of patch titles.
-Inherits from \code{plot.title} by default.
+By default, these settings inherit from \code{plot.title}, with the exception of
+the \code{angle} property, which is not inherited.
 \item \code{plot.patch_title_*.position}: Determines the alignment of the patch
 titles. The default value \code{"panel"} aligns the titles with the plot panels.
 Setting this to \code{"plot"} aligns the titles with the entire plot (excluding
