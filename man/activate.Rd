@@ -9,11 +9,8 @@ activate(x, what)
 \arguments{
 \item{x}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
 
-\item{what}{What should get activated? Possible values are follows:
-\itemize{
-\item A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
-\item \code{NULL}: means set the active context into the \code{heatmap} itself.
-}}
+\item{what}{What should get activated? See \code{position} of \code{\link[=hmanno]{hmanno()}} or \code{what}
+of \code{\link[=stack_active]{stack_active()}}.}
 }
 \value{
 A object with the same class of \code{x}, whose active context will be

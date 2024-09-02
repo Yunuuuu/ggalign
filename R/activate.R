@@ -1,9 +1,8 @@
 #' Determine the context of subsequent manipulations
 #'
 #' @param x A [layout_heatmap()] or [layout_stack()] object.
-#' @param what What should get activated? Possible values are follows:
-#'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
-#'    * `NULL`: means set the active context into the `heatmap` itself.
+#' @param what What should get activated? See `position` of [hmanno()] or `what`
+#' of [stack_active()].
 #' @return A object with the same class of `x`, whose active context will be
 #' `set`.
 #' @export
