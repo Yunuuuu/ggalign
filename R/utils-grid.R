@@ -12,7 +12,7 @@ is_absolute_unit <- function(x) {
 }
 
 #' @importFrom grid unitType
-is_null_unit <- function(x) identical(unitType(x), "null")
+is_null_unit <- function(x) unitType(x) == "null"
 
 get_width <- function(x) UseMethod("get_width")
 get_height <- function(x) UseMethod("get_height")

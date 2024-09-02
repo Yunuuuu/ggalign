@@ -25,8 +25,8 @@ patch_gtable.plot_just <- function(patch, guides) {
     # if all plots have absolute sizes or we have set the viewport width or
     # height, we set the viewport to make justification
     attr(gt, "just") <- attr(patch, "just")
-    attr(gt, "horizontal_just") <- all(is_absolute_unit(panel_widths))
-    attr(gt, "vertical_just") <- all(is_absolute_unit(panel_heights))
+    attr(gt, "horizontal_just") <- !any(is_null_unit(panel_widths))
+    attr(gt, "vertical_just") <- !any(is_null_unit(panel_heights))
     attr(gt, "vp_width") <- attr(patch, "width")
     attr(gt, "vp_height") <- attr(patch, "height")
     add_class(gt, "gtable_plot_just")
