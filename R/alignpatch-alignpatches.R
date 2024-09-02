@@ -452,6 +452,7 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
         # height, we will make justification
         horizontal_just <- attr(ans, "horizontal_just")
         vertical_just <- attr(ans, "vertical_just")
+        x <- y <- NULL
         if (!is.null(vp_width <- attr(ans, "vp_width")) || horizontal_just) {
             if (horizontal_just) {
                 # all is absolute size, we always follow this gtable width
@@ -464,15 +465,9 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
                 vp_width <- max(vp_width, gtable_width(ans))
             }
             if (any(just == "left")) {
-                ans$vp <- viewport(
-                    x = 0L, just = "left",
-                    width = vp_width
-                )
+                x <- 0L
             } else if (any(just == "right")) {
-                ans$vp <- viewport(
-                    x = 1L, just = "right",
-                    width = vp_width
-                )
+                x <- 1L
             }
         }
         if (!is.null(vp_height <- attr(ans, "vp_height")) || vertical_just) {
@@ -482,16 +477,18 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
                 vp_height <- max(vp_height, gtable_height(ans))
             }
             if (any(just == "top")) {
-                ans$vp <- viewport(
-                    y = 1L, just = "top",
-                    height = vp_height
-                )
+                y <- 1L
             } else if (any(just == "bottom")) {
-                ans$vp <- viewport(
-                    y = 0L, just = "bottom",
-                    height = vp_height
-                )
+                y <- 0L
             }
+        }
+        if (!is.null(x) || !is.null(y)) {
+            ans$vp <- viewport(
+                x = x %||% 0.5, y = y %||% 0.5,
+                just = c(x %||% 0.5, y %||% 0.5),
+                width = if (is.null(x)) 1L else vp_width,
+                height = if (is.null(y)) 1L else vp_height,
+            )
         }
     }
     ans
