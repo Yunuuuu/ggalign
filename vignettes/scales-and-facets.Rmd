@@ -107,22 +107,33 @@ ggheatmap(small_mat) +
   scale_x_continuous(breaks = c(3, 5), labels = c("a", "b"))
 ```
 
+### data ordering
+Both `breaks` and `labels` should be provided in the original scale of the raw
+matrix, the internal will reorder them accordingly if you reorder the heatmap
+rows/columns.
+
+`align_reorder` will reorder the heatmap rows/columns based on the weights
+returned from `fun` argument. Here we reorder the heatmap columns by the means.
+
+We provide the labels in the original order here, the layout will reorder them.
+```{r}
+index <- order(colMeans(small_mat))
+xlabels <- letters[seq_len(ncol(small_mat))]
+print(xlabels[index])
+
+ggheatmap(small_mat) +
+  scale_x_continuous(labels = xlabels) +
+  hmanno("t") +
+  align_reorder()
+```
+
 ### discrete or continuous
 `breaks` and `labels` argument will work the same in both discrete scale and
 continuous scale. But note it's hard to match all discrete scale limits, for
 sometimes, you should manually specify the `expand` argument.
 
-I will provide an example of using a heatmap annotation. If you are unfamiliar
-with adding heatmap annotations, try to see `vignette("layout-heatmap")`. If you
-want to learn more about the `align_*` functions, try to see
-`vignette("align-layout")` and `vignette("align-plot")`. 
-
-`hmanno()` indicates where the annotation was added. `align_dendro()` will
-reorder the layout based on the hierarchical clustering tree, and it'll also
-draw the dendrogram tree.
-
-In following example, we must add `expand` argument to match the heatmap and
-the tree.
+In the following example, we must add `expand` argument to match the heatmap and
+the hierarchical clustering tree.
 ```{r}
 ggheatmap(small_mat) +
   scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
@@ -181,26 +192,6 @@ ggheatmap(small_mat) +
   geom_bar(aes(x = value), stat = "identity") +
   scale_y_discrete() +
   theme(axis.text.x = element_text(angle = -60, hjust = 0))
-```
-
-### argument ordering
-Both `breaks` and `labels` should be provided in the original scale of the raw
-matrix, the internal will reorder them accordingly if you reorder the heatmap
-rows/columns.
-
-`align_reorder` will reorder the heatmap rows/columns based on the weights
-returned from `fun` argument. Here we reorder the heatmap columns by the means.
-
-We provide the labels in the original order here, the layout will reorder them.
-```{r}
-index <- order(colMeans(small_mat))
-xlabels <- letters[seq_len(ncol(small_mat))]
-print(xlabels[index])
-
-ggheatmap(small_mat) +
-  scale_x_continuous(labels = xlabels) +
-  hmanno("t") +
-  align_reorder()
 ```
 
 ## Facets

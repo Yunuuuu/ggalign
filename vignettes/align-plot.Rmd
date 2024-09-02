@@ -56,7 +56,7 @@ ggheatmap(small_mat) +
   scale_fill_viridis_c(guide = "none") +
   hmanno("t") +
   ggalign(data = rowSums) +
-  geom_bar(aes(y = value), stat = "identity")
+  geom_point(aes(y = value))
 ```
 
 See `ggplot2 specification` in `?align_gg()` for the data details.
