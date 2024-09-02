@@ -181,7 +181,7 @@ function. Alternatively, you can specify a character vector of axis positions
 ("t", "l", "b", "r") to indicate which axis titles should remain free from
 alignment.
 
-- **When `position` is `NULL`**: The `free_labs` argument controls the alignment
+- **when `position` is `NULL`**: The `free_labs` argument controls the alignment
 of the heatmap body's axis titles. If set to `waiver()`, it will inherit from
 the parent layout.
 - **when `position` is not `NULL`**: The `free_labs` argument controls the
@@ -204,7 +204,7 @@ ggheatmap(small_mat) +
 
 All `align_*()` functions include the `free_labs` argument, which, by default,
 inherits from the annotatioon stack. This allows you to control the alignment
-for each plot individually. 
+for each plot individually.
 
 ## Session information
 ```{r}
