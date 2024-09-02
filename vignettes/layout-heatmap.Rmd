@@ -55,34 +55,32 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-If `filling = TRUE`, the following layer will be added automatically:
-```{r}
-geom_tile(
-  aes(.data$.x, .data$.y, fill = .data$value),
-  width = 1L, height = 1L
-)
-```
-
-If you set `filling = FALSE`, a blank heamtap will be drawn.
-```{r}
-ggheatmap(small_mat, filling = FALSE)
-```
-
 You can treat the `LayerHeatmap` object as a normal ggplot2 object with a
 default `mapping` and `data`. You can add `ggplot2` elements as usual.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
-## Heatmap annotations
-Heatmap annotations add extra information to the rows or columns of your
-heatmap. Annotations can be positioned at the `top`, `left`, `bottom`, or
-`right` of the heatmap, and this positioning is referred to as the active
-context in `ggheatmap()`. 
+By default, we'll add the heatmap layer. If you set `filling = FALSE`, a blank heamtap will be drawn.
+```{r}
+ggheatmap(small_mat, filling = FALSE)
+```
 
-By default, the `ggheatmap()` won't initialize any active context, so if you
-want to add something into the heatmap annotations, you need to use `hmanno()`
-to specify where the annotation should be added.
+## Heatmap annotations
+Heatmap annotations add extra information to the rows or columns of the heatmap.
+Annotations can be positioned at the `top`, `left`, `bottom`, or `right` of the
+heatmap, and this positioning is referred to as the active context in
+`ggheatmap()`. 
+
+By default, `ggheatmap()` does not initialize any active context. You can use
+`hmanno()` to set the active context, directing all subsequent additions to this
+context. This allows you to customize the heatmap layout or add different types
+of plots. An annotation is represented as a `layout_stack()` object, which can
+contain multiple plots. 
+
+In the following example, `align_kmeans()` is used to group the columns into 3
+panels. It doesn't matter if this is added to the top or bottom since it won't
+add a plot area:
 
 ```{r}
 ggheatmap(small_mat) +
@@ -90,19 +88,9 @@ ggheatmap(small_mat) +
   align_kmeans(3L)
 ```
 
-When you set an active context with `hmanno()`, all subsequent additions will be
-directed to this annotation. This allows you to customize the heatmap by adding
-different types of plots. Annotation is represented as `layout_stack()` object,
-which can contain multiple plots. You can also specify which plot context of the
-annotation to use with the `what` argument in `hmanno()`. However, this is
-usually not necessary as each `align_*` function has a `set_context` argument
-that controls whether it sets the active context to the `Align` object when
-added to the stack layout:
-
-- For `align_*` functions that draw something (e.g., `align_dendro()`,
-  `ggalign()`), `set_context` is set to `TRUE` by default. 
-- For `align_*` functions that do not draw anything (e.g., `align_group()`,
-  `align_kmeans()`), `set_context` is set to `FALSE` by default.
+We can add any `align_*()` function to the annotation. For more details on
+`align_*()` functions, refer to `vignette("align-layout")` and
+`vignette("align-plot")`.
 
 ```{r}
 ggheatmap(small_mat) +
@@ -114,30 +102,20 @@ ggheatmap(small_mat) +
 
 In this example:
 
- - `hmanno("r")` specifies that the annotation should be positioned on the right of the heatmap.
+ - `hmanno("r")` change the active context to the right of the heatmap.
  - `align_dendro(k = 3L)` adds a dendrogram to this right-side annotation
- context and sets it as the active plot in the annotation stack. 
+ context and sets itself as the active plot in the annotation stack. 
  - `geom_point(aes(color = factor(branch)))` is then added to this active plot
- within the annotation stack, allowing you to include additional visual
- elements.
-
-If you set `set_context = FALSE`, this will be an error, since no active ggplot
-object can be found.
-```{r error = TRUE}
-ggheatmap(small_mat) +
-  hmanno("r") +
-  align_dendro(k = 3L, set_context = FALSE) +
-  geom_point(aes(color = factor(branch)))
-```
+ within the annotation stack.
 
 ## Control size
 We can use `hmanno()` to control the relative sizes between heatmap body and the
 whole annotation stack.
 
-- when `position` is `NULL`, we can use `width` and `height` arguments to
+- **when `position` is `NULL`**: we can use `width` and `height` arguments to
 control the relative (you can also provide a unit object) width and height of
 the heatmap body.
-- when `position` is not `NULL`, we can use `size` argument to control the
+- **when `position` is not `NULL`**: we can use `size` argument to control the
 relative width (left and right annotation) or height (top and bottom annotation)
 of the whole annotation stack.
 
@@ -160,7 +138,7 @@ ggheatmap(small_mat) +
   geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
-We can use absolute unit to define the size.
+We can use `unit()` to define the size.
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
@@ -170,8 +148,8 @@ ggheatmap(small_mat) +
   geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
-All `align_*` function has a `size` argument to control the relative width (left
-and right annotation) or height (top and bottom annotation) of the single
+All `align_*()` functions has a `size` argument to control the relative width
+(left and right annotation) or height (top and bottom annotation) of the single
 annotation in the whole annotation stack.
 ```{r}
 ggheatmap(small_mat) +
