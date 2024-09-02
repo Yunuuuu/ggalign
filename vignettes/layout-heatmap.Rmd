@@ -184,8 +184,7 @@ ggheatmap(small_mat) +
     orientation = "y"
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
-  scale_x_reverse() +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0))
+  scale_x_reverse()
 ```
 
 ## Session information
