@@ -21,7 +21,7 @@ remotes::install_github("Yunuuuu/ggalign")
 
 `ggalign` pacakge provides two layout to arrange ggplot objects:
 
-- `layout_heatmap()`/`ggheamtap()`: Arrange ggplot into a Heatmap
+- `layout_heatmap()`/`ggheatmap()`: Arrange ggplot into a Heatmap
   layout. See `vignette("layout-heatmap")` for details.
 
 - `layout_stack()`/`ggstack()`: Arrange ggplot vertically or
