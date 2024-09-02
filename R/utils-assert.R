@@ -153,11 +153,12 @@ check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
             `patch-title` = c(
                 "patch-title-top", "patch-title-left",
                 "patch-title-bottom", "patch-title-right"
-            )
+            ),
+            margin = c("margin-t", "margin-l", "margin-b", "margin-r"),
+            margins = c("margin-t", "margin-l", "margin-b", "margin-r")
         )
         template <- c(GGELEMENTS, template, rename(
-            GGELEMENTS,
-            c(t = "top", l = "left", b = "bottom", r = "right")
+            GGELEMENTS, c(t = "top", l = "left", b = "bottom", r = "right")
         ))
         valid_elements <- unlist(GGELEMENTS,
             recursive = FALSE, use.names = FALSE

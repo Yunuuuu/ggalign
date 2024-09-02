@@ -1,15 +1,18 @@
 #' @param ... What sizes of the ggplot2 elements to remove? Allowed values are:
 #' `"title"`, `"subtitle"`, `"xlab-t"`, `"axis-t"`, `"strip-t"`,
-#' `"patch-title-top"`, `"ylab-l"`, `"axis-l"`, `"strip-l"`,
-#' `"patch-title-left"`, `"caption"`, `"xlab-b"`, `"axis-b"`, `"strip-b"`,
-#' `"patch-title-bottom"`, `"ylab-r"`, `"axis-r"`, `"strip-r"`, and,
-#' `"patch-title-right"`. Some unions also allowed:
+#' `"patch-title-top"`, `"margin-t"`, `"ylab-l"`, `"axis-l"`, `"strip-l"`,
+#' `"patch-title-left"`, `"margin-l"`, `"caption"`, `"xlab-b"`, `"axis-b"`,
+#' `"strip-b"`, `"patch-title-bottom"`, `"margin-b"`, `"ylab-r"`, `"axis-r"`,
+#' `"strip-r"`, `"patch-title-right"`, and `"margin-r"`. Some unions also
+#' allowed:
 #' - `"t"/"top`: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
-#'   "patch-title-top".
-#' - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left".
+#'   "patch-title-top", "margin-t".
+#' - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left",
+#'   "margin-l".
 #' - `"b"/"bottom"`："caption", "xlab-b", "axis-b", "strip-b",
-#'   "patch-title-bottom".
-#' - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right".
+#'   "patch-title-bottom", "margin-b".
+#' - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right",
+#'   "margin-r".
 #' - `"x"`: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
 #' - `"y"`: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
 #' - `"xlab"/"xlabs"`: "xlab-t", "xlab-b".
@@ -19,6 +22,7 @@
 #' - `"strip"/"strips"`: "strip-t", "strip-b", "strip-l", "strip-r".
 #' - `"patch-title"`/`"patch-titles"`: "patch-title-top", "patch-title-left",
 #'   "patch-title-bottom", "patch-title-right".
+#' - `"margin"`/`"margins"`: "margin-t", "margin-l", "margin-b", "margin-r".
 #' @return
 #' - `free_space`: A modified version of `plot` with a `free_space` class.
 #' @export
@@ -81,30 +85,34 @@ remove_spaces <- function(gt, ggelements) {
 GGELEMENTS <- list(
     t = c(
         "title", "subtitle", "xlab-t", "axis-t", "strip-t",
-        "patch-title-top"
+        "patch-title-top", "margin-t"
     ),
-    l = c("ylab-l", "axis-l", "strip-l", "patch-title-left"),
-    b = c("caption", "xlab-b", "axis-b", "strip-b", "patch-title-bottom"),
-    r = c("ylab-r", "axis-r", "strip-r", "patch-title-right")
+    l = c("ylab-l", "axis-l", "strip-l", "patch-title-left", "margin-l"),
+    b = c(
+        "caption", "xlab-b", "axis-b", "strip-b", "patch-title-bottom",
+        "margin-b"
+    ),
+    r = c("ylab-r", "axis-r", "strip-r", "patch-title-right", "margin-r")
 )
 
 ggelements_pos <- function(border, ggelements, strip_pos) {
     to_pos <- list(
         t = c(
             `strip-t` = -1L, `axis-t` = -2L, `xlab-t` = -3L,
-            subtitle = -6, title = -7, `patch-title-top` = -8L
+            subtitle = -6, title = -7, `patch-title-top` = -8L,
+            `margin-t` = -10L
         ),
         l = c(
             `strip-l` = -1L, `axis-l` = -2L, `ylab-l` = -3L,
-            `patch-title-left` = -6L
+            `patch-title-left` = -6L, `margin-l` = -8L
         ),
         b = c(
             `strip-b` = 1L, `axis-b` = 2L, `xlab-b` = 3L, caption = 6L,
-            `patch-title-bottom` = 7L
+            `patch-title-bottom` = 7L, `margin-b` = 9L
         ),
         r = c(
             `strip-r` = 1L, `axis-r` = 2L, `ylab-r` = 3L,
-            `patch-title-right` = 6L
+            `patch-title-right` = 6L, `margin-r` = 8L
         )
     )
     pos <- .subset2(to_pos, border)
