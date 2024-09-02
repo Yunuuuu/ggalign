@@ -86,8 +86,8 @@
     
 <p>The package offers a suite of <code>align_*</code> functions designed
 to give you precise control over plot layout. These functions enable you
-to manipulate axis order within the layout and partition along a single
-axis into multiple panels.</p>
+to manipulate axis order within the layout and partition along an axis
+into multiple panels.</p>
 <p>Currently, there are four key <code>align_*</code> functions
 available for layout customization:</p>
 <ul>
@@ -116,9 +116,8 @@ hierarchical clustering or dendrograms.</li>
 <h2 id="align_group">
 <code>align_group</code><a class="anchor" aria-label="anchor" href="#align_group"></a>
 </h2>
-<p>The <code><a href="../reference/align_group.html">align_group()</a></code> function allows you to group elements
-along a layout axis into separate panels. It doesn’t add a plot area but
-organizes the existing layout into groups.</p>
+<p>The <code><a href="../reference/align_group.html">align_group()</a></code> function allows you to group
+rows/columns into separate panels. It doesn’t add any plot area.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -126,8 +125,8 @@ organizes the existing layout into groups.</p>
 <p><img src="align-layout_files/figure-html/align_group_top-1.png" width="700"></p>
 <p>By default, the facet strip text is removed. You can override this
 behavior with <code>theme(strip.text = element_text())</code>. Since
-<code><a href="../reference/align_group.html">align_group()</a></code> does not create a new plot area, the panel
-title can only be added to the heatmap plot.</p>
+<code><a href="../reference/align_group.html">align_group()</a></code> does not create a new plot, the panel title
+can only be added to the heatmap plot.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -139,14 +138,24 @@ title can only be added to the heatmap plot.</p>
 <h2 id="align_reorder">
 <code>align_reorder</code><a class="anchor" aria-label="anchor" href="#align_reorder"></a>
 </h2>
-<p>The <code><a href="../reference/align_reorder.html">align_reorder()</a></code> function reorders the rows or
-columns of the layout based on a summary function. Like
-<code><a href="../reference/align_group.html">align_group()</a></code>, it doesn’t add a plot area.</p>
+<p>The <code><a href="../reference/align_reorder.html">align_reorder()</a></code> function reorders the rows/columns
+based on a summary function. Like <code><a href="../reference/align_group.html">align_group()</a></code>, it doesn’t
+add a plot area.</p>
+<p>Here, we reorder the rows based on the means.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/align_reorder-1.png" width="700"></p>
+<p>By default, <code><a href="../reference/align_reorder.html">align_reorder()</a></code> reorders the rows or columns
+in ascending order of the summary function’s output (from bottom to top
+for rows, or from left to right for columns). To reverse this order, you
+can set <code>decreasing = TRUE</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="align-layout_files/figure-html/align_reorder_decreasing-1.png" width="700"></p>
 <p>Some <code>align_*</code> functions accept a <code>data</code>
 argument. This can be a matrix, a data frame, or even a simple vector,
 which will be converted into a one-column matrix. If the
@@ -164,11 +173,11 @@ function, it will be applied to the transposed matrix.</p>
 <p>Even for top and bottom annotations, you can use
 <code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans()</a></code> to calculate the mean value across all
 columns.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="align_kmeans">
@@ -177,15 +186,15 @@ columns.</p>
 <p>The <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> function groups heatmap rows or
 columns based on k-means clustering. Like the previous functions, it
 does not add a plot area.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>It’s important to note that <code><a href="../reference/align_group.html">align_group()</a></code> and
-<code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> cannot handle sub-grouping. This means they
+<code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> cannot do sub-grouping. This means they
 cannot be used if groups already exist.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -193,7 +202,7 @@ cannot be used if groups already exist.</p>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_kmeans()`:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_kmeans()` cannot do sub-split</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Group of layout x-axis already exists</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
@@ -208,13 +217,12 @@ cannot be used if groups already exist.</p>
 <p>The <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function adds a dendrogram to the
 layout and can also reorder or split the layout based on hierarchical
 clustering. This is particularly useful for working with heatmap plots.
-It supports both layout customization and the addition of plots within
-the layout.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+It supports both layout customization and the addition of plot.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/align_dendro-1.png" width="700"></p>
 <p>Hierarchical clustering is performed in two steps: calculate the
 distance matrix and apply clustering. You can use the
 <code>distance</code> and <code>method</code> argument to control the
@@ -231,49 +239,48 @@ and <code>"kendall"</code>. The correlation distance is defined as
 function should only contain one argument. Please note for clustering on
 columns, the matrix will be transposed automatically.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"pre-defined distance method (1 - pearson)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><img src="align-layout_files/figure-html/align_dendro_distance_pearson-1.png" width="700"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"a function that calculates distance matrix"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/align_dendro_distance_function-1.png" width="700"></p>
 <p>Method to perform hierarchical clustering can be specified by
 <code>method</code>. Possible methods are those supported in
 <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust()</a></code> function. And you can also provide a self-defined
 function, which accepts the distance object and return a
 <code>hclust</code> object.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"ward.D2"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>The dendrogram can also be used to cut the columns/rows into groups.
-You can specify <code>k</code> or <code>h</code>, which work similarly
-to <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"ward.D2"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p>The dendrogram can also be used to cut the columns/rows into groups.
+You can specify <code>k</code> or <code>h</code>, which work similarly
+to <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>In contrast to <code><a href="../reference/align_group.html">align_group()</a></code>,
 <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>, and <code><a href="../reference/align_reorder.html">align_reorder()</a></code>,
 <code><a href="../reference/align_dendro.html">align_dendro()</a></code> is capable of drawing plot components. So it
 has a default <code>set_context</code> value of <code>TRUE</code>,
-meaning it will set the active context of the stack layout.
-Consequently, any ggplot elements added afterward will be included in
-this plot area.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+meaning it will set the active context of the annotation stack layout.
+In this way, we can add any ggplot elements to this plot area.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>The <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function creates default
 <code>node</code> data for the ggplot. See
 <code>ggplot2 specification</code> in <code><a href="../reference/align_dendro.html">?align_dendro</a></code> for
@@ -282,44 +289,44 @@ details. Additionally, <code>edge</code> data is added to the
 dendrogram tree. One useful variable in both <code>node</code> and
 <code>edge</code> data is the <code>branch</code> column, corresponding
 to the <code>cutree</code> result:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> can also perform clustering between
 groups, meaning it can be used even if there are existing groups present
 in the layout:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">column_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>You can reorder the groups by setting
 <code>reorder_group = TRUE</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>You can see the difference by drawing two dendrogram.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align-layout_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="align-layout_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
