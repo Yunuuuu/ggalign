@@ -35,6 +35,12 @@ free_space(plot, ...)
 \itemize{
 \item \verb{"t"/"top}: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
 "patch-title-top".
+\item \code{"l"/"left"}: "ylab-l", "axis-l", "strip-l", "patch-title-left".
+\item \code{"b"/"bottom"}："caption", "xlab-b", "axis-b", "strip-b",
+"patch-title-bottom".
+\item \code{"r"/"right"}: "ylab-r", "axis-r", "strip-r", "patch-title-right".
+\item \code{"x"}: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
+\item \code{"y"}: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
 \item \code{"xlab"/"xlabs"}: "xlab-t", "xlab-b".
 \item \code{"ylab"/"ylabs"}: "ylab-l", "ylab-r".
 \item \code{"lab"/"labs"}: "xlab-t", "xlab-b", "ylab-l", "ylab-r".
@@ -72,6 +78,6 @@ borders (but still align the panels themselves), we can wrap the plot with
 \code{free_border}.
 \item \code{free_lab}: If we want to compose plots without alignment of the axis
 title, we can wrap the plot with \code{free_lab}.
-\item \code{free_space}: Removing the ggplot element sizes when aligning
+\item \code{free_space}: Removing the ggplot element sizes when aligning.
 }
 }

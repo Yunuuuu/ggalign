@@ -9,7 +9,7 @@
 #' `free_border`.
 #' - `free_lab`: If we want to compose plots without alignment of the axis
 #' title, we can wrap the plot with `free_lab`.
-#' - `free_space`: Removing the ggplot element sizes when aligning
+#' - `free_space`: Removing the ggplot element sizes when aligning.
 #'
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][plot_grid] object.
 #' @param axes Which axes shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.

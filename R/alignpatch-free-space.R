@@ -6,12 +6,12 @@
 #' `"patch-title-right"`. Some unions also allowed:
 #' - `"t"/"top`: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
 #'   "patch-title-top".
-#  - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left".
-#  - `"b"/"bottom"`："caption", "xlab-b", "axis-b", "strip-b",
-#    "patch-title-bottom".
-#  - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right".
-#  - `"x"`: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
-#  - `"y"`: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
+#' - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left".
+#' - `"b"/"bottom"`："caption", "xlab-b", "axis-b", "strip-b",
+#'   "patch-title-bottom".
+#' - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right".
+#' - `"x"`: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
+#' - `"y"`: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
 #' - `"xlab"/"xlabs"`: "xlab-t", "xlab-b".
 #' - `"ylab"/"ylabs"`: "ylab-l", "ylab-r".
 #' - `"lab"/"labs"`: "xlab-t", "xlab-b", "ylab-l", "ylab-r".
