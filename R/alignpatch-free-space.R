@@ -72,7 +72,7 @@ remove_spaces <- function(gt, ggelements) {
         elements <- .subset2(ggelements, border)
         if (is_empty(elements)) next
         pos <- .subset2(panel_pos, border) +
-            ggelements_pos(border, ggelements, strip_pos)
+            ggelements_pos(border, elements, strip_pos)
         if (border %in% c("t", "b")) {
             gt$heights[pos] <- unit(0, "mm")
         } else {
@@ -95,7 +95,7 @@ GGELEMENTS <- list(
     r = c("ylab-r", "axis-r", "strip-r", "patch-title-right", "margin-r")
 )
 
-ggelements_pos <- function(border, ggelements, strip_pos) {
+ggelements_pos <- function(border, elements, strip_pos) {
     to_pos <- list(
         t = c(
             `strip-t` = -1L, `axis-t` = -2L, `xlab-t` = -3L,
@@ -132,5 +132,5 @@ ggelements_pos <- function(border, ggelements, strip_pos) {
             )
         )
     }
-    pos
+    .subset(pos, elements)
 }
