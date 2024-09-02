@@ -57,7 +57,7 @@ ggstack(data = mat_scaled) +
   scale_x_continuous(name = "base mean", breaks = FALSE) +
   scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
   # set the active context of the heatmap to the top
-  # and set the size of the top stack 
+  # and set the size of the top stack
   hmanno("t", size = unit(4, "cm")) +
   # add box plot in the heatmap top
   ggalign() +
@@ -65,8 +65,6 @@ ggstack(data = mat_scaled) +
   scale_x_continuous(expand = expansion(), breaks = NULL) +
   scale_fill_brewer(palette = "Dark2", guide = "none") +
   theme(axis.title.y = element_blank()) +
-  # reset heatmap context into heatmap body
-  hmanno() +
   # we move into the stack layout
   stack_active() +
   # add a point plot
@@ -91,7 +89,8 @@ ggstack(data = mat_scaled) +
   ) +
   scale_x_discrete() +
   scale_y_continuous(expand = expansion()) +
-  scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")
+  scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") &
+  theme(plot.margin = margin())
 ```
 
 # The measles vaccine heatmap
