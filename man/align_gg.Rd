@@ -111,8 +111,8 @@ The data in the underlying \code{ggplot} object contains following columns:
 \itemize{
 \item \code{.panel}: the panel for current layout axis.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
-\item \code{.row_names} and \code{.row_index}: the row names and row index of the original
-matrix or data frame.
+\item \code{.row_names} and \code{.row_index}: A factor of the row names and an integer of
+row index of the original matrix or data frame.
 \item \code{.column_names} and \code{.column_index}: the column names and column index of
 the original matrix (only applicable if \code{data} is a \code{matrix}).
 \item \code{value}: the actual matrix value  (only applicable if \code{data} is a

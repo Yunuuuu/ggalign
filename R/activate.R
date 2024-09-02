@@ -68,24 +68,16 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
-    if (is.na(guides) && is_scalar(guides)) {
-        guides <- NA
-    } else if (!is.waive(guides)) {
+    if (!identical(guides, NA) && !is.waive(guides)) {
         guides <- check_guides(guides)
     }
-    if (is.na(free_labs) && is_scalar(free_labs)) {
-        free_labs <- NA
-    } else if (!is.waive(free_labs)) {
+    if (!identical(free_labs, NA) && !is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (is.na(free_spaces) && is_scalar(free_spaces)) {
-        free_spaces <- NA
-    } else if (!is.waive(free_spaces)) {
+    if (!identical(free_spaces, NA) && !is.waive(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces)
     }
-    if (is.na(plot_data) && is_scalar(plot_data)) {
-        plot_data <- NA
-    } else if (!is.waive(plot_data)) {
+    if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
     }
     assert_s3_class(theme, "theme", null_ok = TRUE)
@@ -121,24 +113,16 @@ stack_active <- function(sizes = NULL, guides = NA,
                          theme = NULL, what = NULL) {
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    if (is.na(guides) && is_scalar(guides)) {
-        guides <- NA
-    } else if (!is.waive(guides)) {
+    if (!identical(guides, NA) && !is.waive(guides)) {
         guides <- check_guides(guides)
     }
-    if (is.na(free_labs) && is_scalar(free_labs)) {
-        free_labs <- NA
-    } else if (!is.waive(free_labs)) {
+    if (!identical(free_labs, NA) && !is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (is.na(free_spaces) && is_scalar(free_spaces)) {
-        free_spaces <- NA
-    } else if (!is.waive(free_spaces)) {
+    if (!identical(free_spaces, NA) && !is.waive(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces)
     }
-    if (is.na(plot_data) && is_scalar(plot_data)) {
-        plot_data <- NA
-    } else if (!is.waive(plot_data)) {
+    if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
     }
     assert_s3_class(theme, "theme", null_ok = TRUE)

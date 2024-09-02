@@ -26,8 +26,8 @@
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
-#'  - `.row_names` and `.row_index`: the row names and row index of the original
-#'    matrix or data frame.
+#'  - `.row_names` and `.row_index`: A factor of the row names and an integer of
+#'    row index of the original matrix or data frame.
 #'
 #'  - `.column_names` and `.column_index`: the column names and column index of
 #'    the original matrix (only applicable if `data` is a `matrix`).
@@ -69,6 +69,7 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
+#' @importFrom stats reorder
 AlignGG <- ggplot2::ggproto("AlignGG", Align,
     setup_data = function(self, params, data) {
         # matrix: will be reshaped to the long-format data.frame
@@ -96,13 +97,15 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
         data <- .subset2(self, "data")
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
+        coord_name <- paste0(".", axis)
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
+            # if the data is inherit from the heatmap data
             # Align object always regard row as the observations
             row_coords <- data_frame0(
                 .panel = panel[index],
                 .index = index
             )
-            row_coords[[paste0(".", axis)]] <- seq_along(index)
+            row_coords[[coord_name]] <- seq_along(index)
             column_coords <- data_frame0(
                 .extra_panel = extra_panel[extra_index],
                 .extra_index = extra_index
@@ -117,10 +120,17 @@ AlignGG <- ggplot2::ggproto("AlignGG", Align,
             )
         } else {
             coords <- data_frame0(.panel = panel[index], .index = index)
-            coords[[paste0(".", axis)]] <- seq_along(index)
+            coords[[coord_name]] <- seq_along(index)
             data <- merge(data, coords,
                 by.x = ".row_index", by.y = ".index",
                 sort = FALSE, all = TRUE
+            )
+        }
+        if (!is.null(.subset2(data, ".row_names"))) {
+            data$.row_names <- reorder(
+                .subset2(data, ".row_names"),
+                .subset2(data, coord_name),
+                order = FALSE
             )
         }
         plot <- .subset2(self, "plot")

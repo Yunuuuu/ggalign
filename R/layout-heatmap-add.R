@@ -17,7 +17,7 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
         cli::cli_abort(c(
             "Cannot add {.code {object_name}}",
             i = "No active heatmap annotation",
-            i = "try to activate an annotation with {.fn hmanno}"
+            i = "try to activate an active annotation stack with {.fn hmanno}"
         ))
     }
 

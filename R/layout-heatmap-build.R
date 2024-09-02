@@ -232,6 +232,7 @@ plot_filler <- function() {
     add_class(p, "plot_filler")
 }
 
+#' @importFrom stats reorder
 heatmap_build_data <- function(matrix, row_panel, row_index,
                                column_panel, column_index) {
     ycoords <- data_frame0(
@@ -246,9 +247,24 @@ heatmap_build_data <- function(matrix, row_panel, row_index,
     )
     coords <- merge(xcoords, ycoords, by = NULL, sort = FALSE, all = TRUE)
     ans <- melt_matrix(matrix)
-    merge(ans, coords,
+    ans <- merge(ans, coords,
         by.x = c(".column_index", ".row_index"),
         by.y = c(".xindex", ".yindex"),
         sort = FALSE, all = TRUE
     )
+    if (!is.null(.subset2(ans, ".row_names"))) {
+        ans$.row_names <- reorder(
+            .subset2(ans, ".row_names"),
+            .subset2(ans, ".y"),
+            order = FALSE
+        )
+    }
+    if (!is.null(.subset2(ans, ".column_names"))) {
+        ans$.column_names <- reorder(
+            .subset2(ans, ".column_names"),
+            .subset2(ans, ".x"),
+            order = FALSE
+        )
+    }
+    ans
 }
