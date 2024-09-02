@@ -238,7 +238,6 @@ BuilderAlignPatches <- ggplot2::ggproto(
         }
 
         # setup sizes for non-panel rows/columns --------------
-
         sizes <- table_sizes(
             lapply(gt_list, .subset2, "widths"),
             lapply(gt_list, .subset2, "heights"),
