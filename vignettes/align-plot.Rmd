@@ -37,7 +37,7 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 `align_gg()` is similar to `ggplot` in that it initializes a `ggplot` data and
 `mapping`. Same with other `align_*` functions. `align_gg()` allowing you to
 provide data in various formats, including matrices, data frames, or simple
-vectors. This data can be inherited from the layout. 
+vectors. This data can be also inherited from the layout. 
 
 The function will always use a default mapping for the parallel axes in the
 layout (`aes(y = .data$.y)` for horizontal stack or `aes(x = .data$.x)` for
@@ -59,10 +59,7 @@ ggheatmap(small_mat) +
   geom_bar(aes(y = value), stat = "identity")
 ```
 
-When using `align_gg()` in horizontal stack layouts (including left and right
-annotations) and employing geoms with ambiguous orientations, always note the
-orientation argument. For more information, refer to the `Position scales`
-section in the `vignette("layout-heatmap")`. 
+See `ggplot2 specification` in `?align_gg()` for the data details.
 
 ### Plot data
 `align_gg()` requires specific data formats for its operations. If you need to
@@ -86,8 +83,8 @@ When used in a heatmap layout, and the data is inherited from the heatmap data,
 a special column `.extra_panel` will be added, which is the panel information
 for column (left or right annotation) or row (top or bottom annotation). This is
 useful if you want to create summary plot using another axis panel. In such
-cases, it's often necessary to disable the automatic setting of limits (`limits =
-FALSE` in `align_gg()`).
+cases, it's often necessary to disable the automatic setting of limits (`limits
+= FALSE` in `align_gg()`).
 
 ```{r fig.dim = c(5, 10)}
 set.seed(1L)

@@ -156,12 +156,6 @@ use the continuous scale. So you must manually provide an `orientation` argument
 for these geoms or manually set the discrete scale in the horizontal layout
 (including left and right heatmap annotation).
 
-`ggalign()` is similar to `ggplot` in that it initializes a plot data and
-`mapping`. The data input can be a matrix, a data frame, or a simple vector that
-will be converted into a one-column matrix, and can inherit from the layout
-data. When a plot is initialized, we can add other ggplot2 elements for it. You
-can see `ggplot2 specification` in `?align_gg` for details.
-
 In the following example, `geom_bar` won't work since the ambiguous orientation.
 ```{r}
 ggheatmap(small_mat) +
