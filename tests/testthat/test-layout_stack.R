@@ -86,11 +86,19 @@ testthat::test_that("add `HeatmapLayout` object works well", {
             align_dendro(size = unit(10, "cm"))
     )
     expect_doppelganger(
-        "stack with heatmap annotation of mix absolute and null size",
+        "stack with heatmap annotation of mix absolute and null size 1",
         ggstack(matrix(seq_len(81), nrow = 9L), "h") +
             ggheatmap() +
             hmanno("t", size = unit(6, "cm")) +
             align_dendro(size = unit(10, "cm")) +
+            align_dendro()
+    )
+    expect_doppelganger(
+        "stack with heatmap annotation of mix absolute and null size 2",
+        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
+            ggheatmap() +
+            hmanno("t", size = unit(6, "cm")) +
+            align_dendro() +
             align_dendro()
     )
 })

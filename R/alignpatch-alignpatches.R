@@ -454,9 +454,13 @@ align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
         vertical_just <- attr(ans, "vertical_just")
         if (!is.null(vp_width <- attr(ans, "vp_width")) || horizontal_just) {
             if (horizontal_just) {
-                # all is absolute size, we should follow this gtable width
+                # all is absolute size, we always follow this gtable width
+                # if we use the `vp_width`, and it is smaller than the actual
+                # gtable width, we'll fail to make the justification
                 vp_width <- gtable_width(ans)
             } else {
+                # if some unit are null, we can just use the maximal size,
+                # since the null unit will fill the remaining blank space
                 vp_width <- max(vp_width, gtable_width(ans))
             }
             if (any(just == "left")) {
