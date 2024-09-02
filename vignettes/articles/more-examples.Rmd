@@ -81,6 +81,7 @@ ggstack(data = mat_scaled) +
   hmanno(width = unit(2, "cm"), free_spaces = "y") +
   scale_fill_brewer(palette = "Set3", name = "gene type") +
   scale_x_continuous(breaks = NULL, name = "gene type") +
+  # add barplot in the top annotation
   hmanno("t") +
   ggalign(limits = FALSE) +
   geom_bar(
