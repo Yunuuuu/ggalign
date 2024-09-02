@@ -60,7 +60,7 @@ reference:
   - free_align
   - free_border
   - free_lab
-  - free_size
+  - free_space
   - as_patch
 
 - title: Extending ggplot2

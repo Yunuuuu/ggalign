@@ -20,52 +20,53 @@
 #' - `"patch-title"`/`"patch-titles"`: "patch-title-top", "patch-title-left",
 #'   "patch-title-bottom", "patch-title-right".
 #' @return
-#' - `free_size`: A modified version of `plot` with a `free_size` class.
+#' - `free_space`: A modified version of `plot` with a `free_space` class.
 #' @export
 #' @rdname free
-free_size <- function(plot, ...) {
-    UseMethod("free_size")
+free_space <- function(plot, ...) {
+    UseMethod("free_space")
 }
 
 #' @export
-free_size.default <- function(plot, ...) {
+free_space.default <- function(plot, ...) {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @export
-free_size.ggplot <- function(plot, ...) {
+free_space.ggplot <- function(plot, ...) {
     if (...length() == 0L) return(plot) # styler: off
-    attr(plot, "free_sizes") <- check_ggelements(c(...), arg = "...")
-    add_class(plot, "free_size")
+    attr(plot, "free_spaces") <- check_ggelements(c(...), arg = "...")
+    add_class(plot, "free_space")
 }
 
 #' @export
-free_size.free_size <- function(plot, ...) {
+free_space.free_space <- function(plot, ...) {
     if (...length() == 0L) return(plot) # styler: off
     elements <- check_ggelements(c(...), arg = "...")
-    attr(plot, "free_sizes") <- union(attr(plot, "free_sizes"), elements)
+    attr(plot, "free_spaces") <- union(attr(plot, "free_spaces"), elements)
     plot
 }
 
 #' @export
-free_size.wrapped_plot <- free_size.default
+free_space.wrapped_plot <- free_space.default
 
 ##########################################################
 #' @export
-patch_gtable.free_size <- function(patch, guides) {
-    class(patch) <- setdiff(class(patch), "free_size")
+patch_gtable.free_space <- function(patch, guides) {
+    class(patch) <- setdiff(class(patch), "free_space")
     gt <- NextMethod()
-    remove_border_sizes(gt, attr(patch, "free_sizes"))
+    remove_spaces(gt, attr(patch, "free_spaces"))
 }
 
 #' @importFrom ggplot2 find_panel
-remove_border_sizes <- function(gt, ggelements) {
+#' @importFrom rlang is_empty
+remove_spaces <- function(gt, ggelements) {
     strip_pos <- find_strip_pos(gt)
     ggelements <- lapply(GGELEMENTS, intersect, ggelements)
     panel_pos <- find_panel(gt)
     for (border in names(ggelements)) {
         elements <- .subset2(ggelements, border)
-        if (length(elements) == 0L) next
+        if (is_empty(elements)) next
         pos <- .subset2(panel_pos, border) +
             ggelements_pos(border, ggelements, strip_pos)
         if (border %in% c("t", "b")) {

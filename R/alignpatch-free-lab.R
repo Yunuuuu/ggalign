@@ -16,7 +16,7 @@ free_lab.ggplot <- function(plot, labs = c("t", "l", "b", "r")) {
 free_lab.alignpatches <- free_lab.ggplot
 
 #' @export
-free_lab.free_size <- free_lab.ggplot
+free_lab.free_space <- free_lab.ggplot
 
 #' @export
 free_lab.free_align <- function(plot, labs = c("t", "l", "b", "r")) {

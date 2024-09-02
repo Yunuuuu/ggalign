@@ -40,7 +40,7 @@ activate.StackLayout <- function(x, what) {
 #' @param free_labs A boolean value or a character of the axis position (`"t"`,
 #' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
 #' alignment. By default, all axis title won't be aligned.
-#' @param free_sizes A character specifies the ggplot elements which won't
+#' @param free_spaces A character specifies the ggplot elements which won't
 #' count space sizes when alignment.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
@@ -56,7 +56,7 @@ activate.StackLayout <- function(x, what) {
 #' [HeatmapLayout][layout_heatmap].
 #' @export
 hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
-                   guides = NA, free_labs = NA, free_sizes = NA,
+                   guides = NA, free_labs = NA, free_spaces = NA,
                    plot_data = NA, theme = NULL, what = waiver()) {
     if (is.null(position)) {
         position <- NA
@@ -77,10 +77,10 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     } else if (!is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (is.na(free_sizes) && is_scalar(free_sizes)) {
-        free_sizes <- NA
-    } else if (!is.waive(free_sizes)) {
-        free_sizes <- check_ggelements(free_sizes)
+    if (is.na(free_spaces) && is_scalar(free_spaces)) {
+        free_spaces <- NA
+    } else if (!is.waive(free_spaces)) {
+        free_spaces <- check_ggelements(free_spaces)
     }
     if (is.na(plot_data) && is_scalar(plot_data)) {
         plot_data <- NA
@@ -90,7 +90,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     assert_s3_class(theme, "theme", null_ok = TRUE)
     structure(position,
         what = what, size = size, width = width, height = height,
-        guides = guides, free_labs = free_labs, free_sizes = free_sizes,
+        guides = guides, free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
         class = c("heatmap_active", "active")
     )
@@ -116,7 +116,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #' [StackLayout][layout_stack].
 #' @export
 stack_active <- function(sizes = NULL, guides = NA,
-                         free_labs = NA, free_sizes = NA, plot_data = NA,
+                         free_labs = NA, free_spaces = NA, plot_data = NA,
                          theme = NULL, what = NULL) {
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
@@ -130,10 +130,10 @@ stack_active <- function(sizes = NULL, guides = NA,
     } else if (!is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (is.na(free_sizes) && is_scalar(free_sizes)) {
-        free_sizes <- NA
-    } else if (!is.waive(free_sizes)) {
-        free_sizes <- check_ggelements(free_sizes)
+    if (is.na(free_spaces) && is_scalar(free_spaces)) {
+        free_spaces <- NA
+    } else if (!is.waive(free_spaces)) {
+        free_spaces <- check_ggelements(free_spaces)
     }
     if (is.na(plot_data) && is_scalar(plot_data)) {
         plot_data <- NA
@@ -145,7 +145,7 @@ stack_active <- function(sizes = NULL, guides = NA,
         sizes = sizes,
         guides = guides,
         free_labs = free_labs,
-        free_sizes = free_sizes,
+        free_spaces = free_spaces,
         plot_data = plot_data,
         theme = theme,
         class = c("stack_active", "active")

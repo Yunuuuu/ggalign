@@ -26,8 +26,8 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
         stack@params$free_labs <- free_labs
     }
-    if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-        stack@params$free_sizes <- free_sizes
+    if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+        stack@params$free_spaces <- free_spaces
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         stack@params$plot_data <- plot_data

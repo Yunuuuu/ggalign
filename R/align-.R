@@ -53,7 +53,7 @@ align <- function(align_class, params,
                   # Details see `initialize_align()`
                   data, size = NULL,
                   free_labs = waiver(),
-                  free_sizes = waiver(),
+                  free_spaces = waiver(),
                   plot_data = waiver(),
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
@@ -72,8 +72,8 @@ align <- function(align_class, params,
     if (!is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs, call = call)
     }
-    if (!is.waive(free_sizes)) {
-        free_sizes <- check_ggelements(free_sizes, call = call)
+    if (!is.waive(free_spaces)) {
+        free_spaces <- check_ggelements(free_spaces, call = call)
     }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
@@ -133,7 +133,7 @@ align <- function(align_class, params,
         input_data = data,
         plot_data = plot_data,
         free_labs = free_labs,
-        free_sizes = free_sizes,
+        free_spaces = free_spaces,
         facet = facet,
         limits = limits,
 

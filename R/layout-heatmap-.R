@@ -190,7 +190,7 @@ layout_heatmap.default <- function(data, ...) {
             height = unit(NA, "null"),
             guides = waiver(),
             free_labs = waiver(),
-            free_sizes = waiver(),
+            free_spaces = waiver(),
             plot_data = waiver()
         ),
         set_context = set_context,

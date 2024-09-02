@@ -39,7 +39,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
-                          free_labs = waiver(), free_sizes = waiver()) {
+                          free_labs = waiver(), free_spaces = waiver()) {
     params <- heatmap@params
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
@@ -56,7 +56,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     ypanel <- get_panel(heatmap, "y") %||% factor(rep_len(1L, y_nobs))
     yindex <- get_index(heatmap, "y") %||% reorder_index(ypanel)
 
-    # prepare free_labs and free_sizes
+    # prepare free_labs and free_spaces
     heatmap_labs <- .subset2(params, "free_labs") %|w|% free_labs
 
     if (!is.waive(heatmap_labs)) {
@@ -71,18 +71,18 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     }
 
     # inherit from the parent stack layout
-    heatmap_sizes <- .subset2(params, "free_sizes") %|w|% free_sizes
-    if (!is.waive(heatmap_sizes)) {
-        horizontal_sizes <- get_free_sizes(heatmap_sizes, c("t", "b"))
-        vertical_sizes <- get_free_sizes(heatmap_sizes, c("l", "r"))
-        if (length(horizontal_sizes) == 0L) horizontal_sizes <- NULL
-        if (length(vertical_sizes) == 0L) vertical_sizes <- NULL
+    heatmap_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
+    if (!is.waive(heatmap_spaces)) {
+        horizontal_spaces <- get_free_spaces(heatmap_spaces, c("t", "b"))
+        vertical_spaces <- get_free_spaces(heatmap_spaces, c("l", "r"))
+        if (length(horizontal_spaces) == 0L) horizontal_spaces <- NULL
+        if (length(vertical_spaces) == 0L) vertical_spaces <- NULL
     } else {
         # By default, we won't remove border sizes of the heatmap
-        heatmap_sizes <- NULL
+        heatmap_spaces <- NULL
         # set child stack layout
-        horizontal_sizes <- waiver()
-        vertical_sizes <- waiver()
+        horizontal_spaces <- waiver()
+        vertical_spaces <- waiver()
     }
 
     # read the plot ---------------------------------------
@@ -174,18 +174,18 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         if (is_horizontal(to_direction(position))) {
             panel <- xpanel
             index <- xindex
-            free_sizes <- horizontal_sizes
+            free_spaces <- horizontal_spaces
             free_labs <- horizontal_labs
         } else {
             panel <- ypanel
             index <- yindex
-            free_sizes <- vertical_sizes
+            free_spaces <- vertical_spaces
             free_labs <- vertical_labs
         }
         ans <- stack_build(
             stack, plot_data, guides,
             free_labs = free_labs,
-            free_sizes = free_sizes,
+            free_spaces = free_spaces,
             extra_panel = panel,
             extra_index = index
         )
@@ -212,15 +212,15 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     if (!is.null(heatmap_labs)) {
         p <- free_lab(p, heatmap_labs)
     }
-    if (!is.null(heatmap_sizes)) {
+    if (!is.null(heatmap_spaces)) {
         free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, heatmap_sizes)) > 0L
+            lengths(lapply(GGELEMENTS, intersect, heatmap_spaces)) > 0L
         ]
         if (length(free_borders)) {
             # here, we attach the borders into the panel
             p <- free_border(p, borders = free_borders)
         }
-        p <- free_size(p, heatmap_sizes)
+        p <- free_space(p, heatmap_spaces)
     }
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))

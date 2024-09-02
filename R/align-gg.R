@@ -50,7 +50,7 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_gg <- function(data = NULL, mapping = aes(), size = NULL,
-                     free_labs = waiver(), free_sizes = waiver(),
+                     free_labs = waiver(), free_spaces = waiver(),
                      plot_data = waiver(),
                      limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL) {
@@ -58,7 +58,7 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
     align(AlignGG,
         params = list(mapping = mapping),
         size = size, data = data %||% waiver(),
-        free_labs = free_labs, free_sizes = free_sizes,
+        free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data,
         facet = facet, limits = limits,
         set_context = set_context, order = order, name = name

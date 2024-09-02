@@ -42,7 +42,7 @@ ggalign_stat.StackLayout <- function(x, ..., what) {
 
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
-                        plot_data, free_labs, free_sizes) {
+                        plot_data, free_labs, free_spaces) {
     if (is.null(.subset2(x, "plot"))) {
         return(list(plot = NULL, size = NULL))
     }
@@ -69,9 +69,9 @@ align_build <- function(x, panel, index,
         !!!draw_params
     ))
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data %|w|% NULL
-    # we always set the default free_labs and free_sizes from the layout
+    # we always set the default free_labs and free_spaces from the layout
     free_labs <- .subset2(x, "free_labs") %|w|% free_labs
-    free_sizes <- .subset2(x, "free_sizes") %|w|% free_sizes
+    free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
     # only when user use the internal facet, we'll
@@ -114,15 +114,15 @@ align_build <- function(x, panel, index,
     if (!is.null(free_labs)) {
         plot <- free_lab(plot, free_labs)
     }
-    if (!is.null(free_sizes)) {
+    if (!is.null(free_spaces)) {
         free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, free_sizes)) > 0L
+            lengths(lapply(GGELEMENTS, intersect, free_spaces)) > 0L
         ]
         if (length(free_borders)) {
             # here, we attach the borders into the panel
             plot <- free_border(plot, borders = free_borders)
         }
-        plot <- free_size(plot, free_sizes)
+        plot <- free_space(plot, free_spaces)
     }
     list(plot = plot, size = .subset2(x, "size"))
 }

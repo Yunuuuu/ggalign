@@ -9,7 +9,7 @@ align_panel(
   mapping = aes(),
   size = NULL,
   free_labs = waiver(),
-  free_sizes = waiver(),
+  free_spaces = waiver(),
   plot_data = waiver(),
   limits = TRUE,
   facet = TRUE,
@@ -22,7 +22,7 @@ ggpanel(
   mapping = aes(),
   size = NULL,
   free_labs = waiver(),
-  free_sizes = waiver(),
+  free_spaces = waiver(),
   plot_data = waiver(),
   limits = TRUE,
   facet = TRUE,
@@ -40,7 +40,7 @@ ggpanel(
 \code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
 alignment. By default, all axis title won't be aligned.}
 
-\item{free_sizes}{A character specifies the ggplot elements which won't
+\item{free_spaces}{A character specifies the ggplot elements which won't
 count space sizes when alignment.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.

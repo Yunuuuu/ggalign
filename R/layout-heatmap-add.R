@@ -44,8 +44,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
             heatmap@params$free_labs <- free_labs
         }
-        if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-            heatmap@params$free_sizes <- free_sizes
+        if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+            heatmap@params$free_spaces <- free_spaces
         }
         if (!is.null(width <- attr(object, "width"))) {
             heatmap@params$width <- width
@@ -99,8 +99,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
         stack@params$free_labs <- free_labs
     }
-    if (!identical(free_sizes <- attr(object, "free_sizes"), NA)) {
-        stack@params$free_sizes <- free_sizes
+    if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+        stack@params$free_spaces <- free_spaces
     }
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         stack@params$plot_data <- plot_data

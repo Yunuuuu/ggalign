@@ -106,7 +106,7 @@ layout_stack.NULL <- function(data, ..., environment = parent.frame()) {
         params = list(
             sizes = unit(rep_len(NA, 3L), "null"),
             guides = waiver(), plot_data = waiver(),
-            free_labs = waiver(), free_sizes = waiver()
+            free_labs = waiver(), free_spaces = waiver()
         ),
         nobs = nobs,
         # following parameters are used by ggplot methods

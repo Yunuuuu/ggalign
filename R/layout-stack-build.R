@@ -8,7 +8,7 @@ ggalign_build.StackLayout <- function(x) {
 #' @importFrom rlang is_empty
 #' @noRd
 stack_build <- function(x, plot_data = waiver(), guides = waiver(),
-                        free_labs = waiver(), free_sizes = waiver(),
+                        free_labs = waiver(), free_spaces = waiver(),
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
@@ -22,10 +22,10 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     guides <- .subset2(params, "guides") %|w|% guides
 
-    # unlike heatmap layout, stack free_labs and free_sizes were used
+    # unlike heatmap layout, stack free_labs and free_spaces were used
     # by all plots
     free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% BORDERS
-    free_sizes <- .subset2(params, "free_sizes") %|w|% free_sizes %|w|% NULL
+    free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces %|w|% NULL
 
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
@@ -47,7 +47,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
                 extra_index = extra_index,
                 plot_data = plot_data,
                 free_labs = free_labs,
-                free_sizes = free_sizes
+                free_spaces = free_spaces
             )
             patches <- stack_patch_add_align(
                 patches,
@@ -60,7 +60,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
                 plot_data = plot_data,
                 guides = guides,
                 free_labs = free_labs,
-                free_sizes = free_sizes
+                free_spaces = free_spaces
             )
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(

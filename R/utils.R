@@ -86,7 +86,7 @@ trim_area <- function(area) {
 
 is.waive <- function(x) inherits(x, "waiver")
 
-get_free_sizes <- function(ggelements, borders) {
+get_free_spaces <- function(ggelements, borders) {
     intersect(ggelements, unlist(.subset(GGELEMENTS, borders), FALSE, FALSE))
 }
 
