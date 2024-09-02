@@ -70,7 +70,7 @@ assert_reorder <- function(align, panel, strict) {
 check_guides <- function(guides, arg = caller_arg(guides),
                          call = caller_call()) {
     if (isFALSE(guides) || is.null(guides)) {
-        guides <- character()
+        character()
     } else if (isTRUE(guides)) {
         BORDERS
     } else {

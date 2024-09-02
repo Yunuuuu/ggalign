@@ -111,6 +111,9 @@ align_build <- function(x, panel, index,
             scales = scales, default_facet = default_facet
         )
     }
+    if (!is.null(free_labs)) {
+        plot <- free_lab(plot, free_labs)
+    }
     if (!is.null(free_sizes)) {
         free_borders <- names(GGELEMENTS)[
             lengths(lapply(GGELEMENTS, intersect, free_sizes)) > 0L
@@ -121,10 +124,7 @@ align_build <- function(x, panel, index,
         }
         plot <- free_size(plot, free_sizes)
     }
-    list(
-        plot = free_lab(plot, free_labs),
-        size = .subset2(x, "size")
-    )
+    list(plot = plot, size = .subset2(x, "size"))
 }
 
 finish_plot_data <- function(plot, plot_data,
