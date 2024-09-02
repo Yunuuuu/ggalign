@@ -110,8 +110,8 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'      Usually you are waive to use this, since the adding procedure can be
 #'      easily changed.
 #'    * `NULL`: Remove any active context, this is useful when the active
-#'      context is a [LayoutHeatmap()] object, where any `Align` objects will be
-#'      added into the heatmap. By removing the active context, we can add
+#'      context is a [layout_heatmap()] object, where any `Align` objects will
+#'      be added into the heatmap. By removing the active context, we can add
 #'      `Align` object into the `StackLayout`.
 #' @return A `active` object which can be added into
 #' [StackLayout][layout_stack].

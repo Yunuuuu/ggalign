@@ -47,8 +47,8 @@ are follows:
 Usually you are waive to use this, since the adding procedure can be
 easily changed.
 \item \code{NULL}: Remove any active context, this is useful when the active
-context is a \code{\link[=LayoutHeatmap]{LayoutHeatmap()}} object, where any \code{Align} objects will be
-added into the heatmap. By removing the active context, we can add
+context is a \code{\link[=layout_heatmap]{layout_heatmap()}} object, where any \code{Align} objects will
+be added into the heatmap. By removing the active context, we can add
 \code{Align} object into the \code{StackLayout}.
 }}
 }
