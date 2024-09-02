@@ -60,17 +60,8 @@ change the default data for all \code{geoms}.}
 
 \item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background. Only used when position is \code{NULL}.}
 
-\item{what}{What should get activated for the stack layout? Possible values
-are follows:
-\itemize{
-\item A single number or string of the plot elements in the stack layout.
-Usually you are waive to use this, since the adding procedure can be
-easily changed.
-\item \code{NULL}: Remove any active context, this is useful when the active
-context is a \link[=layout_heatmap]{LayoutHeatmap}, where any \code{Align} objects
-will be added into the heatmap. By removing the active context, we can
-add \code{Align} object into the \code{StackLayout}.
-}}
+\item{what}{What should get activated for the anntoation stack? See
+\link{stack_active} for details.}
 }
 \value{
 A \code{active} object which can be added into

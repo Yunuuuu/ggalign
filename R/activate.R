@@ -1,6 +1,6 @@
 #' Determine the context of subsequent manipulations
 #'
-#' @param x A [ggheatmap][ggheatmap] object.
+#' @param x A [layout_heatmap()] or [layout_stack()] object.
 #' @param what What should get activated? Possible values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
@@ -52,6 +52,8 @@ activate.StackLayout <- function(x, what) {
 #' change the default data for all `geoms`.
 #' @param theme `r rd_theme()` Only used when position is `NULL`.
 #' @inheritParams stack_active
+#' @param what What should get activated for the anntoation stack? See
+#' [stack_active] for details.
 #' @return A `active` object which can be added into
 #' [HeatmapLayout][layout_heatmap].
 #' @export
@@ -109,9 +111,9 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'      Usually you are waive to use this, since the adding procedure can be
 #'      easily changed.
 #'    * `NULL`: Remove any active context, this is useful when the active
-#'      context is a [LayoutHeatmap][layout_heatmap], where any `Align` objects
-#'      will be added into the heatmap. By removing the active context, we can
-#'      add `Align` object into the `StackLayout`.
+#'      context is a [LayoutHeatmap()] object, where any `Align` objects will be
+#'      added into the heatmap. By removing the active context, we can add
+#'      `Align` object into the `StackLayout`.
 #' @return A `active` object which can be added into
 #' [StackLayout][layout_stack].
 #' @export

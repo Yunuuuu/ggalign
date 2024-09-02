@@ -7,7 +7,7 @@
 activate(x, what)
 }
 \arguments{
-\item{x}{A \link{ggheatmap} object.}
+\item{x}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
 
 \item{what}{What should get activated? Possible values are follows:
 \itemize{

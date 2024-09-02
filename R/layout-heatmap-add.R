@@ -105,6 +105,9 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
         stack@params$plot_data <- plot_data
     }
+    if (!is.waive(what <- attr(object, "what"))) {
+        stack <- set_context(stack, what)
+    }
     slot(heatmap, object) <- stack
     heatmap
 }
