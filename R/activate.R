@@ -40,7 +40,8 @@ activate.StackLayout <- function(x, what) {
 #' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
 #' alignment. By default, all axis title won't be aligned.
 #' @param free_spaces A character specifies the ggplot elements which won't
-#' count space sizes when alignment.
+#' count space sizes when alignment. If `NULL`, no space will be removed. See
+#' [free_space()] for allowed values.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
 #' default is to not modify the data. Use `NULL`, if you don't want to modify
@@ -74,7 +75,8 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (!identical(free_spaces, NA) && !is.waive(free_spaces)) {
+    if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
+        !is.null(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces)
     }
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
@@ -119,7 +121,8 @@ stack_active <- function(sizes = NULL, guides = NA,
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs)
     }
-    if (!identical(free_spaces, NA) && !is.waive(free_spaces)) {
+    if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
+        !is.null(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces)
     }
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {

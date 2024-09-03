@@ -183,7 +183,9 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
             free_labs <- vertical_labs
         }
         ans <- stack_build(
-            stack, plot_data, guides,
+            stack,
+            plot_data = plot_data,
+            guides = guides,
             free_labs = free_labs,
             free_spaces = free_spaces,
             extra_panel = panel,

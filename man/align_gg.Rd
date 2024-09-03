@@ -61,7 +61,8 @@ plots along a single axis.
 alignment. By default, all axis title won't be aligned.}
 
 \item{free_spaces}{A character specifies the ggplot elements which won't
-count space sizes when alignment.}
+count space sizes when alignment. If \code{NULL}, no space will be removed. See
+\code{\link[=free_space]{free_space()}} for allowed values.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the

@@ -72,8 +72,11 @@ align <- function(align_class, params,
     if (!is.waive(free_labs)) {
         free_labs <- check_layout_labs(free_labs, call = call)
     }
-    if (!is.waive(free_spaces)) {
+    if (!is.waive(free_spaces) && !is.null(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces, call = call)
+    }
+    if (!is.waive(plot_data)) {
+        plot_data <- check_plot_data(plot_data, call = call)
     }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
@@ -94,7 +97,6 @@ align <- function(align_class, params,
             call = call
         )
     }
-    plot_data <- check_plot_data(plot_data)
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
