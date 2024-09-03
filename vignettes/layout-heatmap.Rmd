@@ -47,8 +47,8 @@ ggplot object contains following columns:
 
   - `.x` and `.y`: the `x` and `y` coordinates
 
-  - `.row_names` and `.column_names`: the row and column names of the original
-    matrix (only applicable when names exist).
+  - `.row_names` and `.column_names`: A factor of the row and column names of
+    the original matrix (only applicable when names exist).
 
   - `.row_index` and `.column_index`: the row and column index of the original
     matrix.
@@ -205,6 +205,53 @@ ggheatmap(small_mat) +
 All `align_*()` functions include the `free_labs` argument, which, by default,
 inherits from the annotatioon stack. This allows you to control the alignment
 for each plot individually.
+
+```{r}
+ggheatmap(small_mat) +
+  hmanno(free_labs = NULL) +
+  scale_fill_viridis_c() +
+  ylab("Heatmap title") +
+  hmanno("t", size = unit(30, "mm"), free_labs = "l") +
+  align_dendro() +
+  ylab("Annotation title")
+```
+
+## Removing Spaces When Aligning Elements
+By default, we'll align all elements of the plot, which can sometimes lead to
+unwanted spacing. Consider the following example:
+
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  hmanno("t", size = unit(30, "mm")) +
+  align_dendro() +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = ~ paste("very very long labels", .x)
+  ) +
+  hmanno("l") +
+  align_dendro() +
+  scale_x_reverse(expand = expansion())
+```
+
+In this case, the left annotation stack is positioned far from the heatmap body due to the wide axis labels in the top annotation stack. This occurs because the top annotation stack is aligned with the heatmap body. To fix this, you can remove the left borders around the panel of the top annotation stack by setting `free_spaces = "l"`.
+
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  hmanno("t", size = unit(30, "mm"), free_spaces = "l") +
+  align_dendro() +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = ~ paste("very very long labels", .x)
+  ) +
+  hmanno("l") +
+  align_dendro() +
+  scale_x_reverse(expand = expansion())
+```
+
+The same with `free_labs` argument, you can control the free_spaces argument for
+the individual plot in `align_*()` function.
 
 ## Session information
 ```{r}
