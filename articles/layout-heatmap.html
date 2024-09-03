@@ -291,10 +291,9 @@ bottom (“b”) axes.</li>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Annotation title"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-heatmap_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>All <code>align_*()</code> functions include the
-<code>free_labs</code> argument, which, by default, inherits from the
-annotatioon stack. This allows you to control the alignment for each
-plot individually.</p>
+<p><code>align_*()</code> functions include the <code>free_labs</code>
+argument, which, by default, inherits from the annotatioon stack. This
+allows you to control the alignment for each plot individually.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_labs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -342,8 +341,8 @@ the top annotation stack by setting <code>free_spaces = "l"</code>.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-heatmap_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>The same with <code>free_labs</code> argument, you can control the
-free_spaces argument for the individual plot in <code>align_*()</code>
-function.</p>
+<code>free_spaces</code> argument for the individual plot in
+<code>align_*()</code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
