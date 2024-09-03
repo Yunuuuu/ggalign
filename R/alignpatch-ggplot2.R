@@ -32,9 +32,8 @@ remove_empty_ticks <- function(p) {
             inherits(calc_element(
                 paste(axis, "ticks", element, sep = "."), theme
             ), "element_blank") &&
-                is.null(.subset2(
-                    theme,
-                    paste(axis, "ticks", "length", element, sep = ".")
+                is.null(calc_element(
+                    paste(axis, "ticks", "length", element, sep = "."), theme
                 ))
         }, logical(1L), USE.NAMES = FALSE) & !rel_ticks
         if (axis == "axis.minor") {

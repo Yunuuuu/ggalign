@@ -13,7 +13,7 @@ heatmap_theme <- function(...) {
 
 #' @importFrom ggplot2 theme element_blank
 align_theme <- function(direction, ...) {
-    default_theme() +
+    default_theme(...) +
         theme(
             axis.line = element_blank(),
             strip.text = element_blank(),
