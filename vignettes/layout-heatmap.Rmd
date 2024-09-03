@@ -202,7 +202,7 @@ ggheatmap(small_mat) +
   ylab("Annotation title")
 ```
 
-All `align_*()` functions include the `free_labs` argument, which, by default,
+`align_*()` functions include the `free_labs` argument, which, by default,
 inherits from the annotatioon stack. This allows you to control the alignment
 for each plot individually.
 
@@ -234,7 +234,11 @@ ggheatmap(small_mat) +
   scale_x_reverse(expand = expansion())
 ```
 
-In this case, the left annotation stack is positioned far from the heatmap body due to the wide axis labels in the top annotation stack. This occurs because the top annotation stack is aligned with the heatmap body. To fix this, you can remove the left borders around the panel of the top annotation stack by setting `free_spaces = "l"`.
+In this case, the left annotation stack is positioned far from the heatmap body
+due to the wide axis labels in the top annotation stack. This occurs because the
+top annotation stack is aligned with the heatmap body. To fix this, you can
+remove the left borders around the panel of the top annotation stack by setting
+`free_spaces = "l"`. 
 
 ```{r}
 ggheatmap(small_mat) +
@@ -250,8 +254,8 @@ ggheatmap(small_mat) +
   scale_x_reverse(expand = expansion())
 ```
 
-The same with `free_labs` argument, you can control the free_spaces argument for
-the individual plot in `align_*()` function.
+The same with `free_labs` argument, you can control the `free_spaces` argument
+for the individual plot in `align_*()` function.
 
 ## Session information
 ```{r}
