@@ -105,7 +105,7 @@
         </dt>
         <dd>Determine the context of subsequent manipulations</dd>
       </dl></div><div class="section level2">
-      <h2 id="layout-design">Layout Design<a class="anchor" aria-label="anchor" href="#layout-design"></a></h2>
+      <h2 id="layout">Layout<a class="anchor" aria-label="anchor" href="#layout"></a></h2>
 
       <div class="section-desc"><p>A <code>Layout</code> object defines how to place the plots.</p></div>
 
@@ -216,27 +216,10 @@
         <dd>Free from alignment</dd>
       </dl><dl><dt>
 
-          <code><a href="as_patch.html">as_patch()</a></code> <code><a href="as_patch.html">patch_gtable()</a></code> <code><a href="as_patch.html">patch_align()</a></code>
+          <code><a href="ggalign_build.html">ggalign_build()</a></code> <code><a href="ggalign_build.html">patch_gtable()</a></code> <code><a href="ggalign_build.html">patch_align()</a></code>
 
         </dt>
-        <dd>Extends plots to be aligned with <code>plot_grid</code></dd>
-      </dl></div><div class="section level2">
-      <h2 id="extending-ggplot-">Extending ggplot2<a class="anchor" aria-label="anchor" href="#extending-ggplot-"></a></h2>
-
-      <div class="section-desc"><p>New ggplot2 geoms, stats, scales, and facets</p></div>
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="geom_draw.html">geom_draw()</a></code>
-
-        </dt>
-        <dd>Layer with Grid or Function</dd>
+        <dd>Building alignpatches object</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
 
@@ -250,10 +233,22 @@
 
       <dl><dt>
 
-          <code><a href="ggalign_build.html">ggalign_build()</a></code> <code><a href="ggalign_build.html">ggalignGrob()</a></code> <code><a href="ggalign_build.html">ggalign_stat()</a></code>
+          <code><a href="ggalignGrob.html">ggalignGrob()</a></code>
 
         </dt>
-        <dd>Build ggplot for rendering.</dd>
+        <dd>Generate a plot grob.</dd>
+      </dl><dl><dt>
+
+          <code><a href="as_alignpatches.html">as_alignpatches()</a></code>
+
+        </dt>
+        <dd>Convert into an <code>alignpatches</code> object</dd>
+      </dl><dl><dt>
+
+          <code><a href="ggalign_stat.html">ggalign_stat()</a></code>
+
+        </dt>
+        <dd>Get the statistics from the layout</dd>
       </dl><dl><dt>
 
           <code><a href="hclust2.html">hclust2()</a></code>
@@ -278,6 +273,12 @@
 
         </dt>
         <dd>Reports whether <code>x</code> is a <code>StackLayout</code> object</dd>
+      </dl><dl><dt>
+
+          <code><a href="geom_draw.html">geom_draw()</a></code>
+
+        </dt>
+        <dd>Layer with Grid or Function</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
