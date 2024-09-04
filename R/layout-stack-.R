@@ -29,7 +29,7 @@ layout_stack <- function(data, direction = NULL, ...,
 
 #' @export
 print.StackLayout <- function(x, ...) {
-    p <- ggalign_build(x)
+    p <- alignpatch(x)
     if (!is.null(p)) print(p, ...)
     invisible(x)
 }
@@ -37,7 +37,7 @@ print.StackLayout <- function(x, ...) {
 #' @importFrom grid grid.draw
 #' @exportS3Method
 grid.draw.StackLayout <- function(x, recording = TRUE) {
-    grid.draw(ggalign_build(x), recording = recording)
+    grid.draw(alignpatch(x), recording = recording)
 }
 
 # Used to place multiple objects in one axis

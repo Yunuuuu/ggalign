@@ -10,7 +10,7 @@ patch_align.gtable_alignpatches <- function(gt, guides,
 #' @importFrom gtable gtable
 #' @importFrom grid unit
 #' @export
-#' @rdname ggalign_build
+#' @rdname alignpatch
 #' @order 4
 patch_gtable.alignpatches <- function(patch, guides) {
     plots <- .subset2(patch, "plots")

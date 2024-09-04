@@ -1,6 +1,6 @@
 #' @importFrom grid unit.c
 #' @export
-ggalign_build.HeatmapLayout <- function(x) {
+alignpatch.HeatmapLayout <- function(x) {
     patches <- heatmap_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")

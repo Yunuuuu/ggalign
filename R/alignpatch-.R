@@ -132,55 +132,49 @@ ggalignGrob <- function(x) UseMethod("ggalignGrob")
 
 #' @export
 #' @rdname ggalignGrob
-ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
+ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 
 #' Building `alignpatches` object
 #'
 #' @description
 #' Prepare plots to be aligned with `plot_grid`
 #'
-#' - `ggalign_build`: Prepare a plot object to be aligned, the output must
+#' - `alignpatch`: Prepare a plot object to be aligned, the output must
 #' implement proper `patch_gtable` method.
 #'
 #' Extend object to be aligned with `plot_grid`
 #'
 #' - `patch_table`: Convert the plot into a [gtable][gtable::gtable].
-#' - `patch_align`: Build a standard [gtable][gtable::gtable] object.
+#' - `patch_align`: Build a standard [gtable][gtable::gtable] object and set the
+#'   panel width and height.
 #'
 #' @details
 #' `ggalign` has implement `patch_gtable` method for following objects:
 #'   - [ggplot][ggplot2::ggplot]
 #'   - [alignpatches][plot_grid]
+#'   - [alignwrap][alignwrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
 #' @param x A plot object to be prepared for alignment.
 #' @return
-#' - `ggalign_build`: An object that implements `patch_gtable` method.
+#' - `alignpatch`: An object that implements `patch_gtable` method.
 #' @export
 #' @order 1
-ggalign_build <- function(x) UseMethod("ggalign_build")
+alignpatch <- function(x) UseMethod("alignpatch")
 
 #' @export
-ggalign_build.default <- function(x) {
-    cli::cli_abort("Cannot deal with {.obj_type_friendly {x}}",
-        class = "missing_ggalign_build_class"
-    )
+alignpatch.default <- function(x) {
+    cli::cli_abort("Cannot align {.obj_type_friendly {x}}")
 }
 
 #' @export
-ggalign_build.ggplot <- function(x) x
+alignpatch.ggplot <- function(x) x
 
 #' @export
-ggalign_build.alignpatches <- function(x) x
+alignpatch.alignpatches <- function(x) x
 
 #' @export
-ggalign_build.wrapped_plot <- function(x) x
-
-#' @export
-ggalign_build.grob <- function(x) wrap(x)
-
-#' @export
-ggalign_build.formula <- function(x) wrap(x)
+alignpatch.wrapped_plot <- function(x) x
 
 #########################################
 #' @param patch A patch to be aligned.
@@ -188,7 +182,7 @@ ggalign_build.formula <- function(x) wrap(x)
 #' @return
 #' - `patch_gtable`: A [gtable][gtable::gtable] object.
 #' @export
-#' @rdname ggalign_build
+#' @rdname alignpatch
 #' @order 2
 patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 
@@ -202,7 +196,7 @@ patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 #'    - `width`/`height`: the panel width and height.
 #'    - `respect`: A boolean value indicates whether to fix this panel area.
 #' @export
-#' @rdname ggalign_build
+#' @rdname alignpatch
 patch_align <- function(gt, guides, panel_width, panel_height) {
     UseMethod("patch_align")
 }

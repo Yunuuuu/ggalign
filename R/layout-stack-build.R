@@ -1,5 +1,5 @@
 #' @export
-ggalign_build.StackLayout <- function(x) {
+alignpatch.StackLayout <- function(x) {
     .subset2(stack_build(x), "plot")
 }
 
