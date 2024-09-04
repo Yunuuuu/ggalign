@@ -50,7 +50,6 @@ wrap.grob <- function(x, ...) x
 wrap.formula <- function(x, ...) {
     rlang::check_installed("gridGraphics", "to add base plots")
     gp <- graphics::par(no.readonly = TRUE)
-    force(x)
     plot_call <- function() {
         old_gp <- graphics::par(no.readonly = TRUE)
         graphics::par(gp)
