@@ -9,7 +9,7 @@
 \alias{patch_gtable.patch}
 \alias{patch_gtable.wrapped_patch}
 \alias{patch_align}
-\title{Building alignpatches object}
+\title{Building \code{alignpatches} object}
 \usage{
 ggalign_build(x)
 

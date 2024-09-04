@@ -2,7 +2,7 @@
 % Please edit documentation in R/alignpatch-title.R
 \name{patch_titles}
 \alias{patch_titles}
-\title{Add Patch Titles to Plot Borders}
+\title{Add patch titles to plot borders}
 \usage{
 patch_titles(
   top = waiver(),

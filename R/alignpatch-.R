@@ -134,7 +134,7 @@ ggalignGrob <- function(x) UseMethod("ggalignGrob")
 #' @rdname ggalignGrob
 ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
 
-#' Building alignpatches object
+#' Building `alignpatches` object
 #'
 #' @description
 #' Prepare plots to be aligned with `plot_grid`

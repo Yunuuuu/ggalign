@@ -1,4 +1,4 @@
-#' Add Patch Titles to Plot Borders
+#' Add patch titles to plot borders
 #'
 #' This function extends ggplot2's title functionality, allowing you to add
 #' titles to each border of the plot: top, left, bottom, and right.
