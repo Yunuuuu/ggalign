@@ -23,7 +23,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_kmeans.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_panel.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_reorder.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/as_alignpatches.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/alignpatch.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/alignwrap.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/cash-Layout-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/cash-StackLayout-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/dendrogram_data.html</loc></url>
@@ -31,7 +32,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/geom_draw.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign-package.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalignGrob.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_build.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_stat.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggplot2-ggproto.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/hclust2.html</loc></url>
@@ -48,5 +48,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/reexports.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/show-Layout-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_active.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/wrap.html</loc></url>
 </urlset>
 

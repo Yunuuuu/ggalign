@@ -188,7 +188,7 @@
       </dl></div><div class="section level2">
       <h2 id="plot-composer">Plot composer<a class="anchor" aria-label="anchor" href="#plot-composer"></a></h2>
 
-      <div class="section-desc"><p>This section outlines essential functions for composing plots into a grid, intended for internal use. The core code of plot composer is derived from the <code>patchwork</code> package, with the hope of eventually integrating and merging these functions into the <code>patchwork</code> project.</p></div>
+      <div class="section-desc"><p>This section outlines essential functions for composing plots into a grid, intended for internal use. The core code is derived from the <code>patchwork</code> package, with the hope of eventually integrating and merging these functions into the <code>patchwork</code> project.</p></div>
 
 
     </div><div class="section level2">
@@ -214,12 +214,35 @@
 
         </dt>
         <dd>Free from alignment</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="extending-plot-composer">Extending Plot Composer<a class="anchor" aria-label="anchor" href="#extending-plot-composer"></a></h2>
 
-          <code><a href="ggalign_build.html">ggalign_build()</a></code> <code><a href="ggalign_build.html">patch_gtable()</a></code> <code><a href="ggalign_build.html">patch_align()</a></code>
+      <div class="section-desc"><p>Extending capabilities to align graphics with <code>plot_grid</code>.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="alignpatch.html">alignpatch()</a></code> <code><a href="alignpatch.html">patch_gtable()</a></code> <code><a href="alignpatch.html">patch_align()</a></code>
 
         </dt>
         <dd>Building <code>alignpatches</code> object</dd>
+      </dl><dl><dt>
+
+          <code><a href="alignwrap.html">alignwrap()</a></code>
+
+        </dt>
+        <dd>Wrap Arbitrary Graphics for Alignment</dd>
+      </dl><dl><dt>
+
+          <code><a href="wrap.html">wrap()</a></code>
+
+        </dt>
+        <dd>Convert Object into a Grob for Wrapping</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
 
@@ -237,12 +260,6 @@
 
         </dt>
         <dd>Generate a plot grob.</dd>
-      </dl><dl><dt>
-
-          <code><a href="as_alignpatches.html">as_alignpatches()</a></code>
-
-        </dt>
-        <dd>Convert into an <code>alignpatches</code> object</dd>
       </dl><dl><dt>
 
           <code><a href="ggalign_stat.html">ggalign_stat()</a></code>
