@@ -49,7 +49,7 @@ should guess the size from the aspect ratio of the \code{gt}.}
 \itemize{
 \item \code{patch_align}: A list with following elements:
 \itemize{
-\item \code{gt}: the standard \link[gtable:gtable]{gtable} object
+\item \code{gt}: A standard \link[gtable:gtable]{gtable} object
 \item \code{width}/\code{height}: the panel width and height.
 \item \code{respect}: A boolean value indicates whether to fix this panel area.
 }

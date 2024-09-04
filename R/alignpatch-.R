@@ -198,7 +198,7 @@ patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 #' should guess the size from the aspect ratio of the `gt`.
 #' @return
 #' - `patch_align`: A list with following elements:
-#'    - `gt`: the standard [gtable][gtable::gtable] object
+#'    - `gt`: A standard [gtable][gtable::gtable] object
 #'    - `width`/`height`: the panel width and height.
 #'    - `respect`: A boolean value indicates whether to fix this panel area.
 #' @export
