@@ -123,84 +123,72 @@ make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
     add_class(ans, "full_patch")
 }
 
-#' Extends plots to be aligned with `plot_grid`
+#' Generate a plot grob.
 #'
-#' Plots implement `as_patch` method must implement following methods to control
-#' the layout details.
-#' - `as_patch`: Convert a plot object into a `patch` to be aligned, the `patch`
-#'       must implement proper `patch_table` method. `ggalign` has implement
-#'       `patch_table` method for [ggplot][ggplot2::ggplot],
-#'       [grob][grid::grob], and [alignpatches][plot_grid] objects.
+#' @param x An object to be converted into a [grob][grid::grob].
+#' @return A [grob()][grid::grob] object.
+#' @export
+ggalignGrob <- function(x) UseMethod("ggalignGrob")
+
+#' @export
+#' @rdname ggalignGrob
+ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
+
+#' Building alignpatches object
+#'
+#' @description
+#' Prepare plots to be aligned with `plot_grid`
+#'
+#' - `ggalign_build`: Prepare a plot object to be aligned, the output must
+#' implement proper `patch_gtable` method.
+#'
+#' Extend object to be aligned with `plot_grid`
+#'
 #' - `patch_table`: Convert the plot into a [gtable][gtable::gtable].
 #' - `patch_align`: Build a standard [gtable][gtable::gtable] object.
-#' @param x A plot object.
+#'
+#' @details
+#' `ggalign` has implement `patch_gtable` method for following objects:
+#'   - [ggplot][ggplot2::ggplot]
+#'   - [alignpatches][plot_grid]
+#'   - [patch][patchwork::patchGrob]
+#' @param x A plot object to be prepared for alignment.
 #' @return
-#'  - `as_patch`: Any objects implements `patch_table` method.
+#' - `ggalign_build`: An object that implements `patch_gtable` method.
 #' @export
-as_patch <- function(x) UseMethod("as_patch")
+#' @order 1
+ggalign_build <- function(x) UseMethod("ggalign_build")
 
 #' @export
-as_patch.default <- function(x) {
-    cli::cli_abort("Cannot arrange {.obj_type_friendly {x}}")
+ggalign_build.default <- function(x) {
+    cli::cli_abort("Cannot deal with {.obj_type_friendly {x}}",
+        class = "missing_ggalign_build_class"
+    )
 }
 
 #' @export
-as_patch.ggplot <- function(x) x
+ggalign_build.ggplot <- function(x) x
 
 #' @export
-as_patch.wrapped_plot <- function(x) x
+ggalign_build.alignpatches <- function(x) x
 
 #' @export
-as_patch.alignpatches <- function(x) x
-
-# `patch` from `patchwork`: patchwork::plot_spacer
-#' @export
-as_patch.patch <- function(x) x
+ggalign_build.wrapped_plot <- function(x) x
 
 #' @export
-as_patch.HeatmapLayout <- function(x) ggalign_build(x)
+ggalign_build.grob <- function(x) wrap(x)
 
 #' @export
-as_patch.StackLayout <- function(x) ggalign_build(x)
-
-#' @export
-as_patch.grob <- function(x) wrap(x)
-
-#' @export
-as_patch.formula <- function(x) wrap(x)
+ggalign_build.formula <- function(x) wrap(x)
 
 #########################################
-# for patchwork
-#' @export
-as_patch.patchwork <- function(x) {
-    patches <- .subset2(x, "patches")
-    plots <- .subset2(patches, "plots")
-    if (!inherits(x, "plot_filler")) {
-        plots <- c(plots, list(plot))
-    }
-    layout <- .subset2(patches, "layout")
-    annotation <- .subset2(patches, "annotation")
-    if (.subset2(layout, "guides") == "collect") {
-        layout$guides <- TRUE
-    } else {
-        layout$guides <- FALSE
-    }
-    layout$theme <- .subset2(annotation, "theme")
-    layout$title <- .subset2(annotation, "title")
-    layout$subtitle <- .subset2(annotation, "subtitle")
-    layout$caption <- .subset2(annotation, "caption")
-    new_alignpatches(plots, layout)
-}
-
-#########################################
-# convert a plot into a gtable
-#' @param patch A `patch` from `as_patch`.
+#' @param patch A patch to be aligned.
 #' @param guides Input guides argument to [plot_grid()]
 #' @return
-#' - `patch_gtable`: A [gtable][gtable::gtable] object, the output panel border
-#'   must be standard.
+#' - `patch_gtable`: A [gtable][gtable::gtable] object.
 #' @export
-#' @rdname as_patch
+#' @rdname ggalign_build
+#' @order 2
 patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 
 # we always build a standard gtable layout for the `patch`
@@ -208,12 +196,12 @@ patch_gtable <- function(patch, guides) UseMethod("patch_gtable")
 #' @param panel_width,panel_height Size of the panel, if the size is `NA`, we
 #' should guess the size from the aspect ratio of the `gt`.
 #' @return
-#' - `patch_align`: A list with following elements
+#' - `patch_align`: A list with following elements:
 #'    - `gt`: the standard [gtable][gtable::gtable] object
 #'    - `width`/`height`: the panel width and height.
 #'    - `respect`: A boolean value indicates whether to fix this panel area.
 #' @export
-#' @rdname as_patch
+#' @rdname ggalign_build
 patch_align <- function(gt, guides, panel_width, panel_height) {
     UseMethod("patch_align")
 }
@@ -229,41 +217,3 @@ alignpatch_class <- function(x) {
     cls <- class(x)
     cls[seq_len(which(cls == "gtable") - 1L)]
 }
-
-#########################################
-# For grob ---------------------------
-#' @importFrom gtable gtable_add_grob
-#' @export
-patch_gtable.grob <- function(patch, guides) patch
-
-#######################################
-# `patch` from `patchwork`: patchwork::plot_spacer
-#' @importFrom gtable gtable_add_rows gtable_add_cols
-#' @importFrom ggplot2 find_panel
-#' @export
-patch_gtable.patch <- function(patch, guides) {
-    guides <- if (length(guides)) "collect" else "keep"
-    table <- patchwork::patchGrob(patch, guides = guides)
-    for (border in c("top", "left", "bottom", "right")) {
-        panel_pos <- find_panel(table)
-        if (border == "top") {
-            h <- .subset2(panel_pos, "t") - 4L # above original xlab
-            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
-        } else if (border == "left") {
-            v <- .subset2(panel_pos, "l") - 4L # left of the ylab
-            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
-        } else if (border == "bottom") {
-            h <- .subset2(panel_pos, "b") + 3L # below original xlab
-            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
-        } else if (border == "right") {
-            v <- .subset2(panel_pos, "r") + 3L # right of the ylab
-            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
-        }
-    }
-    table
-}
-
-#########################################
-# `patch` from `patchwork`: patchwork::wrap_elements
-#' @export
-patch_gtable.wrapped_patch <- patch_gtable.patch

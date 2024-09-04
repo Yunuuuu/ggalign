@@ -34,12 +34,18 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     invisible(x)
 }
 
-#' @importFrom ggplot2 find_panel element_render theme
-#' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom grid grid.draw
-#' @importFrom rlang arg_match0
 #' @exportS3Method
 grid.draw.alignpatches <- function(x, recording = TRUE) {
+    grid.draw(ggalignGrob(x), recording = recording)
+}
+
+#' @importFrom ggplot2 find_panel element_render theme
+#' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
+#' @importFrom rlang arg_match0
+#' @export
+#' @rdname ggalignGrob
+ggalignGrob.alignpatches <- function(x) {
     layout <- .subset2(x, "layout")
     theme <- .subset2(layout, "theme")
 
@@ -149,6 +155,5 @@ grid.draw.alignpatches <- function(x, recording = TRUE) {
             c(nrow(table$layout), 1:(nrow(table$layout) - 1L))
         ]
     }
-
-    grid.draw(table, recording = recording)
+    table
 }

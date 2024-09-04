@@ -1,41 +1,22 @@
-#' Build ggplot for rendering.
+#' Get the statistics from the layout
 #'
-#' - `ggalign_build`: Build layout into an `alignpatches` object
-#' - `ggalignGrob`: Generate a layout plot grob.
-#' - `ggalign_stat`: Get the statistics from the `Align` object.
-#' @param x A [HeatmapLayout][layout_heatmap] or [StackLayout][layout_stack]
-#' object.
-#' @export
-ggalign_build <- function(x) UseMethod("ggalign_build")
-
-#' @export
-ggalign_build.default <- function(x) {
-    cli::cli_abort("{.arg x} must be a {.cls Layout} object")
-}
-
-#' @export
-#' @rdname ggalign_build
-ggalignGrob <- function(x) UseMethod("ggalignGrob")
-
-#' @export
-ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
-
+#' @param x A [layout_heatmap()] or [layout_stack()] object.
 #' @param ... Not used currently.
+#' @return The statistics
 #' @export
-#' @rdname ggalign_build
 ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")
 
 #' @param position A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #' @param what A single number or string of the plot elements in the stack
 #' layout.
 #' @export
-#' @rdname ggalign_build
+#' @rdname ggalign_stat
 ggalign_stat.HeatmapLayout <- function(x, ..., position, what) {
     ggalign_stat(slot(x, position), what = what)
 }
 
 #' @export
-#' @rdname ggalign_build
+#' @rdname ggalign_stat
 ggalign_stat.StackLayout <- function(x, ..., what) {
     .subset2(.subset2(x@plots, what), "statistics")
 }

@@ -9,6 +9,8 @@
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob
 #' @export
+#' @rdname ggalign_build
+#' @order 3
 patch_gtable.ggplot <- function(patch, guides) {
     patch <- remove_empty_ticks(patch)
     ans <- ggplotGrob(patch)

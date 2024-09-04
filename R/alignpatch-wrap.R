@@ -53,25 +53,26 @@ offscreen_dev <- function() {
 }
 
 # For wrapped plot -------------------
+#' @importFrom grid is.grob
 #' @export
 patch_gtable.wrapped_plot <- function(patch, guides) {
-    gt <- NextMethod()
-    ans <- make_patch()
     align <- attr(patch, "align")
     clip <- attr(patch, "clip")
+    if (!is.grob(patch)) patch <- NextMethod()
+    ans <- make_patch()
     ans <- switch(align,
         full = gtable_add_grob(ans,
-            list(gt), 1L, 1L, nrow(ans), ncol(ans),
+            list(patch), 1L, 1L, nrow(ans), ncol(ans),
             clip = clip, name = "wrap_full"
         ),
         plot = gtable_add_grob(ans,
-            list(gt), PLOT_TOP, PLOT_LEFT, PLOT_BOTTOM, PLOT_RIGHT,
+            list(patch), PLOT_TOP, PLOT_LEFT, PLOT_BOTTOM, PLOT_RIGHT,
             clip = clip, name = "wrap_plot"
         ),
         panel = gtable_add_grob(ans,
-            list(gt), PANEL_ROW, PANEL_COL,
+            list(patch), PANEL_ROW, PANEL_COL,
             clip = clip, name = "wrap_panel"
         )
     )
-    add_class(gt, "gtable_wrapped_plot")
+    add_class(ans, "gtable_wrapped_plot")
 }

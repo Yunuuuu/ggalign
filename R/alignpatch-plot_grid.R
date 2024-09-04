@@ -41,7 +41,7 @@ plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
             plots <- plot_list
         }
     }
-    plots <- lapply(plots, as_patch)
+    plots <- lapply(plots, ggalign_build)
     new_alignpatches(plots, list(
         ncol = ncol,
         nrow = nrow,
@@ -65,3 +65,8 @@ new_alignpatches <- function(plots, layout) {
         class = "alignpatches"
     )
 }
+
+#' Convert into an `alignpatches` object
+#'
+#' @param x An object that implements the method.
+as_alignpatches <- function(x) UseMethod("as_alignpatches")

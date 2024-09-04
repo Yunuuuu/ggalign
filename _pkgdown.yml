@@ -24,7 +24,7 @@ reference:
   - stack_active
   - activate
 
-- title: Layout Design
+- title: Layout
   desc: A `Layout` object defines how to place the plots.
   contents:
   - layout_heatmap
@@ -61,21 +61,19 @@ reference:
   - free_border
   - free_lab
   - free_space
-  - as_patch
-
-- title: Extending ggplot2
-  desc: New ggplot2 geoms, stats, scales, and facets
-  contents:
-  - geom_draw
+  - ggalign_build
 
 - title: helpers
   desc: A handful of helpers
   contents:
   - ggalignGrob
+  - as_alignpatches
+  - ggalign_stat
   - hclust2
   - dendrogram_data
   - is.ggheatmap
   - is.ggstack
+  - geom_draw
 
 articles:
 - title: Building plots
