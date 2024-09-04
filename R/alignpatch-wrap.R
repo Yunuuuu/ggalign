@@ -22,7 +22,7 @@ wrap.wrapped_plot <- function(plot, align = NULL, clip = TRUE) {
 
 #' @export
 wrap.formula <- function(x, align = NULL, clip = TRUE) {
-    rlang::check_installed("gridGraphics", "to add base plots to patchworks")
+    rlang::check_installed("gridGraphics", "to add base plots")
     gp <- graphics::par(no.readonly = TRUE)
     force(x)
     plot_call <- function() {
