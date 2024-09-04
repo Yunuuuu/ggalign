@@ -167,7 +167,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
         # For gtable with fixed aspect ratio -------------
         # if it cannot be fixed and aligned, the strip, axis and labs will be
         # attached into the panel
-        # the plot to be fixed must in only one squre of the area
+        # the plot to be fixed must in only one square of the area
         need_fix <- .subset2(design, "l") == .subset2(design, "r") &
             .subset2(design, "t") == .subset2(design, "b") &
             vapply(gt_list, function(gt) {
@@ -222,7 +222,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
             }
         }
 
-        if (!is.null(respect_dims <- do.call(rbind, respect_dims))) {
+        if (!is.null(respect_dims <- do.call(base::rbind, respect_dims))) {
             respect <- matrix(
                 0L, TABLE_ROWS * dims[1L],
                 TABLE_COLS * dims[2]

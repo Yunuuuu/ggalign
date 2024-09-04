@@ -2,12 +2,27 @@
 % Please edit documentation in R/alignpatch-wrap.R
 \name{wrap}
 \alias{wrap}
+\alias{wrap.grob}
+\alias{wrap.formula}
 \title{Convert Object into a Grob for Wrapping}
 \usage{
 wrap(x, ...)
+
+\method{wrap}{grob}(x, ...)
+
+\method{wrap}{formula}(x, ..., device = NULL)
 }
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
+
+\item{...}{Additional arguments passed to specific methods.}
+
+\item{device}{
+    A function that opens a graphics device for \code{grid.echo()} to
+    work on.  By default this is an off-screen, in-memory device
+    based on the \code{pdf} device.  This default device may not be
+    satisfactory when using custom fonts.
+  }
 }
 \value{
 A \link[grid:grid.grob]{grob} object.

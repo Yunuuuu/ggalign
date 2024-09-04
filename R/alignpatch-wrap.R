@@ -38,18 +38,23 @@ alignwrap <- function(plot, ..., align = NULL, clip = TRUE) {
 #' [grob][grid::grob], enabling their alignment within [plot_grid()].
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
+#' @param ... Additional arguments passed to specific methods.
 #' @return A [grob][grid::grob] object.
 #' @export
 #' @keywords internal
 wrap <- function(x, ...) UseMethod("wrap")
 
 #' @export
+#' @rdname wrap
 wrap.grob <- function(x, ...) x
 
+#' @inheritParams gridGraphics::echoGrob
 #' @export
-wrap.formula <- function(x, ...) {
+#' @rdname wrap
+wrap.formula <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to add base plots")
     gp <- graphics::par(no.readonly = TRUE)
+    force(x)
     plot_call <- function() {
         old_gp <- graphics::par(no.readonly = TRUE)
         graphics::par(gp)
@@ -59,22 +64,11 @@ wrap.formula <- function(x, ...) {
     }
     gridGraphics::echoGrob(plot_call,
         name = "base_plot",
-        device = offscreen_dev()
-    )
-}
-
-offscreen_dev <- function() {
-    if (requireNamespace("ragg", quietly = TRUE)) {
-        function(width, height) {
-            ragg::agg_capture(width = width, height = height, units = "in")
-            grDevices::dev.control("enable")
-        }
-    } else {
-        function(width, height) {
+        device = device %||% function(width, height) {
             grDevices::pdf(NULL, width = width, height = height)
             grDevices::dev.control("enable")
         }
-    }
+    )
 }
 
 # For wrapped plot -------------------
