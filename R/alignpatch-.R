@@ -152,6 +152,7 @@ ggalignGrob.default <- function(x) patch_gtable(ggalign_build(x))
 #'   - [ggplot][ggplot2::ggplot]
 #'   - [alignpatches][plot_grid]
 #'   - [patch][patchwork::patchGrob]
+#'   - [wrapped_patch][patchwork::wrap_elements]
 #' @param x A plot object to be prepared for alignment.
 #' @return
 #' - `ggalign_build`: An object that implements `patch_gtable` method.

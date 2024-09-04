@@ -45,6 +45,8 @@ patch_gtable.patch <- function(patch, guides) {
 #########################################
 # `patch` from `patchwork`: patchwork::wrap_elements
 #' @export
+#' @rdname ggalign_build
+#' @order 6
 patch_gtable.wrapped_patch <- patch_gtable.patch
 
 ########################################

@@ -7,6 +7,7 @@
 \alias{patch_gtable.ggplot}
 \alias{patch_gtable.alignpatches}
 \alias{patch_gtable.patch}
+\alias{patch_gtable.wrapped_patch}
 \alias{patch_align}
 \title{Building alignpatches object}
 \usage{
@@ -19,6 +20,8 @@ patch_gtable(patch, guides)
 \method{patch_gtable}{alignpatches}(patch, guides)
 
 \method{patch_gtable}{patch}(patch, guides)
+
+\method{patch_gtable}{wrapped_patch}(patch, guides)
 
 patch_align(gt, guides, panel_width, panel_height)
 }
@@ -71,5 +74,6 @@ Extend object to be aligned with \code{plot_grid}
 \item \link[ggplot2:ggplot]{ggplot}
 \item \link[=plot_grid]{alignpatches}
 \item \link[patchwork:patchGrob]{patch}
+\item \link[patchwork:wrap_elements]{wrapped_patch}
 }
 }
