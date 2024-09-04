@@ -26,7 +26,7 @@ patch_gtable.alignpatches <- function(patch, guides) {
         if (is.null(layout$ncol) && length(panel_widths) > 1L) {
             layout$ncol <- length(panel_widths)
         }
-        if (is.null(layout$nrow) && length(panel_heights) > 1) {
+        if (is.null(layout$nrow) && length(panel_heights) > 1L) {
             layout$nrow <- length(panel_heights)
         }
         dims <- ggplot2::wrap_dims(
@@ -157,8 +157,8 @@ BuilderAlignPatches <- ggplot2::ggproto(
     set_sizes = function(self, gt, design, guides, dims,
                          panel_widths, panel_heights,
                          gt_list = .subset2(self, "gt_list")) {
-        panel_widths <- rep(panel_widths, length.out = dims[2])
-        panel_heights <- rep(panel_heights, length.out = dims[1])
+        panel_widths <- rep(panel_widths, length.out = dims[2L])
+        panel_heights <- rep(panel_heights, length.out = dims[1L])
         if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
         if (!is.unit(panel_heights)) {
             panel_heights <- unit(panel_heights, "null")
@@ -249,7 +249,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
         heights <- .subset2(sizes, "heights")
 
         # restore the panel sizes -----------------------------
-        width_ind <- seq(PANEL_COL, by = TABLE_COLS, length.out = dims[2])
+        width_ind <- seq(PANEL_COL, by = TABLE_COLS, length.out = dims[2L])
         height_ind <- seq(PANEL_ROW, by = TABLE_ROWS, length.out = dims[1L])
         widths[width_ind] <- panel_widths
         heights[height_ind] <- panel_heights
@@ -365,7 +365,7 @@ table_sizes <- function(widths, heights, design, ncol, nrow) {
         } else {
             0L
         }
-    }, numeric(1))
+    }, numeric(1L))
     list(widths = unit(widths, "mm"), heights = unit(heights, "mm"))
 }
 
