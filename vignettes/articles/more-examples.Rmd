@@ -20,7 +20,7 @@ In this thread, We'll use `ggalign` to draw all the heatmap in
 
 # Add more information for gene expression matrix
 ```{r fig.dim = c(12, 10)}
-expr <- readRDS(system.file(package = "ComplexHeatmap", "extdata", "gene_expression.rds"))
+expr <- read_example("gene_expression.rds")
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
 base_mean <- rowMeans(mat)
 mat_scaled <- t(apply(mat, 1, scale))
@@ -96,7 +96,7 @@ ggstack(data = mat_scaled) +
 
 # The measles vaccine heatmap
 ```{r fig.dim = c(12, 12)}
-mat <- readRDS(system.file("extdata", "measles.rds", package = "ComplexHeatmap"))
+mat <- read_example("measles.rds")
 ggheatmap(mat, filling = FALSE) +
   geom_tile(aes(fill = value), color = "white") +
   scale_fill_gradientn(

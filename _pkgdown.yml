@@ -80,6 +80,7 @@ reference:
   - is.ggheatmap
   - is.ggstack
   - geom_draw
+  - read_example
 
 articles:
 - title: Building plots

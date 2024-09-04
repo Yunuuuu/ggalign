@@ -28,7 +28,6 @@ ByteCompile: true
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Suggests: 
-    ComplexHeatmap,
     gridGraphics,
     knitr,
     rmarkdown,

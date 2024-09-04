@@ -12,3 +12,4 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^data-raw$

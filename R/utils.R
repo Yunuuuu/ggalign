@@ -5,6 +5,29 @@
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
+#' Read Example Data
+#'
+#' This function reads example data from the file. If no file is specified, it
+#' returns a list of available example files.
+#'
+#' @param file A string representing the name of the example file to be read. If
+#' `NULL`, the function will return a list of available example file names.
+#' @return If `file` is `NULL`, returns a character vector of available example
+#' file names. Otherwise, returns the contents of the specified example file,
+#' read as an R object.
+#' @export
+read_example <- function(file = NULL) {
+    if (is.null(file)) {
+        dir(example_file())
+    } else {
+        readRDS(example_file(file, mustWork = TRUE))
+    }
+}
+
+example_file <- function(..., base = "extdata") {
+    system.file(base, ..., package = pkg_nm())
+}
+
 save_png <- function(code, width = 400L, height = 400L) {
     path <- tempfile(fileext = ".png")
     grDevices::png(path, width = width, height = height)
