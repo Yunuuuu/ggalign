@@ -284,34 +284,34 @@ BuilderAlignPatches <- ggplot2::ggproto(
         max_z <- vapply(gt_list, function(x) {
             max(.subset2(.subset2(x, "layout"), "z"))
         }, numeric(1L))
-        max_z <- c(0, cumsum(max_z))
+        max_z <- c(0L, cumsum(max_z))
         gt$layout <- do.call(
-            `rbind`,
+            base::rbind,
             lapply(seq_along(gt_list), function(i) {
                 loc <- design[i, , drop = FALSE]
                 lay <- .subset2(.subset2(gt_list, i), "layout")
-                lay$z <- lay$z + ifelse(lay$name == "background", 0, max_z[i])
+                lay$z <- lay$z + ifelse(lay$name == "background", 0L, max_z[i])
                 # we only expand the panel area, here is the magic from
                 # patchwork
                 lay$t <- lay$t + ifelse(
                     lay$t <= PANEL_ROW,
-                    (loc$t - 1) * TABLE_ROWS,
-                    (loc$b - 1) * TABLE_ROWS
+                    (loc$t - 1L) * TABLE_ROWS,
+                    (loc$b - 1L) * TABLE_ROWS
                 )
                 lay$b <- lay$b + ifelse(
                     lay$b < PANEL_ROW,
-                    (loc$t - 1) * TABLE_ROWS,
-                    (loc$b - 1) * TABLE_ROWS
+                    (loc$t - 1L) * TABLE_ROWS,
+                    (loc$b - 1L) * TABLE_ROWS
                 )
                 lay$l <- lay$l + ifelse(
                     lay$l <= PANEL_COL,
-                    (loc$l - 1) * TABLE_COLS,
-                    (loc$r - 1) * TABLE_COLS
+                    (loc$l - 1L) * TABLE_COLS,
+                    (loc$r - 1L) * TABLE_COLS
                 )
                 lay$r <- lay$r + ifelse(
                     lay$r < PANEL_COL,
-                    (loc$l - 1) * TABLE_COLS,
-                    (loc$r - 1) * TABLE_COLS
+                    (loc$l - 1L) * TABLE_COLS,
+                    (loc$r - 1L) * TABLE_COLS
                 )
                 lay$name <- paste0(lay$name, "-plot-", i)
                 lay
@@ -336,26 +336,32 @@ table_sizes <- function(widths, heights, design, ncol, nrow) {
     # we'll set the panel width and height afterward
     widths <- lapply(widths, convertWidth, "mm", valueOnly = TRUE)
     widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
-        area_col <- (i - 1) %/% TABLE_COLS + 1L
+        area_col <- (i - 1L) %/% TABLE_COLS + 1L
         col_loc <- i %% TABLE_COLS
-        if (col_loc == 0) col_loc <- TABLE_COLS
+        if (col_loc == 0L) col_loc <- TABLE_COLS
         area_side <- if (col_loc <= PANEL_COL) "l" else "r"
         idx <- .subset2(design, area_side) == area_col
         if (any(idx)) {
-            max(vapply(widths[idx], `[[`, numeric(1), col_loc), 0L)
+            max(
+                vapply(.subset(widths, idx), .subset, numeric(1L), col_loc),
+                0L
+            )
         } else {
             0L
         }
-    }, numeric(1))
+    }, numeric(1L))
     heights <- lapply(heights, convertHeight, "mm", valueOnly = TRUE)
     heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
-        area_row <- (i - 1) %/% TABLE_ROWS + 1
+        area_row <- (i - 1L) %/% TABLE_ROWS + 1L
         row_loc <- i %% TABLE_ROWS
-        if (row_loc == 0) row_loc <- TABLE_ROWS
+        if (row_loc == 0L) row_loc <- TABLE_ROWS
         area_side <- if (row_loc <= PANEL_COL) "t" else "b"
         idx <- .subset2(design, area_side) == area_row
         if (any(idx)) {
-            max(vapply(heights[idx], `[[`, numeric(1), row_loc), 0L)
+            max(
+                vapply(.subset(heights, idx), .subset, numeric(1L), row_loc),
+                0L
+            )
         } else {
             0L
         }
@@ -390,7 +396,7 @@ align_grobs.full_patch <- function(gt, widths, heights, loc) {
     # see function
     # can be `gtable_free_align`, `gtable_alignpatches` or
     # `gtable_free_borders` objects
-    grobs[[2]] <- align_border_size(
+    grobs[[2L]] <- align_border_size(
         .subset2(grobs, 2L),
         t = t_heights,
         l = l_widths,
@@ -421,8 +427,8 @@ align_border_size.gtable_alignpatches <- function(gt, t = NULL, l = NULL,
     n_col <- ncol(gt)
     if (!is.null(t)) gt$heights[seq_along(t)] <- t
     if (!is.null(l)) gt$widths[seq_along(l)] <- l
-    if (!is.null(b)) gt$heights[seq(n_row - length(b) + 1, n_row)] <- b
-    if (!is.null(r)) gt$widths[seq(n_col - length(r) + 1, n_col)] <- r
+    if (!is.null(b)) gt$heights[seq(n_row - length(b) + 1L, n_row)] <- b
+    if (!is.null(r)) gt$widths[seq(n_col - length(r) + 1L, n_col)] <- r
 
     grobs <- .subset2(gt, "grobs")
     layout <- .subset2(gt, "layout")
@@ -516,7 +522,7 @@ align_border_size.gtable_ggplot <- function(gt, t = NULL, l = NULL,
                                             b = NULL, r = NULL) {
     if (!is.null(t)) gt$heights[seq_along(t)] <- t
     if (!is.null(l)) gt$widths[seq_along(l)] <- l
-    if (!is.null(b)) gt$heights[seq(nrow(gt) - length(b) + 1, nrow(gt))] <- b
-    if (!is.null(r)) gt$widths[seq(ncol(gt) - length(r) + 1, ncol(gt))] <- r
+    if (!is.null(b)) gt$heights[seq(nrow(gt) - length(b) + 1L, nrow(gt))] <- b
+    if (!is.null(r)) gt$widths[seq(ncol(gt) - length(r) + 1L, ncol(gt))] <- r
     gt
 }
