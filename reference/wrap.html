@@ -63,7 +63,13 @@ grob, enabling their alignment within plot_grid()."></head><body>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wrap</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wrap</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'grob'</span></span>
+<span><span class="fu">wrap</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'formula'</span></span>
+<span><span class="fu">wrap</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, device <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,6 +78,17 @@ grob, enabling their alignment within plot_grid()."></head><body>
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>An object to be converted into a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed to specific methods.</p></dd>
+
+
+<dt id="arg-device">device<a class="anchor" aria-label="anchor" href="#arg-device"></a></dt>
+<dd><p>A function that opens a graphics device for <code>grid.echo()</code> to
+    work on.  By default this is an off-screen, in-memory device
+    based on the <code>pdf</code> device.  This default device may not be
+    satisfactory when using custom fonts.</p></dd>
 
 </dl></div>
     <div class="section level2">
