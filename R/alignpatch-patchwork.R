@@ -8,7 +8,7 @@ alignpatch.patchwork <- function(x) {
     }
     layout <- .subset2(patches, "layout")
     annotation <- .subset2(patches, "annotation")
-    if (.subset2(layout, "guides") == "collect") {
+    if (identical(.subset2(layout, "guides"), "collect")) {
         layout$guides <- TRUE
     } else {
         layout$guides <- FALSE
