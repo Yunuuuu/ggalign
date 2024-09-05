@@ -88,21 +88,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     # read the plot ---------------------------------------
     p <- heatmap@plot
 
-    # always remove default axis titles -------------------
-    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
-    # There are multiple ways to set labels in a plot, which take different
-    # priorities. Here are the priorities from highest to lowest.
-    # 1. The guide title.
-    # 2. The scale name.
-    # 3. The `labs()` function.
-    # 4. The captured expression in aes().
-    if (identical(.subset2(.subset2(p, "labels"), "x"), ".x")) {
-        p$labels$x <- NULL
-    }
-    if (identical(.subset2(.subset2(p, "labels"), "y"), ".y")) {
-        p$labels$y <- NULL
-    }
-
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
@@ -147,7 +132,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(fct_rev(.data$.ypanel)),
-            scales = "free_y", space = "free_y",
+            scales = "free_y", space = "free",
             drop = FALSE
         )
         p <- p + melt_facet(p$facet, default_facet) +
@@ -156,7 +141,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.xpanel),
-            scales = "free_x", space = "free_x",
+            scales = "free_x", space = "free",
             drop = FALSE
         )
         p <- p + melt_facet(p$facet, default_facet) +

@@ -64,12 +64,12 @@ align_build <- function(x, panel, index,
                 direction,
                 ggplot2::facet_grid(
                     rows = ggplot2::vars(fct_rev(.data$.panel)),
-                    scales = "free_y", space = "free_y",
+                    scales = "free_y", space = "free",
                     drop = FALSE
                 ),
                 ggplot2::facet_grid(
                     cols = ggplot2::vars(.data$.panel),
-                    scales = "free_x", space = "free_x",
+                    scales = "free_x", space = "free",
                     drop = FALSE
                 )
             )

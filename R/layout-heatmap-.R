@@ -168,7 +168,16 @@ layout_heatmap.default <- function(data, ...) {
     }
     plot <- ggplot2::ggplot(mapping = mapping) +
         heatmap_theme()
-    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y))
+    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
+        # always remove default axis titles -------------------
+        # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
+        # There are multiple ways to set labels in a plot, which take different
+        # priorities. Here are the priorities from highest to lowest.
+        # 1. The guide title.
+        # 2. The scale name.
+        # 3. The `labs()` function.
+        # 4. The captured expression in aes().
+        ggplot2::labs(x = NULL, y = NULL)
 
     # add heatmap filling in the first layer
     if (filling) {
