@@ -28,6 +28,10 @@ example_file <- function(..., base = "extdata") {
     system.file(base, ..., package = pkg_nm())
 }
 
+complete_position <- function(x) {
+    .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
+}
+
 save_png <- function(code, width = 400L, height = 400L) {
     path <- tempfile(fileext = ".png")
     grDevices::png(path, width = width, height = height)

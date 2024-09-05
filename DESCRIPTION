@@ -12,7 +12,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends:
-    ggplot2
+    ggplot2 (>= 3.5.0)
 Imports: 
     cli,
     ggh4x,

@@ -109,6 +109,15 @@ BuilderAlignPatches <- ggplot2::ggproto(
             r = PANEL_COL + TABLE_COLS * (dims[2L] - 1L)
         )
         if (length(collected_guides)) {
+            # https://github.com/tidyverse/ggplot2/blob/57ba97fa04dadc6fd73db1904e39a09d57a4fcbe/R/guides-.R#L512
+            theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
+            theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
+            theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)
+            # ggplot2 use top, left, bottom and left
+            # we complte the position
+            names(collected_guides) <- complete_position(
+                names(collected_guides)
+            )
             for (guide_pos in names(collected_guides)) {
                 gt <- attach_guides(
                     gt, guide_pos,
