@@ -75,6 +75,24 @@ test_that("The grid can be controlled", {
     })
 })
 
+test_that("collect guides works well", {
+    expect_doppelganger(
+        "collect normal guides",
+        plot_grid(p1, p3, guides = TRUE)
+    )
+    p_guides <- p3 + scale_color_continuous(guide = guide_colorbar(
+        theme = theme(legend.key.height = unit(1, "null"))
+    ))
+    expect_doppelganger(
+        "collect guides with null unit",
+        plot_grid(p1, p_guides, guides = TRUE)
+    )
+    expect_doppelganger(
+        "collect guides with multiple plots with null unit",
+        plot_grid(p1, p_guides, p_guides, guides = TRUE)
+    )
+})
+
 test_that("Fixed aspect plots behave", {
     expect_doppelganger("FAR optimise space by default 1", {
         plot_grid(p1, p_f, p3, p4)
