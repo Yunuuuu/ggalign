@@ -12,7 +12,9 @@
 #' @rdname alignpatch
 #' @order 3
 patch_gtable.ggplot <- function(patch, guides) {
-    patch <- remove_empty_ticks(patch)
+    patch <- remove_empty_ticks(patch)    
+    # complete_theme() will ensure elements exist
+    patch$theme <- complete_theme(.subset2(patch, "theme"))
     ans <- ggplotGrob(patch)
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0

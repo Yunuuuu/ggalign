@@ -38,7 +38,7 @@ setup_patch_titles <- function(table, patch) {
         c("top", "left", "bottom", "right")
     )
     # complete_theme() will ensure `plot_title` exists
-    theme <- complete_theme(.subset2(patch, "theme"))
+    theme <- .subset2(patch, "theme")
     old_text <- calc_element("plot.title", theme)
     # always justification by center for patch title
     old_text$hjust <- 0.5
