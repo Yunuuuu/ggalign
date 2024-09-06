@@ -134,13 +134,114 @@ attach_guides <- function(table, guide_pos, guides, theme,
     table
 }
 
+#' @importFrom utils getFromNamespace
 assemble_guides <- function(guides, guide_pos, theme) {
     # for every position, collect all individual guides and arrange them
     # into a guide box which will be inserted into the main gtable
-    Guides <- utils::getFromNamespace("Guides", "ggplot2")
-    Guides$package_box(guides, guide_pos, theme)
+    Guides <- getFromNamespace("Guides", "ggplot2")
+    package_box <- .subset2(Guides, "package_box") %||% package_box
+    package_box(guides, guide_pos, theme)
 }
 
+#' @importFrom gtable gtable_add_rows gtable_add_cols
+#' @importFrom ggplot2 calc_element
+#' @importFrom grid valid.just editGrob viewport
+package_box <- function(guides, guide_pos, theme) {
+    theme <- complete_guide_theme(guide_pos, theme)
+    guides <- guides_build(guides, theme)
+
+    # Set the justification of the legend box
+    # First value is xjust, second value is yjust
+    just <- valid.just(calc_element("legend.justification", theme))
+    xjust <- just[1L]
+    yjust <- just[2L]
+    guides <- editGrob(guides,
+        vp = viewport(x = xjust, y = yjust, just = c(xjust, yjust))
+    )
+    guides <- gtable_add_rows(guides, unit(yjust, "null"))
+    guides <- gtable_add_rows(guides, unit(1L - yjust, "null"), 0L)
+    guides <- gtable_add_cols(guides, unit(xjust, "null"), 0L)
+    guides <- gtable_add_cols(guides, unit(1L - xjust, "null"))
+    guides
+}
+
+#' @importFrom gtable gtable_width gtable_height gtable gtable_add_grob
+#' @importFrom grid editGrob heightDetails widthDetails valid.just unit.c unit
+#' @importFrom ggplot2 margin element_grob element_blank calc_element element_render
+guides_build <- function(guides, theme) {
+    legend.spacing.y <- .subset2(theme, "legend.spacing.y")
+    legend.spacing.x <- .subset2(theme, "legend.spacing.x")
+    legend.box.margin <- calc_element("legend.box.margin", theme) %||%
+        margin()
+    widths <- do.call(`unit.c`, lapply(guides, gtable_width))
+    heights <- do.call(`unit.c`, lapply(guides, gtable_height))
+
+    just <- valid.just(.subset2(theme, "legend.box.just"))
+    xjust <- just[1]
+    yjust <- just[2]
+    vert <- identical(.subset2(theme, "legend.box"), "horizontal")
+    guides <- lapply(guides, function(g) {
+        editGrob(g, vp = viewport(
+            x = xjust, y = yjust, just = c(xjust, yjust),
+            height = if (vert) heightDetails(g) else 1,
+            width = if (!vert) widthDetails(g) else 1
+        ))
+    })
+    guide_ind <- seq(by = 2, length.out = length(guides))
+    sep_ind <- seq(2, by = 2, length.out = length(guides) - 1)
+    if (vert) {
+        heights <- max(heights)
+        if (length(widths) != 1) {
+            w <- unit(rep_len(0, length(widths) * 2 - 1), "mm")
+            w[guide_ind] <- widths
+            w[sep_ind] <- legend.spacing.x
+            widths <- w
+        }
+    } else {
+        widths <- max(widths)
+        if (length(heights) != 1) {
+            h <- unit(rep_len(0, length(heights) * 2 - 1), "mm")
+            h[guide_ind] <- heights
+            h[sep_ind] <- legend.spacing.y
+            heights <- h
+        }
+    }
+    widths <- unit.c(legend.box.margin[4], widths, legend.box.margin[2])
+    heights <- unit.c(legend.box.margin[1], heights, legend.box.margin[3])
+    guides <- gtable_add_grob(
+        gtable(widths, heights, name = "guide-box"),
+        guides,
+        t = 1 + if (!vert) guide_ind else 1,
+        l = 1 + if (vert) guide_ind else 1,
+        name = "guides"
+    )
+    gtable_add_grob(
+        guides,
+        element_render(theme, "legend.box.background"),
+        t = 1, l = 1, b = -1, r = -1,
+        z = -Inf, clip = "off", name = "legend.box.background"
+    )
+}
+
+#' @importFrom ggplot2 calc_element
+complete_guide_theme <- function(guide_pos, theme) {
+    if (guide_pos %in% c("top", "bottom")) {
+        theme$legend.box <- calc_element("legend.box", theme) %||% "horizontal"
+        theme$legend.direction <- calc_element("legend.direction", theme) %||%
+            "horizontal"
+        theme$legend.box.just <- calc_element("legend.box.just", theme) %||%
+            c("center", "top")
+    } else {
+        theme$legend.box <- calc_element("legend.box", theme) %||% "vertical"
+        theme$legend.direction <- calc_element("legend.direction", theme) %||%
+            "vertical"
+        theme$legend.box.just <- calc_element("legend.box.just", theme) %||%
+            c("left", "top")
+    }
+    theme
+}
+
+################################################################ 3
 # Copied from patchwork
 collapse_guides <- function(guides) {
     unnamed <- lapply(guides, unname_grob)
