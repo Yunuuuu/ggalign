@@ -113,6 +113,9 @@ BuilderAlignPatches <- ggplot2::ggproto(
             theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
             theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
             theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)
+            theme$legend.box.spacing <- calc_element(
+                "legend.box.spacing", theme
+            ) %||% unit(0.2, "cm")
             # ggplot2 use top, left, bottom and left
             # we complte the position
             names(collected_guides) <- complete_position(

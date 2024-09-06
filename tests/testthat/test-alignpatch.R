@@ -89,7 +89,9 @@ test_that("collect guides works well", {
     )
     expect_doppelganger(
         "collect guides with multiple plots with null unit",
-        plot_grid(p1, p_guides, p_guides, guides = TRUE)
+        plot_grid(p1, p_guides, p_guides + labs(color = "another"),
+            guides = TRUE
+        )
     )
 })
 

@@ -77,7 +77,7 @@ collect_guides.gtable_ggplot <- function(gt, guides) {
 attach_guides <- function(table, guide_pos, guides, theme,
                           panel_pos = find_panel(table)) {
     guides <- assemble_guides(guides, guide_pos, theme = theme)
-    spacing <- calc_element("legend.box.spacing", theme) %||% unit(0.2, "cm")
+    spacing <- .subset2(theme, "legend.box.spacing")
     legend_width <- gtable_width(guides)
     legend_height <- gtable_height(guides)
     if (guide_pos == "left") {
