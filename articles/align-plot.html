@@ -120,12 +120,13 @@ in the layout (<code>aes(y = .data$.y)</code> for horizontal stack or
 <code>ggplot2 specification</code> in <code><a href="../reference/align_gg.html">?align_gg</a></code> for
 details.</p>
 <blockquote>
-<p>Note: All align_* functions treat rows as observations, meaning the
-<code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function must return a number equal to the parallel
-layout axis. For heatmap column annotations, the heatmap matrix is
-transposed before being used. If data is a function, it will be applied
-to the transposed matrix. In this example, we use <code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums()</a></code>
-to calculate the sum value across all columns.</p>
+<p>Note: All <code>align_*</code> functions treat rows as observations,
+meaning the <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function must return a number equal to
+the parallel layout axis. For heatmap column annotations, the heatmap
+matrix is transposed before being used. If data is a function, it will
+be applied to the transposed matrix. In this example, we use
+<code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums()</a></code> to calculate the sum value across all
+columns.</p>
 </blockquote>
 <p>You can also use the <code><a href="../reference/align_gg.html">ggalign()</a></code> function, which is an
 alias for <code><a href="../reference/align_gg.html">align_gg()</a></code>.</p>
