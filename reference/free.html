@@ -157,6 +157,49 @@ allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "ax
 </ul><ul><li><p><code>free_space</code>: A modified version of <code>plot</code> with a <code>free_space</code> class.</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sometimes you have a plot that defies good composition alginment, e.g. due</span></span></span>
+<span class="r-in"><span><span class="co"># to long axis labels</span></span></span>
+<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_y_discrete</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">""</span>,</span></span>
+<span class="r-in"><span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3 gears are often enough"</span>,</span></span>
+<span class="r-in"><span>               <span class="st">"But, you know, 4 is a nice number"</span>,</span></span>
+<span class="r-in"><span>               <span class="st">"I would def go with 5 gears in a modern car"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># When combined with other plots it ends up looking bad</span></span></span>
+<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># We can fix this be using free (here, with the default "panel" type)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">free_align</span><span class="op">(</span><span class="va">p1</span><span class="op">)</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If we still want the panels to be aligned to the right, we can choose to</span></span></span>
+<span class="r-in"><span><span class="co"># free only the left side</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">free_align</span><span class="op">(</span><span class="va">p1</span>, axes <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># We could use "label" to fix the layout in a different way</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu">free_lab</span><span class="op">(</span><span class="va">p2</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Another issue is that long labels are not using already available free</span></span></span>
+<span class="r-in"><span><span class="co"># space.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This can be fixed with the "space" type</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu">free_space</span><span class="op">(</span><span class="va">p1</span>, <span class="st">"l"</span><span class="op">)</span>, <span class="va">p2</span>, <span class="va">p2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="free-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

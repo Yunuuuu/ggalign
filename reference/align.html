@@ -186,6 +186,78 @@ reorder heamtap rows/columns.</p></li>
 <li><p><code>draw</code>: A method used to draw the plot. Must return a <code>ggplot</code> object.</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="align_gg.html">align_gg</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facetted_pos_scales: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     isLock: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     name: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     order: NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot_data: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_context: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     size: NAnull</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
+<span class="r-in"><span><span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facetted_pos_scales: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     isLock: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     name: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     order: NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot_data: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_context: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     size: NAnull</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
