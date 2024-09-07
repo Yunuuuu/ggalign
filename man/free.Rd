@@ -87,6 +87,7 @@ title, we can wrap the plot with \code{free_lab}.
 }
 }
 \examples{
+# directly copied from patchwork
 # Sometimes you have a plot that defies good composition alginment, e.g. due
 # to long axis labels
 p1 <- ggplot(mtcars) +

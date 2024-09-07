@@ -60,7 +60,7 @@ A \code{alignpatches} object.
 Arrange multiple plots into a grid
 }
 \examples{
-
+# directly copied from patchwork
 p1 <- ggplot(mtcars) +
     geom_point(aes(mpg, disp))
 p2 <- ggplot(mtcars) +

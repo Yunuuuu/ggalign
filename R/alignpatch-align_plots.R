@@ -21,7 +21,7 @@
 #' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
 #' @examples
-#'
+#' # directly copied from patchwork
 #' p1 <- ggplot(mtcars) +
 #'     geom_point(aes(mpg, disp))
 #' p2 <- ggplot(mtcars) +
