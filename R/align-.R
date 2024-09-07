@@ -50,7 +50,7 @@ align <- function(align_class, params,
                   # The data argument is different from the documents in which
                   # `NULL` means this `Align` object won't need any data,
                   # and `waiver()` will indicates inherit from the layout.
-                  # So when adding a new `Align` object which user can input
+                  # So when adding a new `Align` object where user should input
                   # data, always remember transfrom `NULL` to `waiver()`
                   #
                   # Details see `initialize_align()`
