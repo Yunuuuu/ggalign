@@ -61,6 +61,7 @@ reference:
   - free_border
   - free_lab
   - free_space
+  - area
 
 - title: Extending Plot Composer
   desc: >
