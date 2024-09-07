@@ -72,8 +72,8 @@ allowed:
 }
 }
 \description{
-\link{align_plots} will try to align plots by their panels, and align every elements
-of the plot, following functions romove this restrictions.
+\link{align_plots} will try to align plot panels, and every elements of the plot,
+following functions romove these restrictions:
 \itemize{
 \item \code{free_align}: if we want to compose plots without alignment of some panel
 axes (panel won't be aligned). we can wrap the plot with \code{free_align}.

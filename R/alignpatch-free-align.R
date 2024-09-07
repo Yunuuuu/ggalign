@@ -1,7 +1,7 @@
 #' Free from alignment
 #'
-#' [align_plots] will try to align plots by their panels, and align every elements
-#' of the plot, following functions romove this restrictions.
+#' [align_plots] will try to align plot panels, and every elements of the plot,
+#' following functions romove these restrictions:
 #' - `free_align`: if we want to compose plots without alignment of some panel
 #' axes (panel won't be aligned). we can wrap the plot with `free_align`.
 #' - `free_border`: If we want to compose plots without alignment of the panel
