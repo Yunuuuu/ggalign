@@ -14,13 +14,8 @@
 #' `aes(x = .data$.x)`.
 #'
 #' For ggplot usage, matrix (including a simple vector) data is converted into a
-#' long-format data frame, similar to the process utilized in `ggheatmap`. But
-#' note that the long-format data frame does not contain `.xpanel` or `.ypanel`
-#' column, as `align_gg` can only have one facet axis. In the case where the
-#' input data is already a data frame, three additional columns-(`.row_names`,
-#' `.row_index`, and `.panel`)—are added to the data frame.
-#'
-#' The data in the underlying `ggplot` object contains following columns:
+#' long-format data frame. The data in the underlying `ggplot` object will
+#' contain following columns:
 #'
 #'  - `.panel`: the panel for current layout axis.
 #'
@@ -34,6 +29,10 @@
 #'
 #'  - `value`: the actual matrix value  (only applicable if `data` is a
 #'    `matrix`).
+#'
+#' In the case where the input data is already a data frame, three additional
+#' columns-(`.row_names`, `.row_index`, and `.panel`)—are added to the data
+#' frame.
 #'
 #' if data is inherit from the [heatmap][ggheatmap] layout, an additional column
 #' will be added.

@@ -102,13 +102,8 @@ The internal will always use a default mapping of \code{aes(y = .data$.y)} or
 \code{aes(x = .data$.x)}.
 
 For ggplot usage, matrix (including a simple vector) data is converted into a
-long-format data frame, similar to the process utilized in \code{ggheatmap}. But
-note that the long-format data frame does not contain \code{.xpanel} or \code{.ypanel}
-column, as \code{align_gg} can only have one facet axis. In the case where the
-input data is already a data frame, three additional columns-(\code{.row_names},
-\code{.row_index}, and \code{.panel})—are added to the data frame.
-
-The data in the underlying \code{ggplot} object contains following columns:
+long-format data frame. The data in the underlying \code{ggplot} object will
+contain following columns:
 \itemize{
 \item \code{.panel}: the panel for current layout axis.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
@@ -119,6 +114,10 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 \item \code{value}: the actual matrix value  (only applicable if \code{data} is a
 \code{matrix}).
 }
+
+In the case where the input data is already a data frame, three additional
+columns-(\code{.row_names}, \code{.row_index}, and \code{.panel})—are added to the data
+frame.
 
 if data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column
 will be added.
