@@ -33,7 +33,7 @@
 #' added into this plot.
 #' @param order An single integer for the layout order.
 #' @param name A string of the plot name. Used to switch the active context in
-#' [hmanno()] or [stack()].
+#' [hmanno()] or [stack_active()].
 #' @param check.param A single boolean value indicates whether to check the
 #' supplied parameters and warn.
 #' @param call The `call` used to construct the `Align` for reporting messages.

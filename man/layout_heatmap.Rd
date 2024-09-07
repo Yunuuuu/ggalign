@@ -48,7 +48,7 @@ added into this plot.}
 \item{order}{An single integer for the layout order.}
 
 \item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack]{stack()}}.}
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
 
 \item{environment}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Used prior to tidy
 evaluation.}

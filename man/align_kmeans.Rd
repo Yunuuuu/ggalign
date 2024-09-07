@@ -57,7 +57,7 @@ context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
 added into this plot.}
 
 \item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack]{stack()}}.}
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
 }
 \value{
 A new \code{Align} object.
