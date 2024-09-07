@@ -43,7 +43,7 @@ The function will always use a default mapping for the parallel axes in the
 layout (`aes(y = .data$.y)` for horizontal stack or `aes(x = .data$.x)` for
 vertical stack). See `ggplot2 specification` in `?align_gg` for details.
 
-> Note: All align_* functions treat rows as observations, meaning the `NROW()`
+> Note: All `align_*` functions treat rows as observations, meaning the `NROW()`
 function must return a number equal to the parallel layout axis. For heatmap
 column annotations, the heatmap matrix is transposed before being used. If data
 is a function, it will be applied to the transposed matrix. In this example, we
