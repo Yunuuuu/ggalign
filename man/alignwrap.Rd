@@ -21,11 +21,11 @@ clipped if they expand outside their designated area.}
 }
 \value{
 A \code{wrapped_plot} object that can be directly placed into
-\code{\link[=plot_grid]{plot_grid()}}.
+\code{\link[=align_plots]{align_plots()}}.
 }
 \description{
 The \code{alignwrap()} function allows non-ggplot2 elements to be converted into a
-compliant representation for use with \code{\link[=plot_grid]{plot_grid()}}. This is useful for
+compliant representation for use with \code{\link[=align_plots]{align_plots()}}. This is useful for
 adding any graphics that can be converted into a \link[grid:grid.grob]{grob} with the
 \code{\link[=wrap]{wrap()}} method.
 }

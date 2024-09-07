@@ -137,12 +137,12 @@ ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 #' Building `alignpatches` object
 #'
 #' @description
-#' Prepare plots to be aligned with `plot_grid`
+#' Prepare plots to be aligned with `align_plots`
 #'
 #' - `alignpatch`: Prepare a plot object to be aligned, the output must
 #' implement proper `patch_gtable` method.
 #'
-#' Extend object to be aligned with `plot_grid`
+#' Extend object to be aligned with `align_plots`
 #'
 #' - `patch_table`: Convert the plot into a [gtable][gtable::gtable].
 #' - `patch_align`: Build a standard [gtable][gtable::gtable] object and set the
@@ -151,7 +151,7 @@ ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 #' @details
 #' `ggalign` has implement `patch_gtable` method for following objects:
 #'   - [ggplot][ggplot2::ggplot]
-#'   - [alignpatches][plot_grid]
+#'   - [alignpatches][align_plots]
 #'   - [wrapped_plot][alignwrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
@@ -178,7 +178,7 @@ alignpatch.wrapped_plot <- function(x) x
 
 #########################################
 #' @param patch A patch to be aligned.
-#' @param guides Input guides argument to [plot_grid()]
+#' @param guides Input guides argument to [align_plots()]
 #' @return
 #' - `patch_gtable`: A [gtable][gtable::gtable] object.
 #' @export

@@ -461,7 +461,7 @@ align_border_size.gtable_alignpatches <- function(gt, t = NULL, l = NULL,
 #' @importFrom gtable gtable_width gtable_height
 #' @importFrom grid viewport
 #' @export
-align_border_size.gtable_plot_just <- function(gt, t = NULL, l = NULL,
+align_border_size.gtable_free_just <- function(gt, t = NULL, l = NULL,
                                                b = NULL, r = NULL) {
     ans <- NextMethod() # call `gtable_alignpatches` method
 

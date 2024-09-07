@@ -24,7 +24,7 @@ alignpatch.HeatmapLayout <- function(x) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- x@params
-    plot_grid(
+    align_plots(
         !!!plots[keep],
         design = design,
         heights = .subset2(sizes, "height"),
@@ -179,7 +179,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         # for heatmap annotation, we should always make them next to
         # the heatmap body
         if (!is.null(.subset2(ans, "plot"))) {
-            ans$plot <- plot_just(
+            ans$plot <- free_just(
                 .subset2(ans, "plot"),
                 just = switch(position,
                     top = "bottom",

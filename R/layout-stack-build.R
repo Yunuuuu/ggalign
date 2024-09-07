@@ -81,7 +81,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     if (is_empty(.subset2(patches, "plots"))) {
         return(list(plot = NULL, size = NULL))
     }
-    plot <- plot_grid(
+    plot <- align_plots(
         !!!.subset2(patches, "plots"),
         design = area(
             .subset2(patches, "t"),
@@ -163,13 +163,13 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (!is_null_unit(size <- .subset2(sizes, "top"))) {
-                attr(top, "height") <- size
+                attr(top, "vp_height") <- size
             }
             area <- stack_patch_add_plot(area, top, t = 1L, l = l)
         }
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
             if (!is_null_unit(size <- .subset2(sizes, "bottom"))) {
-                attr(bottom, "height") <- size
+                attr(bottom, "vp_height") <- size
             }
             area <- stack_patch_add_plot(area, bottom,
                 t = attr(area, "align") + 1L, l = l
@@ -199,13 +199,13 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (!is_null_unit(size <- .subset2(sizes, "left"))) {
-                attr(left, "width") <- size
+                attr(left, "vp_width") <- size
             }
             area <- stack_patch_add_plot(area, left, t = t, l = 1L)
         }
         if (!is.null(right <- .subset2(plots, "right"))) {
             if (!is_null_unit(size <- .subset2(sizes, "right"))) {
-                attr(right, "width") <- size
+                attr(right, "vp_width") <- size
             }
             area <- stack_patch_add_plot(area, right,
                 t = t, l = attr(area, "align") + 1L

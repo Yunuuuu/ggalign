@@ -2,16 +2,16 @@
 #' @param plot An alignpatches object.
 #' @keywords internal
 #' @noRd
-plot_just <- function(plot, just, width = NULL, height = NULL) {
+free_just <- function(plot, just, width = NULL, height = NULL) {
     attr(plot, "just") <- just
-    attr(plot, "width") <- width
-    attr(plot, "height") <- height
-    add_class(plot, "plot_just")
+    attr(plot, "vp_width") <- width
+    attr(plot, "vp_height") <- height
+    add_class(plot, "free_just")
 }
 
 ####################################################
 #' @export
-patch_gtable.plot_just <- function(patch, guides) {
+patch_gtable.free_just <- function(patch, guides) {
     gt <- NextMethod()
 
     # we check if all panel widths/heights are absolute sizes --------
@@ -27,7 +27,7 @@ patch_gtable.plot_just <- function(patch, guides) {
     attr(gt, "just") <- attr(patch, "just")
     attr(gt, "horizontal_just") <- !any(is_null_unit(panel_widths))
     attr(gt, "vertical_just") <- !any(is_null_unit(panel_heights))
-    attr(gt, "vp_width") <- attr(patch, "width")
-    attr(gt, "vp_height") <- attr(patch, "height")
-    add_class(gt, "gtable_plot_just")
+    attr(gt, "vp_width") <- attr(patch, "vp_width")
+    attr(gt, "vp_height") <- attr(patch, "vp_height")
+    add_class(gt, "gtable_free_just")
 }

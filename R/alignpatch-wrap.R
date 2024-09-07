@@ -1,7 +1,7 @@
 #' Wrap Arbitrary Graphics for Alignment
 #'
 #' The `alignwrap()` function allows non-ggplot2 elements to be converted into a
-#' compliant representation for use with [plot_grid()]. This is useful for
+#' compliant representation for use with [align_plots()]. This is useful for
 #' adding any graphics that can be converted into a [grob][grid::grob] with the
 #' [wrap()] method.
 #'
@@ -14,7 +14,7 @@
 #' @param clip A single boolean value indicating whether the grob should be
 #' clipped if they expand outside their designated area.
 #' @return A `wrapped_plot` object that can be directly placed into
-#' [plot_grid()].
+#' [align_plots()].
 #' @importFrom ggplot2 ggplot
 #' @importFrom grid is.grob
 #' @export
@@ -35,7 +35,7 @@ alignwrap <- function(plot, ..., align = NULL, clip = TRUE) {
 #' Convert Object into a Grob for Wrapping
 #'
 #' The `wrap()` function is used by [alignwrap()] to convert objects into a
-#' [grob][grid::grob], enabling their alignment within [plot_grid()].
+#' [grob][grid::grob], enabling their alignment within [align_plots()].
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
 #' @param ... Additional arguments passed to specific methods.
@@ -64,12 +64,30 @@ wrap.formula <- function(x, ..., device = NULL) {
     }
     gridGraphics::echoGrob(plot_call,
         name = "base_plot",
-        device = device %||% function(width, height) {
-            grDevices::pdf(NULL, width = width, height = height)
-            grDevices::dev.control("enable")
-        }
+        device = device %||% offscreen
     )
 }
+
+offscreen <- function(width, height) {
+    grDevices::pdf(NULL, width = width, height = height)
+    grDevices::dev.control("enable")
+}
+
+#' @importFrom utils getFromNamespace
+#' @export
+#' @rdname wrap
+wrap.Heatmap <- function(x, ..., device = NULL) {
+    draw <- getFromNamespace("draw", "ComplexHeatmap")
+    grid::grid.grabExpr(expr = draw(x, ...), device = device %||% offscreen)
+}
+
+#' @export
+#' @rdname wrap
+wrap.HeatmapList <- wrap.Heatmap
+
+#' @export
+#' @rdname wrap
+wrap.HeatmapAnnotation <- wrap.HeatmapList
 
 # For wrapped plot -------------------
 #' @export
@@ -77,6 +95,15 @@ alignpatch.grob <- function(x) alignwrap(x)
 
 #' @export
 alignpatch.formula <- function(x) alignwrap(x)
+
+#' @export
+alignpatch.Heatmap <- function(x) alignwrap(x)
+
+#' @export
+alignpatch.HeatmapList <- alignpatch.Heatmap
+
+#' @export
+alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
 
 #' @export
 alignpatch.wrapped_plot <- function(x) x

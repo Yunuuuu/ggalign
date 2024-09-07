@@ -35,7 +35,7 @@ activate.StackLayout <- function(x, what) {
 #' annotation.
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
 #' object. Only used when `position` is `NULL`.
-#' @inheritParams plot_grid
+#' @inheritParams align_plots
 #' @param free_labs A boolean value or a character of the axis position (`"t"`,
 #' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
 #' alignment. By default, all axis title won't be aligned.
@@ -97,7 +97,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #' the relative widths (`direction = "horizontal"`) / heights (`direction =
 #' "vertical"`).
 #' @inheritParams hmanno
-#' @inheritParams plot_grid
+#' @inheritParams align_plots
 #' @param what What should get activated for the stack layout? Possible values
 #' are follows:
 #'    * A single number or string of the plot elements in the stack layout.

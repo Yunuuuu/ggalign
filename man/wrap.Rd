@@ -4,6 +4,9 @@
 \alias{wrap}
 \alias{wrap.grob}
 \alias{wrap.formula}
+\alias{wrap.Heatmap}
+\alias{wrap.HeatmapList}
+\alias{wrap.HeatmapAnnotation}
 \title{Convert Object into a Grob for Wrapping}
 \usage{
 wrap(x, ...)
@@ -11,6 +14,12 @@ wrap(x, ...)
 \method{wrap}{grob}(x, ...)
 
 \method{wrap}{formula}(x, ..., device = NULL)
+
+\method{wrap}{Heatmap}(x, ..., device = NULL)
+
+\method{wrap}{HeatmapList}(x, ..., device = NULL)
+
+\method{wrap}{HeatmapAnnotation}(x, ..., device = NULL)
 }
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
@@ -29,6 +38,6 @@ A \link[grid:grid.grob]{grob} object.
 }
 \description{
 The \code{wrap()} function is used by \code{\link[=alignwrap]{alignwrap()}} to convert objects into a
-\link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=plot_grid]{plot_grid()}}.
+\link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=align_plots]{align_plots()}}.
 }
 \keyword{internal}

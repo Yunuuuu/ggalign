@@ -21,10 +21,10 @@
 #' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
 #' @export
-plot_grid <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA,
-                      heights = NA, design = NULL, guides = NULL,
-                      title = NULL, subtitle = NULL, caption = NULL,
-                      theme = NULL) {
+align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
+                        widths = NA, heights = NA, design = NULL, guides = NULL,
+                        title = NULL, subtitle = NULL, caption = NULL,
+                        theme = NULL) {
     plots <- rlang::list2(...)
     assert_bool(byrow)
     guides <- check_guides(guides)

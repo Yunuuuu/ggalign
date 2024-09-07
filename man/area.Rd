@@ -56,5 +56,5 @@ layout <- c(
 plot(layout)
 
 # Apply it to a patchwork
-plot_grid(p1, p2, p3, design = layout)
+align_plots(p1, p2, p3, design = layout)
 }

@@ -18,7 +18,7 @@ free_lab(plot, labs = c("t", "l", "b", "r"))
 free_space(plot, ...)
 }
 \arguments{
-\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=plot_grid]{alignpatches} object.}
+\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches} object.}
 
 \item{axes}{Which axes shouldn't be aligned? Allowed values: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
@@ -72,7 +72,7 @@ allowed:
 }
 }
 \description{
-\link{plot_grid} will try to align plots by their panels, and align every elements
+\link{align_plots} will try to align plots by their panels, and align every elements
 of the plot, following functions romove this restrictions.
 \itemize{
 \item \code{free_align}: if we want to compose plots without alignment of some panel

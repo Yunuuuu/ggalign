@@ -33,7 +33,7 @@ patch_align(gt, guides, panel_width, panel_height)
 
 \item{patch}{A patch to be aligned.}
 
-\item{guides}{Input guides argument to \code{\link[=plot_grid]{plot_grid()}}}
+\item{guides}{Input guides argument to \code{\link[=align_plots]{align_plots()}}}
 
 \item{gt}{A \link[gtable:gtable]{gtable} object from \code{patch_gtable}.}
 
@@ -59,13 +59,13 @@ should guess the size from the aspect ratio of the \code{gt}.}
 }
 }
 \description{
-Prepare plots to be aligned with \code{plot_grid}
+Prepare plots to be aligned with \code{align_plots}
 \itemize{
 \item \code{alignpatch}: Prepare a plot object to be aligned, the output must
 implement proper \code{patch_gtable} method.
 }
 
-Extend object to be aligned with \code{plot_grid}
+Extend object to be aligned with \code{align_plots}
 \itemize{
 \item \code{patch_table}: Convert the plot into a \link[gtable:gtable]{gtable}.
 \item \code{patch_align}: Build a standard \link[gtable:gtable]{gtable} object and set the
@@ -76,7 +76,7 @@ panel width and height.
 \code{ggalign} has implement \code{patch_gtable} method for following objects:
 \itemize{
 \item \link[ggplot2:ggplot]{ggplot}
-\item \link[=plot_grid]{alignpatches}
+\item \link[=align_plots]{alignpatches}
 \item \link[=alignwrap]{wrapped_plot}
 \item \link[patchwork:patchGrob]{patch}
 \item \link[patchwork:wrap_elements]{wrapped_patch}

@@ -111,7 +111,7 @@ ggheatmap(mat2) +
   theme(plot.margin = margin())
 ```
 
-We can use `plot_grid()` to arrange them.
+We can use `align_plots()` to arrange them.
 ```{r fig.dim = c(10, 10)}
 h1 <- ggheatmap(mat) +
   scale_fill_gradient2(name = "mat", low = "green", high = "red") +
@@ -149,7 +149,7 @@ h3 <- ggheatmap(abs(mat)) +
   align_dendro() +
   hmanno(NULL) &
   theme(plot.margin = margin())
-plot_grid(h1, h2, h3, ncol = 2L)
+align_plots(h1, h2, h3, ncol = 2L)
 ```
 
 ```{r}

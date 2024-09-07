@@ -55,7 +55,7 @@ reference:
     package, with the hope of eventually integrating and merging these functions
     into the `patchwork` project.
   contents:
-  - plot_grid
+  - align_plots
   - patch_titles
   - free_align
   - free_border
@@ -64,7 +64,7 @@ reference:
 
 - title: Extending Plot Composer
   desc: >
-    Extending capabilities to align graphics with `plot_grid`.
+    Extending capabilities to align graphics with `align_plots`.
   contents:
   - alignpatch
   - alignwrap
