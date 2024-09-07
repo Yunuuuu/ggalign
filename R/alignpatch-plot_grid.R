@@ -13,7 +13,7 @@
 #' match the aspect ratio of the content.
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
-#' [area()][patchwork::area] together.
+#' [area()] together.
 #' @param guides A single boolean value indicates whether to collect the guides,
 #' or you can specify the string of the guide position to collect. Allowed
 #' strings are: `r rd_values(BORDERS)`.

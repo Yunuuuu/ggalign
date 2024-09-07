@@ -37,7 +37,7 @@ match the aspect ratio of the content.}
 
 \item{design}{Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to
-\link[patchwork:area]{area()} together.}
+\code{\link[=area]{area()}} together.}
 
 \item{guides}{A single boolean value indicates whether to collect the guides,
 or you can specify the string of the guide position to collect. Allowed

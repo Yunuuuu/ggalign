@@ -1,4 +1,4 @@
-# Will ensure serialisation includes a link to the patchwork namespace
+# Will ensure serialisation includes a link to the ggalign namespace
 # Copied from patchwork
 ggalign_namespace_link <- function() NULL
 

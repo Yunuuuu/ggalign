@@ -1,3 +1,49 @@
+# We are removing the patchwork dependency by defining our own version of
+# patchwork::area, as some desired features won't be merged (see this
+# https://github.com/thomasp85/patchwork/issues/379). Therefore, ggalign will
+# retain `alignpatch-`.
+#' @inherit patchwork::area
+#' @details
+#' The grid that the areas are specified in reference to enumerate rows from top
+#' to bottom, and coloumns from left to right. This means that `t` and `l`
+#' should always be less or equal to `b` and `r` respectively. Instead of
+#' specifying area placement with a combination of `area()` calls, it is
+#' possible to instead pass in a single string
+#'
+#' ```
+#' areas <- c(area(1, 1, 2, 1),
+#'            area(2, 3, 3, 3))
+#' ```
+#'
+#' is equivalent to
+#'
+#' ```
+#' areas < -"A##
+#'           A#B
+#'           ##B"
+#' ```
+#' @return A `align_area` object.
+#' @examples
+#' p1 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp))
+#' p2 <- ggplot(mtcars) +
+#'     geom_boxplot(aes(gear, disp, group = gear))
+#' p3 <- ggplot(mtcars) +
+#'     geom_bar(aes(gear)) +
+#'     facet_wrap(~cyl)
+#'
+#' layout <- c(
+#'     area(1, 1),
+#'     area(1, 3, 3),
+#'     area(3, 1, 3, 2)
+#' )
+#'
+#' # Show the layout to make sure it looks as it should
+#' plot(layout)
+#'
+#' # Apply it to a patchwork
+#' plot_grid(p1, p2, p3, design = layout)
+#' @export
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
         one_area <- list(
@@ -21,7 +67,7 @@ area <- function(t, l, b = t, r = l) {
             cli::cli_abort("{.arg l} must be less than {.arg r}")
         }
     }
-    class(one_area) <- "align_area"
+    class(one_area) <- c("align_area", "patch_area")
     one_area
 }
 
@@ -74,10 +120,7 @@ as_areas.character <- function(x) {
 
 # For area from patchwork
 #' @export
-as_areas.patch_area <- function(x) {
-    class(x) <- "align_area"
-    x
-}
+as_areas.patch_area <- function(x) add_class(x, "align_area")
 
 #' @export
 c.align_area <- function(..., recursive = FALSE) {
@@ -104,4 +147,41 @@ print.align_area <- function(x, ...) {
     )
     print(data.frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
     invisible(x)
+}
+
+#' @importFrom grid unit
+#' @importFrom ggplot2 aes margin
+#' @export
+plot.align_area <- function(x, y, ...) {
+    area <- quickdf(x)
+    area$l <- area$l - 0.45
+    area$r <- area$r + 0.45
+    area$t <- area$t - 0.45
+    area$b <- area$b + 0.45
+    area$name <- as.factor(seq_len(nrow(area)))
+    b_fun <- function(lim) {
+        if (lim[1] < lim[2]) {
+            lim <- seq(floor(lim[1]), ceiling(lim[2]), by = 1)
+        } else {
+            lim <- seq(ceiling(lim[1]), floor(lim[2]), by = -1)
+        }
+        lim[-c(1, length(lim))]
+    }
+    ggplot2::ggplot(area) +
+        ggplot2::geom_rect(aes(
+            xmin = .data$l, xmax = .data$r,
+            ymin = .data$t, ymax = .data$b, fill = .data$name
+        ), alpha = 0.3) +
+        ggplot2::scale_y_reverse(breaks = b_fun, expand = c(0, 0.04)) +
+        ggplot2::scale_x_continuous(breaks = b_fun, expand = c(0, 0.04), position = "top") +
+        ggplot2::labs(fill = "Patch") +
+        ggplot2::theme_void() +
+        ggplot2::theme(
+            panel.grid.minor = ggplot2::element_line(
+                size = 0.5, colour = "grey"
+            ),
+            axis.text = ggplot2::element_text(),
+            axis.ticks.length = unit(3, "mm"),
+            plot.margin = margin(10, 10, 10, 10)
+        )
 }
