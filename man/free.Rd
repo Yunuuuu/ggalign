@@ -18,7 +18,8 @@ free_lab(plot, labs = c("t", "l", "b", "r"))
 free_space(plot, ...)
 }
 \arguments{
-\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches} object.}
+\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches}
+object.}
 
 \item{axes}{Which axes shouldn't be aligned? Allowed values: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 

@@ -11,7 +11,8 @@
 #' title, we can wrap the plot with `free_lab`.
 #' - `free_space`: Removing the ggplot element sizes when aligning.
 #'
-#' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots] object.
+#' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
+#' object.
 #' @param axes Which axes shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
 #' @export
 #' @return
