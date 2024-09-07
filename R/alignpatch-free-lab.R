@@ -1,6 +1,7 @@
 #' @param labs Which axis labs to be free?
-#' @return 
+#' @return
 #' - `free_lab`: A modified version of `plot` with a `free_lab` class.
+#' @export
 #' @rdname free
 free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
     UseMethod("free_lab")

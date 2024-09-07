@@ -82,3 +82,8 @@ panel width and height.
 \item \link[patchwork:wrap_elements]{wrapped_patch}
 }
 }
+\examples{
+alignpatch(ggplot())
+patch_gtable(ggplot())
+}
+\keyword{internal}

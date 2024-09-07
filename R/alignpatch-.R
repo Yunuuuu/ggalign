@@ -159,7 +159,10 @@ ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 #' @return
 #' - `alignpatch`: An object that implements `patch_gtable` method.
 #' @export
+#' @examples 
+#' alignpatch(ggplot())
 #' @order 1
+#' @keywords internal
 alignpatch <- function(x) UseMethod("alignpatch")
 
 #' @export
@@ -181,6 +184,8 @@ alignpatch.wrapped_plot <- function(x) x
 #' @param guides Input guides argument to [align_plots()]
 #' @return
 #' - `patch_gtable`: A [gtable][gtable::gtable] object.
+#' @examples 
+#' patch_gtable(ggplot())
 #' @export
 #' @rdname alignpatch
 #' @order 2

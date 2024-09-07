@@ -20,6 +20,33 @@
 #' @inheritParams ggplot2::labs
 #' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
+#' @examples
+#'
+#' p1 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp))
+#' p2 <- ggplot(mtcars) +
+#'     geom_boxplot(aes(gear, disp, group = gear))
+#' p3 <- ggplot(mtcars) +
+#'     geom_bar(aes(gear)) +
+#'     facet_wrap(~cyl)
+#' p4 <- ggplot(mtcars) +
+#'     geom_bar(aes(carb))
+#' p5 <- ggplot(mtcars) +
+#'     geom_violin(aes(cyl, mpg, group = cyl))
+#'
+#' # Either add the plots as single arguments
+#' align_plots(p1, p2, p3, p4, p5)
+#'
+#' # Or use bang-bang-bang to add a list
+#' align_plots(!!!list(p1, p2, p3), p4, p5)
+#'
+#' # Match plots to areas by name
+#' design <- "#BB
+#'            AA#"
+#' align_plots(B = p1, A = p2, design = design)
+#'
+#' # Compare to not using named plot arguments
+#' align_plots(p1, p2, design = design)
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, design = NULL, guides = NULL,

@@ -2,7 +2,7 @@ Package: ggalign
 Title: Align Multiple 'ggplot' Objects
 Version: 0.0.1
 Authors@R: 
-    person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2801-3332"))
+    person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0003-2801-3332"))
 Description: This package extends ggplot2 and offers various tools for organizing and arranging plots.
     It is designed to consistently align a specific axis across multiple ggplot objects, making it 
     especially useful for plots requiring data order manipulation. A typical use case includes 

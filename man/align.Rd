@@ -108,5 +108,9 @@ reorder heamtap rows/columns.
 }
 }
 
+\examples{
+align_gg()
+align_dendro()
+}
 \keyword{datasets}
 \keyword{internal}

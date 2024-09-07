@@ -38,6 +38,9 @@
 #' supplied parameters and warn.
 #' @param call The `call` used to construct the `Align` for reporting messages.
 #' @return A new `Align` object.
+#' @examples
+#' align_gg()
+#' align_dendro()
 #' @importFrom rlang caller_call current_call
 #' @export
 #' @keywords internal

@@ -86,3 +86,38 @@ title, we can wrap the plot with \code{free_lab}.
 \item \code{free_space}: Removing the ggplot element sizes when aligning.
 }
 }
+\examples{
+# Sometimes you have a plot that defies good composition alginment, e.g. due
+# to long axis labels
+p1 <- ggplot(mtcars) +
+  geom_bar(aes(y = factor(gear), fill = factor(gear))) +
+  scale_y_discrete(
+    "",
+    labels = c("3 gears are often enough",
+               "But, you know, 4 is a nice number",
+               "I would def go with 5 gears in a modern car")
+  )
+
+# When combined with other plots it ends up looking bad
+p2 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+
+align_plots(p1, p2, ncol = 1L)
+
+# We can fix this be using free (here, with the default "panel" type)
+align_plots(free_align(p1), p2, ncol = 1L)
+
+# If we still want the panels to be aligned to the right, we can choose to
+# free only the left side
+align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
+
+# We could use "label" to fix the layout in a different way
+align_plots(p1, free_lab(p2), ncol = 1L)
+
+# Another issue is that long labels are not using already available free
+# space.
+align_plots(patchwork::plot_spacer(), p1, p2, p2)
+
+# This can be fixed with the "space" type
+align_plots(patchwork::plot_spacer(), free_space(p1, "l"), p2, p2)
+
+}
