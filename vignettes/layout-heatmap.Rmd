@@ -67,16 +67,15 @@ ggheatmap(small_mat, filling = FALSE)
 ```
 
 ## Heatmap annotations
-Heatmap annotations add extra information to the rows or columns of the heatmap.
-Annotations can be positioned at the `top`, `left`, `bottom`, or `right` of the
-heatmap, and this positioning is referred to as the active context in
-`ggheatmap()`. 
+Heatmap annotations provide additional information for the rows or columns of
+the heatmap and can be placed at the `top`, `left`, `bottom`, or `right`.
 
-By default, `ggheatmap()` does not initialize any active context. You can use
-`hmanno()` to set the active context, directing all subsequent additions to this
-context. This allows you to customize the heatmap layout or add different types
-of plots. An annotation is represented as a `layout_stack()` object, which can
-contain multiple plots. 
+By default, `ggheatmap()` does not initialize an active context, so all
+additions are placed within the heatmap body. You can use `hmanno()` to set the
+active context, directing all subsequent additions to this position. The active
+context allows for custom layout adjustments and the addition of various plot
+types. An annotation is a `layout_stack()` object internally, capable of holding
+multiple plots.
 
 In the following example, `align_kmeans()` is used to group the columns into 3
 panels. It doesn't matter if this is added to the top or bottom since it won't
