@@ -22,7 +22,6 @@ reference:
   contents:
   - hmanno
   - stack_active
-  - activate
 
 - title: Layout
   desc: A `Layout` object defines how to place the plots.

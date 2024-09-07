@@ -1,25 +1,3 @@
-#' Determine the context of subsequent manipulations
-#'
-#' @param x A [layout_heatmap()] or [layout_stack()] object.
-#' @param what What should get activated? See `position` of [hmanno()] or `what`
-#' of [stack_active()].
-#' @return A object with the same class of `x`, whose active context will be
-#' `set`.
-#' @export
-activate <- function(x, what) UseMethod("activate")
-
-#' @export
-activate.HeatmapLayout <- function(x, what) {
-    what <- match_context(what)
-    set_context(x, what)
-}
-
-#' @export
-activate.StackLayout <- function(x, what) {
-    what <- check_stack_context(what)
-    set_context(x, what)
-}
-
 #' Determine the active context of heatmap layout
 #'
 #' @param position Which heatmap annotation should get activated? Possible
