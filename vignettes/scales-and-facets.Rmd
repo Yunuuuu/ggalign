@@ -160,12 +160,12 @@ ggheatmap(small_mat) +
   align_dendro()
 ```
 
-One useful function when you should use the discrete scale is the ambiguous
-`orientation` in geoms. Some geoms use the discrete axis as the main orientation
-like `ggplot2::geom_bar()` and `ggplot2::geom_box()`, but by default we always
-use the continuous scale. So you must manually provide an `orientation` argument
-for these geoms or manually set the discrete scale in the horizontal layout
-(including left and right heatmap annotation).
+One useful feature of the discrete scale is handling ambiguous orientation in
+geoms. Some geoms, like `ggplot2::geom_bar()` and `ggplot2::geom_boxplot()`, use
+the discrete axis as the main orientation, but by default, we use the continuous
+scale. For horizontal layouts (including left and right heatmap annotations),
+you must manually provide the `orientation` argument for these geoms or set the
+discrete scale. 
 
 In the following example, `geom_bar` won't work since the ambiguous orientation.
 ```{r}
