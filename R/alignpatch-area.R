@@ -2,6 +2,7 @@
 # patchwork::area, as some desired features won't be merged (see this
 # https://github.com/thomasp85/patchwork/issues/379). Therefore, ggalign will
 # retain `alignpatch-`.
+#' Specify a plotting area in `align_plots`
 #' @inherit patchwork::area
 #' @details
 #' The grid that the areas are specified in reference to enumerate rows from top
