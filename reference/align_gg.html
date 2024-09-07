@@ -177,12 +177,8 @@ added into this plot.</p></dd>
 <p>The internal will always use a default mapping of <code>aes(y = .data$.y)</code> or
 <code>aes(x = .data$.x)</code>.</p>
 <p>For ggplot usage, matrix (including a simple vector) data is converted into a
-long-format data frame, similar to the process utilized in <code>ggheatmap</code>. But
-note that the long-format data frame does not contain <code>.xpanel</code> or <code>.ypanel</code>
-column, as <code>align_gg</code> can only have one facet axis. In the case where the
-input data is already a data frame, three additional columns-(<code>.row_names</code>,
-<code>.row_index</code>, and <code>.panel</code>)—are added to the data frame.</p>
-<p>The data in the underlying <code>ggplot</code> object contains following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis.</p></li>
+long-format data frame. The data in the underlying <code>ggplot</code> object will
+contain following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis.</p></li>
 <li><p><code>.x</code> or <code>.y</code>: the <code>x</code> or <code>y</code> coordinates</p></li>
 <li><p><code>.row_names</code> and <code>.row_index</code>: A factor of the row names and an integer of
 row index of the original matrix or data frame.</p></li>
@@ -190,7 +186,10 @@ row index of the original matrix or data frame.</p></li>
 the original matrix (only applicable if <code>data</code> is a <code>matrix</code>).</p></li>
 <li><p><code>value</code>: the actual matrix value  (only applicable if <code>data</code> is a
 <code>matrix</code>).</p></li>
-</ul><p>if data is inherit from the <a href="layout_heatmap.html">heatmap</a> layout, an additional column
+</ul><p>In the case where the input data is already a data frame, three additional
+columns-(<code>.row_names</code>, <code>.row_index</code>, and <code>.panel</code>)—are added to the data
+frame.</p>
+<p>if data is inherit from the <a href="layout_heatmap.html">heatmap</a> layout, an additional column
 will be added.</p><ul><li><p><code>.extra_panel</code>: the panel information for column (left or right
 annotation) or row (top or bottom annotation).</p></li>
 </ul></div>
