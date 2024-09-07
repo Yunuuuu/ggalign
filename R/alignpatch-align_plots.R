@@ -56,7 +56,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     assert_bool(byrow)
     guides <- check_guides(guides)
     assert_s3_class(theme, "theme", null_ok = TRUE)
-    if (!is.null(design)) design <- as_areas(design)
     nms <- names(plots)
     if (!is.null(nms) && !is.null(design) && is.character(design)) {
         area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
@@ -68,6 +67,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     }
+    if (!is.null(design)) design <- as_areas(design)
     plots <- lapply(plots, alignpatch)
     new_alignpatches(plots, list(
         ncol = ncol,
