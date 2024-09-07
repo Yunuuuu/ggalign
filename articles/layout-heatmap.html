@@ -141,17 +141,16 @@ usual.</p>
 <div class="section level2">
 <h2 id="heatmap-annotations">Heatmap annotations<a class="anchor" aria-label="anchor" href="#heatmap-annotations"></a>
 </h2>
-<p>Heatmap annotations add extra information to the rows or columns of
-the heatmap. Annotations can be positioned at the <code>top</code>,
-<code>left</code>, <code>bottom</code>, or <code>right</code> of the
-heatmap, and this positioning is referred to as the active context in
-<code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code>.</p>
-<p>By default, <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> does not initialize any active
-context. You can use <code><a href="../reference/hmanno.html">hmanno()</a></code> to set the active context,
-directing all subsequent additions to this context. This allows you to
-customize the heatmap layout or add different types of plots. An
-annotation is represented as a <code><a href="../reference/layout_stack.html">layout_stack()</a></code> object, which
-can contain multiple plots.</p>
+<p>Heatmap annotations provide additional information for the rows or
+columns of the heatmap and can be placed at the <code>top</code>,
+<code>left</code>, <code>bottom</code>, or <code>right</code>.</p>
+<p>By default, <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> does not initialize an active
+context, so all additions are placed within the heatmap body. You can
+use <code><a href="../reference/hmanno.html">hmanno()</a></code> to set the active context, directing all
+subsequent additions to this position. The active context allows for
+custom layout adjustments and the addition of various plot types. An
+annotation is a <code><a href="../reference/layout_stack.html">layout_stack()</a></code> object internally, capable
+of holding multiple plots.</p>
 <p>In the following example, <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> is used to
 group the columns into 3 panels. It doesn’t matter if this is added to
 the top or bottom since it won’t add a plot area:</p>
