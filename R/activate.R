@@ -34,6 +34,10 @@
 #' [stack_active] for details.
 #' @return A `active` object which can be added into
 #' [HeatmapLayout][layout_heatmap].
+#' @examples
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("top") +
+#'     align_dendro()
 #' @export
 hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
                    guides = NA, free_labs = NA, free_spaces = NA,
@@ -87,6 +91,15 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'      `Align` object into the `StackLayout`.
 #' @return A `active` object which can be added into
 #' [StackLayout][layout_stack].
+#' @examples
+#' ggstack(matrix(1:9, nrow = 3L)) +
+#'     ggheatmap() +
+#'     # ggheamtap will set the active context, directing following addition
+#'     # into the heatmap plot area. To remove the heatmap active context,
+#'     # we can use `stack_active()` which will direct subsequent addition into
+#'     # the stack, here we add a dendrogram to the stack.
+#'     stack_active() +
+#'     align_dendro()
 #' @export
 stack_active <- function(sizes = NULL, guides = NA,
                          free_labs = NA, free_spaces = NA, plot_data = NA,

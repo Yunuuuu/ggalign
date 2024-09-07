@@ -71,3 +71,8 @@ A \code{active} object which can be added into
 \description{
 Determine the active context of heatmap layout
 }
+\examples{
+ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    hmanno("top") +
+    align_dendro()
+}

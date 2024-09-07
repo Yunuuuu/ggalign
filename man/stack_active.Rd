@@ -60,3 +60,13 @@ A \code{active} object which can be added into
 \description{
 Determine the active context of stack layout
 }
+\examples{
+ggstack(matrix(1:9, nrow = 3L)) +
+    ggheatmap() +
+    # ggheamtap will set the active context, directing following addition
+    # into the heatmap plot area. To remove the heatmap active context,
+    # we can use `stack_active()` which will direct subsequent addition into
+    # the stack, here we add a dendrogram to the stack.
+    stack_active() +
+    align_dendro()
+}
