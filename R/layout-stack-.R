@@ -29,8 +29,7 @@ layout_stack <- function(data, direction = NULL, ...,
 
 #' @export
 print.StackLayout <- function(x, ...) {
-    p <- alignpatch(x)
-    if (!is.null(p)) print(p, ...)
+    if (!is.null(p <- alignpatch(x))) print(p, ...)
     invisible(x)
 }
 
@@ -126,30 +125,6 @@ layout_stack.default <- function(data, ..., environment = parent.frame()) {
         i = "You have provided {.obj_type_friendly {data}}"
     ))
 }
-
-#' Subset a `StackLayout` object
-#'
-#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
-#'
-#' @param x A `StackLayout` object
-#' @param name A string of slot name in `StackLayout` object.
-#' @importFrom methods slot
-#' @keywords internal
-methods::setMethod("$", "StackLayout", function(x, name) {
-    # https://github.com/tidyverse/ggplot2/issues/6002
-    if (name == "theme") {
-        p <- ggplot2::ggplot()
-        p$theme
-    } else if (name == "plot_env") {
-        p <- ggplot2::ggplot()
-        p$plot_env
-    } else {
-        cli::cli_abort(c(
-            "`$` is just for internal ggplot2 methods",
-            i = "try to use `@` function instead"
-        ))
-    }
-})
 
 #' Reports whether `x` is a `StackLayout` object
 #'
