@@ -1,7 +1,7 @@
 #' Arrange multiple plots into a grid
 #'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
-#' ggplot object.
+#' ggplot object. Use `NULL` to indicate an empty spacer.
 #' @param ncol,nrow The dimensions of the grid to create - if both are `NULL` it
 #' will use the same logic as [facet_wrap()][ggplot2::facet_wrap] to set the
 #' dimensions

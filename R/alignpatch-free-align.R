@@ -50,10 +50,10 @@
 #'
 #' # Another issue is that long labels are not using already available free
 #' # space.
-#' align_plots(patchwork::plot_spacer(), p1, p2, p2)
+#' align_plots(NULL, p1, p2, p2)
 #'
 #' # This can be fixed with the "space" type
-#' align_plots(patchwork::plot_spacer(), free_space(p1, "l"), p2, p2)
+#' align_plots(NULL, free_space(p1, "l"), p2, p2)
 #'
 #' @export
 #' @rdname free

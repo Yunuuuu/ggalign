@@ -21,7 +21,7 @@ align_plots(
 }
 \arguments{
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
-ggplot object.}
+ggplot object. Use \code{NULL} to indicate an empty spacer.}
 
 \item{ncol, nrow}{The dimensions of the grid to create - if both are \code{NULL} it
 will use the same logic as \link[ggplot2:facet_wrap]{facet_wrap()} to set the

@@ -42,7 +42,7 @@ ggalignGrob.patch <- function(x) patchwork::patchGrob(x)
 patch_gtable.patch <- function(patch, guides) {
     guides <- if (length(guides)) "collect" else "keep"
     table <- patchwork::patchGrob(patch, guides = guides)
-    for (border in c("top", "left", "bottom", "right")) {
+    for (border in .TLBR) {
         panel_pos <- find_panel(table)
         if (border == "top") {
             h <- .subset2(panel_pos, "t") - 4L # above original xlab

@@ -36,8 +36,8 @@ GUIDE_RIGHT <- 13L + 2L
 # 8: axis-t
 # 9: strip-t
 # strip.placement = "outside"
-# 8.strip-t 
-# 9. axis-t 
+# 8.strip-t
+# 9. axis-t
 # 10: panel
 # 11: strip-b
 # 12: axis-b
@@ -202,6 +202,13 @@ alignpatch.alignpatches <- function(x) x
 
 #' @export
 alignpatch.wrapped_plot <- function(x) x
+
+###############################################
+#' @export
+alignpatch.NULL <- function(x) NULL
+
+#' @export
+patch_gtable.NULL <- function(patch, guides) make_patch()
 
 #########################################
 #' @param patch A patch to be aligned.

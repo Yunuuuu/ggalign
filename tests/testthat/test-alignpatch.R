@@ -176,7 +176,7 @@ test_that("`free_border()` works well", {
         align_plots(
             free_align(free_border(
                 align_plots(p1, p2, p_f, p4, heights = 1L), "l"
-            ), "t"), p4, p5, patchwork::plot_spacer(),
+            ), "t"), p4, p5, NULL,
             ncol = 2L
         )
     })
