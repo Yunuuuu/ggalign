@@ -197,14 +197,13 @@ ggheatmap(small_mat) +
 ## Facets
 When working with facets, manual configuration of panel using the `facet_*`
 function is not possible since the internal will use `facet_grid` to set the
-row/column groups specified by the heatmap annotation. However, you can provide
+row/column groups defined by `align_*()` functions. However, you can provide
 `facet_grid()` or `facet_null()` (if no panel) to control other arguments except
 `rows` and `cols`. A common usage case is to change the panel strip text.
 
 The default theme in this package will always remove the panel strip text, you
 can override this behaviour with `theme(strip.text = element_text())`. This
-allows us to add the panel title in heatmaps or any heatmap annotation with
-plot.
+allows us to add the panel title in the plot area.
 ```{r}
 ggheatmap(small_mat) +
   facet_grid(labeller = labeller(.column_panel = function(x) letters[as.integer(x)])) +
