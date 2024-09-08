@@ -266,15 +266,15 @@ into discrete.</p>
 </h2>
 <p>When working with facets, manual configuration of panel using the
 <code>facet_*</code> function is not possible since the internal will
-use <code>facet_grid</code> to set the row/column groups specified by
-the heatmap annotation. However, you can provide
+use <code>facet_grid</code> to set the row/column groups defined by
+<code>align_*()</code> functions. However, you can provide
 <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid()</a></code> or <code><a href="https://ggplot2.tidyverse.org/reference/facet_null.html" class="external-link">facet_null()</a></code> (if no panel) to
 control other arguments except <code>rows</code> and <code>cols</code>.
 A common usage case is to change the panel strip text.</p>
 <p>The default theme in this package will always remove the panel strip
 text, you can override this behaviour with
 <code>theme(strip.text = element_text())</code>. This allows us to add
-the panel title in heatmaps or any heatmap annotation with plot.</p>
+the panel title in the plot area.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html" class="external-link">labeller</a></span><span class="op">(</span>.column_panel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">letters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
