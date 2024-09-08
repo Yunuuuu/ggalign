@@ -127,8 +127,7 @@ ggheatmap(small_mat) +
 ## align_dendro
 The `align_dendro()` function adds a dendrogram to the layout and can also
 reorder or split the layout based on hierarchical clustering. This is
-particularly useful for working with heatmap plots. It supports both layout
-customization and the addition of plot. 
+particularly useful for working with heatmap plots.
 
 ```{r align_dendro}
 ggheatmap(small_mat) +
