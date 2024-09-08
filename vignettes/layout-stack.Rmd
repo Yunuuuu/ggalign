@@ -68,10 +68,10 @@ matrices. If the necessary data is not explicitly provided to an `align_*()`
 function, the data frame from `ggstack()` will be passed to the function and
 internally converted into a matrix, which may result in missing values. 
 
-An exception is the `align_gg()` (or `ggalign()`) function, which can handle
-both matrix and data frames. When the input is a matrix (or a simple vector),
-it is automatically transformed into a long-format data frame. When the input is
-a data frame, only the necessary panel and axis information is added to the data
+An exception is the `align_gg()`/`ggalign()` function, which can handle both
+matrix and data frames. When the input is a matrix (or a simple vector), it is
+automatically transformed into a long-format data frame. When the input is a
+data frame, only the necessary panel and axis information is added to the data
 frame.
 
 ```{r}
