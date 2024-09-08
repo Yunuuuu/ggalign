@@ -132,12 +132,11 @@ functions only accept matrices. If the necessary data is not explicitly
 provided to an <code>align_*()</code> function, the data frame from
 <code><a href="../reference/layout_stack.html">ggstack()</a></code> will be passed to the function and internally
 converted into a matrix, which may result in missing values.</p>
-<p>An exception is the <code><a href="../reference/align_gg.html">align_gg()</a></code> (or
-<code><a href="../reference/align_gg.html">ggalign()</a></code>) function, which can handle both matrix and data
-frames. When the input is a matrix (or a simple vector), it is
-automatically transformed into a long-format data frame. When the input
-is a data frame, only the necessary panel and axis information is added
-to the data frame.</p>
+<p>An exception is the <code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code>
+function, which can handle both matrix and data frames. When the input
+is a matrix (or a simple vector), it is automatically transformed into a
+long-format data frame. When the input is a data frame, only the
+necessary panel and axis information is added to the data frame.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_stack.html">ggstack</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
