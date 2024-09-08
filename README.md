@@ -27,8 +27,7 @@ remotes::install_github("Yunuuuu/ggalign")
 - `layout_stack()`/`ggstack()`: Arrange ggplot vertically or
   horizontally. See `vignette("layout-stack")` for details.
 
-To further customize these layouts, the `ggalign` package offers several
-`Align` objects:
+To further customize these layouts, we offer following functions:
 
 - `align_group()`: Group layout axis into panel with a group variable.
 - `align_kmeans()`: Group layout axis into panel by kmeans
@@ -40,8 +39,7 @@ To further customize these layouts, the `ggalign` package offers several
 For more detailed instructions on customizing layouts, see the vignette:
 `vignette("align-layout")`.
 
-Additionally, the following `Align` objects can be used to add plots
-directly into the layout:
+Additionally, plots can be added in the layout with following functions:
 
 - `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
 - `align_panel()`/`ggpanel()`: Create ggplot object with the layout
