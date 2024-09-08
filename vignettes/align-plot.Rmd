@@ -39,9 +39,12 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 provide data in various formats, including matrices, data frames, or simple
 vectors. This data can be also inherited from the layout. 
 
-The function will always use a default mapping for the parallel axes in the
-layout (`aes(y = .data$.y)` for horizontal stack or `aes(x = .data$.x)` for
-vertical stack). See `ggplot2 specification` in `?align_gg` for details.
+`align_gg()` always applies a default mapping for the parallel axes of the data
+index within the layout. This mapping is `aes(y = .data$.y)` for horizontal
+stacking (including left and right heatmap annotation) and `aes(x = .data$.x)`
+for vertical stacking (including top and bottom heatmap annotation). For more
+information, refer to the "ggplot2 Specification" section in the `align_gg()`
+documentation.
 
 > Note: All `align_*` functions treat rows as observations, meaning the `NROW()`
 function must return a number equal to the parallel layout axis. For heatmap
@@ -59,15 +62,15 @@ ggheatmap(small_mat) +
   geom_point(aes(y = value))
 ```
 
-See `ggplot2 specification` in `?align_gg()` for the data details.
+See `ggplot2 specification` in `align_gg()`/`ggalign()` for the data details.
 
 ### Plot data
-`align_gg()` requires specific data formats for its operations. If you need to
-transform or filter data for individual `geoms`, you can use the `data` argument
-within each `geom`. However, if you have multiple `geoms` and want a consistent
-transformation applied across all, you can utilize the `plot_data` argument in
-the `align_gg()` function. This allows you to transform the default data for all
-subsequent geoms. 
+`align_gg()`/`ggalign()` requires the specific data format for its operations.
+If you need to transform or filter data for individual `geoms`, you can use the
+`data` argument within each `geom`. However, if you have multiple `geoms` and
+want a consistent transformation applied across all, you can utilize the
+`plot_data` argument in the `align_gg()`/`ggalign()` function. This allows you
+to transform the default data for all subsequent geoms. 
 
 ```{r}
 ggheatmap(small_mat) +
