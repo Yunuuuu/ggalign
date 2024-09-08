@@ -47,8 +47,6 @@ ggstack(data = mat_scaled) +
   geom_tile(aes(y = 1, fill = factor(value))) +
   scale_y_continuous(breaks = NULL, name = NULL) +
   scale_fill_brewer(palette = "Set1", name = "type") +
-  # reset the heatmap active context into the heatmap body
-  hmanno() +
   # add another heatmap in the stack
   ggheatmap(base_mean) +
   # set the heatmap body width
