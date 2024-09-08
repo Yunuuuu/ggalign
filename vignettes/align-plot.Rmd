@@ -132,6 +132,27 @@ ggheatmap(small_mat) +
   theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
+### Plot titles
+`ggplot2` only allow add titles in the top or add caption in the bottom.
+The ggalign package extends this capability, allowing you to place titles around
+any border of the plot using the `patch_titles()` function. 
+
+```{r}
+ggheatmap(small_mat) +
+  patch_titles(left = "left patch title", bottom = "bottom patch title") +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(palette = "Dark2") +
+  patch_titles(top = "top patch title") +
+  hmanno("r", size = 0.5) +
+  ggalign(limits = FALSE) +
+  geom_boxplot(aes(y = .extra_panel, x = value, fill = factor(.extra_panel))) +
+  scale_y_discrete() +
+  scale_fill_brewer(palette = "Dark2", name = "branch") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  patch_titles(right = "right patch title")
+```
+
 ## `align_panel`
 The `align_panel()` function is similar to align_gg(), but it operates
 specifically with layout panel data, removing all axis labels and ticks. The
