@@ -1,8 +1,8 @@
 # We are removing the patchwork dependency by defining our own version of
 # patchwork::area, as some desired features won't be merged (see this
 # https://github.com/thomasp85/patchwork/issues/379). Therefore, ggalign will
-# retain `alignpatch-`.
-#' Specify a plotting area in `align_plots`
+# retain `alignpatch-*` scripts.
+#' Define the plotting areas in `align_plots`
 #' @inherit patchwork::area
 #' @details
 #' The grid that the areas are specified in reference to enumerate rows from top
@@ -78,6 +78,9 @@ as_areas <- function(x) UseMethod("as_areas")
 as_areas.default <- function(x) {
     cli::cli_abort("Cannot convert {.obj_type_friendly {x}} into a design area")
 }
+
+#' @export
+as_areas.NULL <- function(x) NULL
 
 #' @export
 as_areas.align_area <- function(x) x
