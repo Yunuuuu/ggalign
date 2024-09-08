@@ -81,21 +81,21 @@ the relative widths (<code>direction = "horizontal"</code>) / heights (<code>dir
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
+<dd><p>A boolean value or a string containing one or more of
+<code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code> indicates Which guide should be collected. If <code>NULL</code>, no
+guides will be collected. Default: "tlbr".</p></dd>
 
 
 <dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
-<dd><p>A boolean value or a character of the axis position (<code>"t"</code>,
-<code>"l"</code>, <code>"b"</code>, <code>"r"</code>) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.</p></dd>
+<dd><p>A boolean value or a string containing one or more of
+<code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code> indicates which axis title should be free from
+alignment. If <code>NULL</code>, all axis title will be aligned. Default: "tlbr".</p></dd>
 
 
 <dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
 <dd><p>A character specifies the ggplot elements which won't
-count space sizes when alignment. If <code>NULL</code>, no space will be removed. See
-<code><a href="free.html">free_space()</a></code> for allowed values.</p></dd>
+count space sizes when alignment. If <code>NULL</code> (default), no space will be
+removed. See <code><a href="free.html">free_space()</a></code> for allowed values.</p></dd>
 
 
 <dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
@@ -120,7 +120,7 @@ easily changed.</p></li>
 <li><p><code>NULL</code>: Remove any active context, this is useful when the active
 context is a <code><a href="layout_heatmap.html">layout_heatmap()</a></code> object, where any <code>Align</code> objects will
 be added into the heatmap. By removing the active context, we can add
-<code>Align</code> object into the <code>StackLayout</code>.</p></li>
+<code>Align</code> object into the <code><a href="layout_stack.html">layout_stack()</a></code> .</p></li>
 </ul></dd>
 
 </dl></div>
@@ -137,8 +137,9 @@ be added into the heatmap. By removing the active context, we can add
 <span class="r-in"><span>    <span class="co"># ggheamtap will set the active context, directing following addition</span></span></span>
 <span class="r-in"><span>    <span class="co"># into the heatmap plot area. To remove the heatmap active context,</span></span></span>
 <span class="r-in"><span>    <span class="co"># we can use `stack_active()` which will direct subsequent addition into</span></span></span>
-<span class="r-in"><span>    <span class="co"># the stack, here we add a dendrogram to the stack.</span></span></span>
+<span class="r-in"><span>    <span class="co"># the stack</span></span></span>
 <span class="r-in"><span>    <span class="fu">stack_active</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="co"># here we add a dendrogram to the stack.</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="stack_active-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
