@@ -114,11 +114,13 @@ with other <code>align_*</code> functions. <code><a href="../reference/align_gg.
 allowing you to provide data in various formats, including matrices,
 data frames, or simple vectors. This data can be also inherited from the
 layout.</p>
-<p>The function will always use a default mapping for the parallel axes
-in the layout (<code>aes(y = .data$.y)</code> for horizontal stack or
-<code>aes(x = .data$.x)</code> for vertical stack). See
-<code>ggplot2 specification</code> in <code><a href="../reference/align_gg.html">?align_gg</a></code> for
-details.</p>
+<p><code><a href="../reference/align_gg.html">align_gg()</a></code> always applies a default mapping for the
+parallel axes of the data index within the layout. This mapping is
+<code>aes(y = .data$.y)</code> for horizontal stacking (including left
+and right heatmap annotation) and <code>aes(x = .data$.x)</code> for
+vertical stacking (including top and bottom heatmap annotation). For
+more information, refer to the “ggplot2 Specification” section in the
+<code><a href="../reference/align_gg.html">align_gg()</a></code> documentation.</p>
 <blockquote>
 <p>Note: All <code>align_*</code> functions treat rows as observations,
 meaning the <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function must return a number equal to
@@ -137,19 +139,19 @@ alias for <code><a href="../reference/align_gg.html">align_gg()</a></code>.</p>
 <span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="align-plot_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>See <code>ggplot2 specification</code> in <code>?align_gg()</code>
-for the data details.</p>
+<p>See <code>ggplot2 specification</code> in
+<code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code> for the data details.</p>
 <div class="section level3">
 <h3 id="plot-data">Plot data<a class="anchor" aria-label="anchor" href="#plot-data"></a>
 </h3>
-<p><code><a href="../reference/align_gg.html">align_gg()</a></code> requires specific data formats for its
-operations. If you need to transform or filter data for individual
-<code>geoms</code>, you can use the <code>data</code> argument within
-each <code>geom</code>. However, if you have multiple <code>geoms</code>
-and want a consistent transformation applied across all, you can utilize
-the <code>plot_data</code> argument in the <code><a href="../reference/align_gg.html">align_gg()</a></code>
-function. This allows you to transform the default data for all
-subsequent geoms.</p>
+<p><code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code> requires the specific
+data format for its operations. If you need to transform or filter data
+for individual <code>geoms</code>, you can use the <code>data</code>
+argument within each <code>geom</code>. However, if you have multiple
+<code>geoms</code> and want a consistent transformation applied across
+all, you can utilize the <code>plot_data</code> argument in the
+<code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code> function. This allows you
+to transform the default data for all subsequent geoms.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/layout_heatmap.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
