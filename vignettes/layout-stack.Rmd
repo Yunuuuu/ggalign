@@ -21,6 +21,15 @@ knitr::opts_chunk$set(
 library(ggalign)
 ```
 
+ You can also specify which plot context of the annotation to use with the
+`what` argument in `hmanno()`. However, this is usually not necessary as each
+`align_*` function has a `set_context` argument that controls whether it sets
+the active context to the `Align` object when added to the stack layout:
+
+- For `align_*` functions that draw something (e.g., `align_dendro()`,
+  `ggalign()`), `set_context` is set to `TRUE` by default. 
+- For `align_*` functions that do not draw anything (e.g., `align_group()`,
+  `align_kmeans()`), `set_context` is set to `FALSE` by default.
 ```{r}
 
 ```

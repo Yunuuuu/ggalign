@@ -216,7 +216,7 @@ ggheatmap(small_mat) +
   ylab("Annotation title")
 ```
 
-## Removing Spaces When Aligning Elements
+## Removing spaces when aligning elements
 By default, we'll align all elements of the plot, which can sometimes lead to
 unwanted spacing. Consider the following example:
 

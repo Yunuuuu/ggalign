@@ -92,16 +92,47 @@ layout_add.StackLayout <- function(layout, object, object_name) {
 }
 
 #########################################################
-#' Add components to all plots
+#' Plot arithmetic
+#'
+#' @details
+#' In order to reduce code repetition `ggalign` provides two operators for
+#' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
+#' [layout_heatmap()] or [layout_stack()] object.
+#'
+#' Like `patchwork`, `&` add the element to all plots in the plot. If the
+#' element is a [theme][ggplot2::theme], this will also modify the layout theme.
+#'
+#' Unlike `patchwork`, the `-` operator adds ggplot2 elements (geoms, themes,
+#' facets, etc.) rather than a ggplot plot. The key difference between `&` and
+#' `-` is in how they behave in [layout_heatmap()]. The `-` operator only
+#' applies the element to the current active context in [layout_heatmap()].
+#' Using `-` might seem unintuitive if you think of the operator as "subtract",
+#' the underlying reason is that `-` is the only operator in the same precedence
+#' group as `+`.
 #'
 #' @param e1 A [layout_heatmap()] or [layout_stack()] object.
 #' @param e2 An object to be added to the plot.
 #' @return A modified `Layout` object.
-#' @name layout-and
-#' @aliases &.Layout &.HeatmapLayout &.ggheatmap &.StackLayout &.ggstack
+#' @examples
+#' mat <- matrix(rnorm(81), nrow = 9)
+#' ggheatmap(mat) +
+#'     hmanno("top") +
+#'     align_dendro() &
+#'     theme(panel.border = element_rect(
+#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
+#'     ))
+#' ggheatmap(mat) +
+#'     hmanno("top") +
+#'     align_dendro() -
+#'     theme(panel.border = element_rect(
+#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
+#'     ))
+#'
+#' @name layout-operator
 NULL
 
-#' @rdname layout-and
+#' @aliases &.Layout &.HeatmapLayout &.ggheatmap &.StackLayout &.ggstack
+#' @rdname layout-operator
 #' @export
 methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
     if (missing(e2)) {
@@ -110,7 +141,7 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
             "i" = "Did you accidentally put {.code &} on a new line?"
         ))
     }
-
+    if (is.null(e2)) return(e1) # styler: off
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
@@ -137,6 +168,40 @@ layout_and_add.HeatmapLayout <- function(layout, object, object_name) {
 #' @export
 layout_and_add.StackLayout <- function(layout, object, object_name) {
     layout_stack_and_add(object, layout, object_name)
+}
+
+#########################################################
+#' @aliases -.Layout -.HeatmapLayout -.ggheatmap -.StackLayout -.ggstack
+#' @rdname layout-operator
+#' @export
+methods::setMethod("-", c("Layout", "ANY"), function(e1, e2) {
+    if (missing(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code -} with a single argument.",
+            "i" = "Did you accidentally put {.code -} on a new line?"
+        ))
+    }
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_subtract(e1, e2, e2name)
+})
+
+#' @keywords internal
+layout_subtract <- function(layout, object, object_name) {
+    UseMethod("layout_subtract")
+}
+
+#' @export
+layout_subtract.HeatmapLayout <- function(layout, object, object_name) {
+    layout_heatmap_subtract(object, layout, object_name)
+}
+
+#' @export
+layout_subtract.StackLayout <- function(layout, object, object_name) {
+    layout_stack_subtract(object, layout, object_name)
 }
 
 ############################################################
