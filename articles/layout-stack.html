@@ -89,6 +89,20 @@ can also use the alias <code>ggstack</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
+<p>You can also specify which plot context of the annotation to use with
+the <code>what</code> argument in <code><a href="../reference/hmanno.html">hmanno()</a></code>. However, this
+is usually not necessary as each <code>align_*</code> function has a
+<code>set_context</code> argument that controls whether it sets the
+active context to the <code>Align</code> object when added to the stack
+layout:</p>
+<ul>
+<li>For <code>align_*</code> functions that draw something (e.g.,
+<code><a href="../reference/align_dendro.html">align_dendro()</a></code>, <code><a href="../reference/align_gg.html">ggalign()</a></code>),
+<code>set_context</code> is set to <code>TRUE</code> by default.</li>
+<li>For <code>align_*</code> functions that do not draw anything (e.g.,
+<code><a href="../reference/align_group.html">align_group()</a></code>, <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>),
+<code>set_context</code> is set to <code>FALSE</code> by default.</li>
+</ul>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>

@@ -53,52 +53,6 @@
     </div>
 
     <div class="section level2">
-      <h2 id="building-plot">Building plot<a class="anchor" aria-label="anchor" href="#building-plot"></a></h2>
-
-      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> or <code><a href="../reference/layout_stack.html">ggstack()</a></code>, supplying default data and aesthetic mappings, specified by <code>aes()</code>. You then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>. To save a plot to disk, use <code>ggsave()</code>.</p></div>
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="layout-add.html">`+`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Add components to <code>Layout</code></dd>
-      </dl><dl><dt>
-
-          <code><a href="layout-and.html">`&amp;`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Add components to all plots</dd>
-      </dl></div><div class="section level2">
-      <h2 id="activate-context">Activate context<a class="anchor" aria-label="anchor" href="#activate-context"></a></h2>
-
-      <div class="section-desc"><p>A <code>Layout</code> object may have multiple plots, you can choose where to add ggplot2 elements with following functions.</p></div>
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="hmanno.html">hmanno()</a></code>
-
-        </dt>
-        <dd>Determine the active context of heatmap layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="stack_active.html">stack_active()</a></code>
-
-        </dt>
-        <dd>Determine the active context of stack layout</dd>
-      </dl></div><div class="section level2">
       <h2 id="layout">Layout<a class="anchor" aria-label="anchor" href="#layout"></a></h2>
 
       <div class="section-desc"><p>A <code>Layout</code> object defines how to place the plots.</p></div>
@@ -121,6 +75,41 @@
 
         </dt>
         <dd>Put plots horizontally or vertically</dd>
+      </dl></div><div class="section level2">
+      <h2 id="building-process">Building process<a class="anchor" aria-label="anchor" href="#building-process"></a></h2>
+
+      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> or <code><a href="../reference/layout_stack.html">ggstack()</a></code>, supplying default data. You then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/hmanno.html">hmanno()</a></code> or <code><a href="../reference/stack_active.html">stack_active()</a></code> to control the layout attributes. To save a plot to disk, use <code>ggsave()</code>.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="layout-add.html">`+`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Add components to <code>Layout</code></dd>
+      </dl><dl><dt>
+
+          <code><a href="hmanno.html">hmanno()</a></code>
+
+        </dt>
+        <dd>Determine the active context of heatmap layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="stack_active.html">stack_active()</a></code>
+
+        </dt>
+        <dd>Determine the active context of stack layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="layout-operator.html">`&amp;`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="layout-operator.html">`-`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot arithmetic</dd>
       </dl></div><div class="section level2">
       <h2 id="plot-integration">Plot Integration<a class="anchor" aria-label="anchor" href="#plot-integration"></a></h2>
 
