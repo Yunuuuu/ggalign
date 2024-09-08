@@ -32,8 +32,12 @@ GUIDE_RIGHT <- 13L + 2L
 # 6: legend.box.spacing
 # feature: insert patch title
 # 7: xlab-t
-# 8: axis-t/strip-t strip.placement = "inside"
-# 9: strip-t/axis-t strip.placement = "outside"
+# strip.placement = "inside"
+# 8: axis-t
+# 9: strip-t
+# strip.placement = "outside"
+# 8.strip-t 
+# 9. axis-t 
 # 10: panel
 # 11: strip-b
 # 12: axis-b
@@ -63,7 +67,27 @@ GUIDE_RIGHT <- 13L + 2L
 # 14: tag
 # 15: margin
 
-BORDERS <- c("t", "l", "b", "r")
+.TLBR <- c("top", "left", "bottom", "right")
+.tlbr <- c("t", "l", "b", "r")
+
+setdiff_position <- function(x, y) gsub(sprintf("[%s]", y), "", x)
+union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
+split_position <- function(x) .subset2(strsplit(x, "", fixed = TRUE), 1L)
+setup_position <- function(x) {
+    .subset(
+        c(t = "top", l = "left", b = "bottom", r = "right"),
+        split_position(x)
+    )
+}
+
+opposite_pos <- function(pos) {
+    switch(pos,
+        top = "bottom",
+        bottom = "top",
+        left = "right",
+        right = "left"
+    )
+}
 
 #' @importFrom ggplot2 zeroGrob
 #' @importFrom gtable gtable gtable_add_grob
@@ -85,26 +109,26 @@ make_patch <- function() {
 #' @importFrom ggplot2 find_panel zeroGrob
 #' @importFrom gtable gtable gtable_add_grob
 #' @noRd
-make_full_patch <- function(gt, ..., borders = c("t", "l", "b", "r")) {
+make_full_patch <- function(gt, ..., borders = .TLBR) {
     panel_pos <- find_panel(gt)
     heights <- .subset2(gt, "heights")
     widths <- .subset2(gt, "widths")
-    if (any(borders == "t")) {
+    if (any(borders == "top")) {
         t <- heights[seq_len(.subset2(panel_pos, "t") - 1L)]
     } else {
         t <- unit(rep(0L, PANEL_ROW - 1L), "mm")
     }
-    if (any(borders == "l")) {
+    if (any(borders == "left")) {
         l <- widths[seq_len(.subset2(panel_pos, "l") - 1L)]
     } else {
         l <- unit(rep(0L, PANEL_COL - 1L), "mm")
     }
-    if (any(borders == "b")) {
+    if (any(borders == "bottom")) {
         b <- heights[seq(.subset2(panel_pos, "b") + 1L, nrow(gt))]
     } else {
         b <- unit(rep(0L, TABLE_ROWS - PANEL_ROW), "mm")
     }
-    if (any(borders == "r")) {
+    if (any(borders == "right")) {
         r <- widths[seq(.subset2(panel_pos, "r") + 1L, ncol(gt))]
     } else {
         r <- unit(rep(0L, TABLE_COLS - PANEL_COL), "mm")
@@ -159,7 +183,7 @@ ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 #' @return
 #' - `alignpatch`: An object that implements `patch_gtable` method.
 #' @export
-#' @examples 
+#' @examples
 #' alignpatch(ggplot())
 #' @order 1
 #' @keywords internal
@@ -184,7 +208,7 @@ alignpatch.wrapped_plot <- function(x) x
 #' @param guides Input guides argument to [align_plots()]
 #' @return
 #' - `patch_gtable`: A [gtable][gtable::gtable] object.
-#' @examples 
+#' @examples
 #' patch_gtable(ggplot())
 #' @export
 #' @rdname alignpatch

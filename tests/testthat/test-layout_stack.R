@@ -28,8 +28,8 @@ testthat::test_that("add `stack_active` object works well", {
     )
     params <- p2@params
     expect_identical(params$sizes, unit(rep_len(1L, 3L), "cm"))
-    expect_identical(params$guides, BORDERS)
-    expect_identical(params$free_labs, BORDERS)
+    expect_identical(params$guides, "tlbr")
+    expect_identical(params$free_labs, "tlbr")
     expect_identical(params$plot_data, NULL)
 })
 

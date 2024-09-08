@@ -39,8 +39,8 @@ testthat::test_that("add `heatmap_active` object works well", {
     params <- empty_heatmap2@params
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
-    expect_identical(params$guides, BORDERS)
-    expect_identical(params$free_labs, BORDERS)
+    expect_identical(params$guides, "tlbr")
+    expect_identical(params$free_labs, "tlbr")
     expect_identical(params$plot_data, NULL)
     expect_error(empty_heatmap + hmanno("t"))
 
@@ -57,7 +57,7 @@ testthat::test_that("add `heatmap_active` object works well", {
     expect_identical(params$width, unit(1, "cm"))
     expect_identical(params$height, unit(1, "cm"))
     expect_identical(params$guides, waiver())
-    expect_identical(params$free_labs, BORDERS)
+    expect_identical(params$free_labs, "tlbr")
     expect_identical(params$plot_data, NULL)
 
     # change parameters for heatmap annotation
@@ -84,8 +84,8 @@ testthat::test_that("add `heatmap_active` object works well", {
     expect_identical(get_nobs(stack), get_nobs(p, "x"))
     params <- stack@params
     expect_identical(params$size, unit(NA, "null"))
-    expect_identical(params$guides, character())
-    expect_identical(params$free_labs, BORDERS)
+    expect_identical(params$guides, NULL)
+    expect_identical(params$free_labs, "tlbr")
     expect_identical(params$plot_data, NULL)
 })
 

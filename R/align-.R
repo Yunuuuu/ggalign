@@ -73,7 +73,7 @@ align <- function(align_class, params,
     }
     data <- allow_lambda(data)
     if (!is.waive(free_labs)) {
-        free_labs <- check_layout_labs(free_labs, call = call)
+        free_labs <- check_layout_position(free_labs, call = call)
     }
     if (!is.waive(free_spaces) && !is.null(free_spaces)) {
         free_spaces <- check_ggelements(free_spaces, call = call)

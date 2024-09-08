@@ -9,11 +9,11 @@
 \alias{free_space}
 \title{Free from alignment}
 \usage{
-free_align(plot, axes = c("t", "l", "b", "r"))
+free_align(plot, axes = "tlbr")
 
-free_border(plot, borders = c("t", "l", "b", "r"))
+free_border(plot, borders = "tlbr")
 
-free_lab(plot, labs = c("t", "l", "b", "r"))
+free_lab(plot, labs = "tlbr")
 
 free_space(plot, ...)
 }
@@ -21,11 +21,14 @@ free_space(plot, ...)
 \item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches}
 object.}
 
-\item{axes}{Which axes shouldn't be aligned? Allowed values: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\item{axes}{Which axes shouldn't be aligned? A string containing
+one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{borders}{Which border shouldn't be aligned? Allowed values: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\item{borders}{Which border shouldn't be aligned? A string containing
+one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{labs}{Which axis labs to be free?}
+\item{labs}{Which axis labs to be free? A string containing one or more of
+\code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
 \item{...}{What sizes of the ggplot2 elements to remove? Allowed values are:
 \code{"title"}, \code{"subtitle"}, \code{"xlab-t"}, \code{"axis-t"}, \code{"strip-t"},
@@ -91,16 +94,19 @@ title, we can wrap the plot with \code{free_lab}.
 # Sometimes you have a plot that defies good composition alginment, e.g. due
 # to long axis labels
 p1 <- ggplot(mtcars) +
-  geom_bar(aes(y = factor(gear), fill = factor(gear))) +
-  scale_y_discrete(
-    "",
-    labels = c("3 gears are often enough",
-               "But, you know, 4 is a nice number",
-               "I would def go with 5 gears in a modern car")
-  )
+    geom_bar(aes(y = factor(gear), fill = factor(gear))) +
+    scale_y_discrete(
+        "",
+        labels = c(
+            "3 gears are often enough",
+            "But, you know, 4 is a nice number",
+            "I would def go with 5 gears in a modern car"
+        )
+    )
 
 # When combined with other plots it ends up looking bad
-p2 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) +
+    geom_point(aes(mpg, disp))
 
 align_plots(p1, p2, ncol = 1L)
 

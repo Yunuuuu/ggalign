@@ -32,13 +32,8 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
 #' @importFrom ggplot2 find_panel calc_element zeroGrob element_grob merge_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
-setup_patch_titles <- function(table, patch) {
-    patch_titles <- .subset(
-        .subset2(patch, "labels"),
-        c("top", "left", "bottom", "right")
-    )
+setup_patch_titles <- function(table, patch_titles, theme) {
     # complete_theme() will ensure `plot_title` exists
-    theme <- .subset2(patch, "theme")
     old_text <- calc_element("plot.title", theme)
     # always justification by center for patch title
     old_text$hjust <- 0.5
@@ -48,13 +43,14 @@ setup_patch_titles <- function(table, patch) {
         text <- merge_element(text, old_text)
     } else {
         cli::cli_abort(paste(
-            "Theme element {.var plot.patch_title} must have",
-            "class {.cls element_text}."
+            "Theme element {.var plot.patch_title} must be a",
+            "{.cls element_text}."
         ), call = quote(theme()))
     }
+    # inherit from plot.title.position, default use "panel"
     position <- .subset2(theme, "plot.patch_title.position") %||%
         .subset2(theme, "plot.title.position") %||% "panel"
-    for (border in c("top", "left", "bottom", "right")) {
+    for (border in .TLBR) {
         panel_pos <- find_panel(table)
         patch_title <- .subset2(patch_titles, border)
         name <- paste("plot.patch_title", border, sep = ".")

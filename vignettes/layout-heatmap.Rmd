@@ -177,9 +177,9 @@ ggheatmap(small_mat) +
 ```
 
 To align all axis titles, you can set `free_labs = NULL` in the `hmanno()`
-function. Alternatively, you can specify a character vector of axis positions
-("t", "l", "b", "r") to indicate which axis titles should remain free from
-alignment.
+function. Alternatively, A boolean value or a single string containing one or
+more of axis positions ("t", "l", "b", "r") to indicate which axis titles should
+be free from alignment.
 
 - **when `position` is `NULL`**: The `free_labs` argument controls the alignment
 of the heatmap body's axis titles. If set to `waiver()`, it will inherit from

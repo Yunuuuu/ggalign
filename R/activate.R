@@ -13,13 +13,15 @@
 #' annotation.
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
 #' object. Only used when `position` is `NULL`.
-#' @inheritParams align_plots
-#' @param free_labs A boolean value or a character of the axis position (`"t"`,
-#' `"l"`, `"b"`, `"r"`) indicates which axis title should be free from
-#' alignment. By default, all axis title won't be aligned.
+#' @param guides A boolean value or a string containing one or more of
+#' `r rd_values(.tlbr)` indicates Which guide should be collected. If `NULL`, no
+#' guides will be collected. Default: "tlbr".
+#' @param free_labs A boolean value or a string containing one or more of
+#' `r rd_values(.tlbr)` indicates which axis title should be free from
+#' alignment. If `NULL`, all axis title will be aligned. Default: "tlbr".
 #' @param free_spaces A character specifies the ggplot elements which won't
-#' count space sizes when alignment. If `NULL`, no space will be removed. See
-#' [free_space()] for allowed values.
+#' count space sizes when alignment. If `NULL` (default), no space will be
+#' removed. See [free_space()] for allowed values.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
 #' default is to not modify the data. Use `NULL`, if you don't want to modify
@@ -29,9 +31,8 @@
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
 #' @param theme `r rd_theme()` Only used when position is `NULL`.
-#' @inheritParams stack_active
-#' @param what What should get activated for the anntoation stack? See
-#' [stack_active] for details.
+#' @param what What should get activated for the anntoation stack? Only used
+#' when position is not `NULL`. See [stack_active] for details.
 #' @return A `active` object which can be added into
 #' [HeatmapLayout][layout_heatmap].
 #' @examples
@@ -45,17 +46,17 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (is.null(position)) {
         position <- NA
     } else {
-        position <- match.arg(position, HEATMAP_ANNOTATION_POSITION)
+        position <- match.arg(position, .TLBR)
     }
     if (!is.null(size)) size <- check_size(size)
-    if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
+    if (!is.waive(what)) what <- check_stack_context(what)
     if (!identical(guides, NA) && !is.waive(guides)) {
-        guides <- check_guides(guides)
+        guides <- check_layout_position(guides)
     }
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
-        free_labs <- check_layout_labs(free_labs)
+        free_labs <- check_layout_position(free_labs)
     }
     if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
         !is.null(free_spaces)) {
@@ -88,7 +89,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'    * `NULL`: Remove any active context, this is useful when the active
 #'      context is a [layout_heatmap()] object, where any `Align` objects will
 #'      be added into the heatmap. By removing the active context, we can add
-#'      `Align` object into the `StackLayout`.
+#'      `Align` object into the [layout_stack()] .
 #' @return A `active` object which can be added into
 #' [StackLayout][layout_stack].
 #' @examples
@@ -97,8 +98,9 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'     # ggheamtap will set the active context, directing following addition
 #'     # into the heatmap plot area. To remove the heatmap active context,
 #'     # we can use `stack_active()` which will direct subsequent addition into
-#'     # the stack, here we add a dendrogram to the stack.
+#'     # the stack
 #'     stack_active() +
+#'     # here we add a dendrogram to the stack.
 #'     align_dendro()
 #' @export
 stack_active <- function(sizes = NULL, guides = NA,
@@ -107,10 +109,10 @@ stack_active <- function(sizes = NULL, guides = NA,
     what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     if (!identical(guides, NA) && !is.waive(guides)) {
-        guides <- check_guides(guides)
+        guides <- check_layout_position(guides)
     }
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
-        free_labs <- check_layout_labs(free_labs)
+        free_labs <- check_layout_position(free_labs)
     }
     if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
         !is.null(free_spaces)) {
@@ -133,11 +135,9 @@ stack_active <- function(sizes = NULL, guides = NA,
 
 ########################################################
 match_context <- function(what) {
-    if (!is.null(what)) what <- match.arg(what, HEATMAP_ANNOTATION_POSITION)
+    if (!is.null(what)) what <- match.arg(what, .TLBR)
     what
 }
-
-HEATMAP_ANNOTATION_POSITION <- c("top", "left", "bottom", "right")
 
 #' @keywords internal
 set_context <- function(x, context) UseMethod("set_context")

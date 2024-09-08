@@ -94,13 +94,13 @@ heatmap columns as observations, but we need rows.
 plots along a single axis.
 }}
 
-\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
-\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.}
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
 
 \item{free_spaces}{A character specifies the ggplot elements which won't
-count space sizes when alignment. If \code{NULL}, no space will be removed. See
-\code{\link[=free_space]{free_space()}} for allowed values.}
+count space sizes when alignment. If \code{NULL} (default), no space will be
+removed. See \code{\link[=free_space]{free_space()}} for allowed values.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the

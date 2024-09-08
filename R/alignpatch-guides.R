@@ -29,12 +29,11 @@ collect_guides.gtable_ggplot <- function(gt, guides) {
     panel_pos <- find_panel(gt)
     remove_grobs <- NULL
     for (guide_pos in guides) {
-        panel_border <- .subset2(panel_pos, guide_pos)
         guide_ind <- switch(guide_pos,
-            t = .subset2(guides_loc, "b") < panel_border,
-            l = .subset2(guides_loc, "r") < panel_border,
-            b = .subset2(guides_loc, "t") > panel_border,
-            r = .subset2(guides_loc, "l") > panel_border
+            top = .subset2(guides_loc, "b") < .subset2(panel_pos, "t"),
+            left = .subset2(guides_loc, "r") < .subset2(panel_pos, "l"),
+            bottom = .subset2(guides_loc, "t") > .subset2(panel_pos, "b"),
+            right = .subset2(guides_loc, "l") > .subset2(panel_pos, "r")
         )
         if (!any(guide_ind)) next
         guide_loc <- guides_loc[guide_ind, , drop = FALSE]
@@ -48,16 +47,16 @@ collect_guides.gtable_ggplot <- function(gt, guides) {
 
         # remove the guide from the original gtable
         space_pos <- switch(guide_pos,
-            t = ,
-            l = 1L,
-            b = ,
-            r = -1L
+            top = ,
+            left = 1L,
+            bottom = ,
+            right = -1L
         )
-        if (guide_pos %in% c("r", "l")) {
+        if (guide_pos %in% c("right", "left")) {
             gt$widths[c(guide_loc$l, guide_loc$l + space_pos)] <- unit(
                 c(0L, 0L), "mm"
             )
-        } else if (guide_pos %in% c("b", "t")) {
+        } else if (guide_pos %in% c("bottom", "top")) {
             gt$heights[c(guide_loc$t, guide_loc$t + space_pos)] <- unit(
                 c(0L, 0L), "mm"
             )

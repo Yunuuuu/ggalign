@@ -1,15 +1,17 @@
-#' @param labs Which axis labs to be free?
+#' @param labs Which axis labs to be free? A string containing one or more of
+#' `r rd_values(.tlbr)`.
 #' @return
 #' - `free_lab`: A modified version of `plot` with a `free_lab` class.
 #' @export
 #' @rdname free
-free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
+free_lab <- function(plot, labs = "tlbr") {
     UseMethod("free_lab")
 }
 
 #' @export
-free_lab.ggplot <- function(plot, labs = c("t", "l", "b", "r")) {
-    attr(plot, "free_labs") <- check_labs(labs)
+free_lab.ggplot <- function(plot, labs = "tlbr") {
+    assert_position(labs)
+    attr(plot, "free_labs") <- labs
     add_class(plot, "free_lab")
 }
 
@@ -20,28 +22,30 @@ free_lab.alignpatches <- free_lab.ggplot
 free_lab.free_space <- free_lab.ggplot
 
 #' @export
-free_lab.free_align <- function(plot, labs = c("t", "l", "b", "r")) {
-    labs <- setdiff(labs, attr(plot, "free_axes"))
-    if (length(labs) == 0L) return(plot) # styler: off
+free_lab.free_align <- function(plot, labs = "tlbr") {
+    assert_position(labs)
+    labs <- setdiff_position(labs, attr(plot, "free_axes"))
+    if (nchar(labs) == 0L) return(plot) # styler: off
     NextMethod()
 }
 
 #' @export
-free_lab.free_borders <- function(plot, labs = c("t", "l", "b", "r")) {
-    labs <- setdiff(labs, attr(plot, "free_borders"))
-    if (length(labs) == 0L) return(plot) # styler: off
+free_lab.free_borders <- function(plot, labs = "tlbr") {
+    assert_position(labs)
+    labs <- setdiff_position(labs, attr(plot, "free_borders"))
+    if (nchar(labs) == 0L) return(plot) # styler: off
     NextMethod()
 }
 
 #' @export
-free_lab.free_lab <- function(plot, labs = c("t", "l", "b", "r")) {
-    labs <- check_labs(labs)
-    attr(plot, "free_labs") <- union(attr(plot, "free_labs"), labs)
+free_lab.free_lab <- function(plot, labs = "tlbr") {
+    assert_position(labs)
+    attr(plot, "free_labs") <- union_position(attr(plot, "free_labs"), labs)
     plot
 }
 
 #' @export
-free_lab.default <- function(plot, labs = c("t", "l", "b", "r")) {
+free_lab.default <- function(plot, labs = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
@@ -53,7 +57,7 @@ free_lab.wrapped_plot <- free_lab.default
 patch_gtable.free_lab <- function(patch, guides) {
     class(patch) <- setdiff(class(patch), "free_lab")
     gt <- NextMethod()
-    attach_lab(gt, labs = attr(patch, "free_labs"))
+    attach_lab(gt, labs = setup_position(attr(patch, "free_labs")))
 }
 
 #' @importFrom ggplot2 find_panel
@@ -65,10 +69,10 @@ attach_lab <- function(gt, labs) {
     panel_pos <- find_panel(gt)
     for (lab in labs) {
         layout <- .subset2(gt, "layout")
-        panel_border <- .subset2(panel_pos, lab)
-        if (lab == "t") {
-            index <- .subset2(layout, "t") >= (panel_border - 3L) &
-                .subset2(layout, "b") < panel_border &
+        if (lab == "top") {
+            panel_border <- .subset2(panel_pos, "t")
+            index <- .subset2(layout, "b") < panel_border &
+                .subset2(layout, "t") >= (panel_border - 3L) &
                 .subset2(layout, "l") >= .subset2(panel_pos, "l") &
                 .subset2(layout, "r") <= .subset2(panel_pos, "r")
             if (!any(index)) next
@@ -79,7 +83,8 @@ attach_lab <- function(gt, labs) {
                 y = 1L, just = "bottom",
                 height = gtable_height(grob)
             )
-        } else if (lab == "l") {
+        } else if (lab == "left") {
+            panel_border <- .subset2(panel_pos, "l")
             index <- .subset2(layout, "r") < panel_border &
                 .subset2(layout, "l") >= (panel_border - 3L) &
                 .subset2(layout, "t") >= .subset2(panel_pos, "t") &
@@ -92,7 +97,8 @@ attach_lab <- function(gt, labs) {
                 x = 0L, just = "right",
                 width = gtable_width(grob)
             )
-        } else if (lab == "b") {
+        } else if (lab == "bottom") {
+            panel_border <- .subset2(panel_pos, "b")
             index <- .subset2(layout, "t") > panel_border &
                 .subset2(layout, "b") <= (panel_border + 3L) &
                 .subset2(layout, "l") >= .subset2(panel_pos, "l") &
@@ -105,7 +111,8 @@ attach_lab <- function(gt, labs) {
                 y = 0L, just = "top",
                 height = gtable_height(grob)
             )
-        } else if (lab == "r") {
+        } else if (lab == "right") {
+            panel_border <- .subset2(panel_pos, "r")
             index <- .subset2(layout, "l") > panel_border &
                 .subset2(layout, "r") <= (panel_border + 3L) &
                 .subset2(layout, "t") >= .subset2(panel_pos, "t") &
@@ -129,12 +136,7 @@ attach_lab <- function(gt, labs) {
             r = .subset2(panel_pos, "r"),
             z = Inf, clip = "off",
             name = paste(
-                switch(lab,
-                    t = ,
-                    b = "xlab",
-                    l = ,
-                    r = "ylab"
-                ),
+                switch_position(lab, "xlab", "ylab"),
                 "axis", lab,
                 sep = "-"
             )

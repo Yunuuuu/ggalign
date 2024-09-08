@@ -13,7 +13,8 @@
 #'
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
 #' object.
-#' @param axes Which axes shouldn't be aligned? Allowed values: `r rd_values(BORDERS)`.
+#' @param axes Which axes shouldn't be aligned? A string containing
+#' one or more of `r rd_values(.tlbr)`.
 #' @return
 #' - `free_align`: A modified version of `plot` with a `free_align` class.
 #' @examples
@@ -21,16 +22,19 @@
 #' # Sometimes you have a plot that defies good composition alginment, e.g. due
 #' # to long axis labels
 #' p1 <- ggplot(mtcars) +
-#'   geom_bar(aes(y = factor(gear), fill = factor(gear))) +
-#'   scale_y_discrete(
-#'     "",
-#'     labels = c("3 gears are often enough",
-#'                "But, you know, 4 is a nice number",
-#'                "I would def go with 5 gears in a modern car")
-#'   )
+#'     geom_bar(aes(y = factor(gear), fill = factor(gear))) +
+#'     scale_y_discrete(
+#'         "",
+#'         labels = c(
+#'             "3 gears are often enough",
+#'             "But, you know, 4 is a nice number",
+#'             "I would def go with 5 gears in a modern car"
+#'         )
+#'     )
 #'
 #' # When combined with other plots it ends up looking bad
-#' p2 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+#' p2 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp))
 #'
 #' align_plots(p1, p2, ncol = 1L)
 #'
@@ -53,13 +57,14 @@
 #'
 #' @export
 #' @rdname free
-free_align <- function(plot, axes = c("t", "l", "b", "r")) {
+free_align <- function(plot, axes = "tlbr") {
     UseMethod("free_align")
 }
 
 #' @export
-free_align.ggplot <- function(plot, axes = c("t", "l", "b", "r")) {
-    attr(plot, "free_axes") <- check_borders(axes)
+free_align.ggplot <- function(plot, axes = "tlbr") {
+    assert_position(axes)
+    attr(plot, "free_axes") <- axes
     add_class(plot, "free_align")
 }
 
@@ -67,19 +72,15 @@ free_align.ggplot <- function(plot, axes = c("t", "l", "b", "r")) {
 free_align.alignpatches <- free_align.ggplot
 
 #' @export
-free_align.free_border <- function(plot, axes = c("t", "l", "b", "r")) {
-    free_borders <- attr(plot, "free_borders")
-    # we always add `free_align` behind `free_border`
-    class(plot) <- setdiff(class(plot), "free_border")
-    plot <- NextMethod()
-    free_border(plot, free_borders)
-}
+free_align.free_border <- free_align.ggplot
 
 #' @export
-free_align.free_lab <- function(plot, axes = c("t", "l", "b", "r")) {
-    axes <- check_borders(axes)
-    free_labs <- setdiff(attr(plot, "free_labs"), axes)
+free_align.free_lab <- function(plot, axes = "tlbr") {
+    assert_position(axes)
+    # if axes are free, it's not necessary to free the labs
+    free_labs <- setdiff_position(attr(plot, "free_labs"), axes)
     if (length(free_labs) == 0L) {
+        attr(plot, "free_labs") <- NULL
         class(plot) <- setdiff(class(plot), "free_lab")
     } else {
         attr(plot, "free_labs") <- free_labs
@@ -88,13 +89,14 @@ free_align.free_lab <- function(plot, axes = c("t", "l", "b", "r")) {
 }
 
 #' @export
-free_align.free_align <- function(plot, axes = c("t", "l", "b", "r")) {
-    attr(plot, "free_axes") <- union(attr(plot, "free_axes"), axes)
+free_align.free_align <- function(plot, axes = "tlbr") {
+    assert_position(axes)
+    attr(plot, "free_axes") <- union_position(attr(plot, "free_axes"), axes)
     plot
 }
 
 #' @export
-free_align.default <- function(plot, axes = c("t", "l", "b", "r")) {
+free_align.default <- function(plot, axes = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
@@ -117,7 +119,7 @@ patch_align.gtable_free_align <- function(gt, guides,
     list(
         gt = make_full_patch(gt,
             clip = "off", name = "free_align-table",
-            borders = setdiff(c("t", "l", "b", "r"), attr(gt, "free_axes"))
+            borders = setdiff(.TLBR, setup_position(attr(gt, "free_axes")))
         ),
         width = panel_width, height = panel_height, respect = FALSE
     )

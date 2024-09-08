@@ -24,13 +24,14 @@ alignpatch.HeatmapLayout <- function(x) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- x@params
+
     align_plots(
-        !!!plots[keep],
+        !!!.subset(plots, keep),
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(params, "guides") %|w|% TRUE,
+        guides = .subset2(params, "guides") %|w|% "tlbr",
         theme = x@theme
     )
 }
@@ -59,20 +60,26 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     # prepare free_labs and free_spaces
     heatmap_labs <- .subset2(params, "free_labs") %|w|% free_labs
 
-    if (!is.waive(heatmap_labs)) {
+    if (is.null(heatmap_labs)) {
+        horizontal_labs <- vertical_labs <- NULL
+    } else if (!is.waive(heatmap_labs)) {
         # prepare labs for child stack layout
-        horizontal_labs <- intersect(heatmap_labs, c("t", "b"))
-        vertical_labs <- intersect(heatmap_labs, c("l", "r"))
+        horizontal_labs <- gsub("[lr]", "", heatmap_labs)
+        vertical_labs <- gsub("[tb]", "", heatmap_labs)
+        if (nchar(horizontal_labs) == 0L) horizontal_labs <- NULL
+        if (nchar(vertical_labs) == 0L) vertical_labs <- NULL
     } else {
         # by default, we always collapse the axis title
-        heatmap_labs <- BORDERS
+        heatmap_labs <- "tlbr"
         horizontal_labs <- waiver()
         vertical_labs <- waiver()
     }
 
     # inherit from the parent stack layout
     heatmap_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
-    if (!is.waive(heatmap_spaces)) {
+    if (is.null(heatmap_spaces)) {
+        horizontal_spaces <- vertical_spaces <- NULL
+    } else if (!is.waive(heatmap_spaces)) {
         horizontal_spaces <- get_free_spaces(heatmap_spaces, c("t", "b"))
         vertical_spaces <- get_free_spaces(heatmap_spaces, c("l", "r"))
         if (length(horizontal_spaces) == 0L) horizontal_spaces <- NULL
@@ -152,7 +159,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     }
 
     # plot heatmap annotations ----------------------------
-    stack_list <- lapply(HEATMAP_ANNOTATION_POSITION, function(position) {
+    stack_list <- lapply(.TLBR, function(position) {
         if (is_empty(stack <- slot(heatmap, position))) {
             return(list(plot = NULL, size = NULL))
         }
@@ -191,7 +198,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         }
         ans
     })
-    names(stack_list) <- HEATMAP_ANNOTATION_POSITION
+    names(stack_list) <- .TLBR
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
@@ -205,7 +212,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         ]
         if (length(free_borders)) {
             # here, we attach the borders into the panel
-            p <- free_border(p, borders = free_borders)
+            p <- free_border(p, borders = paste(free_borders, collapse = ""))
         }
         p <- free_space(p, heatmap_spaces)
     }

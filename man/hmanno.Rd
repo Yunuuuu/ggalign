@@ -38,17 +38,17 @@ annotation.
 \item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
 object. Only used when \code{position} is \code{NULL}.}
 
-\item{guides}{A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\item{guides}{A boolean value or a string containing one or more of
+\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates Which guide should be collected. If \code{NULL}, no
+guides will be collected. Default: "tlbr".}
 
-\item{free_labs}{A boolean value or a character of the axis position (\code{"t"},
-\code{"l"}, \code{"b"}, \code{"r"}) indicates which axis title should be free from
-alignment. By default, all axis title won't be aligned.}
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
 
 \item{free_spaces}{A character specifies the ggplot elements which won't
-count space sizes when alignment. If \code{NULL}, no space will be removed. See
-\code{\link[=free_space]{free_space()}} for allowed values.}
+count space sizes when alignment. If \code{NULL} (default), no space will be
+removed. See \code{\link[=free_space]{free_space()}} for allowed values.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
@@ -61,8 +61,8 @@ change the default data for all \code{geoms}.}
 
 \item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background. Only used when position is \code{NULL}.}
 
-\item{what}{What should get activated for the anntoation stack? See
-\link{stack_active} for details.}
+\item{what}{What should get activated for the anntoation stack? Only used
+when position is not \code{NULL}. See \link{stack_active} for details.}
 }
 \value{
 A \code{active} object which can be added into

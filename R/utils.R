@@ -5,6 +5,14 @@
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
+str_extract <- function(string, pattern, ..., fixed = FALSE) {
+    matches <- regexpr(pattern, string, perl = !fixed, ..., fixed = fixed)
+    start <- as.vector(matches)
+    end <- start + attr(matches, "match.length") - 1L
+    start[start == -1L] <- NA_integer_
+    substr(string, start, end)
+}
+
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
@@ -26,10 +34,6 @@ read_example <- function(file = NULL) {
 
 example_file <- function(..., base = "extdata") {
     system.file(base, ..., package = pkg_nm())
-}
-
-complete_position <- function(x) {
-    .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
 }
 
 save_png <- function(code, width = 400L, height = 400L) {

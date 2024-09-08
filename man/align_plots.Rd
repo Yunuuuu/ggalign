@@ -39,9 +39,8 @@ match the aspect ratio of the content.}
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
-\item{guides}{A single boolean value indicates whether to collect the guides,
-or you can specify the string of the guide position to collect. Allowed
-strings are: \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\item{guides}{Which guide should be collected? A string containing one or
+more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
 \item{title}{The text for the title.}
 

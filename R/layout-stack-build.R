@@ -22,9 +22,9 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     guides <- .subset2(params, "guides") %|w|% guides
 
-    # unlike heatmap layout, stack free_labs and free_spaces were used
+    # unlike heatmap layout, stack `free_labs` and `free_spaces` were used
     # by all plots
-    free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% BORDERS
+    free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% "tlbr"
     free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces %|w|% NULL
 
     # we reorder the plots based on the `order` slot
@@ -99,7 +99,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = guides %|w|% TRUE,
+        guides = guides %|w|% "tlbr",
         theme = x@theme
     )
     list(plot = plot, size = .subset2(params, "size"))

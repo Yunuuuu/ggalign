@@ -7,60 +7,77 @@
 #    title
 #    caption
 #    guide: can be collected or kept
-#' @importFrom ggplot2 ggplotGrob
+#' @importFrom ggplot2 ggplotGrob update_labels
 #' @export
 #' @rdname alignpatch
 #' @order 3
 patch_gtable.ggplot <- function(patch, guides) {
-    patch <- remove_empty_ticks(patch)    
-    # complete_theme() will ensure elements exist
-    patch$theme <- complete_theme(.subset2(patch, "theme"))
+    # extract patch titles --------------------------------
+    patch_titles <- .subset(
+        .subset2(patch, "labels"),
+        c("top", "left", "bottom", "right")
+    )
+
+    # we remove patch titles to avoid warning message for unknown labels
+    patch <- update_labels(patch, list(
+        top = NULL, left = NULL, bottom = NULL, right = NULL
+    ))
+
+    # complete_theme() will ensure elements exist --------
+    theme <- complete_theme(.subset2(patch, "theme"))
+    patch$theme <- theme
+
+    # build the grob -------------------------------------
     ans <- ggplotGrob(patch)
+
+    # remove tick length if the tick is blank
     ans <- add_strips(ans) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
-    ans <- setup_patch_titles(ans, patch)
+    # here: we remove tick length when the tick is blank
+    # ans <- setup_tick_length(ans, theme)
+    ans <- setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
     add_class(ans, "gtable_ggplot")
 }
 
-#' @importFrom ggplot2 calc_element theme
-#' @importFrom grid unit
-remove_empty_ticks <- function(p) {
-    theme <- .subset2(p, "theme")
-    # here: we remove tick length when the tick is blank and the tick length is
-    # not set
-    ticks <- c("x.top", "y.left", "x.bottom", "y.right", "theta", "r")
-    rel_ticks <- rep_len(FALSE, length(ticks))
-    for (axis in c("axis.minor", "axis")) {
-        # For major ticks, we also ensure minor tick length is not relative
-        blank <- vapply(ticks, function(element) {
-            inherits(calc_element(
-                paste(axis, "ticks", element, sep = "."), theme
-            ), "element_blank") &&
-                is.null(calc_element(
-                    paste(axis, "ticks", "length", element, sep = "."), theme
-                ))
-        }, logical(1L), USE.NAMES = FALSE) & !rel_ticks
-        if (axis == "axis.minor") {
-            rel_ticks <- vapply(
-                paste(axis, "ticks", "length", ticks, sep = "."),
-                function(element) {
-                    inherits(calc_element(element, theme), "rel")
-                }, logical(1L),
-                USE.NAMES = FALSE
-            )
-        }
-        if (length(blank_ticks <- .subset(ticks, blank))) {
-            empty_ticks <- lapply(seq_along(blank_ticks), function(x) {
+#' @importFrom ggplot2 find_panel calc_element
+#' @importFrom grid unit unit.c
+setup_tick_length <- function(table, theme) {
+    panel_pos <- find_panel(table)
+    axis_pos <- switch(find_strip_pos(table),
+        inside = 2L,
+        outside = 1L
+    )
+    axes <- c("axis.minor", "axis")
+    for (tick in c("x.top", "y.left", "x.bottom", "y.right")) {
+        tick_lengths <- lapply(axes, function(axis) {
+            blank <- inherits(calc_element(
+                paste(axis, "ticks", tick, sep = "."), theme
+            ), "element_blank")
+            if (blank) { # No ticks, no length
                 unit(0, "mm")
-            })
-            names(empty_ticks) <- paste(
-                axis, "ticks", "length", blank_ticks,
-                sep = "."
-            )
-            p <- p + theme(!!!empty_ticks)
+            } else {
+                calc_element(
+                    paste(axis, "ticks.length", tick, sep = "."),
+                    theme
+                )
+            }
+        })
+        tick_length <- max(do.call(unit.c, tick_lengths))
+        if (tick == "x.top") {
+            pos <- .subset2(panel_pos, "t") - axis_pos
+            table$heights[pos] <- min(tick_length, table$heights[pos])
+        } else if (tick == "y.left") {
+            pos <- .subset2(panel_pos, "l") - axis_pos
+            table$widths[pos] <- min(tick_length, table$widths[pos])
+        } else if (tick == "x.bottom") {
+            pos <- .subset2(panel_pos, "b") + axis_pos
+            table$heights[pos] <- min(tick_length, table$heights[pos])
+        } else {
+            pos <- .subset2(panel_pos, "r") + axis_pos
+            table$widths[pos] <- min(tick_length, table$widths[pos])
         }
     }
-    p
+    table
 }
 
 #' @importFrom ggplot2 find_panel

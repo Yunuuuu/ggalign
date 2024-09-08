@@ -67,67 +67,26 @@ assert_reorder <- function(align, panel, strict) {
     }
 }
 
-check_guides <- function(guides, arg = caller_arg(guides),
-                         call = caller_call()) {
-    if (isFALSE(guides) || is.null(guides)) {
-        character()
-    } else if (isTRUE(guides)) {
-        BORDERS
-    } else {
-        check_borders(guides, arg = arg, call = call)
-    }
-}
-
-check_borders <- function(borders, arg = caller_arg(borders),
-                          call = caller_call()) {
-    if (length(borders) == 0L || !all(borders %in% BORDERS)) {
+assert_position <- function(position, arg = caller_arg(position),
+                            call = caller_call()) {
+    assert_string(position, empty_ok = FALSE, arg = arg, call = call)
+    if (grepl("[^tlbr]", position)) {
         cli::cli_abort(sprintf(
-            "only %s are allowed in {.arg {arg}}",
-            oxford_comma(style_val(BORDERS))
+            "{.arg {arg}} can only contain the %s characters",
+            oxford_comma(paste0("\"", .tlbr, "\""))
         ), call = call)
-    } else {
-        unique(borders)
     }
 }
 
-check_labs <- function(labs, arg = caller_arg(labs), call = caller_call()) {
-    if (is.character(labs)) {
-        template <- list(
-            t = "t",
-            l = "l",
-            b = "b",
-            r = "r",
-            x = c("t", "b"),
-            xlab = c("t", "b"),
-            xlabs = c("t", "b"),
-            y = c("l", "r"),
-            ylab = c("l", "r"),
-            ylabs = c("l", "r"),
-            `xlab-t` = "t",
-            `xlab-b` = "b",
-            `ylab-l` = "l",
-            `ylab-r` = "r"
-        )
-        ans <- .subset(template, labs)
-        if (any(unknown <- vapply(ans, is.null, logical(1L)))) { # nolint
-            cli::cli_abort(
-                "Cannot determine the labs: {labs[unknown]}",
-                call = call
-            )
-        }
-        unique(unlist(ans, FALSE, FALSE))
-    } else {
-        cli::cli_abort("{.arg {arg}} must be a character", call = call)
-    }
-}
-
-check_layout_labs <- function(x, arg = caller_arg(x), call = caller_call()) {
+#' @importFrom rlang is_scalar_character
+check_layout_position <- function(x, arg = caller_arg(x),
+                                  call = caller_call()) {
     if (is.null(x) || isFALSE(x)) {
         NULL
     } else if (isTRUE(x)) {
-        BORDERS
+        "tlbr"
     } else {
-        check_labs(x, arg = arg, call = call)
+        assert_position(x, arg = arg, call = call)
     }
 }
 

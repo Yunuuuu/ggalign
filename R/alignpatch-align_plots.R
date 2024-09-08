@@ -14,9 +14,8 @@
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
-#' @param guides A single boolean value indicates whether to collect the guides,
-#' or you can specify the string of the guide position to collect. Allowed
-#' strings are: `r rd_values(BORDERS)`.
+#' @param guides Which guide should be collected? A string containing one or
+#' more of `r rd_values(.tlbr)`.
 #' @inheritParams ggplot2::labs
 #' @param theme `r rd_theme()`
 #' @return A `alignpatches` object.
@@ -52,9 +51,12 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, design = NULL, guides = NULL,
                         title = NULL, subtitle = NULL, caption = NULL,
                         theme = NULL) {
-    plots <- rlang::list2(...)
+    plots <- rlang::dots_list(..., .ignore_empty = "all")
     assert_bool(byrow)
-    guides <- check_guides(guides)
+    if (!is.null(guides)) {
+        assert_position(guides)
+        guides <- setup_position(guides)
+    }
     assert_s3_class(theme, "theme", null_ok = TRUE)
     nms <- names(plots)
     if (!is.null(nms) && is.character(design)) {
@@ -75,7 +77,8 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         byrow = byrow,
         widths = widths,
         heights = heights,
-        design = design, guides = guides,
+        design = design,
+        guides = guides,
         theme = theme,
         title = title, subtitle = subtitle, caption = caption
     ))

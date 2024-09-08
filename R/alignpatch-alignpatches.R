@@ -78,11 +78,11 @@ BuilderAlignPatches <- ggplot2::ggproto(
         self$gt_list <- lapply(plots, patch_gtable, guides = guides)
 
         # collect guides  ---------------------------------------
-        if (length(guides)) {
+        if (is.null(guides)) {
+            collected_guides <- NULL
+        } else {
             # this'll also remove guides from `gt_list`
             collected_guides <- self$collect_guides(guides)
-        } else {
-            collected_guides <- NULL
         }
 
         # setup sizes for each row/column -----------------------
@@ -116,11 +116,6 @@ BuilderAlignPatches <- ggplot2::ggproto(
             theme$legend.box.spacing <- calc_element(
                 "legend.box.spacing", theme
             ) %||% unit(0.2, "cm")
-            # ggplot2 use top, left, bottom and left
-            # we complte the position
-            names(collected_guides) <- complete_position(
-                names(collected_guides)
-            )
             for (guide_pos in names(collected_guides)) {
                 gt <- attach_guides(
                     gt, guide_pos,
@@ -130,7 +125,6 @@ BuilderAlignPatches <- ggplot2::ggproto(
                 )
             }
         }
-
         # add panel area ---------------------------------------
         gtable_add_grob(
             gt, zeroGrob(),
@@ -155,13 +149,13 @@ BuilderAlignPatches <- ggplot2::ggproto(
 
         # collapse the guides in the same guide position
         # remove duplicated guides
-        ans <- lapply(BORDERS, function(guide_pos) {
+        ans <- lapply(.TLBR, function(guide_pos) {
             unlist(
                 lapply(ans, .subset2, guide_pos),
                 recursive = FALSE, use.names = FALSE
             )
         })
-        names(ans) <- BORDERS
+        names(ans) <- .TLBR
         ans <- compact(ans)
         ans <- lapply(ans, collapse_guides)
         compact(ans)
@@ -517,7 +511,7 @@ align_border_size.gtable_free_just <- function(gt, t = NULL, l = NULL,
 align_border_size.gtable_free_align <- function(gt, t = NULL, l = NULL,
                                                 b = NULL, r = NULL) {
     free_axes <- attr(gt, "free_axes")
-    for (axis in free_axes) {
+    for (axis in split_position(free_axes)) {
         assign(x = axis, value = NULL, envir = environment())
     }
     # can be `gtable_ggplot` or `gtable_alignpatches`
