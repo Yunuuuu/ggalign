@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggalign
+# ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
 
 This package extends ggplot2, enabling consistent axis alignment across
 multiple plots. It’s particularly useful for plots where data order
