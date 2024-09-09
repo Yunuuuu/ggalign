@@ -116,7 +116,7 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 }
 
 In the case where the input data is already a data frame, three additional
-columns-(\code{.row_names}, \code{.row_index}, and \code{.panel})—are added to the data
+columns (\code{.row_names}, \code{.row_index}, and \code{.panel}) are added to the data
 frame.
 
 if data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column

@@ -65,7 +65,7 @@ change the default data for all \code{geoms}.}
 when position is not \code{NULL}. See \link{stack_active} for details.}
 }
 \value{
-A \code{active} object which can be added into
+A \code{heatmap_active} object which can be added into
 \link[=layout_heatmap]{HeatmapLayout}.
 }
 \description{

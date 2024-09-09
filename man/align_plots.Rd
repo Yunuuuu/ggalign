@@ -31,9 +31,9 @@ dimensions}
 
 \item{widths, heights}{The relative widths and heights of each column and row
 in the grid. Will get repeated to match the dimensions of the grid. The
-special value of \verb{NA⁠} will behave as \verb{⁠1null⁠} unless a fixed aspect plot is
-inserted in which case it will allow the dimension to expand or contract to
-match the aspect ratio of the content.}
+special value of \code{NA} will behave as \verb{1null} unit unless a fixed aspect plot
+is inserted in which case it will allow the dimension to expand or contract
+to match the aspect ratio of the content.}
 
 \item{design}{Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to

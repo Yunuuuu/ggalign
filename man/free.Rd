@@ -42,7 +42,7 @@ allowed:
 "patch-title-top", "margin-t".
 \item \code{"l"/"left"}: "ylab-l", "axis-l", "strip-l", "patch-title-left",
 "margin-l".
-\item \code{"b"/"bottom"}："caption", "xlab-b", "axis-b", "strip-b",
+\item \code{"b"/"bottom"}: "caption", "xlab-b", "axis-b", "strip-b",
 "patch-title-bottom", "margin-b".
 \item \code{"r"/"right"}: "ylab-r", "axis-r", "strip-r", "patch-title-right",
 "margin-r".

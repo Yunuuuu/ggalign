@@ -9,7 +9,7 @@
 #'   "patch-title-top", "margin-t".
 #' - `"l"/"left"`: "ylab-l", "axis-l", "strip-l", "patch-title-left",
 #'   "margin-l".
-#' - `"b"/"bottom"`："caption", "xlab-b", "axis-b", "strip-b",
+#' - `"b"/"bottom"`: "caption", "xlab-b", "axis-b", "strip-b",
 #'   "patch-title-bottom", "margin-b".
 #' - `"r"/"right"`: "ylab-r", "axis-r", "strip-r", "patch-title-right",
 #'   "margin-r".

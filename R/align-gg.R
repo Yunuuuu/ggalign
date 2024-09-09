@@ -31,7 +31,7 @@
 #'    `matrix`).
 #'
 #' In the case where the input data is already a data frame, three additional
-#' columns-(`.row_names`, `.row_index`, and `.panel`)—are added to the data
+#' columns (`.row_names`, `.row_index`, and `.panel`) are added to the data
 #' frame.
 #'
 #' if data is inherit from the [heatmap][ggheatmap] layout, an additional column

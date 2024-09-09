@@ -54,7 +54,7 @@ be added into the heatmap. By removing the active context, we can add
 }}
 }
 \value{
-A \code{active} object which can be added into
+A \code{stack_active} object which can be added into
 \link[=layout_stack]{StackLayout}.
 }
 \description{

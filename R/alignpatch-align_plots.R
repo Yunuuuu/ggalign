@@ -8,9 +8,9 @@
 #' @param byrow If `FALSE` the plots will be filled in in column-major order.
 #' @param widths,heights The relative widths and heights of each column and row
 #' in the grid. Will get repeated to match the dimensions of the grid. The
-#' special value of `NA⁠` will behave as `⁠1null⁠` unless a fixed aspect plot is
-#' inserted in which case it will allow the dimension to expand or contract to
-#' match the aspect ratio of the content.
+#' special value of `NA` will behave as `1null` unit unless a fixed aspect plot
+#' is inserted in which case it will allow the dimension to expand or contract
+#' to match the aspect ratio of the content.
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
