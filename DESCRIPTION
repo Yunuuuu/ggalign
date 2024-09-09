@@ -1,12 +1,12 @@
 Package: ggalign
 Title: Align Multiple 'ggplot' Objects
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0003-2801-3332"))
-Description: The `ggalign` package is a ggplot2 extension offers various tools for organizing and 
-    arranging plots. It is designed to consistently align a specific axis across multiple ggplot 
-    objects, making it especially useful for plots requiring data order manipulation. A typical 
-    use case includes organizing combinations like a dendrogram and a heatmap.
+Description: A 'ggplot2' extension offers various tools for organizing and arranging plots. 
+    It is designed to consistently align a specific axis across multiple ggplot objects, 
+    making it especially useful for plots requiring data order manipulation. A typical use 
+    case includes organizing combinations like a dendrogram and a heatmap.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
