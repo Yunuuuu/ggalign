@@ -23,8 +23,7 @@ library(ggalign)
 
 ## Input data 
 The data input can be a numeric or character vector, a data frame, and any other
-data which can be converted into a matrix. Simple vector will be converted into
-a one column matrix. 
+data which can be converted into a matrix.
 
 ```{r setup_data}
 set.seed(123)
@@ -55,13 +54,14 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-You can treat the `LayerHeatmap` object as a normal ggplot2 object with a
+You can treat the `layout_heatmap()` object as a normal ggplot2 object with a
 default `mapping` and `data`. You can add `ggplot2` elements as usual.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
-By default, we'll add the heatmap layer. If you set `filling = FALSE`, a blank heamtap will be drawn.
+By default, we'll add the heatmap layer. If you set `filling = FALSE`, a blank
+heamtap will be drawn.
 ```{r}
 ggheatmap(small_mat, filling = FALSE)
 ```
