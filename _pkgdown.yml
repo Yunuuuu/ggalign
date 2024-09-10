@@ -65,10 +65,6 @@ reference:
   - wrap
   - patch
 
-- title: internal
-  contents:
-  - starts_with("patch.")
-
 - title: helpers
   desc: A handful of helpers
   contents:
@@ -80,6 +76,10 @@ reference:
   - is.ggstack
   - geom_draw
   - read_example
+
+- title: internal
+  contents:
+  - starts_with("patch.")
 
 articles:
 - title: Building plots
