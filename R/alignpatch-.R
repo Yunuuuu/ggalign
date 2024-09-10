@@ -176,7 +176,7 @@ ggalignGrob.default <- function(x) patch_gtable(alignpatch(x))
 #' `ggalign` has implement `patch_gtable` method for following objects:
 #'   - [ggplot][ggplot2::ggplot]
 #'   - [alignpatches][align_plots]
-#'   - [wrapped_plot][alignwrap]
+#'   - [wrapped_plot][wrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
 #' @param x A plot object to be prepared for alignment.
@@ -199,6 +199,22 @@ alignpatch.ggplot <- function(x) x
 
 #' @export
 alignpatch.alignpatches <- function(x) x
+
+# For wrapped plot -------------------
+#' @export
+alignpatch.grob <- function(x) wrap(x)
+
+#' @export
+alignpatch.formula <- function(x) wrap(x)
+
+#' @export
+alignpatch.Heatmap <- function(x) wrap(x)
+
+#' @export
+alignpatch.HeatmapList <- alignpatch.Heatmap
+
+#' @export
+alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
 
 #' @export
 alignpatch.wrapped_plot <- function(x) x

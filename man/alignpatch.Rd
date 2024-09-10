@@ -77,7 +77,7 @@ panel width and height.
 \itemize{
 \item \link[ggplot2:ggplot]{ggplot}
 \item \link[=align_plots]{alignpatches}
-\item \link[=alignwrap]{wrapped_plot}
+\item \link[=wrap]{wrapped_plot}
 \item \link[patchwork:patchGrob]{patch}
 \item \link[patchwork:wrap_elements]{wrapped_patch}
 }

@@ -2,42 +2,37 @@
 % Please edit documentation in R/alignpatch-wrap.R
 \name{wrap}
 \alias{wrap}
-\alias{wrap.grob}
-\alias{wrap.formula}
-\alias{wrap.Heatmap}
-\alias{wrap.HeatmapList}
-\alias{wrap.HeatmapAnnotation}
-\title{Convert Object into a Grob for Wrapping}
+\title{Wrap Arbitrary Graphics for Alignment}
 \usage{
-wrap(x, ...)
-
-\method{wrap}{grob}(x, ...)
-
-\method{wrap}{formula}(x, ..., device = NULL)
-
-\method{wrap}{Heatmap}(x, ..., device = NULL)
-
-\method{wrap}{HeatmapList}(x, ..., device = NULL)
-
-\method{wrap}{HeatmapAnnotation}(x, ..., device = NULL)
+wrap(plot, ..., align = NULL, on_top = TRUE, clip = TRUE, vp = NULL)
 }
 \arguments{
-\item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
+\item{plot}{Any graphic that can be converted into a \link[grid:grid.grob]{grob} using
+\code{\link[=patch]{patch()}}.}
 
-\item{...}{Additional arguments passed to specific methods.}
+\item{...}{Additional arguments passed to the \code{\link[=patch]{patch()}} method.}
 
-\item{device}{
-    A function that opens a graphics device for \code{grid.echo()} to
-    work on.  By default this is an off-screen, in-memory device
-    based on the \code{pdf} device.  This default device may not be
-    satisfactory when using custom fonts.
-  }
+\item{align}{A string specifying the area to place the plot: \code{"full"} for the
+full area, \code{"plot"} for the full plotting area (including the axis label), or
+\code{"panel"} for only the actual area where data is drawn.}
+
+\item{on_top}{A single boolean value indicates whether the graphic plot
+should be put frontmost. Note: the graphic plot will always put above the
+background.}
+
+\item{clip}{A single boolean value indicating whether the grob should be
+clipped if they expand outside their designated area.}
+
+\item{vp}{A \link[grid:viewport]{viewport} object, you can use this to define the
+plot area.}
 }
 \value{
-A \link[grid:grid.grob]{grob} object.
+A \code{wrapped_plot} object that can be directly placed into
+\code{\link[=align_plots]{align_plots()}}.
 }
 \description{
-The \code{wrap()} function is used by \code{\link[=alignwrap]{alignwrap()}} to convert objects into a
-\link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=align_plots]{align_plots()}}.
+The \code{wrap()} function allows non-ggplot2 elements to be converted into a
+compliant representation for use with \code{\link[=align_plots]{align_plots()}}. This is useful for
+adding any graphics that can be converted into a \link[grid:grid.grob]{grob} with the
+\code{\link[=patch]{patch()}} method.
 }
-\keyword{internal}

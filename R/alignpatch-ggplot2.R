@@ -25,59 +25,34 @@ patch_gtable.ggplot <- function(patch, guides) {
 
     # complete_theme() will ensure elements exist --------
     theme <- complete_theme(.subset2(patch, "theme"))
+    # here: we remove tick length when the tick is blank
+    theme <- setup_tick_length_element(theme)
     patch$theme <- theme
 
     # build the grob -------------------------------------
     ans <- ggplotGrob(patch)
-
-    # remove tick length if the tick is blank
-    ans <- add_strips(ans) # always add strips columns and/or rows
+    strip_pos <- find_strip_pos(ans)
+    ans <- add_strips(ans, strip_pos) # always add strips columns and/or rows
     ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
-    # here: we remove tick length when the tick is blank
-    # ans <- setup_tick_length(ans, theme)
     ans <- setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
     add_class(ans, "gtable_ggplot")
 }
 
-#' @importFrom ggplot2 find_panel calc_element
-#' @importFrom grid unit unit.c
-setup_tick_length <- function(table, theme) {
-    panel_pos <- find_panel(table)
-    axis_pos <- switch(find_strip_pos(table),
-        inside = 2L,
-        outside = 1L
-    )
-    axes <- c("axis.minor", "axis")
+#' @importFrom ggplot2 calc_element
+#' @importFrom grid unit
+setup_tick_length_element <- function(theme) {
     for (tick in c("x.top", "y.left", "x.bottom", "y.right")) {
-        tick_lengths <- lapply(axes, function(axis) {
+        for (axis in c("axis.minor", "axis")) {
             blank <- inherits(calc_element(
                 paste(axis, "ticks", tick, sep = "."), theme
             ), "element_blank")
             if (blank) { # No ticks, no length
-                unit(0, "mm")
-            } else {
-                calc_element(
-                    paste(axis, "ticks.length", tick, sep = "."),
-                    theme
-                )
+                element <- paste(axis, "ticks.length", tick, sep = ".")
+                theme[[element]] <- unit(0, "mm")
             }
-        })
-        tick_length <- max(do.call(unit.c, tick_lengths))
-        if (tick == "x.top") {
-            pos <- .subset2(panel_pos, "t") - axis_pos
-            table$heights[pos] <- min(tick_length, table$heights[pos])
-        } else if (tick == "y.left") {
-            pos <- .subset2(panel_pos, "l") - axis_pos
-            table$widths[pos] <- min(tick_length, table$widths[pos])
-        } else if (tick == "x.bottom") {
-            pos <- .subset2(panel_pos, "b") + axis_pos
-            table$heights[pos] <- min(tick_length, table$heights[pos])
-        } else {
-            pos <- .subset2(panel_pos, "r") + axis_pos
-            table$widths[pos] <- min(tick_length, table$widths[pos])
         }
     }
-    table
+    theme
 }
 
 #' @importFrom ggplot2 find_panel
@@ -281,12 +256,9 @@ merge_panels <- function(gt, rows, cols) {
 #' @importFrom gtable gtable_add_rows gtable_add_cols
 #' @importFrom ggplot2 find_panel
 #' @importFrom grid unit
-add_strips <- function(gt) {
+add_strips <- function(gt, strip_pos) {
     panel_loc <- find_panel(gt)
-    strip_pos <- switch(find_strip_pos(gt),
-        inside = 0L,
-        outside = 2L
-    )
+    strip_pos <- switch(strip_pos, inside = 0L, outside = 2L) # styler: off
     layout <- .subset2(gt, "layout")
     if (!any(grepl("strip-b", layout$name))) { # No strips
         gt <- gtable_add_rows(

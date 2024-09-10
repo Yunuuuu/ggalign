@@ -231,7 +231,7 @@ BuilderAlignPatches <- ggplot2::ggproto(
         if (!is.null(respect_dims <- do.call(base::rbind, respect_dims))) {
             respect <- matrix(
                 0L, TABLE_ROWS * dims[1L],
-                TABLE_COLS * dims[2]
+                TABLE_COLS * dims[2L]
             )
             respect[respect_dims] <- 1L
             gt$respect <- respect

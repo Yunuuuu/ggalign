@@ -86,12 +86,10 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
 
 new_alignpatches <- function(plots, layout) {
     structure(
-        list(
-            plots = plots, layout = layout,
-            # Will ensure serialisation includes a link to the `ggalign`
-            # namespace
-            `_namespace` = ggalign_namespace_link
-        ),
+        list(plots = plots, layout = layout),
+        # Will ensure serialisation includes a link to the `ggalign`
+        # namespace
+        `_namespace` = ggalign_namespace_link,
         class = "alignpatches"
     )
 }
