@@ -20,6 +20,7 @@
 #' plot area.
 #' @return A `wrapped_plot` object that can be directly placed into
 #' [align_plots()].
+#' @inherit patch seealso
 #' @importFrom ggplot2 ggplot theme element_blank
 #' @importFrom grid is.grob
 #' @export
@@ -58,7 +59,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
     patch
 }
 
-#' Convert Object into a Grob for Wrapping
+#' Convert Object into a Grob
 #'
 #' The `patch()` function is used by [wrap()] to convert objects into a
 #' [grob][grid::grob], enabling their alignment within [align_plots()].
@@ -66,33 +67,42 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @param x An object to be converted into a [grob][grid::grob].
 #' @param ... Additional arguments passed to specific methods.
 #' @return A [grob][grid::grob] object.
+#' @seealso
+#' - [patch.grob]
+#' - [patch.ggplot]
+#' - [patch.formula]
+#' - [patch.Heatmap]
+#' - [patch.HeatmapList]
+#' - [patch.HeatmapAnnotation]
 #' @export
 #' @keywords internal
 patch <- function(x, ...) UseMethod("patch")
 
+#' @inherit patch title description return
+#' @inheritParams patch
+#' @param ... Not used currently.
 #' @export
-#' @rdname patch
 patch.grob <- function(x, ...) x
 
+#' @inherit patch.grob
 #' @export
-#' @rdname patch
 patch.ggplot <- function(x, ...) patch_gtable(x)
 
+#' @inherit patch.grob
 #' @inheritParams gridGraphics::echoGrob
 #' @export
-#' @rdname patch
 patch.formula <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to add base plots")
     gp <- graphics::par(no.readonly = TRUE)
     force(x)
-    plot_call <- function() {
-        old_gp <- graphics::par(no.readonly = TRUE)
-        graphics::par(gp)
-        on.exit(try(graphics::par(old_gp)))
-        suppressMessages(eval(x[[2]], attr(x, ".Environment")))
-        invisible(NULL)
-    }
-    gridGraphics::echoGrob(plot_call,
+    gridGraphics::echoGrob(
+        function() {
+            old_gp <- graphics::par(no.readonly = TRUE)
+            graphics::par(gp)
+            on.exit(try(graphics::par(old_gp)))
+            suppressMessages(eval(x[[2]], attr(x, ".Environment")))
+            invisible(NULL)
+        },
         name = "base_plot",
         device = device %||% offscreen
     )
@@ -103,20 +113,21 @@ offscreen <- function(width, height) {
     grDevices::dev.control("enable")
 }
 
+#' @inherit patch.grob
+#' @inheritParams grid::grid.grabExpr
 #' @importFrom utils getFromNamespace
 #' @export
-#' @rdname patch
 patch.Heatmap <- function(x, ..., device = NULL) {
     draw <- getFromNamespace("draw", "ComplexHeatmap")
     grid::grid.grabExpr(expr = draw(x, ...), device = device %||% offscreen)
 }
 
 #' @export
-#' @rdname patch
+#' @rdname patch.Heatmap
 patch.HeatmapList <- patch.Heatmap
 
 #' @export
-#' @rdname patch
+#' @rdname patch.Heatmap
 patch.HeatmapAnnotation <- patch.HeatmapList
 
 #################################################

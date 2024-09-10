@@ -32,3 +32,13 @@ A \code{patch_inset} object, which can be added in ggplot.
 \description{
 Create a ggplot inset
 }
+\seealso{
+\itemize{
+\item \link{patch.grob}
+\item \link{patch.ggplot}
+\item \link{patch.formula}
+\item \link{patch.Heatmap}
+\item \link{patch.HeatmapList}
+\item \link{patch.HeatmapAnnotation}
+}
+}

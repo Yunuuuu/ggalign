@@ -1,6 +1,7 @@
 #' Create a ggplot inset
 #' @inheritParams wrap
 #' @return A `patch_inset` object, which can be added in ggplot.
+#' @inherit patch seealso
 #' @export
 inset <- function(plot, ..., align = "panel", on_top = TRUE,
                   clip = TRUE, vp = NULL) {

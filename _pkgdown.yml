@@ -65,6 +65,10 @@ reference:
   - patch
   - inset
 
+- title: internal
+  contents:
+  - starts_with("patch.")
+
 - title: helpers
   desc: A handful of helpers
   contents:

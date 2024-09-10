@@ -36,3 +36,13 @@ compliant representation for use with \code{\link[=align_plots]{align_plots()}}.
 adding any graphics that can be converted into a \link[grid:grid.grob]{grob} with the
 \code{\link[=patch]{patch()}} method.
 }
+\seealso{
+\itemize{
+\item \link{patch.grob}
+\item \link{patch.ggplot}
+\item \link{patch.formula}
+\item \link{patch.Heatmap}
+\item \link{patch.HeatmapList}
+\item \link{patch.HeatmapAnnotation}
+}
+}
