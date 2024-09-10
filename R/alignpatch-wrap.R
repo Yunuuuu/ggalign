@@ -114,6 +114,7 @@ offscreen <- function(width, height) {
 }
 
 #' @inherit patch.grob
+#' @param ... Additional arguments passed to [draw()][ComplexHeatmap::draw].
 #' @inheritParams grid::grid.grabExpr
 #' @importFrom utils getFromNamespace
 #' @export

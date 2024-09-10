@@ -15,7 +15,7 @@
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
 
-\item{...}{Not used currently.}
+\item{...}{Additional arguments passed to \link[ComplexHeatmap:draw-dispatch]{draw()}.}
 
 \item{device}{ A function that opens a graphics device for temporary
     rendering. By default this is an off-screen, in-memory device
