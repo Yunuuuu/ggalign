@@ -61,8 +61,8 @@ reference:
     Extending capabilities to align graphics with `align_plots`.
   contents:
   - alignpatch
-  - alignwrap
   - wrap
+  - patch
 
 - title: helpers
   desc: A handful of helpers
