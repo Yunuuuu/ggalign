@@ -23,43 +23,39 @@
 #' @importFrom ggplot2 ggplot theme element_blank
 #' @importFrom grid is.grob
 #' @export
-wrap <- function(plot, ..., align = NULL, on_top = TRUE,
+wrap <- function(plot, ..., align = "panel", on_top = TRUE,
                  clip = TRUE, vp = NULL) {
     patch <- ggplot() +
         theme(
             plot.background = element_blank(),
             panel.background = element_blank()
         )
-    patch <- alignwrap(
-        gg = patch, plot = plot, ...,
-        align = align, on_top = on_top, clip = clip, vp = vp
+    grob <- make_inset(
+        plot = plot, ..., align = align, on_top = on_top,
+        clip = clip, vp = vp
     )
-    add_class(patch, "wrapped_plot")
+    make_wrap(patch, grob)
 }
 
-#' @importFrom rlang arg_match0
-alignwrap <- function(gg, plot, ..., align, on_top,
-                      clip, vp, call = caller_call()) {
-    align <- arg_match0(align, c("panel", "plot", "full"), error_call = call)
-    assert_bool(on_top, call = call)
-    assert_bool(clip, call = call)
-    assert_s3_class(vp, "viewport", null_ok = TRUE, call = call)
-    if (!is.grob(grob <- patch(x = plot, ...))) {
-        cli::cli_abort("{.fn patch} must return a {.cls grob}", call = call)
-    }
-    attr(grob, "align") <- align
-    attr(grob, "clip") <- if (clip) "on" else "off"
-    attr(grob, "vp") <- vp
-    if (on_top) {
-        gg$wrapped_grobs_above <- c(
-            list(grob), .subset2(gg, "wrapped_grobs_above")
+make_wrap <- function(patch, grob) UseMethod("make_wrap")
+
+#' @export
+make_wrap.ggplot <- function(patch, grob) {
+    add_class(make_wrap.wrapped_plot(patch, grob), "wrapped_plot")
+}
+
+#' @export
+make_wrap.wrapped_plot <- function(patch, grob) {
+    if (attr(grob, "on_top")) {
+        patch$wrapped_grobs_above <- c(
+            list(grob), .subset2(patch, "wrapped_grobs_above")
         )
     } else {
-        gg$wrapped_grobs_under <- c(
-            .subset2(gg, "wrapped_grobs_under"), list(grob)
+        patch$wrapped_grobs_under <- c(
+            .subset2(patch, "wrapped_grobs_under"), list(grob)
         )
     }
-    gg
+    patch
 }
 
 #' Convert Object into a Grob for Wrapping
@@ -77,6 +73,10 @@ patch <- function(x, ...) UseMethod("patch")
 #' @export
 #' @rdname patch
 patch.grob <- function(x, ...) x
+
+#' @export
+#' @rdname patch
+patch.ggplot <- function(x, ...) patch_gtable(x)
 
 #' @inheritParams gridGraphics::echoGrob
 #' @export

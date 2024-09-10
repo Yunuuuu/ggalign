@@ -2,6 +2,8 @@
 
 * Add package logo
 
+* new `inset()` function
+
 # ggalign 0.0.2
   
 * omit the redudnant description and add single quote with package name

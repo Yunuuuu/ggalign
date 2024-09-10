@@ -3,6 +3,7 @@
 \name{patch}
 \alias{patch}
 \alias{patch.grob}
+\alias{patch.ggplot}
 \alias{patch.formula}
 \alias{patch.Heatmap}
 \alias{patch.HeatmapList}
@@ -12,6 +13,8 @@
 patch(x, ...)
 
 \method{patch}{grob}(x, ...)
+
+\method{patch}{ggplot}(x, ...)
 
 \method{patch}{formula}(x, ..., device = NULL)
 

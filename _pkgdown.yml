@@ -63,6 +63,7 @@ reference:
   - alignpatch
   - wrap
   - patch
+  - inset
 
 - title: helpers
   desc: A handful of helpers
