@@ -55,15 +55,15 @@ reference:
   - free_lab
   - free_space
   - area
+  - inset
 
 - title: Extending Plot Composer
   desc: >
-    Extending capabilities to align graphics with `align_plots`.
+    Extending capabilities to align graphics with `align_plots()`.
   contents:
   - alignpatch
   - wrap
   - patch
-  - inset
 
 - title: internal
   contents:
