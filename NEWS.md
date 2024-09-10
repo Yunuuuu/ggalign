@@ -19,5 +19,5 @@
   * `align_kmeans()`: Group layout observations by kmeans
   * `align_reorder()`: Reorder layout observations
   * `align_dendro()`: Reorder or Group layout based on Hierarchical Clustering
-  * `align_gg()`/`ggalign`: Create ggplot object in the layout
-  * `align_panel()`/`ggalign`: Create ggplot object based on the layout panel data.
+  * `align_gg()`/`ggalign()`: Create ggplot object in the layout
+  * `align_panel()`/`ggpanel()`: Create ggplot object based on the layout panel data.
