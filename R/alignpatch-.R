@@ -72,7 +72,9 @@ GUIDE_RIGHT <- 13L + 2L
 
 setdiff_position <- function(x, y) gsub(sprintf("[%s]", y), "", x)
 union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
-split_position <- function(x) .subset2(strsplit(x, "", fixed = TRUE), 1L)
+split_position <- function(x) {
+    unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
+}
 setup_position <- function(x) {
     .subset(
         c(t = "top", l = "left", b = "bottom", r = "right"),
