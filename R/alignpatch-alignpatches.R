@@ -50,7 +50,7 @@ patch_gtable.alignpatches <- function(patch, guides) {
 
     # we use R6 object here, since we need modify the gtables of the plots
     # across the building process
-    builder <- ggplot2::ggproto(NULL, BuilderAlignPatches, gt_list = NULL)
+    builder <- ggplot2::ggproto(NULL, AlignPatches, gt_list = NULL)
     builder$build(plots,
         design = design, dims = dims,
         panel_widths = panel_widths,
@@ -63,8 +63,8 @@ patch_gtable.alignpatches <- function(patch, guides) {
 #' @importFrom ggplot2 zeroGrob
 #' @importFrom gtable gtable gtable_add_grob
 #' @importFrom grid unit
-BuilderAlignPatches <- ggplot2::ggproto(
-    "BuilderAlignPatches", NULL,
+AlignPatches <- ggplot2::ggproto(
+    "AlignPatches", NULL,
     build = function(self, plots, design, dims,
                      panel_widths, panel_heights, guides, theme) {
         # prepare the output ----------------------------------
