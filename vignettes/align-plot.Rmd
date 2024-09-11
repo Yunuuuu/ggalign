@@ -1,5 +1,5 @@
 ---
-title: "Plot Integration"
+title: "Layout Plot"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Plot Integration}
