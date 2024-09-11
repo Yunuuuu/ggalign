@@ -15,6 +15,8 @@ pkg_nm <- function() packageName(topenv(environment()))
 #' @return If `file` is `NULL`, returns a character vector of available example
 #' file names. Otherwise, returns the contents of the specified example file,
 #' read as an R object.
+#' @examples
+#' read_example()
 #' @export
 read_example <- function(file = NULL) {
     if (is.null(file)) {

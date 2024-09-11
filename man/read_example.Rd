@@ -19,3 +19,6 @@ read as an R object.
 This function reads example data from the file. If no file is specified, it
 returns a list of available example files.
 }
+\examples{
+read_example()
+}
