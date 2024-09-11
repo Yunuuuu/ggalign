@@ -5,14 +5,6 @@
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
-str_extract <- function(string, pattern, ..., fixed = FALSE) {
-    matches <- regexpr(pattern, string, perl = !fixed, ..., fixed = fixed)
-    start <- as.vector(matches)
-    end <- start + attr(matches, "match.length") - 1L
-    start[start == -1L] <- NA_integer_
-    substr(string, start, end)
-}
-
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
@@ -116,10 +108,6 @@ trim_area <- function(area) {
 }
 
 is.waive <- function(x) inherits(x, "waiver")
-
-get_free_spaces <- function(ggelements, borders) {
-    intersect(ggelements, unlist(.subset(GGELEMENTS, borders), FALSE, FALSE))
-}
 
 add_default_mapping <- function(plot, default_mapping) {
     mapping <- .subset2(plot, "mapping")
@@ -290,17 +278,6 @@ transpose <- function(.l) {
 
     lapply(fields, function(i) lapply(.l, .subset2, i))
 }
-
-# List of all aesthetics known to ggplot
-# (In the future, .all_aesthetics should be removed in favor
-# of direct assignment to ggplot_global$all_aesthetics, see below.)
-.all_aesthetics <- c(
-    "adj", "alpha", "angle", "bg", "cex", "col", "color",
-    "colour", "fg", "fill", "group", "hjust", "label", "linetype", "lower",
-    "lty", "lwd", "max", "middle", "min", "pch", "radius", "sample", "shape",
-    "size", "srt", "upper", "vjust", "weight", "width", "x", "xend", "xmax",
-    "xmin", "xintercept", "y", "yend", "ymax", "ymin", "yintercept", "z"
-)
 
 # Use chartr() for safety since toupper() fails to convert i to I in Turkish locale
 lower_ascii <- "abcdefghijklmnopqrstuvwxyz"

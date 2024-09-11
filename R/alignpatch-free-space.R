@@ -82,6 +82,10 @@ remove_spaces <- function(gt, ggelements) {
     gt
 }
 
+get_free_spaces <- function(ggelements, borders) {
+    intersect(ggelements, unlist(.subset(GGELEMENTS, borders), FALSE, FALSE))
+}
+
 GGELEMENTS <- list(
     t = c(
         "title", "subtitle", "xlab-t", "axis-t", "strip-t",
