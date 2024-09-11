@@ -54,8 +54,8 @@ For more information on adding plots, refer to the vignette:
   Layout](https://yunuuuu.github.io/ggalign/articles/layout-heatmap.html)
 - [Layout
   Customization](https://yunuuuu.github.io/ggalign/articles/align-layout.html)
-- [Plot
-  Integration](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
+- [Layout
+  Plot](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
 - [Stack
   Layout](https://yunuuuu.github.io/ggalign/articles/layout-stack.html)
 - [Scales and
