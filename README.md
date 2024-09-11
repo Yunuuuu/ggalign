@@ -3,9 +3,13 @@
 
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
 
-This package extends ggplot2, enabling consistent axis alignment across
-multiple plots. It’s particularly useful for plots where data order
-needs to be manipulated, such as aligning a dendrogram with a heatmap.
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Yunuuuu/ggalign/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Yunuuuu/ggalign/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end --> This package extends ggplot2, enabling consistent
+axis alignment across multiple plots. It’s particularly useful for plots
+where data order needs to be manipulated, such as aligning a dendrogram
+with a heatmap.
 
 ## Installation
 
