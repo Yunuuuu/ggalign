@@ -252,20 +252,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # setup sizes for non-panel rows/columns --------------
         sizes <- table_sizes(
-            lapply(patches, function(patch) {
-                ans <- .subset2(.subset2(patch, "gt"), "widths")
-                ans[c(
-                    seq_len(LEFT_BORDER + 1L),
-                    (length(ans) - RIGHT_BORDER + 1L):length(ans)
-                )]
-            }),
-            lapply(patches, function(patch) {
-                ans <- .subset2(.subset2(patch, "gt"), "heights")
-                ans[c(
-                    seq_len(TOP_BORDER + 1L),
-                    (length(ans) - BOTTOM_BORDER + 1L):length(ans)
-                )]
-            }),
+            lapply(patches, function(patch) patch$widths()),
+            lapply(patches, function(patch) patch$heights()),
             design, dims[2L], dims[1L]
         )
         widths <- .subset2(sizes, "widths")
@@ -451,36 +439,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             # we only attach labs for plot in the border
             .subset2(patches, i)$free_lab(
                 labs = labs, gt = grob
-            )
-        })
-        gt
-    },
-    free_space = function(self, free_spaces,
-                          gt = self$gt, patches = self$patches) {
-        len <- length(patches)
-        grobs <- .subset2(gt, "grobs")
-        layout <- .subset2(gt, "layout")
-        n_row <- nrow(gt)
-        n_col <- ncol(gt)
-        gt$grobs[seq_len(len)] <- lapply(seq_len(len), function(i) {
-            borders <- c(
-                if (.subset2(layout, "t")[i] == 1L) "top" else NULL,
-                if (.subset2(layout, "l")[i] == 1L) "left" else NULL,
-                if (.subset2(layout, "b")[i] == n_row) "bottom" else NULL,
-                if (.subset2(layout, "r")[i] == n_col) "right" else NULL
-            )
-            grob <- .subset2(grobs, i)
-            if (length(borders) == 0L) {
-                return(grob)
-            }
-            free_spaces <- intersect(free_spaces, get_free_spaces(borders))
-            if (length(free_spaces) == 0L) {
-                return(grob)
-            }
-            # For each plot grob, we reuse it's method to attach the labs
-            # we only attach labs for plot in the border
-            .subset2(patches, i)$free_space(
-                free_spaces = free_spaces, gt = grob
             )
         })
         gt

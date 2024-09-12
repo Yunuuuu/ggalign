@@ -167,6 +167,20 @@ Patch <- ggproto("Patch", NULL,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
+    widths = function(self, gt = self$gt) {
+        ans <- .subset2(gt, "widths")
+        ans[c(
+            seq_len(LEFT_BORDER + 1L),
+            (length(ans) - RIGHT_BORDER + 1L):length(ans)
+        )]
+    },
+    heights = function(self, gt = self$gt) {
+        ans <- .subset2(gt, "heights")
+        ans[c(
+            seq_len(TOP_BORDER + 1L),
+            (length(ans) - BOTTOM_BORDER + 1L):length(ans)
+        )]
+    },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt) {
         if (!is.null(t)) gt$heights[seq_along(t)] <- t

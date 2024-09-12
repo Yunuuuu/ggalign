@@ -100,10 +100,10 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     if (is.null(heatmap_spaces)) {
         horizontal_spaces <- vertical_spaces <- NULL
     } else if (!is.waive(heatmap_spaces)) {
-        horizontal_spaces <- get_free_spaces(heatmap_spaces, c("t", "b"))
-        vertical_spaces <- get_free_spaces(heatmap_spaces, c("l", "r"))
-        if (length(horizontal_spaces) == 0L) horizontal_spaces <- NULL
-        if (length(vertical_spaces) == 0L) vertical_spaces <- NULL
+        horizontal_spaces <- gsub("[lr]", "", heatmap_spaces)
+        vertical_spaces <- gsub("[tb]", "", heatmap_spaces)
+        if (nchar(horizontal_spaces) == 0L) horizontal_spaces <- NULL
+        if (nchar(vertical_spaces) == 0L) vertical_spaces <- NULL
     } else {
         # By default, we won't remove border sizes of the heatmap
         heatmap_spaces <- NULL
@@ -237,13 +237,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         p <- free_lab(p, heatmap_labs)
     }
     if (!is.null(heatmap_spaces)) {
-        free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, heatmap_spaces)) > 0L
-        ]
-        if (length(free_borders)) {
-            # here, we attach the borders into the panel
-            p <- free_border(p, borders = paste(free_borders, collapse = ""))
-        }
         p <- free_space(p, heatmap_spaces)
     }
     plots <- c(plots, list(heatmap = p))

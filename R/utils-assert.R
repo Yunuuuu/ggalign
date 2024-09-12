@@ -87,53 +87,7 @@ check_layout_position <- function(x, arg = caller_arg(x),
         "tlbr"
     } else {
         assert_position(x, arg = arg, call = call)
-    }
-}
-
-check_ggelements <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (is.character(x)) {
-        template <- list(
-            x = c("xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b"),
-            y = c("ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r"),
-            xlab = c("xlab-t", "xlab-b"),
-            xlabs = c("xlab-t", "xlab-b"),
-            ylab = c("ylab-l", "ylab-r"),
-            ylabs = c("ylab-l", "ylab-r"),
-            lab = c("xlab-t", "xlab-b", "ylab-l", "ylab-r"),
-            labs = c("xlab-t", "xlab-b", "ylab-l", "ylab-r"),
-            axis = c("axis-t", "axis-b", "axis-l", "axis-r"),
-            axes = c("axis-t", "axis-b", "axis-l", "axis-r"),
-            strip = c("strip-t", "strip-b", "strip-l", "strip-r"),
-            strips = c("strip-t", "strip-b", "strip-l", "strip-r"),
-            `patch-titles` = c(
-                "patch-title-top", "patch-title-left",
-                "patch-title-bottom", "patch-title-right"
-            ),
-            `patch-title` = c(
-                "patch-title-top", "patch-title-left",
-                "patch-title-bottom", "patch-title-right"
-            ),
-            margin = c("margin-t", "margin-l", "margin-b", "margin-r"),
-            margins = c("margin-t", "margin-l", "margin-b", "margin-r")
-        )
-        template <- c(GGELEMENTS, template, rename(
-            GGELEMENTS, c(t = "top", l = "left", b = "bottom", r = "right")
-        ))
-        valid_elements <- unlist(GGELEMENTS,
-            recursive = FALSE, use.names = FALSE
-        )
-        direct <- intersect(x, valid_elements)
-        indirect <- setdiff(x, valid_elements)
-        ans <- .subset(template, indirect)
-        if (any(unknown <- vapply(ans, is.null, logical(1L)))) { # nolint
-            cli::cli_abort(paste(
-                "Cannot determine the ggplot elements:",
-                "{indirect[unknown]}"
-            ), call = call)
-        }
-        union(direct, unlist(ans, FALSE, FALSE))
-    } else {
-        cli::cli_abort("{.arg {arg}} must be a character", call = call)
+        x
     }
 }
 

@@ -17,7 +17,7 @@ free_vp <- function(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...) {
 alignpatch.free_vp <- function(x) {
     Parent <- NextMethod()
     ggproto(
-        "PatchFreeBorder", Parent,
+        "PatchFreeViewport", Parent,
         vp = attr(x, "vp"),
         patch_gtable = function(self, guides, plot = self$plot) {
             ggproto_parent(Parent, self)$patch_gtable(

@@ -46,7 +46,6 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     # by all plots
     free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% "tlbr"
     free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces %|w|% NULL
-
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
         if (is.align(plot)) {

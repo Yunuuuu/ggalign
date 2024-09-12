@@ -1,5 +1,6 @@
-#' @param borders Which border shouldn't be aligned? A string containing
-#' one or more of `r rd_values(.tlbr)`.
+#' @param borders Which border shouldn't be aligned (`free_border`) or which
+#' border sizes should be removed (`free_space`)? A string containing one or
+#' more of `r rd_values(.tlbr)`.
 #' @return
 #' - `free_border`: A modified version of `plot` with a `free_border` class.
 #' @export

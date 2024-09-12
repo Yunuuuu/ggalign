@@ -245,26 +245,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
             )
         }
         gt
-    },
-
-    #' @importFrom ggplot2 find_panel
-    #' @importFrom rlang is_empty
-    free_space = function(self, free_spaces, gt = self$gt) {
-        strip_pos <- find_strip_pos(gt)
-        free_spaces <- lapply(GGELEMENTS, intersect, free_spaces)
-        panel_pos <- find_panel(gt)
-        for (border in names(free_spaces)) {
-            elements <- .subset2(free_spaces, border)
-            if (is_empty(elements)) next
-            pos <- .subset2(panel_pos, border) +
-                ggelements_pos(border, elements, strip_pos)
-            if (border %in% c("t", "b")) {
-                gt$heights[pos] <- unit(0, "mm")
-            } else {
-                gt$widths[pos] <- unit(0, "mm")
-            }
-        }
-        gt
     }
 )
 
