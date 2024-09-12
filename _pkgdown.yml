@@ -23,7 +23,7 @@ reference:
   - stack_active
   - layout-operator
 
-- title: Plot Integration
+- title: Layout Plot
   desc: >
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
