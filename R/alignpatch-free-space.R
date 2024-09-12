@@ -72,12 +72,11 @@ alignpatch.free_space <- function(x) {
         },
         free_space = function(self, free_spaces, gt = self$gt) {
             if (length(free_spaces <- setdiff(free_spaces, self$free_spaces))) {
-                ggproto_parent(Parent, self)$free_space(
+                gt <- ggproto_parent(Parent, self)$free_space(
                     free_spaces = free_spaces, gt = gt
                 )
-            } else {
-                gt
             }
+            gt
         }
     )
 }

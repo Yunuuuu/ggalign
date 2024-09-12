@@ -70,12 +70,11 @@ alignpatch.free_lab <- function(x) {
         },
         free_lab = function(self, labs, gt = self$gt) {
             if (length(labs <- setdiff(labs, self$free_labs))) {
-                ggproto_parent(Parent, self)$free_lab(
+                gt <- ggproto_parent(Parent, self)$free_lab(
                     labs = labs, gt = gt
                 )
-            } else {
-                gt
             }
+            gt
         }
     )
 }

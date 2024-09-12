@@ -76,12 +76,11 @@ alignpatch.free_border <- function(x) {
         },
         free_border = function(self, guides, borders, gt = self$gt) {
             if (length(borders <- setdiff(borders, self$free_borders))) {
-                ggproto_parent(Parent, self)$free_border(
+                gt <- ggproto_parent(Parent, self)$free_border(
                     guides = guides, borders = borders, gt = gt
                 )
-            } else {
-                gt
             }
+            gt
         }
     )
 }
