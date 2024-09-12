@@ -196,7 +196,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         guess_heights <- which(is.na(as.numeric(panel_heights)))
         cols <- .subset2(design, "l")
         rows <- .subset2(design, "t")
-        gt_index <- order(
+        patch_index <- order(
             # we first set the widths for the fixed plot with heights set by
             # user
             cols %in% guess_widths & !rows %in% guess_heights,
@@ -213,7 +213,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # For plot cannot be fixed, we always attach strips, axes and labels
         # into the panel area
-        for (i in gt_index) {
+        for (i in patch_index) {
             row <- .subset(rows, i)
             col <- .subset(cols, i)
             # we always build a standard gtable layout from the gtable
@@ -225,13 +225,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             panel_widths[col] <- .subset2(panel_sizes, "width")
             panel_heights[row] <- .subset2(panel_sizes, "height")
             if (.subset2(panel_sizes, "respect")) {
-                respect_dims[[i]] <- matrix(
-                    c(
-                        (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
-                        (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
-                    ),
-                    nrow = 1L
-                )
+                respect_dims[[i]] <- matrix(c(
+                    (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
+                    (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
+                ), nrow = 1L)
             }
         }
         if (!is.null(respect_dims <- do.call(base::rbind, respect_dims))) {
@@ -464,12 +461,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         n_row <- nrow(gt)
         n_col <- ncol(gt)
         gt$grobs[seq_len(len)] <- lapply(seq_len(len), function(i) {
-            borders <- intersect(labs, c(
+            borders <- c(
                 if (.subset2(layout, "t")[i] == 1L) "top" else NULL,
                 if (.subset2(layout, "l")[i] == 1L) "left" else NULL,
                 if (.subset2(layout, "b")[i] == n_row) "bottom" else NULL,
                 if (.subset2(layout, "r")[i] == n_col) "right" else NULL
-            ))
+            )
             grob <- .subset2(grobs, i)
             if (length(borders) == 0L) {
                 return(grob)
