@@ -15,6 +15,9 @@ patch_titles(
 \item{top, left, bottom, right}{A string specifying the title to be added to the
 top, left, bottom, and right border of the plot.}
 }
+\value{
+A \link[ggplot2:labs]{labs} object to be added to ggplot.
+}
 \description{
 This function extends ggplot2's title functionality, allowing you to add
 titles to each border of the plot: top, left, bottom, and right.

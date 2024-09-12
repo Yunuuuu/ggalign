@@ -9,6 +9,9 @@
 \arguments{
 \item{object}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
 }
+\value{
+The input invisiblely.
+}
 \description{
 Print Layout object
 }

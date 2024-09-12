@@ -25,6 +25,7 @@ is.layout <- function(x) methods::is(x, "Layout")
 #' Print Layout object
 #'
 #' @param object A [layout_heatmap()] or [layout_stack()] object.
+#' @return The input invisiblely.
 #' @importFrom methods show
 #' @export
 #' @keywords internal
@@ -38,6 +39,7 @@ methods::setMethod("show", "Layout", function(object) {
 #'
 #' @param x A `Layout` object
 #' @param name A string of slot name in `Layout` object.
+#' @return The slot value.
 #' @importFrom methods slot
 #' @export
 #' @keywords internal

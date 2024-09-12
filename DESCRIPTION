@@ -4,7 +4,7 @@ Version: 0.0.2.9000
 Authors@R: 
     person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0003-2801-3332"))
 Description: A 'ggplot2' extension offers various tools for organizing and arranging plots. 
-    It is designed to consistently align a specific axis across multiple ggplot objects, 
+    It is designed to consistently align a specific axis across multiple 'ggplot' objects, 
     making it especially useful for plots requiring data order manipulation. A typical use 
     case includes organizing combinations like a dendrogram and a heatmap.
 License: MIT + file LICENSE

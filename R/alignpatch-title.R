@@ -22,6 +22,7 @@
 #'
 #' @param top,left,bottom,right A string specifying the title to be added to the
 #' top, left, bottom, and right border of the plot.
+#' @return A [labs][ggplot2::labs] object to be added to ggplot.
 #' @export
 #' @importFrom ggplot2 waiver
 patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),

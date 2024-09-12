@@ -11,6 +11,9 @@
 
 \item{name}{A string of slot name in \code{Layout} object.}
 }
+\value{
+The slot value.
+}
 \description{
 Used by \link[ggplot2:ggplot_build]{ggplot_build} and \link[ggplot2:ggsave]{ggsave}
 }
