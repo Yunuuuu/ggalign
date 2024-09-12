@@ -87,6 +87,7 @@ check_layout_position <- function(x, arg = caller_arg(x),
         "tlbr"
     } else {
         assert_position(x, arg = arg, call = call)
+        x
     }
 }
 
