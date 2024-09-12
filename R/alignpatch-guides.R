@@ -1,25 +1,4 @@
-#' @return
-#' A list with following elements
-#'  - `gt`: the modified gtable object
-#'  - `guides`: A list of guides object
-#' @noRd
-collect_guides <- function(gt, guides) {
-    UseMethod("collect_guides")
-}
-
-#' @export
-collect_guides.default <- function(gt, guides) {
-    list(gt = gt, guides = list())
-}
-
-#' @export
-collect_guides.gtable_alignpatches <- function(gt, guides) {
-    collect_guides.gtable_ggplot(gt, guides)
-}
-
-#' @importFrom ggplot2 find_panel
-#' @export
-collect_guides.gtable_ggplot <- function(gt, guides) {
+collect_guides <- function(patch, guides, gt = patch$gt) {
     layout <- .subset2(gt, "layout")
     grobs <- .subset2(gt, "grobs")
     guides_ind <- grep("guide-box", .subset2(layout, "name"))
@@ -65,72 +44,8 @@ collect_guides.gtable_ggplot <- function(gt, guides) {
     if (length(remove_grobs)) {
         gt <- subset_gt(gt, -remove_grobs, trim = FALSE)
     }
-    list(gt = gt, guides = collected_guides)
-}
-
-
-#############################################################
-#' @importFrom gtable gtable_width gtable_height
-#' @importFrom grid unit.c unit
-#' @importFrom ggplot2 calc_element
-attach_guides <- function(table, guide_pos, guides, theme,
-                          panel_pos = find_panel(table)) {
-    guides <- assemble_guides(guides, guide_pos, theme = theme)
-    spacing <- .subset2(theme, "legend.box.spacing")
-    legend_width <- gtable_width(guides)
-    legend_height <- gtable_height(guides)
-    if (guide_pos == "left") {
-        table <- gtable_add_grob(table, guides,
-            clip = "off",
-            t = panel_pos$t,
-            l = panel_pos$l - 5L,
-            b = panel_pos$b,
-            name = "guide-box-collected-left"
-        )
-        table <- align_border_size(table,
-            l = unit.c(
-                table$widths[seq_len(panel_pos$l - 6L)],
-                legend_width, spacing
-            )
-        )
-    } else if (guide_pos == "right") {
-        table <- gtable_add_grob(table, guides,
-            clip = "off", t = panel_pos$t,
-            l = panel_pos$r + 5L, b = panel_pos$b,
-            name = "guide-box-collected-right"
-        )
-        table <- align_border_size(table,
-            r = unit.c(
-                spacing, legend_width,
-                table$widths[seq(panel_pos$r + 6L, ncol(table))]
-            )
-        )
-    } else if (guide_pos == "bottom") {
-        table <- gtable_add_grob(table, guides,
-            clip = "off", t = panel_pos$b + 5L,
-            l = panel_pos$l, r = panel_pos$r,
-            name = "guide-box-collected-bottom"
-        )
-        table <- align_border_size(table,
-            b = unit.c(
-                spacing, legend_height,
-                table$heights[seq(panel_pos$b + 6L, nrow(table))]
-            )
-        )
-    } else if (guide_pos == "top") {
-        table <- gtable_add_grob(table, guides,
-            clip = "off", t = panel_pos$t - 5L,
-            l = panel_pos$l, r = panel_pos$r,
-            name = "guide-box-collected-top"
-        )
-        table <- align_border_size(table,
-            t = unit.c(
-                table$heights[seq_len(panel_pos$t - 6L)],
-                legend_height, spacing
-            )
-        )
-    }
-    table
+    patch$gt <- gt
+    collected_guides
 }
 
 #' @importFrom utils getFromNamespace

@@ -55,31 +55,31 @@ free_space.free_space <- function(plot, ...) {
 free_space.wrapped_plot <- free_space.default
 
 ##########################################################
+#' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-patch_gtable.free_space <- function(patch, guides) {
-    class(patch) <- setdiff(class(patch), "free_space")
-    gt <- NextMethod()
-    remove_spaces(gt, attr(patch, "free_spaces"))
-}
-
-#' @importFrom ggplot2 find_panel
-#' @importFrom rlang is_empty
-remove_spaces <- function(gt, ggelements) {
-    strip_pos <- find_strip_pos(gt)
-    ggelements <- lapply(GGELEMENTS, intersect, ggelements)
-    panel_pos <- find_panel(gt)
-    for (border in names(ggelements)) {
-        elements <- .subset2(ggelements, border)
-        if (is_empty(elements)) next
-        pos <- .subset2(panel_pos, border) +
-            ggelements_pos(border, elements, strip_pos)
-        if (border %in% c("t", "b")) {
-            gt$heights[pos] <- unit(0, "mm")
-        } else {
-            gt$widths[pos] <- unit(0, "mm")
+alignpatch.free_space <- function(x) {
+    Parent <- NextMethod()
+    ggproto(
+        "PatchFreeLab", Parent,
+        free_spaces = attr(x, "free_spaces"),
+        patch_gtable = function(self, guides, plot = self$plot) {
+            ans <- ggproto_parent(Parent, self)$patch_gtable(
+                guides = guides, plot = plot
+            )
+            ggproto_parent(Parent, self)$free_space(
+                free_spaces = self$free_spaces, gt = ans
+            )
+        },
+        free_space = function(self, free_spaces, gt = self$gt) {
+            if (length(free_spaces <- setdiff(free_spaces, self$free_spaces))) {
+                ggproto_parent(Parent, self)$free_space(
+                    free_spaces = free_spaces, gt = gt
+                )
+            } else {
+                gt
+            }
         }
-    }
-    gt
+    )
 }
 
 get_free_spaces <- function(ggelements, borders) {

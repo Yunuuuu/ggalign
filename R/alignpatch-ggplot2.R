@@ -1,3 +1,13 @@
+#' @export
+ggalign_gtable.ggplot <- function(x) alignpatch(x)$patch_gtable()
+
+#' @export
+ggalign_build.ggplot <- function(x) x
+
+#' @importFrom ggplot2 ggproto
+#' @export
+alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
+
 # ggplot2 has following grobs:
 #    panel
 #    axis: must follow panel
@@ -8,35 +18,255 @@
 #    caption
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob update_labels
-#' @export
-#' @rdname alignpatch
-#' @order 3
-patch_gtable.ggplot <- function(patch, guides) {
-    # extract patch titles --------------------------------
-    patch_titles <- .subset(
-        .subset2(patch, "labels"),
-        c("top", "left", "bottom", "right")
-    )
+PatchGgplot <- ggproto("PatchGgplot", Patch,
+    patch_gtable = function(self, guides, plot = self$plot) {
+        # extract patch titles --------------------------------
+        patch_titles <- .subset(
+            .subset2(plot, "labels"),
+            c("top", "left", "bottom", "right")
+        )
 
-    # we remove patch titles to avoid warning message for unknown labels
-    patch <- update_labels(patch, list(
-        top = NULL, left = NULL, bottom = NULL, right = NULL
-    ))
+        # we remove patch titles to avoid warning message for unknown labels
+        plot <- update_labels(plot, list(
+            top = NULL, left = NULL, bottom = NULL, right = NULL
+        ))
 
-    # complete_theme() will ensure elements exist --------
-    theme <- complete_theme(.subset2(patch, "theme"))
-    # here: we remove tick length when the tick is blank
-    theme <- setup_tick_length_element(theme)
-    patch$theme <- theme
+        # complete_theme() will ensure elements exist --------
+        theme <- complete_theme(.subset2(plot, "theme"))
+        # here: we remove tick length when the tick is blank
+        theme <- setup_tick_length_element(theme)
+        plot$theme <- theme
 
-    # build the grob -------------------------------------
-    ans <- ggplotGrob(patch)
-    strip_pos <- find_strip_pos(ans)
-    ans <- add_strips(ans, strip_pos) # always add strips columns and/or rows
-    ans <- add_guides(ans) # add guides columns and/or rows for ggplot2 < 3.5.0
-    ans <- setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
-    add_class(ans, "gtable_ggplot")
-}
+        # build the grob -------------------------------------
+        ans <- ggplotGrob(plot)
+        strip_pos <- find_strip_pos(ans)
+        # always add strips columns and/or rows
+        ans <- add_strips(ans, strip_pos)
+        # add guides columns and/or rows for ggplot2 < 3.5.0
+        ans <- add_guides(ans)
+        setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
+    },
+    collect_guides = function(self, guides, gt = self$gt) {
+        collect_guides(self, guides = guides, gt = gt)
+    },
+
+    #' @importFrom ggplot2 find_panel
+    set_panel_sizes = function(self, guides, panel_width, panel_height,
+                               gt = self$gt) {
+        panel_pos <- find_panel(gt)
+        rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
+        cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
+        respect <- .subset2(gt, "respect")
+        if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
+            if (respect) {
+                can_set_width <- is.na(as.numeric(panel_width))
+                can_set_height <- is.na(as.numeric(panel_height))
+                w <- .subset2(gt, "widths")[LEFT_BORDER + 1L]
+                h <- .subset2(gt, "heights")[TOP_BORDER + 1L]
+                if (can_set_width && can_set_height) {
+                    panel_width <- w
+                    panel_height <- h
+                } else if (can_set_width) {
+                    panel_width <- as.numeric(w) / as.numeric(h) * panel_height
+                } else if (can_set_height) {
+                    panel_height <- as.numeric(h) / as.numeric(w) * panel_width
+                } else {
+                    respect <- FALSE
+                }
+            }
+        } else {
+            respect <- FALSE
+        }
+        list(width = panel_width, height = panel_height, respect = respect)
+    },
+
+    #' @importFrom gtable gtable_add_grob gtable_height gtable_width
+    #' @importFrom grid unit viewport
+    #' @importFrom ggplot2 find_panel
+    free_border = function(self, guides, borders, gt = self$gt) {
+        panel_pos <- find_panel(gt)
+        for (border in borders) {
+            layout <- .subset2(gt, "layout")
+            not_guides <- !grepl("^guide-", .subset2(layout, "name"))
+            if (border == "top") {
+                index <- .subset2(layout, "b") < .subset2(panel_pos, "t") &
+                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
+                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
+
+                # if we'll collect the guides, we shouldn't attach the guides
+                if (any(border == guides)) {
+                    index <- not_guides & index
+                }
+                if (!any(index)) next
+                grob <- subset_gt(gt, index)
+                grob$respect <- FALSE
+                grob$vp <- viewport(
+                    y = 1L, just = "bottom",
+                    height = gtable_height(grob)
+                )
+            } else if (border == "left") {
+                index <- .subset2(layout, "r") < .subset2(panel_pos, "l") &
+                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
+                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
+                # if we'll collect the guides, we shouldn't attach the guides
+                if (any(border == guides)) {
+                    index <- not_guides & index
+                }
+                if (!any(index)) next
+                grob <- subset_gt(gt, index)
+                grob$respect <- FALSE
+                grob$vp <- viewport(
+                    x = 0L, just = "right",
+                    width = gtable_width(grob)
+                )
+            } else if (border == "bottom") {
+                index <- .subset2(layout, "t") > .subset2(panel_pos, "b") &
+                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
+                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
+                # if we'll collect the guides, we shouldn't attach the guides
+                if (any(border == guides)) {
+                    index <- not_guides & index
+                }
+                if (!any(index)) next
+                grob <- subset_gt(gt, index)
+                grob$respect <- FALSE
+                grob$vp <- viewport(
+                    y = 0L, just = "top",
+                    height = gtable_height(grob)
+                )
+            } else if (border == "right") {
+                index <- .subset2(layout, "l") > .subset2(panel_pos, "r") &
+                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
+                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
+                # if we'll collect the guides, we shouldn't attach the guides
+                if (any(border == guides)) {
+                    index <- not_guides & index
+                }
+                if (!any(index)) next
+                grob <- subset_gt(gt, index)
+                grob$respect <- FALSE
+                grob$vp <- viewport(
+                    x = 1L, just = "left",
+                    width = gtable_width(grob)
+                )
+            }
+            gt <- subset_gt(gt, !index, trim = FALSE)
+            gt <- gtable_add_grob(gt,
+                grobs = list(grob),
+                t = .subset2(panel_pos, "t"),
+                l = .subset2(panel_pos, "l"),
+                b = .subset2(panel_pos, "b"),
+                r = .subset2(panel_pos, "r"),
+                z = Inf, clip = "off",
+                name = paste("attach", border, "border", sep = "-")
+            )
+        }
+        gt
+    },
+
+    #' @importFrom ggplot2 find_panel
+    #' @importFrom gtable is.gtable gtable_height gtable_width gtable_add_grob
+    #' @importFrom grid grobHeight grobWidth viewport
+    free_lab = function(self, labs, gt = self$gt) {
+        panel_pos <- find_panel(gt)
+        for (lab in labs) {
+            layout <- .subset2(gt, "layout")
+            if (lab == "top") {
+                panel_border <- .subset2(panel_pos, "t")
+                index <- .subset2(layout, "b") < panel_border &
+                    .subset2(layout, "t") >= (panel_border - 3L) &
+                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
+                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
+                if (!any(index)) next
+
+                # this grob contain both axis labels and axis title
+                grob <- subset_gt(gt, index)
+                grob$vp <- viewport(
+                    y = 1L, just = "bottom",
+                    height = gtable_height(grob)
+                )
+            } else if (lab == "left") {
+                panel_border <- .subset2(panel_pos, "l")
+                index <- .subset2(layout, "r") < panel_border &
+                    .subset2(layout, "l") >= (panel_border - 3L) &
+                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
+                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
+                if (!any(index)) next
+
+                # this grob contain both axis labels and axis title
+                grob <- subset_gt(gt, index)
+                grob$vp <- viewport(
+                    x = 0L, just = "right",
+                    width = gtable_width(grob)
+                )
+            } else if (lab == "bottom") {
+                panel_border <- .subset2(panel_pos, "b")
+                index <- .subset2(layout, "t") > panel_border &
+                    .subset2(layout, "b") <= (panel_border + 3L) &
+                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
+                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
+                if (!any(index)) next
+
+                # this grob contain both axis labels and axis title
+                grob <- subset_gt(gt, index)
+                grob$vp <- viewport(
+                    y = 0L, just = "top",
+                    height = gtable_height(grob)
+                )
+            } else if (lab == "right") {
+                panel_border <- .subset2(panel_pos, "r")
+                index <- .subset2(layout, "l") > panel_border &
+                    .subset2(layout, "r") <= (panel_border + 3L) &
+                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
+                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
+                if (!any(index)) next
+
+                # this grob contain both axis labels and axis title
+                grob <- subset_gt(gt, index)
+                grob$vp <- viewport(
+                    x = 1L, just = "left",
+                    width = gtable_width(grob)
+                )
+            }
+            grob$respect <- FALSE
+            gt <- subset_gt(gt, !index, trim = FALSE)
+            gt <- gtable_add_grob(gt,
+                grobs = list(grob),
+                t = .subset2(panel_pos, "t"),
+                l = .subset2(panel_pos, "l"),
+                b = .subset2(panel_pos, "b"),
+                r = .subset2(panel_pos, "r"),
+                z = Inf, clip = "off",
+                name = paste(
+                    switch_position(lab, "xlab", "ylab"),
+                    "axis", lab,
+                    sep = "-"
+                )
+            )
+        }
+        gt
+    },
+
+    #' @importFrom ggplot2 find_panel
+    #' @importFrom rlang is_empty
+    free_space = function(self, free_spaces, gt = self$gt) {
+        strip_pos <- find_strip_pos(gt)
+        free_spaces <- lapply(GGELEMENTS, intersect, free_spaces)
+        panel_pos <- find_panel(gt)
+        for (border in names(free_spaces)) {
+            elements <- .subset2(free_spaces, border)
+            if (is_empty(elements)) next
+            pos <- .subset2(panel_pos, border) +
+                ggelements_pos(border, elements, strip_pos)
+            if (border %in% c("t", "b")) {
+                gt$heights[pos] <- unit(0, "mm")
+            } else {
+                gt$widths[pos] <- unit(0, "mm")
+            }
+        }
+        gt
+    }
+)
 
 #' @importFrom ggplot2 calc_element
 #' @importFrom grid unit
@@ -53,204 +283,6 @@ setup_tick_length_element <- function(theme) {
         }
     }
     theme
-}
-
-#' @importFrom ggplot2 find_panel
-#' @importFrom gtable gtable_add_rows gtable_add_cols
-#' @importFrom grid unit convertWidth convertHeight
-#' @export
-patch_align.gtable_ggplot <- function(gt, guides, panel_width, panel_height) {
-    panel_pos <- find_panel(gt)
-    rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
-    cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
-    respect <- .subset2(gt, "respect")
-    if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
-        if (respect) {
-            can_set_width <- is.na(as.numeric(panel_width))
-            can_set_height <- is.na(as.numeric(panel_height))
-            w <- .subset2(gt, "widths")[PANEL_COL]
-            h <- .subset2(gt, "heights")[PANEL_ROW]
-            if (can_set_width && can_set_height) {
-                panel_width <- w
-                panel_height <- h
-            } else if (can_set_width) {
-                panel_width <- as.numeric(w) / as.numeric(h) * panel_height
-            } else if (can_set_height) {
-                panel_height <- as.numeric(h) / as.numeric(w) * panel_width
-            } else {
-                # ratio <- as.numeric(w) / as.numeric(h)
-                # actual_ratio <- panel_widths[col] / panel_heights[row]
-                # the plot panel won't be aligned in this ways
-                # # use dplyr::near to compare float number
-                # if (abs(ratio - actual_ratio) < sqrt(.Machine$double.eps)) {
-                #     will_be_fixed <- FALSE
-                # }
-                respect <- FALSE
-                # attach strip, axes and labels into the panel area
-                gt <- attach_border(gt, guides)
-
-                # we suspend the panel area to allow the fixed aspect ratio
-                panel <- gt[PANEL_ROW, PANEL_COL]
-                gt <- gt[-PANEL_ROW, -PANEL_COL]
-                gt$respect <- FALSE
-                gt <- gtable_add_rows(gt, unit(1L, "null"), PANEL_ROW - 1L)
-                gt <- gtable_add_cols(gt, unit(1L, "null"), PANEL_COL - 1L)
-                gt <- gtable_add_grob(
-                    gt, list(panel),
-                    t = PANEL_ROW, l = PANEL_COL,
-                    clip = "off",
-                    name = paste0(
-                        .subset2(.subset2(panel, "layout"), "name"),
-                        collapse = ", "
-                    ),
-                    z = 1
-                )
-            }
-        }
-    } else {
-        # for ggplot with multiple panels, we cannot fix the aspect ratio
-        # we always set respect to `FALSE`, and merge multiple panels into
-        # one
-        if (respect) {
-            gt <- attach_border(gt, guides)
-            respect <- FALSE
-        }
-        gt <- merge_panels(gt, rows, cols)
-    }
-    list(gt = gt, width = panel_width, height = panel_height, respect = respect)
-}
-
-#' @importFrom gtable is.gtable gtable_height gtable_width
-#' @importFrom grid viewport unit convertWidth convertHeight
-merge_panels <- function(gt, rows, cols) {
-    p_rows <- seq(rows[1L], rows[2L])
-    p_cols <- seq(cols[1L], cols[2L])
-    panels <- gt[p_rows, p_cols]
-    gt_new <- gt[-p_rows, -p_cols]
-    # if (is.matrix(respect <- .subset2(gt, "respect"))) {
-    #     # Not used currenly
-    #     # if the respect is a matrix, the input should be an `alignpatches`
-    #     # we only need respect the size of panel
-    #     panels$respect <- respect[p_rows, p_cols]
-    #     gt_new$respect <- FALSE
-    #     gt$respect <- FALSE
-    # }
-    # if (.subset2(ans, "respect")) {
-    #     panel_sizes <- list(width = panels$widths, heights = panels$heights)
-    #     panel_sizes <- lapply(panel_sizes, function(size) {
-    #         unit(sum(as.numeric(size[unitType(size) == "null"])), "null")
-    #     })
-    # }
-    # add panel area
-    gt_new <- gtable_add_rows(gt_new, unit(1L, "null"), rows[1L] - 1L)
-    gt_new <- gtable_add_cols(gt_new, unit(1L, "null"), cols[1L] - 1L)
-
-    p_cols <- seq(cols[1L], cols[2L])
-    if (is_scalar(p_cols)) { # No multiple column panels
-        # For elemnents in the top of the panel
-        top <- which(gt$layout$l == p_cols &
-            gt$layout$r == p_cols &
-            gt$layout$b < rows[1])
-
-        gt_new <- gtable_add_grob(
-            gt_new,
-            gt$grobs[top],
-            gt$layout$t[top],
-            p_cols,
-            gt$layout$b[top],
-            z = gt$layout$z[top],
-            clip = gt$layout$clip[top],
-            name = gt$layout$name[top]
-        )
-
-        # For elemnents in the bottom of the panel
-        bottom <- which(gt$layout$l == p_cols &
-            gt$layout$r == p_cols &
-            gt$layout$t > rows[2L])
-        b_mod <- rows[2L] - rows[1L]
-        gt_new <- gtable_add_grob(
-            gt_new,
-            gt$grobs[bottom],
-            gt$layout$t[bottom] - b_mod,
-            p_cols,
-            gt$layout$b[bottom] - b_mod,
-            z = gt$layout$z[bottom],
-            clip = gt$layout$clip[bottom],
-            name = gt$layout$name[bottom]
-        )
-    } else {
-        for (i in seq_len(nrow(gt))) {
-            if (i >= rows[1L]) {
-                if (i <= rows[2L]) next
-                ii <- i - diff(rows)
-            } else {
-                ii <- i
-            }
-            table <- gt[i, p_cols]
-            if (length(table$grobs) != 0L) {
-                grobname <- paste(table$layout$name, collapse = ", ")
-                gt_new <- gtable_add_grob(
-                    gt_new, table, ii, cols[1L],
-                    clip = "off",
-                    name = grobname,
-                    z = max(table$layout$z)
-                )
-            }
-        }
-    }
-
-    p_rows <- seq(rows[1L], rows[2L])
-    if (is_scalar(p_rows)) {
-        left <- which(gt$layout$t == p_rows &
-            gt$layout$b == p_rows &
-            gt$layout$r < cols[1L])
-        gt_new <- gtable_add_grob(
-            gt_new, gt$grobs[left],
-            p_rows, gt$layout$l[left],
-            p_rows, gt$layout$r[left],
-            z = gt$layout$z[left],
-            clip = gt$layout$clip[left], name = gt$layout$name[left]
-        )
-        right <- which(gt$layout$t == p_rows &
-            gt$layout$b == p_rows &
-            gt$layout$l > cols[2L])
-        r_mod <- cols[2L] - cols[1L]
-        gt_new <- gtable_add_grob(
-            gt_new, gt$grobs[right],
-            p_rows, gt$layout$l[right] - r_mod,
-            p_rows, gt$layout$r[right] - r_mod,
-            z = gt$layout$z[right],
-            clip = gt$layout$clip[right],
-            name = gt$layout$name[right]
-        )
-    } else {
-        for (i in seq_len(ncol(gt))) {
-            if (i >= cols[1L]) {
-                if (i <= cols[2L]) next
-                ii <- i - diff(cols)
-            } else {
-                ii <- i
-            }
-            table <- gt[p_rows, i]
-            if (length(table$grobs) != 0L) {
-                grobname <- paste(table$layout$name, collapse = ", ")
-                gt_new <- gtable_add_grob(
-                    gt_new, table, rows[1], ii,
-                    clip = "off",
-                    name = grobname,
-                    z = max(table$layout$z)
-                )
-            }
-        }
-    }
-    panel_name <- paste0("panel-nested; ", paste(
-        .subset2(.subset2(panels, "layout"), "name"),
-        collapse = ", "
-    ))
-    gtable_add_grob(
-        gt_new, panels, rows[1L], cols[1L],
-        clip = "off", name = panel_name, z = 1L
-    )
 }
 
 #' @importFrom gtable gtable_add_rows gtable_add_cols

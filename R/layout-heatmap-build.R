@@ -1,6 +1,27 @@
-#' @importFrom grid unit.c
+#' @export
+print.HeatmapLayout <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+    ggplot2::set_last_plot(x)
+    print_naive(
+        x = x, newpage = newpage, vp = vp, ...,
+        error_name = "{.fn layout_heatmap}"
+    )
+}
+
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.HeatmapLayout <- function(x, recording = TRUE) {
+    grid.draw(ggalignGrob(x), recording = recording)
+}
+
 #' @export
 alignpatch.HeatmapLayout <- function(x) {
+    alignpatch(ggalign_build(x))
+}
+
+#' @importFrom grid unit.c
+#' @export
+ggalign_build.HeatmapLayout <- function(x) {
     patches <- heatmap_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
@@ -24,7 +45,6 @@ alignpatch.HeatmapLayout <- function(x) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- x@params
-
     align_plots(
         !!!.subset(plots, keep),
         design = design,
@@ -186,8 +206,18 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         # for heatmap annotation, we should always make them next to
         # the heatmap body
         if (!is.null(.subset2(ans, "plot"))) {
-            ans$plot <- free_just(
+            ans$plot <- free_vp(
                 .subset2(ans, "plot"),
+                x = switch(position,
+                    left = 1L,
+                    right = 0L,
+                    0.5
+                ),
+                y = switch(position,
+                    top = 0L,
+                    bottom = 1L,
+                    0.5
+                ),
                 just = switch(position,
                     top = "bottom",
                     left = "right",

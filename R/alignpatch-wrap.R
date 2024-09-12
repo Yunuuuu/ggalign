@@ -48,12 +48,12 @@ make_wrap.ggplot <- function(patch, grob) {
 #' @export
 make_wrap.wrapped_plot <- function(patch, grob) {
     if (attr(grob, "on_top")) {
-        patch$wrapped_grobs_above <- c(
-            list(grob), .subset2(patch, "wrapped_grobs_above")
+        attr(patch, "wrapped_grobs_above") <- c(
+            list(grob), attr(patch, "wrapped_grobs_above")
         )
     } else {
-        patch$wrapped_grobs_under <- c(
-            .subset2(patch, "wrapped_grobs_under"), list(grob)
+        attr(patch, "wrapped_grobs_under") <- c(
+            attr(patch, "wrapped_grobs_under"), list(grob)
         )
     }
     patch
@@ -86,7 +86,7 @@ patch.grob <- function(x, ...) x
 
 #' @inherit patch.grob
 #' @export
-patch.ggplot <- function(x, ...) patch_gtable(x)
+patch.ggplot <- function(x, ...) ggalignGrob(x)
 
 #' @inherit patch.grob
 #' @inheritParams gridGraphics::echoGrob
@@ -132,20 +132,45 @@ patch.HeatmapList <- patch.Heatmap
 patch.HeatmapAnnotation <- patch.HeatmapList
 
 #################################################
+#' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-#' @rdname alignpatch
-#' @order 5
-patch_gtable.wrapped_plot <- function(patch, guides) {
-    ans <- NextMethod() # will call ggplot2 method
-    ans <- add_wrapped_grobs(
-        ans, .subset2(patch, "wrapped_grobs_under"), FALSE
+alignpatch.wrapped_plot <- function(x) {
+    Parent <- NextMethod()
+    ggproto(
+        "PatchWrapped", Parent,
+        wrapped_grobs_under = attr(x, "wrapped_grobs_under"),
+        wrapped_grobs_above = attr(x, "wrapped_grobs_above"),
+        patch_gtable = function(self, guides, plot = Parent$plot) {
+            ans <- ggproto_parent(Parent, self)$patch_gtable(
+                guides = guides, plot = plot
+            )
+            ans <- add_wrapped_grobs(
+                ans, self$wrapped_grobs_under, FALSE
+            )
+            add_wrapped_grobs(
+                ans, self$wrapped_grobs_above, TRUE
+            )
+        }
     )
-    ans <- add_wrapped_grobs(
-        ans, .subset2(patch, "wrapped_grobs_above"), TRUE
-    )
-    add_class(ans, "gtable_wrapped_plot")
 }
 
+# For wrapped plot -------------------
+#' @export
+alignpatch.grob <- function(x) alignpatch(wrap(x))
+
+#' @export
+alignpatch.formula <- alignpatch.grob
+
+#' @export
+alignpatch.Heatmap <- alignpatch.grob
+
+#' @export
+alignpatch.HeatmapList <- alignpatch.Heatmap
+
+#' @export
+alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
+
+################################################## 3
 add_wrapped_grobs <- function(gt, grobs, under) {
     if (is.null(grobs)) return(gt) # styler: off
     for (grob in grobs) gt <- add_wrapped_grob(gt, grob, under)
@@ -157,7 +182,6 @@ add_wrapped_grob <- function(gt, grob, on_top) {
     align <- attr(grob, "align")
     clip <- attr(grob, "clip")
     layout <- .subset2(gt, "layout")
-    panels <- layout[grep("^panel", .subset2(layout, "name")), , drop = FALSE]
     if (on_top) {
         z <- Inf
     } else {
@@ -182,6 +206,10 @@ add_wrapped_grob <- function(gt, grob, on_top) {
             clip = clip, name = "wrap_full", z = z
         )
     } else {
+        panels <- layout[
+            grep("^panel", .subset2(layout, "name")), ,
+            drop = FALSE
+        ]
         panel_loc <- list(
             t = min(.subset2(panels, "t")),
             l = min(.subset2(panels, "l")),
@@ -209,6 +237,13 @@ add_wrapped_grob <- function(gt, grob, on_top) {
     }
     gt
 }
+
+################################################## 3
+#' @export
+ggalign_build.wrapped_plot <- function(x) x
+
+#' @export
+ggalign_gtable.wrapped_plot <- function(x) alignpatch(x)$patch_gtable()
 
 #' @export
 print.wrapped_plot <- print.alignpatches

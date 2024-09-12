@@ -103,24 +103,21 @@ free_align.default <- function(plot, axes = "tlbr") {
 #' @export
 free_align.wrapped_plot <- free_align.default
 
+#' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-patch_gtable.free_align <- function(patch, guides) {
-    class(patch) <- setdiff(class(patch), "free_align")
-
-    # can be `gtable_ggplot` or `gtable_alignpatches`
-    gt <- NextMethod()
-    attr(gt, "free_axes") <- attr(patch, "free_axes")
-    add_class(gt, "gtable_free_align")
-}
-
-#' @export
-patch_align.gtable_free_align <- function(gt, guides,
-                                          panel_width, panel_height) {
-    list(
-        gt = make_full_patch(gt,
-            clip = "off", name = "free_align-table",
-            borders = setdiff(.TLBR, setup_position(attr(gt, "free_axes")))
-        ),
-        width = panel_width, height = panel_height, respect = FALSE
+alignpatch.free_align <- function(x) {
+    Parent <- NextMethod()
+    ggproto(
+        "PatchFreeAlign", Parent,
+        free_axes = split_position(attr(x, "free_axes")),
+        align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
+                                gt = self$gt) {
+            for (axis in self$free_axes) {
+                assign(x = axis, value = NULL, envir = environment())
+            }
+            ggproto_parent(Parent, self)$align_border(
+                t = t, l = l, b = b, r = r, gt = gt
+            )
+        }
     )
 }
