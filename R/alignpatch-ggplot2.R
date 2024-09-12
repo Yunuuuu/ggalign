@@ -51,8 +51,8 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     },
 
     #' @importFrom ggplot2 find_panel
-    set_panel_sizes = function(self, guides, panel_width, panel_height,
-                               gt = self$gt) {
+    align_panel_sizes = function(self, guides, panel_width, panel_height,
+                                 gt = self$gt) {
         panel_pos <- find_panel(gt)
         rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
         cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))

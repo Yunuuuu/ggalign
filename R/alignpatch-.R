@@ -137,7 +137,7 @@ ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 #'   - [wrapped_plot][wrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
-#' 
+#'
 #' @return An object `Patch` object.
 #' @examples
 #' alignpatch(ggplot())
@@ -163,8 +163,8 @@ Patch <- ggproto("Patch", NULL,
         )
     },
     collect_guides = function(self, guides, gt = self$gt) list(),
-    set_panel_sizes = function(self, guides, panel_width, panel_height,
-                               gt = self$gt) {
+    align_panel_sizes = function(self, guides, panel_width, panel_height,
+                                 gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,

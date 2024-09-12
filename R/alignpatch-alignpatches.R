@@ -64,9 +64,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             unit(rep(0L, TABLE_ROWS * dims[1L]), "null")
         )
 
-        # 1. patch_gtable
-        # 2. collect_guides_list: collect_guides, can change the internal gt
-        # 3. set_sizes: set_panel_sizes, can change the internal gt
+        # 1. patch_gtable: create the gtable
+        # 2. collect_guides_list: collect_guides, can change the internal `gt`
+        # 3. set_sizes:
+        #     - (TODO) align_panel_spaces: can change the internal `gt`
+        #     - align_panel_sizes, can change the internal `gt`
         # 4. add_grobs: align_border, return the final gtable
         # setup gtable list ----------------------------------
         for (patch in patches) {
@@ -217,7 +219,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             row <- .subset(rows, i)
             col <- .subset(cols, i)
             # we always build a standard gtable layout from the gtable
-            panel_sizes <- .subset2(patches, i)$set_panel_sizes(
+            panel_sizes <- .subset2(patches, i)$align_panel_sizes(
                 guides = guides,
                 panel_width = panel_widths[col],
                 panel_height = panel_heights[row]
@@ -269,7 +271,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         widths <- .subset2(sizes, "widths")
         heights <- .subset2(sizes, "heights")
 
-        # restore the panel sizes -----------------------------
+        # restore the panel sizes ----------------------------
         width_ind <- seq(LEFT_BORDER + 1L,
             by = TABLE_COLS, length.out = dims[2L]
         )
