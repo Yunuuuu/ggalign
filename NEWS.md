@@ -1,12 +1,16 @@
-# ggalign (development version)
+# ggalign 0.0.3
 
 * Add package logo
 
 * new `inset()` function
 
+* add package quotes in DESCRIPTION
+
+* add return value docs for exported function or methods
+
 # ggalign 0.0.2
   
-* omit the redudnant description and add single quote with package name
+* omit the redudnant description and add single quote for package name
 
 # ggalign 0.0.1
 
