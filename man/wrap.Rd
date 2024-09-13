@@ -36,6 +36,14 @@ compliant representation for use with \code{\link[=align_plots]{align_plots()}}.
 adding any graphics that can be converted into a \link[grid:grid.grob]{grob} with the
 \code{\link[=patch]{patch()}} method.
 }
+\examples{
+library(grid)
+wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
+    inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
+    inset(textGrob("Here are some text", gp = gpar(color = "black")),
+        align = "panel", clip = FALSE
+    )
+}
 \seealso{
 \itemize{
 \item \link{patch.grob}

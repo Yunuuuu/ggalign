@@ -4,6 +4,15 @@ ggalign_gtable.ggplot <- function(x) alignpatch(x)$patch_gtable()
 #' @export
 ggalign_build.ggplot <- function(x) x
 
+##################################################
+#' @export
+print.patch_ggplot <- print.alignpatches
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.patch_ggplot <- grid.draw.alignpatches
+
+#################################################
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)

@@ -22,12 +22,23 @@
 #'
 #' @param top,left,bottom,right A string specifying the title to be added to the
 #' top, left, bottom, and right border of the plot.
-#' @return A [labs][ggplot2::labs] object to be added to ggplot.
+#' @return A [labels][ggplot2::labs] object to be added to ggplot.
+#' @examples
+#' ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp)) +
+#'     patch_titles(
+#'         top = "I'm top patch title",
+#'         left = "I'm left patch title",
+#'         bottom = "I'm bottom patch title",
+#'         right = "I'm right patch title"
+#'     )
 #' @export
 #' @importFrom ggplot2 waiver
 patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
                          right = waiver()) {
-    ggplot2::labs(top = top, left = left, bottom = bottom, right = right)
+    add_class(ggplot2::labs(
+        top = top, left = left, bottom = bottom, right = right
+    ), "patch_labels")
 }
 
 #' @importFrom ggplot2 find_panel calc_element zeroGrob element_grob merge_element
@@ -157,4 +168,14 @@ setup_patch_titles <- function(table, patch_titles, theme) {
         }
     }
     table
+}
+
+#' @importFrom ggplot2 ggplot_add
+#' @export
+ggplot_add.patch_labels <- function(object, plot, object_name) {
+    plot <- NextMethod()
+    if (!inherits(plot, "patch_ggplot")) {
+        plot <- add_class(plot, "patch_ggplot")
+    }
+    plot
 }

@@ -21,6 +21,13 @@
 #' @return A `wrapped_plot` object that can be directly placed into
 #' [align_plots()].
 #' @inherit patch seealso
+#' @examples
+#' library(grid)
+#' wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
+#'     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
+#'     inset(textGrob("Here are some text", gp = gpar(color = "black")),
+#'         align = "panel", clip = FALSE
+#'     )
 #' @importFrom ggplot2 ggplot theme element_blank
 #' @importFrom grid is.grob
 #' @export
@@ -42,14 +49,18 @@ make_wrap <- function(patch, grob) UseMethod("make_wrap")
 
 #' @export
 make_wrap.ggplot <- function(patch, grob) {
-    add_class(make_wrap.wrapped_plot(patch, grob), "wrapped_plot")
+    if (!inherits(patch, "patch_ggplot")) {
+        patch <- add_class(patch, "patch_ggplot")
+    }
+    patch <- add_class(patch, "wrapped_plot")
+    make_wrap(patch, grob)
 }
 
 #' @export
 make_wrap.wrapped_plot <- function(patch, grob) {
     if (attr(grob, "on_top")) {
         attr(patch, "wrapped_grobs_above") <- c(
-            list(grob), attr(patch, "wrapped_grobs_above")
+            attr(patch, "wrapped_grobs_above"), list(grob)
         )
     } else {
         attr(patch, "wrapped_grobs_under") <- c(
@@ -82,17 +93,24 @@ patch <- function(x, ...) UseMethod("patch")
 #' @inheritParams patch
 #' @param ... Not used currently.
 #' @export
-patch.grob <- function(x, ...) x
+patch.grob <- function(x, ...) {
+    rlang::check_dots_empty()
+    x
+}
 
 #' @inherit patch.grob
 #' @export
-patch.ggplot <- function(x, ...) ggalignGrob(x)
+patch.ggplot <- function(x, ...) {
+    rlang::check_dots_empty()
+    ggalignGrob(x)
+}
 
 #' @inherit patch.grob
 #' @inheritParams gridGraphics::echoGrob
 #' @export
 patch.formula <- function(x, ..., device = NULL) {
-    rlang::check_installed("gridGraphics", "to add base plots")
+    rlang::check_installed("gridGraphics", "to make grob from base plot")
+    rlang::check_dots_empty()
     gp <- graphics::par(no.readonly = TRUE)
     force(x)
     gridGraphics::echoGrob(
@@ -144,12 +162,8 @@ alignpatch.wrapped_plot <- function(x) {
             ans <- ggproto_parent(Parent, self)$patch_gtable(
                 guides = guides, plot = plot
             )
-            ans <- add_wrapped_grobs(
-                ans, self$wrapped_grobs_under, FALSE
-            )
-            add_wrapped_grobs(
-                ans, self$wrapped_grobs_above, TRUE
-            )
+            ans <- add_wrapped_grobs(ans, self$wrapped_grobs_under, FALSE)
+            add_wrapped_grobs(ans, self$wrapped_grobs_above, TRUE)
         }
     )
 }
@@ -171,14 +185,16 @@ alignpatch.HeatmapList <- alignpatch.Heatmap
 alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
 
 ################################################## 3
-add_wrapped_grobs <- function(gt, grobs, under) {
+add_wrapped_grobs <- function(gt, grobs, on_top) {
     if (is.null(grobs)) return(gt) # styler: off
-    for (grob in grobs) gt <- add_wrapped_grob(gt, grob, under)
+    for (i in seq_along(grobs)) {
+        gt <- add_wrapped_grob(gt, .subset2(grobs, i), on_top, i)
+    }
     gt
 }
 
 #' @importFrom gtable gtable is.gtable gtable_add_grob
-add_wrapped_grob <- function(gt, grob, on_top) {
+add_wrapped_grob <- function(gt, grob, on_top, i) {
     align <- attr(grob, "align")
     clip <- attr(grob, "clip")
     layout <- .subset2(gt, "layout")
@@ -203,7 +219,7 @@ add_wrapped_grob <- function(gt, grob, on_top) {
     if (align == "full") {
         gt <- gtable_add_grob(gt,
             list(grob), 1L, 1L, nrow(gt), ncol(gt),
-            clip = clip, name = "wrap_full", z = z
+            clip = clip, name = sprintf("wrap-full-%d", i), z = z
         )
     } else {
         panels <- layout[
@@ -223,7 +239,7 @@ add_wrapped_grob <- function(gt, grob, on_top) {
                 .subset2(panel_loc, "l") - 3L,
                 .subset2(panel_loc, "b") + 3L,
                 .subset2(panel_loc, "r") + 3L,
-                clip = clip, name = "wrap_plot", z = z
+                clip = clip, name = sprintf("wrap-plot-%d", i), z = z
             ),
             panel = gtable_add_grob(gt,
                 list(grob),
@@ -231,23 +247,9 @@ add_wrapped_grob <- function(gt, grob, on_top) {
                 .subset2(panel_loc, "l"),
                 .subset2(panel_loc, "b"),
                 .subset2(panel_loc, "r"),
-                clip = clip, name = "wrap_panel", z = z
+                clip = clip, name = sprintf("wrap-panel-%d", i), z = z
             )
         )
     }
     gt
 }
-
-################################################## 3
-#' @export
-ggalign_build.wrapped_plot <- function(x) x
-
-#' @export
-ggalign_gtable.wrapped_plot <- function(x) alignpatch(x)$patch_gtable()
-
-#' @export
-print.wrapped_plot <- print.alignpatches
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.wrapped_plot <- grid.draw.alignpatches

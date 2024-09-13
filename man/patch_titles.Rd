@@ -16,7 +16,7 @@ patch_titles(
 top, left, bottom, and right border of the plot.}
 }
 \value{
-A \link[ggplot2:labs]{labs} object to be added to ggplot.
+A \link[ggplot2:labs]{labels} object to be added to ggplot.
 }
 \description{
 This function extends ggplot2's title functionality, allowing you to add
@@ -40,4 +40,14 @@ inherit from \code{plot.patch_title}. The value \code{"panel"} aligns the patch
 titles with the plot panels. Setting this to \code{"plot"} aligns the patch
 title with the entire plot (excluding margins and plot tags).
 }
+}
+\examples{
+ggplot(mtcars) +
+    geom_point(aes(mpg, disp)) +
+    patch_titles(
+        top = "I'm top patch title",
+        left = "I'm left patch title",
+        bottom = "I'm bottom patch title",
+        right = "I'm right patch title"
+    )
 }

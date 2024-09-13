@@ -32,6 +32,16 @@ A \code{patch_inset} object, which can be added in ggplot.
 \description{
 Create a ggplot inset
 }
+\examples{
+library(grid)
+p1 <- ggplot(mtcars) +
+    geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) +
+    geom_boxplot(aes(gear, disp, group = gear))
+p1 + inset(p2, vp = viewport(0.6, 0.6,
+    just = c(0, 0), width = 0.4, height = 0.4
+))
+}
 \seealso{
 \itemize{
 \item \link{patch.grob}

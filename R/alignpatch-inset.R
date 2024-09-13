@@ -1,7 +1,17 @@
 #' Create a ggplot inset
+#'
 #' @inheritParams wrap
 #' @return A `patch_inset` object, which can be added in ggplot.
 #' @inherit patch seealso
+#' @examples
+#' library(grid)
+#' p1 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp))
+#' p2 <- ggplot(mtcars) +
+#'     geom_boxplot(aes(gear, disp, group = gear))
+#' p1 + inset(p2, vp = viewport(0.6, 0.6,
+#'     just = c(0, 0), width = 0.4, height = 0.4
+#' ))
 #' @export
 inset <- function(plot, ..., align = "panel", on_top = TRUE,
                   clip = TRUE, vp = NULL) {
