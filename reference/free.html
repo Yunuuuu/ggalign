@@ -95,7 +95,7 @@ title, we can wrap the plot with <code>free_lab</code>.</p></li>
 <span></span>
 <span><span class="fu">free_lab</span><span class="op">(</span><span class="va">plot</span>, labs <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, borders <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -113,41 +113,14 @@ one or more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"<
 
 
 <dt id="arg-borders">borders<a class="anchor" aria-label="anchor" href="#arg-borders"></a></dt>
-<dd><p>Which border shouldn't be aligned? A string containing
-one or more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
+<dd><p>Which border shouldn't be aligned (<code>free_border</code>) or which
+border sizes should be removed (<code>free_space</code>)? A string containing one or
+more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
 
 
 <dt id="arg-labs">labs<a class="anchor" aria-label="anchor" href="#arg-labs"></a></dt>
 <dd><p>Which axis labs to be free? A string containing one or more of
 <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>What sizes of the ggplot2 elements to remove? Allowed values are:
-<code>"title"</code>, <code>"subtitle"</code>, <code>"xlab-t"</code>, <code>"axis-t"</code>, <code>"strip-t"</code>,
-<code>"patch-title-top"</code>, <code>"margin-t"</code>, <code>"ylab-l"</code>, <code>"axis-l"</code>, <code>"strip-l"</code>,
-<code>"patch-title-left"</code>, <code>"margin-l"</code>, <code>"caption"</code>, <code>"xlab-b"</code>, <code>"axis-b"</code>,
-<code>"strip-b"</code>, <code>"patch-title-bottom"</code>, <code>"margin-b"</code>, <code>"ylab-r"</code>, <code>"axis-r"</code>,
-<code>"strip-r"</code>, <code>"patch-title-right"</code>, and <code>"margin-r"</code>. Some unions also
-allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
-"patch-title-top", "margin-t".</p></li>
-<li><p><code>"l"/"left"</code>: "ylab-l", "axis-l", "strip-l", "patch-title-left",
-"margin-l".</p></li>
-<li><p><code>"b"/"bottom"</code>: "caption", "xlab-b", "axis-b", "strip-b",
-"patch-title-bottom", "margin-b".</p></li>
-<li><p><code>"r"/"right"</code>: "ylab-r", "axis-r", "strip-r", "patch-title-right",
-"margin-r".</p></li>
-<li><p><code>"x"</code>: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".</p></li>
-<li><p><code>"y"</code>: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".</p></li>
-<li><p><code>"xlab"/"xlabs"</code>: "xlab-t", "xlab-b".</p></li>
-<li><p><code>"ylab"/"ylabs"</code>: "ylab-l", "ylab-r".</p></li>
-<li><p><code>"lab"/"labs"</code>: "xlab-t", "xlab-b", "ylab-l", "ylab-r".</p></li>
-<li><p><code>"axis"/"axes"</code>: "axis-t", "axis-b", "axis-l", "axis-r".</p></li>
-<li><p><code>"strip"/"strips"</code>: "strip-t", "strip-b", "strip-l", "strip-r".</p></li>
-<li><p><code>"patch-title"</code>/<code>"patch-titles"</code>: "patch-title-top", "patch-title-left",
-"patch-title-bottom", "patch-title-right".</p></li>
-<li><p><code>"margin"</code>/<code>"margins"</code>: "margin-t", "margin-l", "margin-b", "margin-r".</p></li>
-</ul></dd>
 
 </dl></div>
     <div class="section level2">
