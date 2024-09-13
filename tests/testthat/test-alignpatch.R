@@ -181,3 +181,25 @@ test_that("`free_border()` works well", {
         )
     })
 })
+
+testthat::test_that("`free_space()` works well", {
+    p1 <- ggplot(mtcars) +
+        geom_bar(aes(y = factor(gear), fill = factor(gear))) +
+        scale_y_discrete(
+            "",
+            labels = c(
+                "3 gears are often enough",
+                "But, you know, 4 is a nice number",
+                "I would def go with 5 gears in a modern car"
+            )
+        )
+    # When combined with other plots it ends up looking bad
+    p2 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    expect_doppelganger("free_space() with ggplot", {
+        align_plots(NULL, free_space(p1, "l"), p2, p2)
+    })
+    expect_doppelganger("free_space() with alignpatches", {
+        align_plots(NULL, free_space(align_plots(p1), "l"), p2, p2)
+    })
+})

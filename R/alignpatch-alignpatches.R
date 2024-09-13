@@ -249,8 +249,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # setup sizes for non-panel rows/columns --------------
         sizes <- table_sizes(
-            lapply(patches, function(patch) patch$widths()),
-            lapply(patches, function(patch) patch$heights()),
+            lapply(patches, function(patch) patch$get_sizes()),
             design, dims[2L], dims[1L]
         )
         widths <- .subset2(sizes, "widths")
@@ -452,10 +451,12 @@ create_design <- function(ncol, nrow, byrow) {
 }
 
 #' @importFrom grid convertHeight convertWidth unit
-table_sizes <- function(widths, heights, design, ncol, nrow) {
+table_sizes <- function(sizes, design, ncol, nrow) {
     # `null` unit of the panel area will be converted into 0
     # we'll set the panel width and height afterward
-    widths <- lapply(widths, convertWidth, "mm", valueOnly = TRUE)
+    widths <- lapply(sizes, function(size) {
+        convertWidth(.subset2(size, "widths"), "mm", valueOnly = TRUE)
+    })
     widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
         area_col <- (i - 1L) %/% TABLE_COLS + 1L
         col_loc <- i %% TABLE_COLS
@@ -471,7 +472,9 @@ table_sizes <- function(widths, heights, design, ncol, nrow) {
             0L
         }
     }, numeric(1L))
-    heights <- lapply(heights, convertHeight, "mm", valueOnly = TRUE)
+    heights <- lapply(sizes, function(size) {
+        convertHeight(.subset2(size, "heights"), "mm", valueOnly = TRUE)
+    })
     heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
         area_row <- (i - 1L) %/% TABLE_ROWS + 1L
         row_loc <- i %% TABLE_ROWS

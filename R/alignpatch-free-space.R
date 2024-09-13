@@ -19,6 +19,9 @@ free_space.ggplot <- function(plot, borders = "tlbr") {
 }
 
 #' @export
+free_space.alignpatches <- free_space.ggplot
+
+#' @export
 free_space.free_space <- function(plot, borders = "tlbr") {
     assert_position(borders)
     attr(plot, "free_spaces") <- union_position(
@@ -39,11 +42,8 @@ alignpatch.free_space <- function(x) {
     ggproto(
         "PatchFreeSpace", Parent,
         free_spaces = split_position(attr(x, "free_spaces")),
-        widths = function(self, free = self$free_spaces, gt = self$gt) {
-            ggproto_parent(Parent, self)$widths(free, gt = gt)
-        },
-        heights = function(self, free = self$free_spaces, gt = self$gt) {
-            ggproto_parent(Parent, self)$heights(free, gt = gt)
+        get_sizes = function(self, free = self$free_spaces, gt = self$gt) {
+            ggproto_parent(Parent, self)$get_sizes(free, gt = gt)
         }
     )
 }

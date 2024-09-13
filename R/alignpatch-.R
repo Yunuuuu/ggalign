@@ -83,12 +83,11 @@ split_position <- function(x) {
     unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 setup_position <- function(x) {
-    .subset(
-        c(t = "top", l = "left", b = "bottom", r = "right"),
-        split_position(x)
-    )
+    complete_pos(split_position(x))
 }
-
+complete_pos <- function(x) {
+    .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
+}
 opposite_pos <- function(pos) {
     switch(pos,
         top = "bottom",
@@ -216,21 +215,7 @@ Patch <- ggproto("Patch", NULL,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
-    widths = function(self, free = NULL, gt = self$gt) {
-        ans <- .subset2(gt, "widths")
-        if (any(free == "l")) {
-            left <- unit(rep_len(0, LEFT_BORDER), "mm")
-        } else {
-            left <- ans[seq_len(LEFT_BORDER)]
-        }
-        if (any(free == "r")) {
-            right <- unit(rep_len(0, RIGHT_BORDER), "mm")
-        } else {
-            right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
-        }
-        unit.c(left, unit(0, "mm"), right)
-    },
-    heights = function(self, free = NULL, gt = self$gt) {
+    get_sizes = function(self, free = NULL, gt = self$gt) {
         ans <- .subset2(gt, "heights")
         if (any(free == "t")) {
             top <- unit(rep_len(0, TOP_BORDER), "mm")
@@ -242,7 +227,21 @@ Patch <- ggproto("Patch", NULL,
         } else {
             bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
         }
-        unit.c(top, unit(0, "mm"), bottom)
+        ans <- .subset2(gt, "widths")
+        if (any(free == "l")) {
+            left <- unit(rep_len(0, LEFT_BORDER), "mm")
+        } else {
+            left <- ans[seq_len(LEFT_BORDER)]
+        }
+        if (any(free == "r")) {
+            right <- unit(rep_len(0, RIGHT_BORDER), "mm")
+        } else {
+            right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
+        }
+        list(
+            widths = unit.c(left, unit(0, "mm"), right),
+            heights = unit.c(top, unit(0, "mm"), bottom)
+        )
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt) {

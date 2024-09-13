@@ -4,11 +4,26 @@
 #' @importFrom grid viewport
 #' @noRd
 free_vp <- function(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...) {
+    UseMethod("free_vp")
+}
+
+#' @export
+free_vp.default <- function(plot, x = 0.5, y = 0.5,
+                            width = NA, height = NA, ...) {
+    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+}
+
+#' @export
+free_vp.ggplot <- function(plot, x = 0.5, y = 0.5,
+                           width = NA, height = NA, ...) {
     attr(plot, "vp") <- viewport(
         x = x, y = y, width = width, height = height, ...,
     )
     add_class(plot, "free_vp")
 }
+
+#' @export
+free_vp.alignpatches <- free_vp.ggplot
 
 ####################################################
 #' @importFrom gtable gtable_width gtable_height
