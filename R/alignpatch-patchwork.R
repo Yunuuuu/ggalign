@@ -55,6 +55,9 @@ PatchPatchworkPatch <- ggproto(
     }
 )
 
+#' @export
+alignpatch.spacer <- function(x) NULL
+
 #########################################
 # `patch` from `patchwork`: patchwork::wrap_elements
 #' @export

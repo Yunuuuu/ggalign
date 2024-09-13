@@ -155,6 +155,7 @@ alignpatch.default <- function(x) {
 alignpatch.NULL <- function(x) NULL
 
 #' @importFrom ggplot2 ggproto
+#' @importFrom grid unit.c
 Patch <- ggproto("Patch", NULL,
     plot = NULL, gt = NULL,
     patch_gtable = function(self, guides, plot = self$plot) {
@@ -167,19 +168,33 @@ Patch <- ggproto("Patch", NULL,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
-    widths = function(self, gt = self$gt) {
+    widths = function(self, free = NULL, gt = self$gt) {
         ans <- .subset2(gt, "widths")
-        ans[c(
-            seq_len(LEFT_BORDER + 1L),
-            (length(ans) - RIGHT_BORDER + 1L):length(ans)
-        )]
+        if (any(free == "l")) {
+            left <- unit(rep_len(0, LEFT_BORDER), "mm")
+        } else {
+            left <- ans[seq_len(LEFT_BORDER)]
+        }
+        if (any(free == "r")) {
+            right <- unit(rep_len(0, RIGHT_BORDER), "mm")
+        } else {
+            right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
+        }
+        unit.c(left, unit(0, "mm"), right)
     },
-    heights = function(self, gt = self$gt) {
+    heights = function(self, free = NULL, gt = self$gt) {
         ans <- .subset2(gt, "heights")
-        ans[c(
-            seq_len(TOP_BORDER + 1L),
-            (length(ans) - BOTTOM_BORDER + 1L):length(ans)
-        )]
+        if (any(free == "t")) {
+            top <- unit(rep_len(0, TOP_BORDER), "mm")
+        } else {
+            top <- ans[seq_len(TOP_BORDER)]
+        }
+        if (any(free == "b")) {
+            bottom <- unit(rep_len(0, BOTTOM_BORDER), "mm")
+        } else {
+            bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
+        }
+        unit.c(top, unit(0, "mm"), bottom)
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt) {

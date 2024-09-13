@@ -110,27 +110,11 @@ alignpatch.free_align <- function(x) {
     ggproto(
         "PatchFreeAlign", Parent,
         free_axes = split_position(attr(x, "free_axes")),
-        widths = function(self, gt = self$gt) {
-            ans <- ggproto_parent(Parent, self)$widths(gt = gt)
-            free <- .subset(list(
-                l = seq_len(LEFT_BORDER),
-                r = seq(LEFT_BORDER + 2L, length.out = RIGHT_BORDER)
-            ), self$free_axes)
-            if (length(free <- unlist(free, FALSE, FALSE))) {
-                ans[free] <- unit(0, "mm")
-            }
-            ans
+        widths = function(self, free = self$free_axes, gt = self$gt) {
+            ggproto_parent(Parent, self)$widths(free, gt = gt)
         },
-        heights = function(self, gt = self$gt) {
-            ans <- ggproto_parent(Parent, self)$heights(gt = gt)
-            free <- .subset(list(
-                t = seq_len(TOP_BORDER),
-                b = seq(TOP_BORDER + 2L, length.out = BOTTOM_BORDER)
-            ), self$free_axes)
-            if (length(free <- unlist(free, FALSE, FALSE))) {
-                ans[free] <- unit(0, "mm")
-            }
-            ans
+        heights = function(self, free = self$free_axes, gt = self$gt) {
+            ggproto_parent(Parent, self)$heights(free, gt = gt)
         },
         align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                                 gt = self$gt) {

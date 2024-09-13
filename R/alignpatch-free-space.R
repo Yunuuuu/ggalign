@@ -39,27 +39,11 @@ alignpatch.free_space <- function(x) {
     ggproto(
         "PatchFreeSpace", Parent,
         free_spaces = split_position(attr(x, "free_spaces")),
-        widths = function(self, gt = self$gt) {
-            ans <- ggproto_parent(Parent, self)$widths(gt = gt)
-            free <- .subset(list(
-                l = seq_len(LEFT_BORDER),
-                r = seq(LEFT_BORDER + 2L, length.out = RIGHT_BORDER)
-            ), self$free_spaces)
-            if (length(free <- unlist(free, FALSE, FALSE))) {
-                ans[free] <- unit(0, "mm")
-            }
-            ans
+        widths = function(self, free = self$free_spaces, gt = self$gt) {
+            ggproto_parent(Parent, self)$widths(free, gt = gt)
         },
-        heights = function(self, gt = self$gt) {
-            ans <- ggproto_parent(Parent, self)$heights(gt = gt)
-            free <- .subset(list(
-                t = seq_len(TOP_BORDER),
-                b = seq(TOP_BORDER + 2L, length.out = BOTTOM_BORDER)
-            ), self$free_spaces)
-            if (length(free <- unlist(free, FALSE, FALSE))) {
-                ans[free] <- unit(0, "mm")
-            }
-            ans
+        heights = function(self, free = self$free_spaces, gt = self$gt) {
+            ggproto_parent(Parent, self)$heights(free, gt = gt)
         }
     )
 }
