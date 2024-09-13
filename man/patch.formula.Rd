@@ -9,7 +9,11 @@
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
 
-\item{...}{Not used currently.}
+\item{...}{
+  Arguments passed on to \code{\link[graphics:par]{graphics::par}}
+  \describe{
+    \item{\code{}}{}
+  }}
 
 \item{device}{
     A function that opens a graphics device for \code{grid.echo()} to

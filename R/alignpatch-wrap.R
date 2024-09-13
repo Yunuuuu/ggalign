@@ -146,13 +146,13 @@ patch.alignpatches <- function(x, ...) {
 }
 
 #' @inherit patch.grob
+#' @inheritDotParams graphics::par -no.readonly
 #' @inheritParams gridGraphics::echoGrob
 #' @export
 patch.formula <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
     rlang::check_dots_empty()
-    gp <- graphics::par(no.readonly = TRUE)
-    force(x)
+    gp <- graphics::par(..., no.readonly = TRUE)
     gridGraphics::echoGrob(
         function() {
             old_gp <- graphics::par(no.readonly = TRUE)
