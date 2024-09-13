@@ -10,6 +10,7 @@
 #' - `free_lab`: If we want to compose plots without alignment of the axis
 #' title, we can wrap the plot with `free_lab`.
 #' - `free_space`: Removing the ggplot element sizes when aligning.
+#' - `free_vp`: Customize the [viewport][grid::viewport] when aligning.
 #'
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
 #' object.
@@ -18,7 +19,7 @@
 #' @return
 #' - `free_align`: A modified version of `plot` with a `free_align` class.
 #' @examples
-#' # directly copied from patchwork
+#' # directly copied from `patchwork`
 #' # Sometimes you have a plot that defies good composition alginment, e.g. due
 #' # to long axis labels
 #' p1 <- ggplot(mtcars) +
@@ -38,21 +39,20 @@
 #'
 #' align_plots(p1, p2, ncol = 1L)
 #'
-#' # We can fix this be using free (here, with the default "panel" type)
+#' # We can fix this be using `free_align`
 #' align_plots(free_align(p1), p2, ncol = 1L)
 #'
 #' # If we still want the panels to be aligned to the right, we can choose to
 #' # free only the left side
 #' align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
 #'
-#' # We could use "label" to fix the layout in a different way
+#' # We could use `free_lab` to fix the layout in a different way
 #' align_plots(p1, free_lab(p2), ncol = 1L)
 #'
-#' # Another issue is that long labels are not using already available free
-#' # space.
+#' # Another issue is that long labels can occupy much spaces
 #' align_plots(NULL, p1, p2, p2)
 #'
-#' # This can be fixed with the "space" type
+#' # This can be fixed with `free_space`
 #' align_plots(NULL, free_space(p1, "l"), p2, p2)
 #'
 #' @export

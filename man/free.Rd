@@ -102,6 +102,10 @@ more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 \itemize{
 \item \code{free_space}: A modified version of \code{plot} with a \code{free_space} class.
 }
+
+\itemize{
+\item \code{free_vp}: A modified version of \code{plot} with a \code{free_vp} class.
+}
 }
 \description{
 \link{align_plots} will try to align plot panels, and every elements of the plot,
@@ -115,10 +119,11 @@ borders (but still align the panels themselves), we can wrap the plot with
 \item \code{free_lab}: If we want to compose plots without alignment of the axis
 title, we can wrap the plot with \code{free_lab}.
 \item \code{free_space}: Removing the ggplot element sizes when aligning.
+\item \code{free_vp}: Customize the \link[grid:viewport]{viewport} when aligning.
 }
 }
 \examples{
-# directly copied from patchwork
+# directly copied from `patchwork`
 # Sometimes you have a plot that defies good composition alginment, e.g. due
 # to long axis labels
 p1 <- ggplot(mtcars) +
@@ -138,21 +143,20 @@ p2 <- ggplot(mtcars) +
 
 align_plots(p1, p2, ncol = 1L)
 
-# We can fix this be using free (here, with the default "panel" type)
+# We can fix this be using `free_align`
 align_plots(free_align(p1), p2, ncol = 1L)
 
 # If we still want the panels to be aligned to the right, we can choose to
 # free only the left side
 align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
 
-# We could use "label" to fix the layout in a different way
+# We could use `free_lab` to fix the layout in a different way
 align_plots(p1, free_lab(p2), ncol = 1L)
 
-# Another issue is that long labels are not using already available free
-# space.
+# Another issue is that long labels can occupy much spaces
 align_plots(NULL, p1, p2, p2)
 
-# This can be fixed with the "space" type
+# This can be fixed with `free_space`
 align_plots(NULL, free_space(p1, "l"), p2, p2)
 
 }
