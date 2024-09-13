@@ -71,7 +71,7 @@ free_space: Removing the ggplot element sizes when aligning.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Free from alignment</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-align.R" class="external-link"><code>R/alignpatch-free-align.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-border.R" class="external-link"><code>R/alignpatch-free-border.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-lab.R" class="external-link"><code>R/alignpatch-free-lab.R</code></a>, and 1 more</small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-align.R" class="external-link"><code>R/alignpatch-free-align.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-border.R" class="external-link"><code>R/alignpatch-free-border.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-lab.R" class="external-link"><code>R/alignpatch-free-lab.R</code></a>, and 2 more</small>
       <div class="d-none name"><code>free.Rd</code></div>
     </div>
 
@@ -95,7 +95,9 @@ title, we can wrap the plot with <code>free_lab</code>.</p></li>
 <span></span>
 <span><span class="fu">free_lab</span><span class="op">(</span><span class="va">plot</span>, labs <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, borders <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, borders <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">free_vp</span><span class="op">(</span><span class="va">plot</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="cn">NA</span>, height <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -121,6 +123,80 @@ more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.
 <dt id="arg-labs">labs<a class="anchor" aria-label="anchor" href="#arg-labs"></a></dt>
 <dd><p>Which axis labs to be free? A string containing one or more of
 <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">grid::viewport</a></code></p><dl><dt><code>default.units</code></dt>
+<dd><p>A string indicating the default units to use
+    if <code>x</code>, <code>y</code>, <code>width</code>, or <code>height</code>
+    are only given as numeric vectors.</p></dd>
+
+    <dt><code>just</code></dt>
+<dd><p>A string or numeric
+    vector specifying the justification of the viewport
+    relative to its (x, y) location.  If there are two values, the first
+    value specifies horizontal justification and the second value specifies
+    vertical justification.  Possible string values are: <code>"left"</code>,
+    <code>"right"</code>, <code>"centre"</code>, <code>"center"</code>, <code>"bottom"</code>,
+    and <code>"top"</code>.  For numeric values, 0 means left alignment
+    and 1 means right alignment.</p></dd>
+
+    <dt><code>gp</code></dt>
+<dd><p>An object of class <code>"gpar"</code>, typically the output
+    from a call to the function <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></code>.  This is basically
+    a list of graphical parameter settings.</p></dd>
+
+    <dt><code>clip</code></dt>
+<dd><p>One of <code>"on"</code>, <code>"inherit"</code>, or
+    <code>"off"</code>, indicating whether to
+    clip to the extent of this viewport, inherit the clipping region
+    from the parent viewport, or turn clipping off altogether.
+    For back-compatibility, a logical value of <code>TRUE</code> corresponds
+    to <code>"on"</code> and <code>FALSE</code> corresponds to <code>"inherit"</code>.</p>
+<p>May also be a grob (or a gTree) that describes a clipping path
+    or the result of a call to <code><a href="https://rdrr.io/r/grid/grid.stroke.html" class="external-link">as.path</a></code>.</p></dd>
+
+    <dt><code>mask</code></dt>
+<dd><p>One of <code>"none"</code> (or <code>FALSE</code>)
+    or <code>"inherit"</code> (or <code>TRUE</code>)
+    or a grob (or a gTree) or the result of call to
+    <code><a href="https://rdrr.io/r/grid/as.mask.html" class="external-link">as.mask</a></code>.  This specifies that the viewport
+    should have no mask, or it should inherit the mask of its parent,
+    or it should have its own mask, as described by the grob.</p></dd>
+
+    <dt><code>xscale</code></dt>
+<dd><p>A numeric vector of length two indicating the minimum and
+    maximum on the x-scale.  The limits may not be identical.</p></dd>
+
+    <dt><code>yscale</code></dt>
+<dd><p>A numeric vector of length two indicating the minimum
+    and maximum on the y-scale. The limits may not be identical.</p></dd>
+
+    <dt><code>angle</code></dt>
+<dd><p>A numeric value indicating the angle of rotation of the
+    viewport.  Positive values indicate the amount of rotation, in
+    degrees, anticlockwise from the positive x-axis.</p></dd>
+
+    <dt><code>layout</code></dt>
+<dd><p>A Grid layout object which splits the viewport into
+    subregions.</p></dd>
+
+    <dt><code>layout.pos.row</code></dt>
+<dd><p>A numeric vector giving the
+    rows occupied by this viewport in its
+    parent's layout.</p></dd>
+
+    <dt><code>layout.pos.col</code></dt>
+<dd><p>A numeric vector giving the
+    columns occupied by this viewport in its
+    parent's layout.</p></dd>
+
+    <dt><code>name</code></dt>
+<dd><p>A character value to uniquely identify the viewport
+    once it has been pushed onto the viewport tree.</p></dd>
+
+
+</dl></dd>
 
 </dl></div>
     <div class="section level2">
