@@ -26,7 +26,7 @@
 #' wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
 #'     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
 #'     inset(textGrob("Here are some text", gp = gpar(color = "black")),
-#'         align = "panel", clip = FALSE
+#'         align = "panel"
 #'     )
 #' @importFrom ggplot2 ggplot theme element_blank
 #' @importFrom grid is.grob
