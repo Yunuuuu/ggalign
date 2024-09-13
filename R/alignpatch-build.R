@@ -1,9 +1,15 @@
 #' @importFrom grid grid.draw
 #' @export
 print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-    if (newpage) grid::grid.newpage()
     ggplot2::set_last_plot(x)
-    # render plot
+    print_naive(
+        x = x, newpage = newpage, vp = vp, ...,
+        error_name = "{.cls alignpatches}"
+    )
+}
+
+print_naive <- function(x, newpage = is.null(vp), vp = NULL, ..., error_name) {
+    if (newpage) grid::grid.newpage()
     if (!is.null(vp)) {
         if (is.character(vp)) {
             grid::seekViewport(vp)
@@ -12,6 +18,7 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
         }
         on.exit(grid::upViewport())
     }
+    # render the plot
     tryCatch(
         grid.draw(x, ...),
         error = function(e) {
@@ -19,12 +26,12 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
                 deparse(conditionCall(e)[[1L]]) == "grid.Call") {
                 if (Sys.getenv("RSTUDIO") == "1") {
                     cli::cli_abort(c(
-                        "The RStudio {.field Plots} window may be too small to show this alignpatches",
+                        "The RStudio {.field Plots} window may be too small to show {error_name}",
                         i = "Please make the window larger."
                     ))
                 } else {
                     cli::cli_abort(c(
-                        "The viewport may be too small to show this alignpatches.",
+                        "The viewport may be too small to show {error_name}.",
                         i = "Please make the window larger."
                     ))
                 }
@@ -40,19 +47,21 @@ grid.draw.alignpatches <- function(x, recording = TRUE) {
     grid.draw(ggalignGrob(x), recording = recording)
 }
 
+#' @export
+ggalign_build.alignpatches <- function(x) x
+
 #' @importFrom ggplot2 find_panel element_render theme
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom rlang arg_match0
 #' @export
-#' @rdname ggalignGrob
-ggalignGrob.alignpatches <- function(x) {
+ggalign_gtable.alignpatches <- function(x) {
     layout <- .subset2(x, "layout")
     theme <- .subset2(layout, "theme")
 
     # use complete_theme() when ggplot2 release
     theme <- complete_theme(theme)
     x$layout$theme <- theme
-    table <- patch_gtable(x)
+    table <- alignpatch(x)$patch_gtable()
 
     fix_respect <- is.matrix(.subset2(table, "respect"))
 

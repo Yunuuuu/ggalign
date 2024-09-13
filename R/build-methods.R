@@ -96,14 +96,6 @@ align_build <- function(x, panel, index,
         plot <- free_lab(plot, free_labs)
     }
     if (!is.null(free_spaces)) {
-        free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, free_spaces)) > 0L
-        ]
-        # we always attach the panel borders if the spaces are ignored
-        if (length(free_borders)) {
-            # here, we attach the borders into the panel
-            plot <- free_border(plot, paste(free_borders, collapse = ""))
-        }
         plot <- free_space(plot, free_spaces)
     }
     list(plot = plot, size = .subset2(x, "size"))

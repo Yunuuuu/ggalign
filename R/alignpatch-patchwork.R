@@ -17,53 +17,48 @@ alignpatch.patchwork <- function(x) {
     layout$title <- .subset2(annotation, "title")
     layout$subtitle <- .subset2(annotation, "subtitle")
     layout$caption <- .subset2(annotation, "caption")
-    new_alignpatches(plots, layout)
+    alignpatch(new_alignpatches(plots, layout))
 }
-
-#' @export
-#' @rdname ggalignGrob
-ggalignGrob.patchwork <- function(x) patchwork::patchworkGrob(x)
 
 ######################################
 # `patch` from `patchwork`: patchwork::plot_spacer
+#' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.patch <- function(x) x
+alignpatch.patch <- function(x) ggproto(NULL, PatchPatchworkPatch, plot = x)
 
-#' @export
-#' @rdname ggalignGrob
-ggalignGrob.patch <- function(x) patchwork::patchGrob(x)
-
-# `patch` from `patchwork`: patchwork::plot_spacer
-#' @importFrom gtable gtable_add_rows gtable_add_cols
-#' @importFrom ggplot2 find_panel
-#' @export
-#' @rdname alignpatch
-#' @order 6
-patch_gtable.patch <- function(patch, guides) {
-    guides <- if (length(guides)) "collect" else "keep"
-    table <- patchwork::patchGrob(patch, guides = guides)
-    for (border in .TLBR) {
-        panel_pos <- find_panel(table)
-        if (border == "top") {
-            h <- .subset2(panel_pos, "t") - 4L # above original xlab
-            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
-        } else if (border == "left") {
-            v <- .subset2(panel_pos, "l") - 4L # left of the ylab
-            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
-        } else if (border == "bottom") {
-            h <- .subset2(panel_pos, "b") + 3L # below original xlab
-            table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
-        } else if (border == "right") {
-            v <- .subset2(panel_pos, "r") + 3L # right of the ylab
-            table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+#' @importFrom ggplot2 ggproto
+PatchPatchworkPatch <- ggproto(
+    "PatchPatchworkPatch", Patch,
+    # `patch` from `patchwork`: patchwork::plot_spacer
+    #' @importFrom gtable gtable_add_rows gtable_add_cols
+    #' @importFrom ggplot2 find_panel
+    patch_gtable = function(self, guides, plot = self$plot) {
+        guides <- if (length(guides)) "collect" else "keep"
+        table <- patchwork::patchGrob(patch, guides = guides)
+        for (border in .TLBR) {
+            panel_pos <- find_panel(table)
+            if (border == "top") {
+                h <- .subset2(panel_pos, "t") - 4L # above original xlab
+                table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+            } else if (border == "left") {
+                v <- .subset2(panel_pos, "l") - 4L # left of the ylab
+                table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+            } else if (border == "bottom") {
+                h <- .subset2(panel_pos, "b") + 3L # below original xlab
+                table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+            } else if (border == "right") {
+                v <- .subset2(panel_pos, "r") + 3L # right of the ylab
+                table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+            }
         }
+        table
     }
-    table
-}
+)
+
+#' @export
+alignpatch.spacer <- function(x) NULL
 
 #########################################
 # `patch` from `patchwork`: patchwork::wrap_elements
 #' @export
-#' @rdname alignpatch
-#' @order 7
-patch_gtable.wrapped_patch <- patch_gtable.patch
+alignpatch.wrapped_patch <- alignpatch.patch

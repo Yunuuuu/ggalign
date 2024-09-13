@@ -15,7 +15,7 @@ free_border(plot, borders = "tlbr")
 
 free_lab(plot, labs = "tlbr")
 
-free_space(plot, ...)
+free_space(plot, borders = "tlbr")
 }
 \arguments{
 \item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches}
@@ -24,39 +24,12 @@ object.}
 \item{axes}{Which axes shouldn't be aligned? A string containing
 one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
-\item{borders}{Which border shouldn't be aligned? A string containing
-one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\item{borders}{Which border shouldn't be aligned (\code{free_border}) or which
+border sizes should be removed (\code{free_space})? A string containing one or
+more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
 \item{labs}{Which axis labs to be free? A string containing one or more of
 \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
-
-\item{...}{What sizes of the ggplot2 elements to remove? Allowed values are:
-\code{"title"}, \code{"subtitle"}, \code{"xlab-t"}, \code{"axis-t"}, \code{"strip-t"},
-\code{"patch-title-top"}, \code{"margin-t"}, \code{"ylab-l"}, \code{"axis-l"}, \code{"strip-l"},
-\code{"patch-title-left"}, \code{"margin-l"}, \code{"caption"}, \code{"xlab-b"}, \code{"axis-b"},
-\code{"strip-b"}, \code{"patch-title-bottom"}, \code{"margin-b"}, \code{"ylab-r"}, \code{"axis-r"},
-\code{"strip-r"}, \code{"patch-title-right"}, and \code{"margin-r"}. Some unions also
-allowed:
-\itemize{
-\item \verb{"t"/"top}: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
-"patch-title-top", "margin-t".
-\item \code{"l"/"left"}: "ylab-l", "axis-l", "strip-l", "patch-title-left",
-"margin-l".
-\item \code{"b"/"bottom"}: "caption", "xlab-b", "axis-b", "strip-b",
-"patch-title-bottom", "margin-b".
-\item \code{"r"/"right"}: "ylab-r", "axis-r", "strip-r", "patch-title-right",
-"margin-r".
-\item \code{"x"}: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".
-\item \code{"y"}: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".
-\item \code{"xlab"/"xlabs"}: "xlab-t", "xlab-b".
-\item \code{"ylab"/"ylabs"}: "ylab-l", "ylab-r".
-\item \code{"lab"/"labs"}: "xlab-t", "xlab-b", "ylab-l", "ylab-r".
-\item \code{"axis"/"axes"}: "axis-t", "axis-b", "axis-l", "axis-r".
-\item \code{"strip"/"strips"}: "strip-t", "strip-b", "strip-l", "strip-r".
-\item \code{"patch-title"}/\code{"patch-titles"}: "patch-title-top", "patch-title-left",
-"patch-title-bottom", "patch-title-right".
-\item \code{"margin"}/\code{"margins"}: "margin-t", "margin-l", "margin-b", "margin-r".
-}}
 }
 \value{
 \itemize{

@@ -1,6 +1,27 @@
-#' @importFrom grid unit.c
+#' @export
+print.HeatmapLayout <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+    ggplot2::set_last_plot(x)
+    print_naive(
+        x = x, newpage = newpage, vp = vp, ...,
+        error_name = "{.fn layout_heatmap}"
+    )
+}
+
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.HeatmapLayout <- function(x, recording = TRUE) {
+    grid.draw(ggalignGrob(x), recording = recording)
+}
+
 #' @export
 alignpatch.HeatmapLayout <- function(x) {
+    alignpatch(ggalign_build(x))
+}
+
+#' @importFrom grid unit.c
+#' @export
+ggalign_build.HeatmapLayout <- function(x) {
     patches <- heatmap_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
@@ -24,7 +45,6 @@ alignpatch.HeatmapLayout <- function(x) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- x@params
-
     align_plots(
         !!!.subset(plots, keep),
         design = design,
@@ -80,10 +100,10 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     if (is.null(heatmap_spaces)) {
         horizontal_spaces <- vertical_spaces <- NULL
     } else if (!is.waive(heatmap_spaces)) {
-        horizontal_spaces <- get_free_spaces(heatmap_spaces, c("t", "b"))
-        vertical_spaces <- get_free_spaces(heatmap_spaces, c("l", "r"))
-        if (length(horizontal_spaces) == 0L) horizontal_spaces <- NULL
-        if (length(vertical_spaces) == 0L) vertical_spaces <- NULL
+        horizontal_spaces <- gsub("[lr]", "", heatmap_spaces)
+        vertical_spaces <- gsub("[tb]", "", heatmap_spaces)
+        if (nchar(horizontal_spaces) == 0L) horizontal_spaces <- NULL
+        if (nchar(vertical_spaces) == 0L) vertical_spaces <- NULL
     } else {
         # By default, we won't remove border sizes of the heatmap
         heatmap_spaces <- NULL
@@ -186,8 +206,18 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         # for heatmap annotation, we should always make them next to
         # the heatmap body
         if (!is.null(.subset2(ans, "plot"))) {
-            ans$plot <- free_just(
+            ans$plot <- free_vp(
                 .subset2(ans, "plot"),
+                x = switch(position,
+                    left = 1L,
+                    right = 0L,
+                    0.5
+                ),
+                y = switch(position,
+                    top = 0L,
+                    bottom = 1L,
+                    0.5
+                ),
                 just = switch(position,
                     top = "bottom",
                     left = "right",
@@ -207,13 +237,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         p <- free_lab(p, heatmap_labs)
     }
     if (!is.null(heatmap_spaces)) {
-        free_borders <- names(GGELEMENTS)[
-            lengths(lapply(GGELEMENTS, intersect, heatmap_spaces)) > 0L
-        ]
-        if (length(free_borders)) {
-            # here, we attach the borders into the panel
-            p <- free_border(p, borders = paste(free_borders, collapse = ""))
-        }
         p <- free_space(p, heatmap_spaces)
     }
     plots <- c(plots, list(heatmap = p))

@@ -70,8 +70,8 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         }
     }
     design <- as_areas(design)
-    plots <- lapply(plots, alignpatch)
-    new_alignpatches(plots, list(
+    patches <- lapply(plots, alignpatch)
+    new_alignpatches(patches, list(
         ncol = ncol,
         nrow = nrow,
         byrow = byrow,
@@ -84,9 +84,9 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     ))
 }
 
-new_alignpatches <- function(plots, layout) {
+new_alignpatches <- function(patches, layout) {
     structure(
-        list(plots = plots, layout = layout),
+        list(patches = patches, layout = layout),
         # Will ensure serialisation includes a link to the `ggalign`
         # namespace
         `_namespace` = ggalign_namespace_link,

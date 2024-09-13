@@ -1,5 +1,25 @@
 #' @export
+print.StackLayout <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+    ggplot2::set_last_plot(x)
+    print_naive(
+        x = x, newpage = newpage, vp = vp, ...,
+        error_name = "{.fn layout_stack}"
+    )
+}
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.StackLayout <- function(x, recording = TRUE) {
+    grid.draw(ggalignGrob(x), recording = recording)
+}
+
+#' @export
 alignpatch.StackLayout <- function(x) {
+    alignpatch(ggalign_build(x))
+}
+
+#' @export
+ggalign_build.StackLayout <- function(x) {
     .subset2(stack_build(x), "plot")
 }
 
@@ -26,7 +46,6 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     # by all plots
     free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% "tlbr"
     free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces %|w|% NULL
-
     # we reorder the plots based on the `order` slot
     plot_index <- order(vapply(plots, function(plot) {
         if (is.align(plot)) {
@@ -163,13 +182,13 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (!is_null_unit(size <- .subset2(sizes, "top"))) {
-                attr(top, "vp_height") <- size
+                attr(top, "vp")$height <- size
             }
             area <- stack_patch_add_plot(area, top, t = 1L, l = l)
         }
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
             if (!is_null_unit(size <- .subset2(sizes, "bottom"))) {
-                attr(bottom, "vp_height") <- size
+                attr(bottom, "vp")$height <- size
             }
             area <- stack_patch_add_plot(area, bottom,
                 t = attr(area, "align") + 1L, l = l
@@ -199,13 +218,13 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
                 attr(area, "align") <- attr(area, "align") + 1L
             }
             if (!is_null_unit(size <- .subset2(sizes, "left"))) {
-                attr(left, "vp_width") <- size
+                attr(left, "vp")$width <- size
             }
             area <- stack_patch_add_plot(area, left, t = t, l = 1L)
         }
         if (!is.null(right <- .subset2(plots, "right"))) {
             if (!is_null_unit(size <- .subset2(sizes, "right"))) {
-                attr(right, "vp_width") <- size
+                attr(right, "vp")$width <- size
             }
             area <- stack_patch_add_plot(area, right,
                 t = t, l = attr(area, "align") + 1L

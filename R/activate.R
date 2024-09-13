@@ -60,7 +60,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     }
     if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
         !is.null(free_spaces)) {
-        free_spaces <- check_ggelements(free_spaces)
+        free_spaces <- check_layout_position(free_spaces)
     }
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
@@ -116,7 +116,7 @@ stack_active <- function(sizes = NULL, guides = NA,
     }
     if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
         !is.null(free_spaces)) {
-        free_spaces <- check_ggelements(free_spaces)
+        free_spaces <- check_layout_position(free_spaces)
     }
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
