@@ -49,6 +49,7 @@ p1 + inset(p2, vp = viewport(0.6, 0.6,
 \item \link{patch.patch_ggplot}
 \item \link{patch.patchwork}
 \item \link{patch.patch}
+\item \link{patch.trellis}
 \item \link{patch.formula} / \link{patch.function}
 \item \link{patch.recordedplot}
 \item \link{patch.Heatmap}

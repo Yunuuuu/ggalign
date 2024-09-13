@@ -84,6 +84,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' - [patch.patch_ggplot]
 #' - [patch.patchwork]
 #' - [patch.patch]
+#' - [patch.trellis]
 #' - [patch.formula] / [patch.function]
 #' - [patch.recordedplot]
 #' - [patch.Heatmap]
@@ -94,6 +95,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @keywords internal
 patch <- function(x, ...) UseMethod("patch")
 
+# Following methods much are copied from `cowplot`
 #' @export
 patch.default <- function(x, ...) {
     cli::cli_abort("Cannot make grob from {.obj_type_friendly {x}}")
@@ -216,6 +218,17 @@ offscreen <- function(width, height) {
 }
 
 #' @inherit patch.grob
+#' @inheritParams grid::grid.grabExpr
+#' @seealso [trellis][lattice::trellis.object]
+#' @export
+patch.trellis <- function(x, ..., device = NULL) {
+    grid::recordGrob(
+        print(plot, newpage = FALSE),
+        list(plot = plot, device = device %||% offscreen)
+    )
+}
+
+#' @inherit patch.grob
 #' @param ... Additional arguments passed to [draw()][ComplexHeatmap::draw].
 #' @inheritParams grid::grid.grabExpr
 #' @seealso
@@ -282,6 +295,9 @@ alignpatch.function <- alignpatch.grob
 
 #' @export
 alignpatch.recordedplot <- alignpatch.grob
+
+#' @export
+alignpatch.trellis <- alignpatch.grob
 
 #' @export
 alignpatch.Heatmap <- function(x) alignpatch(wrap(x, align = "full"))
