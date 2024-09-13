@@ -94,6 +94,11 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @keywords internal
 patch <- function(x, ...) UseMethod("patch")
 
+#' @export
+patch.default <- function(x, ...) {
+    cli::cli_abort("Cannot make grob from {.obj_type_friendly {x}}")
+}
+
 #' @inherit patch title description return
 #' @inheritParams patch
 #' @param ... Not used currently.
@@ -131,9 +136,18 @@ patch.patch_ggplot <- function(x, ...) {
 }
 
 #' @inherit patch.grob
+#' @seealso [alignpatches][align_plots]
+#' @export
+patch.alignpatches <- function(x, ...) {
+    rlang::check_dots_empty()
+    ggalignGrob(x)
+}
+
+#' @inherit patch.grob
 #' @seealso [patchwork][patchwork::patchworkGrob]
 #' @export
 patch.patchwork <- function(x, ...) {
+    rlang::check_installed("patchwork", "to make grob from patchwork")
     rlang::check_dots_empty()
     patchwork::patchworkGrob(x)
 }
@@ -142,16 +156,9 @@ patch.patchwork <- function(x, ...) {
 #' @seealso [patch][patchwork::patchGrob]
 #' @export
 patch.patch <- function(x, ...) {
+    rlang::check_installed("patchwork", "to make grob from patch")
     rlang::check_dots_empty()
     patchwork::patchGrob(x)
-}
-
-#' @inherit patch.grob
-#' @seealso [alignpatches][align_plots]
-#' @export
-patch.alignpatches <- function(x, ...) {
-    rlang::check_dots_empty()
-    ggalignGrob(x)
 }
 
 #' @inherit patch.grob
