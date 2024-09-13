@@ -29,7 +29,8 @@ alignpatch.patchwork <- function(x) {
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.patch <- function(x) {
-    rlang::check_installed("patchwork", "to align patch")
+    plot_cls <- fclass(x)
+    rlang::check_installed("patchwork", sprintf("to align {%s} plot", plot_cls))
     ggproto(NULL, PatchPatchworkPatch, plot = x)
 }
 
@@ -41,24 +42,24 @@ PatchPatchworkPatch <- ggproto(
     #' @importFrom ggplot2 find_panel
     patch_gtable = function(self, guides, plot = self$plot) {
         guides <- if (length(guides)) "collect" else "keep"
-        table <- patchwork::patchGrob(patch, guides = guides)
+        ans <- patchwork::patchGrob(patch, guides = guides)
         for (border in .TLBR) {
-            panel_pos <- find_panel(table)
+            panel_pos <- find_panel(ans)
             if (border == "top") {
                 h <- .subset2(panel_pos, "t") - 4L # above original xlab
-                table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+                ans <- gtable_add_rows(ans, unit(0L, "mm"), pos = h)
             } else if (border == "left") {
                 v <- .subset2(panel_pos, "l") - 4L # left of the ylab
-                table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+                ans <- gtable_add_cols(ans, unit(0, "mm"), pos = v)
             } else if (border == "bottom") {
                 h <- .subset2(panel_pos, "b") + 3L # below original xlab
-                table <- gtable_add_rows(table, unit(0L, "mm"), pos = h)
+                ans <- gtable_add_rows(ans, unit(0L, "mm"), pos = h)
             } else if (border == "right") {
                 v <- .subset2(panel_pos, "r") + 3L # right of the ylab
-                table <- gtable_add_cols(table, unit(0, "mm"), pos = v)
+                ans <- gtable_add_cols(ans, unit(0, "mm"), pos = v)
             }
         }
-        table
+        ans
     }
 )
 
