@@ -84,7 +84,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' - [patch.patch_ggplot]
 #' - [patch.patchwork]
 #' - [patch.patch]
-#' - [patch.formula]
+#' - [patch.formula] / [patch.function]
 #' - [patch.recordedplot]
 #' - [patch.Heatmap]
 #' - [patch.HeatmapList]
@@ -153,7 +153,6 @@ patch.alignpatches <- function(x, ...) {
 #' @export
 patch.formula <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
-    rlang::check_dots_empty()
     gp <- graphics::par(..., no.readonly = TRUE)
     gridGraphics::echoGrob(
         function() {
@@ -166,6 +165,34 @@ patch.formula <- function(x, ..., device = NULL) {
         name = "base_plot",
         device = device %||% offscreen
     )
+}
+
+#' @export
+#' @rdname patch.formula
+patch.function <- function(x, ..., device = NULL) {
+    rlang::check_installed("gridGraphics", "to make grob from base plot")
+    gp <- graphics::par(..., no.readonly = TRUE)
+    gridGraphics::echoGrob(
+        function() {
+            old_gp <- graphics::par(no.readonly = TRUE)
+            graphics::par(gp)
+            on.exit(try(graphics::par(old_gp)))
+            suppressMessages(x())
+            invisible(NULL)
+        },
+        name = "base_plot",
+        device = device %||% offscreen
+    )
+}
+
+#' @inherit patch.grob
+#' @inheritParams gridGraphics::echoGrob
+#' @seealso [recordPlot][grDevices::recordPlot]
+#' @export
+patch.recordedplot <- function(x, ..., device = NULL) {
+    rlang::check_installed("gridGraphics", "to make grob from recordedplot")
+    rlang::check_dots_empty()
+    gridGraphics::echoGrob(x, device = device %||% offscreen)
 }
 
 offscreen <- function(width, height) {
@@ -207,14 +234,6 @@ patch.pheatmap <- function(x, ...) {
     .subset2(x, "gtable")
 }
 
-#' @inherit patch.formula
-#' @seealso [recordPlot][grDevices::recordPlot]
-#' @export
-patch.recordedplot <- function(x, ..., device = NULL) {
-    rlang::check_installed("gridGraphics", "to make grob from recordedplot")
-    gridGraphics::echoGrob(x, device = device %||% offscreen)
-}
-
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
@@ -240,6 +259,9 @@ alignpatch.grob <- function(x) alignpatch(wrap(x))
 
 #' @export
 alignpatch.formula <- alignpatch.grob
+
+#' @export
+alignpatch.function <- alignpatch.grob
 
 #' @export
 alignpatch.recordedplot <- alignpatch.grob

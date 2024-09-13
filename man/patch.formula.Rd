@@ -2,9 +2,12 @@
 % Please edit documentation in R/alignpatch-wrap.R
 \name{patch.formula}
 \alias{patch.formula}
+\alias{patch.function}
 \title{Convert Object into a Grob}
 \usage{
 \method{patch}{formula}(x, ..., device = NULL)
+
+\method{patch}{`function`}(x, ..., device = NULL)
 }
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
