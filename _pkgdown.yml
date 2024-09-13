@@ -11,7 +11,7 @@ reference:
   - layout_heatmap
   - layout_stack
 
-- title: Building process
+- title: Layout Building
   desc: >
     All plots begin with a call to `ggheatmap()` or `ggstack()`, supplying default 
     data. You then reorder the layout, or group the layout into panels, and add 
