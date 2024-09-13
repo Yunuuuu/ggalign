@@ -166,7 +166,7 @@ patch.patch <- function(x, ...) {
 #' @inheritParams gridGraphics::echoGrob
 #' @seealso [plot]
 #' @export
-patch.formula <- function(x, ..., device = NULL) {
+patch.formula <- function(x, ..., device = NULL, name = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
     gp <- graphics::par(..., no.readonly = TRUE)
     gridGraphics::echoGrob(
@@ -177,14 +177,14 @@ patch.formula <- function(x, ..., device = NULL) {
             suppressMessages(eval(x[[2]], attr(x, ".Environment")))
             invisible(NULL)
         },
-        name = "base_plot",
+        name = name,
         device = device %||% offscreen
     )
 }
 
 #' @export
 #' @rdname patch.formula
-patch.function <- function(x, ..., device = NULL) {
+patch.function <- function(x, ..., device = NULL, name = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
     gp <- graphics::par(..., no.readonly = TRUE)
     gridGraphics::echoGrob(
@@ -195,7 +195,7 @@ patch.function <- function(x, ..., device = NULL) {
             suppressMessages(x())
             invisible(NULL)
         },
-        name = "base_plot",
+        name = name,
         device = device %||% offscreen
     )
 }
@@ -224,10 +224,9 @@ offscreen <- function(width, height) {
 #' @importFrom utils getFromNamespace
 #' @export
 patch.Heatmap <- function(x, ..., device = NULL) {
-    plot_cls <- fclass(x)
     rlang::check_installed(
         "ComplexHeatmap",
-        sprintf("to make grob from {%s} plot", plot_cls)
+        sprintf("to make grob from {%s} plot", obj_type_friendly(x))
     )
     draw <- getFromNamespace("draw", "ComplexHeatmap")
     grid::grid.grabExpr(expr = draw(x, ...), device = device %||% offscreen)

@@ -5,9 +5,9 @@
 \alias{patch.function}
 \title{Convert Object into a Grob}
 \usage{
-\method{patch}{formula}(x, ..., device = NULL)
+\method{patch}{formula}(x, ..., device = NULL, name = NULL)
 
-\method{patch}{`function`}(x, ..., device = NULL)
+\method{patch}{`function`}(x, ..., device = NULL, name = NULL)
 }
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
@@ -23,6 +23,10 @@
     work on.  By default this is an off-screen, in-memory device
     based on the \code{pdf} device.  This default device may not be
     satisfactory when using custom fonts.
+  }
+
+\item{name}{
+A character identifier.
   }
 }
 \value{
