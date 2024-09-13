@@ -9,7 +9,27 @@
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
 
-\item{...}{Not used currently.}
+\item{...}{
+  Arguments passed on to \code{\link[grid:grid.grab]{grid::grid.grabExpr}}
+  \describe{
+    \item{\code{warn}}{ An integer specifying the amount of warnings
+    to emit.  0 means no warnings, 1 means warn when it is
+    certain that the grab will not faithfully represent the
+    original scene. 2 means warn if there's any possibility
+    that the grab will not faithfully represent the
+    original scene.
+  }
+    \item{\code{wrap}}{ A logical indicating how the output should
+    be captured. If \code{TRUE}, each non-grob element on the
+    display list is captured by wrapping it in a grob.
+  }
+    \item{\code{wrap.grobs}}{ A logical indicating whether, if we are wrapping
+    elements (\code{wrap=TRUE}), we should wrap grobs (or just
+    wrap viewports).
+  }
+    \item{\code{width,height}}{ Size of the device used for temporary
+    rendering. }
+  }}
 
 \item{device}{ A function that opens a graphics device for temporary
     rendering. By default this is an off-screen, in-memory device

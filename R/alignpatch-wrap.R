@@ -218,14 +218,12 @@ offscreen <- function(width, height) {
 }
 
 #' @inherit patch.grob
+#' @inheritDotParams grid::grid.grabExpr -expr -device
 #' @inheritParams grid::grid.grabExpr
 #' @seealso [trellis][lattice::trellis.object]
 #' @export
 patch.trellis <- function(x, ..., device = NULL) {
-    grid::recordGrob(
-        print(plot, newpage = FALSE),
-        list(plot = plot, device = device %||% offscreen)
-    )
+    grid::grid.grabExpr(expr = print(x), ..., device = device %||% offscreen)
 }
 
 #' @inherit patch.grob
