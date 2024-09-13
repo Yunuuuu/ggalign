@@ -137,6 +137,11 @@ offscreen <- function(width, height) {
 #' @importFrom utils getFromNamespace
 #' @export
 patch.Heatmap <- function(x, ..., device = NULL) {
+    plot_cls <- fclass(x)
+    rlang::check_installed(
+        "gridGraphics",
+        sprintf("to make grob from {%s} plot", plot_cls)
+    )
     draw <- getFromNamespace("draw", "ComplexHeatmap")
     grid::grid.grabExpr(expr = draw(x, ...), device = device %||% offscreen)
 }

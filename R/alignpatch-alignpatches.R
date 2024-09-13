@@ -290,21 +290,17 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 t = t_heights, l = l_widths,
                 b = b_heights, r = r_widths
             )
-            # we always add background in the beginning
+            # extract the background grobs -------------------------
             index <- .subset2(.subset2(grob, "layout"), "name") == "background"
-            bg <- .subset(.subset2(grob, "grobs"), index)
-            if (length(bg) == 1L) {
+            if (any(index)) {
+                bg <- .subset(.subset2(grob, "grobs"), index)
                 name <- paste("plot", i, "background", sep = "-")
-            } else {
-                name <- paste("plot", i, "background",
-                    seq_along(bg),
-                    sep = "-"
-                )
+
+                # we always add background in the beginning --------
+                gt <- gtable_add_grob(gt, bg, t, l, b, r, name = name, z = 0L)
+                grob <- subset_gt(grob, !index, trim = FALSE)
             }
-            gt <- gtable_add_grob(gt, bg, t, l, b, r,
-                name = name, z = 0L
-            )
-            grob <- subset_gt(grob, !index, trim = FALSE)
+            # then we add this grob --------------------------------
             gt <- gtable_add_grob(gt, list(grob), t, l, b, r,
                 name = paste("plot", i, sep = "-")
             )
@@ -314,10 +310,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # always move background grobs to the end
         layout <- .subset2(gt, "layout")
         bg <- grep("plot-\\d+-background", .subset2(layout, "name"))
-        index <- seq_len(nrow(layout))
-        index <- c(index[-bg], index[bg])
-        gt$layout <- layout[index, , drop = FALSE]
-        gt$grobs <- .subset(gt$grobs, index)
+        if (length(bg)) {
+            index <- seq_len(nrow(layout))
+            index <- c(index[-bg], index[bg])
+            gt$layout <- layout[index, , drop = FALSE]
+            gt$grobs <- .subset(gt$grobs, index)
+        }
         gt
     },
     #' @importFrom gtable gtable_width gtable_height
