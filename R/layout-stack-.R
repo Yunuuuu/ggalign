@@ -8,18 +8,15 @@
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
 #' @param ... Not used currently.
-#' @inheritParams layout_heatmap
 #' @return A `StackLayout` object.
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-layout_stack <- function(data, direction = NULL, ...,
-                         environment = parent.frame()) {
+layout_stack <- function(data, direction = NULL, ...) {
     if (missing(data)) {
         .layout_stack(
             data = NULL, nobs = NULL,
             direction = direction,
-            environment = environment,
             call = current_call()
         )
     } else {
@@ -63,10 +60,9 @@ methods::setClass(
 ggstack <- layout_stack
 
 #' @export
-layout_stack.matrix <- function(data, ..., environment = parent.frame()) {
+layout_stack.matrix <- function(data, ...) {
     .layout_stack(
         data = data, nobs = nrow(data), ...,
-        environment = environment,
         call = current_call()
     )
 }
@@ -75,10 +71,9 @@ layout_stack.matrix <- function(data, ..., environment = parent.frame()) {
 layout_stack.data.frame <- layout_stack.matrix
 
 #' @export
-layout_stack.numeric <- function(data, ..., environment = parent.frame()) {
+layout_stack.numeric <- function(data, ...) {
     .layout_stack(
         data = as.matrix(data), nobs = length(data), ...,
-        environment = environment,
         call = current_call()
     )
 }
@@ -87,17 +82,12 @@ layout_stack.numeric <- function(data, ..., environment = parent.frame()) {
 layout_stack.character <- layout_stack.numeric
 
 #' @export
-layout_stack.NULL <- function(data, ..., environment = parent.frame()) {
-    .layout_stack(
-        data = data, nobs = NULL, ...,
-        environment = environment,
-        call = current_call()
-    )
+layout_stack.NULL <- function(data, ...) {
+    .layout_stack(data = data, nobs = NULL, ..., call = current_call())
 }
 
 #' @importFrom grid unit
 .layout_stack <- function(data, nobs, direction = NULL,
-                          environment = parent.frame(),
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     methods::new("StackLayout",
@@ -108,15 +98,13 @@ layout_stack.NULL <- function(data, ..., environment = parent.frame()) {
             free_labs = waiver(), free_spaces = waiver()
         ),
         nobs = nobs,
-        # following parameters are used by ggplot methods
-        # like `ggsave` and `ggplot_build`
-        theme = default_theme(),
-        plot_env = environment
+        # following parameters are used by ggsave
+        theme = default_theme()
     )
 }
 
 #' @export
-layout_stack.default <- function(data, ..., environment = parent.frame()) {
+layout_stack.default <- function(data, ...) {
     cli::cli_abort(c(
         paste(
             "{.arg data} must be a numeric or character vector,",

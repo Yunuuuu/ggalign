@@ -5,9 +5,9 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-layout_stack(data, direction = NULL, ..., environment = parent.frame())
+layout_stack(data, direction = NULL, ...)
 
-ggstack(data, direction = NULL, ..., environment = parent.frame())
+ggstack(data, direction = NULL, ...)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -16,9 +16,6 @@ ggstack(data, direction = NULL, ..., environment = parent.frame())
 direction of the stack layout.}
 
 \item{...}{Not used currently.}
-
-\item{environment}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Used prior to tidy
-evaluation.}
 }
 \value{
 A \code{StackLayout} object.

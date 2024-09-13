@@ -40,13 +40,11 @@
 layout_heatmap <- function(data, mapping = aes(),
                            ...,
                            filling = TRUE,
-                           set_context = TRUE, order = NULL, name = NULL,
-                           environment = parent.frame()) {
+                           set_context = TRUE, order = NULL, name = NULL) {
     if (missing(data)) {
         .layout_heatmap(
             data = NULL, mapping = mapping,
             ..., filling = filling,
-            environment = environment,
             set_context = set_context, order = order, name = name,
             nobs_list = list(), call = current_call()
         )
@@ -139,7 +137,6 @@ layout_heatmap.default <- function(data, ...) {
                             ...,
                             filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
-                            environment = parent.frame(),
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
     assert_bool(filling, call = call)
@@ -192,10 +189,8 @@ layout_heatmap.default <- function(data, ...) {
         set_context = set_context,
         order = order, name = name %||% NA_character_,
         plot = plot, nobs_list = nobs_list,
-        # following parameters are used by ggplot methods
-        # like `ggsave` and `ggplot_build`
-        theme = default_theme(),
-        plot_env = environment
+        # used by ggsave
+        theme = default_theme()
     )
 }
 

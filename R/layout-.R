@@ -13,8 +13,8 @@ ggalign_namespace_link <- function() NULL
 methods::setClass("Layout",
     list(
         active = "ANY",
-        # used by ggplot methods, like `ggsave` and `ggplot_build`
-        theme = "ANY", plot_env = "environment",
+        # used by `ggsave`
+        theme = "ANY", 
         `_namespace` = "ANY"
     ),
     prototype = list(active = NULL, `_namespace` = ggalign_namespace_link)

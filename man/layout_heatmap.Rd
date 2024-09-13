@@ -12,8 +12,7 @@ layout_heatmap(
   filling = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL,
-  environment = parent.frame()
+  name = NULL
 )
 
 ggheatmap(
@@ -23,8 +22,7 @@ ggheatmap(
   filling = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL,
-  environment = parent.frame()
+  name = NULL
 )
 }
 \arguments{
@@ -49,9 +47,6 @@ added into this plot.}
 
 \item{name}{A string of the plot name. Used to switch the active context in
 \code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
-
-\item{environment}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Used prior to tidy
-evaluation.}
 }
 \value{
 A \code{HeatmapLayout} object.
