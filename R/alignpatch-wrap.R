@@ -240,7 +240,10 @@ patch.Heatmap <- function(x, ..., device = NULL) {
         sprintf("to make grob from {%s} plot", obj_type_friendly(x))
     )
     draw <- getFromNamespace("draw", "ComplexHeatmap")
-    grid::grid.grabExpr(expr = draw(x, ...), device = device %||% offscreen)
+    grid::grid.grabExpr(
+        expr = draw(object = x, ...),
+        device = device %||% offscreen
+    )
 }
 
 #' @export
