@@ -62,8 +62,9 @@ alignpatch.free_plot <- function(x) {
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.patch <- function(x) {
-    plot_cls <- fclass(x)
-    rlang::check_installed("patchwork", sprintf("to align {%s} plot", plot_cls))
+    rlang::check_installed(
+        "patchwork", sprintf("to align {%s} plot", obj_type_friendly(x))
+    )
     ggproto(NULL, PatchPatchworkPatch, plot = x)
 }
 
