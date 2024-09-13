@@ -26,6 +26,7 @@ The \code{patch()} function is used by \code{\link[=wrap]{wrap()}} to convert ob
 \item \link{patch.patchwork}
 \item \link{patch.patch}
 \item \link{patch.formula}
+\item \link{patch.recordedplot}
 \item \link{patch.Heatmap}
 \item \link{patch.HeatmapList}
 \item \link{patch.HeatmapAnnotation}

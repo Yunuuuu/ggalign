@@ -85,6 +85,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' - [patch.patchwork]
 #' - [patch.patch]
 #' - [patch.formula]
+#' - [patch.recordedplot]
 #' - [patch.Heatmap]
 #' - [patch.HeatmapList]
 #' - [patch.HeatmapAnnotation]
@@ -148,6 +149,7 @@ patch.alignpatches <- function(x, ...) {
 #' @inherit patch.grob
 #' @inheritDotParams graphics::par -no.readonly
 #' @inheritParams gridGraphics::echoGrob
+#' @seealso [plot]
 #' @export
 patch.formula <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
@@ -174,6 +176,9 @@ offscreen <- function(width, height) {
 #' @inherit patch.grob
 #' @param ... Additional arguments passed to [draw()][ComplexHeatmap::draw].
 #' @inheritParams grid::grid.grabExpr
+#' @seealso
+#'  - [Heatmap][ComplexHeatmap::Heatmap]
+#'  - [HeatmapAnnotation][ComplexHeatmap::HeatmapAnnotation]
 #' @importFrom utils getFromNamespace
 #' @export
 patch.Heatmap <- function(x, ..., device = NULL) {
@@ -195,10 +200,19 @@ patch.HeatmapList <- patch.Heatmap
 patch.HeatmapAnnotation <- patch.HeatmapList
 
 #' @inherit patch.grob
+#' @seealso [pheatmap][pheatmap::pheatmap]
 #' @export
 #' @rdname patch.pheatmap
 patch.pheatmap <- function(x, ...) {
     .subset2(x, "gtable")
+}
+
+#' @inherit patch.formula
+#' @seealso [recordPlot][grDevices::recordPlot]
+#' @export
+patch.recordedplot <- function(x, ..., device = NULL) {
+    rlang::check_installed("gridGraphics", "to make grob from recordedplot")
+    gridGraphics::echoGrob(x, device = device %||% offscreen)
 }
 
 #################################################
@@ -226,6 +240,9 @@ alignpatch.grob <- function(x) alignpatch(wrap(x))
 
 #' @export
 alignpatch.formula <- alignpatch.grob
+
+#' @export
+alignpatch.recordedplot <- alignpatch.grob
 
 #' @export
 alignpatch.Heatmap <- function(x) alignpatch(wrap(x, align = "full"))

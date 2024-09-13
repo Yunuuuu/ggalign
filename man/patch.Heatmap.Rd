@@ -30,3 +30,9 @@ A \link[grid:grid.grob]{grob} object.
 The \code{patch()} function is used by \code{\link[=wrap]{wrap()}} to convert objects into a
 \link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=align_plots]{align_plots()}}.
 }
+\seealso{
+\itemize{
+\item \link[ComplexHeatmap:Heatmap]{Heatmap}
+\item \link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation}
+}
+}
