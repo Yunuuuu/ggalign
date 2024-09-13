@@ -88,6 +88,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' - [patch.Heatmap]
 #' - [patch.HeatmapList]
 #' - [patch.HeatmapAnnotation]
+#' - [patch.pheatmap]
 #' @export
 #' @keywords internal
 patch <- function(x, ...) UseMethod("patch")
@@ -193,6 +194,13 @@ patch.HeatmapList <- patch.Heatmap
 #' @rdname patch.Heatmap
 patch.HeatmapAnnotation <- patch.HeatmapList
 
+#' @inherit patch.grob
+#' @export
+#' @rdname patch.pheatmap
+patch.pheatmap <- function(x, ...) {
+    .subset2(x, "gtable")
+}
+
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
@@ -227,6 +235,9 @@ alignpatch.HeatmapList <- alignpatch.Heatmap
 
 #' @export
 alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
+
+#' @export
+alignpatch.pheatmap <- function(x) alignpatch(wrap(x, align = "full"))
 
 ################################################## 3
 add_wrapped_grobs <- function(gt, grobs, on_top) {

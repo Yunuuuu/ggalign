@@ -53,5 +53,6 @@ p1 + inset(p2, vp = viewport(0.6, 0.6,
 \item \link{patch.Heatmap}
 \item \link{patch.HeatmapList}
 \item \link{patch.HeatmapAnnotation}
+\item \link{patch.pheatmap}
 }
 }

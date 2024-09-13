@@ -55,5 +55,6 @@ wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
 \item \link{patch.Heatmap}
 \item \link{patch.HeatmapList}
 \item \link{patch.HeatmapAnnotation}
+\item \link{patch.pheatmap}
 }
 }
