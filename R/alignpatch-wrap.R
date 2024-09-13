@@ -95,7 +95,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @keywords internal
 patch <- function(x, ...) UseMethod("patch")
 
-# Following methods much are copied from `cowplot`
+# Following methods much are copied from `cowplot` or `ggplotify`
 #' @export
 patch.default <- function(x, ...) {
     cli::cli_abort("Cannot make grob from {.obj_type_friendly {x}}")
