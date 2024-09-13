@@ -461,7 +461,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         area_col <- (i - 1L) %/% TABLE_COLS + 1L
         col_loc <- i %% TABLE_COLS
         if (col_loc == 0L) col_loc <- TABLE_COLS
-        area_side <- if (col_loc <= PANEL_COL) "l" else "r"
+        area_side <- if (col_loc <= LEFT_BORDER + 1L) "l" else "r"
         idx <- .subset2(design, area_side) == area_col
         if (any(idx)) {
             max(
@@ -479,7 +479,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         area_row <- (i - 1L) %/% TABLE_ROWS + 1L
         row_loc <- i %% TABLE_ROWS
         if (row_loc == 0L) row_loc <- TABLE_ROWS
-        area_side <- if (row_loc <= PANEL_COL) "t" else "b"
+        area_side <- if (row_loc <= TOP_BORDER + 1L) "t" else "b"
         idx <- .subset2(design, area_side) == area_row
         if (any(idx)) {
             max(
