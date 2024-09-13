@@ -32,7 +32,6 @@ free_vp.alignpatches <- free_vp.ggplot
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.free_vp <- function(x) {
-    class(x) <- setdiff(class(x), "free_vp")
     Parent <- NextMethod()
     ggproto(
         "PatchFreeViewport", Parent,

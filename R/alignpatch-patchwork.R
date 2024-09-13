@@ -4,6 +4,14 @@
 alignpatch.patchwork <- function(x) {
     rlang::check_installed("patchwork", "to align patchwork")
     get_patches <- getFromNamespace("get_patches", "patchwork")
+    # patchwork will keep the class when extracting patches from it.
+    # we removed the classes for patchwork, added behind patchwork
+    # in this way, the last plot won't have class like `free_align`,
+    # `free_border`, `free_lab`, et al. which is added for the patchwork
+    sub_patchwork_cls <- which(class(x) == "patchwork") - 1L # nolint
+    if (sub_patchwork_cls > 0L) {
+        class(x) <- class(x)[-seq_len(sub_patchwork_cls)]
+    }
     x <- get_patches(x)
     plots <- .subset2(x, "plots")
     layout <- .subset2(x, "layout")

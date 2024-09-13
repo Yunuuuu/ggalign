@@ -15,10 +15,7 @@ grid.draw.patch_ggplot <- grid.draw.alignpatches
 #################################################
 #' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.ggplot <- function(x) {
-    class(x) <- setdiff(class(x), "patch_ggplot")
-    ggproto(NULL, PatchGgplot, plot = x)
-}
+alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 
 # ggplot2 has following grobs:
 #    panel

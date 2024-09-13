@@ -60,7 +60,6 @@ free_border.default <- function(plot, borders = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.free_border <- function(x) {
-    class(x) <- setdiff(class(x), "free_border")
     Parent <- NextMethod()
     ggproto(
         "PatchFreeBorder", Parent,
