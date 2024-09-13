@@ -46,9 +46,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         ans <- add_guides(ans)
         setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
     },
-    collect_guides = function(self, guides, gt = self$gt) {
-        collect_guides(self, guides = guides, gt = gt)
-    },
 
     #' @importFrom ggplot2 find_panel
     align_panel_sizes = function(self, guides, panel_width, panel_height,

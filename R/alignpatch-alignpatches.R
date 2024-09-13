@@ -131,9 +131,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             name = "panel-area"
         )
     },
-    collect_guides = function(self, guides, gt = self$gt) {
-        collect_guides(self, guides = guides, gt = gt)
-    },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt, patches = self$patches) {
         if (is.null(t) && is.null(l) && is.null(b) && is.null(r)) {

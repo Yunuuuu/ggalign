@@ -163,7 +163,55 @@ Patch <- ggproto("Patch", NULL,
             "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
         )
     },
-    collect_guides = function(self, guides, gt = self$gt) list(),
+    collect_guides = function(self, guides, gt = self$gt) {
+        layout <- .subset2(gt, "layout")
+        grobs <- .subset2(gt, "grobs")
+        guides_ind <- grep("guide-box", .subset2(layout, "name"))
+        guides_loc <- layout[guides_ind, , drop = FALSE]
+        collected_guides <- vector("list", length(guides))
+        names(collected_guides) <- guides
+        panel_pos <- find_panel(gt)
+        remove_grobs <- NULL
+        for (guide_pos in guides) {
+            guide_ind <- switch(guide_pos,
+                top = .subset2(guides_loc, "b") < .subset2(panel_pos, "t"),
+                left = .subset2(guides_loc, "r") < .subset2(panel_pos, "l"),
+                bottom = .subset2(guides_loc, "t") > .subset2(panel_pos, "b"),
+                right = .subset2(guides_loc, "l") > .subset2(panel_pos, "r")
+            )
+            if (!any(guide_ind)) next
+            guide_loc <- guides_loc[guide_ind, , drop = FALSE]
+            guide_ind <- .subset(guides_ind, guide_ind)
+            remove_grobs <- c(guide_ind, remove_grobs)
+            guide_box <- .subset2(grobs, guide_ind)
+            collected_guides[[guide_pos]] <- .subset(
+                .subset2(guide_box, "grobs"),
+                grepl("guides", .subset2(.subset2(guide_box, "layout"), "name"))
+            )
+
+            # remove the guide from the original gtable
+            space_pos <- switch(guide_pos,
+                top = ,
+                left = 1L,
+                bottom = ,
+                right = -1L
+            )
+            if (guide_pos %in% c("right", "left")) {
+                gt$widths[c(guide_loc$l, guide_loc$l + space_pos)] <- unit(
+                    c(0L, 0L), "mm"
+                )
+            } else if (guide_pos %in% c("bottom", "top")) {
+                gt$heights[c(guide_loc$t, guide_loc$t + space_pos)] <- unit(
+                    c(0L, 0L), "mm"
+                )
+            }
+        }
+        if (length(remove_grobs)) {
+            gt <- subset_gt(gt, -remove_grobs, trim = FALSE)
+        }
+        self$gt <- gt
+        collected_guides
+    },
     align_panel_sizes = function(self, guides, panel_width, panel_height,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
