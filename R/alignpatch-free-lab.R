@@ -49,9 +49,6 @@ free_lab.default <- function(plot, labs = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
-#' @export
-free_lab.wrapped_plot <- free_lab.default
-
 ####################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export

@@ -100,9 +100,6 @@ free_align.default <- function(plot, axes = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
-#' @export
-free_align.wrapped_plot <- free_align.default
-
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.free_align <- function(x) {

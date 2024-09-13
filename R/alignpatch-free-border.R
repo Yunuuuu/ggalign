@@ -56,9 +56,6 @@ free_border.default <- function(plot, borders = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
-#' @export
-free_border.wrapped_plot <- free_border.default
-
 ################################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export

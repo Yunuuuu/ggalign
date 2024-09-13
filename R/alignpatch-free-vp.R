@@ -1,8 +1,8 @@
 #' Used to make justification to top, left, bottom, or right.
-#' @param plot An alignpatches object.
-#' @keywords internal
 #' @importFrom grid viewport
-#' @noRd
+#' @inheritDotParams grid::viewport -x -y -width -height
+#' @export
+#' @rdname free
 free_vp <- function(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...) {
     UseMethod("free_vp")
 }

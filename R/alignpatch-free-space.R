@@ -30,9 +30,6 @@ free_space.free_space <- function(plot, borders = "tlbr") {
     plot
 }
 
-#' @export
-free_space.wrapped_plot <- free_space.default
-
 ##########################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid unit
