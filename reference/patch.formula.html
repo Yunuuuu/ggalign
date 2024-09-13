@@ -63,10 +63,10 @@ grob, enabling their alignment within align_plots()."><meta property="og:image" 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'formula'</span></span>
-<span><span class="fu"><a href="patch.html">patch</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, device <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="patch.html">patch</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, device <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class '`function`'</span></span>
-<span><span class="fu"><a href="patch.html">patch</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, device <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="patch.html">patch</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, device <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -90,6 +90,10 @@ grob, enabling their alignment within align_plots()."><meta property="og:image" 
     work on.  By default this is an off-screen, in-memory device
     based on the <code>pdf</code> device.  This default device may not be
     satisfactory when using custom fonts.</p></dd>
+
+
+<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
+<dd><p>A character identifier.</p></dd>
 
 </dl></div>
     <div class="section level2">
