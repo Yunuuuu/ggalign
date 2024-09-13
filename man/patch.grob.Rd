@@ -2,9 +2,12 @@
 % Please edit documentation in R/alignpatch-wrap.R
 \name{patch.grob}
 \alias{patch.grob}
+\alias{patch.gList}
 \title{Convert Object into a Grob}
 \usage{
 \method{patch}{grob}(x, ...)
+
+\method{patch}{gList}(x, ...)
 }
 \arguments{
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}

@@ -20,7 +20,7 @@ The \code{patch()} function is used by \code{\link[=wrap]{wrap()}} to convert ob
 }
 \seealso{
 \itemize{
-\item \link{patch.grob}
+\item \link{patch.grob} / \link{patch.gList}
 \item \link{patch.ggplot}
 \item \link{patch.patch_ggplot}
 \item \link{patch.patchwork}

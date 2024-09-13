@@ -44,7 +44,7 @@ p1 + inset(p2, vp = viewport(0.6, 0.6,
 }
 \seealso{
 \itemize{
-\item \link{patch.grob}
+\item \link{patch.grob} / \link{patch.gList}
 \item \link{patch.ggplot}
 \item \link{patch.patch_ggplot}
 \item \link{patch.patchwork}

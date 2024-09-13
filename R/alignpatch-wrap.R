@@ -79,7 +79,7 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @param ... Additional arguments passed to specific methods.
 #' @return A [grob][grid::grob] object.
 #' @seealso
-#' - [patch.grob]
+#' - [patch.grob] / [patch.gList]
 #' - [patch.ggplot]
 #' - [patch.patch_ggplot]
 #' - [patch.patchwork]
@@ -101,6 +101,14 @@ patch <- function(x, ...) UseMethod("patch")
 patch.grob <- function(x, ...) {
     rlang::check_dots_empty()
     x
+}
+
+#' @export
+#' @rdname patch.grob
+patch.gList <- function(x, ...) {
+    rlang::check_dots_empty()
+    # gLists need to be wrapped in a grob tree
+    grid::grobTree(plot)
 }
 
 #' @inherit patch.grob
