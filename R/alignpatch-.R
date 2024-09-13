@@ -1,11 +1,15 @@
 # here is copied from patchwork
 # we modified the `patchwork` package for following reasons:
-# 1. we don't want to align some axes for some columns or rows, this is the main
-#    reason and this is not approriate to push into patchwork.
-# 2. collect guides for each side (should be merged into patchwork).
-# 3. allow collapse axis title and labels (should be merged into patchwork).
-#    see https://github.com/thomasp85/patchwork/pull/373
-# 4. Added titles around the plot top, left, bottom, and right
+# 1. collect guides for each side (should be merged into patchwork, not allowed
+#    to be merged: https://github.com/thomasp85/patchwork/issues/379).
+# 2. `free_*()` functions: see https://github.com/thomasp85/patchwork/issues/379
+#     - `free_align()`: added
+#     - `free_border()`: not added
+#     - `free_lab()`: added
+#     - `free_space()`: added
+#     - `free_vp()`: not added
+# 3. Added titles around the plot top, left, bottom, and right
+#    (`patch_titles()`)
 TABLE_ROWS <- 18L + 2L
 TABLE_COLS <- 15L + 2L
 
