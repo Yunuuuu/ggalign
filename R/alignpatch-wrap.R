@@ -220,7 +220,7 @@ alignpatch.grob <- function(x) alignpatch(wrap(x))
 alignpatch.formula <- alignpatch.grob
 
 #' @export
-alignpatch.Heatmap <- alignpatch.grob
+alignpatch.Heatmap <- function(x) alignpatch(wrap(x, align = "full"))
 
 #' @export
 alignpatch.HeatmapList <- alignpatch.Heatmap
