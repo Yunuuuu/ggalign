@@ -13,3 +13,5 @@
 ^pkgdown$
 ^vignettes/articles$
 ^data-raw$
+^codecov\.yml$
+^\.covrignore$
