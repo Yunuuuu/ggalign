@@ -53,6 +53,7 @@ free_lab.default <- function(plot, labs = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.free_lab <- function(x) {
+    class(x) <- setdiff(class(x), "free_lab")
     Parent <- NextMethod()
     ggproto(
         "PatchFreeLab", Parent,

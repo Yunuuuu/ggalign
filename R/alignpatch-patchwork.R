@@ -17,11 +17,36 @@ alignpatch.patchwork <- function(x) {
     } else {
         layout$guides <- NULL
     }
-    layout$theme <- .subset2(annotation, "theme")
     layout$title <- .subset2(annotation, "title")
     layout$subtitle <- .subset2(annotation, "subtitle")
     layout$caption <- .subset2(annotation, "caption")
-    alignpatch(new_alignpatches(lapply(plots, alignpatch), layout))
+    alignpatch(new_alignpatches(
+        lapply(plots, alignpatch), layout,
+        theme = .subset2(annotation, "theme")
+    ))
+}
+
+#' @export
+alignpatch.free_plot <- function(x) {
+    if (inherits(x, "patchwork")) {
+        free_settings <- attr(x, "patchwork_free_settings")
+    } else {
+        free_settings <- attr(x, "free_settings")
+    }
+    free_settings <- split(
+        names(free_settings),
+        factor(free_settings, rev(unique(free_settings)))
+    )
+    class(x) <- setdiff(class(x), "free_plot")
+    for (type in names(free_settings)) {
+        side <- paste(.subset2(free_settings, type), collapse = "")
+        x <- switch(type,
+            panel = free_align(x, side),
+            label = free_lab(x, side),
+            space = free_space(x, side),
+        )
+    }
+    alignpatch(x)
 }
 
 ######################################

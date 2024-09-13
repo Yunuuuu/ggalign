@@ -197,6 +197,7 @@ patch.HeatmapAnnotation <- patch.HeatmapList
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.wrapped_plot <- function(x) {
+    class(x) <- setdiff(class(x), "wrapped_plot")
     Parent <- NextMethod()
     ggproto(
         "PatchWrapped", Parent,

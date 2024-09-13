@@ -103,6 +103,11 @@ free_align.default <- function(plot, axes = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.free_align <- function(x) {
+    # we remove the class of `free_align()`
+    # patchwork will keep the class when extracting patches from it.
+    # we removed the free_align class here, in case of re-call this
+    # function again in `alignpatch.patchwork`
+    class(x) <- setdiff(class(x), "free_align")
     Parent <- NextMethod()
     ggproto(
         "PatchFreeAlign", Parent,

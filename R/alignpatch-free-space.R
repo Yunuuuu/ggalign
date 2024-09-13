@@ -35,6 +35,7 @@ free_space.free_space <- function(plot, borders = "tlbr") {
 #' @importFrom grid unit
 #' @export
 alignpatch.free_space <- function(x) {
+    class(x) <- setdiff(class(x), "free_space")
     Parent <- NextMethod()
     ggproto(
         "PatchFreeSpace", Parent,
