@@ -34,6 +34,14 @@ more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 \item{labs}{Which axis labs to be free? A string containing one or more of
 \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
 
+\item{x}{A numeric vector or unit object specifying x-location.}
+
+\item{y}{A numeric vector or unit object specifying y-location.}
+
+\item{width}{A numeric vector or unit object specifying width.}
+
+\item{height}{A numeric vector or unit object specifying height.}
+
 \item{...}{
   Arguments passed on to \code{\link[grid:viewport]{grid::viewport}}
   \describe{

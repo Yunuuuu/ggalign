@@ -1,8 +1,8 @@
-#' Used to make justification to top, left, bottom, or right.
-#' @importFrom grid viewport
+#' @inheritParams grid::viewport
 #' @inheritDotParams grid::viewport -x -y -width -height
 #' @return
 #' - `free_vp`: A modified version of `plot` with a `free_vp` class.
+#' @importFrom grid viewport
 #' @export
 #' @rdname free
 free_vp <- function(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...) {
