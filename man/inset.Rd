@@ -46,6 +46,9 @@ p1 + inset(p2, vp = viewport(0.6, 0.6,
 \itemize{
 \item \link{patch.grob}
 \item \link{patch.ggplot}
+\item \link{patch.patch_ggplot}
+\item \link{patch.patchwork}
+\item \link{patch.patch}
 \item \link{patch.formula}
 \item \link{patch.Heatmap}
 \item \link{patch.HeatmapList}

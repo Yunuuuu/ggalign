@@ -81,6 +81,9 @@ make_wrap.wrapped_plot <- function(patch, grob) {
 #' @seealso
 #' - [patch.grob]
 #' - [patch.ggplot]
+#' - [patch.patch_ggplot]
+#' - [patch.patchwork]
+#' - [patch.patch]
 #' - [patch.formula]
 #' - [patch.Heatmap]
 #' - [patch.HeatmapList]
@@ -99,8 +102,44 @@ patch.grob <- function(x, ...) {
 }
 
 #' @inherit patch.grob
+#' @seealso [ggplot][ggplot2::ggplot]
 #' @export
 patch.ggplot <- function(x, ...) {
+    rlang::check_dots_empty()
+    ggplot2::ggplotGrob(x)
+}
+
+#' @inherit patch.grob
+#' @seealso
+#' - [patch_titles]
+#' - [inset]
+#' - [wrap]
+#' @export
+patch.patch_ggplot <- function(x, ...) {
+    rlang::check_dots_empty()
+    ggalignGrob(x)
+}
+
+#' @inherit patch.grob
+#' @seealso [patchwork][patchwork::patchworkGrob]
+#' @export
+patch.patchwork <- function(x, ...) {
+    rlang::check_dots_empty()
+    patchwork::patchworkGrob(x)
+}
+
+#' @inherit patch.grob
+#' @seealso [patch][patchwork::patchGrob]
+#' @export
+patch.patch <- function(x, ...) {
+    rlang::check_dots_empty()
+    patchwork::patchGrob(x)
+}
+
+#' @inherit patch.grob
+#' @seealso [alignpatches][align_plots]
+#' @export
+patch.alignpatches <- function(x, ...) {
     rlang::check_dots_empty()
     ggalignGrob(x)
 }
