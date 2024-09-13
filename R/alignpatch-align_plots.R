@@ -79,14 +79,13 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         heights = heights,
         design = design,
         guides = guides,
-        theme = theme,
         title = title, subtitle = subtitle, caption = caption
-    ))
+    ), theme = theme)
 }
 
-new_alignpatches <- function(patches, layout) {
+new_alignpatches <- function(patches, layout, theme) {
     structure(
-        list(patches = patches, layout = layout),
+        list(patches = patches, layout = layout, theme = theme),
         # Will ensure serialisation includes a link to the `ggalign`
         # namespace
         `_namespace` = ggalign_namespace_link,

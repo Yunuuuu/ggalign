@@ -56,11 +56,11 @@ ggalign_build.alignpatches <- function(x) x
 #' @export
 ggalign_gtable.alignpatches <- function(x) {
     layout <- .subset2(x, "layout")
-    theme <- .subset2(layout, "theme")
+    theme <- .subset2(x, "theme")
 
     # use complete_theme() when ggplot2 release
     theme <- complete_theme(theme)
-    x$layout$theme <- theme
+    x$theme <- theme
     table <- alignpatch(x)$patch_gtable()
 
     fix_respect <- is.matrix(.subset2(table, "respect"))

@@ -75,6 +75,11 @@ test_that("The grid can be controlled", {
     })
 })
 
+test_that("`ggsave()` works well", {
+    p <- align_plots(p1, p2, p3, p4, widths = c(1, 2))
+    expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
+})
+
 test_that("collect guides works well", {
     expect_doppelganger(
         "collect normal guides",

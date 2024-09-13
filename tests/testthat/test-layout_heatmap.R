@@ -99,12 +99,7 @@ testthat::test_that("add `Align` object works well", {
     expect_identical(get_nobs(stack), get_nobs(p2, "x"))
 })
 
-# testthat::test_that("`build_patchwork` works well", {
-#     p <- ggheatmap(1:10)
-#     expect_s3_class(build_patchwork(p), "alignpatches")
-# })
-
-testthat::test_that("`ggplot` method works well", {
+testthat::test_that("`ggsave()` works well", {
     p <- ggheatmap(1:10)
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
 })

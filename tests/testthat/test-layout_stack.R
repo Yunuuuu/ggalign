@@ -102,3 +102,12 @@ testthat::test_that("add `HeatmapLayout` object works well", {
             align_dendro()
     )
 })
+
+testthat::test_that("`ggsave()` works well", {
+    p <- ggstack(matrix(seq_len(81), nrow = 9L), "h") +
+        ggheatmap() +
+        hmanno("t", size = unit(6, "cm")) +
+        align_dendro() +
+        align_dendro()
+    expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
+})

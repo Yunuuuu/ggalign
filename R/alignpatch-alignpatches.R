@@ -14,7 +14,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         layout <- .subset2(plot, "layout")
 
         # complete the theme object
-        theme <- complete_theme(.subset2(layout, "theme"))
+        theme <- complete_theme(.subset2(plot, "theme"))
 
         # get the design areas and design dims ------------------
         panel_widths <- .subset2(layout, "widths")
