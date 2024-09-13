@@ -266,6 +266,9 @@ alignpatch.wrapped_plot <- function(x) {
 alignpatch.grob <- function(x) alignpatch(wrap(x))
 
 #' @export
+alignpatch.gList <- alignpatch.grob
+
+#' @export
 alignpatch.formula <- alignpatch.grob
 
 #' @export
