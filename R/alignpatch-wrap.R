@@ -28,6 +28,14 @@
 #'     inset(textGrob("Here are some text", gp = gpar(color = "black")),
 #'         align = "panel"
 #'     )
+#' p1 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp)) +
+#'     ggtitle("Plot 1")
+#' align_plots(p1, wrap(
+#'     ~ plot(mtcars$mpg, mtcars$disp),
+#'     mar = c(0, 2, 0, 0), bg = NA
+#' ))
+#'
 #' @importFrom ggplot2 ggplot theme element_blank
 #' @importFrom grid is.grob
 #' @export

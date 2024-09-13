@@ -43,6 +43,14 @@ wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
     inset(textGrob("Here are some text", gp = gpar(color = "black")),
         align = "panel"
     )
+p1 <- ggplot(mtcars) +
+    geom_point(aes(mpg, disp)) +
+    ggtitle("Plot 1")
+align_plots(p1, wrap(
+    ~ plot(mtcars$mpg, mtcars$disp),
+    mar = c(0, 2, 0, 0), bg = NA
+))
+
 }
 \seealso{
 \itemize{
