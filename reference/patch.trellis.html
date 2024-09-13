@@ -75,7 +75,30 @@ grob, enabling their alignment within align_plots()."><meta property="og:image" 
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Not used currently.</p></dd>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/r/grid/grid.grab.html" class="external-link">grid::grid.grabExpr</a></code></p><dl><dt><code>warn</code></dt>
+<dd><p>An integer specifying the amount of warnings
+    to emit.  0 means no warnings, 1 means warn when it is
+    certain that the grab will not faithfully represent the
+    original scene. 2 means warn if there's any possibility
+    that the grab will not faithfully represent the
+    original scene.</p></dd>
+
+    <dt><code>wrap</code></dt>
+<dd><p>A logical indicating how the output should
+    be captured. If <code>TRUE</code>, each non-grob element on the
+    display list is captured by wrapping it in a grob.</p></dd>
+
+    <dt><code>wrap.grobs</code></dt>
+<dd><p>A logical indicating whether, if we are wrapping
+    elements (<code>wrap=TRUE</code>), we should wrap grobs (or just
+    wrap viewports).</p></dd>
+
+    <dt><code>width,height</code></dt>
+<dd><p>Size of the device used for temporary
+    rendering.</p></dd>
+
+
+</dl></dd>
 
 
 <dt id="arg-device">device<a class="anchor" aria-label="anchor" href="#arg-device"></a></dt>
