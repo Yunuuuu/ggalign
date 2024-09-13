@@ -1,26 +1,3 @@
-#' Get the statistics from the layout
-#'
-#' @param x A [layout_heatmap()] or [layout_stack()] object.
-#' @param ... Not used currently.
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")
-
-#' @param position A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
-#' @param what A single number or string of the plot elements in the stack
-#' layout.
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.HeatmapLayout <- function(x, ..., position, what) {
-    ggalign_stat(slot(x, position), what = what)
-}
-
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.StackLayout <- function(x, ..., what) {
-    .subset2(.subset2(x@plots, what), "statistics")
-}
-
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
                         plot_data, free_labs, free_spaces) {
