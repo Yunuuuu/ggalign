@@ -78,6 +78,62 @@ make_wrap.wrapped_plot <- function(patch, grob) {
     patch
 }
 
+#' @export
+make_wrap.alignpatches <- function(patch, grob) {
+    patch <- add_class(patch, "wrapped_plot")
+    make_wrap(patch, grob)
+}
+
+#################################################
+#' @importFrom ggplot2 ggproto ggproto_parent
+#' @export
+alignpatch.wrapped_plot <- function(x) {
+    Parent <- NextMethod()
+    ggproto(
+        "PatchWrapped", Parent,
+        wrapped_grobs_under = attr(x, "wrapped_grobs_under"),
+        wrapped_grobs_above = attr(x, "wrapped_grobs_above"),
+        patch_gtable = function(self, guides, plot = Parent$plot) {
+            ans <- ggproto_parent(Parent, self)$patch_gtable(
+                guides = guides, plot = plot
+            )
+            ans <- add_wrapped_grobs(ans, self$wrapped_grobs_under, FALSE)
+            add_wrapped_grobs(ans, self$wrapped_grobs_above, TRUE)
+        }
+    )
+}
+
+# For wrapped plot -------------------
+#' @export
+alignpatch.grob <- function(x) alignpatch(wrap(x))
+
+#' @export
+alignpatch.gList <- alignpatch.grob
+
+#' @export
+alignpatch.formula <- alignpatch.grob
+
+#' @export
+alignpatch.function <- alignpatch.grob
+
+#' @export
+alignpatch.recordedplot <- alignpatch.grob
+
+#' @export
+alignpatch.trellis <- alignpatch.grob
+
+#' @export
+alignpatch.Heatmap <- function(x) alignpatch(wrap(x, align = "full"))
+
+#' @export
+alignpatch.HeatmapList <- alignpatch.Heatmap
+
+#' @export
+alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
+
+#' @export
+alignpatch.pheatmap <- function(x) alignpatch(wrap(x, align = "full"))
+
 ################################################## 3
 add_wrapped_grobs <- function(gt, grobs, on_top) {
     if (is.null(grobs)) return(gt) # styler: off
