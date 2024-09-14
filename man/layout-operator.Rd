@@ -14,7 +14,7 @@
 \alias{-.ggheatmap}
 \alias{-.StackLayout}
 \alias{-.ggstack}
-\title{Plot arithmetic}
+\title{Layout operator}
 \usage{
 \S4method{&}{Layout,ANY}(e1, e2)
 
@@ -29,7 +29,7 @@
 A modified \code{Layout} object.
 }
 \description{
-Plot arithmetic
+Layout operator
 }
 \details{
 In order to reduce code repetition \code{ggalign} provides two operators for

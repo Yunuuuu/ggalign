@@ -104,7 +104,7 @@ layout_add.StackLayout <- function(layout, object, object_name) {
 }
 
 #########################################################
-#' Plot arithmetic
+#' Layout operator
 #'
 #' @details
 #' In order to reduce code repetition `ggalign` provides two operators for
