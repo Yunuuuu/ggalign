@@ -58,32 +58,29 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # save patches, patches won't be copy
         self$patches <- patches
 
-        # prepare the output ----------------------------------
-        gt <- gtable(
-            unit(rep(0L, TABLE_COLS * dims[2L]), "null"),
-            unit(rep(0L, TABLE_ROWS * dims[1L]), "null")
-        )
-
-        # 1. patch_gtable: create the gtable
-        # 2. collect_guides_list: collect_guides, can change the internal `gt`
+        #######################################################
+        # 1. patch_gtable: create the gtable for the patch
+        # 2. collect_guides_list: call collect_guides, can change the internal
+        #    `gt`
         # 3. set_sizes:
         #     - (TODO) align_panel_spaces: can change the internal `gt`
         #     - align_panel_sizes, can change the internal `gt`
-        # 4. add_grobs: align_border, return the final gtable
+        # 4. set_grobs: will call align_border, return the final gtable
         # setup gtable list ----------------------------------
-        for (patch in patches) {
-            # create gtable from the patch
-            patch$gt <- patch$patch_gtable(guides)
-        }
+        for (patch in patches) patch$gt <- patch$patch_gtable(guides)
 
         # collect guides  ---------------------------------------
         if (is.null(guides)) {
             collected_guides <- NULL
         } else {
-            collected_guides <- self$collect_guides_list(
-                guides, patches = patches # styler: off
-            )
+            collected_guides <- self$collect_guides_list(guides, patches)
         }
+
+        # prepare the output ----------------------------------
+        gt <- gtable(
+            unit(rep(0L, TABLE_COLS * dims[2L]), "null"),
+            unit(rep(0L, TABLE_ROWS * dims[1L]), "null")
+        )
 
         # setup sizes for each row/column -----------------------
         gt <- self$set_sizes(
@@ -93,7 +90,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         )
 
         # setup grobs -------------------------------------------
-        gt <- self$add_grobs(design, patches = patches, gt = gt)
+        gt <- self$set_grobs(design, patches = patches, gt = gt)
 
         # add guides into the final gtable ----------------------
         panel_pos <- list(
@@ -120,6 +117,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 )
             }
         }
+
         # add panel area ---------------------------------------
         gtable_add_grob(
             gt, zeroGrob(),
@@ -270,7 +268,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt$heights <- heights
         gt
     },
-    add_grobs = function(self, design, patches, gt = self$gt) {
+    set_grobs = function(self, design, patches, gt = self$gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")
         for (i in seq_along(patches)) {
