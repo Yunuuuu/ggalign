@@ -73,7 +73,7 @@ align_build <- function(x, panel, index,
         plot <- free_lab(plot, free_labs)
     }
     if (!is.null(free_spaces)) {
-        plot <- free_space(plot, free_spaces)
+        plot <- free_space(free_border(plot, free_spaces), free_spaces)
     }
     list(plot = plot, size = .subset2(x, "size"))
 }

@@ -51,7 +51,7 @@ alignpatch.free_plot <- function(x) {
         x <- switch(type,
             panel = free_align(x, side),
             label = free_lab(x, side),
-            space = free_space(x, side),
+            space = free_space(free_border(x, side), side),
         )
     }
     alignpatch(x)

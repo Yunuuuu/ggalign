@@ -216,7 +216,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         p <- free_lab(p, heatmap_labs)
     }
     if (!is.null(heatmap_spaces)) {
-        p <- free_space(p, heatmap_spaces)
+        p <- free_space(free_border(p, heatmap_spaces), heatmap_spaces)
     }
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
