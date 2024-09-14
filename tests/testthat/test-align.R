@@ -114,14 +114,35 @@ testthat::test_that("`align_dendro` works well", {
         p + hmanno("t") + align_dendro(k = 3L)
     )
     expect_doppelganger(
-        "dendro_top_between_group",
+        "dendro_between_group",
         p + hmanno("t") + align_group(column_group) +
             align_dendro()
     )
     expect_doppelganger(
-        "dendro_left_between_group_reorder",
+        "dendro_reorder_group",
         p + hmanno("l") + align_group(row_group) +
             align_dendro(reorder_group = TRUE) +
             scale_x_reverse(),
+    )
+})
+
+testthat::test_that("`ggalign()` works well", {
+    set.seed(1L)
+    small_mat <- matrix(stats::rnorm(81), nrow = 9)
+    expect_doppelganger(
+        "ggalign",
+        ggheatmap(small_mat) +
+            scale_fill_viridis_c(guide = "none") +
+            hmanno("t") +
+            ggalign(data = rowSums) +
+            geom_point(aes(y = value))
+    )
+    expect_doppelganger(
+        "ggalign set size",
+        ggheatmap(small_mat) +
+            scale_fill_viridis_c(guide = "none") +
+            hmanno("t") +
+            ggalign(data = rowSums, size = unit(1, "cm")) +
+            geom_point(aes(y = value))
     )
 })
