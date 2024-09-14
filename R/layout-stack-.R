@@ -24,18 +24,6 @@ layout_stack <- function(data, direction = NULL, ...) {
     }
 }
 
-#' @export
-print.StackLayout <- function(x, ...) {
-    if (!is.null(p <- alignpatch(x))) print(p, ...)
-    invisible(x)
-}
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.StackLayout <- function(x, recording = TRUE) {
-    grid.draw(alignpatch(x), recording = recording)
-}
-
 # Used to place multiple objects in one axis
 # usually the heatmap annotations
 #' @keywords internal

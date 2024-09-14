@@ -14,13 +14,23 @@ methods::setClass("Layout",
     list(
         active = "ANY",
         # used by `ggsave`
-        theme = "ANY", 
+        theme = "ANY",
         `_namespace` = "ANY"
     ),
     prototype = list(active = NULL, `_namespace` = ggalign_namespace_link)
 )
 
 is.layout <- function(x) methods::is(x, "Layout")
+
+#' @export
+print.Layout <- print.alignpatches
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.Layout <- grid.draw.alignpatches
+
+#' @export
+alignpatch.Layout <- function(x) alignpatch(ggalign_build(x))
 
 #' Print Layout object
 #'

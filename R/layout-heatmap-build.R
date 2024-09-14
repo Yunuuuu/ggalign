@@ -1,24 +1,3 @@
-#' @export
-print.HeatmapLayout <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-    ggplot2::set_last_plot(x)
-    print_naive(
-        x = x, newpage = newpage, vp = vp, ...,
-        error_name = "{.fn layout_heatmap}"
-    )
-}
-
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.HeatmapLayout <- function(x, recording = TRUE) {
-    grid.draw(ggalignGrob(x), recording = recording)
-}
-
-#' @export
-alignpatch.HeatmapLayout <- function(x) {
-    alignpatch(ggalign_build(x))
-}
-
 #' @importFrom grid unit.c
 #' @export
 ggalign_build.HeatmapLayout <- function(x) {

@@ -1,24 +1,4 @@
 #' @export
-print.StackLayout <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-    ggplot2::set_last_plot(x)
-    print_naive(
-        x = x, newpage = newpage, vp = vp, ...,
-        error_name = "{.fn layout_stack}"
-    )
-}
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.StackLayout <- function(x, recording = TRUE) {
-    grid.draw(ggalignGrob(x), recording = recording)
-}
-
-#' @export
-alignpatch.StackLayout <- function(x) {
-    alignpatch(ggalign_build(x))
-}
-
-#' @export
 ggalign_build.StackLayout <- function(x) {
     .subset2(stack_build(x), "plot")
 }

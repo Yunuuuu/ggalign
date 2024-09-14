@@ -2,13 +2,6 @@
 #' @export
 print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     ggplot2::set_last_plot(x)
-    print_naive(
-        x = x, newpage = newpage, vp = vp, ...,
-        error_name = "{.cls alignpatches}"
-    )
-}
-
-print_naive <- function(x, newpage = is.null(vp), vp = NULL, ..., error_name) {
     if (newpage) grid::grid.newpage()
     if (!is.null(vp)) {
         if (is.character(vp)) {
@@ -24,11 +17,12 @@ print_naive <- function(x, newpage = is.null(vp), vp = NULL, ..., error_name) {
         error = function(e) {
             if (inherits(e, "simpleError") &&
                 deparse(conditionCall(e)[[1L]]) == "grid.Call") {
+                error_name <- style_cls(obj_type_friendly(x))
                 if (Sys.getenv("RSTUDIO") == "1") {
-                    cli::cli_abort(c(
-                        "The RStudio {.field Plots} window may be too small to show {error_name}",
-                        i = "Please make the window larger."
-                    ))
+                    cli::cli_abort(c(paste(
+                        "The RStudio {.field Plots} window may be",
+                        "too small to show", error_name
+                    ), i = "Please make the window larger."))
                 } else {
                     cli::cli_abort(c(
                         "The viewport may be too small to show {error_name}.",
