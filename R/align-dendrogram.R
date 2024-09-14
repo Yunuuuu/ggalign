@@ -137,17 +137,17 @@ AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
             # if the heatmap has established groups,
             # `k` and `h` must be NULL, and we'll do sub-clustering
             if (!is.null(k) || !is.null(h)) {
-                cli::cli_abort(
-                    c(
-                        paste(
-                            "{.fn {snake_class(self)}} cannot cut tree since",
-                            "the layout", .subset2(self, "direction"),
-                            "direction", "has been splitted"
+                cli::cli_abort(c(
+                    paste(
+                        "{.fn {snake_class(self)}} cannot cut tree since",
+                        "the layout", sprintf(
+                            "%s-axis",
+                            to_coord_axis(.subset2(self, "direction"))
                         ),
-                        i = "{.arg k} and {.arg h} must be `NULL`"
+                        "has been splitted"
                     ),
-                    call = .subset2(self, "call")
-                )
+                    i = "{.arg k} and {.arg h} must be `NULL`"
+                ), call = .subset2(self, "call"))
             }
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
