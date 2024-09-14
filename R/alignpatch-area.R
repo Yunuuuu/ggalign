@@ -154,7 +154,7 @@ print.align_area <- function(x, ...) {
 }
 
 #' @importFrom grid unit
-#' @importFrom ggplot2 aes margin
+#' @importFrom ggplot2 aes margin theme
 #' @export
 plot.align_area <- function(x, y, ...) {
     area <- quickdf(x)
@@ -180,7 +180,7 @@ plot.align_area <- function(x, y, ...) {
         ggplot2::scale_x_continuous(breaks = b_fun, expand = c(0, 0.04), position = "top") +
         ggplot2::labs(fill = "Patch") +
         ggplot2::theme_void() +
-        ggplot2::theme(
+        theme(
             panel.grid.minor = ggplot2::element_line(
                 size = 0.5, colour = "grey"
             ),

@@ -42,6 +42,7 @@
 #' align_gg()
 #' align_dendro()
 #' @importFrom rlang caller_call current_call
+#' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
@@ -113,7 +114,7 @@ align <- function(align_class, params,
     }
 
     # wrap all elements into this annotation ---------------------
-    ggplot2::ggproto(
+    ggproto(
         NULL,
         align_class,
         isLock = FALSE,
@@ -184,11 +185,12 @@ is.align <- function(x) inherits(x, "Align")
 #'  - `layout`: A method used to group heamap rows/columns into panel or
 #'    reorder heamtap rows/columns.
 #'  - `draw`: A method used to draw the plot. Must return a `ggplot` object.
+#' @importFrom ggplot2 ggproto
 #' @export
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-Align <- ggplot2::ggproto("Align",
+Align <- ggproto("Align",
     parameters = function(self) {
         c(
             align_method_params(self$compute),

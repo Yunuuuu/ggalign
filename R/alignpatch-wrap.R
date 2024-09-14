@@ -36,12 +36,12 @@
 #'     mar = c(0, 2, 0, 0), bg = NA
 #' ))
 #'
-#' @importFrom ggplot2 ggplot theme element_blank
+#' @importFrom ggplot2 theme element_blank
 #' @importFrom grid is.grob
 #' @export
 wrap <- function(plot, ..., align = "panel", on_top = TRUE,
                  clip = TRUE, vp = NULL) {
-    patch <- ggplot() +
+    patch <- ggplot2::ggplot() +
         theme(
             plot.background = element_blank(),
             panel.background = element_blank()
@@ -126,12 +126,13 @@ patch.gList <- function(x, ...) {
     grid::grobTree(plot)
 }
 
+#' @importFrom ggplot2 ggplotGrob
 #' @inherit patch.grob
 #' @seealso [ggplot][ggplot2::ggplot]
 #' @export
 patch.ggplot <- function(x, ...) {
     rlang::check_dots_empty()
-    ggplot2::ggplotGrob(x)
+    ggplotGrob(x)
 }
 
 #' @inherit patch.grob

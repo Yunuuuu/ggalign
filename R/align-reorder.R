@@ -36,7 +36,8 @@ align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
     )
 }
 
-AlignReorder <- ggplot2::ggproto("AlignReorder", Align,
+#' @importFrom ggplot2 ggproto
+AlignReorder <- ggproto("AlignReorder", Align,
     setup_data = function(self, params, data) data,
     compute = function(self, panel, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")

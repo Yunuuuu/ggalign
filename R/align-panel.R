@@ -49,7 +49,8 @@ align_panel <- function(mapping = aes(), size = NULL,
 #' @rdname align_panel
 ggpanel <- align_panel
 
-AlignPanel <- ggplot2::ggproto("AlignPanel", Align,
+#' @importFrom ggplot2 ggproto
+AlignPanel <- ggproto("AlignPanel", Align,
     nobs = function(self) {
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli::cli_abort(c(

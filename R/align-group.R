@@ -20,7 +20,8 @@ align_group <- function(group, set_context = FALSE, name = NULL) {
     )
 }
 
-AlignGroup <- ggplot2::ggproto("AlignGroup", Align,
+#' @importFrom ggplot2 ggproto
+AlignGroup <- ggproto("AlignGroup", Align,
     nobs = function(self, params) {
         length(.subset2(params, "group"))
     },

@@ -55,16 +55,18 @@ geom_draw <- function(draw = grid::nullGrob(), ...,
 #' @format NULL
 #' @usage NULL
 #' @aliases GeomDraw
+#' @importFrom grid is.grob
+#' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-GeomDraw <- ggplot2::ggproto(
+GeomDraw <- ggproto(
     "GeomDraw", ggplot2::Geom,
     ## No required_aes
     ## No default_aes
     ## No draw_key
     extra_params = c("na.rm"),
     draw_group = function(data, panel_params, coord, draw, draw_params) {
-        if (grid::is.grob(draw)) {
+        if (is.grob(draw)) {
             draw
         } else {
             coords <- coord$transform(data, panel_params)

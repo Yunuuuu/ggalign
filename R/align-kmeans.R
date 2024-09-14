@@ -30,7 +30,8 @@ align_kmeans <- function(centers, iter.max = 10, nstart = 1,
     )
 }
 
-AlignKmeans <- ggplot2::ggproto("AlignKmeans", Align,
+#' @importFrom ggplot2 ggproto
+AlignKmeans <- ggproto("AlignKmeans", Align,
     setup_data = function(self, params, data) {
         ans <- as.matrix(data)
         assert_(

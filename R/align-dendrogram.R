@@ -91,8 +91,8 @@ align_dendro <- function(mapping = aes(), ...,
     )
 }
 
-#' @importFrom ggplot2 aes
-AlignDendro <- ggplot2::ggproto("AlignDendro", Align,
+#' @importFrom ggplot2 ggproto aes
+AlignDendro <- ggproto("AlignDendro", Align,
     setup_params = function(self, nobs, params) {
         call <- .subset2(self, "call")
         assert_number(.subset2(params, "k"),

@@ -68,8 +68,9 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
+#' @importFrom ggplot2 ggproto
 #' @importFrom stats reorder
-AlignGG <- ggplot2::ggproto("AlignGG", Align,
+AlignGG <- ggproto("AlignGG", Align,
     setup_data = function(self, params, data) {
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
