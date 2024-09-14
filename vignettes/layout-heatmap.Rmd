@@ -9,8 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -84,8 +84,8 @@ add a plot area:
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_kmeans(3L)
+    hmanno("t") +
+    align_kmeans(3L)
 ```
 
 We can add any `align_*()` function to the annotation. For more details on
@@ -94,10 +94,10 @@ We can add any `align_*()` function to the annotation. For more details on
 
 ```{r}
 ggheatmap(small_mat) +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  hmanno("r") +
-  align_dendro(k = 3L) +
-  geom_point(aes(color = factor(branch)))
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r") +
+    align_dendro(k = 3L) +
+    geom_point(aes(color = factor(branch)))
 ```
 
 In this example:
@@ -121,31 +121,31 @@ of the whole annotation stack.
 
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno(height = 1) +
-  hmanno("t", size = 2) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+    scale_fill_viridis_c() +
+    hmanno(height = 1) +
+    hmanno("t", size = 2) +
+    align_dendro() +
+    ggalign(data = rowSums) +
+    geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("t", size = 1) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+    scale_fill_viridis_c() +
+    hmanno("t", size = 1) +
+    align_dendro() +
+    ggalign(data = rowSums) +
+    geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
 We can use `unit()` to define the size.
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("t", size = unit(30, "mm")) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+    scale_fill_viridis_c() +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    ggalign(data = rowSums) +
+    geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
 All `align_*()` functions has a `size` argument to control the relative width
@@ -153,27 +153,27 @@ All `align_*()` functions has a `size` argument to control the relative width
 plot in the whole annotation stack.
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("l", size = 0.2) +
-  ggalign(data = rowSums, aes(x = value), size = unit(10, "mm")) +
-  geom_bar(
-    aes(y = .y, fill = factor(.y)),
-    stat = "identity",
-    orientation = "y"
-  ) +
-  scale_fill_brewer(palette = "Set1", guide = "none") +
-  scale_x_reverse()
+    scale_fill_viridis_c() +
+    hmanno("l", size = 0.2) +
+    ggalign(data = rowSums, aes(x = value), size = unit(10, "mm")) +
+    geom_bar(
+        aes(y = .y, fill = factor(.y)),
+        stat = "identity",
+        orientation = "y"
+    ) +
+    scale_fill_brewer(palette = "Set1", guide = "none") +
+    scale_x_reverse()
 ```
 
 ## Alignment of axis titles
 By default, `ggheatmap()` won't align the axis titles.
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  ylab("Heatmap title") +
-  hmanno("t", size = unit(30, "mm")) +
-  align_dendro() +
-  ylab("Annotation title")
+    scale_fill_viridis_c() +
+    ylab("Heatmap title") +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    ylab("Annotation title")
 ```
 
 To align all axis titles, you can set `free_labs = NULL` in the `hmanno()`
@@ -194,12 +194,12 @@ inherit from the specific heatmap layout axis:
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno(free_labs = NULL) +
-  scale_fill_viridis_c() +
-  ylab("Heatmap title") +
-  hmanno("t", size = unit(30, "mm")) +
-  align_dendro() +
-  ylab("Annotation title")
+    hmanno(free_labs = NULL) +
+    scale_fill_viridis_c() +
+    ylab("Heatmap title") +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    ylab("Annotation title")
 ```
 
 `align_*()` functions include the `free_labs` argument, which, by default,
@@ -208,12 +208,12 @@ for each plot individually.
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno(free_labs = NULL) +
-  scale_fill_viridis_c() +
-  ylab("Heatmap title") +
-  hmanno("t", size = unit(30, "mm"), free_labs = "l") +
-  align_dendro() +
-  ylab("Annotation title")
+    hmanno(free_labs = NULL) +
+    scale_fill_viridis_c() +
+    ylab("Heatmap title") +
+    hmanno("t", size = unit(30, "mm"), free_labs = "l") +
+    align_dendro() +
+    ylab("Annotation title")
 ```
 
 ## Removing spaces when aligning elements
@@ -222,16 +222,16 @@ unwanted spacing. Consider the following example:
 
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("t", size = unit(30, "mm")) +
-  align_dendro() +
-  scale_y_continuous(
-    expand = expansion(),
-    labels = ~ paste("very very long labels", .x)
-  ) +
-  hmanno("l") +
-  align_dendro() +
-  scale_x_reverse(expand = expansion())
+    scale_fill_viridis_c() +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    scale_y_continuous(
+        expand = expansion(),
+        labels = ~ paste("very very long labels", .x)
+    ) +
+    hmanno("l") +
+    align_dendro() +
+    scale_x_reverse(expand = expansion())
 ```
 
 In this case, the left annotation stack is positioned far from the heatmap body
@@ -242,16 +242,16 @@ remove the left borders around the panel of the top annotation stack by setting
 
 ```{r}
 ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("t", size = unit(30, "mm"), free_spaces = "l") +
-  align_dendro() +
-  scale_y_continuous(
-    expand = expansion(),
-    labels = ~ paste("very very long labels", .x)
-  ) +
-  hmanno("l") +
-  align_dendro() +
-  scale_x_reverse(expand = expansion())
+    scale_fill_viridis_c() +
+    hmanno("t", size = unit(30, "mm"), free_spaces = "l") +
+    align_dendro() +
+    scale_y_continuous(
+        expand = expansion(),
+        labels = ~ paste("very very long labels", .x)
+    ) +
+    hmanno("l") +
+    align_dendro() +
+    scale_x_reverse(expand = expansion())
 ```
 
 The same with `free_labs` argument, you can control the `free_spaces` argument

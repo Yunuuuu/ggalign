@@ -31,7 +31,7 @@ align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
         ),
         set_context = set_context,
         name = name, order = NULL,
-        check.param = TRUE, 
+        check.param = TRUE,
         data = data %||% waiver()
     )
 }

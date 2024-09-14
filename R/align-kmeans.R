@@ -25,7 +25,7 @@ align_kmeans <- function(centers, iter.max = 10, nstart = 1,
             trace = trace
         ),
         set_context = set_context,
-        name = name, order = NULL, 
+        name = name, order = NULL,
         data = data %||% waiver()
     )
 }

@@ -9,8 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -46,12 +46,12 @@ ggstack(small_mat) + align_dendro()
 
 ```{r}
 ggstack(small_mat) +
-  align_kmeans(centers = 3L) +
-  ggalign(rowSums) +
-  geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-  facet_grid(switch = "y") +
-  theme(strip.text = element_text()) +
-  align_dendro(aes(color = branch))
+    align_kmeans(centers = 3L) +
+    ggalign(rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    facet_grid(switch = "y") +
+    theme(strip.text = element_text()) +
+    align_dendro(aes(color = branch))
 ```
 
 By default, `ggstack()` arranges the plots horizontally. To change the direction
@@ -76,8 +76,8 @@ frame.
 
 ```{r}
 ggstack(mtcars) +
-  ggalign(mapping = aes(mpg)) +
-  geom_point()
+    ggalign(mapping = aes(mpg)) +
+    geom_point()
 ```
 
 Note `align_gg()`/`ggalign()` always applies a default mapping for the parallel

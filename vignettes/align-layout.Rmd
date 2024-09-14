@@ -9,8 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -43,8 +43,8 @@ panels. It doesn't add any plot area.
 
 ```{r align_group_top}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+    hmanno("t") +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
 
 By default, the facet strip text is removed. You can override this behavior with
@@ -52,9 +52,9 @@ By default, the facet strip text is removed. You can override this behavior with
 new plot, the panel title can only be added to the heatmap plot.
 ```{r align_group_left}
 ggheatmap(small_mat) +
-  theme(strip.text = element_text()) +
-  hmanno("l") +
-  align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
+    theme(strip.text = element_text()) +
+    hmanno("l") +
+    align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
 ```
 
 ## `align_reorder`
@@ -64,8 +64,8 @@ function. Like `align_group()`, it doesn't add a plot area.
 Here, we reorder the rows based on the means.
 ```{r align_reorder}
 ggheatmap(small_mat) +
-  hmanno("l") +
-  align_reorder(rowMeans)
+    hmanno("l") +
+    align_reorder(rowMeans)
 ```
 
 By default, `align_reorder()` reorders the rows or columns in ascending order of
@@ -73,8 +73,8 @@ the summary function's output (from bottom to top for rows, or from left to
 right for columns). To reverse this order, you can set `decreasing = TRUE`: 
 ```{r align_reorder_decreasing}
 ggheatmap(small_mat) +
-  hmanno("l") +
-  align_reorder(rowMeans, decreasing = TRUE)
+    hmanno("l") +
+    align_reorder(rowMeans, decreasing = TRUE)
 ```
 
 Some `align_*` functions accept a `data` argument. This can be a matrix, a data
@@ -94,8 +94,8 @@ mean value across all columns.
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_reorder(rowMeans)
+    hmanno("t") +
+    align_reorder(rowMeans)
 ```
 
 ## `align_kmeans`
@@ -103,8 +103,8 @@ The `align_kmeans()` function groups heatmap rows or columns based on k-means
 clustering. Like the previous functions, it does not add a plot area. 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_kmeans(3L)
+    hmanno("t") +
+    align_kmeans(3L)
 ```
 
 It's important to note that `align_group()` and `align_kmeans()` cannot do
@@ -112,16 +112,16 @@ sub-grouping. This means they cannot be used if groups already exist.
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
-  align_kmeans(3L)
+    hmanno("t") +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
+    align_kmeans(3L)
 ```
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_kmeans(3L) +
-  align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+    hmanno("t") +
+    align_kmeans(3L) +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
 
 ## align_dendro
@@ -131,8 +131,8 @@ particularly useful for working with heatmap plots.
 
 ```{r align_dendro}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro()
+    hmanno("t") +
+    align_dendro()
 ```
 
 Hierarchical clustering is performed in two steps: calculate the distance matrix
@@ -151,16 +151,16 @@ matrix will be transposed automatically.
 
 ```{r align_dendro_distance_pearson}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro(distance = "pearson") +
-  patch_titles(top = "pre-defined distance method (1 - pearson)")
+    hmanno("t") +
+    align_dendro(distance = "pearson") +
+    patch_titles(top = "pre-defined distance method (1 - pearson)")
 ```
 
 ```{r align_dendro_distance_function}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro(distance = function(m) dist(m)) +
-  patch_titles(top = "a function that calculates distance matrix")
+    hmanno("t") +
+    align_dendro(distance = function(m) dist(m)) +
+    patch_titles(top = "a function that calculates distance matrix")
 ```
 
 Method to perform hierarchical clustering can be specified by `method`. Possible
@@ -170,8 +170,8 @@ object.
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro(method = "ward.D2")
+    hmanno("t") +
+    align_dendro(method = "ward.D2")
 ```
 
 The dendrogram can also be used to cut the columns/rows into groups. You can
@@ -179,8 +179,8 @@ specify `k` or `h`, which work similarly to `cutree()`:
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro(k = 3L)
+    hmanno("t") +
+    align_dendro(k = 3L)
 ```
 
 In contrast to `align_group()`, `align_kmeans()`, and `align_reorder()`,
@@ -191,9 +191,9 @@ plot area.
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro() +
-  geom_point(aes(y = y))
+    hmanno("t") +
+    align_dendro() +
+    geom_point(aes(y = y))
 ```
 
 The `align_dendro()` function creates default `node` data for the ggplot. See
@@ -204,9 +204,9 @@ dendrogram tree. One useful variable in both `node` and `edge` data is the
 
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_dendro(aes(color = branch), k = 3) +
-  geom_point(aes(color = branch, y = y))
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3) +
+    geom_point(aes(color = branch, y = y))
 ```
 
 `align_dendro()` can also perform clustering between groups, meaning it can be
@@ -215,27 +215,27 @@ used even if there are existing groups present in the layout:
 ```{r}
 column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(column_groups) +
-  align_dendro(aes(color = branch))
+    hmanno("t") +
+    align_group(column_groups) +
+    align_dendro(aes(color = branch))
 ```
 
 You can reorder the groups by setting `reorder_group = TRUE`.
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(column_groups) +
-  align_dendro(aes(color = branch), reorder_group = TRUE)
+    hmanno("t") +
+    align_group(column_groups) +
+    align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
 You can see the difference by drawing two dendrogram.
 ```{r}
 ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(column_groups) +
-  align_dendro(aes(color = branch), reorder_group = TRUE) +
-  hmanno("b") +
-  align_dendro(aes(color = branch), reorder_group = FALSE)
+    hmanno("t") +
+    align_group(column_groups) +
+    align_dendro(aes(color = branch), reorder_group = TRUE) +
+    hmanno("b") +
+    align_dendro(aes(color = branch), reorder_group = FALSE)
 ```
 
 ## Session information

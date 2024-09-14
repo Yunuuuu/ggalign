@@ -4,8 +4,8 @@ title: "FAQ"
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -41,8 +41,8 @@ index <- NULL
 set.seed(2L)
 group <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
 h <- ggheatmap(small_mat) +
-  hmanno("t") +
-  align_group(group)
+    hmanno("t") +
+    align_group(group)
 ```
 
 This dose initialized the `panels`.
@@ -64,7 +64,7 @@ panels. Here, the panel levels are sampled to create new groups:
 ```{r}
 panels <- factor(panels, sample(levels(panels)))
 new_index <- unlist(split(index, panels[index]),
-  recursive = FALSE, use.names = FALSE
+    recursive = FALSE, use.names = FALSE
 )
 all(index == new_index)
 ```
