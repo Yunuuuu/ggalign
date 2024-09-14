@@ -1,5 +1,5 @@
 Package: ggalign
-Title: Align Multiple 'ggplot' Objects
+Title: A 'ggplot2' Extension for Consistent Axis Alignment
 Version: 0.0.3
 Authors@R: 
     person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0003-2801-3332"))
@@ -8,9 +8,8 @@ Description: A 'ggplot2' extension offers various tools for organizing and arran
     making it especially useful for plots requiring data order manipulation. A typical use 
     case includes organizing combinations like a dendrogram and a heatmap.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
+BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
     ggplot2
 Imports: 
@@ -23,9 +22,6 @@ Imports:
     stats,
     tibble,
     tidyr
-ByteCompile: true
-URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
-BugReports: https://github.com/Yunuuuu/ggalign/issues
 Suggests: 
     gridGraphics,
     knitr,
@@ -34,5 +30,9 @@ Suggests:
     scales,
     testthat (>= 3.0.0),
     vdiffr
+ByteCompile: true
 Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr

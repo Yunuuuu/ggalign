@@ -3,7 +3,7 @@
 \docType{package}
 \name{ggalign-package}
 \alias{ggalign-package}
-\title{ggalign: Align Multiple 'ggplot' Objects}
+\title{ggalign: A 'ggplot2' Extension for Consistent Axis Alignment}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
