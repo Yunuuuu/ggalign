@@ -1,4 +1,6 @@
 .onLoad <- function(libname, pkgname) {
-    theme_elements()
+    if (packageVersion("ggplot2") >= "3.3.0") {
+        theme_elements()
+    }
     invisible()
 }
