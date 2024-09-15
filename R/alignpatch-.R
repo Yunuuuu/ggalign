@@ -199,6 +199,7 @@ Patch <- ggproto("Patch", NULL,
         self$gt <- gt
         collected_guides
     },
+    respect = function(self, gt = self$gt) isTRUE(.subset2(gt, "respect")),
     align_panel_sizes = function(self, guides, panel_width, panel_height,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
@@ -243,5 +244,17 @@ Patch <- ggproto("Patch", NULL,
         }
         gt
     },
-    respect = function(self, gt = self$gt) isTRUE(.subset2(gt, "respect"))
+    split_gt = function(self, gt = self$gt) {
+        index <- .subset2(.subset2(gt, "layout"), "name") == "background"
+        bg <- .subset(.subset2(gt, "grobs"), index)
+        plot <- subset_gt(gt, !index, trim = FALSE)
+        list(bg = bg, plot = plot)
+    },
+    free_border = function(self, guides, borders,
+                           gt = self$gt, patches = self$patches) {
+        cli::cli_abort("Cannot free border for {.obj_type_friendly {self$plot}}")
+    },
+    free_lab = function(self, labs, gt = self$gt, patches = self$patches) {
+        cli::cli_abort("Cannot free lab for {.obj_type_friendly {self$plot}}")
+    }
 )
