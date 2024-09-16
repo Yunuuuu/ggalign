@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,8 +53,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
-<ul><li>{tibble} is now removed from the dependency</li>
+<h2 class="pkg-version" data-toc-text="0.0.4" id="ggalign-004">ggalign 0.0.4<a class="anchor" aria-label="anchor" href="#ggalign-004"></a></h2>
+<ul><li><p>{tibble} is now removed from the dependency</p></li>
+<li><p><code><a href="../reference/align_plots.html">align_plots()</a></code> now can accept <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code>, we have added <code>alignpatch</code> method for these objects.</p></li>
+<li><p>add <code>patch</code> method for <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code></p></li>
+<li><p>fix a bud in <code><a href="../reference/wrap.html">wrap()</a></code> function where duplicated names in gtable cause some grobs missing</p></li>
+<li><p>new <code><a href="../reference/free.html">free_vp()</a></code> function to customize the viewport when aligning.</p></li>
+<li><p><code>StackLayout</code> and <code>HeatmapLayout</code> methods have been collapsed into one method for <code>Layout</code> class</p></li>
+<li><p>New <code>Patch</code> class, now we can extend the alignment process of any object and customize the building process with <code>ggproto</code>.</p></li>
+<li><p>fix missing variable <code>labs</code> in the <code>free_space</code> method of <code>PatchAlignpatches</code></p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.3" id="ggalign-003">ggalign 0.0.3<a class="anchor" aria-label="anchor" href="#ggalign-003"></a></h2><p class="text-muted">CRAN release: 2024-09-15</p>
