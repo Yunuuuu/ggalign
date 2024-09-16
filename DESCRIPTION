@@ -20,7 +20,6 @@ Imports:
     methods,
     rlang (>= 1.1.0),
     stats,
-    tibble,
     tidyr
 Suggests: 
     gridGraphics,

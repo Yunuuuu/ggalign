@@ -77,7 +77,9 @@ AlignGG <- ggproto("AlignGG", Align,
         if (is.matrix(data)) {
             data <- melt_matrix(data)
         } else {
-            data <- as_tibble0(data, rownames = ".row_names")
+            if (!is.null(old_rownames <- rownames(data))) {
+                data$.row_names <- old_rownames
+            }
             data$.row_index <- seq_len(nrow(data))
         }
         data

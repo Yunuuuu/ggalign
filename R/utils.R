@@ -160,7 +160,7 @@ to_matrix_axis <- function(direction) {
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
     col_nms <- colnames(matrix)
-    data <- as_tibble0(matrix, rownames = NULL) # nolint
+    data <- as_data_frame0(matrix) # nolint
     colnames(data) <- seq_len(ncol(data))
     data$.row_index <- seq_len(nrow(data))
     data <- tidyr::pivot_longer(data,
@@ -179,23 +179,21 @@ fct_rev <- function(x) {
     factor(ans, levels = rev(levels(ans)))
 }
 
-data_frame0 <- function(...) {
-    quickdf(list(...))
-}
-
 quickdf <- function(x) {
     class(x) <- "data.frame"
     attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
     x
 }
-
-tibble0 <- function(...) {
-    tibble::tibble(..., .name_repair = "minimal")
+data_frame0 <- function(...) quickdf(list(...))
+as_data_frame0 <- function(data, ...) {
+    as.data.frame(
+        x = data, ...,
+        make.names = FALSE,
+        stringsAsFactors = FALSE,
+        fix.empty.names = FALSE
+    )
 }
 
-as_tibble0 <- function(data, ...) {
-    tibble::as_tibble(data, ..., .name_repair = "minimal")
-}
 
 imap <- function(.x, .f, ...) {
     nms <- names(.x)

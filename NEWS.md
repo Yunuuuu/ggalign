@@ -8,6 +8,8 @@
 
 * add return value docs for exported function or methods
 
+* {tibble} is now removed from the dependency
+
 # ggalign 0.0.2
   
 * omit the redudnant description and add single quote for package name
