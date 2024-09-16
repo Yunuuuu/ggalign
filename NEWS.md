@@ -1,3 +1,7 @@
+# ggalign (development version)
+
+* {tibble} is now removed from the dependency
+
 # ggalign 0.0.3
 
 * Add package logo
@@ -7,8 +11,6 @@
 * add package quotes in DESCRIPTION
 
 * add return value docs for exported function or methods
-
-* {tibble} is now removed from the dependency
 
 # ggalign 0.0.2
   
