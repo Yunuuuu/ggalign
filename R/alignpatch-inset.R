@@ -141,7 +141,7 @@ patch.patch <- function(x, ...) {
 }
 
 #' @inherit patch.grob
-#' @inheritDotParams graphics::par -no.readonly
+#' @param ... Graphical Parameters passed on to [par()][graphics::par].
 #' @inheritParams gridGraphics::echoGrob
 #' @seealso [plot]
 #' @export
