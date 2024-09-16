@@ -9,6 +9,7 @@ free_border.
 free_lab: If we want to compose plots without alignment of the axis
 title, we can wrap the plot with free_lab.
 free_space: Removing the ggplot element sizes when aligning.
+free_vp: Customize the viewport when aligning.
 
 "><meta property="og:description" content="align_plots will try to align plot panels, and every elements of the plot,
 following functions romove these restrictions:
@@ -20,6 +21,7 @@ free_border.
 free_lab: If we want to compose plots without alignment of the axis
 title, we can wrap the plot with free_lab.
 free_space: Removing the ggplot element sizes when aligning.
+free_vp: Customize the viewport when aligning.
 
 "><meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -29,7 +31,7 @@ free_space: Removing the ggplot element sizes when aligning.
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +73,7 @@ free_space: Removing the ggplot element sizes when aligning.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Free from alignment</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-free-align.R" class="external-link"><code>R/alignpatch-free-align.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-free-border.R" class="external-link"><code>R/alignpatch-free-border.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-free-lab.R" class="external-link"><code>R/alignpatch-free-lab.R</code></a>, and 1 more</small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-align.R" class="external-link"><code>R/alignpatch-free-align.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-border.R" class="external-link"><code>R/alignpatch-free-border.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-free-lab.R" class="external-link"><code>R/alignpatch-free-lab.R</code></a>, and 2 more</small>
       <div class="d-none name"><code>free.Rd</code></div>
     </div>
 
@@ -85,6 +87,7 @@ borders (but still align the panels themselves), we can wrap the plot with
 <li><p><code>free_lab</code>: If we want to compose plots without alignment of the axis
 title, we can wrap the plot with <code>free_lab</code>.</p></li>
 <li><p><code>free_space</code>: Removing the ggplot element sizes when aligning.</p></li>
+<li><p><code>free_vp</code>: Customize the <a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a> when aligning.</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -95,7 +98,9 @@ title, we can wrap the plot with <code>free_lab</code>.</p></li>
 <span></span>
 <span><span class="fu">free_lab</span><span class="op">(</span><span class="va">plot</span>, labs <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, borders <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">free_vp</span><span class="op">(</span><span class="va">plot</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="cn">NA</span>, height <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -113,8 +118,9 @@ one or more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"<
 
 
 <dt id="arg-borders">borders<a class="anchor" aria-label="anchor" href="#arg-borders"></a></dt>
-<dd><p>Which border shouldn't be aligned? A string containing
-one or more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
+<dd><p>Which border shouldn't be aligned (<code>free_border</code>) or which
+border sizes should be removed (<code>free_space</code>)? A string containing one or
+more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
 
 
 <dt id="arg-labs">labs<a class="anchor" aria-label="anchor" href="#arg-labs"></a></dt>
@@ -122,32 +128,94 @@ one or more of <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"<
 <code>"t"</code>,<code>"l"</code>,<code>"b"</code>,and <code>"r"</code>.</p></dd>
 
 
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>A numeric vector or unit object specifying x-location.</p></dd>
+
+
+<dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
+<dd><p>A numeric vector or unit object specifying y-location.</p></dd>
+
+
+<dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
+<dd><p>A numeric vector or unit object specifying width.</p></dd>
+
+
+<dt id="arg-height">height<a class="anchor" aria-label="anchor" href="#arg-height"></a></dt>
+<dd><p>A numeric vector or unit object specifying height.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>What sizes of the ggplot2 elements to remove? Allowed values are:
-<code>"title"</code>, <code>"subtitle"</code>, <code>"xlab-t"</code>, <code>"axis-t"</code>, <code>"strip-t"</code>,
-<code>"patch-title-top"</code>, <code>"margin-t"</code>, <code>"ylab-l"</code>, <code>"axis-l"</code>, <code>"strip-l"</code>,
-<code>"patch-title-left"</code>, <code>"margin-l"</code>, <code>"caption"</code>, <code>"xlab-b"</code>, <code>"axis-b"</code>,
-<code>"strip-b"</code>, <code>"patch-title-bottom"</code>, <code>"margin-b"</code>, <code>"ylab-r"</code>, <code>"axis-r"</code>,
-<code>"strip-r"</code>, <code>"patch-title-right"</code>, and <code>"margin-r"</code>. Some unions also
-allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "axis-t", "strip-t",
-"patch-title-top", "margin-t".</p></li>
-<li><p><code>"l"/"left"</code>: "ylab-l", "axis-l", "strip-l", "patch-title-left",
-"margin-l".</p></li>
-<li><p><code>"b"/"bottom"</code>: "caption", "xlab-b", "axis-b", "strip-b",
-"patch-title-bottom", "margin-b".</p></li>
-<li><p><code>"r"/"right"</code>: "ylab-r", "axis-r", "strip-r", "patch-title-right",
-"margin-r".</p></li>
-<li><p><code>"x"</code>: "xlab-t", "axis-t", "strip-t", "xlab-b", "axis-b", "strip-b".</p></li>
-<li><p><code>"y"</code>: "ylab-l", "axis-l", "strip-l", "ylab-r", "axis-r", "strip-r".</p></li>
-<li><p><code>"xlab"/"xlabs"</code>: "xlab-t", "xlab-b".</p></li>
-<li><p><code>"ylab"/"ylabs"</code>: "ylab-l", "ylab-r".</p></li>
-<li><p><code>"lab"/"labs"</code>: "xlab-t", "xlab-b", "ylab-l", "ylab-r".</p></li>
-<li><p><code>"axis"/"axes"</code>: "axis-t", "axis-b", "axis-l", "axis-r".</p></li>
-<li><p><code>"strip"/"strips"</code>: "strip-t", "strip-b", "strip-l", "strip-r".</p></li>
-<li><p><code>"patch-title"</code>/<code>"patch-titles"</code>: "patch-title-top", "patch-title-left",
-"patch-title-bottom", "patch-title-right".</p></li>
-<li><p><code>"margin"</code>/<code>"margins"</code>: "margin-t", "margin-l", "margin-b", "margin-r".</p></li>
-</ul></dd>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">grid::viewport</a></code></p><dl><dt><code>default.units</code></dt>
+<dd><p>A string indicating the default units to use
+    if <code>x</code>, <code>y</code>, <code>width</code>, or <code>height</code>
+    are only given as numeric vectors.</p></dd>
+
+    <dt><code>just</code></dt>
+<dd><p>A string or numeric
+    vector specifying the justification of the viewport
+    relative to its (x, y) location.  If there are two values, the first
+    value specifies horizontal justification and the second value specifies
+    vertical justification.  Possible string values are: <code>"left"</code>,
+    <code>"right"</code>, <code>"centre"</code>, <code>"center"</code>, <code>"bottom"</code>,
+    and <code>"top"</code>.  For numeric values, 0 means left alignment
+    and 1 means right alignment.</p></dd>
+
+    <dt><code>gp</code></dt>
+<dd><p>An object of class <code>"gpar"</code>, typically the output
+    from a call to the function <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></code>.  This is basically
+    a list of graphical parameter settings.</p></dd>
+
+    <dt><code>clip</code></dt>
+<dd><p>One of <code>"on"</code>, <code>"inherit"</code>, or
+    <code>"off"</code>, indicating whether to
+    clip to the extent of this viewport, inherit the clipping region
+    from the parent viewport, or turn clipping off altogether.
+    For back-compatibility, a logical value of <code>TRUE</code> corresponds
+    to <code>"on"</code> and <code>FALSE</code> corresponds to <code>"inherit"</code>.</p>
+<p>May also be a grob (or a gTree) that describes a clipping path
+    or the result of a call to <code><a href="https://rdrr.io/r/grid/grid.stroke.html" class="external-link">as.path</a></code>.</p></dd>
+
+    <dt><code>mask</code></dt>
+<dd><p>One of <code>"none"</code> (or <code>FALSE</code>)
+    or <code>"inherit"</code> (or <code>TRUE</code>)
+    or a grob (or a gTree) or the result of call to
+    <code><a href="https://rdrr.io/r/grid/as.mask.html" class="external-link">as.mask</a></code>.  This specifies that the viewport
+    should have no mask, or it should inherit the mask of its parent,
+    or it should have its own mask, as described by the grob.</p></dd>
+
+    <dt><code>xscale</code></dt>
+<dd><p>A numeric vector of length two indicating the minimum and
+    maximum on the x-scale.  The limits may not be identical.</p></dd>
+
+    <dt><code>yscale</code></dt>
+<dd><p>A numeric vector of length two indicating the minimum
+    and maximum on the y-scale. The limits may not be identical.</p></dd>
+
+    <dt><code>angle</code></dt>
+<dd><p>A numeric value indicating the angle of rotation of the
+    viewport.  Positive values indicate the amount of rotation, in
+    degrees, anticlockwise from the positive x-axis.</p></dd>
+
+    <dt><code>layout</code></dt>
+<dd><p>A Grid layout object which splits the viewport into
+    subregions.</p></dd>
+
+    <dt><code>layout.pos.row</code></dt>
+<dd><p>A numeric vector giving the
+    rows occupied by this viewport in its
+    parent's layout.</p></dd>
+
+    <dt><code>layout.pos.col</code></dt>
+<dd><p>A numeric vector giving the
+    columns occupied by this viewport in its
+    parent's layout.</p></dd>
+
+    <dt><code>name</code></dt>
+<dd><p>A character value to uniquely identify the viewport
+    once it has been pushed onto the viewport tree.</p></dd>
+
+
+</dl></dd>
 
 </dl></div>
     <div class="section level2">
@@ -157,11 +225,12 @@ allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "ax
 </ul><ul><li><p><code>free_border</code>: A modified version of <code>plot</code> with a <code>free_border</code> class.</p></li>
 </ul><ul><li><p><code>free_lab</code>: A modified version of <code>plot</code> with a <code>free_lab</code> class.</p></li>
 </ul><ul><li><p><code>free_space</code>: A modified version of <code>plot</code> with a <code>free_space</code> class.</p></li>
+</ul><ul><li><p><code>free_vp</code>: A modified version of <code>plot</code> with a <code>free_vp</code> class.</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># directly copied from patchwork</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># directly copied from `patchwork`</span></span></span>
 <span class="r-in"><span><span class="co"># Sometimes you have a plot that defies good composition alginment, e.g. due</span></span></span>
 <span class="r-in"><span><span class="co"># to long axis labels</span></span></span>
 <span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -182,7 +251,7 @@ allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "ax
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># We can fix this be using free (here, with the default "panel" type)</span></span></span>
+<span class="r-in"><span><span class="co"># We can fix this be using `free_align`</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">free_align</span><span class="op">(</span><span class="va">p1</span><span class="op">)</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -191,16 +260,15 @@ allowed:</p><ul><li><p><code>"t"/"top</code>: "title", "subtitle", "xlab-t", "ax
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="fu">free_align</span><span class="op">(</span><span class="va">p1</span>, axes <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># We could use "label" to fix the layout in a different way</span></span></span>
+<span class="r-in"><span><span class="co"># We could use `free_lab` to fix the layout in a different way</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu">free_lab</span><span class="op">(</span><span class="va">p2</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Another issue is that long labels are not using already available free</span></span></span>
-<span class="r-in"><span><span class="co"># space.</span></span></span>
+<span class="r-in"><span><span class="co"># Another issue is that long labels can occupy much spaces</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># This can be fixed with the "space" type</span></span></span>
+<span class="r-in"><span><span class="co"># This can be fixed with `free_space`</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu">free_space</span><span class="op">(</span><span class="va">p1</span>, <span class="st">"l"</span><span class="op">)</span>, <span class="va">p2</span>, <span class="va">p2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="free-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
