@@ -1,6 +1,20 @@
-# ggalign (development version)
+# ggalign 0.0.4
 
 * {tibble} is now removed from the dependency
+
+* `align_plots()` now can accept `gList`, `function`, `recordedplot`, `trellis`, `pheatmap`, `Heatmap`, `HeatmapAnnotation`, and `HeatmapList`, we have added `alignpatch` method for these objects.
+
+* add `patch` method for `gList`, `function`, `recordedplot`, `trellis`, `pheatmap`, `Heatmap`, `HeatmapAnnotation`, and `HeatmapList`
+
+* fix a bud in `wrap()` function where duplicated names in gtable cause some grobs missing
+
+* new `free_vp()` function to customize the viewport when aligning.
+
+* `StackLayout` and `HeatmapLayout` methods have been collapsed into one method for `Layout` class
+
+* New `Patch` class, now we can extend the alignment process of any object and customize the building process with `ggproto`.
+
+* fix missing variable `labs` in the `free_space` method of `PatchAlignpatches`
 
 # ggalign 0.0.3
 
