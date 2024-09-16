@@ -25,7 +25,9 @@ manipulated, such as aligning a dendrogram with a heatmap.
 
 ## Installation
 
-You can install the development version of `ggalign` from [GitHub](https://github.com/) with:
+You can install `ggalign` from CRAN using `install.packages("ggalign")`.
+Alternatively you can install the development version of `ggalign` from
+[GitHub](https://github.com/) with:
 
 ```{r, eval=FALSE}
 # install.packages("remotes")

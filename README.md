@@ -17,7 +17,8 @@ with a heatmap.
 
 ## Installation
 
-You can install the development version of `ggalign` from
+You can install `ggalign` from CRAN using `install.packages("ggalign")`.
+Alternatively you can install the development version of `ggalign` from
 [GitHub](https://github.com/) with:
 
 ``` r
