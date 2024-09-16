@@ -49,7 +49,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate a plot grob.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-.R" class="external-link"><code>R/alignpatch-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-.R" class="external-link"><code>R/alignpatch-.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-patchwork.R" class="external-link"><code>R/alignpatch-patchwork.R</code></a>, <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-plot.R" class="external-link"><code>R/alignpatch-plot.R</code></a></small>
       <div class="d-none name"><code>ggalignGrob.Rd</code></div>
     </div>
 
@@ -59,7 +59,19 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'patchwork'</span></span>
+<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'patch'</span></span>
+<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'alignpatches'</span></span>
+<span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,39 +87,6 @@
     <p>A <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob()</a> object.</p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> TableGrob (20 x 17) "layout": 26 grobs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     z         cells               name                                   grob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0 ( 1-20, 1-17)         background       rect[plot.background..rect.2262]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   5 ( 9- 9, 7- 7)             spacer                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   7 (11-11, 7- 7)             axis-l                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3 (13-13, 7- 7)             spacer                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6 ( 9- 9, 9- 9)             axis-t                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   1 (11-11, 9- 9)              panel              gTree[panel-1.gTree.2257]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   9 (13-13, 9- 9)             axis-b                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   4 ( 9- 9,11-11)             spacer                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   8 (11-11,11-11)             axis-r                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  2 (13-13,11-11)             spacer                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 10 ( 8- 8, 9- 9)             xlab-t                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 11 (14-14, 9- 9)             xlab-b                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 12 (11-11, 6- 6)             ylab-l                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 13 (11-11,12-12)             ylab-r                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 14 (11-11,15-15)    guide-box-right                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 15 (11-11, 3- 3)     guide-box-left                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 16 (17-17, 9- 9)   guide-box-bottom                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 17 ( 5- 5, 9- 9)      guide-box-top                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 18 (11-11, 9- 9)   guide-box-inside                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 19 ( 4- 4, 9- 9)           subtitle zeroGrob[plot.subtitle..zeroGrob.2259]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 20 ( 3- 3, 9- 9)              title    zeroGrob[plot.title..zeroGrob.2258]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 21 (18-18, 9- 9)            caption  zeroGrob[plot.caption..zeroGrob.2260]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 22 ( 7- 7, 9- 9)    patch-title-top                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 23 (11-11, 5- 5)   patch-title-left                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 24 (15-15, 9- 9) patch-title-bottom                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 25 (11-11,13-13)  patch-title-right                         zeroGrob[NULL]</span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

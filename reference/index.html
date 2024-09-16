@@ -75,7 +75,7 @@
         </dt>
         <dd>Put plots horizontally or vertically</dd>
       </dl></div><div class="section level2">
-      <h2 id="layout-building">Layout Building<a class="anchor" aria-label="anchor" href="#layout-building"></a></h2>
+      <h2 id="building-process">Building process<a class="anchor" aria-label="anchor" href="#building-process"></a></h2>
 
       <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/layout_heatmap.html">ggheatmap()</a></code> or <code><a href="../reference/layout_stack.html">ggstack()</a></code>, supplying default data. You then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/hmanno.html">hmanno()</a></code> or <code><a href="../reference/stack_active.html">stack_active()</a></code> to control the layout attributes. To save a plot to disk, use <code>ggsave()</code>.</p></div>
 
@@ -108,9 +108,9 @@
           <code><a href="layout-operator.html">`&amp;`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="layout-operator.html">`-`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
 
         </dt>
-        <dd>Layout operator</dd>
+        <dd>Plot arithmetic</dd>
       </dl></div><div class="section level2">
-      <h2 id="layout-plot">Layout Plot<a class="anchor" aria-label="anchor" href="#layout-plot"></a></h2>
+      <h2 id="plot-integration">Plot Integration<a class="anchor" aria-label="anchor" href="#plot-integration"></a></h2>
 
       <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
 
@@ -192,7 +192,7 @@
         <dd>Add patch titles to plot borders</dd>
       </dl><dl><dt>
 
-          <code><a href="free.html">free_align()</a></code> <code><a href="free.html">free_border()</a></code> <code><a href="free.html">free_lab()</a></code> <code><a href="free.html">free_space()</a></code> <code><a href="free.html">free_vp()</a></code>
+          <code><a href="free.html">free_align()</a></code> <code><a href="free.html">free_border()</a></code> <code><a href="free.html">free_lab()</a></code> <code><a href="free.html">free_space()</a></code>
 
         </dt>
         <dd>Free from alignment</dd>
@@ -221,10 +221,10 @@
 
       <dl><dt>
 
-          <code><a href="alignpatch.html">alignpatch()</a></code>
+          <code><a href="alignpatch.html">alignpatch()</a></code> <code><a href="alignpatch.html">patch_gtable()</a></code> <code><a href="alignpatch.html">patch_align()</a></code>
 
         </dt>
-        <dd>Prepare plots to be aligned with <code>align_plots</code></dd>
+        <dd>Building <code>alignpatches</code> object</dd>
       </dl><dl><dt>
 
           <code><a href="wrap.html">wrap()</a></code>

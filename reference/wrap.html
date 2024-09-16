@@ -55,7 +55,7 @@ patch() method."><meta property="og:image" content="https://yunuuuu.github.io/gg
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Wrap Arbitrary Graphics for Alignment</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-wrap.R" class="external-link"><code>R/alignpatch-wrap.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.0.3/R/alignpatch-wrap.R" class="external-link"><code>R/alignpatch-wrap.R</code></a></small>
       <div class="d-none name"><code>wrap.Rd</code></div>
     </div>
 
@@ -114,41 +114,15 @@ plot area.</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><a href="patch.grob.html">patch.grob</a> / <a href="patch.grob.html">patch.gList</a></p></li>
+<ul><li><p><a href="patch.grob.html">patch.grob</a></p></li>
 <li><p><a href="patch.ggplot.html">patch.ggplot</a></p></li>
-<li><p><a href="patch.patch_ggplot.html">patch.patch_ggplot</a></p></li>
-<li><p><a href="patch.patchwork.html">patch.patchwork</a></p></li>
-<li><p><a href="patch.patch.html">patch.patch</a></p></li>
-<li><p><a href="patch.trellis.html">patch.trellis</a></p></li>
-<li><p><a href="patch.formula.html">patch.formula</a> / <a href="patch.formula.html">patch.function</a></p></li>
-<li><p><a href="patch.recordedplot.html">patch.recordedplot</a></p></li>
+<li><p><a href="patch.formula.html">patch.formula</a></p></li>
 <li><p><a href="patch.Heatmap.html">patch.Heatmap</a></p></li>
 <li><p><a href="patch.Heatmap.html">patch.HeatmapList</a></p></li>
 <li><p><a href="patch.Heatmap.html">patch.HeatmapAnnotation</a></p></li>
-<li><p><a href="patch.pheatmap.html">patch.pheatmap</a></p></li>
 </ul></div>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">wrap</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span>gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"goldenrod"</span><span class="op">)</span><span class="op">)</span>, align <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="inset.html">inset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span>gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span><span class="op">)</span>, align <span class="op">=</span> <span class="st">"panel"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="inset.html">inset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">textGrob</a></span><span class="op">(</span><span class="st">"Here are some text"</span>, gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        align <span class="op">=</span> <span class="st">"panel"</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-plt img"><img src="wrap-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Plot 1"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu">wrap</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">disp</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, bg <span class="op">=</span> <span class="cn">NA</span></span></span>
-<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="wrap-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
