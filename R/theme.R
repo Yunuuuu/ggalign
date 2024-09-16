@@ -35,13 +35,20 @@ align_theme <- function(direction, ...) {
         )
 }
 
+#' @importFrom utils packageVersion
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
-    if (is.null(complete <- attr(theme, "complete")) || !complete) {
-        theme <- theme_get() + theme
+    if (!is_theme_complete(theme)) {
+        theme <- if (packageVersion("ggplot2") > "3.5.1") {
+            getFromNamespace("ggplot2", "complete_theme")(theme)
+        } else {
+            theme_get() + theme
+        }
     }
     theme
 }
+
+is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 
 #' @importFrom ggplot2 register_theme_elements el_def
 theme_elements <- function() {
