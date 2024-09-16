@@ -1,6 +1,5 @@
-## Resubmission
-This is a resubmission. In this version I have:
+## R CMD check results
 
-* add package quotes in DESCRIPTION
+0 errors | 0 warnings | 1 note
 
-* add return value docs for exported function or methods
+* This is a new release.
