@@ -56,13 +56,13 @@ reference:
   - free_space
   - area
   - inset
+  - wrap
 
 - title: Extending Plot Composer
   desc: >
     Extending capabilities to align graphics with `align_plots()`.
   contents:
   - alignpatch
-  - wrap
   - patch
 
 - title: helpers
