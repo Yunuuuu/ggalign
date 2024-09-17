@@ -11,7 +11,7 @@ License: MIT + file LICENSE
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
-    ggplot2
+    ggplot2 (>= 3.3.0)
 Imports: 
     cli,
     ggh4x,
