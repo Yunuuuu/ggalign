@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `borders` argument in `free_space()` has been renamed to `spaces`
+
 * {tibble} is now removed from the dependency
 
 * `align_plots()` now can accept `gList`, `function`, `recordedplot`, `trellis`, `pheatmap`, `Heatmap`, `HeatmapAnnotation`, and `HeatmapList`, we have added `alignpatch` method for these objects.

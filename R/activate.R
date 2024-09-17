@@ -19,9 +19,9 @@
 #' @param free_labs A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which axis title should be free from
 #' alignment. If `NULL`, all axis title will be aligned. Default: "tlbr".
-#' @param free_spaces A character specifies the ggplot elements which won't
-#' count space sizes when alignment. If `NULL` (default), no space will be
-#' removed. See [free_space()] for allowed values.
+#' @param free_spaces A boolean value or a string containing one or more of
+#' `r rd_values(.tlbr)` indicates which border spaces should be removed. If
+#' `NULL` (default), no space will be removed.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
 #' default is to not modify the data. Use `NULL`, if you don't want to modify

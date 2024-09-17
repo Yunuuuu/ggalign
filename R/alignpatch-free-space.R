@@ -1,20 +1,22 @@
+#' @param spaces Which border spaces should be removed? A string containing one
+#' or more of `r rd_values(.tlbr)`.
 #' @return
 #' - `free_space`: A modified version of `plot` with a `free_space` class.
 #' @export
 #' @rdname free
-free_space <- function(plot, borders = "tlbr") {
+free_space <- function(plot, spaces = "tlbr") {
     UseMethod("free_space")
 }
 
 #' @export
-free_space.default <- function(plot, borders = "tlbr") {
+free_space.default <- function(plot, spaces = "tlbr") {
     cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @export
-free_space.ggplot <- function(plot, borders = "tlbr") {
-    assert_position(borders)
-    attr(plot, "free_spaces") <- borders
+free_space.ggplot <- function(plot, spaces = "tlbr") {
+    assert_position(spaces)
+    attr(plot, "free_spaces") <- spaces
     add_class(plot, "free_space")
 }
 
@@ -22,10 +24,10 @@ free_space.ggplot <- function(plot, borders = "tlbr") {
 free_space.alignpatches <- free_space.ggplot
 
 #' @export
-free_space.free_space <- function(plot, borders = "tlbr") {
-    assert_position(borders)
+free_space.free_space <- function(plot, spaces = "tlbr") {
+    assert_position(spaces)
     attr(plot, "free_spaces") <- union_position(
-        attr(plot, "free_spaces"), borders
+        attr(plot, "free_spaces"), spaces
     )
     plot
 }

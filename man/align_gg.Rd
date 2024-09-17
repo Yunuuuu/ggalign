@@ -60,9 +60,9 @@ plots along a single axis.
 \code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which axis title should be free from
 alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
 
-\item{free_spaces}{A character specifies the ggplot elements which won't
-count space sizes when alignment. If \code{NULL} (default), no space will be
-removed. See \code{\link[=free_space]{free_space()}} for allowed values.}
+\item{free_spaces}{A boolean value or a string containing one or more of
+\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which border spaces should be removed. If
+\code{NULL} (default), no space will be removed.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
