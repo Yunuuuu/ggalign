@@ -78,11 +78,11 @@ logo <- ggstack(data = mat_scaled) +
     # add another heatmap
     ggheatmap(expr$type) +
     # set the heatmap body width, and remove the spaces in the y-axis
-    hmanno(width = unit(2, "cm"), free_spaces = "y") +
+    hmanno(width = unit(2, "cm")) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation
-    hmanno("t") +
+    hmanno("t", free_spaces = "lr") +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
@@ -100,7 +100,7 @@ logo_tmp <- tempfile(fileext = ".png")
 ggplot2::ggsave(logo_tmp, plot = logo, device = "png", dpi = 1000L)
 hexSticker::sticker(
     logo_tmp,
-    package = "ggalign", s_x = 1.073, s_y = 0.85,
+    package = "ggalign", s_x = 1.02, s_y = 0.86,
     s_width = 0.72, s_height = 0.8,
     p_size = 80, p_y = 1.6, p_color = "#741140",
     h_fill = "white", h_color = "#db5d37", h_size = 0.8,
