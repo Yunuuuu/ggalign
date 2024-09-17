@@ -92,3 +92,6 @@ new_alignpatches <- function(patches, layout, theme) {
         class = "alignpatches"
     )
 }
+
+#' @export
+as.list.alignpatches <- function(x, ...) .subset2(x, "patches")
