@@ -25,16 +25,16 @@ free_vp(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...)
 object.}
 
 \item{axes}{Which axes shouldn't be aligned? A string containing
-one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{borders}{Which border shouldn't be aligned (\code{free_border})? A string
-containing one or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{labs}{Which axis labs to be free? A string containing one or more of
-\code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{spaces}{Which border spaces should be removed? A string containing one
-or more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{x}{A numeric vector or unit object specifying x-location.}
 

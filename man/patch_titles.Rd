@@ -23,8 +23,9 @@ This function extends ggplot2's title functionality, allowing you to add
 titles to each border of the plot: top, left, bottom, and right.
 }
 \details{
-You can also use \link[ggplot2:labs]{labs()} to specify titles for the top, left,
-bottom, and right borders of the plot.
+You can also use \link[ggplot2:labs]{labs()} to specify the titles (use arguments
+\code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}) for the top, left, bottom, and right borders of the
+plot.
 
 The appearance and alignment of these patch titles can be customized using
 \link[ggplot2:theme]{theme()}:

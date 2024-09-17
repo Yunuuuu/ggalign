@@ -1,4 +1,4 @@
-rd_values <- function(x, quote = TRUE, code = TRUE, sep = ",", final = "and") {
+rd_values <- function(x, quote = TRUE, code = TRUE, sep = ", ", final = "and") {
     if (quote) x <- paste0("\"", x, "\"")
     if (code) x <- paste0("`", x, "`")
     oxford_comma(x, sep = sep, final = final)

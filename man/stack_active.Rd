@@ -19,15 +19,15 @@ stack_active(
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
 \item{guides}{A boolean value or a string containing one or more of
-\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates Which guide should be collected. If \code{NULL}, no
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates Which guide should be collected. If \code{NULL}, no
 guides will be collected. Default: "tlbr".}
 
 \item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which axis title should be free from
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
 alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
-\code{"t"},\code{"l"},\code{"b"},and \code{"r"} indicates which border spaces should be removed. If
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
 \code{NULL} (default), no space will be removed.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.

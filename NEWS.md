@@ -8,7 +8,7 @@
 
 * add `patch` method for `gList`, `function`, `recordedplot`, `trellis`, `pheatmap`, `Heatmap`, `HeatmapAnnotation`, and `HeatmapList`
 
-* fix a bud in `wrap()` function where duplicated names in gtable cause some grobs missing
+* fix a bug in `wrap()` function where duplicated names in gtable cause some grobs missing
 
 * new `free_vp()` function to customize the viewport when aligning.
 

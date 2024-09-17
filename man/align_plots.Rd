@@ -40,7 +40,7 @@ either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
 \item{guides}{Which guide should be collected? A string containing one or
-more of \code{"t"},\code{"l"},\code{"b"},and \code{"r"}.}
+more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{title}{The text for the title.}
 
