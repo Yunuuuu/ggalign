@@ -132,8 +132,7 @@ alignment. If <code>NULL</code>, all axis title will be aligned. Default: "tlbr"
 <dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
 <dd><p>A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
-default is to not modify the data. Use <code>NULL</code>, if you don't want to modify
-anything.</p>
+default is <code>NULL</code>, which means we won't want to modify anything.</p>
 <p>Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all <code>geoms</code>.</p></dd>
@@ -211,7 +210,7 @@ annotation) or row (top or bottom annotation).</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
