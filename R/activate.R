@@ -14,7 +14,7 @@
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
 #' object. Only used when `position` is `NULL`.
 #' @param guides A boolean value or a string containing one or more of
-#' `r rd_values(.tlbr)` indicates Which guide should be collected. If `NULL`, no
+#' `r rd_values(.tlbr)` indicates which guide should be collected. If `NULL`, no
 #' guides will be collected. Default: "tlbr".
 #' @param free_labs A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which axis title should be free from
@@ -24,8 +24,7 @@
 #' `NULL` (default), no space will be removed.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
-#' default is to not modify the data. Use `NULL`, if you don't want to modify
-#' anything.
+#' default is `NULL`, which means we won't want to modify anything.
 #'
 #' Used to modify the data after layout has been created, but before the data is
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs

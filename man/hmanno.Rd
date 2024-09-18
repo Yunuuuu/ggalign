@@ -39,7 +39,7 @@ annotation.
 object. Only used when \code{position} is \code{NULL}.}
 
 \item{guides}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates Which guide should be collected. If \code{NULL}, no
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
 guides will be collected. Default: "tlbr".}
 
 \item{free_labs}{A boolean value or a string containing one or more of
@@ -52,8 +52,7 @@ alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
-default is to not modify the data. Use \code{NULL}, if you don't want to modify
-anything.
+default is \code{NULL}, which means we won't want to modify anything.
 
 Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
