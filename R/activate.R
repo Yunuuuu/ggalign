@@ -5,7 +5,7 @@
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
 #' @param size A [unit][grid::unit] object to set the total size of the heatmap
-#' annotation. This will only be used if `what` is a string of `"top"`,
+#' annotation. This will only be used if `position` is a string of `"top"`,
 #' `"left"`, `"bottom"`, or `"right"`.
 #'  - If position is `"top"` or `"bottom"`, `size` set the total height of the
 #' annotation.

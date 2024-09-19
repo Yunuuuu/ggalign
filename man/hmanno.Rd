@@ -26,7 +26,7 @@ values are follows:
 }}
 
 \item{size}{A \link[grid:unit]{unit} object to set the total size of the heatmap
-annotation. This will only be used if \code{what} is a string of \code{"top"},
+annotation. This will only be used if \code{position} is a string of \code{"top"},
 \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \itemize{
 \item If position is \code{"top"} or \code{"bottom"}, \code{size} set the total height of the
