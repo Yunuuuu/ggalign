@@ -3,14 +3,14 @@
 <url><loc>https://yunuuuu.github.io/ggalign/LICENSE-text.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/LICENSE.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/FAQ.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/align-layout.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/align-plot.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/index.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/layout-heatmap.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/articles/layout-stack.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/layout-customize.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/layout-plot.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/more-examples.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/articles/single-heatmap.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/articles/stack-layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/authors.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/news/index.html</loc></url>
@@ -34,6 +34,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_stat.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggplot2-ggproto.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/hclust2.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/heatmap_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/hmanno.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/inset.html</loc></url>
@@ -41,8 +42,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/is.ggstack.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/layout-add.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/layout-operator.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/layout_heatmap.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/layout_stack.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/layout_annotation.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/layout_theme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch.Heatmap.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch.alignpatches.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch.formula.html</loc></url>
@@ -60,6 +61,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/reexports.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/show-Layout-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_active.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/wrap.html</loc></url>
 </urlset>
 
