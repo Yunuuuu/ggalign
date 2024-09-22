@@ -1,5 +1,5 @@
 ########################################
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList getFromNamespace
 #' @export
 alignpatch.patchwork <- function(x) {
     rlang::check_installed("patchwork", "to align patchwork")
@@ -25,11 +25,10 @@ alignpatch.patchwork <- function(x) {
     } else {
         layout$guides <- NULL
     }
-    layout$title <- .subset2(annotation, "title")
-    layout$subtitle <- .subset2(annotation, "subtitle")
-    layout$caption <- .subset2(annotation, "caption")
     alignpatch(new_alignpatches(
-        lapply(plots, alignpatch), layout,
+        lapply(plots, alignpatch),
+        design = layout,
+        annotation = annotation,
         theme = .subset2(annotation, "theme")
     ))
 }
