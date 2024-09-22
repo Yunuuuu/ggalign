@@ -5,6 +5,17 @@
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
+#' @param ans Whether to assign the final results into the 'ans' variable.
+#' @noRd
+body_append <- function(fn, ..., ans = TRUE) {
+    args <- rlang::fn_fmls(fn)
+    body <- rlang::fn_body(fn)
+    body <- as.list(body)
+    if (ans) body[[length(body)]] <- rlang::expr(ans <- !!body[[length(body)]])
+    body <- as.call(c(body, rlang::enexprs(...)))
+    rlang::new_function(args, body)
+}
+
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
