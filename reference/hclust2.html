@@ -81,15 +81,18 @@
 <code>"minkowski"</code>.  Correlation coefficient can be also used, including
 <code>"pearson"</code>, <code>"spearman"</code> or <code>"kendall"</code>. In this way, <code>1 - cor</code> will be used
 as the distance. In addition, you can also provide a <a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a>
-object directly or a function return a <a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a> object.</p></dd>
+object directly or a function return a <a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a> object. Use
+<code>NULL</code>, if you don't want to calculate the distance.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>A string of the agglomeration method to be used. This should be
 (an unambiguous abbreviation of) one of <code>"ward.D"</code>, <code>"ward.D2"</code>, <code>"single"</code>,
 <code>"complete"</code>, <code>"average"</code> (= UPGMA), <code>"mcquitty"</code> (= WPGMA), <code>"median"</code> (=
-WPGMC) or <code>"centroid"</code> (= UPGMC). you can also provide a function which
-returns a <a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a> object.</p></dd>
+WPGMC) or <code>"centroid"</code> (= UPGMC). You can also provide a function which
+accepts the distance and returns a <a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a> object.
+Alternative, you can supply an object which can be coerced to
+<a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a>.</p></dd>
 
 
 <dt id="arg-use-missing">use_missing<a class="anchor" aria-label="anchor" href="#arg-use-missing"></a></dt>

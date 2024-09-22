@@ -348,13 +348,15 @@ appearance.</p>
 <div class="section level2">
 <h2 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
 </h2>
+<div class="section level3">
+<h3 id="distance-methods">Distance methods<a class="anchor" aria-label="anchor" href="#distance-methods"></a>
+</h3>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.patch_title.right <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"pre-defined distance method (1 - pearson)"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -369,11 +371,88 @@ appearance.</p>
 <span><span class="co">#   row_dend_reorder = FALSE,</span></span>
 <span><span class="co">#   column_dend_reorder = FALSE</span></span>
 <span><span class="co"># )</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="va">dist</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"a function that calculates distance matrix"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.patch_title.top <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ComplexHeatmap::Heatmap(mat,</span></span>
+<span><span class="co">#     name = "mat", clustering_distance_rows = function(m) dist(m),</span></span>
+<span><span class="co">#     column_title = "a function that calculates distance matrix",</span></span>
+<span><span class="co">#     row_dend_reorder = FALSE,</span></span>
+<span><span class="co">#     column_dend_reorder = FALSE</span></span>
+<span><span class="co"># )</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="clustering-methods">Clustering methods<a class="anchor" aria-label="anchor" href="#clustering-methods"></a>
+</h3>
+<p>Method to perform hierarchical clustering can be specified by
+<code>method</code> argument, Possible methods are those supported in
+<code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust()</a></code> function.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"single"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ComplexHeatmap::Heatmap(mat,</span></span>
+<span><span class="co">#     name = "mat",</span></span>
+<span><span class="co">#     clustering_method_rows = "single",</span></span>
+<span><span class="co">#     row_dend_reorder = FALSE,</span></span>
+<span><span class="co">#     column_dend_reorder = FALSE</span></span>
+<span><span class="co"># )</span></span></code></pre></div>
+<p>Use <code>distance = NULL</code> if you don’t want to calculate the
+distance.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="cn">NULL</span>, method <span class="op">=</span> <span class="fu">cluster</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/cluster/man/diana.html" class="external-link">diana</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="cn">NULL</span>, method <span class="op">=</span> <span class="fu">cluster</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/cluster/man/agnes.html" class="external-link">agnes</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="render-dendrograms">Render dendrograms<a class="anchor" aria-label="anchor" href="#render-dendrograms"></a>
+</h3>
+<p>It’s easy for <code>ggalign</code> to color the branches by setting
+the color mapping, since <code>ggalign</code> will add the
+<code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code> results into the underlying data.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -400,17 +479,18 @@ appearance.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gtable_0.3.5      jsonlite_1.8.9    highr_0.11        dplyr_1.1.4      </span></span>
-<span><span class="co">#&gt;  [5] compiler_4.4.1    tidyselect_1.2.1  tidyr_1.3.1       jquerylib_0.1.4  </span></span>
-<span><span class="co">#&gt;  [9] systemfonts_1.1.0 scales_1.3.0      textshaping_0.4.0 yaml_2.3.10      </span></span>
-<span><span class="co">#&gt; [13] fastmap_1.2.0     R6_2.5.1          labeling_0.4.3    generics_0.1.3   </span></span>
-<span><span class="co">#&gt; [17] knitr_1.48        tibble_3.2.1      desc_1.4.3        munsell_0.5.1    </span></span>
-<span><span class="co">#&gt; [21] bslib_0.8.0       pillar_1.9.0      rlang_1.1.4       utf8_1.2.4       </span></span>
-<span><span class="co">#&gt; [25] cachem_1.1.0      xfun_0.47         fs_1.6.4          sass_0.4.9       </span></span>
-<span><span class="co">#&gt; [29] cli_3.6.3         pkgdown_2.1.1     withr_3.0.1       magrittr_2.0.3   </span></span>
-<span><span class="co">#&gt; [33] digest_0.6.37     grid_4.4.1        lifecycle_1.0.4   vctrs_0.6.5      </span></span>
-<span><span class="co">#&gt; [37] evaluate_1.0.0    glue_1.7.0        farver_2.1.2      ragg_1.3.3       </span></span>
-<span><span class="co">#&gt; [41] fansi_1.0.6       colorspace_2.1-1  rmarkdown_2.28    purrr_1.0.2      </span></span>
-<span><span class="co">#&gt; [45] tools_4.4.1       pkgconfig_2.0.3   htmltools_0.5.8.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [5] compiler_4.4.1    tidyselect_1.2.1  cluster_2.1.6     tidyr_1.3.1      </span></span>
+<span><span class="co">#&gt;  [9] jquerylib_0.1.4   systemfonts_1.1.0 scales_1.3.0      textshaping_0.4.0</span></span>
+<span><span class="co">#&gt; [13] ggh4x_0.2.8       yaml_2.3.10       fastmap_1.2.0     R6_2.5.1         </span></span>
+<span><span class="co">#&gt; [17] labeling_0.4.3    generics_0.1.3    knitr_1.48        tibble_3.2.1     </span></span>
+<span><span class="co">#&gt; [21] desc_1.4.3        munsell_0.5.1     bslib_0.8.0       pillar_1.9.0     </span></span>
+<span><span class="co">#&gt; [25] rlang_1.1.4       utf8_1.2.4        cachem_1.1.0      xfun_0.47        </span></span>
+<span><span class="co">#&gt; [29] fs_1.6.4          sass_0.4.9        cli_3.6.3         pkgdown_2.1.1    </span></span>
+<span><span class="co">#&gt; [33] withr_3.0.1       magrittr_2.0.3    digest_0.6.37     grid_4.4.1       </span></span>
+<span><span class="co">#&gt; [37] lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.0    glue_1.7.0       </span></span>
+<span><span class="co">#&gt; [41] farver_2.1.2      ragg_1.3.3        fansi_1.0.6       colorspace_2.1-1 </span></span>
+<span><span class="co">#&gt; [45] rmarkdown_2.28    purrr_1.0.2       tools_4.4.1       pkgconfig_2.0.3  </span></span>
+<span><span class="co">#&gt; [49] htmltools_0.5.8.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
