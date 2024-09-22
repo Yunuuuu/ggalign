@@ -65,7 +65,7 @@
 <span>  free_labs <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  what <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -107,7 +107,10 @@ change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> object to rendering the guides, title, subtitle, caption, margins and background. Only used when position is <code>NULL</code>.</p></dd>
+<dd><p>A <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> object, which will be added to all
+plots in the layout. Use <code>NULL</code> if you don't want to any theme components to
+be added. Use <a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>, if you want to inherit from the
+parent layout.</p></dd>
 
 
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
