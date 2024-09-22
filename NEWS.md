@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* new `layout_annotation()` and `layout_theme()` to modify the layout components
+
 * `borders` argument in `free_space()` has been renamed to `spaces`
 
 * {tibble} is now removed from the dependency
