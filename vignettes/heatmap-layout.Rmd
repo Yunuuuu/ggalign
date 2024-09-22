@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`layout_heatmap()` utilizes the grammar of graphics to construct the heatmap and
+`heatmap_layout()` utilizes the grammar of graphics to construct the heatmap and
 heatmap annotations. You can also use the alias `ggheatmap()`.
 
 ```{r setup}
@@ -54,7 +54,7 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-You can treat the `layout_heatmap()` object as a normal ggplot2 object with a
+You can treat the `heatmap_layout()` object as a normal ggplot2 object with a
 default `mapping` and `data`. You can add `ggplot2` elements as usual.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
@@ -69,7 +69,7 @@ ggheatmap(small_mat, filling = FALSE)
 ## Heatmap annotations
 Heatmap annotations provide additional information for the rows or columns of
 the heatmap and can be placed at the `top`, `left`, `bottom`, or `right`. An
-annotation is a `layout_stack()` object internally, capable of holding multiple
+annotation is a `stack_layout()` object internally, capable of holding multiple
 plots.
 
 By default, `ggheatmap()` does not initialize an active context, so all

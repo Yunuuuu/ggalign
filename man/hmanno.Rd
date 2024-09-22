@@ -65,7 +65,7 @@ when position is not \code{NULL}. See \link{stack_active} for details.}
 }
 \value{
 A \code{heatmap_active} object which can be added into
-\link[=layout_heatmap]{HeatmapLayout}.
+\link[=heatmap_layout]{HeatmapLayout}.
 }
 \description{
 Determine the active context of heatmap layout

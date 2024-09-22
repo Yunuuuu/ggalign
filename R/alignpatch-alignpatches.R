@@ -11,7 +11,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
     patch_gtable = function(self, guides, plot = self$plot) {
         patches <- .subset2(plot, "patches")
-        layout <- .subset2(plot, "layout")
+        layout <- .subset2(plot, "design")
 
         # complete the theme object
         theme <- complete_theme(.subset2(plot, "theme"))

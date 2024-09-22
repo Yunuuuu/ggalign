@@ -21,7 +21,7 @@
 \S4method{-}{Layout,ANY}(e1, e2)
 }
 \arguments{
-\item{e1}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
+\item{e1}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 
 \item{e2}{An object to be added to the plot.}
 }
@@ -34,15 +34,16 @@ Layout operator
 \details{
 In order to reduce code repetition \code{ggalign} provides two operators for
 adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-\code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.
+\code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.
 
 Like \code{patchwork}, \code{&} add the element to all plots in the plot. If the
-element is a \link[ggplot2:theme]{theme}, this will also modify the layout theme.
+element is a \link[ggplot2:theme]{theme}, this will also modify the layout
+theme.
 
 Unlike \code{patchwork}, the \code{-} operator adds ggplot2 elements (geoms, themes,
 facets, etc.) rather than a ggplot plot. The key difference between \code{&} and
-\code{-} is in how they behave in \code{\link[=layout_heatmap]{layout_heatmap()}}. The \code{-} operator only
-applies the element to the current active context in \code{\link[=layout_heatmap]{layout_heatmap()}}.
+\code{-} is in how they behave in \code{\link[=heatmap_layout]{heatmap_layout()}}. The \code{-} operator only
+applies the element to the current active context in \code{\link[=heatmap_layout]{heatmap_layout()}}.
 Using \code{-} might seem unintuitive if you think of the operator as "subtract",
 the underlying reason is that \code{-} is the only operator in the same precedence
 group as \code{+}.

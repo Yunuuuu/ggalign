@@ -2,7 +2,7 @@
 # add annotation into annotation list
 #' Put plots horizontally or vertically
 #'
-#' `ggstack` is an alias of `layout_stack`.
+#' `ggstack` is an alias of `stack_layout`.
 #'
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
@@ -12,15 +12,15 @@
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-layout_stack <- function(data, direction = NULL, ...) {
+stack_layout <- function(data, direction = NULL, ...) {
     if (missing(data)) {
-        .layout_stack(
+        .stack_layout(
             data = NULL, nobs = NULL,
             direction = direction,
             call = current_call()
         )
     } else {
-        UseMethod("layout_stack")
+        UseMethod("stack_layout")
     }
 }
 
@@ -44,38 +44,38 @@ methods::setClass(
 )
 
 #' @export
-#' @rdname layout_stack
-ggstack <- layout_stack
+#' @rdname stack_layout
+ggstack <- stack_layout
 
 #' @export
-layout_stack.matrix <- function(data, ...) {
-    .layout_stack(
+stack_layout.matrix <- function(data, ...) {
+    .stack_layout(
         data = data, nobs = nrow(data), ...,
         call = current_call()
     )
 }
 
 #' @export
-layout_stack.data.frame <- layout_stack.matrix
+stack_layout.data.frame <- stack_layout.matrix
 
 #' @export
-layout_stack.numeric <- function(data, ...) {
-    .layout_stack(
+stack_layout.numeric <- function(data, ...) {
+    .stack_layout(
         data = as.matrix(data), nobs = length(data), ...,
         call = current_call()
     )
 }
 
 #' @export
-layout_stack.character <- layout_stack.numeric
+stack_layout.character <- stack_layout.numeric
 
 #' @export
-layout_stack.NULL <- function(data, ...) {
-    .layout_stack(data = data, nobs = NULL, ..., call = current_call())
+stack_layout.NULL <- function(data, ...) {
+    .stack_layout(data = data, nobs = NULL, ..., call = current_call())
 }
 
 #' @importFrom grid unit
-.layout_stack <- function(data, nobs, direction = NULL,
+.stack_layout <- function(data, nobs, direction = NULL,
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     methods::new("StackLayout",
@@ -87,12 +87,12 @@ layout_stack.NULL <- function(data, ...) {
         ),
         nobs = nobs,
         # following parameters are used by ggsave
-        theme = default_theme()
+        theme = NULL
     )
 }
 
 #' @export
-layout_stack.default <- function(data, ...) {
+stack_layout.default <- function(data, ...) {
     cli::cli_abort(c(
         paste(
             "{.arg data} must be a numeric or character vector,",

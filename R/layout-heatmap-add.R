@@ -9,9 +9,6 @@ layout_heatmap_add.default <- function(object, heatmap, object_name) {
 }
 
 #' @export
-layout_heatmap_add.NULL <- function(object, heatmap, object_name) heatmap
-
-#' @export
 layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
         cli::cli_abort(c(
@@ -77,7 +74,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     if (is.null(stack <- slot(heatmap, object))) {
         data <- heatmap@data
         if (!is_horizontal(direction)) data <- t(data)
-        stack <- layout_stack(data = data, direction = direction)
+        stack <- stack_layout(data = data, direction = direction)
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))
 

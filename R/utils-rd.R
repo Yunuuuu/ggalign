@@ -4,10 +4,14 @@ rd_values <- function(x, quote = TRUE, code = TRUE, sep = ", ", final = "and") {
     oxford_comma(x, sep = sep, final = final)
 }
 
-rd_theme <- function() {
+rd_layout_theme <- function() {
     paste(
         "A [theme()][ggplot2::theme] object to rendering the guides",
         "title, subtitle, caption, margins and background.",
         sep = ", "
     )
+}
+
+rd_layout <- function() {
+    "[heatmap_layout()] or [stack_layout()] object"
 }

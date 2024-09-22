@@ -7,7 +7,7 @@
 \S4method{show}{Layout}(object)
 }
 \arguments{
-\item{object}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
+\item{object}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 }
 \value{
 The input invisiblely.

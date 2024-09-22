@@ -17,7 +17,7 @@
 #' @param guides Which guide should be collected? A string containing one or
 #' more of `r rd_values(.tlbr)`.
 #' @inheritParams ggplot2::labs
-#' @param theme `r rd_theme()`
+#' @param theme `r rd_layout_theme()`
 #' @return A `alignpatches` object.
 #' @examples
 #' # directly copied from patchwork
@@ -52,11 +52,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         title = NULL, subtitle = NULL, caption = NULL,
                         theme = NULL) {
     plots <- rlang::dots_list(..., .ignore_empty = "all")
-    assert_bool(byrow)
-    if (!is.null(guides)) {
-        assert_position(guides)
-        guides <- setup_position(guides)
-    }
     assert_s3_class(theme, "theme", null_ok = TRUE)
     nms <- names(plots)
     if (!is.null(nms) && is.character(design)) {
@@ -71,27 +66,85 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
     design <- as_areas(design)
     patches <- lapply(plots, alignpatch)
-    new_alignpatches(patches, list(
+    new_alignpatches(patches,
+        design = layout_design(
+            ncol = ncol,
+            nrow = nrow,
+            byrow = byrow,
+            widths = widths,
+            heights = heights,
+            design = design,
+            guides = guides
+        ),
+        annotation = layout_annotation(
+            title = title,
+            subtitle = subtitle,
+            caption = caption
+        ),
+        theme = theme
+    )
+}
+
+new_alignpatches <- function(patches, design, annotation, theme) {
+    structure(
+        list(
+            patches = patches, design = design,
+            annotation = annotation, theme = theme
+        ),
+        # Will ensure serialisation includes a link to the `ggalign`
+        # namespace
+        `_namespace` = namespace_link,
+        class = "alignpatches"
+    )
+}
+
+#############################################################
+#' @inherit patchwork::plot_layout
+#' @inheritParams patchwork::plot_layout
+#' @importFrom ggplot2 waiver
+#' @noRd
+layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
+                          widths = waiver(), heights = waiver(),
+                          design = waiver(), guides = waiver()) {
+    if (!is.waive(byrow)) assert_bool(byrow)
+    if (!is.waive(design)) design <- as_areas(design)
+    if (!is.waive(guides) && !is.null(guides)) {
+        assert_position(guides)
+        guides <- setup_position(guides)
+    }
+    structure(list(
         ncol = ncol,
         nrow = nrow,
         byrow = byrow,
         widths = widths,
         heights = heights,
         design = design,
-        guides = guides,
-        title = title, subtitle = subtitle, caption = caption
-    ), theme = theme)
+        guides = guides
+    ), class = c("layout_design", "plot_layout"))
 }
 
-new_alignpatches <- function(patches, layout, theme) {
+#' Annotate the whole layout
+#'
+#' @inheritParams ggplot2::labs
+#' @return A `layout_annotation` object to be added into `r rd_layout()`.
+#' @importFrom ggplot2 waiver
+#' @export
+layout_annotation <- function(title = waiver(), subtitle = waiver(),
+                              caption = waiver()) {
     structure(
-        list(patches = patches, layout = layout, theme = theme),
-        # Will ensure serialisation includes a link to the `ggalign`
-        # namespace
-        `_namespace` = ggalign_namespace_link,
-        class = "alignpatches"
+        list(title = title, subtitle = subtitle, caption = caption),
+        class = c("layout_annotation", "plot_annotation")
     )
 }
 
+#' Modify components of the layout theme
+#' @inherit ggplot2::theme description sections references author source note format
+#' @inheritDotParams ggplot2::theme
+#' @note Only used to render the `guides`, `title`, `subtitle`, `caption`,
+#' `margins` and `background`.
+#' @return A `layout_theme` object to be added into `r rd_layout()`.
+#' @examples
+#' layout_theme(plot.background = element_rect(fill = "green"))
+#' @importFrom ggplot2 theme
 #' @export
-as.list.alignpatches <- function(x, ...) .subset2(x, "patches")
+layout_theme <- function(...) add_class(ggplot2::theme(...), "layout_theme")

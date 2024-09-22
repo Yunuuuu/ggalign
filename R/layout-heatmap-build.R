@@ -24,6 +24,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 
     design <- trim_area(do.call(c, design[keep]))
     params <- x@params
+    annotation <- x@annotation
     align_plots(
         !!!.subset(plots, keep),
         design = design,
@@ -31,7 +32,10 @@ ggalign_build.HeatmapLayout <- function(x) {
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
         guides = .subset2(params, "guides") %|w|% "tlbr",
-        theme = x@theme
+        title = .subset2(annotation, "title"),
+        subtitle = .subset2(annotation, "subtitle"),
+        caption = .subset2(annotation, "caption"),
+        theme = x@theme %||% default_theme()
     )
 }
 

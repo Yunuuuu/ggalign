@@ -44,11 +44,11 @@ It is important to note that all \verb{align_*} functions consider the \code{row
 the observations. It means the \code{NROW(data)} must return the same number with
 the parallel \code{layout} axis.
 \itemize{
-\item \code{layout_heatmap}: for column annotation, the \code{layout} data will be
+\item \code{heatmap_layout}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.
-\item \code{layout_stack}: the \code{layout} data will be used as it is since we place all
+\item \code{stack_layout}: the \code{layout} data will be used as it is since we place all
 plots along a single axis.
 }}
 

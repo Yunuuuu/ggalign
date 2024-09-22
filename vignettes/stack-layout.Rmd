@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`layout_stack()` put plots horizontally or vertically. You can also use the
+`stack_layout()` put plots horizontally or vertically. You can also use the
 alias `ggstack()`.
 
 ```{r setup}
@@ -60,7 +60,7 @@ to vertical, use the `direction` argument:
 ggstack(small_mat, "v") + align_dendro()
 ```
 
-Unlike `layout_heatmap()`/`ggheatmap()`, data frames are not automatically
+Unlike `heatmap_layout()`/`ggheatmap()`, data frames are not automatically
 converted into a matrix within `ggstack()`.
 
 When using data frames, be cautious as many `align_*()` functions only accept
@@ -91,7 +91,7 @@ For more information on adding plots, refer to the vignette:
 
 ## Heatmap plot
 Besides the `align_*()` functions, we can also add the
-`layout_heatmap()`/`ggheatmap()` into the stack layout.
+`heatmap_layout()`/`ggheatmap()` into the stack layout.
 
 ## Session information
 ```{r}

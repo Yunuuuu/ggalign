@@ -13,7 +13,7 @@
 \S4method{+}{Layout,ANY}(e1, e2)
 }
 \arguments{
-\item{e1}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
+\item{e1}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 
 \item{e2}{An object to be added to the plot, including \link[ggplot2:gg-add]{gg}
 elements or \link{align} object.}

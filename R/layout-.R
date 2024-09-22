@@ -1,10 +1,10 @@
 # Will ensure serialisation includes a link to the ggalign namespace
 # Copied from patchwork
-ggalign_namespace_link <- function() NULL
+namespace_link <- function() NULL
 
 # https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
 # Here we use S4 object to override the double dispatch of `+.gg` method
-#
+# TODO: use S7
 #' A `Layout` object
 #'
 #' A `Layout` object defines how to place the plots.
@@ -13,11 +13,14 @@ ggalign_namespace_link <- function() NULL
 methods::setClass("Layout",
     list(
         active = "ANY",
-        # used by `ggsave`
-        theme = "ANY",
+        # control the layout, `theme` will also be used by `ggsave`
+        annotation = "list", theme = "ANY",
         `_namespace` = "ANY"
     ),
-    prototype = list(active = NULL, `_namespace` = ggalign_namespace_link)
+    prototype = list(
+        active = NULL, annotation = list(),
+        `_namespace` = namespace_link
+    )
 )
 
 is.layout <- function(x) methods::is(x, "Layout")
@@ -34,7 +37,7 @@ alignpatch.Layout <- function(x) alignpatch(ggalign_build(x))
 
 #' Print Layout object
 #'
-#' @param object A [layout_heatmap()] or [layout_stack()] object.
+#' @param object A `r rd_layout()`.
 #' @return The input invisiblely.
 #' @importFrom methods show
 #' @export
@@ -60,7 +63,7 @@ methods::setMethod("$", "Layout", function(x, name) {
 #############################################################
 #' Add components to `Layout`
 #'
-#' @param e1 A [layout_heatmap()] or [layout_stack()] object.
+#' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
 #' elements or [align] object.
 #' @return A modified `Layout` object.
@@ -74,6 +77,7 @@ methods::setMethod("$", "Layout", function(x, name) {
 NULL
 
 #' @rdname layout-add
+#' @importFrom utils modifyList
 #' @export
 methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
     if (missing(e2)) {
@@ -82,11 +86,30 @@ methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
             "i" = "Did you accidentally put {.code +} on a new line?"
         ))
     }
+    if (is.null(e2)) return(e1) # styler: off
+    if (inherits(e2, "layout_theme")) {
+        if (is.null(e1@theme)) {
+            e1@theme <- e2
+        } else {
+            e1@theme <- e1@theme + e2
+        }
+        return(e1)
+    }
+    if (inherits(e2, "layout_annotation")) {
+        e2 <- e2[!vapply(e2, is.waive, logical(1L), USE.NAMES = FALSE)]
+        e1@annotation <- modifyList(e1@annotation, e2, keep.null = TRUE)
+        return(e1)
+    }
+
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
     layout_add(e1, e2, e2name)
 })
+
+is_layout_components <- function(x) {
+    inherits(x, "layout_theme") || inherits(x, "layout_annotation")
+}
 
 #' @keywords internal
 layout_add <- function(layout, object, object_name) {
@@ -109,20 +132,21 @@ layout_add.StackLayout <- function(layout, object, object_name) {
 #' @details
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' [layout_heatmap()] or [layout_stack()] object.
+#' `r rd_layout()`.
 #'
 #' Like `patchwork`, `&` add the element to all plots in the plot. If the
-#' element is a [theme][ggplot2::theme], this will also modify the layout theme.
+#' element is a [theme][ggplot2::theme], this will also modify the layout
+#' theme.
 #'
 #' Unlike `patchwork`, the `-` operator adds ggplot2 elements (geoms, themes,
 #' facets, etc.) rather than a ggplot plot. The key difference between `&` and
-#' `-` is in how they behave in [layout_heatmap()]. The `-` operator only
-#' applies the element to the current active context in [layout_heatmap()].
+#' `-` is in how they behave in [heatmap_layout()]. The `-` operator only
+#' applies the element to the current active context in [heatmap_layout()].
 #' Using `-` might seem unintuitive if you think of the operator as "subtract",
 #' the underlying reason is that `-` is the only operator in the same precedence
 #' group as `+`.
 #'
-#' @param e1 A [layout_heatmap()] or [layout_stack()] object.
+#' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot.
 #' @return A modified `Layout` object.
 #' @examples
@@ -154,14 +178,21 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
         ))
     }
     if (is.null(e2)) return(e1) # styler: off
+    if (is_layout_components(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code &} to control the layout theme or annotation",
+            i = "Try to use {.code +} instead"
+        ))
+    }
+
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
     e1 <- layout_and_add(e1, e2, e2name)
 
-    # we won't remove the margins around the layout
+    # to align with `patchwork`, we also modify the layout theme
+    # when using `&` to add the theme object.
     if (inherits(e2, "theme")) {
-        e2$plot.margin <- NULL
         e1@theme <- e1@theme + e2
     }
     e1
@@ -194,6 +225,12 @@ methods::setMethod("-", c("Layout", "ANY"), function(e1, e2) {
         ))
     }
     if (is.null(e2)) return(e1) # styler: off
+    if (is_layout_components(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code -} to control the layout theme or annotation",
+            i = "Try to use {.code +} instead"
+        ))
+    }
 
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
@@ -219,7 +256,7 @@ layout_subtract.StackLayout <- function(layout, object, object_name) {
 ############################################################
 #' Get the statistics from the layout
 #'
-#' @param x A [layout_heatmap()] or [layout_stack()] object.
+#' @param x A `r rd_layout()`.
 #' @param ... Not used currently.
 #' @return The statistics
 #' @export
@@ -240,6 +277,7 @@ ggalign_stat.StackLayout <- function(x, ..., what) {
     .subset2(.subset2(x@plots, what), "statistics")
 }
 
+############################################################
 ############################################################
 # layout should be one of "index", "nobs", "panel"
 get_layout <- function(x, layout, ...) UseMethod("get_layout")

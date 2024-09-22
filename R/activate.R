@@ -29,11 +29,11 @@
 #' Used to modify the data after layout has been created, but before the data is
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
-#' @param theme `r rd_theme()` Only used when position is `NULL`.
+#' @param theme `r rd_layout_theme()` Only used when position is `NULL`.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
 #' @return A `heatmap_active` object which can be added into
-#' [HeatmapLayout][layout_heatmap].
+#' [HeatmapLayout][heatmap_layout].
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
@@ -86,11 +86,11 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'      Usually you are waive to use this, since the adding procedure can be
 #'      easily changed.
 #'    * `NULL`: Remove any active context, this is useful when the active
-#'      context is a [layout_heatmap()] object, where any `Align` objects will
+#'      context is a [heatmap_layout()] object, where any `Align` objects will
 #'      be added into the heatmap. By removing the active context, we can add
-#'      `Align` object into the [layout_stack()] .
+#'      `Align` object into the [stack_layout()] .
 #' @return A `stack_active` object which can be added into
-#' [StackLayout][layout_stack].
+#' [StackLayout][stack_layout].
 #' @examples
 #' ggstack(matrix(1:9, nrow = 3L)) +
 #'     ggheatmap() +

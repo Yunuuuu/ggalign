@@ -13,7 +13,7 @@ ggalign_stat(x, ...)
 \method{ggalign_stat}{StackLayout}(x, ..., what)
 }
 \arguments{
-\item{x}{A \code{\link[=layout_heatmap]{layout_heatmap()}} or \code{\link[=layout_stack]{layout_stack()}} object.}
+\item{x}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 
 \item{...}{Not used currently.}
 

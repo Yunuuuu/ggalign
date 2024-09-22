@@ -44,15 +44,17 @@ grid.draw.alignpatches <- function(x, recording = TRUE) {
 #' @export
 ggalign_build.alignpatches <- function(x) x
 
-#' @importFrom ggplot2 find_panel element_render theme
+#' @importFrom ggplot2 find_panel element_render theme theme_get
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom rlang arg_match0
 #' @export
 ggalign_gtable.alignpatches <- function(x) {
-    layout <- .subset2(x, "layout")
-    theme <- .subset2(x, "theme")
+    annotation <- .subset2(x, "annotation")
 
-    # use complete_theme() when ggplot2 release
+    # ensure theme has no missing value
+    theme <- .subset2(x, "theme") %||% theme_get()
+
+    # `TODO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
     x$theme <- theme
     table <- alignpatch(x)$patch_gtable()
@@ -62,21 +64,22 @@ ggalign_gtable.alignpatches <- function(x) {
     # Add title, subtitle, and caption -------------------
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
-        theme, "plot.title", .subset2(layout, "title"),
+        theme = theme, "plot.title",
+        .subset2(annotation, "title"),
         margin_y = TRUE, margin_x = TRUE
     )
     title_height <- grobHeight(title)
 
     # Subtitle
     subtitle <- element_render(
-        theme, "plot.subtitle", .subset2(layout, "subtitle"),
+        theme, "plot.subtitle", .subset2(annotation, "subtitle"),
         margin_y = TRUE, margin_x = TRUE
     )
     subtitle_height <- grobHeight(subtitle)
 
     # whole plot annotation
     caption <- element_render(
-        theme, "plot.caption", .subset2(layout, "caption"),
+        theme, "plot.caption", .subset2(annotation, "caption"),
         margin_y = TRUE, margin_x = TRUE
     )
     caption_height <- grobHeight(caption)

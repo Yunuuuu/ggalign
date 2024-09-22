@@ -191,9 +191,6 @@ layout_stack_add.labels <- layout_stack_add.gg
 layout_stack_add.facetted_pos_scales <- layout_stack_add.gg
 
 #' @export
-layout_stack_add.NULL <- function(object, stack, object_name) stack
-
-#' @export
 layout_stack_add.default <- function(object, stack, object_name) {
     cli::cli_abort("Cannot add {.code {object_name}} into the stack layout")
 }

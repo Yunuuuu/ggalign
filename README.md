@@ -30,11 +30,11 @@ remotes::install_github("Yunuuuu/ggalign")
 
 `ggalign` pacakge provides two layout to arrange ggplot objects:
 
-- `layout_heatmap()`/`ggheatmap()`: Arrange ggplot into a Heatmap
-  layout. See `vignette("layout-heatmap")` for details.
+- `heatmap_layout()`/`ggheatmap()`: Arrange ggplot into a Heatmap
+  layout. See `vignette("heatmap-layout")` for details.
 
-- `layout_stack()`/`ggstack()`: Arrange ggplot vertically or
-  horizontally. See `vignette("layout-stack")` for details.
+- `stack_layout()`/`ggstack()`: Arrange ggplot vertically or
+  horizontally. See `vignette("stack-layout")` for details.
 
 To further customize these layouts, we offer following functions:
 
@@ -46,7 +46,7 @@ To further customize these layouts, we offer following functions:
   clustering
 
 For more detailed instructions on customizing layouts, see the vignette:
-`vignette("align-layout")`.
+`vignette("layout-customize")`.
 
 Additionally, plots can be added in the layout with following functions:
 
@@ -55,18 +55,18 @@ Additionally, plots can be added in the layout with following functions:
   panel data.
 
 For more information on adding plots, refer to the vignette:
-`vignette("align-plot")`.
+`vignette("layout-plot")`.
 
 ## Documentation
 
 - [Heatmap
-  Layout](https://yunuuuu.github.io/ggalign/articles/layout-heatmap.html)
+  Layout](https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html)
 - [Layout
-  Customization](https://yunuuuu.github.io/ggalign/articles/align-layout.html)
+  Customization](https://yunuuuu.github.io/ggalign/articles/layout-customize.html)
 - [Layout
-  Plot](https://yunuuuu.github.io/ggalign/articles/align-plot.html)
+  Plot](https://yunuuuu.github.io/ggalign/articles/layout-plot.html)
 - [Stack
-  Layout](https://yunuuuu.github.io/ggalign/articles/layout-stack.html)
+  Layout](https://yunuuuu.github.io/ggalign/articles/stack-layout.html)
 - [Scales and
   Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
 

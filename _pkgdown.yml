@@ -5,11 +5,11 @@ template:
   light-switch: true
 
 reference:
-- title: Layout
+- title: Layout Class
   desc: A `Layout` object defines how to place the plots.
   contents:
-  - layout_heatmap
-  - layout_stack
+  - heatmap_layout
+  - stack_layout
 
 - title: Layout Building
   desc: >
@@ -22,6 +22,8 @@ reference:
   - hmanno
   - stack_active
   - layout-operator
+  - layout_annotation
+  - layout_theme
 
 - title: Layout Plot
   desc: >
@@ -85,10 +87,10 @@ articles:
 - title: Building plots
   navbar: ~
   contents:
-  - layout-heatmap
-  - align-layout
-  - align-plot
-  - layout-stack
+  - heatmap-layout
+  - layout-customize
+  - layout-plot
+  - stack-layout
   - scales-and-facets
 
 - title: FAQ

@@ -80,6 +80,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     if (is_empty(.subset2(patches, "plots"))) {
         return(list(plot = NULL, size = NULL))
     }
+    annotation <- x@annotation
     plot <- align_plots(
         !!!.subset2(patches, "plots"),
         design = area(
@@ -99,7 +100,10 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             do.call(unit.c, attr(patches, "sizes"))
         ),
         guides = guides %|w|% "tlbr",
-        theme = x@theme
+        title = .subset2(annotation, "title"),
+        subtitle = .subset2(annotation, "subtitle"),
+        caption = .subset2(annotation, "caption"),
+        theme = x@theme %||% default_theme()
     )
     list(plot = plot, size = .subset2(params, "size"))
 }

@@ -1,6 +1,6 @@
 #' Arrange plots around a Heatmap
 #'
-#' `ggheatmap` is an alias of `layout_heatmap`.
+#' `ggheatmap` is an alias of `heatmap_layout`.
 #'
 #' @param data A numeric or character vector, a data frame, and any other data
 #' which can be converted into a matrix. Simple vector will be converted into a
@@ -9,8 +9,10 @@
 #' will using `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
+#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
+#' object.
 #' @param filling A boolean value indicates whether to fill the heatmap. If you
-#' want to custom the filling style, you can set to `FALSE`.
+#' want to customize the filling style, you can set to `FALSE`.
 #' @inheritParams align
 #' @inheritParams ggplot2::ggplot
 #' @section ggplot2 specification:
@@ -35,21 +37,22 @@
 #' @examples
 #' ggheatmap(1:10)
 #' ggheatmap(letters)
+#' ggheatmap(matrix(rnorm(81), nrow = 9L))
 #' @importFrom ggplot2 aes
 #' @export
-layout_heatmap <- function(data, mapping = aes(),
+heatmap_layout <- function(data, mapping = aes(),
                            ...,
-                           filling = TRUE,
+                           width = NA, height = NA, filling = TRUE,
                            set_context = TRUE, order = NULL, name = NULL) {
     if (missing(data)) {
-        .layout_heatmap(
+        .heatmap_layout(
             data = NULL, mapping = mapping,
-            ..., filling = filling,
+            ..., width = width, height = height, filling = filling,
             set_context = set_context, order = order, name = name,
             nobs_list = list(), call = current_call()
         )
     } else {
-        UseMethod("layout_heatmap")
+        UseMethod("heatmap_layout")
     }
 }
 
@@ -63,13 +66,12 @@ methods::setClass(
         plot = "ANY",
         facetted_pos_scales = "ANY",
         params = "list",
-        set_context = "logical",
-        order = "integer",
-        name = "character",
-        # Used by the layout,
+        # If we regard heatmap layout as a plot, and put it into the stack
+        # layout, we need following arguments to control it's behavour
+        set_context = "logical", order = "integer", name = "character",
+        # Used by the layout itself,
         # top, left, bottom, right must be a StackLayout object.
-        top = "ANY", left = "ANY",
-        bottom = "ANY", right = "ANY",
+        top = "ANY", left = "ANY", bottom = "ANY", right = "ANY",
         panel_list = "list", index_list = "list", nobs_list = "list"
     ),
     prototype = list(
@@ -81,13 +83,13 @@ methods::setClass(
 )
 
 #' @export
-#' @rdname layout_heatmap
-ggheatmap <- layout_heatmap
+#' @rdname heatmap_layout
+ggheatmap <- heatmap_layout
 
-#' @importFrom ggplot2 waiver theme
+#' @importFrom ggplot2 waiver
 #' @export
-layout_heatmap.matrix <- function(data, ...) {
-    .layout_heatmap(
+heatmap_layout.matrix <- function(data, ...) {
+    .heatmap_layout(
         data = data, ...,
         nobs_list = list(x = ncol(data), y = nrow(data)),
         call = current_call()
@@ -95,26 +97,26 @@ layout_heatmap.matrix <- function(data, ...) {
 }
 
 #' @export
-layout_heatmap.NULL <- function(data, ...) {
-    .layout_heatmap(
+heatmap_layout.NULL <- function(data, ...) {
+    .heatmap_layout(
         data = data, nobs_list = list(),
         ..., call = current_call()
     )
 }
 
 #' @export
-layout_heatmap.formula <- function(data, ...) {
-    .layout_heatmap(
+heatmap_layout.formula <- function(data, ...) {
+    .heatmap_layout(
         data = allow_lambda(data), ...,
         nobs_list = list(), call = current_call()
     )
 }
 
 #' @export
-layout_heatmap.functon <- layout_heatmap.NULL
+heatmap_layout.functon <- heatmap_layout.NULL
 
 #' @export
-layout_heatmap.default <- function(data, ...) {
+heatmap_layout.default <- function(data, ...) {
     call <- current_call()
     data <- tryCatch(
         as.matrix(data),
@@ -125,7 +127,7 @@ layout_heatmap.default <- function(data, ...) {
             ), call = call)
         }
     )
-    .layout_heatmap(
+    .heatmap_layout(
         data = data, ...,
         nobs_list = list(x = ncol(data), y = nrow(data)),
         call = call
@@ -133,12 +135,14 @@ layout_heatmap.default <- function(data, ...) {
 }
 
 #' @importFrom ggplot2 aes
-.layout_heatmap <- function(data, mapping = aes(),
+.heatmap_layout <- function(data, mapping = aes(),
                             ...,
-                            filling = TRUE,
+                            width = NA, height = NA, filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
+    width <- check_size(width)
+    height <- check_size(height)
     assert_bool(filling, call = call)
     assert_bool(set_context, call = call)
     if (is.null(order) || is.na(order)) {
@@ -150,6 +154,7 @@ layout_heatmap.default <- function(data, ...) {
     } else if (!is.integer(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
     }
+    assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
     plot <- ggplot2::ggplot(mapping = mapping) +
         heatmap_theme()
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
@@ -178,9 +183,9 @@ layout_heatmap.default <- function(data, ...) {
         "HeatmapLayout",
         data = data,
         params = list(
+            width = width,
+            height = height,
             # following parameters can be controlled by `active` object.
-            width = unit(NA, "null"),
-            height = unit(NA, "null"),
             guides = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),
@@ -190,7 +195,7 @@ layout_heatmap.default <- function(data, ...) {
         order = order, name = name %||% NA_character_,
         plot = plot, nobs_list = nobs_list,
         # used by ggsave
-        theme = default_theme()
+        theme = NULL
     )
 }
 
