@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `hmanno()`, `stack_active()`, and `align_*()` functions gain a new argument `theme` to control the theme for the plot.
+
 * new `layout_annotation()` and `layout_theme()` to modify the layout components
 
 * `borders` argument in `free_space()` has been renamed to `spaces`
