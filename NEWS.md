@@ -1,5 +1,9 @@
 # ggalign 0.0.4
 
+* `method` in `hclust2()` can now return any objects which can be coerced into hclust, or you can provide such object directly in `method`.
+
+* `hclust2()` now can accept `distance = NULL`
+
 * `hmanno()`, `stack_active()`, and `align_*()` functions gain a new argument `theme` to control the theme for the plot.
 
 * new `layout_annotation()` and `layout_theme()` to modify the layout components

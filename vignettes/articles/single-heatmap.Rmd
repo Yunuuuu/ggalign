@@ -274,13 +274,13 @@ ggheatmap(mat) +
 ```
 
 # Clustering
+## Distance methods
 ```{r}
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(distance = "pearson") +
-    theme(plot.patch_title.right = element_text(face = "bold", size = 16)) +
     hmanno("t", size = unit(15, "mm")) +
     align_dendro() +
     patch_titles(top = "pre-defined distance method (1 - pearson)") +
@@ -293,6 +293,75 @@ ggheatmap(mat) +
 #   row_dend_reorder = FALSE,
 #   column_dend_reorder = FALSE
 # )
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_dendro(distance = dist) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    patch_titles(top = "a function that calculates distance matrix") +
+    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+# ComplexHeatmap::Heatmap(mat,
+#     name = "mat", clustering_distance_rows = function(m) dist(m),
+#     column_title = "a function that calculates distance matrix",
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
+```
+
+## Clustering methods
+Method to perform hierarchical clustering can be specified by `method` argument,
+Possible methods are those supported in `hclust()` function. 
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_dendro(method = "single") +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+# ComplexHeatmap::Heatmap(mat,
+#     name = "mat",
+#     clustering_method_rows = "single",
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
+```
+
+Use `distance = NULL` if you don't want to calculate the distance.
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_dendro(distance = NULL, method = cluster::diana) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro(distance = NULL, method = cluster::agnes) +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+## Render dendrograms
+It's easy for `ggalign` to color the branches by setting the color mapping,
+since `ggalign` will add the `cutree()` results into the underlying data.
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_dendro(aes(color = branch), k = 2L) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
 ```
 
 # Session information

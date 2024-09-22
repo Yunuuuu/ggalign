@@ -6,12 +6,15 @@
 #' `"minkowski"`.  Correlation coefficient can be also used, including
 #' `"pearson"`, `"spearman"` or `"kendall"`. In this way, `1 - cor` will be used
 #' as the distance. In addition, you can also provide a [dist][stats::dist]
-#' object directly or a function return a [dist][stats::dist] object.
+#' object directly or a function return a [dist][stats::dist] object. Use
+#' `NULL`, if you don't want to calculate the distance.
 #' @param method A string of the agglomeration method to be used. This should be
 #' (an unambiguous abbreviation of) one of `"ward.D"`, `"ward.D2"`, `"single"`,
 #' `"complete"`, `"average"` (= UPGMA), `"mcquitty"` (= WPGMA), `"median"` (=
-#' WPGMC) or `"centroid"` (= UPGMC). you can also provide a function which
-#' returns a [hclust][stats::hclust] object.
+#' WPGMC) or `"centroid"` (= UPGMC). You can also provide a function which
+#' accepts the distance and returns a [hclust][stats::hclust] object.
+#' Alternative, you can supply an object which can be coerced to
+#' [hclust][stats::hclust].
 #' @param use_missing An optional character string giving a method for computing
 #' covariances in the presence of missing values. This must be (an abbreviation
 #' of) one of the strings `"everything"`, `"all.obs"`, `"complete.obs"`,
@@ -30,6 +33,20 @@ hclust2 <- function(matrix,
                     distance = "euclidean",
                     method = "complete",
                     use_missing = "pairwise.complete.obs") {
+    call <- current_call() # used for message
+    method <- allow_lambda(method)
+    if (!is_string(method) && !is.function(method)) {
+        ans <- tryCatch(
+            stats::as.hclust(method),
+            error = function(cnd) {
+                cli::cli_abort(paste(
+                    "{.arg method} can only be a {.cls string},",
+                    "{.cls function} or an object coerced to {.cls hclust}"
+                ), call = call)
+            }
+        )
+        return(ans)
+    }
     distance <- allow_lambda(distance)
     if (is_string(distance)) {
         distance <- match.arg(
@@ -59,25 +76,27 @@ hclust2 <- function(matrix,
         }
     } else if (inherits(distance, "dist")) {
         d <- distance
+    } else if (is.null(distance)) {
+        d <- matrix
     } else {
         cli::cli_abort(paste(
             "{.arg distance} can only be a {.cls string}, {.cls dist}",
             "object, or a {.cls function} return {.cls dist}"
         ))
     }
-    method <- allow_lambda(method)
     if (is_string(method)) {
         ans <- stats::hclust(d, method = method)
     } else if (is.function(method)) {
         ans <- method(d)
-        if (inherits(ans, "hclust")) {
-            cli::cli_abort("{.arg method} must return a {.cls hclust} object")
-        }
-    } else {
-        cli::cli_abort(paste(
-            "{.arg method} can only be a {.cls string},",
-            "or a {.cls function} return {.cls hclust}"
-        ))
+        ans <- tryCatch(
+            stats::as.hclust(ans),
+            error = function(cnd) {
+                cli::cli_abort(paste(
+                    "{.arg method} must return an object which",
+                    "can be coerced to {.cls hclust}"
+                ), call = call)
+            }
+        )
     }
     ans
 }
