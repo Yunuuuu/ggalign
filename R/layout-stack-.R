@@ -83,7 +83,8 @@ stack_layout.NULL <- function(data, ...) {
         params = list(
             sizes = unit(rep_len(NA, 3L), "null"),
             guides = waiver(), plot_data = waiver(),
-            free_labs = waiver(), free_spaces = waiver()
+            free_labs = waiver(), free_spaces = waiver(),
+            theme = waiver()
         ),
         nobs = nobs,
         # following parameters are used by ggsave

@@ -10,7 +10,7 @@ stack_active(
   free_labs = NA,
   free_spaces = NA,
   plot_data = NA,
-  theme = NULL,
+  theme = NA,
   what = NULL
 )
 }
@@ -38,7 +38,10 @@ Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background. Only used when position is \code{NULL}.}
+\item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
+plots in the layout. Use \code{NULL} if you don't want to any theme components to
+be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
+parent layout.}
 
 \item{what}{What should get activated for the stack layout? Possible values
 are follows:

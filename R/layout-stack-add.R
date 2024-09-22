@@ -16,24 +16,30 @@ layout_stack_add.Align <- function(object, stack, object_name) {
 #' @importFrom methods slot
 #' @export
 layout_stack_add.stack_active <- function(object, stack, object_name) {
-    stack <- set_context(stack, object)
-    if (!is.null(sizes <- attr(object, "sizes"))) {
+    if (!is.waive(what <- .subset2(object, "what"))) {
+        stack <- set_context(stack, what)
+    }
+    if (!is.null(sizes <- .subset2(object, "sizes"))) {
         stack@params$sizes <- sizes
     }
-    if (!identical(guides <- attr(object, "guides"), NA)) {
+    if (!identical(guides <- .subset2(object, "guides"), NA)) {
         stack@params$guides <- guides
     }
-    if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
         stack@params$free_labs <- free_labs
     }
-    if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
         stack@params$free_spaces <- free_spaces
     }
-    if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
+    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
         stack@params$plot_data <- plot_data
     }
-    if (!is.null(theme <- attr(object, "theme"))) {
-        stack@theme <- stack@theme + theme
+    if (!identical(theme <- .subset2(object, "theme"), NA)) {
+        if (is.waive(stack@params$theme) || is.null(stack@params$theme)) {
+            stack@params$theme <- theme
+        } else {
+            stack@params$theme <- stack@params$theme + theme
+        }
     }
     stack
 }

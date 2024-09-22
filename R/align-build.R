@@ -1,6 +1,6 @@
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
-                        plot_data, free_labs, free_spaces) {
+                        plot_data, free_labs, free_spaces, theme) {
     if (is.null(.subset2(x, "plot"))) {
         return(list(plot = NULL, size = NULL))
     }
@@ -30,6 +30,7 @@ align_build <- function(x, panel, index,
     # we always set the default free_labs and free_spaces from the layout
     free_labs <- .subset2(x, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
+    theme <- .subset2(x, "theme") %|w|% theme
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
     # only when user use the internal facet, we'll
@@ -69,6 +70,7 @@ align_build <- function(x, panel, index,
             scales = scales, default_facet = default_facet
         )
     }
+    plot <- plot + theme
     if (!is.null(free_labs)) {
         plot <- free_lab(plot, free_labs)
     }

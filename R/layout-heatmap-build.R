@@ -43,7 +43,8 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
-                          free_labs = waiver(), free_spaces = waiver()) {
+                          free_labs = waiver(), free_spaces = waiver(),
+                          theme = waiver()) {
     params <- heatmap@params
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
@@ -82,18 +83,24 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     heatmap_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
     if (is.null(heatmap_spaces)) {
         horizontal_spaces <- vertical_spaces <- NULL
-    } else if (!is.waive(heatmap_spaces)) {
-        horizontal_spaces <- gsub("[lr]", "", heatmap_spaces)
-        vertical_spaces <- gsub("[tb]", "", heatmap_spaces)
-        if (nchar(horizontal_spaces) == 0L) horizontal_spaces <- NULL
-        if (nchar(vertical_spaces) == 0L) vertical_spaces <- NULL
-    } else {
+    } else if (is.waive(heatmap_spaces)) {
         # By default, we won't remove border sizes of the heatmap
         heatmap_spaces <- NULL
         # set child stack layout
         horizontal_spaces <- waiver()
         vertical_spaces <- waiver()
+    } else {
+        horizontal_spaces <- gsub("[lr]", "", heatmap_spaces)
+        vertical_spaces <- gsub("[tb]", "", heatmap_spaces)
+        if (nchar(horizontal_spaces) == 0L) horizontal_spaces <- NULL
+        if (nchar(vertical_spaces) == 0L) vertical_spaces <- NULL
     }
+
+    # inherit from the parent stack layout
+    theme <- .subset2(params, "theme") %|w|% theme
+
+    # by default, we won't add any theme components
+    heatmap_theme <- theme %|w|% NULL
 
     # read the plot ---------------------------------------
     p <- heatmap@plot
@@ -183,6 +190,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
             guides = guides,
             free_labs = free_labs,
             free_spaces = free_spaces,
+            theme = theme,
             extra_panel = panel,
             extra_index = index
         )
@@ -215,7 +223,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
-
+    p <- p + heatmap_theme
     if (!is.null(heatmap_labs)) {
         p <- free_lab(p, heatmap_labs)
     }

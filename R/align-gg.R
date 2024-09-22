@@ -50,7 +50,7 @@
 #' @export
 align_gg <- function(data = NULL, mapping = aes(), size = NULL,
                      free_labs = waiver(), free_spaces = waiver(),
-                     plot_data = waiver(),
+                     plot_data = waiver(), theme = waiver(),
                      limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
@@ -58,7 +58,7 @@ align_gg <- function(data = NULL, mapping = aes(), size = NULL,
         params = list(mapping = mapping),
         size = size, data = data %||% waiver(),
         free_labs = free_labs, free_spaces = free_spaces,
-        plot_data = plot_data,
+        plot_data = plot_data, theme = theme,
         facet = facet, limits = limits,
         set_context = set_context, order = order, name = name
     )

@@ -33,34 +33,39 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
 
 #' @export
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
-    if (is.na(object)) {
+    if (is.null(position <- .subset2(object, "position"))) {
         heatmap <- set_context(heatmap, NULL)
-        if (!identical(guides <- attr(object, "guides"), NA)) {
+        if (!identical(guides <- .subset2(object, "guides"), NA)) {
             heatmap@params$guides <- guides
         }
-        if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+        if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
             heatmap@params$free_labs <- free_labs
         }
-        if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+        if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
             heatmap@params$free_spaces <- free_spaces
         }
-        if (!is.null(width <- attr(object, "width"))) {
+        if (!is.null(width <- .subset2(object, "width"))) {
             heatmap@params$width <- width
         }
-        if (!is.null(height <- attr(object, "height"))) {
+        if (!is.null(height <- .subset2(object, "height"))) {
             heatmap@params$height <- height
         }
-        if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
+        if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
             heatmap@params$plot_data <- plot_data
         }
-        if (!is.null(theme <- attr(object, "theme"))) {
-            heatmap@theme <- heatmap@theme + theme
+        if (!identical(theme <- .subset2(object, "theme"), NA)) {
+            if (is.waive(heatmap@params$theme) ||
+                is.null(heatmap@params$theme)) {
+                heatmap@params$theme <- theme
+            } else {
+                heatmap@params$theme <- heatmap@params$theme + theme
+            }
         }
         return(heatmap)
     }
 
-    heatmap <- set_context(heatmap, object)
-    direction <- to_direction(object)
+    heatmap <- set_context(heatmap, position)
+    direction <- to_direction(position)
     axis <- to_coord_axis(direction)
 
     if (is.null(get_nobs(heatmap, axis))) {
@@ -71,7 +76,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     }
 
     # initialize the annotation stack ------------
-    if (is.null(stack <- slot(heatmap, object))) {
+    if (is.null(stack <- slot(heatmap, position))) {
         data <- heatmap@data
         if (!is_horizontal(direction)) data <- t(data)
         stack <- stack_layout(data = data, direction = direction)
@@ -87,25 +92,32 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack@params$size <- unit(NA, "null")
     }
 
-    if (!is.null(size <- attr(object, "size"))) {
+    if (!is.null(size <- .subset2(object, "size"))) {
         stack@params$size <- size
     }
-    if (!identical(guides <- attr(object, "guides"), NA)) {
+    if (!identical(guides <- .subset2(object, "guides"), NA)) {
         stack@params$guides <- guides
     }
-    if (!identical(free_labs <- attr(object, "free_labs"), NA)) {
+    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
         stack@params$free_labs <- free_labs
     }
-    if (!identical(free_spaces <- attr(object, "free_spaces"), NA)) {
+    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
         stack@params$free_spaces <- free_spaces
     }
-    if (!identical(plot_data <- attr(object, "plot_data"), NA)) {
+    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
         stack@params$plot_data <- plot_data
     }
-    if (!is.waive(what <- attr(object, "what"))) {
+    if (!is.waive(what <- .subset2(object, "what"))) {
         stack <- set_context(stack, what)
     }
-    slot(heatmap, object) <- stack
+    if (!identical(theme <- .subset2(object, "theme"), NA)) {
+        if (is.waive(stack@params$theme) || is.null(stack@params$theme)) {
+            stack@params$theme <- theme
+        } else {
+            stack@params$theme <- stack@params$theme + theme
+        }
+    }
+    slot(heatmap, position) <- stack
     heatmap
 }
 

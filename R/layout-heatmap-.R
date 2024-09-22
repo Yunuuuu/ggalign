@@ -189,7 +189,8 @@ heatmap_layout.default <- function(data, ...) {
             guides = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),
-            plot_data = waiver()
+            plot_data = waiver(),
+            theme = waiver()
         ),
         set_context = set_context,
         order = order, name = name %||% NA_character_,

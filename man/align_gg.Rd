@@ -12,6 +12,7 @@ align_gg(
   free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
+  theme = waiver(),
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -26,6 +27,7 @@ ggalign(
   free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
+  theme = waiver(),
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -71,6 +73,11 @@ default is \code{NULL}, which means we won't want to modify anything.
 Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
+
+\item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
+plots in the layout. Use \code{NULL} if you don't want to any theme components to
+be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
+parent layout.}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}

@@ -29,7 +29,10 @@
 #' Used to modify the data after layout has been created, but before the data is
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
-#' @param theme `r rd_layout_theme()` Only used when position is `NULL`.
+#' @param theme A [theme()][ggplot2::theme] object, which will be added to all
+#' plots in the layout. Use `NULL` if you don't want to any theme components to
+#' be added. Use [waiver()][ggplot2::waiver()], if you want to inherit from the
+#' parent layout.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
 #' @return A `heatmap_active` object which can be added into
@@ -41,12 +44,8 @@
 #' @export
 hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
                    guides = NA, free_labs = NA, free_spaces = NA,
-                   plot_data = NA, theme = NULL, what = waiver()) {
-    if (is.null(position)) {
-        position <- NA
-    } else {
-        position <- match.arg(position, .TLBR)
-    }
+                   plot_data = NA, theme = NA, what = waiver()) {
+    if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
@@ -64,11 +63,16 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
     }
-    assert_s3_class(theme, "theme", null_ok = TRUE)
-    structure(position,
-        what = what, size = size, width = width, height = height,
-        guides = guides, free_labs = free_labs, free_spaces = free_spaces,
-        plot_data = plot_data, theme = theme,
+    if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {
+        assert_s3_class(theme, "theme")
+    }
+    structure(
+        list(
+            position = position,
+            what = what, size = size, width = width, height = height,
+            guides = guides, free_labs = free_labs, free_spaces = free_spaces,
+            plot_data = plot_data, theme = theme
+        ),
         class = c("heatmap_active", "active")
     )
 }
@@ -104,8 +108,8 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #' @export
 stack_active <- function(sizes = NULL, guides = NA,
                          free_labs = NA, free_spaces = NA, plot_data = NA,
-                         theme = NULL, what = NULL) {
-    what <- check_stack_context(what)
+                         theme = NA, what = NULL) {
+    if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     if (!identical(guides, NA) && !is.waive(guides)) {
         guides <- check_layout_position(guides)
@@ -120,14 +124,19 @@ stack_active <- function(sizes = NULL, guides = NA,
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
         plot_data <- check_plot_data(plot_data)
     }
-    assert_s3_class(theme, "theme", null_ok = TRUE)
-    structure(what,
-        sizes = sizes,
-        guides = guides,
-        free_labs = free_labs,
-        free_spaces = free_spaces,
-        plot_data = plot_data,
-        theme = theme,
+    if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {
+        assert_s3_class(theme, "theme")
+    }
+    structure(
+        list(
+            what = what,
+            sizes = sizes,
+            guides = guides,
+            free_labs = free_labs,
+            free_spaces = free_spaces,
+            plot_data = plot_data,
+            theme = theme
+        ),
         class = c("stack_active", "active")
     )
 }
