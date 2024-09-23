@@ -74,6 +74,11 @@ AlignReorder <- ggproto("AlignReorder", Align,
                         ),
                         call = .subset2(self, "call")
                     )
+                } else if (anyDuplicated(ans)) {
+                    cli::cli_abort(
+                        "find ties when coercing {.arg order} into integer",
+                        call = .subset2(self, "call")
+                    )
                 }
             } else if (is.null(layout_nms <- rownames(data))) {
                 cli::cli_abort(c(
