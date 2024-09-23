@@ -62,3 +62,6 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     hmanno("l") +
     align_reorder()
 }
+\seealso{
+\code{\link[=order2]{order2()}}
+}

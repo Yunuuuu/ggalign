@@ -13,6 +13,7 @@
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("l") +
 #'     align_reorder()
+#' @seealso [order2()]
 #' @export
 align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
