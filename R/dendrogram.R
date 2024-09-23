@@ -41,7 +41,8 @@ hclust2 <- function(matrix,
             error = function(cnd) {
                 cli::cli_abort(paste(
                     "{.arg method} can only be a {.cls string},",
-                    "{.cls function} or an object coerced to {.cls hclust}"
+                    "{.cls function} or an object which can be coerced to",
+                    "{.cls hclust}."
                 ), call = call)
             }
         )
