@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-heatmap-.R
 \name{is.ggheatmap}
 \alias{is.ggheatmap}
-\title{Reports whether \code{x} is a \code{HeatmapLayout} object}
+\title{Reports whether \code{x} is a \code{\link[=heatmap_layout]{heatmap_layout()}} object}
 \usage{
 is.ggheatmap(x)
 }
@@ -13,7 +13,7 @@ is.ggheatmap(x)
 A boolean value
 }
 \description{
-Reports whether \code{x} is a \code{HeatmapLayout} object
+Reports whether \code{x} is a \code{\link[=heatmap_layout]{heatmap_layout()}} object
 }
 \examples{
 is.ggheatmap(ggheatmap(1:10))

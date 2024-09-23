@@ -281,7 +281,7 @@ stack_add_heatmap_element <- function(object, stack, object_name, force,
     } else if (force) {
         cli::cli_abort(c(
             "Cannot add {.code {object_name}}",
-            i = "No active {.cls HeatmapLayout} object",
+            i = "No active {.fn heatmap_layout} object",
             i = "Did you forget to add a {.fn ggheatmap}?"
         ))
     } else {

@@ -35,8 +35,7 @@
 #' parent layout.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
-#' @return A `heatmap_active` object which can be added into
-#' [HeatmapLayout][heatmap_layout].
+#' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +

@@ -33,7 +33,7 @@ testthat::test_that("add `stack_active` object works well", {
     expect_identical(params$plot_data, NULL)
 })
 
-testthat::test_that("add `HeatmapLayout` object works well", {
+testthat::test_that("add `heatmap_layout()` object works well", {
     # stack without data add heatmap without data gave error
     expect_error(ggstack() + ggheatmap())
 

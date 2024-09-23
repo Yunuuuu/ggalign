@@ -138,11 +138,12 @@ layout_annotation <- function(title = waiver(), subtitle = waiver(),
 }
 
 #' Modify components of the layout theme
-#' @inherit ggplot2::theme description sections references author source note format
-#' @inheritDotParams ggplot2::theme
-#' @note Only used to render the `guides`, `title`, `subtitle`, `caption`,
+#'
+#' Used to render the `guides`, `title`, `subtitle`, `caption`,
 #' `margins` and `background`.
-#' @return A `layout_theme` object to be added into `r rd_layout()`.
+#' @inherit ggplot2::theme description sections references author source note format
+#' @param ... Additional arguments passed to [theme()][ggplot2::theme].
+#' @return A `layout_theme` object to be added to `r rd_layout()`.
 #' @examples
 #' layout_theme(plot.background = element_rect(fill = "green"))
 #' @importFrom ggplot2 theme

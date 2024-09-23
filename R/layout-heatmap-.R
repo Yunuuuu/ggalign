@@ -1,4 +1,4 @@
-#' Arrange plots around a Heatmap
+#' Arrange plots in a Heatmap
 #'
 #' `ggheatmap` is an alias of `heatmap_layout`.
 #'
@@ -200,7 +200,7 @@ heatmap_layout.default <- function(data, ...) {
     )
 }
 
-#' Reports whether `x` is a `HeatmapLayout` object
+#' Reports whether `x` is a [heatmap_layout()] object
 #'
 #' @param x An object to test
 #' @return A boolean value
