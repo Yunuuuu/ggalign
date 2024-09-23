@@ -18,6 +18,6 @@
 A \link[grid:grid.grob]{grob} object.
 }
 \description{
-The \code{patch()} function is used by \code{\link[=wrap]{wrap()}} to convert objects into a
-\link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=align_plots]{align_plots()}}.
+The \code{patch()} function is used by \code{\link[=wrap]{wrap()}} and \code{\link[=inset]{inset()}} to convert objects
+into a \link[grid:grid.grob]{grob}, enabling their alignment within \code{\link[=align_plots]{align_plots()}}.
 }

@@ -48,8 +48,8 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 ############################################################
 #' Convert Object into a Grob
 #'
-#' The `patch()` function is used by [wrap()] to convert objects into a
-#' [grob][grid::grob], enabling their alignment within [align_plots()].
+#' The `patch()` function is used by [wrap()] and [inset()] to convert objects
+#' into a [grob][grid::grob], enabling their alignment within [align_plots()].
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
 #' @param ... Additional arguments passed to specific methods.
