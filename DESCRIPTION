@@ -22,11 +22,13 @@ Imports:
     stats,
     tidyr
 Suggests: 
+    cluster,
     gridGraphics,
     knitr,
     patchwork,
     rmarkdown,
     scales,
+    seriation,
     testthat (>= 3.0.0),
     vdiffr
 ByteCompile: true
