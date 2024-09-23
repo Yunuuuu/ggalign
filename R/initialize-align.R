@@ -149,14 +149,12 @@ initialize_align_layout <- function(object, nobs, direction,
     }
 
     # we always prevent from reordering layout twice.
-    if (!is.null(layout_index)) {
-        if (!all(layout_index == new_index)) {
-            cli::cli_abort(paste0(
-                "{.fn {snake_class(object)}} disrupt the previously ",
-                "established order of the layout ",
-                axis, "-axis"
-            ), call = call)
-        }
+    if (!is.null(layout_index) && !all(layout_index == new_index)) {
+        cli::cli_abort(paste0(
+            "{.fn {snake_class(object)}} disrupt the previously ",
+            "established order of the layout ",
+            axis, "-axis"
+        ), call = call)
     }
 
     # in the finally, Let us initialize the annotation plot -----
