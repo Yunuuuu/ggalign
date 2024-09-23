@@ -12,15 +12,15 @@
 #'
 #' It is important to note that all `align_*` functions consider the `rows` as
 #' the observations. It means the `NROW(data)` must return the same number with
-#' the parallel `layout` axis.
+#' the specific `layout` axis.
 #'
-#'  - `heatmap_layout`: for column annotation, the `layout` data will be
+#'  - `heatmap_layout()`: for column annotation, the `layout` data will be
 #'  transposed before using (If data is a `function`, it will be applied with
 #'  the transposed matrix). This is necessary because column annotation uses
 #'  heatmap columns as observations, but we need rows.
 #'
-#'  - `stack_layout`: the `layout` data will be used as it is since we place all
-#'    plots along a single axis.
+#'  - `stack_layout()`: the `layout` data will be used as it is since we place
+#'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
 #' @inheritParams hmanno

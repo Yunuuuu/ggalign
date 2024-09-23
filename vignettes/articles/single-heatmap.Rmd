@@ -223,8 +223,7 @@ ggheatmap(mat) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro() +
-    hmanno(NULL) &
+    align_dendro() &
     theme(plot.margin = margin())
 ```
 
@@ -237,8 +236,7 @@ ggheatmap(mat, color = "white") +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro() +
-    hmanno(NULL) &
+    align_dendro() &
     theme(plot.margin = margin())
 ```
 
@@ -249,8 +247,7 @@ ggheatmap(mat, filling = FALSE) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro() +
-    hmanno(NULL) &
+    align_dendro() &
     theme(plot.margin = margin())
 ```
 
@@ -268,8 +265,7 @@ ggheatmap(mat) +
     hmanno("t", size = unit(15, "mm")) +
     align_dendro() +
     patch_titles(top = "I am a column title") +
-    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) +
-    hmanno(NULL) &
+    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
     theme(plot.margin = margin())
 ```
 
@@ -284,8 +280,7 @@ ggheatmap(mat) +
     hmanno("t", size = unit(15, "mm")) +
     align_dendro() +
     patch_titles(top = "pre-defined distance method (1 - pearson)") +
-    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) +
-    hmanno(NULL) &
+    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
     theme(plot.margin = margin())
 # ComplexHeatmap::Heatmap(mat,
 #   name = "mat", clustering_distance_rows = "pearson",
@@ -304,8 +299,7 @@ ggheatmap(mat) +
     hmanno("t", size = unit(15, "mm")) +
     align_dendro() +
     patch_titles(top = "a function that calculates distance matrix") +
-    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) +
-    hmanno(NULL) &
+    theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
     theme(plot.margin = margin())
 # ComplexHeatmap::Heatmap(mat,
 #     name = "mat", clustering_distance_rows = function(m) dist(m),
@@ -325,8 +319,7 @@ ggheatmap(mat) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(method = "single") +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro() +
-    hmanno(NULL) &
+    align_dendro() &
     theme(plot.margin = margin())
 # ComplexHeatmap::Heatmap(mat,
 #     name = "mat",
@@ -344,8 +337,7 @@ ggheatmap(mat) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(distance = NULL, method = cluster::diana) +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro(distance = NULL, method = cluster::agnes) +
-    hmanno(NULL) &
+    align_dendro(distance = NULL, method = cluster::agnes) &
     theme(plot.margin = margin())
 ```
 
@@ -359,9 +351,29 @@ ggheatmap(mat) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(aes(color = branch), k = 2L) +
     hmanno("t", size = unit(15, "mm")) +
-    align_dendro() +
-    hmanno(NULL) &
+    align_dendro() &
     theme(plot.margin = margin())
+```
+
+## Set row and column orders
+We can use `align_reorder()` to set the order.
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_reorder(~ as.numeric(gsub("row", "", rownames(mat)))) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_reorder(~ as.numeric(gsub("column", "", colnames(mat)))) &
+    theme(plot.margin = margin())
+# ComplexHeatmap::Heatmap(mat,
+#     name = "mat",
+#     row_order = order(as.numeric(gsub("row", "", rownames(mat)))),
+#     column_order = order(as.numeric(gsub("column", "", colnames(mat)))),
+#     column_title = "reorder matrix",
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
 ```
 
 # Session information

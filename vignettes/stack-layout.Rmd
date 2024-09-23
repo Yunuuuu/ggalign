@@ -64,7 +64,7 @@ Unlike `heatmap_layout()`/`ggheatmap()`, data frames are not automatically
 converted into a matrix within `ggstack()`.
 
 When using data frames, be cautious as many `align_*()` functions only accept
-matrices. If the necessary data is not explicitly provided to an `align_*()`
+matrix. If the necessary data is not explicitly provided to an `align_*()`
 function, the data frame from `ggstack()` will be passed to the function and
 internally converted into a matrix, which may result in missing values. 
 
@@ -83,8 +83,7 @@ ggstack(mtcars) +
 Note `align_gg()`/`ggalign()` always applies a default mapping for the parallel
 axes of the data index within the layout. This mapping is `aes(y = .data$.y)`
 for horizontal stack and `aes(x = .data$.x)` for vertical stack. So here we only
-provide mapping for the `x-axis`, for the horizontal stack, we default use the
-data index as the `y-axis`.
+provide mapping for the `x-axis`.
 
 For more information on adding plots, refer to the vignette:
 `vignette("align-plot")`.
