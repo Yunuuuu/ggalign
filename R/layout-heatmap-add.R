@@ -33,38 +33,21 @@ layout_heatmap_add.Align <- function(object, heatmap, object_name) {
 
 #' @export
 layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
-    if (is.null(position <- .subset2(object, "position"))) {
-        heatmap <- set_context(heatmap, NULL)
-        if (!identical(guides <- .subset2(object, "guides"), NA)) {
-            heatmap@params$guides <- guides
-        }
-        if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
-            heatmap@params$free_labs <- free_labs
-        }
-        if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
-            heatmap@params$free_spaces <- free_spaces
-        }
+    position <- .subset2(object, "position")
+    heatmap <- set_context(heatmap, position)
+    if (is.null(position)) {
         if (!is.null(width <- .subset2(object, "width"))) {
             heatmap@params$width <- width
         }
         if (!is.null(height <- .subset2(object, "height"))) {
             heatmap@params$height <- height
         }
-        if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
-            heatmap@params$plot_data <- plot_data
-        }
-        if (!identical(theme <- .subset2(object, "theme"), NA)) {
-            if (is.waive(heatmap@params$theme) ||
-                is.null(heatmap@params$theme)) {
-                heatmap@params$theme <- theme
-            } else {
-                heatmap@params$theme <- heatmap@params$theme + theme
-            }
-        }
+        heatmap <- layout_add_active(
+            .subset2(object, "active"), heatmap, object_name
+        )
         return(heatmap)
     }
 
-    heatmap <- set_context(heatmap, position)
     direction <- to_direction(position)
     axis <- to_coord_axis(direction)
 
@@ -91,33 +74,12 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         # object.
         stack@params$size <- unit(NA, "null")
     }
-
     if (!is.null(size <- .subset2(object, "size"))) {
         stack@params$size <- size
     }
-    if (!identical(guides <- .subset2(object, "guides"), NA)) {
-        stack@params$guides <- guides
-    }
-    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
-        stack@params$free_labs <- free_labs
-    }
-    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
-        stack@params$free_spaces <- free_spaces
-    }
-    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
-        stack@params$plot_data <- plot_data
-    }
-    if (!is.waive(what <- .subset2(object, "what"))) {
-        stack <- set_context(stack, what)
-    }
-    if (!identical(theme <- .subset2(object, "theme"), NA)) {
-        if (is.waive(stack@params$theme) || is.null(stack@params$theme)) {
-            stack@params$theme <- theme
-        } else {
-            stack@params$theme <- stack@params$theme + theme
-        }
-    }
-    slot(heatmap, position) <- stack
+    slot(heatmap, position) <- layout_stack_add.stack_active(
+        .subset(object, c("what", "active")), stack, object_name
+    )
     heatmap
 }
 

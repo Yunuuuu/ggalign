@@ -13,7 +13,6 @@ layout_stack_add.Align <- function(object, stack, object_name) {
     )
 }
 
-#' @importFrom methods slot
 #' @export
 layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!is.waive(what <- .subset2(object, "what"))) {
@@ -22,29 +21,32 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!is.null(sizes <- .subset2(object, "sizes"))) {
         stack@params$sizes <- sizes
     }
-    if (!identical(guides <- .subset2(object, "guides"), NA)) {
-        stack@params$guides <- guides
-    }
-    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
-        stack@params$free_labs <- free_labs
-    }
-    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
-        stack@params$free_spaces <- free_spaces
-    }
-    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
-        stack@params$plot_data <- plot_data
-    }
-    if (!identical(theme <- .subset2(object, "theme"), NA)) {
-        if (is.waive(stack@params$theme) || is.null(stack@params$theme)) {
-            stack@params$theme <- theme
-        } else {
-            stack@params$theme <- stack@params$theme + theme
-        }
-    }
-    stack
+    layout_add_active(.subset2(object, "active"), stack, object_name)
 }
 
-#' @importFrom methods slot
+layout_add_active <- function(object, layout, object_name) {
+    if (!identical(guides <- .subset2(object, "guides"), NA)) {
+        layout@params$guides <- guides
+    }
+    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
+        layout@params$free_labs <- free_labs
+    }
+    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
+        layout@params$free_spaces <- free_spaces
+    }
+    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
+        layout@params$plot_data <- plot_data
+    }
+    if (!identical(theme <- .subset2(object, "theme"), NA)) {
+        if (is.waive(layout@params$theme) || is.null(layout@params$theme)) {
+            layout@params$theme <- theme
+        } else {
+            layout@params$theme <- layout@params$theme + theme
+        }
+    }
+    layout
+}
+
 #' @export
 layout_stack_add.heatmap_active <- function(object, stack, object_name) {
     stack_add_heatmap_element(object, stack, object_name, TRUE)

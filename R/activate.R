@@ -5,8 +5,8 @@
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
 #' @param size A [unit][grid::unit] object to set the total size of the heatmap
-#' annotation. This will only be used if `position` is a string of 
-#' `r rd_values(.TLBR, final = "or")`. 
+#' annotation. This will only be used if `position` is a string of
+#' `r rd_values(.TLBR, final = "or")`.
 #'  - If position is `"top"` or `"bottom"`, `size` set the total height of the
 #' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
@@ -49,30 +49,19 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
     if (!is.waive(what)) what <- check_stack_context(what)
-    if (!identical(guides, NA) && !is.waive(guides)) {
-        guides <- check_layout_position(guides)
-    }
-    if (!identical(free_labs, NA) && !is.waive(free_labs)) {
-        free_labs <- check_layout_position(free_labs)
-    }
-    if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
-        !is.null(free_spaces)) {
-        free_spaces <- check_layout_position(free_spaces)
-    }
-    if (!identical(plot_data, NA) && !is.waive(plot_data)) {
-        plot_data <- check_plot_data(plot_data)
-    }
-    if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {
-        assert_s3_class(theme, "theme")
-    }
+    active <- .active(
+        guides = guides,
+        free_labs = free_labs,
+        free_spaces = free_spaces,
+        plot_data = plot_data,
+        theme = theme
+    )
     structure(
         list(
-            position = position,
-            what = what, size = size, width = width, height = height,
-            guides = guides, free_labs = free_labs, free_spaces = free_spaces,
-            plot_data = plot_data, theme = theme
+            position = position, size = size, width = width, height = height,
+            what = what, active = active
         ),
-        class = c("heatmap_active", "active")
+        class = "heatmap_active"
     )
 }
 
@@ -110,33 +99,46 @@ stack_active <- function(sizes = NULL, guides = NA,
                          theme = NA, what = NULL) {
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
+    active <- .active(
+        guides = guides,
+        free_labs = free_labs,
+        free_spaces = free_spaces,
+        plot_data = plot_data,
+        theme = theme
+    )
+    structure(
+        list(what = what, sizes = sizes, active = active),
+        class = "stack_active"
+    )
+}
+
+.active <- function(guides, free_labs, free_spaces, plot_data, theme,
+                    call = caller_call()) {
     if (!identical(guides, NA) && !is.waive(guides)) {
-        guides <- check_layout_position(guides)
+        guides <- check_layout_position(guides, call = call)
     }
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
-        free_labs <- check_layout_position(free_labs)
+        free_labs <- check_layout_position(free_labs, call = call)
     }
     if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
         !is.null(free_spaces)) {
-        free_spaces <- check_layout_position(free_spaces)
+        free_spaces <- check_layout_position(free_spaces, call = call)
     }
     if (!identical(plot_data, NA) && !is.waive(plot_data)) {
-        plot_data <- check_plot_data(plot_data)
+        plot_data <- check_plot_data(plot_data, call = call)
     }
     if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {
-        assert_s3_class(theme, "theme")
+        assert_s3_class(theme, "theme", call = call)
     }
     structure(
         list(
-            what = what,
-            sizes = sizes,
             guides = guides,
             free_labs = free_labs,
             free_spaces = free_spaces,
             plot_data = plot_data,
             theme = theme
         ),
-        class = c("stack_active", "active")
+        class = "active"
     )
 }
 
