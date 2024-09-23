@@ -69,8 +69,8 @@ AlignReorder <- ggproto("AlignReorder", Align,
                 if (any(ans < 1L) || any(ans > nrow(data))) {
                     cli::cli_abort(
                         paste(
-                            "Outliers found in the provided ordering index",
-                            "{.arg order}"
+                            "Outliers found in the provided ordering",
+                            "integer index {.arg order}"
                         ),
                         call = .subset2(self, "call")
                     )
@@ -94,7 +94,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
                     cli::cli_abort(sprintf(
                         "{.arg order} contains invalid names: %s",
                         style_val(order[is.na(ans)])
-                    ), call = call)
+                    ), call = .subset2(self, "call"))
                 }
             }
             msg <- "must be an ordering integer index or character of"
