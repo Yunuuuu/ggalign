@@ -34,7 +34,7 @@
 #' columns (`.row_names`, `.row_index`, and `.panel`) are added to the data
 #' frame.
 #'
-#' if data is inherit from the [heatmap][ggheatmap] layout, an additional column
+#' If data is inherit from the [heatmap][ggheatmap] layout, an additional column
 #' will be added.
 #'
 #'  - `.extra_panel`: the panel information for column (left or right

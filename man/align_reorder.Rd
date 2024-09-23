@@ -16,7 +16,7 @@ align_reorder(
 }
 \arguments{
 \item{fun}{A summary function. It should take a data and return the weights
-for the layout observations.}
+for each row.}
 
 \item{...}{Additional arguments passed to \code{fun}.}
 

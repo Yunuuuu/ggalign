@@ -1,7 +1,7 @@
 #' Reorders layout observations based on weights or summary statistics.
 #'
 #' @param fun A summary function. It should take a data and return the weights
-#' for the layout observations.
+#' for each row.
 #' @param ... Additional arguments passed to `fun`.
 #' @param strict A boolean value indicates whether the order should be strict.
 #' If previous groups has been established, and strict is `FALSE`, this will

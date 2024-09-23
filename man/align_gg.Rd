@@ -125,7 +125,7 @@ In the case where the input data is already a data frame, three additional
 columns (\code{.row_names}, \code{.row_index}, and \code{.panel}) are added to the data
 frame.
 
-if data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column
+If data is inherit from the \link[=ggheatmap]{heatmap} layout, an additional column
 will be added.
 \itemize{
 \item \code{.extra_panel}: the panel information for column (left or right
