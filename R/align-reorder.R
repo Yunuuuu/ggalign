@@ -1,13 +1,12 @@
 #' Reorders layout observations based on weights or summary statistics.
 #'
-#' @param fun A summary function. It should take a data and return the weights
-#' for each row.
+#' @param fun A summary function. It should take a data and return the
+#' statistic, which we'll call [order2()] to extract the order information.
 #' @param ... Additional arguments passed to `fun`.
 #' @param strict A boolean value indicates whether the order should be strict.
 #' If previous groups has been established, and strict is `FALSE`, this will
 #' reorder the observations in each group.
-#' @param decreasing A boolean value. Should the sort order be increasing or
-#' decreasing?
+#' @param reverse A boolean value. Should the sort order be in reverse?
 #' @inheritParams align
 #' @inherit align return
 #' @examples
@@ -16,17 +15,17 @@
 #'     align_reorder()
 #' @export
 align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
-                          decreasing = FALSE, data = NULL,
+                          reverse = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
     fun <- rlang::as_function(fun)
     assert_bool(strict)
-    assert_bool(decreasing)
+    assert_bool(reverse)
     align(
         align_class = AlignReorder,
         params = list(
             fun = fun,
             fun_params = rlang::list2(...),
-            decreasing = decreasing,
+            reverse = reverse,
             strict = strict
         ),
         set_context = set_context,
@@ -41,17 +40,18 @@ AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
         assert_reorder(self, panel, strict)
-        weights <- rlang::inject(fun(data, !!!fun_params))
+        ans <- rlang::inject(fun(data, !!!fun_params))
+        ans <- order2(ans)
         assert_mismatch_nobs(self,
-            nrow(data), length(weights),
-            msg = "must return an atomic vector"
+            nrow(data), length(ans),
+            msg = "must return a statistic with",
+            arg = "fun"
         )
-        weights
+        ans
     },
-    layout = function(self, panel, index, decreasing) {
-        list(
-            panel,
-            order(.subset2(self, "statistics"), decreasing = decreasing)
-        )
+    layout = function(self, panel, index, reverse) {
+        index <- .subset2(self, "statistics")
+        if (reverse) index <- rev(index)
+        list(panel, index)
     }
 )

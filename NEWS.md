@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `fun` in `align_reorder()` now can return any statistics which can be handled by `order2()`
+
 * fix `ggheatmap()` order not work when put in a stack layout
 
 * `method` in `hclust2()` can now return any objects which can be coerced into hclust, or you can provide such object directly in `method`.

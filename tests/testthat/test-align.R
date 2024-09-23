@@ -59,12 +59,12 @@ testthat::test_that("`align_reorder` works well", {
             align_reorder(strict = FALSE),
     )
     expect_doppelganger(
-        "reorder_top_decreasing",
-        p + hmanno("t") + align_reorder(decreasing = TRUE)
+        "reorder_top_reverse",
+        p + hmanno("t") + align_reorder(reverse = TRUE)
     )
     expect_doppelganger(
-        "reorder_left_decreasing",
-        p + hmanno("l") + align_reorder(decreasing = TRUE)
+        "reorder_left_reverse",
+        p + hmanno("l") + align_reorder(reverse = TRUE)
     )
 })
 

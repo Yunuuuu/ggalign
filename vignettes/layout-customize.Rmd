@@ -70,11 +70,11 @@ ggheatmap(small_mat) +
 
 By default, `align_reorder()` reorders the rows or columns in ascending order of
 the summary function's output (from bottom to top for rows, or from left to
-right for columns). To reverse this order, you can set `decreasing = TRUE`: 
-```{r align_reorder_decreasing}
+right for columns). To reverse this order, you can set `reverse = TRUE`: 
+```{r align_reorder_reverse}
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(rowMeans, decreasing = TRUE)
+    align_reorder(rowMeans, reverse = TRUE)
 ```
 
 Some `align_*` functions accept a `data` argument. This can be a matrix, a data

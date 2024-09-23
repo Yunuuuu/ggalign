@@ -542,11 +542,3 @@ check_dendrogram <- function(tree, arg = caller_arg(tree),
         ), call = call)
     }
 }
-
-order2 <- function(x) UseMethod("order2")
-
-#' @export
-order2.hclust <- function(x) x$order
-
-#' @export
-order2.dendrogram <- function(x) stats::order.dendrogram(x)

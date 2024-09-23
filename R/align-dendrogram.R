@@ -57,6 +57,7 @@
 #' @seealso
 #' - [dendrogram_data()]
 #' - [hclust2()]
+#' @importFrom stats order.dendrogram
 #' @export
 align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
@@ -196,9 +197,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                     use_missing = use_missing
                 ))
                 # reorder parent based on the parent tree
-                panel <- factor(
-                    panel, parent_levels[stats::order.dendrogram(parent)]
-                )
+                panel <- factor(panel, parent_levels[order.dendrogram(parent)])
                 ans <- merge_dendrogram(parent, children)
                 # we don't cutree
                 # self$draw_params$height <- attr(ans, "cutoff_height")

@@ -28,8 +28,8 @@ AlignGroup <- ggproto("AlignGroup", Align,
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(self, nobs,
             length(.subset2(params, "group")),
-            arg = "group",
-            msg = "must be an atomic vector"
+            msg = "must be an atomic vector",
+            arg = "group"
         )
         params
     },

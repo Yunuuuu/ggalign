@@ -8,15 +8,15 @@ align_reorder(
   fun = rowMeans,
   ...,
   strict = TRUE,
-  decreasing = FALSE,
+  reverse = FALSE,
   data = NULL,
   set_context = FALSE,
   name = NULL
 )
 }
 \arguments{
-\item{fun}{A summary function. It should take a data and return the weights
-for each row.}
+\item{fun}{A summary function. It should take a data and return the
+statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information.}
 
 \item{...}{Additional arguments passed to \code{fun}.}
 
@@ -24,8 +24,7 @@ for each row.}
 If previous groups has been established, and strict is \code{FALSE}, this will
 reorder the observations in each group.}
 
-\item{decreasing}{A boolean value. Should the sort order be increasing or
-decreasing?}
+\item{reverse}{A boolean value. Should the sort order be in reverse?}
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
