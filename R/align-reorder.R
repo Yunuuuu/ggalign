@@ -81,7 +81,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
                         "No names found in layout %s-axis",
                         to_coord_axis(.subset2(self, "direction"))
                     ),
-                    i = "Cannot use character {.arg order}"
+                    i = "Cannot use ordering character index {.arg order}"
                 ), call = .subset2(self, "call"))
             } else {
                 ans <- match(order, layout_nms)
@@ -91,13 +91,12 @@ AlignReorder <- ggproto("AlignReorder", Align,
                         style_val(order[is.na(ans)])
                     ), call = call)
                 }
-                use <- index
             }
             msg <- "must be an ordering integer index or character of"
             index <- ans
         }
         assert_mismatch_nobs(
-            self, nrow(data), length(ans),
+            self, nrow(data), length(index),
             msg = msg, arg = "order"
         )
         self$index <- index
