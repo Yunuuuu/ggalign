@@ -1,7 +1,7 @@
 #' Reorder or Group layout based on hierarchical clustering
 #'
 #' @inheritParams align_gg
-#' @param ... Additional arguments passed to
+#' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [geom_segment()][ggplot2::geom_segment].
 #' @inheritParams hclust2
 #' @inheritParams dendrogram_data

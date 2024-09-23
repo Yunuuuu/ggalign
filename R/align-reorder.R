@@ -3,8 +3,8 @@
 #' @param order A summary function. It should take a data and return the
 #' statistic, which we'll call [order2()] to extract the order information. You
 #' can also provide the ordering integer index or character.
-#' @param ... Additional arguments passed to function provided in `order`
-#' argument.
+#' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
+#' function provided in `order` argument.
 #' @param strict A boolean value indicates whether the order should be strict.
 #' If previous groups has been established, and strict is `FALSE`, this will
 #' reorder the observations in each group.

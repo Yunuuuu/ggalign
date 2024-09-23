@@ -19,8 +19,8 @@ align_reorder(
 statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information. You
 can also provide the ordering integer index or character.}
 
-\item{...}{Additional arguments passed to function provided in \code{order}
-argument.}
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+function provided in \code{order} argument.}
 
 \item{strict}{A boolean value indicates whether the order should be strict.
 If previous groups has been established, and strict is \code{FALSE}, this will

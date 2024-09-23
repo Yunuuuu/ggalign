@@ -23,7 +23,8 @@ and returns a \link[grid:grid.grob]{grob}.
 when \code{draw} is a function, it is used as the \code{draw_group} function
 in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object.}
 
-\item{...}{Additional arguments passed to \code{draw}.}
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{draw}.}
 
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping

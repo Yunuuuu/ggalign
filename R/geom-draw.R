@@ -8,7 +8,8 @@
 #'
 #'   when `draw` is a function, it is used as the `draw_group` function
 #'   in a [Geom][ggplot2::Geom] `ggproto` object.
-#' @param ... Additional arguments passed to `draw`.
+#' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
+#' `draw`.
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @details If you want to combine the functionality of multiple geoms it can

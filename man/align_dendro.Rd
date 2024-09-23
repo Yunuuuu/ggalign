@@ -32,7 +32,7 @@ align_dendro(
 \arguments{
 \item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
-\item{...}{Additional arguments passed to
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \link[ggplot2:geom_segment]{geom_segment()}.}
 
 \item{distance}{A string of distance measure to be used. This must be one of
