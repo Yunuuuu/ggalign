@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `align_reorder()` now can accept an ordering character names.
+
 * export `order2()` function
 
 * `align_reorder()`: fun argument has been renamed to `order` argument, and it can now accept the ordering integer index directly

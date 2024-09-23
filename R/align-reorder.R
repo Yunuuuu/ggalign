@@ -2,7 +2,8 @@
 #'
 #' @param order A summary function. It should take a data and return the
 #' statistic, which we'll call [order2()] to extract the order information. You
-#' can also provide the ordering integer index and wrap it with [I()].
+#' can also provide the ordering integer index or character and wrap it with
+#' [I()].
 #' @param ... Additional arguments passed to function provided in `order`
 #' argument.
 #' @param strict A boolean value indicates whether the order should be strict.
@@ -16,16 +17,25 @@
 #'     hmanno("l") +
 #'     align_reorder()
 #' @seealso [order2()]
+#' @importFrom ggplot2 waiver
 #' @export
 align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
     if (!inherits(order, "AsIs")) {
         order <- rlang::as_function(order)
-    } else if (!is.numeric(order) || anyNA(order) || anyDuplicated(order)) {
-        cli::cli_abort(
-            "{.arg order} must be a numeric without missing value or ties"
-        )
+    } else if (!(is.numeric(order) || is.character(order)) ||
+        anyNA(order) || anyDuplicated(order)) {
+        cli::cli_abort(paste(
+            "{.arg order} must be an ordering numeric or character",
+            "without missing value or ties"
+        ))
+    } else if (!is.null(data) && !is.waive(data)) {
+        cli::cli_warn(c(
+            "{.arg data} won't be used",
+            i = "{.arg order} is not a {.cls function}"
+        ))
+        data <- waiver()
     }
     assert_bool(strict)
     assert_bool(reverse)
@@ -50,14 +60,36 @@ AlignReorder <- ggproto("AlignReorder", Align,
         data <- .subset2(self, "data")
         assert_reorder(self, panel, strict)
         if (inherits(order, "AsIs")) {
-            ans <- as.integer(order)
-            if (any(ans < 1L) || any(ans > nrow(data))) {
-                cli::cli_abort(
-                    "Outliers found in the provided ordering index",
-                    call = .subset2(self, "call")
-                )
+            if (is.numeric(order)) {
+                ans <- as.integer(order)
+                if (any(ans < 1L) || any(ans > nrow(data))) {
+                    cli::cli_abort(
+                        paste(
+                            "Outliers found in the provided ordering index",
+                            "{.arg order}"
+                        ),
+                        call = .subset2(self, "call")
+                    )
+                }
+            } else if (is.null(layout_nms <- rownames(data))) {
+                cli::cli_abort(c(
+                    sprintf(
+                        "No names found in layout %s-axis",
+                        to_coord_axis(.subset2(self, "direction"))
+                    ),
+                    i = "Cannot use character {.arg order}"
+                ), call = .subset2(self, "call"))
+            } else {
+                ans <- match(order, layout_nms)
+                if (anyNA(ans)) {
+                    cli::cli_abort(sprintf(
+                        "{.arg order} contains invalid names: %s",
+                        style_val(order[is.na(ans)])
+                    ), call = call)
+                }
+                use <- index
             }
-            msg <- "must be an ordering integer index of"
+            msg <- "must be an ordering integer index or character of"
             index <- ans
         } else {
             ans <- rlang::inject(order(data, !!!order_params))
@@ -66,7 +98,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
         }
         assert_mismatch_nobs(
             self, nrow(data), length(ans),
-            msg = smg, arg = "order"
+            msg = msg, arg = "order"
         )
         self$index <- index
         ans
