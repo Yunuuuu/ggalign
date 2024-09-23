@@ -113,7 +113,8 @@ matrix, the internal will reorder them accordingly if you reorder the heatmap
 rows/columns.
 
 `align_reorder` will reorder the heatmap rows/columns based on the weights
-returned from `fun` argument. Here we reorder the heatmap columns by the means.
+returned from `fun` argument or the ordering index wrapped with `I()`. Here we
+calculate the final index by the means and reorder the heatmap columns.
 
 We provide the labels in the original order here, the layout will reorder them.
 ```{r}
@@ -124,7 +125,7 @@ print(xlabels[index])
 ggheatmap(small_mat) +
     scale_x_continuous(labels = xlabels) +
     hmanno("t") +
-    align_reorder()
+    align_reorder(I(index))
 ```
 
 ### discrete or continuous

@@ -68,6 +68,16 @@ ggheatmap(small_mat) +
     align_reorder(rowMeans)
 ```
 
+In addition, we can provide the integer index directly in the `order` argument,
+in this way, we should wrap the integer index in `I()`.
+```{r align_reorder_index}
+my_order <- sample(nrow(small_mat))
+print(rownames(small_mat)[my_order])
+ggheatmap(small_mat) +
+    hmanno("l") +
+    align_reorder(I(my_order))
+```
+
 By default, `align_reorder()` reorders the rows or columns in ascending order of
 the summary function's output (from bottom to top for rows, or from left to
 right for columns). To reverse this order, you can set `reverse = TRUE`: 

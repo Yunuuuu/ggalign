@@ -5,7 +5,7 @@
 \title{Reorders layout observations based on weights or summary statistics.}
 \usage{
 align_reorder(
-  fun = rowMeans,
+  order = rowMeans,
   ...,
   strict = TRUE,
   reverse = FALSE,
@@ -15,10 +15,12 @@ align_reorder(
 )
 }
 \arguments{
-\item{fun}{A summary function. It should take a data and return the
-statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information.}
+\item{order}{A summary function. It should take a data and return the
+statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information. You
+can also provide the ordering integer index and wrap it with \code{\link[=I]{I()}}.}
 
-\item{...}{Additional arguments passed to \code{fun}.}
+\item{...}{Additional arguments passed to function provided in \code{order}
+argument.}
 
 \item{strict}{A boolean value indicates whether the order should be strict.
 If previous groups has been established, and strict is \code{FALSE}, this will
