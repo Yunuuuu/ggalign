@@ -160,13 +160,13 @@ the <code>order</code> argument.</p>
 <span><span class="co">#&gt; [1] "row3" "row1" "row7" "row6" "row2" "row8" "row9" "row5" "row4"</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_reorder_integer_index-1.png" width="700"></p>
 <p>We can also provide the ordering character index.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_reorder_character_index-1.png" width="700"></p>
 <p>By default, <code><a href="../reference/align_reorder.html">align_reorder()</a></code> reorders the rows or columns
 in ascending order of the summary function’s output (from bottom to top
