@@ -181,8 +181,10 @@ function.</code></pre>
 in the original scale of the raw matrix, the internal will reorder them
 accordingly if you reorder the heatmap rows/columns.</p>
 <p><code>align_reorder</code> will reorder the heatmap rows/columns
-based on the weights returned from <code>fun</code> argument. Here we
-reorder the heatmap columns by the means.</p>
+based on the weights returned from <code>order</code> function, or you
+can directly provide the ordering integer or character index. Here we
+calculate the final index by the means and reorder the heatmap
+columns.</p>
 <p>We provide the labels in the original order here, the layout will
 reorder them.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -194,7 +196,7 @@ reorder them.</p>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">xlabels</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span></span></code></pre></div>
 <p><img src="scales-and-facets_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div class="section level3">
