@@ -213,7 +213,7 @@ stack_add_align <- function(object, stack, object_name) {
     }
 
     # check annotation name is unique --------------------
-    if (!is.null(name <- .subset2(object, "name"))) {
+    if (!is.na(name <- .subset2(object, "name"))) {
         if (any(names(plots) == name)) {
             cli::cli_warn("{object_name}: {name} plot is already present")
         }

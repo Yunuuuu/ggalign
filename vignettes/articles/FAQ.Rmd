@@ -56,10 +56,10 @@ like this (Since `reorder_group = FALSE`, the `panels` won't be changed):
 h <- h + align_dendro(reorder_group = FALSE)
 # always remember dendrogram will initialize the index, here, we extract the
 # index from the underlying dendrogram
-index <- stats::order.dendrogram(ggalign_stat(h, position = "top", what = 2L))
+index <- stats::order.dendrogram(ggalign_stat(h, "top", 2L))
 ```
 
-However, if a dendrogram with reorder_group = TRUE is added, it will reorder the
+However, if a dendrogram with `reorder_group = TRUE` is added, it will reorder the
 panels. Here, the panel levels are sampled to create new groups: 
 ```{r}
 panels <- factor(panels, sample(levels(panels)))
