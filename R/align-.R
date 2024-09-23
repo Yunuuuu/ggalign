@@ -95,12 +95,7 @@ align <- function(align_class, params,
     } else if (!is.integer(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
     }
-    if (!is.null(name) && (!is_string(name) || name == "")) {
-        cli::cli_abort(
-            "{.arg name} must be a single non-empty string",
-            call = call
-        )
-    }
+    assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
@@ -131,7 +126,7 @@ align <- function(align_class, params,
         size = size,
         # should we allow user switch between different annotation with a string
         # name? Should I remove "name" argument from user?
-        name = name,
+        name = name %||% NA_character_,
         order = order,
         set_context = set_context,
         # use `NULL` if this align don't require any data

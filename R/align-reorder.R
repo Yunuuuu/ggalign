@@ -38,7 +38,6 @@ align_reorder <- function(fun = rowMeans, ..., strict = TRUE,
 
 #' @importFrom ggplot2 ggproto
 AlignReorder <- ggproto("AlignReorder", Align,
-    setup_data = function(self, params, data) data,
     compute = function(self, panel, index, fun, fun_params, strict) {
         data <- .subset2(self, "data")
         assert_reorder(self, panel, strict)

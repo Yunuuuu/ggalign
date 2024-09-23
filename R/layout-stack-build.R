@@ -34,7 +34,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
         if (is.align(plot)) {
             .subset2(plot, "order")
         } else {
-            NA_integer_
+            plot@order
         }
     }, integer(1L)))
     plots <- .subset(plots, plot_index)
