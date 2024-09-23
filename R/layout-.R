@@ -257,7 +257,7 @@ layout_subtract.StackLayout <- function(layout, object, object_name) {
 #' Get the statistics from the layout
 #'
 #' @param x A `r rd_layout()`.
-#' @param ... Not used currently.
+#' @inheritParams rlang::args_dots_used
 #' @return The statistics
 #' @export
 ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")
@@ -267,14 +267,28 @@ ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")
 #' layout.
 #' @export
 #' @rdname ggalign_stat
-ggalign_stat.HeatmapLayout <- function(x, ..., position, what) {
-    ggalign_stat(slot(x, position), what = what)
+ggalign_stat.HeatmapLayout <- function(x, position, ...) {
+    ggalign_stat(x = slot(x, position), ...)
 }
 
 #' @export
 #' @rdname ggalign_stat
-ggalign_stat.StackLayout <- function(x, ..., what) {
-    .subset2(.subset2(x@plots, what), "statistics")
+ggalign_stat.StackLayout <- function(x, what, ...) {
+    if (is.null(ans <- .subset2(x@plots, what))) {
+        cli::cli_abort("Cannot find {what} plot in this stack layout")
+    }
+    ggalign_stat(x = ans, ...)
+}
+
+#' @export
+ggalign_stat.Align <- function(x, ...) {
+    if (...length() > 0L) {
+        cli::cli_abort(c(
+            "Find unused arguments in {.arg ...}",
+            i = "Please check argument{?s}: {c(...)}"
+        ))
+    }
+    .subset2(x, "statistics")
 }
 
 ############################################################

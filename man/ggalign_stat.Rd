@@ -8,14 +8,14 @@
 \usage{
 ggalign_stat(x, ...)
 
-\method{ggalign_stat}{HeatmapLayout}(x, ..., position, what)
+\method{ggalign_stat}{HeatmapLayout}(x, position, ...)
 
-\method{ggalign_stat}{StackLayout}(x, ..., what)
+\method{ggalign_stat}{StackLayout}(x, what, ...)
 }
 \arguments{
 \item{x}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 
-\item{...}{Not used currently.}
+\item{...}{Arguments passed to methods.}
 
 \item{position}{A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.}
 
