@@ -12,8 +12,7 @@ initialize_align <- function(object, direction,
     # we must have the same observations across all plots
     # 1. if Align require data, the `nobs` should be nrow(data)
     # 2. if not, we run `nobs()` method to get the `nobs`
-    # we must know the `nobs` before check arguments since we need check
-    # the arguments user passed are compatible with `nobs`
+    # we need check the arguments user passed are compatible with `nobs`
     if (!is.null(input_data)) { # this `Align` object require data
         if (is.waive(input_data)) { # inherit from the layout
             if (is.null(layout_data)) {
@@ -42,8 +41,12 @@ initialize_align <- function(object, direction,
         object$labels <- rownames(data)
         params <- object$setup_params(nobs, input_params)
         object$data <- object$setup_data(params, data)
-    } else {
+    } else { # this `Align` object doesn't require any data
+        # If nobs is NA, it means we don't initialize the layout observations
+        # So we call `$nobs` method to initialize the layout observations
         if (is.na(nobs)) nobs <- object$nobs(input_params)
+        # `Align` will use `NULL` to indicate it doesn't require the
+        # initialization of the latyout observations
         params <- object$setup_params(nobs, input_params)
     }
     # save the parameters into the object ------------
@@ -54,7 +57,7 @@ initialize_align <- function(object, direction,
         object, nobs, direction,
         layout_panel, layout_index, object_name
     )
-    c(ans, list(nobs = nobs))
+    c(ans, list(nobs = nobs %||% NA_integer_))
 }
 
 initialize_align_layout <- function(object, nobs, direction,
@@ -95,7 +98,7 @@ initialize_align_layout <- function(object, nobs, direction,
                 ),
                 call = call
             )
-        } else if (length(new_panel) != nobs) {
+        } else if (is.null(nobs) || length(new_panel) != nobs) {
             cli::cli_abort(
                 paste(
                     "{.fn layout} panel of {.fn {snake_class(object)}}",
@@ -126,7 +129,7 @@ initialize_align_layout <- function(object, nobs, direction,
                 ),
                 call = call
             )
-        } else if (length(new_index) != nobs) {
+        } else if (is.null(nobs) || length(new_index) != nobs) {
             cli::cli_abort(
                 paste(
                     "layout index of {.fn {snake_class(object)}}",

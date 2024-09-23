@@ -220,12 +220,15 @@ Align <- ggproto("Align",
     setup_data = function(params, data) data,
 
     # You must provide `nobs()` function or data shouldn't be `NULL`
-    nobs = function(params) {
-        cli::cli_abort("Not implement currently")
-    },
+    # If this `Align` doesn't initialize the layout observations, we should
+    # return `NULL`, in this way, you cannot use this `Align` object to
+    # initialize the layout panel or index. We always ensure the panel and index
+    # number is equal to `nobs`. If you want to indicates no obervations, you
+    # must return `0L`.
+    nobs = function(params) NULL,
 
     # Following fields should be defined for the new `Align` object.
-    # argument name in the function doesn't matter.
+    # argument name in these function doesn't matter.
     compute = function(self, panel, index) NULL,
 
     # Group heamap row/column and reorder, Must return a list of 2:
