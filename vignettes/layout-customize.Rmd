@@ -75,14 +75,14 @@ my_order <- sample(nrow(small_mat))
 print(rownames(small_mat)[my_order])
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(I(my_order))
+    align_reorder(my_order)
 ```
 
 We can also provide the ordering character index.
 ```{r align_reorder_character_index}
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(I(rownames(small_mat)[my_order]))
+    align_reorder(rownames(small_mat)[my_order])
 ```
 
 By default, `align_reorder()` reorders the rows or columns in ascending order of
