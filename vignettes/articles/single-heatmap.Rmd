@@ -61,6 +61,10 @@ point, while `ComplexHeatmap` considers the left-top as the starting point.
 The `scale_fill_*` function in ggplot2 makes it easy to modify colors.
 
 ```{r}
+# ComplexHeatmap::Heatmap(mat,
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
 dim(mat)
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
@@ -71,10 +75,6 @@ ggheatmap(mat) +
     align_dendro() +
     hmanno(NULL) &
     theme(plot.margin = margin())
-# ComplexHeatmap::Heatmap(mat,
-#   row_dend_reorder = FALSE,
-#   column_dend_reorder = FALSE
-# )
 ```
 
 ```{r}
@@ -272,6 +272,12 @@ ggheatmap(mat) +
 # Clustering
 ## Distance methods
 ```{r}
+# ComplexHeatmap::Heatmap(mat,
+#   name = "mat", clustering_distance_rows = "pearson",
+#   column_title = "pre-defined distance method (1 - pearson)",
+#   row_dend_reorder = FALSE,
+#   column_dend_reorder = FALSE
+# )
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -282,15 +288,15 @@ ggheatmap(mat) +
     patch_titles(top = "pre-defined distance method (1 - pearson)") +
     theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
     theme(plot.margin = margin())
-# ComplexHeatmap::Heatmap(mat,
-#   name = "mat", clustering_distance_rows = "pearson",
-#   column_title = "pre-defined distance method (1 - pearson)",
-#   row_dend_reorder = FALSE,
-#   column_dend_reorder = FALSE
-# )
 ```
 
 ```{r}
+# ComplexHeatmap::Heatmap(mat,
+#     name = "mat", clustering_distance_rows = function(m) dist(m),
+#     column_title = "a function that calculates distance matrix",
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -301,18 +307,18 @@ ggheatmap(mat) +
     patch_titles(top = "a function that calculates distance matrix") +
     theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
     theme(plot.margin = margin())
-# ComplexHeatmap::Heatmap(mat,
-#     name = "mat", clustering_distance_rows = function(m) dist(m),
-#     column_title = "a function that calculates distance matrix",
-#     row_dend_reorder = FALSE,
-#     column_dend_reorder = FALSE
-# )
 ```
 
 ## Clustering methods
 Method to perform hierarchical clustering can be specified by `method` argument,
 Possible methods are those supported in `hclust()` function. 
 ```{r}
+# ComplexHeatmap::Heatmap(mat,
+#     name = "mat",
+#     clustering_method_rows = "single",
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE
+# )
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -321,12 +327,6 @@ ggheatmap(mat) +
     hmanno("t", size = unit(15, "mm")) +
     align_dendro() &
     theme(plot.margin = margin())
-# ComplexHeatmap::Heatmap(mat,
-#     name = "mat",
-#     clustering_method_rows = "single",
-#     row_dend_reorder = FALSE,
-#     column_dend_reorder = FALSE
-# )
 ```
 
 Use `distance = NULL` if you don't want to calculate the distance.
@@ -358,14 +358,6 @@ ggheatmap(mat) +
 # Set row and column orders
 We can use `align_reorder()` to set the order.
 ```{r}
-ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
-    align_reorder(~ as.numeric(gsub("row", "", rownames(mat)))) +
-    hmanno("t", size = unit(15, "mm")) +
-    align_reorder(~ as.numeric(gsub("column", "", colnames(mat)))) &
-    theme(plot.margin = margin())
 # ComplexHeatmap::Heatmap(mat,
 #     name = "mat",
 #     row_order = order(as.numeric(gsub("row", "", rownames(mat)))),
@@ -374,6 +366,14 @@ ggheatmap(mat) +
 #     row_dend_reorder = FALSE,
 #     column_dend_reorder = FALSE
 # )
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(20, "mm")) +
+    align_reorder(~ as.numeric(gsub("row", "", rownames(mat)))) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_reorder(~ as.numeric(gsub("column", "", colnames(mat)))) &
+    theme(plot.margin = margin())
 ```
 
 # Session information
