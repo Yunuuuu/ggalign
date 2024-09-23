@@ -330,7 +330,7 @@ ggheatmap(mat) +
 ```
 
 Use `distance = NULL` if you don't want to calculate the distance.
-```{r}
+```{r eval=rlang::is_installed("cluster")}
 ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -370,16 +370,16 @@ ggheatmap(mat) +
     scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
-    align_reorder(I(as.numeric(gsub("row", "", rownames(mat))))) +
+    align_reorder(as.numeric(gsub("row", "", rownames(mat)))) +
     hmanno("t", size = unit(15, "mm")) +
-    align_reorder(I(as.numeric(gsub("column", "", colnames(mat))))) &
+    align_reorder(as.numeric(gsub("column", "", colnames(mat)))) &
     theme(plot.margin = margin())
 ```
 
 # Seriation
 `align_reorder()` can directly take the `seriate()` function as the input and
 extract the ordering information.
-```{r}
+```{r eval=rlang::is_installed("seriation")}
 mat2 <- max(mat) - mat
 ggheatmap(mat2) +
     scale_fill_gradient2(
@@ -395,7 +395,7 @@ ggheatmap(mat2) +
 ```
 
 Above code will run seriate twice, we can manually extract the ordering index.
-```{r}
+```{r eval=rlang::is_installed("seriation")}
 o <- seriation::seriate(mat2, method = "BEA_TSP")
 ggheatmap(mat2) +
     scale_fill_gradient2(
