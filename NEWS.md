@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* fix `ggheatmap()` order not work when put in a stack layout
+
 * `method` in `hclust2()` can now return any objects which can be coerced into hclust, or you can provide such object directly in `method`.
 
 * `hclust2()` now can accept `distance = NULL`
