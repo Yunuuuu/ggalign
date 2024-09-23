@@ -5,8 +5,8 @@
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
 #' @param size A [unit][grid::unit] object to set the total size of the heatmap
-#' annotation. This will only be used if `position` is a string of `"top"`,
-#' `"left"`, `"bottom"`, or `"right"`.
+#' annotation. This will only be used if `position` is a string of 
+#' `r rd_values(.TLBR, final = "or")`. 
 #'  - If position is `"top"` or `"bottom"`, `size` set the total height of the
 #' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
@@ -15,10 +15,10 @@
 #' object. Only used when `position` is `NULL`.
 #' @param guides A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which guide should be collected. If `NULL`, no
-#' guides will be collected. Default: "tlbr".
+#' guides will be collected. Default: `"tlbr"`.
 #' @param free_labs A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which axis title should be free from
-#' alignment. If `NULL`, all axis title will be aligned. Default: "tlbr".
+#' alignment. If `NULL`, all axis title will be aligned. Default: `"tlbr"`.
 #' @param free_spaces A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which border spaces should be removed. If
 #' `NULL` (default), no space will be removed.

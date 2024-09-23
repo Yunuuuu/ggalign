@@ -26,8 +26,8 @@ values are follows:
 }}
 
 \item{size}{A \link[grid:unit]{unit} object to set the total size of the heatmap
-annotation. This will only be used if \code{position} is a string of \code{"top"},
-\code{"left"}, \code{"bottom"}, or \code{"right"}.
+annotation. This will only be used if \code{position} is a string of
+\code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"}.
 \itemize{
 \item If position is \code{"top"} or \code{"bottom"}, \code{size} set the total height of the
 annotation.
@@ -40,11 +40,11 @@ object. Only used when \code{position} is \code{NULL}.}
 
 \item{guides}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
-guides will be collected. Default: "tlbr".}
+guides will be collected. Default: \code{"tlbr"}.}
 
 \item{free_labs}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: "tlbr".}
+alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
