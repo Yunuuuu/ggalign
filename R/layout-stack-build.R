@@ -30,14 +30,14 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     theme <- .subset2(params, "theme") %|w|% theme %|w|% NULL
 
     # we reorder the plots based on the `order` slot
-    plot_index <- order(vapply(plots, function(plot) {
+    plot_order <- vapply(plots, function(plot) {
         if (is.align(plot)) {
             .subset2(plot, "order")
         } else {
             plot@order
         }
-    }, integer(1L)))
-    plots <- .subset(plots, plot_index)
+    }, integer(1L))
+    plots <- .subset(plots, make_order(plot_order))
     patches <- stack_patch(direction)
     has_top <- FALSE
     has_bottom <- FALSE

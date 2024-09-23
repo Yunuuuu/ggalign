@@ -16,6 +16,14 @@ body_append <- function(fn, ..., ans = TRUE) {
     rlang::new_function(args, body)
 }
 
+make_order <- function(order) {
+    # we always add 0.5 offset, this will ensure the order set is always
+    # in the front of the order not set
+    # make_order(c(NA, 1, NA)): c(2, 1, 3) instead c(1, 2, 3)
+    order[is.na(order)] <- seq_along(order)[is.na(order)] + 0.5
+    order(order)
+}
+
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
