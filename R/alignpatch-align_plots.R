@@ -66,21 +66,27 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
     design <- as_areas(design)
     patches <- lapply(plots, alignpatch)
+    design <- layout_design(
+        ncol = ncol,
+        nrow = nrow,
+        byrow = byrow,
+        widths = widths,
+        heights = heights,
+        design = design,
+        guides = guides
+    )
+    design <- design[!vapply(design, is.waive, logical(1L), USE.NAMES = FALSE)]
+    annotation <- layout_annotation(
+        title = title,
+        subtitle = subtitle,
+        caption = caption
+    )
+    annotation <- annotation[
+        !vapply(annotation, is.waive, logical(1L), USE.NAMES = FALSE)
+    ]
     new_alignpatches(patches,
-        design = layout_design(
-            ncol = ncol,
-            nrow = nrow,
-            byrow = byrow,
-            widths = widths,
-            heights = heights,
-            design = design,
-            guides = guides
-        ),
-        annotation = layout_annotation(
-            title = title,
-            subtitle = subtitle,
-            caption = caption
-        ),
+        design = design,
+        annotation = annotation,
         theme = theme
     )
 }
