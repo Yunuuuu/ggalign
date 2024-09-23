@@ -1,7 +1,7 @@
 #' Ordering Permutation
 #'
 #' `order2` returns a permutation which rearranges its first argument into
-#' ascending order. By default, `order2` will call [order()].
+#' ascending order. By default, `order2` will call [order()] directly.
 #' @param x Any objects can be extracting ordering.
 #' @return An integer vector unless any of the inputs has `2^31` or more
 #' elements, when it is a double vector.

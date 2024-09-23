@@ -16,8 +16,8 @@ align_reorder(
 }
 \arguments{
 \item{order}{A summary function. It should take a data and return the
-statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information. You
-can also provide the ordering integer index or character.}
+statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information.
+Alternatively, You can also provide an ordering integer or character index.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 function provided in \code{order} argument.}
