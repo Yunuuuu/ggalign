@@ -355,7 +355,7 @@ ggheatmap(mat) +
     theme(plot.margin = margin())
 ```
 
-## Set row and column orders
+# Set row and column orders
 We can use `align_reorder()` to set the order.
 ```{r}
 ggheatmap(mat) +
