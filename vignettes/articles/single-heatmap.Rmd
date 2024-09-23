@@ -404,9 +404,9 @@ ggheatmap(mat2) +
     ) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
-    align_reorder(I(seriation::get_order(o, 1L))) +
+    align_reorder(seriation::get_order(o, 1L)) +
     hmanno("t", size = unit(15, "mm")) +
-    align_reorder(I(seriation::get_order(o, 2L))) &
+    align_reorder(seriation::get_order(o, 2L)) &
     theme(plot.margin = margin())
 ```
 For more use of the `seriate()` function, please refer to the

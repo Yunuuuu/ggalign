@@ -17,8 +17,7 @@ align_reorder(
 \arguments{
 \item{order}{A summary function. It should take a data and return the
 statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information. You
-can also provide the ordering integer index or character and wrap it with
-\code{\link[=I]{I()}}.}
+can also provide the ordering integer index or character.}
 
 \item{...}{Additional arguments passed to function provided in \code{order}
 argument.}

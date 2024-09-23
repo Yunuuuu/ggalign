@@ -68,14 +68,21 @@ ggheatmap(small_mat) +
     align_reorder(rowMeans)
 ```
 
-In addition, we can provide the integer index directly in the `order` argument,
-in this way, we should wrap the integer index in `I()`.
-```{r align_reorder_index}
+In addition, we can provide the ordering integer index directly in the `order`
+argument.
+```{r align_reorder_integer_index}
 my_order <- sample(nrow(small_mat))
 print(rownames(small_mat)[my_order])
 ggheatmap(small_mat) +
     hmanno("l") +
     align_reorder(I(my_order))
+```
+
+We can also provide the ordering character index.
+```{r align_reorder_character_index}
+ggheatmap(small_mat) +
+    hmanno("l") +
+    align_reorder(I(rownames(small_mat)[my_order]))
 ```
 
 By default, `align_reorder()` reorders the rows or columns in ascending order of

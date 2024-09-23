@@ -2,8 +2,7 @@
 #'
 #' @param order A summary function. It should take a data and return the
 #' statistic, which we'll call [order2()] to extract the order information. You
-#' can also provide the ordering integer index or character and wrap it with
-#' [I()].
+#' can also provide the ordering integer index or character.
 #' @param ... Additional arguments passed to function provided in `order`
 #' argument.
 #' @param strict A boolean value indicates whether the order should be strict.
@@ -22,20 +21,21 @@
 align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
-    if (!inherits(order, "AsIs")) {
+    if (is.numeric(order) || is.character(order)) {
+        if (anyNA(order) || anyDuplicated(order)) {
+            cli::cli_abort(paste(
+                "{.arg order} must be an ordering numeric or character",
+                "without missing value or ties"
+            ))
+        } else if (!is.null(data) && !is.waive(data)) {
+            cli::cli_warn(c(
+                "{.arg data} won't be used",
+                i = "{.arg order} is not a {.cls function}"
+            ))
+            data <- waiver()
+        }
+    } else {
         order <- rlang::as_function(order)
-    } else if (!(is.numeric(order) || is.character(order)) ||
-        anyNA(order) || anyDuplicated(order)) {
-        cli::cli_abort(paste(
-            "{.arg order} must be an ordering numeric or character",
-            "without missing value or ties"
-        ))
-    } else if (!is.null(data) && !is.waive(data)) {
-        cli::cli_warn(c(
-            "{.arg data} won't be used",
-            i = "{.arg order} is not a {.cls function}"
-        ))
-        data <- waiver()
     }
     assert_bool(strict)
     assert_bool(reverse)
@@ -59,7 +59,11 @@ AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, order, order_params, strict) {
         data <- .subset2(self, "data")
         assert_reorder(self, panel, strict)
-        if (inherits(order, "AsIs")) {
+        if (is.function(order)) {
+            ans <- rlang::inject(order(data, !!!order_params))
+            index <- as.integer(order2(ans))
+            msg <- "must return a statistic with"
+        } else {
             if (is.numeric(order)) {
                 ans <- as.integer(order)
                 if (any(ans < 1L) || any(ans > nrow(data))) {
@@ -91,10 +95,6 @@ AlignReorder <- ggproto("AlignReorder", Align,
             }
             msg <- "must be an ordering integer index or character of"
             index <- ans
-        } else {
-            ans <- rlang::inject(order(data, !!!order_params))
-            index <- as.integer(order2(ans))
-            msg <- "must return a statistic with"
         }
         assert_mismatch_nobs(
             self, nrow(data), length(ans),

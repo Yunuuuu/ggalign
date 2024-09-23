@@ -32,9 +32,13 @@ testthat::test_that("`align_group` works well", {
 
 testthat::test_that("`align_reorder` works well", {
     set.seed(1L)
-    p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))
+    mat <- matrix(stats::rnorm(72L), nrow = 9L)
+    rownames(mat) <- paste0("row", seq_len(nrow(mat)))
+    colnames(mat) <- paste0("column", seq_len(ncol(mat)))
+    p <- ggheatmap(mat)
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
+    # align_reorder cannot do sub-split
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_reorder())
     expect_doppelganger(
@@ -65,6 +69,16 @@ testthat::test_that("`align_reorder` works well", {
     expect_doppelganger(
         "reorder_left_reverse",
         p + hmanno("l") + align_reorder(reverse = TRUE)
+    )
+    # integer or character index works well
+    my_order <- sample(nrow(mat))
+    expect_doppelganger(
+        "reorder_left_integer_index",
+        p + hmanno("l") + align_reorder(my_order)
+    )
+    expect_doppelganger(
+        "reorder_left_character_index",
+        p + hmanno("l") + align_reorder(rownames(mat)[my_order])
     )
 })
 
