@@ -133,7 +133,7 @@ argument:</p>
 frames are not automatically converted into a matrix within
 <code><a href="../reference/stack_layout.html">ggstack()</a></code>.</p>
 <p>When using data frames, be cautious as many <code>align_*()</code>
-functions only accept matrices. If the necessary data is not explicitly
+functions only accept matrix. If the necessary data is not explicitly
 provided to an <code>align_*()</code> function, the data frame from
 <code><a href="../reference/stack_layout.html">ggstack()</a></code> will be passed to the function and internally
 converted into a matrix, which may result in missing values.</p>
@@ -151,8 +151,7 @@ necessary panel and axis information is added to the data frame.</p>
 default mapping for the parallel axes of the data index within the
 layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal
 stack and <code>aes(x = .data$.x)</code> for vertical stack. So here we
-only provide mapping for the <code>x-axis</code>, for the horizontal
-stack, we default use the data index as the <code>y-axis</code>.</p>
+only provide mapping for the <code>x-axis</code>.</p>
 <p>For more information on adding plots, refer to the vignette:
 <code>vignette("align-plot")</code>.</p>
 </div>

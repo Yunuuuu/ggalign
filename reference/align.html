@@ -96,12 +96,12 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the <code>layout</code> data,</p>
 <p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
 the observations. It means the <code>NROW(data)</code> must return the same number with
-the parallel <code>layout</code> axis.</p><ul><li><p><code>heatmap_layout</code>: for column annotation, the <code>layout</code> data will be
+the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
 transposed before using (If data is a <code>function</code>, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.</p></li>
-<li><p><code>stack_layout</code>: the <code>layout</code> data will be used as it is since we place all
-plots along a single axis.</p></li>
+<li><p><code><a href="stack_layout.html">stack_layout()</a></code>: the <code>layout</code> data will be used as it is since we place
+all plots along a single axis.</p></li>
 </ul></dd>
 
 

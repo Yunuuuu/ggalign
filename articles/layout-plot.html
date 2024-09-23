@@ -119,22 +119,13 @@ with other <code>align_*</code> functions. <code><a href="../reference/align_gg.
 allowing you to provide data in various formats, including matrices,
 data frames, or simple vectors. This data can be also inherited from the
 layout.</p>
-<p><code><a href="../reference/align_gg.html">align_gg()</a></code> always applies a default mapping for the
-parallel axes of the data index within the layout. This mapping is
+<p><code><a href="../reference/align_gg.html">align_gg()</a></code> always applies a default mapping for the axis
+of the data index in the layout. This mapping is
 <code>aes(y = .data$.y)</code> for horizontal stacking (including left
 and right heatmap annotation) and <code>aes(x = .data$.x)</code> for
 vertical stacking (including top and bottom heatmap annotation). For
 more information, refer to the “ggplot2 Specification” section in the
 <code><a href="../reference/align_gg.html">align_gg()</a></code> documentation.</p>
-<blockquote>
-<p>Note: All <code>align_*</code> functions treat rows as observations,
-meaning the <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function must return a number equal to
-the parallel layout axis. For heatmap column annotations, the heatmap
-matrix is transposed before being used. If data is a function, it will
-be applied to the transposed matrix. In this example, we use
-<code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums()</a></code> to calculate the sum value across all
-columns.</p>
-</blockquote>
 <p>You can also use the <code><a href="../reference/align_gg.html">ggalign()</a></code> function, which is an
 alias for <code><a href="../reference/align_gg.html">align_gg()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
