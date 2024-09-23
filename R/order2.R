@@ -5,6 +5,9 @@
 #' @param x Any objects can be extracting ordering.
 #' @return An integer vector unless any of the inputs has `2^31` or more
 #' elements, when it is a double vector.
+#' @examples
+#' order2(sample(10L))
+#' order2(letters)
 #' @export
 order2 <- function(x) UseMethod("order2")
 

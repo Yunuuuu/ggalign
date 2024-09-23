@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* export `order2()` function
+
 * `align_reorder()`: fun argument has been renamed to `order` argument, and it can now accept the ordering integer index directly
 
 * `fun` in `align_reorder()` now can return any statistics which can be handled by `order2()`

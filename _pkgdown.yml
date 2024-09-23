@@ -73,6 +73,7 @@ reference:
   - ggalignGrob
   - ggalign_stat
   - hclust2
+  - order2
   - dendrogram_data
   - is.ggheatmap
   - is.ggstack

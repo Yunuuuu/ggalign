@@ -32,3 +32,7 @@ elements, when it is a double vector.
 \code{order2} returns a permutation which rearranges its first argument into
 ascending order. By default, \code{order2} will call \code{\link[=order]{order()}}.
 }
+\examples{
+order2(sample(10L))
+order2(letters)
+}
