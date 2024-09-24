@@ -113,6 +113,7 @@ but is versatile enough to be used with any heatmap, not just single-column or
 single-row heatmaps.
 ```{r}
 ggheatmap(small_mat) +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("t") +
     align_dendro(aes(color = branch), k = 3L) +
     scale_color_brewer(palette = "Dark2") +
@@ -122,8 +123,7 @@ ggheatmap(small_mat) +
     # the default will always use continuous scale, here, we override it, since
     # the panel is a factor variable, we should use discrete scale.
     scale_y_discrete() +
-    scale_fill_brewer(palette = "Dark2", name = "branch") +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0))
+    scale_fill_brewer(palette = "Dark2", name = "branch")
 ```
 
 ### Plot titles
@@ -134,6 +134,7 @@ any border of the plot using the `patch_titles()` function.
 ```{r}
 ggheatmap(small_mat) +
     patch_titles(left = "left patch title", bottom = "bottom patch title") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("t") +
     align_dendro(aes(color = branch), k = 3L) +
     scale_color_brewer(palette = "Dark2") +
@@ -143,7 +144,6 @@ ggheatmap(small_mat) +
     geom_boxplot(aes(y = .extra_panel, x = value, fill = factor(.extra_panel))) +
     scale_y_discrete() +
     scale_fill_brewer(palette = "Dark2", name = "branch") +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     patch_titles(right = "right patch title")
 ```
 
