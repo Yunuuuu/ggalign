@@ -137,10 +137,9 @@ hclust2 <- function(matrix,
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes may
 #'              fall outside panel (between two panels), so there are possible
-#'              `NA` values in this column. We also provide `ggpanel` column,
-#'              which always give the right branch for usage of the ggplot
-#'              facet.
-#'   - `ggpanel`: See `panel`, this is what we often used.
+#'              `NA` values in this column.
+#'   - `ggpanel`: Similar with `panel` column, but always give the correct
+#'              branch for usage of the ggplot facet.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
 #'     and correspond to both nodes of each edge.

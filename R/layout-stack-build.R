@@ -38,7 +38,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
         } else {
             plot@order
         }
-    }, integer(1L))
+    }, integer(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, make_order(plot_order))
 
     # build the stack

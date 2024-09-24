@@ -158,10 +158,9 @@ to color different groups.
 using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes may
 fall outside panel (between two panel), so there are possible
-\code{NA} values in this column. We also provide \code{.panel} column,
-which always give the right branch for usage of the ggplot
-facet.
-\item \code{.panel}: See \code{panel}, this is what we often used.
+\code{NA} values in this column.
+\item \code{.panel}: Similar with \code{panel} column, but always give the correct branch
+for usage of the ggplot facet.
 \item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
 functionality as \code{panel}, but they are specifically for the \code{edge} data
 and correspond to both nodes of each edge.
