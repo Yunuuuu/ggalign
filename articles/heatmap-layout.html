@@ -191,8 +191,11 @@ to this active plot within the annotation stack.</li>
 <div class="section level2">
 <h2 id="control-size">Control size<a class="anchor" aria-label="anchor" href="#control-size"></a>
 </h2>
-<p>We can use <code><a href="../reference/hmanno.html">hmanno()</a></code> to control the relative sizes
-between heatmap body and the whole annotation stack.</p>
+<p>You can specify the heatmap body sizes
+(<code>width</code>/<code>height</code>) using the
+<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function. Alternatively, the
+<code><a href="../reference/hmanno.html">hmanno()</a></code> function allows you to control the heatmap body
+sizes, and it can also set the overall size of the annotation stack.</p>
 <ul>
 <li>
 <strong>when <code>position</code> is <code>NULL</code></strong>: we
@@ -206,9 +209,8 @@ control the relative width (left and right annotation) or height (top
 and bottom annotation) of the whole annotation stack.</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, height <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
@@ -231,10 +233,10 @@ and bottom annotation) of the whole annotation stack.</li>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.x</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>All <code>align_*()</code> functions has a <code>size</code> argument
-to control the relative width (left and right annotation) or height (top
-and bottom annotation) of the single plot in the whole annotation
-stack.</p>
+<p>Some <code>align_*()</code> functions has a <code>size</code>
+argument to control the relative width (left and right annotation) or
+height (top and bottom annotation) of the single plot in the whole
+annotation stack.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
