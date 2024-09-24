@@ -5,19 +5,16 @@
 \title{Determine the active context of stack layout}
 \usage{
 stack_active(
-  sizes = NULL,
   guides = NA,
   free_labs = NA,
   free_spaces = NA,
   plot_data = NA,
   theme = NA,
-  what = NULL
+  what = NULL,
+  sizes = NULL
 )
 }
 \arguments{
-\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
-the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
-
 \item{guides}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
 guides will be collected. Default: \code{"tlbr"}.}
@@ -54,6 +51,9 @@ context is a \code{\link[=heatmap_layout]{heatmap_layout()}} object, where any \
 be added into the heatmap. By removing the active context, we can add
 \code{Align} object into the \code{\link[=stack_layout]{stack_layout()}} .
 }}
+
+\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
+the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 }
 \value{
 A \code{stack_active} object which can be added into

@@ -65,14 +65,6 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack <- stack_layout(data = data, direction = direction)
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))
-
-        # Initialize the stack size
-        # it is the total size of the stack in the stack direction.
-        # In `params` slot, we'll also have a `sizes` indicates the relative
-        # size of the vertical direction with this stack, which won't be used by
-        # heatmap annotation, since heatmap annotation only allow `Align`
-        # object.
-        stack@params$size <- unit(NA, "null")
     }
     if (!is.null(size <- .subset2(object, "size"))) {
         stack@params$size <- size

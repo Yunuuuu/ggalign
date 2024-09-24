@@ -11,8 +11,6 @@
 #' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
-#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
-#' object. Only used when `position` is `NULL`.
 #' @param guides A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which guide should be collected. If `NULL`, no
 #' guides will be collected. Default: `"tlbr"`.
@@ -35,15 +33,17 @@
 #' parent layout.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
+#' @inheritParams heatmap_layout
 #' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
 #'     align_dendro()
 #' @export
-hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
+hmanno <- function(position = NULL, size = NULL,
                    guides = NA, free_labs = NA, free_spaces = NA,
-                   plot_data = NA, theme = NA, what = waiver()) {
+                   plot_data = NA, theme = NA, what = waiver(),
+                   width = NULL, height = NULL) {
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
     if (!is.null(width)) width <- check_size(width)
@@ -67,11 +67,8 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 
 #' Determine the active context of stack layout
 #'
-#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
-#' the relative widths (`direction = "horizontal"`) / heights (`direction =
-#' "vertical"`).
 #' @inheritParams hmanno
-#' @inheritParams align_plots
+#' @inheritParams stack_layout
 #' @param what What should get activated for the stack layout? Possible values
 #' are follows:
 #'    * A single number or string of the plot elements in the stack layout.
@@ -94,9 +91,9 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
 #'     # here we add a dendrogram to the stack.
 #'     align_dendro()
 #' @export
-stack_active <- function(sizes = NULL, guides = NA,
-                         free_labs = NA, free_spaces = NA, plot_data = NA,
-                         theme = NA, what = NULL) {
+stack_active <- function(guides = NA, free_labs = NA, free_spaces = NA,
+                         plot_data = NA, theme = NA, what = NULL,
+                         sizes = NULL) {
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     active <- new_active(

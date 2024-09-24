@@ -7,14 +7,14 @@
 hmanno(
   position = NULL,
   size = NULL,
-  width = NULL,
-  height = NULL,
   guides = NA,
   free_labs = NA,
   free_spaces = NA,
   plot_data = NA,
   theme = NA,
-  what = waiver()
+  what = waiver(),
+  width = NULL,
+  height = NULL
 )
 }
 \arguments{
@@ -34,9 +34,6 @@ annotation.
 \item If position is \code{"left"} or \code{"right"}, \code{size} set the total width of the
 annotation.
 }}
-
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
-object. Only used when \code{position} is \code{NULL}.}
 
 \item{guides}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
@@ -65,6 +62,9 @@ parent layout.}
 
 \item{what}{What should get activated for the anntoation stack? Only used
 when position is not \code{NULL}. See \link{stack_active} for details.}
+
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
+object.}
 }
 \value{
 A \code{heatmap_active} object which can be added into \link{heatmap_layout}.

@@ -5,15 +5,18 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-stack_layout(data, direction = NULL, ...)
+stack_layout(data, direction = NULL, sizes = NA, ...)
 
-ggstack(data, direction = NULL, ...)
+ggstack(data, direction = NULL, sizes = NA, ...)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
 
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
+
+\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
+the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
 \item{...}{Not used currently.}
 }

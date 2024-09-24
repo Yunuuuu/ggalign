@@ -7,16 +7,19 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
+#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
+#' the relative widths (`direction = "horizontal"`) / heights (`direction =
+#' "vertical"`).
 #' @param ... Not used currently.
 #' @return A `StackLayout` object.
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-stack_layout <- function(data, direction = NULL, ...) {
+stack_layout <- function(data, direction = NULL, sizes = NA, ...) {
     if (missing(data)) {
         .stack_layout(
             data = NULL, nobs = NULL,
-            direction = direction,
+            direction = direction, sizes = sizes,
             call = current_call()
         )
     } else {
@@ -75,15 +78,23 @@ stack_layout.NULL <- function(data, ...) {
 }
 
 #' @importFrom grid unit
-.stack_layout <- function(data, nobs, direction = NULL,
+.stack_layout <- function(data, direction = NULL, sizes = NA, nobs,
                           call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
+    sizes <- check_stack_sizes(sizes)
     methods::new("StackLayout",
         data = data, direction = direction,
         params = list(
-            sizes = unit(rep_len(NA, 3L), "null"),
-            guides = waiver(), plot_data = waiver(),
-            free_labs = waiver(), free_spaces = waiver(),
+            # @param sizes the relative size of the vertical direction with this
+            # stack, which won't be used by heatmap annotation
+            sizes = sizes,
+            # @param size the total size of the stack, used by heatmap
+            # annotation.
+            size = unit(NA, "null"),
+            guides = waiver(),
+            plot_data = waiver(),
+            free_labs = waiver(),
+            free_spaces = waiver(),
             theme = waiver()
         ),
         nobs = nobs,
