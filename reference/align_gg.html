@@ -60,13 +60,13 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_gg</span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -75,13 +75,13 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggalign</span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_labs <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -94,35 +94,12 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A matrix, a data frame, or even a simple vector that will be
-converted into a one-column matrix. If the <code>data</code> argument is set to <code>NULL</code>,
-the <code>align_*</code> will use the <code>layout</code> data. Additionally, the <code>data</code> argument
-can also accept a function (purrr-like lambda is also okay), which will be
-applied with the <code>layout</code> data,</p>
-<p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
-the observations. It means the <code>NROW(data)</code> must return the same number with
-the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
-transposed before using (If data is a <code>function</code>, it will be applied with
-the transposed matrix). This is necessary because column annotation uses
-heatmap columns as observations, but we need rows.</p></li>
-<li><p><code><a href="stack_layout.html">stack_layout()</a></code>: the <code>layout</code> data will be used as it is since we place
-all plots along a single axis.</p></li>
-</ul></dd>
-
-
-<dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
+<dl><dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
 <dd><p>Additional default list of aesthetic mappings to use for plot.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
 <dd><p>Plot size, can be an <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
-
-
-<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
-<dd><p>A boolean value or a string containing one or more of
-<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which axis title should be free from
-alignment. If <code>NULL</code>, all axis title will be aligned. Default: <code>"tlbr"</code>.</p></dd>
 
 
 <dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
@@ -145,6 +122,29 @@ change the default data for all <code>geoms</code>.</p></dd>
 plots in the layout. Use <code>NULL</code> if you don't want to any theme components to
 be added. Use <a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>, if you want to inherit from the
 parent layout.</p></dd>
+
+
+<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
+<dd><p>A boolean value or a string containing one or more of
+<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which axis title should be free from
+alignment. If <code>NULL</code>, all axis title will be aligned. Default: <code>"tlbr"</code>.</p></dd>
+
+
+<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dd><p>A matrix, a data frame, or even a simple vector that will be
+converted into a one-column matrix. If the <code>data</code> argument is set to <code>NULL</code>,
+the <code>align_*</code> will use the <code>layout</code> data. Additionally, the <code>data</code> argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the <code>layout</code> data,</p>
+<p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
+the observations. It means the <code>NROW(data)</code> must return the same number with
+the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
+transposed before using (If data is a <code>function</code>, it will be applied with
+the transposed matrix). This is necessary because column annotation uses
+heatmap columns as observations, but we need rows.</p></li>
+<li><p><code><a href="stack_layout.html">stack_layout()</a></code>: the <code>layout</code> data will be used as it is since we place
+all plots along a single axis.</p></li>
+</ul></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
