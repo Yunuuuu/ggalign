@@ -46,7 +46,6 @@
 #'     hmanno("top") +
 #'     ggalign() +
 #'     geom_point(aes(y = value))
-#' @importFrom rlang caller_call current_call
 #' @export
 align_gg <- function(mapping = aes(), size = NULL,
                      free_spaces = waiver(), plot_data = waiver(),
