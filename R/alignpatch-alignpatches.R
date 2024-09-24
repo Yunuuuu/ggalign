@@ -140,12 +140,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         if (is.null(t) && is.null(l) && is.null(b) && is.null(r)) {
             return(gt)
         }
-        n_row <- nrow(gt)
-        n_col <- ncol(gt)
-        if (!is.null(t)) gt$heights[seq_along(t)] <- t
-        if (!is.null(l)) gt$widths[seq_along(l)] <- l
-        if (!is.null(b)) gt$heights[seq(n_row - length(b) + 1L, n_row)] <- b
-        if (!is.null(r)) gt$widths[seq(n_col - length(r) + 1L, n_col)] <- r
+        gt <- Patch$align_border(t = t, l = l, b = b, r = r, gt = gt)
         self$recurse_lapply(function(patch, grob, t, l, b, r) {
             # For each plot grob, we reuse it's method to set the border
             # sizes we only set the border sizes for plot in the border

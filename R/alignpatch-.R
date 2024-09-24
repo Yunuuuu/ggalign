@@ -27,12 +27,9 @@ RIGHT_BORDER <- 7L + 1L
 # 6: legend.box.spacing
 # feature: insert patch title
 # 7: xlab-t
-# strip.placement = "inside"
-# 8: axis-t
-# 9: strip-t
-# strip.placement = "outside"
-# 8.strip-t
-# 9. axis-t
+# strip.placement = "inside"/"outside"
+# 8: axis-t/strip-t
+# 9: strip-t/axis-t
 # 10: panel
 # 11: strip-b
 # 12: axis-b
@@ -237,10 +234,12 @@ Patch <- ggproto("Patch", NULL,
         if (!is.null(t)) gt$heights[seq_along(t)] <- t
         if (!is.null(l)) gt$widths[seq_along(l)] <- l
         if (!is.null(b)) {
-            gt$heights[seq(nrow(gt) - length(b) + 1L, nrow(gt))] <- b
+            n_row <- nrow(gt)
+            gt$heights[seq(n_row - length(b) + 1L, n_row)] <- b
         }
         if (!is.null(r)) {
-            gt$widths[seq(ncol(gt) - length(r) + 1L, ncol(gt))] <- r
+            n_col <- ncol(gt)
+            gt$widths[seq(n_col - length(r) + 1L, n_col)] <- r
         }
         gt
     },
