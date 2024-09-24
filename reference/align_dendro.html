@@ -252,10 +252,9 @@ to color different groups.</p></li>
 using <a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a>, this column will show
 which panel current node or edge is from. Note: some nodes may
 fall outside panel (between two panel), so there are possible
-<code>NA</code> values in this column. We also provide <code>.panel</code> column,
-which always give the right branch for usage of the ggplot
-facet.</p></li>
-<li><p><code>.panel</code>: See <code>panel</code>, this is what we often used.</p></li>
+<code>NA</code> values in this column.</p></li>
+<li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct branch
+for usage of the ggplot facet.</p></li>
 <li><p><code>panel1</code> and <code>panel2</code>: The panel1 and panel2 variables have the same
 functionality as <code>panel</code>, but they are specifically for the <code>edge</code> data
 and correspond to both nodes of each edge.</p></li>
