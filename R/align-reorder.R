@@ -80,7 +80,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
                         call = .subset2(self, "call")
                     )
                 }
-            } else if (is.null(layout_nms <- rownames(data))) {
+            } else if (is.null(layout_labels <- .subset2(self, "labels"))) {
                 cli::cli_abort(c(
                     sprintf(
                         "No names found in layout %s-axis",
@@ -89,7 +89,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
                     i = "Cannot use ordering character index {.arg order}"
                 ), call = .subset2(self, "call"))
             } else {
-                ans <- match(order, layout_nms)
+                ans <- match(order, layout_labels)
                 if (anyNA(ans)) {
                     cli::cli_abort(sprintf(
                         "{.arg order} contains invalid names: %s",

@@ -120,12 +120,12 @@ align <- function(align_class, params,
         plot = NULL,
         data = NULL,
         params = NULL,
-        labels = NULL,
+        labels = NULL, # the original rownames of the input data
 
         # user input -------------------------------
         size = size,
         # should we allow user switch between different annotation with a string
-        # name? Should I remove "name" argument from user?
+        # name? Should I remove "name" argument from the user input?
         name = name %||% NA_character_,
         order = order,
         set_context = set_context,
