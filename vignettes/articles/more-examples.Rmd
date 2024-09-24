@@ -78,10 +78,10 @@ ggstack(data = mat_scaled) +
         panel.border = element_rect(fill = NA),
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
-    # add another heatmap
-    ggheatmap(expr$type) +
-    # set the heatmap body width
-    hmanno(width = unit(2, "cm"), theme = theme(plot.margin = margin(r = 3))) +
+    # add another heatmap, and set the heatmap body width
+    ggheatmap(expr$type, width = unit(2, "cm")) +
+    # set the heatmap layout theme
+    hmanno(theme = theme(plot.margin = margin(r = 3))) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis

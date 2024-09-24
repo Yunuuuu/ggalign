@@ -77,6 +77,8 @@ stack_layout.NULL <- function(data, ...) {
     .stack_layout(data = data, nobs = NULL, ..., call = current_call())
 }
 
+#' @importFrom rlang caller_call
+#' @importFrom ggplot2 waiver
 #' @importFrom grid unit
 .stack_layout <- function(data, direction = NULL, sizes = NA, nobs,
                           call = caller_call()) {

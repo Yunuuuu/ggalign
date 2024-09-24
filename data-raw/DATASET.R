@@ -49,10 +49,8 @@ logo <- ggstack(data = mat_scaled) +
     geom_tile(aes(y = 1, fill = factor(value))) +
     scale_y_continuous(breaks = NULL, name = NULL) +
     scale_fill_brewer(palette = "Set1", name = "type") +
-    # add another heatmap in the stack
-    ggheatmap(base_mean) +
-    # set the heatmap body width
-    hmanno(width = unit(2, "cm")) +
+    # add another heatmap in the stack and set the heatmap body width
+    ggheatmap(base_mean, width = unit(2, "cm")) +
     scale_y_continuous(breaks = NULL) +
     scale_x_continuous(name = "base mean", breaks = FALSE) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
@@ -75,10 +73,8 @@ logo <- ggstack(data = mat_scaled) +
         panel.border = element_rect(fill = NA),
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
-    # add another heatmap
-    ggheatmap(expr$type) +
-    # set the heatmap body width
-    hmanno(width = unit(2, "cm")) +
+    # add another heatmap and set the heatmap body width
+    ggheatmap(expr$type, width = unit(2, "cm")) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis

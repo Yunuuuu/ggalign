@@ -109,8 +109,10 @@ In this example:
  within the annotation stack.
 
 ## Control size
-We can use `hmanno()` to control the relative sizes between heatmap body and the
-whole annotation stack.
+You can specify the heatmap body sizes (`width`/`height`) using the
+`ggheatmap()` function. Alternatively, the `hmanno()` function allows you to
+control the heatmap body sizes, and it can also set the overall size of the
+annotation stack. 
 
 - **when `position` is `NULL`**: we can use `width` and `height` arguments to
 control the relative (you can also provide a unit object) width and height of
@@ -120,9 +122,8 @@ relative width (left and right annotation) or height (top and bottom annotation)
 of the whole annotation stack.
 
 ```{r}
-ggheatmap(small_mat) +
+ggheatmap(small_mat, height = 1) +
     scale_fill_viridis_c() +
-    hmanno(height = 1) +
     hmanno("t", size = 2) +
     align_dendro() +
     ggalign(data = rowSums) +
@@ -148,7 +149,7 @@ ggheatmap(small_mat) +
     geom_bar(aes(y = value, fill = .x), stat = "identity")
 ```
 
-All `align_*()` functions has a `size` argument to control the relative width
+Some `align_*()` functions has a `size` argument to control the relative width
 (left and right annotation) or height (top and bottom annotation) of the single
 plot in the whole annotation stack.
 ```{r}
