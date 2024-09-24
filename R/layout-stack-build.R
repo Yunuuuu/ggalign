@@ -20,14 +20,16 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     index <- get_index(x) %||% reorder_index(panel)
 
     plots <- x@plots
-    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    guides <- .subset2(params, "guides") %|w|% guides
 
-    # unlike heatmap layout, stack `free_labs` and `free_spaces` were used
-    # by all plots
-    free_labs <- .subset2(params, "free_labs") %|w|% free_labs %|w|% "tlbr"
-    free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces %|w|% NULL
-    theme <- .subset2(params, "theme") %|w|% theme %|w|% NULL
+    # we remove the plot without actual plot area
+    keep <- vapply(plots, function(plot) {
+        (is.align(plot) && !is.null(.subset2(plot, "plot"))) ||
+            is.ggheatmap(plot)
+    }, logical(1L), USE.NAMES = FALSE)
+    plots <- .subset(plots, keep)
+    if (is_empty(plots)) {
+        return(list(plot = NULL, size = NULL))
+    }
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
@@ -38,6 +40,13 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
         }
     }, integer(1L))
     plots <- .subset(plots, make_order(plot_order))
+
+    # build the stack
+    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
+    guides <- .subset2(params, "guides") %|w|% guides
+    free_labs <- .subset2(params, "free_labs") %|w|% free_labs
+    free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
+    theme <- .subset2(params, "theme") %|w|% theme
     patches <- stack_patch(direction)
     has_top <- FALSE
     has_bottom <- FALSE
@@ -47,10 +56,10 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
                 panel = panel, index = index,
                 extra_panel = extra_panel,
                 extra_index = extra_index,
-                plot_data = plot_data,
-                free_labs = free_labs,
-                free_spaces = free_spaces,
-                theme = theme
+                plot_data = plot_data %|w|% NULL,
+                free_labs = free_labs %|w|% "tlbr",
+                free_spaces = free_spaces %|w|% NULL,
+                theme = theme %|w|% NULL
             )
             patches <- stack_patch_add_align(
                 patches,

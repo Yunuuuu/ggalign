@@ -31,7 +31,7 @@
 #' @param set_context A single boolean value indicates whether to set the active
 #' context to current plot. If `TRUE`, all subsequent ggplot elements will be
 #' added into this plot.
-#' @param order An single integer for the layout order.
+#' @param order An single integer for the plot area order.
 #' @param name A string of the plot name. Used to switch the active context in
 #' [hmanno()] or [stack_active()].
 #' @param check.param A single boolean value indicates whether to check the

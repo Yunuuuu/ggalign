@@ -1,17 +1,13 @@
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
                         plot_data, free_labs, free_spaces, theme) {
-    if (is.null(.subset2(x, "plot"))) {
-        return(list(plot = NULL, size = NULL))
-    }
-    direction <- .subset2(x, "direction")
-
     x$lock()
     on.exit(x$unlock())
 
     # let `align` to determine how to draw
     # 1. add default layer
     # 2. add plot data
+    direction <- .subset2(x, "direction")
     params <- .subset2(x, "params")
     draw_params <- params[
         intersect(
@@ -26,8 +22,9 @@ align_build <- function(x, panel, index,
         panel, index, extra_panel, extra_index,
         !!!draw_params
     ))
-    plot_data <- .subset2(x, "plot_data") %|w|% plot_data %|w|% NULL
-    # we always set the default free_labs and free_spaces from the layout
+
+    # we always set the default value from the layout
+    plot_data <- .subset2(x, "plot_data") %|w|% plot_data
     free_labs <- .subset2(x, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
     theme <- .subset2(x, "theme") %|w|% theme
@@ -117,8 +114,7 @@ align_set_scales_and_facet <- function(plot, direction, scales, default_facet) {
 #' @noRd
 set_scales <- function(plot, scale_name, panel, index,
                        layout_labels, facet_scales,
-                       set_limits = TRUE,
-                       expand = ggplot2::expansion()) {
+                       set_limits = TRUE, expand = ggplot2::expansion()) {
     panel <- panel[index]
 
     # For y-axis, ggplot arrange panel from top to bottom,

@@ -50,7 +50,7 @@ want to customize the filling style, you can set to \code{FALSE}.}
 context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
 added into this plot.}
 
-\item{order}{An single integer for the layout order.}
+\item{order}{An single integer for the plot area order.}
 
 \item{name}{A string of the plot name. Used to switch the active context in
 \code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
