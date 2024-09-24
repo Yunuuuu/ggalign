@@ -19,11 +19,11 @@ align_dendro(
   center = FALSE,
   type = "rectangle",
   size = NULL,
-  data = NULL,
-  free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
+  free_labs = waiver(),
+  data = NULL,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -80,6 +80,27 @@ middle of all direct child nodes.}
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
+\item{free_spaces}{A boolean value or a string containing one or more of
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
+\code{NULL} (default), no space will be removed.}
+
+\item{plot_data}{A function used to transform the plot data before rendering.
+By default, it'll inherit from the parent layout. If no parent layout, the
+default is \code{NULL}, which means we won't want to modify anything.
+
+Used to modify the data after layout has been created, but before the data is
+handled of to the ggplot2 for rendering. Use this hook if the you needs
+change the default data for all \code{geoms}.}
+
+\item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
+plots in the layout. Use \code{NULL} if you don't want to any theme components to
+be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
+parent layout.}
+
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
+
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
 the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
@@ -97,27 +118,6 @@ heatmap columns as observations, but we need rows.
 \item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
 all plots along a single axis.
 }}
-
-\item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
-
-\item{free_spaces}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
-\code{NULL} (default), no space will be removed.}
-
-\item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. If no parent layout, the
-default is \code{NULL}, which means we won't want to modify anything.
-
-Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all \code{geoms}.}
-
-\item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
-plots in the layout. Use \code{NULL} if you don't want to any theme components to
-be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
-parent layout.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current plot. If \code{TRUE}, all subsequent ggplot elements will be

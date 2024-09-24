@@ -8,10 +8,10 @@ hmanno(
   position = NULL,
   size = NULL,
   guides = NA,
-  free_labs = NA,
   free_spaces = NA,
   plot_data = NA,
   theme = NA,
+  free_labs = NA,
   what = waiver(),
   width = NULL,
   height = NULL
@@ -39,10 +39,6 @@ annotation.
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
 guides will be collected. Default: \code{"tlbr"}.}
 
-\item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
-
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
 \code{NULL} (default), no space will be removed.}
@@ -59,6 +55,10 @@ change the default data for all \code{geoms}.}
 plots in the layout. Use \code{NULL} if you don't want to any theme components to
 be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
 parent layout.}
+
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{what}{What should get activated for the anntoation stack? Only used
 when position is not \code{NULL}. See \link{stack_active} for details.}

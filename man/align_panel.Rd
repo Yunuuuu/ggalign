@@ -8,10 +8,10 @@
 align_panel(
   mapping = aes(),
   size = NULL,
-  free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
+  free_labs = waiver(),
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -22,10 +22,10 @@ align_panel(
 ggpanel(
   mapping = aes(),
   size = NULL,
-  free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
+  free_labs = waiver(),
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -37,10 +37,6 @@ ggpanel(
 \item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
-
-\item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
@@ -58,6 +54,10 @@ change the default data for all \code{geoms}.}
 plots in the layout. Use \code{NULL} if you don't want to any theme components to
 be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
 parent layout.}
+
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}

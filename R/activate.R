@@ -41,8 +41,9 @@
 #'     align_dendro()
 #' @export
 hmanno <- function(position = NULL, size = NULL,
-                   guides = NA, free_labs = NA, free_spaces = NA,
-                   plot_data = NA, theme = NA, what = waiver(),
+                   guides = NA, free_spaces = NA,
+                   plot_data = NA, theme = NA,
+                   free_labs = NA, what = waiver(),
                    width = NULL, height = NULL) {
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
@@ -91,8 +92,9 @@ hmanno <- function(position = NULL, size = NULL,
 #'     # here we add a dendrogram to the stack.
 #'     align_dendro()
 #' @export
-stack_active <- function(guides = NA, free_labs = NA, free_spaces = NA,
-                         plot_data = NA, theme = NA, what = NULL,
+stack_active <- function(guides = NA, free_spaces = NA,
+                         plot_data = NA, theme = NA,
+                         free_labs = NA, what = NULL,
                          sizes = NULL) {
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)

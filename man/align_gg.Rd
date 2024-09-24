@@ -6,13 +6,13 @@
 \title{Create ggplot object with a customized data}
 \usage{
 align_gg(
-  data = NULL,
   mapping = aes(),
   size = NULL,
-  free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
+  free_labs = waiver(),
+  data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -21,13 +21,13 @@ align_gg(
 )
 
 ggalign(
-  data = NULL,
   mapping = aes(),
   size = NULL,
-  free_labs = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
+  free_labs = waiver(),
+  data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -36,31 +36,9 @@ ggalign(
 )
 }
 \arguments{
-\item{data}{A matrix, a data frame, or even a simple vector that will be
-converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
-can also accept a function (purrr-like lambda is also okay), which will be
-applied with the \code{layout} data,
-
-It is important to note that all \verb{align_*} functions consider the \code{rows} as
-the observations. It means the \code{NROW(data)} must return the same number with
-the specific \code{layout} axis.
-\itemize{
-\item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
-transposed before using (If data is a \code{function}, it will be applied with
-the transposed matrix). This is necessary because column annotation uses
-heatmap columns as observations, but we need rows.
-\item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
-all plots along a single axis.
-}}
-
 \item{mapping}{Additional default list of aesthetic mappings to use for plot.}
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
-
-\item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
@@ -78,6 +56,28 @@ change the default data for all \code{geoms}.}
 plots in the layout. Use \code{NULL} if you don't want to any theme components to
 be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
 parent layout.}
+
+\item{free_labs}{A boolean value or a string containing one or more of
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
+alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
+
+\item{data}{A matrix, a data frame, or even a simple vector that will be
+converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
+the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
+can also accept a function (purrr-like lambda is also okay), which will be
+applied with the \code{layout} data,
+
+It is important to note that all \verb{align_*} functions consider the \code{rows} as
+the observations. It means the \code{NROW(data)} must return the same number with
+the specific \code{layout} axis.
+\itemize{
+\item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
+transposed before using (If data is a \code{function}, it will be applied with
+the transposed matrix). This is necessary because column annotation uses
+heatmap columns as observations, but we need rows.
+\item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
+all plots along a single axis.
+}}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}

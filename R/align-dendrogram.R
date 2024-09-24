@@ -67,9 +67,10 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
-                         size = NULL, data = NULL,
-                         free_labs = waiver(), free_spaces = waiver(),
-                         plot_data = waiver(), theme = waiver(),
+                         size = NULL,
+                         free_spaces = waiver(), plot_data = waiver(),
+                         theme = waiver(), free_labs = waiver(),
+                         data = NULL,
                          set_context = TRUE, order = NULL, name = NULL) {
     assert_bool(reorder_group)
     assert_bool(plot_dendrogram)

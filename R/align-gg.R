@@ -48,10 +48,10 @@
 #'     geom_point(aes(y = value))
 #' @importFrom rlang caller_call current_call
 #' @export
-align_gg <- function(data = NULL, mapping = aes(), size = NULL,
-                     free_labs = waiver(), free_spaces = waiver(),
-                     plot_data = waiver(), theme = waiver(),
-                     limits = TRUE, facet = TRUE,
+align_gg <- function(mapping = aes(), size = NULL,
+                     free_spaces = waiver(), plot_data = waiver(),
+                     theme = waiver(), free_labs = waiver(),
+                     data = NULL, limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignGG,

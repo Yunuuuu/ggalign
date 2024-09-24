@@ -56,9 +56,8 @@ align <- function(align_class, params,
                   #
                   # Details see `initialize_align()`
                   data, size = NULL,
-                  free_labs = waiver(),
-                  free_spaces = waiver(),
-                  plot_data = waiver(), theme = waiver(),
+                  free_spaces = waiver(), plot_data = waiver(),
+                  theme = waiver(), free_labs = waiver(),
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
                   check.param = TRUE, call = caller_call()) {

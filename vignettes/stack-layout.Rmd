@@ -47,7 +47,7 @@ ggstack(small_mat) + align_dendro()
 ```{r}
 ggstack(small_mat) +
     align_kmeans(centers = 3L) +
-    ggalign(rowSums) +
+    ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
     facet_grid(switch = "y") +
     theme(strip.text = element_text()) +
@@ -76,7 +76,7 @@ frame.
 
 ```{r}
 ggstack(mtcars) +
-    ggalign(mapping = aes(mpg)) +
+    ggalign(aes(mpg)) +
     geom_point()
 ```
 
