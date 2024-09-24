@@ -49,7 +49,7 @@ hmanno <- function(position = NULL, size = NULL, width = NULL, height = NULL,
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
     if (!is.waive(what)) what <- check_stack_context(what)
-    active <- .active(
+    active <- new_active(
         guides = guides,
         free_labs = free_labs,
         free_spaces = free_spaces,
@@ -99,7 +99,7 @@ stack_active <- function(sizes = NULL, guides = NA,
                          theme = NA, what = NULL) {
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    active <- .active(
+    active <- new_active(
         guides = guides,
         free_labs = free_labs,
         free_spaces = free_spaces,
@@ -112,8 +112,8 @@ stack_active <- function(sizes = NULL, guides = NA,
     )
 }
 
-.active <- function(guides, free_labs, free_spaces, plot_data, theme,
-                    call = caller_call()) {
+new_active <- function(guides, free_labs, free_spaces, plot_data, theme,
+                       call = caller_call()) {
     if (!identical(guides, NA) && !is.waive(guides)) {
         guides <- check_layout_position(guides, call = call)
     }
