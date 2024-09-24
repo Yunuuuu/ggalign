@@ -159,20 +159,21 @@ set_context.HeatmapLayout <- function(x, context) {
 
 #' @export
 set_context.StackLayout <- function(x, context) {
-    if (is.na(context)) {
-        context <- NULL
+    if (is.null(context)) {
     } else if ((l <- length(x@plots)) == 0L) {
         cli::cli_abort("No contexts in the stack layout to be activated")
     } else if (is.character(name <- context)) {
-        context <- which(name == names(x@plots))
-        if (length(context) == 0L) {
+        context <- match(name, names(x@plots))
+        if (is.na(context)) {
             cli::cli_abort("Cannot find {name} plot in this stack layout")
         }
     } else if (context > l) {
-        cli::cli_abort(paste(
-            "Canno determine the context",
-            "the stack layout has only {l} context{?s}",
-            sep = ", "
+        cli::cli_abort(c(
+            "Cannot determine the context",
+            i = paste(
+                "the stack layout has only {l} context{?s} but you provided",
+                "an integer index ({context})"
+            )
         ))
     }
     x@active <- context

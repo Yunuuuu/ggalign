@@ -133,9 +133,8 @@ check_plot_data <- function(plot_data, arg = caller_arg(plot_data),
 
 check_stack_context <- function(what, arg = caller_arg(what),
                                 call = caller_call()) {
-    if (is.null(what)) {
-        what <- NA
-    } else if (!is_scalar(what) || !(is.numeric(what) || is.character(what))) {
+    if (is.null(what)) return(what) # styler: off
+    if (!is_scalar(what) || !(is.numeric(what) || is.character(what))) {
         cli::cli_abort("{.arg {arg}} must be a single number or string",
             call = call
         )
