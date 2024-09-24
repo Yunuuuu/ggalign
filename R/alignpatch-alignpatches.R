@@ -160,6 +160,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         ans <- lapply(ans, collapse_guides)
         compact(ans)
     },
+    #' @importFrom grid is.unit unit
     set_sizes = function(self, design, guides, dims,
                          panel_widths, panel_heights,
                          patches, gt = self$gt) {
@@ -260,6 +261,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt$heights <- heights
         gt
     },
+
+    #' @importFrom gtable gtable_add_grob
     set_grobs = function(self, design, patches, gt = self$gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")
@@ -303,8 +306,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt
     },
     #' @importFrom gtable gtable_width gtable_height
-    #' @importFrom grid unit.c unit
-    #' @importFrom ggplot2 calc_element
+    #' @importFrom grid unit.c
+    #' @importFrom ggplot2 find_panel
     attach_guides = function(self, guide_pos, guides, theme,
                              panel_pos = find_panel(gt), ...,
                              gt = self$gt) {
