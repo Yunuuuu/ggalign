@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `align_()*`: now `order` argument only control the plot area.
+
 * `align_reorder()` now can accept an ordering character names.
 
 * export `order2()` function
