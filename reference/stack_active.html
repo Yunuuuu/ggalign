@@ -60,13 +60,13 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_active</span><span class="op">(</span></span>
-<span>  sizes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_labs <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  what <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  what <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sizes <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -74,12 +74,7 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
-<dd><p>A numeric or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object of length <code>3</code> indicates
-the relative widths (<code>direction = "horizontal"</code>) / heights (<code>direction = "vertical"</code>).</p></dd>
-
-
-<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
+<dl><dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
 <dd><p>A boolean value or a string containing one or more of
 <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected. If <code>NULL</code>, no
 guides will be collected. Default: <code>"tlbr"</code>.</p></dd>
@@ -123,6 +118,11 @@ context is a <code><a href="heatmap_layout.html">heatmap_layout()</a></code> obj
 be added into the heatmap. By removing the active context, we can add
 <code>Align</code> object into the <code><a href="stack_layout.html">stack_layout()</a></code> .</p></li>
 </ul></dd>
+
+
+<dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
+<dd><p>A numeric or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object of length <code>3</code> indicates
+the relative widths (<code>direction = "horizontal"</code>) / heights (<code>direction = "vertical"</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

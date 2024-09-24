@@ -59,9 +59,9 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggstack</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggstack</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +75,11 @@
 <dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
 <dd><p>A string of <code>"horizontal"</code> or <code>"vertical"</code>, indicates the
 direction of the stack layout.</p></dd>
+
+
+<dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
+<dd><p>A numeric or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object of length <code>3</code> indicates
+the relative widths (<code>direction = "horizontal"</code>) / heights (<code>direction = "vertical"</code>).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

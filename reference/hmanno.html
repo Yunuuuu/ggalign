@@ -62,14 +62,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hmanno</span><span class="op">(</span></span>
 <span>  position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_labs <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span></span>
+<span>  what <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  height <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,11 +92,6 @@ annotation.</p></li>
 <li><p>If position is <code>"left"</code> or <code>"right"</code>, <code>size</code> set the total width of the
 annotation.</p></li>
 </ul></dd>
-
-
-<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a>
-object. Only used when <code>position</code> is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
@@ -136,6 +131,11 @@ parent layout.</p></dd>
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
 <dd><p>What should get activated for the anntoation stack? Only used
 when position is not <code>NULL</code>. See <a href="stack_active.html">stack_active</a> for details.</p></dd>
+
+
+<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
+<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a>
+object.</p></dd>
 
 </dl></div>
     <div class="section level2">
