@@ -394,7 +394,9 @@ ggheatmap(mat2) +
     theme(plot.margin = margin())
 ```
 
-Above code will run seriate twice, we can manually extract the ordering index.
+The above code will execute `seriate()` twice—once for each dimension. However,
+since a single run of `seriate()` can provide the ordering for both dimensions,
+we can manually extract the ordering indices to avoid redundancy.
 ```{r eval=rlang::is_installed("seriation")}
 o <- seriation::seriate(mat2, method = "BEA_TSP")
 ggheatmap(mat2) +
