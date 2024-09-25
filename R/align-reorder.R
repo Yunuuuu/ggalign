@@ -17,6 +17,7 @@
 #'     align_reorder()
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
+#' @importFrom vctrs vec_cast
 #' @export
 align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
@@ -27,7 +28,10 @@ align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                 "{.arg order} must be an ordering numeric or character",
                 "without missing value or ties"
             ))
-        } else if (!is.null(data) && !is.waive(data)) {
+        } else if (is.numeric(order)) {
+            order <- vec_cast(order, integer())
+        }
+        if (!is.null(data) && !is.waive(data)) {
             cli::cli_warn(c(
                 "{.arg data} won't be used",
                 i = "{.arg order} is not a {.cls function}"
@@ -54,6 +58,7 @@ align_reorder <- function(order = rowMeans, ..., strict = TRUE,
     )
 }
 
+#' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 ggproto
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, order, order_params, strict) {
@@ -61,11 +66,13 @@ AlignReorder <- ggproto("AlignReorder", Align,
         assert_reorder(self, panel, strict)
         if (is.function(order)) {
             ans <- rlang::inject(order(data, !!!order_params))
-            index <- as.integer(order2(ans))
+            index <- vec_cast(order2(ans), integer(),
+                x_arg = "order", call = .subset2(self, "call")
+            )
             msg <- "must return a statistic with"
         } else {
             if (is.numeric(order)) {
-                ans <- as.integer(order)
+                ans <- order
                 if (any(ans < 1L) || any(ans > nrow(data))) {
                     cli::cli_abort(
                         paste(

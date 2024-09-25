@@ -131,6 +131,7 @@ check_plot_data <- function(plot_data, arg = caller_arg(plot_data),
     plot_data
 }
 
+#' @importFrom vctrs vec_cast
 check_stack_context <- function(what, arg = caller_arg(what),
                                 call = caller_call()) {
     if (is.null(what)) return(what) # styler: off
@@ -141,7 +142,7 @@ check_stack_context <- function(what, arg = caller_arg(what),
     } else if (anyNA(what)) {
         cli::cli_abort("{.arg {arg}} cannot be {.code NA}", call = call)
     } else if (is.numeric(what)) {
-        what <- as.integer(what)
+        what <- vec_cast(what, integer(), x_arg = arg, call = call)
         if (what <= 0L) {
             cli::cli_abort(
                 "{.arg {arg}} must be a positive integer",

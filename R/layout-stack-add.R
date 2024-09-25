@@ -52,6 +52,7 @@ layout_stack_add.heatmap_active <- function(object, stack, object_name) {
     stack_add_heatmap_element(object, stack, object_name, TRUE)
 }
 
+#' @importFrom rlang try_fetch
 #' @importFrom methods slot
 #' @export
 layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
@@ -76,7 +77,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         if (is.function(heatmap_data)) {
             data <- heatmap_data(data)
             call <- current_call()
-            data <- tryCatch(
+            data <- try_fetch(
                 as.matrix(data),
                 error = function(cnd) {
                     cli::cli_abort(paste(

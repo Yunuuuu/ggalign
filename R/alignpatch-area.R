@@ -44,32 +44,31 @@
 #'
 #' # Apply it to a patchwork
 #' align_plots(p1, p2, p3, design = layout)
+#' @importFrom vctrs df_list vec_cast new_data_frame
 #' @export
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
-        one_area <- list(
+        one_area <- df_list(
             t = integer(0L),
             l = integer(0L),
             b = integer(0L),
             r = integer(0L)
         )
     } else {
-        len <- max(length(t), length(l), length(b), length(r))
-        one_area <- list(
-            t = rep_len(as.integer(t), len),
-            l = rep_len(as.integer(l), len),
-            b = rep_len(as.integer(b), len),
-            r = rep_len(as.integer(r), len)
+        one_area <- df_list(
+            t = vec_cast(t, integer()),
+            l = vec_cast(l, integer()),
+            b = vec_cast(b, integer()),
+            r = vec_cast(r, integer())
         )
-        if (any(t > b)) {
+        if (any(.subset2(one_area, "t") > .subset2(one_area, "b"))) {
             cli::cli_abort("{.arg t} must be less than {.arg b}")
         }
-        if (any(l > r)) {
+        if (any(.subset2(one_area, "l") > .subset2(one_area, "r"))) {
             cli::cli_abort("{.arg l} must be less than {.arg r}")
         }
     }
-    class(one_area) <- c("align_area", "patch_area")
-    one_area
+    new_data_frame(one_area, class = c("align_area", "patch_area"))
 }
 
 as_areas <- function(x) UseMethod("as_areas")
@@ -85,6 +84,7 @@ as_areas.NULL <- function(x) NULL
 #' @export
 as_areas.align_area <- function(x) x
 
+#' @importFrom vctrs vec_rbind
 #' @export
 as_areas.character <- function(x) {
     call <- current_call() # used for message only
@@ -119,50 +119,44 @@ as_areas.character <- function(x) {
         }
         area(t = t, l = l, b = b, r = r)
     })
-    do.call(c, area_list)
+    do.call(vec_rbind, area_list)
 }
+
+#' @importFrom vctrs vec_rbind
+#' @export
+c.align_area <- function(...) vec_rbind(...)
+
+#' @importFrom vctrs vec_slice
+#' @export
+`[.align_area` <- function(x, i) vec_slice(x, i)
 
 # For area from patchwork
 #' @export
 as_areas.patch_area <- function(x) add_class(x, "align_area")
 
 #' @export
-c.align_area <- function(..., recursive = FALSE) {
-    if (...length() == 0L) {
-        return(area())
-    }
-    all_areas <- list(...)
-    area(
-        unlist(lapply(all_areas, .subset2, "t")),
-        unlist(lapply(all_areas, .subset2, "l")),
-        unlist(lapply(all_areas, .subset2, "b")),
-        unlist(lapply(all_areas, .subset2, "r"))
-    )
-}
-
-#' @export
 length.align_area <- function(x) length(.subset2(x, "t"))
 
+#' @importFrom vctrs new_data_frame
 #' @export
 print.align_area <- function(x, ...) {
     cat(
         length(x), "patch areas, spanning",
         max(x$r), "columns and", max(x$b), "rows\n\n"
     )
-    print(data.frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
+    print(new_data_frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
     invisible(x)
 }
 
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme
 #' @export
-plot.align_area <- function(x, y, ...) {
-    area <- quickdf(x)
-    area$l <- area$l - 0.45
-    area$r <- area$r + 0.45
-    area$t <- area$t - 0.45
-    area$b <- area$b + 0.45
-    area$name <- as.factor(seq_len(nrow(area)))
+plot.align_area <- function(x, ...) {
+    x$l <- x$l - 0.45
+    x$r <- x$r + 0.45
+    x$t <- x$t - 0.45
+    x$b <- x$b + 0.45
+    x$name <- as.factor(seq_len(nrow(x)))
     b_fun <- function(lim) {
         if (lim[1] < lim[2]) {
             lim <- seq(floor(lim[1]), ceiling(lim[2]), by = 1)
@@ -171,13 +165,15 @@ plot.align_area <- function(x, y, ...) {
         }
         lim[-c(1, length(lim))]
     }
-    ggplot2::ggplot(area) +
+    ggplot2::ggplot(x) +
         ggplot2::geom_rect(aes(
             xmin = .data$l, xmax = .data$r,
             ymin = .data$t, ymax = .data$b, fill = .data$name
         ), alpha = 0.3) +
         ggplot2::scale_y_reverse(breaks = b_fun, expand = c(0, 0.04)) +
-        ggplot2::scale_x_continuous(breaks = b_fun, expand = c(0, 0.04), position = "top") +
+        ggplot2::scale_x_continuous(
+            breaks = b_fun, expand = c(0, 0.04), position = "top"
+        ) +
         ggplot2::labs(fill = "Patch") +
         ggplot2::theme_void() +
         theme(

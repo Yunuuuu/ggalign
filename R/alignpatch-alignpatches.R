@@ -4,14 +4,16 @@ alignpatch.alignpatches <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
+#' @importFrom vctrs new_data_frame
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     patches = NULL,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
+    #' @importFrom vctrs vec_slice
     patch_gtable = function(self, guides, plot = self$plot) {
         patches <- .subset2(plot, "patches")
-        layout <- .subset2(plot, "design")
+        layout <- .subset2(plot, "layout")
 
         # complete the theme object
         theme <- complete_theme(.subset2(plot, "theme"))
@@ -38,22 +40,24 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         } else {
             dims <- c(max(.subset2(design, "b")), max(.subset2(design, "r")))
         }
+
         # filter `plots` based on the design areas --------------------
-        design <- quickdf(design)
         if (nrow(design) < length(patches)) {
             cli::cli_warn(
                 "Too few patch areas to hold all plots. Dropping plots"
             )
             plots <- patches[seq_len(nrow(design))]
         } else {
-            design <- design[seq_along(patches), , drop = FALSE]
+            design <- vec_slice(design, seq_along(patches))
         }
-        guides <- .subset2(layout, "guides")
 
         # remove NULL patch -----------------------------------
         keep <- !vapply(patches, is.null, logical(1L), USE.NAMES = FALSE)
-        design <- design[keep, , drop = FALSE]
+        design <- vec_slice(design, keep)
         patches <- .subset(patches, keep)
+
+        # if no plots, we return `NULL` -----------------------
+        if (is_empty(patches)) return(NULL) # styler: off
 
         # save patches, patches won't be copy
         self$patches <- patches
@@ -69,6 +73,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 4. set_grobs: will call `align_border` and `split_gt`, return the
         #    final gtable
         # setup gtable list ----------------------------------
+        guides <- .subset2(layout, "guides")
         for (patch in patches) patch$gt <- patch$patch_gtable(guides)
 
         # collect guides  ---------------------------------------
@@ -263,11 +268,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
 
     #' @importFrom gtable gtable_add_grob
+    #' @importFrom vctrs vec_slice
     set_grobs = function(self, design, patches, gt = self$gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")
         for (i in seq_along(patches)) {
-            loc <- design[i, , drop = FALSE]
+            loc <- vec_slice(design, i)
             # We must align the borders for the gtable grob with the
             # final plot area sizes
             l <- (.subset2(loc, "l") - 1L) * TABLE_COLS + 1L

@@ -27,7 +27,7 @@ alignpatch.patchwork <- function(x) {
     }
     alignpatch(new_alignpatches(
         lapply(plots, alignpatch),
-        design = layout,
+        layout = layout,
         annotation = annotation,
         theme = .subset2(annotation, "theme")
     ))

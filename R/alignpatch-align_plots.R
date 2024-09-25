@@ -66,7 +66,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
     design <- as_areas(design)
     patches <- lapply(plots, alignpatch)
-    design <- layout_design(
+    layout <- layout_design(
         ncol = ncol,
         nrow = nrow,
         byrow = byrow,
@@ -75,7 +75,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         design = design,
         guides = guides
     )
-    design <- design[!vapply(design, is.waive, logical(1L), USE.NAMES = FALSE)]
+    layout <- layout[!vapply(layout, is.waive, logical(1L), USE.NAMES = FALSE)]
     annotation <- layout_annotation(
         title = title,
         subtitle = subtitle,
@@ -85,16 +85,16 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         !vapply(annotation, is.waive, logical(1L), USE.NAMES = FALSE)
     ]
     new_alignpatches(patches,
-        design = design,
+        layout = layout,
         annotation = annotation,
         theme = theme
     )
 }
 
-new_alignpatches <- function(patches, design, annotation, theme) {
+new_alignpatches <- function(patches, layout, annotation, theme) {
     structure(
         list(
-            patches = patches, design = design,
+            patches = patches, layout = layout,
             annotation = annotation, theme = theme
         ),
         # Will ensure serialisation includes a link to the `ggalign`

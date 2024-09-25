@@ -108,6 +108,8 @@ ggalignGrob <- function(x) {
     ggalign_gtable(ggalign_build(x))
 }
 
+# Now, we only define `ggalign_gtable` method for `alignpatches` and `ggplot`
+# `ggalign_build` must return these objects
 ggalign_build <- function(x) UseMethod("ggalign_build")
 
 ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
@@ -147,11 +149,12 @@ Patch <- ggproto("Patch", NULL,
             "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
         )
     },
+    #' @importFrom vctrs vec_slice
     collect_guides = function(self, guides, gt = self$gt) {
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")
         guides_ind <- grep("guide-box", .subset2(layout, "name"))
-        guides_loc <- layout[guides_ind, , drop = FALSE]
+        guides_loc <- vec_slice(layout, guides_ind)
         collected_guides <- vector("list", length(guides))
         names(collected_guides) <- guides
         panel_pos <- find_panel(gt)
@@ -164,7 +167,7 @@ Patch <- ggproto("Patch", NULL,
                 right = .subset2(guides_loc, "l") > .subset2(panel_pos, "r")
             )
             if (!any(guide_ind)) next
-            guide_loc <- guides_loc[guide_ind, , drop = FALSE]
+            guide_loc <- vec_slice(guides_loc, guide_ind)
             guide_ind <- .subset(guides_ind, guide_ind)
             remove_grobs <- c(guide_ind, remove_grobs)
             guide_box <- .subset2(grobs, guide_ind)

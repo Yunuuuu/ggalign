@@ -27,7 +27,7 @@
 #' @examples
 #' hclust2(dist(USArrests), method = "ward.D")
 #' @return A [hclust][stats::hclust] object.
-#' @importFrom rlang is_string
+#' @importFrom rlang is_string try_fetch
 #' @export
 hclust2 <- function(matrix,
                     distance = "euclidean",
@@ -36,7 +36,7 @@ hclust2 <- function(matrix,
     call <- current_call() # used for message
     method <- allow_lambda(method)
     if (!is_string(method) && !is.function(method)) {
-        ans <- tryCatch(
+        ans <- try_fetch(
             stats::as.hclust(method),
             error = function(cnd) {
                 cli::cli_abort(paste(
@@ -89,7 +89,7 @@ hclust2 <- function(matrix,
         ans <- stats::hclust(d, method = method)
     } else if (is.function(method)) {
         ans <- method(d)
-        ans <- tryCatch(
+        ans <- try_fetch(
             stats::as.hclust(ans),
             error = function(cnd) {
                 cli::cli_abort(paste(
@@ -138,7 +138,7 @@ hclust2 <- function(matrix,
 #'              which panel current node or edge is from. Note: some nodes may
 #'              fall outside panel (between two panels), so there are possible
 #'              `NA` values in this column.
-#'   - `ggpanel`: Similar with `panel` column, but always give the correct
+#'   - `.panel`: Similar with `panel` column, but always give the correct
 #'              branch for usage of the ggplot facet.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
@@ -147,6 +147,7 @@ hclust2 <- function(matrix,
 #' @examples
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
+#' @importFrom vctrs vec_rbind
 #' @export
 dendrogram_data <- function(tree,
                             priority = "right",
@@ -186,7 +187,10 @@ dendrogram_data <- function(tree,
         root <- root %||% "root"
     } else if (is.numeric(leaf_braches)) {
         root <- root %||% (min(leaf_braches) - 1L)
+    } else {
+        cli::cli_abort("{.arg leaf_braches} must be a character or numeric")
     }
+
     # branch_gap must be a numeric value
     # and the length must be equal to `length(unique(leaf_braches)) - 1L`
     if (is.numeric(branch_gap)) {
@@ -219,7 +223,7 @@ dendrogram_data <- function(tree,
         if (stats::is.leaf(dend)) { # base version
             index <- as.integer(dend) # the column index of the original data
             y <- attr(dend, "height") %||% 0
-            label <- attr(dend, "label") %||% NA_character_
+            label <- attr(dend, "label") %||% NA
             i <<- i + 1L
             if (is.null(leaf_braches)) {
                 branch <- root
@@ -241,7 +245,7 @@ dendrogram_data <- function(tree,
                 index = index, label = label,
                 x = x, y = y, branch = branch,
                 leaf = TRUE, panel = branch,
-                ggpanel = branch
+                .panel = branch
             )
             list(
                 # current node
@@ -259,8 +263,8 @@ dendrogram_data <- function(tree,
             data <- transpose(lapply(dend, .dendrogram_data, from_root = FALSE))
 
             # node should be the direct children
-            node <- do.call(rbind, .subset2(data, "node"))
-            edge <- do.call(rbind, .subset2(data, "edge"))
+            node <- do.call(vec_rbind, .subset2(data, "node"))
+            edge <- do.call(vec_rbind, .subset2(data, "edge"))
 
             # all coordinate for direct children nodes -------------
             # following should be length 2
@@ -334,10 +338,10 @@ dendrogram_data <- function(tree,
 
             # there is no node data in dendrogram root
             if (!from_root) {
-                node <- rbind(node, data_frame0(
-                    index = NA_integer_, label = NA_character_,
+                node <- vec_rbind(node, data_frame0(
+                    index = NA, label = NA,
                     x = x, y = y, branch = branch, leaf = FALSE,
-                    panel = panel, ggpanel = ggpanel
+                    panel = panel, .panel = ggpanel
                 ))
             }
 
@@ -352,7 +356,7 @@ dendrogram_data <- function(tree,
                     branch = direct_leaves_branch,
                     panel1 = direct_leaves_panel,
                     panel2 = direct_leaves_panel,
-                    ggpanel = direct_leaves_ggpanel
+                    .panel = direct_leaves_ggpanel
                 )
                 # 2 horizontal lines
                 # we double the left line and the right line when a node is not
@@ -407,7 +411,7 @@ dendrogram_data <- function(tree,
                             panel,
                             .subset(direct_leaves_panel, i)
                         ),
-                        ggpanel = c(
+                        .panel = c(
                             .subset(direct_leaves_ggpanel, 3L - i),
                             ggpanel,
                             .subset(direct_leaves_ggpanel, i),
@@ -424,10 +428,10 @@ dendrogram_data <- function(tree,
                         branch = direct_leaves_branch,
                         panel1 = rep_len(panel, 2L),
                         panel2 = direct_leaves_panel,
-                        ggpanel = rep_len(ggpanel, 2L)
+                        .panel = rep_len(ggpanel, 2L)
                     )
                 }
-                added_edge <- rbind(vertical_lines, horizontal_lines)
+                added_edge <- vec_rbind(vertical_lines, horizontal_lines)
             } else {
                 added_edge <- data_frame0(
                     x = rep_len(x, 2L),
@@ -437,13 +441,13 @@ dendrogram_data <- function(tree,
                     branch = direct_leaves_branch,
                     panel1 = rep_len(panel, 2L),
                     panel2 = direct_leaves_panel,
-                    ggpanel = rep_len(ggpanel, 2L)
+                    .panel = rep_len(ggpanel, 2L)
                 )
             }
             if (is.null(edge)) {
                 edge <- added_edge
             } else {
-                edge <- rbind(edge, added_edge)
+                edge <- vec_rbind(edge, added_edge)
             }
             list(
                 node = node, edge = edge,
@@ -463,16 +467,12 @@ dendrogram_data <- function(tree,
     branch_levels <- c(branch_levels, root)
     node$panel <- factor(.subset2(node, "panel"), panel_levels)
     node$branch <- factor(.subset2(node, "branch"), branch_levels)
-    node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_levels)
-    rownames(node) <- NULL
+    node$.panel <- factor(.subset2(node, ".panel"), panel_levels)
 
-    edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_levels)
     edge$panel1 <- factor(.subset2(edge, "panel1"), panel_levels)
     edge$panel2 <- factor(.subset2(edge, "panel2"), panel_levels)
     edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
-    rownames(node) <- NULL
-
-    # we rename `ggpanel` into the finale name `.panel`
+    edge$.panel <- factor(.subset2(edge, ".panel"), panel_levels)
     list(node = node, edge = edge)
 }
 

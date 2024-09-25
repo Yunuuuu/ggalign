@@ -1,4 +1,5 @@
 #' @importFrom grid grid.draw
+#' @importFrom rlang try_fetch cnd_signal
 #' @export
 print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     ggplot2::set_last_plot(x)
@@ -12,7 +13,7 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
         on.exit(grid::upViewport())
     }
     # render the plot
-    tryCatch(
+    try_fetch(
         grid.draw(x, ...),
         error = function(e) {
             if (inherits(e, "simpleError") &&
@@ -30,6 +31,7 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
                     ))
                 }
             }
+            cnd_signal(e)
         }
     )
     invisible(x)
@@ -57,7 +59,7 @@ ggalign_gtable.alignpatches <- function(x) {
     # `TODO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
     x$theme <- theme
-    table <- alignpatch(x)$patch_gtable()
+    table <- alignpatch(x)$patch_gtable() %||% make_patch()
 
     fix_respect <- is.matrix(.subset2(table, "respect"))
 

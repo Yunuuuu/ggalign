@@ -20,7 +20,8 @@ Imports:
     methods,
     rlang (>= 1.1.0),
     stats,
-    tidyr
+    tidyr,
+    vctrs
 Suggests:
     gridGraphics,
     knitr,

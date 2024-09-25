@@ -81,9 +81,10 @@ get_grob <- function(x, name) {
     .subset2(.subset2(x, "grobs"), grep(pattern, nms))
 }
 
+#' @importFrom vctrs vec_slice
 #' @importFrom gtable gtable_trim
 subset_gt <- function(gt, index, trim = TRUE) {
-    gt$layout <- .subset2(gt, "layout")[index, , drop = FALSE]
+    gt$layout <- vec_slice(.subset2(gt, "layout"), index)
     gt$grobs <- .subset(.subset2(gt, "grobs"), index)
     if (trim) gtable_trim(gt) else gt
 }
@@ -176,13 +177,14 @@ to_matrix_axis <- function(direction) {
     switch_direction(direction, "row", "column")
 }
 
+#' @importFrom tidyr pivot_longer
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
     col_nms <- colnames(matrix)
-    data <- as_data_frame0(matrix) # nolint
-    colnames(data) <- seq_len(ncol(data))
+    data <- as_data_frame0(matrix)
+    colnames(data) <- as.character(seq_len(ncol(matrix)))
     data$.row_index <- seq_len(nrow(data))
-    data <- tidyr::pivot_longer(data,
+    data <- pivot_longer(data,
         cols = !".row_index",
         names_to = ".column_index",
         values_to = "value"
@@ -203,7 +205,10 @@ quickdf <- function(x) {
     attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
     x
 }
-data_frame0 <- function(...) quickdf(list(...))
+
+#' @importFrom vctrs data_frame
+data_frame0 <- function(...) data_frame(..., .name_repair = "minimal")
+
 as_data_frame0 <- function(data, ...) {
     as.data.frame(
         x = data, ...,
@@ -212,7 +217,6 @@ as_data_frame0 <- function(data, ...) {
         fix.empty.names = FALSE
     )
 }
-
 
 imap <- function(.x, .f, ...) {
     nms <- names(.x)

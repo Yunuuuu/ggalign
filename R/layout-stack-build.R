@@ -1,6 +1,6 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    .subset2(stack_build(x), "plot")
+    .subset2(stack_build(x), "plot") %||% align_plots()
 }
 
 #' @param panel,index layout of the axis vertically with the stack.

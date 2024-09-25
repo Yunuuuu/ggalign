@@ -43,6 +43,7 @@
 #' align_dendro()
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
+#' @importFrom vctrs vec_cast
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
@@ -89,10 +90,8 @@ align <- function(align_class, params,
         order <- NA_integer_
     } else if (!is_scalar(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
-    } else if (is.double(order)) {
-        order <- as.integer(order)
-    } else if (!is.integer(order)) {
-        cli::cli_abort("{.arg order} must be a single number", call = call)
+    } else {
+        order <- vec_cast(order, integer(), call = call)
     }
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
 

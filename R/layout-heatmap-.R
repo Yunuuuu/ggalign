@@ -115,10 +115,11 @@ heatmap_layout.formula <- function(data, ...) {
 #' @export
 heatmap_layout.functon <- heatmap_layout.NULL
 
+#' @importFrom rlang try_fetch
 #' @export
 heatmap_layout.default <- function(data, ...) {
     call <- current_call()
-    data <- tryCatch(
+    data <- try_fetch(
         as.matrix(data),
         error = function(cnd) {
             cli::cli_abort(paste(
@@ -134,6 +135,7 @@ heatmap_layout.default <- function(data, ...) {
     )
 }
 
+#' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 aes
 .heatmap_layout <- function(data, mapping = aes(),
                             ...,
@@ -149,10 +151,8 @@ heatmap_layout.default <- function(data, ...) {
         order <- NA_integer_
     } else if (!is_scalar(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
-    } else if (is.double(order)) {
-        order <- as.integer(order)
-    } else if (!is.integer(order)) {
-        cli::cli_abort("{.arg order} must be a single number", call = call)
+    } else {
+        order <- vec_cast(order, integer(), call = call)
     }
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
     plot <- ggplot2::ggplot(mapping = mapping) +

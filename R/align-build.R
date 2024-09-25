@@ -226,7 +226,8 @@ set_scales <- function(plot, scale_name, panel, index,
     ), NULL)
 }
 
-get_breaks <- function(scale, layout_limits, layout_labels) {
+#' @importFrom vctrs vec_cast
+get_breaks <- function(scale, layout_breaks, layout_labels) {
     breaks <- scale$breaks
     if (identical(breaks, NA)) {
         cli::cli_abort(c(
@@ -239,29 +240,26 @@ get_breaks <- function(scale, layout_limits, layout_labels) {
     }
 
     if (is.waive(breaks)) {
-        breaks <- layout_limits
+        breaks <- layout_breaks
     } else {
         if (is.function(breaks)) {
-            breaks <- breaks(layout_labels %||% layout_limits)
+            breaks <- breaks(layout_labels %||% layout_breaks)
         }
 
         if (is.factor(breaks) || is.character(breaks)) {
             # we interpreted the character breaks as the names of the original
             # matrix data.
-            breaks <- layout_limits[
-                match(as.character(breaks), layout_labels %||% layout_limits)
+            breaks <- layout_breaks[
+                match(as.character(breaks), layout_labels %||% layout_breaks)
             ]
-        } else if (is.numeric(breaks)) {
-            # we interpreted the numeric breaks as the index of the original
-            # matrix data
-            breaks <- as.integer(breaks)
         } else {
-            return(NULL)
+            # breaks must be a character or an integer
+            breaks <- vec_cast(breaks, integer(), call = scale$call)
         }
     }
 
     # Breaks only occur only on values in domain
-    in_domain <- intersect(breaks, layout_limits)
+    in_domain <- intersect(breaks, layout_breaks)
     structure(in_domain, pos = match(in_domain, breaks))
 }
 

@@ -172,10 +172,7 @@ add_wrapped_grob <- function(gt, grob, on_top, i) {
             clip = clip, name = sprintf("wrap-full-%d", i), z = z
         )
     } else {
-        panels <- layout[
-            grep("^panel", .subset2(layout, "name")), ,
-            drop = FALSE
-        ]
+        panels <- vec_slice(layout, grep("^panel", .subset2(layout, "name")))
         panel_loc <- list(
             t = min(.subset2(panels, "t")),
             l = min(.subset2(panels, "l")),

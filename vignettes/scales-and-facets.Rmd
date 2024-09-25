@@ -46,7 +46,7 @@ discrete scale, thought you can provide as a continuous scale.
 
     - A character vector of breaks (rownames / colunames of the matrix).
 
-    - A numeric vector of data index.
+    - A numeric vector of data index (floating number were not allowed).
 
     - A function that takes the data limits or the data index as input and
     returns breaks as output. Also accepts rlang lambda function notation. 
@@ -70,7 +70,12 @@ ggheatmap(small_mat) + scale_x_continuous(breaks = c("column3", "column5"))
 ```
 
 ```{r}
-ggheatmap(small_mat) + scale_x_continuous(breaks = 5:6)
+ggheatmap(small_mat) + scale_x_continuous(breaks = c(3, 5))
+```
+
+Floating number were not allowed.
+```{r error=TRUE}
+ggheatmap(small_mat) + scale_x_continuous(breaks = c(3.5, 5))
 ```
 
 ### labels

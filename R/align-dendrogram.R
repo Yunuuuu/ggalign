@@ -121,6 +121,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         )
         ans
     },
+    #' @importFrom vctrs vec_slice
     compute = function(self, panel, index,
                        distance, method, use_missing, reorder_group,
                        k = NULL, h = NULL) {
@@ -157,7 +158,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             # we do clustering within each group ---------------
             for (g in levels(panel)) {
                 i <- which(panel == g)
-                gdata <- data[i, , drop = FALSE]
+                gdata <- vec_slice(data, i)
                 if (nrow(gdata) == 1L) {
                     children[[g]] <- tree_one_node(i, .subset(labels, i))
                 } else {
@@ -187,7 +188,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             } else if (reorder_group) {
                 parent_levels <- levels(panel)
                 parent_data <- t(sapply(parent_levels, function(g) {
-                    colMeans(data[panel == g, , drop = FALSE])
+                    colMeans(vec_slice(data, panel == g))
                 }))
                 rownames(parent_data) <- parent_levels
                 parent <- stats::as.dendrogram(hclust2(
