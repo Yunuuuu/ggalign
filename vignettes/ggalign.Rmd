@@ -104,6 +104,7 @@ ggheatmap(small_mat) +
         stat = "identity",
         orientation = "y"
     ) +
+    scale_fill_brewer(name = NULL, palette = "Accent", guide = "none") +
     scale_x_reverse()
 ```
 
