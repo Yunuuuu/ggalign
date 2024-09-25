@@ -150,6 +150,20 @@ width/height of the left or top annotation, the second controls the relative
 size of the heatmap body width/height, and the third controls the relative
 width/height of the right or bottom annotation. 
 
+By default the three rows/columns will have equal sizes.
+```{r}
+ggstack(small_mat, "v") +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    hmanno("l") +
+    align_dendro(aes(color = .panel), k = 3L) +
+    scale_x_reverse() +
+    hmanno("r") +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    ggheatmap()
+```
+
 ```{r}
 ggstack(small_mat, "v", c(1, 2, 1)) +
     ggheatmap() +
@@ -179,7 +193,7 @@ ggstack(small_mat, "v") +
 ```
 
 By default the flank annotation will fill the whole stack flank, but we can
-still control the size of heatmap annotation in `hmanno()`. 
+still control the total size of heatmap annotation in `hmanno()`. 
 ```{r}
 ggstack(small_mat, "v") +
     ggheatmap() +
