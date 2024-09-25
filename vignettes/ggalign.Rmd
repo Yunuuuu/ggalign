@@ -35,14 +35,7 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # Simple heatmap
 ```{r}
-ggheatmap(small_mat) +
-    scale_fill_viridis_c()
-```
-  
-```{r}
-ggheatmap(small_mat) +
-    geom_point() +
-    scale_fill_viridis_c()
+ggheatmap(small_mat) + scale_fill_viridis_c()
 ```
 
 # heatmap layout customize
