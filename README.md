@@ -74,12 +74,10 @@ For more information on adding plots, refer to the vignette:
 
 ### Pros
 
-- Data can automatically inherit from the heatmap body, reducing the
-  need for manual data manipulation.
-- Heatmap annotation axes and legends are automatically generated,
-  simplifying plot creation.
+- Data can automatically inherit from the heatmap body.
+- Heatmap annotation axes and legends are automatically generated.
 - Dendrograms can be easily customized and colored based on cluster
-  characteristics, offering more flexibility in visual styling.
+  characteristics.
 - Full integration with the ggplot2 ecosystem allows for a broader range
   of customization options, including advanced themes, layouts,
   annotation positioning, geoms, stats, the full range of ggplot2 color
