@@ -27,7 +27,7 @@ align_build <- function(x, panel, index,
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data
     free_labs <- .subset2(x, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
-    theme <- .subset2(x, "theme") %|w|% theme
+    theme <- inherit_theme(.subset2(x, "theme"), theme)
     plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
 
     # only when user use the internal facet, we'll
@@ -75,6 +75,18 @@ align_build <- function(x, panel, index,
         plot <- free_space(free_border(plot, free_spaces), free_spaces)
     }
     list(plot = plot, size = .subset2(x, "size"))
+}
+
+inherit_theme <- function(theme, parent) {
+    if (is.null(theme)) return(NULL) # styler: off
+    # if parent theme is not set, we use NULL
+    parent_theme <- parent %|w|% NULL
+    if (is.waive(theme)) { # inherit from parent theme
+        theme <- parent_theme
+    } else if (!is.null(parent_theme)) {
+        theme <- parent_theme + theme
+    }
+    theme
 }
 
 finish_plot_data <- function(plot, plot_data,

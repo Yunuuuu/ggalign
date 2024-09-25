@@ -53,9 +53,9 @@ handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
 \item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
-plots in the layout. Use \code{NULL} if you don't want to any theme components to
-be added. Use \link[ggplot2:waiver]{waiver()}, if you want to inherit from the
-parent layout.}
+plots in the layout. Use \link[ggplot2:waiver]{waiver()}, if you want to
+inherit from the parent layout. Use \code{NULL} if you don't want to any theme
+components to be added.}
 
 \item{free_labs}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from

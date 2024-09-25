@@ -28,9 +28,9 @@
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
 #' @param theme A [theme()][ggplot2::theme] object, which will be added to all
-#' plots in the layout. Use `NULL` if you don't want to any theme components to
-#' be added. Use [waiver()][ggplot2::waiver()], if you want to inherit from the
-#' parent layout.
+#' plots in the layout. Use [waiver()][ggplot2::waiver()], if you want to
+#' inherit from the parent layout. Use `NULL` if you don't want to any theme
+#' components to be added.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
 #' @inheritParams heatmap_layout

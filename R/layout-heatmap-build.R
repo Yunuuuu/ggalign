@@ -97,10 +97,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     }
 
     # inherit from the parent stack layout
-    theme <- .subset2(params, "theme") %|w|% theme
-
-    # by default, we won't add any theme components
-    heatmap_theme <- theme %|w|% NULL
+    theme <- inherit_theme(.subset2(params, "theme"), theme)
 
     # read the plot ---------------------------------------
     p <- heatmap@plot
@@ -223,7 +220,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
-    p <- p + heatmap_theme
+    p <- p + theme
     if (!is.null(heatmap_labs)) {
         p <- free_lab(p, heatmap_labs)
     }

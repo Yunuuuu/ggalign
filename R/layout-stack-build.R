@@ -46,7 +46,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
     guides <- .subset2(params, "guides") %|w|% guides
     free_labs <- .subset2(params, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
-    theme <- .subset2(params, "theme") %|w|% theme
+    theme <- inherit_theme(.subset2(params, "theme"), theme)
     patches <- stack_patch(direction)
     has_top <- FALSE
     has_bottom <- FALSE
@@ -59,7 +59,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
                 plot_data = plot_data %|w|% NULL,
                 free_labs = free_labs %|w|% "tlbr",
                 free_spaces = free_spaces %|w|% NULL,
-                theme = theme %|w|% NULL
+                theme = theme
             )
             patches <- stack_patch_add_align(
                 patches,
