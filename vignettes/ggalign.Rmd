@@ -127,7 +127,7 @@ ggheatmap(small_mat) +
 ```
 
 # More complex heatmap
-```{r}
+```{r fig.dim = c(12, 10)}
 expr <- read_example("gene_expression.rds")
 mat <- as.matrix(expr[, grep("cell", colnames(expr))])
 base_mean <- rowMeans(mat)
