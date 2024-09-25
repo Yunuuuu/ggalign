@@ -1,0 +1,208 @@
+---
+title: "ggalign"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggalign}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+You can install `ggalign` from CRAN with `install.packages("ggalign")`, However,
+the latest version has undergone significant changes, so it's recommended to
+install it from GitHub for the most up-to-date features:
+```{r}
+# install.packages("remotes")
+remotes::install_github("Yunuuuu/ggalign")
+```
+
+```{r setup}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
+# Simple heatmap
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c()
+```
+  
+```{r}
+ggheatmap(small_mat) +
+    geom_point() +
+    scale_fill_viridis_c()
+```
+
+# heatmap layout customize
+## Based on dendrogram
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3) +
+    geom_point(aes(color = branch, y = y)) +
+    scale_color_brewer(palette = "Dark2")
+```
+
+## Based on kmeans
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_kmeans(3L)
+```
+
+## Based on a group variable
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
+```
+
+## Based on a ordering weights
+Here, we ordered the heatmap rows based on the row means.
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("l") +
+    align_reorder(rowMeans)
+```
+
+# Heatmap annotation plot
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3) +
+    geom_point(aes(color = branch, y = y)) +
+    scale_color_brewer(palette = "Dark2") +
+    ggalign(aes(y = value)) +
+    geom_boxplot(aes(fill = .panel, group = interaction(.x, .panel))) +
+    scale_fill_brewer(palette = "Dark2")
+```
+
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t", size = 0.5) +
+    align_dendro(aes(color = branch), k = 3L) +
+    ggalign(aes(y = value), data = rowSums) +
+    geom_bar(stat = "identity", aes(fill = factor(.panel))) +
+    scale_fill_brewer(name = NULL, palette = "Dark2") +
+    hmanno("l", size = 0.5) +
+    align_dendro(aes(color = branch), size = 0.5, k = 4L) +
+    scale_x_reverse() +
+    ggalign(aes(x = value), data = rowSums) +
+    geom_bar(
+        aes(y = .y, fill = factor(.y)),
+        stat = "identity",
+        orientation = "y"
+    ) +
+    scale_x_reverse()
+```
+
+# Multiple heatmaps
+```{r}
+(ggstack(small_mat) +
+    ggheatmap() +
+    ggheatmap() &
+    scale_fill_viridis_c() &
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))) +
+    stack_active() +
+    align_dendro(aes(color = branch), k = 4L, size = 0.2) +
+    scale_color_brewer(palette = "Dark2")
+```
+
+# More complex heatmap
+```{r}
+expr <- read_example("gene_expression.rds")
+mat <- as.matrix(expr[, grep("cell", colnames(expr))])
+base_mean <- rowMeans(mat)
+mat_scaled <- t(apply(mat, 1, scale))
+type <- gsub("s\\d+_", "", colnames(mat))
+ggstack(data = mat_scaled) +
+    stack_active(sizes = c(0.2, 1, 1)) +
+    # group stack rows into 5 groups
+    align_kmeans(centers = 5L) +
+    # add a block plot for each group in the stack
+    ggpanel(size = unit(1, "cm")) +
+    geom_tile(aes(x = 1, fill = factor(.panel))) +
+    scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
+    scale_x_continuous(breaks = NULL, name = NULL) +
+    # add a heatmap plot in the stack
+    ggheatmap() +
+    hmanno(free_spaces = "l") +
+    scale_y_continuous(breaks = NULL) +
+    scale_fill_viridis_c(option = "magma") +
+    # add dendrogram for this heatmap
+    hmanno("t") +
+    align_dendro() +
+    # add a block for the heatmap column
+    ggalign(data = type, size = unit(1, "cm")) +
+    geom_tile(aes(y = 1, fill = factor(value))) +
+    scale_y_continuous(breaks = NULL, name = NULL) +
+    scale_fill_brewer(
+        palette = "Set1", name = "type",
+        guide = guide_legend(position = "top")
+    ) +
+    # add another heatmap in the stack and set the heatmap body width
+    ggheatmap(base_mean, width = unit(2, "cm")) +
+    scale_y_continuous(breaks = NULL) +
+    scale_x_continuous(name = "base mean", breaks = FALSE) +
+    scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
+    # set the active context of the heatmap to the top
+    # and set the size of the top stack
+    hmanno("t", size = unit(4, "cm")) +
+    # add box plot in the heatmap top
+    ggalign() +
+    geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
+    scale_x_continuous(expand = expansion(), breaks = NULL) +
+    scale_fill_brewer(
+        palette = "Dark2", name = "base mean",
+        guide = guide_legend(position = "top")
+    ) +
+    theme(axis.title.y = element_blank()) +
+    # we move into the stack layout
+    stack_active() +
+    # add a point plot
+    ggalign(data = expr$length, size = unit(2, "cm")) +
+    geom_point(aes(x = value)) +
+    labs(x = "length") +
+    theme(
+        panel.border = element_rect(fill = NA),
+        axis.text.x = element_text(angle = -60, hjust = 0)
+    ) +
+    # add another heatmap and set the heatmap body width
+    ggheatmap(expr$type, width = unit(2, "cm")) +
+    scale_fill_brewer(palette = "Set3", name = "gene type") +
+    scale_x_continuous(breaks = NULL, name = "gene type") +
+    # add barplot in the top annotation, and remove the spaces in the y-axis
+    hmanno("t", free_spaces = "lr") +
+    ggalign(limits = FALSE) +
+    geom_bar(
+        aes(.extra_panel, fill = factor(value)),
+        position = position_fill()
+    ) +
+    scale_x_discrete() +
+    scale_y_continuous(expand = expansion()) +
+    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
+    theme(plot.margin = margin()) &
+    theme(
+        plot.background = element_blank(), panel.background = element_blank(),
+        legend.background = element_blank()
+    )
+```
+
+# Session information
+```{r}
+sessionInfo()
+```
