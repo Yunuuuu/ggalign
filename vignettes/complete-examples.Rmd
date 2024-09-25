@@ -1,8 +1,8 @@
 ---
-title: "complete-examples"
+title: "Complete Examples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{complete-examples}
+  %\VignetteIndexEntry{Complete Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
