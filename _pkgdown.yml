@@ -93,6 +93,7 @@ articles:
   - layout-plot
   - stack-layout
   - scales-and-facets
+  - complete-examples
 
 - title: FAQ
   navbar: " "
