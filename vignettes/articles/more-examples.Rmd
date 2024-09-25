@@ -27,8 +27,7 @@ mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
 
 ggstack(data = mat_scaled) +
-    # remove margins
-    stack_active(theme = theme(plot.margin = margin())) +
+    stack_active(sizes = c(0.2, 1, 1)) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +
     # add a block plot for each group in the stack
@@ -38,11 +37,9 @@ ggstack(data = mat_scaled) +
     scale_x_continuous(breaks = NULL, name = NULL) +
     # add a heatmap plot in the stack
     ggheatmap() +
-    # Note, the x-axis of the left plot will have expansion,
-    # so, there'll be some spaces between this heatmap of the left tile
     hmanno(free_spaces = "l") +
     scale_y_continuous(breaks = NULL) +
-    scale_fill_viridis_c() +
+    scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
     hmanno("t") +
     align_dendro() +
@@ -50,7 +47,10 @@ ggstack(data = mat_scaled) +
     ggalign(data = type, size = unit(1, "cm")) +
     geom_tile(aes(y = 1, fill = factor(value))) +
     scale_y_continuous(breaks = NULL, name = NULL) +
-    scale_fill_brewer(palette = "Set1", name = "type") +
+    scale_fill_brewer(
+        palette = "Set1", name = "type",
+        guide = guide_legend(position = "top")
+    ) +
     # add another heatmap in the stack and set the heatmap body width
     ggheatmap(base_mean, width = unit(2, "cm")) +
     scale_y_continuous(breaks = NULL) +
@@ -60,32 +60,30 @@ ggstack(data = mat_scaled) +
     # and set the size of the top stack
     hmanno("t", size = unit(4, "cm")) +
     # add box plot in the heatmap top
-    ggalign(theme = theme(plot.margin = margin(r = 3))) +
+    ggalign() +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
     scale_x_continuous(expand = expansion(), breaks = NULL) +
-    scale_fill_brewer(palette = "Dark2", guide = "none") +
+    scale_fill_brewer(
+        palette = "Dark2", name = "base mean",
+        guide = guide_legend(position = "top")
+    ) +
     theme(axis.title.y = element_blank()) +
     # we move into the stack layout
     stack_active() +
     # add a point plot
-    ggalign(
-        data = expr$length, size = unit(2, "cm"),
-        theme = theme(plot.margin = margin(r = 3))
-    ) +
+    ggalign(data = expr$length, size = unit(2, "cm")) +
     geom_point(aes(x = value)) +
     labs(x = "length") +
     theme(
         panel.border = element_rect(fill = NA),
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
-    # add another heatmap, and set the heatmap body width
+    # add another heatmap and set the heatmap body width
     ggheatmap(expr$type, width = unit(2, "cm")) +
-    # set the heatmap layout theme
-    hmanno(theme = theme(plot.margin = margin(r = 3))) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
-    hmanno("t", free_spaces = "lr", theme = theme(plot.margin = margin(b = 3))) +
+    hmanno("t", free_spaces = "lr") +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
@@ -93,7 +91,12 @@ ggstack(data = mat_scaled) +
     ) +
     scale_x_discrete() +
     scale_y_continuous(expand = expansion()) +
-    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none")
+    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
+    theme(plot.margin = margin()) &
+    theme(
+        plot.background = element_blank(), panel.background = element_blank(),
+        legend.background = element_blank()
+    )
 ```
 
 # The measles vaccine heatmap
