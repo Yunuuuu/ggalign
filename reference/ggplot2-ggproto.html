@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
     <li><a class="dropdown-item" href="../articles/scales-and-facets.html">Scales and Facets</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">complete-examples</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
@@ -64,7 +65,7 @@
 
 
 
-<p>All <code>geom_*()</code> functions (like <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>) return a layer that
+<p>All <code>geom_*()</code> functions (like <code>geom_point()</code>) return a layer that
 contains a <code>Geom*</code> object (like <code>GeomPoint</code>). The <code>Geom*</code>
 object is responsible for rendering the data in the plot.</p>
 <p>Each of the <code>Geom*</code> objects is a <code><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto()</a></code> object, descended
@@ -108,7 +109,7 @@ and ymin and ymax values. It can potentially set other values as well.</p></li>
 
 
 
-<p>All <code>coord_*()</code> functions (like <code><a href="https://ggplot2.tidyverse.org/reference/coord_trans.html" class="external-link">coord_trans()</a></code>) return a <code>Coord*</code>
+<p>All <code>coord_*()</code> functions (like <code>coord_trans()</code>) return a <code>Coord*</code>
 object (like <code>CoordTrans</code>).</p>
 <p>Each of the <code>Coord*</code> objects is a <code><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto()</a></code> object,
 descended from the top-level <code>Coord</code>.  To create a new type of Coord
@@ -121,17 +122,17 @@ object, you typically will want to implement one or more of the following:</p><u
 <li><p><code>backtransform_range(panel_params)</code>: Extracts the panel range provided
 in <code>panel_params</code> (created by <code>setup_panel_params()</code>, see below) and
 back-transforms to data coordinates. This back-transformation can be needed
-for coords such as <code><a href="https://ggplot2.tidyverse.org/reference/coord_trans.html" class="external-link">coord_trans()</a></code> where the range in the transformed
+for coords such as <code>coord_trans()</code> where the range in the transformed
 coordinates differs from the range in the untransformed coordinates. Returns
 a list of two ranges, <code>x</code> and <code>y</code>, and these correspond to the variables
-mapped to the <code>x</code> and <code>y</code> aesthetics, even for coords such as <code><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip()</a></code>
+mapped to the <code>x</code> and <code>y</code> aesthetics, even for coords such as <code>coord_flip()</code>
 where the <code>x</code> aesthetic is shown along the y direction and vice versa.</p></li>
 <li><p><code>range(panel_params)</code>: Extracts the panel range provided
 in <code>panel_params</code> (created by <code>setup_panel_params()</code>, see below) and
 returns it. Unlike <code>backtransform_range()</code>, this function does not perform
 any back-transformation and instead returns final transformed coordinates. Returns
 a list of two ranges, <code>x</code> and <code>y</code>, and these correspond to the variables
-mapped to the <code>x</code> and <code>y</code> aesthetics, even for coords such as <code><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip()</a></code>
+mapped to the <code>x</code> and <code>y</code> aesthetics, even for coords such as <code>coord_flip()</code>
 where the <code>x</code> aesthetic is shown along the y direction and vice versa.</p></li>
 <li><p><code>transform</code>: Transforms x and y coordinates.</p></li>
 <li><p><code>distance</code>: Calculates distance.</p></li>
