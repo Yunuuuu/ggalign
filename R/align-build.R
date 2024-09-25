@@ -80,11 +80,11 @@ align_build <- function(x, panel, index,
 inherit_theme <- function(theme, parent) {
     if (is.null(theme)) return(NULL) # styler: off
     # if parent theme is not set, we use NULL
-    parent_theme <- parent %|w|% NULL
+    parent <- parent %|w|% NULL
     if (is.waive(theme)) { # inherit from parent theme
-        theme <- parent_theme
-    } else if (!is.null(parent_theme)) {
-        theme <- parent_theme + theme
+        theme <- parent
+    } else if (!is.null(parent)) {
+        theme <- parent + theme
     }
     theme
 }
