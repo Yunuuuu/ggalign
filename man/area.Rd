@@ -55,6 +55,6 @@ layout <- c(
 # Show the layout to make sure it looks as it should
 plot(layout)
 
-# Apply it to a patchwork
+# Apply it to a alignpatches
 align_plots(p1, p2, p3, design = layout)
 }

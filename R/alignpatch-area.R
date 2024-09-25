@@ -42,7 +42,7 @@
 #' # Show the layout to make sure it looks as it should
 #' plot(layout)
 #'
-#' # Apply it to a patchwork
+#' # Apply it to a alignpatches
 #' align_plots(p1, p2, p3, design = layout)
 #' @importFrom vctrs df_list vec_cast new_data_frame
 #' @export
@@ -134,8 +134,9 @@ c.align_area <- function(...) vec_rbind(...)
 #' @export
 as_areas.patch_area <- function(x) add_class(x, "align_area")
 
+#' @importFrom vctrs vec_size
 #' @export
-length.align_area <- function(x) length(.subset2(x, "t"))
+length.align_area <- function(x) vec_size(x)
 
 #' @importFrom vctrs new_data_frame
 #' @export
