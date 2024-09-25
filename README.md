@@ -82,8 +82,8 @@ For more information on adding plots, refer to the vignette:
   characteristics, offering more flexibility in visual styling.
 - Full integration with the ggplot2 ecosystem allows for a broader range
   of customization options, including advanced themes, layouts,
-  annotation positioning, geoms, stats, and other ggplot2 components.
-- Supports the full range of ggplot2 color palettes.
+  annotation positioning, geoms, stats, the full range of ggplot2 color
+  palettes and other ggplot2 components.
 - Provides a more familiar workflow for users already accustomed to
   ggplot2, reducing the learning curve compared to a specialized package
   like ComplexHeatmap.
