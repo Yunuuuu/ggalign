@@ -143,7 +143,8 @@ length.align_area <- function(x) vec_size(x)
 print.align_area <- function(x, ...) {
     cat(
         length(x), "patch areas, spanning",
-        max(x$r), "columns and", max(x$b), "rows\n\n"
+        max(.subset2(x, "r")), "columns and", 
+        max(.subset2(x, "b")), "rows\n\n"
     )
     print(new_data_frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
     invisible(x)
