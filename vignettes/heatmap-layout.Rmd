@@ -89,8 +89,8 @@ ggheatmap(small_mat) +
 ```
 
 We can add any `align_*()` function to the annotation. For more details on
-`align_*()` functions, refer to `vignette("align-layout")` and
-`vignette("align-plot")`.
+`align_*()` functions, refer to `vignette("layout-customize")` and
+`vignette("layout-plot")`.
 
 ```{r}
 ggheatmap(small_mat) +

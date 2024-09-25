@@ -60,6 +60,10 @@ to vertical, use the `direction` argument:
 ggstack(small_mat, "v") + align_dendro()
 ```
 
+>Note that vertical stack take the `x-axis` as the observations, but horizontal
+stack take the `y-axis` as the observations.
+
+## Data frame Input
 Unlike `heatmap_layout()`/`ggheatmap()`, data frames are not automatically
 converted into a matrix within `ggstack()`.
 
@@ -69,10 +73,9 @@ function, the data frame from `ggstack()` will be passed to the function and
 internally converted into a matrix, which may result in missing values. 
 
 An exception is the `align_gg()`/`ggalign()` function, which can handle both
-matrix and data frames. When the input is a matrix (or a simple vector), it is
-automatically transformed into a long-format data frame. When the input is a
-data frame, only the necessary panel and axis information is added to the data
-frame.
+matrix and data frames. When the input is a matrix (or a simple vector), it will
+be transformed into a long-format data frame. When the input is a data frame,
+only the necessary panel and axis information will be added to the data frame.
 
 ```{r}
 ggstack(mtcars) +
@@ -86,11 +89,123 @@ for horizontal stack and `aes(x = .data$.x)` for vertical stack. So here we only
 provide mapping for the `x-axis`.
 
 For more information on adding plots, refer to the vignette:
-`vignette("align-plot")`.
+`vignette("layout-plot")`.
 
 ## Heatmap plot
 Besides the `align_*()` functions, we can also add the
 `heatmap_layout()`/`ggheatmap()` into the stack layout.
+
+```{r}
+ggstack(small_mat) +
+    ggheatmap()
+```
+
+As mentioned earlier, vertical stacks use the `x-axis` for observations, while
+horizontal stacks use the `y-axis`. However, heatmap layouts always use the y-axis
+for observations. When a heatmap layout is added to a vertical stack layout, the
+inherited data is automatically converted to a matrix and transposed before use. 
+```{r}
+ggstack(small_mat, direction = "v") +
+    ggheatmap()
+```
+
+Once a heatmap layout is added, any further elements you add will be applied to
+this heatmap layout. You can include `align_*` elements or any ggplot2
+components for the heatmap. 
+
+```{r}
+ggstack(small_mat) +
+    ggheatmap() +
+    scale_fill_viridis_c()
+```
+
+If you'd like to add elements to the stack layout rather than the heatmap
+layout, you can easily switch from the heatmap layout to the stack layout using
+`stack_active()`. 
+```{r}
+ggstack(small_mat) +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    stack_active() +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value), fill = "red", orientation = "y", stat = "identity")
+```
+
+One exception is the heatmap layout itself, which cannot be added to another
+heatmap layout. Therefore, you can directly add a heatmap layout to the stack
+layout without using `stack_active()`. 
+```{r}
+ggstack(small_mat, "v") +
+    ggheatmap() +
+    ggheatmap() &
+    scale_fill_viridis_c()
+```
+
+## Control sizes
+A length of 3 sizes should be provided in `ggstack()` when putting a heatmap
+with flank annotation into the stack layout. For vertical stacks, this means
+heatmaps with left or right annotations; for horizontal stacks, this means
+heatmaps with top or bottom annotations. The first size controls the relative
+width/height of the left or top annotation, the second controls the relative
+size of the heatmap body width/height, and the third controls the relative
+width/height of the right or bottom annotation. 
+
+```{r}
+ggstack(small_mat, "v", c(1, 2, 1)) +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    hmanno("l") +
+    align_dendro(aes(color = .panel), k = 3L) +
+    scale_x_reverse() +
+    hmanno("r") +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    ggheatmap()
+```
+
+In this way, heatmap body width/height specified in `hmanno()` or `ggheatmap()`
+won't work.
+```{r}
+ggstack(small_mat, "v") +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    hmanno("l") +
+    align_dendro(aes(color = .panel), k = 3L) +
+    scale_x_reverse() +
+    hmanno("r") +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    ggheatmap(width = unit(2, "null"))
+```
+
+By default the flank annotation will fill the whole stack flank, but we can
+still control the size of heatmap annotation in `hmanno()`. 
+```{r}
+ggstack(small_mat, "v") +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    hmanno("l", size = unit(2, "cm")) +
+    align_dendro(aes(color = .panel), k = 3L) +
+    scale_x_reverse() +
+    hmanno("r") +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    ggheatmap()
+```
+
+You can also use `npc` unit.
+```{r}
+ggstack(small_mat, "v") +
+    ggheatmap() +
+    scale_fill_viridis_c() +
+    hmanno("l", size = unit(0.5, "npc")) +
+    align_dendro(aes(color = .panel), k = 3L) +
+    scale_x_reverse() +
+    hmanno("r") +
+    ggalign(data = rowSums) +
+    geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
+    ggheatmap()
+```
 
 ## Session information
 ```{r}
