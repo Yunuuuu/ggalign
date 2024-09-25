@@ -60,7 +60,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">geom_draw</span><span class="op">(</span></span>
-<span>  draw <span class="op">=</span> <span class="fu">zeroGrob</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  draw <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/zeroGrob.html" class="external-link">zeroGrob</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -116,7 +116,7 @@ When using a <code>geom_*()</code> function to construct a layer, the <code>stat
 argument can be used the override the default coupling between geoms and
 stats. The <code>stat</code> argument accepts the following:</p><ul><li><p>A <code>Stat</code> ggproto subclass, for example <code>StatCount</code>.</p></li>
 <li><p>A string naming the stat. To give the stat as a string, strip the
-function name of the <code>stat_</code> prefix. For example, to use <code>stat_count()</code>,
+function name of the <code>stat_</code> prefix. For example, to use <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">stat_count()</a></code>,
 give the stat as <code>"count"</code>.</p></li>
 <li><p>For more information and other ways to specify the stat, see the
 <a href="https://ggplot2.tidyverse.org/reference/layer_stats.html" class="external-link">layer stat</a> documentation.</p></li>
@@ -126,11 +126,11 @@ give the stat as <code>"count"</code>.</p></li>
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
 <dd><p>A position adjustment to use on the data for this layer. This
 can be used in various ways, including to prevent overplotting and
-improving the display. The <code>position</code> argument accepts the following:</p><ul><li><p>The result of calling a position function, such as <code>position_jitter()</code>.
+improving the display. The <code>position</code> argument accepts the following:</p><ul><li><p>The result of calling a position function, such as <code><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html" class="external-link">position_jitter()</a></code>.
 This method allows for passing extra arguments to the position.</p></li>
 <li><p>A string naming the position adjustment. To give the position as a
 string, strip the function name of the <code>position_</code> prefix. For example,
-to use <code>position_jitter()</code>, give the position as <code>"jitter"</code>.</p></li>
+to use <code><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html" class="external-link">position_jitter()</a></code>, give the position as <code>"jitter"</code>.</p></li>
 <li><p>For more information and other ways to specify the position, see the
 <a href="https://ggplot2.tidyverse.org/reference/layer_positions.html" class="external-link">layer position</a> documentation.</p></li>
 </ul></dd>
