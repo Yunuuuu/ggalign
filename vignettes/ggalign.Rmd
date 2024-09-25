@@ -23,6 +23,10 @@ remotes::install_github("Yunuuuu/ggalign")
 ```
 
 ```{r setup}
+library(ggalign)
+```
+
+```{r setup_data}
 set.seed(123)
 small_mat <- matrix(rnorm(81), nrow = 9)
 rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
