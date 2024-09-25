@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 You can install `ggalign` from CRAN with `install.packages("ggalign")`, However,
 the latest version has undergone significant changes, so it's recommended to
 install it from GitHub for the most up-to-date features:
-```{r}
+```{r, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("Yunuuuu/ggalign")
 ```
