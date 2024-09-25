@@ -70,6 +70,32 @@ For more information on adding plots, refer to the vignette:
 - [Scales and
   Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
 
+## Compare with ComplexHeatmap
+
+### Pros
+
+- Data can automatically inherit from the heatmap body, reducing the
+  need for manual data manipulation.
+- Heatmap annotation axes and legends are automatically generated,
+  simplifying plot creation.
+- Dendrograms can be easily customized and colored based on cluster
+  characteristics, offering more flexibility in visual styling.
+- Full integration with the ggplot2 ecosystem allows for a broader range
+  of customization options, including advanced themes, layouts,
+  annotation positioning, geoms, stats, and other ggplot2 components.
+- Supports the full range of ggplot2 color palettes.
+- Provides a more familiar workflow for users already accustomed to
+  ggplot2, reducing the learning curve compared to a specialized package
+  like ComplexHeatmap.
+- Enhanced flexibility in controlling plot size, and spacing.
+- Can easily align with ggplot2 plots by panel area.
+
+### Cons
+
+Fewer Built-In Annotations: May require additional coding for specific
+annotations or customization compared to the extensive built-in
+annotation function in ComplexHeatmap.
+
 ## Examples
 
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
