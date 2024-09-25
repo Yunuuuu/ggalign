@@ -474,16 +474,17 @@ information.</p>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="va">seriate</span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/seriation/man/seriate.html" class="external-link">seriate</a></span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="va">seriate</span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/seriation/man/seriate.html" class="external-link">seriate</a></span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <p>The above code will execute <code>seriate()</code> twice—once for
 each dimension. However, since a single run of <code>seriate()</code>
 can provide the ordering for both dimensions, we can manually extract
 the ordering indices to avoid redundancy.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">seriation</span><span class="fu">::</span><span class="fu">seriate</span><span class="op">(</span><span class="va">mat2</span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">seriation</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/seriation/man/seriate.html" class="external-link">seriate</a></span><span class="op">(</span><span class="va">mat2</span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span></span>
 <span>        low <span class="op">=</span> <span class="st">"#2600D1FF"</span>, high <span class="op">=</span> <span class="st">"#EE3F3FFF"</span>,</span>
@@ -491,12 +492,13 @@ the ordering indices to avoid redundancy.</p>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="fu">get_order</span><span class="op">(</span><span class="va">o</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/seriation/man/get_order.html" class="external-link">get_order</a></span><span class="op">(</span><span class="va">o</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="fu">get_order</span><span class="op">(</span><span class="va">o</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/seriation/man/get_order.html" class="external-link">get_order</a></span><span class="op">(</span><span class="va">o</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>For more use of the <code>seriate()</code> function, please refer to
-the <a href="https://cran.r-project.org/web/packages/seriation/index.html" class="external-link">seriation</a>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-22-1.png" width="700">
+For more use of the <code>seriate()</code> function, please refer to the
+<a href="https://cran.r-project.org/web/packages/seriation/index.html" class="external-link">seriation</a>
 package.</p>
 </div>
 <div class="section level2">
@@ -528,19 +530,20 @@ package.</p>
 <span><span class="co">#&gt; [1] ggalign_0.0.4 ggplot2_3.5.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] gtable_0.3.5      jsonlite_1.8.9    highr_0.11        dplyr_1.1.4      </span></span>
-<span><span class="co">#&gt;  [5] compiler_4.4.1    tidyselect_1.2.1  tidyr_1.3.1       cluster_2.1.6    </span></span>
-<span><span class="co">#&gt;  [9] jquerylib_0.1.4   systemfonts_1.1.0 scales_1.3.0      textshaping_0.4.0</span></span>
-<span><span class="co">#&gt; [13] ggh4x_0.2.8       yaml_2.3.10       fastmap_1.2.0     R6_2.5.1         </span></span>
-<span><span class="co">#&gt; [17] labeling_0.4.3    generics_0.1.3    knitr_1.48        tibble_3.2.1     </span></span>
-<span><span class="co">#&gt; [21] desc_1.4.3        munsell_0.5.1     bslib_0.8.0       pillar_1.9.0     </span></span>
-<span><span class="co">#&gt; [25] rlang_1.1.4       utf8_1.2.4        cachem_1.1.0      xfun_0.47        </span></span>
-<span><span class="co">#&gt; [29] fs_1.6.4          sass_0.4.9        cli_3.6.3         pkgdown_2.1.1    </span></span>
-<span><span class="co">#&gt; [33] withr_3.0.1       magrittr_2.0.3    digest_0.6.37     grid_4.4.1       </span></span>
-<span><span class="co">#&gt; [37] lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.0    glue_1.7.0       </span></span>
-<span><span class="co">#&gt; [41] farver_2.1.2      ragg_1.3.3        fansi_1.0.6       colorspace_2.1-1 </span></span>
-<span><span class="co">#&gt; [45] purrr_1.0.2       rmarkdown_2.28    tools_4.4.1       pkgconfig_2.0.3  </span></span>
-<span><span class="co">#&gt; [49] htmltools_0.5.8.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] sass_0.4.9        utf8_1.2.4        generics_0.1.3    tidyr_1.3.1      </span></span>
+<span><span class="co">#&gt;  [5] digest_0.6.37     magrittr_2.0.3    evaluate_1.0.0    grid_4.4.1       </span></span>
+<span><span class="co">#&gt;  [9] iterators_1.0.14  fastmap_1.2.0     foreach_1.5.2     jsonlite_1.8.9   </span></span>
+<span><span class="co">#&gt; [13] seriation_1.5.6   purrr_1.0.2       fansi_1.0.6       scales_1.3.0     </span></span>
+<span><span class="co">#&gt; [17] codetools_0.2-20  textshaping_0.4.0 jquerylib_0.1.4   cli_3.6.3        </span></span>
+<span><span class="co">#&gt; [21] registry_0.5-1    rlang_1.1.4       munsell_0.5.1     withr_3.0.1      </span></span>
+<span><span class="co">#&gt; [25] cachem_1.1.0      yaml_2.3.10       ggh4x_0.2.8       tools_4.4.1      </span></span>
+<span><span class="co">#&gt; [29] dplyr_1.1.4       colorspace_2.1-1  vctrs_0.6.5       TSP_1.2-4        </span></span>
+<span><span class="co">#&gt; [33] ca_0.71.1         R6_2.5.1          lifecycle_1.0.4   fs_1.6.4         </span></span>
+<span><span class="co">#&gt; [37] ragg_1.3.3        cluster_2.1.6     pkgconfig_2.0.3   desc_1.4.3       </span></span>
+<span><span class="co">#&gt; [41] pkgdown_2.1.1     pillar_1.9.0      bslib_0.8.0       gtable_0.3.5     </span></span>
+<span><span class="co">#&gt; [45] glue_1.7.0        systemfonts_1.1.0 xfun_0.47         tibble_3.2.1     </span></span>
+<span><span class="co">#&gt; [49] tidyselect_1.2.1  highr_0.11        knitr_1.48        farver_2.1.2     </span></span>
+<span><span class="co">#&gt; [53] htmltools_0.5.8.1 rmarkdown_2.28    labeling_0.4.3    compiler_4.4.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
