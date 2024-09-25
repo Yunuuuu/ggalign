@@ -87,7 +87,7 @@ ggheatmap(small_mat) +
     scale_fill_brewer(palette = "Dark2")
 ```
 
-```{r fig.dim = c(12, 10)}
+```{r fig.dim = c(10, 8)}
 ggheatmap(small_mat) +
     scale_fill_viridis_c() +
     hmanno("t", size = 0.5) +
@@ -109,6 +109,7 @@ ggheatmap(small_mat) +
 ```
 
 # Multiple heatmaps
+## Horizontal layout
 ```{r}
 (ggstack(small_mat) +
     ggheatmap() +
@@ -120,7 +121,8 @@ ggheatmap(small_mat) +
     scale_color_brewer(palette = "Dark2")
 ```
 
-```{r}
+## Vertical layout
+```{r fig.height = 8}
 ggstack(small_mat, "v") +
     align_dendro(aes(color = branch),
         k = 4L, size = 0.2,
