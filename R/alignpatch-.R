@@ -85,7 +85,7 @@ opposite_pos <- function(pos) {
 #' @importFrom ggplot2 zeroGrob
 #' @importFrom gtable gtable gtable_add_grob
 #' @importFrom grid unit
-make_patch <- function() {
+make_patch_table <- function() {
     widths <- unit(rep(0L, TABLE_COLS), "mm")
     widths[LEFT_BORDER + 1L] <- unit(1L, "null")
     heights <- unit(rep(0L, TABLE_ROWS), "mm")

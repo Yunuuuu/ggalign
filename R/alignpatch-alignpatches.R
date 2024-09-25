@@ -57,7 +57,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         patches <- .subset(patches, keep)
 
         # if no plots, we return `NULL` -----------------------
-        if (is_empty(patches)) return(NULL) # styler: off
+        if (is_empty(patches)) return(make_patch_table()) # styler: off
 
         # save patches, patches won't be copy
         self$patches <- patches
