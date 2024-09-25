@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `geom_draw()` now utilize `patch()` function to convert objects into grob
+
 * internal changes: all vectors have been operated with `vctrs` package
 
 * `stack_layout()`: gain `sizes` argument to control the relative sizes of the stack

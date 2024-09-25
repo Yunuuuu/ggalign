@@ -2,14 +2,15 @@
 #'
 #' Draw ggplot2 layer with a grod or function.
 #'
-#' @param draw Either a [grob][grid::grob] object or a function (can be
-#'   purrr-style) which accepts two arguments (\code{data} and \code{coords})
-#'   and returns a [grob][grid::grob].
+#' @param draw Either a function (can be purrr-style) which accepts two
+#'   arguments (\code{data} and \code{coords}) and returns a [grob][grid::grob]
+#'   or any objects which can be converted to [grob][grid::grob] by [patch()].
 #'
 #'   when `draw` is a function, it is used as the `draw_group` function
 #'   in a [Geom][ggplot2::Geom] `ggproto` object.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
-#' `draw`.
+#' function specified in argument `draw` or [patch()] if `draw` is not a
+#' function.
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @details If you want to combine the functionality of multiple geoms it can
@@ -30,8 +31,9 @@
 #' ggplot2::ggplot(data.frame(x = 1, y = 2)) +
 #'     geom_draw(ggdraw_text)
 #' @return A ggplot2 layer.
+#' @importFrom ggplot2 zeroGrob
 #' @export
-geom_draw <- function(draw = grid::nullGrob(), ...,
+geom_draw <- function(draw = zeroGrob(), ...,
                       mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       na.rm = FALSE, inherit.aes = TRUE) {
@@ -44,9 +46,8 @@ geom_draw <- function(draw = grid::nullGrob(), ...,
         position = position,
         show.legend = FALSE,
         inherit.aes = inherit.aes,
-        params = rlang::list2(
-            draw = draw,
-            na.rm = na.rm,
+        params = list(
+            draw = draw, na.rm = na.rm,
             draw_params = rlang::list2(...)
         )
     )
@@ -67,12 +68,19 @@ GeomDraw <- ggproto(
     ## No draw_key
     extra_params = c("na.rm"),
     draw_group = function(data, panel_params, coord, draw, draw_params) {
-        if (is.grob(draw)) {
-            draw
-        } else {
+        if (is.function(draw)) {
             coords <- coord$transform(data, panel_params)
-            rlang::inject(draw(coords, !!!draw_params))
+            grob <- rlang::inject(draw(coords, !!!draw_params))
+            if (!is.grob(grob)) {
+                cli::cli_abort("{.fn draw} must return a {.cls grob}")
+            }
+        } else {
+            grob <- rlang::inject(patch(x = draw, !!!draw_params))
+            if (!is.grob(grob)) {
+                cli::cli_abort("{.fn patch} must return a {.cls grob}")
+            }
         }
+        grob
     }
 )
 

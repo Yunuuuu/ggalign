@@ -5,7 +5,7 @@
 \title{Layer with Grid or Function}
 \usage{
 geom_draw(
-  draw = grid::nullGrob(),
+  draw = zeroGrob(),
   ...,
   mapping = NULL,
   data = NULL,
@@ -16,15 +16,16 @@ geom_draw(
 )
 }
 \arguments{
-\item{draw}{Either a \link[grid:grid.grob]{grob} object or a function (can be
-purrr-style) which accepts two arguments (\code{data} and \code{coords})
-and returns a \link[grid:grid.grob]{grob}.
+\item{draw}{Either a function (can be purrr-style) which accepts two
+arguments (\code{data} and \code{coords}) and returns a \link[grid:grid.grob]{grob}
+or any objects which can be converted to \link[grid:grid.grob]{grob} by \code{\link[=patch]{patch()}}.
 
 when \code{draw} is a function, it is used as the \code{draw_group} function
 in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
-\code{draw}.}
+function specified in argument \code{draw} or \code{\link[=patch]{patch()}} if \code{draw} is not a
+function.}
 
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
