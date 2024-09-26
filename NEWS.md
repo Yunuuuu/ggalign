@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* new `free_guide()` function, to override the layout guides argument for single plot
+
 * `geom_draw()` now utilize `patch()` function to convert objects into grob
 
 * internal changes: all vectors have been operated with `vctrs` package
