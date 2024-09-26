@@ -177,17 +177,17 @@ middle of all direct child nodes.</p></dd>
 <dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
 <dd><p>A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
-default is <code>NULL</code>, which means we won't want to modify anything.</p>
+default is <code>NULL</code>, which means we won't modify anything.</p>
 <p>Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> object, which will be added to all
-plots in the layout. Use <a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>, if you want to
-inherit from the parent layout. Use <code>NULL</code> if you don't want to any theme
-components to be added.</p></dd>
+<dd><p>One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
+<li><p><code>NULL</code>: won't add any theme components.</p></li>
+<li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added to all plots in the layout.</p></li>
+</ul></dd>
 
 
 <dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
