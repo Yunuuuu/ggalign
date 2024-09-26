@@ -170,9 +170,12 @@ added into this plot.</p></dd>
 
 
 <p><code>align_panel</code> initializes a <code>ggplot</code> data and <code>mapping</code>.</p>
-<p>The internal will always use a default mapping of <code>aes(y = .data$.y)</code> or
-<code>aes(x = .data$.x)</code>.</p>
-<p>The data in the underlying <code>ggplot</code> object contains following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis.</p></li>
+<p><code>align_panel()</code> always applies a default mapping for the axis of the data
+index in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal stack
+layout (including left and right heatmap annotation) and <code>aes(x = .data$.x)</code>
+for vertical stack layout (including top and bottom heatmap annotation).</p>
+<p>The data in the underlying <code>ggplot</code> object contains following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis. It means <code>x-axis</code> for
+vertical stack layout, <code>y-axis</code> for horizontal stack layout.</p></li>
 <li><p><code>.index</code>: the index of the original layout data.</p></li>
 <li><p><code>.x</code> or <code>.y</code>: the <code>x</code> or <code>y</code> coordinates</p></li>
 </ul></div>

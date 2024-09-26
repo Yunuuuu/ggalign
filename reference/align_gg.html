@@ -187,12 +187,13 @@ added into this plot.</p></dd>
 
 <p><code>align_gg</code> initializes a <code>ggplot</code> data and <code>mapping</code>.</p>
 <p><code>align_gg()</code> always applies a default mapping for the axis of the data index
-in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal stacking
-(including left and right heatmap annotation) and <code>aes(x = .data$.x)</code> for
-vertical stacking (including top and bottom heatmap annotation)</p>
+in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal stack
+layout (including left and right heatmap annotation) and <code>aes(x = .data$.x)</code>
+for vertical stack layout (including top and bottom heatmap annotation).</p>
 <p>For ggplot usage, matrix (including a simple vector) data is converted into a
 long-format data frame. The data in the underlying <code>ggplot</code> object will
-contain following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis.</p></li>
+contain following columns:</p><ul><li><p><code>.panel</code>: the panel for current layout axis. It means <code>x-axis</code> for
+vertical stack layout, <code>y-axis</code> for horizontal stack layout.</p></li>
 <li><p><code>.x</code> or <code>.y</code>: the <code>x</code> or <code>y</code> coordinates</p></li>
 <li><p><code>.row_names</code> and <code>.row_index</code>: A factor of the row names and an integer of
 row index of the original matrix or data frame.</p></li>
