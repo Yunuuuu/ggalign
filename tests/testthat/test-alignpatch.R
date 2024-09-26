@@ -187,7 +187,7 @@ test_that("`free_border()` works well", {
     })
 })
 
-testthat::test_that("`free_space()` works well", {
+test_that("`free_space()` works well", {
     p1 <- ggplot(mtcars) +
         geom_bar(aes(y = factor(gear), fill = factor(gear))) +
         scale_y_discrete(
@@ -207,4 +207,58 @@ testthat::test_that("`free_space()` works well", {
     expect_doppelganger("free_space() with alignpatches", {
         align_plots(NULL, free_space(align_plots(p1), "l"), p2, p2)
     })
+})
+
+test_that("`free_guide()` works well", {
+    p_right <- p3 + ggtitle(NULL) + labs("right")
+    p_top <- p_right +
+        scale_color_continuous(
+            name = "top",
+            guide = guide_colorbar(position = "top")
+        )
+    p_left <- p_right +
+        scale_color_continuous(
+            name = "left",
+            guide = guide_colorbar(position = "left")
+        )
+    p_bottom <- p_right +
+        scale_color_continuous(
+            name = "bottom",
+            guide = guide_colorbar(position = "bottom")
+        )
+    p_guides <- align_plots(
+        p_right + scale_color_continuous(
+            name = "patches_top",
+            guide = guide_colorbar(position = "top")
+        ),
+        p_right + scale_color_continuous(
+            name = "patches_left",
+            guide = guide_colorbar(position = "left")
+        ),
+        p_right + scale_color_continuous(
+            name = "patches_bottom",
+            guide = guide_colorbar(position = "bottom")
+        ),
+        p_right + scale_color_continuous(name = "patches_right"),
+        guides = "tlbr"
+    )
+    expect_doppelganger(
+        "free_guide() with ggplot",
+        align_plots(
+            p_guides,
+            free_guide(p_top, "l"),
+            free_guide(p_left, "t"),
+            free_guide(p_bottom, "l"),
+            free_guide(p_right, "t"),
+            guides = "tlbr"
+        )
+    )
+    expect_doppelganger(
+        "free_guide() with alignpatches",
+        align_plots(
+            free_guide(p_guides, "tlbr"),
+            p_top, p_left, p_bottom, p_right,
+            guides = "tlbr"
+        )
+    )
 })

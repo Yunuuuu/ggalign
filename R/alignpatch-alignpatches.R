@@ -56,7 +56,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         design <- vec_slice(design, keep)
         patches <- .subset(patches, keep)
 
-        # if no plots, we return `NULL` -----------------------
+        # if no plots, we return empty gtable -----------------
         if (is_empty(patches)) return(make_patch_table()) # styler: off
 
         # save patches, patches won't be copy
@@ -77,11 +77,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         for (patch in patches) patch$gt <- patch$patch_gtable(guides)
 
         # collect guides  ---------------------------------------
-        if (is.null(guides)) {
-            collected_guides <- NULL
-        } else {
-            collected_guides <- self$collect_guides_list(guides, patches)
-        }
+        collected_guides <- self$collect_guides_list(guides, patches)
 
         # prepare the output ----------------------------------
         gt <- gtable(
@@ -326,46 +322,46 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 x = gt,
                 grobs = guides,
                 t = panel_pos$t,
-                l = panel_pos$l - 5L,
+                l = panel_pos$l - 6L,
                 b = panel_pos$b,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "l") - 4:5] <- unit.c(
+            gt$widths[.subset2(panel_pos, "l") - 5:6] <- unit.c(
                 spacing, legend_width
             )
         } else if (guide_pos == "right") {
             gt <- gtable_add_grob(
                 x = gt, grobs = guides,
                 t = panel_pos$t,
-                l = panel_pos$r + 5L,
+                l = panel_pos$r + 6L,
                 b = panel_pos$b,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "r") + 4:5] <- unit.c(
+            gt$widths[.subset2(panel_pos, "r") + 5:6] <- unit.c(
                 spacing, legend_width
             )
         } else if (guide_pos == "bottom") {
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guides,
-                t = panel_pos$b + 5L,
+                t = panel_pos$b + 6L,
                 l = panel_pos$l,
                 r = panel_pos$r,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "b") + 4:5] <- unit.c(
+            gt$heights[.subset2(panel_pos, "b") + 5:6] <- unit.c(
                 spacing, legend_height
             )
         } else if (guide_pos == "top") {
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guides,
-                t = panel_pos$t - 5L,
+                t = panel_pos$t - 6L,
                 l = panel_pos$l,
                 r = panel_pos$r,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "t") - 4:5] <- unit.c(
+            gt$heights[.subset2(panel_pos, "t") - 5:6] <- unit.c(
                 spacing, legend_height
             )
         }

@@ -1,5 +1,5 @@
-#' @param borders Which border shouldn't be aligned (`free_border`)? A string
-#' containing one or more of `r rd_values(.tlbr)`.
+#' @param borders Which border shouldn't be aligned? A string containing one or
+#' more of `r rd_values(.tlbr)`.
 #' @return
 #' - `free_border`: A modified version of `plot` with a `free_border` class.
 #' @export
@@ -62,7 +62,7 @@ alignpatch.free_border <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeBorder", Parent,
-        free_borders = setup_position(attr(x, "free_borders")),
+        free_borders = setup_pos(attr(x, "free_borders")),
         patch_gtable = function(self, guides, plot = self$plot) {
             ans <- ggproto_parent(Parent, self)$patch_gtable(
                 guides = guides, plot = plot

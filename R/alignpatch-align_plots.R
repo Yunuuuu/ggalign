@@ -116,7 +116,7 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     if (!is.waive(design)) design <- as_areas(design)
     if (!is.waive(guides) && !is.null(guides)) {
         assert_position(guides)
-        guides <- setup_position(guides)
+        guides <- setup_pos(guides)
     }
     structure(list(
         ncol = ncol,

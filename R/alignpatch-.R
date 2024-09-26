@@ -67,7 +67,7 @@ union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
 split_position <- function(x) {
     unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
-setup_position <- function(x) {
+setup_pos <- function(x) {
     complete_pos(split_position(x))
 }
 complete_pos <- function(x) {
@@ -151,6 +151,7 @@ Patch <- ggproto("Patch", NULL,
     },
     #' @importFrom vctrs vec_slice
     collect_guides = function(self, guides, gt = self$gt) {
+        if (is.null(guides)) return(list()) # styler: off
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")
         guides_ind <- grep("guide-box", .subset2(layout, "name"))
@@ -254,7 +255,9 @@ Patch <- ggproto("Patch", NULL,
     },
     free_border = function(self, guides, borders,
                            gt = self$gt, patches = self$patches) {
-        cli::cli_abort("Cannot free border for {.obj_type_friendly {self$plot}}")
+        cli::cli_abort(
+            "Cannot free border for {.obj_type_friendly {self$plot}}"
+        )
     },
     free_lab = function(self, labs, gt = self$gt, patches = self$patches) {
         cli::cli_abort("Cannot free lab for {.obj_type_friendly {self$plot}}")

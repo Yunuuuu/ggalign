@@ -11,6 +11,8 @@
 #' title, we can wrap the plot with `free_lab`.
 #' - `free_space`: Removing the ggplot element sizes when aligning.
 #' - `free_vp`: Customize the [viewport][grid::viewport] when aligning.
+#' - `free_guide`: If we want to override the behaviour of the overall guides
+#'   behaviour, we can wrap the plot with `free_guide`.
 #'
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
 #' object.
