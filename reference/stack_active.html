@@ -97,9 +97,9 @@ change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
-<li><p><code>NULL</code>: won't add any theme components.</p></li>
-<li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added to all plots in the layout.</p></li>
+<dd><p>Default layout theme. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
+<li><p><code>NULL</code>: Use the default theme associated with the package.</p></li>
+<li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added with the parent layout theme.</p></li>
 </ul></dd>
 
 
@@ -110,14 +110,12 @@ alignment. If <code>NULL</code>, all axis title will be aligned. Default: <code>
 
 
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
-<dd><p>What should get activated for the stack layout? Possible values
-are follows:</p><ul><li><p>A single number or string of the plot elements in the stack layout.
-Usually you are waive to use this, since the adding procedure can be
-easily changed.</p></li>
-<li><p><code>NULL</code>: Remove any active context, this is useful when the active
-context is a <code><a href="heatmap_layout.html">heatmap_layout()</a></code> object, where any <code>Align</code> objects will
-be added into the heatmap. By removing the active context, we can add
-<code>Align</code> object into the <code><a href="stack_layout.html">stack_layout()</a></code> .</p></li>
+<dd><p>What should get activated for the stack layout?
+Possible values are follows:</p><ul><li><p>A single number or string of the plot elements in the stack layout.</p></li>
+<li><p><code>NULL</code>: remove any active context, this is useful when the active context is a
+<code><a href="heatmap_layout.html">heatmap_layout()</a></code> object, where any <code>align_*()</code> will be added into the
+heatmap. By removing the active context, we can add <code>align_*()</code> into the
+<code><a href="stack_layout.html">stack_layout()</a></code>.</p></li>
 </ul></dd>
 
 

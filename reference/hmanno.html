@@ -117,9 +117,9 @@ change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
-<li><p><code>NULL</code>: won't add any theme components.</p></li>
-<li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added to all plots in the layout.</p></li>
+<dd><p>Default layout theme. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
+<li><p><code>NULL</code>: Use the default theme associated with the package.</p></li>
+<li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added with the parent layout theme.</p></li>
 </ul></dd>
 
 
@@ -131,7 +131,9 @@ alignment. If <code>NULL</code>, all axis title will be aligned. Default: <code>
 
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
 <dd><p>What should get activated for the anntoation stack? Only used
-when position is not <code>NULL</code>. See <a href="stack_active.html">stack_active</a> for details.</p></dd>
+when position is not <code>NULL</code>. Possible values are follows:</p><ul><li><p>A single number or string of the plot elements in the stack layout.</p></li>
+<li><p><code>NULL</code>: remove any active context.</p></li>
+</ul></dd>
 
 
 <dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
