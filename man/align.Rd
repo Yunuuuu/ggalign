@@ -57,12 +57,18 @@ Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{One of:
+\item{theme}{Default plot theme: One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
-\item \code{NULL}: won't add any theme components.
-\item \link[ggplot2:theme]{theme()}: will be added to all plots in the layout.
-}}
+\item \code{NULL}: Use the default theme associated with the package.
+\item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
+}
+
+\verb{Note:} The axis title and labels parallel to the layout axis will always be
+removed in the default theme. For vertical stack layouts, this refers to the
+\code{x-axis}, and for horizontal stack layouts, this refers to the \code{y-axis}. If
+you want to display the axis title or labels, you should manually add
+\link[ggplot2:theme]{theme()} elements for the parallel axis title or labels.}
 
 \item{free_labs}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from

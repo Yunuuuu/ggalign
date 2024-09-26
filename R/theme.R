@@ -1,9 +1,6 @@
 #' @importFrom ggplot2 theme_classic
-default_theme <- function(...) theme_classic(...)
-
-#' @importFrom ggplot2 theme element_blank
-heatmap_theme <- function(...) {
-    default_theme(...) +
+default_theme <- function(...) {
+    theme_classic(...) +
         theme(
             axis.line = element_blank(),
             strip.text = element_blank(),
@@ -11,28 +8,16 @@ heatmap_theme <- function(...) {
         )
 }
 
-#' @importFrom ggplot2 theme element_blank
-align_theme <- function(direction, ...) {
-    default_theme(...) +
-        theme(
-            axis.line = element_blank(),
-            strip.text = element_blank(),
-            strip.background = element_blank()
-        ) +
-        # remove the title and text of axis parallelly with layout
-        switch_direction(
-            direction,
-            theme(
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank()
-            ),
-            theme(
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank()
-            )
-        )
+inherit_theme <- function(theme, parent) {
+    if (is.null(theme)) return(NULL) # styler: off
+    # if parent theme is not set, we use NULL
+    parent <- parent %|w|% NULL
+    if (is.waive(theme)) { # inherit from parent theme
+        theme <- parent
+    } else if (!is.null(parent)) { # add parent layout theme
+        theme <- parent + theme
+    }
+    theme
 }
 
 #' @importFrom utils packageVersion

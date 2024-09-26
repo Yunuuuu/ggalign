@@ -27,12 +27,9 @@
 #' Used to modify the data after layout has been created, but before the data is
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
-#' @param theme One of:
-#'  - [waiver()][ggplot2::waiver()]: will inherit from the parent layout. 
-#'  - `NULL`: won't add any theme components.
-#'  - [theme()][ggplot2::theme]: will be added to all plots in the layout.
+#' @param theme Default layout theme. `r rd_theme()`
 #' @param what What should get activated for the anntoation stack? Only used
-#' when position is not `NULL`. See [stack_active] for details.
+#' when position is not `NULL`. `r rd_stack_what()`.
 #' @inheritParams heatmap_layout
 #' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
@@ -70,15 +67,11 @@ hmanno <- function(position = NULL, size = NULL,
 #'
 #' @inheritParams hmanno
 #' @inheritParams stack_layout
-#' @param what What should get activated for the stack layout? Possible values
-#' are follows:
-#'    * A single number or string of the plot elements in the stack layout.
-#'      Usually you are waive to use this, since the adding procedure can be
-#'      easily changed.
-#'    * `NULL`: Remove any active context, this is useful when the active
-#'      context is a [heatmap_layout()] object, where any `Align` objects will
-#'      be added into the heatmap. By removing the active context, we can add
-#'      `Align` object into the [stack_layout()] .
+#' @param what What should get activated for the stack layout?
+#' `r rd_stack_what()`, this is useful when the active context is a
+#' [heatmap_layout()] object, where any `align_*()` will be added into the
+#' heatmap. By removing the active context, we can add `align_*()` into the
+#' [stack_layout()].
 #' @return A `stack_active` object which can be added into
 #' [StackLayout][stack_layout].
 #' @examples

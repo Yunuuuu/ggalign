@@ -1,3 +1,4 @@
+#' @importFrom ggplot2 theme element_blank
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
                         plot_data, free_labs, free_spaces, theme) {
@@ -69,7 +70,24 @@ align_build <- function(x, panel, index,
             scales = scales, default_facet = default_facet
         )
     }
-    plot <- plot + theme
+
+    # remove the title and text of axis parallelly with the layout
+    plot$theme <- (theme %||% default_theme()) +
+        switch_direction(
+            direction,
+            theme(
+                axis.title.y = element_blank(),
+                axis.text.y = element_blank(),
+                axis.ticks.y = element_blank()
+            ),
+            theme(
+                axis.title.x = element_blank(),
+                axis.text.x = element_blank(),
+                axis.ticks.x = element_blank()
+            )
+        ) + 
+        plot$theme
+
     if (!is.null(free_labs)) {
         plot <- free_lab(plot, free_labs)
     }
@@ -77,18 +95,6 @@ align_build <- function(x, panel, index,
         plot <- free_space(free_border(plot, free_spaces), free_spaces)
     }
     list(plot = plot, size = .subset2(x, "size"))
-}
-
-inherit_theme <- function(theme, parent) {
-    if (is.null(theme)) return(NULL) # styler: off
-    # if parent theme is not set, we use NULL
-    parent <- parent %|w|% NULL
-    if (is.waive(theme)) { # inherit from parent theme
-        theme <- parent
-    } else if (!is.null(parent)) {
-        theme <- parent + theme
-    }
-    theme
 }
 
 finish_plot_data <- function(plot, plot_data,

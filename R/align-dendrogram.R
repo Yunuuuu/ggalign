@@ -232,7 +232,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         direction <- .subset2(self, "direction")
         ans <- ggplot2::ggplot(mapping = mapping) +
-            align_theme(direction) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
                     x = .data$x, y = .data$y,

@@ -61,7 +61,7 @@ AlignPanel <- ggproto("AlignPanel", Align,
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
         ans <- ggplot2::ggplot(mapping = mapping) +
-            align_theme(direction) +
+            # remove the title and text of axis vertically with the layout
             switch_direction(
                 direction,
                 theme(

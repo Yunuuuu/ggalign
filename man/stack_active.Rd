@@ -31,27 +31,25 @@ Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{One of:
+\item{theme}{Default layout theme. One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
-\item \code{NULL}: won't add any theme components.
-\item \link[ggplot2:theme]{theme()}: will be added to all plots in the layout.
+\item \code{NULL}: Use the default theme associated with the package.
+\item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
 }}
 
 \item{free_labs}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
 alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
-\item{what}{What should get activated for the stack layout? Possible values
-are follows:
+\item{what}{What should get activated for the stack layout?
+Possible values are follows:
 \itemize{
 \item A single number or string of the plot elements in the stack layout.
-Usually you are waive to use this, since the adding procedure can be
-easily changed.
-\item \code{NULL}: Remove any active context, this is useful when the active
-context is a \code{\link[=heatmap_layout]{heatmap_layout()}} object, where any \code{Align} objects will
-be added into the heatmap. By removing the active context, we can add
-\code{Align} object into the \code{\link[=stack_layout]{stack_layout()}} .
+\item \code{NULL}: remove any active context, this is useful when the active context is a
+\code{\link[=heatmap_layout]{heatmap_layout()}} object, where any \verb{align_*()} will be added into the
+heatmap. By removing the active context, we can add \verb{align_*()} into the
+\code{\link[=stack_layout]{stack_layout()}}.
 }}
 
 \item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates

@@ -85,8 +85,7 @@ AlignGG <- ggproto("AlignGG", Align,
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(mapping = mapping) +
-            align_theme(direction)
+        ans <- ggplot2::ggplot(mapping = mapping)
 
         add_default_mapping(ans, switch_direction(
             direction,

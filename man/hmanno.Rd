@@ -51,11 +51,11 @@ Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{One of:
+\item{theme}{Default layout theme. One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
-\item \code{NULL}: won't add any theme components.
-\item \link[ggplot2:theme]{theme()}: will be added to all plots in the layout.
+\item \code{NULL}: Use the default theme associated with the package.
+\item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
 }}
 
 \item{free_labs}{A boolean value or a string containing one or more of
@@ -63,7 +63,11 @@ change the default data for all \code{geoms}.}
 alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{what}{What should get activated for the anntoation stack? Only used
-when position is not \code{NULL}. See \link{stack_active} for details.}
+when position is not \code{NULL}. Possible values are follows:
+\itemize{
+\item A single number or string of the plot elements in the stack layout.
+\item \code{NULL}: remove any active context.
+}}
 
 \item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
 object.}

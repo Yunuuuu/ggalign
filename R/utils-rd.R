@@ -4,6 +4,18 @@ rd_values <- function(x, quote = TRUE, code = TRUE, sep = ", ", final = "and") {
     oxford_comma(x, sep = sep, final = final)
 }
 
+rd_layout <- function() "[heatmap_layout()] or [stack_layout()] object"
+
+rd_theme <- function() {
+    paste(
+        "One of:",
+        "- [waiver()][ggplot2::waiver()]: will inherit from the parent layout.",
+        "- `NULL`: Use the default theme associated with the package.",
+        "- [theme()][ggplot2::theme]: will be added with the parent layout theme.",
+        sep = "\n"
+    )
+}
+
 rd_layout_theme <- function() {
     paste(
         "A [theme()][ggplot2::theme] object to rendering the guides",
@@ -12,6 +24,11 @@ rd_layout_theme <- function() {
     )
 }
 
-rd_layout <- function() {
-    "[heatmap_layout()] or [stack_layout()] object"
+rd_stack_what <- function() {
+    paste(
+        "Possible values are follows:",
+        "* A single number or string of the plot elements in the stack layout.",
+        "* `NULL`: remove any active context",
+        sep = "\n"
+    )
 }

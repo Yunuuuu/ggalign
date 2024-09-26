@@ -155,8 +155,7 @@ heatmap_layout.default <- function(data, ...) {
         order <- vec_cast(order, integer(), call = call)
     }
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
-    plot <- ggplot2::ggplot(mapping = mapping) +
-        heatmap_theme()
+    plot <- ggplot2::ggplot(mapping = mapping)
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
         # always remove default axis titles -------------------
         # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function

@@ -24,6 +24,13 @@
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
 #' @inheritParams hmanno
+#' @param theme Default plot theme: `r rd_theme()`
+#' 
+#' `Note:` The axis title and labels parallel to the layout axis will always be
+#' removed in the default theme. For vertical stack layouts, this refers to the
+#' `x-axis`, and for horizontal stack layouts, this refers to the `y-axis`. If
+#' you want to display the axis title or labels, you should manually add
+#' [theme()][ggplot2::theme] elements for the parallel axis title or labels.
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.
 #' @param facet A boolean value indicates whether to set the layout facet for
