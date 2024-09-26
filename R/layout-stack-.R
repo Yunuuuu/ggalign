@@ -10,12 +10,13 @@
 #' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
 #' the relative widths (`direction = "horizontal"`) / heights (`direction =
 #' "vertical"`).
-#' @param ... Not used currently.
+#' @inheritParams rlang::args_dots_empty
 #' @return A `StackLayout` object.
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
 stack_layout <- function(data, direction = NULL, sizes = NA, ...) {
+    rlang::check_dots_empty()
     if (missing(data)) {
         .stack_layout(
             data = NULL, nobs = NULL,

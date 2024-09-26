@@ -18,7 +18,7 @@ direction of the stack layout.}
 \item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
-\item{...}{Not used currently.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 A \code{StackLayout} object.
