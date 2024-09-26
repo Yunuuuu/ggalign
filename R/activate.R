@@ -24,9 +24,9 @@
 #' By default, it'll inherit from the parent layout. If no parent layout, the
 #' default is `NULL`, which means we won't modify anything.
 #'
-#' Used to modify the data after layout has been created, but before the data is
-#' handled of to the ggplot2 for rendering. Use this hook if the you needs
-#' change the default data for all `geoms`.
+#' Used to modify the data after layout has been created, which should be a data
+#' frame, but before the data is handled of to the ggplot2 for rendering. Use
+#' this hook if the you needs change the default data for all `geoms`.
 #' @param theme Default layout theme. `r rd_theme()`
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. `r rd_stack_what()`.

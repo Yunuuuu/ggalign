@@ -88,9 +88,9 @@ middle of all direct child nodes.}
 By default, it'll inherit from the parent layout. If no parent layout, the
 default is \code{NULL}, which means we won't modify anything.
 
-Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all \code{geoms}.}
+Used to modify the data after layout has been created, which should be a data
+frame, but before the data is handled of to the ggplot2 for rendering. Use
+this hook if the you needs change the default data for all \code{geoms}.}
 
 \item{theme}{Default plot theme: One of:
 \itemize{
