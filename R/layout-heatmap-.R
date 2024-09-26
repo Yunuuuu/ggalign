@@ -5,8 +5,8 @@
 #' @param data A numeric or character vector, a data frame, and any other data
 #' which can be converted into a matrix. Simple vector will be converted into a
 #' one column matrix.
-#' @param mapping Default list of aesthetic mappings to use for plot. If `NULL`,
-#' will using `aes(.data$.x, .data$.y)`.
+#' @param mapping Default list of aesthetic mappings to use for plot. In
+#' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]

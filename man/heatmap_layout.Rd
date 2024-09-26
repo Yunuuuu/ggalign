@@ -34,8 +34,8 @@ ggheatmap(
 which can be converted into a matrix. Simple vector will be converted into a
 one column matrix.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot. If \code{NULL},
-will using \code{aes(.data$.x, .data$.y)}.}
+\item{mapping}{Default list of aesthetic mappings to use for plot. In
+addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 
 \item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
 Only used when \code{filling = TRUE}.}
