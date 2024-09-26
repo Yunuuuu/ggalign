@@ -1,4 +1,4 @@
-#' @inheritParams align_plots
+#' @param guides `r rd_guides()`
 #' @return
 #' - `free_guide`: A modified version of `plot` with a `free_guide` class.
 #' @export
@@ -9,7 +9,7 @@ free_guide <- function(plot, guides = "tlbr") {
 
 #' @export
 free_guide.ggplot <- function(plot, guides = "tlbr") {
-    assert_position(guides)
+    if (!is.null(guides)) assert_position(guides)
     attr(plot, "free_guides") <- guides
     add_class(plot, "free_guide")
 }
@@ -25,9 +25,11 @@ alignpatch.free_guide <- function(x) {
     ggproto(
         "PatchFreeGuide", Parent,
         free_guides = setup_pos(attr(x, "free_guides")),
-        collect_guides = function(self, guides, gt = self$gt) {
-            ggproto_parent(Parent, self)$collect_guides(
-                guides = self$free_guides, gt = gt
+        set_guides = function(self, guides) {
+            union(
+                self$free_guides,
+                # we always collect guides in the border
+                intersect(guides, .subset2(self, "borders"))
             )
         }
     )

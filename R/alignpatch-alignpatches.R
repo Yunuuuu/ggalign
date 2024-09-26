@@ -11,7 +11,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
     #' @importFrom vctrs vec_slice
-    patch_gtable = function(self, guides, plot = self$plot) {
+    patch_gtable = function(self, guides = self$guides, plot = self$plot) {
         patches <- .subset2(plot, "patches")
         layout <- .subset2(plot, "layout")
 
@@ -53,13 +53,38 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # remove NULL patch -----------------------------------
         keep <- !vapply(patches, is.null, logical(1L), USE.NAMES = FALSE)
-        design <- vec_slice(design, keep)
         patches <- .subset(patches, keep)
 
         # if no plots, we return empty gtable -----------------
         if (is_empty(patches)) return(make_patch_table()) # styler: off
 
-        # save patches, patches won't be copy
+        # add borders to patch --------------------------------
+        design <- vec_slice(design, keep)
+        for (i in seq_along(patches)) {
+            patches[[i]]$borders <- c(
+                if (.subset2(design, "t")[i] == 1L) "top" else NULL,
+                if (.subset2(design, "l")[i] == 1L) "left" else NULL,
+                if (.subset2(design, "b")[i] == .subset(dims, 1L)) {
+                    "bottom"
+                } else {
+                    NULL
+                },
+                if (.subset2(design, "r")[i] == .subset(dims, 2L)) {
+                    "right"
+                } else {
+                    NULL
+                }
+            )
+        }
+
+        # add guides argument to patch --------------------------
+        # We by default won't collect any guides
+        guides <- .subset2(layout, "guides") %|w|% guides
+
+        # Let each patch to determine whether collect guides ----
+        for (patch in patches) patch$guides <- patch$set_guides(guides)
+
+        # save patches, patches won't be copy -------------------
         self$patches <- patches
 
         #######################################################
@@ -73,11 +98,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 4. set_grobs: will call `align_border` and `split_gt`, return the
         #    final gtable
         # setup gtable list ----------------------------------
-        guides <- .subset2(layout, "guides")
-        for (patch in patches) patch$gt <- patch$patch_gtable(guides)
+        for (patch in patches) patch$gt <- patch$patch_gtable()
 
         # collect guides  ---------------------------------------
-        collected_guides <- self$collect_guides_list(guides, patches)
+        collected_guides <- self$collect_guides_list(patches)
 
         # prepare the output ----------------------------------
         gt <- gtable(
@@ -87,8 +111,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # setup sizes for each row/column -----------------------
         gt <- self$set_sizes(
-            design, guides,
-            dims, panel_widths, panel_heights,
+            design, dims, panel_widths, panel_heights,
             patches = patches, gt = gt
         )
         # For z in the gtable layout
@@ -149,8 +172,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
     split_gt = function(self, gt = self$gt) list(bg = NULL, plot = gt),
-    collect_guides_list = function(self, guides, patches) {
-        ans <- lapply(patches, function(patch) patch$collect_guides(guides))
+    collect_guides_list = function(self, patches) {
+        ans <- lapply(patches, function(patch) patch$collect_guides())
         # collapse the guides in the same guide position
         ans <- lapply(.TLBR, function(guide_pos) {
             unlist(lapply(ans, .subset2, guide_pos), FALSE, FALSE)
@@ -162,7 +185,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         compact(ans)
     },
     #' @importFrom grid is.unit unit
-    set_sizes = function(self, design, guides, dims,
+    set_sizes = function(self, design, dims,
                          panel_widths, panel_heights,
                          patches, gt = self$gt) {
         panel_widths <- rep(panel_widths, length.out = dims[2L])
@@ -209,7 +232,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             col <- .subset(cols, i)
             # we always build a standard gtable layout from the gtable
             panel_sizes <- .subset2(patches, i)$align_panel_sizes(
-                guides = guides,
                 panel_width = panel_widths[col],
                 panel_height = panel_heights[row]
             )
@@ -368,13 +390,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt
     },
     #' @importFrom rlang is_empty
-    free_border = function(self, guides, borders,
+    free_border = function(self, borders, guides = self$guides,
                            gt = self$gt, patches = self$patches) {
         self$recurse_lapply(
             function(patch, grob, t, l, b, r) {
                 borders <- intersect(borders, c(t, l, b, r))
                 if (is_empty(borders)) return(grob) # styler: off
-                patch$free_border(guides, borders = borders, gt = grob)
+                patch$free_border(borders = borders, gt = grob)
             },
             t = "top", l = "left", b = "bottom", r = "right",
             gt = gt, patches = patches
@@ -400,23 +422,23 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         if (is_empty(patches)) return(gt) # styler: off
         patch_index <- seq_along(patches)
         grobs <- .subset2(gt, "grobs")
-        layout <- .subset2(gt, "layout")
         layout_index <- match(
             paste0("plot-", patch_index),
-            .subset2(layout, "name")
+            .subset2(.subset2(gt, "layout"), "name")
         )
-        n_row <- nrow(gt)
-        n_col <- ncol(gt)
         # For each grob, we reuse the method from the patch to apply with the
-        # plot gtable.
+        # plot gtable. We always apply function to the plot border in the
+        # alignpatches
         gt$grobs[layout_index] <- .mapply(function(layout_idx, patch_idx) {
+            patch <- .subset2(patches, patch_idx)
+            borders <- .subset2(patch, "borders")
             .fn(
-                patch = .subset2(patches, patch_idx),
+                patch = patch,
                 grob = .subset2(grobs, layout_idx),
-                t = if (.subset2(layout, "t")[layout_idx] == 1L) t else NULL,
-                l = if (.subset2(layout, "l")[layout_idx] == 1L) l else NULL,
-                b = if (.subset2(layout, "b")[layout_idx] == n_row) b else NULL,
-                r = if (.subset2(layout, "r")[layout_idx] == n_col) r else NULL
+                t = if (any(borders == "top")) t else NULL,
+                l = if (any(borders == "left")) l else NULL,
+                b = if (any(borders == "bottom")) b else NULL,
+                r = if (any(borders == "right")) r else NULL
             )
         }, list(layout_idx = layout_index, patch_idx = patch_index), NULL)
         gt

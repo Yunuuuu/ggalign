@@ -14,8 +14,8 @@
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
-#' @param guides Which guide should be collected? A string containing one or
-#' more of `r rd_values(.tlbr)`.
+#' @param guides `r rd_guides()`. If `waiver()`, will inherit from the upper
+#' level.
 #' @inheritParams ggplot2::labs
 #' @param theme `r rd_layout_theme()`
 #' @return A `alignpatches` object.
@@ -48,7 +48,8 @@
 #' align_plots(p1, p2, design = design)
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
-                        widths = NA, heights = NA, design = NULL, guides = NULL,
+                        widths = NA, heights = NA,
+                        design = NULL, guides = waiver(),
                         title = NULL, subtitle = NULL, caption = NULL,
                         theme = NULL) {
     plots <- rlang::dots_list(..., .ignore_empty = "all")
@@ -66,16 +67,21 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
     design <- as_areas(design)
     patches <- lapply(plots, alignpatch)
-    layout <- layout_design(
-        ncol = ncol,
-        nrow = nrow,
-        byrow = byrow,
-        widths = widths,
-        heights = heights,
-        design = design,
+
+    # setup layout
+    if (!is.waive(byrow)) assert_bool(byrow)
+    if (!is.waive(design)) design <- as_areas(design)
+    if (!is.waive(guides) && !is.null(guides)) {
+        assert_position(guides)
+        guides <- setup_pos(guides)
+    }
+    layout <- list(
+        ncol = ncol, nrow = nrow, byrow = byrow,
+        widths = widths, heights = heights, design = design,
         guides = guides
     )
-    layout <- layout[!vapply(layout, is.waive, logical(1L), USE.NAMES = FALSE)]
+
+    # setup annotation
     annotation <- layout_annotation(
         title = title,
         subtitle = subtitle,
@@ -85,8 +91,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         !vapply(annotation, is.waive, logical(1L), USE.NAMES = FALSE)
     ]
     new_alignpatches(patches,
-        layout = layout,
-        annotation = annotation,
+        layout = layout, annotation = annotation,
         theme = theme
     )
 }
@@ -111,10 +116,10 @@ new_alignpatches <- function(patches, layout, annotation, theme) {
 #' @noRd
 layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
                           widths = waiver(), heights = waiver(),
-                          design = waiver(), guides = waiver()) {
+                          design = waiver(), guides = NA) {
     if (!is.waive(byrow)) assert_bool(byrow)
     if (!is.waive(design)) design <- as_areas(design)
-    if (!is.waive(guides) && !is.null(guides)) {
+    if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
         assert_position(guides)
         guides <- setup_pos(guides)
     }

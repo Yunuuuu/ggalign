@@ -143,14 +143,16 @@ alignpatch.NULL <- function(x) NULL
 #' @importFrom ggplot2 ggproto
 #' @importFrom grid unit.c
 Patch <- ggproto("Patch", NULL,
-    plot = NULL, gt = NULL,
-    patch_gtable = function(self, guides, plot = self$plot) {
+    plot = NULL, borders = NULL, guides = NULL, gt = NULL,
+    set_guides = function(guides) guides,
+    patch_gtable = function(self, guides = self$guides, plot = self$plot) {
         cli::cli_abort(
             "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
         )
     },
+
     #' @importFrom vctrs vec_slice
-    collect_guides = function(self, guides, gt = self$gt) {
+    collect_guides = function(self, guides = self$guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")
@@ -201,8 +203,8 @@ Patch <- ggproto("Patch", NULL,
         collected_guides
     },
     respect = function(self, gt = self$gt) isTRUE(.subset2(gt, "respect")),
-    align_panel_sizes = function(self, guides, panel_width, panel_height,
-                                 gt = self$gt) {
+    align_panel_sizes = function(self, panel_width, panel_height,
+                                 guides = self$guides, gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
     get_sizes = function(self, free = NULL, gt = self$gt) {
@@ -253,7 +255,7 @@ Patch <- ggproto("Patch", NULL,
         plot <- subset_gt(gt, !index, trim = FALSE)
         list(bg = bg, plot = plot)
     },
-    free_border = function(self, guides, borders,
+    free_border = function(self, borders, guides = self$guides,
                            gt = self$gt, patches = self$patches) {
         cli::cli_abort(
             "Cannot free border for {.obj_type_friendly {self$plot}}"

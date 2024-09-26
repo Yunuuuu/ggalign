@@ -12,7 +12,7 @@ align_plots(
   widths = NA,
   heights = NA,
   design = NULL,
-  guides = NULL,
+  guides = waiver(),
   title = NULL,
   subtitle = NULL,
   caption = NULL,
@@ -39,8 +39,8 @@ to match the aspect ratio of the content.}
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
-\item{guides}{Which guide should be collected? A string containing one or
-more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
+\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. If \code{waiver()}, will inherit from the upper
+level.}
 
 \item{title}{The text for the title.}
 

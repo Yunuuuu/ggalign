@@ -36,11 +36,6 @@ alignpatch.free_vp <- function(x) {
     ggproto(
         "PatchFreeViewport", Parent,
         vp = attr(x, "vp"),
-        patch_gtable = function(self, guides, plot = self$plot) {
-            ggproto_parent(Parent, self)$patch_gtable(
-                guides = guides, plot = plot
-            )
-        },
         align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                                 gt = self$gt) {
             ans <- ggproto_parent(Parent, self)$align_border(

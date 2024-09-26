@@ -33,8 +33,7 @@ one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 \item{borders}{Which border shouldn't be aligned? A string containing one or
 more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
-\item{guides}{Which guide should be collected? A string containing one or
-more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
+\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}}
 
 \item{labs}{Which axis labs to be free? A string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}

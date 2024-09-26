@@ -57,7 +57,7 @@ alignpatch.free_lab <- function(x) {
     ggproto(
         "PatchFreeLab", Parent,
         free_labs = setup_pos(attr(x, "free_labs")),
-        patch_gtable = function(self, guides, plot = self$plot) {
+        patch_gtable = function(self, guides = self$guides, plot = self$plot) {
             ans <- ggproto_parent(Parent, self)$patch_gtable(
                 guides = guides, plot = plot
             )

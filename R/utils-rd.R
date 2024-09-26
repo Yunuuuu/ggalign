@@ -32,3 +32,10 @@ rd_stack_what <- function() {
         sep = "\n"
     )
 }
+
+rd_guides <- function() {
+    paste(
+        "Which guide should be collected? A string containing one or more of",
+        rd_values(.tlbr)
+    )
+}
