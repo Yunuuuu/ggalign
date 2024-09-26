@@ -120,9 +120,9 @@ all plots along a single axis.</p></li>
 <dd><p>A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
 default is <code>NULL</code>, which means we won't modify anything.</p>
-<p>Used to modify the data after layout has been created, but before the data is
-handled of to the ggplot2 for rendering. Use this hook if the you needs
-change the default data for all <code>geoms</code>.</p></dd>
+<p>Used to modify the data after layout has been created, which should be a data
+frame, but before the data is handled of to the ggplot2 for rendering. Use
+this hook if the you needs change the default data for all <code>geoms</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
