@@ -68,7 +68,7 @@
 <span>  widths <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  heights <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  design <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -110,8 +110,8 @@ either be specified as a text string or by concatenating calls to
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>Which guide should be collected? A string containing one or
-more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>.</p></dd>
+<dd><p>Which guide should be collected? A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>. If <code>waiver()</code>, will inherit from the upper
+level.</p></dd>
 
 
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
