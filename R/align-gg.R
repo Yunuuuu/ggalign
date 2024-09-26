@@ -10,8 +10,10 @@
 #' @section ggplot2 specification:
 #' `align_gg` initializes a `ggplot` data and `mapping`.
 #'
-#' The internal will always use a default mapping of `aes(y = .data$.y)` or
-#' `aes(x = .data$.x)`.
+#' `align_gg()` always applies a default mapping for the axis of the data index
+#' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stacking
+#' (including left and right heatmap annotation) and `aes(x = .data$.x)` for
+#' vertical stacking (including top and bottom heatmap annotation)
 #'
 #' For ggplot usage, matrix (including a simple vector) data is converted into a
 #' long-format data frame. The data in the underlying `ggplot` object will

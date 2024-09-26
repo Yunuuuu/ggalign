@@ -112,8 +112,10 @@ A \code{AlignGG} object.
 
 \code{align_gg} initializes a \code{ggplot} data and \code{mapping}.
 
-The internal will always use a default mapping of \code{aes(y = .data$.y)} or
-\code{aes(x = .data$.x)}.
+\code{align_gg()} always applies a default mapping for the axis of the data index
+in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stacking
+(including left and right heatmap annotation) and \code{aes(x = .data$.x)} for
+vertical stacking (including top and bottom heatmap annotation)
 
 For ggplot usage, matrix (including a simple vector) data is converted into a
 long-format data frame. The data in the underlying \code{ggplot} object will
