@@ -45,16 +45,18 @@ guides will be collected. Default: \code{"tlbr"}.}
 
 \item{plot_data}{A function used to transform the plot data before rendering.
 By default, it'll inherit from the parent layout. If no parent layout, the
-default is \code{NULL}, which means we won't want to modify anything.
+default is \code{NULL}, which means we won't modify anything.
 
 Used to modify the data after layout has been created, but before the data is
 handled of to the ggplot2 for rendering. Use this hook if the you needs
 change the default data for all \code{geoms}.}
 
-\item{theme}{A \link[ggplot2:theme]{theme()} object, which will be added to all
-plots in the layout. Use \link[ggplot2:waiver]{waiver()}, if you want to
-inherit from the parent layout. Use \code{NULL} if you don't want to any theme
-components to be added.}
+\item{theme}{One of:
+\itemize{
+\item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
+\item \code{NULL}: won't add any theme components.
+\item \link[ggplot2:theme]{theme()}: will be added to all plots in the layout.
+}}
 
 \item{free_labs}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from

@@ -22,15 +22,15 @@
 #' `NULL` (default), no space will be removed.
 #' @param plot_data A function used to transform the plot data before rendering.
 #' By default, it'll inherit from the parent layout. If no parent layout, the
-#' default is `NULL`, which means we won't want to modify anything.
+#' default is `NULL`, which means we won't modify anything.
 #'
 #' Used to modify the data after layout has been created, but before the data is
 #' handled of to the ggplot2 for rendering. Use this hook if the you needs
 #' change the default data for all `geoms`.
-#' @param theme A [theme()][ggplot2::theme] object, which will be added to all
-#' plots in the layout. Use [waiver()][ggplot2::waiver()], if you want to
-#' inherit from the parent layout. Use `NULL` if you don't want to any theme
-#' components to be added.
+#' @param theme One of:
+#'  - [waiver()][ggplot2::waiver()]: will inherit from the parent layout. 
+#'  - `NULL`: won't add any theme components.
+#'  - [theme()][ggplot2::theme]: will be added to all plots in the layout.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is not `NULL`. See [stack_active] for details.
 #' @inheritParams heatmap_layout

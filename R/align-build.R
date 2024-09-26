@@ -1,6 +1,8 @@
 align_build <- function(x, panel, index,
                         extra_panel, extra_index,
                         plot_data, free_labs, free_spaces, theme) {
+    # we lock the Align object to prevent user from modifying this object
+    # in `$draw` method, we shouldn't do any calculations in `$draw` method
     x$lock()
     on.exit(x$unlock())
 
