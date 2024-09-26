@@ -113,15 +113,16 @@ A \code{AlignGG} object.
 \code{align_gg} initializes a \code{ggplot} data and \code{mapping}.
 
 \code{align_gg()} always applies a default mapping for the axis of the data index
-in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stacking
-(including left and right heatmap annotation) and \code{aes(x = .data$.x)} for
-vertical stacking (including top and bottom heatmap annotation)
+in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
+layout (including left and right heatmap annotation) and \code{aes(x = .data$.x)}
+for vertical stack layout (including top and bottom heatmap annotation).
 
 For ggplot usage, matrix (including a simple vector) data is converted into a
 long-format data frame. The data in the underlying \code{ggplot} object will
 contain following columns:
 \itemize{
-\item \code{.panel}: the panel for current layout axis.
+\item \code{.panel}: the panel for current layout axis. It means \code{x-axis} for
+vertical stack layout, \code{y-axis} for horizontal stack layout.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 \item \code{.row_names} and \code{.row_index}: A factor of the row names and an integer of
 row index of the original matrix or data frame.

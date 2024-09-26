@@ -11,12 +11,15 @@
 #' @section ggplot2 specification:
 #' `align_panel` initializes a `ggplot` data and `mapping`.
 #'
-#' The internal will always use a default mapping of `aes(y = .data$.y)` or
-#' `aes(x = .data$.x)`.
+#' `align_panel()` always applies a default mapping for the axis of the data
+#' index in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack
+#' layout (including left and right heatmap annotation) and `aes(x = .data$.x)`
+#' for vertical stack layout (including top and bottom heatmap annotation).
 #'
 #' The data in the underlying `ggplot` object contains following columns:
 #'
-#'  - `.panel`: the panel for current layout axis.
+#'  - `.panel`: the panel for current layout axis. It means `x-axis` for
+#'    vertical stack layout, `y-axis` for horizontal stack layout.
 #'
 #'  - `.index`: the index of the original layout data.
 #'

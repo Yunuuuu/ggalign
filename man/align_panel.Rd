@@ -93,12 +93,15 @@ panel data. \code{ggpanel} is just an alias of \code{align_panel}.
 
 \code{align_panel} initializes a \code{ggplot} data and \code{mapping}.
 
-The internal will always use a default mapping of \code{aes(y = .data$.y)} or
-\code{aes(x = .data$.x)}.
+\code{align_panel()} always applies a default mapping for the axis of the data
+index in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
+layout (including left and right heatmap annotation) and \code{aes(x = .data$.x)}
+for vertical stack layout (including top and bottom heatmap annotation).
 
 The data in the underlying \code{ggplot} object contains following columns:
 \itemize{
-\item \code{.panel}: the panel for current layout axis.
+\item \code{.panel}: the panel for current layout axis. It means \code{x-axis} for
+vertical stack layout, \code{y-axis} for horizontal stack layout.
 \item \code{.index}: the index of the original layout data.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 }

@@ -11,15 +11,16 @@
 #' `align_gg` initializes a `ggplot` data and `mapping`.
 #'
 #' `align_gg()` always applies a default mapping for the axis of the data index
-#' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stacking
-#' (including left and right heatmap annotation) and `aes(x = .data$.x)` for
-#' vertical stacking (including top and bottom heatmap annotation)
+#' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack
+#' layout (including left and right heatmap annotation) and `aes(x = .data$.x)`
+#' for vertical stack layout (including top and bottom heatmap annotation).
 #'
 #' For ggplot usage, matrix (including a simple vector) data is converted into a
 #' long-format data frame. The data in the underlying `ggplot` object will
 #' contain following columns:
 #'
-#'  - `.panel`: the panel for current layout axis.
+#'  - `.panel`: the panel for current layout axis. It means `x-axis` for
+#'    vertical stack layout, `y-axis` for horizontal stack layout.
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
