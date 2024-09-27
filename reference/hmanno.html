@@ -97,17 +97,17 @@ annotation.</p></li>
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A boolean value or a string containing one or more of
-<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected. If <code>NULL</code>, no
-guides will be collected. Default: <code>"tlbr"</code>.</p></dd>
+<dd><p>A boolean value or a string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected. If <code>NULL</code>, no guides will be collected. Default: <code>"tlbr"</code>.</p><ul><li><p>If position is <code>NULL</code>, this applies to the heamtap layout.</p></li>
+<li><p>If position is a string, this applies to the heatmap annotation.</p></li>
+</ul></dd>
 
 
 <dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
-<dd><p>Override the guides collection behaviour for the heatmap
-body or the heatmap annotation. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: Following the parent layout behaviour.</p></li>
+<dd><p>Override the guide collection behavior for the heatmap
+body or heatmap annotations. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: Following the parent layout behaviour.</p></li>
 <li><p><code>NULL</code>: prevent the collection of guides for the plot.</p></li>
 <li><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected for the plot.</p></li>
-<li><p>If position is <code>NULL</code>, this applies to the heatmap body.</p></li>
+</ul><p>Whether it operates on the heatmap body or heatmap annotation depends on:</p><ul><li><p>If position is <code>NULL</code>, this applies to the heatmap body.</p></li>
 <li><p>If position is a string, this applies to the heamtap annotation stack.</p></li>
 </ul></dd>
 
