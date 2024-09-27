@@ -66,6 +66,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -78,6 +79,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -108,6 +110,11 @@ Only used when <code>filling = TRUE</code>.</p></dd>
 <dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
 <dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a>
 object.</p></dd>
+
+
+<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
+<dd><p>Which guide should be collected? A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>. If <code>waiver()</code>, will inherit from the upper
+level.</p></dd>
 
 
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>

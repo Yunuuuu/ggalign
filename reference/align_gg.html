@@ -63,6 +63,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_gg</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
@@ -78,6 +79,7 @@
 <span><span class="fu">ggalign</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
@@ -103,6 +105,14 @@
 <dd><p>Plot size, can be an <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 
+<dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
+<dd><p>Override the guides collection behaviour for the plot.
+One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: Following the parent layout behaviour.</p></li>
+<li><p><code>NULL</code>: prevent the collection of guides for the plot.</p></li>
+<li><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected for the plot.</p></li>
+</ul></dd>
+
+
 <dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
 <dd><p>A boolean value or a string containing one or more of
 <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which border spaces should be removed. If
@@ -120,12 +130,12 @@ this hook if the you needs change the default data for all <code>geoms</code>.</
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
 <dd><p>Default plot theme: One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
-<li><p><code>NULL</code>: Use the default theme associated with the package.</p></li>
+<li><p><code>NULL</code>: Use the <a href="theme_ggalign.html">default theme</a>.</p></li>
 <li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added with the parent layout theme.</p></li>
 </ul><p><code>Note:</code> The axis title and labels parallel to the layout axis will always be
-removed in the default theme. For vertical stack layouts, this refers to the
-<code>x-axis</code>, and for horizontal stack layouts, this refers to the <code>y-axis</code>. If
-you want to display the axis title or labels, you should manually add
+removed by default. For vertical stack layouts, this refers to the <code>x-axis</code>,
+and for horizontal stack layouts, this refers to the <code>y-axis</code>. If you want to
+display the axis title or labels, you should manually add
 <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> elements for the parallel axis title or labels.</p></dd>
 
 

@@ -64,6 +64,7 @@
 <span>  position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -101,6 +102,16 @@ annotation.</p></li>
 guides will be collected. Default: <code>"tlbr"</code>.</p></dd>
 
 
+<dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
+<dd><p>Override the guides collection behaviour for the heatmap
+body or the heatmap annotation. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: Following the parent layout behaviour.</p></li>
+<li><p><code>NULL</code>: prevent the collection of guides for the plot.</p></li>
+<li><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which guide should be collected for the plot.</p></li>
+<li><p>If position is <code>NULL</code>, this applies to the heatmap body.</p></li>
+<li><p>If position is a string, this applies to the heamtap annotation stack.</p></li>
+</ul></dd>
+
+
 <dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
 <dd><p>A boolean value or a string containing one or more of
 <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which border spaces should be removed. If
@@ -118,7 +129,7 @@ this hook if the you needs change the default data for all <code>geoms</code>.</
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
 <dd><p>Default layout theme. One of:</p><ul><li><p><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a>: will inherit from the parent layout.</p></li>
-<li><p><code>NULL</code>: Use the default theme associated with the package.</p></li>
+<li><p><code>NULL</code>: Use the <a href="theme_ggalign.html">default theme</a>.</p></li>
 <li><p><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a>: will be added with the parent layout theme.</p></li>
 </ul></dd>
 
@@ -131,7 +142,7 @@ alignment. If <code>NULL</code>, all axis title will be aligned. Default: <code>
 
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
 <dd><p>What should get activated for the anntoation stack? Only used
-when position is not <code>NULL</code>. Possible values are follows:</p><ul><li><p>A single number or string of the plot elements in the stack layout.</p></li>
+when position is a string. Possible values are follows:</p><ul><li><p>A single number or string of the plot elements in the stack layout.</p></li>
 <li><p><code>NULL</code>: remove any active context.</p></li>
 </ul></dd>
 
