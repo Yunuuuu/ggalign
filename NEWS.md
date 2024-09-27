@@ -1,5 +1,9 @@
 # ggalign 0.0.4
 
+* new `theme_ggalign()` function for the default theme of ggalign package
+
+* export option `ggalign.default_theme` allow user to change the global default theme
+
 * new `free_guide()` function, to override the layout guides argument for single plot
 
 * `geom_draw()` now utilize `patch()` function to convert objects into grob
