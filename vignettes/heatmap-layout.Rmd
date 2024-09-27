@@ -166,57 +166,6 @@ ggheatmap(small_mat) +
     scale_x_reverse()
 ```
 
-## Alignment of axis titles
-By default, `ggheatmap()` won't align the axis titles.
-```{r}
-ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
-    ylab("Heatmap title") +
-    hmanno("t", size = unit(30, "mm")) +
-    align_dendro() +
-    ylab("Annotation title")
-```
-
-To align all axis titles, you can set `free_labs = NULL` in the `hmanno()`
-function. Alternatively, A boolean value or a single string containing one or
-more of axis positions ("t", "l", "b", "r") to indicate which axis titles should
-be free from alignment.
-
-- **when `position` is `NULL`**: The `free_labs` argument controls the alignment
-of the heatmap body's axis titles. If set to `waiver()`, it will inherit from
-the parent layout.
-- **when `position` is not `NULL`**: The `free_labs` argument controls the
-alignment of the annotation stack's axis titles. If set to `waiver()`, it will
-inherit from the specific heatmap layout axis:
-  - For top and bottom annotations, it inherits from the left ("l") and right
-  ("r") axes. 
-  - For left and right annotations, it inherits from the top ("t") and bottom
-  ("b") axes.
-
-```{r}
-ggheatmap(small_mat) +
-    hmanno(free_labs = NULL) +
-    scale_fill_viridis_c() +
-    ylab("Heatmap title") +
-    hmanno("t", size = unit(30, "mm")) +
-    align_dendro() +
-    ylab("Annotation title")
-```
-
-`align_*()` functions include the `free_labs` argument, which, by default,
-inherits from the annotatioon stack. This allows you to control the alignment
-for each plot individually.
-
-```{r}
-ggheatmap(small_mat) +
-    hmanno(free_labs = NULL) +
-    scale_fill_viridis_c() +
-    ylab("Heatmap title") +
-    hmanno("t", size = unit(30, "mm"), free_labs = "l") +
-    align_dendro() +
-    ylab("Annotation title")
-```
-
 ## Removing spaces when aligning elements
 By default, we'll align all elements of the plot, which can sometimes lead to
 unwanted spacing. Consider the following example:
@@ -255,7 +204,62 @@ ggheatmap(small_mat) +
     scale_x_reverse(expand = expansion())
 ```
 
-The same with `free_labs` argument, you can control the `free_spaces` argument
+`align_*()` functions include the `free_spaces` argument, which, by default,
+inherits from the annotation stack. This allows you to control the alignment
+for each plot individually.
+
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro(free_labs = "l") +
+    scale_y_continuous(
+        expand = expansion(),
+        labels = ~ paste("very very long labels", .x)
+    ) +
+    hmanno("l") +
+    align_dendro() +
+    scale_x_reverse(expand = expansion())
+```
+
+## Alignment of axis titles
+By default, `ggheatmap()` won't align the axis titles.
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    ylab("Heatmap title") +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    ylab("Annotation title")
+```
+
+To align all axis titles, you can set `free_labs = NULL` in the `hmanno()`
+function. Alternatively, A boolean value or a single string containing one or
+more of axis positions ("t", "l", "b", "r") to indicate which axis titles should
+be free from alignment.
+
+- **when `position` is `NULL`**: The `free_labs` argument controls the alignment
+of the heatmap body's axis titles. If set to `waiver()`, it will inherit from
+the parent layout.
+- **when `position` is not `NULL`**: The `free_labs` argument controls the
+alignment of the annotation stack's axis titles. If set to `waiver()`, it will
+inherit from the specific heatmap layout axis:
+  - For top and bottom annotations, it inherits from the left ("l") and right
+  ("r") axes. 
+  - For left and right annotations, it inherits from the top ("t") and bottom
+  ("b") axes.
+
+```{r}
+ggheatmap(small_mat) +
+    hmanno(free_labs = NULL) +
+    scale_fill_viridis_c() +
+    ylab("Heatmap title") +
+    hmanno("t", size = unit(30, "mm")) +
+    align_dendro() +
+    ylab("Annotation title")
+```
+
+The same with `free_spaces` argument, you can control the `free_labs` argument
 for the individual plot in `align_*()` function.
 
 ## Session information
