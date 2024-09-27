@@ -23,15 +23,15 @@
 #'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
-#' @param free_guides Override the guides collection behaviour for the plot. 
+#' @param free_guides Override the guides collection behaviour for the plot.
 #' `r rd_free_guides()`
 #' @inheritParams hmanno
 #' @param theme Default plot theme: `r rd_theme()`
 #'
 #' `Note:` The axis title and labels parallel to the layout axis will always be
-#' removed in the default theme. For vertical stack layouts, this refers to the
-#' `x-axis`, and for horizontal stack layouts, this refers to the `y-axis`. If
-#' you want to display the axis title or labels, you should manually add
+#' removed by default. For vertical stack layouts, this refers to the `x-axis`,
+#' and for horizontal stack layouts, this refers to the `y-axis`. If you want to
+#' display the axis title or labels, you should manually add
 #' [theme()][ggplot2::theme] elements for the parallel axis title or labels.
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.

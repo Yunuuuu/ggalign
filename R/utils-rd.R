@@ -10,7 +10,7 @@ rd_theme <- function() {
     paste(
         "One of:",
         "- [waiver()][ggplot2::waiver()]: will inherit from the parent layout.",
-        "- `NULL`: Use the default theme associated with the package.",
+        "- `NULL`: Use the [default theme][theme_ggalign].",
         "- [theme()][ggplot2::theme]: will be added with the parent layout theme.",
         sep = "\n"
     )

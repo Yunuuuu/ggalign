@@ -73,7 +73,7 @@ align_build <- function(x, panel, index,
     }
 
     # remove the title and text of axis parallelly with the layout
-    plot$theme <- (theme %||% default_theme()) +
+    plot$theme <- theme +
         switch_direction(
             direction,
             theme(

@@ -63,14 +63,14 @@ this hook if the you needs change the default data for all \code{geoms}.}
 \item{theme}{Default plot theme: One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
-\item \code{NULL}: Use the default theme associated with the package.
+\item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
 \item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
 }
 
 \verb{Note:} The axis title and labels parallel to the layout axis will always be
-removed in the default theme. For vertical stack layouts, this refers to the
-\code{x-axis}, and for horizontal stack layouts, this refers to the \code{y-axis}. If
-you want to display the axis title or labels, you should manually add
+removed by default. For vertical stack layouts, this refers to the \code{x-axis},
+and for horizontal stack layouts, this refers to the \code{y-axis}. If you want to
+display the axis title or labels, you should manually add
 \link[ggplot2:theme]{theme()} elements for the parallel axis title or labels.}
 
 \item{free_labs}{A boolean value or a string containing one or more of

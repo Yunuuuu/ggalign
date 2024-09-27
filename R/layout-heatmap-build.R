@@ -222,7 +222,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
-    p$theme <- (theme %||% default_theme()) + p$theme
+    p$theme <- theme + p$theme
     if (!is.waive(free_guides <- .subset2(params, "free_guides"))) {
         p <- free_guide(p, free_guides)
     }

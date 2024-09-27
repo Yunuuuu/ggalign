@@ -65,7 +65,7 @@ this hook if the you needs change the default data for all \code{geoms}.}
 \item{theme}{Default layout theme. One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
-\item \code{NULL}: Use the default theme associated with the package.
+\item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
 \item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
 }}
 

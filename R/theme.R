@@ -1,5 +1,25 @@
+default_theme <- function() {
+    opt <- sprintf("%s.default_theme", pkg_nm())
+    ans <- getOption(opt)
+    if (is.null(ans)) {
+        ans <- theme_ggalign()
+    } else if (!inherits(ans, "theme")) {
+        cli::cli_abort("{.arg {opt}} must be a {.cls theme} object")
+    }
+    ans
+}
+
+#' Complete theme for ggalign package
+#'
+#' Default theme for `r rd_layout()`. You can use the option
+#' `r rd_values(sprintf("%s.default_theme", pkg_nm()))` to chagne the default
+#' theme. 
+#' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic
-default_theme <- function(...) {
+#' @return A complete [theme][ggplot2::theme] object.
+#' @examples theme_ggalign()
+#' @export
+theme_ggalign <- function(...) {
     theme_classic(...) +
         theme(
             axis.line = element_blank(),
@@ -9,9 +29,9 @@ default_theme <- function(...) {
 }
 
 inherit_theme <- function(theme, parent) {
-    if (is.null(theme)) return(NULL) # styler: off
-    # if parent theme is not set, we use NULL
-    parent <- parent %|w|% NULL
+    if (is.null(theme)) return(default_theme()) # styler: off
+    # if parent theme is not set, we use the default theme
+    parent <- parent %|w|% default_theme()
     if (is.waive(theme)) { # inherit from parent theme
         theme <- parent
     } else if (!is.null(parent)) { # add parent layout theme
