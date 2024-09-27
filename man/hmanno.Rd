@@ -36,16 +36,22 @@ annotation.
 annotation.
 }}
 
-\item{guides}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
-guides will be collected. Default: \code{"tlbr"}.}
+\item{guides}{A boolean value or a string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no guides will be collected. Default: \code{"tlbr"}.
+\itemize{
+\item If position is \code{NULL}, this applies to the heamtap layout.
+\item If position is a string, this applies to the heatmap annotation.
+}}
 
-\item{free_guides}{Override the guides collection behaviour for the heatmap
-body or the heatmap annotation. One of:
+\item{free_guides}{Override the guide collection behavior for the heatmap
+body or heatmap annotations. One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: Following the parent layout behaviour.
 \item \code{NULL}: prevent the collection of guides for the plot.
 \item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected for the plot.
+}
+
+Whether it operates on the heatmap body or heatmap annotation depends on:
+\itemize{
 \item If position is \code{NULL}, this applies to the heatmap body.
 \item If position is a string, this applies to the heamtap annotation stack.
 }}

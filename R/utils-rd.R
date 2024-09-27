@@ -24,6 +24,15 @@ rd_layout_theme <- function() {
     )
 }
 
+rd_layout_guides <- function() {
+    paste(
+        "A boolean value or a string containing one or more of",
+        rd_values(.tlbr),
+        "indicates which guide should be collected.",
+        "If `NULL`, no guides will be collected. Default: `\"tlbr\"`."
+    )
+}
+
 rd_stack_what <- function() {
     paste(
         "Possible values are follows:",

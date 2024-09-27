@@ -42,7 +42,7 @@ ggalign(
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
-\item{free_guides}{Override the guides collection behaviour for the plot.
+\item{free_guides}{Override the guide collection behavior for the plot.
 One of:
 \itemize{
 \item \link[ggplot2:waiver]{waiver()}: Following the parent layout behaviour.

@@ -15,9 +15,7 @@ stack_active(
 )
 }
 \arguments{
-\item{guides}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
-guides will be collected. Default: \code{"tlbr"}.}
+\item{guides}{A boolean value or a string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no guides will be collected. Default: \code{"tlbr"}.}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If

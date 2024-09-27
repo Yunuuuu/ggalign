@@ -11,12 +11,16 @@
 #' annotation.
 #'  - If position is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
-#' @param guides A boolean value or a string containing one or more of
-#' `r rd_values(.tlbr)` indicates which guide should be collected. If `NULL`, no
-#' guides will be collected. Default: `"tlbr"`.
-#' @param free_guides Override the guides collection behaviour for the heatmap
-#' body or the heatmap annotation. `r rd_free_guides()`
 #'
+#' @param guides `r rd_layout_guides()`
+#'
+#'  - If position is `NULL`, this applies to the heamtap layout.
+#'  - If position is a string, this applies to the heatmap annotation.
+#'
+#' @param free_guides Override the guide collection behavior for the heatmap
+#' body or heatmap annotations. `r rd_free_guides()`
+#'
+#' Whether it operates on the heatmap body or heatmap annotation depends on:
 #'  - If position is `NULL`, this applies to the heatmap body.
 #'  - If position is a string, this applies to the heamtap annotation stack.
 #'
@@ -72,6 +76,7 @@ hmanno <- function(position = NULL, size = NULL,
 
 #' Determine the active context of stack layout
 #'
+#' @param guides `r rd_layout_guides()`
 #' @inheritParams hmanno
 #' @inheritParams stack_layout
 #' @param what What should get activated for the stack layout?

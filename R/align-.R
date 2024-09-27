@@ -23,7 +23,7 @@
 #'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
-#' @param free_guides Override the guides collection behaviour for the plot.
+#' @param free_guides Override the guide collection behavior for the plot.
 #' `r rd_free_guides()`
 #' @inheritParams hmanno
 #' @param theme Default plot theme: `r rd_theme()`
