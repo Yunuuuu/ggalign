@@ -10,17 +10,19 @@
 #' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
 #' the relative widths (`direction = "horizontal"`) / heights (`direction =
 #' "vertical"`).
+#' @inheritParams align_plots
 #' @inheritParams rlang::args_dots_empty
 #' @return A `StackLayout` object.
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-stack_layout <- function(data, direction = NULL, sizes = NA, ...) {
+stack_layout <- function(data, direction = NULL, sizes = NA, guides = waiver(),
+                         ...) {
     rlang::check_dots_empty()
     if (missing(data)) {
         .stack_layout(
             data = NULL, nobs = NULL,
-            direction = direction, sizes = sizes,
+            direction = direction, sizes = sizes, guides = guides,
             call = current_call()
         )
     } else {
@@ -81,20 +83,24 @@ stack_layout.NULL <- function(data, ...) {
 #' @importFrom rlang caller_call
 #' @importFrom ggplot2 waiver
 #' @importFrom grid unit
-.stack_layout <- function(data, direction = NULL, sizes = NA, nobs,
-                          call = caller_call()) {
+.stack_layout <- function(data, direction = NULL, sizes = NA, guides = waiver(),
+                          nobs, call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     sizes <- check_stack_sizes(sizes)
+    if (!is.null(guides) && !is.waive(guides)) {
+        assert_position(guides, call = call)
+    }
     methods::new("StackLayout",
         data = data, direction = direction,
         params = list(
             # @param sizes the relative size of the vertical direction with this
-            # stack, which won't be used by heatmap annotation
+            # stack, which won't be used by heatmap annotation.
             sizes = sizes,
+            guides = guides,
             # @param size the total size of the stack, used by heatmap
             # annotation.
             size = unit(NA, "null"),
-            guides = waiver(),
+            free_guides = waiver(), # only used by heatmap annotation
             plot_data = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),

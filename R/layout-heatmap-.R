@@ -11,6 +11,7 @@
 #' Only used when `filling = TRUE`.
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
 #' object.
+#' @inheritParams align_plots
 #' @param filling A boolean value indicates whether to fill the heatmap. If you
 #' want to customize the filling style, you can set to `FALSE`.
 #' @inheritParams align
@@ -42,12 +43,14 @@
 #' @export
 heatmap_layout <- function(data, mapping = aes(),
                            ...,
-                           width = NA, height = NA, filling = TRUE,
+                           width = NA, height = NA,
+                           guides = waiver(), filling = TRUE,
                            set_context = TRUE, order = NULL, name = NULL) {
     if (missing(data)) {
         .heatmap_layout(
             data = NULL, mapping = mapping,
-            ..., width = width, height = height, filling = filling,
+            ..., width = width, height = height,
+            guides = guides, filling = filling,
             set_context = set_context, order = order, name = name,
             nobs_list = list(), call = current_call()
         )
@@ -69,7 +72,7 @@ methods::setClass(
         # If we regard heatmap layout as a plot, and put it into the stack
         # layout, we need following arguments to control it's behavour
         set_context = "logical", order = "integer", name = "character",
-        # Used by the layout itself,
+        # Used by the layout itself:
         # top, left, bottom, right must be a StackLayout object.
         top = "ANY", left = "ANY", bottom = "ANY", right = "ANY",
         panel_list = "list", index_list = "list", nobs_list = "list"
@@ -139,12 +142,16 @@ heatmap_layout.default <- function(data, ...) {
 #' @importFrom ggplot2 aes
 .heatmap_layout <- function(data, mapping = aes(),
                             ...,
-                            width = NA, height = NA, filling = TRUE,
+                            width = NA, height = NA,
+                            guides = waiver(), filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
     width <- check_size(width)
     height <- check_size(height)
+    if (!is.null(guides) && !is.waive(guides)) {
+        assert_position(guides, call = call)
+    }
     assert_bool(filling, call = call)
     assert_bool(set_context, call = call)
     if (is.null(order) || is.na(order)) {
@@ -181,11 +188,10 @@ heatmap_layout.default <- function(data, ...) {
     methods::new(
         "HeatmapLayout",
         data = data,
+        # following parameters can be controlled by `active` object.
         params = list(
-            width = width,
-            height = height,
-            # following parameters can be controlled by `active` object.
-            guides = waiver(),
+            width = width, height = height, guides = guides,
+            free_guides = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),
             plot_data = waiver(),

@@ -23,9 +23,11 @@
 #'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
+#' @param free_guides Override the guides collection behaviour for the plot. 
+#' `r rd_free_guides()`
 #' @inheritParams hmanno
 #' @param theme Default plot theme: `r rd_theme()`
-#' 
+#'
 #' `Note:` The axis title and labels parallel to the layout axis will always be
 #' removed in the default theme. For vertical stack layouts, this refers to the
 #' `x-axis`, and for horizontal stack layouts, this refers to the `y-axis`. If
@@ -64,8 +66,8 @@ align <- function(align_class, params,
                   #
                   # Details see `initialize_align()`
                   data, size = NULL,
-                  free_spaces = waiver(), plot_data = waiver(),
-                  theme = waiver(), free_labs = waiver(),
+                  free_guides = waiver(), free_spaces = waiver(),
+                  plot_data = waiver(), theme = waiver(), free_labs = waiver(),
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
                   check.param = TRUE, call = caller_call()) {
@@ -74,12 +76,15 @@ align <- function(align_class, params,
     }
 
     # check arguments ---------------------------------------------
+    data <- allow_lambda(data)
     if (is.null(size)) {
         size <- unit(NA, "null")
     } else {
         size <- check_size(size)
     }
-    data <- allow_lambda(data)
+    if (!is.waive(free_guides) && !is.null(free_guides)) {
+        assert_position(free_guides, call = call)
+    }
     if (!is.waive(free_labs)) {
         free_labs <- check_layout_position(free_labs, call = call)
     }
@@ -137,6 +142,7 @@ align <- function(align_class, params,
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
+        free_guides = free_guides,
         plot_data = plot_data,
         free_labs = free_labs,
         free_spaces = free_spaces,

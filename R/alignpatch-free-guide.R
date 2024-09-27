@@ -22,9 +22,12 @@ free_guide.alignpatches <- free_guide.ggplot
 #' @export
 alignpatch.free_guide <- function(x) {
     Parent <- NextMethod()
+    if (!is.null(free_guides <- attr(x, "free_guides"))) {
+        free_guides <- setup_pos(free_guides)
+    }
     ggproto(
         "PatchFreeGuide", Parent,
-        free_guides = setup_pos(attr(x, "free_guides")),
+        free_guides = free_guides,
         set_guides = function(self, guides) {
             union(
                 self$free_guides,

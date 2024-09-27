@@ -23,7 +23,6 @@ ggalign_build.HeatmapLayout <- function(x) {
     keep <- lengths(plots) > 0L
 
     design <- trim_area(do.call(c, design[keep]))
-    params <- x@params
     annotation <- x@annotation
     align_plots(
         !!!.subset(plots, keep),
@@ -31,7 +30,7 @@ ggalign_build.HeatmapLayout <- function(x) {
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(params, "guides") %|w|% "tlbr",
+        guides = .subset2(x@params, "guides") %|w|% "tlbr",
         title = .subset2(annotation, "title"),
         subtitle = .subset2(annotation, "subtitle"),
         caption = .subset2(annotation, "caption"),
@@ -42,7 +41,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
+heatmap_build <- function(heatmap, plot_data = waiver(),
                           free_labs = waiver(), free_spaces = waiver(),
                           theme = waiver()) {
     params <- heatmap@params
@@ -105,7 +104,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    guides <- .subset2(params, "guides") %|w|% guides
     p <- finish_plot_data(p, plot_data %|w|% NULL, data = data)
 
     # setup the scales -----------------------------------
@@ -184,16 +182,20 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
         ans <- stack_build(
             stack,
             plot_data = plot_data,
-            guides = guides,
             free_labs = free_labs,
             free_spaces = free_spaces,
             theme = theme,
             extra_panel = panel,
             extra_index = index
         )
-        # for heatmap annotation, we should always make them next to
-        # the heatmap body
         if (!is.null(.subset2(ans, "plot"))) {
+            # for annotation stack, we handle the free_guides
+            free_guides <- .subset2(stack@params, "free_guides")
+            if (!is.waive(free_guides)) {
+                ans$plot <- free_guide(.subset2(ans, "plot"), free_guides)
+            }
+            # for heatmap annotation, we should always make them next to
+            # the heatmap body
             ans$plot <- free_vp(
                 .subset2(ans, "plot"),
                 x = switch(position,
@@ -221,6 +223,9 @@ heatmap_build <- function(heatmap, plot_data = waiver(), guides = waiver(),
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
     p$theme <- (theme %||% default_theme()) + p$theme
+    if (!is.waive(free_guides <- .subset2(params, "free_guides"))) {
+        p <- free_guide(p, free_guides)
+    }
     if (!is.null(heatmap_labs)) {
         p <- free_lab(p, heatmap_labs)
     }

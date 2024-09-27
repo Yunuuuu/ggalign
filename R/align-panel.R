@@ -34,14 +34,15 @@
 #' @importFrom rlang caller_call current_call
 #' @export
 align_panel <- function(mapping = aes(), size = NULL,
-                        free_spaces = waiver(), plot_data = waiver(),
-                        theme = waiver(), free_labs = waiver(),
+                        free_guides = waiver(), free_spaces = waiver(),
+                        plot_data = waiver(), theme = waiver(),
+                        free_labs = waiver(),
                         limits = TRUE, facet = TRUE,
                         set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignPanel,
         params = list(mapping = mapping),
-        size = size, data = NULL,
+        size = size, data = NULL, free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
         set_context = set_context, order = order, name = name

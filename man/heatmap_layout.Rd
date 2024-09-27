@@ -11,6 +11,7 @@ heatmap_layout(
   ...,
   width = NA,
   height = NA,
+  guides = waiver(),
   filling = TRUE,
   set_context = TRUE,
   order = NULL,
@@ -23,6 +24,7 @@ ggheatmap(
   ...,
   width = NA,
   height = NA,
+  guides = waiver(),
   filling = TRUE,
   set_context = TRUE,
   order = NULL,
@@ -42,6 +44,9 @@ Only used when \code{filling = TRUE}.}
 
 \item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
 object.}
+
+\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. If \code{waiver()}, will inherit from the upper
+level.}
 
 \item{filling}{A boolean value indicates whether to fill the heatmap. If you
 want to customize the filling style, you can set to \code{FALSE}.}

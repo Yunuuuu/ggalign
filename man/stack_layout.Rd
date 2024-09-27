@@ -5,9 +5,9 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-stack_layout(data, direction = NULL, sizes = NA, ...)
+stack_layout(data, direction = NULL, sizes = NA, guides = waiver(), ...)
 
-ggstack(data, direction = NULL, sizes = NA, ...)
+ggstack(data, direction = NULL, sizes = NA, guides = waiver(), ...)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -18,7 +18,11 @@ direction of the stack layout.}
 \item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
-\item{...}{These dots are for future extensions and must be empty.}
+\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. If \code{waiver()}, will inherit from the upper
+level.}
+
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
+ggplot object. Use \code{NULL} to indicate an empty spacer.}
 }
 \value{
 A \code{StackLayout} object.

@@ -8,6 +8,7 @@ hmanno(
   position = NULL,
   size = NULL,
   guides = NA,
+  free_guides = NA,
   free_spaces = NA,
   plot_data = NA,
   theme = NA,
@@ -39,6 +40,16 @@ annotation.
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected. If \code{NULL}, no
 guides will be collected. Default: \code{"tlbr"}.}
 
+\item{free_guides}{Override the guides collection behaviour for the heatmap
+body or the heatmap annotation. One of:
+\itemize{
+\item \link[ggplot2:waiver]{waiver()}: Following the parent layout behaviour.
+\item \code{NULL}: prevent the collection of guides for the plot.
+\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected for the plot.
+\item If position is \code{NULL}, this applies to the heatmap body.
+\item If position is a string, this applies to the heamtap annotation stack.
+}}
+
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
 \code{NULL} (default), no space will be removed.}
@@ -63,7 +74,7 @@ this hook if the you needs change the default data for all \code{geoms}.}
 alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
 
 \item{what}{What should get activated for the anntoation stack? Only used
-when position is not \code{NULL}. Possible values are follows:
+when position is a string. Possible values are follows:
 \itemize{
 \item A single number or string of the plot elements in the stack layout.
 \item \code{NULL}: remove any active context.

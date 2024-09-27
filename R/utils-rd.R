@@ -39,3 +39,17 @@ rd_guides <- function() {
         rd_values(.tlbr)
     )
 }
+
+rd_free_guides <- function() {
+    paste(
+        "One of:",
+        "- [waiver()][ggplot2::waiver()]: Following the parent layout behaviour.",
+        "- `NULL`: prevent the collection of guides for the plot.",
+        paste(
+            "- A string containing one or more of",
+            rd_values(.tlbr),
+            "indicates which guide should be collected for the plot."
+        ),
+        sep = "\n"
+    )
+}

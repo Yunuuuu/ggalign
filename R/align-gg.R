@@ -51,14 +51,16 @@
 #'     geom_point(aes(y = value))
 #' @export
 align_gg <- function(mapping = aes(), size = NULL,
-                     free_spaces = waiver(), plot_data = waiver(),
-                     theme = waiver(), free_labs = waiver(),
+                     free_guides = waiver(), free_spaces = waiver(),
+                     plot_data = waiver(), theme = waiver(),
+                     free_labs = waiver(),
                      data = NULL, limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL) {
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
         size = size, data = data %||% waiver(),
+        free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
         facet = facet, limits = limits,

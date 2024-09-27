@@ -1,5 +1,7 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
+    # we by default, collect all guides
+    x@params$guides <- .subset2(x@params, "guides") %|w|% "tlbr"
     .subset2(stack_build(x), "plot") %||% align_plots()
 }
 
@@ -7,9 +9,8 @@ ggalign_build.StackLayout <- function(x) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty
 #' @noRd
-stack_build <- function(x, plot_data = waiver(), guides = waiver(),
-                        free_labs = waiver(), free_spaces = waiver(),
-                        theme = waiver(),
+stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
+                        free_spaces = waiver(), theme = waiver(),
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
@@ -43,7 +44,6 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
 
     # build the stack
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    guides <- .subset2(params, "guides") %|w|% guides
     free_labs <- .subset2(params, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
     theme <- inherit_theme(.subset2(params, "theme"), theme)
@@ -70,7 +70,6 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             # for a heatmap
             patch <- heatmap_build(plot,
                 plot_data = plot_data,
-                guides = guides,
                 free_labs = free_labs,
                 free_spaces = free_spaces,
                 theme = theme
@@ -113,7 +112,7 @@ stack_build <- function(x, plot_data = waiver(), guides = waiver(),
             .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = guides %|w|% "tlbr",
+        guides = .subset2(params, "guides"),
         title = .subset2(annotation, "title"),
         subtitle = .subset2(annotation, "subtitle"),
         caption = .subset2(annotation, "caption"),

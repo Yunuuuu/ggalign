@@ -27,6 +27,7 @@ align_build <- function(x, panel, index,
     ))
 
     # we always set the default value from the layout
+    free_guides <- .subset2(x, "free_guides")
     plot_data <- .subset2(x, "plot_data") %|w|% plot_data
     free_labs <- .subset2(x, "free_labs") %|w|% free_labs
     free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
@@ -85,9 +86,9 @@ align_build <- function(x, panel, index,
                 axis.text.x = element_blank(),
                 axis.ticks.x = element_blank()
             )
-        ) + 
+        ) +
         plot$theme
-
+    if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
     if (!is.null(free_labs)) {
         plot <- free_lab(plot, free_labs)
     }

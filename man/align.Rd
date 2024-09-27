@@ -11,6 +11,7 @@ align(
   params,
   data,
   size = NULL,
+  free_guides = waiver(),
   free_spaces = waiver(),
   plot_data = waiver(),
   theme = waiver(),
@@ -44,6 +45,14 @@ all plots along a single axis.
 }}
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
+
+\item{free_guides}{Override the guides collection behaviour for the plot.
+One of:
+\itemize{
+\item \link[ggplot2:waiver]{waiver()}: Following the parent layout behaviour.
+\item \code{NULL}: prevent the collection of guides for the plot.
+\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected for the plot.
+}}
 
 \item{free_spaces}{A boolean value or a string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If

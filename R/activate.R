@@ -14,6 +14,12 @@
 #' @param guides A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which guide should be collected. If `NULL`, no
 #' guides will be collected. Default: `"tlbr"`.
+#' @param free_guides Override the guides collection behaviour for the heatmap
+#' body or the heatmap annotation. `r rd_free_guides()`
+#'
+#'  - If position is `NULL`, this applies to the heatmap body.
+#'  - If position is a string, this applies to the heamtap annotation stack.
+#'
 #' @param free_labs A boolean value or a string containing one or more of
 #' `r rd_values(.tlbr)` indicates which axis title should be free from
 #' alignment. If `NULL`, all axis title will be aligned. Default: `"tlbr"`.
@@ -29,7 +35,7 @@
 #' this hook if the you needs change the default data for all `geoms`.
 #' @param theme Default layout theme. `r rd_theme()`
 #' @param what What should get activated for the anntoation stack? Only used
-#' when position is not `NULL`. `r rd_stack_what()`.
+#' when position is a string. `r rd_stack_what()`.
 #' @inheritParams heatmap_layout
 #' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
@@ -38,22 +44,23 @@
 #'     align_dendro()
 #' @export
 hmanno <- function(position = NULL, size = NULL,
-                   guides = NA, free_spaces = NA,
+                   guides = NA, free_guides = NA, free_spaces = NA,
                    plot_data = NA, theme = NA,
                    free_labs = NA, what = waiver(),
                    width = NULL, height = NULL) {
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
-    if (!is.null(width)) width <- check_size(width)
-    if (!is.null(height)) height <- check_size(height)
-    if (!is.waive(what)) what <- check_stack_context(what)
     active <- new_active(
         guides = guides,
+        free_guides = free_guides,
         free_labs = free_labs,
         free_spaces = free_spaces,
         plot_data = plot_data,
         theme = theme
     )
+    if (!is.null(width)) width <- check_size(width)
+    if (!is.null(height)) height <- check_size(height)
+    if (!is.waive(what)) what <- check_stack_context(what)
     structure(
         list(
             position = position, size = size, width = width, height = height,
@@ -93,6 +100,9 @@ stack_active <- function(guides = NA, free_spaces = NA,
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     active <- new_active(
         guides = guides,
+        # for a stack, it is the top-level, what we need is the `guides`
+        # argument only
+        free_guides = NA,
         free_labs = free_labs,
         free_spaces = free_spaces,
         plot_data = plot_data,
@@ -104,10 +114,15 @@ stack_active <- function(guides = NA, free_spaces = NA,
     )
 }
 
-new_active <- function(guides, free_labs, free_spaces, plot_data, theme,
+new_active <- function(guides, free_guides,
+                       free_labs, free_spaces, plot_data, theme,
                        call = caller_call()) {
     if (!identical(guides, NA) && !is.waive(guides)) {
         guides <- check_layout_position(guides, call = call)
+    }
+    if (!identical(free_guides, NA) && !is.waive(free_guides) &&
+        !is.null(free_guides)) {
+        assert_position(free_guides, call = call)
     }
     if (!identical(free_labs, NA) && !is.waive(free_labs)) {
         free_labs <- check_layout_position(free_labs, call = call)
@@ -125,6 +140,7 @@ new_active <- function(guides, free_labs, free_spaces, plot_data, theme,
     structure(
         list(
             guides = guides,
+            free_guides = free_guides,
             free_labs = free_labs,
             free_spaces = free_spaces,
             plot_data = plot_data,
@@ -132,6 +148,32 @@ new_active <- function(guides, free_labs, free_spaces, plot_data, theme,
         ),
         class = "active"
     )
+}
+
+layout_add_active <- function(object, layout, object_name) {
+    if (!identical(guides <- .subset2(object, "guides"), NA)) {
+        layout@params$guides <- guides
+    }
+    if (!identical(free_guides <- .subset2(object, "free_guides"), NA)) {
+        layout@params$free_guides <- free_guides
+    }
+    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
+        layout@params$free_labs <- free_labs
+    }
+    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
+        layout@params$free_spaces <- free_spaces
+    }
+    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
+        layout@params$plot_data <- plot_data
+    }
+    if (!identical(theme <- .subset2(object, "theme"), NA)) {
+        if (is.waive(layout@params$theme) || is.null(layout@params$theme)) {
+            layout@params$theme <- theme
+        } else {
+            layout@params$theme <- layout@params$theme + theme
+        }
+    }
+    layout
 }
 
 ########################################################
