@@ -1,10 +1,12 @@
 default_theme <- function() {
     opt <- sprintf("%s.default_theme", pkg_nm())
-    ans <- getOption(opt)
-    if (is.null(ans)) {
+    if (is.null(ans <- getOption(opt, default = NULL))) {
         ans <- theme_ggalign()
     } else if (!inherits(ans, "theme")) {
-        cli::cli_abort("{.arg {opt}} must be a {.cls theme} object")
+        cli::cli_abort(c(
+            "{.arg {opt}} must be a {.fn theme} object",
+            i = "You have provided a {.obj_type_friendly {ans}}"
+        ))
     }
     ans
 }
@@ -13,7 +15,7 @@ default_theme <- function() {
 #'
 #' Default theme for `r rd_layout()`. You can use the option
 #' `r rd_values(sprintf("%s.default_theme", pkg_nm()))` to chagne the default
-#' theme. 
+#' theme.
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic
 #' @return A complete [theme][ggplot2::theme] object.
