@@ -15,10 +15,11 @@ alignpatch(x)
 \item \link[=wrap]{wrapped_plot}
 \item \link[patchwork:patchGrob]{patch}
 \item \link[patchwork:wrap_elements]{wrapped_patch}
+\item \link[patchwork:plot_spacer]{spacer}
 }}
 }
 \value{
-An object \code{Patch} object.
+A \code{Patch} object.
 }
 \description{
 Prepare plots to be aligned with \code{align_plots}

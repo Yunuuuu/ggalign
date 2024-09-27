@@ -123,8 +123,9 @@ ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 #'   - [wrapped_plot][wrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
+#'   - [spacer][patchwork::plot_spacer]
 #'
-#' @return An object `Patch` object.
+#' @return A `Patch` object.
 #' @examples
 #' alignpatch(ggplot())
 #' @seealso [align_plots]
