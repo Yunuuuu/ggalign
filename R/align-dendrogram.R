@@ -129,31 +129,16 @@ AlignDendro <- ggproto("AlignDendro", Align,
                        k = NULL, h = NULL) {
         data <- .subset2(self, "data")
         if (nrow(data) < 2L) {
-            cli::cli_abort(
-                c(
-                    "Cannot do Hierarchical Clustering",
-                    i = "must have >= 2 observations to cluster"
-                ),
-                call = .subset2(self, "call")
-            )
+            cli::cli_abort(c(
+                "Cannot do Hierarchical Clustering",
+                i = "must have >= 2 observations to cluster"
+            ), call = .subset2(self, "call"))
         }
         # if the old panel exist, we do sub-clustering
-        if (!is.null(panel)) {
+        if (!is.null(panel) && is.null(k) && is.null(h)) {
             # if the heatmap has established groups,
-            # `k` and `h` must be NULL, and we'll do sub-clustering
-            if (!is.null(k) || !is.null(h)) {
-                cli::cli_abort(c(
-                    paste(
-                        "{.fn {snake_class(self)}} cannot cut tree since",
-                        "the layout", sprintf(
-                            "%s-axis",
-                            to_coord_axis(.subset2(self, "direction"))
-                        ),
-                        "has been splitted"
-                    ),
-                    i = "{.arg k} and {.arg h} must be `NULL`"
-                ), call = .subset2(self, "call"))
-            }
+            # `k` and `h` is not null, we must ensure the dendrogram don't
+            # change the panel
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
             labels <- rownames(data)
@@ -202,7 +187,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 # reorder parent based on the parent tree
                 panel <- factor(panel, parent_levels[order.dendrogram(parent)])
                 ans <- merge_dendrogram(parent, children)
-                # we don't cutree
+                # we don't cutree, so we won't draw the height line
                 # self$draw_params$height <- attr(ans, "cutoff_height")
             } else {
                 ans <- Reduce(merge, children)
@@ -214,7 +199,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     layout = function(self, panel, index, k, h) {
         statistics <- .subset2(self, "statistics")
-        if (!is.null(panel)) { # we have do sub-clustering
+        if (!is.null(panel) && is.null(k) && is.null(h)) {
+            # we have do sub-clustering
             panel <- .subset2(self, "panel")
         } else if (!is.null(k)) {
             panel <- stats::cutree(statistics, k = k)
