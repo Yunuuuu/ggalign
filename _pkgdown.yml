@@ -22,6 +22,7 @@ reference:
   - hmanno
   - stack_active
   - layout-operator
+  - theme_ggalign
   - layout_annotation
   - layout_theme
 
