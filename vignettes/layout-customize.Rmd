@@ -131,8 +131,10 @@ ggheatmap(small_mat) +
     align_kmeans(3L)
 ```
 
-It's important to note that `align_group()` and `align_kmeans()` cannot do
-sub-grouping. This means they cannot be used if groups already exist. 
+It's important to note that all `align_*` functions which define groups must not
+break the previous established groups. This means the new groups must nest in
+the old groups, in this way, usually they cannot be used if groups already
+exist.
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +
@@ -234,7 +236,8 @@ ggheatmap(small_mat) +
 ```
 
 `align_dendro()` can also perform clustering between groups, meaning it can be
-used even if there are existing groups present in the layout: 
+used even if there are existing groups present in the layout, in this way, you
+cannot specify `k` or `h`: 
 
 ```{r}
 column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
@@ -260,6 +263,16 @@ ggheatmap(small_mat) +
     align_dendro(aes(color = branch), reorder_group = TRUE) +
     hmanno("b") +
     align_dendro(aes(color = branch), reorder_group = FALSE)
+```
+
+If you specify `k` or `h`, this always turn off the sub-clustering. The same
+principle applies to `align_dendro()`, the new groups must be nested in the
+previously established groups.
+```{r error=TRUE}
+ggheatmap(small_mat) +
+    hmanno("t") +
+    align_group(column_groups) +
+    align_dendro(k = 2L)
 ```
 
 ## Session information

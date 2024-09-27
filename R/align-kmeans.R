@@ -46,7 +46,6 @@ AlignKmeans <- ggproto("AlignKmeans", Align,
         stats::kmeans(data, centers, iter.max, nstart, algorithm, trace)
     },
     layout = function(self, panel, index) {
-        assert_sub_split(self, panel)
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
     }
 )

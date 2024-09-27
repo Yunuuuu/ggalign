@@ -136,9 +136,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(k) && is.null(h)) {
-            # if the heatmap has established groups,
-            # `k` and `h` is not null, we must ensure the dendrogram don't
-            # change the panel
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
             labels <- rownames(data)

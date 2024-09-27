@@ -34,7 +34,6 @@ AlignGroup <- ggproto("AlignGroup", Align,
         params
     },
     layout = function(self, panel, index, group) {
-        assert_sub_split(self, panel)
         list(group, index)
     }
 )

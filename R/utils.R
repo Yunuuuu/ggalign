@@ -24,6 +24,8 @@ make_order <- function(order) {
     order(order)
 }
 
+`%nest%` <- function(x, y) all(lengths(lapply(split(y, x), unique)) == 1L)
+
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it

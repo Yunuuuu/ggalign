@@ -106,6 +106,12 @@ initialize_align_layout <- function(object, nobs, direction,
                 ),
                 call = call
             )
+        } else if (!is.null(layout_panel) && !(new_panel %nest% layout_panel)) {
+            cli::cli_abort(paste0(
+                "{.fn {snake_class(object)}} disrupt the previously ",
+                "established panel groups of the layout ",
+                axis, "-axis"
+            ), call = call)
         }
     }
 

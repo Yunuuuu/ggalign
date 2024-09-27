@@ -113,13 +113,14 @@ testthat::test_that("`align_kmeans` works well", {
 
 testthat::test_that("`align_dendro` works well", {
     set.seed(1L)
-    p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))
+    mat <- matrix(stats::rnorm(72L), nrow = 9L)
+    # rownames(mat) <- paste0("row", seq_len(nrow(mat)))
+    # colnames(mat) <- paste0("column", seq_len(ncol(mat)))
+    p <- ggheatmap(mat)
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
     expect_error(p + hmanno("t") + align_group(column_group) +
-        align_dendro(k = 3L))
-    expect_error(p + hmanno("t") + align_group(column_group) +
-        align_dendro(h = 3L))
+        align_dendro(k = 2L))
 
     testthat::skip_on_ci() # I don't know why this will fail in github CI
     expect_doppelganger("dendrogram", p + hmanno("t") + align_dendro())
@@ -129,7 +130,8 @@ testthat::test_that("`align_dendro` works well", {
     )
     expect_doppelganger(
         "dendro_between_group",
-        p + hmanno("t") + align_group(column_group) +
+        p + hmanno("t") + 
+            align_group(column_group) +
             align_dendro()
     )
     expect_doppelganger(
