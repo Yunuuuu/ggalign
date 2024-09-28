@@ -24,7 +24,12 @@ make_order <- function(order) {
     order(order)
 }
 
-`%nest%` <- function(x, y) all(lengths(lapply(split(y, x), unique)) == 1L)
+#' @importFrom data.table data.table
+`%nest%` <- function(x, y) {
+    ans <- data.table(x = x, y = y)
+    ans <- unique(ans)
+    !anyDuplicated(ans$x)
+}
 
 #' Read Example Data
 #'
@@ -179,22 +184,24 @@ to_matrix_axis <- function(direction) {
     switch_direction(direction, "row", "column")
 }
 
-#' @importFrom tidyr pivot_longer
+#' @importFrom data.table melt setDF setnames
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
     col_nms <- colnames(matrix)
-    data <- as_data_frame0(matrix)
-    colnames(data) <- as.character(seq_len(ncol(matrix)))
+    data <- as.data.table(matrix)
+    setnames(data, as.character(seq_len(ncol(matrix))))
     data$.row_index <- seq_len(nrow(data))
-    data <- pivot_longer(data,
-        cols = !".row_index",
-        names_to = ".column_index",
-        values_to = "value"
+    data <- melt(data,
+        id.vars = ".row_index",
+        variable.name = ".column_index",
+        variable.factor = FALSE,
+        value.name = "value",
+        verbose = FALSE
     )
     data$.column_index <- as.integer(data$.column_index)
     if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
     if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
-    data
+    setDF(data)
 }
 
 fct_rev <- function(x) {

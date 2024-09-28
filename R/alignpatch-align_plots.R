@@ -80,7 +80,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         widths = widths, heights = heights, design = design,
         guides = guides
     )
-
     # setup annotation
     annotation <- layout_annotation(
         title = title,

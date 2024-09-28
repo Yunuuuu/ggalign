@@ -1,0 +1,59 @@
+---
+title: "collect-guides"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{collect-guides}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggalign)
+```
+
+By default, `ggalign` will collect all guide legends to the side they are
+original in.
+
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+ggheatmap(small_mat) +
+  scale_fill_viridis_c(name = "I'm from heatmap body") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from top tree", palette = "Dark2",
+    guide = guide_legend(position = "right")
+  ) +
+  hmanno("l") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from left tree", palette = "Dark2",
+    guide = guide_legend(position = "top")
+  ) +
+  scale_x_reverse() +
+  hmanno("b") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from bottom tree", palette = "Dark2",
+    guide = guide_legend(position = "left")
+  ) +
+  scale_y_reverse() +
+  hmanno("r") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from right tree", palette = "Dark2",
+    guide = guide_legend(position = "bottom")
+  ) &
+  theme(plot.margin = margin())
+```

@@ -14,13 +14,13 @@ Depends:
     ggplot2 (>= 3.3.0)
 Imports: 
     cli,
+    data.table,
     ggh4x,
     grid,
     gtable,
     methods,
     rlang (>= 1.1.0),
     stats,
-    tidyr,
     vctrs
 Suggests:
     gridGraphics,
