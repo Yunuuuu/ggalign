@@ -3,7 +3,8 @@ title: "Heatmap Layout"
 output: 
   bookdown::html_document2:
     base_format: rmarkdown::html_vignette
-    number_sections: FALSE
+    number_sections: no
+    fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,7 +16,9 @@ pkgdown:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
 )
 ```
 
@@ -26,7 +29,7 @@ heatmap annotations. You can also use the alias `ggheatmap()`.
 library(ggalign)
 ```
 
-## Input data 
+## Input data
 The data input can be a numeric or character vector, a data frame, and any other
 data which can be converted into a matrix.
 
@@ -220,7 +223,8 @@ For a heatmap layout, it has five plots (heatmap body, four sides of the nested
 heatmap annotation stack). Here we only collect guides in the top and bottom
 side. When position is `NULL`, `hmanno()` set the `guides` for the heatmap
 layout.
-```{r heatmap_collect_top_and_bottom_guides, fig.dim = c(12, 12)}
+```{r heatmap_collect_top_and_bottom_guides, fig.dim = c(12, 12),
+fig.cap="Heatmap collect top and bottom guides only"}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") # we set the `guides` argument here
 ```
