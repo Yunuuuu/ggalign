@@ -43,7 +43,7 @@ similarly to `cowplot::align_plots()` and `patchwork::wrap_plots()`.
 
 ## Guide legends
 By default, `align_plots()` won't collect any guide legends. You can use the
-`guides` argument to control which positions of guide legends should be
+`guides` argument to control which side of the guide legends should be
 collected. They will be collected to their original side. Here, we use
 `patch_titles()` to indicate the guide legend position (instead of using
 `ggtitle()`). `patch_titles()` can add titles on four sides, and the title will
@@ -76,8 +76,10 @@ align_plots(p_right, p_bottom, p_top, p_left, guides = "tlbr")
 ```
 
 If `align_plots()` is nested in another `align_plots()`, the nested
-`align_plots()` will inherit the `guides` argument.
-
+`align_plots()` will inherit the `guides` argument from the upper-level
+`align_plots()`. And the top-level `align_plots()` won't collect guide legends
+from plots within the nested `align_plots()` unless the nested `align_plots()`
+collects them first.
 
 ## free_guide
 The `free_guide()` function allows you to override the `guides` argument for a
@@ -92,7 +94,7 @@ align_plots(
 )
 ```
 
-You can also specify which guide positions to collect for individual plots.
+You can also specify which guide positions to be collected for individual plots.
 ```{r}
 align_plots(
   free_guide(p_right, "r"),
@@ -102,45 +104,7 @@ align_plots(
 )
 ```
 
-
-
-## 
-By default, `ggalign` will collect all guide legends on the side they originate
-from. 
-
-```{r setup_data}
-set.seed(123)
-small_mat <- matrix(rnorm(81), nrow = 9)
-rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-ggheatmap(small_mat) +
-  scale_fill_viridis_c(name = "I'm from heatmap body") +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  hmanno("t") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from top tree", palette = "Dark2",
-    guide = guide_legend(position = "right")
-  ) +
-  hmanno("l") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from left tree", palette = "Dark2",
-    guide = guide_legend(position = "top")
-  ) +
-  scale_x_reverse() +
-  hmanno("b") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from bottom tree", palette = "Dark2",
-    guide = guide_legend(position = "left")
-  ) +
-  scale_y_reverse() +
-  hmanno("r") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from right tree", palette = "Dark2",
-    guide = guide_legend(position = "bottom")
-  ) &
-  theme(plot.margin = margin())
+## Session information
+```{r}
+sessionInfo()
 ```

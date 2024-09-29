@@ -176,6 +176,21 @@ align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
 # We could use `free_lab` to fix the layout in a different way
 align_plots(p1, free_lab(p2), ncol = 1L)
 
+# `free_border` is similar with `free_lab`, they have a distinction in terms
+# of placement on either the top or bottom side of the panel. Specifically,
+# the top side contains the `title` and `subtitle`, while the bottom side
+# contains the `caption`. free_lab() does not attach these elements in the
+# panel area.
+p3 <- ggplot(mtcars) +
+    geom_point(aes(hp, wt, colour = mpg)) +
+    ggtitle("Plot 3")
+p_axis_top <- ggplot(mtcars) +
+    geom_point(aes(mpg, disp)) +
+    ggtitle("Plot axis in top") +
+    scale_x_continuous(position = "top")
+align_plots(p_axis_top, free_lab(p3))
+align_plots(p_axis_top, free_border(p3))
+
 # Another issue is that long labels can occupy much spaces
 align_plots(NULL, p1, p2, p2)
 
