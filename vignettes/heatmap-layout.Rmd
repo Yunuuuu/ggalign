@@ -29,7 +29,7 @@ heatmap annotations. You can also use the alias `ggheatmap()`.
 library(ggalign)
 ```
 
-## Input data
+## input data
 The data input can be a numeric or character vector, a data frame, and any other
 data which can be converted into a matrix.
 
@@ -44,7 +44,7 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ggheatmap(small_mat)
 ```
 
-## Heatmap body
+## heatmap body
 For `ggplot2` usage, the matrix input will be converted into a long formated
 data frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
 but can be controlled using `mapping` argument. The data in the underlying
@@ -74,7 +74,7 @@ heamtap will be drawn.
 ggheatmap(small_mat, filling = FALSE)
 ```
 
-## Heatmap annotations
+## heatmap annotations
 Heatmap annotations provide additional information for the rows or columns of
 the heatmap and can be placed at the `top`, `left`, `bottom`, or `right`. An
 annotation is a `stack_layout()` object internally, capable of holding multiple
@@ -116,7 +116,7 @@ In this example:
  - `geom_point(aes(color = factor(branch)))` is then added to this active plot
  within the annotation stack.
 
-## Control size
+## control size
 You can specify the heatmap body sizes (`width`/`height`) using the
 `ggheatmap()` function. Alternatively, the `hmanno()` function allows you to
 control the heatmap body sizes, and it can also set the overall size of the
@@ -174,7 +174,7 @@ ggheatmap(small_mat) +
   scale_x_reverse()
 ```
 
-## Guide legends
+## guide legends
 By default, `ggheatmap()` will collect all guide legends on the side they
 originate from.
 
