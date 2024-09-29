@@ -35,7 +35,7 @@ more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 
 \item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
 indicates which side of guide legends should be collected for the plot. If
-NULL, no guide legends will be collected.}
+\code{NULL}, no guide legends will be collected.}
 
 \item{labs}{Which axis labs to be free? A string containing one or more of
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
