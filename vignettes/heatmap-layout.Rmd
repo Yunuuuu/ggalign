@@ -170,7 +170,7 @@ ggheatmap(small_mat) +
 By default, `ggheatmap()` will collect all guide legends on the side they
 originate from.
 
-```{r}
+```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides <- ggheatmap(small_mat) +
   scale_fill_viridis_c(name = "I'm from heatmap body") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
@@ -215,7 +215,7 @@ For a heatmap layout, it has five plots (heatmap body, four sides of the nested
 heatmap annotation stack). Here we only collect guides in the top and bottom
 side. When position is `NULL`, `hmanno()` set the `guides` for the heatmap
 layout.
-```{r heatmap_collect_top_and_bottom_guides}
+```{r heatmap_collect_top_and_bottom_guides, fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") # we set the `guides` argument here
 ```
@@ -226,7 +226,7 @@ single plot. In the last example, the heatmap body right side legend won't be
 collected. We can use `free_guides` to override the `guides` argument for the
 heatmap body plot.
 
-```{r}
+```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
   hmanno(free_guides = "r") # we collect the right guide legend for the heatmap body 
@@ -237,7 +237,7 @@ annotation stack in `hmanno()`.
 ### heatmap annotation guide legends
 When position is a string, `hmanno()` set the `guides` for the heatmap
 annotation stack.
-```{r}
+```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
   hmanno(free_guides = "r") + # we collect the right guide legend for the heatmap body 
@@ -250,10 +250,10 @@ stack if the stack layout collects its own guide legends first. In nested layout
 the top-level layout won't collect guide legends from plots within the nested 
 layout unless the nested layout collects them first.
 
-A annotation stack is just a [stack layout](`stack_layout()`), it can contain
-multiple plots with `align_*()` functions, these functions also have a
-`free_guides` argument to control override the `guides` argument in the
-annotation stack layout.
+An annotation stack is simply a [stack layout](`stack_layout()`), which can add
+multiple plots using `align_*()` functions. The `align_*()` functions include a
+`free_guides` argument to override the `guides` setting in the annotation stack
+layout.
 
 ## free_spaces
 By default, `ggheatmap()` will align all elements of the plot, which can
@@ -314,7 +314,7 @@ In the \@ref(fig:heatmap_collect_top_and_bottom_guides) figure we can also use
 the `free_spaces` to make a compact heatmap. Here, we remove the right border
 spaces of the top annotation stack, and the left border spaces of the bottom
 annotation stack.
-```{r}
+```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
   hmanno("t", free_spaces = "r") + # we remove the right border spaces
