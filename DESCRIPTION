@@ -23,6 +23,7 @@ Imports:
     stats,
     vctrs
 Suggests:
+    bookdown,
     gridGraphics,
     knitr,
     patchwork,

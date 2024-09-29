@@ -1,10 +1,12 @@
 ---
 title: "Heatmap Layout"
-output: rmarkdown::html_vignette
+output: bookdown::html_document2
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
 ---
 
 ```{r, include = FALSE}
