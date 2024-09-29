@@ -230,7 +230,7 @@ heatmap_with_four_side_guides +
 ```
 
 ### free_guides
-The `free_guide()` function allows you to override the `guides` argument for a
+The `free_guides` argument allows you to override the `guides` argument for a
 single plot. In the last example, the heatmap body right side legend won't be
 collected. We can use `free_guides` to override the `guides` argument for the
 heatmap body plot.
