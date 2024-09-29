@@ -1,8 +1,8 @@
 ---
-title: "plot-composer"
+title: "Plot composer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{plot-composer}
+  %\VignetteIndexEntry{Plot composer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
