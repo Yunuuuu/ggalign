@@ -292,7 +292,7 @@ on the side they originate from.</p>
 <span>  <span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">heatmap_with_four_side_guides</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
 <p><code><a href="../reference/hmanno.html">hmanno()</a></code> provides <code>guides</code> and
 <code>free_guides</code> argument to provide precise control over the
 guide legend position.</p>
@@ -310,7 +310,7 @@ layout.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="co"># we set the `guides` argument here</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/heatmap_collect_top_and_bottom_guides-1.png" width="700"></p>
+<p><img src="heatmap-layout_files/figure-html/heatmap_collect_top_and_bottom_guides-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="free_guides">free_guides<a class="anchor" aria-label="anchor" href="#free_guides"></a>
@@ -324,7 +324,7 @@ for the heatmap body plot.</p>
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="co"># we collect the right guide legend for the heatmap body </span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png" width="700">
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png" width="1152">
 You can also use <code>free_guides</code> to override the
 <code>guides</code> argument for heatmap annotation stack in
 <code><a href="../reference/hmanno.html">hmanno()</a></code>.</p>
@@ -340,17 +340,17 @@ You can also use <code>free_guides</code> to override the
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we collect the right guide legend for the heatmap body </span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, guides <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span> <span class="co"># the left annotation won't collect the guide legends </span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>direction <span class="op">=</span> <span class="st">"vertical"</span>, position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png" width="1152"></p>
 <p>Guide legends in the heatmap layout will only be collected from the
 annotation stack if the stack layout collects its own guide legends
 first. In nested layouts, the top-level layout won’t collect guide
 legends from plots within the nested layout unless the nested layout
 collects them first.</p>
-<p>A annotation stack is just a <a href="%60stack_layout()%60">stack
-layout</a>, it can contain multiple plots with <code>align_*()</code>
-functions, these functions also have a <code>free_guides</code> argument
-to control override the <code>guides</code> argument in the annotation
-stack layout.</p>
+<p>An annotation stack is simply a <a href="%60stack_layout()%60">stack
+layout</a>, which can add multiple plots using <code>align_*()</code>
+functions. The <code>align_*()</code> functions include a
+<code>free_guides</code> argument to override the <code>guides</code>
+setting in the annotation stack layout.</p>
 </div>
 </div>
 <div class="section level2">
@@ -422,7 +422,7 @@ left border spaces of the bottom annotation stack.</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, free_spaces <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we remove the right border spaces</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="co"># we remove the left border spaces</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png" width="1152"></p>
 <p><code>align_*()</code> functions include the <code>free_spaces</code>
 argument, which, by default, inherits from the annotation stack. This
 allows you to control the alignment for each plot individually.</p>
