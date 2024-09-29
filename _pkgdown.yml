@@ -96,6 +96,11 @@ articles:
   - scales-and-facets
   - complete-examples
 
+- title: Plot composer
+  navbar: " "
+  contents:
+  - plot-composer
+
 - title: FAQ
   navbar: " "
   contents:

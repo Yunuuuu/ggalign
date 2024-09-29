@@ -1,0 +1,146 @@
+---
+title: "plot-composer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{plot-composer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggalign)
+```
+
+# align_plots
+Special thanks to the `patchwork` project—many core codes of the plot composer
+process were adapted from `patchwork`. We have added new features to better
+implement `ggalign`'s layout functions (`ggheatmap()` and `ggstack()`),
+including: 
+
+  - `free_align()`
+  - `free_border()`
+  - `free_guide()`
+  - `free_lab()`
+  - `free_space()`
+  - `free_vp()`
+
+These features have not been pushed to `patchwork` because they required
+significant modification of core code. We attempted to merge them, but the
+author of `patchwork` decided to implement some of these features independently.
+The latest version of patchwork now includes `free_align()`, `free_lab()`, and
+`free_space()` functionality under a single function: `patchwork::free()`. For
+more details, see: https://www.tidyverse.org/blog/2024/09/patchwork-1-3-0/.  
+
+The plot composer function in `ggalign` is `align_plots()`, which behaves
+similarly to `cowplot::align_plots()` and `patchwork::wrap_plots()`. 
+
+## Guide legends
+By default, `align_plots()` won't collect any guide legends. You can use the
+`guides` argument to control which positions of guide legends should be
+collected. They will be collected to their original side. Here, we use
+`patch_titles()` to indicate the guide legend position (instead of using
+`ggtitle()`). `patch_titles()` can add titles on four sides, and the title will
+be placed between the plot panel and the guide legend.
+
+```{r}
+p_right <- ggplot(mtcars) +
+  geom_point(aes(hp, wt, colour = mpg)) +
+  patch_titles("right") +
+  labs(color = "right")
+p_top <- p_right +
+  patch_titles("top") +
+  scale_color_continuous(
+    name = "top",
+    guide = guide_colorbar(position = "top")
+  )
+p_left <- p_right +
+  patch_titles("left") +
+  scale_color_continuous(
+    name = "left",
+    guide = guide_colorbar(position = "left")
+  )
+p_bottom <- p_right +
+  patch_titles("bottom") +
+  scale_color_continuous(
+    name = "bottom",
+    guide = guide_colorbar(position = "bottom")
+  )
+align_plots(p_right, p_bottom, p_top, p_left, guides = "tlbr")
+```
+
+If `align_plots()` is nested in another `align_plots()`, the nested
+`align_plots()` will inherit the `guides` argument.
+
+
+## free_guide
+The `free_guide()` function allows you to override the `guides` argument for a
+single plot.
+```{r}
+align_plots(
+  free_guide(p_right, NULL),
+  free_guide(p_bottom, NULL),
+  free_guide(p_top, NULL),
+  free_guide(p_left, NULL),
+  guides = "tlbr"
+)
+```
+
+You can also specify which guide positions to collect for individual plots.
+```{r}
+align_plots(
+  free_guide(p_right, "r"),
+  free_guide(p_bottom, "b"),
+  free_guide(p_top, "t"),
+  free_guide(p_left, "l")
+)
+```
+
+
+
+## 
+By default, `ggalign` will collect all guide legends on the side they originate
+from. 
+
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+ggheatmap(small_mat) +
+  scale_fill_viridis_c(name = "I'm from heatmap body") +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from top tree", palette = "Dark2",
+    guide = guide_legend(position = "right")
+  ) +
+  hmanno("l") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from left tree", palette = "Dark2",
+    guide = guide_legend(position = "top")
+  ) +
+  scale_x_reverse() +
+  hmanno("b") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from bottom tree", palette = "Dark2",
+    guide = guide_legend(position = "left")
+  ) +
+  scale_y_reverse() +
+  hmanno("r") +
+  align_dendro(aes(color = branch), k = 3L) +
+  scale_color_brewer(
+    name = "I'm from right tree", palette = "Dark2",
+    guide = guide_legend(position = "bottom")
+  ) &
+  theme(plot.margin = margin())
+```
