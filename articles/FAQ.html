@@ -151,8 +151,8 @@ create new groups:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_dendro()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_dendro()` disrupt the previously established order of the</span></span>
-<span><span class="co">#&gt;   layout x-axis</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_dendro()` disrupt the previously established ordered index of</span></span>
+<span><span class="co">#&gt;   the layout x-axis</span></span></code></pre></div>
 <p>To prevent reordering of the layout axis twice, we ensure that the
 <code>new_index</code> matches the <code>index</code> (if
 <code>index</code> is not NULL). This is done to maintain consistency
