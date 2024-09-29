@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* all `free_*` arguments now accept the same argument of the corresponding `free_*` functions.
+
 * new `theme_ggalign()` function for the default theme of ggalign package
 
 * export option `ggalign.default_theme` allow user to change the global default theme
