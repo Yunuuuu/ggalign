@@ -26,6 +26,9 @@
     <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/plot-composer.html">plot-composer</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
@@ -87,7 +90,7 @@ ggplot object. Use <code>NULL</code> to indicate an empty spacer.</p></dd>
 
 <dt id="arg-ncol-nrow">ncol, nrow<a class="anchor" aria-label="anchor" href="#arg-ncol-nrow"></a></dt>
 <dd><p>The dimensions of the grid to create - if both are <code>NULL</code> it
-will use the same logic as <a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a> to set the
+will use the same logic as <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> to set the
 dimensions</p></dd>
 
 
@@ -110,8 +113,7 @@ either be specified as a text string or by concatenating calls to
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>Which guide should be collected? A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>. If <code>waiver()</code>, will inherit from the upper
-level.</p></dd>
+<dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
 
 
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
@@ -129,7 +131,8 @@ bottom-right of the plot by default.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> object to rendering the guides, title, subtitle, caption, margins and background.</p></dd>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> object to rendering the guides
+title, subtitle, caption, margins and background.</p></dd>
 
 </dl></div>
     <div class="section level2">
