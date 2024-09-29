@@ -5,6 +5,8 @@ output:
     base_format: rmarkdown::html_vignette
     number_sections: no
     fig_caption: yes
+    fig_width: 7
+    fig_height: 7
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,9 +18,7 @@ pkgdown:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
+  comment = "#>"
 )
 ```
 
@@ -223,8 +223,7 @@ For a heatmap layout, it has five plots (heatmap body, four sides of the nested
 heatmap annotation stack). Here we only collect guides in the top and bottom
 side. When position is `NULL`, `hmanno()` set the `guides` for the heatmap
 layout.
-```{r heatmap_collect_top_and_bottom_guides, fig.dim = c(12, 12),
-fig.cap="Heatmap collect top and bottom guides only"}
+```{r guides, fig.dim = c(12, 12), fig.cap="Heatmap collect top and bottom guides only"}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") # we set the `guides` argument here
 ```
@@ -318,10 +317,9 @@ ggheatmap(small_mat) +
   scale_x_reverse(expand = expansion())
 ```
 
-In the \@ref(fig:heatmap_collect_top_and_bottom_guides) figure we can also use
-the `free_spaces` to make a compact heatmap. Here, we remove the right border
-spaces of the top annotation stack, and the left border spaces of the bottom
-annotation stack.
+In the Figure \@ref(fig:guides) we can also use the `free_spaces` to
+make a compact heatmap. Here, we remove the right border spaces of the top
+annotation stack, and the left border spaces of the bottom annotation stack.
 ```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
