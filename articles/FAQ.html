@@ -126,7 +126,7 @@ unordered:</p>
 <span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span></span></code></pre></div>
-<p>This dose initialized the <code>panels</code>.</p>
+<p>We initialized the <code>panels</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">panels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span></span></code></pre></div>
 <p>When we add a dendrogram with <code>reorder_group = FALSE</code>;
@@ -140,7 +140,7 @@ changed):</p>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/order.dendrogram.html" class="external-link">order.dendrogram</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggalign_stat.html">ggalign_stat</a></span><span class="op">(</span><span class="va">h</span>, <span class="st">"top"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>However, if a dendrogram with <code>reorder_group = TRUE</code> is
 added, it will reorder the panels. Here, the panel levels are sampled to
-create new groups:</p>
+create the new groups:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">panels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">panels</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">panels</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">new_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">panels</span><span class="op">[</span><span class="va">index</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -171,9 +171,29 @@ all, you can utilize the <code>plot_data</code> argument in the
 you to transform the default data for all additive geoms.</p>
 </div>
 <div class="section level2">
+<h2 id="why-are-there-spaces-after-setting-all-plot-margin-to-zero">Why are there spaces after setting all plot.margin to zero?<a class="anchor" aria-label="anchor" href="#why-are-there-spaces-after-setting-all-plot-margin-to-zero"></a>
+</h2>
+<p>By default, ggalign doesn’t add spaces between plots. If you notice
+spaces, they are likely due to:</p>
+<ul>
+<li>Plot margins within individual plots.</li>
+<li>Scale expansion automatically added by ggplot2.</li>
+</ul>
+<p>You can resolve this by removing the scale expansion and adjusting
+the margins in the theme:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+</div>
+<div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -199,17 +219,18 @@ you to transform the default data for all additive geoms.</p>
 <span><span class="co">#&gt; [1] ggalign_0.0.4 ggplot2_3.5.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] vctrs_0.6.5       cli_3.6.3         knitr_1.48        rlang_1.1.4      </span></span>
-<span><span class="co">#&gt;  [5] xfun_0.47         generics_0.1.3    textshaping_0.4.0 data.table_1.16.0</span></span>
-<span><span class="co">#&gt;  [9] jsonlite_1.8.9    glue_1.7.0        colorspace_2.1-1  htmltools_0.5.8.1</span></span>
-<span><span class="co">#&gt; [13] ragg_1.3.3        sass_0.4.9        fansi_1.0.6       scales_1.3.0     </span></span>
-<span><span class="co">#&gt; [17] rmarkdown_2.28    grid_4.4.1        tibble_3.2.1      evaluate_1.0.0   </span></span>
-<span><span class="co">#&gt; [21] munsell_0.5.1     jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.10      </span></span>
-<span><span class="co">#&gt; [25] lifecycle_1.0.4   compiler_4.4.1    dplyr_1.1.4       fs_1.6.4         </span></span>
-<span><span class="co">#&gt; [29] pkgconfig_2.0.3   systemfonts_1.1.0 digest_0.6.37     R6_2.5.1         </span></span>
-<span><span class="co">#&gt; [33] tidyselect_1.2.1  utf8_1.2.4        pillar_1.9.0      magrittr_2.0.3   </span></span>
-<span><span class="co">#&gt; [37] bslib_0.8.0       withr_3.0.1       tools_4.4.1       gtable_0.3.5     </span></span>
-<span><span class="co">#&gt; [41] pkgdown_2.1.1     cachem_1.1.0      desc_1.4.3</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] gtable_0.3.5      jsonlite_1.8.9    highr_0.11        dplyr_1.1.4      </span></span>
+<span><span class="co">#&gt;  [5] compiler_4.4.1    tidyselect_1.2.1  jquerylib_0.1.4   systemfonts_1.1.0</span></span>
+<span><span class="co">#&gt;  [9] scales_1.3.0      textshaping_0.4.0 ggh4x_0.2.8       yaml_2.3.10      </span></span>
+<span><span class="co">#&gt; [13] fastmap_1.2.0     R6_2.5.1          labeling_0.4.3    generics_0.1.3   </span></span>
+<span><span class="co">#&gt; [17] knitr_1.48        tibble_3.2.1      desc_1.4.3        munsell_0.5.1    </span></span>
+<span><span class="co">#&gt; [21] bslib_0.8.0       pillar_1.9.0      rlang_1.1.4       utf8_1.2.4       </span></span>
+<span><span class="co">#&gt; [25] cachem_1.1.0      xfun_0.47         fs_1.6.4          sass_0.4.9       </span></span>
+<span><span class="co">#&gt; [29] viridisLite_0.4.2 cli_3.6.3         pkgdown_2.1.1     withr_3.0.1      </span></span>
+<span><span class="co">#&gt; [33] magrittr_2.0.3    digest_0.6.37     grid_4.4.1        lifecycle_1.0.4  </span></span>
+<span><span class="co">#&gt; [37] vctrs_0.6.5       evaluate_1.0.0    glue_1.7.0        data.table_1.16.0</span></span>
+<span><span class="co">#&gt; [41] farver_2.1.2      ragg_1.3.3        fansi_1.0.6       colorspace_2.1-1 </span></span>
+<span><span class="co">#&gt; [45] rmarkdown_2.28    tools_4.4.1       pkgconfig_2.0.3   htmltools_0.5.8.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
