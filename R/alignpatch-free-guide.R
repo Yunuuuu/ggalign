@@ -1,4 +1,6 @@
-#' @param guides `r rd_guides()`
+#' @param guides A string containing one or more of `r rd_values(.tlbr)`
+#' indicates which side of guide legends should be collected for the plot. If
+#' NULL, no guide legends will be collected.
 #' @return
 #' - `free_guide`: A modified version of `plot` with a `free_guide` class.
 #' @export

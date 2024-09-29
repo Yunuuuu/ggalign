@@ -210,7 +210,7 @@ test_that("`free_space()` works well", {
 })
 
 test_that("`free_guide()` works well", {
-    p_right <- p3 + ggtitle(NULL) + labs("right")
+    p_right <- p3 + ggtitle(NULL) + labs(color = "right")
     p_top <- p_right +
         scale_color_continuous(
             name = "top",

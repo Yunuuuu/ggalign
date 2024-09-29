@@ -3,7 +3,7 @@
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
 #' ggplot object. Use `NULL` to indicate an empty spacer.
 #' @param ncol,nrow The dimensions of the grid to create - if both are `NULL` it
-#' will use the same logic as [facet_wrap()][ggplot2::facet_wrap] to set the
+#' will use the same logic as [`facet_wrap()`][ggplot2::facet_wrap] to set the
 #' dimensions
 #' @param byrow If `FALSE` the plots will be filled in in column-major order.
 #' @param widths,heights The relative widths and heights of each column and row
@@ -14,10 +14,10 @@
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
-#' @param guides `r rd_guides()`. If `waiver()`, will inherit from the upper
-#' level.
+#' @param guides `r rd_guides()`
 #' @inheritParams ggplot2::labs
-#' @param theme `r rd_layout_theme()`
+#' @param theme A [`theme()`][ggplot2::theme] object to rendering the guides
+#' title, subtitle, caption, margins and background.
 #' @return A `alignpatches` object.
 #' @examples
 #' # directly copied from patchwork
