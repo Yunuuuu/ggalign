@@ -9,55 +9,56 @@ rd_layout <- function() "[heatmap_layout()] or [stack_layout()] object"
 rd_theme <- function() {
     paste(
         "One of:",
-        "- [waiver()][ggplot2::waiver()]: will inherit from the parent layout.",
+        "- [`waiver()`][ggplot2::waiver()]: will inherit from the parent layout.",
         "- `NULL`: Use the [default theme][theme_ggalign].",
-        "- [theme()][ggplot2::theme]: will be added with the parent layout theme.",
+        "- [`theme()`][ggplot2::theme]: will be added with the parent layout theme.",
         sep = "\n"
-    )
-}
-
-rd_layout_theme <- function() {
-    paste(
-        "A [theme()][ggplot2::theme] object to rendering the guides",
-        "title, subtitle, caption, margins and background.",
-        sep = ", "
-    )
-}
-
-rd_layout_guides <- function() {
-    paste(
-        "A boolean value or a string containing one or more of",
-        rd_values(.tlbr),
-        "indicates which guide should be collected.",
-        "If `NULL`, no guides will be collected. Default: `\"tlbr\"`."
     )
 }
 
 rd_stack_what <- function() {
     paste(
-        "Possible values are follows:",
-        "* A single number or string of the plot elements in the stack layout.",
-        "* `NULL`: remove any active context",
+        "Options include::",
+        "- A single number or string of the plot elements in the stack layout.",
+        "- `NULL`: remove any active context",
         sep = "\n"
     )
 }
 
-rd_guides <- function() {
+rd_pos <- function(x, null, default = "it inherits from the parent layout") {
     paste(
-        "Which guide should be collected? A string containing one or more of",
-        rd_values(.tlbr)
+        "A string containing one or more of", rd_values(.tlbr),
+        sprintf("indicates %s.", x),
+        sprintf("If `NULL`, %s.", null),
+        "If [`waiver()`][ggplot2::waiver()], it will inherit from the parent layout"
+    )
+}
+
+rd_free_labs <- function() {
+    rd_pos(
+        "which axis title should be free from alignment",
+        "all axis title will be aligned",
+        "no axis titles will be aligned"
+    )
+}
+
+rd_guides <- function() {
+    rd_pos(
+        "which side of guide legends should be collected",
+        "no guide legends will be collected"
     )
 }
 
 rd_free_guides <- function() {
     paste(
-        "One of:",
-        "- [waiver()][ggplot2::waiver()]: Following the parent layout behaviour.",
-        "- `NULL`: prevent the collection of guides for the plot.",
+        "Options include:",
+        "- [`waiver()`][ggplot2::waiver()]: inherits behavior from the layout.",
+        "- `NULL`: no guide legends will be collected for the plot.",
         paste(
             "- A string containing one or more of",
             rd_values(.tlbr),
-            "indicates which guide should be collected for the plot."
+            "indicates which side of guide legends",
+            "should be collected for the plot."
         ),
         sep = "\n"
     )

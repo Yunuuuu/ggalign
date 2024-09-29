@@ -24,7 +24,7 @@ align_plots(
 ggplot object. Use \code{NULL} to indicate an empty spacer.}
 
 \item{ncol, nrow}{The dimensions of the grid to create - if both are \code{NULL} it
-will use the same logic as \link[ggplot2:facet_wrap]{facet_wrap()} to set the
+will use the same logic as \code{\link[ggplot2:facet_wrap]{facet_wrap()}} to set the
 dimensions}
 
 \item{byrow}{If \code{FALSE} the plots will be filled in in column-major order.}
@@ -39,8 +39,7 @@ to match the aspect ratio of the content.}
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
-\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. If \code{waiver()}, will inherit from the upper
-level.}
+\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
 
 \item{title}{The text for the title.}
 
@@ -50,7 +49,8 @@ displayed below the title.}
 \item{caption}{The text for the caption which will be displayed in the
 bottom-right of the plot by default.}
 
-\item{theme}{A \link[ggplot2:theme]{theme()} object to rendering the guides, title, subtitle, caption, margins and background.}
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} object to rendering the guides
+title, subtitle, caption, margins and background.}
 }
 \value{
 A \code{alignpatches} object.

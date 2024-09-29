@@ -4,40 +4,47 @@
 #' values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#' @param size A [unit][grid::unit] object to set the total size of the heatmap
-#' annotation. This will only be used if `position` is a string of
-#' `r rd_values(.TLBR, final = "or")`.
-#'  - If position is `"top"` or `"bottom"`, `size` set the total height of the
+#'
+#' @param size An [unit][grid::unit] object to set the total size of the heatmap
+#' annotation. This will only be used if `position` is a string.
+#'  - If `position` is `"top"` or `"bottom"`, `size` set the total height of the
 #' annotation.
-#'  - If position is `"left"` or `"right"`, `size` set the total width of the
+#'  - If `position` is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
 #'
-#' @param guides `r rd_layout_guides()`
+#' @param guides `r rd_guides()`
 #'
-#'  - If position is `NULL`, this applies to the heamtap layout.
-#'  - If position is a string, this applies to the heatmap annotation.
+#'  - If `position` is `NULL`, this applies to the heamtap layout.
+#'  - If `position` is a string, this applies to the heatmap annotation stack
+#'    layout.
 #'
-#' @param free_guides Override the guide collection behavior for the heatmap
-#' body or heatmap annotations. `r rd_free_guides()`
+#' @param free_guides Override the `guides` collection behavior specified in
+#' the heatmap layout. `r rd_free_guides()`
 #'
-#' Whether it operates on the heatmap body or heatmap annotation depends on:
-#'  - If position is `NULL`, this applies to the heatmap body.
-#'  - If position is a string, this applies to the heamtap annotation stack.
+#' `guides` argument controls the global guide collection behavior for all plots
+#' in the layout, while the `free_guides` argument overrides this for a single
+#' plot in the layout.
 #'
-#' @param free_labs A boolean value or a string containing one or more of
-#' `r rd_values(.tlbr)` indicates which axis title should be free from
-#' alignment. If `NULL`, all axis title will be aligned. Default: `"tlbr"`.
-#' @param free_spaces A boolean value or a string containing one or more of
-#' `r rd_values(.tlbr)` indicates which border spaces should be removed. If
-#' `NULL` (default), no space will be removed.
-#' @param plot_data A function used to transform the plot data before rendering.
-#' By default, it'll inherit from the parent layout. If no parent layout, the
-#' default is `NULL`, which means we won't modify anything.
+#' @param free_labs A string with one or more of `r rd_values(.tlbr)` indicating
+#' which axis titles should be free from alignment. Defaults to
+#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
+#' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
+#' will be aligned.
+#'
+#' @param free_spaces A string with one or more of `r rd_values(.tlbr)`
+#' indicating which border spaces to remove. Defaults to
+#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
+#' parent, the default is `NULL`, meaning no spaces are removed.
+#'
+#' @param plot_data A function to transform plot data before rendering. Defaults
+#' to [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
+#' no parent layout, the default is `NULL`, meaning the data won't be modified.
 #'
 #' Used to modify the data after layout has been created, which should be a data
 #' frame, but before the data is handled of to the ggplot2 for rendering. Use
 #' this hook if the you needs change the default data for all `geoms`.
-#' @param theme Default layout theme. `r rd_theme()`
+#'
+#' @param theme Default theme for the plot in the layout. `r rd_theme()`
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is a string. `r rd_stack_what()`.
 #' @inheritParams heatmap_layout
@@ -76,7 +83,7 @@ hmanno <- function(position = NULL, size = NULL,
 
 #' Determine the active context of stack layout
 #'
-#' @param guides `r rd_layout_guides()`
+#' @param guides `r rd_guides()`
 #' @inheritParams hmanno
 #' @inheritParams stack_layout
 #' @param what What should get activated for the stack layout?
@@ -122,21 +129,19 @@ stack_active <- function(guides = NA, free_spaces = NA,
 new_active <- function(guides, free_guides,
                        free_labs, free_spaces, plot_data, theme,
                        call = caller_call()) {
-    if (!identical(guides, NA) && !is.waive(guides)) {
-        guides <- check_layout_position(guides, call = call)
+    if (!identical(guides, NA)) {
+        assert_layout_position(guides, call = call)
     }
-    if (!identical(free_guides, NA) && !is.waive(free_guides) &&
-        !is.null(free_guides)) {
-        assert_position(free_guides, call = call)
+    if (!identical(free_guides, NA)) {
+        assert_layout_position(free_guides, call = call)
     }
-    if (!identical(free_labs, NA) && !is.waive(free_labs)) {
-        free_labs <- check_layout_position(free_labs, call = call)
+    if (!identical(free_labs, NA)) {
+        assert_layout_position(free_labs, call = call)
     }
-    if (!identical(free_spaces, NA) && !is.waive(free_spaces) &&
-        !is.null(free_spaces)) {
-        free_spaces <- check_layout_position(free_spaces, call = call)
+    if (!identical(free_spaces, NA)) {
+        assert_layout_position(free_spaces, call = call)
     }
-    if (!identical(plot_data, NA) && !is.waive(plot_data)) {
+    if (!identical(plot_data, NA)) {
         plot_data <- check_plot_data(plot_data, call = call)
     }
     if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {

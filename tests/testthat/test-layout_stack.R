@@ -22,8 +22,8 @@ testthat::test_that("add `stack_active` object works well", {
     # change parameters for stack self
     p2 <- p + stack_active(
         sizes = unit(1, "cm"),
-        guides = TRUE,
-        free_labs = TRUE,
+        guides = "tlbr",
+        free_labs = "tlbr",
         plot_data = NULL
     )
     params <- p2@params

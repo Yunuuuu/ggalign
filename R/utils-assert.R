@@ -78,16 +78,10 @@ assert_position <- function(position, arg = caller_arg(position),
     }
 }
 
-#' @importFrom rlang is_scalar_character
-check_layout_position <- function(x, arg = caller_arg(x),
-                                  call = caller_call()) {
-    if (is.null(x) || isFALSE(x)) {
-        NULL
-    } else if (isTRUE(x)) {
-        "tlbr"
-    } else {
-        assert_position(x, arg = arg, call = call)
-        x
+assert_layout_position <- function(position, arg = caller_arg(position),
+                                   call = caller_call()) {
+    if (!is.waive(position) && !is.null(position)) {
+        assert_position(position, call = call)
     }
 }
 
@@ -121,11 +115,11 @@ check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
 check_plot_data <- function(plot_data, arg = caller_arg(plot_data),
                             call = caller_call()) {
     plot_data <- allow_lambda(plot_data)
-    if (!is.null(plot_data) &&
+    if (!is.waive(plot_data) && !is.null(plot_data) &&
         !is.function(plot_data)) {
         cli::cli_abort(paste(
             "{.arg {arg}} must be a function,",
-            "{.code NULL} or {.fn waiver()}"
+            "{.code NULL} or {.fn waiver}"
         ), call = call)
     }
     plot_data

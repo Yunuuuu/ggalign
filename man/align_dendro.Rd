@@ -81,21 +81,22 @@ middle of all direct child nodes.}
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
-\item{free_guides}{Override the guide collection behavior for the plot.
-One of:
+\item{free_guides}{Override the \code{guides} argument specified in the layout for
+a plot. Options include:
 \itemize{
-\item \link[ggplot2:waiver]{waiver()}: Following the parent layout behaviour.
-\item \code{NULL}: prevent the collection of guides for the plot.
-\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which guide should be collected for the plot.
+\item \code{\link[ggplot2:waiver]{waiver()}}: inherits behavior from the layout.
+\item \code{NULL}: no guide legends will be collected for the plot.
+\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected for the plot..
 }}
 
-\item{free_spaces}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which border spaces should be removed. If
-\code{NULL} (default), no space will be removed.}
+\item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
+indicating which border spaces to remove. Defaults to
+\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
+parent, the default is \code{NULL}, meaning no spaces are removed.}
 
-\item{plot_data}{A function used to transform the plot data before rendering.
-By default, it'll inherit from the parent layout. If no parent layout, the
-default is \code{NULL}, which means we won't modify anything.
+\item{plot_data}{A function to transform plot data before rendering. Defaults
+to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
+no parent layout, the default is \code{NULL}, meaning the data won't be modified.
 
 Used to modify the data after layout has been created, which should be a data
 frame, but before the data is handled of to the ggplot2 for rendering. Use
@@ -103,9 +104,9 @@ this hook if the you needs change the default data for all \code{geoms}.}
 
 \item{theme}{Default plot theme: One of:
 \itemize{
-\item \link[ggplot2:waiver]{waiver()}: will inherit from the parent layout.
+\item \code{\link[ggplot2:waiver]{waiver()}}: will inherit from the parent layout.
 \item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
-\item \link[ggplot2:theme]{theme()}: will be added with the parent layout theme.
+\item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
 }
 
 \verb{Note:} The axis title and labels parallel to the layout axis will always be
@@ -114,9 +115,11 @@ and for horizontal stack layouts, this refers to the \code{y-axis}. If you want 
 display the axis title or labels, you should manually add
 \link[ggplot2:theme]{theme()} elements for the parallel axis title or labels.}
 
-\item{free_labs}{A boolean value or a string containing one or more of
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which axis title should be free from
-alignment. If \code{NULL}, all axis title will be aligned. Default: \code{"tlbr"}.}
+\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
+which axis titles should be free from alignment. Defaults to
+\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
+parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
+will be aligned.}
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},

@@ -23,8 +23,8 @@
 #'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
-#' @param free_guides Override the guide collection behavior for the plot.
-#' `r rd_free_guides()`
+#' @param free_guides Override the `guides` argument specified in the layout for
+#' a plot. `r rd_free_guides()`.
 #' @inheritParams hmanno
 #' @param theme Default plot theme: `r rd_theme()`
 #'
@@ -33,6 +33,7 @@
 #' and for horizontal stack layouts, this refers to the `y-axis`. If you want to
 #' display the axis title or labels, you should manually add
 #' [theme()][ggplot2::theme] elements for the parallel axis title or labels.
+#'
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.
 #' @param facet A boolean value indicates whether to set the layout facet for
@@ -82,18 +83,10 @@ align <- function(align_class, params,
     } else {
         size <- check_size(size)
     }
-    if (!is.waive(free_guides) && !is.null(free_guides)) {
-        assert_position(free_guides, call = call)
-    }
-    if (!is.waive(free_labs)) {
-        free_labs <- check_layout_position(free_labs, call = call)
-    }
-    if (!is.waive(free_spaces) && !is.null(free_spaces)) {
-        free_spaces <- check_layout_position(free_spaces, call = call)
-    }
-    if (!is.waive(plot_data)) {
-        plot_data <- check_plot_data(plot_data, call = call)
-    }
+    assert_layout_position(free_guides, call = call)
+    assert_layout_position(free_spaces, call = call)
+    plot_data <- check_plot_data(plot_data, call = call)
+    assert_layout_position(free_labs, call = call)
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
     assert_bool(set_context, call = call)

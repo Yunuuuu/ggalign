@@ -18,8 +18,7 @@ direction of the stack layout.}
 \item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
-\item{guides}{Which guide should be collected? A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. If \code{waiver()}, will inherit from the upper
-level.}
+\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
 ggplot object. Use \code{NULL} to indicate an empty spacer.}
