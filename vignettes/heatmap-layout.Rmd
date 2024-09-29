@@ -1,6 +1,8 @@
 ---
 title: "Heatmap Layout"
-output: bookdown::html_document2
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
