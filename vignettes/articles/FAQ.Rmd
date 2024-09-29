@@ -45,7 +45,7 @@ h <- ggheatmap(small_mat) +
     align_group(group)
 ```
 
-This dose initialized the `panels`.
+We initialized the `panels`.
 ```{r}
 panels <- factor(group)
 ```
@@ -60,7 +60,7 @@ index <- stats::order.dendrogram(ggalign_stat(h, "top", 2L))
 ```
 
 However, if a dendrogram with `reorder_group = TRUE` is added, it will reorder the
-panels. Here, the panel levels are sampled to create new groups: 
+panels. Here, the panel levels are sampled to create the new groups: 
 ```{r}
 panels <- factor(panels, sample(levels(panels)))
 new_index <- unlist(split(index, panels[index]),
@@ -84,6 +84,24 @@ you need to transform or filter data for individual `geoms`, you can use the
 want a consistent transformation applied across all, you can utilize the
 `plot_data` argument in the `ggalign()` or `ggpanel()` function. This allows you
 to transform the default data for all additive geoms.
+
+## Why are there spaces after setting all plot.margin to zero?
+By default, ggalign doesn't add spaces between plots. If you notice spaces, they
+are likely due to:
+
+- Plot margins within individual plots.
+- Scale expansion automatically added by ggplot2.
+
+You can resolve this by removing the scale expansion and adjusting the margins
+in the theme: 
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_y_continuous(expand = expansion()) &
+    theme(plot.margin = margin())
+```
 
 ## Session information
 ```{r}
