@@ -286,11 +286,8 @@ in the layout. They will be collected to their original side.</p>
 <p>For a heatmap layout, it has five plots (heatmap body, four sides of the nested
 heatmap annotation stack). Here we only collect guides in the top and bottom
 side. When position is <code>NULL</code>, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code> for the heatmap
-layout.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="co"># we set the `guides` argument here</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/heatmap_collect_top_and_bottom_guides-1.png"><!-- --></p>
+layout.
+<code>{r heatmap_collect_top_and_bottom_guides, fig.dim = c(12, 12), fig.cap="Heatmap collect top and bottom guides only"} heatmap_with_four_side_guides +   hmanno(guides = "tb") # we set the `guides` argument here</code></p>
 </div>
 <div class="section level3">
 <h3 id="free_guides">free_guides<a class="anchor" aria-label="anchor" href="#free_guides"></a>
@@ -299,7 +296,7 @@ layout.</p>
 single plot. In the last example, the heatmap body right side legend won’t be
 collected. We can use <code>free_guides</code> to override the <code>guides</code> argument for the
 heatmap body plot.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="co"># we collect the right guide legend for the heatmap body </span></span></code></pre></div>
@@ -312,7 +309,7 @@ annotation stack in <code><a href="../reference/hmanno.html">hmanno()</a></code>
 </h3>
 <p>When position is a string, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code> for the heatmap
 annotation stack.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we collect the right guide legend for the heatmap body </span></span>
@@ -333,7 +330,7 @@ argument to override the <code>guides</code> setting in the annotation stack lay
 </h2>
 <p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> will align all elements of the plot, which can
 sometimes lead to unwanted spacing. Consider the following example:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -371,7 +368,7 @@ due to the wide axis labels in the top annotation stack. This occurs because the
 top annotation stack is aligned with the heatmap body. To fix this, you can
 remove the left borders around the panel of the top annotation stack by setting
 <code>free_spaces = "l"</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -388,7 +385,7 @@ remove the left borders around the panel of the top annotation stack by setting
 the <code>free_spaces</code> to make a compact heatmap. Here, we remove the right border
 spaces of the top annotation stack, and the left border spaces of the bottom
 annotation stack.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, free_spaces <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we remove the right border spaces</span></span>
@@ -397,7 +394,7 @@ annotation stack.</p>
 <p><code>align_*()</code> functions include the <code>free_spaces</code> argument, which, by default,
 inherits from the annotation stack. This allows you to control the alignment
 for each plot individually.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -415,7 +412,7 @@ for each plot individually.</p>
 <h2 id="free_labs">free_labs<a class="anchor" aria-label="anchor" href="#free_labs"></a>
 </h2>
 <p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> won’t align the axis titles.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Heatmap title"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -427,7 +424,7 @@ for each plot individually.</p>
 function. Alternatively, A single string containing one or more of axis
 positions (“t”, “l”, “b”, “r”) to indicate which axis titles should be free from
 alignment.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_labs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -442,7 +439,7 @@ for the individual plot in <code>align_*()</code> function.</p>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
