@@ -158,7 +158,7 @@ initialize_align_layout <- function(object, nobs, direction,
     if (!is.null(layout_index) && !all(layout_index == new_index)) {
         cli::cli_abort(paste0(
             "{.fn {snake_class(object)}} disrupt the previously ",
-            "established order of the layout ",
+            "established ordered index of the layout ",
             axis, "-axis"
         ), call = call)
     }
