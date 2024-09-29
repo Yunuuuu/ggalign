@@ -3,6 +3,7 @@ title: "Heatmap Layout"
 output: 
   bookdown::html_document2:
     base_format: rmarkdown::html_vignette
+    number_sections: FALSE
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
@@ -254,10 +255,9 @@ stack if the stack layout collects its own guide legends first. In nested layout
 the top-level layout won't collect guide legends from plots within the nested 
 layout unless the nested layout collects them first.
 
-An annotation stack is simply a [stack layout](stack_layout()), which can add
-multiple plots using `align_*()` functions. The `align_*()` functions include a
-`free_guides` argument to override the `guides` setting in the annotation stack
-layout.
+An annotation stack is simply a `stack_layout()`, which can add multiple plots
+using `align_*()` functions. The `align_*()` functions include a `free_guides`
+argument to override the `guides` setting in the annotation stack layout.
 
 ## free_spaces
 By default, `ggheatmap()` will align all elements of the plot, which can
