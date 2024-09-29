@@ -223,7 +223,7 @@ For a heatmap layout, it has five plots (heatmap body, four sides of the nested
 heatmap annotation stack). Here we only collect guides in the top and bottom
 side. When position is `NULL`, `hmanno()` set the `guides` for the heatmap
 layout.
-```{r guides, fig.dim = c(12, 12), fig.cap="Heatmap collect top and bottom guides only"}
+```{r heatmap-guides-tb, fig.dim = c(12, 12), fig.cap="Heatmap collect top and bottom guides only"}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") # we set the `guides` argument here
 ```
@@ -317,7 +317,7 @@ ggheatmap(small_mat) +
   scale_x_reverse(expand = expansion())
 ```
 
-In the Figure \@ref(fig:guides) we can also use the `free_spaces` to
+In the Figure \@ref(fig:heatmap-guides-tb) we can also use the `free_spaces` to
 make a compact heatmap. Here, we remove the right border spaces of the top
 annotation stack, and the left border spaces of the bottom annotation stack.
 ```{r fig.dim = c(12, 12)}
