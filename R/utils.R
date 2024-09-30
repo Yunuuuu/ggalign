@@ -222,7 +222,7 @@ to_matrix_axis <- function(direction) {
     switch_direction(direction, "row", "column")
 }
 
-#' @importFrom data.table melt setDF setnames
+#' @importFrom data.table melt setnames
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)
     col_nms <- colnames(matrix)
@@ -239,7 +239,7 @@ melt_matrix <- function(matrix) {
     data$.column_index <- as.integer(data$.column_index)
     if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
     if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
-    setDF(data)
+    data
 }
 
 fct_rev <- function(x) {

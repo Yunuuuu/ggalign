@@ -237,31 +237,31 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     list(plots = plots, sizes = sizes)
 }
 
-plot_filler <- function() {
-    p <- ggplot2::ggplot()
-    add_class(p, "plot_filler")
-}
-
+#' @importFrom data.table data.table setDF merge
 #' @importFrom stats reorder
 heatmap_build_data <- function(matrix, row_panel, row_index,
                                column_panel, column_index) {
-    ycoords <- data_frame0(
+    ycoords <- data.table(
         .ypanel = row_panel[row_index],
         .yindex = row_index,
-        .y = seq_along(row_index)
+        .y = seq_along(row_index),
+        k = 1L
     )
-    xcoords <- data_frame0(
+    xcoords <- data.table(
         .xpanel = column_panel[column_index],
         .xindex = column_index,
-        .x = seq_along(column_index)
+        .x = seq_along(column_index),
+        k = 1L
     )
-    coords <- merge(xcoords, ycoords, by = NULL, sort = FALSE, all = TRUE)
+    coords <- xcoords[ycoords, on = "k", allow.cartesian = TRUE]
+    coords[, "k" := NULL]
     ans <- melt_matrix(matrix)
     ans <- merge(ans, coords,
         by.x = c(".column_index", ".row_index"),
         by.y = c(".xindex", ".yindex"),
         sort = FALSE, all = TRUE
     )
+    setDF(ans)
     if (!is.null(.subset2(ans, ".row_names"))) {
         ans$.row_names <- reorder(
             .subset2(ans, ".row_names"),
