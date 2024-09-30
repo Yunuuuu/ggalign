@@ -100,7 +100,7 @@ AlignGG <- ggproto("AlignGG", Align,
             aes(x = .data$.x)
         ))
     },
-    #' @importFrom data.table as.data.table data.table setDF merge
+    #' @importFrom data.table as.data.table data.table setDF merge.data.table
     draw = function(self, panel, index, extra_panel, extra_index) {
         data <- as.data.table(.subset2(self, "data"))
         direction <- .subset2(self, "direction")

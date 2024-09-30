@@ -17,13 +17,14 @@
 #'     align_reorder()
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
-#' @importFrom vctrs vec_cast
+#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @export
 align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
     if (is.numeric(order) || is.character(order)) {
-        if (anyNA(order) || anyDuplicated(order)) {
+        # vec_duplicate_any is slight faster than `anyDuplicated`
+        if (anyNA(order) || vec_duplicate_any(order)) {
             cli::cli_abort(paste(
                 "{.arg order} must be an ordering numeric or character",
                 "without missing value or ties"
@@ -58,7 +59,7 @@ align_reorder <- function(order = rowMeans, ..., strict = TRUE,
     )
 }
 
-#' @importFrom vctrs vec_cast
+#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 ggproto
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, order, order_params, strict) {
@@ -81,7 +82,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
                         ),
                         call = .subset2(self, "call")
                     )
-                } else if (anyDuplicated(ans)) {
+                } else if (vec_duplicate_any(ans)) {
                     cli::cli_abort(
                         "find ties when coercing {.arg order} into integer",
                         call = .subset2(self, "call")

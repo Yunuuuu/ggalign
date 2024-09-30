@@ -237,7 +237,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     list(plots = plots, sizes = sizes)
 }
 
-#' @importFrom data.table data.table setDF merge
+#' @importFrom data.table data.table setDF merge.data.table
 #' @importFrom stats reorder
 heatmap_build_data <- function(matrix, row_panel, row_index,
                                column_panel, column_index) {
