@@ -24,11 +24,60 @@ make_order <- function(order) {
     order(order)
 }
 
-#' @importFrom data.table data.table
+# library(data.table)
+# library(vctrs)
+# `%nest_unique%` <- function(x, y) {
+#     ans <- new_data_frame(list(x = x, y = y))
+#     ans <- unique(ans)
+#     !vec_duplicate_any(ans$x)
+# }
+# `%nest_vctrs%` <- function(x, y) {
+#     ans <- new_data_frame(list(x = x, y = y))
+#     ans <- vec_unique(ans)
+#     !vec_duplicate_any(.subset2(ans, "x"))
+# }
+# `%nest_vctrs_loc%` <- function(x, y) {
+#     # we don't check the inputs for performance
+#     loc <- vec_unique_loc(new_data_frame(list(x = x, y = y)))
+#     !vec_duplicate_any(vec_slice(x, loc))
+# }
+# `%nest_data_table%` <- function(x, y) {
+#     ans <- data.table(x = x, y = y)
+#     ans <- unique(ans)
+#     !vec_duplicate_any(.subset2(ans, "x"))
+# }
+# `%nest_split%` <- function(x, y) {
+#     all(lengths(lapply(split(y, x), unique)) == 1L)
+# }
+# `%nest_table%` <- function(x, y) {
+#     all(rowSums(table(x, y) > 0L) == 1L)
+# }
+# foo <- rep(seq(10^4L / 2L), each = 4)
+# bar <- rep(seq(10^4L), each = 2)
+# bench::mark(
+#     nest_unique = bar %nest_unique% foo,
+#     nest_vctrs = bar %nest_vctrs% foo,
+#     nest_vctrs_loc = bar %nest_vctrs_loc% foo,
+#     nest_data_table = bar %nest_data_table% foo,
+#     nest_split = bar %nest_split% foo,
+#     nest_table = bar %nest_table% foo,
+# )
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
+#> # A tibble: 6 × 6
+#>   expression           min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr>      <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 nest_unique       5.37ms   7.49ms    134.      1.33MB    69.2 
+#> 2 nest_vctrs       200.3µs 214.57µs   3591.     754.7KB     6.00
+#> 3 nest_vctrs_loc  193.99µs 207.29µs   4490.    706.95KB     6.00
+#> 4 nest_data_table 402.71µs 459.55µs   1918.    985.25KB     4.00
+#> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3 
+#> 6 nest_table      183.52ms 189.87ms      5.20  576.35MB     8.67
+#' @importFrom vctrs new_data_frame vec_unique_loc vec_duplicate_any
 `%nest%` <- function(x, y) {
-    ans <- data.table(x = x, y = y)
-    ans <- unique(ans)
-    !anyDuplicated(ans$x)
+    # we don't check the inputs for performance
+    loc <- vec_unique_loc(new_data_frame(list(x = x, y = y)))
+    !vec_duplicate_any(vec_slice(x, loc))
 }
 
 #' Read Example Data
@@ -75,17 +124,6 @@ allow_lambda <- function(x) {
     } else {
         x
     }
-}
-
-#' @importFrom ggplot2 zeroGrob
-get_grob <- function(x, name) {
-    nms <- .subset2(.subset2(x, "layout"), "name")
-    pattern <- paste0("^", name, "$")
-    ind <- grep(pattern, nms)
-    if (length(ind) == 0) {
-        return(zeroGrob())
-    }
-    .subset2(.subset2(x, "grobs"), grep(pattern, nms))
 }
 
 #' @importFrom vctrs vec_slice
