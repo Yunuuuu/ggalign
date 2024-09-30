@@ -48,7 +48,7 @@
 #' @export
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
-        one_area <- df_list(
+        one_area <- list(
             t = integer(0L),
             l = integer(0L),
             b = integer(0L),
@@ -119,7 +119,7 @@ as_areas.character <- function(x) {
         }
         area(t = t, l = l, b = b, r = r)
     })
-    do.call(vec_rbind, area_list)
+    do.call(c, area_list)
 }
 
 #' @importFrom vctrs vec_rbind
@@ -138,27 +138,32 @@ as_areas.patch_area <- function(x) add_class(x, "align_area")
 #' @export
 length.align_area <- function(x) vec_size(x)
 
-#' @importFrom vctrs new_data_frame
+#' @importFrom vctrs new_data_frame vec_data vec_set_names vec_seq_along
 #' @export
 print.align_area <- function(x, ...) {
+    data <- x
+    x <- vec_data(x)
+    x <- vec_set_names(x, paste0(vec_seq_along(data), ": "))
     cat(
-        length(x), "patch areas, spanning",
-        max(.subset2(x, "r")), "columns and", 
-        max(.subset2(x, "b")), "rows\n\n"
+        length(data), "patch areas, spanning",
+        max(.subset2(data, "r")), "columns and",
+        max(.subset2(data, "b")), "rows\n\n"
     )
-    print(new_data_frame(unclass(x), row.names = paste0(seq_along(x), ": ")))
-    invisible(x)
+    NextMethod()
+    invisible(data)
 }
 
+#' @importFrom vctrs vec_seq_along vec_data
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme
 #' @export
 plot.align_area <- function(x, ...) {
-    x$l <- x$l - 0.45
-    x$r <- x$r + 0.45
-    x$t <- x$t - 0.45
-    x$b <- x$b + 0.45
-    x$name <- as.factor(seq_len(nrow(x)))
+    data <- vec_data(x)
+    data$l <- data$l - 0.45
+    data$r <- data$r + 0.45
+    data$t <- data$t - 0.45
+    data$b <- data$b + 0.45
+    data$name <- as.factor(vec_seq_along(x))
     b_fun <- function(lim) {
         if (lim[1] < lim[2]) {
             lim <- seq(floor(lim[1]), ceiling(lim[2]), by = 1)
@@ -167,7 +172,7 @@ plot.align_area <- function(x, ...) {
         }
         lim[-c(1, length(lim))]
     }
-    ggplot2::ggplot(x) +
+    ggplot2::ggplot(data) +
         ggplot2::geom_rect(aes(
             xmin = .data$l, xmax = .data$r,
             ymin = .data$t, ymax = .data$b, fill = .data$name
