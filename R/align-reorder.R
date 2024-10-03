@@ -1,8 +1,11 @@
 #' Reorders layout observations based on weights or summary statistics.
 #'
-#' @param order A summary function. It should take a data and return the
-#' statistic, which we'll call [order2()] to extract the order information.
-#' Alternatively, You can also provide an ordering integer or character index.
+#' @param order A summary function which accepts a data and returns the
+#' statistic, which we'll call [`order2()`] to extract order information.
+#' Alternatively, you can provide an ordering index as either an integer or a
+#' character. Since characters have been designated as character indices, if you
+#' wish to specify a function name as a string, you must enclose it with
+#' [`I()`].
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' function provided in `order` argument.
 #' @param strict A boolean value indicates whether the order should be strict.
@@ -14,7 +17,7 @@
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("l") +
-#'     align_reorder()
+#'     align_reorder(I("rowMeans"))
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
 #' @importFrom vctrs vec_cast vec_duplicate_any
@@ -22,7 +25,8 @@
 align_reorder <- function(order = rowMeans, ..., strict = TRUE,
                           reverse = FALSE, data = NULL,
                           set_context = FALSE, name = NULL) {
-    if (is.numeric(order) || is.character(order)) {
+    if (is.numeric(order) ||
+        (is.character(order) && !inherits(order, "AsIs"))) {
         # vec_duplicate_any is slight faster than `anyDuplicated`
         if (anyNA(order) || vec_duplicate_any(order)) {
             cli::cli_abort(paste(

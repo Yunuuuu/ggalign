@@ -15,9 +15,12 @@ align_reorder(
 )
 }
 \arguments{
-\item{order}{A summary function. It should take a data and return the
-statistic, which we'll call \code{\link[=order2]{order2()}} to extract the order information.
-Alternatively, You can also provide an ordering integer or character index.}
+\item{order}{A summary function which accepts a data and returns the
+statistic, which we'll call \code{\link[=order2]{order2()}} to extract order information.
+Alternatively, you can provide an ordering index as either an integer or a
+character. Since characters have been designated as character indices, if you
+wish to specify a function name as a string, you must enclose it with
+\code{\link[=I]{I()}}.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 function provided in \code{order} argument.}
@@ -62,7 +65,7 @@ Reorders layout observations based on weights or summary statistics.
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     hmanno("l") +
-    align_reorder()
+    align_reorder(I("rowMeans"))
 }
 \seealso{
 \code{\link[=order2]{order2()}}
