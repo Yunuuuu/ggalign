@@ -55,7 +55,7 @@ a plot. Options include:
 }}
 
 \item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
-indicating which border spaces to remove. Defaults to
+indicating which border spaces should be removed. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
 parent, the default is \code{NULL}, meaning no spaces are removed.}
 

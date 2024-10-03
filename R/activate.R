@@ -32,7 +32,7 @@
 #' will be aligned.
 #'
 #' @param free_spaces A string with one or more of `r rd_values(.tlbr)`
-#' indicating which border spaces to remove. Defaults to
+#' indicating which border spaces should be removed. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
 #' parent, the default is `NULL`, meaning no spaces are removed.
 #'

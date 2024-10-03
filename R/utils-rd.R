@@ -34,14 +34,6 @@ rd_pos <- function(x, null, default = "it inherits from the parent layout") {
     )
 }
 
-rd_free_labs <- function() {
-    rd_pos(
-        "which axis title should be free from alignment",
-        "all axis title will be aligned",
-        "no axis titles will be aligned"
-    )
-}
-
 rd_guides <- function() {
     rd_pos(
         "which side of guide legends should be collected",
