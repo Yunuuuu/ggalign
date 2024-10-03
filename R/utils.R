@@ -22,12 +22,17 @@ make_order <- function(order) {
 
     # for order not set by user, we use heuristic algorithm to define the order
     need_action <- is.na(order)
+    if (all(need_action)) { # shorthand for the usual way, we don't set any
+        return(index)
+    } else if (all(!need_action)) { # we won't need do something special
+        return(order(order))
+    }
 
     # 1. for outliers, we always put them in the two tail
     # 2. for order has been set and is not the outliers,
     #    we always follow the order
     # 3. non-outliers were always regarded as the integer index
-    user_index <- as.integer(order[!need_action & order > 0L & order <= l])
+    user_index <- as.integer(order[!need_action & order >= 1L & order <= l])
 
     # we flatten user index to continuous integer sequence
     pairs <- split(user_index, user_index)
@@ -36,9 +41,10 @@ make_order <- function(order) {
         start + lengths(pairs) - 1L,
         data.table::shift(start, fill = l + 1L, type = "lead") - 1L
     )
+    # following index has been used by user
+    use <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
 
     # following index can be used
-    use <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
     use <- setdiff(index, unlist(use, FALSE, FALSE))
 
     # we assign the candidate index to the order user not set.
