@@ -154,7 +154,7 @@ heatmap_layout.default <- function(data, ...) {
     }
     assert_bool(filling, call = call)
     assert_bool(set_context, call = call)
-    order <- check_order(order)
+    order <- check_order(order, call = call)
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
     plot <- ggplot2::ggplot(mapping = mapping)
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
