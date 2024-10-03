@@ -156,10 +156,8 @@ heatmap_layout.default <- function(data, ...) {
     assert_bool(set_context, call = call)
     if (is.null(order) || is.na(order)) {
         order <- NA_integer_
-    } else if (!is_scalar(order)) {
+    } else if (!is_scalar(order) || !is.numeric(order)) {
         cli::cli_abort("{.arg order} must be a single number", call = call)
-    } else {
-        order <- vec_cast(order, integer(), call = call)
     }
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
     plot <- ggplot2::ggplot(mapping = mapping)

@@ -65,6 +65,8 @@ align_build <- function(x, panel, index,
             facet_scales = .subset2(x, "facetted_pos_scales"),
             set_limits = .subset2(x, "limits")
         )
+        # to avoid overriding the last scale message
+        # we remove the scale firstly
         plot <- remove_scales(plot, .subset2(scales, 1L)$aesthetics)
         plot <- align_set_scales_and_facet(
             plot = plot, direction = direction,
@@ -146,7 +148,7 @@ set_scales <- function(plot, scale_name, panel, index,
     # By default we'll use the continuous scale
     use_discrete <- FALSE
 
-    # the single scale control the labels and breaks
+    # the single scale control the "labels" and "breaks"
     # and determine the global theme
     if (!is.null(global_scale <- plot$scales$get_scales(scale_name))) {
         use_discrete <- global_scale$is_discrete()
@@ -156,9 +158,9 @@ set_scales <- function(plot, scale_name, panel, index,
     if (n_panel > 1L &&
         !is.null(facet_scales) &&
         !is_empty(user_scales <- .subset2(facet_scales, scale_name))) {
-        # if the global scale was not provided,
-        # we test if the first facetted scale is discrete
         if (is.null(global_scale)) {
+            # if the global scale was not provided,
+            # we test if the first facetted scale is discrete
             for (scale in user_scales) {
                 if (inherits(scale, "Scale")) {
                     use_discrete <- scale$is_discrete()
@@ -197,9 +199,9 @@ set_scales <- function(plot, scale_name, panel, index,
         labels <- get_labels(global_scale, breaks, layout_labels)
     }
 
-    # fill NULL with the global scale --------------------
+    # fill `NULL` with the global scale --------------------
     if (is.null(names(user_scales))) {
-        ids <- seq_len(nlevels(panel))
+        ids <- seq_len(n_panel)
     } else {
         ids <- levels(panel)
     }
@@ -212,13 +214,9 @@ set_scales <- function(plot, scale_name, panel, index,
     }
     if (!is.list(expand)) expand <- rep_len(list(expand), n_panel)
     # we always reset the limits of the user provided scales
-    .mapply(function(scale, data, e) {
-        data_index <- .subset2(data, "index")
-        plot_coord <- .subset2(data, "coord")
-
+    .mapply(function(scale, data_index, plot_coord, e) {
         # setup limits -------------------------------
         if (set_limits) {
-            # always reset the limits
             if (use_discrete) {
                 # the labels of `plot_coord` is the data index
                 # See `heatmap_build_data`
@@ -239,10 +237,8 @@ set_scales <- function(plot, scale_name, panel, index,
         scale
     }, list(
         scale = user_scales,
-        data = split(
-            data_frame0(coord = seq_along(index), index = index),
-            panel
-        ),
+        data_index = split(index, panel),
+        plot_coord = split(seq_along(index), panel),
         e = expand
     ), NULL)
 }

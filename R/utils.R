@@ -17,10 +17,36 @@ body_append <- function(fn, ..., ans = TRUE) {
 }
 
 make_order <- function(order) {
-    # we always add 0.5 offset, this will ensure the order set is always
-    # in the front of the order not set
-    # make_order(c(NA, 1, NA)): c(2, 1, 3) instead c(1, 2, 3)
-    order[is.na(order)] <- seq_along(order)[is.na(order)] + 0.5
+    l <- length(order)
+    index <- seq_len(l)
+
+    # for order not set by user, we use heuristic algorithm to define the order
+    need_action <- is.na(order)
+
+    # 1. for outliers, we always put them in the two tail
+    # 2. for order has been set and is not the outliers,
+    #    we always follow the order
+    # 3. non-outliers were always regarded as the integer index
+    user_index <- as.integer(order[!need_action & order > 0L & order <= l])
+
+    # we flatten user index to continuous integer sequence
+    pairs <- split(user_index, user_index)
+    start <- as.integer(names(pairs)) # start is the user provided index
+    end <- pmin(
+        start + lengths(pairs) - 1L,
+        data.table::shift(start, fill = l + 1L, type = "lead") - 1L
+    )
+
+    # following index can be used
+    use <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
+    use <- setdiff(index, unlist(use, FALSE, FALSE))
+
+    # we assign the candidate index to the order user not set.
+    order[need_action] <- use[seq_len(sum(need_action))]
+
+    # make_order(c(NA, 1, NA)): c(2, 1, 3)
+    # make_order(c(NA, 1, 3)): c(2, 1, 3)
+    # make_order(c(NA, 1, 3, 1)): c(2, 4, 3, 1)
     order(order)
 }
 
@@ -29,7 +55,7 @@ make_order <- function(order) {
 # `%nest_unique%` <- function(x, y) {
 #     ans <- new_data_frame(list(x = x, y = y))
 #     ans <- unique(ans)
-#     !vec_duplicate_any(ans$x)
+#     !anyDuplicated(ans$x)
 # }
 # `%nest_vctrs%` <- function(x, y) {
 #     ans <- new_data_frame(list(x = x, y = y))
@@ -44,7 +70,7 @@ make_order <- function(order) {
 # `%nest_data_table%` <- function(x, y) {
 #     ans <- data.table(x = x, y = y)
 #     ans <- unique(ans)
-#     !vec_duplicate_any(.subset2(ans, "x"))
+#     !anyDuplicated(.subset2(ans, "x"))
 # }
 # `%nest_split%` <- function(x, y) {
 #     all(lengths(lapply(split(y, x), unique)) == 1L)
@@ -67,11 +93,11 @@ make_order <- function(order) {
 #> # A tibble: 6 × 6
 #>   expression           min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>      <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 nest_unique       5.37ms   7.49ms    134.      1.33MB    69.2 
+#> 1 nest_unique       5.37ms   7.49ms    134.      1.33MB    69.2
 #> 2 nest_vctrs       200.3µs 214.57µs   3591.     754.7KB     6.00
 #> 3 nest_vctrs_loc  193.99µs 207.29µs   4490.    706.95KB     6.00
 #> 4 nest_data_table 402.71µs 459.55µs   1918.    985.25KB     4.00
-#> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3 
+#> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3
 #> 6 nest_table      183.52ms 189.87ms      5.20  576.35MB     8.67
 #' @importFrom vctrs new_data_frame vec_unique_loc vec_duplicate_any
 `%nest%` <- function(x, y) {
@@ -206,7 +232,9 @@ to_direction <- function(position) {
 }
 
 is_vertical <- function(direction) direction == "vertical"
+
 is_horizontal <- function(direction) direction == "horizontal"
+
 switch_direction <- function(direction, h, v) {
     if (is_horizontal(direction)) {
         h
@@ -214,6 +242,7 @@ switch_direction <- function(direction, h, v) {
         v
     }
 }
+
 to_coord_axis <- function(direction) {
     switch_direction(direction, "y", "x")
 }
