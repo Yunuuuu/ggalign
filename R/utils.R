@@ -2,6 +2,31 @@
 
 `%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
 
+#' Read Example Data
+#'
+#' This function reads example data from the file. If no file is specified, it
+#' returns a list of available example files.
+#'
+#' @param file A string representing the name of the example file to be read. If
+#' `NULL`, the function will return a list of available example file names.
+#' @return If `file` is `NULL`, returns a character vector of available example
+#' file names. Otherwise, returns the contents of the specified example file,
+#' read as an R object.
+#' @examples
+#' read_example()
+#' @export
+read_example <- function(file = NULL) {
+    if (is.null(file)) {
+        dir(example_file())
+    } else {
+        readRDS(example_file(file, mustWork = TRUE))
+    }
+}
+
+example_file <- function(..., base = "extdata") {
+    system.file(base, ..., package = pkg_nm())
+}
+
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
@@ -112,31 +137,6 @@ make_order <- function(order) {
     !vec_duplicate_any(vec_slice(x, loc))
 }
 
-#' Read Example Data
-#'
-#' This function reads example data from the file. If no file is specified, it
-#' returns a list of available example files.
-#'
-#' @param file A string representing the name of the example file to be read. If
-#' `NULL`, the function will return a list of available example file names.
-#' @return If `file` is `NULL`, returns a character vector of available example
-#' file names. Otherwise, returns the contents of the specified example file,
-#' read as an R object.
-#' @examples
-#' read_example()
-#' @export
-read_example <- function(file = NULL) {
-    if (is.null(file)) {
-        dir(example_file())
-    } else {
-        readRDS(example_file(file, mustWork = TRUE))
-    }
-}
-
-example_file <- function(..., base = "extdata") {
-    system.file(base, ..., package = pkg_nm())
-}
-
 save_png <- function(code, width = 400L, height = 400L) {
     path <- tempfile(fileext = ".png")
     grDevices::png(path, width = width, height = height)
@@ -158,54 +158,6 @@ allow_lambda <- function(x) {
     }
 }
 
-#' @importFrom vctrs vec_slice
-#' @importFrom gtable gtable_trim
-subset_gt <- function(gt, index, trim = TRUE) {
-    gt$layout <- vec_slice(.subset2(gt, "layout"), index)
-    gt$grobs <- .subset(.subset2(gt, "grobs"), index)
-    if (trim) gtable_trim(gt) else gt
-}
-
-gtable_trim_widths <- function(gt) {
-    layout <- .subset2(gt, "layout")
-    w <- range(.subset2(layout, "l"), .subset2(layout, "r"))
-    gt$widths <- .subset2(gt, "widths")[seq.int(w[1L], w[2L])]
-    if (is.matrix(respect <- .subset2(gt, "respect"))) {
-        respect <- respect[, seq.int(w[1L], w[2L]), drop = FALSE]
-        if (all(respect == 0L)) respect <- FALSE
-        gt$respect <- respect
-    }
-    layout$l <- .subset2(layout, "l") - w[1L] + 1L
-    layout$r <- .subset2(layout, "r") - w[1L] + 1L
-    gt$layout <- layout
-    gt
-}
-
-gtable_trim_heights <- function(gt) {
-    layout <- .subset2(gt, "layout")
-    h <- range(.subset2(layout, "t"), .subset2(layout, "b"))
-    gt$heights <- .subset2(gt, "heights")[seq.int(h[1L], h[2L])]
-    if (is.matrix(respect <- .subset2(gt, "respect"))) {
-        respect <- respect[seq.int(h[1L], h[2L]), , drop = FALSE]
-        if (all(respect == 0L)) respect <- FALSE
-        gt$respect <- respect
-    }
-    layout$t <- .subset2(layout, "t") - h[1L] + 1L
-    layout$b <- .subset2(layout, "b") - h[1L] + 1L
-    gt$layout <- layout
-    gt
-}
-
-trim_area <- function(area) {
-    w <- min(.subset2(area, "l"), .subset2(area, "r"))
-    h <- min(.subset2(area, "t"), .subset2(area, "b"))
-    area$l <- .subset2(area, "l") - w + 1L
-    area$r <- .subset2(area, "r") - w + 1L
-    area$t <- .subset2(area, "t") - h + 1L
-    area$b <- .subset2(area, "b") - h + 1L
-    area
-}
-
 is.waive <- function(x) inherits(x, "waiver")
 
 add_default_mapping <- function(plot, default_mapping) {
@@ -224,6 +176,7 @@ ggproto_clone <- function(ggproto) {
     ans
 }
 
+###########################################################
 switch_position <- function(position, x, y) {
     switch(position,
         top = ,
@@ -308,20 +261,6 @@ imap <- function(.x, .f, ...) {
 }
 
 compact <- function(.x) .x[lengths(.x) > 0L]
-
-recycle_scalar <- function(x, length, arg = rlang::caller_arg(x)) {
-    l <- length(x)
-    if (l == 1L || l == length) {
-        rep_len(x, length)
-    } else {
-        if (length != 1L) {
-            msg <- sprintf("1 or %d", length) # nolint
-        } else {
-            msg <- "1"
-        }
-        cli::cli_abort("length of {.arg {arg}} can only be {msg}")
-    }
-}
 
 #' Rename elements in a list, data.frame or vector
 #'
