@@ -146,3 +146,14 @@ check_stack_context <- function(what, arg = caller_arg(what),
     }
     what
 }
+
+check_order <- function(order, arg = caller_arg(order), call = caller_call()) {
+    if (is.null(order)) {
+        order <- NA_integer_
+    } else if (!is_scalar(order) || (!is.numeric(order) && !is.na(order))) {
+        cli::cli_abort("{.arg {arg}} must be a single number", call = call)
+    } else {
+        order <- NA_integer_
+    }
+    order
+}

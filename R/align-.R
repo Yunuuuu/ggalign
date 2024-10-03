@@ -89,12 +89,7 @@ align <- function(align_class, params,
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
     assert_bool(set_context, call = call)
-
-    if (is.null(order) || is.na(order)) {
-        order <- NA_integer_
-    } else if (!is_scalar(order) || !is.numeric(order)) {
-        cli::cli_abort("{.arg order} must be a single number", call = call)
-    }
+    order <- check_order(order, call = call)
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
 
     # Warn about extra params or missing parameters ---------------
