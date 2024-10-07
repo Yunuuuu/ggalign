@@ -18,10 +18,7 @@ initialize_align <- function(object, direction, position,
         if (is.waive(input_data)) { # inherit from the layout
             if (is.null(layout_data)) {
                 cli::cli_abort(c(
-                    paste(
-                        "You must provide {.arg data} argument in",
-                        style_code(object_name)
-                    ),
+                    "{.arg data} argument must be provided",
                     i = "No data was found in the layout"
                 ), call = call)
             }
@@ -32,10 +29,9 @@ initialize_align <- function(object, direction, position,
             if (is.na(nobs)) {
                 nobs <- NROW(data)
             } else if (NROW(data) != nobs) {
-                cli::cli_abort(sprintf(
-                    "%s from %s must have %s",
-                    style_arg("data"), style_code(object_name),
-                    "compatible observations with the layout"
+                cli::cli_abort(paste(
+                    "{.arg data} must have compatible",
+                    "observations with the layout"
                 ), call = call)
             }
         }
