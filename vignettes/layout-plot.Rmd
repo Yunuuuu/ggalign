@@ -56,8 +56,6 @@ ggheatmap(small_mat) +
     geom_point(aes(y = value))
 ```
 
-See `ggplot2 specification` in `align_gg()`/`ggalign()` for the data details.
-
 ### Plot data
 `align_gg()`/`ggalign()` requires the specific data format for its operations.
 If you need to transform or filter data for individual `geoms`, you can use the
