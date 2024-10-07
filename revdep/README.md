@@ -10,7 +10,7 @@
 |collate  |C.UTF-8                      |
 |ctype    |C.UTF-8                      |
 |tz       |Asia/Shanghai                |
-|date     |2024-09-29                   |
+|date     |2024-10-07                   |
 |pandoc   |3.1.3 @ /usr/bin/pandoc      |
 
 # Dependencies
@@ -26,9 +26,9 @@
 |fansi        |1.0.6 |1.0.6  |   |
 |farver       |2.1.2 |2.1.2  |   |
 |generics     |0.1.3 |NA     |*  |
-|ggh4x        |0.2.8 |0.2.8  |   |
+|ggh4x        |0.2.8 |NA     |*  |
 |ggplot2      |3.5.1 |3.5.1  |   |
-|glue         |1.7.0 |1.7.0  |   |
+|glue         |1.8.0 |1.8.0  |   |
 |gtable       |0.3.5 |0.3.5  |   |
 |isoband      |0.2.7 |0.2.7  |   |
 |labeling     |0.4.3 |0.4.3  |   |
