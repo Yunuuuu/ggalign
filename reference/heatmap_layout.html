@@ -120,8 +120,18 @@ object.</p></dd>
 
 
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
-<dd><p>A boolean value indicates whether to fill the heatmap. If you
-want to customize the filling style, you can set to <code>FALSE</code>.</p></dd>
+<dd><p>A boolean value indicating whether to fill the heatmap. If you
+wish to customize the filling style, set this to <code>FALSE</code>.</p>
+<p>By default, the classic heatmap colour scheme
+<code>scale_fill_gradient2(low = "blue", high = "red")</code>
+is utilized for continuous values.
+You can use the option
+<code>"ggalign.heatmap_continuous_fill"</code> or
+<code>"ggalign.heatmap_discrete_fill"</code> to modify the
+default heatmap fill scale. See
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_fill_continuous()</a></code> or
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete()</a></code> for option setting
+details.</p></dd>
 
 
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
