@@ -104,6 +104,9 @@ layout_heatmap_add.gg <- function(object, heatmap, object_name) {
 layout_heatmap_add.labels <- layout_heatmap_add.gg
 
 #' @export
+layout_heatmap_add.patch_inset <- layout_heatmap_add.gg
+
+#' @export
 layout_heatmap_add.facetted_pos_scales <- layout_heatmap_add.gg
 
 ##############################################################
@@ -139,6 +142,9 @@ heatmap_add.gg <- function(object, heatmap, object_name) {
 
 #' @export
 heatmap_add.labels <- heatmap_add.gg
+
+#' @export
+heatmap_add.patch_inset <- heatmap_add.gg
 
 #' @export
 heatmap_add.facetted_pos_scales <- heatmap_add.gg

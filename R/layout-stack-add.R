@@ -174,6 +174,9 @@ layout_stack_add.ggplot <- function(object, stack, object_name) {
 layout_stack_add.labels <- layout_stack_add.gg
 
 #' @export
+layout_stack_add.patch_inset <- layout_stack_add.gg
+
+#' @export
 layout_stack_add.facetted_pos_scales <- layout_stack_add.gg
 
 #' @export

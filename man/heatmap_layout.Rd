@@ -56,7 +56,7 @@ is utilized for continuous values.
 You can use the option
 \code{"ggalign.heatmap_continuous_fill"} or
 \code{"ggalign.heatmap_discrete_fill"} to modify the
-default heatmap fill scale. See
+default heatmap body fill scale. See
 \code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
 \code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for option setting
 details.}
