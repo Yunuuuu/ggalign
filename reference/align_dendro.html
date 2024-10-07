@@ -223,7 +223,8 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the <code>layout</code> data,</p>
 <p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
 the observations. It means the <code>NROW(data)</code> must return the same number with
-the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
+the specific <code>layout</code> axis (meaning the x-axis for vertical stack layout, or
+y-axis for horizontal stack layout).</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
 transposed before using (If data is a <code>function</code>, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.</p></li>
@@ -255,7 +256,7 @@ added into this plot.</p></dd>
     <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
 
 
-<p><code>align_dendro</code> initializes a <code>ggplot</code> data and <code>mapping</code>.</p>
+<p><code>align_dendro</code> initializes a ggplot <code>data</code> and <code>mapping</code>.</p>
 <p>The internal will always use a default mapping of <code>aes(x = .data$x, y = .data$y)</code>.</p>
 <p>The default ggplot data is the <code>node</code> coordinates, in addition, a
 <a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a> layer with a data of the tree segments

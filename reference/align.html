@@ -101,7 +101,8 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the <code>layout</code> data,</p>
 <p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
 the observations. It means the <code>NROW(data)</code> must return the same number with
-the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
+the specific <code>layout</code> axis (meaning the x-axis for vertical stack layout, or
+y-axis for horizontal stack layout).</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
 transposed before using (If data is a <code>function</code>, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.</p></li>
@@ -223,7 +224,6 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     facetted_pos_scales: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_guides: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>
@@ -259,7 +259,6 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     facetted_pos_scales: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_guides: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>

@@ -115,7 +115,8 @@ can also accept a function (purrr-like lambda is also okay), which will be
 applied with the <code>layout</code> data,</p>
 <p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
 the observations. It means the <code>NROW(data)</code> must return the same number with
-the specific <code>layout</code> axis.</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
+the specific <code>layout</code> axis (meaning the x-axis for vertical stack layout, or
+y-axis for horizontal stack layout).</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
 transposed before using (If data is a <code>function</code>, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.</p></li>
