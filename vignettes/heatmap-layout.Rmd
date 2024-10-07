@@ -6,7 +6,7 @@ output:
     number_sections: no
     fig_caption: yes
     fig_width: 7
-    fig_height: 7
+    fig_height: 5
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
