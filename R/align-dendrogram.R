@@ -254,8 +254,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
         )
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
-        node <- rename(node, c(ggpanel = ".panel"))
-        edge <- rename(edge, c(ggpanel = ".panel"))
         if (is_horizontal(direction)) {
             edge <- rename(
                 edge,
