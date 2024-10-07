@@ -216,6 +216,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
+    p <- add_class(p, "ggalign_heatmap")
     if (!is.waive(free_guides <- .subset2(params, "free_guides"))) {
         p <- free_guide(p, free_guides)
     }
@@ -228,6 +229,38 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
+}
+
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.ggalign_heatmap <- function(plot) {
+    old_discrete_fill <- getOption("ggplot2.discrete.fill")
+    old_continuous_fill <- getOption("ggplot2.continuous.fill")
+    on.exit({
+        options(ggplot2.discrete.fill = old_discrete_fill)
+        options(ggplot2.continuous.fill = old_continuous_fill)
+    })
+    # change the default fill scale --------------------------
+    options(ggplot2.discrete.fill = heatmap_fill("discrete"))
+    options(ggplot2.continuous.fill = heatmap_fill("continuous"))
+    NextMethod()
+}
+
+heatmap_fill <- function(type) {
+    type <- match.arg(type, c("discrete", "continuous"))
+    opt <- sprintf("%s.heatmap_%s_fill", pkg_nm(), type)
+    if (is.null(ans <- getOption(opt, default = NULL))) {
+        if (type == "continuous") {
+            ans <- function(...) {
+                ggplot2::scale_fill_gradient2(low = "blue", high = "red")
+            }
+        } else {
+            ans <- getOption("ggplot2.discrete.fill")
+        }
+    } else if (inherits(ans, "Scale")) {
+        ans <- rlang::new_function(rlang::exprs(... = ), ans)
+    }
+    ans
 }
 
 #' @importFrom ggplot2 ggproto

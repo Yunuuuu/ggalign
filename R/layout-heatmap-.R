@@ -12,8 +12,20 @@
 #' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
 #' object.
 #' @inheritParams align_plots
-#' @param filling A boolean value indicates whether to fill the heatmap. If you
-#' want to customize the filling style, you can set to `FALSE`.
+#' @param filling A boolean value indicating whether to fill the heatmap. If you
+#' wish to customize the filling style, set this to `FALSE`.
+#'
+#' By default, the classic heatmap colour scheme
+#' [`scale_fill_gradient2(low = "blue", high = "red")`][ggplot2::scale_fill_gradient2]
+#' is utilized for continuous values.
+#' You can use the option
+#' `r rd_values(sprintf("%s.heatmap_continuous_fill", pkg_nm()))` or
+#' `r rd_values(sprintf("%s.heatmap_discrete_fill", pkg_nm()))` to modify the
+#' default heatmap body fill scale. See
+#' [`scale_fill_continuous()`][ggplot2::scale_fill_continuous] or
+#' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for option setting
+#' details.
+#'
 #' @inheritParams align
 #' @inheritParams ggplot2::ggplot
 #' @section ggplot2 specification:

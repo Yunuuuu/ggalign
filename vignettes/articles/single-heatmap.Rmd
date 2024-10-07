@@ -67,7 +67,7 @@ The `scale_fill_*` function in ggplot2 makes it easy to modify colors.
 # )
 dim(mat)
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
+    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
@@ -193,11 +193,7 @@ na_index <- sample(c(TRUE, FALSE),
 )
 mat_with_na[na_index] <- NA
 ggheatmap(mat_with_na) +
-    scale_fill_gradient2(
-        low = "#2600D1FF",
-        high = "#EE3F3FFF",
-        na.value = "black"
-    ) +
+    scale_fill_gradient2(low = "blue", high = "red", na.value = "black") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
@@ -215,7 +211,6 @@ In ggplot2, you can use `panel.border` argument in `theme()` function to control
 the Heatmap body border.
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(
         axis.text.x = element_text(angle = -60, hjust = 0),
         panel.border = element_rect(linetype = "dashed", fill = NA)
@@ -231,7 +226,6 @@ You can use `color` aesthetic to specify the cell border color and
 `linewidth` aesthetic to specify the border width.
 ```{r}
 ggheatmap(mat, color = "white") +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro() +
@@ -256,7 +250,6 @@ We can use `patch_titles()` to add titles around each border of the plot. You
 can use `theme()` to control the text appearance. 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro() +
@@ -279,7 +272,6 @@ ggheatmap(mat) +
 #   column_dend_reorder = FALSE
 # )
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(distance = "pearson") +
@@ -298,7 +290,6 @@ ggheatmap(mat) +
 #     column_dend_reorder = FALSE
 # )
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(distance = dist) +
@@ -320,7 +311,6 @@ Possible methods are those supported in `hclust()` function.
 #     column_dend_reorder = FALSE
 # )
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(method = "single") +
@@ -332,7 +322,6 @@ ggheatmap(mat) +
 Use `distance = NULL` if you don't want to calculate the distance.
 ```{r eval=rlang::is_installed("cluster")}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(distance = NULL, method = cluster::diana) +
@@ -346,7 +335,6 @@ It's easy for `ggalign` to color the branches by setting the color mapping,
 since `ggalign` will add the `cutree()` results into the underlying data.
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_dendro(aes(color = branch), k = 2L) +
@@ -367,7 +355,6 @@ We can use `align_reorder()` to set the order.
 #     column_dend_reorder = FALSE
 # )
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "#2600D1FF", high = "#EE3F3FFF") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_reorder(as.numeric(gsub("row", "", rownames(mat)))) +
@@ -382,10 +369,7 @@ extract the ordering information.
 ```{r eval=rlang::is_installed("seriation")}
 mat2 <- max(mat) - mat
 ggheatmap(mat2) +
-    scale_fill_gradient2(
-        low = "#2600D1FF", high = "#EE3F3FFF",
-        midpoint = 2L
-    ) +
+    scale_fill_gradient2(low = "blue", high = "red", midpoint = 2L) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_reorder(seriation::seriate, method = "BEA_TSP") +
@@ -400,10 +384,7 @@ we can manually extract the ordering indices to avoid redundancy.
 ```{r eval=rlang::is_installed("seriation")}
 o <- seriation::seriate(mat2, method = "BEA_TSP")
 ggheatmap(mat2) +
-    scale_fill_gradient2(
-        low = "#2600D1FF", high = "#EE3F3FFF",
-        midpoint = 2L
-    ) +
+    scale_fill_gradient2(low = "blue", high = "red", midpoint = 2L) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
     align_reorder(seriation::get_order(o, 1L)) +

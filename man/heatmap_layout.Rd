@@ -47,8 +47,19 @@ object.}
 
 \item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
 
-\item{filling}{A boolean value indicates whether to fill the heatmap. If you
-want to customize the filling style, you can set to \code{FALSE}.}
+\item{filling}{A boolean value indicating whether to fill the heatmap. If you
+wish to customize the filling style, set this to \code{FALSE}.
+
+By default, the classic heatmap colour scheme
+\code{\link[ggplot2:scale_gradient]{scale_fill_gradient2(low = "blue", high = "red")}}
+is utilized for continuous values.
+You can use the option
+\code{"ggalign.heatmap_continuous_fill"} or
+\code{"ggalign.heatmap_discrete_fill"} to modify the
+default heatmap fill scale. See
+\code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
+\code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for option setting
+details.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current plot. If \code{TRUE}, all subsequent ggplot elements will be

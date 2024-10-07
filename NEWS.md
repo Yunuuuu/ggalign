@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* heatmap fill color scale now default use `scale_fill_gradient2(low = "blue", high = "red")` for continuous values.
+
 * `Coord` is used to set limits instead of `Scale`
 
 * all `free_*` arguments now accept the same argument of the corresponding `free_*` functions.
