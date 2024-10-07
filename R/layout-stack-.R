@@ -42,11 +42,12 @@ methods::setClass(
         plots = "list",
         params = "list",
         direction = "character",
+        position = "ANY", # used by heatmap layout
         panel = "ANY",
         index = "ANY",
         nobs = "ANY"
     ),
-    prototype = list(panel = NULL, index = NULL, nobs = NULL)
+    prototype = list(position = NULL, panel = NULL, index = NULL, nobs = NULL)
 )
 
 #' @export
@@ -91,7 +92,8 @@ stack_layout.NULL <- function(data, ...) {
         assert_position(guides, call = call)
     }
     methods::new("StackLayout",
-        data = data, direction = direction,
+        data = data, 
+        direction = direction,
         params = list(
             # @param sizes the relative size of the vertical direction with this
             # stack, which won't be used by heatmap annotation.

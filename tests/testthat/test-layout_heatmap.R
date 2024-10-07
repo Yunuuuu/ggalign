@@ -75,8 +75,7 @@ testthat::test_that("add `hmanno()` works well", {
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
             hmanno("l", free_guides = "l") +
-            align_dendro(aes(color = branch)) +
-            scale_x_reverse()
+            align_dendro(aes(color = branch))
     )
 })
 

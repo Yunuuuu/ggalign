@@ -157,7 +157,6 @@ ggstack(small_mat, "v") +
     scale_fill_viridis_c() +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
-    scale_x_reverse() +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
@@ -170,7 +169,6 @@ ggstack(small_mat, "v", c(1, 2, 1)) +
     scale_fill_viridis_c() +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
-    scale_x_reverse() +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
@@ -185,7 +183,6 @@ ggstack(small_mat, "v") +
     scale_fill_viridis_c() +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
-    scale_x_reverse() +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
@@ -200,7 +197,6 @@ ggstack(small_mat, "v") +
     scale_fill_viridis_c() +
     hmanno("l", size = unit(2, "cm")) +
     align_dendro(aes(color = .panel), k = 3L) +
-    scale_x_reverse() +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
@@ -214,7 +210,6 @@ ggstack(small_mat, "v") +
     scale_fill_viridis_c() +
     hmanno("l", size = unit(0.5, "npc")) +
     align_dendro(aes(color = .panel), k = 3L) +
-    scale_x_reverse() +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +

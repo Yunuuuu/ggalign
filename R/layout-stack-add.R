@@ -209,7 +209,9 @@ stack_add_align <- function(object, stack, object_name) {
     # this step the object will act with the stack layout
     # group rows into panel or reorder rows
     layout <- initialize_align(
-        object, stack@direction,
+        object,
+        direction = stack@direction,
+        position = stack@position,
         layout_data = stack@data,
         layout_panel = get_panel(stack),
         layout_index = get_index(stack),

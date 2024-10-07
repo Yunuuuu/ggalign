@@ -211,12 +211,14 @@ AlignDendro <- ggproto("AlignDendro", Align,
         if (!is.null(panel)) panel <- factor(panel, unique(panel[index]))
         list(panel, index)
     },
+    #' @importFrom ggplot2 aes
     ggplot = function(self, plot_dendrogram, mapping, segment_params) {
         if (!plot_dendrogram) {
             return(NULL)
         }
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(mapping = mapping) +
+        ans <- ggplot2::ggplot(mapping = mapping)
+        add_default_mapping(ans, aes(x = .data$x, y = .data$y)) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
                     x = .data$x, y = .data$y,
@@ -230,20 +232,16 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ggplot2::labs(x = "height"),
                 ggplot2::labs(y = "height")
             )
-        add_default_mapping(ans, aes(x = .data$x, y = .data$y))
     },
     draw = function(self, panel, index, extra_panel, extra_index,
                     # other argumentds
                     plot_cut_height, center, type, root) {
         direction <- .subset2(self, "direction")
         if (nlevels(panel) > 1L && type == "triangle") {
-            cli::cli_warn(c(
-                paste(
-                    "{.arg type} of {.arg triangle}",
-                    "is not well support for facet dendrogram"
-                ),
-                i = "will use {.filed rectangle} dendrogram instead"
-            ))
+            cli::cli_warn(c(paste(
+                "{.arg type} of {.arg triangle}",
+                "is not well support for facet dendrogram"
+            ), i = "will use {.filed rectangle} dendrogram instead"))
             type <- "rectangle"
         }
         data <- dendrogram_data(
@@ -269,6 +267,16 @@ AlignDendro <- ggproto("AlignDendro", Align,
         plot$data <- node
         # edge layer should be in the first
         plot$layers[[1L]]$data <- edge
+        position <- .subset2(self, "position")
+        if (is.null(position) || !isTRUE(plot$coordinates$default)) {
+            # if the dendrogram is in a normal stack layout
+            # or if user has set the coordinate, we won't reverse
+            # the dendrogram height axis
+        } else if (position == "bottom") { # in the bottom, reverse y-axis
+            plot <- plot + ggplot2::coord_trans(y = "reverse", clip = "off")
+        } else if (position == "left") { # in the left, reverse x-axis
+            plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
+        }
         height <- .subset2(self, "height")
         plot_cut_height <- plot_cut_height %||% !is.null(height)
         if (plot_cut_height && !is.null(height)) {

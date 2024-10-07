@@ -63,6 +63,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         data <- heatmap@data
         if (!is_horizontal(direction)) data <- t(data)
         stack <- stack_layout(data = data, direction = direction)
+        stack@position <- position
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))
     }

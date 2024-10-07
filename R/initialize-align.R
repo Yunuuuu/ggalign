@@ -1,10 +1,11 @@
 #' object is an environment, it won't be copied, and will modify in place
 #' @noRd
-initialize_align <- function(object, direction,
+initialize_align <- function(object, direction, position,
                              layout_data,
                              layout_panel, layout_index,
                              nobs, object_name) {
     object$direction <- direction
+    object$position <- position
     input_data <- .subset2(object, "input_data")
     input_params <- .subset2(object, "input_params")
     call <- .subset2(object, "call")

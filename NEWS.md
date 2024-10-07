@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* dendrogram height axis will be automatically reversed in bottom and left annotation stack
+
 * heatmap fill color scale now default use `scale_fill_gradient2(low = "blue", high = "red")` for continuous values.
 
 * `Coord` is used to set limits instead of `Scale`

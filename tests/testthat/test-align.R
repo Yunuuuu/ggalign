@@ -123,7 +123,10 @@ testthat::test_that("`align_dendro` works well", {
         align_dendro(k = 2L))
 
     testthat::skip_on_ci() # I don't know why this will fail in github CI
-    expect_doppelganger("dendrogram", p + hmanno("t") + align_dendro())
+    expect_doppelganger("dendrogram_top", p + hmanno("t") + align_dendro())
+    expect_doppelganger("dendrogram_left", p + hmanno("l") + align_dendro())
+    expect_doppelganger("dendrogram_bottom", p + hmanno("b") + align_dendro())
+    expect_doppelganger("dendrogram_right", p + hmanno("r") + align_dendro())
     expect_doppelganger(
         "dendro_cutree",
         p + hmanno("t") + align_dendro(k = 3L)
@@ -137,8 +140,7 @@ testthat::test_that("`align_dendro` works well", {
     expect_doppelganger(
         "dendro_reorder_group",
         p + hmanno("l") + align_group(row_group) +
-            align_dendro(reorder_group = TRUE) +
-            scale_x_reverse(),
+            align_dendro(reorder_group = TRUE),
     )
 })
 

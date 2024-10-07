@@ -113,6 +113,7 @@ align <- function(align_class, params,
         # and will be saved and accessed across the plot rendering process
         statistics = NULL,
         direction = NULL,
+        position = NULL,
         plot = NULL,
         data = NULL,
         params = NULL,
