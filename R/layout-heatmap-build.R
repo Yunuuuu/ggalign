@@ -1,7 +1,8 @@
 #' @importFrom grid unit.c
 #' @export
 ggalign_build.HeatmapLayout <- function(x) {
-    patches <- heatmap_build(x)
+    layout_theme <- x@theme %||% default_theme()
+    patches <- heatmap_build(x, layout_theme = layout_theme)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
     design <- list(
@@ -34,7 +35,7 @@ ggalign_build.HeatmapLayout <- function(x) {
         title = .subset2(annotation, "title"),
         subtitle = .subset2(annotation, "subtitle"),
         caption = .subset2(annotation, "caption"),
-        theme = x@theme %||% default_theme()
+        theme = layout_theme
     )
 }
 
@@ -43,7 +44,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(),
                           free_labs = waiver(), free_spaces = waiver(),
-                          theme = waiver()) {
+                          theme = waiver(), layout_theme = waiver()) {
     params <- heatmap@params
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
@@ -179,6 +180,7 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
             free_labs = free_labs,
             free_spaces = free_spaces,
             theme = theme,
+            layout_theme = layout_theme,
             extra_panel = panel,
             extra_index = index
         )
