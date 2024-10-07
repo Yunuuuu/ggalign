@@ -104,7 +104,7 @@ panel data. \code{ggpanel} is just an alias of \code{align_panel}.
 }
 \section{ggplot2 specification}{
 
-\code{align_panel} initializes a \code{ggplot} data and \code{mapping}.
+\code{align_panel} initializes a ggplot \code{data} and \code{mapping}.
 
 \code{align_panel()} always applies a default mapping for the axis of the data
 index in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack

@@ -129,7 +129,8 @@ applied with the \code{layout} data,
 
 It is important to note that all \verb{align_*} functions consider the \code{rows} as
 the observations. It means the \code{NROW(data)} must return the same number with
-the specific \code{layout} axis.
+the specific \code{layout} axis (meaning the x-axis for vertical stack layout, or
+y-axis for horizontal stack layout).
 \itemize{
 \item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
@@ -156,7 +157,7 @@ Reorder or Group layout based on hierarchical clustering
 }
 \section{ggplot2 specification}{
 
-\code{align_dendro} initializes a \code{ggplot} data and \code{mapping}.
+\code{align_dendro} initializes a ggplot \code{data} and \code{mapping}.
 
 The internal will always use a default mapping of \code{aes(x = .data$x, y = .data$y)}.
 

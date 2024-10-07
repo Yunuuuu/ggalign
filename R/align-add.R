@@ -19,11 +19,16 @@ align_add.gg <- function(object, align, object_name) {
 align_add.labels <- align_add.gg
 
 #' @export
-align_add.facetted_pos_scales <- function(object, align, object_name) {
-    assert_facetted_scales(
-        object, object_name,
-        sprintf("a %s plot", style_fn(snake_class(align)))
-    )
-    align$facetted_pos_scales <- object
-    align
+align_add.facetted_pos_scales <- align_add.gg
+
+#' @export
+align_add.Coord <- function(object, align, object_name) {
+    if (!inherits(object, "CoordCartesian")) {
+        cli::cli_warn(c(
+            "only {.field Cartesian coordinate} is supported",
+            i = "will discard {.fn {snake_class(object)}} directly"
+        ))
+        return(align)
+    }
+    NextMethod() # call gg method
 }

@@ -141,8 +141,16 @@ heatmap_add.gg <- function(object, heatmap, object_name) {
 heatmap_add.labels <- heatmap_add.gg
 
 #' @export
-heatmap_add.facetted_pos_scales <- function(object, heatmap, object_name) {
-    assert_facetted_scales(object, object_name, "the heatmap layout")
-    heatmap@facetted_pos_scales <- object
-    heatmap
+heatmap_add.facetted_pos_scales <- heatmap_add.gg
+
+#' @export
+heatmap_add.Coord <- function(object, heatmap, object_name) {
+    if (!inherits(object, "CoordCartesian")) {
+        cli::cli_warn(c(
+            "only {.field cartesian coordinate} is supported",
+            i = "will discard {.fn {snake_class(object)}} directly"
+        ))
+        return(heatmap)
+    }
+    NextMethod() # call gg method
 }

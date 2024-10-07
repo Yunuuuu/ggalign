@@ -101,9 +101,6 @@ ggheatmap(v) +
             data
         }
     ) +
-    # the default will always use continuous scale, here, we override it, since
-    # the panel is a factor variable, we should use discrete scale.
-    scale_x_discrete() +
     scale_fill_brewer(palette = "Dark2", name = "branch")
 ```
 
@@ -120,9 +117,6 @@ ggheatmap(small_mat) +
     hmanno("r", size = 0.5) +
     ggalign(limits = FALSE) +
     geom_boxplot(aes(y = .extra_panel, x = value, fill = factor(.extra_panel))) +
-    # the default will always use continuous scale, here, we override it, since
-    # the panel is a factor variable, we should use discrete scale.
-    scale_y_discrete() +
     scale_fill_brewer(palette = "Dark2", name = "branch")
 ```
 
@@ -142,7 +136,6 @@ ggheatmap(small_mat) +
     hmanno("r", size = 0.5) +
     ggalign(limits = FALSE) +
     geom_boxplot(aes(y = .extra_panel, x = value, fill = factor(.extra_panel))) +
-    scale_y_discrete() +
     scale_fill_brewer(palette = "Dark2", name = "branch") +
     patch_titles(right = "right patch title")
 ```

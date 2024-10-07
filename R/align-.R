@@ -12,7 +12,8 @@
 #'
 #' It is important to note that all `align_*` functions consider the `rows` as
 #' the observations. It means the `NROW(data)` must return the same number with
-#' the specific `layout` axis.
+#' the specific `layout` axis (meaning the x-axis for vertical stack layout, or
+#' y-axis for horizontal stack layout).
 #'
 #'  - `heatmap_layout()`: for column annotation, the `layout` data will be
 #'  transposed before using (If data is a `function`, it will be applied with
@@ -119,8 +120,8 @@ align <- function(align_class, params,
 
         # user input -------------------------------
         size = size,
-        # should we allow user switch between different annotation with a string
-        # name? Should I remove "name" argument from the user input?
+        # should we allow user switch between different plot with a string name?
+        # Should I remove "name" argument from the user input?
         name = name %||% NA_character_,
         order = order,
         set_context = set_context,
@@ -137,7 +138,6 @@ align <- function(align_class, params,
 
         # collect parameters
         input_params = params[intersect(names(params), all)],
-        facetted_pos_scales = NULL,
 
         # used to provide error message
         call = call

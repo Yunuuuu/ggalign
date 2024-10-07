@@ -76,9 +76,9 @@ methods::setMethod("$", "Layout", function(x, name) {
 #' @aliases +.Layout +.HeatmapLayout +.ggheatmap +.StackLayout +.ggstack
 NULL
 
-#' @rdname layout-add
 #' @importFrom utils modifyList
 #' @export
+#' @rdname layout-add
 methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
     if (missing(e2)) {
         cli::cli_abort(c(

@@ -89,7 +89,6 @@ ggstack(data = mat_scaled) +
         aes(.extra_panel, fill = factor(value)),
         position = position_fill()
     ) +
-    scale_x_discrete() +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
     theme(plot.margin = margin()) &

@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `Coord` is used to set limits instead of `Scale`
+
 * all `free_*` arguments now accept the same argument of the corresponding `free_*` functions.
 
 * new `theme_ggalign()` function for the default theme of ggalign package

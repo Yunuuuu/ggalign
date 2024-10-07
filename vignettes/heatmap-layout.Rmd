@@ -237,7 +237,7 @@ heatmap body plot.
 ```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
-  hmanno(free_guides = "r") # we collect the right guide legend for the heatmap body 
+  hmanno(free_guides = "r") # we collect the right guide legend for the heatmap body
 ```
 You can also use `free_guides` to override the `guides` argument for heatmap
 annotation stack in `hmanno()`.
@@ -248,15 +248,15 @@ annotation stack.
 ```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides +
   hmanno(guides = "tb") + # we set the `guides` argument here
-  hmanno(free_guides = "r") + # we collect the right guide legend for the heatmap body 
-  hmanno("l", guides = NULL) + # the left annotation won't collect the guide legends 
+  hmanno(free_guides = "r") + # we collect the right guide legend for the heatmap body
+  hmanno("l", guides = NULL) + # the left annotation won't collect the guide legends
   guides(color = guide_legend(direction = "vertical", position = "top"))
 ```
 
-Guide legends in the heatmap layout will only be collected from the annotation 
-stack if the stack layout collects its own guide legends first. In nested layouts, 
-the top-level layout won't collect guide legends from plots within the nested 
-layout unless the nested layout collects them first.
+In the nested layouts, the top-level layout won't collect guide legends from
+plots within the nested layout unless the nested layout collects them first.
+Guide legends in the heatmap layout will only be collected from the annotation
+stack if the stack layout collects its own guide legends first.
 
 An annotation stack is simply a `stack_layout()`, which can add multiple plots
 using `align_*()` functions. The `align_*()` functions include a `free_guides`

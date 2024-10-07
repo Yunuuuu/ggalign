@@ -15,7 +15,6 @@ Depends:
 Imports: 
     cli,
     data.table,
-    ggh4x,
     grid,
     gtable,
     methods,

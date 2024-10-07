@@ -76,7 +76,7 @@ ggheatmap(small_mat) +
     geom_point(aes(color = branch, y = y)) +
     scale_color_brewer(palette = "Dark2") +
     ggalign(aes(y = value)) +
-    geom_boxplot(aes(fill = .panel, group = interaction(.x, .panel))) +
+    geom_boxplot(aes(factor(.x), fill = .panel)) +
     scale_fill_brewer(palette = "Dark2")
 ```
 

@@ -1,3 +1,5 @@
+# `assert_*()` functions will do the side effects
+# `check_*()` functions will return the arguments
 #' @importFrom rlang caller_arg caller_env
 assert_gp <- function(gp, arg = caller_arg(gp),
                       call = caller_env()) {
@@ -11,22 +13,6 @@ assert_mapping <- function(mapping, arg = caller_arg(mapping),
         cli::cli_abort(c("{.arg {arg}} must be created with {.fn aes}.",
             x = "You've supplied {.obj_type_friendly {mapping}}."
         ), call = call)
-    }
-}
-
-assert_facetted_scales <- function(object, object_name, plot_name,
-                                   call = caller_call()) {
-    if (any(vapply(object, rlang::is_formula, logical(1L)))) {
-        cli::cli_abort(
-            c(
-                "Cannot add {.code {object_name}} into {plot_name}",
-                paste(
-                    "{.fn facetted_pos_scales} formula is not supported in",
-                    "{.pkg ggalign}"
-                )
-            ),
-            call = call
-        )
     }
 }
 
@@ -156,4 +142,27 @@ check_order <- function(order, arg = caller_arg(order), call = caller_call()) {
         order <- NA_integer_
     }
     order
+}
+
+#' @importFrom ggplot2 Facet
+assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
+    # Check if we can overide core functions of Facet
+    valid_init <- identical(
+        body(environment(Facet$init_scales)$f),
+        body(environment(x$init_scales)$f)
+    )
+    valid_train <- identical(
+        body(environment(Facet$train_scales)$f),
+        body(environment(x$train_scales)$f)
+    )
+    valid_finish <- identical(
+        body(environment(Facet$finish_data)$f),
+        body(environment(x$finish_data)$f)
+    )
+    if (!all(c(valid_init, valid_train, valid_finish))) {
+        cli::cli_warn(c(
+            "Unknown facet: {.obj_type_friendly {x}}.",
+            i = "Overriding facetted scales may be unstable."
+        ))
+    }
 }

@@ -67,7 +67,6 @@ methods::setClass(
     list(
         data = "ANY",
         plot = "ANY",
-        facetted_pos_scales = "ANY",
         params = "list",
         # If we regard heatmap layout as a plot, and put it into the stack
         # layout, we need following arguments to control it's behavour

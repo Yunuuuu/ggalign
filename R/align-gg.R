@@ -8,7 +8,7 @@
 #' @inheritParams ggplot2::ggplot
 #'
 #' @section ggplot2 specification:
-#' `align_gg` initializes a `ggplot` data and `mapping`.
+#' `align_gg` initializes a ggplot `data` and `mapping`.
 #'
 #' `align_gg()` always applies a default mapping for the axis of the data index
 #' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack

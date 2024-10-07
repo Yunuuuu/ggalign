@@ -26,17 +26,15 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
 ## Scales
-Scales are handled as the usual in ggplot2, but for position scales, `limits`
-cannot be setted, and the internal will always reset it as the default. This is
-required to align the layout and annotation.
-```{r}
-ggheatmap(small_mat) + scale_x_continuous(limits = c(0, 0))
-```
-
-`breaks` and `labels` in the position scales are handled in a similar manner of
-discrete scale, thought you can provide as a continuous scale.
+Scales are handled as the usual in ggplot2, but for position scales in the
+heatmap body or in the specific axis of `align_*()` plots (referring to  the
+x-axis for vertical stacks or the y-axis for horizontal stacks), we introduce
+some adjustments to better align with the layout concept. 
 
 ### breaks
+`breaks` and `labels` are typically handled in a similar manner of discrete
+scale, thought you can provide as a continuous scale.
+
 `breaks` should be one of:
 
     - `NULL` for no breaks
@@ -134,79 +132,26 @@ ggheatmap(small_mat) +
     align_reorder(index)
 ```
 
-### discrete or continuous
-`breaks` and `labels` argument will work the same in both discrete scale and
-continuous scale. But note it's hard to match all discrete scale limits, for
-sometimes, you should manually specify the `expand` argument.
-
-In the following example, we must add `expand` argument to match the heatmap and
-the hierarchical clustering tree.
+### expand
+By default, we utilize zero expand for the heatmap or for the specific axis of
+`align_*()` plots (meaning the x-axis for vertical stacks or the y-axis for
+horizontal stacks). This is typically the desired setting. If you wish to
+introduce expansion, you must manually adjust it and apply it to each plot to
+ensure proper axis alignment.
 ```{r}
 ggheatmap(small_mat) +
-    scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
+    scale_x_continuous(expand = expansion(mult = 0.1)) +
     hmanno("t") +
-    align_dendro() +
-    scale_x_discrete()
-```
-
-```{r}
-ggheatmap(small_mat) +
-    scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
-    hmanno("t") +
-    align_dendro() +
-    scale_x_discrete(expand = expansion(add = 0.5))
-```
-
-Indeed, you can use the default scale for the dendrogram directly. The layout
-always sets the appropriate limits for the continuous scale.
-
-```{r}
-ggheatmap(small_mat) +
-    scale_x_discrete(breaks = c(3, 5), labels = c("a", "b")) +
-    hmanno("t") +
-    align_dendro()
-```
-
-One useful feature of the discrete scale is handling ambiguous orientation in
-geoms. Some geoms, like `ggplot2::geom_bar()` and `ggplot2::geom_boxplot()`, use
-the discrete axis as the main orientation, but by default, we use the continuous
-scale. For horizontal layouts (including left and right heatmap annotations),
-you must manually provide the `orientation` argument for these geoms or set the
-discrete scale. 
-
-In the following example, `geom_bar` won't work since the ambiguous orientation.
-```{r}
-ggheatmap(small_mat) +
-    hmanno("l") +
-    ggalign() +
-    geom_bar(aes(x = value), stat = "identity") +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0))
-```
-
-Try to provide the `orientation` argument or set the scale into discrete.
-```{r}
-ggheatmap(small_mat) +
-    hmanno("l") +
-    ggalign() +
-    geom_bar(aes(x = value), stat = "identity", orientation = "y") +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0))
-```
-
-```{r}
-ggheatmap(small_mat) +
-    hmanno("l") +
-    ggalign() +
-    geom_bar(aes(x = value), stat = "identity") +
-    scale_y_discrete() +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0))
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_x_continuous(expand = expansion(mult = 0.1))
 ```
 
 ## Facets
-When working with facets, manual configuration of panel using the `facet_*`
+When working with facets, manual configuration of panel using the `facet_*()`
 function is not possible since the internal will use `facet_grid` to set the
 row/column groups defined by `align_*()` functions. However, you can provide
 `facet_grid()` or `facet_null()` (if no panel) to control other arguments except
-`rows` and `cols`. A common usage case is to change the panel strip text.
+`rows` or `cols`. A common usage case is to change the panel strip text.
 
 The default theme in this package will always remove the panel strip text, you
 can override this behaviour with `theme(strip.text = element_text())`. This
@@ -218,6 +163,11 @@ ggheatmap(small_mat) +
     hmanno("top") +
     align_kmeans(centers = 3L)
 ```
+
+## Coords
+Currently, only cartesian coordinate can be used to align axis well.
+Internally, the limits will always be set to the number of observations, with an
+additional range expansion of 0.5 added on both ends. 
 
 ## Session information
 ```{r}

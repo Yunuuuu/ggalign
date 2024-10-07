@@ -42,15 +42,14 @@ inherit_theme <- function(theme, parent) {
     theme
 }
 
-#' @importFrom utils packageVersion
+#' @importFrom rlang try_fetch
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
     if (!is_theme_complete(theme)) {
-        theme <- if (packageVersion("ggplot2") > "3.5.1") {
-            getFromNamespace("ggplot2", "complete_theme")(theme)
-        } else {
-            theme_get() + theme
-        }
+        theme <- try_fetch(
+            ggfun("complete_theme")(theme),
+            error = function(cnd) theme_get() + theme
+        )
     }
     theme
 }

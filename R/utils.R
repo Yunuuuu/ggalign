@@ -1,7 +1,5 @@
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-`%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
-
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
@@ -150,32 +148,6 @@ add_class <- function(x, ...) {
     x
 }
 
-allow_lambda <- function(x) {
-    if (rlang::is_formula(x)) {
-        rlang::as_function(x)
-    } else {
-        x
-    }
-}
-
-is.waive <- function(x) inherits(x, "waiver")
-
-add_default_mapping <- function(plot, default_mapping) {
-    mapping <- .subset2(plot, "mapping")
-    for (nm in names(mapping)) {
-        default_mapping[[nm]] <- .subset2(mapping, nm)
-    }
-    plot$mapping <- default_mapping
-    plot
-}
-
-#' @importFrom rlang env_clone
-ggproto_clone <- function(ggproto) {
-    ans <- env_clone(ggproto)
-    class(ans) <- class(ggproto)
-    ans
-}
-
 ###########################################################
 switch_position <- function(position, x, y) {
     switch(position,
@@ -298,10 +270,6 @@ is_scalar_numeric <- function(x) {
     length(x) == 1L && is.numeric(x)
 }
 
-is_discrete <- function(x) {
-    is.factor(x) || is.character(x) || is.logical(x)
-}
-
 transpose <- function(.l) {
     if (!length(.l)) return(.l) # styler: off
     inner_names <- names(.l[[1L]])
@@ -322,21 +290,3 @@ transpose <- function(.l) {
 
     lapply(fields, function(i) lapply(.l, .subset2, i))
 }
-
-# Use chartr() for safety since toupper() fails to convert i to I in Turkish locale
-lower_ascii <- "abcdefghijklmnopqrstuvwxyz"
-upper_ascii <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-to_lower_ascii <- function(x) chartr(upper_ascii, lower_ascii, x)
-to_upper_ascii <- function(x) chartr(lower_ascii, upper_ascii, x)
-snakeize <- function(x) {
-    x <- gsub("([A-Za-z])([A-Z])([a-z])", "\\1_\\2\\3", x)
-    x <- gsub(".", "_", x, fixed = TRUE)
-    x <- gsub("([a-z])([A-Z])", "\\1_\\2", x)
-    to_lower_ascii(x)
-}
-
-firstUpper <- function(s) {
-    paste0(to_upper_ascii(substring(s, 1L, 1L)), substring(s, 2L))
-}
-
-snake_class <- function(x) snakeize(fclass(x))

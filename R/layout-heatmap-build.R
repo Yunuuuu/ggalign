@@ -106,30 +106,23 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data
     p <- finish_plot_data(p, plot_data %|w|% NULL, data = data)
 
-    # setup the scales -----------------------------------
+    # setup plot theme ----------------------------------
+    p$theme <- theme + p$theme
+
+    # setup the facet -----------------------------------
     do_row_facet <- nlevels(ypanel) > 1L
     do_column_facet <- nlevels(xpanel) > 1L
 
-    facet_scales <- heatmap@facetted_pos_scales
-    xscales <- set_scales(
-        plot = p,
-        scale_name = "x",
+    x_layout <- list(
         panel = xpanel,
         index = xindex,
-        layout_labels = colnames(mat),
-        facet_scales = facet_scales
+        labels = colnames(mat)
     )
-    p <- remove_scales(p, .subset2(xscales, 1L)$aesthetics)
-
-    yscales <- set_scales(
-        plot = p,
-        scale_name = "y",
+    y_layout <- list(
         panel = ypanel,
         index = yindex,
-        layout_labels = rownames(mat),
-        facet_scales = facet_scales
+        labels = rownames(mat)
     )
-    p <- remove_scales(p, .subset2(yscales, 1L)$aesthetics)
 
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
@@ -139,29 +132,30 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
             scales = "free", space = "free",
             drop = FALSE
         )
-        p <- p + melt_facet(p$facet, default_facet) +
-            ggh4x::facetted_pos_scales(x = xscales, y = yscales)
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(fct_rev(.data$.ypanel)),
             scales = "free_y", space = "free",
             drop = FALSE
         )
-        p <- p + melt_facet(p$facet, default_facet) +
-            xscales +
-            ggh4x::facetted_pos_scales(x = NULL, y = yscales)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.xpanel),
             scales = "free_x", space = "free",
             drop = FALSE
         )
-        p <- p + melt_facet(p$facet, default_facet) +
-            yscales +
-            ggh4x::facetted_pos_scales(x = xscales, y = NULL)
     } else {
-        p <- p + xscales + yscales + melt_facet(p$facet, NULL)
+        # we only support `FacetNull` if there have no panel
+        default_facet <- ggplot2::facet_null()
     }
+    xlim_list <- set_limits("x", x_layout)
+    ylim_list <- set_limits("y", y_layout)
+    p <- p + heatmap_melt_facet(p$facet, default_facet) +
+        facet_ggalign(x = x_layout, y = y_layout) +
+        coord_ggalign(
+            xlim_list = rep(xlim_list, times = nlevels(ypanel)),
+            ylim_list = rep(ylim_list, each = nlevels(xpanel))
+        )
 
     # plot heatmap annotations ----------------------------
     stack_list <- lapply(.TLBR, function(position) {
@@ -222,7 +216,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
-    p$theme <- theme + p$theme
     if (!is.waive(free_guides <- .subset2(params, "free_guides"))) {
         p <- free_guide(p, free_guides)
     }
@@ -235,6 +228,34 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
     list(plots = plots, sizes = sizes)
+}
+
+#' @importFrom ggplot2 ggproto
+heatmap_melt_facet <- function(user_facet, default_facet) {
+    if (inherits(default_facet, "FacetNull")) { # no panel
+        # we only support `FacetNull` if there have no panel
+        if (inherits(user_facet, "FacetNull")) return(user_facet) # styler: off
+        return(default_facet)
+    }
+
+    if (!inherits(user_facet, "FacetGrid")) return(default_facet) # styler: off
+
+    # re-dispatch parameters
+    params <- user_facet$params
+
+    # we always fix the grid rows and cols
+    params$rows <- default_facet$params$rows
+    params$cols <- default_facet$params$cols
+    params$drop <- default_facet$params$drop
+
+    # if the default is free, it must be free
+    params$free$x <- params$free$x || default_facet$params$free$x
+    params$space_free$x <- params$space_free$x ||
+        default_facet$params$space_free$x
+    params$free$y <- params$free$y || default_facet$params$free$y
+    params$space_free$y <- params$space_free$x ||
+        default_facet$params$space_free$y
+    ggproto(NULL, user_facet, params = params)
 }
 
 #' @importFrom data.table data.table setDF merge.data.table

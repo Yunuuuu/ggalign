@@ -15,7 +15,7 @@
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
 #' @inheritParams align
 #' @section ggplot2 specification:
-#' `align_dendro` initializes a `ggplot` data and `mapping`.
+#' `align_dendro` initializes a ggplot `data` and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(x = .data$x, y =
 #' .data$y)`.
