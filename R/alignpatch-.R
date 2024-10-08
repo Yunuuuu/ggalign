@@ -10,16 +10,17 @@
 #     - `free_vp()`: not added
 # 3. Added titles around the plot top, left, bottom, and right
 #    (`patch_titles()`)
-TABLE_ROWS <- 18L + 2L
-TABLE_COLS <- 15L + 2L
+TABLE_ROWS <- 18L + 2L + 2L
+TABLE_COLS <- 15L + 2L + 2L
 
-TOP_BORDER <- 9L + 1L
-LEFT_BORDER <- 7L + 1L
-BOTTOM_BORDER <- 8L + 1L
-RIGHT_BORDER <- 7L + 1L
+TOP_BORDER <- 9L + 1L + 1L
+LEFT_BORDER <- 7L + 1L + 1L
+BOTTOM_BORDER <- 8L + 1L + 1L
+RIGHT_BORDER <- 7L + 1L + 1L
 
 # top-bottom
 # 1: margin
+# feature: insert layout patch title
 # 2: tag
 # 3: title
 # 4: subtitle
@@ -39,11 +40,13 @@ RIGHT_BORDER <- 7L + 1L
 # 15: guide-box-bottom
 # 16: caption
 # 17: tag
+# feature: insert layout patch title
 # 18: margin
 
 # left-right
 #
 # 1: margin
+# feature: insert layout patch title
 # 2: tag
 # 3: guide-box-left
 # 4: legend.box.spacing
@@ -57,6 +60,7 @@ RIGHT_BORDER <- 7L + 1L
 # 12: legend.box.spacing
 # 13: guide-box-right
 # 14: tag
+# feature: insert layout patch title
 # 15: margin
 
 .TLBR <- c("top", "left", "bottom", "right")
