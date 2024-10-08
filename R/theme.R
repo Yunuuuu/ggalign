@@ -14,7 +14,7 @@ default_theme <- function() {
 #' Complete theme for ggalign package
 #'
 #' Default theme for `r rd_layout()`. You can use the option
-#' `r rd_values(sprintf("%s.default_theme", pkg_nm()))` to chagne the default
+#' `r rd_values(sprintf("%s.default_theme", pkg_nm()))` to change the default
 #' theme.
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic

@@ -21,7 +21,7 @@ A complete \link[ggplot2:theme]{theme} object.
 }
 \description{
 Default theme for \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object. You can use the option
-\code{"ggalign.default_theme"} to chagne the default
+\code{"ggalign.default_theme"} to change the default
 theme.
 }
 \examples{
