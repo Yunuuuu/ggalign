@@ -80,11 +80,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     new_alignpatches(patches, layout = layout)
 }
 
-new_alignpatches <- function(patches,
-                             layout = NULL,
-                             titles = list(),
-                             patch_titles = list(),
-                             theme = NULL) {
+new_alignpatches <- function(patches, layout = NULL) {
     layout <- layout %||% list(
         ncol = NULL, nrow = NULL, byrow = TRUE,
         widths = NA, heights = NA,
@@ -94,9 +90,11 @@ new_alignpatches <- function(patches,
         list(
             patches = patches,
             layout = layout,
-            patch_titles = patch_titles,
-            titles = titles,
-            theme = theme
+            patch_titles = list(
+                top = NULL, left = NULL, bottom = NULL, right = NULL
+            ),
+            titles = list(title = NULL, subtitle = NULL, caption = NULL),
+            theme = NULL
         ),
         # Will ensure serialisation includes a link to the `ggalign`
         # namespace
@@ -271,8 +269,8 @@ layout_annotation <- function(top = waiver(), left = waiver(),
                               bottom = waiver(), right = waiver(),
                               theme = NULL) {
     titles <- patch_titles(
-        top = top, left = left, bottom = bottom,
-        right = right
+        top = top, left = left,
+        bottom = bottom, right = right
     )
     if (!is.null(theme) && !is.waive(theme)) assert_s3_class(theme, "theme")
     structure(

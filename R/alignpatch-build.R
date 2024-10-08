@@ -66,8 +66,7 @@ ggalign_gtable.alignpatches <- function(x) {
     # Add title, subtitle, and caption -------------------
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
-        theme = theme, "plot.title",
-        .subset2(titles, "title"),
+        theme = theme, "plot.title", .subset2(titles, "title"),
         margin_y = TRUE, margin_x = TRUE
     )
     title_height <- grobHeight(title)
