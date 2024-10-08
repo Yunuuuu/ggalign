@@ -76,12 +76,30 @@
 
 ## Features
 
-* Heatmap layout: Arrange ggplot into a Heatmap.
-* Stack layout: Arrange ggplot vertically or horizontally.
-* Customize layouts or add plots:
-  * `align_group()`: Group layout axis into panel
-  * `align_kmeans()`: Group layout observations by kmeans
-  * `align_reorder()`: Reorder layout observations
-  * `align_dendro()`: Reorder or Group layout based on Hierarchical Clustering
-  * `align_gg()`/`ggalign()`: Create ggplot object in the layout
-  * `align_panel()`/`ggpanel()`: Create ggplot object based on the layout panel data.
+`ggalign` pacakge provides two layout to arrange ggplot objects:
+
+  - `heatmap_layout()`/`ggheatmap()`: Arrange ggplot into a Heatmap layout. See
+  `vignette("heatmap-layout")` for details.
+
+  - `stack_layout()`/`ggstack()`: Arrange ggplot vertically or horizontally. See
+  `vignette("stack-layout")` for details.
+
+To further customize these layouts, we offer following functions:
+
+  - `align_group()`: Group layout axis into panel with a group variable.
+  - `align_kmeans()`: Group layout axis into panel by kmeans
+  - `align_reorder()`: Reorders layout observations based on weights or summary
+  statistics. 
+  - `align_dendro()`: Reorder or Group layout based on hierarchical clustering
+
+For more detailed instructions on customizing layouts, see the vignette:
+`vignette("layout-customize")`. 
+
+Additionally, plots can be added in the layout with following functions: 
+
+  - `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
+  - `align_panel()`/`ggpanel()`: Create ggplot object with the layout panel
+    data.
+
+For more information on adding plots, refer to the vignette:
+`vignette("layout-plot")`.
