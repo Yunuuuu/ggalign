@@ -73,6 +73,33 @@ test_that("The grid can be controlled", {
                 theme(plot.patch_title.left = element_text(face = "bold"))
         )
     })
+    expect_doppelganger("background and panel border", {
+        align_plots(
+            p1 + theme(plot.background = element_blank()),
+            p2 + theme(plot.background = element_blank()),
+            align_plots(
+                p3 + theme(plot.background = element_blank()),
+                p4 + theme(plot.background = element_blank()),
+                theme = theme(
+                    panel.border = element_rect(colour = "blue"),
+                    plot.background = element_rect(
+                        fill = "yellow", color = "black",
+                        linewidth = unit(1, "cm")
+                    )
+                )
+            ),
+            title = "I'm layout title",
+            subtitle = "I'm layout subtitle",
+            caption = "I'm layout caption",
+            theme = theme(
+                panel.border = element_rect(colour = "red"),
+                plot.background = element_rect(
+                    fill = "green", color = "black",
+                    linewidth = unit(1, "cm")
+                )
+            )
+        )
+    })
 })
 
 test_that("`ggsave()` works well", {

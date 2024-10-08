@@ -14,7 +14,7 @@ A \code{layout_theme} object to be added to \code{\link[=heatmap_layout]{heatmap
 }
 \description{
 Used to render the \code{guides}, \code{title}, \code{subtitle}, \code{caption},
-\code{margins} and \code{background}.
+\code{margins}, \code{panel.border} \code{background}.
 }
 \section{Theme inheritance}{
 

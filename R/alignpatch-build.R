@@ -59,7 +59,7 @@ ggalign_gtable.alignpatches <- function(x) {
     # `TODO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
     x$theme <- theme
-    table <- alignpatch(x)$patch_gtable(attach_guides = TRUE)
+    table <- alignpatch(x)$patch_gtable(top_level = TRUE)
 
     fix_respect <- is.matrix(.subset2(table, "respect"))
 

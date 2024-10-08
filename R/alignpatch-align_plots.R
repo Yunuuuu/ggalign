@@ -150,7 +150,8 @@ layout_annotation <- function(title = waiver(), subtitle = waiver(),
 #' Modify components of the layout theme
 #'
 #' Used to render the `guides`, `title`, `subtitle`, `caption`,
-#' `margins` and `background`.
+#' `margins`, `panel.border` `background`.
+#'
 #' @inherit ggplot2::theme description sections references author source note format
 #' @param ... Additional arguments passed to [theme()][ggplot2::theme].
 #' @return A `layout_theme` object to be added to `r rd_layout()`.

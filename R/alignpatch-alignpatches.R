@@ -11,8 +11,9 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
     #' @importFrom vctrs vec_slice
-    patch_gtable = function(self, attach_guides = FALSE, guides = self$guides,
+    patch_gtable = function(self, top_level = FALSE, guides = self$guides,
                             plot = self$plot) {
+        theme <- complete_theme(.subset2(plot, "theme"))
         patches <- .subset2(plot, "patches")
         layout <- .subset2(plot, "layout")
 
@@ -122,35 +123,60 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         )
 
         # add guides into the final gtable ----------------------
-        if (attach_guides) {
+        if (top_level) {
             gt <- self$attach_guide_list(
                 guide_list = collected_guides,
+                theme = theme,
                 panel_pos = panel_pos,
                 gt = gt
             )
         } else {
             # used by `$collect_guides() method`
+            self$theme <- theme
             self$collected_guides <- collected_guides
             self$panel_pos <- panel_pos
         }
 
         # setup grobs -------------------------------------------
         # For z in the gtable layout
-        # 0: background
-        # 1: plot table
-        # 2: legends
+        # 0L: layout background
+        # 1L: background of the plot
+        # 2L: plot table
+        # 3L: foreground of the panel area
+        # 4L: legends
         gt <- self$set_grobs(design, patches = patches, gt = gt)
 
         # add panel area ---------------------------------------
-        gtable_add_grob(
-            gt, zeroGrob(),
+        gt <- gtable_add_grob(
+            gt, list(zeroGrob()),
             t = .subset2(panel_pos, "t"),
             l = .subset2(panel_pos, "l"),
             b = .subset2(panel_pos, "b"),
             r = .subset2(panel_pos, "r"),
-            z = -1L,
+            z = 0L,
             name = "panel-area"
         )
+        gt <- gtable_add_grob(
+            gt,
+            # foreground
+            list(element_render(theme, "panel.border", fill = NA)),
+            t = .subset2(panel_pos, "t"),
+            l = .subset2(panel_pos, "l"),
+            b = .subset2(panel_pos, "b"),
+            r = .subset2(panel_pos, "r"),
+            z = 3L,
+            name = "panel-foreground"
+        )
+
+        # add background -----------------------------------
+        if (!top_level && inherits(theme$plot.background, "element")) {
+            gt <- gtable_add_grob(gt,
+                element_render(theme, "plot.background"),
+                t = 1L, l = 1L, b = -1L, r = -1L,
+                name = "background", z = 0L
+            )
+        }
+        gt
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt, patches = self$patches) {
@@ -164,7 +190,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             patch$align_border(t = t, l = l, b = b, r = r, gt = grob)
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
-    split_gt = function(self, gt = self$gt) list(bg = NULL, plot = gt),
+    # split_gt = function(self, gt = self$gt) list(bg = NULL, plot = gt),
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         collected_guides <- self$collected_guides
         # for guides not collected by the top-level, we attach the guides
@@ -315,7 +341,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             # then we add the plot ---------------------------------
             gt <- gtable_add_grob(gt,
                 list(.subset2(grobs, "plot")), t, l, b, r,
-                name = paste("plot", i, sep = "-"), z = 1L
+                name = paste("plot", i, sep = "-"), z = 2L
             )
 
             # add background grob ----------------------------------
@@ -323,7 +349,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 # we always add background in the beginning --------
                 gt <- gtable_add_grob(gt, bg, t, l, b, r,
                     name = paste("plot", i, "background", sep = "-"),
-                    z = 0L
+                    z = 1L
                 )
             }
 
@@ -332,12 +358,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }
         gt
     },
-    attach_guide_list = function(self, guide_list, panel_pos = self$panel_pos,
+    attach_guide_list = function(self, guide_list, theme = self$theme,
+                                 panel_pos = self$panel_pos,
                                  gt = self$gt) {
         if (length(guide_list)) {
-            # complete the theme object
-            theme <- complete_theme(.subset2(self$plot, "theme"))
-
             # https://github.com/tidyverse/ggplot2/blob/57ba97fa04dadc6fd73db1904e39a09d57a4fcbe/R/guides-.R#L512
             theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
             theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
@@ -351,7 +375,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                     guides = .subset2(guide_list, guide_pos),
                     theme = theme, panel_pos = panel_pos,
                     name = sprintf("guide-box-collected-%s", guide_pos),
-                    clip = "off", z = 2L, gt = gt
+                    clip = "off", z = 4L, gt = gt
                 )
             }
         }
