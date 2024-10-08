@@ -163,6 +163,14 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
 }
 
 #' @export
+layout_stack_add.list <- function(object, stack, object_name) {
+    for (o in object) {
+        stack <- layout_stack_add(o, stack, object_name)
+    }
+    stack
+}
+
+#' @export
 layout_stack_add.ggplot <- function(object, stack, object_name) {
     cli::cli_abort(c(
         "Cannot add {.code {object_name}} into the stack layout",
