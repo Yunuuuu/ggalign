@@ -78,9 +78,9 @@ ggheatmap(small_mat) +
 
 ## Compre with other ggplot2 heatmap extension
 
-In comparison to other heatmap extensions of ggplot2, such as
+In comparison to other heatmap extensions of `ggplot2`, such as
 [ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap), `ggalign` fully
-supports the ggplot2 syntax. This means you can incorporate any geoms,
+supports the `ggplot2` syntax. This means you can incorporate any geoms,
 stats, scales, etc., and allowing for the creation of more complex
 heatmap layouts, including multiple heatmaps arranged vertically or
 horizontally.
@@ -89,12 +89,12 @@ horizontally.
 
 ### Pros
 
-- Full integration with the ggplot2 ecosystem.
+- Full integration with the `ggplot2` ecosystem.
 - Heatmap annotation axes and legends are automatically generated.
 - Dendrograms can be easily customized and colored based on cluster
   characteristics.
 - Enhanced flexibility in controlling plot size, and spacing.
-- Can easily align with ggplot2 plots by panel area.
+- Can easily align with `ggplot2` plots by panel area.
 
 ### Cons
 
