@@ -30,9 +30,10 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Basic example
 
-The usage of `ggalign` is simple if you known ggplot2 syntax, we first
-initialize the layout, we then reorder the layout, or group the layout
-into panels, and add plots, layers, scales, coords with `+`.
+The usage of `ggalign` is simple if you’re familiar with `ggplot2`
+syntax, we first initialize the layout, we then reorder the layout, or
+group the layout into panels, and add plots, layers, scales, coords with
+`+`.
 
 ``` r
 library(ggalign)
