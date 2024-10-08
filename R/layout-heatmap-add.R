@@ -3,16 +3,28 @@ layout_heatmap_add <- function(object, heatmap, object_name) {
     UseMethod("layout_heatmap_add")
 }
 
+# Add elements for heatmap or annotation
+#' @importFrom methods slot slot<-
 #' @export
 layout_heatmap_add.default <- function(object, heatmap, object_name) {
-    cli::cli_abort("Cannot add {.code {object_name}} to {.cls ggheatmap}")
+    # if no active context, we directly add it into the main heatmap
+    if (is.null(position <- get_context(heatmap))) {
+        heatmap <- heatmap_add(object, heatmap, object_name)
+    } else {
+        slot(heatmap, position) <- stack_add_ggelement(
+            object, slot(heatmap, position), object_name,
+            sprintf("the heatmap %s annotation", position)
+        )
+    }
+    heatmap
 }
 
+##################################################################
 #' @export
 layout_heatmap_add.Align <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}}",
+            "Cannot add {.var {object_name}}",
             i = "No active heatmap annotation",
             i = "try to activate an active annotation stack with {.fn hmanno}"
         ))
@@ -79,42 +91,16 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
 #' @export
 layout_heatmap_add.list <- function(object, heatmap, object_name) {
     for (o in object) {
-        heatmap <- heatmap + o
+        heatmap <- layout_heatmap_add(o, heatmap, object_name)
     }
     heatmap
 }
-
-#############################################################
-# Add elements for heatmap or annotation
-#' @importFrom methods slot slot<-
-#' @export
-layout_heatmap_add.gg <- function(object, heatmap, object_name) {
-    # if no active context, we directly add it into the main heatmap
-    if (is.null(position <- get_context(heatmap))) {
-        heatmap <- heatmap_add(object, heatmap, object_name)
-    } else {
-        slot(heatmap, position) <- stack_add_ggelement(
-            object, slot(heatmap, position), object_name,
-            sprintf("the heatmap %s annotation", position)
-        )
-    }
-    heatmap
-}
-
-#' @export
-layout_heatmap_add.labels <- layout_heatmap_add.gg
-
-#' @export
-layout_heatmap_add.patch_inset <- layout_heatmap_add.gg
-
-#' @export
-layout_heatmap_add.facetted_pos_scales <- layout_heatmap_add.gg
 
 ##############################################################
 # Preventing from adding following elements
 #' @export
 layout_heatmap_add.matrix <- function(object, heatmap, object_name) {
-    cli::cli_abort("Can't change data in {.cls ggheatmap} object")
+    cli::cli_abort("Can't change data in {.fn ggheatmap} object")
 }
 
 #' @export
@@ -123,8 +109,8 @@ layout_heatmap_add.data.frame <- layout_heatmap_add.matrix
 #' @export
 layout_heatmap_add.ggplot <- function(object, heatmap, object_name) {
     cli::cli_abort(c(
-        "Cannot add {.code {object_name}} into the heatmap layout",
-        i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"
+        "Cannot add {.var {object_name}} into the heatmap layout",
+        i = "try to use {.fn ggalign} to initialize the {.cls ggplot}"
     ))
 }
 
@@ -133,31 +119,21 @@ layout_heatmap_add.ggplot <- function(object, heatmap, object_name) {
 #' @keywords internal
 heatmap_add <- function(object, heatmap, object_name) UseMethod("heatmap_add")
 
+#' @importFrom ggplot2 ggplot_add
 #' @export
-heatmap_add.gg <- function(object, heatmap, object_name) {
-    heatmap@plot <- ggplot2::ggplot_add(
-        object, heatmap@plot, object_name
-    )
+heatmap_add.default <- function(object, heatmap, object_name) {
+    heatmap@plot <- ggplot_add(object, heatmap@plot, object_name)
     heatmap
 }
-
-#' @export
-heatmap_add.labels <- heatmap_add.gg
-
-#' @export
-heatmap_add.patch_inset <- heatmap_add.gg
-
-#' @export
-heatmap_add.facetted_pos_scales <- heatmap_add.gg
 
 #' @export
 heatmap_add.Coord <- function(object, heatmap, object_name) {
     if (!inherits(object, "CoordCartesian")) {
         cli::cli_warn(c(
             "only {.field cartesian coordinate} is supported",
-            i = "will discard {.fn {snake_class(object)}} directly"
+            i = "will discard {.var {object_name}} directly"
         ))
         return(heatmap)
     }
-    NextMethod() # call gg method
+    NextMethod() # call default method
 }

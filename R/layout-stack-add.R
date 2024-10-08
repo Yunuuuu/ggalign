@@ -3,6 +3,12 @@ layout_stack_add <- function(object, stack, object_name) {
     UseMethod("layout_stack_add")
 }
 
+#' @export
+layout_stack_add.default <- function(object, stack, object_name) {
+    stack_add_ggelement(object, stack, object_name, "the stack layout")
+}
+
+###################################################################
 # `Align` can be added for both heatmap and stack layout
 #' @importFrom methods slot slot<-
 #' @export
@@ -43,7 +49,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
             cli::cli_abort(c(
                 paste(
                     "You must provide {.arg data} argument in",
-                    style_code(object_name)
+                    "{.var {object_name}}"
                 ),
                 i = "No data was found in the stack layout"
             ))
@@ -58,7 +64,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
                 as.matrix(data),
                 error = function(cnd) {
                     cli::cli_abort(paste(
-                        "{.arg data} in {.code {object_name}} must return",
+                        "{.arg data} in {.var {object_name}} must return",
                         "a matrix-like object"
                     ), call = call)
                 }
@@ -82,9 +88,8 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         nobs <- heatmap_nobs
     } else if (!identical(heatmap_nobs, stack_nobs)) {
         cli::cli_abort(sprintf(
-            "%s (%d) is not compatible with the %s stack layout (%d)",
-            style_code(object_name), heatmap_nobs,
-            style_field(direction), stack_nobs
+            "{.var {object_name}} (%d) is not compatible with the %s (%d)",
+            heatmap_nobs, "{.field {direction}} stack layout", stack_nobs
         ))
     } else {
         nobs <- stack_nobs
@@ -99,7 +104,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         panel <- heatmap_panel
     } else if (!identical(heatmap_panel, stack_panel)) {
         cli::cli_abort(paste(
-            "{.code {object_name}} disrupt the previously",
+            "{.var {object_name}} disrupt the previously",
             "established layout panel of the stack"
         ))
     } else {
@@ -117,9 +122,8 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
     if (!is.null(stack_index)) {
         if (!all(stack_index == index)) {
             cli::cli_abort(sprintf(
-                "{.code {object_name}} disrupt the previously %s %s-axis",
-                "established layout order of the stack",
-                axis
+                "{.var {object_name}} disrupt the previously %s %s-axis",
+                "established layout order of the stack", axis
             ))
         }
     }
@@ -138,7 +142,9 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
     # check heatmap name is unique ----------------------
     if (!is.na(name <- object@name)) {
         if (any(names(plots) == name)) {
-            cli::cli_warn("{object_name}: {name} plot is already present")
+            cli::cli_warn(
+                "{.var {object_name}}: {name} plot is already present"
+            )
         }
         plots[[name]] <- object
     } else {
@@ -156,32 +162,12 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
     stack
 }
 
-###################################################################
-#' @export
-layout_stack_add.gg <- function(object, stack, object_name) {
-    stack_add_ggelement(object, stack, object_name, "the stack layout")
-}
-
 #' @export
 layout_stack_add.ggplot <- function(object, stack, object_name) {
     cli::cli_abort(c(
         "Cannot add {.code {object_name}} into the stack layout",
         i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"
     ))
-}
-
-#' @export
-layout_stack_add.labels <- layout_stack_add.gg
-
-#' @export
-layout_stack_add.patch_inset <- layout_stack_add.gg
-
-#' @export
-layout_stack_add.facetted_pos_scales <- layout_stack_add.gg
-
-#' @export
-layout_stack_add.default <- function(object, stack, object_name) {
-    cli::cli_abort("Cannot add {.code {object_name}} into the stack layout")
 }
 
 #################################################################

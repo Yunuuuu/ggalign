@@ -4,7 +4,7 @@ align_add <- function(object, align, object_name) UseMethod("align_add")
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-align_add.gg <- function(object, align, object_name) {
+align_add.default <- function(object, align, object_name) {
     if (is.null(plot <- .subset2(align, "plot"))) {
         cli::cli_abort(paste(
             "Can't add {.code {object_name}} to a",
@@ -16,12 +16,6 @@ align_add.gg <- function(object, align, object_name) {
 }
 
 #' @export
-align_add.labels <- align_add.gg
-
-#' @export
-align_add.facetted_pos_scales <- align_add.gg
-
-#' @export
 align_add.Coord <- function(object, align, object_name) {
     if (!inherits(object, "CoordCartesian")) {
         cli::cli_warn(c(
@@ -30,5 +24,5 @@ align_add.Coord <- function(object, align, object_name) {
         ))
         return(align)
     }
-    NextMethod() # call gg method
+    NextMethod() # call default method
 }
