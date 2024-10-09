@@ -69,6 +69,7 @@
 <span>  distance <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"complete"</span>,</span>
 <span>  use_missing <span class="op">=</span> <span class="st">"pairwise.complete.obs"</span>,</span>
+<span>  merge_dendrogram <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  reorder_group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  k <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  h <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -129,6 +130,12 @@ covariances in the presence of missing values. This must be (an abbreviation
 of) one of the strings <code>"everything"</code>, <code>"all.obs"</code>, <code>"complete.obs"</code>,
 <code>"na.or.complete"</code>, or <code>"pairwise.complete.obs"</code>. Only used when <code>distance</code>
 is a correlation coefficient string.</p></dd>
+
+
+<dt id="arg-merge-dendrogram">merge_dendrogram<a class="anchor" aria-label="anchor" href="#arg-merge-dendrogram"></a></dt>
+<dd><p>A single boolean value, indicates whether we should
+merge multiple dendrograms, only used when previous groups have been
+established.</p></dd>
 
 
 <dt id="arg-reorder-group">reorder_group<a class="anchor" aria-label="anchor" href="#arg-reorder-group"></a></dt>

@@ -134,25 +134,17 @@ this’ll do something like this (Since
 <code>reorder_group = FALSE</code>, the <code>panels</code> won’t be
 changed):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="va">h</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">h1</span> <span class="op">&lt;-</span> <span class="va">h</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_group <span class="op">=</span> <span class="cn">FALSE</span>, merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># always remember dendrogram will initialize the index, here, we extract the</span></span>
 <span><span class="co"># index from the underlying dendrogram</span></span>
-<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/order.dendrogram.html" class="external-link">order.dendrogram</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggalign_stat.html">ggalign_stat</a></span><span class="op">(</span><span class="va">h</span>, <span class="st">"top"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/order.dendrogram.html" class="external-link">order.dendrogram</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggalign_stat.html">ggalign_stat</a></span><span class="op">(</span><span class="va">h1</span>, <span class="st">"top"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>However, if a dendrogram with <code>reorder_group = TRUE</code> is
-added, it will reorder the panels. Here, the panel levels are sampled to
-create the new groups:</p>
+then added, it will reorder the panels:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">panels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">panels</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">panels</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">new_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">panels</span><span class="op">[</span><span class="va">index</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>    recursive <span class="op">=</span> <span class="cn">FALSE</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">h2</span> <span class="op">&lt;-</span> <span class="va">h</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_group <span class="op">=</span> <span class="cn">TRUE</span>, merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">new_index</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/order.dendrogram.html" class="external-link">order.dendrogram</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggalign_stat.html">ggalign_stat</a></span><span class="op">(</span><span class="va">h2</span>, <span class="st">"top"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">index</span> <span class="op">==</span> <span class="va">new_index</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">h</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_dendro()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_dendro()` disrupt the previously established ordered index of</span></span>
-<span><span class="co">#&gt;   the layout x-axis</span></span></code></pre></div>
 <p>To prevent reordering of the layout axis twice, we ensure that the
 <code>new_index</code> matches the <code>index</code> (if
 <code>index</code> is not NULL). This is done to maintain consistency
@@ -181,19 +173,19 @@ spaces, they are likely due to:</p>
 </ul>
 <p>You can resolve this by removing the scale expansion and adjusting
 the margins in the theme:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
