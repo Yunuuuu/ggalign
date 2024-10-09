@@ -45,11 +45,6 @@ h <- ggheatmap(small_mat) +
     align_group(group)
 ```
 
-We initialized the `panels`.
-```{r}
-panels <- factor(group)
-```
-
 When we add a dendrogram with `reorder_group = FALSE`; this'll do something
 like this (Since `reorder_group = FALSE`, the `panels` won't be changed): 
 ```{r}
@@ -60,7 +55,7 @@ index <- stats::order.dendrogram(ggalign_stat(h1, "top", 2L))
 ```
 
 However, if a dendrogram with `reorder_group = TRUE` is then added, it will
-reorder the panels: 
+reorder the panels, so the underlying index will be changed: 
 ```{r}
 h2 <- h + align_dendro(reorder_group = TRUE, merge_dendrogram = TRUE)
 new_index <- stats::order.dendrogram(ggalign_stat(h2, "top", 2L))
