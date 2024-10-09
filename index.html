@@ -91,25 +91,55 @@
 <!-- badges: start -->
 
 <div class="section level2">
+<h2 id="why-use-ggalign">Why use <code>ggalign</code>?<a class="anchor" aria-label="anchor" href="#why-use-ggalign"></a>
+</h2>
+<p><code>ggalign</code> focuses on aligning observations across multiple plots. It leverages the <code>"number of observations"</code> in the <a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vctrs</a> package or [NROW()] function to maintain consistency in plot organization.</p>
+<p>If you’ve ever struggled with aligning plots with self-contained ordering (like dendrogram), or applying consistent grouping or ordering across multiple plots (e.g., with k-means clustering), <code>ggalign</code> is designed to make this easier. The package integrates seamlessly with ggplot2, providing the flexibility to use its geoms, scales, and other components for complex visualizations.</p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>ggalign</code> from CRAN using <code>install.packages("ggalign")</code>. Alternatively you can install the development version of <code>ggalign</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install <code>ggalign</code> from <code>CRAN</code> using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggalign"</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, install the development version from <a href="https://github.com/Yunuuuu/ggalign" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Yunuuuu/ggalign"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>The usage of <code>ggalign</code> is simple if you’re familiar with <code>ggplot2</code> syntax, <code>ggalign</code> works with a simple workflow:</p>
+<ul>
+<li>Initialize the layout using <code><a href="reference/heatmap_layout.html">ggheatmap()</a></code> or <code><a href="reference/stack_layout.html">ggstack()</a></code>.</li>
+<li>Customize the layout with:
+<ul>
+<li>
+<code><a href="reference/align_group.html">align_group()</a></code>: Group layout axis into panel with a group variable.</li>
+<li>
+<code><a href="reference/align_kmeans.html">align_kmeans()</a></code>: Group layout axis into panel by kmeans</li>
+<li>
+<code><a href="reference/align_reorder.html">align_reorder()</a></code>: Reorder layout observations based on statistical weights or allows for manual reordering based on user-defined criteria.</li>
+<li>
+<code><a href="reference/align_dendro.html">align_dendro()</a></code>: Reorder or Group layout based on hierarchical clustering</li>
+</ul>
+</li>
+<li>Adding plots with <code><a href="reference/align_gg.html">ggalign()</a></code> or <code><a href="reference/align_panel.html">ggpanel()</a></code>, then add ggplot2 elements like geoms, stats, scales.</li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="basic-example">Basic example<a class="anchor" aria-label="anchor" href="#basic-example"></a>
 </h2>
-<p>The usage of <code>ggalign</code> is simple if you’re familiar with <code>ggplot2</code> syntax, we first initialize the layout, we then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Below, we’ll walk through a basic example of using <code>ggalign</code> to create a heatmap with a <code>dendrogram</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">small_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">81</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># initialize the heamtap layout, we can regard it as a normal ggplot object</span></span>
+<span><span class="co"># initialize the heatmap layout, we can regard it as a normal ggplot object</span></span>
 <span><span class="fu"><a href="reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="co"># we can directly modify geoms, scales and other ggplot2 components</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -124,25 +154,9 @@
 <p><img src="https://yunuuuu.github.io/ggalign/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png"></p>
 </div>
 <div class="section level2">
-<h2 id="more-complex-examples">More Complex Examples<a class="anchor" aria-label="anchor" href="#more-complex-examples"></a>
+<h2 id="compare-with-other-ggplot2-heatmap-extension">Compare with other ggplot2 heatmap extension<a class="anchor" aria-label="anchor" href="#compare-with-other-ggplot2-heatmap-extension"></a>
 </h2>
-<p><img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png"><img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png"></p>
-</div>
-<div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
-</h2>
-<ul>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html">Heatmap Layout</a></li>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/layout-customize.html">Layout Customization</a></li>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/layout-plot.html">Layout Plot</a></li>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/stack-layout.html">Stack Layout</a></li>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html">Scales and Facets</a></li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="compre-with-other-ggplot2-heatmap-extension">Compre with other ggplot2 heatmap extension<a class="anchor" aria-label="anchor" href="#compre-with-other-ggplot2-heatmap-extension"></a>
-</h2>
-<p>In comparison to other heatmap extensions of <code>ggplot2</code>, such as <a href="https://github.com/XiaoLuo-boy/ggheatmap" class="external-link">ggheatmap</a>, <code>ggalign</code> fully supports the <code>ggplot2</code> syntax. This means you can incorporate any geoms, stats, scales, etc., and allowing for the creation of more complex heatmap layouts, including multiple heatmaps arranged vertically or horizontally.</p>
+<p>The main advantage of <code>ggalign</code> over other extensions like ggheatmap is its full compatibility with the ggplot2 grammar. You can seamlessly use any ggplot2 geoms, stats, and scales to build complex layouts, including multiple heatmaps arranged vertically or horizontally.</p>
 </div>
 <div class="section level2">
 <h2 id="compare-with-complexheatmap">Compare with ComplexHeatmap<a class="anchor" aria-label="anchor" href="#compare-with-complexheatmap"></a>
@@ -153,9 +167,9 @@
 <ul>
 <li>Full integration with the <code>ggplot2</code> ecosystem.</li>
 <li>Heatmap annotation axes and legends are automatically generated.</li>
-<li>Dendrograms can be easily customized and colored based on cluster characteristics.</li>
-<li>Enhanced flexibility in controlling plot size, and spacing.</li>
-<li>Can easily align with <code>ggplot2</code> plots by panel area.</li>
+<li>Dendrogram can be easily customized and colored.</li>
+<li>Flexible control over plot size and spacing.</li>
+<li>Can easily align with other <code>ggplot2</code> plots by panel area.</li>
 </ul>
 </div>
 <div class="section level3">
@@ -163,6 +177,22 @@
 </h3>
 <p>Fewer Built-In Annotations: May require additional coding for specific annotations or customization compared to the extensive built-in annotation function in ComplexHeatmap.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="more-complex-examples">More Complex Examples<a class="anchor" aria-label="anchor" href="#more-complex-examples"></a>
+</h2>
+<p>Here are some more advanced visualizations using <code>ggalign</code>: <img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png"><img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png"></p>
+</div>
+<div class="section level2">
+<h2 id="further-documentation">Further Documentation<a class="anchor" aria-label="anchor" href="#further-documentation"></a>
+</h2>
+<ul>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html">Heatmap Layout</a></li>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/layout-customize.html">Layout Customization</a></li>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/layout-plot.html">Layout Plot</a></li>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/stack-layout.html">Stack Layout</a></li>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html">Scales and Facets</a></li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
