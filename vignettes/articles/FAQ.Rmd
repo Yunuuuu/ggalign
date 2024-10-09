@@ -53,24 +53,18 @@ panels <- factor(group)
 When we add a dendrogram with `reorder_group = FALSE`; this'll do something
 like this (Since `reorder_group = FALSE`, the `panels` won't be changed): 
 ```{r}
-h <- h + align_dendro(reorder_group = FALSE)
+h1 <- h + align_dendro(reorder_group = FALSE, merge_dendrogram = TRUE)
 # always remember dendrogram will initialize the index, here, we extract the
 # index from the underlying dendrogram
-index <- stats::order.dendrogram(ggalign_stat(h, "top", 2L))
+index <- stats::order.dendrogram(ggalign_stat(h1, "top", 2L))
 ```
 
-However, if a dendrogram with `reorder_group = TRUE` is added, it will reorder the
-panels. Here, the panel levels are sampled to create the new groups: 
+However, if a dendrogram with `reorder_group = TRUE` is then added, it will
+reorder the panels: 
 ```{r}
-panels <- factor(panels, sample(levels(panels)))
-new_index <- unlist(split(index, panels[index]),
-    recursive = FALSE, use.names = FALSE
-)
+h2 <- h + align_dendro(reorder_group = TRUE, merge_dendrogram = TRUE)
+new_index <- stats::order.dendrogram(ggalign_stat(h2, "top", 2L))
 all(index == new_index)
-```
-
-```{r error=TRUE}
-h + align_dendro(reorder_group = TRUE)
 ```
 
 To prevent reordering of the layout axis twice, we ensure that the `new_index`
