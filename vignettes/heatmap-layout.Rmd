@@ -91,7 +91,7 @@ context, so all additions are placed within the heatmap body. we can use
 position. The active context allows for custom layout adjustments and the
 addition of various plot types. 
 
-In the following example, align_kmeans() is used to group the columns into three
+In the following example, `align_kmeans()` is used to group the columns into three
 panels. It doesn't matter if this is added to the top or bottom since it won't
 add a plot area: 
 
@@ -121,7 +121,7 @@ In this example:
  - `geom_point(aes(color = factor(branch)))` is then added to this active plot
  within the annotation stack, here, it means the `align_dendro()` plot.
 
-## Plot size
+## plot size
 ### heatmap body size
 You can specify the heatmap body relative sizes (`width`/`height`) in the
 `ggheatmap()` function.
