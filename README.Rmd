@@ -109,7 +109,7 @@ or horizontally.
 ### Cons
 Fewer Built-In Annotations: May require additional coding for specific
 annotations or customization compared to the extensive built-in annotation
-function in ComplexHeatmap.
+function in [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
 
 ## More Complex Examples
 Here are some more advanced visualizations using `ggalign`:

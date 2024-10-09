@@ -15,13 +15,14 @@ knitr::opts_chunk$set(
 ```
 
 The package offers a suite of `align_*` functions designed to give you precise
-control over plot layout. These functions enable you to manipulate axis order
-within the layout and partition along an axis into multiple panels.
+control over plot layout. These functions enable you to reorder the observations
+or partition the observations into multiple groups.
 
 Currently, there are four key `align_*` functions available for layout customization:
 
 - **`align_group`**: Group and align plots based on categorical factors.
-- **`align_reorder`**: Reorder plots or split axes into different panels.
+- **`align_reorder`**: Reorder layout observations based on statistical weights
+ or allows for manual reordering based on user-defined criteria.
 - **`align_kmeans`**: Arrange plots by k-means clustering results.
 - **`align_dendro`**: Align plots according to hierarchical clustering or dendrograms.
 
