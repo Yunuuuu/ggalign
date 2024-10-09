@@ -396,6 +396,171 @@ For more use of the `seriate()` function, please refer to the
 [seriation](https://cran.r-project.org/web/packages/seriation/index.html)
 package. 
 
+# Dimension labels
+`ggplot2` use scales and theme to control the axis labels, Please see
+[scales](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html#scales)
+section for more details.
+```{r}
+# ComplexHeatmap::Heatmap(mat,
+#     row_dend_reorder = FALSE,
+#     column_dend_reorder = FALSE,
+#     name = "mat", row_names_side = "left", row_dend_side = "right",
+#     column_names_side = "top", column_dend_side = "bottom"
+# )
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    scale_x_continuous(position = "top") +
+    scale_y_continuous(position = "right") +
+    theme(axis.text.x = element_text(angle = 60, hjust = 0)) +
+    hmanno("l", size = unit(15, "mm")) +
+    align_dendro() +
+    scale_x_continuous(position = "top") +
+    hmanno("b", size = unit(15, "mm")) +
+    align_dendro() +
+    scale_y_continuous(position = "right") +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    scale_y_continuous(breaks = NULL) +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(
+        axis.text.x = element_text(angle = -60, hjust = 0),
+        axis.text.y = element_text(face = "bold", size = 16)
+    ) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+I'm unsure if `ggalign` should automatically reorder theme elements when
+reordering data, as shown in 
+[scales](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html#data-ordering).
+To ensure the theme elements reflect the final data ordering, users should
+manually specify them after any reordering operations now. 
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(
+        axis.text.x = element_text(angle = -60, hjust = 0),
+        axis.text.y = element_text(
+            face = "bold", size = 16,
+            colour = c(rep("red", 10), rep("blue", 8))
+        )
+    ) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+# Heatmap split
+## Split by k-means clustering
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_kmeans(2L) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_kmeans(3L) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_kmeans(2L) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_kmeans(3L) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+The dendrogram was calculated in each group defined by kmeans.
+
+## Split by categorical variables
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_group(rep(c("A", "B"), 9)) +
+    align_dendro() +
+    hmanno("t", size = unit(15, "mm")) +
+    align_group(rep(c("C", "D"), 12)) +
+    align_dendro() +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+## Split by dendrogram
+When you splitted by a dendrogram, the cutted height will be indicated with a
+dashed line.
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro(k = 3L) +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro(k = 2L) +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    scale_fill_gradient2(low = "blue", high = "red") +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    hmanno("r", size = unit(15, "mm")) +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2") +
+    hmanno("t", size = unit(15, "mm")) +
+    align_dendro(k = 2L) +
+    hmanno(NULL) &
+    theme(plot.margin = margin())
+```
+
 # Session information
 ```{r}
 sessionInfo()
