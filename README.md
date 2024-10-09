@@ -50,7 +50,7 @@ remotes::install_github("Yunuuuu/ggalign")
 ## Getting Started
 
 The usage of `ggalign` is simple if you’re familiar with `ggplot2`
-syntax, `ggalign` works with a simple workflow:
+syntax, the typical workflow includes:
 
 - Initialize the layout using `ggheatmap()` or `ggstack()`.
 - Customize the layout with:
@@ -114,7 +114,8 @@ multiple heatmaps arranged vertically or horizontally.
 
 Fewer Built-In Annotations: May require additional coding for specific
 annotations or customization compared to the extensive built-in
-annotation function in ComplexHeatmap.
+annotation function in
+[ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
 
 ## More Complex Examples
 

@@ -52,8 +52,8 @@ remotes::install_github("Yunuuuu/ggalign")
 ```
 
 ## Getting Started
-The usage of `ggalign` is simple if you're familiar with `ggplot2` syntax,
-`ggalign` works with a simple workflow: 
+The usage of `ggalign` is simple if you're familiar with `ggplot2` syntax, the
+typical workflow includes: 
 
  - Initialize the layout using `ggheatmap()` or `ggstack()`.
  - Customize the layout with:
