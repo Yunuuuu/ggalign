@@ -45,12 +45,6 @@ alignpatch.free_guide <- function(x) {
     ggproto(
         "PatchFreeGuide", Parent,
         free_guides = free_guides,
-        set_guides = function(self, guides) {
-            union(
-                self$free_guides,
-                # we always collect guides in the border
-                intersect(guides, .subset2(self, "borders"))
-            )
-        }
+        set_guides = function(self, guides) self$free_guides
     )
 }
