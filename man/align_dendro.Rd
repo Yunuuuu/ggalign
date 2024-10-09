@@ -10,6 +10,7 @@ align_dendro(
   distance = "euclidean",
   method = "complete",
   use_missing = "pairwise.complete.obs",
+  merge_dendrogram = FALSE,
   reorder_group = FALSE,
   k = NULL,
   h = NULL,
@@ -57,6 +58,10 @@ covariances in the presence of missing values. This must be (an abbreviation
 of) one of the strings \code{"everything"}, \code{"all.obs"}, \code{"complete.obs"},
 \code{"na.or.complete"}, or \code{"pairwise.complete.obs"}. Only used when \code{distance}
 is a correlation coefficient string.}
+
+\item{merge_dendrogram}{A single boolean value, indicates whether we should
+merge multiple dendrograms, only used when previous groups have been
+established.}
 
 \item{reorder_group}{A single boolean value, indicates whether we should do
 Hierarchical Clustering between groups, only used when previous groups have

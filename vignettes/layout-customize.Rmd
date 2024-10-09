@@ -256,14 +256,28 @@ ggheatmap(small_mat) +
     align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
 
-You can see the difference by drawing two dendrogram.
+You can merge the sub-tree in each group by settting `merge_dendrogram = TRUE`.
 ```{r}
 ggheatmap(small_mat) +
     hmanno("t") +
     align_group(column_groups) +
-    align_dendro(aes(color = branch), reorder_group = TRUE) +
+    align_dendro(aes(color = branch), merge_dendrogram = TRUE)
+```
+
+You can reorder the dendrogram and merge simutaneously.
+```{r}
+ggheatmap(small_mat) +
+    hmanno("t") +
+    align_group(column_groups) +
+    align_dendro(aes(color = branch),
+        reorder_group = TRUE,
+        merge_dendrogram = TRUE
+    ) +
     hmanno("b") +
-    align_dendro(aes(color = branch), reorder_group = FALSE)
+    align_dendro(aes(color = branch),
+        reorder_group = FALSE,
+        merge_dendrogram = TRUE
+    )
 ```
 
 If you specify `k` or `h`, this always turn off the sub-clustering. The same

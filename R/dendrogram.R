@@ -468,11 +468,12 @@ dendrogram_data <- function(tree,
     node$panel <- factor(.subset2(node, "panel"), panel_levels)
     node$branch <- factor(.subset2(node, "branch"), branch_levels)
     node$.panel <- factor(.subset2(node, ".panel"), panel_levels)
-
-    edge$panel1 <- factor(.subset2(edge, "panel1"), panel_levels)
-    edge$panel2 <- factor(.subset2(edge, "panel2"), panel_levels)
-    edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
-    edge$.panel <- factor(.subset2(edge, ".panel"), panel_levels)
+    if (!is.null(edge)) {
+        edge$panel1 <- factor(.subset2(edge, "panel1"), panel_levels)
+        edge$panel2 <- factor(.subset2(edge, "panel2"), panel_levels)
+        edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
+        edge$.panel <- factor(.subset2(edge, ".panel"), panel_levels)
+    }
     list(node = node, edge = edge)
 }
 

@@ -142,6 +142,16 @@ testthat::test_that("`align_dendro` works well", {
         p + hmanno("l") + align_group(row_group) +
             align_dendro(reorder_group = TRUE),
     )
+    expect_doppelganger(
+        "dendro_merge_group",
+        p + hmanno("l") + align_group(row_group) +
+            align_dendro(merge_dendrogram = TRUE),
+    )
+    expect_doppelganger(
+        "dendro_reorder_and_merge",
+        p + hmanno("l") + align_group(row_group) +
+            align_dendro(reorder_group = TRUE, merge_dendrogram = TRUE),
+    )
 })
 
 testthat::test_that("`ggalign()` works well", {
