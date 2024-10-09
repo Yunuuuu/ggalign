@@ -94,9 +94,10 @@ ggheatmap(small_mat) +
 
 ## Compare with other ggplot2 heatmap extension
 
-The main advantage of `ggalign` over other extensions like ggheatmap is
-its full compatibility with the ggplot2 grammar. You can seamlessly use
-any ggplot2 geoms, stats, and scales to build complex layouts, including
+The main advantage of `ggalign` over other extensions like
+[ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) is its full
+compatibility with the ggplot2 grammar. You can seamlessly use any
+ggplot2 geoms, stats, and scales to build complex layouts, including
 multiple heatmaps arranged vertically or horizontally.
 
 ## Compare with ComplexHeatmap

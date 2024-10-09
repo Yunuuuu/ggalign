@@ -92,10 +92,11 @@ ggheatmap(small_mat) +
 ![](https://yunuuuu.github.io/ggalign/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
 
 ## Compare with other ggplot2 heatmap extension
-The main advantage of `ggalign` over other extensions like ggheatmap is its full
-compatibility with the ggplot2 grammar. You can seamlessly use any ggplot2
-geoms, stats, and scales to build complex layouts, including multiple heatmaps
-arranged vertically or horizontally.
+The main advantage of `ggalign` over other extensions like
+[ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) is its full compatibility
+with the ggplot2 grammar. You can seamlessly use any ggplot2 geoms, stats, and
+scales to build complex layouts, including multiple heatmaps arranged vertically
+or horizontally.
 
 ## Compare with ComplexHeatmap
 ### Pros
