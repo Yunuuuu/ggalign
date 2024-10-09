@@ -22,14 +22,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-`heatmap_layout()` utilizes the grammar of graphics to construct the heatmap and
-heatmap annotations. You can also use the alias `ggheatmap()`.
+The `heatmap_layout()`/`ggheatmap()` function provides a powerful way to create
+customizable heatmaps in R using ggplot2. This vignette will guide you through
+its usage.
 
-```{r setup}
-library(ggalign)
-```
-
-## input data
+## Input Data
 The data input can be a numeric or character vector, a data frame, and any other
 data which can be converted into a matrix.
 
@@ -41,6 +38,7 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
 ```{r matrix}
+library(ggalign)
 ggheatmap(small_mat)
 ```
 
@@ -75,20 +73,27 @@ ggheatmap(small_mat, filling = FALSE)
 ```
 
 ## heatmap annotations
-Heatmap annotations provide additional information for the rows or columns of
-the heatmap and can be placed at the `top`, `left`, `bottom`, or `right`. An
-annotation is a `stack_layout()` object internally, capable of holding multiple
-plots.
+A heatmap typically has two observation axes, you can reorder the observations,
+or provide additional information for them. An annotation is a `stack_layout()`
+object internally, capable of holding multiple plots, and can be placed at the
+`top`, `left`, `bottom`, or `right`.
 
-By default, `ggheatmap()` does not initialize an active context, so all
-additions are placed within the heatmap body. You can use `hmanno()` to set the
-active context, directing all subsequent additions to this position. The active
-context allows for custom layout adjustments and the addition of various plot
-types.
+Note that `ggalign` use the concept of `"number of observations"` in the
+[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package or `NROW()`
+function. When aligning the observations, you must ensure the number of
+observations is equal. For column annotations, the layout data will be
+transposed before use. This is necessary because column annotations use heatmap
+columns as observations, but we need rows. 
 
-In the following example, `align_kmeans()` is used to group the columns into 3
+By default, `heatmap_layout()`/`ggheatmap()` does not initialize an active
+context, so all additions are placed within the heatmap body. we can use
+`hmanno()` to set the active context, directing all subsequent additions to this
+position. The active context allows for custom layout adjustments and the
+addition of various plot types. 
+
+In the following example, align_kmeans() is used to group the columns into three
 panels. It doesn't matter if this is added to the top or bottom since it won't
-add a plot area:
+add a plot area: 
 
 ```{r}
 ggheatmap(small_mat) +
@@ -114,37 +119,40 @@ In this example:
  - `align_dendro(k = 3L)` adds a dendrogram to this right-side annotation
  context and sets itself as the active plot in the annotation stack. 
  - `geom_point(aes(color = factor(branch)))` is then added to this active plot
- within the annotation stack.
+ within the annotation stack, here, it means the `align_dendro()` plot.
 
-## control size
-You can specify the heatmap body sizes (`width`/`height`) using the
-`ggheatmap()` function. Alternatively, the `hmanno()` function allows you to
-control the heatmap body sizes, and it can also set the overall size of the
-annotation stack.
-
-- **when `position` is `NULL`**: we can use `width` and `height` arguments to
-control the relative (you can also provide a unit object) width and height of
-the heatmap body.
-- **when `position` is a string**: we can use `size` argument to control the
-relative width (left and right annotation) or height (top and bottom annotation)
-of the whole annotation stack.
-
+## Plot size
+### heatmap body size
+You can specify the heatmap body relative sizes (`width`/`height`) in the
+`ggheatmap()` function.
 ```{r}
-ggheatmap(small_mat, height = 1) +
+ggheatmap(small_mat, height = 2) +
   scale_fill_viridis_c() +
-  hmanno("t", size = 2) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+  hmanno("t") +
+  align_dendro()
 ```
+
+Alternatively, the `hmanno()` function allows you to control the heatmap body
+sizes when `position` is `NULL`. 
+```{r}
+ggheatmap(small_mat) +
+  hmanno(position = NULL, height = 2) +
+  scale_fill_viridis_c() +
+  hmanno("t") +
+  align_dendro()
+```
+
+### heatmap annotation total size
+The `hmanno()` function allows you to control the total annotation stack size
+when `position` is a `string`. The `size` argument controls the relative width
+(for left and right annotations) or height (for top and bottom annotations) of
+the whole annotation stack. 
 
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
   hmanno("t", size = 1) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+  align_dendro()
 ```
 
 We can use `unit()` to define the size.
@@ -152,14 +160,14 @@ We can use `unit()` to define the size.
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
   hmanno("t", size = unit(30, "mm")) +
-  align_dendro() +
-  ggalign(data = rowSums) +
-  geom_bar(aes(y = value, fill = .x), stat = "identity")
+  align_dendro()
 ```
 
-Some `align_*()` functions has a `size` argument to control the relative width
-(left and right annotation) or height (top and bottom annotation) of the single
-plot in the whole annotation stack.
+### single annotation plot size
+All `align_*()` functions that add plots in the annotation stack have a `size`
+argument to control the relative width (for left and right annotations) or
+height (for top and bottom annotations) of the single plot in the annotation
+stack. 
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
@@ -174,8 +182,8 @@ ggheatmap(small_mat) +
 ```
 
 ## guide legends
-By default, `ggheatmap()` will collect all guide legends on the side they
-originate from.
+By default, `ggheatmap()` will collect all guide legends on the side from which
+they originate. 
 
 ```{r fig.dim = c(12, 12)}
 heatmap_with_four_side_guides <- ggheatmap(small_mat) +
@@ -184,80 +192,124 @@ heatmap_with_four_side_guides <- ggheatmap(small_mat) +
   hmanno("t") +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
-    name = "I'm from top tree", palette = "Dark2",
+    name = "I'm from top annotation", palette = "Dark2",
     guide = guide_legend(position = "right")
   ) +
   hmanno("l") +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
-    name = "I'm from left tree", palette = "Dark2",
+    name = "I'm from left annotation", palette = "Dark2",
     guide = guide_legend(position = "top")
   ) +
   hmanno("b") +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
-    name = "I'm from bottom tree", palette = "Dark2",
+    name = "I'm from bottom annotation", palette = "Dark2",
     guide = guide_legend(position = "left")
   ) +
   hmanno("r") +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
-    name = "I'm from right tree", palette = "Dark2",
+    name = "I'm from right annotation", palette = "Dark2",
     guide = guide_legend(position = "bottom")
   ) &
   theme(plot.margin = margin())
 heatmap_with_four_side_guides
 ```
 
-`hmanno()` provides `guides` and `free_guides` argument to provide precise
-control over the guide legend position. 
+This package provides the `guides` and `free_guides` arguments for precise control
+over guide legends.
 
-### guides
-`guides` argument controls which positions of guide legends should be collected
-in the layout. They will be collected to their original side.
+### which position of guide legends should be collected in the layout?
+The `guides` argument controls which positions of guide legends should be
+collected in the layout. They will be collected to their original side. 
 
+#### heatmap layout
 For a heatmap layout, it has five plots (heatmap body, four sides of the nested
-heatmap annotation stack). Here we only collect guides in the top and bottom
-side. When position is `NULL`, `hmanno()` set the `guides` for the heatmap
-layout.
+heatmap annotation stack). When position is `NULL`, `hmanno()` set the `guides`
+for the heatmap layout.
 ```{r heatmap-guides-tb, fig.dim = c(12, 12), fig.cap="Heatmap collect top and bottom guides only"}
 heatmap_with_four_side_guides +
-  hmanno(guides = "tb") # we set the `guides` argument here
+  # the heatmap layout only collect guide legends in the top and bottom
+  hmanno(guides = "tb")
 ```
 
-### free_guides
-The `free_guides` argument allows you to override the `guides` argument for a
-single plot. In the last example, the heatmap body right side legend won't be
-collected. We can use `free_guides` to override the `guides` argument for the
-heatmap body plot.
+In this way, the guide legends in the left and right position won't be
+collected.
 
-```{r fig.dim = c(12, 12)}
-heatmap_with_four_side_guides +
-  hmanno(guides = "tb") + # we set the `guides` argument here
-  hmanno(free_guides = "r") # we collect the right guide legend for the heatmap body
-```
-You can also use `free_guides` to override the `guides` argument for heatmap
-annotation stack in `hmanno()`.
-
-### heatmap annotation guide legends
-When position is a string, `hmanno()` set the `guides` for the heatmap
-annotation stack.
-```{r fig.dim = c(12, 12)}
-heatmap_with_four_side_guides +
-  hmanno(guides = "tb") + # we set the `guides` argument here
-  hmanno(free_guides = "r") + # we collect the right guide legend for the heatmap body
-  hmanno("l", guides = NULL) + # the left annotation won't collect the guide legends
-  guides(color = guide_legend(direction = "vertical", position = "top"))
-```
-
+#### heatmap annotation stack layout
 In the nested layouts, the top-level layout won't collect guide legends from
 plots within the nested layout unless the nested layout collects them first.
 Guide legends in the heatmap layout will only be collected from the annotation
 stack if the stack layout collects its own guide legends first.
 
-An annotation stack is simply a `stack_layout()`, which can add multiple plots
-using `align_*()` functions. The `align_*()` functions include a `free_guides`
-argument to override the `guides` setting in the annotation stack layout.
+When `position` is a string, `hmanno()` set the `guides` for the heatmap
+annotation stack. By default, it'll inherit from the parent layout (heatmap
+layout)'s `guides` argument.
+```{r fig.dim = c(12, 12)}
+heatmap_with_four_side_guides +
+  # the left annotation won't collecte the guide legends
+  hmanno("l", guides = NULL)
+```
+
+>Note: Guide legends in the heatmap layout will only be collected from the
+annotation stack if the stack layout collects its own guide legends first.
+
+In this example, the guide legends from the left annotation won't be collected
+by the heatmap layout since the left annotation doesn't collect the guide
+legends. 
+
+### which position of guide legends should be collected for a single plot?
+The `free_guides` argument allows you to override the `guides` argument for a
+single plot.
+
+#### heatmap body
+When `position` is `NULL`, `hmanno()` set the `free_guides` for the heatmap
+body.
+```{r fig.dim = c(12, 12)}
+heatmap_with_four_side_guides +
+  # the heatmap layout only collect guide legends in the top and bottom
+  hmanno(guides = "tb") +
+  # we override the layout `guides` argument and collect the right guide
+  # legend for the heatmap body
+  hmanno(free_guides = "r")
+```
+
+In this example, the heatmap body right side legend won't be collected by
+default in the layout. We use `free_guides` to override the `guides` argument
+for the heatmap body plot.
+
+#### heatmap annotation stack
+In the heamtap layout, each annotation stack is a nested stack plot, we can also
+use `free_guides` to override the `guides` argument in the heatmap layout for
+the annotation stack in `hmanno()`.
+
+```{r fig.dim = c(12, 12)}
+heatmap_with_four_side_guides +
+  # the heatmap layout only collect guide legends in the top and bottom
+  hmanno(guides = "tb") +
+  # we collect the right guide legend for the right annotation in the heatmap layout
+  hmanno("t", free_guides = "r") +
+  # we collect the left guide legend for the bottom annotation in the heatmap layout
+  hmanno("b", free_guides = "l")
+```
+
+#### single plot in the annotation stack
+All `align_*()` functions which add plot include a `free_guides` argument to
+override the `guides` setting for the plot in the annotation stack layout.
+```{r}
+ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  hmanno("t") +
+  # we won't collect any guide legends from the dendrogram plot
+  align_dendro(aes(color = branch), k = 3L, free_guides = NULL) +
+  align_dendro(aes(color = branch), k = 3L, free_guides = NULL) &
+  scale_color_brewer(
+    palette = "Dark2",
+    guide = guide_legend(position = "bottom")
+  )
+```
 
 ## free_spaces
 By default, `ggheatmap()` will align all elements of the plot, which can
@@ -272,7 +324,7 @@ ggheatmap(small_mat) +
     expand = expansion(),
     labels = ~ paste("very very long labels", .x)
   ) +
-  hmanno("l") +
+  hmanno("l", unit(20, "mm")) +
   align_dendro()
 ```
 
@@ -308,7 +360,7 @@ ggheatmap(small_mat) +
     expand = expansion(),
     labels = ~ paste("very very long labels", .x)
   ) +
-  hmanno("l") +
+  hmanno("l", unit(20, "mm")) +
   align_dendro()
 ```
 
@@ -335,7 +387,7 @@ ggheatmap(small_mat) +
     expand = expansion(),
     labels = ~ paste("very very long labels", .x)
   ) +
-  hmanno("l") +
+  hmanno("l", unit(20, "mm")) +
   align_dendro()
 ```
 

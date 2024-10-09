@@ -106,13 +106,13 @@ It is important to note that all `align_*` functions consider the `rows` as
 the observations. It means the `NROW(data)` must return the same number with
 the specific `layout` axis.
 
- - `heatmap_layout()`: for column annotation, the `layout` data will be
- transposed before using (If data is a `function`, it will be applied with
- the transposed matrix). This is necessary because column annotation uses
+ - `heatmap_layout()`/`ggheatmap()`: for column annotation, the `layout` data
+ will be transposed before using (If data is a `function`, it will be applied
+ with the transposed matrix). This is necessary because column annotation uses
  heatmap columns as observations, but we need rows.
 
- - `stack_layout()`: the `layout` data will be used as it is since we place
-   all plots along a single axis.
+ - `stack_layout()`/`ggstack()`: the `layout` data will be used as it is since
+ we place all plots along a single axis.
 
 Even for top and bottom annotations, you can use `rowMeans()` to calculate the
 mean value across all columns. 

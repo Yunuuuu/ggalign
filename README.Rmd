@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.org/package=ggalign)
 <!-- badges: end -->
 
-
 This package extends ggplot2 by providing advanced tools for aligning and
 organizing multiple plots, particularly those that automatically reorder
 observations, such as dendrogram. It offers fine control over layout adjustment
@@ -125,4 +124,3 @@ Here are some more advanced visualizations using `ggalign`:
 - [Layout Plot](https://yunuuuu.github.io/ggalign/articles/layout-plot.html)
 - [Stack Layout](https://yunuuuu.github.io/ggalign/articles/stack-layout.html)
 - [Scales and Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
-
