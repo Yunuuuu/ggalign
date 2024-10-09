@@ -119,6 +119,8 @@ hclust2 <- function(matrix,
 #' of the number of observations in `tree`.
 #' @param leaf_braches Branches of the leaf node. Must be the same length of the
 #' number of observations in `tree`. Usually come from [cutree][stats::cutree].
+#' @param reorder_branches A single boolean value, indicates whether reorder the
+#' provided leaf_braches based on the actual index.
 #' @param branch_gap A single numeric value indicates the gap between different
 #' branches.
 #' @param root A length one string or numeric indicates the root branch.
@@ -148,6 +150,7 @@ hclust2 <- function(matrix,
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
 #' @importFrom vctrs vec_rbind
+#' @importFrom stats order.dendrogram
 #' @export
 dendrogram_data <- function(tree,
                             priority = "right",
@@ -155,10 +158,12 @@ dendrogram_data <- function(tree,
                             type = "rectangle",
                             leaf_pos = NULL,
                             leaf_braches = NULL,
+                            reorder_branches = TRUE,
                             branch_gap = NULL,
                             root = NULL) {
     dend <- check_dendrogram(tree)
     assert_bool(center)
+    assert_bool(reorder_branches)
     type <- match.arg(type, c("rectangle", "triangle"))
     priority <- match.arg(priority, c("left", "right"))
     N <- stats::nobs(dend)
@@ -189,6 +194,10 @@ dendrogram_data <- function(tree,
         root <- root %||% (min(leaf_braches) - 1L)
     } else {
         cli::cli_abort("{.arg leaf_braches} must be a character or numeric")
+    }
+
+    if (!is.null(leaf_braches) && reorder_branches) {
+        leaf_braches <- .subset(leaf_braches, order.dendrogram(dend))
     }
 
     # branch_gap must be a numeric value
@@ -228,7 +237,7 @@ dendrogram_data <- function(tree,
             if (is.null(leaf_braches)) {
                 branch <- root
             } else {
-                branch <- .subset(leaf_braches, index)
+                branch <- .subset(leaf_braches, i)
             }
 
             x <- .subset(leaf_pos, i) + total_gap
