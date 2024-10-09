@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/Yunuuuu/ggalign/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Yunuuuu/ggalign?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.org/package=ggalign)
 <!-- badges: end -->
+
+
 This package extends ggplot2 by providing advanced tools for aligning and
 organizing multiple plots, particularly those that automatically reorder
 observations, such as dendrogram. It offers fine control over layout adjustment

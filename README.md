@@ -10,12 +10,14 @@
 coverage](https://codecov.io/gh/Yunuuuu/ggalign/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Yunuuuu/ggalign?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.org/package=ggalign)
-<!-- badges: end --> This package extends ggplot2 by providing advanced
-tools for aligning and organizing multiple plots, particularly those
-that automatically reorder observations, such as dendrogram. It offers
-fine control over layout adjustment and plot annotations, enabling you
-to create complex, publication-quality visualizations while still using
-the familiar grammar of ggplot2.
+<!-- badges: end -->
+
+This package extends ggplot2 by providing advanced tools for aligning
+and organizing multiple plots, particularly those that automatically
+reorder observations, such as dendrogram. It offers fine control over
+layout adjustment and plot annotations, enabling you to create complex,
+publication-quality visualizations while still using the familiar
+grammar of ggplot2.
 
 ## Why use `ggalign`?
 
