@@ -22,7 +22,7 @@ the familiar grammar of ggplot2.
 `ggalign` focuses on aligning observations across multiple plots. It
 leverages the `"number of observations"` in the
 [vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package or
-\[NROW()\] function to maintain consistency in plot organization.
+`NROW()` function to maintain consistency in plot organization.
 
 If you’ve ever struggled with aligning plots with self-contained
 ordering (like dendrogram), or applying consistent grouping or ordering
