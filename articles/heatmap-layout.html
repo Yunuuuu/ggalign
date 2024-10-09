@@ -131,11 +131,16 @@ default <code>mapping</code> and <code>data</code>. You can add <code>ggplot2</c
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-2-1.png"><!-- --></p>
-<p>By default, we’ll add the heatmap layer. If you set <code>filling = FALSE</code>, a blank
-heamtap will be drawn.</p>
+<p>By default, a heatmap layer is added. If you set filling = FALSE, a blank
+heatmap will be drawn, allowing for customized filling geoms. For larger
+matrices, you may want to use a raster layer for faster rendering. In such
+cases, packages like <a href="https://github.com/VPetukhov/ggrastr" class="external-link">ggrastr</a> or
+<a href="https://ggfx.data-imaginist.com/reference/with_raster.html" class="external-link">ggfx</a> are helpful.
+Additionally, <a href="https://ggfx.data-imaginist.com/reference/with_raster.html" class="external-link">ggfx</a>
+offers many image filters that can be applied to ggplot2 layers.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-3-1.png"><!-- --></p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggrastr</span><span class="fu">::</span><span class="fu">rasterize</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="heatmap-annotations">heatmap annotations<a class="anchor" aria-label="anchor" href="#heatmap-annotations"></a>
