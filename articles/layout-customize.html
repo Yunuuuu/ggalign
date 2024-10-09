@@ -194,13 +194,14 @@ consider the <code>rows</code> as the observations. It means the
 <code>NROW(data)</code> must return the same number with the specific
 <code>layout</code> axis.</p>
 <ul>
-<li><p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the
-<code>layout</code> data will be transposed before using (If data is a
-<code>function</code>, it will be applied with the transposed matrix).
-This is necessary because column annotation uses heatmap columns as
-observations, but we need rows.</p></li>
-<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>: the <code>layout</code> data will be
-used as it is since we place all plots along a single axis.</p></li>
+<li><p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>: for
+column annotation, the <code>layout</code> data will be transposed
+before using (If data is a <code>function</code>, it will be applied
+with the transposed matrix). This is necessary because column annotation
+uses heatmap columns as observations, but we need rows.</p></li>
+<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code>: the
+<code>layout</code> data will be used as it is since we place all plots
+along a single axis.</p></li>
 </ul>
 <p>Even for top and bottom annotations, you can use
 <code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans()</a></code> to calculate the mean value across all

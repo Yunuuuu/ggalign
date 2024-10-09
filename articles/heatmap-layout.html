@@ -91,23 +91,23 @@
 
     
     
-<p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code> utilizes the grammar of graphics to construct the heatmap and
-heatmap annotations. You can also use the alias <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
+<p>The <code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function provides a powerful way to create
+customizable heatmaps in R using ggplot2. This vignette will guide you through
+its usage.</p>
 <div class="section level2">
-<h2 id="input-data">input data<a class="anchor" aria-label="anchor" href="#input-data"></a>
+<h2 id="input-data">Input Data<a class="anchor" aria-label="anchor" href="#input-data"></a>
 </h2>
 <p>The data input can be a numeric or character vector, a data frame, and any other
 data which can be converted into a matrix.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">small_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">81</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: ggplot2</span></span>
+<span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/matrix-1.png"><!-- --></p>
 </div>
 <div class="section level2">
@@ -128,31 +128,37 @@ matrix.</p></li>
 </ul>
 <p>You can treat the <code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code> object as a normal ggplot2 object with a
 default <code>mapping</code> and <code>data</code>. You can add <code>ggplot2</code> elements as usual.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-2-1.png"><!-- --></p>
 <p>By default, we’ll add the heatmap layer. If you set <code>filling = FALSE</code>, a blank
 heamtap will be drawn.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-3-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="heatmap-annotations">heatmap annotations<a class="anchor" aria-label="anchor" href="#heatmap-annotations"></a>
 </h2>
-<p>Heatmap annotations provide additional information for the rows or columns of
-the heatmap and can be placed at the <code>top</code>, <code>left</code>, <code>bottom</code>, or <code>right</code>. An
-annotation is a <code><a href="../reference/stack_layout.html">stack_layout()</a></code> object internally, capable of holding multiple
-plots.</p>
-<p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> does not initialize an active context, so all
-additions are placed within the heatmap body. You can use <code><a href="../reference/hmanno.html">hmanno()</a></code> to set the
-active context, directing all subsequent additions to this position. The active
-context allows for custom layout adjustments and the addition of various plot
-types.</p>
-<p>In the following example, <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> is used to group the columns into 3
+<p>A heatmap typically has two observation axes, you can reorder the observations,
+or provide additional information for them. An annotation is a <code><a href="../reference/stack_layout.html">stack_layout()</a></code>
+object internally, capable of holding multiple plots, and can be placed at the
+<code>top</code>, <code>left</code>, <code>bottom</code>, or <code>right</code>.</p>
+<p>Note that <code>ggalign</code> use the concept of <code>"number of observations"</code> in the
+<a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vctrs</a> package or <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code>
+function. When aligning the observations, you must ensure the number of
+observations is equal. For column annotations, the layout data will be
+transposed before use. This is necessary because column annotations use heatmap
+columns as observations, but we need rows.</p>
+<p>By default, <code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> does not initialize an active
+context, so all additions are placed within the heatmap body. we can use
+<code><a href="../reference/hmanno.html">hmanno()</a></code> to set the active context, directing all subsequent additions to this
+position. The active context allows for custom layout adjustments and the
+addition of various plot types.</p>
+<p>In the following example, align_kmeans() is used to group the columns into three
 panels. It doesn’t matter if this is added to the top or bottom since it won’t
 add a plot area:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
@@ -160,7 +166,7 @@ add a plot area:</p>
 <p>We can add any <code>align_*()</code> function to the annotation. For more details on
 <code>align_*()</code> functions, refer to <code><a href="../articles/layout-customize.html">vignette("layout-customize")</a></code> and
 <code><a href="../articles/layout-plot.html">vignette("layout-plot")</a></code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -176,54 +182,61 @@ add a plot area:</p>
 context and sets itself as the active plot in the annotation stack.</li>
 <li>
 <code>geom_point(aes(color = factor(branch)))</code> is then added to this active plot
-within the annotation stack.</li>
+within the annotation stack, here, it means the <code><a href="../reference/align_dendro.html">align_dendro()</a></code> plot.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="control-size">control size<a class="anchor" aria-label="anchor" href="#control-size"></a>
+<h2 id="plot-size">Plot size<a class="anchor" aria-label="anchor" href="#plot-size"></a>
 </h2>
-<p>You can specify the heatmap body sizes (<code>width</code>/<code>height</code>) using the
-<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function. Alternatively, the <code><a href="../reference/hmanno.html">hmanno()</a></code> function allows you to
-control the heatmap body sizes, and it can also set the overall size of the
-annotation stack.</p>
-<ul>
-<li>
-<strong>when <code>position</code> is <code>NULL</code></strong>: we can use <code>width</code> and <code>height</code> arguments to
-control the relative (you can also provide a unit object) width and height of
-the heatmap body.</li>
-<li>
-<strong>when <code>position</code> is a string</strong>: we can use <code>size</code> argument to control the
-relative width (left and right annotation) or height (top and bottom annotation)
-of the whole annotation stack.</li>
-</ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, height <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="section level3">
+<h3 id="heatmap-body-size">heatmap body size<a class="anchor" aria-label="anchor" href="#heatmap-body-size"></a>
+</h3>
+<p>You can specify the heatmap body relative sizes (<code>width</code>/<code>height</code>) in the
+<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.x</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-6-1.png"><!-- --></p>
+<p>Alternatively, the <code><a href="../reference/hmanno.html">hmanno()</a></code> function allows you to control the heatmap body
+sizes when <code>position</code> is <code>NULL</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>position <span class="op">=</span> <span class="cn">NULL</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="heatmap-annotation-total-size">heatmap annotation total size<a class="anchor" aria-label="anchor" href="#heatmap-annotation-total-size"></a>
+</h3>
+<p>The <code><a href="../reference/hmanno.html">hmanno()</a></code> function allows you to control the total annotation stack size
+when <code>position</code> is a <code>string</code>. The <code>size</code> argument controls the relative width
+(for left and right annotations) or height (for top and bottom annotations) of
+the whole annotation stack.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.x</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-8-1.png"><!-- --></p>
 <p>We can use <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit()</a></code> to define the size.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.x</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-8-1.png"><!-- --></p>
-<p>Some <code>align_*()</code> functions has a <code>size</code> argument to control the relative width
-(left and right annotation) or height (top and bottom annotation) of the single
-plot in the whole annotation stack.</p>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-9-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="single-annotation-plot-size">single annotation plot size<a class="anchor" aria-label="anchor" href="#single-annotation-plot-size"></a>
+</h3>
+<p>All <code>align_*()</code> functions that add plots in the annotation stack have a <code>size</code>
+argument to control the relative width (for left and right annotations) or
+height (for top and bottom annotations) of the single plot in the annotation
+stack.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -235,13 +248,14 @@ plot in the whole annotation stack.</p>
 <span>    orientation <span class="op">=</span> <span class="st">"y"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-9-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png"><!-- --></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="guide-legends">guide legends<a class="anchor" aria-label="anchor" href="#guide-legends"></a>
 </h2>
-<p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> will collect all guide legends on the side they
-originate from.</p>
+<p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> will collect all guide legends on the side from which
+they originate.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"I'm from heatmap body"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -249,85 +263,137 @@ originate from.</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"I'm from top tree"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"I'm from top annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"I'm from left tree"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"I'm from left annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"I'm from bottom tree"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"I'm from bottom annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"I'm from right tree"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"I'm from right annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">heatmap_with_four_side_guides</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png"><!-- --></p>
-<p><code><a href="../reference/hmanno.html">hmanno()</a></code> provides <code>guides</code> and <code>free_guides</code> argument to provide precise
-control over the guide legend position.</p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- --></p>
+<p>This package provides the <code>guides</code> and <code>free_guides</code> arguments for precise control
+over guide legends.</p>
 <div class="section level3">
-<h3 id="guides">guides<a class="anchor" aria-label="anchor" href="#guides"></a>
+<h3 id="which-position-of-guide-legends-should-be-collected-in-the-layout">which position of guide legends should be collected in the layout?<a class="anchor" aria-label="anchor" href="#which-position-of-guide-legends-should-be-collected-in-the-layout"></a>
 </h3>
-<p><code>guides</code> argument controls which positions of guide legends should be collected
-in the layout. They will be collected to their original side.</p>
+<p>The <code>guides</code> argument controls which positions of guide legends should be
+collected in the layout. They will be collected to their original side.</p>
+<div class="section level4">
+<h4 id="heatmap-layout">heatmap layout<a class="anchor" aria-label="anchor" href="#heatmap-layout"></a>
+</h4>
 <p>For a heatmap layout, it has five plots (heatmap body, four sides of the nested
-heatmap annotation stack). Here we only collect guides in the top and bottom
-side. When position is <code>NULL</code>, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code> for the heatmap
-layout.</p>
+heatmap annotation stack). When position is <code>NULL</code>, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code>
+for the heatmap layout.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="co"># we set the `guides` argument here</span></span></code></pre></div>
+<span>  <span class="co"># the heatmap layout only collect guide legends in the top and bottom</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <span style="display:block;" id="fig:heatmap-guides-tb"></span>
 <img src="heatmap-layout_files/figure-html/heatmap-guides-tb-1.png" alt="Heatmap collect top and bottom guides only"><p class="caption">
 Figure 1: Heatmap collect top and bottom guides only
 </p>
 </div>
+<p>In this way, the guide legends in the left and right position won’t be
+collected.</p>
 </div>
-<div class="section level3">
-<h3 id="free_guides">free_guides<a class="anchor" aria-label="anchor" href="#free_guides"></a>
-</h3>
-<p>The <code>free_guides</code> argument allows you to override the <code>guides</code> argument for a
-single plot. In the last example, the heatmap body right side legend won’t be
-collected. We can use <code>free_guides</code> to override the <code>guides</code> argument for the
-heatmap body plot.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="co"># we collect the right guide legend for the heatmap body</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- -->
-You can also use <code>free_guides</code> to override the <code>guides</code> argument for heatmap
-annotation stack in <code><a href="../reference/hmanno.html">hmanno()</a></code>.</p>
-</div>
-<div class="section level3">
-<h3 id="heatmap-annotation-guide-legends">heatmap annotation guide legends<a class="anchor" aria-label="anchor" href="#heatmap-annotation-guide-legends"></a>
-</h3>
-<p>When position is a string, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code> for the heatmap
-annotation stack.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we collect the right guide legend for the heatmap body</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, guides <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span> <span class="co"># the left annotation won't collect the guide legends</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>direction <span class="op">=</span> <span class="st">"vertical"</span>, position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
+<div class="section level4">
+<h4 id="heatmap-annotation-stack-layout">heatmap annotation stack layout<a class="anchor" aria-label="anchor" href="#heatmap-annotation-stack-layout"></a>
+</h4>
 <p>In the nested layouts, the top-level layout won’t collect guide legends from
 plots within the nested layout unless the nested layout collects them first.
 Guide legends in the heatmap layout will only be collected from the annotation
 stack if the stack layout collects its own guide legends first.</p>
-<p>An annotation stack is simply a <code><a href="../reference/stack_layout.html">stack_layout()</a></code>, which can add multiple plots
-using <code>align_*()</code> functions. The <code>align_*()</code> functions include a <code>free_guides</code>
-argument to override the <code>guides</code> setting in the annotation stack layout.</p>
+<p>When <code>position</code> is a string, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>guides</code> for the heatmap
+annotation stack. By default, it’ll inherit from the parent layout (heatmap
+layout)’s <code>guides</code> argument.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
+<span>  <span class="co"># the left annotation won't collecte the guide legends</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, guides <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
+<blockquote>
+<p>Note: Guide legends in the heatmap layout will only be collected from the
+annotation stack if the stack layout collects its own guide legends first.</p>
+</blockquote>
+<p>In this example, the guide legends from the left annotation won’t be collected
+by the heatmap layout since the left annotation doesn’t collect the guide
+legends.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="which-position-of-guide-legends-should-be-collected-for-a-single-plot">which position of guide legends should be collected for a single plot?<a class="anchor" aria-label="anchor" href="#which-position-of-guide-legends-should-be-collected-for-a-single-plot"></a>
+</h3>
+<p>The <code>free_guides</code> argument allows you to override the <code>guides</code> argument for a
+single plot.</p>
+<div class="section level4">
+<h4 id="heatmap-body-1">heatmap body<a class="anchor" aria-label="anchor" href="#heatmap-body-1"></a>
+</h4>
+<p>When <code>position</code> is <code>NULL</code>, <code><a href="../reference/hmanno.html">hmanno()</a></code> set the <code>free_guides</code> for the heatmap
+body.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
+<span>  <span class="co"># the heatmap layout only collect guide legends in the top and bottom</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># we override the layout `guides` argument and collect the right guide</span></span>
+<span>  <span class="co"># legend for the heatmap body</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
+<p>In this example, the heatmap body right side legend won’t be collected by
+default in the layout. We use <code>free_guides</code> to override the <code>guides</code> argument
+for the heatmap body plot.</p>
+</div>
+<div class="section level4">
+<h4 id="heatmap-annotation-stack">heatmap annotation stack<a class="anchor" aria-label="anchor" href="#heatmap-annotation-stack"></a>
+</h4>
+<p>In the heamtap layout, each annotation stack is a nested stack plot, we can also
+use <code>free_guides</code> to override the <code>guides</code> argument in the heatmap layout for
+the annotation stack in <code><a href="../reference/hmanno.html">hmanno()</a></code>.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
+<span>  <span class="co"># the heatmap layout only collect guide legends in the top and bottom</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># we collect the right guide legend for the right annotation in the heatmap layout</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, free_guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># we collect the left guide legend for the bottom annotation in the heatmap layout</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span>, free_guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
+</div>
+<div class="section level4">
+<h4 id="single-plot-in-the-annotation-stack">single plot in the annotation stack<a class="anchor" aria-label="anchor" href="#single-plot-in-the-annotation-stack"></a>
+</h4>
+<p>All <code>align_*()</code> functions which add plot include a <code>free_guides</code> argument to
+override the <code>guides</code> setting for the plot in the annotation stack layout.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># we won't collect any guide legends from the dendrogram plot</span></span>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span>, free_guides <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span>, free_guides <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
+<span>    palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
+<span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -335,7 +401,7 @@ argument to override the <code>guides</code> setting in the annotation stack lay
 </h2>
 <p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> will align all elements of the plot, which can
 sometimes lead to unwanted spacing. Consider the following example:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -344,9 +410,9 @@ sometimes lead to unwanted spacing. Consider the following example:</p>
 <span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
 <p>Both <code>free_spaces</code> and <code>free_labs</code> operate on individual plots, while layout
 values set global parameters for the entire layout. This means that <code>align_*</code>
 functions will inherit these values, but you can override them within the
@@ -372,7 +438,7 @@ due to the wide axis labels in the top annotation stack. This occurs because the
 top annotation stack is aligned with the heatmap body. To fix this, you can
 remove the left borders around the panel of the top annotation stack by setting
 <code>free_spaces = "l"</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -381,22 +447,22 @@ remove the left borders around the panel of the top annotation stack by setting
 <span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
 <p>In the Figure <a href="#fig:heatmap-guides-tb">1</a> we can also use the <code>free_spaces</code> to
 make a compact heatmap. Here, we remove the right border spaces of the top
 annotation stack, and the left border spaces of the bottom annotation stack.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_with_four_side_guides</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we set the `guides` argument here</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, free_spaces <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># we remove the right border spaces</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="co"># we remove the left border spaces</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-18-1.png"><!-- --></p>
 <p><code>align_*()</code> functions include the <code>free_spaces</code> argument, which, by default,
 inherits from the annotation stack. This allows you to control the alignment
 for each plot individually.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -405,27 +471,27 @@ for each plot individually.</p>
 <span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span>, <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-19-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="free_labs">free_labs<a class="anchor" aria-label="anchor" href="#free_labs"></a>
 </h2>
 <p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> won’t align the axis titles.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Heatmap title"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Annotation title"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-20-1.png"><!-- --></p>
 <p>To align all axis titles, you can set <code>free_labs = NULL</code> in the <code><a href="../reference/hmanno.html">hmanno()</a></code>
 function. Alternatively, A single string containing one or more of axis
 positions (“t”, “l”, “b”, “r”) to indicate which axis titles should be free from
 alignment.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>free_labs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -433,14 +499,14 @@ alignment.</p>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Annotation title"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-18-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-21-1.png"><!-- --></p>
 <p>The same with <code>free_spaces</code> argument, you can control the <code>free_labs</code> argument
 for the individual plot in <code>align_*()</code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
