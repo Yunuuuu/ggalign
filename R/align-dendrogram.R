@@ -260,7 +260,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ggplot2::labs(y = "height")
             )
     },
-    #' @importFrom vctrs vec_rbind vec_unique
+    #' @importFrom vctrs vec_rbind
     draw = function(self, panel, index, extra_panel, extra_index,
                     # other argumentds
                     plot_cut_height, center, type, root) {
