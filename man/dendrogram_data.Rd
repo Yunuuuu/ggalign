@@ -11,6 +11,7 @@ dendrogram_data(
   type = "rectangle",
   leaf_pos = NULL,
   leaf_braches = NULL,
+  reorder_branches = TRUE,
   branch_gap = NULL,
   root = NULL
 )
@@ -36,6 +37,9 @@ of the number of observations in \code{tree}.}
 
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
 number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
+
+\item{reorder_branches}{A single boolean value, indicates whether reorder the
+provided leaf_braches based on the actual index.}
 
 \item{branch_gap}{A single numeric value indicates the gap between different
 branches.}
