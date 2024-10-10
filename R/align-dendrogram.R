@@ -382,11 +382,10 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 )
         }
         # always turn off clip, this is what dendrogram dependends on
-        if (!identical(plot$coordinates$clip, "off")) {
+        old_coord <- plot$coordinates
+        if (!identical(old_coord$clip, "off")) {
             # to prevent from changing the input of user.
-            coord <- ggproto_clone(plot$coordinates)
-            coord$clip <- "off"
-            plot$coordinates <- coord
+            plot$coordinates <- ggproto(NULL, old_coord, clip = "off")
         }
         plot
     }
