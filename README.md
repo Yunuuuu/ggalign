@@ -110,6 +110,7 @@ multiple heatmaps arranged vertically or horizontally.
 - Dendrogram can be easily customized and colored.
 - Flexible control over plot size and spacing.
 - Can easily align with other `ggplot2` plots by panel area.
+- Can easily extend for other clustering algorithm, or annotation plot.
 
 ### Cons
 
