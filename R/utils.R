@@ -25,6 +25,12 @@ example_file <- function(..., base = "extdata") {
     system.file(base, ..., package = pkg_nm())
 }
 
+with_options <- function(code, ...) {
+    opts <- options(...)
+    on.exit(rlang::inject(options(!!!opts)))
+    force(code)
+}
+
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 

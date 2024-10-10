@@ -236,16 +236,11 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
 #' @importFrom ggplot2 ggplot_build
 #' @export
 ggplot_build.ggalign_heatmap <- function(plot) {
-    old_discrete_fill <- getOption("ggplot2.discrete.fill")
-    old_continuous_fill <- getOption("ggplot2.continuous.fill")
-    on.exit({
-        options(ggplot2.discrete.fill = old_discrete_fill)
-        options(ggplot2.continuous.fill = old_continuous_fill)
-    })
-    # change the default fill scale --------------------------
-    options(ggplot2.discrete.fill = heatmap_fill("discrete"))
-    options(ggplot2.continuous.fill = heatmap_fill("continuous"))
-    NextMethod()
+    with_options(
+        NextMethod(),
+        ggplot2.discrete.fill = heatmap_fill("discrete"),
+        ggplot2.continuous.fill = heatmap_fill("continuous")
+    )
 }
 
 heatmap_fill <- function(type) {
