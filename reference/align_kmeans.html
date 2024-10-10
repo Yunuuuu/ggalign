@@ -63,16 +63,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_kmeans</span><span class="op">(</span></span>
-<span>  <span class="va">centers</span>,</span>
-<span>  iter.max <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  nstart <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  algorithm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hartigan-Wong"</span>, <span class="st">"Lloyd"</span>, <span class="st">"Forgy"</span>, <span class="st">"MacQueen"</span><span class="op">)</span>,</span>
-<span>  trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  set_context <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_kmeans</span><span class="op">(</span><span class="va">centers</span>, <span class="va">...</span>, data <span class="op">=</span> <span class="cn">NULL</span>, set_context <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,38 +76,39 @@
     (distinct) rows in <code>x</code> is chosen as the initial centres.</p></dd>
 
 
-<dt id="arg-iter-max">iter.max<a class="anchor" aria-label="anchor" href="#arg-iter-max"></a></dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">stats::kmeans</a></code></p><dl><dt><code>iter.max</code></dt>
 <dd><p>the maximum number of iterations allowed.</p></dd>
 
-
-<dt id="arg-nstart">nstart<a class="anchor" aria-label="anchor" href="#arg-nstart"></a></dt>
+    <dt><code>nstart</code></dt>
 <dd><p>if <code>centers</code> is a number, how many random sets
     should be chosen?</p></dd>
 
-
-<dt id="arg-algorithm">algorithm<a class="anchor" aria-label="anchor" href="#arg-algorithm"></a></dt>
+    <dt><code>algorithm</code></dt>
 <dd><p>character: may be abbreviated.  Note that
     <code>"Lloyd"</code> and <code>"Forgy"</code> are alternative names for one
     algorithm.</p></dd>
 
-
-<dt id="arg-trace">trace<a class="anchor" aria-label="anchor" href="#arg-trace"></a></dt>
+    <dt><code>trace</code></dt>
 <dd><p>logical or integer number, currently only used in the
     default method (<code>"Hartigan-Wong"</code>): if positive (or true),
     tracing information on the progress of the algorithm is
     produced.  Higher values may produce more tracing information.</p></dd>
 
 
+</dl></dd>
+
+
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A matrix, a data frame, or even a simple vector that will be
-converted into a one-column matrix. If the <code>data</code> argument is set to <code>NULL</code>,
-the <code>align_*</code> will use the <code>layout</code> data. Additionally, the <code>data</code> argument
-can also accept a function (purrr-like lambda is also okay), which will be
-applied with the <code>layout</code> data,</p>
-<p>It is important to note that all <code>align_*</code> functions consider the <code>rows</code> as
-the observations. It means the <code>NROW(data)</code> must return the same number with
-the specific <code>layout</code> axis (meaning the x-axis for vertical stack layout, or
-y-axis for horizontal stack layout).</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
+<dd><p>A matrix, data frame, or a simple vector. If an atomic vector is
+provided, it will be converted into a one-column matrix. When <code>data = NULL</code>,
+the internal <code>layout</code> data will be used by default. Additionally, <code>data</code> can
+be a function (including purrr-like lambdas), which will be applied to the
+<code>layout</code> data.</p>
+<p>It is important to note that we consider the <code>rows</code> as the observations. It
+means the <code>NROW(data)</code> must return the same number with the specific <code>layout</code>
+axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
+stack layout).</p><ul><li><p><code><a href="heatmap_layout.html">heatmap_layout()</a></code>: for column annotation, the <code>layout</code> data will be
 transposed before using (If data is a <code>function</code>, it will be applied with
 the transposed matrix). This is necessary because column annotation uses
 heatmap columns as observations, but we need rows.</p></li>
