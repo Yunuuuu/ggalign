@@ -4,35 +4,27 @@
 \alias{align_kmeans}
 \title{Split layout by k-means clustering groups.}
 \usage{
-align_kmeans(
-  centers,
-  iter.max = 10,
-  nstart = 1,
-  algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
-  trace = FALSE,
-  data = NULL,
-  set_context = FALSE,
-  name = NULL
-)
+align_kmeans(centers, ..., data = NULL, set_context = FALSE, name = NULL)
 }
 \arguments{
 \item{centers}{either the number of clusters, say \eqn{k}, or a set of
     initial (distinct) cluster centres.  If a number, a random set of
     (distinct) rows in \code{x} is chosen as the initial centres.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
-
-\item{nstart}{if \code{centers} is a number, how many random sets
+\item{...}{
+  Arguments passed on to \code{\link[stats:kmeans]{stats::kmeans}}
+  \describe{
+    \item{\code{iter.max}}{the maximum number of iterations allowed.}
+    \item{\code{nstart}}{if \code{centers} is a number, how many random sets
     should be chosen?}
-
-\item{algorithm}{character: may be abbreviated.  Note that
+    \item{\code{algorithm}}{character: may be abbreviated.  Note that
     \code{"Lloyd"} and \code{"Forgy"} are alternative names for one
     algorithm.}
-
-\item{trace}{logical or integer number, currently only used in the
+    \item{\code{trace}}{logical or integer number, currently only used in the
     default method (\code{"Hartigan-Wong"}): if positive (or true),
     tracing information on the progress of the algorithm is
     produced.  Higher values may produce more tracing information.}
+  }}
 
 \item{data}{A matrix, a data frame, or even a simple vector that will be
 converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
