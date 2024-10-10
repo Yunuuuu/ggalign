@@ -69,6 +69,7 @@
 <span>  distance <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"complete"</span>,</span>
 <span>  use_missing <span class="op">=</span> <span class="st">"pairwise.complete.obs"</span>,</span>
+<span>  reorder_dendrogram <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  merge_dendrogram <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  reorder_group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  k <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -132,16 +133,21 @@ of) one of the strings <code>"everything"</code>, <code>"all.obs"</code>, <code>
 is a correlation coefficient string.</p></dd>
 
 
+<dt id="arg-reorder-dendrogram">reorder_dendrogram<a class="anchor" aria-label="anchor" href="#arg-reorder-dendrogram"></a></dt>
+<dd><p>A single boolean value, indicates whether we should
+reorder the dendrogram based on the means. Default: <code>FALSE</code>.</p></dd>
+
+
 <dt id="arg-merge-dendrogram">merge_dendrogram<a class="anchor" aria-label="anchor" href="#arg-merge-dendrogram"></a></dt>
 <dd><p>A single boolean value, indicates whether we should
 merge multiple dendrograms, only used when previous groups have been
-established.</p></dd>
+established. Default: <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-reorder-group">reorder_group<a class="anchor" aria-label="anchor" href="#arg-reorder-group"></a></dt>
 <dd><p>A single boolean value, indicates whether we should do
 Hierarchical Clustering between groups, only used when previous groups have
-been established.</p></dd>
+been established. Default: <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
