@@ -27,7 +27,7 @@ align_dendro(
   theme = waiver(),
   free_labs = waiver(),
   data = NULL,
-  set_context = TRUE,
+  set_context = NULL,
   order = NULL,
   name = NULL
 )
