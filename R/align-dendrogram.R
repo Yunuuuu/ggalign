@@ -203,6 +203,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 )
                 # we don't cutree, so we won't draw the height line
                 # self$draw_params$height <- attr(ans, "cutoff_height")
+            } else {
+                parent <- NULL
             }
 
             # merge children tree ------------------------------
@@ -210,11 +212,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 statistics <- .subset2(statistics, 1L)
                 self$statistics <- statistics
             } else if (merge_dendrogram) {
-                if (reorder_group) {
-                    statistics <- merge_dendrogram(parent, statistics)
-                } else {
-                    statistics <- Reduce(merge, statistics)
-                }
+                statistics <- merge_dendrogram(parent, statistics)
                 self$statistics <- statistics
             } else {
                 self$multiple_tree <- TRUE

@@ -322,7 +322,9 @@ dendrogram_data <- function(tree,
                     .subset2(leaves, "x"),
                     .subset2(leaves, "panel")
                 )
-                ranges <- ranges[order(vapply(ranges, min, numeric(1L)))]
+                ranges <- ranges[
+                    order(vapply(ranges, min, numeric(1L), USE.NAMES = FALSE))
+                ]
                 full_panel <- names(ranges)
                 panel <- NA
                 for (i in seq_along(ranges)) {
@@ -502,7 +504,15 @@ cutree_k_to_h <- function(tree, k) {
 # this function won't set the right `midpoint`, but `dendrogram_data` function
 # won't use it, so, it has no hurt to use.
 merge_dendrogram <- function(parent, children) {
-    children_heights <- vapply(children, attr, numeric(1L), "height")
+    if (is.null(parent)) { # if no parent, call the merge function from `stats`
+        return(Reduce(function(x, y) {
+            merge(x, y, adjust = "none")
+        }, children))
+    }
+    children_heights <- vapply(
+        children, attr, numeric(1L), "height",
+        USE.NAMES = FALSE
+    )
     parent_branch_heights <- tree_branch_heights(parent)
     cutoff_height <- max(children_heights) + min(parent_branch_heights) * 0.5
     .merge_dendrogram <- function(dend) {
@@ -512,9 +522,13 @@ merge_dendrogram <- function(parent, children) {
             attrs <- attributes(dend)
             # we recursively run for each node of current branch
             dend <- lapply(dend, .merge_dendrogram)
-            heights <- vapply(dend, attr, numeric(1L), "height")
-            n_members <- vapply(dend, attr, integer(1L), "members")
-            # we update height and members, in addition, midpoint
+            heights <- vapply(dend, attr, numeric(1L), "height",
+                USE.NAMES = FALSE
+            )
+            n_members <- vapply(dend, attr, integer(1L), "members",
+                USE.NAMES = FALSE
+            )
+            # we update height and members
             attrs$height <- .subset2(attrs, "height") + max(heights)
             attrs$members <- sum(n_members)
             attributes(dend) <- attrs
