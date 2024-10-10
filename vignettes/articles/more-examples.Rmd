@@ -1,6 +1,10 @@
 ---
 title: "ComplexHeatmap: more examples"
 output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ComplexHeatmap: more examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
