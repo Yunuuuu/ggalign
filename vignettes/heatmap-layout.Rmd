@@ -78,6 +78,13 @@ ggheatmap(small_mat, filling = FALSE) +
   ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "ragg")
 ```
 
+Indeed, we have add `ggrastr::rasterise()` method for both `ggheatmap()` and
+`ggstack()` objects, you can directly call `ggrastr::rasterise()` to the
+`ggheamtap()` which will rasterise all plots in the layout.
+```{r eval=rlang::is_installed("ragg")}
+ggrastr::rasterise(ggheatmap(small_mat), dev = "ragg")
+```
+
 ## heatmap annotations
 A heatmap typically has two observation axes, you can reorder the observations,
 or provide additional information for them. An annotation is a `stack_layout()`
