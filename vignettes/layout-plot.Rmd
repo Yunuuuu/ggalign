@@ -2,7 +2,7 @@
 title: "Layout Plot"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plot Integration}
+  %\VignetteIndexEntry{Layout Plot}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
