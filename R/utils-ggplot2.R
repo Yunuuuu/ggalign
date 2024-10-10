@@ -103,13 +103,26 @@ facet_ggalign <- function(x = NULL, y = NULL) {
 # ggplot2 add default scales in `compute_aesthetics` process
 # then ggplot2 transform all scales
 #  layout:
+#   in ggplot_build
 #    - `setup`:
-#       - call `setup_params`
+#       - call `facet$setup_params`
 #       - attach `plot_env`
-#       - call `setup_data`
-#       - call `compute_layout`
-#       - call `map_data`
+#       - call `facet$setup_data`
+#       - call `facet$compute_layout`
+#       - call `coord$setup_layout`
+#       - call `facet$map_data`
 #    - `train_position` call `init_scales`
+#  in ggplot_gtable
+#    - `render`:
+#         - call `coord$draw_panel`
+#         - call `facet$draw_panels`:
+#           - call `facet$init_gtable`:
+#           - call `facet$attach_axes`:
+#             - call `coord$render_axis_h`:
+#               - call `guide$draw`:
+#             - call `coord$render_axis_v`:
+#               - call `guide$draw`:
+#           - call `facet$attach_strips`:
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.facet_ggalign <- function(object, plot, object_name) {
@@ -124,14 +137,14 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
             # for each scale, we set the `breaks` and `labels`
             if (!is.null(x_scale) &&
                 !is.null(x_layout <- .subset2(object, "x"))) {
-                scales$x <- init_scales(
+                scales$x <- align_scales(
                     x_scale, "x", x_layout,
                     panel_scales = .subset2(scales, "x")
                 )
             }
             if (!is.null(y_scale) &&
                 !is.null(y_layout <- .subset2(object, "y"))) {
-                scales$y <- init_scales(
+                scales$y <- align_scales(
                     y_scale, "y", y_layout,
                     panel_scales = .subset2(scales, "y")
                 )
@@ -143,7 +156,7 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
 }
 
 #' @importFrom vctrs vec_slice
-init_scales <- function(scale, scale_name, layout, panel_scales) {
+align_scales <- function(scale, scale_name, layout, panel_scales) {
     panel <- .subset2(layout, "panel")
     index <- .subset2(layout, "index")
     labels <- .subset2(layout, "labels")
@@ -193,8 +206,13 @@ init_scales <- function(scale, scale_name, layout, panel_scales) {
             # setup breaks and labels --------------------
             in_domain <- match(data_index, breaks)
             keep <- !is.na(in_domain)
-            s$breaks <- plot_coord[keep]
-            s$labels <- labels[in_domain[keep]]
+            if (any(keep)) {
+                s$breaks <- plot_coord[keep]
+                s$labels <- labels[in_domain[keep]]
+            } else {
+                s$breaks <- NULL
+                s$labels <- NULL
+            }
         }
         s$expand <- e
         s
