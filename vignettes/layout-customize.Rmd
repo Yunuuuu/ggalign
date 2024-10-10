@@ -21,7 +21,7 @@ or partition the observations into multiple groups.
 Currently, there are four key `align_*` functions available for layout customization:
 
 - **`align_group`**: Group and align plots based on categorical factors.
-- **`align_reorder`**: Reorder layout observations based on statistical weights
+- **`align_order`**: Reorder layout observations based on statistical weights
  or allows for manual reordering based on user-defined criteria.
 - **`align_kmeans`**: Arrange plots by k-means clustering results.
 - **`align_dendro`**: Align plots according to hierarchical clustering or dendrograms.
@@ -58,41 +58,41 @@ ggheatmap(small_mat) +
     align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
 ```
 
-## `align_reorder`
-The `align_reorder()` function reorders the rows/columns based on a summary
-function. Like `align_group()`, it doesn't add a plot area. 
+## `align_order`
+The `align_order()` function order the rows/columns based on the summary
+weights, Like `align_group()`, it doesn't add a plot area. 
 
-Here, we reorder the rows based on the means.
-```{r align_reorder}
+Here, we order the rows based on the means.
+```{r align_order}
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(rowMeans)
+    align_order(rowMeans)
 ```
 
 In addition, we can provide the ordering integer index directly in the `order`
 argument.
-```{r align_reorder_integer_index}
+```{r align_order_integer_index}
 my_order <- sample(nrow(small_mat))
 print(rownames(small_mat)[my_order])
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(my_order)
+    align_order(my_order)
 ```
 
 We can also provide the ordering character index.
-```{r align_reorder_character_index}
+```{r align_order_character_index}
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(rownames(small_mat)[my_order])
+    align_order(rownames(small_mat)[my_order])
 ```
 
-By default, `align_reorder()` reorders the rows or columns in ascending order of
+By default, `align_order()` reorders the rows or columns in ascending order of
 the summary function's output (from bottom to top for rows, or from left to
 right for columns). To reverse this order, you can set `reverse = TRUE`: 
-```{r align_reorder_reverse}
+```{r align_order_reverse}
 ggheatmap(small_mat) +
     hmanno("l") +
-    align_reorder(rowMeans, reverse = TRUE)
+    align_order(rowMeans, reverse = TRUE)
 ```
 
 Some `align_*` functions accept a `data` argument. This can be a matrix, a data
@@ -120,7 +120,7 @@ mean value across all columns.
 ```{r}
 ggheatmap(small_mat) +
     hmanno("t") +
-    align_reorder(rowMeans)
+    align_order(rowMeans)
 ```
 
 ## `align_kmeans`
@@ -210,7 +210,7 @@ ggheatmap(small_mat) +
     align_dendro(k = 3L)
 ```
 
-In contrast to `align_group()`, `align_kmeans()`, and `align_reorder()`,
+In contrast to `align_group()`, `align_kmeans()`, and `align_order()`,
 `align_dendro()` is capable of drawing plot components. So it has a default
 `set_context` value of `TRUE`, meaning it will set the active context of the
 annotation stack layout. In this way, we can add any ggplot elements to this

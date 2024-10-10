@@ -115,12 +115,13 @@ Both `breaks` and `labels` should be provided in the original scale of the raw
 matrix, the internal will reorder them accordingly if you reorder the heatmap
 rows/columns.
 
-`align_reorder` will reorder the heatmap rows/columns based on the weights
-returned from `order` function, or you can directly provide the ordering integer
-or character index. Here we calculate the final index by the means and reorder
-the heatmap columns.
+`align_order` will reorder the heatmap rows/columns based on the weights
+returned from `wts` function, or you can directly provide the ordering integer
+or character index. Here we calculate the final index by the means and order the
+heatmap columns.
 
-We provide the labels in the original order here, the layout will reorder them.
+We provide the labels in the original order here, the layout will order them
+accordingly. 
 ```{r}
 index <- order(colMeans(small_mat))
 xlabels <- letters[seq_len(ncol(small_mat))]
@@ -129,7 +130,7 @@ print(xlabels[index])
 ggheatmap(small_mat) +
     scale_x_continuous(labels = xlabels) +
     hmanno("t") +
-    align_reorder(index)
+    align_order(index)
 ```
 
 ### expand

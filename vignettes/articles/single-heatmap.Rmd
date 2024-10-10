@@ -344,7 +344,7 @@ ggheatmap(mat) +
 ```
 
 # Set row and column orders
-We can use `align_reorder()` to set the order.
+We can use `align_order()` to set the order.
 ```{r}
 # ComplexHeatmap::Heatmap(mat,
 #     name = "mat",
@@ -357,9 +357,9 @@ We can use `align_reorder()` to set the order.
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(20, "mm")) +
-    align_reorder(as.numeric(gsub("row", "", rownames(mat)))) +
+    align_order(as.numeric(gsub("row", "", rownames(mat)))) +
     hmanno("t", size = unit(15, "mm")) +
-    align_reorder(as.numeric(gsub("column", "", colnames(mat)))) &
+    align_order(as.numeric(gsub("column", "", colnames(mat)))) &
     theme(plot.margin = margin())
 ```
 

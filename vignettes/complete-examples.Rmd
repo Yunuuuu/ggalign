@@ -64,7 +64,16 @@ Here, we ordered the heatmap rows based on the row means.
 ggheatmap(small_mat) +
     scale_fill_viridis_c() +
     hmanno("l") +
-    align_reorder(rowMeans)
+    align_order(rowMeans)
+```
+
+## Based on seriation object
+Here, we ordered the heatmap rows based on `seriate`.
+```{r eval=rlang::is_installed("seriation")}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("l") +
+    align_reorder(seriation::seriate, method = "BEA_TSP")
 ```
 
 # Heatmap annotation plot

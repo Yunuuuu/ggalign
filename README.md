@@ -58,7 +58,7 @@ syntax, the typical workflow includes:
 - Customize the layout with:
   - `align_group()`: Group layout axis into panel with a group variable.
   - `align_kmeans()`: Group layout axis into panel by kmeans.
-  - `align_reorder()`: Reorder layout observations based on statistical
+  - `align_order()`: Reorder layout observations based on statistical
     weights or by manually specifying the observation index.
   - `align_dendro()`: Reorder or Group layout based on hierarchical
     clustering.

@@ -42,6 +42,7 @@ reference:
   - align_dendro
   - align_group
   - align_kmeans
+  - align_order
   - align_reorder
 
 - title: Plot composer

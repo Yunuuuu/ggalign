@@ -23,6 +23,7 @@ Imports:
     vctrs
 Suggests:
     bookdown,
+    ggrastr,
     gridGraphics,
     knitr,
     patchwork,

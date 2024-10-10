@@ -30,6 +30,58 @@ testthat::test_that("`align_group` works well", {
     )
 })
 
+testthat::test_that("`align_order` works well", {
+    set.seed(1L)
+    mat <- matrix(stats::rnorm(72L), nrow = 9L)
+    rownames(mat) <- paste0("row", seq_len(nrow(mat)))
+    colnames(mat) <- paste0("column", seq_len(ncol(mat)))
+    p <- ggheatmap(mat)
+    row_group <- sample(letters[1:3], 9, replace = TRUE)
+    column_group <- sample(letters[1:3], 8, replace = TRUE)
+    # align_order cannot do sub-split
+    expect_error(p + hmanno("t") + align_group(column_group) +
+        align_order())
+    expect_doppelganger(
+        "reorder_top",
+        p + hmanno("t") + align_order(),
+    )
+    expect_doppelganger(
+        "reorder_bottom",
+        p + hmanno("b") + align_order(),
+    )
+    expect_doppelganger(
+        "reorder_left",
+        p + hmanno("l") + align_order(),
+    )
+    expect_doppelganger(
+        "reorder_right",
+        p + hmanno("r") + align_order(),
+    )
+    expect_doppelganger(
+        "reorder_top_within_group",
+        p + hmanno("t") + align_group(column_group) +
+            align_order(strict = FALSE),
+    )
+    expect_doppelganger(
+        "reorder_top_reverse",
+        p + hmanno("t") + align_order(reverse = TRUE)
+    )
+    expect_doppelganger(
+        "reorder_left_reverse",
+        p + hmanno("l") + align_order(reverse = TRUE)
+    )
+    # integer or character index works well
+    my_order <- sample(nrow(mat))
+    expect_doppelganger(
+        "reorder_left_integer_index",
+        p + hmanno("l") + align_order(my_order)
+    )
+    expect_doppelganger(
+        "reorder_left_character_index",
+        p + hmanno("l") + align_order(rownames(mat)[my_order])
+    )
+})
+
 testthat::test_that("`align_reorder` works well", {
     set.seed(1L)
     mat <- matrix(stats::rnorm(72L), nrow = 9L)
@@ -42,43 +94,25 @@ testthat::test_that("`align_reorder` works well", {
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_reorder())
     expect_doppelganger(
-        "reorder_top",
-        p + hmanno("t") + align_reorder(),
+        "order_top",
+        p + hmanno("t") + align_reorder(hclust2),
     )
     expect_doppelganger(
-        "reorder_bottom",
-        p + hmanno("b") + align_reorder(),
+        "order_bottom",
+        p + hmanno("b") + align_reorder(hclust2),
     )
     expect_doppelganger(
-        "reorder_left",
-        p + hmanno("l") + align_reorder(),
+        "order_left",
+        p + hmanno("l") + align_reorder(hclust2),
     )
     expect_doppelganger(
-        "reorder_right",
-        p + hmanno("r") + align_reorder(),
+        "order_right",
+        p + hmanno("r") + align_reorder(hclust2),
     )
     expect_doppelganger(
-        "reorder_top_within_group",
+        "order_top_within_group",
         p + hmanno("t") + align_group(column_group) +
-            align_reorder(strict = FALSE),
-    )
-    expect_doppelganger(
-        "reorder_top_reverse",
-        p + hmanno("t") + align_reorder(reverse = TRUE)
-    )
-    expect_doppelganger(
-        "reorder_left_reverse",
-        p + hmanno("l") + align_reorder(reverse = TRUE)
-    )
-    # integer or character index works well
-    my_order <- sample(nrow(mat))
-    expect_doppelganger(
-        "reorder_left_integer_index",
-        p + hmanno("l") + align_reorder(my_order)
-    )
-    expect_doppelganger(
-        "reorder_left_character_index",
-        p + hmanno("l") + align_reorder(rownames(mat)[my_order])
+            align_reorder(hclust2, strict = FALSE),
     )
 })
 
@@ -133,7 +167,7 @@ testthat::test_that("`align_dendro` works well", {
     )
     expect_doppelganger(
         "dendro_between_group",
-        p + hmanno("t") + 
+        p + hmanno("t") +
             align_group(column_group) +
             align_dendro()
     )
