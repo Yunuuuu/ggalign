@@ -75,7 +75,7 @@ Additionally, [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html)
 offers many image filters that can be applied to ggplot2 layers. 
 ```{r eval=rlang::is_installed("ggrastr")}
 ggheatmap(small_mat, filling = FALSE) +
-  ggrastr::rasterize(geom_tile(aes(fill = value)), dev = "cairo_png")
+  ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "cairo_png")
 ```
 
 ## heatmap annotations
