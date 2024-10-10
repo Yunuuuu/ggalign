@@ -190,8 +190,17 @@ patch.recordedplot <- function(x, ..., device = NULL) {
 }
 
 offscreen <- function(width, height) {
-    grDevices::pdf(NULL, width = width, height = height)
-    grDevices::dev.control("enable")
+    if (requireNamespace("ragg", quietly = TRUE)) {
+        function(width, height) {
+            ragg::agg_capture(width = width, height = height, units = "in")
+            grDevices::dev.control("enable")
+        }
+    } else {
+        function(width, height) {
+            grDevices::pdf(NULL, width = width, height = height)
+            grDevices::dev.control("enable")
+        }
+    }
 }
 
 #' @inherit patch.grob

@@ -27,6 +27,7 @@ Suggests:
     gridGraphics,
     knitr,
     patchwork,
+    ragg,
     rmarkdown,
     scales,
     seriation,

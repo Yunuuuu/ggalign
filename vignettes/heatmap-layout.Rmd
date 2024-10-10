@@ -73,9 +73,9 @@ cases, packages like [ggrastr](https://github.com/VPetukhov/ggrastr) or
 [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) are helpful.
 Additionally, [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html)
 offers many image filters that can be applied to ggplot2 layers. 
-```{r eval=rlang::is_installed("ggrastr")}
+```{r eval=rlang::is_installed("ragg")}
 ggheatmap(small_mat, filling = FALSE) +
-  ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "cairo_png")
+  ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "ragg")
 ```
 
 ## heatmap annotations
