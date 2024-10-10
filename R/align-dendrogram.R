@@ -59,7 +59,6 @@
 #' @seealso
 #' - [dendrogram_data()]
 #' - [hclust2()]
-#' @importFrom stats order.dendrogram
 #' @export
 align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
@@ -198,8 +197,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ))
                 # reorder parent based on the parent tree
                 panel <- factor(
-                    panel,
-                    parent_levels[order.dendrogram(parent)]
+                    panel, parent_levels[order.dendrogram(parent)]
                 )
                 # we don't cutree, so we won't draw the height line
                 # self$draw_params$height <- attr(ans, "cutoff_height")
