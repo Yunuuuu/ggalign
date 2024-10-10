@@ -104,7 +104,7 @@ available for layout customization:</p>
 <strong><code>align_group</code></strong>: Group and align plots
 based on categorical factors.</li>
 <li>
-<strong><code>align_reorder</code></strong>: Reorder layout
+<strong><code>align_order</code></strong>: Reorder layout
 observations based on statistical weights or allows for manual
 reordering based on user-defined criteria.</li>
 <li>
@@ -145,18 +145,18 @@ can only be added to the heatmap plot.</p>
 <p><img src="layout-customize_files/figure-html/align_group_left-1.png" width="700"></p>
 </div>
 <div class="section level2">
-<h2 id="align_reorder">
-<code>align_reorder</code><a class="anchor" aria-label="anchor" href="#align_reorder"></a>
+<h2 id="align_order">
+<code>align_order</code><a class="anchor" aria-label="anchor" href="#align_order"></a>
 </h2>
-<p>The <code><a href="../reference/align_reorder.html">align_reorder()</a></code> function reorders the rows/columns
-based on a summary function. Like <code><a href="../reference/align_group.html">align_group()</a></code>, it doesn’t
-add a plot area.</p>
-<p>Here, we reorder the rows based on the means.</p>
+<p>The <code><a href="../reference/align_order.html">align_order()</a></code> function order the rows/columns based
+on the summary weights, Like <code><a href="../reference/align_group.html">align_group()</a></code>, it doesn’t add
+a plot area.</p>
+<p>Here, we order the rows based on the means.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
-<p><img src="layout-customize_files/figure-html/align_reorder-1.png" width="700"></p>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
+<p><img src="layout-customize_files/figure-html/align_order-1.png" width="700"></p>
 <p>In addition, we can provide the ordering integer index directly in
 the <code>order</code> argument.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -165,23 +165,23 @@ the <code>order</code> argument.</p>
 <span><span class="co">#&gt; [1] "row3" "row1" "row7" "row6" "row2" "row8" "row9" "row5" "row4"</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span></span></code></pre></div>
-<p><img src="layout-customize_files/figure-html/align_reorder_integer_index-1.png" width="700"></p>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span></span></code></pre></div>
+<p><img src="layout-customize_files/figure-html/align_order_integer_index-1.png" width="700"></p>
 <p>We can also provide the ordering character index.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="layout-customize_files/figure-html/align_reorder_character_index-1.png" width="700"></p>
-<p>By default, <code><a href="../reference/align_reorder.html">align_reorder()</a></code> reorders the rows or columns
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="layout-customize_files/figure-html/align_order_character_index-1.png" width="700"></p>
+<p>By default, <code><a href="../reference/align_order.html">align_order()</a></code> reorders the rows or columns
 in ascending order of the summary function’s output (from bottom to top
 for rows, or from left to right for columns). To reverse this order, you
 can set <code>reverse = TRUE</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="layout-customize_files/figure-html/align_reorder_reverse-1.png" width="700"></p>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="layout-customize_files/figure-html/align_order_reverse-1.png" width="700"></p>
 <p>Some <code>align_*</code> functions accept a <code>data</code>
 argument. This can be a matrix, a data frame, or even a simple vector,
 which will be converted into a one-column matrix. If the
@@ -209,7 +209,7 @@ columns.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -304,7 +304,7 @@ to <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cut
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>In contrast to <code><a href="../reference/align_group.html">align_group()</a></code>,
-<code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>, and <code><a href="../reference/align_reorder.html">align_reorder()</a></code>,
+<code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>, and <code><a href="../reference/align_order.html">align_order()</a></code>,
 <code><a href="../reference/align_dendro.html">align_dendro()</a></code> is capable of drawing plot components. So it
 has a default <code>set_context</code> value of <code>TRUE</code>,
 meaning it will set the active context of the annotation stack layout.
