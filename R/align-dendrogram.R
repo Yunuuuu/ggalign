@@ -5,12 +5,14 @@
 #' [geom_segment()][ggplot2::geom_segment].
 #' @inheritParams hclust2
 #' @inheritParams dendrogram_data
+#' @param reorder_dendrogram A single boolean value, indicates whether we should
+#' reorder the dendrogram based on the means. Default: `FALSE`.
 #' @param merge_dendrogram A single boolean value, indicates whether we should
 #' merge multiple dendrograms, only used when previous groups have been
-#' established.
+#' established. Default: `FALSE`.
 #' @param reorder_group A single boolean value, indicates whether we should do
 #' Hierarchical Clustering between groups, only used when previous groups have
-#' been established.
+#' been established. Default: `FALSE`.
 #' @param k An integer scalar indicates the desired number of groups.
 #' @param h A numeric scalar indicates heights where the tree should be cut.
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
@@ -64,6 +66,7 @@ align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
                          method = "complete",
                          use_missing = "pairwise.complete.obs",
+                         reorder_dendrogram = FALSE,
                          merge_dendrogram = FALSE,
                          reorder_group = FALSE,
                          k = NULL, h = NULL,
@@ -76,6 +79,7 @@ align_dendro <- function(mapping = aes(), ...,
                          free_labs = waiver(),
                          data = NULL,
                          set_context = TRUE, order = NULL, name = NULL) {
+    assert_bool(reorder_dendrogram)
     assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
     assert_bool(plot_dendrogram)
@@ -87,7 +91,8 @@ align_dendro <- function(mapping = aes(), ...,
             k = k, h = h, plot_cut_height = plot_cut_height,
             segment_params = rlang::list2(...),
             center = center, type = type, root = root,
-            merge_dendrogram = merge_dendrogram,
+            reorder_dendro = reorder_dendrogram,
+            merge_dendro = merge_dendrogram,
             reorder_group = reorder_group,
             mapping = mapping,
             plot_dendrogram = plot_dendrogram
@@ -118,6 +123,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
         )
         # initialize the internal parameters
         self$multiple_tree <- FALSE
+        self$height <- NULL
+        self$panel <- NULL
         params
     },
     setup_data = function(self, params, data) {
@@ -132,7 +139,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     #' @importFrom vctrs vec_slice
     compute = function(self, panel, index, distance, method, use_missing,
-                       k = NULL, h = NULL) {
+                       reorder_dendro, k = NULL, h = NULL) {
         data <- .subset2(self, "data")
         if (nrow(data) < 2L) {
             cli::cli_abort(c(
@@ -169,6 +176,9 @@ AlignDendro <- ggproto("AlignDendro", Align,
                             x
                         }
                     })
+                    if (reorder_dendro) {
+                        child <- reorder_dendrogram(child, rowMeans(gdata))
+                    }
                     children[[g]] <- child
                 }
             }
@@ -178,7 +188,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     #' @importFrom stats order.dendrogram
     layout = function(self, panel, index, distance, method, use_missing,
-                      k, h, merge_dendrogram, reorder_group) {
+                      reorder_dendro, merge_dendro, reorder_group,
+                      k, h) {
         statistics <- .subset2(self, "statistics")
         if (!is.null(panel) && is.null(k) && is.null(h)) {
             # reordering the dendrogram ------------------------
@@ -186,7 +197,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 data <- .subset2(self, "data")
                 parent_levels <- levels(panel)
                 parent_data <- t(sapply(parent_levels, function(g) {
-                    colMeans(vec_slice(data, panel == g))
+                    colMeans(vec_slice(data, panel == g), na.rm = TRUE)
                 }))
                 rownames(parent_data) <- parent_levels
                 parent <- stats::as.dendrogram(hclust2(
@@ -196,9 +207,11 @@ AlignDendro <- ggproto("AlignDendro", Align,
                     use_missing = use_missing
                 ))
                 # reorder parent based on the parent tree
-                panel <- factor(
-                    panel, parent_levels[order.dendrogram(parent)]
-                )
+                if (reorder_dendro) {
+                    data <- .subset2(self, "data")
+                    parent <- reorder_dendrogram(parent, rowMeans(parent_data))
+                }
+                panel <- factor(panel, parent_levels[order.dendrogram(parent)])
                 # we don't cutree, so we won't draw the height line
                 # self$draw_params$height <- attr(ans, "cutoff_height")
             } else {
@@ -209,18 +222,28 @@ AlignDendro <- ggproto("AlignDendro", Align,
             if (nlevels(panel) == 1L) {
                 statistics <- .subset2(statistics, 1L)
                 self$statistics <- statistics
-            } else if (merge_dendrogram) {
+            } else if (merge_dendro) {
                 statistics <- merge_dendrogram(parent, statistics)
                 self$statistics <- statistics
             } else {
                 self$multiple_tree <- TRUE
             }
-        } else if (!is.null(k)) {
-            panel <- stats::cutree(statistics, k = k)
-            self$height <- cutree_k_to_h(statistics, k)
-        } else if (!is.null(h)) {
-            panel <- stats::cutree(statistics, h = h)
-            self$height <- h
+        } else {
+            if (reorder_dendro) {
+                data <- .subset2(self, "data")
+                statistics <- reorder_dendrogram(statistics, rowMeans(data))
+                if (!is.null(k) || !is.null(h)) {
+                    statistics <- stats::as.hclust(statistics)
+                }
+                self$statistics <- statistics
+            }
+            if (!is.null(k)) {
+                panel <- stats::cutree(statistics, k = k)
+                self$height <- cutree_k_to_h(statistics, k)
+            } else if (!is.null(h)) {
+                panel <- stats::cutree(statistics, h = h)
+                self$height <- h
+            }
         }
         if (self$multiple_tree) {
             index <- unlist(lapply(statistics, order2), FALSE, FALSE)
@@ -230,6 +253,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         # reorder panel factor levels to following the dendrogram order
         if (!is.null(panel)) {
             panel <- factor(panel, unique(panel[index]))
+            # save panel information, in case of user change it
             self$panel <- panel
         }
         list(panel, index)

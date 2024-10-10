@@ -500,19 +500,6 @@ dendrogram_data <- function(tree,
     list(node = node, edge = edge)
 }
 
-cutree_k_to_h <- function(tree, k) {
-    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
-        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
-    }
-    n <- n1 + 1
-    if (is.unsorted(tree$height)) {
-        cli::cli_abort(
-            "the 'height' component of 'tree' is not sorted (increasingly)"
-        )
-    }
-    mean(tree$height[c(n - k, n - k + 1L)])
-}
-
 # this function won't set the right `midpoint`, but `dendrogram_data` function
 # won't use it, so, it has no hurt to use.
 merge_dendrogram <- function(parent, children) {
@@ -528,7 +515,7 @@ merge_dendrogram <- function(parent, children) {
     parent_branch_heights <- tree_branch_heights(parent)
     cutoff_height <- max(children_heights) + min(parent_branch_heights) * 0.5
     .merge_dendrogram <- function(dend) {
-        if (stats::is.leaf(dend)) { # base version
+        if (stats::is.leaf(dend)) { # base version, leaf should be the index
             .subset2(children, dend)
         } else { # for a branch, we should update the members, height
             attrs <- attributes(dend)
@@ -550,6 +537,25 @@ merge_dendrogram <- function(parent, children) {
     ans <- .merge_dendrogram(parent)
     attr(ans, "cutoff_height") <- cutoff_height
     ans
+}
+
+#' @importFrom stats reorder
+reorder_dendrogram <- function(dend, wts) {
+    if (inherits(dend, "hclust")) dend <- stats::as.dendrogram(dend)
+    reorder(x = dend, wts = wts, agglo.FUN = mean)
+}
+
+cutree_k_to_h <- function(tree, k) {
+    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
+        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
+    }
+    n <- n1 + 1
+    if (is.unsorted(tree$height)) {
+        cli::cli_abort(
+            "the 'height' component of 'tree' is not sorted (increasingly)"
+        )
+    }
+    mean(tree$height[c(n - k, n - k + 1L)])
 }
 
 tree_branch_heights <- function(dend) {

@@ -147,12 +147,12 @@ testthat::test_that("`align_kmeans` works well", {
 
 testthat::test_that("`align_dendro` works well", {
     set.seed(1L)
-    mat <- matrix(stats::rnorm(72L), nrow = 9L)
+    mat <- matrix(stats::rnorm(100L), nrow = 10L)
     # rownames(mat) <- paste0("row", seq_len(nrow(mat)))
     # colnames(mat) <- paste0("column", seq_len(ncol(mat)))
     p <- ggheatmap(mat)
-    row_group <- sample(letters[1:3], 9, replace = TRUE)
-    column_group <- sample(letters[1:3], 8, replace = TRUE)
+    row_group <- sample(letters[1:3], nrow(mat), replace = TRUE)
+    column_group <- sample(letters[1:3], ncol(mat), replace = TRUE)
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_dendro(k = 2L))
 
@@ -164,6 +164,22 @@ testthat::test_that("`align_dendro` works well", {
     expect_doppelganger(
         "dendro_cutree",
         p + hmanno("t") + align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "dendro_reorder_dendro",
+        p + hmanno("t") + align_dendro(reorder_dendrogram = TRUE)
+    )
+    expect_doppelganger(
+        "dendro_reorder_dendro_and_cutree",
+        p + hmanno("t") +
+            align_dendro(aes(color = branch), k = 3L, reorder_dendrogram = TRUE)
+    )
+    expect_doppelganger(
+        "dendro_reorder_dendro_in_and_between_group",
+        p +
+            hmanno("t") +
+            align_group(column_group) +
+            align_dendro(aes(color = branch), reorder_dendrogram = TRUE)
     )
     expect_doppelganger(
         "dendro_between_group",
@@ -182,9 +198,30 @@ testthat::test_that("`align_dendro` works well", {
             align_dendro(merge_dendrogram = TRUE),
     )
     expect_doppelganger(
-        "dendro_reorder_and_merge",
+        "dendro_reorder_and_merge_group",
         p + hmanno("l") + align_group(row_group) +
             align_dendro(reorder_group = TRUE, merge_dendrogram = TRUE),
+    )
+    expect_doppelganger(
+        "dendro_reorder_dendro_in_group_and_merge_group",
+        p +
+            hmanno("t") +
+            align_group(column_group) +
+            align_dendro(aes(color = branch),
+                reorder_dendrogram = TRUE,
+                merge_dendrogram = TRUE
+            )
+    )
+    expect_doppelganger(
+        "dendro_reorder_dendro_in_and_between_group_and_merge_group",
+        p +
+            hmanno("t") +
+            align_group(column_group) +
+            align_dendro(aes(color = branch),
+                reorder_dendrogram = TRUE,
+                reorder_group = TRUE,
+                merge_dendrogram = TRUE
+            )
     )
 })
 

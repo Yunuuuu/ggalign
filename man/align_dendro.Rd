@@ -10,6 +10,7 @@ align_dendro(
   distance = "euclidean",
   method = "complete",
   use_missing = "pairwise.complete.obs",
+  reorder_dendrogram = FALSE,
   merge_dendrogram = FALSE,
   reorder_group = FALSE,
   k = NULL,
@@ -59,13 +60,16 @@ of) one of the strings \code{"everything"}, \code{"all.obs"}, \code{"complete.ob
 \code{"na.or.complete"}, or \code{"pairwise.complete.obs"}. Only used when \code{distance}
 is a correlation coefficient string.}
 
+\item{reorder_dendrogram}{A single boolean value, indicates whether we should
+reorder the dendrogram based on the means. Default: \code{FALSE}.}
+
 \item{merge_dendrogram}{A single boolean value, indicates whether we should
 merge multiple dendrograms, only used when previous groups have been
-established.}
+established. Default: \code{FALSE}.}
 
 \item{reorder_group}{A single boolean value, indicates whether we should do
 Hierarchical Clustering between groups, only used when previous groups have
-been established.}
+been established. Default: \code{FALSE}.}
 
 \item{k}{An integer scalar indicates the desired number of groups.}
 

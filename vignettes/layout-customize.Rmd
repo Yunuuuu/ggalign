@@ -236,6 +236,20 @@ ggheatmap(small_mat) +
     geom_point(aes(color = branch, y = y))
 ```
 
+You can reorder the dendrogram by the mean values of the observation by settting
+`reorder_dendrogram = TRUE`.
+```{r fig.width=10}
+h1 <- ggheatmap(small_mat) +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3, reorder_dendrogram = TRUE) +
+    ggtitle("reorder_dendrogram = TRUE")
+h2 <- ggheatmap(small_mat) +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3) +
+    ggtitle("reorder_dendrogram = FALSE")
+align_plots(h1, h2)
+```
+
 `align_dendro()` can also perform clustering between groups, meaning it can be
 used even if there are existing groups present in the layout, in this way, you
 cannot specify `k` or `h`: 
