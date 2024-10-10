@@ -126,16 +126,16 @@ which axis titles should be free from alignment. Defaults to
 parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
 will be aligned.}
 
-\item{data}{A matrix, a data frame, or even a simple vector that will be
-converted into a one-column matrix. If the \code{data} argument is set to \code{NULL},
-the \verb{align_*} will use the \code{layout} data. Additionally, the \code{data} argument
-can also accept a function (purrr-like lambda is also okay), which will be
-applied with the \code{layout} data,
+\item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
+provided, it will be converted into a one-column matrix. When \code{data = NULL},
+the internal \code{layout} data will be used by default. Additionally, \code{data} can
+be a function (including purrr-like lambdas), which will be applied to the
+\code{layout} data.
 
-It is important to note that all \verb{align_*} functions consider the \code{rows} as
-the observations. It means the \code{NROW(data)} must return the same number with
-the specific \code{layout} axis (meaning the x-axis for vertical stack layout, or
-y-axis for horizontal stack layout).
+It is important to note that we consider the \code{rows} as the observations. It
+means the \code{NROW(data)} must return the same number with the specific \code{layout}
+axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
+stack layout).
 \itemize{
 \item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
 transposed before using (If data is a \code{function}, it will be applied with
