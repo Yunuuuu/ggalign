@@ -130,6 +130,6 @@ stack_layout.default <- function(data, ...) {
 #' @param x An object to test
 #' @return A boolean value
 #' @examples
-#' is.ggstack(ggstack(1:10))
+#' is_ggstack(ggstack(1:10))
 #' @export
-is.ggstack <- function(x) methods::is(x, "StackLayout")
+is_ggstack <- function(x) methods::is(x, "StackLayout")

@@ -77,8 +77,8 @@ reference:
   - hclust2
   - order2
   - dendrogram_data
-  - is.ggheatmap
-  - is.ggstack
+  - is_ggheatmap
+  - is_ggstack
   - geom_draw
   - read_example
 

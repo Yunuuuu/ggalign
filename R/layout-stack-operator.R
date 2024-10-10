@@ -6,7 +6,7 @@ layout_stack_subtract <- function(object, stack, object_name) {
 #' @export
 layout_stack_subtract.default <- function(object, stack, object_name) {
     stack@plots <- lapply(stack@plots, function(plot) {
-        if (is.ggheatmap(plot)) {
+        if (is_ggheatmap(plot)) {
             plot <- layout_heatmap_subtract(object, plot, object_name)
         } else if (!is.null(.subset2(plot, "plot"))) {
             # if `align` has plot, we added the object
@@ -34,7 +34,7 @@ layout_stack_and_add <- function(object, stack, object_name) {
 #' @export
 layout_stack_and_add.default <- function(object, stack, object_name) {
     stack@plots <- lapply(stack@plots, function(plot) {
-        if (is.ggheatmap(plot)) {
+        if (is_ggheatmap(plot)) {
             plot <- layout_heatmap_and_add(object, plot, object_name)
         } else if (!is.null(.subset2(plot, "plot"))) {
             # if `align` has plot, we added the object

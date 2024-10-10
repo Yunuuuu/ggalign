@@ -27,8 +27,8 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
 
     # we remove the plot without actual plot area
     keep <- vapply(plots, function(plot) {
-        (is.align(plot) && !is.null(.subset2(plot, "plot"))) ||
-            is.ggheatmap(plot)
+        (is_align(plot) && !is.null(.subset2(plot, "plot"))) ||
+            is_ggheatmap(plot)
     }, logical(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, keep)
     if (is_empty(plots)) {
@@ -37,7 +37,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
-        if (is.align(plot)) {
+        if (is_align(plot)) {
             .subset2(plot, "order")
         } else {
             plot@order
@@ -54,7 +54,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
     has_top <- FALSE
     has_bottom <- FALSE
     for (plot in plots) {
-        if (is.align(plot)) {
+        if (is_align(plot)) {
             patch <- align_build(plot,
                 panel = panel, index = index,
                 extra_panel = extra_panel,
@@ -69,7 +69,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
                 .subset2(patch, "plot"),
                 .subset2(patch, "size")
             )
-        } else if (is.ggheatmap(plot)) {
+        } else if (is_ggheatmap(plot)) {
             # for a heatmap
             patch <- heatmap_build(plot,
                 plot_data = plot_data,

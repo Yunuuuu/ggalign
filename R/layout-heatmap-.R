@@ -215,6 +215,6 @@ heatmap_layout.default <- function(data, ...) {
 #' @param x An object to test
 #' @return A boolean value
 #' @examples
-#' is.ggheatmap(ggheatmap(1:10))
+#' is_ggheatmap(ggheatmap(1:10))
 #' @export
-is.ggheatmap <- function(x) methods::is(x, "HeatmapLayout")
+is_ggheatmap <- function(x) methods::is(x, "HeatmapLayout")

@@ -236,7 +236,7 @@ stack_add_ggelement <- function(object, stack, object_name, layout_name) {
         ))
     }
     plot <- stack@plots[[active_index]]
-    if (is.ggheatmap(plot)) {
+    if (is_ggheatmap(plot)) {
         plot <- layout_heatmap_add(object, plot, object_name)
     } else {
         plot <- align_add(object, plot, object_name)
@@ -250,7 +250,7 @@ stack_add_ggelement <- function(object, stack, object_name, layout_name) {
 stack_add_heatmap_element <- function(object, stack, object_name, force,
                                       stack_add_fun) {
     if (!is.null(active_index <- get_context(stack)) &&
-        is.ggheatmap(plot <- .subset2(stack@plots, active_index))) {
+        is_ggheatmap(plot <- .subset2(stack@plots, active_index))) {
         plot <- layout_heatmap_add(object, plot, object_name)
         stack@plots[[active_index]] <- plot
         axis <- to_coord_axis(stack@direction)

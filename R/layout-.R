@@ -23,7 +23,7 @@ methods::setClass("Layout",
     )
 )
 
-is.layout <- function(x) methods::is(x, "Layout")
+is_layout <- function(x) methods::is(x, "Layout")
 
 #' @export
 print.Layout <- print.alignpatches
@@ -338,7 +338,7 @@ set_layout.StackLayout <- function(x, layout, ..., value) {
     slot(x, layout) <- value
     axis <- to_coord_axis(x@direction)
     x@plots <- lapply(x@plots, function(plot) {
-        if (is.ggheatmap(plot)) {
+        if (is_ggheatmap(plot)) {
             set_layout(plot, layout = layout, axis = axis, value = value)
         } else {
             plot

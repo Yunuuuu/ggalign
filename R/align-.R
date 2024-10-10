@@ -162,7 +162,7 @@ plot.Align <- function(x, ...) {
     cli::cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 
-is.align <- function(x) inherits(x, "Align")
+is_align <- function(x) inherits(x, "Align")
 
 #' @section Align:
 #' Each of the `Align*` objects is just a [ggproto()][ggplot2::ggproto] object,
