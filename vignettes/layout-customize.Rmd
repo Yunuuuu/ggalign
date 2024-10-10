@@ -236,8 +236,8 @@ ggheatmap(small_mat) +
     geom_point(aes(color = branch, y = y))
 ```
 
-You can reorder the dendrogram by the mean values of the observation by settting
-`reorder_dendrogram = TRUE`.
+You can reorder the dendrogram based on the mean values of the observations by
+setting `reorder_dendrogram = TRUE`.
 ```{r fig.width=10}
 h1 <- ggheatmap(small_mat) +
     hmanno("t") +
@@ -294,9 +294,9 @@ ggheatmap(small_mat) +
     )
 ```
 
-If you specify `k` or `h`, this always turn off the sub-clustering. The same
-principle applies to `align_dendro()`, the new groups must be nested in the
-previously established groups.
+If you specify `k` or `h`, this will always turn off sub-clustering. The same
+principle applies to `align_dendro()`, where new groups must be nested within
+the previously established groups.  
 ```{r error=TRUE}
 ggheatmap(small_mat) +
     hmanno("t") +
