@@ -37,8 +37,8 @@ ggproto_clone <- function(ggproto) {
 #######################################################################
 #' @keywords internal
 coord_ggalign <- function(xlim_list = NULL, ylim_list = NULL) {
-    if (!is.list(xlim_list)) xlim_list <- list(xlim_list)
-    if (!is.list(ylim_list)) ylim_list <- list(ylim_list)
+    if (!is.null(xlim_list) && !is.list(xlim_list)) xlim_list <- list(xlim_list)
+    if (!is.null(ylim_list) && !is.list(ylim_list)) ylim_list <- list(ylim_list)
     structure(
         list(xlim_list = xlim_list, ylim_list = ylim_list),
         class = "coord_ggalign"
@@ -78,19 +78,14 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
         setup_panel_params = function(self, scale_x, scale_y, params = list()) {
             cur_panel <- self$panel_counter + 1L
             on.exit(self$panel_counter <- cur_panel)
-            xlim_list <- .subset2(object, "xlim_list")
-            if (length(xlim_list) >= cur_panel) {
-                xlim <- .subset2(xlim_list, cur_panel)
-            } else {
-                xlim <- NULL
+            if (!is.null(xlim_list <- .subset2(object, "xlim_list")) &&
+                length(xlim_list) >= cur_panel) {
+                self$limits$x <- .subset2(xlim_list, cur_panel)
             }
-            ylim_list <- .subset2(object, "ylim_list")
-            if (length(ylim_list) >= cur_panel) {
-                ylim <- .subset2(ylim_list, cur_panel)
-            } else {
-                ylim <- NULL
+            if (!is.null(ylim_list <- .subset2(object, "ylim_list")) &&
+                length(ylim_list) >= cur_panel) {
+                self$limits$y <- .subset2(ylim_list, cur_panel)
             }
-            self$limits <- list(x = xlim, y = ylim)
             ggproto_parent(Parent, self)$setup_panel_params(
                 scale_x = scale_x, scale_y = scale_y, params = params
             )
