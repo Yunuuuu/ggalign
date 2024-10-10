@@ -1,6 +1,8 @@
 # ggalign 0.0.4
 
-*`align_dendro()` gain a new argument `reorder_dendrogram` to control whether to reorder the generated dendrogram based on the mean values.
+* `set_context` argument in `align_dendro()` now depends on `plot_dendrogram` by default
+
+* `align_dendro()` gain a new argument `reorder_dendrogram` to control whether to reorder the generated dendrogram based on the mean values.
 
 * `align_reorder()` now splitted into two function `align_order()` and `align_reorder()`
 
