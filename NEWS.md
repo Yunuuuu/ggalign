@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `align_reorder()` now splitted into two function `align_order()` and `align_reorder()`
+
 * `dendrogram_data()` gain a new argument `reorder_branches` to control whether to reorder the input `leaf_braches` based on the tree.
 
 * `align_dendro()` gain new argument `merge_dendrogram` to control whether the dendrograms in multiple groups should be merged
