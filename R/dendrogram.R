@@ -29,9 +29,7 @@
 #' @return A [hclust][stats::hclust] object.
 #' @importFrom rlang is_string try_fetch
 #' @export
-hclust2 <- function(matrix,
-                    distance = "euclidean",
-                    method = "complete",
+hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                     use_missing = "pairwise.complete.obs") {
     call <- current_call() # used for message
     method <- allow_lambda(method)
@@ -48,42 +46,10 @@ hclust2 <- function(matrix,
         )
         return(ans)
     }
-    distance <- allow_lambda(distance)
-    if (is_string(distance)) {
-        distance <- match.arg(
-            distance, c(
-                "euclidean", "maximum", "manhattan", "canberra",
-                "binary", "minkowski", "pearson", "spearman", "kendall"
-            )
-        )
-        d <- switch(distance,
-            euclidean = ,
-            maximum = ,
-            manhattan = ,
-            canberra = ,
-            binary = ,
-            minkowski = stats::dist(matrix, method = distance),
-            pearson = ,
-            spearman = ,
-            kendall = stats::as.dist(
-                1 - stats::cor(t(matrix), use = use_missing, method = distance)
-            ),
-            cli::cli_abort("Unsupported {.arg distance} method specified")
-        )
-    } else if (is.function(distance)) {
-        d <- distance(matrix)
-        if (inherits(distance, "dist")) {
-            cli::cli_abort("{.arg distance} must return a {.cls dist} object")
-        }
-    } else if (inherits(distance, "dist")) {
-        d <- distance
-    } else if (is.null(distance)) {
+    if (is.null(distance)) {
         d <- matrix
     } else {
-        cli::cli_abort(paste(
-            "{.arg distance} can only be a {.cls string}, {.cls dist}",
-            "object, or a {.cls function} return {.cls dist}"
-        ))
+        d <- make_dist(matrix, distance, use_missing)
     }
     if (is_string(method)) {
         ans <- stats::hclust(d, method = method)
@@ -100,6 +66,52 @@ hclust2 <- function(matrix,
         )
     }
     ans
+}
+
+make_dist <- function(matrix, distance, use_missing,
+                      arg = caller_arg(distance), call = caller_call()) {
+    distance <- allow_lambda(distance)
+    if (is_string(distance)) {
+        distance <- rlang::arg_match0(distance, c(
+            "euclidean", "maximum", "manhattan", "canberra",
+            "binary", "minkowski", "pearson", "spearman", "kendall"
+        ), arg_nm = arg, error_call = call)
+        d <- switch(distance,
+            euclidean = ,
+            maximum = ,
+            manhattan = ,
+            canberra = ,
+            binary = ,
+            minkowski = stats::dist(matrix, method = distance),
+            pearson = ,
+            spearman = ,
+            kendall = stats::as.dist(
+                1 - stats::cor(t(matrix), use = use_missing, method = distance)
+            ),
+            cli::cli_abort("Unsupported {.arg {arg}} method specified",
+                call = call
+            )
+        )
+    } else if (is.function(distance)) {
+        d <- distance(matrix)
+        if (inherits(distance, "dist")) {
+            cli::cli_abort(
+                "{.arg {arg}} must return a {.cls dist} object",
+                call = call
+            )
+        }
+    } else if (inherits(distance, "dist")) {
+        d <- distance
+    } else {
+        cli::cli_abort(
+            paste(
+                "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
+                "object, or a {.cls function} return {.cls dist}"
+            ),
+            call = call
+        )
+    }
+    d
 }
 
 #' Dengrogram x and y coordinates
