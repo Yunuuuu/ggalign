@@ -329,8 +329,8 @@ to the <code>cutree</code> result:</p>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>You can reorder the dendrogram by the mean values of the observation
-by settting <code>reorder_dendrogram = TRUE</code>.</p>
+<p>You can reorder the dendrogram based on the mean values of the
+observations by setting <code>reorder_dendrogram = TRUE</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -384,9 +384,9 @@ in the layout, in this way, you cannot specify <code>k</code> or
 <span>        merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
-<p>If you specify <code>k</code> or <code>h</code>, this always turn off
-the sub-clustering. The same principle applies to
-<code><a href="../reference/align_dendro.html">align_dendro()</a></code>, the new groups must be nested in the
+<p>If you specify <code>k</code> or <code>h</code>, this will always
+turn off sub-clustering. The same principle applies to
+<code><a href="../reference/align_dendro.html">align_dendro()</a></code>, where new groups must be nested within the
 previously established groups.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
