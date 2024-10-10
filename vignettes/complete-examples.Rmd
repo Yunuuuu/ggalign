@@ -73,7 +73,7 @@ Here, we ordered the heatmap rows based on `seriate`.
 ggheatmap(small_mat) +
     scale_fill_viridis_c() +
     hmanno("l") +
-    align_reorder(seriation::seriate, method = "BEA_TSP")
+    align_reorder(seriation::seriate)
 ```
 
 # Heatmap annotation plot
