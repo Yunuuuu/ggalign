@@ -25,7 +25,7 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
-## Why I cannot add a dendrogram with `reorder_group = TRUE` behind a dendrogram with `reorder_group = FALSE`?
+## Why can't I add two dendrograms with different `reorder` settings?
 
 > Note: We always prevent users from reordering the layout axis twice.
 
@@ -79,7 +79,7 @@ want a consistent transformation applied across all, you can utilize the
 `plot_data` argument in the `ggalign()` or `ggpanel()` function. This allows you
 to transform the default data for all additive geoms.
 
-## Why are there spaces after setting all plot.margin to zero?
+## Why are there spaces after setting all `plot.margin` to zero?
 By default, ggalign doesn't add spaces between plots. If you notice spaces, they
 are likely due to:
 
