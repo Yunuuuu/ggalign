@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(ggalign)
 ```
 
-In this thread, We'll use `ggalign` to draw all the heatmap in
+In this thread, we'll use `ggalign` to draw all the heatmap in
 <https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html>. 
 
 
