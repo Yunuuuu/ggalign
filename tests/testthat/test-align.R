@@ -147,7 +147,7 @@ testthat::test_that("`align_kmeans` works well", {
 
 testthat::test_that("`align_dendro` works well", {
     set.seed(1L)
-    mat <- matrix(stats::rnorm(100L), nrow = 10L)
+    mat <- matrix(stats::rnorm(120L), nrow = 10L)
     # rownames(mat) <- paste0("row", seq_len(nrow(mat)))
     # colnames(mat) <- paste0("column", seq_len(ncol(mat)))
     p <- ggheatmap(mat)
