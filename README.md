@@ -78,7 +78,7 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # initialize the heatmap layout, we can regard it as a normal ggplot object
-ggheatmap(small_mat) + 
+ggheatmap(small_mat) +
     # we can directly modify geoms, scales and other ggplot2 components
     scale_fill_viridis_c() +
     # add annotation in the top
@@ -95,11 +95,12 @@ ggheatmap(small_mat) +
 
 ## Compare with other ggplot2 heatmap extension
 
-The main advantage of `ggalign` over other extensions like
-[ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) is its full
-compatibility with the ggplot2 grammar. You can seamlessly use any
-ggplot2 geoms, stats, and scales to build complex layouts, including
-multiple heatmaps arranged vertically or horizontally.
+`ggalign` offers advantages over extensions like
+[ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) by providing full
+compatibility with `ggplot2`. With `ggalign`, you can: - Seamlessly
+integrate ggplot2 `geoms`, `stats`, and `scales` into your layouts. -
+Align dendrograms even in facetted plots. - Create multi-panel layouts
+with ease.
 
 ## Compare with ComplexHeatmap
 
@@ -135,5 +136,5 @@ Here are some more advanced visualizations using `ggalign`:
   Plot](https://yunuuuu.github.io/ggalign/articles/layout-plot.html)
 - [Stack
   Layout](https://yunuuuu.github.io/ggalign/articles/stack-layout.html)
-- [Scales and
-  Facets](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html)
+- [Special Syntax for Layout
+  Axis](https://yunuuuu.github.io/ggalign/articles/special-syntax.html)
