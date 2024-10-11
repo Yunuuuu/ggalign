@@ -102,8 +102,8 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="why-i-cannot-add-a-dendrogram-with-reorder_group-true-behind-a-dendrogram-with-reorder_group-false">Why I cannot add a dendrogram with <code>reorder_group = TRUE</code>
-behind a dendrogram with <code>reorder_group = FALSE</code>?<a class="anchor" aria-label="anchor" href="#why-i-cannot-add-a-dendrogram-with-reorder_group-true-behind-a-dendrogram-with-reorder_group-false"></a>
+<h2 id="why-cant-i-add-two-dendrograms-with-different-reorder-settings">Why can’t I add two dendrograms with different <code>reorder</code>
+settings?<a class="anchor" aria-label="anchor" href="#why-cant-i-add-two-dendrograms-with-different-reorder-settings"></a>
 </h2>
 <blockquote>
 <p>Note: We always prevent users from reordering the layout axis
@@ -161,7 +161,8 @@ all, you can utilize the <code>plot_data</code> argument in the
 you to transform the default data for all additive geoms.</p>
 </div>
 <div class="section level2">
-<h2 id="why-are-there-spaces-after-setting-all-plot-margin-to-zero">Why are there spaces after setting all plot.margin to zero?<a class="anchor" aria-label="anchor" href="#why-are-there-spaces-after-setting-all-plot-margin-to-zero"></a>
+<h2 id="why-are-there-spaces-after-setting-all-plot-margin-to-zero">Why are there spaces after setting all <code>plot.margin</code> to
+zero?<a class="anchor" aria-label="anchor" href="#why-are-there-spaces-after-setting-all-plot-margin-to-zero"></a>
 </h2>
 <p>By default, ggalign doesn’t add spaces between plots. If you notice
 spaces, they are likely due to:</p>
