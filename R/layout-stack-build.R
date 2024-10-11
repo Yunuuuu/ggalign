@@ -1,6 +1,7 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    layout_theme <- x@theme %||% default_theme()
+    layout_theme <- x@theme %||%
+        default_theme() + theme(panel.border = element_blank())
     # we by default, collect all guides
     x@params$guides <- .subset2(x@params, "guides") %|w|% "tlbr"
     .subset2(stack_build(x, layout_theme = layout_theme), "plot") %||%

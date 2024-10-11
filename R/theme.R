@@ -11,15 +11,23 @@ default_theme <- function() {
     ans
 }
 
-#' Complete theme for ggalign package
+#' Complete theme for layout plots
 #'
-#' Default theme for `r rd_layout()`. You can use the option
-#' `r rd_values(sprintf("%s.default_theme", pkg_nm()))` to change the default
-#' theme.
+#' Default theme for `r rd_layout()`.
+#'
+#' @details
+#' You can use the option `r rd_values(sprintf("%s.default_theme", pkg_nm()))`
+#' to change the default theme.
+#'
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic
-#' @return A complete [theme][ggplot2::theme] object.
-#' @examples theme_ggalign()
+#' @return A [theme][ggplot2::theme] object.
+#' @examples
+#' old <- options(ggalign.default_theme = theme_bw())
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("top") +
+#'     align_dendro(k = 3L)
+#' options(ggalign.default_theme = old)
 #' @export
 theme_ggalign <- function(...) {
     theme_classic(...) +

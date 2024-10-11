@@ -21,7 +21,7 @@
 #' You can use the option
 #' `r rd_values(sprintf("%s.heatmap_continuous_fill", pkg_nm()))` or
 #' `r rd_values(sprintf("%s.heatmap_discrete_fill", pkg_nm()))` to modify the
-#' default heatmap body fill scale. See
+#' default heatmap body fill color scale. See
 #' [`scale_fill_continuous()`][ggplot2::scale_fill_continuous] or
 #' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for option setting
 #' details.

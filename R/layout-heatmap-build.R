@@ -1,7 +1,8 @@
 #' @importFrom grid unit.c
 #' @export
 ggalign_build.HeatmapLayout <- function(x) {
-    layout_theme <- x@theme %||% default_theme()
+    layout_theme <- x@theme %||%
+        default_theme() + theme(panel.border = element_blank())
     patches <- heatmap_build(x, layout_theme = layout_theme)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
