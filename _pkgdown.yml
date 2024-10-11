@@ -79,7 +79,6 @@ reference:
   - dendrogram_data
   - is_ggheatmap
   - is_ggstack
-  - geom_draw
   - read_example
 
 - title: internal
