@@ -255,6 +255,7 @@ used even if there are existing groups present in the layout, in this way, you
 cannot specify `k` or `h`: 
 
 ```{r}
+set.seed(3L)
 column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
 ggheatmap(small_mat) +
     hmanno("t") +
