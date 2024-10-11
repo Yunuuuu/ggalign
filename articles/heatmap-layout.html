@@ -95,7 +95,7 @@
 customizable heatmaps in R using ggplot2. This vignette will guide you through
 its usage.</p>
 <div class="section level2">
-<h2 id="input-data">Input Data<a class="anchor" aria-label="anchor" href="#input-data"></a>
+<h2 id="input-data">input data<a class="anchor" aria-label="anchor" href="#input-data"></a>
 </h2>
 <p>The data input can be a numeric or character vector, a data frame, and any other
 data which can be converted into a matrix.</p>
@@ -143,8 +143,8 @@ offers many image filters that can be applied to ggplot2 layers.</p>
 <span>  <span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-3-1.png"><!-- --></p>
 <p>Indeed, we have add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and
-<code><a href="../reference/stack_layout.html">ggstack()</a></code> objects, you can directly call <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code> to the
-<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> which will rasterise all plots in the layout.</p>
+<code><a href="../reference/stack_layout.html">ggstack()</a></code> objects, you can directly call <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code> which will
+rasterise all plots in the layout.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-4-1.png"><!-- --></p>
@@ -302,7 +302,7 @@ they originate.</p>
 <p>This package provides the <code>guides</code> and <code>free_guides</code> arguments for precise control
 over guide legends.</p>
 <div class="section level3">
-<h3 id="which-position-of-guide-legends-should-be-collected-in-the-layout">which position of guide legends should be collected in the layout?<a class="anchor" aria-label="anchor" href="#which-position-of-guide-legends-should-be-collected-in-the-layout"></a>
+<h3 id="legend-position-in-layout">Legend Position in Layout<a class="anchor" aria-label="anchor" href="#legend-position-in-layout"></a>
 </h3>
 <p>The <code>guides</code> argument controls which positions of guide legends should be
 collected in the layout. They will be collected to their original side.</p>
@@ -350,7 +350,7 @@ legends.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="which-position-of-guide-legends-should-be-collected-for-a-single-plot">which position of guide legends should be collected for a single plot?<a class="anchor" aria-label="anchor" href="#which-position-of-guide-legends-should-be-collected-for-a-single-plot"></a>
+<h3 id="legend-position-for-a-single-plot">Legend Position for a Single Plot<a class="anchor" aria-label="anchor" href="#legend-position-for-a-single-plot"></a>
 </h3>
 <p>The <code>free_guides</code> argument allows you to override the <code>guides</code> argument for a
 single plot.</p>
