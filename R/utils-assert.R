@@ -81,7 +81,7 @@ check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
             "a numeric or unit object of length 3"
         ), call = call)
     }
-    if (l == 1L) sizes <- rep(sizes, times = 3L)
+    if (l == 1L) sizes <- rep(sizes, length.out = 3L)
     if (!is.unit(sizes)) sizes <- unit(sizes, "null")
     sizes
 }
