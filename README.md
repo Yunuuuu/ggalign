@@ -97,10 +97,13 @@ ggheatmap(small_mat) +
 
 `ggalign` offers advantages over extensions like
 [ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) by providing full
-compatibility with `ggplot2`. With `ggalign`, you can: - Seamlessly
-integrate ggplot2 `geoms`, `stats`, and `scales` into your layouts. -
-Align dendrograms even in facetted plots. - Create multi-panel layouts
-with ease.
+compatibility with `ggplot2`. With `ggalign`, you can:
+
+- Seamlessly integrate ggplot2 `geoms`, `stats`, `scales` et al. into
+  your layouts.
+- Align dendrograms even in facetted plots.
+- Easily create complex layouts, including multiple heatmaps arranged
+  both vertically and horizontally.
 
 ## Compare with ComplexHeatmap
 
