@@ -94,7 +94,7 @@ articles:
   - layout-customize
   - layout-plot
   - stack-layout
-  - scales-and-facets
+  - special-syntax
   - complete-examples
 
 - title: Plot composer

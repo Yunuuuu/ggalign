@@ -114,17 +114,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     do_row_facet <- nlevels(ypanel) > 1L
     do_column_facet <- nlevels(xpanel) > 1L
 
-    x_layout <- list(
-        panel = xpanel,
-        index = xindex,
-        labels = colnames(mat)
-    )
-    y_layout <- list(
-        panel = ypanel,
-        index = yindex,
-        labels = rownames(mat)
-    )
-
     # then we add facet -----------------------------------
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
@@ -149,10 +138,13 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
         # we only support `FacetNull` if there have no panel
         default_facet <- ggplot2::facet_null()
     }
-    xlim_list <- set_limits("x", x_layout)
-    ylim_list <- set_limits("y", y_layout)
+
+    x_params <- list(panel = xpanel, index = xindex, labels = colnames(mat))
+    y_params <- list(panel = ypanel, index = yindex, labels = rownames(mat))
+    xlim_list <- set_limits("x", x_params)
+    ylim_list <- set_limits("y", y_params)
     p <- p + heatmap_melt_facet(p$facet, default_facet) +
-        facet_ggalign(x = x_layout, y = y_layout) +
+        facet_ggalign(x = x_params, y = y_params) +
         coord_ggalign(
             xlim_list = rep(xlim_list, times = nlevels(ypanel)),
             ylim_list = rep(ylim_list, each = nlevels(xpanel))

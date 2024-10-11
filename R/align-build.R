@@ -71,23 +71,23 @@ align_build <- function(x, panel, index,
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        layout <- list(
+        params <- list(
             panel = panel, index = index,
             labels = .subset2(x, "labels")
         )
         plot <- plot + align_melt_facet(plot$facet, default_facet, direction) +
             switch_direction(
                 direction,
-                facet_ggalign(y = layout),
-                facet_ggalign(x = layout)
+                facet_ggalign(y = params),
+                facet_ggalign(x = params)
             )
         # set up coord limits to align each observation
         if (.subset2(x, "limits")) {
             plot <- plot +
                 switch_direction(
                     direction,
-                    coord_ggalign(ylim_list = set_limits("y", layout)),
-                    coord_ggalign(xlim_list = set_limits("x", layout))
+                    coord_ggalign(ylim_list = set_limits("y", params)),
+                    coord_ggalign(xlim_list = set_limits("x", params))
                 )
         }
     }

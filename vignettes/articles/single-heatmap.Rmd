@@ -451,12 +451,6 @@ ggheatmap(mat) +
     theme(plot.margin = margin())
 ```
 
-I'm unsure if `ggalign` should automatically reorder theme elements when
-reordering data, as shown in 
-[scales](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html#data-ordering).
-To ensure the theme elements reflect the final data ordering, users should
-manually specify them after any reordering operations now. 
-
 ```{r}
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
