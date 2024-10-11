@@ -209,7 +209,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ))
                 # reorder parent based on the parent tree
                 if (reorder_dendro) {
-                    data <- .subset2(self, "data")
                     parent <- reorder_dendrogram(parent, rowMeans(parent_data))
                 }
                 panel <- factor(panel, parent_levels[order.dendrogram(parent)])
@@ -222,11 +221,15 @@ AlignDendro <- ggproto("AlignDendro", Align,
             # merge children tree ------------------------------
             if (nlevels(panel) == 1L) {
                 statistics <- .subset2(statistics, 1L)
-                self$statistics <- statistics
             } else if (merge_dendro) {
+                # `merge_dendrogram` will follow the order of the parent
                 statistics <- merge_dendrogram(parent, statistics)
-                self$statistics <- statistics
             } else {
+                # if no parent tree, and we havn't merged the tree
+                # we must manually reorder the dendrogram
+                if (!is.null(parent)) {
+                    statistics <- .subset(statistics, levels(panel))
+                }
                 self$multiple_tree <- TRUE
             }
         } else {
@@ -236,7 +239,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 if (!is.null(k) || !is.null(h)) {
                     statistics <- stats::as.hclust(statistics)
                 }
-                self$statistics <- statistics
             }
             if (!is.null(k)) {
                 panel <- stats::cutree(statistics, k = k)
@@ -246,6 +248,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 self$height <- h
             }
         }
+        # save the modified `statistics`
+        self$statistics <- statistics
         if (self$multiple_tree) {
             index <- unlist(lapply(statistics, order2), FALSE, FALSE)
         } else {
