@@ -103,7 +103,7 @@ compatibility with `ggplot2`. With `ggalign`, you can:
   your layouts.
 - Align dendrograms even in facetted plots.
 - Easily create complex layouts, including multiple heatmaps arranged
-  both vertically and horizontally.
+  vertically or horizontally.
 
 ## Compare with ComplexHeatmap
 
