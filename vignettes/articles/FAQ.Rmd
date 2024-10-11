@@ -25,6 +25,32 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
+## Can I change the default data for all geoms?
+All function in `ggalign` requires specific data formats for its operations. If
+you need to transform or filter data for individual `geoms`, you can use the
+`data` argument within each `geom`. However, if you have multiple `geoms` and
+want a consistent transformation applied across all, you can utilize the
+`plot_data` argument in the `ggalign()` or `ggpanel()` function. This allows you
+to transform the default data for all additive geoms.
+
+## Why are there spaces after setting all `plot.margin` to zero?
+By default, ggalign doesn't add spaces between plots. If you notice spaces, they
+are likely due to:
+
+- Plot margins within individual plots.
+- Scale expansion automatically added by ggplot2.
+
+You can resolve this by removing the scale expansion and adjusting the margins
+in the theme: 
+```{r}
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    hmanno("t") +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_y_continuous(expand = expansion()) &
+    theme(plot.margin = margin())
+```
+
 ## Why can't I add two dendrograms with different `reorder` settings?
 
 > Note: We always prevent users from reordering the layout axis twice.
@@ -70,32 +96,6 @@ all(index == new_index)
 To prevent reordering of the layout axis twice, we ensure that the `new_index`
 matches the `index` (if `index` is not NULL). This is done to maintain
 consistency and prevent conflicts in the ordering of the heatmap.
-
-## Can I change the default data for all geoms?
-All function in `ggalign` requires specific data formats for its operations. If
-you need to transform or filter data for individual `geoms`, you can use the
-`data` argument within each `geom`. However, if you have multiple `geoms` and
-want a consistent transformation applied across all, you can utilize the
-`plot_data` argument in the `ggalign()` or `ggpanel()` function. This allows you
-to transform the default data for all additive geoms.
-
-## Why are there spaces after setting all `plot.margin` to zero?
-By default, ggalign doesn't add spaces between plots. If you notice spaces, they
-are likely due to:
-
-- Plot margins within individual plots.
-- Scale expansion automatically added by ggplot2.
-
-You can resolve this by removing the scale expansion and adjusting the margins
-in the theme: 
-```{r}
-ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
-    hmanno("t") +
-    align_dendro(aes(color = branch), k = 3L) +
-    scale_y_continuous(expand = expansion()) &
-    theme(plot.margin = margin())
-```
 
 ## Session information
 ```{r}
