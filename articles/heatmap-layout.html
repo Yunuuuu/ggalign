@@ -131,7 +131,7 @@ default <code>mapping</code> and <code>data</code>. You can add <code>ggplot2</c
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-2-1.png"><!-- --></p>
-<p>By default, a heatmap layer is added. If you set filling = FALSE, a blank
+<p>By default, a heatmap layer is added. If you set <code>filling = FALSE</code>, a blank
 heatmap will be drawn, allowing for customized filling geoms. For larger
 matrices, you may want to use a raster layer for faster rendering. In such
 cases, packages like <a href="https://github.com/VPetukhov/ggrastr" class="external-link">ggrastr</a> or

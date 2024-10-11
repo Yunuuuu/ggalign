@@ -141,7 +141,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># initialize the heatmap layout, we can regard it as a normal ggplot object</span></span>
-<span><span class="fu"><a href="reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># we can directly modify geoms, scales and other ggplot2 components</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># add annotation in the top</span></span>
@@ -157,7 +157,7 @@
 <div class="section level2">
 <h2 id="compare-with-other-ggplot2-heatmap-extension">Compare with other ggplot2 heatmap extension<a class="anchor" aria-label="anchor" href="#compare-with-other-ggplot2-heatmap-extension"></a>
 </h2>
-<p>The main advantage of <code>ggalign</code> over other extensions like <a href="https://github.com/XiaoLuo-boy/ggheatmap" class="external-link">ggheatmap</a> is its full compatibility with the ggplot2 grammar. You can seamlessly use any ggplot2 geoms, stats, and scales to build complex layouts, including multiple heatmaps arranged vertically or horizontally.</p>
+<p><code>ggalign</code> offers advantages over extensions like <a href="https://github.com/XiaoLuo-boy/ggheatmap" class="external-link">ggheatmap</a> by providing full compatibility with <code>ggplot2</code>. With <code>ggalign</code>, you can: - Seamlessly integrate ggplot2 <code>geoms</code>, <code>stats</code>, and <code>scales</code> into your layouts. - Align dendrograms even in facetted plots. - Create multi-panel layouts with ease.</p>
 </div>
 <div class="section level2">
 <h2 id="compare-with-complexheatmap">Compare with ComplexHeatmap<a class="anchor" aria-label="anchor" href="#compare-with-complexheatmap"></a>
@@ -193,7 +193,7 @@
 <li><a href="https://yunuuuu.github.io/ggalign/articles/layout-customize.html">Layout Customization</a></li>
 <li><a href="https://yunuuuu.github.io/ggalign/articles/layout-plot.html">Layout Plot</a></li>
 <li><a href="https://yunuuuu.github.io/ggalign/articles/stack-layout.html">Stack Layout</a></li>
-<li><a href="https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html">Scales and Facets</a></li>
+<li><a href="https://yunuuuu.github.io/ggalign/articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
 </ul>
 </div>
 </div>
