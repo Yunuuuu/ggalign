@@ -1,8 +1,8 @@
 ---
-title: "Special Syntax for Axis Alignment in ggalign"
+title: "Special Syntax for Layout Axis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Special Syntax for Axis Alignment in ggalign}
+  %\VignetteIndexEntry{Special Syntax for Layout Axis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
