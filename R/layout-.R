@@ -25,6 +25,14 @@ methods::setClass("Layout",
     )
 )
 
+layout_default <- function(layout) {
+    layout@theme <- layout@theme %||%
+        default_theme() + theme(panel.border = element_blank())
+    # we by default, collect all guides
+    layout@params$guides <- .subset2(layout@params, "guides") %|w|% "tlbr"
+    layout
+}
+
 is_layout <- function(x) methods::is(x, "Layout")
 
 #' @export

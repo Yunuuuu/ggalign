@@ -1,9 +1,8 @@
 #' @importFrom grid unit.c
 #' @export
 ggalign_build.HeatmapLayout <- function(x) {
-    layout_theme <- x@theme %||%
-        default_theme() + theme(panel.border = element_blank())
-    patches <- heatmap_build(x, layout_theme = layout_theme)
+    x <- layout_default(x)
+    patches <- heatmap_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
     design <- list(
@@ -32,12 +31,12 @@ ggalign_build.HeatmapLayout <- function(x) {
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(x@params, "guides") %|w|% "tlbr"
+        guides = .subset2(x@params, "guides")
     ) + layout_title(
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
-    ) + layout_annotation(theme = layout_theme)
+    ) + layout_annotation(theme = x@theme)
 }
 
 #' @importFrom ggplot2 aes
@@ -45,7 +44,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom grid unit is.unit unit.c
 heatmap_build <- function(heatmap, plot_data = waiver(),
                           free_labs = waiver(), free_spaces = waiver(),
-                          theme = waiver(), layout_theme = waiver()) {
+                          theme = waiver()) {
     params <- heatmap@params
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
@@ -173,7 +172,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
             free_labs = free_labs,
             free_spaces = free_spaces,
             theme = theme,
-            layout_theme = layout_theme,
             extra_panel = panel,
             extra_index = index
         )

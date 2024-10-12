@@ -1,11 +1,6 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    layout_theme <- x@theme %||%
-        default_theme() + theme(panel.border = element_blank())
-    # we by default, collect all guides
-    x@params$guides <- .subset2(x@params, "guides") %|w|% "tlbr"
-    .subset2(stack_build(x, layout_theme = layout_theme), "plot") %||%
-        align_plots()
+    .subset2(stack_build(layout_default(x)), "plot") %||% align_plots()
 }
 
 #' @param panel,index layout of the axis vertically with the stack.
@@ -14,7 +9,6 @@ ggalign_build.StackLayout <- function(x) {
 #' @noRd
 stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
                         free_spaces = waiver(), theme = waiver(),
-                        layout_theme = waiver(),
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(x))) { # no plots
         return(list(plot = NULL, size = NULL))
@@ -76,8 +70,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
                 plot_data = plot_data,
                 free_labs = free_labs,
                 free_spaces = free_spaces,
-                theme = theme,
-                layout_theme = layout_theme
+                theme = theme
             )
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
@@ -122,7 +115,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
-    ) + layout_annotation(theme = layout_theme)
+    ) + layout_annotation(theme = x@theme)
     list(plot = plot, size = .subset2(params, "size"))
 }
 
