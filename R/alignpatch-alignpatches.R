@@ -8,13 +8,13 @@ alignpatch.alignpatches <- function(x) {
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     # We by default won't collect any guides
     guides = NULL,
+    set_theme = function(theme) theme,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
     #' @importFrom vctrs vec_slice
     patch_gtable = function(self, top_level = FALSE, plot = self$plot) {
         patches <- lapply(.subset2(plot, "plots"), alignpatch)
-        theme <- complete_theme(.subset2(plot, "theme"))
         layout <- .subset2(plot, "layout")
 
         # get the design areas and design dims ------------------
@@ -76,14 +76,30 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             )
         }
 
-        # add guides argument to patch -----------------------------
-        # `self$guides` by default is `NULl`, if this is a 
+        # we inherit parameters from the parent --------------------
+        # in `alignpatches` object, `self$guides` and `self$theme` will always
+        # be the parent parameters, we always attach the parent `gudies` and
+        # `theme` in `self`
+        #
+        # `self$guides` by default is `NULl`, if this is a
         # nested alignpatches, `self$guides` should be set by
         # `$set_guides()` method, which is the parent guides
         guides <- .subset2(layout, "guides") %|w|% self$guides
+        # the same applies to theme but use `$set_theme()` method
+        # the top-level alignpatches will always complete theme in
+        # `ggalign_gtable.alignpatches`.
+        if (is.null(theme <- .subset2(plot, "theme"))) {
+            theme <- self$theme
+        } else {
+            theme <- complete_theme(theme)
+        }
 
-        # Let each patch to determine whether to collect guides ----
-        for (patch in patches) patch$guides <- patch$set_guides(guides)
+        for (patch in patches) {
+            # Let each patch to determine whether to collect guides
+            patch$guides <- patch$set_guides(guides)
+            # inherit theme for nested `alignpatches` object only
+            patch$theme <- patch$set_theme(theme)
+        }
 
         # save patches, patches won't be copy -------------------
         self$patches <- patches
@@ -134,7 +150,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             )
         } else {
             # used by `$collect_guides() method`
-            self$theme <- theme
+            # if this is a nested alignpatches, theme will be automatically
+            # attached by` $set_theme()`
             self$collected_guides <- collected_guides
             self$panel_pos <- panel_pos
         }

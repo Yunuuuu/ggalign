@@ -101,7 +101,7 @@ new_alignpatches <- function(plots, layout = NULL,
         list(
             plots = plots, # the input plot list
             layout = layout, # the layout design
-            annotation = annotation, #
+            annotation = annotation,
             titles = titles,
             theme = theme
         ),
@@ -246,7 +246,8 @@ alignpatches_add.layout_title <- function(object, plot, object_name) {
 #'
 #' @param theme A [`theme()`][ggplot2::theme] used to render the `guides`,
 #' `title`, `subtitle`, `caption`, `margins`, `patch.title`, `panel.border`, and
-#' `background`.
+#' `background`. If `NULL` (default), will inherit from the parent
+#' `alignpatches`.
 #' @inheritParams rlang::args_dots_empty
 #'
 #' @details

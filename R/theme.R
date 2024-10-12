@@ -53,7 +53,7 @@ inherit_theme <- function(theme, parent) {
 #' @importFrom rlang try_fetch
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
-    if (!is_theme_complete(theme)) {
+    if (!is_theme_complete(theme <- theme %||% theme_get())) {
         theme <- try_fetch(
             ggfun("complete_theme")(theme),
             error = function(cnd) theme_get() + theme

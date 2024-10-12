@@ -9,7 +9,8 @@ layout_annotation(theme = waiver(), ...)
 \arguments{
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
-\code{background}.}
+\code{background}. If \code{NULL} (default), will inherit from the parent
+\code{alignpatches}.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 }

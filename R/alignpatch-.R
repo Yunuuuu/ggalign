@@ -148,8 +148,8 @@ Patch <- ggproto("Patch", NULL,
     # plot = NULL,
     # following fields will be added in `alignpatches$patch_gtable()`
     # borders = NULL, guides = NULL, gt = NULL,
-
     set_guides = function(guides) guides,
+    set_theme = function(theme) NULL, # by default we won't need theme
     patch_gtable = function(self, plot = self$plot) {
         cli::cli_abort(
             "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
