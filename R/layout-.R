@@ -15,7 +15,7 @@ methods::setClass("Layout",
         active = "ANY",
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
-        annotation = "list",
+        annotation = "list", # To-DO add `pacth_titles` for layout
         theme = "ANY",
         `_namespace` = "ANY"
     ),
