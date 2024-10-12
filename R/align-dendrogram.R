@@ -166,6 +166,12 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(k) && is.null(h)) {
+            if (is.null(data)) {
+                cli::cli_abort(c(
+                    "Cannot do sub-clustering",
+                    i = "Try to provide the {.arg data}"
+                ), call = .subset2(self, "call"))
+            }
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
             labels <- rownames(data)
