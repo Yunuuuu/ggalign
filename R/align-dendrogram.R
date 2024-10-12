@@ -158,6 +158,12 @@ AlignDendro <- ggproto("AlignDendro", Align,
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendro, k = NULL, h = NULL) {
         data <- .subset2(self, "data")
+        if (!is.null(data) && nrow(data) < 2L) {
+            cli::cli_abort(c(
+                "Cannot do Hierarchical Clustering",
+                i = "must have >= 2 observations to cluster"
+            ), call = .subset2(self, "call"))
+        }
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(k) && is.null(h)) {
             children <- vector("list", nlevels(panel))

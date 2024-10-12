@@ -1,5 +1,9 @@
 # ggalign (development version)
 
+## Bug fixes:
+
+* fix bug when provide `hclust` or `dendrogram` in method argument of `align_dendro()`
+
 # ggalign 0.0.4
 
 * `layout_heatmap()`/`ggheatmap()` arguments width/height have been renamed `.width`/`.height` to helps avoid conflicts with arguments from `geom_tile()`. 
