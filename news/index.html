@@ -58,7 +58,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.4" id="ggalign-004">ggalign 0.0.4<a class="anchor" aria-label="anchor" href="#ggalign-004"></a></h2>
-<ul><li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code></p></li>
+<ul><li><p>the nestet alignpatches theme by default will inherit from the parent alignpatches</p></li>
+<li><p>new <code><a href="../reference/layout_title.html">layout_title()</a></code> function, now <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> only control the layout theme</p></li>
+<li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code></p></li>
 <li><p><code>set_context</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> now depends on <code>plot_dendrogram</code> by default</p></li>
 <li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain a new argument <code>reorder_dendrogram</code> to control whether to reorder the generated dendrogram based on the mean values.</p></li>
 <li><p><code><a href="../reference/align_reorder.html">align_reorder()</a></code> now splitted into two function <code><a href="../reference/align_order.html">align_order()</a></code> and <code><a href="../reference/align_reorder.html">align_reorder()</a></code></p></li>
@@ -83,7 +85,7 @@
 <li><p><code>method</code> in <code><a href="../reference/hclust2.html">hclust2()</a></code> can now return any objects which can be coerced into hclust, or you can provide such object directly in <code>method</code>.</p></li>
 <li><p><code><a href="../reference/hclust2.html">hclust2()</a></code> now can accept <code>distance = NULL</code></p></li>
 <li><p><code><a href="../reference/hmanno.html">hmanno()</a></code>, <code><a href="../reference/stack_active.html">stack_active()</a></code>, and <code>align_*()</code> functions gain a new argument <code>theme</code> to control the theme for the plot.</p></li>
-<li><p>new <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> and <code><a href="../reference/layout_theme.html">layout_theme()</a></code> to modify the layout components</p></li>
+<li><p>new <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> and <code>layout_theme()</code> to modify the layout components</p></li>
 <li><p><code>borders</code> argument in <code><a href="../reference/free.html">free_space()</a></code> has been renamed to <code>spaces</code></p></li>
 <li><p>{tibble} is now removed from the dependency</p></li>
 <li><p><code><a href="../reference/align_plots.html">align_plots()</a></code> now can accept <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code>, we have added <code>alignpatch</code> method for these objects.</p></li>
