@@ -53,15 +53,15 @@
 #' @importFrom ggplot2 aes
 #' @export
 heatmap_layout <- function(data, mapping = aes(),
-                           ...,
+                           ..., filling = TRUE,
                            .width = NA, .height = NA,
-                           guides = waiver(), filling = TRUE,
+                           guides = waiver(), theme = NULL,
                            set_context = TRUE, order = NULL, name = NULL) {
     if (missing(data)) {
         .heatmap_layout(
             data = NULL, mapping = mapping,
             ..., .width = .width, .height = .height,
-            guides = guides, filling = filling,
+            guides = guides, theme = theme, filling = filling,
             set_context = set_context, order = order, name = name,
             nobs_list = list(), call = current_call()
         )
@@ -76,7 +76,7 @@ methods::setClass(
     "HeatmapLayout",
     contains = "Layout",
     list(
-        data = "ANY", plot = "ANY", params = "list",
+        data = "ANY", plot = "ANY",
         # parameters for heatmap body
         width = "ANY", height = "ANY",
         # If we regard heatmap layout as a plot, and put it into the stack
@@ -151,18 +151,19 @@ heatmap_layout.default <- function(data, ...) {
 #' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 aes
 .heatmap_layout <- function(data, mapping = aes(),
-                            ...,
+                            ..., filling = TRUE,
                             .width = NA, .height = NA,
-                            guides = waiver(), filling = TRUE,
+                            guides = waiver(), theme = NULL,
                             set_context = TRUE, order = NULL, name = NULL,
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
+    assert_bool(filling, call = call)
     width <- check_size(.width)
     height <- check_size(.height)
     if (!is.null(guides) && !is.waive(guides)) {
         assert_position(guides, call = call)
     }
-    assert_bool(filling, call = call)
+    if (!is.null(theme)) assert_s3_class(theme, "theme")
     assert_bool(set_context, call = call)
     order <- check_order(order, call = call)
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
@@ -203,7 +204,8 @@ heatmap_layout.default <- function(data, ...) {
         ),
         set_context = set_context,
         order = order, name = name %||% NA_character_,
-        plot = plot, nobs_list = nobs_list
+        plot = plot, nobs_list = nobs_list,
+        theme = theme
     )
 }
 

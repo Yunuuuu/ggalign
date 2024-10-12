@@ -16,13 +16,14 @@
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-stack_layout <- function(data, direction = NULL, sizes = NA, guides = waiver(),
-                         ...) {
+stack_layout <- function(data, direction = NULL, sizes = NA,
+                         ..., guides = waiver(), theme = NULL) {
     rlang::check_dots_empty()
     if (missing(data)) {
         .stack_layout(
             data = NULL, nobs = NULL,
-            direction = direction, sizes = sizes, guides = guides,
+            direction = direction, sizes = sizes,
+            guides = guides, theme = theme,
             call = current_call()
         )
     } else {
@@ -40,7 +41,6 @@ methods::setClass(
     list(
         data = "ANY",
         plots = "list",
-        params = "list",
         direction = "character",
         position = "ANY", # used by heatmap annotation, annotation position
         size = "ANY", # used by heatmap annotation, total annotation size
@@ -90,7 +90,8 @@ stack_layout.NULL <- function(data, ...) {
 #' @importFrom rlang caller_call
 #' @importFrom ggplot2 waiver
 #' @importFrom grid unit
-.stack_layout <- function(data, direction = NULL, sizes = NA, guides = waiver(),
+.stack_layout <- function(data, direction = NULL, sizes = NA,
+                          guides = waiver(), theme = NULL,
                           nobs, call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     sizes <- check_stack_sizes(sizes)
@@ -111,6 +112,7 @@ stack_layout.NULL <- function(data, ...) {
             free_spaces = waiver(),
             theme = waiver()
         ),
+        theme = theme,
         nobs = nobs
     )
 }

@@ -7,15 +7,15 @@
 hmanno(
   position = NULL,
   size = NULL,
-  width = NULL,
-  height = NULL,
   guides = NA,
   free_guides = NA,
   free_spaces = NA,
   plot_data = NA,
   theme = NA,
   free_labs = NA,
-  what = waiver()
+  what = waiver(),
+  width = NULL,
+  height = NULL
 )
 }
 \arguments{
@@ -34,8 +34,6 @@ annotation.
 \item If \code{position} is \code{"left"} or \code{"right"}, \code{size} set the total width of the
 annotation.
 }}
-
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
 
 \item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout
 \itemize{
@@ -88,6 +86,8 @@ when position is a string. Options include::
 \item A single number or string of the plot elements in the stack layout.
 \item \code{NULL}: remove any active context.
 }}
+
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
 }
 \value{
 A \code{heatmap_active} object which can be added into \link{heatmap_layout}.

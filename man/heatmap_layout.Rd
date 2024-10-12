@@ -9,10 +9,11 @@ heatmap_layout(
   data,
   mapping = aes(),
   ...,
+  filling = TRUE,
   .width = NA,
   .height = NA,
   guides = waiver(),
-  filling = TRUE,
+  theme = NULL,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -22,10 +23,11 @@ ggheatmap(
   data,
   mapping = aes(),
   ...,
+  filling = TRUE,
   .width = NA,
   .height = NA,
   guides = waiver(),
-  filling = TRUE,
+  theme = NULL,
   set_context = TRUE,
   order = NULL,
   name = NULL
@@ -42,10 +44,6 @@ addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 \item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
 Only used when \code{filling = TRUE}.}
 
-\item{.width, .height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
-
-\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
-
 \item{filling}{A boolean value indicating whether to fill the heatmap. If you
 wish to customize the filling style, set this to \code{FALSE}.
 
@@ -59,6 +57,14 @@ default heatmap body fill color scale. See
 \code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
 \code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for option setting
 details.}
+
+\item{.width, .height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
+
+\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
+
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
+\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
+\code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current plot. If \code{TRUE}, all subsequent ggplot elements will be

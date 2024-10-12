@@ -15,6 +15,7 @@
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
 #' @param guides `r rd_guides()`
+#' @inheritParams layout_annotation
 #' @return An `alignpatches` object.
 #' @seealso
 #'  - [layout_design()]
@@ -49,8 +50,8 @@
 #' align_plots(p1, p2, design = design)
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
-                        widths = NA, heights = NA,
-                        design = NULL, guides = waiver()) {
+                        widths = NA, heights = NA, design = NULL,
+                        guides = waiver(), theme = NULL) {
     plots <- rlang::dots_list(..., .ignore_empty = "all")
     nms <- names(plots)
     if (!is.null(nms) && is.character(design)) {
@@ -77,12 +78,13 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         assert_position(guides)
         guides <- setup_pos(guides)
     }
+    if (!is.null(theme)) assert_s3_class(theme, "theme")
     layout <- list(
         ncol = ncol, nrow = nrow, byrow = byrow,
         widths = widths, heights = heights, design = design,
         guides = guides
     )
-    new_alignpatches(plots, layout = layout)
+    new_alignpatches(plots, layout = layout, theme = theme)
 }
 
 new_alignpatches <- function(plots, layout = NULL,
@@ -246,8 +248,7 @@ alignpatches_add.layout_title <- function(object, plot, object_name) {
 #'
 #' @param theme A [`theme()`][ggplot2::theme] used to render the `guides`,
 #' `title`, `subtitle`, `caption`, `margins`, `patch.title`, `panel.border`, and
-#' `background`. If `NULL` (default), will inherit from the parent
-#' `alignpatches`.
+#' `background`. If `NULL` (default), will inherit from the parent `layout`.
 #' @inheritParams rlang::args_dots_empty
 #'
 #' @details

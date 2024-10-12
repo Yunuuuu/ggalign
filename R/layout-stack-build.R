@@ -110,12 +110,13 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
             x@sizes[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = .subset2(params, "guides")
+        guides = .subset2(params, "guides"),
+        theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
-    ) + layout_annotation(theme = x@theme)
+    )
     list(plot = plot, size = x@size)
 }
 

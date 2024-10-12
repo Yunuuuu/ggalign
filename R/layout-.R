@@ -12,7 +12,7 @@ namespace_link <- function() NULL
 #' @keywords internal
 methods::setClass("Layout",
     list(
-        active = "ANY",
+        active = "ANY", params = "list",
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
         annotation = "list", # To-DO add `pacth_titles` for layout
@@ -20,7 +20,8 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, titles = list(), annotation = list(), theme = NULL,
+        active = NULL, params = list(),
+        titles = list(), annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )

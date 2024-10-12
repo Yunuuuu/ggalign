@@ -31,12 +31,13 @@ ggalign_build.HeatmapLayout <- function(x) {
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(x@params, "guides")
+        guides = .subset2(x@params, "guides"),
+        theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
-    ) + layout_annotation(theme = x@theme)
+    )
 }
 
 #' @importFrom ggplot2 aes

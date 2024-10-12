@@ -54,10 +54,9 @@
 #'     align_dendro()
 #' @export
 hmanno <- function(position = NULL, size = NULL,
-                   width = NULL, height = NULL,
                    guides = NA, free_guides = NA, free_spaces = NA,
-                   plot_data = NA, theme = NA,
-                   free_labs = NA, what = waiver()) {
+                   plot_data = NA, theme = NA, free_labs = NA, what = waiver(),
+                   width = NULL, height = NULL) {
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
     active <- new_active(
