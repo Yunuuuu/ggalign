@@ -144,9 +144,13 @@ alignpatch.NULL <- function(x) NULL
 #' @importFrom ggplot2 ggproto
 #' @importFrom grid unit.c
 Patch <- ggproto("Patch", NULL,
-    plot = NULL, borders = NULL, guides = NULL, gt = NULL,
+    # following fields will be added by `alignpatch()`
+    # plot = NULL,
+    # following fields will be added in `alignpatches$patch_gtable()`
+    # borders = NULL, guides = NULL, gt = NULL,
+
     set_guides = function(guides) guides,
-    patch_gtable = function(self, guides = self$guides, plot = self$plot) {
+    patch_gtable = function(self, plot = self$plot) {
         cli::cli_abort(
             "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
         )
@@ -205,7 +209,7 @@ Patch <- ggproto("Patch", NULL,
     },
     respect = function(self, gt = self$gt) isTRUE(.subset2(gt, "respect")),
     align_panel_sizes = function(self, panel_width, panel_height,
-                                 guides = self$guides, gt = self$gt) {
+                                 gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)
     },
     get_sizes = function(self, free = NULL, gt = self$gt) {
@@ -256,13 +260,12 @@ Patch <- ggproto("Patch", NULL,
         plot <- subset_gt(gt, !index, trim = FALSE)
         list(bg = bg, plot = plot)
     },
-    free_border = function(self, borders, guides = self$guides,
-                           gt = self$gt, patches = self$patches) {
+    free_border = function(self, borders, gt = self$gt) {
         cli::cli_abort(
             "Cannot free border for {.obj_type_friendly {self$plot}}"
         )
     },
-    free_lab = function(self, labs, gt = self$gt, patches = self$patches) {
+    free_lab = function(self, labs, gt = self$gt) {
         cli::cli_abort("Cannot free lab for {.obj_type_friendly {self$plot}}")
     }
 )

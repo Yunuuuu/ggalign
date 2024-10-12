@@ -1,21 +1,20 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.alignpatches <- function(x) {
-    x$patches <- lapply(.subset2(x, "patches"), alignpatch)
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
 #' @importFrom vctrs new_data_frame
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
-    patches = NULL,
+    # We by default won't collect any guides
+    guides = NULL,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
     #' @importFrom vctrs vec_slice
-    patch_gtable = function(self, top_level = FALSE, guides = self$guides,
-                            plot = self$plot) {
+    patch_gtable = function(self, top_level = FALSE, plot = self$plot) {
+        patches <- lapply(.subset2(plot, "plots"), alignpatch)
         theme <- complete_theme(.subset2(plot, "theme"))
-        patches <- .subset2(plot, "patches")
         layout <- .subset2(plot, "layout")
 
         # get the design areas and design dims ------------------
@@ -78,8 +77,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }
 
         # add guides argument to patch -----------------------------
-        # We by default won't collect any guides
-        guides <- .subset2(layout, "guides") %|w|% guides
+        # `self$guides` by default is `NULl`, if this is a 
+        # nested alignpatches, `self$guides` should be set by
+        # `$set_guides()` method, which is the parent guides
+        guides <- .subset2(layout, "guides") %|w|% self$guides
 
         # Let each patch to determine whether to collect guides ----
         for (patch in patches) patch$guides <- patch$set_guides(guides)
@@ -443,7 +444,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt
     },
     #' @importFrom rlang is_empty
-    free_border = function(self, borders, guides = self$guides,
+    free_border = function(self, borders,
                            gt = self$gt, patches = self$patches) {
         self$recurse_lapply(
             function(patch, grob, t, l, b, r) {

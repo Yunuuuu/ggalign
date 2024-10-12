@@ -85,7 +85,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     new_alignpatches(plots, layout = layout)
 }
 
-new_alignpatches <- function(patches, layout = NULL,
+new_alignpatches <- function(plots, layout = NULL,
                              titles = NULL, annotation = NULL,
                              theme = NULL) {
     layout <- layout %||% list(
@@ -99,7 +99,7 @@ new_alignpatches <- function(patches, layout = NULL,
     )
     structure(
         list(
-            patches = patches, # the input plot list
+            plots = plots, # the input plot list
             layout = layout, # the layout design
             annotation = annotation, #
             titles = titles,

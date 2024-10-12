@@ -63,19 +63,16 @@ alignpatch.free_border <- function(x) {
     ggproto(
         "PatchFreeBorder", Parent,
         free_borders = setup_pos(attr(x, "free_borders")),
-        patch_gtable = function(self, guides = self$guides, plot = self$plot) {
-            ans <- ggproto_parent(Parent, self)$patch_gtable(
-                guides = guides, plot = plot
-            )
+        patch_gtable = function(self, plot = self$plot) {
+            ans <- ggproto_parent(Parent, self)$patch_gtable(plot = plot)
             ggproto_parent(Parent, self)$free_border(
-                guides = guides, borders = self$free_borders, gt = ans
+                borders = self$free_borders, gt = ans
             )
         },
-        free_border = function(self, borders,
-                               guides = self$guides, gt = self$gt) {
+        free_border = function(self, borders, gt = self$gt) {
             if (length(borders <- setdiff(borders, self$free_borders))) {
                 gt <- ggproto_parent(Parent, self)$free_border(
-                    guides = guides, borders = borders, gt = gt
+                    borders = borders, gt = gt
                 )
             }
             gt

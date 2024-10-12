@@ -58,7 +58,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     respect = function(self, gt = self$gt) .subset2(gt, "respect"),
 
     #' @importFrom ggplot2 find_panel
-    align_panel_sizes = function(self, guides, panel_width, panel_height,
+    align_panel_sizes = function(self, panel_width, panel_height,
                                  gt = self$gt) {
         panel_pos <- find_panel(gt)
         rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
@@ -90,7 +90,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     #' @importFrom gtable gtable_add_grob gtable_height gtable_width
     #' @importFrom grid unit viewport
     #' @importFrom ggplot2 find_panel
-    free_border = function(self, borders, guides = self$guides, gt = self$gt) {
+    free_border = function(self, borders, gt = self$gt, guides = self$guides) {
         panel_pos <- find_panel(gt)
         for (border in borders) {
             layout <- .subset2(gt, "layout")
