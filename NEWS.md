@@ -1,3 +1,5 @@
+# ggalign (development version)
+
 # ggalign 0.0.4
 
 * `layout_heatmap()`/`ggheatmap()` arguments width/height have been renamed `.width`/`.height` to helps avoid conflicts with arguments from `geom_tile()`. 
