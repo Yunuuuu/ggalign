@@ -26,7 +26,7 @@ initialize_align <- function(object, direction, position,
         } else {
             data <- align_setup_data(input_data, layout_data)
             # we always regard rows as the observations
-            if (is.na(nobs)) {
+            if (is.null(nobs)) {
                 nobs <- NROW(data)
             } else if (NROW(data) != nobs) {
                 cli::cli_abort(paste(
@@ -39,9 +39,10 @@ initialize_align <- function(object, direction, position,
         params <- object$setup_params(nobs, input_params)
         object$data <- object$setup_data(params, data)
     } else { # this `Align` object doesn't require any data
-        # If nobs is NA, it means we don't initialize the layout observations
-        # So we call `$nobs` method to initialize the layout observations
-        if (is.na(nobs)) nobs <- object$nobs(input_params)
+        # If `nobs` is `NULL`, it means we don't initialize the layout
+        # observations So we call `$nobs` method to initialize the layout
+        # observations
+        if (is.null(nobs)) nobs <- object$nobs(input_params)
         # `Align` will use `NULL` to indicate it doesn't require the
         # initialization of the latyout observations
         params <- object$setup_params(nobs, input_params)
@@ -54,7 +55,7 @@ initialize_align <- function(object, direction, position,
         object, nobs, direction,
         layout_panel, layout_index, object_name
     )
-    c(ans, list(nobs = nobs %||% NA_integer_))
+    c(ans, list(nobs = nobs))
 }
 
 initialize_align_layout <- function(object, nobs, direction,

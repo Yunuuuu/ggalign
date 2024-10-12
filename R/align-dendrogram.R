@@ -84,6 +84,13 @@ align_dendro <- function(mapping = aes(), ...,
     assert_bool(reorder_group)
     assert_bool(plot_dendrogram)
     assert_mapping(mapping)
+    if (is.null(data)) {
+        if (inherits(method, "hclust") || inherits(method, "dendrogram")) {
+            data <- NULL # no need for data
+        } else {
+            data <- waiver()
+        }
+    }
     align(
         align_class = AlignDendro,
         params = list(
@@ -102,7 +109,7 @@ align_dendro <- function(mapping = aes(), ...,
         plot_data = plot_data, theme = theme,
         set_context = set_context %||% plot_dendrogram,
         name = name, order = order,
-        size = size, data = data %||% waiver()
+        size = size, data = data
     )
 }
 
@@ -138,16 +145,19 @@ AlignDendro <- ggproto("AlignDendro", Align,
         )
         ans
     },
+    nobs = function(self, params) {
+        if (inherits(tree <- .subset2(params, "method"), "hclust")) {
+            self$labels <- .subset2(tree, "labels")
+            length(.subset2(tree, "labels"))
+        } else {
+            self$labels <- labels(as.dendrogram(tmp))
+            stats::nobs(tree)
+        }
+    },
     #' @importFrom vctrs vec_slice
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendro, k = NULL, h = NULL) {
         data <- .subset2(self, "data")
-        if (nrow(data) < 2L) {
-            cli::cli_abort(c(
-                "Cannot do Hierarchical Clustering",
-                i = "must have >= 2 observations to cluster"
-            ), call = .subset2(self, "call"))
-        }
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(k) && is.null(h)) {
             children <- vector("list", nlevels(panel))

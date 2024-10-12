@@ -46,6 +46,12 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
         )
         return(ans)
     }
+    if (nrow(matrix) < 2L) {
+        cli::cli_abort(c(
+            "Cannot do Hierarchical Clustering",
+            i = "must have >= 2 observations to cluster"
+        ))
+    }
     if (is.null(distance)) {
         d <- matrix
     } else {
