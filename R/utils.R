@@ -31,6 +31,29 @@ with_options <- function(code, ...) {
     force(code)
 }
 
+# This will work with most things but be aware that it might fail with some
+# complex objects. For example, according to `?S3Methods`, calling foo on
+# matrix(1:4, 2, 2) would try foo.matrix, then `foo.numeric`, then
+# `foo.default`; whereas this code will just look for `foo.matrix` and
+# `foo.default`.
+#' @importFrom utils getS3method
+#' @importFrom methods extends
+has_method <- function(x, f, inherit = TRUE, default = TRUE) {
+    x_class <- class(x)
+    if (isS4(x)) x_class <- extends(x_class)
+    if (inherit) {
+        if (default) x_class <- c(x_class, "default")
+    } else {
+        x_class <- .subset(x_class, 1L)
+    }
+    for (cls in x_class) {
+        if (!is.null(getS3method(f, cls, optional = TRUE))) {
+            return(TRUE)
+        }
+    }
+    return(FALSE)
+}
+
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 

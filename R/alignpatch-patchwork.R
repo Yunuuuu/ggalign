@@ -26,7 +26,7 @@ alignpatch.patchwork <- function(x) {
         layout$guides <- NULL
     }
     alignpatch(new_alignpatches(
-        lapply(plots, alignpatch),
+        plots = plots,
         layout = layout,
         annotation = annotation,
         theme = .subset2(annotation, "theme")

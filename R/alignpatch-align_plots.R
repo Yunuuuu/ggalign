@@ -66,11 +66,15 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         }
     }
     design <- as_areas(design)
-    patches <- lapply(plots, alignpatch)
+    for (plot in plots) {
+        if (!has_method(plot, "alignpatch", default = FALSE)) {
+            cli::cli_abort("Cannot align {.obj_type_friendly {plot}}")
+        }
+    }
 
     # setup layout
-    if (!is.waive(byrow)) assert_bool(byrow)
-    if (!is.waive(design)) design <- as_areas(design)
+    assert_bool(byrow)
+    design <- as_areas(design)
     if (!is.waive(guides) && !is.null(guides)) {
         assert_position(guides)
         guides <- setup_pos(guides)
@@ -89,16 +93,15 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     annotation <- annotation[
         !vapply(annotation, is.waive, logical(1L), USE.NAMES = FALSE)
     ]
-    new_alignpatches(patches,
-        layout = layout, annotation = annotation,
-        theme = theme
+    new_alignpatches(plots,
+        layout = layout, annotation = annotation, theme = theme
     )
 }
 
-new_alignpatches <- function(patches, layout, annotation, theme) {
+new_alignpatches <- function(plots, layout, annotation, theme) {
     structure(
         list(
-            patches = patches, layout = layout,
+            patches = plots, layout = layout,
             annotation = annotation, theme = theme
         ),
         # Will ensure serialisation includes a link to the `ggalign`

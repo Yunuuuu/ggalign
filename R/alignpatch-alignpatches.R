@@ -1,6 +1,7 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.alignpatches <- function(x) {
+    x$patches <- lapply(.subset2(x, "patches"), alignpatch)
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 

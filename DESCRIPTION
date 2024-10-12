@@ -20,6 +20,7 @@ Imports:
     methods,
     rlang (>= 1.1.0),
     stats,
+    utils,
     vctrs
 Suggests:
     bookdown,
