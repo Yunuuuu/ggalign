@@ -42,12 +42,18 @@ methods::setClass(
         plots = "list",
         params = "list",
         direction = "character",
-        position = "ANY", # used by heatmap layout
+        position = "ANY", # used by heatmap annotation, annotation position
+        size = "ANY", # used by heatmap annotation, total annotation size
+        sizes = "ANY", # used by stack layout
         panel = "ANY",
         index = "ANY",
         nobs = "ANY"
     ),
-    prototype = list(position = NULL, panel = NULL, index = NULL, nobs = NULL)
+    prototype = list(
+        plots = list(), position = NULL,
+        size = unit(NA, "null"),
+        panel = NULL, index = NULL, nobs = NULL
+    )
 )
 
 #' @export
@@ -92,25 +98,20 @@ stack_layout.NULL <- function(data, ...) {
         assert_position(guides, call = call)
     }
     methods::new("StackLayout",
-        data = data, 
+        data = data,
         direction = direction,
+        # @param sizes the relative size of the vertical direction with this
+        # stack, which won't be used by heatmap annotation.
+        sizes = sizes,
         params = list(
-            # @param sizes the relative size of the vertical direction with this
-            # stack, which won't be used by heatmap annotation.
-            sizes = sizes,
             guides = guides,
-            # @param size the total size of the stack, used by heatmap
-            # annotation.
-            size = unit(NA, "null"),
             free_guides = waiver(), # only used by heatmap annotation
             plot_data = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),
             theme = waiver()
         ),
-        nobs = nobs,
-        # following parameters are used by ggsave
-        theme = NULL
+        nobs = nobs
     )
 }
 

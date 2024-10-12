@@ -55,3 +55,7 @@ rd_free_guides <- function() {
         sep = "\n"
     )
 }
+
+rd_heatmap_size <- function() {
+    "Heatmap body width/height, can be a [unit][grid::unit] object"
+}

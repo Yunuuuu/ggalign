@@ -4,7 +4,7 @@
 #' values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#'
+#' @param width,height `r rd_heatmap_size()`.
 #' @param size An [unit][grid::unit] object to set the total size of the heatmap
 #' annotation. This will only be used if `position` is a string.
 #'  - If `position` is `"top"` or `"bottom"`, `size` set the total height of the
@@ -47,7 +47,6 @@
 #' @param theme Default theme for the plot in the layout. `r rd_theme()`
 #' @param what What should get activated for the anntoation stack? Only used
 #' when position is a string. `r rd_stack_what()`.
-#' @inheritParams heatmap_layout
 #' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
@@ -55,10 +54,10 @@
 #'     align_dendro()
 #' @export
 hmanno <- function(position = NULL, size = NULL,
+                   width = NULL, height = NULL,
                    guides = NA, free_guides = NA, free_spaces = NA,
                    plot_data = NA, theme = NA,
-                   free_labs = NA, what = waiver(),
-                   width = NULL, height = NULL) {
+                   free_labs = NA, what = waiver()) {
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
     active <- new_active(
@@ -74,7 +73,8 @@ hmanno <- function(position = NULL, size = NULL,
     if (!is.waive(what)) what <- check_stack_context(what)
     structure(
         list(
-            position = position, size = size, width = width, height = height,
+            position = position, size = size,
+            width = width, height = height,
             what = what, active = active
         ),
         class = "heatmap_active"

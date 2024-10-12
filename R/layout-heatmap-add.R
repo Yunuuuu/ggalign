@@ -48,10 +48,10 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     heatmap <- set_context(heatmap, position)
     if (is.null(position)) {
         if (!is.null(width <- .subset2(object, "width"))) {
-            heatmap@params$width <- width
+            heatmap@width <- width
         }
         if (!is.null(height <- .subset2(object, "height"))) {
-            heatmap@params$height <- height
+            heatmap@height <- height
         }
         heatmap <- layout_add_active(
             .subset2(object, "active"), heatmap, object_name
@@ -79,7 +79,7 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack <- set_index(stack, value = get_index(heatmap, axis))
     }
     if (!is.null(size <- .subset2(object, "size"))) {
-        stack@params$size <- size
+        stack@size <- size
     }
     slot(heatmap, position) <- layout_stack_add.stack_active(
         .subset(object, c("what", "active")), stack, object_name

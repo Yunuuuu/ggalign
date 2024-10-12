@@ -9,8 +9,8 @@ heatmap_layout(
   data,
   mapping = aes(),
   ...,
-  width = NA,
-  height = NA,
+  .width = NA,
+  .height = NA,
   guides = waiver(),
   filling = TRUE,
   set_context = TRUE,
@@ -22,8 +22,8 @@ ggheatmap(
   data,
   mapping = aes(),
   ...,
-  width = NA,
-  height = NA,
+  .width = NA,
+  .height = NA,
   guides = waiver(),
   filling = TRUE,
   set_context = TRUE,
@@ -42,8 +42,7 @@ addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 \item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
 Only used when \code{filling = TRUE}.}
 
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit}
-object.}
+\item{.width, .height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
 
 \item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
 

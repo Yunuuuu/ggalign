@@ -220,7 +220,9 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
         p <- free_space(free_border(p, heatmap_spaces), heatmap_spaces)
     }
     plots <- c(plots, list(heatmap = p))
-    sizes <- c(sizes, list(heatmap = .subset(params, c("width", "height"))))
+    sizes <- c(sizes, list(
+        heatmap = list(width = heatmap@width, height = heatmap@height)
+    ))
     list(plots = plots, sizes = sizes)
 }
 

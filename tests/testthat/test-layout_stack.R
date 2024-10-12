@@ -12,8 +12,8 @@ testthat::test_that("`ggstack` works well", {
 
     # stack with no data
     p <- ggstack()
-    expect_s3_class(p@params$sizes, "unit")
-    expect_length(p@params$sizes, 3L)
+    expect_s3_class(p$sizes, "unit")
+    expect_length(p$sizes, 3L)
     expect_identical(p@nobs, NULL)
 })
 
@@ -26,8 +26,8 @@ testthat::test_that("add `stack_active` object works well", {
         free_labs = "tlbr",
         plot_data = NULL
     )
+    expect_identical(p2@sizes, unit(rep_len(1L, 3L), "cm"))
     params <- p2@params
-    expect_identical(params$sizes, unit(rep_len(1L, 3L), "cm"))
     expect_identical(params$guides, "tlbr")
     expect_identical(params$free_labs, "tlbr")
     expect_identical(params$plot_data, NULL)

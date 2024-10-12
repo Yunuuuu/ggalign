@@ -9,8 +9,7 @@
 #' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
 #' Only used when `filling = TRUE`.
-#' @param width,height Heatmap body width/height, can be a [unit][grid::unit]
-#' object.
+#' @param .width,.height `r rd_heatmap_size()`.
 #' @inheritParams align_plots
 #' @param filling A boolean value indicating whether to fill the heatmap. If you
 #' wish to customize the filling style, set this to `FALSE`.
@@ -55,13 +54,13 @@
 #' @export
 heatmap_layout <- function(data, mapping = aes(),
                            ...,
-                           width = NA, height = NA,
+                           .width = NA, .height = NA,
                            guides = waiver(), filling = TRUE,
                            set_context = TRUE, order = NULL, name = NULL) {
     if (missing(data)) {
         .heatmap_layout(
             data = NULL, mapping = mapping,
-            ..., width = width, height = height,
+            ..., .width = .width, .height = .height,
             guides = guides, filling = filling,
             set_context = set_context, order = order, name = name,
             nobs_list = list(), call = current_call()
@@ -77,9 +76,9 @@ methods::setClass(
     "HeatmapLayout",
     contains = "Layout",
     list(
-        data = "ANY",
-        plot = "ANY",
-        params = "list",
+        data = "ANY", plot = "ANY", params = "list",
+        # parameters for heatmap body
+        width = "ANY", height = "ANY",
         # If we regard heatmap layout as a plot, and put it into the stack
         # layout, we need following arguments to control it's behavour
         set_context = "logical", order = "integer", name = "character",
@@ -153,13 +152,13 @@ heatmap_layout.default <- function(data, ...) {
 #' @importFrom ggplot2 aes
 .heatmap_layout <- function(data, mapping = aes(),
                             ...,
-                            width = NA, height = NA,
+                            .width = NA, .height = NA,
                             guides = waiver(), filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
-    width <- check_size(width)
-    height <- check_size(height)
+    width <- check_size(.width)
+    height <- check_size(.height)
     if (!is.null(guides) && !is.waive(guides)) {
         assert_position(guides, call = call)
     }
@@ -192,10 +191,10 @@ heatmap_layout.default <- function(data, ...) {
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
         "HeatmapLayout",
-        data = data,
+        data = data, width = width, height = height,
         # following parameters can be controlled by `active` object.
         params = list(
-            width = width, height = height, guides = guides,
+            guides = guides,
             free_guides = waiver(),
             free_labs = waiver(),
             free_spaces = waiver(),
@@ -204,9 +203,7 @@ heatmap_layout.default <- function(data, ...) {
         ),
         set_context = set_context,
         order = order, name = name %||% NA_character_,
-        plot = plot, nobs_list = nobs_list,
-        # used by ggsave
-        theme = NULL
+        plot = plot, nobs_list = nobs_list
     )
 }
 

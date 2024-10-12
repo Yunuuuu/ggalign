@@ -20,7 +20,7 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, titles = list(), annotation = list(),
+        active = NULL, titles = list(), annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )

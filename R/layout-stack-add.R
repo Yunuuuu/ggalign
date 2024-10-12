@@ -61,7 +61,7 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
         stack <- set_context(stack, what)
     }
     if (!is.null(sizes <- .subset2(object, "sizes"))) {
-        stack@params$sizes <- sizes
+        stack@sizes <- sizes
     }
     layout_add_active(.subset2(object, "active"), stack, object_name)
 }

@@ -186,7 +186,7 @@ ggstack(small_mat, "v") +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap(width = unit(2, "null"))
+    ggheatmap(.width = unit(2, "null"))
 ```
 
 By default the flank annotation will fill the whole stack flank, but we can

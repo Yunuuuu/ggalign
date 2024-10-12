@@ -9,8 +9,6 @@ testthat::test_that("`ggheatmap` works well", {
 
     # heatmap with no data
     p <- ggheatmap()
-    expect_s3_class(p@params$width, "unit")
-    expect_s3_class(p@params$height, "unit")
     expect_identical(p@nobs_list$x, NULL)
     expect_identical(p@nobs_list$y, NULL)
 

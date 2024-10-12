@@ -1,5 +1,7 @@
 # ggalign 0.0.4
 
+* `layout_heatmap()`/`ggheatmap()` arguments width/height have been renamed `.width`/`.height` to helps avoid conflicts with arguments from `geom_tile()`. 
+
 * the nestet alignpatches theme by default will inherit from the parent alignpatches
 
 * new `layout_title()` function, now `layout_annotation()` only control the layout theme

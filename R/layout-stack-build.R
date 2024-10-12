@@ -103,11 +103,11 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
         widths = switch_direction(
             direction,
             do.call(unit.c, attr(patches, "sizes")),
-            .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)]
+            x@sizes[c(has_top, TRUE, has_bottom)]
         ),
         heights = switch_direction(
             direction,
-            .subset2(params, "sizes")[c(has_top, TRUE, has_bottom)],
+            x@sizes[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
         guides = .subset2(params, "guides")
@@ -116,7 +116,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
     ) + layout_annotation(theme = x@theme)
-    list(plot = plot, size = .subset2(params, "size"))
+    list(plot = plot, size = x@size)
 }
 
 stack_patch <- function(direction) {
