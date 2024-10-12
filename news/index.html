@@ -58,7 +58,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.4" id="ggalign-004">ggalign 0.0.4<a class="anchor" aria-label="anchor" href="#ggalign-004"></a></h2>
-<ul><li><p>the nestet alignpatches theme by default will inherit from the parent alignpatches</p></li>
+<ul><li><p><code>layout_heatmap()</code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> arguments width/height have been renamed <code>.width</code>/<code>.height</code> to helps avoid conflicts with arguments from <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code>.</p></li>
+<li><p>the nestet alignpatches theme by default will inherit from the parent alignpatches</p></li>
 <li><p>new <code><a href="../reference/layout_title.html">layout_title()</a></code> function, now <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> only control the layout theme</p></li>
 <li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code></p></li>
 <li><p><code>set_context</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> now depends on <code>plot_dendrogram</code> by default</p></li>
