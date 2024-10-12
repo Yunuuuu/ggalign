@@ -1,5 +1,9 @@
 # ggalign 0.0.4
 
+* the nestet alignpatches theme by default will inherit from the parent alignpatches
+
+* new `layout_title()` function, now `layout_annotation()` only control the layout theme
+
 * add `ggrastr::rasterize` method for both `ggheatmap()` and `ggstack()`
 
 * `set_context` argument in `align_dendro()` now depends on `plot_dendrogram` by default
