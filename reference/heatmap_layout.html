@@ -67,10 +67,11 @@
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -80,10 +81,11 @@
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -110,14 +112,6 @@ addition, we will always add mapping <code>aes(.data$.x, .data$.y)</code>.</p></
 Only used when <code>filling = TRUE</code>.</p></dd>
 
 
-<dt id="arg--width-height">.width, .height<a class="anchor" aria-label="anchor" href="#arg--width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
-
-
-<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
-
-
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
 <dd><p>A boolean value indicating whether to fill the heatmap. If you
 wish to customize the filling style, set this to <code>FALSE</code>.</p>
@@ -131,6 +125,20 @@ default heatmap body fill color scale. See
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_fill_continuous()</a></code> or
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete()</a></code> for option setting
 details.</p></dd>
+
+
+<dt id="arg--width-height">.width, .height<a class="anchor" aria-label="anchor" href="#arg--width-height"></a></dt>
+<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
+
+
+<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
+<dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
+
+
+<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
+<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
+<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
 
 
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>

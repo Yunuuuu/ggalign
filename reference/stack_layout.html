@@ -63,9 +63,23 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggstack</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggstack</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -86,13 +100,19 @@ direction of the stack layout.</p></dd>
 the relative widths (<code>direction = "horizontal"</code>) / heights (<code>direction = "vertical"</code>).</p></dd>
 
 
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; A list of plots, ususally the
+ggplot object. Use <code>NULL</code> to indicate an empty spacer.</p></dd>
+
+
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
 <dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
 
 
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; A list of plots, ususally the
-ggplot object. Use <code>NULL</code> to indicate an empty spacer.</p></dd>
+<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
+<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
+<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

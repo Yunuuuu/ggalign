@@ -66,15 +66,15 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hmanno</span><span class="op">(</span></span>
 <span>  position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  plot_data <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_labs <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  height <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,10 +96,6 @@ annotation.</p></li>
 <li><p>If <code>position</code> is <code>"left"</code> or <code>"right"</code>, <code>size</code> set the total width of the
 annotation.</p></li>
 </ul></dd>
-
-
-<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
@@ -155,6 +151,10 @@ will be aligned.</p></dd>
 when position is a string. Options include::</p><ul><li><p>A single number or string of the plot elements in the stack layout.</p></li>
 <li><p><code>NULL</code>: remove any active context.</p></li>
 </ul></dd>
+
+
+<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
+<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 </dl></div>
     <div class="section level2">

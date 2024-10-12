@@ -71,7 +71,8 @@
 <span>  widths <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  heights <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  design <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,6 +111,12 @@ either be specified as a text string or by concatenating calls to
 
 <dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
 <dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
+
+
+<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
+<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
+<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
