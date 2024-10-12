@@ -23,8 +23,9 @@ reference:
   - stack_active
   - layout-operator
   - theme_ggalign
+  - layout_design
+  - layout_title
   - layout_annotation
-  - layout_theme
 
 - title: Layout Plot
   desc: >
