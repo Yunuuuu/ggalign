@@ -1,4 +1,6 @@
-This release is a major update that includes a significant rewrite of the internals. As a result, it may break reverse dependencies. However, since this package is new to CRAN, we have decided to only increment the patch version number and immediately push it to CRAN. No issues with reverse dependencies have been detected.
+This release is a major update that includes a significant rewrite of the internals and introduces new features (including new functions and arguments). Since this package is new to CRAN, no reverse dependencies exist yet, and we have decided to increment only the patch version number.
+
+We apologize for the short-term nature of the previous submission. We responded by email, but it appears the message was returned. We update frequently because the changes introduced in this version are substantial, and we want to avoid users encountering inconsistencies.
 
 ## R CMD check results
 0 errors | 0 warnings | 1 note

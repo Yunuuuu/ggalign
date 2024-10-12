@@ -1,17 +1,17 @@
 # Platform
 
-|field    |value                        |
-|:--------|:----------------------------|
-|version  |R version 4.4.0 (2024-04-24) |
-|os       |Ubuntu 24.04 LTS             |
-|system   |x86_64, linux-gnu            |
-|ui       |X11                          |
-|language |en                           |
-|collate  |C.UTF-8                      |
-|ctype    |C.UTF-8                      |
-|tz       |Asia/Shanghai                |
-|date     |2024-10-07                   |
-|pandoc   |3.1.3 @ /usr/bin/pandoc      |
+|field    |value                             |
+|:--------|:---------------------------------|
+|version  |R version 4.4.0 (2024-04-24)      |
+|os       |Ubuntu 24.04 LTS                  |
+|system   |x86_64, linux-gnu                 |
+|ui       |X11                               |
+|language |en                                |
+|collate  |C.UTF-8                           |
+|ctype    |C.UTF-8                           |
+|tz       |Asia/Shanghai                     |
+|date     |2024-10-12                        |
+|pandoc   |3.1.3 @ /usr/bin/ (via rmarkdown) |
 
 # Dependencies
 
@@ -21,7 +21,7 @@
 |cli          |3.6.3 |3.6.3  |   |
 |colorspace   |2.1-1 |2.1-1  |   |
 |cpp11        |0.5.0 |NA     |*  |
-|data.table   |NA    |1.16.0 |*  |
+|data.table   |NA    |1.16.2 |*  |
 |dplyr        |1.1.4 |NA     |*  |
 |fansi        |1.0.6 |1.0.6  |   |
 |farver       |2.1.2 |2.1.2  |   |
