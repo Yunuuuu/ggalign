@@ -136,8 +136,8 @@ In this example:
 
 # plot size
 ## heatmap body size
-You can specify the relative sizes of the heatmap body using the .width and
-.height arguments in the ggheatmap() function. The dot prefix helps avoid
+You can specify the relative sizes of the heatmap body using the `.width` and
+`.height` arguments in the ggheatmap() function. The dot prefix helps avoid
 conflicts with arguments from `geom_tile()`. 
 ```{r}
 ggheatmap(small_mat, .height = 2) +
