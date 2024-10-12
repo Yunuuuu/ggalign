@@ -25,19 +25,19 @@ ggalign_build.HeatmapLayout <- function(x) {
     keep <- lengths(plots) > 0L
 
     design <- trim_area(do.call(c, design[keep]))
-    annotation <- x@annotation
+    titles <- x@titles
     align_plots(
         !!!.subset(plots, keep),
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(x@params, "guides") %|w|% "tlbr",
-        title = .subset2(annotation, "title"),
-        subtitle = .subset2(annotation, "subtitle"),
-        caption = .subset2(annotation, "caption"),
-        theme = layout_theme
-    )
+        guides = .subset2(x@params, "guides") %|w|% "tlbr"
+    ) + layout_title(
+        title = .subset2(titles, "title"),
+        subtitle = .subset2(titles, "subtitle"),
+        caption = .subset2(titles, "caption")
+    ) + layout_annotation(theme = layout_theme)
 }
 
 #' @importFrom ggplot2 aes

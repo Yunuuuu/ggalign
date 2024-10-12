@@ -14,11 +14,13 @@ methods::setClass("Layout",
     list(
         active = "ANY",
         # control the layout, `theme` will also be used by `ggsave`
-        annotation = "list", theme = "ANY",
+        titles = "list",
+        annotation = "list",
+        theme = "ANY",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, annotation = list(),
+        active = NULL, titles = list(), annotation = list(),
         `_namespace` = namespace_link
     )
 )
@@ -87,17 +89,8 @@ methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
         ))
     }
     if (is.null(e2)) return(e1) # styler: off
-    if (inherits(e2, "layout_theme")) {
-        if (is.null(e1@theme)) {
-            e1@theme <- e2
-        } else {
-            e1@theme <- e1@theme + e2
-        }
-        return(e1)
-    }
-    if (inherits(e2, "layout_annotation")) {
-        e2 <- e2[!vapply(e2, is.waive, logical(1L), USE.NAMES = FALSE)]
-        e1@annotation <- modifyList(e1@annotation, e2, keep.null = TRUE)
+    if (inherits(e2, "layout_title")) {
+        e1@titles <- alignpatches_update(e1@titles, e2)
         return(e1)
     }
 
@@ -106,10 +99,6 @@ methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
     e2name <- deparse(substitute(e2))
     layout_add(e1, e2, e2name)
 })
-
-is_layout_components <- function(x) {
-    inherits(x, "layout_theme") || inherits(x, "layout_annotation")
-}
 
 #' @keywords internal
 layout_add <- function(layout, object, object_name) {
@@ -178,9 +167,9 @@ methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
         ))
     }
     if (is.null(e2)) return(e1) # styler: off
-    if (is_layout_components(e2)) {
+    if (inherits(e2, "layout_title")) {
         cli::cli_abort(c(
-            "Cannot use {.code &} to control the layout theme or annotation",
+            "Cannot use {.code &} to change the layout titles",
             i = "Try to use {.code +} instead"
         ))
     }
@@ -225,9 +214,9 @@ methods::setMethod("-", c("Layout", "ANY"), function(e1, e2) {
         ))
     }
     if (is.null(e2)) return(e1) # styler: off
-    if (is_layout_components(e2)) {
+    if (inherits(e2, "layout_title")) {
         cli::cli_abort(c(
-            "Cannot use {.code -} to control the layout theme or annotation",
+            "Cannot use {.code -} to change the layout titles",
             i = "Try to use {.code +} instead"
         ))
     }

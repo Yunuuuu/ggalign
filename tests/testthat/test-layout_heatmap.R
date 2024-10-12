@@ -26,22 +26,24 @@ testthat::test_that("`ggheatmap` works well", {
     expect_doppelganger("heatmap-data.frame", ggheatmap(data.frame(1:10)))
 })
 
-testthat::test_that("add `layout_theme()` works well", {
+testthat::test_that("add `layout_annotation()` works well", {
     expect_doppelganger(
         "heatmap-layout-theme",
         ggheatmap(matrix(1:9, nrow = 3L)) +
-            layout_theme(plot.background = element_rect(fill = "red"))
+            layout_annotation(
+                theme = theme(plot.background = element_rect(fill = "red"))
+            )
     )
 })
 
-testthat::test_that("add `layout_annotation()` works well", {
+testthat::test_that("add `layout_title()` works well", {
     expect_doppelganger(
         "heatmap-layout-annotation",
         ggheatmap(matrix(1:9, nrow = 3L)) +
+            layout_title(title = "I'm layout title") +
             layout_annotation(
-                title = "I'm layout title"
-            ) +
-            layout_theme(plot.title = element_text(face = "bold"))
+                theme = theme(plot.title = element_text(face = "bold"))
+            )
     )
 })
 

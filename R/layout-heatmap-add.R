@@ -11,9 +11,8 @@ layout_heatmap_add.default <- function(object, heatmap, object_name) {
     if (is.null(position <- get_context(heatmap))) {
         heatmap <- heatmap_add(object, heatmap, object_name)
     } else {
-        slot(heatmap, position) <- stack_add_ggelement(
-            object, slot(heatmap, position), object_name,
-            sprintf("the heatmap %s annotation", position)
+        slot(heatmap, position) <- layout_stack_add(
+            object, slot(heatmap, position), object_name
         )
     }
     heatmap
@@ -136,4 +135,15 @@ heatmap_add.Coord <- function(object, heatmap, object_name) {
         return(heatmap)
     }
     NextMethod() # call default method
+}
+
+#' @export
+heatmap_add.layout_annotation <- function(object, heatmap, object_name) {
+    heatmap@annotation <- alignpatches_update(
+        heatmap@annotation, .subset2(object, "annotation")
+    )
+    heatmap@theme <- update_layout_theme(
+        heatmap@theme, .subset2(object, "theme")
+    )
+    heatmap
 }

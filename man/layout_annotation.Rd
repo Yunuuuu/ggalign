@@ -2,22 +2,44 @@
 % Please edit documentation in R/alignpatch-align_plots.R
 \name{layout_annotation}
 \alias{layout_annotation}
-\title{Annotate the whole layout}
+\title{Modify components of the layout}
 \usage{
-layout_annotation(title = waiver(), subtitle = waiver(), caption = waiver())
+layout_annotation(theme = waiver(), ...)
 }
 \arguments{
-\item{title}{The text for the title.}
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
+\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
+\code{background}.}
 
-\item{subtitle}{The text for the subtitle for the plot which will be
-displayed below the title.}
-
-\item{caption}{The text for the caption which will be displayed in the
-bottom-right of the plot by default.}
-}
-\value{
-A \code{layout_annotation} object to be added into \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \description{
-Annotate the whole layout
+\itemize{
+\item modify the theme of the layout
+}
+}
+\details{
+\itemize{
+\item \code{guides}, \code{patch.title}, \code{panel.border}, and \code{background} will always be
+added even for the nested \code{alignpatches} object.
+\item \code{title}, \code{subtitle}, \code{caption}, and \code{margins} will be added for the
+top-level \code{alignpatches} object only.
+}
+}
+\examples{
+p1 <- ggplot(mtcars) +
+    geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) +
+    geom_boxplot(aes(gear, disp, group = gear))
+p3 <- ggplot(mtcars) +
+    geom_bar(aes(gear)) +
+    facet_wrap(~cyl)
+align_plots(
+    p1 + theme(plot.background = element_blank()),
+    p2 + theme(plot.background = element_blank()),
+    p3 + theme(plot.background = element_blank())
+) +
+    layout_annotation(
+        theme = theme(plot.background = element_rect(fill = "red"))
+    )
 }

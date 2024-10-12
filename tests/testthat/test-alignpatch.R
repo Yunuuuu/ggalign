@@ -50,11 +50,12 @@ test_that("The grid can be controlled", {
         align_plots(p1, p2, p3, p4, heights = grid::unit(3, "cm"))
     })
 
-    expect_doppelganger("Setting annotation", {
-        align_plots(p1, p2, p3, p4,
-            title = "I'm title", subtitle = "I'm subtitle",
-            caption = "I'm caption"
-        )
+    expect_doppelganger("Setting title", {
+        align_plots(p1, p2, p3, p4) +
+            layout_title(
+                title = "I'm title", subtitle = "I'm subtitle",
+                caption = "I'm caption"
+            )
     })
 
     expect_doppelganger("patch titles", {
@@ -79,26 +80,31 @@ test_that("The grid can be controlled", {
             p2 + theme(plot.background = element_blank()),
             align_plots(
                 p3 + theme(plot.background = element_blank()),
-                p4 + theme(plot.background = element_blank()),
+                p4 + theme(plot.background = element_blank())
+            ) +
+                layout_annotation(
+                    theme = theme(
+                        panel.border = element_rect(colour = "blue"),
+                        plot.background = element_rect(
+                            fill = "yellow", color = "black",
+                            linewidth = unit(1, "cm")
+                        )
+                    )
+                )
+        ) +
+            layout_title(
+                title = "I'm layout title",
+                subtitle = "I'm layout subtitle",
+                caption = "I'm layout caption"
+            ) + layout_annotation(
                 theme = theme(
-                    panel.border = element_rect(colour = "blue"),
+                    panel.border = element_rect(colour = "red"),
                     plot.background = element_rect(
-                        fill = "yellow", color = "black",
+                        fill = "green", color = "black",
                         linewidth = unit(1, "cm")
                     )
                 )
-            ),
-            title = "I'm layout title",
-            subtitle = "I'm layout subtitle",
-            caption = "I'm layout caption",
-            theme = theme(
-                panel.border = element_rect(colour = "red"),
-                plot.background = element_rect(
-                    fill = "green", color = "black",
-                    linewidth = unit(1, "cm")
-                )
             )
-        )
     })
 })
 

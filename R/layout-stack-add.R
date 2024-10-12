@@ -5,7 +5,43 @@ layout_stack_add <- function(object, stack, object_name) {
 
 #' @export
 layout_stack_add.default <- function(object, stack, object_name) {
-    stack_add_ggelement(object, stack, object_name, "the stack layout")
+    if (is.null(active_index <- get_context(stack))) {
+        cli::cli_abort(c(
+            "Cannot add {.code {object_name}} into the stack layout",
+            i = "No active {.cls ggplot} object",
+            i = paste(
+                "Did you forget to initialize a {.cls ggplot} object",
+                "with {.fn ggalign}?"
+            )
+        ))
+    }
+    plot <- stack@plots[[active_index]]
+    if (is_ggheatmap(plot)) {
+        plot <- layout_heatmap_add(object, plot, object_name)
+    } else {
+        plot <- align_add(object, plot, object_name)
+    }
+    stack@plots[[active_index]] <- plot
+    stack
+}
+
+#' @export
+layout_stack_add.layout_annotation <- function(object, stack, object_name) {
+    active_index <- get_context(stack)
+    if (!is.null(active_index) &&
+        is_ggheatmap(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- layout_heatmap_add(
+            object, plot, object_name
+        )
+    } else {
+        stack@annotation <- alignpatches_update(
+            stack@annotation, .subset2(object, "annotation")
+        )
+        stack@theme <- update_layout_theme(
+            stack@theme, .subset2(object, "theme")
+        )
+    }
+    stack
 }
 
 ###################################################################
