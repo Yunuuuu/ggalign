@@ -68,6 +68,7 @@ body_append <- function(fn, ..., ans = TRUE) {
     rlang::new_function(args, body)
 }
 
+#' @importFrom vctrs vec_unrep
 make_order <- function(order) {
     l <- length(order)
     index <- seq_len(l)
@@ -84,16 +85,15 @@ make_order <- function(order) {
     # 2. for order has been set and is not the outliers,
     #    we always follow the order
     # 3. non-outliers were always regarded as the integer index
-    user_index <- as.integer(order[!need_action & order >= 1L & order <= l])
+    used <- as.integer(order[!need_action & order >= 1L & order <= l])
 
     # we flatten user index to continuous integer sequence
-    pairs <- split(user_index, user_index)
-    start <- as.integer(names(pairs)) # start is the user provided index
+    sequence <- vec_unrep(used) # key is the sequence start
+    start <- .subset2(sequence, "key")
     end <- pmin(
-        start + lengths(pairs) - 1L,
+        start + .subset2(sequence, "times") - 1L,
         data.table::shift(start, fill = l + 1L, type = "lead") - 1L
     )
-    # following index has been used by user
     use <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
 
     # following index can be used
