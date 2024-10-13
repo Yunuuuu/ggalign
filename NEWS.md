@@ -2,6 +2,8 @@
 
 ## features:
 
+* for large matrix (> 20000 cells), automatically use `geom_raster()`
+
 * a new `layer_order()` function to change the ggplot2 layer adding order
 
 ## Bug fixes:
