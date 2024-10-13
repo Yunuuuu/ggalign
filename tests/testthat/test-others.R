@@ -13,6 +13,6 @@ test_that("layer_order() works well", {
         "layer_order_add_in_the_end",
         ggplot(faithfuld, aes(waiting, eruptions)) +
             geom_raster(aes(fill = density)) +
-            layer_order(geom_point(color = "red", size = 1), order = 3L)
+            layer_order(geom_point(color = "red", size = 1), order = Inf)
     )
 })
