@@ -1,5 +1,9 @@
 # ggalign (development version)
 
+## features:
+
+* a new `layer_order()` function to change the ggplot2 layer adding order
+
 ## Bug fixes:
 
 * fix bug when provide `hclust` or `dendrogram` in method argument of `align_dendro()`

@@ -40,8 +40,8 @@ with_options <- function(code, ...) {
 #' @importFrom methods extends
 has_method <- function(x, f, inherit = TRUE, default = TRUE) {
     x_class <- class(x)
-    if (isS4(x)) x_class <- extends(x_class)
     if (inherit) {
+        if (isS4(x)) x_class <- extends(x_class)
         if (default) x_class <- c(x_class, "default")
     } else {
         x_class <- .subset(x_class, 1L)

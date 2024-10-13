@@ -73,6 +73,7 @@ reference:
 - title: helpers
   desc: A handful of helpers
   contents:
+  - layer_order
   - ggalignGrob
   - ggalign_stat
   - hclust2
