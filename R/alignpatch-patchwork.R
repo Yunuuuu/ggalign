@@ -33,6 +33,7 @@ alignpatch.patchwork <- function(x) {
     ))
 }
 
+#' @importFrom vctrs vec_set_difference
 #' @export
 alignpatch.free_plot <- function(x) {
     if (inherits(x, "patchwork")) {
@@ -44,7 +45,7 @@ alignpatch.free_plot <- function(x) {
         names(free_settings),
         factor(free_settings, rev(unique(free_settings)))
     )
-    class(x) <- setdiff(class(x), "free_plot")
+    class(x) <- vec_set_difference(class(x), "free_plot")
     for (type in names(free_settings)) {
         side <- paste(.subset2(free_settings, type), collapse = "")
         x <- switch(type,

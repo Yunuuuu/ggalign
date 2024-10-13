@@ -68,7 +68,7 @@ body_append <- function(fn, ..., ans = TRUE) {
     rlang::new_function(args, body)
 }
 
-#' @importFrom vctrs vec_unrep
+#' @importFrom vctrs vec_unrep vec_set_difference
 make_order <- function(order) {
     l <- length(order)
     index <- seq_len(l)
@@ -94,13 +94,13 @@ make_order <- function(order) {
         start + .subset2(sequence, "times") - 1L,
         data.table::shift(start, fill = l + 1L, type = "lead") - 1L
     )
-    use <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
+    used <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
 
     # following index can be used
-    use <- setdiff(index, unlist(use, FALSE, FALSE))
+    unused <- vec_set_difference(index, unlist(used, FALSE, FALSE))
 
     # we assign the candidate index to the order user not set.
-    order[need_action] <- use[seq_len(sum(need_action))]
+    order[need_action] <- unused[seq_len(sum(need_action))]
 
     # make_order(c(NA, 1, NA)): c(2, 1, 3)
     # make_order(c(NA, 1, 3)): c(2, 1, 3)
@@ -276,11 +276,12 @@ compact <- function(.x) .x[lengths(.x) > 0L]
 #' @return `x`, with new names according to `replace`
 #'
 #' @keywords internal
+#' @importFrom vctrs vec_set_difference
 #' @noRd
 rename <- function(x, replace) {
     current_names <- names(x)
     old_names <- names(replace)
-    missing_names <- setdiff(old_names, current_names)
+    missing_names <- vec_set_difference(old_names, current_names)
     if (length(missing_names) > 0) {
         replace <- replace[!old_names %in% missing_names]
         old_names <- names(replace)

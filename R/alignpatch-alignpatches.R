@@ -209,12 +209,15 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             patch$align_border(t = t, l = l, b = b, r = r, gt = grob)
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
-    # split_gt = function(self, gt = self$gt) list(bg = NULL, plot = gt),
+    #' @importFrom vctrs vec_set_difference
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         collected_guides <- self$collected_guides
         # for guides not collected by the top-level, we attach the guides
         self$gt <- self$attach_guide_list(
-            .subset(collected_guides, setdiff(names(collected_guides), guides)),
+            .subset(
+                collected_guides,
+                vec_set_difference(names(collected_guides), guides)
+            ),
             gt = gt
         )
         # return guides to be collected

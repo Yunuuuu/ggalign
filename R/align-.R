@@ -54,6 +54,7 @@
 #' align_dendro()
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
+#' @importFrom vctrs vec_set_difference
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
@@ -96,10 +97,10 @@ align <- function(align_class, params,
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
     if (isTRUE(check.param)) {
-        if (length(extra_param <- setdiff(names(params), all))) { # nolint
+        if (length(extra_param <- vec_set_difference(names(params), all))) { # nolint
             cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
         }
-        if (length(missing <- setdiff(all, names(params)))) { # nolint
+        if (length(missing <- vec_set_difference(all, names(params)))) { # nolint
             cli::cli_abort("missing parameters: {missing}", call = call)
         }
     }
@@ -284,6 +285,7 @@ Align <- ggproto("Align",
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
+#' @importFrom vctrs vec_set_difference
 align_method_params <- function(f, remove = c("panel", "index")) {
-    setdiff(names(ggproto_formals(f)), c("self", remove))
+    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }

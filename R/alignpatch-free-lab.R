@@ -63,8 +63,9 @@ alignpatch.free_lab <- function(x) {
                 labs = self$free_labs, gt = ans
             )
         },
+        #' @importFrom vctrs vec_set_difference
         free_lab = function(self, labs, gt = self$gt) {
-            if (length(labs <- setdiff(labs, self$free_labs))) {
+            if (length(labs <- vec_set_difference(labs, self$free_labs))) {
                 gt <- ggproto_parent(Parent, self)$free_lab(
                     labs = labs, gt = gt
                 )

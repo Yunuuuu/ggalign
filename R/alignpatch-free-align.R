@@ -91,6 +91,7 @@ free_align.alignpatches <- free_align.ggplot
 #' @export
 free_align.free_border <- free_align.ggplot
 
+#' @importFrom vctrs vec_set_difference
 #' @export
 free_align.free_lab <- function(plot, axes = "tlbr") {
     assert_position(axes)
@@ -98,7 +99,7 @@ free_align.free_lab <- function(plot, axes = "tlbr") {
     free_labs <- setdiff_position(attr(plot, "free_labs"), axes)
     if (length(free_labs) == 0L) {
         attr(plot, "free_labs") <- NULL
-        class(plot) <- setdiff(class(plot), "free_lab")
+        class(plot) <- vec_set_difference(class(plot), "free_lab")
     } else {
         attr(plot, "free_labs") <- free_labs
     }

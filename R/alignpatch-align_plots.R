@@ -48,6 +48,7 @@
 #'
 #' # Compare to not using named plot arguments
 #' align_plots(p1, p2, design = design)
+#' @importFrom vctrs vec_set_difference
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, design = NULL,
@@ -56,7 +57,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     nms <- names(plots)
     if (!is.null(nms) && is.character(design)) {
         area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
-        area_names <- sort(setdiff(area_names, c("", "#")))
+        area_names <- sort(vec_set_difference(area_names, c("", "#")))
         if (all(nms %in% area_names)) {
             plot_list <- vector("list", length(area_names))
             names(plot_list) <- area_names
@@ -180,9 +181,10 @@ alignpatches_update <- function(old, new) {
     modifyList(old, new[!vapply(new, is.waive, logical(1L))], keep.null = TRUE)
 }
 
+#' @importFrom vctrs vec_set_difference
 update_layout_design <- function(old, new) {
     guides <- .subset2(new, "guides")
-    new <- .subset(new, setdiff(names(new), "guides"))
+    new <- .subset(new, vec_set_difference(names(new), "guides"))
     old <- alignpatches_update(old, new)
     if (!identical(guides, NA)) old$guides <- guides
     old
