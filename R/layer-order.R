@@ -19,34 +19,38 @@
 #' @export
 layer_order <- function(layer, order = 0) {
     assert_s3_class(layer, "Layer")
+    if (!is_scalar(order)) {
+        cli::cli_abort("{.arg order} must be a single number")
+    }
+    if (is.na(order)) {
+        cli::cli_abort("{.arg order} cannot be missing value")
+    }
     order <- vec_cast(order, integer())
-    structure(
-        list(
-            layer = layer, order = order,
-            object_name = deparse(substitute(layer))
-        ),
-        class = "layer_order"
+    layer <- add_class(layer, "layer_order")
+    attr(layer, "layer_order") <- list(
+        order = order,
+        # used for `ggplot_add`
+        object_name = deparse(substitute(layer))
     )
+    layer
 }
-
-#' @export
-print.layer_order <- function(x, ...) print(.subset2(x, "layer"))
 
 #' @importFrom ggplot2 ggplot_add
 #' @importFrom vctrs vec_slice
 #' @export
 ggplot_add.layer_order <- function(object, plot, object_name) {
+    if (is.null(params <- attr(object, "layer_order"))) {
+        cli::cli_abort("Invalid {.cls layer_order} object")
+    }
     # ggplot2 will do something special for the layer
     # add layer_name, we re-call the method for the layer
-    ans <- ggplot_add(
-        .subset2(object, "layer"), plot,
-        .subset2(object, "object_name")
-    )
+    object_name <- .subset2(params, "object_name")
+    ans <- NextMethod()
     if ((cur <- length(layers <- .subset2(ans, "layers"))) == 1L) {
         return(ans)
     }
     layer <- .subset2(layers, cur)
-    order <- .subset2(object, "order")
+    order <- .subset2(params, "order")
     if (order >= length(layers)) return(ans) # styler: off
     if (order <= 0L) {
         layers <- append(vec_slice(layers, -cur), layer, 0L)
