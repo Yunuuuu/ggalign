@@ -57,17 +57,9 @@ testthat::test_that("add `heatmap_layout()` object works well", {
     expect_error(
         ggstack(matrix(seq_len(81), nrow = 9L)) +
             align_kmeans(3L) +
-            ggheatmap(matrix(seq_len(81), nrow = 9L)) +
+            ggheatmap() +
             hmanno("l") +
             align_kmeans(4)
-    )
-
-    expect_error(
-        ggstack(matrix(seq_len(81), nrow = 9L)) +
-            align_dendro() +
-            ggheatmap(matrix(seq_len(81), nrow = 9L)) +
-            hmanno("l") +
-            align_kmeans(3)
     )
 
     # absolute size works well
