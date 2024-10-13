@@ -137,7 +137,8 @@ alias for <code><a href="../reference/align_gg.html">align_gg()</a></code>.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="section level3">
 <h3 id="plot-data">Plot data<a class="anchor" aria-label="anchor" href="#plot-data"></a>
@@ -156,7 +157,8 @@ to transform the default data for all subsequent geoms.</p>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>plot_data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">.panel</span> <span class="op">==</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.row_names</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.row_names</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -187,7 +189,8 @@ necessary to disable the automatic setting of limits
 <span>            <span class="va">data</span></span>
 <span>        <span class="op">}</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-4-1.png" width="480"></p>
 <pre><code><span><span class="co">#&gt;   .column_index .row_index      value .extra_panel .panel .x</span></span>
 <span><span class="co">#&gt; 1             1          1 -0.6264538            b      1  1</span></span>
@@ -208,7 +211,8 @@ single-column or single-row heatmaps.</p>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">.extra_panel</span>, x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">.extra_panel</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -230,7 +234,8 @@ to place titles around any border of the plot using the
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">.extra_panel</span>, x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">.extra_panel</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>right <span class="op">=</span> <span class="st">"right patch title"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>right <span class="op">=</span> <span class="st">"right patch title"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 </div>
@@ -268,7 +273,8 @@ layout.</p>
 <span>        data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">.x</span> <span class="op">~</span> <span class="va">.panel</span>, <span class="va">data</span>, FUN <span class="op">=</span> <span class="va">median</span><span class="op">)</span></span>
 <span>        <span class="op">}</span></span>
-<span>    <span class="op">)</span></span></code></pre></div>
+<span>    <span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
