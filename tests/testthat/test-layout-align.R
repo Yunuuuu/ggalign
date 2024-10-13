@@ -161,6 +161,18 @@ testthat::test_that("`align_dendro` works well", {
     expect_doppelganger("dendrogram_left", p + hmanno("l") + align_dendro())
     expect_doppelganger("dendrogram_bottom", p + hmanno("b") + align_dendro())
     expect_doppelganger("dendrogram_right", p + hmanno("r") + align_dendro())
+    expect_doppelganger("stack_no_data_hclust_input", {
+        ggstack() + align_dendro(method = hclust2(mat))
+    })
+    expect_doppelganger("stack_no_data_dendrogram_input", {
+        ggstack() + align_dendro(method = stats::as.dendrogram(hclust2(mat)))
+    })
+    expect_doppelganger("heatmap_no_data_hclust_input", {
+        ggstack() + align_dendro(method = hclust2(mat))
+    })
+    expect_doppelganger("heatmap_no_data_dendrogram_input", {
+        ggstack() + align_dendro(method = stats::as.dendrogram(hclust2(mat)))
+    })
     expect_doppelganger(
         "dendro_cutree",
         p + hmanno("t") + align_dendro(k = 3L)
@@ -213,7 +225,7 @@ testthat::test_that("`align_dendro` works well", {
             )
     )
     expect_doppelganger(
-        "dendro_reorder_dendro_in_and_between_group_and_merge_group",
+        "dendro_reorder_dendro_in_and_between_group_and_merge",
         p +
             hmanno("t") +
             align_group(column_group) +

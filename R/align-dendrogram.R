@@ -148,7 +148,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
     nobs = function(self, params) {
         if (inherits(tree <- .subset2(params, "method"), "hclust")) {
             self$labels <- .subset2(tree, "labels")
-            length(.subset2(tree, "labels"))
+            length(.subset2(tree, "order"))
         } else { # a dendrogram
             self$labels <- labels(tree)
             stats::nobs(tree)

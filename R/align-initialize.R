@@ -89,21 +89,15 @@ initialize_align_layout <- function(object, nobs, direction,
                 call = call
             )
         } else if (!is.atomic(new_panel)) {
-            cli::cli_abort(
-                c(
-                    "{.fn {snake_class(object)}}: invalid layout panel",
-                    i = "layout panel must be an atomic vector"
-                ),
-                call = call
-            )
+            cli::cli_abort(c(
+                "{.fn {snake_class(object)}}: invalid layout panel",
+                i = "layout panel must be an atomic vector"
+            ), call = call)
         } else if (is.null(nobs) || length(new_panel) != nobs) {
-            cli::cli_abort(
-                paste(
-                    "{.fn layout} panel of {.fn {snake_class(object)}}",
-                    "is not compatible with {axis}-axis"
-                ),
-                call = call
-            )
+            cli::cli_abort(paste(
+                "{.fn layout} panel of {.fn {snake_class(object)}}",
+                "is not compatible with {axis}-axis"
+            ), call = call)
         } else if (!is.null(layout_panel) && !(new_panel %nest% layout_panel)) {
             cli::cli_abort(paste0(
                 "{.fn {snake_class(object)}} disrupt the previously ",
@@ -126,21 +120,15 @@ initialize_align_layout <- function(object, nobs, direction,
                 call = call
             )
         } else if (!is.integer(new_index)) {
-            cli::cli_abort(
-                c(
-                    "{.fn {snake_class(object)}}: invalid layout index",
-                    i = "layout index must be integer"
-                ),
-                call = call
-            )
+            cli::cli_abort(c(
+                "{.fn {snake_class(object)}}: invalid layout index",
+                i = "layout index must be integer"
+            ), call = call)
         } else if (is.null(nobs) || length(new_index) != nobs) {
-            cli::cli_abort(
-                paste(
-                    "layout index of {.fn {snake_class(object)}}",
-                    "is not compatible with {axis}-axis"
-                ),
-                call = call
-            )
+            cli::cli_abort(paste(
+                "layout index of {.fn {snake_class(object)}}",
+                "is not compatible with {axis}-axis"
+            ), call = call)
         }
     }
 
