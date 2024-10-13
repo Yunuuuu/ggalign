@@ -25,7 +25,7 @@ layer_order <- function(layer, order = 0) {
     if (is.na(order)) {
         cli::cli_abort("{.arg order} cannot be missing value")
     }
-    order <- vec_cast(order, integer())
+    if (!is.infinite(order)) order <- vec_cast(order, integer())
     layer <- add_class(layer, "layer_order")
     attr(layer, "layer_order") <- list(
         order = order,
