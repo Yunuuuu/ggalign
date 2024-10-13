@@ -15,6 +15,12 @@
 #' been established. Default: `FALSE`.
 #' @param k An integer scalar indicates the desired number of groups.
 #' @param h A numeric scalar indicates heights where the tree should be cut.
+#' @param cutree A function used to cut the [`hclust`][stats::hclust] tree. It
+#' should accept four arguments: the [`hclust`][stats::hclust] tree object,
+#' `distance` (only applicable when `method` is a string or a function for
+#' performing hierarchical clustering), k (the number of clusters), and h (the
+#' height at which to cut the tree). By default, [`cutree()`][stats::cutree()]
+#' is used.
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
 #' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
@@ -69,7 +75,7 @@ align_dendro <- function(mapping = aes(), ...,
                          reorder_dendrogram = FALSE,
                          merge_dendrogram = FALSE,
                          reorder_group = FALSE,
-                         k = NULL, h = NULL,
+                         k = NULL, h = NULL, cutree = NULL,
                          plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
@@ -82,6 +88,8 @@ align_dendro <- function(mapping = aes(), ...,
     assert_bool(reorder_dendrogram)
     assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
+    cutree <- allow_lambda(cutree)
+    assert_(cutree, is.function, "a function", null_ok = TRUE)
     assert_bool(plot_dendrogram)
     assert_mapping(mapping)
     if (is.null(data)) {
@@ -101,6 +109,7 @@ align_dendro <- function(mapping = aes(), ...,
             reorder_dendro = reorder_dendrogram,
             merge_dendro = merge_dendrogram,
             reorder_group = reorder_group,
+            cutree = cutree,
             mapping = mapping,
             plot_dendrogram = plot_dendrogram
         ),
@@ -129,6 +138,12 @@ AlignDendro <- ggproto("AlignDendro", Align,
             null_ok = TRUE,
             arg = "plot_cut_height", call = call
         )
+        # setup the default value for `plot_cut_height`
+        params$plot_cut_height <- .subset2(params, "plot_cut_height") %||% (
+            # we by default don't draw the height of the user-provided cutree
+            # since function like `dynamicTreeCut` will merge tree
+            is.null(params$cutree) && (!is.null(params$k) || !is.null(params$h))
+        )
         # initialize the internal parameters
         self$multiple_tree <- FALSE
         self$height <- NULL
@@ -156,7 +171,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     #' @importFrom vctrs vec_slice
     compute = function(self, panel, index, distance, method, use_missing,
-                       reorder_dendro, k = NULL, h = NULL) {
+                       reorder_dendro, k = NULL, h = NULL, cutree = NULL) {
         data <- .subset2(self, "data")
         if (!is.null(data) && nrow(data) < 2L) {
             cli::cli_abort(c(
@@ -165,7 +180,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             ), call = .subset2(self, "call"))
         }
         # if the old panel exist, we do sub-clustering
-        if (!is.null(panel) && is.null(k) && is.null(h)) {
+        if (!is.null(panel) && is.null(k) && is.null(h) && is.null(cutree)) {
             if (is.null(data)) {
                 cli::cli_abort(c(
                     "Cannot do sub-clustering",
@@ -209,12 +224,13 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         hclust2(data, distance, method, use_missing)
     },
+    #' @importFrom vctrs vec_unique_count
     #' @importFrom stats order.dendrogram
     layout = function(self, panel, index, distance, method, use_missing,
                       reorder_dendro, merge_dendro, reorder_group,
-                      k, h) {
+                      k, h, cutree, plot_cut_height) {
         statistics <- .subset2(self, "statistics")
-        if (!is.null(panel) && is.null(k) && is.null(h)) {
+        if (!is.null(panel) && is.null(k) && is.null(h) && is.null(cutree)) {
             # reordering the dendrogram ------------------------
             if (nlevels(panel) > 1L && reorder_group) {
                 data <- .subset2(self, "data")
@@ -255,19 +271,35 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 self$multiple_tree <- TRUE
             }
         } else {
+            distance <- attr(statistics, "distance")
             if (reorder_dendro) {
                 data <- .subset2(self, "data")
                 statistics <- reorder_dendrogram(statistics, rowMeans(data))
-                if (!is.null(k) || !is.null(h)) {
+            }
+            if (!is.null(k) || !is.null(h) || !is.null(cutree)) {
+                if (inherits(statistics, "dendrogram")) {
+                    # we need hclust object to cutree
                     statistics <- stats::as.hclust(statistics)
                 }
-            }
-            if (!is.null(k)) {
-                panel <- stats::cutree(statistics, k = k)
-                self$height <- cutree_k_to_h(statistics, k)
-            } else if (!is.null(h)) {
-                panel <- stats::cutree(statistics, h = h)
-                self$height <- h
+                if (is.null(cutree)) {
+                    cutree <- function(tree, dist, k, h) {
+                        if (!is.null(k)) {
+                            stats::cutree(tree, k = k)
+                        } else {
+                            stats::cutree(tree, h = h)
+                        }
+                    }
+                    # For `cutree`, we always respect the height user specified
+                    # For user defined function, we always calculate
+                    # height from the number of `panels`
+                    if (is.null(k) && plot_cut_height) self$height <- h
+                }
+                panel <- cutree(statistics, distance, k, h)
+                if (is.null(self$height) && plot_cut_height) {
+                    self$height <- cutree_k_to_h(
+                        statistics, vec_unique_count(panel)
+                    )
+                }
             }
         }
         # save the modified `statistics`
@@ -393,9 +425,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
         } else if (position == "left") { # in the left, reverse x-axis
             plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
         }
-        height <- .subset2(self, "height")
-        plot_cut_height <- plot_cut_height %||% !is.null(height)
-        if (plot_cut_height && !is.null(height)) {
+
+        if (plot_cut_height && !is.null(height <- .subset2(self, "height"))) {
             plot <- plot +
                 switch_direction(
                     direction,

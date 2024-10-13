@@ -2,6 +2,8 @@
 
 ## features:
 
+* `align_dendro()` gain a new argument `cutree` to customize the process of tree cutting
+
 * for large matrix (> 20000 cells), automatically use `geom_raster()`
 
 * a new `layer_order()` function to change the ggplot2 layer adding order

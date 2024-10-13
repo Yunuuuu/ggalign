@@ -15,6 +15,7 @@ align_dendro(
   reorder_group = FALSE,
   k = NULL,
   h = NULL,
+  cutree = NULL,
   plot_dendrogram = TRUE,
   plot_cut_height = NULL,
   root = NULL,
@@ -74,6 +75,13 @@ been established. Default: \code{FALSE}.}
 \item{k}{An integer scalar indicates the desired number of groups.}
 
 \item{h}{A numeric scalar indicates heights where the tree should be cut.}
+
+\item{cutree}{A function used to cut the \code{\link[stats:hclust]{hclust}} tree. It
+should accept four arguments: the \code{\link[stats:hclust]{hclust}} tree object,
+\code{distance} (only applicable when \code{method} is a string or a function for
+performing hierarchical clustering), k (the number of clusters), and h (the
+height at which to cut the tree). By default, \code{\link[stats:cutree]{cutree()}}
+is used.}
 
 \item{plot_dendrogram}{A boolean value indicates whether plot the dendrogram
 tree.}

@@ -65,6 +65,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
             }
         )
     }
+    if (!is.null(distance)) attr(ans, "distance") <- d
     ans
 }
 
