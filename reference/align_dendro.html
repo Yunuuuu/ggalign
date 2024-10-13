@@ -74,6 +74,7 @@
 <span>  reorder_group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  k <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  h <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutree <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_dendrogram <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_cut_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -156,6 +157,15 @@ been established. Default: <code>FALSE</code>.</p></dd>
 
 <dt id="arg-h">h<a class="anchor" aria-label="anchor" href="#arg-h"></a></dt>
 <dd><p>A numeric scalar indicates heights where the tree should be cut.</p></dd>
+
+
+<dt id="arg-cutree">cutree<a class="anchor" aria-label="anchor" href="#arg-cutree"></a></dt>
+<dd><p>A function used to cut the <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code> tree. It
+should accept four arguments: the <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code> tree object,
+<code>distance</code> (only applicable when <code>method</code> is a string or a function for
+performing hierarchical clustering), k (the number of clusters), and h (the
+height at which to cut the tree). By default, <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code>
+is used.</p></dd>
 
 
 <dt id="arg-plot-dendrogram">plot_dendrogram<a class="anchor" aria-label="anchor" href="#arg-plot-dendrogram"></a></dt>
