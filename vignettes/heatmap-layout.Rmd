@@ -68,11 +68,16 @@ ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 
 By default, a heatmap layer is added. If you set `filling = FALSE`, a blank
 heatmap will be drawn, allowing for customized filling geoms. For larger
-matrices, you may want to use a raster layer for faster rendering. In such
-cases, packages like [ggrastr](https://github.com/VPetukhov/ggrastr) or
+matrices, you may want to use a raster layer for faster rendering. 
+```{r}
+ggheatmap(small_mat, filling = FALSE) +
+  geom_raster()
+```
+
+In such cases, packages like [ggrastr](https://github.com/VPetukhov/ggrastr) or
 [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) are helpful.
 Additionally, [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html)
-offers many image filters that can be applied to ggplot2 layers. 
+offers many image filters that can be applied to ggplot2 layers.
 ```{r eval=rlang::is_installed("ragg")}
 ggheatmap(small_mat, filling = FALSE) +
   ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "ragg")
