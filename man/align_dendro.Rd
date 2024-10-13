@@ -61,8 +61,11 @@ of) one of the strings \code{"everything"}, \code{"all.obs"}, \code{"complete.ob
 \code{"na.or.complete"}, or \code{"pairwise.complete.obs"}. Only used when \code{distance}
 is a correlation coefficient string.}
 
-\item{reorder_dendrogram}{A single boolean value, indicates whether we should
-reorder the dendrogram based on the means. Default: \code{FALSE}.}
+\item{reorder_dendrogram}{A single boolean value indicating whether to
+reorder the dendrogram based on the means. Alternatively, you can provide a
+custom function that accepts an \link[stats:hclust]{hclust} object and the data
+used to generate the tree, returning either an \link[stats:hclust]{hclust} or
+\link[stats:dendrogram]{dendrogram} object. Default is \code{FALSE}.}
 
 \item{merge_dendrogram}{A single boolean value, indicates whether we should
 merge multiple dendrograms, only used when previous groups have been

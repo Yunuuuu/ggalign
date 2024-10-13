@@ -2,6 +2,8 @@
 
 ## features:
 
+* `reorder_dendrogram` argument in `align_dendro()` function now can accept a function to reorder the tree.
+
 * `align_dendro()` gain a new argument `cutree` to customize the process of tree cutting
 
 * for large matrix (> 20000 cells), automatically use `geom_raster()`
