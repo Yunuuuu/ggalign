@@ -7,8 +7,9 @@
 #' one column matrix.
 #' @param mapping Default list of aesthetic mappings to use for plot. In
 #' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
-#' @param ... Additional arguments passed to [geom_tile][ggplot2::geom_tile].
-#' Only used when `filling = TRUE`.
+#' @param ... Additional arguments passed to
+#' [geom_tile()][ggplot2::geom_tile]/[geom_raster()][ggplot2::geom_raster]. Only
+#' used when `filling = TRUE`. 
 #' @param .width,.height `r rd_heatmap_size()`.
 #' @inheritParams align_plots
 #' @param filling A boolean value indicating whether to fill the heatmap. If you
@@ -78,7 +79,7 @@ methods::setClass(
     list(
         data = "ANY", plot = "ANY",
         # parameters for heatmap body
-        width = "ANY", height = "ANY",
+        width = "ANY", height = "ANY", filling = "ANY",
         # If we regard heatmap layout as a plot, and put it into the stack
         # layout, we need following arguments to control it's behavour
         set_context = "logical", order = "integer", name = "character",
@@ -178,15 +179,11 @@ heatmap_layout.default <- function(data, ...) {
         # 3. The `labs()` function.
         # 4. The captured expression in aes().
         ggplot2::labs(x = NULL, y = NULL)
-
-    # add heatmap filling in the first layer
+    # save the `geom_tile()`/geom_raster() parameters
     if (filling) {
-        if (is.null(.subset2(plot$mapping, "fill"))) {
-            tile_mapping <- aes(.data$.x, .data$.y, fill = .data$value)
-        } else {
-            tile_mapping <- aes(.data$.x, .data$.y)
-        }
-        plot <- plot + ggplot2::geom_tile(mapping = tile_mapping, ...)
+        filling_params <- rlang::list2(...)
+    } else {
+        filling_params <- NULL
     }
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
@@ -205,7 +202,7 @@ heatmap_layout.default <- function(data, ...) {
         set_context = set_context,
         order = order, name = name %||% NA_character_,
         plot = plot, nobs_list = nobs_list,
-        theme = theme
+        theme = theme, filling = filling_params
     )
 }
 

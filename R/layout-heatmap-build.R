@@ -103,6 +103,26 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     # read the plot ---------------------------------------
     p <- heatmap@plot
 
+    # add heatmap filling in the first layer
+    if (!is.null(filling_params <- heatmap@filling)) {
+        if (is.null(.subset2(p$mapping, "fill"))) {
+            mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+        } else {
+            mapping <- aes(.data$.x, .data$.y)
+        }
+        if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
+            cli::cli_inform(c(">" = "heatmap built by {.fn geom_raster}"))
+            p <- p + layer_order(rlang::inject(ggplot2::geom_raster(
+                mapping = mapping, !!!filling_params
+            )))
+        } else {
+            cli::cli_inform(c(">" = "heatmap built by {.fn geom_tile}"))
+            p <- p + layer_order(rlang::inject(ggplot2::geom_tile(
+                mapping = mapping, !!!filling_params
+            )))
+        }
+    }
+
     # set the default data -------------------------------
     data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
     plot_data <- .subset2(params, "plot_data") %|w|% plot_data

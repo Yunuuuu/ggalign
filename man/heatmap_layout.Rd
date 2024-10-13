@@ -41,8 +41,9 @@ one column matrix.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. In
 addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 
-\item{...}{Additional arguments passed to \link[ggplot2:geom_tile]{geom_tile}.
-Only used when \code{filling = TRUE}.}
+\item{...}{Additional arguments passed to
+\link[ggplot2:geom_tile]{geom_tile()}/\link[ggplot2:geom_tile]{geom_raster()}. Only
+used when \code{filling = TRUE}.}
 
 \item{filling}{A boolean value indicating whether to fill the heatmap. If you
 wish to customize the filling style, set this to \code{FALSE}.

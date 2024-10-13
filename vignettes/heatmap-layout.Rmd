@@ -60,32 +60,32 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-You can treat the `heatmap_layout()` object as a normal ggplot2 object with a
-default `mapping` and `data`. You can add `ggplot2` elements as usual.
+You can treat the `heatmap_layout()` object as a standard ggplot2 object with
+default mapping and data. This means you can add ggplot2 layers or elements just
+like in any ggplot object.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
-By default, a heatmap layer is added. If you set `filling = FALSE`, a blank
-heatmap will be drawn, allowing for customized filling geoms. For larger
-matrices, you may want to use a raster layer for faster rendering. 
-```{r}
-ggheatmap(small_mat, filling = FALSE) +
-  geom_raster()
-```
+By default, `ggheatmap()` adds a heatmap layer. If the matrix has more than
+20,000 cells (`nrow * ncol > 20000`), `geom_raster()` will be used to render the
+heatmap body for performance efficiency. For smaller matrices, `geom_tile()` is
+used. 
 
-In such cases, packages like [ggrastr](https://github.com/VPetukhov/ggrastr) or
-[ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) are helpful.
-Additionally, [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html)
-offers many image filters that can be applied to ggplot2 layers.
+If you set `filling = FALSE`, a blank heatmap will be drawn, allowing for
+customized filling geoms. You can use external packages like
+[ggrastr](https://github.com/VPetukhov/ggrastr) or
+[ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) to rasterize
+the heatmap body. Additionally,
+[ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) offers many
+image filters that can be applied to ggplot2 layers.
 ```{r eval=rlang::is_installed("ragg")}
 ggheatmap(small_mat, filling = FALSE) +
   ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "ragg")
 ```
 
-Indeed, we have add `ggrastr::rasterise()` method for both `ggheatmap()` and
-`ggstack()` objects, you can directly call `ggrastr::rasterise()` which will
-rasterise all plots in the layout. 
+You can rasterize all plots in the layout directly with `ggrastr::rasterise()`.
+This method works for both `ggheatmap()` and `ggstack()` objects.
 ```{r eval=rlang::is_installed("ragg")}
 ggrastr::rasterise(ggheatmap(small_mat), dev = "ragg")
 ```
