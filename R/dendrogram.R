@@ -94,8 +94,7 @@ make_dist <- function(matrix, distance, use_missing,
             )
         )
     } else if (is.function(distance)) {
-        d <- distance(matrix)
-        if (inherits(distance, "dist")) {
+        if (!inherits(d <- distance(matrix), "dist")) {
             cli::cli_abort(
                 "{.arg {arg}} must return a {.cls dist} object",
                 call = call
@@ -104,13 +103,10 @@ make_dist <- function(matrix, distance, use_missing,
     } else if (inherits(distance, "dist")) {
         d <- distance
     } else {
-        cli::cli_abort(
-            paste(
-                "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
-                "object, or a {.cls function} return {.cls dist}"
-            ),
-            call = call
-        )
+        cli::cli_abort(paste(
+            "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
+            "object, or a {.cls function} return {.cls dist}"
+        ), call = call)
     }
     d
 }
