@@ -30,7 +30,6 @@ Suggests:
     ragg,
     rmarkdown,
     scales,
-    seriation,
     testthat (>= 3.0.0),
     vdiffr
 ByteCompile: true

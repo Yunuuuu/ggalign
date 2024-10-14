@@ -67,15 +67,6 @@ ggheatmap(small_mat) +
     align_order(rowMeans)
 ```
 
-## Based on seriation object
-Here, we ordered the heatmap rows based on `seriate`.
-```{r eval=rlang::is_installed("seriation")}
-ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
-    hmanno("l") +
-    align_reorder(seriation::seriate)
-```
-
 # Heatmap annotation plot
 ```{r}
 ggheatmap(small_mat) +

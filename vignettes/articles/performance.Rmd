@@ -1,0 +1,102 @@
+---
+title: "Performance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Performance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+```{r setup_pkgs}
+library(ComplexHeatmap)
+library(pheatmap)
+library(gplots)
+library(ggalign)
+```
+
+```{r setup_data}
+set.seed(123)
+n <- 1000
+mat <- matrix(rnorm(n * n), nrow = n)
+```
+
+For heatmap with dendrogram
+```{r}
+bench::mark(
+    "heatmap()" = {
+        pdf(NULL)
+        heatmap(mat)
+        dev.off()
+        NULL
+    },
+    "heatmap.2()" = {
+        pdf(NULL)
+        heatmap.2(mat, trace = "none")
+        dev.off()
+        NULL
+    },
+    "Heatmap()" = {
+        pdf(NULL)
+        draw(Heatmap(mat, row_dend_reorder = FALSE, column_dend_reorder = FALSE))
+        dev.off()
+        NULL
+    },
+    "pheatmap()" = {
+        pdf(NULL)
+        pheatmap(mat)
+        dev.off()
+        NULL
+    },
+    "ggalign()" = {
+        pdf(NULL)
+        print(ggheatmap(mat) +
+            hmanno("t") + align_dendro() +
+            hmanno("r") + align_dendro())
+        dev.off()
+        NULL
+    }
+)
+```
+
+A simple heatmap
+```{r}
+bench::mark(
+    "heatmap()" = {
+        pdf(NULL)
+        heatmap(mat, Rowv = NA, Colv = NA)
+        dev.off()
+        NULL
+    },
+    "heatmap.2()" = {
+        pdf(NULL)
+        heatmap.2(mat, dendrogram = "none", trace = "none")
+        dev.off()
+        NULL
+    },
+    "Heatmap()" = {
+        pdf(NULL)
+        draw(Heatmap(mat, cluster_rows = FALSE, cluster_columns = FALSE))
+        dev.off()
+        NULL
+    },
+    "pheatmap()" = {
+        pdf(NULL)
+        pheatmap(mat, cluster_rows = FALSE, cluster_cols = FALSE)
+        dev.off()
+        NULL
+    },
+    "ggalign()" = {
+        pdf(NULL)
+        print(ggheatmap(mat))
+        dev.off()
+        NULL
+    }
+)
+```

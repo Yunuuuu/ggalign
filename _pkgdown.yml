@@ -108,6 +108,11 @@ articles:
   contents:
   - articles/FAQ
 
+- title: Performance
+  navbar: " "
+  contents:
+  - articles/performance
+
 - title: ComplexHeatmap
   navbar: ComplexHeatmap
   contents:
