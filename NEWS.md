@@ -16,6 +16,8 @@
 
 ## Bug fixes:
 
+* fix bug when provide a function in `distance`argument of `align_dendro()`
+
 * fix bug when provide `hclust` or `dendrogram` in method argument of `align_dendro()`
 
 # ggalign 0.0.4
