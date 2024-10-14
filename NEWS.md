@@ -2,6 +2,8 @@
 
 ## features:
 
+* `merge` function has been implemented with `vctrs` for performance
+
 * {data.table} is now removed from the dependency
 
 * `reorder_dendrogram` argument in `align_dendro()` function now can accept a function to reorder the tree.
