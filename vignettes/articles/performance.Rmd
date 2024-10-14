@@ -27,6 +27,42 @@ n <- 1000
 mat <- matrix(rnorm(n * n), nrow = n)
 ```
 
+A simple heatmap.
+```{r}
+bench::mark(
+    "heatmap()" = {
+        pdf(NULL)
+        heatmap(mat, Rowv = NA, Colv = NA)
+        dev.off()
+        NULL
+    },
+    "heatmap.2()" = {
+        pdf(NULL)
+        heatmap.2(mat, dendrogram = "none", trace = "none")
+        dev.off()
+        NULL
+    },
+    "Heatmap()" = {
+        pdf(NULL)
+        draw(Heatmap(mat, cluster_rows = FALSE, cluster_columns = FALSE))
+        dev.off()
+        NULL
+    },
+    "pheatmap()" = {
+        pdf(NULL)
+        pheatmap(mat, cluster_rows = FALSE, cluster_cols = FALSE)
+        dev.off()
+        NULL
+    },
+    "ggalign()" = {
+        pdf(NULL)
+        print(ggheatmap(mat))
+        dev.off()
+        NULL
+    }
+)
+```
+
 For heatmap with dendrogram
 ```{r}
 bench::mark(
@@ -59,42 +95,6 @@ bench::mark(
         print(ggheatmap(mat) +
             hmanno("t") + align_dendro() +
             hmanno("r") + align_dendro())
-        dev.off()
-        NULL
-    }
-)
-```
-
-A simple heatmap
-```{r}
-bench::mark(
-    "heatmap()" = {
-        pdf(NULL)
-        heatmap(mat, Rowv = NA, Colv = NA)
-        dev.off()
-        NULL
-    },
-    "heatmap.2()" = {
-        pdf(NULL)
-        heatmap.2(mat, dendrogram = "none", trace = "none")
-        dev.off()
-        NULL
-    },
-    "Heatmap()" = {
-        pdf(NULL)
-        draw(Heatmap(mat, cluster_rows = FALSE, cluster_columns = FALSE))
-        dev.off()
-        NULL
-    },
-    "pheatmap()" = {
-        pdf(NULL)
-        pheatmap(mat, cluster_rows = FALSE, cluster_cols = FALSE)
-        dev.off()
-        NULL
-    },
-    "ggalign()" = {
-        pdf(NULL)
-        print(ggheatmap(mat))
         dev.off()
         NULL
     }
