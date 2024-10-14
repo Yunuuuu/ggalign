@@ -137,10 +137,15 @@ testthat::test_that("`align_kmeans` works well", {
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
 
+    # reorder twice
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_kmeans(3L))
     expect_error(p + hmanno("l") + align_group(row_group) +
         align_kmeans(3L))
+
+    # adding plot gave error
+    expect_error(p + hmanno("t") + align_kmeans(3L, set_context = TRUE) +
+        geom_point())
 
     expect_doppelganger(
         "kmeans_top",
@@ -255,11 +260,14 @@ testthat::test_that("`align_dendro` works well", {
 testthat::test_that("`ggalign()` works well", {
     set.seed(1L)
     small_mat <- matrix(stats::rnorm(81), nrow = 9)
+    # adding non-cartesian coord
     expect_warning(ggheatmap(small_mat) +
         hmanno("t") +
         ggalign(data = rowSums, size = unit(1, "cm")) +
         geom_point(aes(y = value)) +
         coord_polar())
+
+    # test plot
     expect_doppelganger(
         "ggalign",
         ggheatmap(small_mat) +
