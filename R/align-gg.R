@@ -115,15 +115,13 @@ AlignGG <- ggproto("AlignGG", Align,
                 .extra_index = extra_index
             ), row = coords)
             coords <- vec_cbind(coords$col, coords$row)
-            data <- merge(data, coords,
+            data <- full_join(data, coords,
                 by.x = c(".column_index", ".row_index"),
-                by.y = c(".extra_index", ".index"),
-                sort = FALSE, all = TRUE
+                by.y = c(".extra_index", ".index")
             )
         } else {
-            data <- merge(data, coords,
-                by.x = ".row_index", by.y = ".index",
-                sort = FALSE, all = TRUE
+            data <- full_join(data, coords,
+                by.x = ".row_index", by.y = ".index"
             )
         }
         if (!is.null(.subset2(data, ".row_names"))) {

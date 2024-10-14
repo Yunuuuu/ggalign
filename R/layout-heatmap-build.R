@@ -320,10 +320,9 @@ heatmap_build_data <- function(matrix, row_panel, row_index,
     )
     coords <- vec_cbind(coords$x, coords$y)
     ans <- melt_matrix(matrix)
-    ans <- merge(ans, coords,
+    ans <- full_join(ans, coords,
         by.x = c(".column_index", ".row_index"),
-        by.y = c(".xindex", ".yindex"),
-        sort = FALSE, all = TRUE
+        by.y = c(".xindex", ".yindex")
     )
     if (!is.null(.subset2(ans, ".row_names"))) {
         ans$.row_names <- reorder(

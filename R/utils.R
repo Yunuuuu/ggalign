@@ -230,6 +230,20 @@ quickdf <- function(x) {
     x
 }
 
+#' @importFrom vctrs vec_locate_matches
+full_join <- function(x, y, by, by.x = by, by.y = by) {
+    loc <- vec_locate_matches(
+        x[by.x], rename(y[by.y], structure(by.x, names = by.y))
+    )
+
+    # drop duplicated join column
+    y <- y[setdiff(names(y), by.y)]
+    vec_cbind(
+        vec_slice(x, .subset2(loc, "needles")),
+        vec_slice(y, .subset2(loc, "haystack"))
+    )
+}
+
 #' @importFrom vctrs new_data_frame vec_rep vec_rep_each
 melt_matrix <- function(matrix) {
     row_nms <- rownames(matrix)

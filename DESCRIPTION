@@ -20,7 +20,7 @@ Imports:
     rlang (>= 1.1.0),
     stats,
     utils,
-    vctrs
+    vctrs (>= 0.4.0)
 Suggests:
     bookdown,
     ggrastr,
