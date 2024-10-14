@@ -230,18 +230,23 @@ quickdf <- function(x) {
     x
 }
 
-#' @importFrom vctrs vec_locate_matches
-full_join <- function(x, y, by, by.x = by, by.y = by) {
-    loc <- vec_locate_matches(
-        x[by.x], rename(y[by.y], structure(by.x, names = by.y))
+#' @importFrom rlang set_names
+#' @importFrom vctrs vec_locate_matches vec_slice
+full_join <- function(x, y, by = intersect(names(x), names(y)),
+                      by.x = by, by.y = by) {
+    loc <- vec_locate_matches(x[by.x], set_names(y[by.y], by.x), remaining = NA)
+    x_slicer <- .subset2(loc, "needles")
+    y_slicer <- .subset2(loc, "haystack")
+    ans <- vec_cbind(
+        vec_slice(x, x_slicer),
+        # drop duplicated join column
+        vec_slice(y[setdiff(names(y), by.y)], y_slicer)
     )
-
-    # drop duplicated join column
-    y <- y[setdiff(names(y), by.y)]
-    vec_cbind(
-        vec_slice(x, .subset2(loc, "needles")),
-        vec_slice(y, .subset2(loc, "haystack"))
-    )
+    if (anyNA(x_slicer)) {
+        new_rows <- which(is.na(x_slicer)) # should come from `y`
+        ans[new_rows, by.x] <- vec_slice(y[by.y], y_slicer[new_rows])
+    }
+    ans
 }
 
 #' @importFrom vctrs new_data_frame vec_rep vec_rep_each
