@@ -72,16 +72,13 @@ align_gg <- function(mapping = aes(), size = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
-#' @importFrom data.table setDF
 #' @importFrom ggplot2 ggproto
-#' @importFrom stats reorder
 AlignGG <- ggproto("AlignGG", Align,
     setup_data = function(self, params, data) {
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
         if (is.matrix(data)) {
             data <- melt_matrix(data)
-            setDF(data)
         } else {
             if (!is.null(old_rownames <- rownames(data))) {
                 data$.row_names <- old_rownames
@@ -100,45 +97,35 @@ AlignGG <- ggproto("AlignGG", Align,
             aes(x = .data$.x)
         ))
     },
-    #' @importFrom data.table as.data.table data.table setDF merge.data.table
+
+    #' @importFrom vctrs vec_expand_grid vec_cbind
     #' @importFrom stats reorder
     draw = function(self, panel, index, extra_panel, extra_index) {
-        data <- as.data.table(.subset2(self, "data"))
+        data <- .subset2(self, "data")
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
+        coords <- data_frame0(.panel = panel[index], .index = index)
+        coords[[coord_name]] <- seq_along(index)
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
             # Align object always regard row as the observations
-            row_coords <- data.table(
-                .panel = panel[index],
-                .index = index,
-                k = 1L
-            )
-            row_coords[, (coord_name) := seq_along(index)]
-            column_coords <- data.table(
+            coords <- vec_expand_grid(col = data_frame0(
                 .extra_panel = extra_panel[extra_index],
-                .extra_index = extra_index,
-                k = 1L
-            )
-            coords <- column_coords[row_coords,
-                on = "k", allow.cartesian = TRUE
-            ]
-            coords[, "k" := NULL]
+                .extra_index = extra_index
+            ), row = coords)
+            coords <- vec_cbind(coords$col, coords$row)
             data <- merge(data, coords,
                 by.x = c(".column_index", ".row_index"),
                 by.y = c(".extra_index", ".index"),
                 sort = FALSE, all = TRUE
             )
         } else {
-            coords <- data.table(.panel = panel[index], .index = index)
-            coords[, (coord_name) := seq_along(index)]
             data <- merge(data, coords,
                 by.x = ".row_index", by.y = ".index",
                 sort = FALSE, all = TRUE
             )
         }
-        setDF(data)
         if (!is.null(.subset2(data, ".row_names"))) {
             data$.row_names <- reorder(
                 .subset2(data, ".row_names"),

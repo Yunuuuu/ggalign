@@ -2,6 +2,8 @@
 
 ## features:
 
+* {data.table} is now removed from the dependency
+
 * `reorder_dendrogram` argument in `align_dendro()` function now can accept a function to reorder the tree.
 
 * `align_dendro()` gain a new argument `cutree` to customize the process of tree cutting

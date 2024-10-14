@@ -302,31 +302,29 @@ heatmap_melt_facet <- function(user_facet, default_facet) {
     ggproto(NULL, user_facet, params = params)
 }
 
-#' @importFrom data.table data.table setDF merge.data.table
+#' @importFrom vctrs vec_expand_grid vec_cbind
 #' @importFrom stats reorder
 heatmap_build_data <- function(matrix, row_panel, row_index,
                                column_panel, column_index) {
-    ycoords <- data.table(
-        .ypanel = row_panel[row_index],
-        .yindex = row_index,
-        .y = seq_along(row_index),
-        k = 1L
+    coords <- vec_expand_grid(
+        y = data_frame0(
+            .ypanel = row_panel[row_index],
+            .yindex = row_index,
+            .y = seq_along(row_index)
+        ),
+        x = data_frame0(
+            .xpanel = column_panel[column_index],
+            .xindex = column_index,
+            .x = seq_along(column_index)
+        )
     )
-    xcoords <- data.table(
-        .xpanel = column_panel[column_index],
-        .xindex = column_index,
-        .x = seq_along(column_index),
-        k = 1L
-    )
-    coords <- xcoords[ycoords, on = "k", allow.cartesian = TRUE]
-    coords[, "k" := NULL]
+    coords <- vec_cbind(coords$x, coords$y)
     ans <- melt_matrix(matrix)
     ans <- merge(ans, coords,
         by.x = c(".column_index", ".row_index"),
         by.y = c(".xindex", ".yindex"),
         sort = FALSE, all = TRUE
     )
-    setDF(ans)
     if (!is.null(.subset2(ans, ".row_names"))) {
         ans$.row_names <- reorder(
             .subset2(ans, ".row_names"),

@@ -68,7 +68,7 @@ body_append <- function(fn, ..., ans = TRUE) {
     rlang::new_function(args, body)
 }
 
-#' @importFrom vctrs vec_unrep vec_set_difference
+#' @importFrom vctrs vec_unrep vec_set_difference vec_c
 make_order <- function(order) {
     l <- length(order)
     index <- seq_len(l)
@@ -92,7 +92,7 @@ make_order <- function(order) {
     start <- .subset2(sequence, "key")
     end <- pmin(
         start + .subset2(sequence, "times") - 1L,
-        data.table::shift(start, fill = l + 1L, type = "lead") - 1L
+        vec_c(start[-1L] - 1L, l) # the next start - 1L
     )
     used <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
 
@@ -211,37 +211,7 @@ to_matrix_axis <- function(direction) {
     switch_direction(direction, "row", "column")
 }
 
-#' @importFrom data.table melt setnames
-melt_matrix <- function(matrix) {
-    row_nms <- rownames(matrix)
-    col_nms <- colnames(matrix)
-    data <- as.data.table(matrix)
-    setnames(data, as.character(seq_len(ncol(matrix))))
-    data$.row_index <- seq_len(nrow(data))
-    data <- melt(data,
-        id.vars = ".row_index",
-        variable.name = ".column_index",
-        variable.factor = FALSE,
-        value.name = "value",
-        verbose = FALSE
-    )
-    data$.column_index <- as.integer(data$.column_index)
-    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
-    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
-    data
-}
-
-fct_rev <- function(x) {
-    ans <- as.factor(x)
-    factor(ans, levels = rev(levels(ans)))
-}
-
-quickdf <- function(x) {
-    class(x) <- "data.frame"
-    attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
-    x
-}
-
+##########################################################
 #' @importFrom vctrs data_frame
 data_frame0 <- function(...) data_frame(..., .name_repair = "minimal")
 
@@ -252,6 +222,31 @@ as_data_frame0 <- function(data, ...) {
         stringsAsFactors = FALSE,
         fix.empty.names = FALSE
     )
+}
+
+quickdf <- function(x) {
+    class(x) <- "data.frame"
+    attr(x, "row.names") <- .set_row_names(length(.subset2(x, 1L)))
+    x
+}
+
+#' @importFrom vctrs new_data_frame vec_rep vec_rep_each
+melt_matrix <- function(matrix) {
+    row_nms <- rownames(matrix)
+    col_nms <- colnames(matrix)
+    data <- new_data_frame(list(
+        .row_index = vec_rep(seq_len(nrow(matrix)), ncol(matrix)),
+        .column_index = vec_rep_each(seq_len(ncol(matrix)), nrow(matrix)),
+        value = c(matrix)
+    ))
+    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
+    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    data
+}
+
+fct_rev <- function(x) {
+    ans <- as.factor(x)
+    factor(ans, levels = rev(levels(ans)))
 }
 
 imap <- function(.x, .f, ...) {
