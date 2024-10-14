@@ -147,6 +147,7 @@ testthat::test_that("`align_kmeans` works well", {
     expect_error(p + hmanno("t") + align_kmeans(3L, set_context = TRUE) +
         geom_point())
 
+    set.seed(1L)
     expect_doppelganger(
         "kmeans_top",
         p + hmanno("t") + align_kmeans(3L)
