@@ -290,18 +290,15 @@ compact <- function(.x) .x[lengths(.x) > 0L]
 #' @return `x`, with new names according to `replace`
 #'
 #' @keywords internal
-#' @importFrom vctrs vec_set_difference
+#' @importFrom rlang set_names
+#' @importFrom vctrs vec_slice<-
 #' @noRd
 rename <- function(x, replace) {
-    current_names <- names(x)
-    old_names <- names(replace)
-    missing_names <- vec_set_difference(old_names, current_names)
-    if (length(missing_names) > 0) {
-        replace <- replace[!old_names %in% missing_names]
-        old_names <- names(replace)
-    }
-    names(x)[match(old_names, current_names)] <- as.vector(replace)
-    x
+    set_names(x, function(nms) {
+        nms <- set_names(nms)
+        vec_slice(nms, names(replace)) <- replace
+        nms
+    })
 }
 
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
