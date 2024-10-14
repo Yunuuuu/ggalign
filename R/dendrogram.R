@@ -12,9 +12,9 @@
 #' (an unambiguous abbreviation of) one of `"ward.D"`, `"ward.D2"`, `"single"`,
 #' `"complete"`, `"average"` (= UPGMA), `"mcquitty"` (= WPGMA), `"median"` (=
 #' WPGMC) or `"centroid"` (= UPGMC). You can also provide a function which
-#' accepts the distance and returns a [hclust][stats::hclust] object.
-#' Alternative, you can supply an object which can be coerced to
-#' [hclust][stats::hclust].
+#' accepts the calculated distance (or the input matrix if `distance` is `NULL`)
+#' and returns a [hclust][stats::hclust] object. Alternative, you can supply an
+#' object which can be coerced to [hclust][stats::hclust].
 #' @param use_missing An optional character string giving a method for computing
 #' covariances in the presence of missing values. This must be (an abbreviation
 #' of) one of the strings `"everything"`, `"all.obs"`, `"complete.obs"`,

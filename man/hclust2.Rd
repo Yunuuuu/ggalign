@@ -26,9 +26,9 @@ object directly or a function return a \link[stats:dist]{dist} object. Use
 (an unambiguous abbreviation of) one of \code{"ward.D"}, \code{"ward.D2"}, \code{"single"},
 \code{"complete"}, \code{"average"} (= UPGMA), \code{"mcquitty"} (= WPGMA), \code{"median"} (=
 WPGMC) or \code{"centroid"} (= UPGMC). You can also provide a function which
-accepts the distance and returns a \link[stats:hclust]{hclust} object.
-Alternative, you can supply an object which can be coerced to
-\link[stats:hclust]{hclust}.}
+accepts the calculated distance (or the input matrix if \code{distance} is \code{NULL})
+and returns a \link[stats:hclust]{hclust} object. Alternative, you can supply an
+object which can be coerced to \link[stats:hclust]{hclust}.}
 
 \item{use_missing}{An optional character string giving a method for computing
 covariances in the presence of missing values. This must be (an abbreviation
