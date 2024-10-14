@@ -54,6 +54,7 @@ testthat::test_that("add `heatmap_layout()` object works well", {
 
     # we prevent from reordering the layout index
     expect_error(ggstack(1:10) + ggheatmap(letters))
+    set.seed(1L)
     expect_error(
         ggstack(matrix(seq_len(81), nrow = 9L)) +
             align_kmeans(3L) +

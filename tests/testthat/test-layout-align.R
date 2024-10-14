@@ -7,6 +7,10 @@ testthat::test_that("`align_group` works well", {
     expect_error(p + hmanno("t") + align_group(1:4))
     expect_error(p + hmanno("t") + align_group(row_group))
 
+    # adding plot gave error
+    expect_error(p + hmanno("t") + align_group(1:4, set_context = TRUE) +
+        geom_point())
+
     # cannot do sub-group
     expect_error(p +
         hmanno("t") +
@@ -41,6 +45,11 @@ testthat::test_that("`align_order` works well", {
     # align_order cannot do sub-split
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_order())
+
+    # adding plot gave error
+    expect_error(p + hmanno("t") + align_order(set_context = TRUE) +
+        geom_point())
+
     expect_doppelganger(
         "reorder_top",
         p + hmanno("t") + align_order(),
@@ -93,6 +102,12 @@ testthat::test_that("`align_reorder` works well", {
     # align_reorder cannot do sub-split
     expect_error(p + hmanno("t") + align_group(column_group) +
         align_reorder())
+
+    # adding plot gave error
+    expect_error(p + hmanno("t") + align_reorder(set_context = TRUE) +
+        geom_point())
+
+    # reorder plot
     expect_doppelganger(
         "order_top",
         p + hmanno("t") + align_reorder(hclust2),
@@ -240,6 +255,11 @@ testthat::test_that("`align_dendro` works well", {
 testthat::test_that("`ggalign()` works well", {
     set.seed(1L)
     small_mat <- matrix(stats::rnorm(81), nrow = 9)
+    expect_warning(ggheatmap(small_mat) +
+        hmanno("t") +
+        ggalign(data = rowSums, size = unit(1, "cm")) +
+        geom_point(aes(y = value)) +
+        coord_polar())
     expect_doppelganger(
         "ggalign",
         ggheatmap(small_mat) +
