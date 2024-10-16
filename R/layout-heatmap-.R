@@ -179,8 +179,9 @@ heatmap_layout.default <- function(data, ...) {
         assert_layout_position(guides, call = call)
         action$guides <- guides
     }
-    plot <- ggplot2::ggplot(mapping = mapping)
-    plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
+    plot <- ggplot2::ggplot(
+        mapping = add_default_mapping(mapping, aes(.data$.x, .data$.y))
+    ) +
         # always remove default axis titles -------------------
         # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
         # There are multiple ways to set labels in a plot, which take different

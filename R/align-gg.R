@@ -89,13 +89,13 @@ AlignGG <- ggproto("AlignGG", Align,
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(mapping = mapping)
-
-        add_default_mapping(ans, switch_direction(
-            direction,
-            aes(y = .data$.y),
-            aes(x = .data$.x)
-        ))
+        ggplot2::ggplot(
+            mapping = add_default_mapping(mapping, switch_direction(
+                direction,
+                aes(y = .data$.y),
+                aes(x = .data$.x)
+            ))
+        )
     },
 
     #' @importFrom vctrs vec_expand_grid vec_cbind

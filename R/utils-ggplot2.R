@@ -18,13 +18,11 @@ is.waive <- function(x) inherits(x, "waiver")
 
 snake_class <- function(x) ggfun("snake_class")(x)
 
-add_default_mapping <- function(plot, default_mapping) {
-    mapping <- .subset2(plot, "mapping")
+add_default_mapping <- function(mapping, default_mapping) {
     for (nm in names(mapping)) {
         default_mapping[[nm]] <- .subset2(mapping, nm)
     }
-    plot$mapping <- default_mapping
-    plot
+    default_mapping
 }
 
 #' @importFrom rlang env_clone

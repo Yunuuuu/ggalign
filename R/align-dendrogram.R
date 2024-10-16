@@ -360,8 +360,11 @@ AlignDendro <- ggproto("AlignDendro", Align,
             return(NULL)
         }
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(mapping = mapping)
-        add_default_mapping(ans, aes(x = .data$x, y = .data$y)) +
+        ggplot2::ggplot(
+            mapping = add_default_mapping(
+                mapping, aes(x = .data$x, y = .data$y)
+            )
+        ) +
             rlang::inject(ggplot2::geom_segment(
                 mapping = aes(
                     x = .data$x, y = .data$y,

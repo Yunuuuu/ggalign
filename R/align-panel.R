@@ -64,7 +64,13 @@ AlignPanel <- ggproto("AlignPanel", Align,
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(mapping = mapping) +
+        ggplot2::ggplot(
+            mapping = add_default_mapping(mapping, switch_direction(
+                direction,
+                aes(y = .data$.y),
+                aes(x = .data$.x)
+            ))
+        ) +
             # remove the title and text of axis vertically with the layout
             switch_direction(
                 direction,
@@ -79,12 +85,6 @@ AlignPanel <- ggproto("AlignPanel", Align,
                     axis.ticks.y = element_blank()
                 )
             )
-
-        add_default_mapping(ans, switch_direction(
-            direction,
-            aes(y = .data$.y),
-            aes(x = .data$.x)
-        ))
     },
     draw = function(self, panel, index, extra_panel, extra_index) {
         axis <- to_coord_axis(.subset2(self, "direction"))
