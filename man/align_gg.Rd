@@ -8,33 +8,35 @@
 align_gg(
   mapping = aes(),
   size = NULL,
-  free_guides = waiver(),
-  free_spaces = waiver(),
-  plot_data = waiver(),
-  theme = waiver(),
-  free_labs = waiver(),
+  action = NULL,
   data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL
+  name = NULL,
+  free_guides = deprecated(),
+  free_spaces = deprecated(),
+  plot_data = deprecated(),
+  theme = deprecated(),
+  free_labs = deprecated()
 )
 
 ggalign(
   mapping = aes(),
   size = NULL,
-  free_guides = waiver(),
-  free_spaces = waiver(),
-  plot_data = waiver(),
-  theme = waiver(),
-  free_labs = waiver(),
+  action = NULL,
   data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
   order = NULL,
-  name = NULL
+  name = NULL,
+  free_guides = deprecated(),
+  free_spaces = deprecated(),
+  plot_data = deprecated(),
+  theme = deprecated(),
+  free_labs = deprecated()
 )
 }
 \arguments{
@@ -42,45 +44,7 @@ ggalign(
 
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
-\item{free_guides}{Override the \code{guides} argument specified in the layout for
-a plot. Options include:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: inherits behavior from the layout.
-\item \code{NULL}: no guide legends will be collected for the plot.
-\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected for the plot..
-}}
-
-\item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
-indicating which border spaces should be removed. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent, the default is \code{NULL}, meaning no spaces are removed.}
-
-\item{plot_data}{A function to transform plot data before rendering. Defaults
-to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
-no parent layout, the default is \code{NULL}, meaning the data won't be modified.
-
-Used to modify the data after layout has been created, which should be a data
-frame, but before the data is handled of to the ggplot2 for rendering. Use
-this hook if the you needs change the default data for all \code{geoms}.}
-
-\item{theme}{Default plot theme: One of:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: will inherit from the parent layout.
-\item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
-\item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
-}
-
-\verb{Note:} The axis title and labels parallel to the layout axis will always be
-removed by default. For vertical stack layouts, this refers to the \code{x-axis},
-and for horizontal stack layouts, this refers to the \code{y-axis}. If you want to
-display the axis title or labels, you should manually add
-\link[ggplot2:theme]{theme()} elements for the parallel axis title or labels.}
-
-\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which axis titles should be free from alignment. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
-will be aligned.}
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
 
 \item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
 provided, it will be converted into a one-column matrix. When \code{data = NULL},
@@ -115,6 +79,22 @@ added into this plot.}
 
 \item{name}{A string of the plot name. Used to switch the active context in
 \code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
+
+\item{free_guides}{Override the \code{guides} collection behavior specified in the
+heatmap layout for the annotation stack layout. Only used when \code{position} is
+a string.}
+
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+instead.}
+
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
 }
 \value{
 A \code{AlignGG} object.

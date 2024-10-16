@@ -60,16 +60,16 @@ ggheatmap(small_mat) +
 `align_gg()`/`ggalign()` requires the specific data format for its operations.
 If you need to transform or filter data for individual `geoms`, you can use the
 `data` argument within each `geom`. However, if you have multiple `geoms` and
-want a consistent transformation applied across all, you can utilize the
-`plot_data` argument in the `align_gg()`/`ggalign()` function. This allows you
-to transform the default data for all subsequent geoms. 
+want a consistent transformation applied across all, you can utilize the plot
+action argument `plot_data` in the `align_gg()`/`ggalign()` function. This
+allows you to transform the default data for all subsequent geoms. 
 
 ```{r}
 ggheatmap(small_mat) +
     scale_fill_viridis_c(guide = "none") +
     hmanno("t") +
     align_kmeans(3L) +
-    ggalign(plot_data = function(data) subset(data, .panel == 1L)) +
+    ggalign(action = plot_action(plot_data = function(data) subset(data, .panel == 1L))) +
     geom_bar(aes(y = value, fill = .row_names), stat = "identity")
 ```
 

@@ -31,7 +31,7 @@ ggalign_build.HeatmapLayout <- function(x) {
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         # No parent layout, by default we'll always collect guides
-        guides = .subset2(x@params, "guides"),
+        guides = .subset2(x@action, "guides"),
         theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -43,10 +43,8 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, plot_data = waiver(),
-                          free_labs = waiver(), free_spaces = waiver(),
-                          theme = waiver()) {
-    params <- heatmap@params
+heatmap_build <- function(heatmap, action = NULL) {
+    action <- inherit_action(heatmap@action, action)
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
     y_nobs <- get_nobs(heatmap, "y")
@@ -61,75 +59,6 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
 
     ypanel <- get_panel(heatmap, "y") %||% factor(rep_len(1L, y_nobs))
     yindex <- get_index(heatmap, "y") %||% reorder_index(ypanel)
-
-    # prepare free_labs and free_spaces
-    heatmap_labs <- .subset2(params, "free_labs") %|w|% free_labs
-
-    if (is.null(heatmap_labs)) {
-        horizontal_labs <- vertical_labs <- NULL
-    } else if (!is.waive(heatmap_labs)) {
-        # prepare labs for child stack layout
-        horizontal_labs <- gsub("[lr]", "", heatmap_labs)
-        vertical_labs <- gsub("[tb]", "", heatmap_labs)
-        if (nchar(horizontal_labs) == 0L) horizontal_labs <- NULL
-        if (nchar(vertical_labs) == 0L) vertical_labs <- NULL
-    } else {
-        # by default, we always collapse the axis title
-        heatmap_labs <- "tlbr"
-        horizontal_labs <- waiver()
-        vertical_labs <- waiver()
-    }
-
-    # inherit from the parent stack layout
-    heatmap_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
-    if (is.null(heatmap_spaces)) {
-        horizontal_spaces <- vertical_spaces <- NULL
-    } else if (is.waive(heatmap_spaces)) {
-        # By default, we won't remove border sizes of the heatmap
-        heatmap_spaces <- NULL
-        # set child stack layout
-        horizontal_spaces <- waiver()
-        vertical_spaces <- waiver()
-    } else {
-        horizontal_spaces <- gsub("[lr]", "", heatmap_spaces)
-        vertical_spaces <- gsub("[tb]", "", heatmap_spaces)
-        if (nchar(horizontal_spaces) == 0L) horizontal_spaces <- NULL
-        if (nchar(vertical_spaces) == 0L) vertical_spaces <- NULL
-    }
-
-    # inherit from the parent stack layout
-    theme <- inherit_theme(.subset2(params, "theme"), theme)
-
-    # read the plot ---------------------------------------
-    p <- heatmap@plot
-
-    # add heatmap filling in the first layer
-    if (!is.null(filling_params <- heatmap@filling)) {
-        if (is.null(.subset2(p$mapping, "fill"))) {
-            mapping <- aes(.data$.x, .data$.y, fill = .data$value)
-        } else {
-            mapping <- aes(.data$.x, .data$.y)
-        }
-        if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
-            cli::cli_inform(c(">" = "heatmap built by {.fn geom_raster}"))
-            p <- p + layer_order(rlang::inject(ggplot2::geom_raster(
-                mapping = mapping, !!!filling_params
-            )))
-        } else {
-            cli::cli_inform(c(">" = "heatmap built by {.fn geom_tile}"))
-            p <- p + layer_order(rlang::inject(ggplot2::geom_tile(
-                mapping = mapping, !!!filling_params
-            )))
-        }
-    }
-
-    # set the default data -------------------------------
-    data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
-    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    p <- finish_plot_data(p, plot_data %|w|% NULL, data = data)
-
-    # setup plot theme ----------------------------------
-    p$theme <- theme + p$theme
 
     # setup the facet -----------------------------------
     do_row_facet <- nlevels(ypanel) > 1L
@@ -164,12 +93,34 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
     y_params <- list(panel = ypanel, index = yindex, labels = rownames(mat))
     xlim_list <- set_limits("x", x_params)
     ylim_list <- set_limits("y", y_params)
-    p <- p + heatmap_melt_facet(p$facet, default_facet) +
-        facet_ggalign(x = x_params, y = y_params) +
-        coord_ggalign(
-            xlim_list = rep(xlim_list, times = nlevels(ypanel)),
-            ylim_list = rep(ylim_list, each = nlevels(xpanel))
-        )
+
+    # prepare action for vertical and horizontal stack layout
+    vertical_action <- horizontal_action <- action
+    if (!is.null(layout_labs <- .subset2(action, "free_labs")) &&
+        !is.waive(layout_labs)) {
+        # prepare labs for child stack layout
+        horizontal_action$free_labs <- gsub("[lr]", "", layout_labs)
+        vertical_action$free_labs <- gsub("[tb]", "", layout_labs)
+        if (nchar(horizontal_action$free_labs) == 0L) {
+            horizontal_action$free_labs <- NULL
+        }
+        if (nchar(vertical_action$free_labs) == 0L) {
+            vertical_action$free_labs <- NULL
+        }
+    }
+
+    # inherit from the parent stack layout
+    if (!is.null(layout_spaces <- .subset2(action, "free_spaces")) &&
+        !is.waive(layout_spaces)) {
+        horizontal_action$free_spaces <- gsub("[lr]", "", layout_spaces)
+        vertical_action$free_spaces <- gsub("[tb]", "", layout_spaces)
+        if (nchar(horizontal_action$free_spaces) == 0L) {
+            horizontal_action$free_spaces <- NULL
+        }
+        if (nchar(vertical_action$free_spaces) == 0L) {
+            vertical_action$free_spaces <- NULL
+        }
+    }
 
     # plot heatmap annotations ----------------------------
     stack_list <- lapply(.TLBR, function(position) {
@@ -179,33 +130,23 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
         if (is_horizontal(to_direction(position))) {
             panel <- xpanel
             index <- xindex
-            free_spaces <- horizontal_spaces
-            free_labs <- horizontal_labs
+            action <- horizontal_action
         } else {
             panel <- ypanel
             index <- yindex
-            free_spaces <- vertical_spaces
-            free_labs <- vertical_labs
+            action <- vertical_action
         }
-        ans <- stack_build(
+        plot <- stack_build(
             stack,
-            plot_data = plot_data,
-            free_labs = free_labs,
-            free_spaces = free_spaces,
-            theme = theme,
+            action = action,
             extra_panel = panel,
             extra_index = index
         )
-        if (!is.null(.subset2(ans, "plot"))) {
-            # for annotation stack, we handle the free_guides
-            free_guides <- .subset2(stack@params, "free_guides")
-            if (!is.waive(free_guides)) {
-                ans$plot <- free_guide(.subset2(ans, "plot"), free_guides)
-            }
+        if (!is.null(plot)) {
             # for heatmap annotation, we should always make them next to
             # the heatmap body
-            ans$plot <- free_vp(
-                .subset2(ans, "plot"),
+            plot <- free_vp(
+                plot,
                 x = switch(position,
                     left = 1L,
                     right = 0L,
@@ -223,23 +164,58 @@ heatmap_build <- function(heatmap, plot_data = waiver(),
                     right = "left"
                 )
             )
+            size <- .subset2(stack@annotation, "size")
+            free_guides <- .subset2(stack@annotation, "free_guides")
+            if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
+        } else {
+            size <- NULL
         }
-        ans
+        list(plot = plot, size = size)
     })
     names(stack_list) <- .TLBR
     stack_list <- transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
+
+    # read the plot ---------------------------------------
+    p <- heatmap@plot
+
+    # add heatmap filling in the first layer
+    if (!is.null(filling_params <- heatmap@filling)) {
+        if (is.null(.subset2(p$mapping, "fill"))) {
+            mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+        } else {
+            mapping <- aes(.data$.x, .data$.y)
+        }
+        if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
+            cli::cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
+            p <- p + layer_order(rlang::inject(ggplot2::geom_raster(
+                mapping = mapping, !!!filling_params
+            )))
+        } else {
+            cli::cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
+            p <- p + layer_order(rlang::inject(ggplot2::geom_tile(
+                mapping = mapping, !!!filling_params
+            )))
+        }
+    }
+
+    # set the default data -------------------------------
+    p$data <- heatmap_build_data(mat, ypanel, yindex, xpanel, xindex)
+
+    # set the facets and coord ---------------------------
+    p <- p + heatmap_melt_facet(p$facet, default_facet) +
+        facet_ggalign(x = x_params, y = y_params) +
+        coord_ggalign(
+            xlim_list = rep(xlim_list, times = nlevels(ypanel)),
+            ylim_list = rep(ylim_list, each = nlevels(xpanel))
+        )
+
+    # add action -----------------------------------------
+    p <- plot_add_action(p, heatmap@body_action, action)
+
+    # add class to set the default color mapping
     p <- add_class(p, "ggalign_heatmap")
-    if (!is.waive(free_guides <- .subset2(params, "free_guides"))) {
-        p <- free_guide(p, free_guides)
-    }
-    if (!is.null(heatmap_labs)) {
-        p <- free_lab(p, heatmap_labs)
-    }
-    if (!is.null(heatmap_spaces)) {
-        p <- free_space(free_border(p, heatmap_spaces), heatmap_spaces)
-    }
     plots <- c(plots, list(heatmap = p))
     sizes <- c(sizes, list(
         heatmap = list(width = heatmap@width, height = heatmap@height)

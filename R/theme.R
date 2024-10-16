@@ -38,18 +38,6 @@ theme_ggalign <- function(...) {
         )
 }
 
-inherit_theme <- function(theme, parent) {
-    if (is.null(theme)) return(default_theme()) # styler: off
-    # if parent theme is not set, we use the default theme
-    parent <- parent %|w|% default_theme()
-    if (is.waive(theme)) { # inherit from parent theme
-        theme <- parent
-    } else if (!is.null(parent)) { # add parent layout theme
-        theme <- parent + theme
-    }
-    theme
-}
-
 #' @importFrom rlang try_fetch
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {

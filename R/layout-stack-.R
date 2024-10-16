@@ -7,23 +7,23 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
-#' @param sizes A numeric or [unit][grid::unit] object of length `3` indicates
+#' @inheritParams rlang::args_dots_empty
+#' @param sizes A numeric or a [unit][grid::unit] object of length `3` indicates
 #' the relative widths (`direction = "horizontal"`) / heights (`direction =
 #' "vertical"`).
-#' @inheritParams align_plots
-#' @inheritParams rlang::args_dots_empty
+#' @inheritParams heatmap_layout
 #' @return A `StackLayout` object.
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-stack_layout <- function(data, direction = NULL, sizes = NA,
-                         ..., guides = waiver(), theme = NULL) {
+stack_layout <- function(data, direction = NULL, ..., sizes = NA,
+                         action = NULL, theme = NULL) {
     rlang::check_dots_empty()
     if (missing(data)) {
         .stack_layout(
             data = NULL, nobs = NULL,
             direction = direction, sizes = sizes,
-            guides = guides, theme = theme,
+            action = action, theme = theme,
             call = current_call()
         )
     } else {
@@ -39,19 +39,18 @@ methods::setClass(
     "StackLayout",
     contains = "Layout",
     list(
-        data = "ANY",
-        plots = "list",
-        direction = "character",
-        position = "ANY", # used by heatmap annotation, annotation position
-        size = "ANY", # used by heatmap annotation, total annotation size
+        data = "ANY", plots = "list", direction = "character",
+        annotation = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
-        panel = "ANY",
-        index = "ANY",
-        nobs = "ANY"
+        panel = "ANY", index = "ANY", nobs = "ANY"
     ),
     prototype = list(
-        plots = list(), position = NULL,
-        size = unit(NA, "null"),
+        plots = list(),
+        annotation = list( # used by heatmap annotation
+            position = NULL, # annotation position
+            size = unit(NA, "null"), # total annotation size
+            free_guides = waiver()
+        ),
         panel = NULL, index = NULL, nobs = NULL
     )
 )
@@ -91,29 +90,18 @@ stack_layout.NULL <- function(data, ...) {
 #' @importFrom ggplot2 waiver
 #' @importFrom grid unit
 .stack_layout <- function(data, direction = NULL, sizes = NA,
-                          guides = waiver(), theme = NULL,
+                          action = NULL, theme = NULL,
                           nobs, call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
-    sizes <- check_stack_sizes(sizes)
-    if (!is.null(guides) && !is.waive(guides)) {
-        assert_position(guides, call = call)
-    }
+    sizes <- check_stack_sizes(sizes, call = call)
+    action <- check_action(action, call = call)
     methods::new("StackLayout",
         data = data,
         direction = direction,
+        theme = theme, action = action, # used by the layout
         # @param sizes the relative size of the vertical direction with this
         # stack, which won't be used by heatmap annotation.
-        sizes = sizes,
-        params = list(
-            guides = guides,
-            free_guides = waiver(), # only used by heatmap annotation
-            plot_data = waiver(),
-            free_labs = waiver(),
-            free_spaces = waiver(),
-            theme = waiver()
-        ),
-        theme = theme,
-        nobs = nobs
+        sizes = sizes, nobs = nobs
     )
 }
 

@@ -82,10 +82,10 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
-                         size = NULL,
-                         free_guides = waiver(), free_spaces = waiver(),
-                         plot_data = waiver(), theme = waiver(),
-                         free_labs = waiver(),
+                         size = NULL, action = NULL,
+                         free_guides = deprecated(), free_spaces = deprecated(),
+                         plot_data = deprecated(), theme = deprecated(),
+                         free_labs = deprecated(),
                          data = NULL, set_context = NULL,
                          order = NULL, name = NULL) {
     reorder_dendrogram <- allow_lambda(reorder_dendrogram)
@@ -128,7 +128,7 @@ align_dendro <- function(mapping = aes(), ...,
         plot_data = plot_data, theme = theme,
         set_context = set_context %||% plot_dendrogram,
         name = name, order = order,
-        size = size, data = data
+        size = size, action = action, data = data
     )
 }
 

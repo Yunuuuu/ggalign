@@ -1,24 +1,20 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    .subset2(stack_build(layout_default(x)), "plot") %||% align_plots()
+    stack_build(layout_default(x)) %||% align_plots()
 }
 
 #' @param panel,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty
 #' @noRd
-stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
-                        free_spaces = waiver(), theme = waiver(),
+stack_build <- function(stack, action = NULL,
                         extra_panel = NULL, extra_index = NULL) {
-    if (is.na(nobs <- get_nobs(x))) { # no plots
-        return(list(plot = NULL, size = NULL))
-    }
-    direction <- x@direction
-    params <- x@params
-    panel <- get_panel(x) %||% factor(rep_len(1L, nobs))
-    index <- get_index(x) %||% reorder_index(panel)
+    if (is.na(nobs <- get_nobs(stack))) return(NULL) # styler: off
+    direction <- stack@direction
+    panel <- get_panel(stack) %||% factor(rep_len(1L, nobs))
+    index <- get_index(stack) %||% reorder_index(panel)
 
-    plots <- x@plots
+    plots <- stack@plots
 
     # we remove the plot without actual plot area
     keep <- vapply(plots, function(plot) {
@@ -26,9 +22,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
             is_ggheatmap(plot)
     }, logical(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, keep)
-    if (is_empty(plots)) {
-        return(list(plot = NULL, size = NULL))
-    }
+    if (is_empty(plots)) return(NULL) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
@@ -41,23 +35,16 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
     plots <- .subset(plots, make_order(plot_order))
 
     # build the stack
-    plot_data <- .subset2(params, "plot_data") %|w|% plot_data
-    free_labs <- .subset2(params, "free_labs") %|w|% free_labs
-    free_spaces <- .subset2(params, "free_spaces") %|w|% free_spaces
-    theme <- inherit_theme(.subset2(params, "theme"), theme)
+    action <- inherit_action(stack@action, action)
     patches <- stack_patch(direction)
     has_top <- FALSE
     has_bottom <- FALSE
     for (plot in plots) {
         if (is_align(plot)) {
             patch <- align_build(plot,
-                panel = panel, index = index,
+                panel = panel, index = index, action,
                 extra_panel = extra_panel,
-                extra_index = extra_index,
-                plot_data = plot_data %|w|% NULL,
-                free_labs = free_labs %|w|% "tlbr",
-                free_spaces = free_spaces %|w|% NULL,
-                theme = theme
+                extra_index = extra_index
             )
             patches <- stack_patch_add_align(
                 patches,
@@ -66,12 +53,7 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
             )
         } else if (is_ggheatmap(plot)) {
             # for a heatmap
-            patch <- heatmap_build(plot,
-                plot_data = plot_data,
-                free_labs = free_labs,
-                free_spaces = free_spaces,
-                theme = theme
-            )
+            patch <- heatmap_build(plot, action)
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
                 patches, heatmap_plots,
@@ -88,11 +70,9 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
             }
         }
     }
-    if (is_empty(.subset2(patches, "plots"))) {
-        return(list(plot = NULL, size = NULL))
-    }
-    titles <- x@titles
-    plot <- align_plots(
+    if (is_empty(.subset2(patches, "plots"))) return(NULL) # styler: off
+    titles <- stack@titles
+    align_plots(
         !!!.subset2(patches, "plots"),
         design = area(
             .subset2(patches, "t"),
@@ -103,21 +83,20 @@ stack_build <- function(x, plot_data = waiver(), free_labs = waiver(),
         widths = switch_direction(
             direction,
             do.call(unit.c, attr(patches, "sizes")),
-            x@sizes[c(has_top, TRUE, has_bottom)]
+            stack@sizes[c(has_top, TRUE, has_bottom)]
         ),
         heights = switch_direction(
             direction,
-            x@sizes[c(has_top, TRUE, has_bottom)],
+            stack@sizes[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = .subset2(params, "guides"),
-        theme = x@theme
+        guides = .subset2(action, "guides"),
+        theme = stack@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
     )
-    list(plot = plot, size = x@size)
 }
 
 stack_patch <- function(direction) {

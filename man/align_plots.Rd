@@ -36,7 +36,11 @@ to match the aspect ratio of the content.}
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
-\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
+\item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
+which side of guide legends should be collected. Defaults to
+\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout.  If
+there is no parent layout, or if \code{NULL} is provided, no guides will be
+collected.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and

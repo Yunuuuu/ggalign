@@ -2,6 +2,10 @@
 
 ## features:
 
+* `align()`, `stack_active()`, and `hmanno()` functions gain a new argument `action`, and deprecate `free_guides`, `free_spaces`, `plot_data`, `theme`, `free_labs`, and `guides` arguments.
+
+* new `plot_action()` function to control specifications of the plot in layout
+
 * `merge` function has been implemented with `vctrs` for performance
 
 * {data.table} is now removed from the dependency

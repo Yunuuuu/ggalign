@@ -53,8 +53,8 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         if (!is.null(height <- .subset2(object, "height"))) {
             heatmap@height <- height
         }
-        heatmap <- layout_add_active(
-            .subset2(object, "active"), heatmap, object_name
+        heatmap@action <- update_action(
+            heatmap@action, .subset2(object, "action")
         )
         return(heatmap)
     }
@@ -74,16 +74,19 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         data <- heatmap@data
         if (!is_horizontal(direction)) data <- t(data)
         stack <- stack_layout(data = data, direction = direction)
-        stack@position <- position
+        stack@annotation$position <- position
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))
+    } else {
+        stack@action <- update_action(stack@action, .subset2(object, "action"))
     }
     if (!is.null(size <- .subset2(object, "size"))) {
-        stack@size <- size
+        stack@annotation$size <- size
     }
-    slot(heatmap, position) <- layout_stack_add.stack_active(
-        .subset(object, c("what", "active")), stack, object_name
-    )
+    if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
+        stack@annotation$free_guides <- free_guides
+    }
+    slot(heatmap, position) <- stack
     heatmap
 }
 
@@ -139,11 +142,17 @@ heatmap_add.Coord <- function(object, heatmap, object_name) {
 
 #' @export
 heatmap_add.layout_annotation <- function(object, heatmap, object_name) {
-    heatmap@annotation <- alignpatches_update(
+    heatmap@annotation <- update_non_waive(
         heatmap@annotation, .subset2(object, "annotation")
     )
     heatmap@theme <- update_layout_theme(
         heatmap@theme, .subset2(object, "theme")
     )
+    heatmap
+}
+
+#' @export
+heatmap_add.plot_action <- function(object, heatmap, object_name) {
+    heatmap@body_action <- update_action(heatmap@body_action, object)
     heatmap
 }

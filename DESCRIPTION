@@ -16,6 +16,7 @@ Imports:
     cli,
     grid,
     gtable,
+    lifecycle,
     methods,
     rlang (>= 1.1.0),
     stats,

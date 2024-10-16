@@ -24,17 +24,7 @@
 #'    all plots along a single axis.
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
-#' @param free_guides Override the `guides` argument specified in the layout for
-#' a plot. `r rd_free_guides()`.
-#' @inheritParams hmanno
-#' @param theme Default plot theme: `r rd_theme()`
-#'
-#' `Note:` The axis title and labels parallel to the layout axis will always be
-#' removed by default. For vertical stack layouts, this refers to the `x-axis`,
-#' and for horizontal stack layouts, this refers to the `y-axis`. If you want to
-#' display the axis title or labels, you should manually add
-#' [theme()][ggplot2::theme] elements for the parallel axis title or labels.
-#'
+#' @param action A [plot_action()] object used for the plot.
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.
 #' @param facet A boolean value indicates whether to set the layout facet for
@@ -45,6 +35,7 @@
 #' @param order An single integer for the plot area order.
 #' @param name A string of the plot name. Used to switch the active context in
 #' [hmanno()] or [stack_active()].
+#' @inheritParams hmanno
 #' @param check.param A single boolean value indicates whether to check the
 #' supplied parameters and warn.
 #' @param call The `call` used to construct the `Align` for reporting messages.
@@ -55,6 +46,7 @@
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
 #' @importFrom vctrs vec_set_difference
+#' @importFrom lifecycle deprecated
 #' @export
 #' @keywords internal
 align <- function(align_class, params,
@@ -67,32 +59,39 @@ align <- function(align_class, params,
                   # data, always remember transfrom `NULL` to `waiver()`
                   #
                   # Details see `initialize_align()`
-                  data, size = NULL,
-                  free_guides = waiver(), free_spaces = waiver(),
-                  plot_data = waiver(), theme = waiver(), free_labs = waiver(),
+                  data, size = NULL, action = NULL,
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
+                  free_guides = deprecated(), free_spaces = deprecated(),
+                  plot_data = deprecated(), theme = deprecated(),
+                  free_labs = deprecated(),
                   check.param = TRUE, call = caller_call()) {
     if (align_override_call(call)) {
         call <- current_call()
     }
+    action <- check_action(action, call = call)
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
     if (is.null(size)) {
         size <- unit(NA, "null")
     } else {
-        size <- check_size(size)
+        size <- check_size(size, call = call)
     }
-    assert_layout_position(free_guides, call = call)
-    assert_layout_position(free_spaces, call = call)
-    plot_data <- check_plot_data(plot_data, call = call)
-    assert_layout_position(free_labs, call = call)
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
     assert_bool(set_context, call = call)
     order <- check_order(order, call = call)
-    assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
+    assert_string(name,
+        empty_ok = FALSE, na_ok = TRUE,
+        null_ok = TRUE, call = call
+    )
+    action <- deprecate_action(
+        action, snake_class(align_class), plot_data, theme,
+        free_spaces, free_labs,
+        free_guides = free_guides,
+        call = call
+    )
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
@@ -130,11 +129,7 @@ align <- function(align_class, params,
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
-        free_guides = free_guides,
-        plot_data = plot_data,
-        free_labs = free_labs,
-        free_spaces = free_spaces,
-        theme = theme,
+        action = action,
         facet = facet,
         limits = limits,
 

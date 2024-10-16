@@ -50,16 +50,16 @@
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #' @export
-align_gg <- function(mapping = aes(), size = NULL,
-                     free_guides = waiver(), free_spaces = waiver(),
-                     plot_data = waiver(), theme = waiver(),
-                     free_labs = waiver(),
+align_gg <- function(mapping = aes(), size = NULL, action = NULL,
                      data = NULL, limits = TRUE, facet = TRUE,
-                     set_context = TRUE, order = NULL, name = NULL) {
+                     set_context = TRUE, order = NULL, name = NULL,
+                     free_guides = deprecated(), free_spaces = deprecated(),
+                     plot_data = deprecated(), theme = deprecated(),
+                     free_labs = deprecated()) {
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data %||% waiver(),
+        size = size, data = data %||% waiver(), action = action,
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,

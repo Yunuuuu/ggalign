@@ -138,7 +138,7 @@ unname_vp <- function(x) {
             x$layout$heights <- absolute.size(x$layout$heights)
         }
     }
-    unit_elements <- vapply(x, is.unit, logical(1))
+    unit_elements <- vapply(x, is.unit, logical(1), USE.NAMES = FALSE)
     x[unit_elements] <- lapply(.subset(x, unit_elements), absolute.size)
     x
 }
@@ -158,7 +158,7 @@ unname_grob <- function(x) {
         x$children <- unname(lapply(x$children, unname_grob))
         x$childrenOrder <- rep_len("", length(x$childrenOrder))
     }
-    unit_elements <- vapply(x, is.unit, logical(1))
+    unit_elements <- vapply(x, is.unit, logical(1), USE.NAMES = FALSE)
     x[unit_elements] <- lapply(.subset(x, unit_elements), absolute.size)
     x
 }

@@ -67,7 +67,7 @@ assert_position <- function(position, arg = caller_arg(position),
 assert_layout_position <- function(position, arg = caller_arg(position),
                                    call = caller_call()) {
     if (!is.waive(position) && !is.null(position)) {
-        assert_position(position, call = call)
+        assert_position(position, arg = arg, call = call)
     }
 }
 
@@ -164,5 +164,20 @@ assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
             "Unknown facet: {.obj_type_friendly {x}}.",
             i = "Overriding facetted scales may be unstable."
         ))
+    }
+}
+
+assert_action <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!inherits(x, "plot_action")) {
+        cli::cli_abort("{.arg {arg}} must be created with {.fn plot_action}")
+    }
+}
+
+check_action <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (is.null(x)) {
+        default_action()
+    } else {
+        assert_action(x, arg = arg, call = call)
+        update_action(default_action(), x)
     }
 }

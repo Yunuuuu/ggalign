@@ -34,7 +34,7 @@ layout_stack_add.layout_annotation <- function(object, stack, object_name) {
             object, plot, object_name
         )
     } else {
-        stack@annotation <- alignpatches_update(
+        stack@annotation <- update_non_waive(
             stack@annotation, .subset2(object, "annotation")
         )
         stack@theme <- update_layout_theme(
@@ -63,7 +63,8 @@ layout_stack_add.stack_active <- function(object, stack, object_name) {
     if (!is.null(sizes <- .subset2(object, "sizes"))) {
         stack@sizes <- sizes
     }
-    layout_add_active(.subset2(object, "active"), stack, object_name)
+    stack@action <- update_action(stack@action, .subset2(object, "action"))
+    stack
 }
 
 #' @export
@@ -163,9 +164,6 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
             ))
         }
     }
-    # let the stack determine how to collect the guides
-    object@params$guides <- object@params$guides %|w|%
-        .subset2(stack@params, "guides")
 
     # set up context index ------------------------------
     plots <- stack@plots
@@ -241,7 +239,7 @@ stack_add_align <- function(object, stack, object_name) {
     layout <- initialize_align(
         object,
         direction = stack@direction,
-        position = stack@position,
+        position = .subset2(stack@annotation, "position"),
         layout_data = stack@data,
         layout_panel = get_panel(stack),
         layout_index = get_index(stack),

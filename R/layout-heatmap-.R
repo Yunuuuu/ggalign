@@ -9,8 +9,10 @@
 #' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to
 #' [geom_tile()][ggplot2::geom_tile]/[geom_raster()][ggplot2::geom_raster]. Only
-#' used when `filling = TRUE`. 
+#' used when `filling = TRUE`.
 #' @param .width,.height `r rd_heatmap_size()`.
+#' @param action A [plot_action()] object used to define the default plot action
+#' in the layout.
 #' @inheritParams align_plots
 #' @param filling A boolean value indicating whether to fill the heatmap. If you
 #' wish to customize the filling style, set this to `FALSE`.
@@ -52,18 +54,20 @@
 #' ggheatmap(letters)
 #' ggheatmap(matrix(rnorm(81), nrow = 9L))
 #' @importFrom ggplot2 aes
+#' @importFrom lifecycle deprecated
 #' @export
 heatmap_layout <- function(data, mapping = aes(),
-                           ..., filling = TRUE,
-                           .width = NA, .height = NA,
-                           guides = waiver(), theme = NULL,
-                           set_context = TRUE, order = NULL, name = NULL) {
+                           ..., .width = NA, .height = NA,
+                           action = NULL, theme = NULL, filling = TRUE,
+                           set_context = TRUE, order = NULL, name = NULL,
+                           guides = deprecated()) {
     if (missing(data)) {
         .heatmap_layout(
             data = NULL, mapping = mapping,
             ..., .width = .width, .height = .height,
-            guides = guides, theme = theme, filling = filling,
+            action = action, theme = theme, filling = filling,
             set_context = set_context, order = order, name = name,
+            guides = guides,
             nobs_list = list(), call = current_call()
         )
     } else {
@@ -77,7 +81,7 @@ methods::setClass(
     "HeatmapLayout",
     contains = "Layout",
     list(
-        data = "ANY", plot = "ANY",
+        data = "ANY", plot = "ANY", body_action = "ANY",
         # parameters for heatmap body
         width = "ANY", height = "ANY", filling = "ANY",
         # If we regard heatmap layout as a plot, and put it into the stack
@@ -149,25 +153,32 @@ heatmap_layout.default <- function(data, ...) {
     )
 }
 
+#' @importFrom lifecycle deprecated
 #' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 aes
 .heatmap_layout <- function(data, mapping = aes(),
-                            ..., filling = TRUE,
+                            ...,
                             .width = NA, .height = NA,
-                            guides = waiver(), theme = NULL,
+                            action = NULL, theme = NULL, filling = TRUE,
                             set_context = TRUE, order = NULL, name = NULL,
+                            guides = deprecated(),
                             # following parameters are used internally
                             nobs_list, call = caller_call()) {
+    width <- check_size(.width, call = call)
+    height <- check_size(.height, call = call)
+    action <- check_action(action, call = call)
+    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     assert_bool(filling, call = call)
-    width <- check_size(.width)
-    height <- check_size(.height)
-    if (!is.null(guides) && !is.waive(guides)) {
-        assert_position(guides, call = call)
-    }
-    if (!is.null(theme)) assert_s3_class(theme, "theme")
     assert_bool(set_context, call = call)
     order <- check_order(order, call = call)
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
+    if (lifecycle::is_present(guides)) {
+        lifecycle::deprecate_warn(
+            "0.0.5", "ggheatmap(guides)", "ggheatmap(action)"
+        )
+        assert_layout_position(guides, call = call)
+        action$guides <- guides
+    }
     plot <- ggplot2::ggplot(mapping = mapping)
     plot <- add_default_mapping(plot, aes(.data$.x, .data$.y)) +
         # always remove default axis titles -------------------
@@ -189,20 +200,17 @@ heatmap_layout.default <- function(data, ...) {
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
         "HeatmapLayout",
-        data = data, width = width, height = height,
+        data = data,
+        theme = theme, action = action, # used by the layout
+        body_action = default_action(), # used by heatmap body
         # following parameters can be controlled by `active` object.
-        params = list(
-            guides = guides,
-            free_guides = waiver(),
-            free_labs = waiver(),
-            free_spaces = waiver(),
-            plot_data = waiver(),
-            theme = waiver()
-        ),
+        width = width, height = height,
+        # following parameters used when adding ggheamtap to ggstack
         set_context = set_context,
         order = order, name = name %||% NA_character_,
+        # following parameters are used internally
         plot = plot, nobs_list = nobs_list,
-        theme = theme, filling = filling_params
+        filling = filling_params
     )
 }
 

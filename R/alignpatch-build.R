@@ -56,7 +56,7 @@ ggalign_gtable.alignpatches <- function(x) {
     # ensure theme has no missing value
     theme <- .subset2(x, "theme") %||% theme_get()
 
-    # `TODO`: use `complete_theme()` from ggplot2 release
+    # `TO-DO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
     x$theme <- theme
     table <- alignpatch(x)$patch_gtable(top_level = TRUE)

@@ -4,77 +4,67 @@
 #' values are follows:
 #'    * A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #'    * `NULL`: means set the active context into the `heatmap` itself.
-#' @param width,height `r rd_heatmap_size()`.
 #' @param size An [unit][grid::unit] object to set the total size of the heatmap
-#' annotation. This will only be used if `position` is a string.
+#' annotation. Only used if `position` is a string.
 #'  - If `position` is `"top"` or `"bottom"`, `size` set the total height of the
 #' annotation.
 #'  - If `position` is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
-#'
-#' @param guides `r rd_guides()`
-#'
-#'  - If `position` is `NULL`, this applies to the heamtap layout.
-#'  - If `position` is a string, this applies to the heatmap annotation stack
-#'    layout.
-#'
-#' @param free_guides Override the `guides` collection behavior specified in
-#' the heatmap layout. `r rd_free_guides()`
-#'
-#' `guides` argument controls the global guide collection behavior for all plots
-#' in the layout, while the `free_guides` argument overrides this for a single
-#' plot in the layout.
-#'
-#' @param free_labs A string with one or more of `r rd_values(.tlbr)` indicating
-#' which axis titles should be free from alignment. Defaults to
-#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
-#' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
-#' will be aligned.
-#'
-#' @param free_spaces A string with one or more of `r rd_values(.tlbr)`
-#' indicating which border spaces should be removed. Defaults to
-#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
-#' parent, the default is `NULL`, meaning no spaces are removed.
-#'
-#' @param plot_data A function to transform plot data before rendering. Defaults
-#' to [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
-#' no parent layout, the default is `NULL`, meaning the data won't be modified.
-#'
-#' Used to modify the data after layout has been created, which should be a data
-#' frame, but before the data is handled of to the ggplot2 for rendering. Use
-#' this hook if the you needs change the default data for all `geoms`.
-#'
-#' @param theme Default theme for the plot in the layout. `r rd_theme()`
+#' @inheritParams heatmap_layout
+#' @param width,height `r rd_heatmap_size()`. Only used when `position` is
+#' `NULL`.
+#' @param free_guides Override the `guides` collection behavior specified in the
+#' heatmap layout for the annotation stack layout. Only used when `position` is
+#' a string.
 #' @param what What should get activated for the anntoation stack? Only used
-#' when position is a string. `r rd_stack_what()`.
+#' when `position` is a string. `r rd_stack_what()`.
+#' @inheritParams rlang::args_dots_empty
+#' @param guides `r lifecycle::badge("deprecated")` Please use `action` argument
+#' instead.
+#' @param free_spaces `r lifecycle::badge("deprecated")` Please use `action`
+#' argument instead.
+#' @param plot_data `r lifecycle::badge("deprecated")` Please use `action`
+#' argument instead.
+#' @param theme `r lifecycle::badge("deprecated")` Please use `action` argument
+#' instead.
+#' @param free_labs `r lifecycle::badge("deprecated")` Please use `action`
+#' argument instead.
 #' @return A `heatmap_active` object which can be added into [heatmap_layout].
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
 #'     align_dendro()
+#' @importFrom lifecycle deprecated
 #' @export
-hmanno <- function(position = NULL, size = NULL,
-                   guides = NA, free_guides = NA, free_spaces = NA,
-                   plot_data = NA, theme = NA, free_labs = NA, what = waiver(),
-                   width = NULL, height = NULL) {
+hmanno <- function(position = NULL, size = NULL, action = NULL,
+                   width = NULL, height = NULL, free_guides = waiver(),
+                   what = waiver(), ...,
+                   # following parameters have replaced with `action` argument
+                   guides = deprecated(),
+                   free_spaces = deprecated(), plot_data = deprecated(),
+                   theme = deprecated(), free_labs = deprecated()) {
+    rlang::check_dots_empty()
+    if (is.null(action)) {
+        action <- plot_action()
+    } else {
+        assert_action(action)
+    }
     if (!is.null(position)) position <- match.arg(position, .TLBR)
     if (!is.null(size)) size <- check_size(size)
-    active <- new_active(
-        guides = guides,
-        free_guides = free_guides,
-        free_labs = free_labs,
-        free_spaces = free_spaces,
-        plot_data = plot_data,
-        theme = theme
-    )
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
+    assert_layout_position(free_guides)
     if (!is.waive(what)) what <- check_stack_context(what)
+    action <- deprecate_action(
+        action, "hmanno", plot_data, theme,
+        free_spaces, free_labs,
+        guides = guides
+    )
     structure(
         list(
-            position = position, size = size,
-            width = width, height = height,
-            what = what, active = active
+            position = position, size = size, action = action,
+            width = width, height = height, free_guides = free_guides,
+            what = what
         ),
         class = "heatmap_active"
     )
@@ -82,7 +72,6 @@ hmanno <- function(position = NULL, size = NULL,
 
 #' Determine the active context of stack layout
 #'
-#' @param guides `r rd_guides()`
 #' @inheritParams hmanno
 #' @inheritParams stack_layout
 #' @param what What should get activated for the stack layout?
@@ -103,86 +92,30 @@ hmanno <- function(position = NULL, size = NULL,
 #'     # here we add a dendrogram to the stack.
 #'     align_dendro()
 #' @export
-stack_active <- function(guides = NA, free_spaces = NA,
-                         plot_data = NA, theme = NA,
-                         free_labs = NA, what = NULL,
-                         sizes = NULL) {
+stack_active <- function(action = NULL, sizes = NULL, what = NULL,
+                         ...,
+                         # following parameters have replaced with `action`
+                         # argument
+                         guides = deprecated(),
+                         free_spaces = deprecated(), plot_data = deprecated(),
+                         theme = deprecated(), free_labs = deprecated()) {
+    rlang::check_dots_empty()
+    if (is.null(action)) {
+        action <- plot_action() # To-DO: Use `NULL` to indicates the default
+    } else {
+        assert_action(action)
+    }
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    active <- new_active(
-        guides = guides,
-        # for a stack, it is the top-level, what we need is the `guides`
-        # argument only
-        free_guides = NA,
-        free_labs = free_labs,
-        free_spaces = free_spaces,
-        plot_data = plot_data,
-        theme = theme
+    action <- deprecate_action(
+        action, "stack_active", plot_data, theme,
+        free_spaces, free_labs,
+        guides = guides
     )
     structure(
-        list(what = what, sizes = sizes, active = active),
+        list(what = what, sizes = sizes, action = action),
         class = "stack_active"
     )
-}
-
-new_active <- function(guides, free_guides,
-                       free_labs, free_spaces, plot_data, theme,
-                       call = caller_call()) {
-    if (!identical(guides, NA)) {
-        assert_layout_position(guides, call = call)
-    }
-    if (!identical(free_guides, NA)) {
-        assert_layout_position(free_guides, call = call)
-    }
-    if (!identical(free_labs, NA)) {
-        assert_layout_position(free_labs, call = call)
-    }
-    if (!identical(free_spaces, NA)) {
-        assert_layout_position(free_spaces, call = call)
-    }
-    if (!identical(plot_data, NA)) {
-        plot_data <- check_plot_data(plot_data, call = call)
-    }
-    if (!identical(theme, NA) && !is.waive(theme) && !is.null(theme)) {
-        assert_s3_class(theme, "theme", call = call)
-    }
-    structure(
-        list(
-            guides = guides,
-            free_guides = free_guides,
-            free_labs = free_labs,
-            free_spaces = free_spaces,
-            plot_data = plot_data,
-            theme = theme
-        ),
-        class = "active"
-    )
-}
-
-layout_add_active <- function(object, layout, object_name) {
-    if (!identical(guides <- .subset2(object, "guides"), NA)) {
-        layout@params$guides <- guides
-    }
-    if (!identical(free_guides <- .subset2(object, "free_guides"), NA)) {
-        layout@params$free_guides <- free_guides
-    }
-    if (!identical(free_labs <- .subset2(object, "free_labs"), NA)) {
-        layout@params$free_labs <- free_labs
-    }
-    if (!identical(free_spaces <- .subset2(object, "free_spaces"), NA)) {
-        layout@params$free_spaces <- free_spaces
-    }
-    if (!identical(plot_data <- .subset2(object, "plot_data"), NA)) {
-        layout@params$plot_data <- plot_data
-    }
-    if (!identical(theme <- .subset2(object, "theme"), NA)) {
-        if (is.waive(layout@params$theme) || is.null(layout@params$theme)) {
-            layout@params$theme <- theme
-        } else {
-            layout@params$theme <- layout@params$theme + theme
-        }
-    }
-    layout
 }
 
 ########################################################

@@ -22,15 +22,17 @@ testthat::test_that("add `stack_active` object works well", {
     # change parameters for stack self
     p2 <- p + stack_active(
         sizes = unit(1, "cm"),
-        guides = "tlbr",
-        free_labs = "tlbr",
-        plot_data = NULL
+        action = plot_action(
+            guides = "tlbr",
+            free_labs = "tlbr",
+            plot_data = NULL
+        )
     )
     expect_identical(p2@sizes, unit(rep_len(1L, 3L), "cm"))
-    params <- p2@params
-    expect_identical(params$guides, "tlbr")
-    expect_identical(params$free_labs, "tlbr")
-    expect_identical(params$plot_data, NULL)
+    action <- p2@action
+    expect_identical(action$guides, "tlbr")
+    expect_identical(action$free_labs, "tlbr")
+    expect_identical(action$plot_data, NULL)
 })
 
 testthat::test_that("add `heatmap_layout()` object works well", {

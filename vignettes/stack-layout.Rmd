@@ -164,7 +164,7 @@ ggstack(small_mat, "v") +
 ```
 
 ```{r}
-ggstack(small_mat, "v", c(1, 2, 1)) +
+ggstack(small_mat, "v", sizes = c(1, 2, 1)) +
     ggheatmap() +
     scale_fill_viridis_c() +
     hmanno("l") +

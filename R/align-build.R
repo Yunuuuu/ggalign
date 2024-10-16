@@ -1,7 +1,6 @@
 #' @importFrom ggplot2 theme element_blank
-align_build <- function(x, panel, index,
-                        extra_panel, extra_index,
-                        plot_data, free_labs, free_spaces, theme) {
+align_build <- function(x, panel, index, action,
+                        extra_panel, extra_index) {
     # we lock the Align object to prevent user from modifying this object
     # in `$draw` method, we shouldn't do any calculations in `$draw` method
     x$lock()
@@ -25,32 +24,6 @@ align_build <- function(x, panel, index,
         panel, index, extra_panel, extra_index,
         !!!draw_params
     ))
-
-    # we always set the default value from the layout
-    free_guides <- .subset2(x, "free_guides")
-    plot_data <- .subset2(x, "plot_data") %|w|% plot_data
-    free_labs <- .subset2(x, "free_labs") %|w|% free_labs
-    free_spaces <- .subset2(x, "free_spaces") %|w|% free_spaces
-    theme <- inherit_theme(.subset2(x, "theme"), theme)
-    plot <- finish_plot_data(plot, plot_data, call = .subset2(x, "call"))
-
-    # remove the title and text of axis parallelly with the layout
-    plot$theme <- theme +
-        switch_direction(
-            direction,
-            theme(
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank()
-            ),
-            theme(
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank()
-            )
-        ) +
-        plot$theme
-
     # only when user use the internal facet, we'll setup the limits
     if (.subset2(x, "facet")) {
         # set up facets
@@ -91,13 +64,21 @@ align_build <- function(x, panel, index,
                 )
         }
     }
-    if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
-    if (!is.null(free_labs)) {
-        plot <- free_lab(plot, free_labs)
-    }
-    if (!is.null(free_spaces)) {
-        plot <- free_space(free_border(plot, free_spaces), free_spaces)
-    }
+    plot <- plot_add_action(plot, .subset2(x, "action"), action,
+        theme = switch_direction(
+            direction,
+            theme(
+                axis.title.y = element_blank(),
+                axis.text.y = element_blank(),
+                axis.ticks.y = element_blank()
+            ),
+            theme(
+                axis.title.x = element_blank(),
+                axis.text.x = element_blank(),
+                axis.ticks.x = element_blank()
+            )
+        )
+    )
     list(plot = plot, size = .subset2(x, "size"))
 }
 
@@ -143,23 +124,6 @@ align_melt_facet <- function(user_facet, default_facet, direction) {
     } else {
         default_facet
     }
-}
-
-finish_plot_data <- function(plot, plot_data,
-                             data = .subset2(plot, "data"),
-                             call = caller_call()) {
-    if (!is.null(plot_data)) {
-        if (!is.data.frame(data <- plot_data(data))) {
-            cli::cli_abort(
-                "{.arg plot_data} must return a {.cls data.frame}",
-                call = call
-            )
-        }
-        plot$data <- data
-    } else {
-        plot$data <- data
-    }
-    plot
 }
 
 remove_scales <- function(plot, scale_aesthetics) {

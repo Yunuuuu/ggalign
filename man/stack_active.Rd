@@ -5,43 +5,23 @@
 \title{Determine the active context of stack layout}
 \usage{
 stack_active(
-  guides = NA,
-  free_spaces = NA,
-  plot_data = NA,
-  theme = NA,
-  free_labs = NA,
+  action = NULL,
+  sizes = NULL,
   what = NULL,
-  sizes = NULL
+  ...,
+  guides = deprecated(),
+  free_spaces = deprecated(),
+  plot_data = deprecated(),
+  theme = deprecated(),
+  free_labs = deprecated()
 )
 }
 \arguments{
-\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
+in the layout.}
 
-\item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
-indicating which border spaces should be removed. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent, the default is \code{NULL}, meaning no spaces are removed.}
-
-\item{plot_data}{A function to transform plot data before rendering. Defaults
-to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
-no parent layout, the default is \code{NULL}, meaning the data won't be modified.
-
-Used to modify the data after layout has been created, which should be a data
-frame, but before the data is handled of to the ggplot2 for rendering. Use
-this hook if the you needs change the default data for all \code{geoms}.}
-
-\item{theme}{Default theme for the plot in the layout. One of:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: will inherit from the parent layout.
-\item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
-\item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
-}}
-
-\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which axis titles should be free from alignment. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
-will be aligned.}
+\item{sizes}{A numeric or a \link[grid:unit]{unit} object of length \code{3} indicates
+the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
 \item{what}{What should get activated for the stack layout?
 Options include::
@@ -53,8 +33,24 @@ heatmap. By removing the active context, we can add \verb{align_*()} into the
 \code{\link[=stack_layout]{stack_layout()}}.
 }}
 
-\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
-the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
+\item{...}{Additional arguments passed to
+\link[ggplot2:geom_tile]{geom_tile()}/\link[ggplot2:geom_tile]{geom_raster()}. Only
+used when \code{filling = TRUE}.}
+
+\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+instead.}
+
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+instead.}
+
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
 }
 \value{
 A \code{stack_active} object which can be added into

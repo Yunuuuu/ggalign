@@ -58,24 +58,25 @@ testthat::test_that("add `hmanno()` works well", {
         "heatmap-hmanno-null-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
-            hmanno(guides = NULL) +
+            hmanno(action = plot_action(guides = NULL)) +
             hmanno("r") +
             align_dendro()
     )
     expect_doppelganger(
-        "heatmap-hmanno-null-free-guides",
+        "heatmap-hmanno-stack-action-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
-            hmanno(guides = NULL, free_guides = "r") +
-            hmanno("r") +
-            align_dendro()
-    )
-    expect_doppelganger(
-        "heatmap-hmanno-stack-free-guides",
-        ggheatmap(matrix(1:9, nrow = 3L)) +
-            scale_fill_viridis_c() +
-            hmanno("l", free_guides = "l") +
+            hmanno("l", action = plot_action(guides = "l")) +
             align_dendro(aes(color = branch))
+    )
+    expect_doppelganger(
+        "heatmap-hmanno-align-guides",
+        ggheatmap(matrix(1:9, nrow = 3L)) +
+            scale_fill_viridis_c() +
+            hmanno(action = plot_action(guides = NULL)) +
+            hmanno("r") +
+            align_dendro() +
+            plot_action(guides = "l")
     )
 })
 

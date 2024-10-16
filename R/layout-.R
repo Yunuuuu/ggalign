@@ -4,7 +4,7 @@ namespace_link <- function() NULL
 
 # https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
 # Here we use S4 object to override the double dispatch of `+.gg` method
-# TODO: use S7
+# TO-DO: use S7
 #' A `Layout` object
 #'
 #' A `Layout` object defines how to place the plots.
@@ -12,7 +12,8 @@ namespace_link <- function() NULL
 #' @keywords internal
 methods::setClass("Layout",
     list(
-        active = "ANY", params = "list",
+        active = "ANY",
+        action = "ANY", # used to control the default plot behaviour
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
         annotation = "list", # To-DO add `pacth_titles` for layout
@@ -20,8 +21,7 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, params = list(),
-        titles = list(), annotation = list(), theme = NULL,
+        active = NULL, titles = list(), annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )
@@ -30,7 +30,7 @@ layout_default <- function(layout) {
     layout@theme <- layout@theme %||%
         default_theme() + theme(panel.border = element_blank())
     # we by default, collect all guides
-    layout@params$guides <- .subset2(layout@params, "guides") %|w|% "tlbr"
+    layout@action$guides <- .subset2(layout@action, "guides") %|w|% "tlbr"
     layout
 }
 
@@ -99,7 +99,7 @@ methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
     }
     if (is.null(e2)) return(e1) # styler: off
     if (inherits(e2, "layout_title")) {
-        e1@titles <- alignpatches_update(e1@titles, e2)
+        e1@titles <- update_non_waive(e1@titles, e2)
         return(e1)
     }
 

@@ -110,7 +110,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 2. collect_guides_list: call `collect_guides`, can change the internal
         #    `gt`
         # 3. set_sizes:
-        #     - (TODO) align_panel_spaces: can change the internal `gt`
+        #     - (To-Do) align_panel_spaces: can change the internal `gt`
         #     - align_panel_sizes, can change the internal `gt`
         # 4. set_grobs: will call `align_border` and `split_gt`, return the
         #    final gtable
@@ -252,7 +252,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # the plot to be fixed must in only one square of the area
         need_fix <- .subset2(design, "l") == .subset2(design, "r") &
             .subset2(design, "t") == .subset2(design, "b") &
-            vapply(patches, function(patch) patch$respect(), logical(1L))
+            vapply(
+                patches,
+                function(patch) patch$respect(),
+                logical(1L),
+                USE.NAMES = FALSE
+            )
 
         # here we respect the aspect ratio when necessary -----
         # if the width or height is NA, we will guess the panel widths or
@@ -549,7 +554,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         } else {
             0L
         }
-    }, numeric(1L))
+    }, numeric(1L), USE.NAMES = FALSE)
     heights <- lapply(sizes, function(size) {
         convertHeight(.subset2(size, "heights"), "mm", valueOnly = TRUE)
     })
@@ -561,12 +566,16 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         idx <- .subset2(design, area_side) == area_row
         if (any(idx)) {
             max(
-                vapply(.subset(heights, idx), .subset, numeric(1L), row_loc),
+                vapply(
+                    .subset(heights, idx), .subset, numeric(1L),
+                    row_loc,
+                    USE.NAMES = FALSE
+                ),
                 0L
             )
         } else {
             0L
         }
-    }, numeric(1L))
+    }, numeric(1L), USE.NAMES = FALSE)
     list(widths = unit(widths, "mm"), heights = unit(heights, "mm"))
 }

@@ -26,3 +26,9 @@ align_add.Coord <- function(object, align, object_name) {
     }
     NextMethod() # call default method
 }
+
+#' @export
+align_add.plot_action <- function(object, align, object_name) {
+    align$action <- update_action(align$action, object)
+    align
+}

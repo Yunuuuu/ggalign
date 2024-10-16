@@ -8,20 +8,13 @@
 stack_layout(
   data,
   direction = NULL,
-  sizes = NA,
   ...,
-  guides = waiver(),
+  sizes = NA,
+  action = NULL,
   theme = NULL
 )
 
-ggstack(
-  data,
-  direction = NULL,
-  sizes = NA,
-  ...,
-  guides = waiver(),
-  theme = NULL
-)
+ggstack(data, direction = NULL, ..., sizes = NA, action = NULL, theme = NULL)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -29,13 +22,13 @@ ggstack(
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
 
-\item{sizes}{A numeric or \link[grid:unit]{unit} object of length \code{3} indicates
+\item{...}{These dots are for future extensions and must be empty.}
+
+\item{sizes}{A numeric or a \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
 
-\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
-ggplot object. Use \code{NULL} to indicate an empty spacer.}
-
-\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout}
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
+in the layout.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and

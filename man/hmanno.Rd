@@ -7,15 +7,17 @@
 hmanno(
   position = NULL,
   size = NULL,
-  guides = NA,
-  free_guides = NA,
-  free_spaces = NA,
-  plot_data = NA,
-  theme = NA,
-  free_labs = NA,
-  what = waiver(),
+  action = NULL,
   width = NULL,
-  height = NULL
+  height = NULL,
+  free_guides = waiver(),
+  what = waiver(),
+  ...,
+  guides = deprecated(),
+  free_spaces = deprecated(),
+  plot_data = deprecated(),
+  theme = deprecated(),
+  free_labs = deprecated()
 )
 }
 \arguments{
@@ -27,7 +29,7 @@ values are follows:
 }}
 
 \item{size}{An \link[grid:unit]{unit} object to set the total size of the heatmap
-annotation. This will only be used if \code{position} is a string.
+annotation. Only used if \code{position} is a string.
 \itemize{
 \item If \code{position} is \code{"top"} or \code{"bottom"}, \code{size} set the total height of the
 annotation.
@@ -35,59 +37,41 @@ annotation.
 annotation.
 }}
 
-\item{guides}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected. If \code{NULL}, no guide legends will be collected. If \code{\link[ggplot2:waiver]{waiver()}}, it will inherit from the parent layout
-\itemize{
-\item If \code{position} is \code{NULL}, this applies to the heamtap layout.
-\item If \code{position} is a string, this applies to the heatmap annotation stack
-layout.
-}}
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
+in the layout.}
 
-\item{free_guides}{Override the \code{guides} collection behavior specified in
-the heatmap layout. Options include:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: inherits behavior from the layout.
-\item \code{NULL}: no guide legends will be collected for the plot.
-\item A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicates which side of guide legends should be collected for the plot.
-}
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object. Only used when \code{position} is
+\code{NULL}.}
 
-\code{guides} argument controls the global guide collection behavior for all plots
-in the layout, while the \code{free_guides} argument overrides this for a single
-plot in the layout.}
-
-\item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
-indicating which border spaces should be removed. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent, the default is \code{NULL}, meaning no spaces are removed.}
-
-\item{plot_data}{A function to transform plot data before rendering. Defaults
-to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
-no parent layout, the default is \code{NULL}, meaning the data won't be modified.
-
-Used to modify the data after layout has been created, which should be a data
-frame, but before the data is handled of to the ggplot2 for rendering. Use
-this hook if the you needs change the default data for all \code{geoms}.}
-
-\item{theme}{Default theme for the plot in the layout. One of:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: will inherit from the parent layout.
-\item \code{NULL}: Use the \link[=theme_ggalign]{default theme}.
-\item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
-}}
-
-\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which axis titles should be free from alignment. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
-will be aligned.}
+\item{free_guides}{Override the \code{guides} collection behavior specified in the
+heatmap layout for the annotation stack layout. Only used when \code{position} is
+a string.}
 
 \item{what}{What should get activated for the anntoation stack? Only used
-when position is a string. Options include::
+when \code{position} is a string. Options include::
 \itemize{
 \item A single number or string of the plot elements in the stack layout.
 \item \code{NULL}: remove any active context.
 }}
 
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
+\item{...}{Additional arguments passed to
+\link[ggplot2:geom_tile]{geom_tile()}/\link[ggplot2:geom_tile]{geom_raster()}. Only
+used when \code{filling = TRUE}.}
+
+\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+instead.}
+
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
+
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+instead.}
+
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
 }
 \value{
 A \code{heatmap_active} object which can be added into \link{heatmap_layout}.
