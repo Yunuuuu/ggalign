@@ -18,7 +18,7 @@
 #' which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout.  If
 #' there is no parent layout, or if `NULL` is provided, no guides will be
-#' collected. 
+#' collected.
 #' @inheritParams layout_annotation
 #' @return An `alignpatches` object.
 #' @seealso
@@ -193,7 +193,7 @@ update_layout_design <- function(old, new) {
     guides <- .subset2(new, "guides")
     new$guides <- NULL # guides need special consideration
     old <- update_non_waive(old, new)
-    if (!identical(guides, NA)) old$guides <- guides
+    if (!identical(guides, NA)) old["guides"] <- list(guides)
     old
 }
 
