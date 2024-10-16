@@ -42,7 +42,15 @@ install.packages("ggalign")
 ```
 
 Alternatively, install the development version from
-[GitHub](https://github.com/Yunuuuu/ggalign) with:
+[r-universe](https://yunuuuu.r-universe.dev/ggalign) with:
+
+``` r
+install.packages("ggalign",
+    repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
+or from [GitHub](https://github.com/Yunuuuu/ggalign) with:
 
 ``` r
 # install.packages("remotes")
