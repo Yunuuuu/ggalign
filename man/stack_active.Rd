@@ -33,9 +33,7 @@ heatmap. By removing the active context, we can add \verb{align_*()} into the
 \code{\link[=stack_layout]{stack_layout()}}.
 }}
 
-\item{...}{Additional arguments passed to
-\link[ggplot2:geom_tile]{geom_tile()}/\link[ggplot2:geom_tile]{geom_raster()}. Only
-used when \code{filling = TRUE}.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
 instead.}

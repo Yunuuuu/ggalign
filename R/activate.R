@@ -10,6 +10,7 @@
 #' annotation.
 #'  - If `position` is `"left"` or `"right"`, `size` set the total width of the
 #' annotation.
+#' @inheritParams rlang::args_dots_empty
 #' @inheritParams heatmap_layout
 #' @param width,height `r rd_heatmap_size()`. Only used when `position` is
 #' `NULL`.
@@ -18,7 +19,6 @@
 #' a string.
 #' @param what What should get activated for the anntoation stack? Only used
 #' when `position` is a string. `r rd_stack_what()`.
-#' @inheritParams rlang::args_dots_empty
 #' @param guides `r lifecycle::badge("deprecated")` Please use `action` argument
 #' instead.
 #' @param free_spaces `r lifecycle::badge("deprecated")` Please use `action`
