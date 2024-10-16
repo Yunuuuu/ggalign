@@ -182,7 +182,7 @@ layout.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stack_layout.html">ggstack</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>As mentioned earlier, vertical stacks use the <code>x-axis</code> for
 observations, while horizontal stacks use the <code>y-axis</code>.
@@ -192,7 +192,7 @@ is automatically converted to a matrix and transposed before use.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stack_layout.html">ggstack</a></span><span class="op">(</span><span class="va">small_mat</span>, direction <span class="op">=</span> <span class="st">"v"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>Once a heatmap layout is added, any further elements you add will be
 applied to this heatmap layout. You can include <code>align_*</code>
@@ -201,7 +201,7 @@ elements or any ggplot2 components for the heatmap.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stack_layout.html">ggstack</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>If you’d like to add elements to the stack layout rather than the
 heatmap layout, you can easily switch from the heatmap layout to the
@@ -213,7 +213,7 @@ stack layout using <code><a href="../reference/stack_active.html">stack_active()
 <span>    <span class="fu"><a href="../reference/stack_active.html">stack_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>One exception is the heatmap layout itself, which cannot be added to
 another heatmap layout. Therefore, you can directly add a heatmap layout
@@ -223,8 +223,8 @@ to the stack layout without using <code><a href="../reference/stack_active.html"
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -249,11 +249,11 @@ right or bottom annotation.</p>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, fill <span class="op">=</span> <span class="va">.panel</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/stack_layout.html">ggstack</a></span><span class="op">(</span><span class="va">small_mat</span>, <span class="st">"v"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/stack_layout.html">ggstack</a></span><span class="op">(</span><span class="va">small_mat</span>, <span class="st">"v"</span>, sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -262,8 +262,8 @@ right or bottom annotation.</p>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, fill <span class="op">=</span> <span class="va">.panel</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>In this way, heatmap body width/height specified in
 <code><a href="../reference/hmanno.html">hmanno()</a></code> or <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> won’t work.</p>
@@ -277,8 +277,8 @@ right or bottom annotation.</p>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, fill <span class="op">=</span> <span class="va">.panel</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span>.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"null"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>By default the flank annotation will fill the whole stack flank, but
 we can still control the total size of heatmap annotation in
@@ -293,8 +293,8 @@ we can still control the total size of heatmap annotation in
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, fill <span class="op">=</span> <span class="va">.panel</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>You can also use <code>npc</code> unit.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -307,8 +307,8 @@ we can still control the total size of heatmap annotation in
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, fill <span class="op">=</span> <span class="va">.panel</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built by `geom_tile()`</span></span></code></pre></div>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="stack-layout_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 <div class="section level2">
