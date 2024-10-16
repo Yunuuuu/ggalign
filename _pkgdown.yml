@@ -21,6 +21,7 @@ reference:
   - layout-add
   - hmanno
   - stack_active
+  - plot_action
   - layout-operator
   - theme_ggalign
   - layout_design
