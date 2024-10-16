@@ -189,10 +189,14 @@ update_non_waive <- function(old, new) {
 
 #' @importFrom vctrs vec_set_difference
 update_layout_design <- function(old, new) {
-    guides <- setup_pos(.subset2(new, "guides"))
+    guides <- .subset2(new, "guides")
     new$guides <- NULL # guides need special consideration
     old <- update_non_waive(old, new)
-    if (!identical(guides, NA)) old["guides"] <- list(guides)
+    if (is.null(guides) || is.waive(guides)) {
+        old["guides"] <- list(guides)
+    } else if (!identical(guides, NA)) {
+        old["guides"] <- list(setup_pos(guides))
+    }
     old
 }
 
