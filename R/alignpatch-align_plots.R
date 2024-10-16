@@ -167,7 +167,6 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     if (!is.waive(design)) design <- as_areas(design)
     if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
         assert_position(guides)
-        guides <- setup_pos(guides)
     }
     structure(list(
         ncol = ncol,
@@ -190,7 +189,7 @@ update_non_waive <- function(old, new) {
 
 #' @importFrom vctrs vec_set_difference
 update_layout_design <- function(old, new) {
-    guides <- .subset2(new, "guides")
+    guides <- setup_pos(.subset2(new, "guides"))
     new$guides <- NULL # guides need special consideration
     old <- update_non_waive(old, new)
     if (!identical(guides, NA)) old["guides"] <- list(guides)
@@ -211,7 +210,7 @@ alignpatches_add.plot_layout <- function(object, plot, object_name) {
     } else if (identical(object$guides, "auto")) {
         object$guides <- waiver()
     } else if (identical(object$guides, "collect")) {
-        object$guides <- .TLBR
+        object$guides <- "tlbr"
     } else if (identical(object$guides, "keep")) {
         object["guides"] <- list(NULL)
     }
