@@ -98,17 +98,16 @@ check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
     size
 }
 
-check_plot_data <- function(plot_data, arg = caller_arg(plot_data),
-                            call = caller_call()) {
-    plot_data <- allow_lambda(plot_data)
-    if (!is.waive(plot_data) && !is.null(plot_data) &&
-        !is.function(plot_data)) {
+check_action_data <- function(data, arg = caller_arg(data),
+                              call = caller_call()) {
+    data <- allow_lambda(data)
+    if (!is.waive(data) && !is.null(data) && !is.function(data)) {
         cli::cli_abort(paste(
             "{.arg {arg}} must be a function,",
             "{.code NULL} or {.fn waiver}"
         ), call = call)
     }
-    plot_data
+    data
 }
 
 #' @importFrom vctrs vec_cast

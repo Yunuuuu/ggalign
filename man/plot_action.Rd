@@ -5,7 +5,7 @@
 \title{Plot Action Specifications in the Layout}
 \usage{
 plot_action(
-  plot_data = NA,
+  data = NA,
   theme = NA,
   guides = NA,
   free_spaces = NA,
@@ -13,12 +13,12 @@ plot_action(
 )
 }
 \arguments{
-\item{plot_data}{A function to transform the plot data before rendering.
-Defaults to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent
-layout. If no parent layout is specified, the default is \code{NULL}, meaning the
-data won't be modified. Use this hook to modify the data for all \code{geoms}
-after the layout is created but before rendering by \code{ggplot2}. The data
-returned must be a data frame.}
+\item{data}{A function to transform the plot data before rendering.  Defaults
+to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
+no parent layout is specified, the default is \code{NULL}, meaning the data won't
+be modified. Use this hook to modify the data for all \code{geoms} after the
+layout is created but before rendering by \code{ggplot2}. The data returned must
+be a data frame.}
 
 \item{theme}{Default plot theme: One of:
 \itemize{

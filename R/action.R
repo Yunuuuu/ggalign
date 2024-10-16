@@ -7,12 +7,12 @@
 #' through the `action` argument in the `align_*()` functions, or it can be
 #' added directly to a plot.
 #'
-#' @param plot_data A function to transform the plot data before rendering.
-#' Defaults to [`waiver()`][ggplot2::waiver()], which inherits from the parent
-#' layout. If no parent layout is specified, the default is `NULL`, meaning the
-#' data won't be modified. Use this hook to modify the data for all `geoms`
-#' after the layout is created but before rendering by `ggplot2`. The data
-#' returned must be a data frame.
+#' @param data A function to transform the plot data before rendering.  Defaults
+#' to [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
+#' no parent layout is specified, the default is `NULL`, meaning the data won't
+#' be modified. Use this hook to modify the data for all `geoms` after the
+#' layout is created but before rendering by `ggplot2`. The data returned must
+#' be a data frame.
 #'
 #' @param theme Default plot theme: `r rd_theme()`
 #'
@@ -57,16 +57,16 @@
 #' )
 #'
 #' @export
-plot_action <- function(plot_data = NA, theme = NA, guides = NA,
+plot_action <- function(data = NA, theme = NA, guides = NA,
                         free_spaces = NA, free_labs = NA) {
-    if (!identical(plot_data, NA)) plot_data <- check_plot_data(plot_data)
+    if (!identical(data, NA)) data <- check_action_data(data)
     if (!identical(theme, NA)) assert_s3_class(theme, "theme", null_ok = TRUE)
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
     if (!identical(guides, NA)) assert_layout_position(guides)
     structure(
         list(
-            plot_data = plot_data,
+            data = data,
             theme = theme,
             free_spaces = free_spaces,
             free_labs = free_labs,
@@ -79,7 +79,7 @@ plot_action <- function(plot_data = NA, theme = NA, guides = NA,
 default_action <- function() {
     structure(
         list(
-            plot_data = waiver(), theme = NULL,
+            data = waiver(), theme = NULL,
             free_spaces = waiver(), free_labs = waiver(),
             guides = waiver()
         ),
@@ -131,8 +131,8 @@ deprecate_action <- function(action, fun, plot_data, theme,
             sprintf("%s(plot_data)", fun),
             sprintf("%s(action)", fun)
         )
-        plot_data <- check_plot_data(plot_data, call = call)
-        action["plot_data"] <- list(plot_data)
+        data <- check_action_data(plot_data, call = call)
+        action["data"] <- list(data)
     }
     if (lifecycle::is_present(theme)) {
         lifecycle::deprecate_warn(
@@ -163,8 +163,8 @@ inherit_theme <- function(theme, parent) {
 
 inherit_action <- function(action, parent = NULL) {
     if (is.null(parent)) return(action) # styler: off
-    action["plot_data"] <- list(.subset2(action, "plot_data") %|w|%
-        .subset2(parent, "plot_data"))
+    action["data"] <- list(.subset2(action, "data") %|w|%
+        .subset2(parent, "data"))
     action["theme"] <- list(inherit_theme(
         .subset2(action, "theme"),
         .subset2(parent, "theme")
@@ -180,10 +180,10 @@ plot_add_action <- function(plot, action, parent, theme = NULL,
                             call = caller_call()) {
     action <- inherit_action(action, parent)
     # by default, we won't change the data
-    if (!is.null(plot_data <- .subset2(action, "plot_data") %|w|% NULL)) {
+    if (!is.null(plot_data <- .subset2(action, "data") %|w|% NULL)) {
         if (!is.data.frame(data <- plot_data(.subset2(plot, "data")))) {
             cli::cli_abort(
-                "{.arg plot_data} must return a {.cls data.frame}",
+                "plot action {.arg data} must return a {.cls data.frame}",
                 call = call
             )
         }
