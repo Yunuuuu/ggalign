@@ -213,7 +213,7 @@ By default, `ggheatmap()` will collect all guide legends on the side from which
 they originate. 
 
 ```{r fig.dim = c(12, 12)}
-ggheatmap(small_mat) +
+heatmap_collect_all_guides <- ggheatmap(small_mat) +
   scale_fill_viridis_c(name = "I'm from heatmap body") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t") +
@@ -241,39 +241,15 @@ ggheatmap(small_mat) +
     guide = guide_legend(position = "bottom")
   ) &
   theme(plot.margin = margin())
+heatmap_collect_all_guides
 ```
 
 Use the `guides` argument control which side of guide legends should be
-gathered.
+gathered. In the following example, we'll collect the guide legends only on the
+`top` and `left` sides: 
 ```{r fig.dim = c(12, 12)}
-ggheatmap(small_mat, action = plot_action(guides = "tl")) +
-  scale_fill_viridis_c(name = "I'm from heatmap body") +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  hmanno("t") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from top annotation", palette = "Dark2",
-    guide = guide_legend(position = "right")
-  ) +
-  hmanno("l") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from left annotation", palette = "Dark2",
-    guide = guide_legend(position = "top")
-  ) +
-  hmanno("b") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from bottom annotation", palette = "Dark2",
-    guide = guide_legend(position = "left")
-  ) +
-  hmanno("r") +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from right annotation", palette = "Dark2",
-    guide = guide_legend(position = "bottom")
-  ) &
-  theme(plot.margin = margin())
+heatmap_collect_all_guides +
+  hmanno(action = plot_action(guides = "tl"))
 ```
 
 ## free_spaces
