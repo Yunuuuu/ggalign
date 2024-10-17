@@ -280,7 +280,7 @@ Here, the guide legend is collected by the bottom annotation but will not be
 collected by the heatmap layout since the heatmap layout only gathers guides
 from the `top` and `bottom`.
 
-To override the guide collection behavior of the heatmap annotation, you can use
+To override the guide collection behavior for the heatmap annotation, you can use
 the `free_guides` argument of the `hmanno()` function.
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
