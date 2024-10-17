@@ -20,7 +20,7 @@ facets, and coordinates are handled in the layout axis. This vignette highlights
 the differences in syntax between `ggalign` and `ggplot2`.
 
 ## Layout Axis
-The layout axis refers to specific axes in multi-plots layout: 
+The layout axis refers to the axes used for alignment:
 - x-axis in vertical stack layouts
 
 - x-axis in horizontal stack layouts
