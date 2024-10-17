@@ -176,6 +176,8 @@ inherit_action <- function(action, parent = NULL) {
     action
 }
 
+#' @param theme Additional default theme elements to be added for the plot
+#' @noRd
 plot_add_action <- function(plot, action, parent, theme = NULL,
                             call = caller_call()) {
     action <- inherit_action(action, parent)

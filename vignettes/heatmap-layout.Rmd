@@ -213,7 +213,7 @@ By default, `ggheatmap()` will collect all guide legends on the side from which
 they originate. 
 
 ```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides <- ggheatmap(small_mat) +
+heatmap_collect_all_guides <- ggheatmap(small_mat, .width = 2, .height = 2L) +
   scale_fill_viridis_c(name = "I'm from heatmap body") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t") +
@@ -226,7 +226,7 @@ heatmap_collect_all_guides <- ggheatmap(small_mat) +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
     name = "I'm from left annotation", palette = "Dark2",
-    guide = guide_legend(position = "top")
+    guide = guide_legend(position = "top", direction = "vertical")
   ) +
   hmanno("b") +
   align_dendro(aes(color = branch), k = 3L) +
@@ -238,7 +238,7 @@ heatmap_collect_all_guides <- ggheatmap(small_mat) +
   align_dendro(aes(color = branch), k = 3L) +
   scale_color_brewer(
     name = "I'm from right annotation", palette = "Dark2",
-    guide = guide_legend(position = "bottom")
+    guide = guide_legend(position = "bottom", direction = "vertical")
   ) &
   theme(plot.margin = margin())
 heatmap_collect_all_guides
@@ -246,11 +246,53 @@ heatmap_collect_all_guides
 
 Use the `guides` argument control which side of guide legends should be
 gathered. In the following example, we'll collect the guide legends only on the
-`top` and `left` sides: 
+`top` and `bottom` sides: 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
-  hmanno(action = plot_action(guides = "tl"))
+  # we only collect guides in the top and bottom side
+  hmanno(action = plot_action(guides = "tb"))
 ```
+
+You can also apply the `plot_action()` function directly to specific plots:
+```{r fig.dim = c(12, 12)}
+heatmap_collect_all_guides +
+  # we only collect guides in the top and bottom side
+  hmanno(action = plot_action(guides = "tb")) +
+  # for the heatmap body, we also collect guide in the right side
+  hmanno() +
+  plot_action(guides = "r")
+```
+
+As previously mentioned, the annotation is represented as a `stack_layout()`
+object. Guide legends within the annotation stack are first collected by the
+`stack_layout()` itself and are then passed to the overall heatmap layout for
+further collection.  See following example:
+```{r fig.dim = c(12, 12)}
+heatmap_collect_all_guides +
+  # we only collect guides in the top and bottom side
+  hmanno(action = plot_action(guides = "tb")) +
+  # for the bottom annotation, we also collect guide in the left side
+  hmanno("b") +
+  plot_action(guides = "l")
+```
+
+Here, the guide legend is collected by the bottom annotation but will not be
+collected by the heatmap layout since the heatmap layout only gathers guides
+from the `top` and `bottom`.
+
+To override the guide collection behavior of the heatmap annotation, you can use
+the `free_guides` argument of the `hmanno()` function.
+```{r fig.dim = c(12, 12)}
+heatmap_collect_all_guides +
+  # we only collect guides in the top and bottom side
+  hmanno(action = plot_action(guides = "tb")) +
+  # for the bottom annotation, we also collect guide in the left side
+  hmanno("b", free_guides = "l") +
+  plot_action(guides = "l")
+```
+
+>Note: The heatmap layout will only collect guide legends from the annotation
+stack if the stack layout collects its own guides first. 
 
 ## free_spaces
 By default, `ggheatmap()` will align all elements of the plot, which can

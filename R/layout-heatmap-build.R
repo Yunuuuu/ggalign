@@ -30,7 +30,6 @@ ggalign_build.HeatmapLayout <- function(x) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        # No parent layout, by default we'll always collect guides
         guides = .subset2(x@action, "guides"),
         theme = x@theme
     ) + layout_title(
