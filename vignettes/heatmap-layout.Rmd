@@ -282,7 +282,7 @@ ggheatmap(small_mat) +
   align_dendro() +
   scale_y_continuous(
     expand = expansion(),
-    labels = ~ paste("very very long labels", .x)
+    labels = ~ paste("very long labels", .x)
   ) +
   hmanno("l", unit(20, "mm")) +
   align_dendro()
