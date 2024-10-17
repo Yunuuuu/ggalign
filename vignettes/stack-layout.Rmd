@@ -164,6 +164,9 @@ ggstack(small_mat, "v") +
 ```
 
 ```{r}
+# the left annotation, will have a relative size 1
+# the heatmap body will have a relative width 2
+# the right annotation will have a relative size 1
 ggstack(small_mat, "v", sizes = c(1, 2, 1)) +
     ggheatmap() +
     scale_fill_viridis_c() +
@@ -179,23 +182,24 @@ In this way, heatmap body width/height specified in `hmanno()` or `ggheatmap()`
 won't work.
 ```{r}
 ggstack(small_mat, "v") +
-    ggheatmap() +
+    ggheatmap(.width = unit(2, "null")) + # not work
     scale_fill_viridis_c() +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap(.width = unit(2, "null"))
+    ggheatmap(.width = unit(2, "null")) # not work
 ```
 
 By default the flank annotation will fill the whole stack flank, but we can
-still control the total size of heatmap annotation in `hmanno()`. 
+still control the size of heatmap annotation in `hmanno()`. 
 ```{r}
 ggstack(small_mat, "v") +
     ggheatmap() +
     scale_fill_viridis_c() +
-    hmanno("l", size = unit(2, "cm")) +
+    # the left annotation will have a total size 2cm
+    hmanno("l", size = unit(2, "cm")) + 
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
@@ -208,6 +212,7 @@ You can also use `npc` unit.
 ggstack(small_mat, "v") +
     ggheatmap() +
     scale_fill_viridis_c() +
+    # the left annotation will have a total width 1/2 npc
     hmanno("l", size = unit(0.5, "npc")) +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
