@@ -303,19 +303,6 @@ arguments is distinct from other arguments in `plot_action()`:
   - For left and right annotations, it inherits from the top ("t") and bottom ("b") 
     axes.
 
-```{r}
-ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  hmanno("t", size = unit(30, "mm")) +
-  align_dendro(action = plot_action(free_labs = "l")) +
-  scale_y_continuous(
-    expand = expansion(),
-    labels = ~ paste("very long labels", .x)
-  ) +
-  hmanno("l", unit(20, "mm")) +
-  align_dendro()
-```
-
 ## free_labs
 By default, `ggheatmap()` won't align the axis titles.
 ```{r}
