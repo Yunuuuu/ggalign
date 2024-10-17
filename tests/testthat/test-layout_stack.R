@@ -25,14 +25,14 @@ testthat::test_that("add `stack_active` object works well", {
         action = plot_action(
             guides = "tlbr",
             free_labs = "tlbr",
-            plot_data = NULL
+            data = NULL
         )
     )
     expect_identical(p2@sizes, unit(rep_len(1L, 3L), "cm"))
     action <- p2@action
     expect_identical(action$guides, "tlbr")
     expect_identical(action$free_labs, "tlbr")
-    expect_identical(action$plot_data, NULL)
+    expect_identical(action$data, NULL)
 })
 
 testthat::test_that("add `heatmap_layout()` object works well", {

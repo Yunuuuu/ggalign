@@ -77,15 +77,15 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         stack@annotation$position <- position
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))
-    } else {
-        stack@action <- update_action(stack@action, .subset2(object, "action"))
     }
+    # update parameters --------------------------
     if (!is.null(size <- .subset2(object, "size"))) {
         stack@annotation$size <- size
     }
     if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
         stack@annotation$free_guides <- free_guides
     }
+    stack@action <- update_action(stack@action, .subset2(object, "action"))
     slot(heatmap, position) <- stack
     heatmap
 }

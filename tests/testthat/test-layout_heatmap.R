@@ -70,7 +70,7 @@ testthat::test_that("add `hmanno()` works well", {
             align_dendro(aes(color = branch))
     )
     expect_doppelganger(
-        "heatmap-hmanno-align-guides",
+        "heatmap-hmanno-align-action-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
             hmanno(action = plot_action(guides = NULL)) +
