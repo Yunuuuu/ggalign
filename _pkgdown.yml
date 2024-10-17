@@ -4,6 +4,9 @@ template:
   bootstrap: 5
   light-switch: true
 
+development:
+  mode: auto
+
 reference:
 - title: Layout Class
   desc: A `Layout` object defines how to place the plots.
