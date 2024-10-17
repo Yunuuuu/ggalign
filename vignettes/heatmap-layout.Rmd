@@ -332,8 +332,7 @@ string containing one or more of axis positions ("t", "l", "b", "r") to indicate
 which axis titles should be free from alignment.
 
 ```{r}
-ggheatmap(small_mat) +
-  hmanno(free_labs = NULL) +
+ggheatmap(small_mat, action = plot_action(free_labs = NULL)) +
   scale_fill_viridis_c() +
   ylab("Heatmap title") +
   hmanno("t", size = unit(30, "mm")) +
