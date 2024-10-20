@@ -65,6 +65,10 @@ syntax, the typical workflow includes:
 - Adding plots with `ggalign()` or `ggpanel()`, and then layer
   additional ggplot2 elements such as geoms, stats, or scales.
 
+For documents of the release version, please see
+<https://yunuuuu.github.io/ggalign>, for documents of the development
+version, please see <https://yunuuuu.github.io/ggalign/dev>
+
 ## Basic example
 
 Below, we’ll walk through a basic example of using `ggalign` to create a
@@ -126,7 +130,9 @@ annotation function in
 ## More Complex Examples
 
 Here are some more advanced visualizations using `ggalign`:
+
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
+
 ![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
 
 ## Further Documentation
