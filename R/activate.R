@@ -34,6 +34,7 @@
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     hmanno("top") +
 #'     align_dendro()
+#' @importFrom ggplot2 waiver
 #' @importFrom lifecycle deprecated
 #' @export
 hmanno <- function(position = NULL, size = NULL, action = NULL,
@@ -91,6 +92,7 @@ hmanno <- function(position = NULL, size = NULL, action = NULL,
 #'     stack_active() +
 #'     # here we add a dendrogram to the stack.
 #'     align_dendro()
+#' @importFrom lifecycle deprecated
 #' @export
 stack_active <- function(action = NULL, sizes = NULL, what = NULL,
                          ...,

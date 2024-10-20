@@ -93,10 +93,8 @@ alignpatch.wrapped_plot <- function(x) {
         "PatchWrapped", Parent,
         wrapped_grobs_under = attr(x, "wrapped_grobs_under"),
         wrapped_grobs_above = attr(x, "wrapped_grobs_above"),
-        patch_gtable = function(self, guides, plot = Parent$plot) {
-            ans <- ggproto_parent(Parent, self)$patch_gtable(
-                guides = guides, plot = plot
-            )
+        patch_gtable = function(self, plot = Parent$plot) {
+            ans <- ggproto_parent(Parent, self)$patch_gtable(plot = plot)
             ans <- add_wrapped_grobs(ans, self$wrapped_grobs_under, FALSE)
             add_wrapped_grobs(ans, self$wrapped_grobs_above, TRUE)
         }

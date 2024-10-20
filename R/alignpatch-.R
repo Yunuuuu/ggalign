@@ -141,19 +141,34 @@ alignpatch.default <- function(x) {
 #' @export
 alignpatch.NULL <- function(x) NULL
 
+abort_no_method <- function(plot, method) {
+    cli::cli_abort("no {.fn {method}} method for {.obj_type_friendly {plot}}")
+}
+
 #' @importFrom ggplot2 ggproto
 #' @importFrom grid unit.c
-Patch <- ggproto("Patch", NULL,
+Patch <- ggproto(c("Patch", "ggalign"), NULL,
     # following fields will be added by `alignpatch()`
     # plot = NULL,
     # following fields will be added in `alignpatches$patch_gtable()`
-    # borders = NULL, guides = NULL, gt = NULL,
-    set_guides = function(guides) guides,
-    set_theme = function(theme) NULL, # by default we won't need theme
+    # borders = NULL, guides = NULL, theme = NULL, gt = NULL,
+
+    #' @param guides `guides` argument from the parent alignpatches
+    #' @return Which side of guide legends should be collected by the parent
+    #' `alignpatches` object?
+    #' @noRd
+    set_guides = function(self, guides) {
+        abort_no_method(self$plot, "set_guides")
+    },
+
+    #' @param theme `theme` from the parent alignpatches
+    #' @return theme for current `alignpatches`.
+    #' @noRd
+    set_theme = function(self, theme) {
+        abort_no_method(self$plot, "set_theme")
+    },
     patch_gtable = function(self, plot = self$plot) {
-        cli::cli_abort(
-            "Cannot convert {.obj_type_friendly {plot}} into a {.cls grob}"
-        )
+        abort_no_method(self$plot, "patch_gtable")
     },
 
     #' @importFrom vctrs vec_slice
@@ -256,16 +271,24 @@ Patch <- ggproto("Patch", NULL,
     },
     split_gt = function(self, gt = self$gt) {
         index <- .subset2(.subset2(gt, "layout"), "name") == "background"
-        bg <- .subset(.subset2(gt, "grobs"), index)
-        plot <- subset_gt(gt, !index, trim = FALSE)
+        if (any(index)) {
+            bg <- .subset(.subset2(gt, "grobs"), index) # a list of background
+            plot <- subset_gt(gt, !index, trim = FALSE)
+        } else {
+            bg <- NULL
+            plot <- gt
+        }
         list(bg = bg, plot = plot)
     },
     free_border = function(self, borders, gt = self$gt) {
-        cli::cli_abort(
-            "Cannot free border for {.obj_type_friendly {self$plot}}"
-        )
+        abort_no_method(self$plot, "free_border")
+    },
+    align_free_border = function(self, borders,
+                                 t = NULL, l = NULL, b = NULL, r = NULL,
+                                 gt = self$gt) {
+        abort_no_method(self$plot, "align_free_border")
     },
     free_lab = function(self, labs, gt = self$gt) {
-        cli::cli_abort("Cannot free lab for {.obj_type_friendly {self$plot}}")
+        abort_no_method(self$plot, "free_lab")
     }
 )

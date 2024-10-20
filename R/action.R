@@ -26,18 +26,22 @@
 #' which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
 #' parent layout, all guides will be collected. If `NULL`, no guides will be
-#' aligned.
+#' collected.
 #'
 #' @param free_spaces A string with one or more of `r rd_values(.tlbr)`
 #' indicating which border spaces should be removed. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
 #' parent, the default is `NULL`, meaning no spaces are removed.
 #'
+#' Usually you want to apply this with the whole layout, instead of individual
+#' plots.
+#'
 #' @param free_labs A string with one or more of `r rd_values(.tlbr)` indicating
 #' which axis titles should be free from alignment. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
 #' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
 #' will be aligned.
+#'
 #' @return A `plot_action` object.
 #' @examples
 #' # used in the layout, define the default action for all plots in the layout
@@ -161,8 +165,7 @@ inherit_theme <- function(theme, parent) {
     parent + theme
 }
 
-inherit_action <- function(action, parent = NULL) {
-    if (is.null(parent)) return(action) # styler: off
+inherit_action <- function(action, parent) {
     action["data"] <- list(.subset2(action, "data") %|w|%
         .subset2(parent, "data"))
     action["theme"] <- list(inherit_theme(
@@ -178,9 +181,7 @@ inherit_action <- function(action, parent = NULL) {
 
 #' @param theme Additional default theme elements to be added for the plot
 #' @noRd
-plot_add_action <- function(plot, action, parent, theme = NULL,
-                            call = caller_call()) {
-    action <- inherit_action(action, parent)
+plot_add_action <- function(plot, action, theme = NULL, call = caller_call()) {
     # by default, we won't change the data
     if (!is.null(plot_data <- .subset2(action, "data") %|w|% NULL)) {
         if (!is.data.frame(data <- plot_data(.subset2(plot, "data")))) {

@@ -125,7 +125,7 @@ setup_patch_titles <- function(table, patch_titles, theme) {
                 b <- max(panel_pos$b)
             } else {
                 t <- 1L
-                b <- ncol(table)
+                b <- nrow(table)
             }
             v <- .subset2(panel_pos, "l") - 4L # left of the ylab
             table <- gtable_add_cols(table, width, pos = v)
@@ -157,7 +157,7 @@ setup_patch_titles <- function(table, patch_titles, theme) {
                 b <- max(panel_pos$b)
             } else {
                 t <- 1L
-                b <- ncol(table)
+                b <- nrow(table)
             }
             v <- .subset2(panel_pos, "r") + 3L # right of the ylab
             table <- gtable_add_cols(table, width, pos = v)

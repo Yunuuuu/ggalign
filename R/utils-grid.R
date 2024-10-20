@@ -61,3 +61,34 @@ trim_area <- function(area) {
     area$b <- .subset2(area, "b") - h + 1L
     area
 }
+
+liberate_area <- function(gt, top, left, bottom, right,
+                          clip = "inherit", name = NULL, vp = NULL) {
+    if (any(remove <- grob_in_area(gt, top, right, bottom, left))) {
+        liberated <- gt[top:bottom, left:right]
+        if (is.function(vp <- allow_lambda(vp))) {
+            liberated$vp <- vp(liberated)
+        } else if (inherits(vp, "viewport")) {
+            liberated$vp <- vp
+        }
+        liberated$respect <- FALSE
+        name <- name %||% paste(
+            .subset2(.subset2(liberated, "layout"), "name"),
+            collapse = "; "
+        )
+        gt <- subset_gt(gt, !remove, trim = FALSE)
+        gt <- gtable_add_grob(
+            gt, list(liberated), top, left, bottom, right,
+            z = max(.subset2(.subset2(liberated, "layout"), "z")),
+            clip = clip, name = name
+        )
+    }
+    gt
+}
+
+grob_in_area <- function(gt, top, right, bottom, left) {
+    .subset2(.subset2(gt, "layout"), "l") >= left &
+        .subset2(.subset2(gt, "layout"), "t") >= top &
+        .subset2(.subset2(gt, "layout"), "r") <= right &
+        .subset2(.subset2(gt, "layout"), "b") <= bottom
+}

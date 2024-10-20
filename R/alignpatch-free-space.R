@@ -24,6 +24,16 @@ free_space.ggplot <- function(plot, spaces = "tlbr") {
 free_space.alignpatches <- free_space.ggplot
 
 #' @export
+free_space.free_align <- function(plot, spaces = "tlbr") {
+    assert_position(spaces)
+    spaces <- setdiff_position(spaces, attr(plot, "free_axes"))
+    if (nchar(spaces) == 0L) {
+        return(plot)
+    }
+    NextMethod()
+}
+
+#' @export
 free_space.free_space <- function(plot, spaces = "tlbr") {
     assert_position(spaces)
     attr(plot, "free_spaces") <- union_position(
@@ -41,8 +51,11 @@ alignpatch.free_space <- function(x) {
     ggproto(
         "PatchFreeSpace", Parent,
         free_spaces = split_position(attr(x, "free_spaces")),
-        get_sizes = function(self, free = self$free_spaces, gt = self$gt) {
-            ggproto_parent(Parent, self)$get_sizes(free, gt = gt)
+        get_sizes = function(self, free = NULL, gt = self$gt) {
+            ggproto_parent(Parent, self)$get_sizes(
+                union(free, self$free_spaces),
+                gt = gt
+            )
         }
     )
 }

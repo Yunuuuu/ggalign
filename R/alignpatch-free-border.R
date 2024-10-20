@@ -63,16 +63,44 @@ alignpatch.free_border <- function(x) {
     ggproto(
         "PatchFreeBorder", Parent,
         free_borders = setup_pos(attr(x, "free_borders")),
-        patch_gtable = function(self, plot = self$plot) {
-            ans <- ggproto_parent(Parent, self)$patch_gtable(plot = plot)
-            ggproto_parent(Parent, self)$free_border(
-                borders = self$free_borders, gt = ans
+        collect_guides = function(self, guides = self$guides, gt = self$gt) {
+            ans <- ggproto_parent(Parent, self)$collect_guides(
+                guides = guides, gt = gt
+            )
+            self$gt <- ggproto_parent(Parent, self)$free_border(
+                borders = self$free_borders, gt = self$gt
+            )
+            ans
+        },
+        align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
+                                gt = self$gt) {
+            gt <- ggproto_parent(Parent, self)$align_border(
+                t = t, l = l, b = b, r = r, gt = gt
+            )
+            ggproto_parent(Parent, self)$align_free_border(
+                borders = self$free_borders,
+                t = t, l = l, b = b, r = r, gt = gt
             )
         },
+
+        #' @importFrom vctrs vec_set_difference
         free_border = function(self, borders, gt = self$gt) {
-            if (length(borders <- setdiff(borders, self$free_borders))) {
+            borders <- vec_set_difference(borders, self$free_borders)
+            if (length(borders)) {
                 gt <- ggproto_parent(Parent, self)$free_border(
                     borders = borders, gt = gt
+                )
+            }
+            gt
+        },
+        align_free_border = function(self, borders,
+                                     t = NULL, l = NULL, b = NULL, r = NULL,
+                                     gt = self$gt) {
+            borders <- vec_set_difference(borders, self$free_borders)
+            if (length(borders)) {
+                gt <- ggproto_parent(Parent, self)$align_free_border(
+                    borders = borders,
+                    t = t, l = l, b = b, r = r, gt = gt
                 )
             }
             gt

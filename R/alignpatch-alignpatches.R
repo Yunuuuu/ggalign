@@ -7,8 +7,11 @@ alignpatch.alignpatches <- function(x) {
 #' @importFrom vctrs new_data_frame
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     # We by default won't collect any guides
-    guides = NULL,
-    set_theme = function(theme) theme,
+    guides = NULL, theme = NULL,
+    set_guides = function(self, guides, plot = self$plot) guides,
+    set_theme = function(self, theme, plot = self$plot) {
+        inherit_theme(.subset2(plot, "theme"), theme)
+    },
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
@@ -77,27 +80,15 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }
 
         # we inherit parameters from the parent --------------------
-        # in `alignpatches` object, `self$guides` and `self$theme` will always
-        # be the parent parameters, we always attach the parent `gudies` and
-        # `theme` in `self`
-        #
-        # `self$guides` by default is `NULl`, if this is a
-        # nested alignpatches, `self$guides` should be set by
-        # `$set_guides()` method, which is the parent guides
+        # by default, we won't collect any guide legends
         guides <- .subset2(layout, "guides") %|w|% self$guides
-        # the same applies to theme but use `$set_theme()` method
-        # the top-level alignpatches will always complete theme in
-        # `ggalign_gtable.alignpatches`.
-        if (is.null(theme <- .subset2(plot, "theme"))) {
-            theme <- self$theme
-        } else {
-            theme <- complete_theme(theme)
-        }
 
+        # by default, we use ggplot2 default theme
+        theme <- self$theme %||% self$set_theme(theme_get(), plot = plot)
+
+        # Let each patch to determine whether to collect guides and the theme
         for (patch in patches) {
-            # Let each patch to determine whether to collect guides
             patch$guides <- patch$set_guides(guides)
-            # inherit theme for nested `alignpatches` object only
             patch$theme <- patch$set_theme(theme)
         }
 
@@ -112,10 +103,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 3. set_sizes:
         #     - (To-Do) align_panel_spaces: can change the internal `gt`
         #     - align_panel_sizes, can change the internal `gt`
+        #     - get_sizes, the widths and heights for the internal `gt`
         # 4. set_grobs: will call `align_border` and `split_gt`, return the
         #    final gtable
         # setup gtable list ----------------------------------
-        for (patch in patches) patch$gt <- patch$patch_gtable()
+        for (patch in patches) {
+            patch$gt <- patch$patch_gtable()
+        }
 
         # collect guides  ---------------------------------------
         collected_guides <- self$collect_guides_list(patches)
@@ -150,8 +144,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             )
         } else {
             # used by `$collect_guides() method`
-            # if this is a nested alignpatches, theme will be automatically
-            # attached by` $set_theme()`
             self$collected_guides <- collected_guides
             self$panel_pos <- panel_pos
         }
@@ -195,6 +187,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 name = "background", z = 0L
             )
         }
+
+        # arrange the grobs
+        idx <- order(.subset2(.subset2(gt, "layout"), "z"))
+        gt$layout <- vec_slice(.subset2(gt, "layout"), idx)
+        gt$grobs <- .subset(.subset2(gt, "grobs"), idx)
         gt
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
@@ -416,9 +413,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                              gt = self$gt) {
         guides <- assemble_guides(guides, guide_pos, theme = theme)
         spacing <- .subset2(theme, "legend.box.spacing")
-        legend_width <- gtable_width(guides)
-        legend_height <- gtable_height(guides)
         if (guide_pos == "left") {
+            legend_width <- gtable_width(guides)
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guides,
@@ -431,6 +427,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 spacing, legend_width
             )
         } else if (guide_pos == "right") {
+            legend_width <- gtable_width(guides)
             gt <- gtable_add_grob(
                 x = gt, grobs = guides,
                 t = panel_pos$t,
@@ -442,24 +439,36 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 spacing, legend_width
             )
         } else if (guide_pos == "bottom") {
+            location <- .subset2(theme, "legend.location") %||% "panel"
+            place <- switch(location,
+                panel = panel_pos,
+                list(l = 1L, r = ncol(gt))
+            )
+            legend_height <- gtable_height(guides)
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guides,
                 t = panel_pos$b + 6L,
-                l = panel_pos$l,
-                r = panel_pos$r,
+                l = place$l,
+                r = place$r,
                 ...
             )
             gt$heights[.subset2(panel_pos, "b") + 5:6] <- unit.c(
                 spacing, legend_height
             )
         } else if (guide_pos == "top") {
+            location <- .subset2(theme, "legend.location") %||% "panel"
+            place <- switch(location,
+                panel = panel_pos,
+                list(l = 1L, r = ncol(gt))
+            )
+            legend_height <- gtable_height(guides)
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guides,
                 t = panel_pos$t - 6L,
-                l = panel_pos$l,
-                r = panel_pos$r,
+                l = place$l,
+                r = place$r,
                 ...
             )
             gt$heights[.subset2(panel_pos, "t") - 5:6] <- unit.c(
@@ -468,10 +477,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }
         gt
     },
+
     #' @importFrom rlang is_empty
-    free_border = function(self, borders,
-                           gt = self$gt, patches = self$patches) {
-        self$recurse_lapply(
+    free_border = function(self, borders, gt = self$gt,
+                           patches = self$patches) {
+        gt <- self$recurse_lapply(
             function(patch, grob, t, l, b, r) {
                 borders <- intersect(borders, c(t, l, b, r))
                 if (is_empty(borders)) return(grob) # styler: off
@@ -480,7 +490,35 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             t = "top", l = "left", b = "bottom", r = "right",
             gt = gt, patches = patches
         )
+        # for the collected guides, we should also liberate them
+        guide_index <- sprintf("guide-box-collected-%s", borders) %in%
+            .subset2(.subset2(gt, "layout"), "name")
+        if (any(guide_index)) {
+            gt <- PatchGgplot$free_border(
+                borders = borders[guide_index], gt = gt
+            )
+        }
+        gt
     },
+    align_free_border = function(self, borders,
+                                 t = NULL, l = NULL, b = NULL, r = NULL,
+                                 gt = self$gt, patches = self$patches) {
+        gt <- self$recurse_lapply(
+            function(patch, grob, t, l, b, r) {
+                patch$align_free_border(
+                    borders = borders,
+                    t = t, l = l, b = b, r = r, gt = grob
+                )
+            },
+            t = t, l = l, b = b, r = r,
+            gt = gt, patches = patches
+        )
+        PatchGgplot$align_free_border(
+            borders = borders,
+            t = t, l = l, b = b, r = r, gt = gt
+        )
+    },
+
     #' @importFrom rlang is_empty
     free_lab = function(self, labs, gt = self$gt, patches = self$patches) {
         self$recurse_lapply(

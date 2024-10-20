@@ -42,8 +42,7 @@ ggalign_build.HeatmapLayout <- function(x) {
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-heatmap_build <- function(heatmap, action = NULL) {
-    action <- inherit_action(heatmap@action, action)
+heatmap_build <- function(heatmap, action = heatmap@action) {
     mat <- heatmap@data
     x_nobs <- get_nobs(heatmap, "x")
     y_nobs <- get_nobs(heatmap, "y")
@@ -129,15 +128,15 @@ heatmap_build <- function(heatmap, action = NULL) {
         if (is_horizontal(to_direction(position))) {
             panel <- xpanel
             index <- xindex
-            action <- horizontal_action
+            stack_action <- inherit_action(stack@action, horizontal_action)
         } else {
             panel <- ypanel
             index <- yindex
-            action <- vertical_action
+            stack_action <- inherit_action(stack@action, vertical_action)
         }
         plot <- stack_build(
             stack,
-            action = action,
+            action = stack_action,
             extra_panel = panel,
             extra_index = index
         )
@@ -163,9 +162,16 @@ heatmap_build <- function(heatmap, action = NULL) {
                     right = "left"
                 )
             )
-            size <- .subset2(stack@annotation, "size")
+            # whether we should override the `guides` collection for the whole
+            # annotation stack
             free_guides <- .subset2(stack@annotation, "free_guides")
             if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
+            # we also apply the `free_spaces` for the whole annotation stack
+            free_spaces <- .subset2(stack_action, "free_spaces") %|w|% NULL
+            if (!is.null(free_spaces)) {
+                plot <- free_space(free_border(plot, free_spaces), free_spaces)
+            }
+            size <- .subset2(stack@annotation, "size")
         } else {
             size <- NULL
         }
@@ -211,7 +217,7 @@ heatmap_build <- function(heatmap, action = NULL) {
         )
 
     # add action -----------------------------------------
-    p <- plot_add_action(p, heatmap@body_action, action)
+    p <- plot_add_action(p, inherit_action(heatmap@body_action, action))
 
     # add class to set the default color mapping
     p <- add_class(p, "ggalign_heatmap")

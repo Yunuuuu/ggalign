@@ -78,6 +78,13 @@ free_align <- function(plot, axes = "tlbr") {
     UseMethod("free_align")
 }
 
+# free_guides: set_guides
+# free_lab: collect_guides
+# free_border: collect_guides and align_border
+# free_space: get_sizes
+# free_align: get_sizes and align_border
+# free_vp: align_border
+
 #' @export
 free_align.ggplot <- function(plot, axes = "tlbr") {
     assert_position(axes)
@@ -87,9 +94,6 @@ free_align.ggplot <- function(plot, axes = "tlbr") {
 
 #' @export
 free_align.alignpatches <- free_align.ggplot
-
-#' @export
-free_align.free_border <- free_align.ggplot
 
 #' @importFrom vctrs vec_set_difference
 #' @export
@@ -102,6 +106,32 @@ free_align.free_lab <- function(plot, axes = "tlbr") {
         class(plot) <- vec_set_difference(class(plot), "free_lab")
     } else {
         attr(plot, "free_labs") <- free_labs
+    }
+    NextMethod()
+}
+
+#' @export
+free_align.free_space <- function(plot, axes = "tlbr") {
+    assert_position(axes)
+    free_spaces <- setdiff_position(attr(plot, "free_spaces"), axes)
+    if (length(free_spaces) == 0L) {
+        attr(plot, "free_spaces") <- NULL
+        class(plot) <- vec_set_difference(class(plot), "free_space")
+    } else {
+        attr(plot, "free_spaces") <- free_spaces
+    }
+    NextMethod()
+}
+
+#' @export
+free_align.free_border <- function(plot, axes = "tlbr") {
+    assert_position(axes)
+    free_borders <- setdiff_position(attr(plot, "free_borders"), axes)
+    if (length(free_borders) == 0L) {
+        attr(plot, "free_borders") <- NULL
+        class(plot) <- vec_set_difference(class(plot), "free_border")
+    } else {
+        attr(plot, "free_borders") <- free_borders
     }
     NextMethod()
 }
@@ -125,8 +155,11 @@ alignpatch.free_align <- function(x) {
     ggproto(
         "PatchFreeAlign", Parent,
         free_axes = split_position(attr(x, "free_axes")),
-        get_sizes = function(self, free = self$free_axes, gt = self$gt) {
-            ggproto_parent(Parent, self)$get_sizes(free, gt = gt)
+        get_sizes = function(self, free = NULL, gt = self$gt) {
+            ggproto_parent(Parent, self)$get_sizes(
+                union(free, self$free_axes),
+                gt = gt
+            )
         },
         align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                                 gt = self$gt) {

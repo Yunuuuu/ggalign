@@ -64,7 +64,7 @@ align_build <- function(x, panel, index, action,
                 )
         }
     }
-    plot <- plot_add_action(plot, .subset2(x, "action"), action,
+    plot <- plot_add_action(plot, action,
         theme = switch_direction(
             direction,
             theme(

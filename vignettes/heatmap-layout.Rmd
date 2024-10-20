@@ -258,7 +258,7 @@ You can also apply the `plot_action()` function directly to specific plots:
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side
   hmanno(action = plot_action(guides = "tb")) +
-  # for the heatmap body, we also collect guide in the right side
+  # for the heatmap body, we collect guide in the right side
   hmanno() +
   plot_action(guides = "r")
 ```
@@ -266,28 +266,31 @@ heatmap_collect_all_guides +
 As previously mentioned, the annotation is represented as a `stack_layout()`
 object. Guide legends within the annotation stack are first collected by the
 `stack_layout()` itself and are then passed to the overall heatmap layout for
-further collection.  See following example:
+further collection. See following example:
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
-  # we only collect guides in the top and bottom side
+  # we only collect guides in the top and bottom side in the heatmap layout
   hmanno(action = plot_action(guides = "tb")) +
-  # for the bottom annotation, we also collect guide in the left side
+  # for the dendrogram in the bottom annotation, we collect guide in the left side
   hmanno("b") +
   plot_action(guides = "l")
 ```
 
 Here, the guide legend is collected by the bottom annotation but will not be
 collected by the heatmap layout since the heatmap layout only gathers guides
-from the `top` and `bottom`.
+from the `top` and `bottom`. In this way, the guide legends of the annotation
+stack will be put around the annotation stack layout.
 
 To override the guide collection behavior for the heatmap annotation, you can use
 the `free_guides` argument of the `hmanno()` function.
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
-  # we only collect guides in the top and bottom side
+  # we only collect guides in the top and bottom side in the heatmap layout
   hmanno(action = plot_action(guides = "tb")) +
-  # for the bottom annotation, we also collect guide in the left side
+  # we also collect guides in the left side for the bottom annotation stack
+  # layout in the heatmap layout
   hmanno("b", free_guides = "l") +
+  # for the dendrogram in the bottom annotation, we collect guide in the left side
   plot_action(guides = "l")
 ```
 
@@ -328,6 +331,18 @@ ggheatmap(small_mat) +
   ) +
   hmanno("l", unit(20, "mm")) +
   align_dendro()
+```
+
+One useful way to utilize `free_spaces` is to position the guide legends next to
+the annotations. (Note the guide legend from the bottom annotation): 
+```{r fig.dim = c(12, 12)}
+heatmap_collect_all_guides +
+  # we only collect guides in the top and bottom side
+  hmanno(action = plot_action(guides = "tb")) +
+  # 1. in the bottom annotation stack layout, we collect the legends in the
+  #    left side
+  # 2. we remove the spaces of the left border in the annotation
+  hmanno("b", action = plot_action(guides = "l", free_spaces = "l"))
 ```
 
 In the `ggheatmap()` layout, the behavior of `free_spaces` and `free_labs`

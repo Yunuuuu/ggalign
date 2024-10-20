@@ -5,12 +5,13 @@ ggalign_build.StackLayout <- function(x) {
 
 #' @param panel,index layout of the axis vertically with the stack.
 #' @importFrom grid unit.c
-#' @importFrom rlang is_empty
+#' @importFrom rlang is_empty is_string
 #' @noRd
-stack_build <- function(stack, action = NULL,
+stack_build <- function(stack, action = stack@action,
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(stack))) return(NULL) # styler: off
     direction <- stack@direction
+    position <- .subset2(stack@annotation, "position")
     panel <- get_panel(stack) %||% factor(rep_len(1L, nobs))
     index <- get_index(stack) %||% reorder_index(panel)
 
@@ -35,14 +36,29 @@ stack_build <- function(stack, action = NULL,
     plots <- .subset(plots, make_order(plot_order))
 
     # build the stack
-    action <- inherit_action(stack@action, action)
     patches <- stack_patch(direction)
     has_top <- FALSE
     has_bottom <- FALSE
+
+    # for `free_spaces`, if we have applied it in the whole stack layout
+    # we shouln't use it for a single plot. this applies for the heamtap
+    # annotation stack (`position` is not `NULL`).
+    stack_spaces <- .subset2(action, "free_spaces")
+    remove_spaces <- is_string(stack_spaces) && !is.null(position)
     for (plot in plots) {
         if (is_align(plot)) {
+            align_action <- inherit_action(.subset2(plot, "action"), action)
+            if (remove_spaces) {
+                align_spaces <- .subset2(align_action, "free_spaces")
+                if (is_string(align_spaces)) {
+                    align_spaces <- setdiff_position(align_spaces, stack_spaces)
+                    if (nchar(align_spaces) == 0L) align_spaces <- NULL
+                    align_action["free_spaces"] <- list(align_spaces)
+                }
+            }
             patch <- align_build(plot,
-                panel = panel, index = index, action,
+                panel = panel, index = index,
+                action = align_action,
                 extra_panel = extra_panel,
                 extra_index = extra_index
             )
@@ -53,7 +69,7 @@ stack_build <- function(stack, action = NULL,
             )
         } else if (is_ggheatmap(plot)) {
             # for a heatmap
-            patch <- heatmap_build(plot, action)
+            patch <- heatmap_build(plot, inherit_action(plot@action, action))
             heatmap_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_heatmap(
                 patches, heatmap_plots,

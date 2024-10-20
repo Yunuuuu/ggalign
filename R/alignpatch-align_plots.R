@@ -290,7 +290,7 @@ alignpatches_add.layout_title <- function(object, plot, object_name) {
 #' @export
 layout_annotation <- function(theme = waiver(), ...) {
     rlang::check_dots_empty()
-    if (!is.null(theme) && !is.waive(theme)) assert_s3_class(theme, "theme")
+    if (!is.waive(theme)) assert_s3_class(theme, "theme", null_ok = TRUE)
     structure(
         list(annotation = list(), theme = theme),
         class = c("layout_annotation", "plot_annotation")
@@ -300,7 +300,7 @@ layout_annotation <- function(theme = waiver(), ...) {
 update_layout_theme <- function(old, new) {
     if (is.waive(new)) return(old) # styler: off
     if (is.null(old) || is.null(new)) return(new) # styler: off
-    ggfun("add_theme")(old, new)
+    old + new
 }
 
 #' @export
@@ -309,7 +309,7 @@ alignpatches_add.layout_annotation <- function(object, plot, object_name) {
         .subset2(plot, "annotation"),
         .subset2(object, "annotation")
     )
-    plot$theme <- inherit_theme(
+    plot$theme <- update_layout_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )
@@ -322,7 +322,7 @@ alignpatches_add.plot_annotation <- function(object, plot, object_name) {
         .subset2(plot, "titles"),
         .subset(object, names(layout_title()))
     )
-    plot$theme <- inherit_theme(
+    plot$theme <- update_layout_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )

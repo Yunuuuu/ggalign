@@ -19,9 +19,6 @@ free_lab.ggplot <- function(plot, labs = "tlbr") {
 free_lab.alignpatches <- free_lab.ggplot
 
 #' @export
-free_lab.free_space <- free_lab.ggplot
-
-#' @export
 free_lab.free_align <- function(plot, labs = "tlbr") {
     assert_position(labs)
     labs <- setdiff_position(labs, attr(plot, "free_axes"))
@@ -57,11 +54,14 @@ alignpatch.free_lab <- function(x) {
     ggproto(
         "PatchFreeLab", Parent,
         free_labs = setup_pos(attr(x, "free_labs")),
-        patch_gtable = function(self, plot = self$plot) {
-            ans <- ggproto_parent(Parent, self)$patch_gtable(plot = plot)
-            ggproto_parent(Parent, self)$free_lab(
-                labs = self$free_labs, gt = ans
+        collect_guides = function(self, guides = self$guides, gt = self$gt) {
+            ans <- ggproto_parent(Parent, self)$collect_guides(
+                guides = guides, gt = gt
             )
+            self$gt <- ggproto_parent(Parent, self)$free_lab(
+                labs = self$free_labs, gt = self$gt
+            )
+            ans
         },
         #' @importFrom vctrs vec_set_difference
         free_lab = function(self, labs, gt = self$gt) {

@@ -36,12 +36,15 @@ these axis titles or labels, you must manually add the appropriate
 which side of guide legends should be collected. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
 parent layout, all guides will be collected. If \code{NULL}, no guides will be
-aligned.}
+collected.}
 
 \item{free_spaces}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
 indicating which border spaces should be removed. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
-parent, the default is \code{NULL}, meaning no spaces are removed.}
+parent, the default is \code{NULL}, meaning no spaces are removed.
+
+Usually you want to apply this with the whole layout, instead of individual
+plots.}
 
 \item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
 which axis titles should be free from alignment. Defaults to

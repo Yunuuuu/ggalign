@@ -28,7 +28,9 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob update_labels
 PatchGgplot <- ggproto("PatchGgplot", Patch,
-    patch_gtable = function(self, guides, plot = self$plot) {
+    set_guides = function(guides) guides,
+    set_theme = function(theme) NULL,
+    patch_gtable = function(self, plot = self$plot) {
         # extract patch titles --------------------------------
         patch_titles <- .subset(
             .subset2(plot, "labels"),
@@ -90,83 +92,87 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     #' @importFrom gtable gtable_add_grob gtable_height gtable_width
     #' @importFrom grid unit viewport
     #' @importFrom ggplot2 find_panel
-    free_border = function(self, borders, gt = self$gt, guides = self$guides) {
+    free_border = function(self, borders, gt = self$gt) {
         panel_pos <- find_panel(gt)
         for (border in borders) {
-            layout <- .subset2(gt, "layout")
-            not_guides <- !grepl("^guide-", .subset2(layout, "name"))
             if (border == "top") {
-                index <- .subset2(layout, "b") < .subset2(panel_pos, "t") &
-                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
-                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
-
-                # if we'll collect the guides, we shouldn't attach the guides
-                if (any(border == guides)) {
-                    index <- not_guides & index
-                }
-                if (!any(index)) next
-                grob <- subset_gt(gt, index)
-                grob$respect <- FALSE
-                grob$vp <- viewport(
-                    y = 1L, just = "bottom",
-                    height = gtable_height(grob)
+                gt <- liberate_area(
+                    gt,
+                    1L,
+                    1L,
+                    .subset2(panel_pos, "t") - 1L,
+                    ncol(gt),
+                    clip = "off",
+                    name = "free-border-top",
+                    vp = ~ viewport(
+                        y = 0L, just = "bottom",
+                        height = gtable_height(.x)
+                    )
                 )
             } else if (border == "left") {
-                index <- .subset2(layout, "r") < .subset2(panel_pos, "l") &
-                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
-                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
-                # if we'll collect the guides, we shouldn't attach the guides
-                if (any(border == guides)) {
-                    index <- not_guides & index
-                }
-                if (!any(index)) next
-                grob <- subset_gt(gt, index)
-                grob$respect <- FALSE
-                grob$vp <- viewport(
-                    x = 0L, just = "right",
-                    width = gtable_width(grob)
+                gt <- liberate_area(
+                    gt,
+                    1L,
+                    1L,
+                    nrow(gt),
+                    .subset2(panel_pos, "l") - 1L,
+                    clip = "off",
+                    name = "free-border-left",
+                    vp = ~ viewport(
+                        x = 1L, just = "right",
+                        width = gtable_width(.x)
+                    )
                 )
             } else if (border == "bottom") {
-                index <- .subset2(layout, "t") > .subset2(panel_pos, "b") &
-                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
-                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
-                # if we'll collect the guides, we shouldn't attach the guides
-                if (any(border == guides)) {
-                    index <- not_guides & index
-                }
-                if (!any(index)) next
-                grob <- subset_gt(gt, index)
-                grob$respect <- FALSE
-                grob$vp <- viewport(
-                    y = 0L, just = "top",
-                    height = gtable_height(grob)
+                gt <- liberate_area(
+                    gt,
+                    .subset2(panel_pos, "b") + 1L,
+                    1L,
+                    nrow(gt),
+                    ncol(gt),
+                    clip = "off",
+                    name = "free-border-bottom",
+                    vp = ~ viewport(
+                        y = 1L, just = "top",
+                        height = gtable_height(.x)
+                    )
                 )
             } else if (border == "right") {
-                index <- .subset2(layout, "l") > .subset2(panel_pos, "r") &
-                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
-                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
-                # if we'll collect the guides, we shouldn't attach the guides
-                if (any(border == guides)) {
-                    index <- not_guides & index
-                }
-                if (!any(index)) next
-                grob <- subset_gt(gt, index)
-                grob$respect <- FALSE
-                grob$vp <- viewport(
-                    x = 1L, just = "left",
-                    width = gtable_width(grob)
+                gt <- liberate_area(
+                    gt,
+                    1L,
+                    .subset2(panel_pos, "r") + 1L,
+                    nrow(gt),
+                    ncol(gt),
+                    clip = "off",
+                    name = "free-border-right",
+                    vp = ~ viewport(
+                        x = 0L, just = "left",
+                        width = gtable_width(.x)
+                    )
                 )
             }
-            gt <- subset_gt(gt, !index, trim = FALSE)
-            gt <- gtable_add_grob(gt,
-                grobs = list(grob),
-                t = .subset2(panel_pos, "t"),
-                l = .subset2(panel_pos, "l"),
-                b = .subset2(panel_pos, "b"),
-                r = .subset2(panel_pos, "r"),
-                z = Inf, clip = "off",
-                name = paste("attach", border, "border", sep = "-")
-            )
+        }
+        gt
+    },
+    align_free_border = function(self, borders,
+                                 t = NULL, l = NULL, b = NULL, r = NULL,
+                                 gt = self$gt) {
+        if (is.null(t) && is.null(l) && is.null(b) && is.null(r)) {
+            return(gt)
+        }
+        # For free borders, we also align the margins
+        for (border in borders) {
+            i <- .subset2(.subset2(gt, "layout"), "name") ==
+                sprintf("free-border-%s", border)
+            if (any(i)) {
+                i <- which(i)
+                gt$grobs[[i]] <- switch_position(
+                    border,
+                    Patch$align_border(l = l, r = r, gt = gt$grobs[[i]]),
+                    Patch$align_border(t = t, b = b, gt = gt$grobs[[i]])
+                )
+            }
         }
         gt
     },
@@ -177,79 +183,68 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     free_lab = function(self, labs, gt = self$gt) {
         panel_pos <- find_panel(gt)
         for (lab in labs) {
-            layout <- .subset2(gt, "layout")
+            name <- paste(
+                switch_position(lab, "xlab", "ylab"),
+                "axis", lab,
+                sep = "-"
+            )
             if (lab == "top") {
                 panel_border <- .subset2(panel_pos, "t")
-                index <- .subset2(layout, "b") < panel_border &
-                    .subset2(layout, "t") >= (panel_border - 3L) &
-                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
-                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
-                if (!any(index)) next
-
-                # this grob contain both axis labels and axis title
-                grob <- subset_gt(gt, index)
-                grob$vp <- viewport(
-                    y = 1L, just = "bottom",
-                    height = gtable_height(grob)
+                gt <- liberate_area(
+                    gt,
+                    panel_border - 3L,
+                    .subset2(panel_pos, "l"),
+                    panel_border - 1L,
+                    .subset2(panel_pos, "r"),
+                    name = name,
+                    vp = ~ viewport(
+                        y = 0L, just = "bottom",
+                        height = gtable_height(.x)
+                    )
                 )
             } else if (lab == "left") {
                 panel_border <- .subset2(panel_pos, "l")
-                index <- .subset2(layout, "r") < panel_border &
-                    .subset2(layout, "l") >= (panel_border - 3L) &
-                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
-                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
-                if (!any(index)) next
-
-                # this grob contain both axis labels and axis title
-                grob <- subset_gt(gt, index)
-                grob$vp <- viewport(
-                    x = 0L, just = "right",
-                    width = gtable_width(grob)
+                gt <- liberate_area(
+                    gt,
+                    .subset2(panel_pos, "t"),
+                    panel_border - 3L,
+                    .subset2(panel_pos, "b"),
+                    panel_border - 1L,
+                    name = name,
+                    vp = ~ viewport(
+                        x = 1L, just = "right",
+                        width = gtable_width(.x)
+                    )
                 )
             } else if (lab == "bottom") {
                 panel_border <- .subset2(panel_pos, "b")
-                index <- .subset2(layout, "t") > panel_border &
-                    .subset2(layout, "b") <= (panel_border + 3L) &
-                    .subset2(layout, "l") >= .subset2(panel_pos, "l") &
-                    .subset2(layout, "r") <= .subset2(panel_pos, "r")
-                if (!any(index)) next
-
-                # this grob contain both axis labels and axis title
-                grob <- subset_gt(gt, index)
-                grob$vp <- viewport(
-                    y = 0L, just = "top",
-                    height = gtable_height(grob)
+                gt <- liberate_area(
+                    gt,
+                    panel_border + 1L,
+                    .subset2(panel_pos, "l"),
+                    panel_border + 3L,
+                    .subset2(panel_pos, "r"),
+                    name = name,
+                    vp = ~ viewport(
+                        y = 1L, just = "top",
+                        height = gtable_height(.x)
+                    )
                 )
             } else if (lab == "right") {
                 panel_border <- .subset2(panel_pos, "r")
-                index <- .subset2(layout, "l") > panel_border &
-                    .subset2(layout, "r") <= (panel_border + 3L) &
-                    .subset2(layout, "t") >= .subset2(panel_pos, "t") &
-                    .subset2(layout, "b") <= .subset2(panel_pos, "b")
-                if (!any(index)) next
-
-                # this grob contain both axis labels and axis title
-                grob <- subset_gt(gt, index)
-                grob$vp <- viewport(
-                    x = 1L, just = "left",
-                    width = gtable_width(grob)
+                gt <- liberate_area(
+                    gt,
+                    .subset2(panel_pos, "t"),
+                    panel_border + 1L,
+                    .subset2(panel_pos, "b"),
+                    panel_border + 3L,
+                    name = name,
+                    vp = ~ viewport(
+                        x = 0L, just = "left",
+                        width = gtable_width(.x)
+                    )
                 )
             }
-            grob$respect <- FALSE
-            gt <- subset_gt(gt, !index, trim = FALSE)
-            gt <- gtable_add_grob(gt,
-                grobs = list(grob),
-                t = .subset2(panel_pos, "t"),
-                l = .subset2(panel_pos, "l"),
-                b = .subset2(panel_pos, "b"),
-                r = .subset2(panel_pos, "r"),
-                z = Inf, clip = "off",
-                name = paste(
-                    switch_position(lab, "xlab", "ylab"),
-                    "axis", lab,
-                    sep = "-"
-                )
-            )
         }
         gt
     }
