@@ -17,6 +17,11 @@ knitr::opts_chunk$set(
 
 ```{r echo=FALSE}
 mode <- params$mode
+url <- switch(
+    mode,
+    devel = "https://yunuuuu.github.io/ggalign/dev",
+    release = "https://yunuuuu.github.io/ggalign"
+)
 ```
 
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
@@ -72,8 +77,8 @@ typical workflow includes:
  - Adding plots with `ggalign()` or `ggpanel()`, and then layer additional
  ggplot2 elements such as geoms, stats, or scales. 
 
-For documents of the development version, please see
-<https://yunuuuu.github.io/ggalign/dev>. 
+For documents of the `r if (mode == "devel") "release" else "development"`
+version, please see `r sprintf("<%s>", url)`. 
 
 ## Basic example
 Below, we'll walk through a basic example of using `ggalign` to create a heatmap
@@ -98,14 +103,6 @@ ggheatmap(small_mat) +
     geom_point(aes(color = branch, y = y)) +
     # change color mapping for the dendrogram
     scale_color_brewer(palette = "Dark2")
-```
-
-```{r echo=FALSE}
-url <- switch(
-    mode,
-    devel = "https://yunuuuu.github.io/ggalign/dev",
-    release = "https://yunuuuu.github.io/ggalign"
-)
 ```
 
 `r sprintf("![](%s/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)", url)`

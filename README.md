@@ -65,7 +65,7 @@ syntax, the typical workflow includes:
 - Adding plots with `ggalign()` or `ggpanel()`, and then layer
   additional ggplot2 elements such as geoms, stats, or scales.
 
-For documents of the development version, please see
+For documents of the release version, please see
 <https://yunuuuu.github.io/ggalign/dev>.
 
 ## Basic example
