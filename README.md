@@ -42,15 +42,7 @@ install.packages("ggalign")
 ```
 
 Alternatively, install the development version from
-[r-universe](https://yunuuuu.r-universe.dev/ggalign) with:
-
-``` r
-install.packages("ggalign",
-    repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
-)
-```
-
-or from [GitHub](https://github.com/Yunuuuu/ggalign) with:
+[GitHub](https://github.com/Yunuuuu/ggalign) with:
 
 ``` r
 # install.packages("remotes")
@@ -72,6 +64,9 @@ syntax, the typical workflow includes:
     clustering.
 - Adding plots with `ggalign()` or `ggpanel()`, and then layer
   additional ggplot2 elements such as geoms, stats, or scales.
+
+For documents of the development version, please see
+<https://yunuuuu.github.io/ggalign/dev>.
 
 ## Basic example
 
