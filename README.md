@@ -66,7 +66,8 @@ syntax, the typical workflow includes:
   additional ggplot2 elements such as geoms, stats, or scales.
 
 For documents of the release version, please see
-<https://yunuuuu.github.io/ggalign/dev>.
+<https://yunuuuu.github.io/ggalign>, for documents of the development
+version, please see <https://yunuuuu.github.io/ggalign/dev>
 
 ## Basic example
 

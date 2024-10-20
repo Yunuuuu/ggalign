@@ -2,6 +2,8 @@
 output: github_document
 params: 
   mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
+  release: "https://yunuuuu.github.io/ggalign"
+  devel: "https://yunuuuu.github.io/ggalign/dev"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -17,11 +19,7 @@ knitr::opts_chunk$set(
 
 ```{r echo=FALSE}
 mode <- params$mode
-url <- switch(
-    mode,
-    devel = "https://yunuuuu.github.io/ggalign/dev",
-    release = "https://yunuuuu.github.io/ggalign"
-)
+url <- params[[mode]]
 ```
 
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
@@ -77,8 +75,8 @@ typical workflow includes:
  - Adding plots with `ggalign()` or `ggpanel()`, and then layer additional
  ggplot2 elements such as geoms, stats, or scales. 
 
-For documents of the `r if (mode == "devel") "release" else "development"`
-version, please see `r sprintf("<%s>", url)`. 
+For documents of the release version, please see <`r params$release`>, for
+documents of the development version, please see <`r params$devel`>
 
 ## Basic example
 Below, we'll walk through a basic example of using `ggalign` to create a heatmap
