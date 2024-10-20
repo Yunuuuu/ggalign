@@ -11,7 +11,7 @@ object."><meta property="og:image" content="https://yunuuuu.github.io/ggalign/lo
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,9 +35,6 @@ object."><meta property="og:image" content="https://yunuuuu.github.io/ggalign/lo
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
-    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
-    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
     <li><a class="dropdown-item" href="../articles/more-examples.html">ComplexHeatmap: more examples</a></li>
@@ -60,7 +57,7 @@ object."><meta property="og:image" content="https://yunuuuu.github.io/ggalign/lo
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Create a new <code>Align</code> object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/align-.R" class="external-link"><code>R/align-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/align-.R" class="external-link"><code>R/align-.R</code></a></small>
       <div class="d-none name"><code>align.Rd</code></div>
     </div>
 
@@ -77,17 +74,16 @@ object.</p>
 <span>  <span class="va">params</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_spaces <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  plot_data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  free_labs <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  free_guides <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_spaces <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  plot_data <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  theme <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  check.param <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  call <span class="op">=</span> <span class="fu">caller_call</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -119,8 +115,47 @@ all plots along a single axis.</p></li>
 <dd><p>Plot size, can be an <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 
-<dt id="arg-action">action<a class="anchor" aria-label="anchor" href="#arg-action"></a></dt>
-<dd><p>A <code><a href="plot_action.html">plot_action()</a></code> object used for the plot.</p></dd>
+<dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
+<dd><p>Override the <code>guides</code> argument specified in the layout for
+a plot. Options include:</p><ul><li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: inherits behavior from the layout.</p></li>
+<li><p><code>NULL</code>: no guide legends will be collected for the plot.</p></li>
+<li><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected for the plot..</p></li>
+</ul></dd>
+
+
+<dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
+<dd><p>A string with one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>
+indicating which border spaces should be removed. Defaults to
+<code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If no
+parent, the default is <code>NULL</code>, meaning no spaces are removed.</p></dd>
+
+
+<dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
+<dd><p>A function to transform plot data before rendering. Defaults
+to <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If
+no parent layout, the default is <code>NULL</code>, meaning the data won't be modified.</p>
+<p>Used to modify the data after layout has been created, which should be a data
+frame, but before the data is handled of to the ggplot2 for rendering. Use
+this hook if the you needs change the default data for all <code>geoms</code>.</p></dd>
+
+
+<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
+<dd><p>Default plot theme: One of:</p><ul><li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: will inherit from the parent layout.</p></li>
+<li><p><code>NULL</code>: Use the <a href="theme_ggalign.html">default theme</a>.</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>: will be added with the parent layout theme.</p></li>
+</ul><p><code>Note:</code> The axis title and labels parallel to the layout axis will always be
+removed by default. For vertical stack layouts, this refers to the <code>x-axis</code>,
+and for horizontal stack layouts, this refers to the <code>y-axis</code>. If you want to
+display the axis title or labels, you should manually add
+<a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a> elements for the parallel axis title or labels.</p></dd>
+
+
+<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
+<dd><p>A string with one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicating
+which axis titles should be free from alignment. Defaults to
+<code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If no
+parent layout, no axis titles will be aligned. If <code>NULL</code>, all axis titles
+will be aligned.</p></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
@@ -146,32 +181,6 @@ added into this plot.</p></dd>
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>A string of the plot name. Used to switch the active context in
 <code><a href="hmanno.html">hmanno()</a></code> or <code><a href="stack_active.html">stack_active()</a></code>.</p></dd>
-
-
-<dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
-<dd><p>Override the <code>guides</code> collection behavior specified in the
-heatmap layout for the annotation stack layout. Only used when <code>position</code> is
-a string.</p></dd>
-
-
-<dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>action</code>
-argument instead.</p></dd>
-
-
-<dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>action</code>
-argument instead.</p></dd>
-
-
-<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>action</code> argument
-instead.</p></dd>
-
-
-<dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>action</code>
-argument instead.</p></dd>
 
 
 <dt id="arg-check-param">check.param<a class="anchor" aria-label="anchor" href="#arg-check-param"></a></dt>
@@ -208,7 +217,6 @@ reorder heamtap rows/columns.</p></li>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="align_gg.html">align_gg</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     action: plot_action</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
@@ -216,6 +224,9 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_guides: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
@@ -230,17 +241,18 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     plot: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     position: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     set_context: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     size: NAnull</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theme: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
 <span class="r-in"><span><span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     action: plot_action</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
@@ -248,6 +260,9 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_guides: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_labs: waiver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     free_spaces: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
@@ -262,12 +277,14 @@ reorder heamtap rows/columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     plot: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     plot_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     position: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     set_context: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     size: NAnull</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theme: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
 </code></pre></div>

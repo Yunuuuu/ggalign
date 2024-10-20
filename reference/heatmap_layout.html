@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,6 @@
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
-    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
-    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
     <li><a class="dropdown-item" href="../articles/more-examples.html">ComplexHeatmap: more examples</a></li>
@@ -56,7 +53,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Arrange plots in a Heatmap</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/layout-heatmap-.R" class="external-link"><code>R/layout-heatmap-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/layout-heatmap-.R" class="external-link"><code>R/layout-heatmap-.R</code></a></small>
       <div class="d-none name"><code>heatmap_layout.Rd</code></div>
     </div>
 
@@ -70,30 +67,28 @@
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggheatmap</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,24 +108,8 @@ addition, we will always add mapping <code>aes(.data$.x, .data$.y)</code>.</p></
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to
-<a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a>/<a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a>. Only
-used when <code>filling = TRUE</code>.</p></dd>
-
-
-<dt id="arg--width-height">.width, .height<a class="anchor" aria-label="anchor" href="#arg--width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
-
-
-<dt id="arg-action">action<a class="anchor" aria-label="anchor" href="#arg-action"></a></dt>
-<dd><p>A <code><a href="plot_action.html">plot_action()</a></code> object used to define the default plot action
-in the layout.</p></dd>
-
-
-<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
-<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
-<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
+<dd><p>Additional arguments passed to <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a>.
+Only used when <code>filling = TRUE</code>.</p></dd>
 
 
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
@@ -148,6 +127,20 @@ default heatmap body fill color scale. See
 details.</p></dd>
 
 
+<dt id="arg--width-height">.width, .height<a class="anchor" aria-label="anchor" href="#arg--width-height"></a></dt>
+<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
+
+
+<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
+<dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
+
+
+<dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
+<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
+<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
+
+
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
 <dd><p>A single boolean value indicates whether to set the active
 context to current plot. If <code>TRUE</code>, all subsequent ggplot elements will be
@@ -161,14 +154,6 @@ added into this plot.</p></dd>
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>A string of the plot name. Used to switch the active context in
 <code><a href="hmanno.html">hmanno()</a></code> or <code><a href="stack_active.html">stack_active()</a></code>.</p></dd>
-
-
-<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A string with one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicating
-which side of guide legends should be collected. Defaults to
-<code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout.  If
-there is no parent layout, or if <code>NULL</code> is provided, no guides will be
-collected.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -194,13 +179,10 @@ matrix.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ggheatmap</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="heatmap_layout-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">ggheatmap</span><span class="op">(</span><span class="va">letters</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="heatmap_layout-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">ggheatmap</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">81</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">9L</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="heatmap_layout-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

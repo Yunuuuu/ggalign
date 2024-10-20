@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,6 @@
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
-    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
-    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
     <li><a class="dropdown-item" href="../articles/more-examples.html">ComplexHeatmap: more examples</a></li>
@@ -56,7 +53,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Put plots horizontally or vertically</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/layout-stack-.R" class="external-link"><code>R/layout-stack-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/layout-stack-.R" class="external-link"><code>R/layout-stack-.R</code></a></small>
       <div class="d-none name"><code>stack_layout.Rd</code></div>
     </div>
 
@@ -69,13 +66,20 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span>,</span>
 <span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggstack</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, action <span class="op">=</span> <span class="cn">NULL</span>, theme <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggstack</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,18 +95,18 @@
 direction of the stack layout.</p></dd>
 
 
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>These dots are for future extensions and must be empty.</p></dd>
-
-
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
-<dd><p>A numeric or a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object of length <code>3</code> indicates
+<dd><p>A numeric or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object of length <code>3</code> indicates
 the relative widths (<code>direction = "horizontal"</code>) / heights (<code>direction = "vertical"</code>).</p></dd>
 
 
-<dt id="arg-action">action<a class="anchor" aria-label="anchor" href="#arg-action"></a></dt>
-<dd><p>A <code><a href="plot_action.html">plot_action()</a></code> object used to define the default plot action
-in the layout.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; A list of plots, ususally the
+ggplot object. Use <code>NULL</code> to indicate an empty spacer.</p></dd>
+
+
+<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
+<dd><p>A string containing one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicates which side of guide legends should be collected. If <code>NULL</code>, no guide legends will be collected. If <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, it will inherit from the parent layout</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>

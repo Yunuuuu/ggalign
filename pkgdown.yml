@@ -8,12 +8,11 @@ articles:
   layout-customize: layout-customize.html
   layout-plot: layout-plot.html
   articles/more-examples: more-examples.html
-  articles/performance: performance.html
   plot-composer: plot-composer.html
   articles/single-heatmap: single-heatmap.html
   special-syntax: special-syntax.html
   stack-layout: stack-layout.html
-last_built: 2024-10-17T07:17Z
+last_built: 2024-10-20T18:01Z
 urls:
   reference: https://yunuuuu.github.io/ggalign/reference
   article: https://yunuuuu.github.io/ggalign/articles
