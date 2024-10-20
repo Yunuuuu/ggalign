@@ -94,7 +94,7 @@ ggheatmap(small_mat) +
     scale_color_brewer(palette = "Dark2")
 ```
 
-![](https://yunuuuu.github.io/ggalign/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
+![](https://yunuuuu.github.io/ggalign/dev/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
 
 ## Compare with other ggplot2 heatmap extension
 
@@ -129,18 +129,20 @@ annotation function in
 ## More Complex Examples
 
 Here are some more advanced visualizations using `ggalign`:
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
+
+![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
+
+![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
 
 ## Further Documentation
 
 - [Heatmap
-  Layout](https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html)
+  Layout](https://yunuuuu.github.io/ggalign/dev/articles/heatmap-layout.html)
 - [Layout
-  Customization](https://yunuuuu.github.io/ggalign/articles/layout-customize.html)
+  Customization](https://yunuuuu.github.io/ggalign/dev/articles/layout-customize.html)
 - [Layout
-  Plot](https://yunuuuu.github.io/ggalign/articles/layout-plot.html)
+  Plot](https://yunuuuu.github.io/ggalign/dev/articles/layout-plot.html)
 - [Stack
-  Layout](https://yunuuuu.github.io/ggalign/articles/stack-layout.html)
+  Layout](https://yunuuuu.github.io/ggalign/dev/articles/stack-layout.html)
 - [Special Syntax for Layout
-  Axis](https://yunuuuu.github.io/ggalign/articles/special-syntax.html)
+  Axis](https://yunuuuu.github.io/ggalign/dev/articles/special-syntax.html)

@@ -1,5 +1,7 @@
 ---
 output: github_document
+params: 
+  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -11,6 +13,10 @@ knitr::opts_chunk$set(
     fig.path = "man/figures/README-",
     out.width = "100%"
 )
+```
+
+```{r echo=FALSE}
+mode <- params$mode
 ```
 
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
@@ -93,7 +99,16 @@ ggheatmap(small_mat) +
     # change color mapping for the dendrogram
     scale_color_brewer(palette = "Dark2")
 ```
-![](https://yunuuuu.github.io/ggalign/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
+
+```{r echo=FALSE}
+url <- switch(
+    mode,
+    devel = "https://yunuuuu.github.io/ggalign/dev",
+    release = "https://yunuuuu.github.io/ggalign"
+)
+```
+
+`r sprintf("![](%s/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)", url)`
 
 ## Compare with other ggplot2 heatmap extension
 `ggalign` offers advantages over extensions like
@@ -122,13 +137,15 @@ function in [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
 
 ## More Complex Examples
 Here are some more advanced visualizations using `ggalign`:
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
+
+`r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)", url)`
+
+`r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)", url)`
 
 ## Further Documentation
 
-- [Heatmap Layout](https://yunuuuu.github.io/ggalign/articles/heatmap-layout.html)
-- [Layout Customization](https://yunuuuu.github.io/ggalign/articles/layout-customize.html)
-- [Layout Plot](https://yunuuuu.github.io/ggalign/articles/layout-plot.html)
-- [Stack Layout](https://yunuuuu.github.io/ggalign/articles/stack-layout.html)
-- [Special Syntax for Layout Axis](https://yunuuuu.github.io/ggalign/articles/special-syntax.html)
+- [Heatmap Layout](`r sprintf("%s/articles/heatmap-layout.html", url)`)
+- [Layout Customization](`r sprintf("%s/articles/layout-customize.html", url)`)
+- [Layout Plot](`r sprintf("%s/articles/layout-plot.html", url)`)
+- [Stack Layout](`r sprintf("%s/articles/stack-layout.html", url)`)
+- [Special Syntax for Layout Axis](`r sprintf("%s/articles/special-syntax.html", url)`)
