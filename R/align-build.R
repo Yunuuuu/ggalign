@@ -77,7 +77,8 @@ align_build <- function(x, panel, index, action,
                 axis.text.x = element_blank(),
                 axis.ticks.x = element_blank()
             )
-        )
+        ),
+        call = .subset2(x, "call")
     )
     list(plot = plot, size = .subset2(x, "size"))
 }
