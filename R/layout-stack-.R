@@ -94,7 +94,7 @@ stack_layout.NULL <- function(data, ...) {
                           nobs, call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
     sizes <- check_stack_sizes(sizes, call = call)
-    action <- check_action(action, call = call)
+    action <- check_action(action, FALSE, call = call)
     methods::new("StackLayout",
         data = data,
         direction = direction,

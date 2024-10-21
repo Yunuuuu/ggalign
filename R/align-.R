@@ -69,7 +69,6 @@ align <- function(align_class, params,
     if (align_override_call(call)) {
         call <- current_call()
     }
-    action <- check_action(action, call = call)
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
@@ -85,12 +84,6 @@ align <- function(align_class, params,
     assert_string(name,
         empty_ok = FALSE, na_ok = TRUE,
         null_ok = TRUE, call = call
-    )
-    action <- deprecate_action(
-        action, snake_class(align_class), plot_data, theme,
-        free_spaces, free_labs,
-        free_guides = free_guides,
-        call = call
     )
 
     # Warn about extra params or missing parameters ---------------

@@ -40,6 +40,13 @@ align_panel <- function(mapping = aes(), size = NULL, action = NULL,
                         plot_data = deprecated(), theme = deprecated(),
                         free_labs = deprecated()) {
     assert_mapping(mapping)
+    action <- check_action(action, FALSE)
+    action <- deprecate_action(
+        action, "align_panel",
+        plot_data, theme,
+        free_spaces, free_labs,
+        free_guides = free_guides
+    )
     align(AlignPanel,
         params = list(mapping = mapping),
         size = size, action = action, data = NULL, free_guides = free_guides,

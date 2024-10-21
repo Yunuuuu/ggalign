@@ -2,6 +2,8 @@
 
 ## features:
 
+* `plot_action()` gains a new argument `inherit` to control the inheritance of `data` argument
+
 * new `ggoncoplot()` function to draw oncoprint
 
 * new `fortity_heatmap()` function to convert any objects for plot with [ggheatmap()]

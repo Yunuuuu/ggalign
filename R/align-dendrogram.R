@@ -96,6 +96,13 @@ align_dendro <- function(mapping = aes(), ...,
             "{.arg reorder_dendrogram} must be a single boolean value or a function"
         )
     }
+    action <- check_action(action, FALSE)
+    action <- deprecate_action(
+        action, "align_dendro",
+        plot_data, theme,
+        free_spaces, free_labs,
+        free_guides = free_guides
+    )
     assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
     cutree <- allow_lambda(cutree)

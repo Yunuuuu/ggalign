@@ -146,7 +146,7 @@ heatmap_layout.default <- function(data, ...) {
                             nobs_list, call = caller_call()) {
     width <- check_size(.width, call = call)
     height <- check_size(.height, call = call)
-    action <- check_action(action, call = call)
+    action <- check_action(action, FALSE, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     assert_bool(filling, call = call)
     assert_bool(set_context, call = call)
@@ -183,7 +183,7 @@ heatmap_layout.default <- function(data, ...) {
         "HeatmapLayout",
         data = data,
         theme = theme, action = action, # used by the layout
-        body_action = default_action(), # used by heatmap body
+        body_action = default_action(TRUE), # used by heatmap body
         # following parameters can be controlled by `active` object.
         width = width, height = height,
         # following parameters used when adding ggheamtap to ggstack

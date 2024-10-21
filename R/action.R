@@ -7,14 +7,19 @@
 #' through the `action` argument in the `align_*()` functions, or it can be
 #' added directly to a plot.
 #'
-#' @param data A function to transform the plot data before rendering. Defaults
-#' to [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
-#' no parent layout is specified, the default is `NULL`, meaning the data won't
-#' be modified. Use this hook to modify the data for all `geoms` after the
-#' layout is created but before rendering by `ggplot2`. The data returned must
-#' be a data frame.
+#' @param data A function to transform the plot data before rendering. Whether
+#' this function is applied after the parent layout's action data depends on
+#' the `inherit` argument. Defaults to [`waiver()`][ggplot2::waiver()], which
+#' directly inherits from the parent layout. If no parent layout is specified,
+#' the default is `NULL`, meaning the data won't be modified.
 #'
-#' @param theme Default plot theme: `r rd_theme()`
+#' Use this hook to modify the data for all `geoms` after the layout is created
+#' but before rendering by `ggplot2`. The returned data must be a data frame.
+#'
+#' @param theme Default plot theme, one of:
+#'   - `NULL`: will inherit from the parent layout directly.
+#'   - [`theme()`][ggplot2::theme]: will be added with the parent layout theme.
+#'     If you want to override the parent layout theme, set `complete=TRUE`.
 #'
 #' **Note:** Axis titles and labels that are parallel to the layout axis will
 #' always be removed by default. For vertical stack layouts, this refers to the
@@ -42,6 +47,11 @@
 #' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
 #' will be aligned.
 #'
+#' @param inherit A single boolean value indicating whether to apply the parent
+#' action `data` first and then apply the specified action `data`. Defaults to
+#' `FALSE` for actions in the layout, `ggpanel()`, and `align_dendro()`, but
+#' `TRUE` for heatmap body and `ggalign()`.
+#'
 #' @return A `plot_action` object.
 #' @examples
 #' # used in the layout, define the default action for all plots in the layout
@@ -62,30 +72,33 @@
 #'
 #' @export
 plot_action <- function(data = NA, theme = NA, guides = NA,
-                        free_spaces = NA, free_labs = NA) {
+                        free_spaces = NA, free_labs = NA,
+                        inherit = NA) {
     if (!identical(data, NA)) data <- check_action_data(data)
     if (!identical(theme, NA)) assert_s3_class(theme, "theme", null_ok = TRUE)
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
     if (!identical(guides, NA)) assert_layout_position(guides)
+    if (!identical(inherit, NA)) assert_bool(inherit)
     structure(
         list(
             data = data,
             theme = theme,
             free_spaces = free_spaces,
             free_labs = free_labs,
-            guides = guides
+            guides = guides,
+            inherit = inherit
         ),
         class = "plot_action"
     )
 }
 
-default_action <- function() {
+default_action <- function(inherit) {
     structure(
         list(
             data = waiver(), theme = NULL,
             free_spaces = waiver(), free_labs = waiver(),
-            guides = waiver()
+            guides = waiver(), inherit = inherit
         ),
         class = "plot_action"
     )
@@ -167,9 +180,24 @@ inherit_theme <- function(theme, parent) {
     parent + theme
 }
 
+inherit_action_data <- function(data, parent, inherit) {
+    if (is.waive(data)) return(parent) # styler: off
+    if (is.null(data)) return(NULL) # styler: off
+    if (is.function(parent) && inherit) {
+        user_data <- data # current action data function
+        data <- function(data) user_data(parent(data))
+    }
+    data
+}
+
 inherit_action <- function(action, parent) {
-    action["data"] <- list(.subset2(action, "data") %|w|%
-        .subset2(parent, "data"))
+    action["data"] <- list(
+        inherit_action_data(
+            .subset2(action, "data"),
+            .subset2(parent, "data"),
+            .subset2(action, "inherit")
+        )
+    )
     action["theme"] <- list(inherit_theme(
         .subset2(action, "theme"),
         .subset2(parent, "theme")

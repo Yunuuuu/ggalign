@@ -6,15 +6,6 @@ rd_values <- function(x, quote = TRUE, code = TRUE, sep = ", ", final = "and") {
 
 rd_layout <- function() "[heatmap_layout()] or [stack_layout()] object"
 
-rd_theme <- function() {
-    paste(
-        "One of:",
-        "- `NULL`: will inherit from the parent layout directly.",
-        "- [`theme()`][ggplot2::theme]: will be added with the parent layout theme.",
-        sep = "\n"
-    )
-}
-
 rd_stack_what <- function() {
     paste(
         "Options include::",

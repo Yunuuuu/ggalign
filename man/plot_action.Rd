@@ -9,21 +9,25 @@ plot_action(
   theme = NA,
   guides = NA,
   free_spaces = NA,
-  free_labs = NA
+  free_labs = NA,
+  inherit = NA
 )
 }
 \arguments{
-\item{data}{A function to transform the plot data before rendering. Defaults
-to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
-no parent layout is specified, the default is \code{NULL}, meaning the data won't
-be modified. Use this hook to modify the data for all \code{geoms} after the
-layout is created but before rendering by \code{ggplot2}. The data returned must
-be a data frame.}
+\item{data}{A function to transform the plot data before rendering. Whether
+this function is applied after the parent layout's action data depends on
+the \code{inherit} argument. Defaults to \code{\link[ggplot2:waiver]{waiver()}}, which
+directly inherits from the parent layout. If no parent layout is specified,
+the default is \code{NULL}, meaning the data won't be modified.
 
-\item{theme}{Default plot theme: One of:
+Use this hook to modify the data for all \code{geoms} after the layout is created
+but before rendering by \code{ggplot2}. The returned data must be a data frame.}
+
+\item{theme}{Default plot theme, one of:
 \itemize{
 \item \code{NULL}: will inherit from the parent layout directly.
 \item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
+If you want to override the parent layout theme, set \code{complete=TRUE}.
 }
 
 \strong{Note:} Axis titles and labels that are parallel to the layout axis will
@@ -51,6 +55,11 @@ which axis titles should be free from alignment. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
 parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
 will be aligned.}
+
+\item{inherit}{A single boolean value indicating whether to apply the parent
+action \code{data} first and then apply the specified action \code{data}. Defaults to
+\code{FALSE} for actions in the layout, \code{ggpanel()}, and \code{align_dendro()}, but
+\code{TRUE} for heatmap body and \code{ggalign()}.}
 }
 \value{
 A \code{plot_action} object.
