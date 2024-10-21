@@ -84,7 +84,7 @@ typical workflow includes:
  ggplot2 elements such as geoms, stats, or scales. 
 
 For documents of the release version, please see <`r params$release`>, for
-documents of the development version, please see <`r params$devel`>
+documents of the development version, please see <`r params$devel`>.
 
 ## Basic example
 Below, we'll walk through a basic example of using `ggalign` to create a heatmap

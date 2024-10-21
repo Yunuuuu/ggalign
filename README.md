@@ -75,7 +75,7 @@ syntax, the typical workflow includes:
 
 For documents of the release version, please see
 <https://yunuuuu.github.io/ggalign>, for documents of the development
-version, please see <https://yunuuuu.github.io/ggalign/dev>
+version, please see <https://yunuuuu.github.io/ggalign/dev>.
 
 ## Basic example
 
