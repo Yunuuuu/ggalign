@@ -147,11 +147,20 @@ ggoncoplot.default <- function(data, mapping = aes(), ...,
             hmanno("t") +
             align_order(order(column_scores, decreasing = TRUE))
     }
-    ans + hmanno(NULL, action = plot_action(data = function(data) {
-        value_list <- strsplit(data$value, split = "[;:,|]", perl = TRUE)
-        data$value <- NULL
-        data <- vec_rep_each(data, list_sizes(value_list))
-        data$value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
-        data
-    }))
+    ans +
+        hmanno(NULL,
+            action = plot_action(data = function(data) {
+                separate_longer_alt(data)
+            })
+        ) +
+        # we always set the default plot action data for the heatmap body
+        plot_action(data = function(data) separate_longer_alt(data))
+}
+
+#' @importFrom vctrs list_sizes vec_rep_each
+separate_longer_alt <- function(data, delim = "[;:,|]") {
+    value_list <- strsplit(data$value, split = delim)
+    data <- vec_rep_each(data, list_sizes(value_list))
+    data$value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
+    data
 }
