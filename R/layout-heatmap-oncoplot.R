@@ -53,7 +53,6 @@
 #'     }) &
 #'     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
 #' @inherit heatmap_layout return
-#' @importFrom vctrs vec_slice list_sizes vec_rep_each
 #' @importFrom ggplot2 aes
 #' @export
 ggoncoplot <- function(data, mapping = aes(), ...,
@@ -77,6 +76,7 @@ ggoncoplot.functon <- ggoncoplot.NULL
 #' @export
 ggoncoplot.formula <- ggoncoplot.functon
 
+#' @importFrom vctrs vec_slice list_sizes vec_rep_each
 #' @importFrom ggplot2 aes
 #' @export
 ggoncoplot.default <- function(data, mapping = aes(), ...,

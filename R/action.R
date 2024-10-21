@@ -7,7 +7,7 @@
 #' through the `action` argument in the `align_*()` functions, or it can be
 #' added directly to a plot.
 #'
-#' @param data A function to transform the plot data before rendering.  Defaults
+#' @param data A function to transform the plot data before rendering. Defaults
 #' to [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
 #' no parent layout is specified, the default is `NULL`, meaning the data won't
 #' be modified. Use this hook to modify the data for all `geoms` after the
@@ -161,6 +161,8 @@ deprecate_action <- function(action, fun, plot_data, theme,
 
 #######################################################
 inherit_theme <- function(theme, parent) {
+    # By default, we'll always complete the theme when building the layout
+    # so parent always exist.
     if (is.null(theme)) return(parent) # styler: off
     parent + theme
 }

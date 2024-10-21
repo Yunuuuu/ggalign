@@ -13,7 +13,7 @@ plot_action(
 )
 }
 \arguments{
-\item{data}{A function to transform the plot data before rendering.  Defaults
+\item{data}{A function to transform the plot data before rendering. Defaults
 to \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
 no parent layout is specified, the default is \code{NULL}, meaning the data won't
 be modified. Use this hook to modify the data for all \code{geoms} after the
