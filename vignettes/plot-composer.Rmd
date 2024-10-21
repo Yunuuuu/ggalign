@@ -36,10 +36,59 @@ significant modification of core code. We attempted to merge them, but the
 author of `patchwork` decided to implement some of these features independently.
 The latest version of patchwork now includes `free_align()`, `free_lab()`, and
 `free_space()` functionality under a single function: `patchwork::free()`. For
-more details, see: https://www.tidyverse.org/blog/2024/09/patchwork-1-3-0/.  
+more details, see: <https://www.tidyverse.org/blog/2024/09/patchwork-1-3-0/>.
 
 The plot composer function in `ggalign` is `align_plots()`, which behaves
-similarly to `cowplot::align_plots()` and `patchwork::wrap_plots()`. 
+similarly to `cowplot::align_plots()` and `patchwork::wrap_plots()`. However,
+you can directly use `align_plots()` with `ggheatmap()` and `ggstack()`,
+ensuring that they align correctly by plot panel. Additionally, `align_plots()`
+can align `pheatmap` and `ComplexHeatmap` objects, although they won't align by
+panel area with ggplot2. 
+
+## Plot Assembly
+We'll start with a few well-known example plots:
+```{r}
+p1 <- ggplot(mtcars) +
+  geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) +
+  geom_boxplot(aes(gear, disp, group = gear))
+p3 <- ggplot(mtcars) +
+  geom_bar(aes(gear)) +
+  facet_wrap(~cyl)
+p4 <- ggplot(mtcars) +
+  geom_bar(aes(carb))
+p5 <- ggplot(mtcars) +
+  geom_violin(aes(cyl, mpg, group = cyl))
+```
+
+Either add the plots as single arguments
+```{r}
+align_plots(p1, p2, p3, p4, p5)
+```
+
+Or use bang-bang-bang to add a list of plots
+```{r}
+align_plots(!!!list(p1, p2, p3), p4, p5)
+```
+
+## Empty area
+You can use `NULL` to indicate the empty area.
+```{r}
+align_plots(p1, NULL, p2, NULL, p3, NULL)
+```
+
+## Controlling the grid
+Like `patchwork`, if no specific layout is provided, `align_plots()` will
+attempt to create a grid that is as square as possible, with each column and row
+taking up equal space: 
+```{r}
+align_plots(p1, p2, p3, p4, ncol = 3)
+```
+
+To adjust the widths of columns, use:
+```{r}
+align_plots(p1, p2, p3, p4, widths = c(2, 1))
+```
 
 ## Guide legends
 By default, `align_plots()` won't collect any guide legends. You can use the
