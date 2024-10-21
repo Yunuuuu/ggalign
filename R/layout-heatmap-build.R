@@ -100,10 +100,10 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
         horizontal_action$free_labs <- gsub("[lr]", "", layout_labs)
         vertical_action$free_labs <- gsub("[tb]", "", layout_labs)
         if (nchar(horizontal_action$free_labs) == 0L) {
-            horizontal_action$free_labs <- NULL
+            horizontal_action["free_labs"] <- list(NULL)
         }
         if (nchar(vertical_action$free_labs) == 0L) {
-            vertical_action$free_labs <- NULL
+            vertical_action["free_labs"] <- list(NULL)
         }
     }
 
@@ -113,10 +113,10 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
         horizontal_action$free_spaces <- gsub("[lr]", "", layout_spaces)
         vertical_action$free_spaces <- gsub("[tb]", "", layout_spaces)
         if (nchar(horizontal_action$free_spaces) == 0L) {
-            horizontal_action$free_spaces <- NULL
+            horizontal_action["free_spaces"] <- list(NULL)
         }
         if (nchar(vertical_action$free_spaces) == 0L) {
-            vertical_action$free_spaces <- NULL
+            vertical_action["free_spaces"] <- list(NULL)
         }
     }
 
