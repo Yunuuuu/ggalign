@@ -86,7 +86,8 @@ added directly to a plot.</p>
 <span>  theme <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  free_spaces <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  free_labs <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  free_labs <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  inherit <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,17 +96,19 @@ added directly to a plot.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A function to transform the plot data before rendering. Defaults
-to <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If
-no parent layout is specified, the default is <code>NULL</code>, meaning the data won't
-be modified. Use this hook to modify the data for all <code>geoms</code> after the
-layout is created but before rendering by <code>ggplot2</code>. The data returned must
-be a data frame.</p></dd>
+<dd><p>A function to transform the plot data before rendering. Whether
+this function is applied after the parent layout's action data depends on
+the <code>inherit</code> argument. Defaults to <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which
+directly inherits from the parent layout. If no parent layout is specified,
+the default is <code>NULL</code>, meaning the data won't be modified.</p>
+<p>Use this hook to modify the data for all <code>geoms</code> after the layout is created
+but before rendering by <code>ggplot2</code>. The returned data must be a data frame.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>Default plot theme: One of:</p><ul><li><p><code>NULL</code>: will inherit from the parent layout directly.</p></li>
-<li><p><code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>: will be added with the parent layout theme.</p></li>
+<dd><p>Default plot theme, one of:</p><ul><li><p><code>NULL</code>: will inherit from the parent layout directly.</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>: will be added with the parent layout theme.
+If you want to override the parent layout theme, set <code>complete=TRUE</code>.</p></li>
 </ul><p><strong>Note:</strong> Axis titles and labels that are parallel to the layout axis will
 always be removed by default. For vertical stack layouts, this refers to the
 x-axis; for horizontal stack layouts, this refers to the y-axis. To display
@@ -136,6 +139,13 @@ which axis titles should be free from alignment. Defaults to
 <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If no
 parent layout, no axis titles will be aligned. If <code>NULL</code>, all axis titles
 will be aligned.</p></dd>
+
+
+<dt id="arg-inherit">inherit<a class="anchor" aria-label="anchor" href="#arg-inherit"></a></dt>
+<dd><p>A single boolean value indicating whether to apply the parent
+action <code>data</code> first and then apply the specified action <code>data</code>. Defaults to
+<code>FALSE</code> for actions in the layout, <code><a href="align_panel.html">ggpanel()</a></code>, and <code><a href="align_dendro.html">align_dendro()</a></code>, but
+<code>TRUE</code> for heatmap body and <code><a href="align_gg.html">ggalign()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
