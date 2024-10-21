@@ -36,6 +36,16 @@
 #' ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 #'
 #' ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
+#'     hmanno("t", size = 0.5) +
+#'     ggalign() +
+#'     geom_bar(aes(.x, fill = value), data = function(x) {
+#'         subset(x, !is.na(value))
+#'     }) +
+#'     hmanno("r", size = 0.5) +
+#'     ggalign() +
+#'     geom_bar(aes(fill = value), orientation = "y", data = function(x) {
+#'         subset(x, !is.na(value))
+#'     }) &
 #'     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
 #' @inherit heatmap_layout return
 #' @importFrom vctrs vec_slice list_sizes vec_rep_each
