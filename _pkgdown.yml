@@ -13,6 +13,7 @@ reference:
   contents:
   - heatmap_layout
   - stack_layout
+  - ggoncoplot
 
 - title: Layout Building
   desc: >
