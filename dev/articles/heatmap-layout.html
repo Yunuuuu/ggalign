@@ -342,21 +342,26 @@ gathered. In the following example, we’ll collect the guide legends only on th
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>  <span class="co"># we only collect guides in the top and bottom side</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># for the heatmap body, we collect guide in the right side</span></span>
+<span>  <span class="co"># we ensure the heatmap body is the active context</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># for the heatmap body, we collect guide in the right side</span></span>
 <span>  <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
-<p>As previously mentioned, the annotation is represented as a <code><a href="../reference/stack_layout.html">stack_layout()</a></code>
-object. Guide legends within the annotation stack are first collected by the
-<code><a href="../reference/stack_layout.html">stack_layout()</a></code> itself and are then passed to the overall heatmap layout for
-further collection. See following example:</p>
+<p>As previously mentioned, the annotation is represented as a stack_layout()
+object. The guide legends within the annotation stack are first collected by the
+stack_layout() itself and then passed to the overall heatmap layout for further
+integration. By default, it inherits the guides arguments from the heatmap
+layout. See following example:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>  <span class="co"># we only collect guides in the top and bottom side in the heatmap layout</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># for the dendrogram in the bottom annotation, we collect guide in the left side</span></span>
+<span>  <span class="co"># we ensure the active context is in the bottom annotation</span></span>
+<span>  <span class="co"># By default, it inherits "guides" argument from the heamtap layout, which</span></span>
+<span>  <span class="co"># means it'll collect "guides" in the top and bottom side</span></span>
 <span>  <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># for the dendrogram in the bottom annotation, we collect guide in the left side</span></span>
 <span>  <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
@@ -364,8 +369,11 @@ further collection. See following example:</p>
 collected by the heatmap layout since the heatmap layout only gathers guides
 from the <code>top</code> and <code>bottom</code>. In this way, the guide legends of the annotation
 stack will be put around the annotation stack layout.</p>
-<p>To override the guide collection behavior for the heatmap annotation, you can use
-the <code>free_guides</code> argument of the <code><a href="../reference/hmanno.html">hmanno()</a></code> function.</p>
+<p>To override this guide collection behavior for the heatmap annotation, you can
+use the <code>free_guides</code> argument of the <code><a href="../reference/hmanno.html">hmanno()</a></code> function. This differs from the
+<code>guides</code> argument in <code><a href="../reference/plot_action.html">plot_action()</a></code>, which controls the behavior for the plots
+in the layout. The <code>free_guides</code> argument specifies which guide legends from the
+annotation stack layout should be collected by the heatmap layout.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>  <span class="co"># we only collect guides in the top and bottom side in the heatmap layout</span></span>
