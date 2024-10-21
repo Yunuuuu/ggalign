@@ -2,6 +2,8 @@
 
 ## features:
 
+* new `ggoncoplot()` function to draw oncoprint
+
 * new `fortity_heatmap()` function to convert any objects for plot with [ggheatmap()]
 
 * `align()`, `stack_active()`, and `hmanno()` functions gain a new argument `action`, and deprecate `free_guides`, `free_spaces`, `plot_data`, `theme`, `free_labs`, and `guides` arguments.
