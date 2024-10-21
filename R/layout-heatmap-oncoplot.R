@@ -36,6 +36,11 @@
 #' ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 #'
 #' ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
+#'     # Note that guide legends from `geom_tile` and `geom_bar` are different.
+#'     # Although they appear similar, the internal mechanisms won't collapse
+#'     # the guide legends. Therefore, we remove the guide legends from
+#'     # `geom_tile`.
+#'     guides(fill = "none") +
 #'     hmanno("t", size = 0.5) +
 #'     ggalign() +
 #'     geom_bar(aes(.x, fill = value), data = function(x) {
