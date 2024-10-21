@@ -184,6 +184,7 @@ inherit_action <- function(action, parent) {
 plot_add_action <- function(plot, action, theme = NULL, call = caller_call()) {
     # by default, we won't change the data
     if (!is.null(plot_data <- .subset2(action, "data") %|w|% NULL)) {
+        # To be compatible with ggplot2, it must be a data frame
         if (!is.data.frame(data <- plot_data(.subset2(plot, "data")))) {
             cli::cli_abort(
                 "plot action {.arg data} must return a {.cls data.frame}",

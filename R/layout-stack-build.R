@@ -41,8 +41,9 @@ stack_build <- function(stack, action = stack@action,
     has_bottom <- FALSE
 
     # for `free_spaces`, if we have applied it in the whole stack layout
-    # we shouln't use it for a single plot. this applies for the heamtap
-    # annotation stack (`position` is not `NULL`).
+    # we shouln't use it for a single plot. Otherwise, the guide legends
+    # collected by the layout will overlap with the plot axis.
+    # this occurs in the heamtap annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(action, "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
     for (plot in plots) {
