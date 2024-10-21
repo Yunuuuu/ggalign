@@ -11,7 +11,7 @@ stack_build <- function(stack, action = stack@action,
                         extra_panel = NULL, extra_index = NULL) {
     if (is.na(nobs <- get_nobs(stack))) return(NULL) # styler: off
     direction <- stack@direction
-    position <- .subset2(stack@annotation, "position")
+    position <- .subset2(stack@heatmap, "position")
     panel <- get_panel(stack) %||% factor(rep_len(1L, nobs))
     index <- get_index(stack) %||% reorder_index(panel)
 

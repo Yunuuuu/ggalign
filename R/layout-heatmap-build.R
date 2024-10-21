@@ -164,14 +164,14 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
             )
             # whether we should override the `guides` collection for the whole
             # annotation stack
-            free_guides <- .subset2(stack@annotation, "free_guides")
+            free_guides <- .subset2(stack@heatmap, "free_guides")
             if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
             # we also apply the `free_spaces` for the whole annotation stack
             free_spaces <- .subset2(stack_action, "free_spaces") %|w|% NULL
             if (!is.null(free_spaces)) {
                 plot <- free_space(free_border(plot, free_spaces), free_spaces)
             }
-            size <- .subset2(stack@annotation, "size")
+            size <- .subset2(stack@heatmap, "size")
         } else {
             size <- NULL
         }

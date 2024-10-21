@@ -239,7 +239,7 @@ stack_add_align <- function(object, stack, object_name) {
     layout <- initialize_align(
         object,
         direction = stack@direction,
-        position = .subset2(stack@annotation, "position"),
+        position = .subset2(stack@heatmap, "position"),
         layout_data = stack@data,
         layout_panel = get_panel(stack),
         layout_index = get_index(stack),

@@ -40,13 +40,13 @@ methods::setClass(
     contains = "Layout",
     list(
         data = "ANY", plots = "list", direction = "character",
-        annotation = "list", # used by heatmap annotation
+        heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
         panel = "ANY", index = "ANY", nobs = "ANY"
     ),
     prototype = list(
         plots = list(),
-        annotation = list( # used by heatmap annotation
+        heatmap = list( # used by heatmap annotation
             position = NULL, # annotation position
             size = unit(NA, "null"), # total annotation size
             free_guides = waiver()
