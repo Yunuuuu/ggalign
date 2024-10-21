@@ -258,21 +258,26 @@ You can also apply the `plot_action()` function directly to specific plots:
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side
   hmanno(action = plot_action(guides = "tb")) +
-  # for the heatmap body, we collect guide in the right side
+  # we ensure the heatmap body is the active context
   hmanno() +
+  # for the heatmap body, we collect guide in the right side
   plot_action(guides = "r")
 ```
 
-As previously mentioned, the annotation is represented as a `stack_layout()`
-object. Guide legends within the annotation stack are first collected by the
-`stack_layout()` itself and are then passed to the overall heatmap layout for
-further collection. See following example:
+As previously mentioned, the annotation is represented as a stack_layout()
+object. The guide legends within the annotation stack are first collected by the
+stack_layout() itself and then passed to the overall heatmap layout for further
+integration. By default, it inherits the guides arguments from the heatmap
+layout. See following example: 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side in the heatmap layout
   hmanno(action = plot_action(guides = "tb")) +
-  # for the dendrogram in the bottom annotation, we collect guide in the left side
+  # we ensure the active context is in the bottom annotation
+  # By default, it inherits "guides" argument from the heamtap layout, which
+  # means it'll collect "guides" in the top and bottom side
   hmanno("b") +
+  # for the dendrogram in the bottom annotation, we collect guide in the left side
   plot_action(guides = "l")
 ```
 
@@ -281,8 +286,11 @@ collected by the heatmap layout since the heatmap layout only gathers guides
 from the `top` and `bottom`. In this way, the guide legends of the annotation
 stack will be put around the annotation stack layout.
 
-To override the guide collection behavior for the heatmap annotation, you can use
-the `free_guides` argument of the `hmanno()` function.
+To override this guide collection behavior for the heatmap annotation, you can
+use the `free_guides` argument of the `hmanno()` function. This differs from the
+`guides` argument in `plot_action()`, which controls the behavior for the plots
+in the layout. The `free_guides` argument specifies which guide legends from the
+annotation stack layout should be collected by the heatmap layout. 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side in the heatmap layout
