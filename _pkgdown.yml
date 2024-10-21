@@ -80,6 +80,7 @@ reference:
   - layer_order
   - ggalignGrob
   - ggalign_stat
+  - fortify_heatmap
   - align
   - hclust2
   - order2

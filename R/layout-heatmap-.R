@@ -104,16 +104,6 @@ methods::setClass(
 #' @rdname heatmap_layout
 ggheatmap <- heatmap_layout
 
-#' @importFrom ggplot2 waiver
-#' @export
-heatmap_layout.matrix <- function(data, ...) {
-    .heatmap_layout(
-        data = data, ...,
-        nobs_list = list(x = ncol(data), y = nrow(data)),
-        call = current_call()
-    )
-}
-
 #' @export
 heatmap_layout.NULL <- function(data, ...) {
     .heatmap_layout(
@@ -121,6 +111,9 @@ heatmap_layout.NULL <- function(data, ...) {
         ..., call = current_call()
     )
 }
+
+#' @export
+heatmap_layout.functon <- heatmap_layout.NULL
 
 #' @export
 heatmap_layout.formula <- function(data, ...) {
@@ -131,25 +124,12 @@ heatmap_layout.formula <- function(data, ...) {
 }
 
 #' @export
-heatmap_layout.functon <- heatmap_layout.NULL
-
-#' @importFrom rlang try_fetch
-#' @export
 heatmap_layout.default <- function(data, ...) {
-    call <- current_call()
-    data <- try_fetch(
-        as.matrix(data),
-        error = function(cnd) {
-            cli::cli_abort(paste(
-                "{.arg data} must be a matrix-like object but you provide",
-                "{.obj_type_friendly {data}}"
-            ), call = call)
-        }
-    )
+    data <- fortify_heatmap(data)
     .heatmap_layout(
         data = data, ...,
         nobs_list = list(x = ncol(data), y = nrow(data)),
-        call = call
+        call = current_call()
     )
 }
 
