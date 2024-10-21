@@ -4,7 +4,7 @@
 #'
 #' @param data A numeric or character vector, a data frame, and any other data
 #' which can be converted into a matrix. Simple vector will be converted into a
-#' one column matrix.
+#' one column matrix. If `missing`, will inherit from the parent layout.
 #' @param mapping Default list of aesthetic mappings to use for plot. In
 #' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
 #' @param ... Additional arguments passed to

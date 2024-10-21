@@ -38,7 +38,7 @@ ggheatmap(
 \arguments{
 \item{data}{A numeric or character vector, a data frame, and any other data
 which can be converted into a matrix. Simple vector will be converted into a
-one column matrix.}
+one column matrix. If \code{missing}, will inherit from the parent layout.}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot. In
 addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
