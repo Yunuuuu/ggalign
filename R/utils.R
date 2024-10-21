@@ -177,6 +177,8 @@ add_class <- function(x, ...) {
     x
 }
 
+na_if <- function(x, y) ifelse(is.na(x), y, x)
+
 ###########################################################
 switch_position <- function(position, x, y) {
     switch(position,

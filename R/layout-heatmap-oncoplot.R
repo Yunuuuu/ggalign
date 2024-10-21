@@ -77,6 +77,7 @@ ggoncoplot.functon <- ggoncoplot.NULL
 #' @export
 ggoncoplot.formula <- ggoncoplot.functon
 
+#' @importFrom ggplot2 aes
 #' @export
 ggoncoplot.default <- function(data, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
@@ -96,7 +97,10 @@ ggoncoplot.default <- function(data, mapping = aes(), ...,
     data[data == ""] <- NA_character_
 
     # set mapping for width and height
-    default_mapping <- aes(width = .data$width, height = .data$height)
+    default_mapping <- aes(
+        width = na_if(map_width[.data$value], 1),
+        height = na_if(map_height[.data$value], 1)
+    )
     if (!is.null(map_width)) {
         if (!rlang::is_named(map_width) || !is.numeric(map_width)) {
             cli::cli_abort("{.arg map_width} must be a named numeric")
@@ -148,14 +152,6 @@ ggoncoplot.default <- function(data, mapping = aes(), ...,
         data$value <- NULL
         data <- vec_rep_each(data, list_sizes(value_list))
         data$value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
-        if (!is.null(map_width)) {
-            width <- map_width[data$value]
-            data$width <- ifelse(is.na(width), 1, width)
-        }
-        if (!is.null(map_height)) {
-            height <- map_height[data$value]
-            data$height <- ifelse(is.na(height), 1, height)
-        }
         data
     }))
 }
