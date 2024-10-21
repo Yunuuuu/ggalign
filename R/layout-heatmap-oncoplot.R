@@ -76,7 +76,7 @@ ggoncoplot.functon <- ggoncoplot.NULL
 #' @export
 ggoncoplot.formula <- ggoncoplot.functon
 
-#' @importFrom vctrs vec_slice list_sizes vec_rep_each
+#' @importFrom vctrs vec_slice
 #' @importFrom ggplot2 aes
 #' @export
 ggoncoplot.default <- function(data, mapping = aes(), ...,
