@@ -23,12 +23,12 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
                     cli::cli_abort(c(paste(
                         "The RStudio {.field Plots} window may be",
                         "too small to show", error_name
-                    ), i = "Please make the window larger."))
+                    ), i = "Please make the window larger."), parent = e)
                 } else {
                     cli::cli_abort(c(
                         "The viewport may be too small to show {error_name}.",
                         i = "Please make the window larger."
-                    ))
+                    ), parent = e)
                 }
             }
             cnd_signal(e)

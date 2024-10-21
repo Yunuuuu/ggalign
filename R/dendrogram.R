@@ -31,7 +31,6 @@
 #' @export
 hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                     use_missing = "pairwise.complete.obs") {
-    call <- current_call() # used for message
     method <- allow_lambda(method)
     if (!is_string(method) && !is.function(method)) {
         ans <- try_fetch(
@@ -41,7 +40,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                     "{.arg method} can only be a {.cls string},",
                     "{.cls function} or an object which can be coerced to",
                     "{.cls hclust}."
-                ), call = call)
+                ), parent = cnd)
             }
         )
         return(ans)
@@ -61,7 +60,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                 cli::cli_abort(paste(
                     "{.arg method} must return an object which",
                     "can be coerced to {.cls hclust}"
-                ), call = call)
+                ), parent = cnd)
             }
         )
     }

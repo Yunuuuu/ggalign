@@ -96,14 +96,13 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         data <- switch_direction(direction, stack_data, t(stack_data))
         if (is.function(heatmap_data)) {
             data <- heatmap_data(data)
-            call <- current_call()
             data <- try_fetch(
                 as.matrix(data),
                 error = function(cnd) {
                     cli::cli_abort(paste(
                         "{.arg data} in {.var {object_name}} must return",
                         "a matrix-like object"
-                    ), call = call)
+                    ), parent = cnd)
                 }
             )
         }
