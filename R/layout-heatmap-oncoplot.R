@@ -54,7 +54,7 @@
 #' @inherit heatmap_layout return
 #' @importFrom ggplot2 aes
 #' @export
-ggoncoplot <- function(data, mapping = aes(), ...,
+ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        map_width = NULL, map_height = NULL,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
@@ -66,7 +66,7 @@ ggoncoplot <- function(data, mapping = aes(), ...,
 }
 
 #' @export
-ggoncoplot.NULL <- function(data, mapping = aes(), ...) {
+ggoncoplot.NULL <- function(data = NULL, mapping = aes(), ...) {
     cli::cli_abort("{.fn ggoncoplot} only accept a valid character matrix")
 }
 
@@ -80,7 +80,7 @@ ggoncoplot.formula <- ggoncoplot.functon
 #' @importFrom ggplot2 aes
 #' @export
 #' @rdname ggoncoplot
-ggoncoplot.default <- function(data, mapping = aes(), ...,
+ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,

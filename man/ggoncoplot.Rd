@@ -6,7 +6,7 @@
 \title{Create \code{OncoPrint} Visualizations from Genetic Alteration Data}
 \usage{
 ggoncoplot(
-  data,
+  data = NULL,
   mapping = aes(),
   ...,
   map_width = NULL,
@@ -25,7 +25,7 @@ ggoncoplot(
 )
 
 \method{ggoncoplot}{default}(
-  data,
+  data = NULL,
   mapping = aes(),
   ...,
   map_width = NULL,
