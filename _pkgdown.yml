@@ -80,6 +80,7 @@ reference:
   contents:
   - layer_order
   - ggalignGrob
+  - ggalign_attr
   - ggalign_stat
   - fortify_heatmap
   - align

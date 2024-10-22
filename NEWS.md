@@ -2,6 +2,8 @@
 
 ## features:
 
+* now, a special attribute `ggalign` can be used to pass additional informations across the building procee, and a new function `ggalign_attr()` can be used to extract the data.
+
 * new `fortify_heatmap()` method for `MAF` object.
 
 * `plot_action()` gains a new argument `inherit` to control the inheritance of `data` argument
