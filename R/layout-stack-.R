@@ -7,7 +7,7 @@
 #' @param data A numeric or character vector, a data frame, or a matrix.
 #' @param direction A string of `"horizontal"` or `"vertical"`, indicates the
 #' direction of the stack layout.
-#' @inheritParams rlang::args_dots_empty
+#' @param ... Additional arguments passed to [`fortify_stack()`].
 #' @param sizes A numeric or a [unit][grid::unit] object of length `3` indicates
 #' the relative widths (`direction = "horizontal"`) / heights (`direction =
 #' "vertical"`).
@@ -16,25 +16,16 @@
 #' @examples
 #' ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
 #' @export
-stack_layout <- function(data, direction = NULL, ..., sizes = NA,
+stack_layout <- function(data = NULL, direction = NULL, ..., sizes = NA,
                          action = NULL, theme = NULL) {
-    rlang::check_dots_empty()
-    if (missing(data)) {
-        .stack_layout(
-            data = NULL, nobs = NULL,
-            direction = direction, sizes = sizes,
-            action = action, theme = theme,
-            call = current_call()
-        )
-    } else {
-        UseMethod("stack_layout")
-    }
+    UseMethod("stack_layout")
 }
 
 # Used to place multiple objects in one axis
 # usually the heatmap annotations
-#' @keywords internal
 #' @importFrom grid unit
+#' @importFrom ggplot2 waiver
+#' @keywords internal
 methods::setClass(
     "StackLayout",
     contains = "Layout",
@@ -60,41 +51,17 @@ methods::setClass(
 ggstack <- stack_layout
 
 #' @export
-stack_layout.matrix <- function(data, ...) {
-    .stack_layout(
-        data = data, nobs = nrow(data), ...,
-        call = current_call()
-    )
-}
-
-#' @export
-stack_layout.data.frame <- stack_layout.matrix
-
-#' @export
-stack_layout.numeric <- function(data, ...) {
-    .stack_layout(
-        data = as.matrix(data), nobs = length(data), ...,
-        call = current_call()
-    )
-}
-
-#' @export
-stack_layout.character <- stack_layout.numeric
-
-#' @export
-stack_layout.NULL <- function(data, ...) {
-    .stack_layout(data = data, nobs = NULL, ..., call = current_call())
-}
-
-#' @importFrom rlang caller_call
-#' @importFrom ggplot2 waiver
-#' @importFrom grid unit
-.stack_layout <- function(data, direction = NULL, sizes = NA,
-                          action = NULL, theme = NULL,
-                          nobs, call = caller_call()) {
+stack_layout.default <- function(data = NULL, direction = NULL, ..., sizes = NA,
+                                 action = NULL, theme = NULL) {
+    data <- fortify_stack(data = data, ...)
     direction <- match.arg(direction, c("horizontal", "vertical"))
     sizes <- check_stack_sizes(sizes, call = call)
     action <- check_action(action, FALSE, call = call)
+    if (is.null(data)) {
+        nobs <- NULL
+    } else {
+        nobs <- NROW(data)
+    }
     methods::new("StackLayout",
         data = data,
         direction = direction,
@@ -103,17 +70,6 @@ stack_layout.NULL <- function(data, ...) {
         # stack, which won't be used by heatmap annotation.
         sizes = sizes, nobs = nobs
     )
-}
-
-#' @export
-stack_layout.default <- function(data, ...) {
-    cli::cli_abort(c(
-        paste(
-            "{.arg data} must be a numeric or character vector,",
-            "a data frame, or a matrix."
-        ),
-        i = "You have provided {.obj_type_friendly {data}}"
-    ))
 }
 
 #' Reports whether `x` is a `StackLayout` object

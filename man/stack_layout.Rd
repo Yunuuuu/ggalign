@@ -6,7 +6,7 @@
 \title{Put plots horizontally or vertically}
 \usage{
 stack_layout(
-  data,
+  data = NULL,
   direction = NULL,
   ...,
   sizes = NA,
@@ -14,7 +14,14 @@ stack_layout(
   theme = NULL
 )
 
-ggstack(data, direction = NULL, ..., sizes = NA, action = NULL, theme = NULL)
+ggstack(
+  data = NULL,
+  direction = NULL,
+  ...,
+  sizes = NA,
+  action = NULL,
+  theme = NULL
+)
 }
 \arguments{
 \item{data}{A numeric or character vector, a data frame, or a matrix.}
@@ -22,7 +29,7 @@ ggstack(data, direction = NULL, ..., sizes = NA, action = NULL, theme = NULL)
 \item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
 direction of the stack layout.}
 
-\item{...}{These dots are for future extensions and must be empty.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_stack]{fortify_stack()}}.}
 
 \item{sizes}{A numeric or a \link[grid:unit]{unit} object of length \code{3} indicates
 the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
