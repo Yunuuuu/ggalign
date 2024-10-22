@@ -2,6 +2,8 @@
 
 ## features:
 
+* new `fortify_stack()` function to convert any objects for plot with [ggstack()]
+
 * now, a special attribute `ggalign` can be used to pass additional informations across the building process, and a new function `ggalign_attr()` can be used to extract the data.
 
 * new `fortify_heatmap()` method for `MAF` object.

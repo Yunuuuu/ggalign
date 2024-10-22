@@ -83,6 +83,7 @@ reference:
   - ggalign_attr
   - ggalign_stat
   - fortify_heatmap
+  - fortify_stack
   - align
   - hclust2
   - order2
