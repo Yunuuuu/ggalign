@@ -72,7 +72,8 @@
 <span>  <span class="va">...</span>,</span>
 <span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_top <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  remove_empty_samples <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  remove_empty_samples <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  collapse_vars <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,14 +98,30 @@
 
 
 <dt id="arg-remove-empty-samples">remove_empty_samples<a class="anchor" aria-label="anchor" href="#arg-remove-empty-samples"></a></dt>
-<dd><p>A single boolean value indicates whether to drop
+<dd><p>A single boolean value indicating whether to drop
 samples without any genomic alterations.</p></dd>
+
+
+<dt id="arg-collapse-vars">collapse_vars<a class="anchor" aria-label="anchor" href="#arg-collapse-vars"></a></dt>
+<dd><p>A single boolean value indicating whether to collapse
+multiple alterations in the same sample and gene into a single value
+<code>"Multi_Hit"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A matrix used by <code><a href="heatmap_layout.html">ggheatmap()</a></code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="ggalign-attributes">ggalign attributes<a class="anchor" aria-label="anchor" href="#ggalign-attributes"></a></h2>
+
+
+<ul><li><p><code>gene_anno</code>: gene summary informations</p></li>
+<li><p><code>sample_anno</code>: sample summary informations</p></li>
+<li><p><code>n_genes</code>: Total of genes</p></li>
+<li><p><code>n_samples</code>: Total of samples</p></li>
+<li><p><code>breaks</code>: factor levels of <code>Variant_Classification</code>, if <code>collapse_vars = TRUE</code>, <code>"Multi_Hit"</code> will be added in the end.</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
