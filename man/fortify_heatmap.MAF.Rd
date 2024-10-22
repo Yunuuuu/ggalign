@@ -9,7 +9,8 @@
   ...,
   genes = NULL,
   n_top = NULL,
-  remove_empty_samples = TRUE
+  remove_empty_samples = TRUE,
+  collapse_vars = FALSE
 )
 }
 \arguments{
@@ -21,8 +22,12 @@
 
 \item{n_top}{A single number indicates how many top genes to be drawn.}
 
-\item{remove_empty_samples}{A single boolean value indicates whether to drop
+\item{remove_empty_samples}{A single boolean value indicating whether to drop
 samples without any genomic alterations.}
+
+\item{collapse_vars}{A single boolean value indicating whether to collapse
+multiple alterations in the same sample and gene into a single value
+\code{"Multi_Hit"}.}
 }
 \value{
 A matrix used by \code{\link[=ggheatmap]{ggheatmap()}}.
@@ -30,3 +35,14 @@ A matrix used by \code{\link[=ggheatmap]{ggheatmap()}}.
 \description{
 Build data for the heatmap layout
 }
+\section{ggalign attributes}{
+
+\itemize{
+\item \code{gene_anno}: gene summary informations
+\item \code{sample_anno}: sample summary informations
+\item \code{n_genes}: Total of genes
+\item \code{n_samples}: Total of samples
+\item \code{breaks}: factor levels of \code{Variant_Classification}, if \code{collapse_vars = TRUE}, \code{"Multi_Hit"} will be added in the end.
+}
+}
+

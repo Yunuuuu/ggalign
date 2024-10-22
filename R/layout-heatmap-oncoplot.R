@@ -156,8 +156,10 @@ ggoncoplot.default <- function(data, mapping = aes(), ...,
     }
     ans + hmanno(NULL, action = plot_action(data = function(data) {
         value_list <- strsplit(data$value, split = "[;:,|]")
+        lvls <- ggalign_attr(data, "breaks")
         data <- vec_rep_each(data, list_sizes(value_list))
-        data$value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
+        value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
+        if (!is.null(lvls)) data$value <- factor(value, levels = lvls)
         data
     }))
 }

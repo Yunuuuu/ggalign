@@ -181,11 +181,17 @@ inherit_theme <- function(theme, parent) {
 }
 
 inherit_action_data <- function(data, parent, inherit) {
-    if (is.waive(data)) return(parent) # styler: off
+    if (is.waive(data)) return(parent) # styler: off # nolint
     if (is.null(data)) return(NULL) # styler: off
+    # if data is a function, we check if we should call parent first then call
+    # itself
     if (is.function(parent) && inherit) {
         user_data <- data # current action data function
-        data <- function(data) user_data(parent(data))
+        data <- function(data) {
+            # we always restore the `ggalign` attribute
+            ans <- restore_attr_ggalign(parent(data), data)
+            user_data(ans)
+        }
     }
     data
 }

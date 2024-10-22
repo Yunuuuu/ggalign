@@ -85,7 +85,8 @@ AlignGG <- ggproto("AlignGG", Align,
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
         if (is.matrix(data)) {
-            data <- melt_matrix(data)
+            ans <- melt_matrix(data)
+            data <- restore_attr_ggalign(ans, data)
         } else {
             if (!is.null(old_rownames <- rownames(data))) {
                 data$.row_names <- old_rownames

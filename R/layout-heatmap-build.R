@@ -325,5 +325,5 @@ heatmap_build_data <- function(matrix, row_panel, row_index,
             order = FALSE
         )
     }
-    ans
+    restore_attr_ggalign(ans, matrix)
 }

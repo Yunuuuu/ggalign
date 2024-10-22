@@ -92,8 +92,11 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
             ))
         }
         # always convert into a matrix
-        stack_data <- as.matrix(stack_data)
-        data <- switch_direction(direction, stack_data, t(stack_data))
+        data <- switch_direction(
+            direction, 
+            as.matrix(stack_data),
+            t(as.matrix(stack_data))
+        )
         if (is.function(heatmap_data)) {
             data <- heatmap_data(data)
             data <- try_fetch(
@@ -106,7 +109,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
                 }
             )
         }
-        object@data <- data
+        object@data <- restore_attr_ggalign(data, stack_data)
         # we should sync the `nobs` of the vertical axis
         if (is_horizontal(direction)) {
             object <- set_nobs(object, axis = "x", value = ncol(data))

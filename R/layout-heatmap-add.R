@@ -72,7 +72,9 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
     # initialize the annotation stack ------------
     if (is.null(stack <- slot(heatmap, position))) {
         data <- heatmap@data
-        if (!is_horizontal(direction)) data <- t(data)
+        if (!is_horizontal(direction)) {
+            data <- restore_attr_ggalign(t(data), data)
+        }
         stack <- stack_layout(data = data, direction = direction)
         stack@heatmap$position <- position
         stack <- set_panel(stack, value = get_panel(heatmap, axis))

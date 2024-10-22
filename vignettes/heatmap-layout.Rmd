@@ -199,7 +199,7 @@ ggheatmap(small_mat) +
 All `align_*()` functions that add plots in the annotation stack have a `size`
 argument to control the relative width (for left and right annotations) or
 height (for top and bottom annotations) of the single plot in the annotation
-stack. 
+stack.
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +

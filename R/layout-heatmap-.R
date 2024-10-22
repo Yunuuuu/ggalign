@@ -116,6 +116,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    guides = deprecated()) {
     # prepare data --------------------------------------
     data <- fortify_heatmap(data = data, ...)
+
     # check arguments -----------------------------------
     width <- check_size(width)
     height <- check_size(height)

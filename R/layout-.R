@@ -292,6 +292,41 @@ ggalign_stat.Align <- function(x, ...) {
     .subset2(x, "statistics")
 }
 
+####################################################
+# we keep an attribute `ggalign` across all data
+# this is used to pass additional annotation informations
+restore_attr_ggalign <- function(data, original) {
+    if (is.null(attr(data, "ggalign")) &&
+        !is.null(ggalign_params <- attr(original, "ggalign"))) {
+        attr(data, "ggalign") <- ggalign_params
+    }
+    data
+}
+
+#' Get a field data from the `ggalign` attribute
+#'
+#' When rendering the layout with `r rd_layout()`, a special attribute is kept
+#' in the data called `"ggalign"`, which can be used to pass additional
+#' information for the input data. This function helps extract data from that
+#' attribute. This is particularly useful in the `data` function for
+#' transforming the parent layout data.
+#'
+#' @param x Input data for the function used to transform the layout data.
+#' @param field A single string indicating which data to use. Typically, this
+#' list of data is attached by the [fortify_heatmap()] function (see the
+#' `ggalign attributes` section in the documentation). Check
+#' [fortify_heatmap.MAF()] for examples.
+#'
+#' @return The requested data field or `NULL` if not found.
+#'
+#' @export
+ggalign_attr <- function(x, field) {
+    if (is.null(x <- attr(x, "ggalign"))) {
+        return(NULL)
+    }
+    .subset2(x, field)
+}
+
 ############################################################
 ############################################################
 # layout should be one of "index", "nobs", "panel"

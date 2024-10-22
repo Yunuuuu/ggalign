@@ -24,7 +24,9 @@ initialize_align <- function(object, direction, position,
             }
             data <- layout_data
         } else {
-            data <- align_setup_data(input_data, layout_data)
+            data <- restore_attr_ggalign(
+                align_setup_data(input_data, layout_data), layout_data
+            )
             # we always regard rows as the observations
             if (is.null(nobs)) {
                 nobs <- NROW(data)
