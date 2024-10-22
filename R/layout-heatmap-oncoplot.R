@@ -10,7 +10,7 @@
 #' `ggoncoplot()` is a wrapper around the [ggheatmap()] function, designed to
 #' simplify the creation of `OncoPrint`-style visualizations. The function
 #' automatically processes the input character matrix by splitting the encoded
-#' alterations (delimited by `[;:,|]`) into individual genomic events and
+#' alterations (delimited by regex `[;:,|]`) into individual genomic events and
 #' unnesting the columns for visualization.
 #'
 #' Additionally, a predefined reordering function, adapted from
@@ -18,7 +18,7 @@
 #' the organization of the alterations.
 #'
 #' @param data A character matrix which encodes the alterations, you can use
-#' `[;:,|]` to separate multiple alterations.
+#' regex `[;:,|]` to separate multiple alterations.
 #' @inheritParams heatmap_layout
 #' @param map_width,map_height A named numeric value defines the width/height of
 #' each alterations.
