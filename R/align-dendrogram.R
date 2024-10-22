@@ -372,14 +372,17 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 mapping, aes(x = .data$x, y = .data$y)
             )
         ) +
-            rlang::inject(ggplot2::geom_segment(
-                mapping = aes(
-                    x = .data$x, y = .data$y,
-                    xend = .data$xend, yend = .data$yend
-                ),
-                !!!segment_params,
-                stat = "identity"
-            )) +
+            rlang::inject(
+                ggplot2::geom_segment(
+                    mapping = aes(
+                        x = .data$x, y = .data$y,
+                        xend = .data$xend, yend = .data$yend
+                    ),
+                    !!!segment_params,
+                    stat = "identity",
+                    data = function(data) ggalign_attr(data, "edge")
+                )
+            ) +
             switch_direction(
                 direction,
                 ggplot2::labs(x = "height"),
@@ -459,9 +462,9 @@ AlignDendro <- ggproto("AlignDendro", Align,
             node <- rename(node, c(x = "y", y = "x"))
         }
         plot <- .subset2(self, "plot")
-        plot$data <- node
-        # edge layer should be in the first
-        plot$layers[[1L]]$data <- edge
+        # we do some tricks, since ggplot2 won't remove the attributes
+        # we attach the `edge` data in `ggalign` attribute
+        plot$data <- structure(node, ggalign = list(edge = edge))
         position <- .subset2(self, "position")
         if (is.null(position) || !isTRUE(plot$coordinates$default)) {
             # if the dendrogram is in a normal stack layout
