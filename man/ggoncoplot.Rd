@@ -2,6 +2,7 @@
 % Please edit documentation in R/layout-heatmap-oncoplot.R
 \name{ggoncoplot}
 \alias{ggoncoplot}
+\alias{ggoncoplot.default}
 \title{Create \code{OncoPrint} Visualizations from Genetic Alteration Data}
 \usage{
 ggoncoplot(
@@ -11,7 +12,35 @@ ggoncoplot(
   map_width = NULL,
   map_height = NULL,
   reorder_row = reorder_column,
-  reorder_column = TRUE
+  reorder_column = TRUE,
+  width = NA,
+  height = NA,
+  action = NULL,
+  theme = NULL,
+  filling = waiver(),
+  set_context = TRUE,
+  order = NULL,
+  name = NULL,
+  guides = deprecated()
+)
+
+\method{ggoncoplot}{default}(
+  data,
+  mapping = aes(),
+  ...,
+  map_width = NULL,
+  map_height = NULL,
+  reorder_row = reorder_column,
+  reorder_column = TRUE,
+  width = NA,
+  height = NA,
+  action = NULL,
+  theme = NULL,
+  filling = waiver(),
+  set_context = TRUE,
+  order = NULL,
+  name = NULL,
+  guides = deprecated()
 )
 }
 \arguments{
@@ -21,40 +50,7 @@ ggoncoplot(
 \item{mapping}{Default list of aesthetic mappings to use for plot. In
 addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 
-\item{...}{
-  Arguments passed on to \code{\link[=heatmap_layout]{heatmap_layout}}
-  \describe{
-    \item{\code{.width,.height}}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
-    \item{\code{action}}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
-in the layout.}
-    \item{\code{filling}}{A boolean value indicating whether to fill the heatmap. If you
-wish to customize the filling style, set this to \code{FALSE}.
-
-By default, the classic heatmap colour scheme
-\code{\link[ggplot2:scale_gradient]{scale_fill_gradient2(low = "blue", high = "red")}}
-is utilized for continuous values.
-You can use the option
-\code{"ggalign.heatmap_continuous_fill"} or
-\code{"ggalign.heatmap_discrete_fill"} to modify the
-default heatmap body fill color scale. See
-\code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
-\code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for option setting
-details.}
-    \item{\code{guides}}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which side of guide legends should be collected. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout.  If
-there is no parent layout, or if \code{NULL} is provided, no guides will be
-collected.}
-    \item{\code{theme}}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
-\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
-\code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
-    \item{\code{set_context}}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
-    \item{\code{order}}{An single integer for the plot area order.}
-    \item{\code{name}}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
-  }}
+\item{...}{Additional arguments passed to \code{\link[=fortify_heatmap]{fortify_heatmap()}}.}
 
 \item{map_width, map_height}{A named numeric value defines the width/height of
 each alterations.}
@@ -62,6 +58,53 @@ each alterations.}
 \item{reorder_row, reorder_column}{A boolean value indicating whether to
 reorder the rows/columns based on the frequency or characteristics of the
 alterations.}
+
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
+
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
+in the layout.}
+
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
+\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
+\code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
+
+\item{filling}{A single string of
+\code{"raster"} or \code{"tile"} to indicate the filling
+style. By default, \code{waiver()} is used, which means that if the input matrix
+has more than 20,000 cells (\code{nrow * ncol > 20000}),
+\code{\link[ggplot2:geom_tile]{geom_raster()}} will be used for performance
+efficiency; for smaller matrices, \code{\link[ggplot2:geom_tile]{geom_tile()}} will be
+used. To customize the filling style, set this to \code{NULL}.
+
+For backward compatibility, a single boolean value is acceptable: \code{TRUE}
+means \code{waiver()}, and \code{FALSE} means \code{NULL}.
+
+By default, the classic heatmap color scheme
+\code{\link[ggplot2:scale_gradient]{scale_fill_gradient2(low = "blue", high = "red")}}
+is utilized for continuous values.
+
+You can use the options
+\code{"ggalign.heatmap_continuous_fill"} or
+\code{"ggalign.heatmap_discrete_fill"} to modify the
+default heatmap body filling color scale. See
+\code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
+\code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for details on
+option settings.}
+
+\item{set_context}{A single boolean value indicates whether to set the active
+context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
+added into this plot.}
+
+\item{order}{An single integer for the plot area order.}
+
+\item{name}{A string of the plot name. Used to switch the active context in
+\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
+
+\item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
+which side of guide legends should be collected. Defaults to
+\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout.  If
+there is no parent layout, or if \code{NULL} is provided, no guides will be
+collected.}
 }
 \value{
 A \code{HeatmapLayout} object.

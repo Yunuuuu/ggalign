@@ -68,12 +68,26 @@ ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
 By default, `ggheatmap()` adds a heatmap layer. If the matrix has more than
-20,000 cells (`nrow * ncol > 20000`), `geom_raster()` will be used to render the
-heatmap body for performance efficiency. For smaller matrices, `geom_tile()` is
-used. 
+20,000 cells (`nrow * ncol > 20000`), it uses `geom_raster()` for performance
+efficiency; for smaller matrices, `geom_tile()` is used. You can explicitly
+choose the layer by providing a single string (`"raster"` or `"tile"`) in the
+`filling` argument.
+```{r}
+ggheatmap(small_mat, filling = "raster")
+```
 
-If you set `filling = FALSE`, a blank heatmap will be drawn, allowing for
-customized filling geoms. You can use external packages like
+```{r}
+ggheatmap(small_mat, filling = "tile")
+```
+
+If you set `filling = NULL`, a blank heatmap will be drawn, allowing for
+customized filling geoms. In this way, you must set `fill` mapping manually.
+```{r}
+ggheatmap(small_mat, filling = NULL) +
+  geom_tile(aes(fill = value), color = "black", width = 0.9, height = 0.9)
+```
+
+You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or
 [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) to rasterize
 the heatmap body. Additionally,
@@ -141,11 +155,10 @@ In this example:
 
 # Plot Size
 ## Heatmap Body Size
-You can specify the relative sizes of the heatmap body using the `.width` and
-`.height` arguments in the `ggheatmap()` function. The dot prefix helps avoid
-conflicts with arguments from `geom_tile()`/`geom_raster()`. 
+You can specify the relative sizes of the heatmap body using the `width` and
+`height` arguments in the `ggheatmap()` function.
 ```{r}
-ggheatmap(small_mat, .height = 2) +
+ggheatmap(small_mat, height = 2) +
   scale_fill_viridis_c() +
   hmanno("t") +
   align_dendro()
@@ -213,7 +226,7 @@ By default, `ggheatmap()` will collect all guide legends on the side from which
 they originate. 
 
 ```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides <- ggheatmap(small_mat, .width = 2, .height = 2L) +
+heatmap_collect_all_guides <- ggheatmap(small_mat, width = 2, height = 2L) +
   scale_fill_viridis_c(name = "I'm from heatmap body") +
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
   hmanno("t") +

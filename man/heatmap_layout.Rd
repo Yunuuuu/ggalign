@@ -6,14 +6,14 @@
 \title{Arrange plots in a Heatmap}
 \usage{
 heatmap_layout(
-  data,
+  data = NULL,
   mapping = aes(),
   ...,
-  .width = NA,
-  .height = NA,
+  width = NA,
+  height = NA,
   action = NULL,
   theme = NULL,
-  filling = TRUE,
+  filling = waiver(),
   set_context = TRUE,
   order = NULL,
   name = NULL,
@@ -21,14 +21,14 @@ heatmap_layout(
 )
 
 ggheatmap(
-  data,
+  data = NULL,
   mapping = aes(),
   ...,
-  .width = NA,
-  .height = NA,
+  width = NA,
+  height = NA,
   action = NULL,
   theme = NULL,
-  filling = TRUE,
+  filling = waiver(),
   set_context = TRUE,
   order = NULL,
   name = NULL,
@@ -43,11 +43,9 @@ one column matrix. If \code{missing}, will inherit from the parent layout.}
 \item{mapping}{Default list of aesthetic mappings to use for plot. In
 addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
 
-\item{...}{Additional arguments passed to
-\link[ggplot2:geom_tile]{geom_tile()}/\link[ggplot2:geom_tile]{geom_raster()}. Only
-used when \code{filling = TRUE}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_heatmap]{fortify_heatmap()}}.}
 
-\item{.width, .height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
+\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
 
 \item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
 in the layout.}
@@ -56,19 +54,28 @@ in the layout.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{filling}{A boolean value indicating whether to fill the heatmap. If you
-wish to customize the filling style, set this to \code{FALSE}.
+\item{filling}{A single string of
+\code{"raster"} or \code{"tile"} to indicate the filling
+style. By default, \code{waiver()} is used, which means that if the input matrix
+has more than 20,000 cells (\code{nrow * ncol > 20000}),
+\code{\link[ggplot2:geom_tile]{geom_raster()}} will be used for performance
+efficiency; for smaller matrices, \code{\link[ggplot2:geom_tile]{geom_tile()}} will be
+used. To customize the filling style, set this to \code{NULL}.
 
-By default, the classic heatmap colour scheme
+For backward compatibility, a single boolean value is acceptable: \code{TRUE}
+means \code{waiver()}, and \code{FALSE} means \code{NULL}.
+
+By default, the classic heatmap color scheme
 \code{\link[ggplot2:scale_gradient]{scale_fill_gradient2(low = "blue", high = "red")}}
 is utilized for continuous values.
-You can use the option
+
+You can use the options
 \code{"ggalign.heatmap_continuous_fill"} or
 \code{"ggalign.heatmap_discrete_fill"} to modify the
-default heatmap body fill color scale. See
+default heatmap body filling color scale. See
 \code{\link[ggplot2:scale_colour_continuous]{scale_fill_continuous()}} or
-\code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for option setting
-details.}
+\code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for details on
+option settings.}
 
 \item{set_context}{A single boolean value indicates whether to set the active
 context to current plot. If \code{TRUE}, all subsequent ggplot elements will be

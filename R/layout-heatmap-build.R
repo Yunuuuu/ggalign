@@ -18,10 +18,13 @@ ggalign_build.HeatmapLayout <- function(x) {
     ), function(x, name) {
         out <- .subset(sizes, x)
         out$heatmap <- .subset2(.subset2(out, "heatmap"), name)
-        out <- .subset(out, lengths(.subset(plots, x)) > 0L)
+        out <- .subset(
+            out,
+            !vapply(.subset(plots, x), is.null, logical(1L), USE.NAMES = FALSE)
+        )
         do.call(unit.c, out)
     })
-    keep <- lengths(plots) > 0L
+    keep <- !vapply(plots, is.null, logical(1L), USE.NAMES = FALSE)
 
     design <- trim_area(do.call(c, design[keep]))
     titles <- x@titles
@@ -185,24 +188,27 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
     # read the plot ---------------------------------------
     p <- heatmap@plot
 
-    # add heatmap filling in the first layer
-    if (!is.null(filling_params <- heatmap@filling)) {
+    # add heatmap filling in the first layer --------------
+    if (!is.null(filling <- heatmap@filling)) {
+        # we always ensure the filling layer has a fill mapping
         if (is.null(.subset2(p$mapping, "fill"))) {
             mapping <- aes(.data$.x, .data$.y, fill = .data$value)
         } else {
             mapping <- aes(.data$.x, .data$.y)
         }
-        if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
-            cli::cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
-            p <- p + layer_order(rlang::inject(ggplot2::geom_raster(
-                mapping = mapping, !!!filling_params
-            )))
-        } else {
-            cli::cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
-            p <- p + layer_order(rlang::inject(ggplot2::geom_tile(
-                mapping = mapping, !!!filling_params
-            )))
+        if (is.waive(filling)) {
+            if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
+                cli::cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
+                filling <- "raster"
+            } else {
+                cli::cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
+                filling <- "raster"
+            }
         }
+        p <- p + layer_order(switch(filling,
+            raster = ggplot2::geom_raster(mapping = mapping),
+            tile = ggplot2::geom_tile(mapping = mapping)
+        ))
     }
 
     # set the default data -------------------------------

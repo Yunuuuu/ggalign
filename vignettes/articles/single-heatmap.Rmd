@@ -227,10 +227,13 @@ ggheatmap(mat) +
     theme(plot.margin = margin())
 ```
 
-You can use `color` aesthetic to specify the cell border color and
-`linewidth` aesthetic to specify the border width.
+You can use the `filling` argument to turn off the heatmap cell filling,
+allowing you to customize the heatmap body geoms. Use the `color` aesthetic to
+specify the cell border color and the `linewidth` aesthetic to set the border
+width.
 ```{r}
-ggheatmap(mat, color = "white") +
+ggheatmap(mat, filling = NULL) +
+    geom_tile(aes(fill = value), color = "white") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
@@ -239,9 +242,9 @@ ggheatmap(mat, color = "white") +
     theme(plot.margin = margin())
 ```
 
-You can use `filling` argument to turn off the heatmap cell filling.
+To draw a blank heatmap body:
 ```{r}
-ggheatmap(mat, filling = FALSE) +
+ggheatmap(mat, filling = NULL) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("r", size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +

@@ -277,7 +277,8 @@ imap <- function(.x, .f, ...) {
     out
 }
 
-compact <- function(.x) .x[lengths(.x) > 0L]
+#' @importFrom vctrs list_sizes
+compact <- function(.x) .x[list_sizes(.x) > 0L]
 
 #' Rename elements in a list, data.frame or vector
 #'

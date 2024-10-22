@@ -20,7 +20,6 @@
 #' @param data A character matrix which encodes the alterations, you can use
 #' `[;:,|]` to separate multiple alterations.
 #' @inheritParams heatmap_layout
-#' @inheritDotParams heatmap_layout -data -mapping
 #' @param map_width,map_height A named numeric value defines the width/height of
 #' each alterations.
 #' @param reorder_row,reorder_column A boolean value indicating whether to
@@ -58,15 +57,16 @@
 ggoncoplot <- function(data, mapping = aes(), ...,
                        map_width = NULL, map_height = NULL,
                        reorder_row = reorder_column,
-                       reorder_column = TRUE) {
+                       reorder_column = TRUE,
+                       width = NA, height = NA,
+                       action = NULL, theme = NULL, filling = waiver(),
+                       set_context = TRUE, order = NULL, name = NULL,
+                       guides = deprecated()) {
     UseMethod("ggoncoplot")
 }
 
 #' @export
-ggoncoplot.NULL <- function(data, mapping = aes(), ...,
-                            map_width = NULL, map_height = NULL,
-                            reorder_row = reorder_column,
-                            reorder_column = TRUE) {
+ggoncoplot.NULL <- function(data, mapping = aes(), ...) {
     cli::cli_abort("{.fn ggoncoplot} only accept a valid character matrix")
 }
 
@@ -79,12 +79,17 @@ ggoncoplot.formula <- ggoncoplot.functon
 #' @importFrom vctrs vec_slice list_sizes vec_rep_each
 #' @importFrom ggplot2 aes
 #' @export
+#' @rdname ggoncoplot
 ggoncoplot.default <- function(data, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
                                reorder_row = reorder_column,
-                               reorder_column = TRUE) {
+                               reorder_column = TRUE,
+                               width = NA, height = NA,
+                               action = NULL, theme = NULL, filling = waiver(),
+                               set_context = TRUE, order = NULL, name = NULL,
+                               guides = deprecated()) {
     # prepare the matrix
-    data <- fortify_heatmap(data)
+    data <- fortify_heatmap(data = data, ...)
     if (!is.character(data)) {
         cli::cli_abort("{.arg data} must be a character matrix")
     }
@@ -129,10 +134,12 @@ ggoncoplot.default <- function(data, mapping = aes(), ...,
     }
 
     # draw the oncoplot
-    ans <- .heatmap_layout(
-        data = data, mapping = mapping, ...,
-        nobs_list = list(x = ncol(data), y = nrow(data)),
-        call = current_call()
+    ans <- heatmap_layout(
+        data = data, mapping = mapping,
+        width = width, height = height,
+        action = action, theme = theme, filling = filling,
+        set_context = set_context, order = order, name = name,
+        guides = guides
     )
     if (reorder_row) {
         ans <- ans + hmanno("l") + align_order(row_index, reverse = TRUE)

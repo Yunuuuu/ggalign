@@ -7,26 +7,33 @@
 #' one column matrix. If `missing`, will inherit from the parent layout.
 #' @param mapping Default list of aesthetic mappings to use for plot. In
 #' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
-#' @param ... Additional arguments passed to
-#' [geom_tile()][ggplot2::geom_tile]/[geom_raster()][ggplot2::geom_raster]. Only
-#' used when `filling = TRUE`.
-#' @param .width,.height `r rd_heatmap_size()`.
+#' @param ... Additional arguments passed to [`fortify_heatmap()`].
+#' @param width,height `r rd_heatmap_size()`.
 #' @param action A [plot_action()] object used to define the default plot action
 #' in the layout.
 #' @inheritParams align_plots
-#' @param filling A boolean value indicating whether to fill the heatmap. If you
-#' wish to customize the filling style, set this to `FALSE`.
+#' @param filling A single string of
+#' `r rd_values(c("raster", "tile"), final = "or")` to indicate the filling
+#' style. By default, `waiver()` is used, which means that if the input matrix
+#' has more than 20,000 cells (`nrow * ncol > 20000`),
+#' [`geom_raster()`][ggplot2::geom_raster] will be used for performance
+#' efficiency; for smaller matrices, [`geom_tile()`][ggplot2::geom_tile] will be
+#' used. To customize the filling style, set this to `NULL`.
 #'
-#' By default, the classic heatmap colour scheme
+#' For backward compatibility, a single boolean value is acceptable: `TRUE`
+#' means `waiver()`, and `FALSE` means `NULL`.
+#'
+#' By default, the classic heatmap color scheme
 #' [`scale_fill_gradient2(low = "blue", high = "red")`][ggplot2::scale_fill_gradient2]
 #' is utilized for continuous values.
-#' You can use the option
+#'
+#' You can use the options
 #' `r rd_values(sprintf("%s.heatmap_continuous_fill", pkg_nm()))` or
 #' `r rd_values(sprintf("%s.heatmap_discrete_fill", pkg_nm()))` to modify the
-#' default heatmap body fill color scale. See
+#' default heatmap body filling color scale. See
 #' [`scale_fill_continuous()`][ggplot2::scale_fill_continuous] or
-#' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for option setting
-#' details.
+#' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for details on
+#' option settings.
 #'
 #' @inheritParams align
 #' @inheritParams ggplot2::ggplot
@@ -56,23 +63,13 @@
 #' @importFrom ggplot2 aes
 #' @importFrom lifecycle deprecated
 #' @export
-heatmap_layout <- function(data, mapping = aes(),
-                           ..., .width = NA, .height = NA,
-                           action = NULL, theme = NULL, filling = TRUE,
+heatmap_layout <- function(data = NULL, mapping = aes(),
+                           ...,
+                           width = NA, height = NA,
+                           action = NULL, theme = NULL, filling = waiver(),
                            set_context = TRUE, order = NULL, name = NULL,
                            guides = deprecated()) {
-    if (missing(data)) {
-        .heatmap_layout(
-            data = NULL, mapping = mapping,
-            ..., .width = .width, .height = .height,
-            action = action, theme = theme, filling = filling,
-            set_context = set_context, order = order, name = name,
-            guides = guides,
-            nobs_list = list(), call = current_call()
-        )
-    } else {
-        UseMethod("heatmap_layout")
-    }
+    UseMethod("heatmap_layout")
 }
 
 # used to create the heatmap layout
@@ -104,53 +101,36 @@ methods::setClass(
 #' @rdname heatmap_layout
 ggheatmap <- heatmap_layout
 
-#' @export
-heatmap_layout.NULL <- function(data, ...) {
-    .heatmap_layout(
-        data = data, nobs_list = list(),
-        ..., call = current_call()
-    )
-}
-
-#' @export
-heatmap_layout.functon <- heatmap_layout.NULL
-
-#' @export
-heatmap_layout.formula <- function(data, ...) {
-    .heatmap_layout(
-        data = allow_lambda(data), ...,
-        nobs_list = list(), call = current_call()
-    )
-}
-
-#' @export
-heatmap_layout.default <- function(data, ...) {
-    data <- fortify_heatmap(data)
-    .heatmap_layout(
-        data = data, ...,
-        nobs_list = list(x = ncol(data), y = nrow(data)),
-        call = current_call()
-    )
-}
-
 #' @importFrom lifecycle deprecated
 #' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 aes
-.heatmap_layout <- function(data, mapping = aes(),
-                            ...,
-                            .width = NA, .height = NA,
-                            action = NULL, theme = NULL, filling = TRUE,
-                            set_context = TRUE, order = NULL, name = NULL,
-                            guides = deprecated(),
-                            # following parameters are used internally
-                            nobs_list, call = caller_call()) {
-    width <- check_size(.width, call = call)
-    height <- check_size(.height, call = call)
-    action <- check_action(action, FALSE, call = call)
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    assert_bool(filling, call = call)
-    assert_bool(set_context, call = call)
-    order <- check_order(order, call = call)
+#' @importFrom rlang arg_match0
+#' @export
+heatmap_layout.default <- function(data = NULL, mapping = aes(),
+                                   ...,
+                                   width = NA, height = NA,
+                                   action = NULL, theme = NULL,
+                                   filling = waiver(),
+                                   set_context = TRUE, order = NULL,
+                                   name = NULL,
+                                   guides = deprecated()) {
+    # prepare data --------------------------------------
+    data <- fortify_heatmap(data = data, ...)
+    # check arguments -----------------------------------
+    width <- check_size(width)
+    height <- check_size(height)
+    action <- check_action(action, FALSE)
+    if (!is.null(theme)) assert_s3_class(theme, "theme")
+    # A single boolean value for compatible with version <= 0.0.4
+    if (isTRUE(filling)) {
+        filling <- waiver()
+    } else if (isFALSE(filling)) {
+        filling <- NULL
+    } else if (!is.waive(filling) && !is.null(filling)) {
+        filling <- arg_match0(filling, c("tile", "raster"))
+    }
+    assert_bool(set_context)
+    order <- check_order(order)
     assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
     if (lifecycle::is_present(guides)) {
         lifecycle::deprecate_warn(
@@ -159,6 +139,13 @@ heatmap_layout.default <- function(data, ...) {
         assert_layout_position(guides, call = call)
         action$guides <- guides
     }
+    # initialize nobs --------------------------------
+    if (is.null(data) || is.function(data)) {
+        nobs_list <- list(x = NULL, y = NULL)
+    } else {
+        nobs_list <- list(x = ncol(data), y = nrow(data))
+    }
+    # initialize the heatmap body plot
     plot <- ggplot2::ggplot(
         mapping = add_default_mapping(mapping, aes(.data$.x, .data$.y))
     ) +
@@ -171,12 +158,6 @@ heatmap_layout.default <- function(data, ...) {
         # 3. The `labs()` function.
         # 4. The captured expression in aes().
         ggplot2::labs(x = NULL, y = NULL)
-    # save the `geom_tile()`/geom_raster() parameters
-    if (filling) {
-        filling_params <- rlang::list2(...)
-    } else {
-        filling_params <- NULL
-    }
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
@@ -191,7 +172,7 @@ heatmap_layout.default <- function(data, ...) {
         order = order, name = name %||% NA_character_,
         # following parameters are used internally
         plot = plot, nobs_list = nobs_list,
-        filling = filling_params
+        filling = filling
     )
 }
 

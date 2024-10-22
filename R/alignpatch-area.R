@@ -84,7 +84,7 @@ as_areas.NULL <- function(x) NULL
 #' @export
 as_areas.align_area <- function(x) x
 
-#' @importFrom vctrs vec_rbind
+#' @importFrom vctrs vec_rbind list_sizes
 #' @export
 as_areas.character <- function(x) {
     call <- current_call() # used for message only
@@ -94,7 +94,7 @@ as_areas.character <- function(x) {
     if (identical(x[[1L]], "")) x[[1L]] <- NULL
     if (identical(x[[length(x)]], "")) x[[length(x)]] <- NULL
     x <- lapply(x, function(x) .subset2(strsplit(x, split = ""), 1L))
-    ncols <- lengths(x)
+    ncols <- list_sizes(x)
     ncol <- .subset(ncols, 1L)
     if (any(ncols != ncol)) {
         cli::cli_abort("character layout must be rectangular", call = call)

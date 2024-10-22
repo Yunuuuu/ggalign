@@ -182,14 +182,14 @@ In this way, heatmap body width/height specified in `hmanno()` or `ggheatmap()`
 won't work.
 ```{r}
 ggstack(small_mat, "v") +
-    ggheatmap(.width = unit(2, "null")) + # not work
+    ggheatmap(width = unit(2, "null")) + # not work
     scale_fill_viridis_c() +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap(.width = unit(2, "null")) # not work
+    ggheatmap(width = unit(2, "null")) # not work
 ```
 
 By default the flank annotation will fill the whole stack flank, but we can
