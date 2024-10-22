@@ -57,7 +57,7 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
     assert_mapping(mapping)
-    action <- check_action(action, TRUE)
+    action <- check_action(action)
     action <- deprecate_action(
         action, "align_gg",
         plot_data, theme,
@@ -85,8 +85,7 @@ AlignGG <- ggproto("AlignGG", Align,
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
         if (is.matrix(data)) {
-            ans <- melt_matrix(data)
-            data <- restore_attr_ggalign(ans, data)
+            data <- melt_matrix(data)
         } else {
             if (!is.null(old_rownames <- rownames(data))) {
                 data$.row_names <- old_rownames
@@ -123,24 +122,24 @@ AlignGG <- ggproto("AlignGG", Align,
                 .extra_index = extra_index
             ), row = coords)
             coords <- vec_cbind(coords$col, coords$row)
-            data <- full_join(data, coords,
+            ans <- full_join(data, coords,
                 by.x = c(".column_index", ".row_index"),
                 by.y = c(".extra_index", ".index")
             )
         } else {
-            data <- full_join(data, coords,
+            ans <- full_join(data, coords,
                 by.x = ".row_index", by.y = ".index"
             )
         }
-        if (!is.null(.subset2(data, ".row_names"))) {
-            data$.row_names <- reorder(
-                .subset2(data, ".row_names"),
-                .subset2(data, coord_name),
+        if (!is.null(.subset2(ans, ".row_names"))) {
+            ans$.row_names <- reorder(
+                .subset2(ans, ".row_names"),
+                .subset2(ans, coord_name),
                 order = FALSE
             )
         }
         plot <- .subset2(self, "plot")
-        plot$data <- data
+        plot$data <- restore_attr_ggalign(ans, data)
         plot
     }
 )

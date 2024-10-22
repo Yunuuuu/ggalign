@@ -58,8 +58,7 @@ will be aligned.}
 
 \item{inherit}{A single boolean value indicating whether to apply the parent
 action \code{data} first and then apply the specified action \code{data}. Defaults to
-\code{FALSE} for actions in the layout, \code{ggpanel()}, and \code{align_dendro()}, but
-\code{TRUE} for heatmap body and \code{ggalign()}.}
+\code{FALSE}.}
 }
 \value{
 A \code{plot_action} object.

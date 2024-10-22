@@ -24,9 +24,7 @@ initialize_align <- function(object, direction, position,
             }
             data <- layout_data
         } else {
-            data <- restore_attr_ggalign(
-                align_setup_data(input_data, layout_data), layout_data
-            )
+            data <- align_setup_data(input_data, layout_data)
             # we always regard rows as the observations
             if (is.null(nobs)) {
                 nobs <- NROW(data)
@@ -39,7 +37,10 @@ initialize_align <- function(object, direction, position,
         }
         object$labels <- rownames(data)
         params <- object$setup_params(nobs, input_params)
-        object$data <- object$setup_data(params, data)
+        object$data <- restore_attr_ggalign(
+            object$setup_data(params, data),
+            layout_data
+        )
     } else { # this `Align` object doesn't require any data
         # If `nobs` is `NULL`, it means we don't initialize the layout
         # observations So we call `$nobs` method to initialize the layout

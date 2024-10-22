@@ -77,7 +77,8 @@ ggheatmap(small_mat) +
 If the action data function has been set in both the single plot and the parent
 layout, Whether the action data function is applied after the parent layout's
 action data depends on the `inherit` argument in `plot_action()`. By default,
-only heatmap body and `ggalign()` will inherit the parent action data function.
+this argument is set to `FALSE`, meaning that the action data function will not
+apply the transformations from the parent layout.
 
 The following plot will result in an empty plot area since no data remains after
 filtering: 
@@ -91,11 +92,14 @@ ggheatmap(small_mat) +
     align_kmeans(3L) +
     # this action data function will be applied after the layout action data
     # function, so there is no panel in `2`
-    ggalign(action = plot_action(data = function(data) subset(data, .panel == 2L))) +
+    ggalign(action = plot_action(
+        data = function(data) subset(data, .panel == 2L),
+        inherit = TRUE
+    )) +
     geom_bar(aes(y = value, fill = .row_names), stat = "identity")
 ```
 
-To resolve this issue, you can set `inherit = FALSE`:
+To resolve this issue, you can set `inherit = FALSE`, or keep the default value:
 ```{r}
 set.seed(1234L)
 ggheatmap(small_mat) +

@@ -56,7 +56,7 @@ stack_layout.default <- function(data = NULL, direction = NULL, ..., sizes = NA,
     data <- fortify_stack(data = data, ...)
     direction <- match.arg(direction, c("horizontal", "vertical"))
     sizes <- check_stack_sizes(sizes)
-    action <- check_action(action, FALSE)
+    action <- check_action(action)
     if (is.null(data)) {
         nobs <- NULL
     } else {

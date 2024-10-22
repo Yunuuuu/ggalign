@@ -49,8 +49,7 @@
 #'
 #' @param inherit A single boolean value indicating whether to apply the parent
 #' action `data` first and then apply the specified action `data`. Defaults to
-#' `FALSE` for actions in the layout, `ggpanel()`, and `align_dendro()`, but
-#' `TRUE` for heatmap body and `ggalign()`.
+#' `FALSE`.
 #'
 #' @return A `plot_action` object.
 #' @examples
@@ -93,7 +92,7 @@ plot_action <- function(data = NA, theme = NA, guides = NA,
     )
 }
 
-default_action <- function(inherit) {
+default_action <- function(inherit = FALSE) {
     structure(
         list(
             data = waiver(), theme = NULL,

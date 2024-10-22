@@ -132,12 +132,20 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         weights <- rowSums(counts)
         row_index <- order(weights, decreasing = TRUE)
     }
-
     # draw the oncoplot
+    action_data <- function(data) {
+        value_list <- strsplit(data$value, split = "[;:,|]")
+        lvls <- ggalign_attr(data, "breaks")
+        data <- vec_rep_each(data, list_sizes(value_list))
+        value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
+        if (!is.null(lvls)) data$value <- factor(value, levels = lvls)
+        data
+    }
     ans <- heatmap_layout(
         data = data, mapping = mapping,
         width = width, height = height,
-        action = action, theme = theme, filling = filling,
+        action = plot_action(data = action_data),
+        theme = theme, filling = filling,
         set_context = set_context, order = order, name = name,
         guides = guides
     )
@@ -154,15 +162,8 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
             hmanno("t") +
             align_order(order(column_scores, decreasing = TRUE))
     }
-    action_data <- function(data) {
-        value_list <- strsplit(data$value, split = "[;:,|]")
-        lvls <- ggalign_attr(data, "breaks")
-        data <- vec_rep_each(data, list_sizes(value_list))
-        value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
-        if (!is.null(lvls)) data$value <- factor(value, levels = lvls)
-        data
-    }
-    ans <- ans + hmanno(NULL, action = plot_action(data = action_data))
+    # always make sure user provided action override the default action
+    ans <- ans + hmanno(NULL, action = action)
     if (!is.null(ans@filling)) {
         # we always make sure heatmap body has such action data
         ans <- ans + plot_action(data = action_data)
