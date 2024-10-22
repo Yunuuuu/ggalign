@@ -67,7 +67,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stack_layout</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -75,7 +75,14 @@
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggstack</span><span class="op">(</span><span class="va">data</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, sizes <span class="op">=</span> <span class="cn">NA</span>, action <span class="op">=</span> <span class="cn">NULL</span>, theme <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggstack</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  sizes <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -92,7 +99,7 @@ direction of the stack layout.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>These dots are for future extensions and must be empty.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="fortify_stack.html">fortify_stack()</a></code>.</p></dd>
 
 
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
