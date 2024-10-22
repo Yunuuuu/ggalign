@@ -48,6 +48,8 @@ fortify_heatmap.formula <- function(data, ...) rlang::as_function(data)
 #' @param ... Not used currently.
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
+#' @param remove_empty_samples A single boolean value indicates whether to drop
+#' samples without any genomic alterations.
 #' @export
 #' @rdname fortify_heatmap.MAF
 fortify_heatmap.MAF <- function(data, ..., genes = NULL, n_top = NULL,

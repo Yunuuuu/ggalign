@@ -20,6 +20,9 @@
 \item{genes}{An atomic character defines the genes to draw.}
 
 \item{n_top}{A single number indicates how many top genes to be drawn.}
+
+\item{remove_empty_samples}{A single boolean value indicates whether to drop
+samples without any genomic alterations.}
 }
 \value{
 A matrix used by \code{\link[=ggheatmap]{ggheatmap()}}.
