@@ -193,8 +193,10 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
         # we always ensure the filling layer has a fill mapping
         if (is.null(.subset2(p$mapping, "fill"))) {
             mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+            raster_geom <- geom_matrix_raster(data = mat)
         } else {
             mapping <- aes(.data$.x, .data$.y)
+            raster_geom <- ggplot2::geom_raster(mapping = mapping)
         }
         if (is.waive(filling)) {
             if (get_nobs(heatmap, "x") * get_nobs(heatmap, "y") > 20000L) {
@@ -206,7 +208,7 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
             }
         }
         p <- p + layer_order(switch(filling,
-            raster = ggplot2::geom_raster(mapping = mapping),
+            raster = raster_geom,
             tile = ggplot2::geom_tile(mapping = mapping)
         ))
     }
