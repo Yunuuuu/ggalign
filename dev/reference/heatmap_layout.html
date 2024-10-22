@@ -67,14 +67,14 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heatmap_layout</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filling <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -82,14 +82,14 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggheatmap</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  .width <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  .height <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  filling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filling <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -113,12 +113,10 @@ addition, we will always add mapping <code>aes(.data$.x, .data$.y)</code>.</p></
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to
-<a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a>/<a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a>. Only
-used when <code>filling = TRUE</code>.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="fortify_heatmap.html">fortify_heatmap()</a></code>.</p></dd>
 
 
-<dt id="arg--width-height">.width, .height<a class="anchor" aria-label="anchor" href="#arg--width-height"></a></dt>
+<dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
 <dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
 
 
@@ -134,18 +132,25 @@ in the layout.</p></dd>
 
 
 <dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
-<dd><p>A boolean value indicating whether to fill the heatmap. If you
-wish to customize the filling style, set this to <code>FALSE</code>.</p>
-<p>By default, the classic heatmap colour scheme
+<dd><p>A single string of
+<code>"raster"</code> or <code>"tile"</code> to indicate the filling
+style. By default, <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> is used, which means that if the input matrix
+has more than 20,000 cells (<code>nrow * ncol &gt; 20000</code>),
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code> will be used for performance
+efficiency; for smaller matrices, <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> will be
+used. To customize the filling style, set this to <code>NULL</code>.</p>
+<p>For backward compatibility, a single boolean value is acceptable: <code>TRUE</code>
+means <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, and <code>FALSE</code> means <code>NULL</code>.</p>
+<p>By default, the classic heatmap color scheme
 <code>scale_fill_gradient2(low = "blue", high = "red")</code>
-is utilized for continuous values.
-You can use the option
+is utilized for continuous values.</p>
+<p>You can use the options
 <code>"ggalign.heatmap_continuous_fill"</code> or
 <code>"ggalign.heatmap_discrete_fill"</code> to modify the
-default heatmap body fill color scale. See
+default heatmap body filling color scale. See
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_continuous.html" class="external-link">scale_fill_continuous()</a></code> or
-<code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete()</a></code> for option setting
-details.</p></dd>
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete()</a></code> for details on
+option settings.</p></dd>
 
 
 <dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
