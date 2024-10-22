@@ -137,7 +137,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         lifecycle::deprecate_warn(
             "0.0.5", "ggheatmap(guides)", "ggheatmap(action)"
         )
-        assert_layout_position(guides, call = call)
+        assert_layout_position(guides)
         action$guides <- guides
     }
     # initialize nobs --------------------------------
