@@ -144,11 +144,3 @@ Here are some more advanced visualizations using `ggalign`:
 `r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)", url)`
 
 `r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)", url)`
-
-## Further Documentation
-
-- [Heatmap Layout](`r sprintf("%s/articles/heatmap-layout.html", url)`)
-- [Layout Customization](`r sprintf("%s/articles/layout-customize.html", url)`)
-- [Layout Plot](`r sprintf("%s/articles/layout-plot.html", url)`)
-- [Stack Layout](`r sprintf("%s/articles/stack-layout.html", url)`)
-- [Special Syntax for Layout Axis](`r sprintf("%s/articles/special-syntax.html", url)`)

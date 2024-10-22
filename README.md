@@ -142,16 +142,3 @@ Here are some more advanced visualizations using `ggalign`:
 ![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
 
 ![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
-
-## Further Documentation
-
-- [Heatmap
-  Layout](https://yunuuuu.github.io/ggalign/dev/articles/heatmap-layout.html)
-- [Layout
-  Customization](https://yunuuuu.github.io/ggalign/dev/articles/layout-customize.html)
-- [Layout
-  Plot](https://yunuuuu.github.io/ggalign/dev/articles/layout-plot.html)
-- [Stack
-  Layout](https://yunuuuu.github.io/ggalign/dev/articles/stack-layout.html)
-- [Special Syntax for Layout
-  Axis](https://yunuuuu.github.io/ggalign/dev/articles/special-syntax.html)
