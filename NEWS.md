@@ -2,6 +2,8 @@
 
 ## features:
 
+* new `fortify_heatmap()` method for `MAF` object.
+
 * `plot_action()` gains a new argument `inherit` to control the inheritance of `data` argument
 
 * new `ggoncoplot()` function to draw oncoprint
