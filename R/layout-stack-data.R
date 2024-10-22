@@ -34,11 +34,8 @@ fortify_stack.formula <- fortify_stack.function
 
 #' @export
 fortify_stack.default <- function(data, ...) {
-    cli::cli_abort(c(
-        paste(
-            "{.arg data} must be a numeric or character vector,",
-            "a data frame, or a matrix."
-        ),
-        i = "You have provided {.obj_type_friendly {data}}"
+    cli::cli_abort(paste0(
+        "{.arg data} must be a a numeric or character vector, a matrix, ",
+        "a data frame, or an object coercible by {.fn fortify_stack}"
     ))
 }
