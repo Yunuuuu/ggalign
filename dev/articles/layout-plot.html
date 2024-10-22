@@ -168,8 +168,9 @@ to transform the default data for all subsequent geoms.</p>
 <p>If the action data function has been set in both the single plot and
 the parent layout, Whether the action data function is applied after the
 parent layout’s action data depends on the <code>inherit</code> argument
-in <code><a href="../reference/plot_action.html">plot_action()</a></code>. By default, only heatmap body and
-<code><a href="../reference/align_gg.html">ggalign()</a></code> will inherit the parent action data function.</p>
+in <code><a href="../reference/plot_action.html">plot_action()</a></code>. By default, this argument is set to
+<code>FALSE</code>, meaning that the action data function will not apply
+the transformations from the parent layout.</p>
 <p>The following plot will result in an empty plot area since no data
 remains after filtering:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -182,11 +183,15 @@ remains after filtering:</p>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># this action data function will be applied after the layout action data</span></span>
 <span>    <span class="co"># function, so there is no panel in `2`</span></span>
-<span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span>data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">.panel</span> <span class="op">==</span> <span class="fl">2L</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="../reference/plot_action.html">plot_action</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">.panel</span> <span class="op">==</span> <span class="fl">2L</span><span class="op">)</span>,</span>
+<span>        inherit <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.row_names</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>To resolve this issue, you can set <code>inherit = FALSE</code>:</p>
+<p>To resolve this issue, you can set <code>inherit = FALSE</code>, or
+keep the default value:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
