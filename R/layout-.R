@@ -261,7 +261,10 @@ layout_subtract.StackLayout <- function(layout, object, object_name) {
 #' @inheritParams rlang::args_dots_used
 #' @return The statistics
 #' @export
-ggalign_stat <- function(x, ...) UseMethod("ggalign_stat")
+ggalign_stat <- function(x, ...) {
+    rlang::check_dots_used()
+    UseMethod("ggalign_stat")
+}
 
 #' @param position A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
 #' @param what A single number or string of the plot elements in the stack
@@ -282,15 +285,7 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 }
 
 #' @export
-ggalign_stat.Align <- function(x, ...) {
-    if (...length() > 0L) {
-        cli::cli_abort(c(
-            "Find unused arguments in {.arg ...}",
-            i = "Please check argument{?s}: {c(...)}"
-        ))
-    }
-    .subset2(x, "statistics")
-}
+ggalign_stat.Align <- function(x, ...) .subset2(x, "statistics")
 
 ####################################################
 # we keep an attribute `ggalign` across all data
