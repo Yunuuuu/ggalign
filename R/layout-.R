@@ -322,6 +322,15 @@ ggalign_attr <- function(x, field) {
     .subset2(x, field)
 }
 
+add_ggalign_attr <- function(x, values) {
+    if (is.null(suppl <- attr(x, "ggalign"))) {
+        attr(x, "ggalign") <- values
+    } else {
+        attr(x, "ggalign") <- c(suppl, values)
+    }
+    x
+}
+
 ############################################################
 ############################################################
 # layout should be one of "index", "nobs", "panel"
