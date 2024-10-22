@@ -93,7 +93,7 @@ reference:
 - title: internal
   contents:
   - starts_with("patch.")
-  - starts_with("layout_heatmap.")
+  - starts_with("fortify_heatmap.")
 
 articles:
 - title: Building plots
