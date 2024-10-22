@@ -25,6 +25,14 @@ fortify_stack.character <- fortify_stack.numeric
 fortify_stack.NULL <- function(data, ...) NULL
 
 #' @export
+fortify_stack.function <- function(data, ...) {
+    cli::cli_abort("Cannot use function in {.field stack} layout")
+}
+
+#' @export
+fortify_stack.formula <- fortify_stack.function
+
+#' @export
 fortify_stack.default <- function(data, ...) {
     cli::cli_abort(c(
         paste(
