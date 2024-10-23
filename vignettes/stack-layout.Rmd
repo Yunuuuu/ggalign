@@ -126,6 +126,7 @@ layout, you can easily switch from the heatmap layout to the stack layout using
 ggstack(small_mat) +
     ggheatmap() +
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     stack_active() +
     ggalign(data = rowSums) +
     geom_bar(aes(value), fill = "red", orientation = "y", stat = "identity")
@@ -155,12 +156,14 @@ By default the three rows/columns will have equal sizes.
 ggstack(small_mat, "v") +
     ggheatmap() +
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap()
+    ggheatmap() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 ```{r}
@@ -170,12 +173,14 @@ ggstack(small_mat, "v") +
 ggstack(small_mat, "v", sizes = c(1, 2, 1)) +
     ggheatmap() +
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap()
+    ggheatmap() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 In this way, heatmap body width/height specified in `hmanno()` or `ggheatmap()`
@@ -184,12 +189,14 @@ won't work.
 ggstack(small_mat, "v") +
     ggheatmap(width = unit(2, "null")) + # not work
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     hmanno("l") +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap(width = unit(2, "null")) # not work
+    ggheatmap(width = unit(2, "null")) + # not work
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 By default the flank annotation will fill the whole stack flank, but we can
@@ -198,13 +205,15 @@ still control the size of heatmap annotation in `hmanno()`.
 ggstack(small_mat, "v") +
     ggheatmap() +
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     # the left annotation will have a total size 2cm
-    hmanno("l", size = unit(2, "cm")) + 
+    hmanno("l", size = unit(2, "cm")) +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap()
+    ggheatmap() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 You can also use `npc` unit.
@@ -212,13 +221,15 @@ You can also use `npc` unit.
 ggstack(small_mat, "v") +
     ggheatmap() +
     scale_fill_viridis_c() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     # the left annotation will have a total width 1/2 npc
     hmanno("l", size = unit(0.5, "npc")) +
     align_dendro(aes(color = .panel), k = 3L) +
     hmanno("r") +
     ggalign(data = rowSums) +
     geom_bar(aes(value, fill = .panel), orientation = "y", stat = "identity") +
-    ggheatmap()
+    ggheatmap() +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 ## Session information
