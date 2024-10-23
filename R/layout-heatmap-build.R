@@ -202,7 +202,7 @@ heatmap_build <- function(heatmap, action = heatmap@action) {
                 filling <- "raster"
             } else {
                 cli::cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
-                filling <- "raster"
+                filling <- "tile"
             }
         }
         p <- p + layer_order(switch(filling,
