@@ -96,17 +96,21 @@ added directly to a plot.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A function to transform the plot data before rendering. Whether
-this function is applied after the parent layout's action data depends on
-the <code>inherit</code> argument. Defaults to <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which
-directly inherits from the parent layout. If no parent layout is specified,
-the default is <code>NULL</code>, meaning the data won't be modified.</p>
-<p>Use this hook to modify the data for all <code>geoms</code> after the layout is created
+<dd><p>A function to transform the plot data before rendering, referred
+to as action data. Defaults will attempt to inherit from the parent layout if
+the actual data is inherited from it, with one exception: <code><a href="align_dendro.html">align_dendro()</a></code>,
+which will not inherit the action data by default. Acceptable values include:</p><ul><li><p><code>NULL</code>: No action taken.</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: Inherits from the parent layout.</p></li>
+<li><p>A <code>function</code> or <code>purrr-style formula</code>: Used to transform the plot data,
+which should accept a data frame and return a data frame. You can inherit
+the parent layout action data function, applying it after the parent
+layout's action data, using the <code>inherit</code> argument.</p></li>
+</ul><p>Use this hook to modify the data for all <code>geoms</code> after the layout is created
 but before rendering by <code>ggplot2</code>. The returned data must be a data frame.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>Default plot theme, one of:</p><ul><li><p><code>NULL</code>: will inherit from the parent layout directly.</p></li>
+<dd><p>Default plot theme, one of:</p><ul><li><p><code>NULL</code>: inherit from the parent layout directly.</p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>: will be added with the parent layout theme.
 If you want to override the parent layout theme, set <code>complete=TRUE</code>.</p></li>
 </ul><p><strong>Note:</strong> Axis titles and labels that are parallel to the layout axis will
