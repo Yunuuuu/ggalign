@@ -85,6 +85,7 @@ reference:
   - ggalign_stat
   - fortify_heatmap
   - fortify_stack
+  - geom_pie
   - align
   - hclust2
   - order2
