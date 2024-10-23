@@ -54,9 +54,22 @@ ggstack <- stack_layout
 stack_layout.default <- function(data = NULL, direction = NULL, ..., sizes = NA,
                                  action = NULL, theme = NULL) {
     data <- fortify_stack(data = data, ...)
+    .stack_layout(data,
+        # if inherit from the parent layout data, we'll inherit
+        # the action data function, but now, no parent layout
+        action_data = if (is.null(data)) waiver() else NULL,
+        direction = direction, sizes = sizes,
+        action = action, theme = theme
+    )
+}
+
+.stack_layout <- function(data = NULL, action_data = NULL,
+                          direction = NULL, sizes = NA,
+                          action = NULL, theme = NULL,
+                          call = caller_call()) {
     direction <- match.arg(direction, c("horizontal", "vertical"))
-    sizes <- check_stack_sizes(sizes)
-    action <- check_action(action)
+    sizes <- check_stack_sizes(sizes, call = call)
+    action <- check_action(action, data = action_data, call = call)
     if (is.null(data)) {
         nobs <- NULL
     } else {

@@ -75,7 +75,12 @@ layout_heatmap_add.heatmap_active <- function(object, heatmap, object_name) {
         if (!is_horizontal(direction)) {
             data <- restore_attr_ggalign(t(data), data)
         }
-        stack <- stack_layout(data = data, direction = direction)
+        stack <- .stack_layout(data,
+            # if inherit from the parent layout data, we'll inherit
+            # the action data function, but now, no parent layout
+            action_data = waiver(),
+            direction = direction
+        )
         stack@heatmap$position <- position
         stack <- set_panel(stack, value = get_panel(heatmap, axis))
         stack <- set_index(stack, value = get_index(heatmap, axis))

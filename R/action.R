@@ -7,17 +7,23 @@
 #' through the `action` argument in the `align_*()` functions, or it can be
 #' added directly to a plot.
 #'
-#' @param data A function to transform the plot data before rendering. Whether
-#' this function is applied after the parent layout's action data depends on
-#' the `inherit` argument. Defaults to [`waiver()`][ggplot2::waiver()], which
-#' directly inherits from the parent layout. If no parent layout is specified,
-#' the default is `NULL`, meaning the data won't be modified.
+#' @param data A function to transform the plot data before rendering, referred
+#' to as action data. Defaults will attempt to inherit from the parent layout if
+#' the actual data is inherited from it, with one exception: `align_dendro()`,
+#' which will not inherit the action data by default. Acceptable values include:
+#'
+#' - `NULL`: No action taken.
+#' - [`waiver()`][ggplot2::waiver()]: Inherits from the parent layout.
+#' - A `function` or `purrr-style formula`: Used to transform the plot data,
+#'   which should accept a data frame and return a data frame. You can inherit
+#'   the parent layout action data function, applying it after the parent
+#'   layout's action data, using the `inherit` argument.
 #'
 #' Use this hook to modify the data for all `geoms` after the layout is created
 #' but before rendering by `ggplot2`. The returned data must be a data frame.
 #'
 #' @param theme Default plot theme, one of:
-#'   - `NULL`: will inherit from the parent layout directly.
+#'   - `NULL`: inherit from the parent layout directly.
 #'   - [`theme()`][ggplot2::theme]: will be added with the parent layout theme.
 #'     If you want to override the parent layout theme, set `complete=TRUE`.
 #'
@@ -92,12 +98,15 @@ plot_action <- function(data = NA, theme = NA, guides = NA,
     )
 }
 
-default_action <- function(inherit = FALSE) {
+default_action <- function(data) {
     structure(
         list(
-            data = waiver(), theme = NULL,
-            free_spaces = waiver(), free_labs = waiver(),
-            guides = waiver(), inherit = inherit
+            data = data,
+            theme = NULL,
+            free_spaces = waiver(),
+            free_labs = waiver(),
+            guides = waiver(),
+            inherit = FALSE
         ),
         class = "plot_action"
     )

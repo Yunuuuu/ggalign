@@ -120,7 +120,9 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     # check arguments -----------------------------------
     width <- check_size(width)
     height <- check_size(height)
-    action <- check_action(action)
+    # if inherit from the parent layout data, we'll inherit
+    # the action data function
+    action <- check_action(action, if (is.null(data)) waiver() else NULL)
     if (!is.null(theme)) assert_s3_class(theme, "theme")
     # A single boolean value for compatible with version <= 0.0.4
     if (isTRUE(filling)) {
@@ -165,7 +167,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         "HeatmapLayout",
         data = data,
         theme = theme, action = action, # used by the layout
-        body_action = default_action(), # used by heatmap body
+        body_action = default_action(waiver()), # used by heatmap body
         # following parameters can be controlled by `active` object.
         width = width, height = height,
         # following parameters used when adding ggheamtap to ggstack

@@ -14,18 +14,25 @@ plot_action(
 )
 }
 \arguments{
-\item{data}{A function to transform the plot data before rendering. Whether
-this function is applied after the parent layout's action data depends on
-the \code{inherit} argument. Defaults to \code{\link[ggplot2:waiver]{waiver()}}, which
-directly inherits from the parent layout. If no parent layout is specified,
-the default is \code{NULL}, meaning the data won't be modified.
+\item{data}{A function to transform the plot data before rendering, referred
+to as action data. Defaults will attempt to inherit from the parent layout if
+the actual data is inherited from it, with one exception: \code{align_dendro()},
+which will not inherit the action data by default. Acceptable values include:
+\itemize{
+\item \code{NULL}: No action taken.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits from the parent layout.
+\item A \code{function} or \verb{purrr-style formula}: Used to transform the plot data,
+which should accept a data frame and return a data frame. You can inherit
+the parent layout action data function, applying it after the parent
+layout's action data, using the \code{inherit} argument.
+}
 
 Use this hook to modify the data for all \code{geoms} after the layout is created
 but before rendering by \code{ggplot2}. The returned data must be a data frame.}
 
 \item{theme}{Default plot theme, one of:
 \itemize{
-\item \code{NULL}: will inherit from the parent layout directly.
+\item \code{NULL}: inherit from the parent layout directly.
 \item \code{\link[ggplot2:theme]{theme()}}: will be added with the parent layout theme.
 If you want to override the parent layout theme, set \code{complete=TRUE}.
 }

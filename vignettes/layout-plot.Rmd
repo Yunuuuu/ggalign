@@ -56,7 +56,7 @@ ggheatmap(small_mat) +
     geom_point(aes(y = value))
 ```
 
-### Plot data
+### action data
 `align_gg()`/`ggalign()` requires the specific data format for its operations.
 If you need to transform or filter data for individual `geoms`, you can use the
 `data` argument within each `geom`. However, if you have multiple `geoms` and
@@ -73,54 +73,6 @@ ggheatmap(small_mat) +
     ggalign(action = plot_action(data = function(data) subset(data, .panel == 1L))) +
     geom_bar(aes(y = value, fill = .row_names), stat = "identity")
 ```
-
-If the action data function has been set in both the single plot and the parent
-layout, Whether the action data function is applied after the parent layout's
-action data depends on the `inherit` argument in `plot_action()`. By default,
-this argument is set to `FALSE`, meaning that the action data function will not
-apply the transformations from the parent layout.
-
-The following plot will result in an empty plot area since no data remains after
-filtering: 
-```{r}
-set.seed(1234L)
-ggheatmap(small_mat) +
-    scale_fill_viridis_c(guide = "none") +
-    hmanno("t",
-        action = plot_action(data = function(data) subset(data, .panel == 1L))
-    ) +
-    align_kmeans(3L) +
-    # this action data function will be applied after the layout action data
-    # function, so there is no panel in `2`
-    ggalign(action = plot_action(
-        data = function(data) subset(data, .panel == 2L),
-        inherit = TRUE
-    )) +
-    geom_bar(aes(y = value, fill = .row_names), stat = "identity")
-```
-
-To resolve this issue, you can set `inherit = FALSE`, or keep the default value:
-```{r}
-set.seed(1234L)
-ggheatmap(small_mat) +
-    scale_fill_viridis_c(guide = "none") +
-    hmanno("t",
-        action = plot_action(data = function(data) subset(data, .panel == 1L))
-    ) +
-    align_kmeans(3L) +
-    # this action data function will be applied after the layout action data
-    # function
-    ggalign(
-        action = plot_action(
-            data = function(data) subset(data, .panel == 2L),
-            inherit = FALSE
-        )
-    ) +
-    geom_bar(aes(y = value, fill = .row_names), stat = "identity")
-```
-
-This functionality is particularly useful for `ggoncoplot()`, as it relies on
-action data to prepare the data internally.
 
 ### Cross panel sumamry
 When used in a heatmap layout, and the data is inherited from the heatmap data,

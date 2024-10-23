@@ -12,6 +12,7 @@ align(
   data,
   size = NULL,
   action = NULL,
+  action_data = NA,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -49,6 +50,9 @@ all plots along a single axis.
 \item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
 
 \item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
+
+\item{action_data}{Default action data, which by default tries to infer
+from the \code{data} argument.}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}

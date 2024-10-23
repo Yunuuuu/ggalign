@@ -172,9 +172,8 @@ assert_action <- function(x, arg = caller_arg(x), call = caller_call()) {
     }
 }
 
-check_action <- function(x, inherit = FALSE,
-                         arg = caller_arg(x), call = caller_call()) {
-    ans <- default_action(inherit)
+check_action <- function(x, data, arg = caller_arg(x), call = caller_call()) {
+    ans <- default_action(data)
     if (is.null(x)) {
         ans
     } else {

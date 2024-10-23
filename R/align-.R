@@ -25,6 +25,8 @@
 #'
 #' @param size Plot size, can be an [unit][grid::unit] object.
 #' @param action A [plot_action()] object used for the plot.
+#' @param action_data Default action data, which by default tries to infer 
+#' from the `data` argument.
 #' @param limits A boolean value indicates whether to set the layout limtis for
 #' the plot.
 #' @param facet A boolean value indicates whether to set the layout facet for
@@ -52,14 +54,19 @@
 align <- function(align_class, params,
                   # this function is used for adding more `Align` Class
                   # Not used by the user.
-                  # The data argument is different from the documents in which
+                  # The `data` argument is different from the documents in which
                   # `NULL` means this `Align` object won't need any data,
                   # and `waiver()` will indicates inherit from the layout.
                   # So when adding a new `Align` object where user should input
                   # data, always remember transfrom `NULL` to `waiver()`
                   #
                   # Details see `initialize_align()`
-                  data, size = NULL, action = NULL,
+                  data, size = NULL,
+                  # The `action` argument is different from the documents in
+                  # which `NULL` means this `Align` object won't plot,
+                  # and `waiver()` will indicates we should set the default
+                  # action for this `Align` object.
+                  action = NULL, action_data = NA,
                   limits = TRUE, facet = TRUE,
                   set_context = TRUE, order = NULL, name = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
@@ -85,6 +92,28 @@ align <- function(align_class, params,
         empty_ok = FALSE, na_ok = TRUE,
         null_ok = TRUE, call = call
     )
+
+    if (!is.null(action)) {
+        if (identical(action_data, NA)) {
+            # set the default action data behaviour
+            # if inherit from the layout data, we'll also inherit the
+            # action data function
+            action_data <- if (is.waive(data)) waiver() else NULL
+        }
+        action <- check_action(
+            action %|w|% NULL,
+            data = action_data,
+            arg = "action",
+            call = call
+        )
+        action <- deprecate_action(
+            action, snake_class(align_class),
+            plot_data, theme,
+            free_spaces, free_labs,
+            free_guides = free_guides,
+            call = call
+        )
+    }
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()

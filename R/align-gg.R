@@ -57,16 +57,9 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
     assert_mapping(mapping)
-    action <- check_action(action)
-    action <- deprecate_action(
-        action, "align_gg",
-        plot_data, theme,
-        free_spaces, free_labs,
-        free_guides = free_guides
-    )
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data %||% waiver(), action = action,
+        size = size, data = data %||% waiver(), action = action %||% waiver(),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
