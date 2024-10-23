@@ -42,7 +42,7 @@
 #'     guides(fill = "none") +
 #'     hmanno("t", size = 0.5) +
 #'     ggalign() +
-#'     geom_bar(aes(.x, fill = value), data = function(x) {
+#'     geom_bar(aes(fill = value), data = function(x) {
 #'         subset(x, !is.na(value))
 #'     }) +
 #'     hmanno("r", size = 0.5) +
