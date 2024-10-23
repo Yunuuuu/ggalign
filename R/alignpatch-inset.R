@@ -69,7 +69,10 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 #' - [patch.pheatmap]
 #' @export
 #' @keywords internal
-patch <- function(x, ...) UseMethod("patch")
+patch <- function(x, ...) {
+    rlang::check_dots_used()
+    UseMethod("patch")
+}
 
 # Following methods much are copied from `cowplot` or `ggplotify`
 #' @export
@@ -82,14 +85,12 @@ patch.default <- function(x, ...) {
 #' @param ... Not used currently.
 #' @export
 patch.grob <- function(x, ...) {
-    rlang::check_dots_empty()
     x
 }
 
 #' @export
 #' @rdname patch.grob
 patch.gList <- function(x, ...) {
-    rlang::check_dots_empty()
     # gLists need to be wrapped in a grob tree
     grid::grobTree(plot)
 }
@@ -99,7 +100,6 @@ patch.gList <- function(x, ...) {
 #' @seealso [ggplot][ggplot2::ggplot]
 #' @export
 patch.ggplot <- function(x, ...) {
-    rlang::check_dots_empty()
     ggplotGrob(x)
 }
 
@@ -110,7 +110,6 @@ patch.ggplot <- function(x, ...) {
 #' - [wrap]
 #' @export
 patch.patch_ggplot <- function(x, ...) {
-    rlang::check_dots_empty()
     ggalignGrob(x)
 }
 
@@ -118,7 +117,6 @@ patch.patch_ggplot <- function(x, ...) {
 #' @seealso [alignpatches][align_plots]
 #' @export
 patch.alignpatches <- function(x, ...) {
-    rlang::check_dots_empty()
     ggalignGrob(x)
 }
 
@@ -127,7 +125,7 @@ patch.alignpatches <- function(x, ...) {
 #' @export
 patch.patchwork <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patchwork")
-    rlang::check_dots_empty()
+
     patchwork::patchworkGrob(x)
 }
 
@@ -136,7 +134,7 @@ patch.patchwork <- function(x, ...) {
 #' @export
 patch.patch <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patch")
-    rlang::check_dots_empty()
+
     patchwork::patchGrob(x)
 }
 
@@ -185,7 +183,7 @@ patch.function <- function(x, ..., device = NULL, name = NULL) {
 #' @export
 patch.recordedplot <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from recordedplot")
-    rlang::check_dots_empty()
+
     gridGraphics::echoGrob(x, device = device %||% offscreen)
 }
 
