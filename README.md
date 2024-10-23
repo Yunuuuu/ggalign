@@ -70,8 +70,8 @@ syntax, the typical workflow includes:
     weights or by manually specifying the observation index.
   - `align_dendro()`: Reorder or Group layout based on hierarchical
     clustering.
-- Adding plots with `ggalign()` or `ggpanel()`, and then layer
-  additional ggplot2 elements such as geoms, stats, or scales.
+- Adding plots with `ggalign()`, `ggpanel()`, or `ggwrap()`, and then
+  layer additional ggplot2 elements such as geoms, stats, or scales.
 
 For documents of the release version, please see
 <https://yunuuuu.github.io/ggalign>, for documents of the development
