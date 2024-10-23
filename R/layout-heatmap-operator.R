@@ -16,14 +16,6 @@ layout_heatmap_subtract.default <- function(object, heatmap, object_name) {
     heatmap
 }
 
-#' @export
-layout_heatmap_subtract.ggplot <- function(object, heatmap, object_name) {
-    cli::cli_abort(c(
-        "Cannot add {.var {object_name}} into the heatmap layout",
-        i = "try to use {.fn ggalign} to initialize the {.cls ggplot}"
-    ))
-}
-
 ###############################################################
 #' @keywords internal
 layout_heatmap_and_add <- function(object, heatmap, object_name) {

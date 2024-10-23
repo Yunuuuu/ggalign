@@ -140,7 +140,7 @@ ggheatmap(small_mat) +
 ```
 
 ## `align_panel`
-The `align_panel()` function is similar to align_gg(), but it operates
+The `align_panel()` function is similar to `align_gg()`, but it operates
 specifically with layout panel data, removing all axis labels and ticks. The
 `ggpanel()` function is an alias for `align_panel()`. 
 
@@ -167,6 +167,21 @@ ggheatmap(small_mat) +
         }
     )
 ```
+
+## `align_wrap`
+The `align_wrap()` function accepts arbitrary graphic and converts it into a
+ggplot object, allowing you to incorporate them into your layout. Note that it
+won't align every actual axis value. The `ggwrap()` function serves as an alias
+for `align_wrap()`.
+```{r}
+ggheatmap(small_mat) +
+    hmanno("top") +
+    ggwrap(ggplot(mtcars, aes(wt, mpg))) +
+    geom_point()
+```
+
+You can also wrap any objects that can be converted into a `grob.` See the
+`patch()` function for more details.
 
 ## Session information
 ```{r}

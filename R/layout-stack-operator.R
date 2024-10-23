@@ -17,14 +17,6 @@ layout_stack_subtract.default <- function(object, stack, object_name) {
     stack
 }
 
-#' @export
-layout_stack_subtract.ggplot <- function(object, stack, object_name) {
-    cli::cli_abort(c(
-        "Cannot add {.code {object_name}} into the stack layout",
-        i = "try to use {.fn ggalign} instead"
-    ))
-}
-
 ##################################################################
 #' @keywords internal
 layout_stack_and_add <- function(object, stack, object_name) {

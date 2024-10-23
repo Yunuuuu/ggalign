@@ -93,7 +93,7 @@ layout_stack_add.HeatmapLayout <- function(object, stack, object_name) {
         }
         # always convert into a matrix
         data <- switch_direction(
-            direction, 
+            direction,
             as.matrix(stack_data),
             t(as.matrix(stack_data))
         )
@@ -210,7 +210,10 @@ layout_stack_add.list <- function(object, stack, object_name) {
 layout_stack_add.ggplot <- function(object, stack, object_name) {
     cli::cli_abort(c(
         "Cannot add {.code {object_name}} into the stack layout",
-        i = "try to use {.fn ggalign} to initialize a {.cls ggplot} object"
+        i = paste(
+            "try to use {.fn ggalign} to create a {.cls ggplot}",
+            "or use {.fn ggwrap} to wrap this plot"
+        )
     ))
 }
 

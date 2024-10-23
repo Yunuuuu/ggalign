@@ -119,7 +119,10 @@ layout_heatmap_add.data.frame <- layout_heatmap_add.matrix
 layout_heatmap_add.ggplot <- function(object, heatmap, object_name) {
     cli::cli_abort(c(
         "Cannot add {.var {object_name}} into the heatmap layout",
-        i = "try to use {.fn ggalign} to initialize the {.cls ggplot}"
+        i = paste(
+            "try to use {.fn ggalign} to create a {.cls ggplot}",
+            "or use {.fn ggwrap} to wrap this plot"
+        )
     ))
 }
 

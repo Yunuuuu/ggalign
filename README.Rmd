@@ -80,8 +80,8 @@ typical workflow includes:
    - `align_order()`: Reorder layout observations based on statistical weights
    or by manually specifying the observation index.
    - `align_dendro()`: Reorder or Group layout based on hierarchical clustering.
- - Adding plots with `ggalign()` or `ggpanel()`, and then layer additional
- ggplot2 elements such as geoms, stats, or scales. 
+ - Adding plots with `ggalign()`, `ggpanel()`, or `ggwrap()`, and then layer
+ additional ggplot2 elements such as geoms, stats, or scales. 
 
 For documents of the release version, please see <`r params$release`>, for
 documents of the development version, please see <`r params$devel`>.

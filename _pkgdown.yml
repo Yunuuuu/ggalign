@@ -39,6 +39,7 @@ reference:
   contents:
   - ggalign
   - ggpanel
+  - ggwrap
 
 - title: Layout Customization
   desc: >
