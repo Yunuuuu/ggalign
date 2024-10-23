@@ -187,7 +187,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         } else {
             tile_mapping$height <- NULL
         }
-        # we always ensure the filling layer has a fill mapping
+        # check if user has provided and manual fill mapping
         if (!is.null(.subset2(ans@plot$mapping, "fill"))) {
             tile_mapping$fill <- NULL
         }
