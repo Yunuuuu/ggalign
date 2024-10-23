@@ -94,3 +94,37 @@ testthat::test_that("`ggsave()` works well", {
     p <- ggheatmap(1:10)
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
 })
+
+testthat::test_that("`ggoncoplot` works well", {
+    mat <- read.table(textConnection(
+        "s1,s2,s3
+         g1,snv; indel,snv,indel
+         g2,,snv;indel,snv
+         g3,snv,,indel;snv"
+    ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+    expect_doppelganger(
+        "single-oncoplot",
+        ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9))
+    )
+    expect_doppelganger(
+        "oncoplot-with-annotation",
+        ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
+            # Note that guide legends from `geom_tile` and `geom_bar` are different.
+            # Although they appear similar, the internal mechanisms won't collapse
+            # the guide legends. Therefore, we remove the guide legends from
+            # `geom_tile`.
+            guides(fill = "none") +
+            hmanno("t", size = 0.5) +
+            ggalign() +
+            geom_bar(aes(fill = value), data = function(x) {
+                subset(x, !is.na(value))
+            }) +
+            hmanno("r", size = 0.5) +
+            ggalign() +
+            geom_bar(aes(fill = value), orientation = "y", data = function(x) {
+                subset(x, !is.na(value))
+            }) &
+            scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
+    )
+})
