@@ -101,30 +101,6 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     data <- trimws(data, whitespace = "[\\h\\v]")
     data[data == ""] <- NA_character_
 
-    # set mapping for width and height
-    default_mapping <- aes(
-        width = na_if(map_width[.data$value], 1),
-        height = na_if(map_height[.data$value], 1)
-    )
-    if (!is.null(map_width)) {
-        if (!rlang::is_named(map_width) || !is.numeric(map_width)) {
-            cli::cli_abort("{.arg map_width} must be a named numeric")
-        }
-    } else {
-        default_mapping$width <- NULL
-    }
-    if (!is.null(map_height)) {
-        if (!rlang::is_named(map_height) || !is.numeric(map_height)) {
-            cli::cli_abort("{.arg map_height} must be a named numeric")
-        }
-    } else {
-        default_mapping$height <- NULL
-    }
-
-    if (length(default_mapping)) {
-        mapping <- add_default_mapping(mapping, default_mapping)
-    }
-
     # prepare counts matrix to reorder the column or rows
     if (reorder_column || reorder_row) {
         counts <- !is.na(data)
@@ -132,20 +108,42 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         weights <- rowSums(counts)
         row_index <- order(weights, decreasing = TRUE)
     }
-    # draw the oncoplot
+
+    # check filling
+    if (isTRUE(filling) || is.waive(filling)) {
+        filling <- "tile"
+    } else if (isFALSE(filling)) {
+        filling <- NULL
+    } else if (!is.null(filling)) {
+        filling <- arg_match0(filling, c("tile", "raster"))
+        if (filling == "raster") {
+            cli::cli_warn("Cannot use {.fn geom_raster} in oncoplot")
+            filling <- "tile"
+        }
+    }
+
+    # prepare the action data
     action_data <- function(data) {
-        value_list <- strsplit(data$value, split = "[;:,|]")
+        value_list <- strsplit(data$value,
+            split = "\\s*[;:,|]\\s*", perl = TRUE
+        )
         lvls <- ggalign_attr(data, "breaks")
         data <- vec_rep_each(data, list_sizes(value_list))
         value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
-        if (!is.null(lvls)) data$value <- factor(value, levels = lvls)
+        if (!is.null(lvls)) {
+            data$value <- factor(value, levels = lvls)
+        } else {
+            data$value <- value
+        }
         data
     }
+
+    # draw the oncoplot
     ans <- heatmap_layout(
         data = data, mapping = mapping,
         width = width, height = height,
         action = plot_action(data = action_data),
-        theme = theme, filling = filling,
+        theme = theme, filling = NULL,
         set_context = set_context, order = order, name = name,
         guides = guides
     )
@@ -164,9 +162,36 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     }
     # always make sure user provided action override the default action
     ans <- ans + hmanno(NULL, action = action)
-    if (!is.null(ans@filling)) {
+    if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
         ans <- ans + plot_action(data = action_data)
+
+        # set mapping for width and height
+        tile_mapping <- aes(
+            .data$.x, .data$.y,
+            fill = .data$value,
+            width = na_if(map_width[.data$value], 1),
+            height = na_if(map_height[.data$value], 1)
+        )
+        if (!is.null(map_width)) {
+            if (!rlang::is_named(map_width) || !is.numeric(map_width)) {
+                cli::cli_abort("{.arg map_width} must be a named numeric")
+            }
+        } else {
+            tile_mapping$width <- NULL
+        }
+        if (!is.null(map_height)) {
+            if (!rlang::is_named(map_height) || !is.numeric(map_height)) {
+                cli::cli_abort("{.arg map_height} must be a named numeric")
+            }
+        } else {
+            tile_mapping$height <- NULL
+        }
+        # we always ensure the filling layer has a fill mapping
+        if (!is.null(.subset2(ans@plot$mapping, "fill"))) {
+            tile_mapping$fill <- NULL
+        }
+        ans <- ans + ggplot2::geom_tile(tile_mapping)
     }
     ans
 }
