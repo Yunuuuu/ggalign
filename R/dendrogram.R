@@ -280,8 +280,8 @@ dendrogram_data <- function(tree,
             data <- transpose(lapply(dend, .dendrogram_data, from_root = FALSE))
 
             # node should be the direct children
-            node <- do.call(vec_rbind, .subset2(data, "node"))
-            edge <- do.call(vec_rbind, .subset2(data, "edge"))
+            node <- vec_rbind(!!!.subset2(data, "node"))
+            edge <- vec_rbind(!!!.subset2(data, "edge"))
 
             # all coordinate for direct children nodes -------------
             # following should be length 2
