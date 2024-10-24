@@ -11,10 +11,10 @@ geom_pie(
   position = "identity",
   ...,
   clockwise = TRUE,
+  steps = 100,
   lineend = "butt",
   linejoin = "round",
   linemitre = 10,
-  steps = 100,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -97,14 +97,14 @@ lists which parameters it can accept.
 
 \item{clockwise}{A single boolean value indicates clockwise or not.}
 
+\item{steps}{An integer indicating the number of steps to generate the pie
+chart radian. Increasing this value results in a smoother pie circular.}
+
 \item{lineend}{Line end style (round, butt, square).}
 
 \item{linejoin}{Line join style (round, mitre, bevel).}
 
 \item{linemitre}{Line mitre limit (number greater than 1).}
-
-\item{steps}{An integer indicating the number of steps to generate the pie
-chart radian. Increasing this value results in a smoother pie circular.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}

@@ -16,9 +16,9 @@
 #' @export
 geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
                      position = "identity", ...,
-                     clockwise = TRUE,
+                     clockwise = TRUE, steps = 100,
                      lineend = "butt", linejoin = "round", linemitre = 10,
-                     steps = 100, na.rm = FALSE,
+                     na.rm = FALSE,
                      show.legend = NA, inherit.aes = TRUE) {
     ggplot2::layer(
         data = data,
