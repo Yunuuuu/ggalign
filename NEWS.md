@@ -4,7 +4,7 @@
 
 * new `geom_pie()` function to draw pie charts
 
-* new `ggwrap()` function to wrap arbitrary graphics to the layout
+* new `gplot()` function to wrap ggplot to the layout
 
 * new `fortify_stack()` function to convert any objects for plot with [ggstack()]
 
