@@ -180,8 +180,33 @@ ggheatmap(small_mat) +
     geom_point()
 ```
 
-You can also wrap any objects that can be converted into a `grob.` See the
+You can also wrap any objects that can be converted into a `grob`. See the
 `patch()` function for more details.
+
+You can take a grob directly:
+```{r}
+library(grid)
+ggheatmap(small_mat) +
+    hmanno("top") +
+    # ggwrap will create a `ggplot` object
+    ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
+    # we can then add any inset grobs (the same as ggwrap, it can take any objects
+    # which can be converted to a `grob`)
+    inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
+    inset(textGrob("Here are some text", gp = gpar(color = "black")),
+        align = "panel"
+    )
+```
+
+You can take a base plot:
+```{r}
+ggheatmap(small_mat) +
+    hmanno("top") +
+    ggwrap(~ plot(mtcars$mpg, mtcars$disp),
+        align = "full",
+        mar = c(0, 2, 0, 4.5), bg = NA
+    )
+```
 
 ## Session information
 ```{r}
