@@ -1,16 +1,22 @@
 #' Pie charts
+#' @section new aesthetics:
+#'  - `angle`: the pie circle angle.
+#'  - `angle0`: the initial pie circle angle.
+#'  - `radius`: the circle radius.
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_polygon
 #' @inheritParams ggplot2::geom_path
 #' @param steps An integer indicating the number of steps to generate the pie
 #' chart radian. Increasing this value results in a smoother pie circular.
+#' @param clockwise A single boolean value indicates clockwise or not.
 #' @eval ggfun("rd_aesthetics")("geom", "pie")
 #' @examples
 #' ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
-#'     geom_pie(aes(x, y, radian = value * 2 * pi))
+#'     geom_pie(aes(x, y, angle = value * 360))
 #' @export
 geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
                      position = "identity", ...,
+                     clockwise = TRUE,
                      lineend = "butt", linejoin = "round", linemitre = 10,
                      steps = 100, na.rm = FALSE,
                      show.legend = NA, inherit.aes = TRUE) {
@@ -26,6 +32,7 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
             lineend = lineend,
             linejoin = linejoin,
             linemitre = linemitre,
+            clockwise = clockwise,
             na.rm = na.rm, steps = steps, ...
         )
     )
@@ -33,22 +40,32 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' @importFrom ggplot2 ggproto aes .pt resolution
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_slice<- vec_cbind vec_rbind vec_rep_each
+#' @importFrom vctrs vec_slice<- vec_cbind vec_rbind vec_rep_each vec_cast
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,
-    default_aes = set_names(
-        ggplot2::GeomPolygon$default_aes,
-        function(nms) {
-            nms <- set_names(nms)
-            vec_slice(nms, "subgroup") <- "radius"
-            nms
-        }
+    default_aes = aes(
+        !!!set_names(
+            ggplot2::GeomPolygon$default_aes,
+            function(nms) {
+                nms <- set_names(nms)
+                vec_slice(nms, "subgroup") <- "radius"
+                nms
+            }
+        ),
+        angle0 = 0
     ),
-    non_missing_aes = c("x", "y", "radian", "radius"),
-    required_aes = c("x", "y", "radian"),
+    non_missing_aes = c("x", "y", "angle", "angle0", "radius"),
+    required_aes = c("x", "y", "angle"),
     handle_na = ggplot2::Geom$handle_na,
-    setup_params = function(data, params) {
-        params$steps <- max(as.integer(.subset2(params, "steps")), 1L) + 1L
+    setup_params = function(self, data, params) {
+        steps <- vec_cast(.subset2(params, "steps"), integer(),
+            x_arg = "steps",
+            call = call(snake_class(self))
+        )
+        assert_bool(.subset2(params, "clockwise"),
+            arg = "clockwise", call = call(snake_class(self))
+        )
+        params$steps <- max(steps, 1L) + 1L
         params
     },
     setup_data = function(data, params) {
@@ -70,16 +87,28 @@ GeomPie <- ggproto("GeomPie",
         data
     },
     draw_panel = function(data, panel_params, coord, steps = 100L,
-                          lineend = "butt", linejoin = "round",
-                          linemitre = 10) {
+                          clockwise = TRUE, lineend = "butt",
+                          linejoin = "round", linemitre = 10) {
         # Expand x, y, radius data to points along circle
-        circular_data <- Map(function(x, y, radius, radian) {
-            radians <- seq(0, radian, length.out = steps)[-1L]
-            data_frame0(
-                x = c(x, cos(radians) * radius + x),
-                y = c(y, sin(radians) * radius + y)
-            )
-        }, x = data$x, y = data$y, radius = data$radius, radian = data$radian)
+        circular_data <- Map(
+            function(x, y, radius, ang, ang0) {
+                if (clockwise) {
+                    ang0 <- 90 - ang0
+                    radians <- seq(ang0, ang0 - ang, length.out = steps)[-1L] *
+                        pi / 180
+                } else {
+                    ang0 <- 90 + ang0
+                    radians <- seq(ang0, ang0 + ang, length.out = steps)[-1L] *
+                        pi / 180
+                }
+                data_frame0(
+                    x = c(x, cos(radians) * radius + x),
+                    y = c(y, sin(radians) * radius + y)
+                )
+            },
+            x = data$x, y = data$y,
+            radius = data$radius, ang = data$angle, ang0 = data$angle0
+        )
         circular_data <- vec_cbind(
             vec_rbind(!!!circular_data),
             vec_rep_each(

@@ -10,6 +10,7 @@ geom_pie(
   stat = "identity",
   position = "identity",
   ...,
+  clockwise = TRUE,
   lineend = "butt",
   linejoin = "round",
   linemitre = 10,
@@ -94,6 +95,8 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
+\item{clockwise}{A single boolean value indicates clockwise or not.}
+
 \item{lineend}{Line end style (round, butt, square).}
 
 \item{linejoin}{Line join style (round, mitre, bevel).}
@@ -120,14 +123,24 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \description{
 Pie charts
 }
+\section{new aesthetics}{
+
+\itemize{
+\item \code{angle}: the pie circle angle.
+\item \code{angle0}: the initial pie circle angle.
+\item \code{radius}: the circle radius.
+}
+}
+
 \section{Aesthetics}{
 
 \code{geom_pie()} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
 \item \strong{\code{\link[=aes_position]{x}}}
 \item \strong{\code{\link[=aes_position]{y}}}
-\item \strong{\code{radian}}
+\item \strong{\code{angle}}
 \item \code{\link[=aes_colour_fill_alpha]{alpha}}
+\item \code{angle0}
 \item \code{\link[=aes_colour_fill_alpha]{colour}}
 \item \code{\link[=aes_colour_fill_alpha]{fill}}
 \item \code{\link[=aes_group_order]{group}}
@@ -140,5 +153,5 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
-    geom_pie(aes(x, y, radian = value * 2 * pi))
+    geom_pie(aes(x, y, angle = value * 360))
 }
