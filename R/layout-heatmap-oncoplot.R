@@ -25,6 +25,7 @@
 #' @param reorder_row,reorder_column A boolean value indicating whether to
 #' reorder the rows/columns based on the frequency or characteristics of the
 #' alterations.
+#' @param filling Same as [ggheatmap()], but only `"tile"` can be used.
 #' @examples
 #' # A simple example from `ComplexHeatmap`
 #' mat <- read.table(textConnection(
