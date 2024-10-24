@@ -212,7 +212,7 @@ layout_stack_add.ggplot <- function(object, stack, object_name) {
         "Cannot add {.code {object_name}} into the stack layout",
         i = paste(
             "try to use {.fn ggalign} to create a {.cls ggplot}",
-            "or use {.fn ggwrap} to wrap this plot"
+            "or use {.fn gplot} to add this plot"
         )
     ))
 }

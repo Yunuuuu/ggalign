@@ -12,7 +12,7 @@ alignpatch(x)
 \itemize{
 \item \link[ggplot2:ggplot]{ggplot}
 \item \link[=align_plots]{alignpatches}
-\item \link[=wrap]{wrapped_plot}
+\item \link[=ggwrap]{wrapped_plot}
 \item \link[patchwork:patchGrob]{patch}
 \item \link[patchwork:wrap_elements]{wrapped_patch}
 \item \link[patchwork:plot_spacer]{spacer}

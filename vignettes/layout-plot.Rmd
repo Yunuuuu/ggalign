@@ -168,26 +168,27 @@ ggheatmap(small_mat) +
     )
 ```
 
-## `align_wrap`
-The `align_wrap()` function accepts arbitrary graphic and converts it into a
-ggplot object, allowing you to incorporate them into your layout. Note that it
-won't align every actual axis value. The `ggwrap()` function serves as an alias
-for `align_wrap()`.
+## `align_ggplot`
+The `align_ggplot()` function allows you to incorporate a ggplot object into
+your layout while maintaining alignment with other plot elements. Unlike
+`align_gg()`, which aligns every axis value precisely, `align_ggplot()` focuses
+more on layout integration without enforcing strict axis alignment. Here's how
+it works: 
 ```{r}
 ggheatmap(small_mat) +
     hmanno("top") +
-    ggwrap(ggplot(mtcars, aes(wt, mpg))) +
+    gplot(ggplot(mtcars, aes(wt, mpg))) +
     geom_point()
 ```
 
-You can also wrap any objects that can be converted into a `grob`. You can take
-a grob directly:
+You can also wrap objects that can be converted into a `grob` (graphical object)
+using `ggwrap()`, which converts them into a `ggplot` for plotting: 
 ```{r}
 library(grid)
 ggheatmap(small_mat) +
     hmanno("top") +
-    # ggwrap will create a `ggplot` object
-    ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
+    # ggwrap will create a `ggplot` object, we use `gplot` to add it into the layout
+    gplot(ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full")) +
     # we can then add any inset grobs (the same as ggwrap, it can take any objects
     # which can be converted to a `grob`)
     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
@@ -196,8 +197,10 @@ ggheatmap(small_mat) +
     )
 ```
 
-You can take a base plot with formula, `pheatmap`, `ComplexHeatmap`, et al. See
-the `patch()` function for more details.
+You can also integrate base plots, pheatmap, ComplexHeatmap, e.g., and explore
+more with the `patch()` function for combining such plots within the same
+layout.  This makes it versatile for mixing different types of plots and objects
+into a cohesive visual layout. 
 
 ## Session information
 ```{r}

@@ -1,6 +1,6 @@
 #' Create a ggplot inset
 #'
-#' @inheritParams wrap
+#' @inheritParams ggwrap
 #' @return A `patch_inset` object, which can be added in ggplot.
 #' @inherit patch seealso
 #' @examples
@@ -48,7 +48,7 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 ############################################################
 #' Convert Object into a Grob
 #'
-#' The `patch()` function is used by [wrap()] and [inset()] to convert objects
+#' The `patch()` function is used by [ggwrap()] and [inset()] to convert objects
 #' into a [grob][grid::grob].
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
@@ -107,7 +107,7 @@ patch.ggplot <- function(x, ...) {
 #' @seealso
 #' - [patch_titles]
 #' - [inset]
-#' - [wrap]
+#' - [ggwrap]
 #' @export
 patch.patch_ggplot <- function(x, ...) {
     ggalignGrob(x)

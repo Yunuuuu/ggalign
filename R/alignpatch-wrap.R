@@ -1,6 +1,6 @@
-#' Wrap Arbitrary Graphics for Alignment
+#' Wrap Arbitrary Graphics to ggplot
 #'
-#' The `wrap()` function allows non-ggplot2 elements to be converted into a
+#' The `ggwrap()` function allows non-ggplot2 elements to be converted into a
 #' compliant representation for use with [align_plots()]. This is useful for
 #' adding any graphics that can be converted into a [grob][grid::grob] with the
 #' [patch()] method.
@@ -23,7 +23,7 @@
 #' @inherit patch seealso
 #' @examples
 #' library(grid)
-#' wrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
+#' ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +
 #'     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
 #'     inset(textGrob("Here are some text", gp = gpar(color = "black")),
 #'         align = "panel"
@@ -31,7 +31,7 @@
 #' p1 <- ggplot(mtcars) +
 #'     geom_point(aes(mpg, disp)) +
 #'     ggtitle("Plot 1")
-#' align_plots(p1, wrap(
+#' align_plots(p1, ggwrap(
 #'     ~ plot(mtcars$mpg, mtcars$disp),
 #'     mar = c(0, 2, 0, 0), bg = NA
 #' ))
@@ -39,8 +39,8 @@
 #' @importFrom ggplot2 theme element_blank
 #' @importFrom grid is.grob
 #' @export
-wrap <- function(plot, ..., align = "panel", on_top = TRUE,
-                 clip = TRUE, vp = NULL) {
+ggwrap <- function(plot, ..., align = "panel", on_top = TRUE,
+                   clip = TRUE, vp = NULL) {
     patch <- ggplot2::ggplot() +
         theme(
             plot.background = element_blank(),
@@ -103,7 +103,7 @@ alignpatch.wrapped_plot <- function(x) {
 
 # For wrapped plot -------------------
 #' @export
-alignpatch.grob <- function(x) alignpatch(wrap(x))
+alignpatch.grob <- function(x) alignpatch(ggwrap(x))
 
 #' @export
 alignpatch.gList <- alignpatch.grob
@@ -121,7 +121,7 @@ alignpatch.recordedplot <- alignpatch.grob
 alignpatch.trellis <- alignpatch.grob
 
 #' @export
-alignpatch.Heatmap <- function(x) alignpatch(wrap(x, align = "full"))
+alignpatch.Heatmap <- function(x) alignpatch(ggwrap(x, align = "full"))
 
 #' @export
 alignpatch.HeatmapList <- alignpatch.Heatmap
@@ -130,7 +130,7 @@ alignpatch.HeatmapList <- alignpatch.Heatmap
 alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
 
 #' @export
-alignpatch.pheatmap <- function(x) alignpatch(wrap(x, align = "full"))
+alignpatch.pheatmap <- function(x) alignpatch(ggwrap(x, align = "full"))
 
 ################################################## 3
 add_wrapped_grobs <- function(gt, grobs, on_top) {

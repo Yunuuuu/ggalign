@@ -120,7 +120,7 @@ ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 #' `ggalign` has implement `alignpatch` method for following objects:
 #'   - [ggplot][ggplot2::ggplot]
 #'   - [alignpatches][align_plots]
-#'   - [wrapped_plot][wrap]
+#'   - [wrapped_plot][ggwrap]
 #'   - [patch][patchwork::patchGrob]
 #'   - [wrapped_patch][patchwork::wrap_elements]
 #'   - [spacer][patchwork::plot_spacer]
