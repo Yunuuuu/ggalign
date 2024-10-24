@@ -20,13 +20,13 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_dendro.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_gg.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_ggplot.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_group.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_kmeans.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_order.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_panel.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_plots.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_reorder.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_wrap.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/alignpatch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/area.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cash-Layout-method.html</loc></url>
@@ -42,6 +42,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/ggalign_attr.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/ggalign_stat.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/ggoncoplot.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/ggwrap.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/hclust2.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/heatmap_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/hmanno.html</loc></url>
@@ -76,6 +77,5 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_active.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/theme_ggalign.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/wrap.html</loc></url>
 </urlset>
 
