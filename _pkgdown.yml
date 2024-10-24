@@ -39,7 +39,7 @@ reference:
   contents:
   - ggalign
   - ggpanel
-  - ggwrap
+  - gplot
 
 - title: Layout Customization
   desc: >
@@ -67,7 +67,7 @@ reference:
   - free_space
   - area
   - inset
-  - wrap
+  - ggwrap
 
 - title: Extending Plot Composer
   desc: >
