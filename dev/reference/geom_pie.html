@@ -72,6 +72,7 @@
 <span>  stat <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  clockwise <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  lineend <span class="op">=</span> <span class="st">"butt"</span>,</span>
 <span>  linejoin <span class="op">=</span> <span class="st">"round"</span>,</span>
 <span>  linemitre <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -161,6 +162,10 @@ lists which parameters it can accept.</p></li>
 </ul></dd>
 
 
+<dt id="arg-clockwise">clockwise<a class="anchor" aria-label="anchor" href="#arg-clockwise"></a></dt>
+<dd><p>A single boolean value indicates clockwise or not.</p></dd>
+
+
 <dt id="arg-lineend">lineend<a class="anchor" aria-label="anchor" href="#arg-lineend"></a></dt>
 <dd><p>Line end style (round, butt, square).</p></dd>
 
@@ -199,13 +204,22 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 
 </dl></div>
     <div class="section level2">
+    <h2 id="new-aesthetics">new aesthetics<a class="anchor" aria-label="anchor" href="#new-aesthetics"></a></h2>
+
+
+<ul><li><p><code>angle</code>: the pie circle angle.</p></li>
+<li><p><code>angle0</code>: the initial pie circle angle.</p></li>
+<li><p><code>radius</code>: the circle radius.</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="aesthetics">Aesthetics<a class="anchor" aria-label="anchor" href="#aesthetics"></a></h2>
 
 
 <p><code>geom_pie()</code> understands the following aesthetics (required aesthetics are in bold):</p><ul><li><p><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">x</a></code></strong></p></li>
 <li><p><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">y</a></code></strong></p></li>
-<li><p><strong><code>radian</code></strong></p></li>
+<li><p><strong><code>angle</code></strong></p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">alpha</a></code></p></li>
+<li><p><code>angle0</code></p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">colour</a></code></p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">fill</a></code></p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_group_order.html" class="external-link">group</a></code></p></li>
@@ -218,7 +232,7 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, value <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">geom_pie</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radian <span class="op">=</span> <span class="va">value</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">geom_pie</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, angle <span class="op">=</span> <span class="va">value</span> <span class="op">*</span> <span class="fl">360</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="geom_pie-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
