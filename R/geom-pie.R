@@ -109,13 +109,8 @@ GeomPie <- ggproto("GeomPie",
             x = data$x, y = data$y,
             radius = data$radius, ang = data$angle, ang0 = data$angle0
         )
-        circular_data <- vec_cbind(
-            vec_rbind(!!!circular_data),
-            vec_rep_each(
-                data[setdiff(names(data), c("x", "y", "radius", "radian"))],
-                times = steps
-            )
-        )
+        circular_data <- vec_rbind(!!!circular_data)
+
         # Transform to viewport coords
         circular_data <- coord$transform(circular_data, panel_params)
 
@@ -126,13 +121,13 @@ GeomPie <- ggproto("GeomPie",
             id.lengths = rep_len(steps, nrow(data)),
             default.units = "native",
             gp = grid::gpar(
-                col = circular_data$colour,
+                col = data$colour,
                 fill = ggplot2::fill_alpha(
-                    circular_data$fill,
-                    circular_data$alpha
+                    data$fill,
+                    data$alpha
                 ),
-                lwd = circular_data$linewidth,
-                lty = circular_data$linetype,
+                lwd = data$linewidth,
+                lty = data$linetype,
                 lineend = lineend,
                 linejoin = linejoin,
                 linemitre = linemitre
