@@ -108,8 +108,15 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
             if (!is.null(xlim_list <- .subset2(object, "xlim_list")) &&
                 length(xlim_list) >= cur_panel) {
                 if (scale_x$is_discrete()) {
+                    # for discrete scale, the limits starts from zero in each
+                    # panel
                     self$limits$x <- .subset2(xlim_list, cur_panel) -
                         (min(.subset2(xlim_list, cur_panel)) - 0.5)
+                    # we reset the breaks into character breaks
+                    # we match it by the original labels
+                    domain <- intersect(scale_x$labels, scale_x$get_limits())
+                    keep <- match(domain, scale_x$labels)
+                    scale_x$labels <- scale_x$breaks <- scale_x$labels[keep]
                 } else {
                     self$limits$x <- .subset2(xlim_list, cur_panel)
                 }
@@ -117,8 +124,15 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
             if (!is.null(ylim_list <- .subset2(object, "ylim_list")) &&
                 length(ylim_list) >= cur_panel) {
                 if (scale_y$is_discrete()) {
+                    # for discrete scale, the limits starts from zero in each
+                    # panel
                     self$limits$y <- .subset2(ylim_list, cur_panel) -
                         (min(.subset2(ylim_list, cur_panel)) - 0.5)
+                    # we reset the breaks into character breaks
+                    # we match it by the original labels
+                    domain <- intersect(scale_y$labels, scale_y$get_limits())
+                    keep <- match(domain, scale_y$labels)
+                    scale_y$labels <- scale_y$breaks <- scale_y$labels[keep]
                 } else {
                     self$limits$y <- .subset2(ylim_list, cur_panel)
                 }
@@ -193,7 +207,9 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
             coord <- ggproto(NULL, ParentCoord,
                 render_axis_h = function(self, panel_params, theme) {
                     if (!is.null(x_params)) {
-                        x <- .subset2(panel_params, "x")$get_breaks()
+                        x <- .subset2(panel_params, "x")$scale[[
+                            "_ggalign_breaks"
+                        ]]
                         theme <- subset_theme("x", theme, x)
                     }
                     ggproto_parent(ParentCoord, self)$render_axis_h(
@@ -202,7 +218,9 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
                 },
                 render_axis_v = function(self, panel_params, theme) {
                     if (!is.null(y_params)) {
-                        y <- .subset2(panel_params, "y")$get_breaks()
+                        y <- .subset2(panel_params, "y")$scale[[
+                            "_ggalign_breaks"
+                        ]]
                         theme <- subset_theme("y", theme, y)
                     }
                     ggproto_parent(ParentCoord, self)$render_axis_v(
@@ -210,6 +228,8 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
                     )
                 }
             )
+
+
             ggproto_parent(Parent, self)$draw_panels(
                 panels = panels, layout = layout,
                 x_scales = x_scales, y_scales = y_scales,
@@ -276,7 +296,8 @@ align_scales <- function(facet, scale, axis, params, panel_scales) {
             in_domain <- match(data_index, breaks)
             keep <- !is.na(in_domain)
             if (any(keep)) {
-                s$breaks <- plot_coord[keep]
+                # `_ggalign_breaks` used to match theme element values
+                s[["_ggalign_breaks"]] <- s$breaks <- plot_coord[keep]
                 s$labels <- labels[in_domain[keep]]
             } else {
                 s$breaks <- NULL
