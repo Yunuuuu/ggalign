@@ -107,11 +107,21 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
             cur_panel <- self$panel_counter + 1L
             if (!is.null(xlim_list <- .subset2(object, "xlim_list")) &&
                 length(xlim_list) >= cur_panel) {
-                self$limits$x <- .subset2(xlim_list, cur_panel)
+                if (scale_x$is_discrete()) {
+                    self$limits$x <- .subset2(xlim_list, cur_panel) -
+                        (min(.subset2(xlim_list, cur_panel)) - 0.5)
+                } else {
+                    self$limits$x <- .subset2(xlim_list, cur_panel)
+                }
             }
             if (!is.null(ylim_list <- .subset2(object, "ylim_list")) &&
                 length(ylim_list) >= cur_panel) {
-                self$limits$y <- .subset2(ylim_list, cur_panel)
+                if (scale_y$is_discrete()) {
+                    self$limits$y <- .subset2(ylim_list, cur_panel) -
+                        (min(.subset2(ylim_list, cur_panel)) - 0.5)
+                } else {
+                    self$limits$y <- .subset2(ylim_list, cur_panel)
+                }
             }
             self$panel_counter <- cur_panel
             ggproto_parent(Parent, self)$setup_panel_params(
