@@ -22,6 +22,9 @@
 #'  - `.panel`: the panel for current layout axis. It means `x-axis` for
 #'    vertical stack layout, `y-axis` for horizontal stack layout.
 #'
+#'  - `.index`: the index of the original layout data (only applicable if `data`
+#'    is `NULL`).
+#'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
 #'  - `.row_names` and `.row_index`: A factor of the row names and an integer of
@@ -49,9 +52,18 @@
 #'     hmanno("top") +
 #'     ggalign() +
 #'     geom_point(aes(y = value))
+#'
+#' # if data is `NULL`, a three column data frame
+#' # will be created (`.panel`, `.index`, `.x`/`.y`)
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     hmanno("t", size = 0.5) +
+#'     align_dendro(k = 3L) +
+#'     ggalign(data = NULL, size = 0.2) +
+#'     geom_tile(aes(y = 1L, fill = .panel))
+#'
 #' @export
 align_gg <- function(mapping = aes(), size = NULL, action = NULL,
-                     data = NULL, limits = TRUE, facet = TRUE,
+                     data = waiver(), limits = TRUE, facet = TRUE,
                      set_context = TRUE, order = NULL, name = NULL,
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
@@ -59,7 +71,7 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
     assert_mapping(mapping)
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data %||% waiver(), action = action %||% waiver(),
+        size = size, data = data, action = action %||% waiver(),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
@@ -74,6 +86,13 @@ ggalign <- align_gg
 
 #' @importFrom ggplot2 ggproto
 AlignGG <- ggproto("AlignGG", Align,
+    nobs = function(self) {
+        axis <- to_coord_axis(.subset2(self, "direction"))
+        cli::cli_abort(c(
+            "You cannot add {.fn {snake_class(self)}}",
+            i = "layout {axis}-axis is not initialized"
+        ), call = .subset2(self, "call"))
+    },
     setup_data = function(self, params, data) {
         # matrix: will be reshaped to the long-format data.frame
         # data.frame: won't do any thing special
@@ -89,13 +108,30 @@ AlignGG <- ggproto("AlignGG", Align,
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
-        ggplot2::ggplot(
+        ans <- ggplot2::ggplot(
             mapping = add_default_mapping(mapping, switch_direction(
                 direction,
                 aes(y = .data$.y),
                 aes(x = .data$.x)
             ))
         )
+        if (is.null(.subset2(self, "input_data"))) {
+            # remove the title and text of axis vertically with the layout
+            ans <- ans + switch_direction(
+                direction,
+                theme(
+                    axis.title.x = element_blank(),
+                    axis.text.x = element_blank(),
+                    axis.ticks.x = element_blank()
+                ),
+                theme(
+                    axis.title.y = element_blank(),
+                    axis.text.y = element_blank(),
+                    axis.ticks.y = element_blank()
+                )
+            )
+        }
+        ans
     },
 
     #' @importFrom vctrs vec_expand_grid vec_cbind
@@ -105,22 +141,24 @@ AlignGG <- ggproto("AlignGG", Align,
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
-        coords <- data_frame0(.panel = panel[index], .index = index)
-        coords[[coord_name]] <- seq_along(index)
+        ans <- data_frame0(.panel = panel[index], .index = index)
+        ans[[coord_name]] <- seq_along(index)
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
             # Align object always regard row as the observations
-            coords <- vec_expand_grid(col = data_frame0(
+            ans <- vec_expand_grid(col = data_frame0(
                 .extra_panel = extra_panel[extra_index],
                 .extra_index = extra_index
-            ), row = coords)
-            coords <- vec_cbind(coords$col, coords$row)
-            ans <- full_join(data, coords,
-                by.x = c(".column_index", ".row_index"),
-                by.y = c(".extra_index", ".index")
-            )
-        } else {
-            ans <- full_join(data, coords,
+            ), row = ans)
+            ans <- vec_cbind(ans$col, ans$row)
+            if (!is.null(data)) {
+                ans <- full_join(data, ans,
+                    by.x = c(".column_index", ".row_index"),
+                    by.y = c(".extra_index", ".index")
+                )
+            }
+        } else if (!is.null(data)) {
+            ans <- full_join(data, ans,
                 by.x = ".row_index", by.y = ".index"
             )
         }

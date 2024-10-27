@@ -6,10 +6,10 @@
 \title{Create ggplot object with a customized data}
 \usage{
 align_gg(
+  data = waiver(),
   mapping = aes(),
   size = NULL,
   action = NULL,
-  data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -23,10 +23,10 @@ align_gg(
 )
 
 ggalign(
+  data = waiver(),
   mapping = aes(),
   size = NULL,
   action = NULL,
-  data = NULL,
   limits = TRUE,
   facet = TRUE,
   set_context = TRUE,
@@ -40,12 +40,6 @@ ggalign(
 )
 }
 \arguments{
-\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
-
-\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
-
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
-
 \item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
 provided, it will be converted into a one-column matrix. When \code{data = NULL},
 the internal \code{layout} data will be used by default. Additionally, \code{data} can
@@ -64,6 +58,12 @@ heatmap columns as observations, but we need rows.
 \item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
 all plots along a single axis.
 }}
+
+\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
+
+\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
+
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
 
 \item{limits}{A boolean value indicates whether to set the layout limtis for
 the plot.}
@@ -117,6 +117,8 @@ contain following columns:
 \itemize{
 \item \code{.panel}: the panel for current layout axis. It means \code{x-axis} for
 vertical stack layout, \code{y-axis} for horizontal stack layout.
+\item \code{.index}: the index of the original layout data (only applicable if \code{data}
+is \code{NULL}).
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 \item \code{.row_names} and \code{.row_index}: A factor of the row names and an integer of
 row index of the original matrix or data frame.
@@ -143,4 +145,13 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     hmanno("top") +
     ggalign() +
     geom_point(aes(y = value))
+
+# if data is `NULL`, a three column data frame
+# will be created (`.panel`, `.index`, `.x`/`.y`)
+ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    hmanno("t", size = 0.5) +
+    align_dendro(k = 3L) +
+    ggalign(data = NULL, size = 0.2) +
+    geom_tile(aes(y = 1L, fill = .panel))
+
 }
