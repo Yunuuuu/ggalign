@@ -38,11 +38,11 @@ logo <- ggstack(data = mat_scaled) +
     scale_x_continuous(breaks = NULL, name = NULL) +
     # add a heatmap plot in the stack
     ggheatmap() +
-    hmanno(free_spaces = "l") +
+    quad_active(free_spaces = "l") +
     scale_y_continuous(breaks = NULL) +
     scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
-    hmanno("t") +
+    anno_top() +
     align_dendro() +
     # add a block for the heatmap column
     ggalign(data = type, size = unit(1, "cm")) +
@@ -56,7 +56,7 @@ logo <- ggstack(data = mat_scaled) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
     # set the active context of the heatmap to the top
     # and set the size of the top stack
-    hmanno("t", size = unit(4, "cm")) +
+    anno_top(size = unit(4, "cm")) +
     # add box plot in the heatmap top
     ggalign() +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
@@ -78,7 +78,7 @@ logo <- ggstack(data = mat_scaled) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
-    hmanno("t", free_spaces = "lr") +
+    anno_top(free_spaces = "lr") +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),

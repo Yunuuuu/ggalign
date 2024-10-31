@@ -18,8 +18,8 @@ hclust2(
 \code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"}, \code{"binary"} or
 \code{"minkowski"}.  Correlation coefficient can be also used, including
 \code{"pearson"}, \code{"spearman"} or \code{"kendall"}. In this way, \code{1 - cor} will be used
-as the distance. In addition, you can also provide a \link[stats:dist]{dist}
-object directly or a function return a \link[stats:dist]{dist} object. Use
+as the distance. In addition, you can also provide a \code{\link[stats:dist]{dist}}
+object directly or a function return a \code{\link[stats:dist]{dist}} object. Use
 \code{NULL}, if you don't want to calculate the distance.}
 
 \item{method}{A string of the agglomeration method to be used. This should be
@@ -27,8 +27,8 @@ object directly or a function return a \link[stats:dist]{dist} object. Use
 \code{"complete"}, \code{"average"} (= UPGMA), \code{"mcquitty"} (= WPGMA), \code{"median"} (=
 WPGMC) or \code{"centroid"} (= UPGMC). You can also provide a function which
 accepts the calculated distance (or the input matrix if \code{distance} is \code{NULL})
-and returns a \link[stats:hclust]{hclust} object. Alternative, you can supply an
-object which can be coerced to \link[stats:hclust]{hclust}.}
+and returns a \code{\link[stats:hclust]{hclust}} object. Alternative, you can supply
+an object which can be coerced to \code{\link[stats:hclust]{hclust}}.}
 
 \item{use_missing}{An optional character string giving a method for computing
 covariances in the presence of missing values. This must be (an abbreviation

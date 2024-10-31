@@ -1,33 +1,34 @@
-#' Build data for the heatmap layout
+#' Build a Matrix
 #'
-#' @param data Any objects to be plot with [ggheatmap()].
+#' This function converts various objects into a matrix format.
+#'
+#' @param data Any objects to be converted to a matrix.
 #' @inheritParams rlang::args_dots_used
-#' @return A matrix used by [ggheatmap()].
+#' @return A matrix containing the converted data.
 #' @seealso
-#' - [fortify_heatmap.matrix]
-#' - [fortify_heatmap.MAF]
+#' - [`fortify_matrix.MAF`] for converting [`MAF`][maftools::read.maf] objects.
 #' @export
-fortify_heatmap <- function(data, ...) {
+fortify_matrix <- function(data, ...) {
     rlang::check_dots_used()
-    UseMethod("fortify_heatmap")
+    UseMethod("fortify_matrix")
 }
 
-#' @inherit fortify_heatmap title description return
-#' @inheritParams fortify_heatmap
+#' @inherit fortify_matrix title description return
+#' @inheritParams fortify_matrix
 #' @param ... Not used currently.
 #' @export
-#' @rdname fortify_heatmap.matrix
-fortify_heatmap.matrix <- function(data, ...) data
+#' @rdname fortify_matrix.matrix
+fortify_matrix.matrix <- function(data, ...) data
 
 #' @importFrom rlang try_fetch
 #' @export
-fortify_heatmap.default <- function(data, ...) {
+fortify_matrix.default <- function(data, ...) {
     try_fetch(
         as.matrix(data),
         error = function(cnd) {
             cli::cli_abort(paste0(
                 "{.arg data} must be a {.cls matrix}, ",
-                "or an object coercible by {.fn fortify_heatmap}, or a valid ",
+                "or an object coercible by {.fn fortify_matrix}, or a valid ",
                 "{.cls matrix}-like object coercible by {.fn as.matrix}"
             ), parent = cnd)
         }
@@ -35,16 +36,19 @@ fortify_heatmap.default <- function(data, ...) {
 }
 
 #' @export
-fortify_heatmap.NULL <- function(data, ...) NULL
+fortify_matrix.waiver <- function(data, ...) data
 
 #' @export
-fortify_heatmap.function <- function(data, ...) data
+fortify_matrix.NULL <- function(data, ...) NULL
 
 #' @export
-fortify_heatmap.formula <- function(data, ...) rlang::as_function(data)
+fortify_matrix.function <- function(data, ...) data
 
-#' @inherit fortify_heatmap title description return
-#' @inheritParams fortify_heatmap
+#' @export
+fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
+
+#' @inherit fortify_matrix title description return
+#' @inheritParams fortify_matrix
 #' @param ... Not used currently.
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
@@ -62,10 +66,10 @@ fortify_heatmap.formula <- function(data, ...) rlang::as_function(data)
 #'    TRUE`, `"Multi_Hit"` will be added in the end.
 #' @importFrom vctrs new_data_frame vec_unique_count vec_group_loc vec_chop vec_cbind
 #' @export
-#' @rdname fortify_heatmap.MAF
-fortify_heatmap.MAF <- function(data, ..., genes = NULL, n_top = NULL,
-                                remove_empty_samples = TRUE,
-                                collapse_vars = FALSE) {
+#' @rdname fortify_matrix.MAF
+fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
+                               remove_empty_samples = TRUE,
+                               collapse_vars = FALSE) {
     rlang::check_installed(
         "maftools", "to make mutation matrix from `MAF` object"
     )
@@ -77,7 +81,7 @@ fortify_heatmap.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         c("Tumor_Sample_Barcode", "Hugo_Symbol", "Variant_Classification")
     ]
     n_genes <- vec_unique_count(.subset2(data, "Hugo_Symbol"))
-    n_samples <- vec_unique_count(data$Tumor_Sample_Barcode)
+    n_samples <- vec_unique_count(.subset2(data, "Tumor_Sample_Barcode"))
 
     # filter by genes
     if (is.null(genes)) {

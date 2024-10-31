@@ -1,21 +1,19 @@
-#' Arrange plots in a Heatmap
+#' Arrange Plots in a Heatmap
 #'
-#' `ggheatmap` is an alias of `heatmap_layout`.
+#' `heatmap_layout` is a specialized version of [`quad_alignb()`], which always
+#' includes a default mapping of `aes(.data$.x, .data$.y)` and a default filling
+#' layer. This function simplifies the creation of heatmap plots by integrating
+#' essential elements for a standard heatmap layout, ensuring that the
+#' appropriate data mapping and visualization layers are automatically applied.
+#' `ggheatmap` is an alias for `heatmap_layout`.
 #'
-#' @param data A numeric or character vector, a data frame, and any other data
-#' which can be converted into a matrix. Simple vector will be converted into a
-#' one column matrix. If `missing`, will inherit from the parent layout.
-#' @param mapping Default list of aesthetic mappings to use for plot. In
-#' addition, we will always add mapping `aes(.data$.x, .data$.y)`.
-#' @param ... Additional arguments passed to [`fortify_heatmap()`].
-#' @param width,height `r rd_heatmap_size()`.
-#' @param action A [plot_action()] object used to define the default plot action
-#' in the layout.
-#' @inheritParams align_plots
-#' @param filling A single string of
-#' `r rd_values(c("raster", "tile"), final = "or")` to indicate the filling
-#' style. By default, `waiver()` is used, which means that if the input matrix
-#' has more than 20,000 cells (`nrow * ncol > 20000`),
+#' @param data `r rd_layout_data()`. If not already a matrix, will be converted
+#' to one by [`fortify_matrix()`].
+#' @param ... Additional arguments passed to [`fortify_matrix()`].
+#' @inheritParams quad_layout
+#' @param filling A single string of `r oxford_or(c("raster", "tile"))` to
+#' indicate the filling style. By default, `waiver()` is used, which means that
+#' if the input matrix has more than 20,000 cells (`nrow * ncol > 20000`),
 #' [`geom_raster()`][ggplot2::geom_raster] will be used for performance
 #' efficiency; for smaller matrices, [`geom_tile()`][ggplot2::geom_tile] will be
 #' used. To customize the filling style, set this to `NULL`.
@@ -28,15 +26,20 @@
 #' is utilized for continuous values.
 #'
 #' You can use the options
-#' `r rd_values(sprintf("%s.heatmap_continuous_fill", pkg_nm()))` or
-#' `r rd_values(sprintf("%s.heatmap_discrete_fill", pkg_nm()))` to modify the
+#' `r code_quote(sprintf("%s.heatmap_continuous_fill", pkg_nm()))` or
+#' `r code_quote(sprintf("%s.heatmap_discrete_fill", pkg_nm()))` to modify the
 #' default heatmap body filling color scale. See
 #' [`scale_fill_continuous()`][ggplot2::scale_fill_continuous] or
 #' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for details on
 #' option settings.
 #'
-#' @inheritParams align
-#' @inheritParams ggplot2::ggplot
+#' @param set_context `r lifecycle::badge("deprecated")` Please use `context`
+#' argument instead.
+#' @param order `r lifecycle::badge("deprecated")` Please use `context` argument
+#' instead.
+#' @param name `r lifecycle::badge("deprecated")` Please use `context` argument
+#' instead.
+#' @inheritParams hmanno
 #' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -65,38 +68,15 @@
 #' @export
 heatmap_layout <- function(data = NULL, mapping = aes(),
                            ...,
-                           width = NA, height = NA,
-                           action = NULL, theme = NULL, filling = waiver(),
-                           set_context = TRUE, order = NULL, name = NULL,
+                           width = NA, height = NA, filling = waiver(),
+                           action = NULL, theme = NULL, context = NULL,
+                           set_context = deprecated(),
+                           order = deprecated(), name = deprecated(),
                            guides = deprecated()) {
     UseMethod("heatmap_layout")
 }
 
-# used to create the heatmap layout
-#' @keywords internal
-methods::setClass(
-    "HeatmapLayout",
-    contains = "Layout",
-    list(
-        data = "ANY", plot = "ANY", body_action = "ANY",
-        # parameters for heatmap body
-        width = "ANY", height = "ANY", filling = "ANY",
-        # If we regard heatmap layout as a plot, and put it into the stack
-        # layout, we need following arguments to control it's behavour
-        set_context = "logical", order = "integer", name = "character",
-        # Used by the layout itself:
-        # top, left, bottom, right must be a StackLayout object.
-        top = "ANY", left = "ANY", bottom = "ANY", right = "ANY",
-        panel_list = "list", index_list = "list", nobs_list = "list"
-    ),
-    prototype = list(
-        top = NULL, left = NULL,
-        bottom = NULL, right = NULL,
-        panel_list = list(), index_list = list(),
-        nobs_list = list()
-    )
-)
-
+#' @usage NULL
 #' @export
 #' @rdname heatmap_layout
 ggheatmap <- heatmap_layout
@@ -108,23 +88,12 @@ ggheatmap <- heatmap_layout
 #' @export
 heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    ...,
-                                   width = NA, height = NA,
-                                   action = NULL, theme = NULL,
-                                   filling = waiver(),
-                                   set_context = TRUE, order = NULL,
-                                   name = NULL,
+                                   width = NA, height = NA, filling = waiver(),
+                                   action = NULL, theme = NULL, context = NULL,
+                                   set_context = deprecated(),
+                                   order = deprecated(), name = deprecated(),
                                    guides = deprecated()) {
-    # prepare data --------------------------------------
-    data <- fortify_heatmap(data = data, ...)
-
-    # check arguments -----------------------------------
-    width <- check_size(width)
-    height <- check_size(height)
-    # if inherit from the parent layout data, we'll inherit
-    # the action data function
-    action <- check_action(action, if (is.null(data)) waiver() else NULL)
-    if (!is.null(theme)) assert_s3_class(theme, "theme")
-    # A single boolean value for compatible with version <= 0.0.4
+    # A single boolean value for compatible with `version <= 0.0.4`
     if (isTRUE(filling)) {
         filling <- waiver()
     } else if (isFALSE(filling)) {
@@ -132,58 +101,52 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     } else if (!is.waive(filling) && !is.null(filling)) {
         filling <- arg_match0(filling, c("tile", "raster"))
     }
-    assert_bool(set_context)
-    order <- check_order(order)
-    assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = TRUE)
+    data <- data %|w|% NULL
+    # we need a matrix to melted into long formated data frame
+    data <- fortify_matrix(data = data, ...)
+    if (!is.null(data) && !is.function(data)) {
+        nrows <- NROW(data)
+        ncols <- ncol(data)
+    } else {
+        nrows <- NULL
+        ncols <- NULL
+    }
+    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    context <- update_context(context, new_context(
+        active = TRUE, order = NA_integer_, name = NA_character_
+    ))
+    context <- deprecate_context(context, "ggheatmap",
+        set_context = set_context, order = order, name = name
+    )
+    ans <- new_quad_layout(
+        name = "ggheatmap",
+        data = data,
+        horizontal = new_layout_params(nobs = nrows),
+        vertical = new_layout_params(nobs = ncols),
+        mapping = mapping, action = action, theme = theme, context = context,
+        width = width, height = height,
+        class = "HeatmapLayout"
+    )
     if (lifecycle::is_present(guides)) {
         lifecycle::deprecate_warn(
             "0.0.5", "ggheatmap(guides)", "ggheatmap(action)"
         )
         assert_layout_position(guides)
-        action$guides <- guides
+        ans@action["guides"] <- list(guides)
     }
-    # initialize nobs --------------------------------
-    if (is.null(data) || is.function(data)) {
-        nobs_list <- list(x = NULL, y = NULL)
-    } else {
-        nobs_list <- list(x = ncol(data), y = nrow(data))
-    }
-    # initialize the heatmap body plot
-    plot <- ggplot2::ggplot(
-        mapping = add_default_mapping(mapping, aes(.data$.x, .data$.y))
-    ) +
-        # always remove default axis titles -------------------
-        # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
-        # There are multiple ways to set labels in a plot, which take different
-        # priorities. Here are the priorities from highest to lowest.
-        # 1. The guide title.
-        # 2. The scale name.
-        # 3. The `labs()` function.
-        # 4. The captured expression in aes().
-        ggplot2::labs(x = NULL, y = NULL)
-
-    # Here we use S4 object to override the double dispatch of `+.gg` method
-    methods::new(
-        "HeatmapLayout",
-        data = data,
-        theme = theme, action = action, # used by the layout
-        body_action = default_action(waiver()), # used by heatmap body
-        # following parameters can be controlled by `active` object.
-        width = width, height = height,
-        # following parameters used when adding ggheamtap to ggstack
-        set_context = set_context,
-        order = order, name = name %||% NA_character_,
-        # following parameters are used internally
-        plot = plot, nobs_list = nobs_list,
-        filling = filling
+    # always remove default axis titles
+    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
+    # There are multiple ways to set labels in a plot, which take different
+    # priorities. Here are the priorities from highest to lowest.
+    # 1. The guide title.
+    # 2. The scale name.
+    # 3. The `labs()` function.
+    # 4. The captured expression in aes().
+    ans@plot <- ans@plot + ggplot2::labs(x = NULL, y = NULL)
+    # add default mapping
+    ans@plot$mapping <- add_default_mapping(
+        ans@plot$mapping, aes(.data$.x, .data$.y)
     )
+    ans@filling <- filling
+    ans
 }
-
-#' Reports whether `x` is a [heatmap_layout()] object
-#'
-#' @param x An object to test
-#' @return A boolean value
-#' @examples
-#' is_ggheatmap(ggheatmap(1:10))
-#' @export
-is_ggheatmap <- function(x) methods::is(x, "HeatmapLayout")

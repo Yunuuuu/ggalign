@@ -102,7 +102,7 @@ ggheatmap(small_mat) +
     # we can directly modify geoms, scales and other ggplot2 components
     scale_fill_viridis_c() +
     # add annotation in the top
-    hmanno("top") +
+    anno_top() +
     # in the top annotation, we add a dendrogram, and split observations into 3 groups
     align_dendro(aes(color = branch), k = 3) +
     # in the dendrogram we add a point geom

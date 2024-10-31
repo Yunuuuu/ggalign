@@ -74,11 +74,11 @@ dim(mat)
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -86,11 +86,11 @@ ggheatmap(mat) +
 ggheatmap(mat) +
     scale_fill_gradient2(low = "green", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro() +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -107,12 +107,12 @@ ggheatmap(mat2) +
         oob = scales::squish
     ) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -121,12 +121,12 @@ We can use `align_plots()` to arrange them.
 h1 <- ggheatmap(mat) +
     scale_fill_gradient2(name = "mat", low = "green", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 
 h2 <- ggheatmap(mat / 4) +
@@ -136,23 +136,23 @@ h2 <- ggheatmap(mat / 4) +
         low = "green", high = "red"
     ) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 
 h3 <- ggheatmap(abs(mat)) +
     scale_fill_gradient2(name = "abs(mat)", low = "green", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 align_plots(h1, h2, h3, ncol = 2L)
 ```
@@ -161,11 +161,11 @@ align_plots(h1, h2, h3, ncol = 2L)
 ggheatmap(mat) +
     scale_fill_gradientn(colors = rev(rainbow(10))) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -175,11 +175,11 @@ discrete_mat <- matrix(sample(1:4, 100, replace = TRUE), 10, 10)
 colors <- structure(1:4, names = c("1", "2", "3", "4")) # black, red, green, blue
 ggheatmap(discrete_mat, aes(fill = factor(value))) +
     scale_fill_manual(values = colors) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -200,11 +200,11 @@ mat_with_na[na_index] <- NA
 ggheatmap(mat_with_na) +
     scale_fill_gradient2(low = "blue", high = "red", na.value = "black") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -220,9 +220,9 @@ ggheatmap(mat) +
         axis.text.x = element_text(angle = -60, hjust = 0),
         panel.border = element_rect(linetype = "dashed", fill = NA)
     ) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     theme(plot.margin = margin())
 ```
@@ -235,9 +235,9 @@ width.
 ggheatmap(mat, filling = NULL) +
     geom_tile(aes(fill = value), color = "white") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) &
     theme(plot.margin = margin())
 ```
@@ -246,9 +246,9 @@ To draw a blank heatmap body:
 ```{r}
 ggheatmap(mat, filling = NULL) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) &
     theme(plot.margin = margin())
 ```
@@ -259,11 +259,11 @@ can use `theme()` to control the text appearance.
 ```{r}
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     patch_titles(right = "I am a row title") +
     theme(plot.patch_title.right = element_text(face = "bold", size = 16)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     patch_titles(top = "I am a column title") +
     theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
@@ -279,9 +279,9 @@ ggheatmap(mat) +
 # )
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(distance = "pearson", reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     patch_titles(top = "pre-defined distance method (1 - pearson)") +
     theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
@@ -295,9 +295,9 @@ ggheatmap(mat) +
 # )
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(distance = dist, reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     patch_titles(top = "a function that calculates distance matrix") +
     theme(plot.patch_title.top = element_text(face = "bold", size = 16)) &
@@ -314,9 +314,9 @@ Possible methods are those supported in `hclust()` function.
 # )
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(method = "single", reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) &
     theme(plot.margin = margin())
 ```
@@ -325,12 +325,12 @@ Use `distance = NULL` if you don't want to calculate the distance.
 ```{r eval=rlang::is_installed("cluster")}
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(
         distance = NULL, method = cluster::diana,
         reorder_dendrogram = TRUE
     ) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(
         distance = NULL, method = cluster::agnes,
         reorder_dendrogram = TRUE
@@ -344,9 +344,9 @@ since `ggalign` will add the `cutree()` results into the underlying data.
 ```{r}
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_dendro(aes(color = branch), k = 2L, reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) &
     theme(plot.margin = margin())
 ```
@@ -362,9 +362,9 @@ We can use `align_order()` to set the order.
 # )
 ggheatmap(mat) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_order(as.numeric(gsub("row", "", rownames(mat)))) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_order(as.numeric(gsub("column", "", colnames(mat)))) &
     theme(plot.margin = margin())
 ```
@@ -377,9 +377,9 @@ mat2 <- max(mat) - mat
 ggheatmap(mat2) +
     scale_fill_gradient2(low = "blue", high = "red", midpoint = 2L) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_reorder(seriation::seriate, method = "BEA_TSP") +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_reorder(seriation::seriate, method = "BEA_TSP") &
     theme(plot.margin = margin())
 ```
@@ -392,9 +392,9 @@ o <- seriation::seriate(mat2, method = "BEA_TSP")
 ggheatmap(mat2) +
     scale_fill_gradient2(low = "blue", high = "red", midpoint = 2L) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(20, "mm")) +
+    anno_right(size = unit(20, "mm")) +
     align_order(seriation::get_order(o, 1L)) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_order(seriation::get_order(o, 2L)) &
     theme(plot.margin = margin())
 ```
@@ -416,13 +416,13 @@ ggheatmap(mat) +
     scale_x_continuous(position = "top") +
     scale_y_continuous(position = "right") +
     theme(axis.text.x = element_text(angle = 60, hjust = 0)) +
-    hmanno("l", size = unit(15, "mm")) +
+    anno_left(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     scale_x_continuous(position = "top") +
-    hmanno("b", size = unit(15, "mm")) +
+    anno_bottom(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
     scale_y_continuous(position = "right") +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -431,11 +431,11 @@ ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     scale_y_continuous(breaks = NULL) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -446,11 +446,11 @@ ggheatmap(mat) +
         axis.text.x = element_text(angle = -60, hjust = 0),
         axis.text.y = element_text(face = "bold", size = 16)
     ) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -464,11 +464,11 @@ ggheatmap(mat) +
             colour = c(rep("red", 10), rep("blue", 8))
         )
     ) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -478,12 +478,12 @@ ggheatmap(mat) +
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_kmeans(2L) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -491,12 +491,12 @@ ggheatmap(mat) +
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_kmeans(3L) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -504,13 +504,13 @@ ggheatmap(mat) +
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_kmeans(2L) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_kmeans(3L) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -521,13 +521,13 @@ The dendrogram was calculated in each group defined by kmeans.
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_group(rep(c("A", "B"), 9)) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_group(rep(c("C", "D"), 12)) +
     align_dendro(reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -538,11 +538,11 @@ dashed line.
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(k = 3L, reorder_dendrogram = TRUE) +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(k = 2L, reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 
@@ -550,12 +550,12 @@ ggheatmap(mat) +
 ggheatmap(mat) +
     scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r", size = unit(15, "mm")) +
+    anno_right(size = unit(15, "mm")) +
     align_dendro(aes(color = branch), k = 3L, reorder_dendrogram = TRUE) +
     scale_color_brewer(palette = "Dark2") +
-    hmanno("t", size = unit(15, "mm")) +
+    anno_top(size = unit(15, "mm")) +
     align_dendro(k = 2L, reorder_dendrogram = TRUE) +
-    hmanno(NULL) &
+    quad_active() &
     theme(plot.margin = margin())
 ```
 

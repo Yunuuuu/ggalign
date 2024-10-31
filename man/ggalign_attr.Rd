@@ -2,25 +2,27 @@
 % Please edit documentation in R/layout-.R
 \name{ggalign_attr}
 \alias{ggalign_attr}
-\title{Get a field data from the \code{ggalign} attribute}
+\title{Get data from the \code{ggalign} attribute}
 \usage{
-ggalign_attr(x, field)
+ggalign_attr(x, field = NULL)
 }
 \arguments{
 \item{x}{Input data for the function used to transform the layout data.}
 
-\item{field}{A single string indicating which data to use. Typically, this
-list of data is attached by the \code{\link[=fortify_heatmap]{fortify_heatmap()}} function (see the
-\verb{ggalign attributes} section in the documentation). Check
-\code{\link[=fortify_heatmap.MAF]{fortify_heatmap.MAF()}} for examples.}
+\item{field}{A string specifying the particular data to retrieve from the
+\code{ggalign} attribute. If \code{NULL}, the entire \code{ggalign} attribute will be
+returned.  Commonly, this attribute list is attached by \code{\link[=fortify_matrix]{fortify_matrix()}}
+or \code{\link[=fortify_data_frame]{fortify_data_frame()}} functions (refer to the \verb{ggalign attributes}
+section in the documentation for details). For examples, see
+\code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}.}
 }
 \value{
-The requested data field or \code{NULL} if not found.
+The specified data from the \code{ggalign} attribute or \code{NULL} if it is
+unavailable.
 }
 \description{
-When rendering the layout with \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object, a special attribute is kept
-in the data called \code{"ggalign"}, which can be used to pass additional
-information for the input data. This function helps extract data from that
-attribute. This is particularly useful in the \code{data} function for
-transforming the parent layout data.
+This function extracts data from the \code{ggalign} attribute retained in the data
+when rendering \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object. The \code{ggalign} attribute holds supplementary
+information for input data, making it useful for transforming parent layout
+data within a \code{data} function.
 }

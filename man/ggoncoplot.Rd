@@ -15,13 +15,10 @@ ggoncoplot(
   reorder_column = TRUE,
   width = NA,
   height = NA,
+  filling = waiver(),
   action = NULL,
   theme = NULL,
-  filling = waiver(),
-  set_context = TRUE,
-  order = NULL,
-  name = NULL,
-  guides = deprecated()
+  context = NULL
 )
 
 \method{ggoncoplot}{default}(
@@ -34,23 +31,20 @@ ggoncoplot(
   reorder_column = TRUE,
   width = NA,
   height = NA,
+  filling = waiver(),
   action = NULL,
   theme = NULL,
-  filling = waiver(),
-  set_context = TRUE,
-  order = NULL,
-  name = NULL,
-  guides = deprecated()
+  context = NULL
 )
 }
 \arguments{
 \item{data}{A character matrix which encodes the alterations, you can use
 regex \verb{[;:,|]} to separate multiple alterations.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot. In
-addition, we will always add mapping \code{aes(.data$.x, .data$.y)}.}
+\item{mapping}{Default list of aesthetic mappings to use for the main plot.
+If not specified, must be supplied in each layer added to the plot.}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_heatmap]{fortify_heatmap()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{map_width, map_height}{A named numeric value defines the width/height of
 each alterations.}
@@ -59,31 +53,20 @@ each alterations.}
 reorder the rows/columns based on the frequency or characteristics of the
 alterations.}
 
-\item{width, height}{Heatmap body width/height, can be a \link[grid:unit]{unit} object.}
+\item{width, height}{The relative width/height of the main plot, can be a
+\code{\link[grid:unit]{unit}} object}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
-in the layout.}
+\item{filling}{Same as \code{\link[=ggheatmap]{ggheatmap()}}, but only \code{"tile"} can be used.}
+
+\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
+for the plots in the layout.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{filling}{Same as \code{\link[=ggheatmap]{ggheatmap()}}, but only \code{"tile"} can be used.}
-
-\item{set_context}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
-
-\item{order}{An single integer for the plot area order.}
-
-\item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
-
-\item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which side of guide legends should be collected. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout.  If
-there is no parent layout, or if \code{NULL} is provided, no guides will be
-collected.}
+\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+added to a layout.}
 }
 \value{
 A \code{HeatmapLayout} object.
@@ -120,12 +103,12 @@ ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
     # the guide legends. Therefore, we remove the guide legends from
     # `geom_tile`.
     guides(fill = "none") +
-    hmanno("t", size = 0.5) +
+    anno_top(size = 0.5) +
     ggalign() +
     geom_bar(aes(fill = value), data = function(x) {
         subset(x, !is.na(value))
     }) +
-    hmanno("r", size = 0.5) +
+    anno_right(size = 0.5) +
     ggalign() +
     geom_bar(aes(fill = value), orientation = "y", data = function(x) {
         subset(x, !is.na(value))

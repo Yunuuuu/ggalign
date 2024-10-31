@@ -1,20 +1,27 @@
-rd_values <- function(x, quote = TRUE, code = TRUE, sep = ", ", final = "and") {
-    if (quote) x <- paste0("\"", x, "\"")
-    if (code) x <- paste0("`", x, "`")
-    oxford_comma(x, sep = sep, final = final)
+rd_layout <- function() {
+    sprintf("%s or [`stack_layout()`] object", rd_quad())
 }
 
-rd_layout <- function() "[heatmap_layout()] or [stack_layout()] object"
+rd_quad <- function() "[`quad_layout()`]/[`ggheatmap()`]"
 
 rd_stack_what <- function() {
     paste(
-        "Options include::",
-        "- A single number or string of the plot elements in the stack layout.",
-        "- `NULL`: remove any active context",
-        sep = "\n"
+        "A single number or string of the plot elements in the stack layout.",
+        "If `NULL`, will remove any active context"
     )
 }
 
-rd_heatmap_size <- function() {
-    "Heatmap body width/height, can be a [unit][grid::unit] object"
+rd_quad_position <- function(action) {
+    sprintf(
+        "A string of %s indicates which annotation stack should be %s",
+        oxford_or(.TLBR), action
+    )
+}
+
+rd_layout_data <- function() {
+    paste(
+        "Default dataset to use for the layout. If not specified, it must be",
+        "supplied in each plot added to the layout. By default, it will try to",
+        "inherit from parent layout"
+    )
 }

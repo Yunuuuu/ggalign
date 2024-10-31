@@ -1,26 +1,22 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    stack_build(layout_default(x)) %||% align_plots()
+    stack_build(default_layout(x)) %||% align_plots()
 }
 
-#' @param panel,index layout of the axis vertically with the stack.
+#' @param extra_layout layout parameters of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 #' @noRd
-stack_build <- function(stack, action = stack@action,
-                        extra_panel = NULL, extra_index = NULL) {
-    if (is.na(nobs <- get_nobs(stack))) return(NULL) # styler: off
+stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
-    panel <- get_panel(stack) %||% factor(rep_len(1L, nobs))
-    index <- get_index(stack) %||% reorder_index(panel)
 
     plots <- stack@plots
 
     # we remove the plot without actual plot area
     keep <- vapply(plots, function(plot) {
         (is_align(plot) && !is.null(.subset2(plot, "plot"))) ||
-            is_ggheatmap(plot)
+            is_quad_layout(plot)
     }, logical(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, keep)
     if (is_empty(plots)) return(NULL) # styler: off
@@ -28,9 +24,9 @@ stack_build <- function(stack, action = stack@action,
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
         if (is_align(plot)) {
-            .subset2(plot, "order")
+            .subset2(.subset2(plot, "context"), "order")
         } else {
-            plot@order
+            .subset2(plot@context, "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, make_order(plot_order))
@@ -43,9 +39,10 @@ stack_build <- function(stack, action = stack@action,
     # for `free_spaces`, if we have applied it in the whole stack layout
     # we shouln't use it for a single plot. Otherwise, the guide legends
     # collected by the layout will overlap with the plot axis.
-    # this occurs in the heamtap annotation stack (`position` is not `NULL`).
+    # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(action, "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
+    layout <- set_layout_params(stack@layout)
     for (plot in plots) {
         if (is_align(plot)) {
             align_action <- inherit_action(.subset2(plot, "action"), action)
@@ -58,32 +55,31 @@ stack_build <- function(stack, action = stack@action,
                 }
             }
             patch <- align_build(plot,
-                panel = panel, index = index,
+                panel = .subset2(layout, "panel"),
+                index = .subset2(layout, "index"),
                 action = align_action,
-                extra_panel = extra_panel,
-                extra_index = extra_index
+                extra_layout = extra_layout
             )
             patches <- stack_patch_add_align(
                 patches,
                 .subset2(patch, "plot"),
                 .subset2(patch, "size")
             )
-        } else if (is_ggheatmap(plot)) {
-            # for a heatmap
-            patch <- heatmap_build(plot, inherit_action(plot@action, action))
-            heatmap_plots <- .subset2(patch, "plots")
-            patches <- stack_patch_add_heatmap(
-                patches, heatmap_plots,
+        } else if (is_quad_layout(plot)) {
+            patch <- quad_build(plot, inherit_action(plot@action, action))
+            quad_plots <- .subset2(patch, "plots")
+            patches <- stack_patch_add_quad(
+                patches, quad_plots,
                 .subset2(patch, "sizes")
             )
             if (is_horizontal(direction)) {
-                has_top <- has_top || !is.null(.subset2(heatmap_plots, "top"))
+                has_top <- has_top || !is.null(.subset2(quad_plots, "top"))
                 has_bottom <- has_bottom ||
-                    !is.null(.subset2(heatmap_plots, "bottom"))
+                    !is.null(.subset2(quad_plots, "bottom"))
             } else {
-                has_top <- has_top || !is.null(.subset2(heatmap_plots, "left"))
+                has_top <- has_top || !is.null(.subset2(quad_plots, "left"))
                 has_bottom <- has_bottom ||
-                    !is.null(.subset2(heatmap_plots, "right"))
+                    !is.null(.subset2(quad_plots, "right"))
             }
         }
     }
@@ -154,7 +150,7 @@ stack_patch_add_align <- function(area, plot, size) {
 }
 
 #' @importFrom grid unit.c unit
-stack_patch_add_heatmap <- function(area, plots, sizes) {
+stack_patch_add_quad <- function(area, plots, sizes) {
     if (is_horizontal(attr(area, "direction"))) {
         area <- stack_patch_add_align(
             area,
@@ -163,8 +159,8 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         )
         area <- stack_patch_add_align(
             area,
-            .subset2(plots, "heatmap"),
-            .subset2(.subset2(sizes, "heatmap"), "width")
+            .subset2(plots, "main"),
+            .subset2(.subset2(sizes, "main"), "width")
         )
         l <- max(.subset2(area, "r"))
         if (!is.null(top <- .subset2(plots, "top"))) {
@@ -199,8 +195,8 @@ stack_patch_add_heatmap <- function(area, plots, sizes) {
         )
         area <- stack_patch_add_align(
             area,
-            .subset2(plots, "heatmap"),
-            .subset2(.subset2(sizes, "heatmap"), "height")
+            .subset2(plots, "main"),
+            .subset2(.subset2(sizes, "main"), "height")
         )
         t <- max(.subset2(area, "b"))
         if (!is.null(left <- .subset2(plots, "left"))) {

@@ -1,11 +1,19 @@
-#' Create ggplot object with a customized data
+#' Create ggplot object
 #'
-#' `ggalign` is just an alias of `align_gg`.
+#' `ggalign` is an alias of `align_gg`.
 #'
-#' @param mapping Additional default list of aesthetic mappings to use for plot.
+#' @param data A flexible input that specifies the data to be used
+#' - `NULL`: No data is set.
+#' - [`waiver()`]: Uses the layout matrix.
+#' - A `function` (including purrr-like lambda syntax) that is applied to the
+#'   layout matrix, and must return a matrix. If you want to transform the final
+#'   plot data, please use `action` argument.
+#' - A `matrix`, `data frame`, or atomic vector. If an atomic vector is
+#'   provided, it is converted into a single-column data frame.
+#' @inheritParams align_dendro
 #' @inheritParams align
+#' @inheritParams heatmap_layout
 #' @importFrom ggplot2 aes
-#' @inheritParams ggplot2::ggplot
 #'
 #' @section ggplot2 specification:
 #' `align_gg` initializes a ggplot `data` and `mapping`.
@@ -40,23 +48,24 @@
 #' columns (`.row_names`, `.row_index`, and `.panel`) are added to the data
 #' frame.
 #'
-#' If the data is inherit from [heatmap_layout()], an additional column will be
-#' added.
+#' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], an additional
+#' column will be added.
 #'
 #'  - `.extra_panel`: the panel information for column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
-#' @return A `AlignGG` object.
+#' @inherit align return
+#' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("top") +
+#'     anno_top() +
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
 #' # if data is `NULL`, a three column data frame
 #' # will be created (`.panel`, `.index`, `.x`/`.y`)
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("t", size = 0.5) +
+#'     anno_top(size = 0.5) +
 #'     align_dendro(k = 3L) +
 #'     ggalign(data = NULL, size = 0.2) +
 #'     geom_tile(aes(y = 1L, fill = .panel))
@@ -64,22 +73,30 @@
 #' @export
 align_gg <- function(mapping = aes(), size = NULL, action = NULL,
                      data = waiver(), limits = TRUE, facet = TRUE,
-                     set_context = TRUE, order = NULL, name = NULL,
+                     context = NULL, set_context = deprecated(),
+                     order = deprecated(), name = deprecated(),
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
     assert_mapping(mapping)
+    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    context <- update_context(context, new_context(
+        active = TRUE, order = NA_integer_, name = NA_character_
+    ))
+    context <- deprecate_context(context, "align_gg",
+        set_context = set_context, order = order, name = name
+    )
     align(AlignGG,
         params = list(mapping = mapping),
         size = size, data = data, action = action %||% waiver(),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        facet = facet, limits = limits,
-        set_context = set_context, order = order, name = name
+        facet = facet, limits = limits, context = context
     )
 }
 
+#' @usage NULL
 #' @export
 #' @rdname align_gg
 ggalign <- align_gg
@@ -90,7 +107,7 @@ AlignGG <- ggproto("AlignGG", Align,
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli::cli_abort(c(
             "You cannot add {.fn {snake_class(self)}}",
-            i = "layout {axis}-axis is not initialized"
+            i = "layout {axis}-axis is not initialized or you must provide {.arg data}"
         ), call = .subset2(self, "call"))
     },
     setup_data = function(self, params, data) {
@@ -98,11 +115,14 @@ AlignGG <- ggproto("AlignGG", Align,
         # data.frame: won't do any thing special
         if (is.matrix(data)) {
             data <- melt_matrix(data)
-        } else {
+        } else if (is.data.frame(data)) {
             if (!is.null(old_rownames <- rownames(data))) {
                 data$.row_names <- old_rownames
             }
             data$.row_index <- seq_len(nrow(data))
+        } else {
+            data <- fortify_data_frame(data)
+            data$.row_index <- seq_len(vec_size(data))
         }
         data
     },
@@ -143,6 +163,7 @@ AlignGG <- ggproto("AlignGG", Align,
         coord_name <- paste0(".", axis)
         ans <- data_frame0(.panel = panel[index], .index = index)
         ans[[coord_name]] <- seq_along(index)
+        # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
             # Align object always regard row as the observations

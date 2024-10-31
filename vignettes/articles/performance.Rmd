@@ -93,8 +93,8 @@ bench::mark(
     "ggalign()" = {
         pdf(NULL)
         print(ggheatmap(mat) +
-            hmanno("t") + align_dendro() +
-            hmanno("r") + align_dendro())
+            anno_top() + align_dendro() +
+            anno_right() + align_dendro())
         dev.off()
         NULL
     }

@@ -17,7 +17,7 @@
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
 #' object.
 #' @param axes Which axes shouldn't be aligned? A string containing
-#' one or more of `r rd_values(.tlbr)`.
+#' one or more of `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_align`: A modified version of `plot` with a `free_align` class.
 #' @examples

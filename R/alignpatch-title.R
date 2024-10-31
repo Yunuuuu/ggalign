@@ -5,7 +5,7 @@
 #'
 #' @details
 #' You can also use [labs()][ggplot2::labs] to specify the titles (use arguments
-#' `r rd_values(.TLBR)`) for the top, left, bottom, and right borders of the
+#' `r oxford_and(.TLBR)`) for the top, left, bottom, and right borders of the
 #' plot.
 #'
 #' The appearance and alignment of these patch titles can be customized using

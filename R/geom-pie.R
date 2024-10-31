@@ -90,7 +90,7 @@ GeomPie <- ggproto("GeomPie",
                           clockwise = TRUE, lineend = "butt",
                           linejoin = "round", linemitre = 10) {
         # Expand x, y, radius data to points along circle
-        circular_data <- Map(
+        circular_data <- .mapply(
             function(x, y, radius, ang, ang0) {
                 if (clockwise) {
                     ang0 <- 90 - ang0
@@ -106,8 +106,11 @@ GeomPie <- ggproto("GeomPie",
                     y = c(y, sin(radians) * radius + y)
                 )
             },
-            x = data$x, y = data$y,
-            radius = data$radius, ang = data$angle, ang0 = data$angle0
+            list(
+                x = data$x, y = data$y,
+                radius = data$radius, ang = data$angle, ang0 = data$angle0
+            ),
+            MoreArgs = NULL
         )
         circular_data <- vec_rbind(!!!circular_data)
 

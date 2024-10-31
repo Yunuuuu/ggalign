@@ -16,7 +16,7 @@ default_theme <- function() {
 #' Default theme for `r rd_layout()`.
 #'
 #' @details
-#' You can use the option `r rd_values(sprintf("%s.default_theme", pkg_nm()))`
+#' You can use the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`
 #' to change the default theme.
 #'
 #' @inheritDotParams ggplot2::theme_classic
@@ -25,7 +25,7 @@ default_theme <- function() {
 #' @examples
 #' old <- options(ggalign.default_theme = theme_bw())
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("top") +
+#'     anno_top() +
 #'     align_dendro(k = 3L)
 #' options(ggalign.default_theme = old)
 #' @export

@@ -27,13 +27,13 @@ example_file <- function(..., base = "extdata") {
 
 with_options <- function(code, ...) {
     opts <- options(...)
-    on.exit(rlang::inject(options(!!!opts)))
+    on.exit(options(opts))
     force(code)
 }
 
 # This will work with most things but be aware that it might fail with some
 # complex objects. For example, according to `?S3Methods`, calling foo on
-# matrix(1:4, 2, 2) would try foo.matrix, then `foo.numeric`, then
+# matrix(1:4, 2, 2) would try `foo.matrix`, then `foo.numeric`, then
 # `foo.default`; whereas this code will just look for `foo.matrix` and
 # `foo.default`.
 #' @importFrom utils getS3method
@@ -54,19 +54,25 @@ has_method <- function(x, f, inherit = TRUE, default = TRUE) {
     return(FALSE)
 }
 
+#' For functions with a `call` argument, we check if the call originates from
+#' the current package. If it does, we use the caller's call; if not, we use the
+#' current call directly. Used by `align()` and `free()`
+#' @noRd
+#' @importFrom utils packageName
+override_call <- function(call = NULL) {
+    # if no caller call
+    if (is.null(call) || is.function(f <- .subset2(call, 1L))) {
+        return(TRUE)
+    }
+    # if call from the current package
+    !identical(
+        packageName(environment(eval(f))),
+        pkg_nm()
+    )
+}
+
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
-
-#' @param ans Whether to assign the final results into the 'ans' variable.
-#' @noRd
-body_append <- function(fn, ..., ans = TRUE) {
-    args <- rlang::fn_fmls(fn)
-    body <- rlang::fn_body(fn)
-    body <- as.list(body)
-    if (ans) body[[length(body)]] <- rlang::expr(ans <- !!body[[length(body)]])
-    body <- as.call(c(body, rlang::enexprs(...)))
-    rlang::new_function(args, body)
-}
 
 #' @importFrom vctrs vec_unrep vec_set_difference vec_c
 make_order <- function(order) {
@@ -333,4 +339,18 @@ transpose <- function(.l) {
     .l <- lapply(.l, as.list)
 
     lapply(fields, function(i) lapply(.l, .subset2, i))
+}
+
+oxford_and <- function(chr, code = TRUE, quote = TRUE, sep = ", ") {
+    oxford_comma(code_quote(chr, code, quote), sep = sep, final = "and")
+}
+
+oxford_or <- function(chr, code = TRUE, quote = TRUE, sep = ", ") {
+    oxford_comma(code_quote(chr, code, quote), sep = sep, final = "or")
+}
+
+code_quote <- function(x, code = TRUE, quote = TRUE) {
+    if (quote) x <- paste0("\"", x, "\"")
+    if (code) x <- paste0("`", x, "`")
+    x
 }

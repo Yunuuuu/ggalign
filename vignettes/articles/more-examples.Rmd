@@ -35,7 +35,7 @@ ggstack(data = mat_scaled) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +
     # add a block plot for each group in the stack
-    ggpanel(size = unit(1, "cm")) +
+    ggalign(size = unit(1, "cm"), data = NULL) +
     geom_tile(aes(x = 1, fill = factor(.panel))) +
     scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
     scale_x_continuous(breaks = NULL, name = NULL) +
@@ -44,7 +44,7 @@ ggstack(data = mat_scaled) +
     scale_y_continuous(breaks = NULL) +
     scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
-    hmanno("t") +
+    anno_top() +
     align_dendro() +
     # add a block for the heatmap column
     ggalign(data = type, size = unit(1, "cm")) +
@@ -61,7 +61,7 @@ ggstack(data = mat_scaled) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
     # set the active context of the heatmap to the top
     # and set the size of the top stack
-    hmanno("t", size = unit(4, "cm")) +
+    anno_top(size = unit(4, "cm")) +
     # add box plot in the heatmap top
     ggalign() +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
@@ -86,7 +86,7 @@ ggstack(data = mat_scaled) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
-    hmanno("t", action = plot_action(free_spaces = "lr")) +
+    anno_top(action = plot_action(free_spaces = "lr")) +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
@@ -111,15 +111,15 @@ ggheatmap(mat, filling = FALSE) +
         values = scales::rescale(c(0, 800, 1000, 127000), c(0, 1))
     ) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-    hmanno("r") +
+    anno_right() +
     align_dendro(plot_dendrogram = FALSE) +
-    hmanno("t", size = unit(2, "cm")) +
+    anno_top(size = unit(2, "cm")) +
     ggalign(data = rowSums) +
     geom_bar(aes(y = value), fill = "#FFE200", stat = "identity") +
     scale_y_continuous(expand = expansion()) +
     ggtitle("Measles cases in US states 1930-2001\nVaccine introduced 1961") +
     theme(plot.title = element_text(hjust = 0.5)) +
-    hmanno("r", size = unit(2, "cm")) +
+    anno_right(size = unit(2, "cm")) +
     ggalign(data = rowSums) +
     geom_bar(aes(x = value),
         fill = "#FFE200", stat = "identity",

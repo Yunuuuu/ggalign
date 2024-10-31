@@ -41,12 +41,12 @@
 #'     # the guide legends. Therefore, we remove the guide legends from
 #'     # `geom_tile`.
 #'     guides(fill = "none") +
-#'     hmanno("t", size = 0.5) +
+#'     anno_top(size = 0.5) +
 #'     ggalign() +
 #'     geom_bar(aes(fill = value), data = function(x) {
 #'         subset(x, !is.na(value))
 #'     }) +
-#'     hmanno("r", size = 0.5) +
+#'     anno_right(size = 0.5) +
 #'     ggalign() +
 #'     geom_bar(aes(fill = value), orientation = "y", data = function(x) {
 #'         subset(x, !is.na(value))
@@ -59,10 +59,8 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        map_width = NULL, map_height = NULL,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
-                       width = NA, height = NA,
-                       action = NULL, theme = NULL, filling = waiver(),
-                       set_context = TRUE, order = NULL, name = NULL,
-                       guides = deprecated()) {
+                       width = NA, height = NA, filling = waiver(),
+                       action = NULL, theme = NULL, context = NULL) {
     UseMethod("ggoncoplot")
 }
 
@@ -85,12 +83,10 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,
-                               width = NA, height = NA,
-                               action = NULL, theme = NULL, filling = waiver(),
-                               set_context = TRUE, order = NULL, name = NULL,
-                               guides = deprecated()) {
+                               width = NA, height = NA, filling = waiver(),
+                               action = NULL, theme = NULL, context = NULL) {
     # prepare the matrix
-    data <- fortify_heatmap(data = data, ...)
+    data <- fortify_matrix(data = data, ...)
     if (!is.character(data)) {
         cli::cli_abort("{.arg data} must be a character matrix")
     }
@@ -144,12 +140,10 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         data = data, mapping = mapping,
         width = width, height = height,
         action = plot_action(data = action_data),
-        theme = theme, filling = NULL,
-        set_context = set_context, order = order, name = name,
-        guides = guides
+        theme = theme, context = context, filling = NULL
     )
     if (reorder_row) {
-        ans <- ans + hmanno("l") + align_order(row_index, reverse = TRUE)
+        ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
     }
     if (reorder_column) {
         column_scores <- apply(vec_slice(counts, row_index), 2L, function(x) {
@@ -158,11 +152,11 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
             sum(score)
         })
         ans <- ans +
-            hmanno("t") +
+            anno_top() +
             align_order(order(column_scores, decreasing = TRUE))
     }
     # always make sure user provided action override the default action
-    ans <- ans + hmanno(NULL, action = action)
+    ans <- ans + quad_active(action = action)
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
         ans <- ans + plot_action(data = action_data)

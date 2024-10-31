@@ -38,7 +38,7 @@ either be specified as a text string or by concatenating calls to
 
 \item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
 which side of guide legends should be collected. Defaults to
-\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout.  If
+\code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
 there is no parent layout, or if \code{NULL} is provided, no guides will be
 collected.}
 

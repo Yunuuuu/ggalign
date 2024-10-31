@@ -11,18 +11,26 @@
 #' @param strict A boolean value indicates whether the order should be strict.
 #' If previous groups has been established, and strict is `FALSE`, this will
 #' reorder the observations in each group.
+#' @param data A `matrix`, `data frame`, or atomic vector used as the input for
+#' the `wts` function. Alternatively, you can specify a `function` (including
+#' purrr-like lambda syntax) that will be applied to the layout matrix,
+#' transforming it as necessary for weight calculations. By default, it will
+#' inherit from the layout matrix.
 #' @inheritParams align
+#' @inheritParams heatmap_layout
 #' @inherit align return
+#' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("l") +
+#'     anno_left() +
 #'     align_order(I("rowMeans"))
 #' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 waiver
 #' @export
 align_order <- function(wts = rowMeans, ...,
                         reverse = FALSE, strict = TRUE, data = NULL,
-                        set_context = FALSE, name = NULL) {
+                        context = NULL, set_context = deprecated(),
+                        name = deprecated()) {
     if (is.numeric(wts) ||
         (is.character(wts) && !inherits(wts, "AsIs"))) {
         # vec_duplicate_any is slight faster than `anyDuplicated`
@@ -39,13 +47,23 @@ align_order <- function(wts = rowMeans, ...,
                 "{.arg data} won't be used",
                 i = "{.arg order} is not a {.cls function}"
             ))
-            data <- waiver()
         }
+        # we always inherit from parent layout
+        # in this way, we obtain the names of the layout data
+        data <- waiver()
     } else {
         wts <- rlang::as_function(wts)
+        data <- data %||% waiver()
     }
     assert_bool(strict)
     assert_bool(reverse)
+    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    context <- update_context(context, new_context(
+        active = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    context <- deprecate_context(context, "align_order",
+        set_context = set_context, name = name
+    )
     align(
         align_class = AlignOrder,
         params = list(
@@ -54,16 +72,26 @@ align_order <- function(wts = rowMeans, ...,
             reverse = reverse,
             strict = strict
         ),
-        set_context = set_context,
-        name = name, order = NULL,
+        context = context,
         check.param = TRUE,
-        data = data %||% waiver()
+        data = data
     )
 }
 
 #' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 ggproto
 AlignOrder <- ggproto("AlignOrder", Align,
+    nobs = function(params) length(.subset2(params, "wts")),
+    setup_params = function(self, nobs, params) {
+        if (!is.function(.subset2(params, "wts"))) {
+            assert_mismatch_nobs(self, nobs,
+                length(.subset2(params, "wts")),
+                msg = "must be an ordering integer index or character of",
+                arg = "wts"
+            )
+        }
+        params
+    },
     compute = function(self, panel, index, wts, wts_params, strict) {
         assert_reorder(self, panel, strict)
         if (is.function(wts)) {
@@ -87,10 +115,9 @@ AlignOrder <- ggproto("AlignOrder", Align,
     },
     layout = function(self, panel, index, wts, reverse) {
         if (!is.function(wts)) {
-            data <- .subset2(self, "data")
             if (is.numeric(wts)) {
                 index <- wts
-                if (any(index < 1L) || any(index > nrow(data))) {
+                if (any(index < 1L) || any(index > length(wts))) {
                     cli::cli_abort(paste(
                         "Outliers found in the provided ordering",
                         "integer index {.arg wts}"
@@ -115,11 +142,6 @@ AlignOrder <- ggproto("AlignOrder", Align,
                     style_val(wts[is.na(index)])
                 ), call = .subset2(self, "call"))
             }
-            assert_mismatch_nobs(
-                self, nrow(data), length(index),
-                msg = "must be an ordering integer index or character of",
-                arg = "wts"
-            )
         } else {
             index <- order(.subset2(self, "statistics"))
         }

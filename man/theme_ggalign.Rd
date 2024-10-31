@@ -20,7 +20,7 @@ theme_ggalign(...)
 A \link[ggplot2:theme]{theme} object.
 }
 \description{
-Default theme for \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.
+Default theme for \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.
 }
 \details{
 You can use the option \code{"ggalign.default_theme"}
@@ -29,7 +29,7 @@ to change the default theme.
 \examples{
 old <- options(ggalign.default_theme = theme_bw())
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
-    hmanno("top") +
+    anno_top() +
     align_dendro(k = 3L)
 options(ggalign.default_theme = old)
 }

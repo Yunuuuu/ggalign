@@ -1,25 +1,157 @@
-testthat::test_that("`ggstack` works well", {
+testthat::test_that("`stack_align` works well", {
     # atomic was converted to one-column matrix
-    x <- ggstack(1:10)
+    x <- stack_alignh(1:10)
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
-    expect_identical(get_nobs(x), 10L)
+    expect_identical(x@layout, new_layout_params(nobs = 10L))
 
-    x <- ggstack(letters)
+    x <- stack_alignh(letters)
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
-    expect_identical(get_nobs(x), length(letters))
+    expect_identical(x@layout, new_layout_params(nobs = length(letters)))
 
     # stack with no data
-    p <- ggstack()
-    expect_s3_class(p$sizes, "unit")
-    expect_length(p$sizes, 3L)
-    expect_identical(p@nobs, NULL)
+    x <- stack_alignh()
+    expect_s3_class(x@sizes, "unit")
+    expect_length(x@sizes, 3L)
+    expect_identical(x@layout, new_layout_params())
+})
+
+testthat::test_that("`stack_free` works well", {
+    # atomic was converted to one-column data frame
+    x <- stack_freeh(1:10)
+    expect_true(is.data.frame(x@data))
+    expect_identical(names(x@data), "value")
+    expect_identical(x@layout, NULL)
+
+    x <- stack_freeh(letters)
+    expect_true(is.data.frame(x@data))
+    expect_identical(names(x@data), "value")
+    expect_identical(x@layout, NULL)
+
+    # stack with no data
+    x <- stack_freeh()
+    expect_s3_class(x@sizes, "unit")
+    expect_length(x@sizes, 3L)
+    expect_identical(x@layout, NULL)
+})
+
+testthat::test_that("`stack_align` add `Align` object", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    expect_doppelganger("add-align-dendro", {
+        stack_alignh(small_mat) +
+            align_dendro()
+    })
+    expect_doppelganger("add-align-dendro-split", {
+        stack_alignh(small_mat) +
+            align_dendro(k = 3L)
+    })
+    expect_doppelganger("add-align-gg", {
+        stack_alignh(small_mat) +
+            ggalign() +
+            geom_boxplot()
+    })
+    expect_doppelganger("add-align-kmeans", {
+        set.seed(1L)
+        stack_alignh(small_mat) +
+            ggalign() +
+            geom_boxplot(aes(value, factor(.y))) +
+            align_kmeans(3L)
+    })
+})
+
+testthat::test_that("`stack_align` add `quad_layout()` object works well", {
+    # error cases
+    expect_error(stack_alignh() + quad_alignv())
+    expect_error(stack_alignv() + quad_alignh())
+    # stack without data add heatmap without data gave error
+    expect_error(stack_alignh() + quad_alignb()) # we must provide data
+
+    # successful cases
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    expect_doppelganger("add-quad_alignh", {
+        stack_alignh(small_mat) +
+            quad_alignh() +
+            geom_boxplot(aes(value, factor(.y)))
+    })
+    expect_doppelganger("add-quad_alignv", {
+        stack_alignv(small_mat) +
+            quad_alignv() +
+            geom_boxplot(aes(factor(.x), value))
+    })
+    expect_doppelganger("add-quad_alignb", {
+        stack_alignh(small_mat) +
+            quad_alignb(NULL, aes(.x, .y)) +
+            geom_tile(aes(fill = value))
+    })
+    expect_doppelganger("add-ggheatmap", {
+        stack_alignh(small_mat) + ggheatmap()
+    })
+    expect_doppelganger("add-ggheatmap_with_name_as_mapping", {
+        stack_alignh(small_mat) +
+            ggheatmap(filling = NULL) +
+            geom_tile(aes(.column_names, .row_names, fill = value))
+    })
+})
+
+testthat::test_that("`stack_align` add `quad_switch()` works well", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+
+    set.seed(1L)
+    expect_doppelganger(
+        "add-quad_switch",
+        stack_alignh(small_mat) +
+            align_kmeans(3L) +
+            ggheatmap() +
+            quad_switch("l") +
+            align_dendro()
+    )
+
+    # absolute size works well
+    expect_doppelganger(
+        "stack with absolute size 1",
+        stack_alignh(matrix(seq_len(81), nrow = 9L)) +
+            ggheatmap() +
+            quad_switch("t", size = unit(6, "cm")) +
+            align_dendro()
+    )
+    expect_doppelganger(
+        "stack with absolute size 2",
+        stack_alignh(matrix(seq_len(81), nrow = 9L)) +
+            ggheatmap() +
+            quad_switch("t", size = unit(6, "cm")) +
+            align_dendro(size = unit(10, "cm"))
+    )
+    expect_doppelganger(
+        "stack with mix absolute and null size 1",
+        stack_alignh(matrix(seq_len(81), nrow = 9L)) +
+            ggheatmap() +
+            quad_switch("t", size = unit(6, "cm")) +
+            align_dendro(size = unit(10, "cm")) +
+            align_dendro()
+    )
+    expect_doppelganger(
+        "stack with mix absolute and null size 2",
+        stack_alignh(matrix(seq_len(81), nrow = 9L)) +
+            ggheatmap() +
+            quad_switch("t", size = unit(6, "cm")) +
+            align_dendro() +
+            align_dendro()
+    )
 })
 
 testthat::test_that("add `stack_active` object works well", {
-    p <- ggstack(matrix(1:9, nrow = 3L))
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
     # change parameters for stack self
+    p <- stack_alignh(small_mat)
     p2 <- p + stack_active(
         sizes = unit(1, "cm"),
         action = plot_action(
@@ -35,73 +167,10 @@ testthat::test_that("add `stack_active` object works well", {
     expect_identical(action$data, NULL)
 })
 
-testthat::test_that("add `heatmap_layout()` object works well", {
-    # stack without data add heatmap without data gave error
-    expect_error(ggstack() + ggheatmap())
-
-    # add heatmap with data gave right nobs for the stack layout
-    p <- ggstack() + ggheatmap(matrix(1:9, nrow = 3L))
-    expect_identical(get_nobs(p), 3L)
-
-    # add heatmap without data gave right nobs for the heatmap layout
-    p <- ggstack(matrix(1:10, nrow = 2L))
-    p2 <- p + ggheatmap()
-    expect_identical(get_nobs(p), get_nobs(p2@plots[[1L]], "y"))
-    expect_identical(get_nobs(p2@plots[[1L]], "x"), 5L)
-
-    p <- ggstack(matrix(1:10, nrow = 2L), "v")
-    p2 <- p + ggheatmap()
-    expect_identical(get_nobs(p), get_nobs(p2@plots[[1L]], "x"))
-    expect_identical(get_nobs(p2@plots[[1L]], "y"), 5L)
-
-    # we prevent from reordering the layout index
-    expect_error(ggstack(1:10) + ggheatmap(letters))
-    set.seed(1L)
-    expect_error(
-        ggstack(matrix(seq_len(81), nrow = 9L)) +
-            align_kmeans(3L) +
-            ggheatmap() +
-            hmanno("l") +
-            align_kmeans(4)
-    )
-
-    # absolute size works well
-    expect_doppelganger(
-        "stack with absolute size 1",
-        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
-            ggheatmap() +
-            hmanno("t", size = unit(6, "cm")) +
-            align_dendro()
-    )
-    expect_doppelganger(
-        "stack with absolute size 2",
-        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
-            ggheatmap() +
-            hmanno("t", size = unit(6, "cm")) +
-            align_dendro(size = unit(10, "cm"))
-    )
-    expect_doppelganger(
-        "stack with mix absolute and null size 1",
-        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
-            ggheatmap() +
-            hmanno("t", size = unit(6, "cm")) +
-            align_dendro(size = unit(10, "cm")) +
-            align_dendro()
-    )
-    expect_doppelganger(
-        "stack with mix absolute and null size 2",
-        ggstack(matrix(seq_len(81), nrow = 9L), "h") +
-            ggheatmap() +
-            hmanno("t", size = unit(6, "cm")) +
-            align_dendro() +
-            align_dendro()
-    )
-})
-
 testthat::test_that("`ggsave()` works well", {
     p <- ggstack(matrix(seq_len(81), nrow = 9L), "h") +
         ggheatmap() +
-        hmanno("t", size = unit(6, "cm")) +
+        anno_top(size = unit(6, "cm")) +
         align_dendro() +
         align_dendro()
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))

@@ -4,7 +4,7 @@
 \name{align}
 \alias{align}
 \alias{Align}
-\title{Create a new \code{Align} object}
+\title{Create a New \code{Align} Object}
 \usage{
 align(
   align_class,
@@ -15,9 +15,7 @@ align(
   action_data = NA,
   limits = TRUE,
   facet = TRUE,
-  set_context = TRUE,
-  order = NULL,
-  name = NULL,
+  context = NULL,
   free_guides = deprecated(),
   free_spaces = deprecated(),
   plot_data = deprecated(),
@@ -28,50 +26,38 @@ align(
 )
 }
 \arguments{
-\item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
-provided, it will be converted into a one-column matrix. When \code{data = NULL},
-the internal \code{layout} data will be used by default. Additionally, \code{data} can
-be a function (including purrr-like lambdas), which will be applied to the
-\code{layout} data.
-
-It is important to note that we consider the \code{rows} as the observations. It
-means the \code{NROW(data)} must return the same number with the specific \code{layout}
-axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
-stack layout).
+\item{data}{Options for \code{data}:
 \itemize{
-\item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
-transposed before using (If data is a \code{function}, it will be applied with
-the transposed matrix). This is necessary because column annotation uses
-heatmap columns as observations, but we need rows.
-\item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
-all plots along a single axis.
+\item A matrix, data frame, or atomic vector. If an atomic vector is provided,
+it will be converted into a one-column matrix.
+\item \code{\link[=waiver]{waiver()}}: Uses the \verb{layout matrix}.
+\item \code{NULL}: No data is set.
+\item A \code{function} (including purrr-like \code{lambda} syntax), which will be applied
+to the \verb{layout matrix}.
 }}
 
-\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
+\item{size}{Plot size, specified as a \code{\link[grid:unit]{unit}} object.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
+\item{action}{Options for \code{action}:
+\itemize{
+\item \code{NULL}: For \verb{align_*()} functions that do not add a plot.
+\item \code{\link[=waiver]{waiver()}}: Uses the default \code{\link[=plot_action]{plot_action()}}.
+\item A \code{\link[=plot_action]{plot_action()}} object to define specific plot actions.
+}}
 
-\item{action_data}{Default action data, which by default tries to infer
-from the \code{data} argument.}
+\item{action_data}{Default action data, inferred from the \code{data} argument by
+default.}
 
-\item{limits}{A boolean value indicates whether to set the layout limtis for
-the plot.}
+\item{limits}{Logical; determines if layout limits are set for the plot.}
 
-\item{facet}{A boolean value indicates whether to set the layout facet for
-the plot. If this is \code{FALSE}, \code{limits} will always be \code{FALSE} too.}
+\item{facet}{Logical; determines if layout facets are set for the plot. If
+\code{FALSE}, \code{limits} will also be set to \code{FALSE}.}
 
-\item{set_context}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
+\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+added to a layout.}
 
-\item{order}{An single integer for the plot area order.}
-
-\item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
-
-\item{free_guides}{Override the \code{guides} collection behavior specified in the
-heatmap layout for the annotation stack layout. Only used when \code{position} is
-a string.}
+\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+argument instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
 argument instead.}
@@ -85,41 +71,55 @@ instead.}
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
 argument instead.}
 
-\item{check.param}{A single boolean value indicates whether to check the
-supplied parameters and warn.}
+\item{check.param}{Logical; if \code{TRUE}, checks the supplied parameters and
+provides warnings as necessary.}
 
-\item{call}{The \code{call} used to construct the \code{Align} for reporting messages.}
+\item{call}{The \code{call} used to construct the \code{Align} object, for reporting
+messages.}
 }
 \value{
 A new \code{Align} object.
 }
 \description{
-\code{Align} object will act with the \code{layout} object, reorder or split the
-observations, some of them can also add plot components into the \code{layout}
-object.
+An \code{Align} object interacts with the \code{layout} object to reorder or split
+observations and, in some cases, add plot components to the \code{layout}.
 }
-\section{Align}{
-
-Each of the \verb{Align*} objects is just a \link[ggplot2:ggproto]{ggproto()} object,
-descended from the top-level \code{Align}, and each implements various
+\details{
+Each of the \verb{Align*} objects is just a \code{\link[ggplot2:ggproto]{ggproto()}}
+object, descended from the top-level \code{Align}, and each implements various
 methods and fields.
 
 To create a new type of \verb{Align*} object, you typically will want to
 override one or more of the following:
 \itemize{
-\item \code{setup_params}: Prepare parameter or check parameters used by this
-annotation.
-\item \code{setup_data}: Prepare data used by this annotation.
+\item \code{setup_params}: Prepare parameter or check parameters used by this plot.
+\item \code{setup_data}: Prepare data used by this plot.
 \item \code{compute}: A method used to compute statistics.
-\item \code{layout}: A method used to group heamap rows/columns into panel or
-reorder heamtap rows/columns.
+\item \code{layout}: A method used to group observations into panel or reorder
+observations.
 \item \code{draw}: A method used to draw the plot. Must return a \code{ggplot} object.
+}
+}
+\section{Aligned Axis}{
+
+It is important to note that we consider rows as observations, meaning
+\code{NROW(data)} must match the number of observations along the specified layout
+axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
+layout).
+\itemize{
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: for column annotation, the
+\verb{layout matrix} will be transposed before using (If data is a function, it
+will be applied with the transposed matrix). This is necessary because
+column annotation uses columns as observations, but we need rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: the \verb{layout matrix} will be used as it is since we
+place all plots along a single axis.
 }
 }
 
 \examples{
 align_gg()
 align_dendro()
+
 }
 \keyword{datasets}
 \keyword{internal}

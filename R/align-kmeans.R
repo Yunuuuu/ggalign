@@ -2,20 +2,28 @@
 #'
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
-#' @inheritParams align
+#' @inheritParams align_dendro
 #' @inherit align return
+#' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("t") +
+#'     anno_top() +
 #'     align_kmeans(3L)
 #' @export
-align_kmeans <- function(centers, ...,
-                         data = NULL, set_context = FALSE, name = NULL) {
+align_kmeans <- function(centers, ..., data = NULL,
+                         context = NULL, set_context = deprecated(),
+                         name = deprecated()) {
+    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    context <- update_context(context, new_context(
+        active = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    context <- deprecate_context(context, "align_group",
+        set_context = set_context, name = name
+    )
     align(
         align_class = AlignKmeans,
         params = list(centers = centers, params = rlang::list2(...)),
-        set_context = set_context,
-        name = name, order = NULL,
+        context = context,
         data = data %||% waiver()
     )
 }
@@ -23,7 +31,7 @@ align_kmeans <- function(centers, ...,
 #' @importFrom ggplot2 ggproto
 AlignKmeans <- ggproto("AlignKmeans", Align,
     setup_data = function(self, params, data) {
-        ans <- as.matrix(data)
+        ans <- fortify_matrix(data)
         assert_(
             ans, is.numeric, "a numeric matrix",
             arg = "data", call = .subset2(self, "call")

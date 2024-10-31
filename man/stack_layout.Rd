@@ -5,48 +5,47 @@
 \alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
-stack_layout(
-  data = NULL,
-  direction = NULL,
-  ...,
-  sizes = NA,
-  action = NULL,
-  theme = NULL
-)
-
-ggstack(
-  data = NULL,
-  direction = NULL,
-  ...,
-  sizes = NA,
-  action = NULL,
-  theme = NULL
-)
+stack_layout(data = NULL, direction = NULL, type = NULL, ...)
 }
 \arguments{
-\item{data}{A numeric or character vector, a data frame, or a matrix.}
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout:
+\itemize{
+\item If \code{type} is \code{align}, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to get a data
+frame.
+\item If \code{type} is \code{free}, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to get a matrix.
+}}
 
-\item{direction}{A string of \code{"horizontal"} or \code{"vertical"}, indicates the
-direction of the stack layout.}
+\item{direction}{A string indicating the direction of the stack layout,
+either \code{"horizontal"} or \code{"vertical"}.}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_stack]{fortify_stack()}}.}
+\item{type}{A string indicating the stack layout type: \code{"align"} for
+aligned plots (\code{\link[=stack_align]{stack_align()}}) or \code{"free"} for free stacking
+(\code{\link[=stack_free]{stack_free()}}).}
 
-\item{sizes}{A numeric or a \link[grid:unit]{unit} object of length \code{3} indicates
-the relative widths (\code{direction = "horizontal"}) / heights (\code{direction = "vertical"}).}
-
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default plot action
-in the layout.}
-
-\item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
-\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
-\code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
 }
 \value{
 A \code{StackLayout} object.
 }
 \description{
-\code{ggstack} is an alias of \code{stack_layout}.
+This function integrates the functionalities of \code{stack_free()} and
+\code{stack_align()} into a single interface. \code{ggstack} is an alias for
+\code{stack_layout}.
 }
 \examples{
-ggstack(matrix(rnorm(100L), nrow = 10L)) + align_dendro()
+small_mat <- matrix(rnorm(56), nrow = 7L)
+stack_layout(small_mat, "horizontal", "align") + align_dendro()
+
+# ggstack is an alias for `stack_layout`
+ggstack(small_mat, "horizontal") + align_dendro()
+
+# this is the same with:
+stack_align(small_mat, "h") + align_dendro()
+}
+\seealso{
+\itemize{
+\item \code{\link[=stack_align]{stack_align()}}
+\item \code{\link[=stack_free]{stack_free()}}
+}
 }

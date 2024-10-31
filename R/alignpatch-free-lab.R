@@ -1,5 +1,5 @@
 #' @param labs Which axis labs to be free? A string containing one or more of
-#' `r rd_values(.tlbr)`.
+#' `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_lab`: A modified version of `plot` with a `free_lab` class.
 #' @export

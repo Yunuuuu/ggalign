@@ -21,14 +21,15 @@ which will not inherit the action data by default. Acceptable values include:
 \itemize{
 \item \code{NULL}: No action taken.
 \item \code{\link[ggplot2:waiver]{waiver()}}: Inherits from the parent layout.
-\item A \code{function} or \verb{purrr-style formula}: Used to transform the plot data,
-which should accept a data frame and return a data frame. You can inherit
-the parent layout action data function, applying it after the parent
-layout's action data, using the \code{inherit} argument.
+\item A \code{function} or purrr-style \code{formula}: Used to transform the plot data,
+which should accept a data frame and return a data frame. You can apply
+this after the parent layout action data function, using the \code{inherit}
+argument.
 }
 
 Use this hook to modify the data for all \code{geoms} after the layout is created
-but before rendering by \code{ggplot2}. The returned data must be a data frame.}
+but before rendering by \code{ggplot2}. The returned data must be a data frame for
+ggplot.}
 
 \item{theme}{Default plot theme, one of:
 \itemize{
@@ -57,13 +58,13 @@ parent, the default is \code{NULL}, meaning no spaces are removed.
 Usually you want to apply this with the whole layout, instead of individual
 plots.}
 
-\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which axis titles should be free from alignment. Defaults to
+\item{free_labs}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
+indicating which axis titles should be free from alignment. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
 parent layout, no axis titles will be aligned. If \code{NULL}, all axis titles
 will be aligned.}
 
-\item{inherit}{A single boolean value indicating whether to apply the parent
+\item{inherit}{A single boolean value indicates whether to apply the parent
 action \code{data} first and then apply the specified action \code{data}. Defaults to
 \code{FALSE}.}
 }
@@ -72,22 +73,22 @@ A \code{plot_action} object.
 }
 \description{
 The \code{plot_action()} function defines the behavior of plots within a layout.
-It can be used in the \code{action} argument of layout functions like \code{hmanno()}
-or \code{stack_active()} to set global actions for all plots in the layout.
-Additionally, \code{plot_action()} can be applied directly to specific plots
-through the \code{action} argument in the \verb{align_*()} functions, or it can be
-added directly to a plot.
+It can be used in the \code{action} argument of layout functions like
+\code{\link[=quad_switch]{quad_switch()}} or \code{\link[=stack_switch]{stack_switch()}} to set global actions for all plots
+in the layout. Additionally, \code{plot_action()} can be applied directly to
+specific plots through the \code{action} argument in the \verb{align_*()} functions, or
+it can be added directly to a plot.
 }
 \examples{
 # used in the layout, define the default action for all plots in the layout
-ggheatmap(matrix(rnorm(100L), nrow = 10),
+ggheatmap(matrix(rnorm(72), nrow = 8),
     action = plot_action(
         theme = theme(plot.background = element_rect(fill = "red"))
     )
 )
 
 # You can also add it for a single plot
-ggheatmap(matrix(rnorm(100L), nrow = 10),
+ggheatmap(matrix(rnorm(72), nrow = 8),
     action = plot_action(
         theme = theme(plot.background = element_rect(fill = "red"))
     )

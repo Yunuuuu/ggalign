@@ -14,9 +14,9 @@
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
-#' @param guides A string with one or more of `r rd_values(.tlbr)` indicating
+#' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
 #' which side of guide legends should be collected. Defaults to
-#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout.  If
+#' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
 #' there is no parent layout, or if `NULL` is provided, no guides will be
 #' collected.
 #' @inheritParams layout_annotation
@@ -188,7 +188,7 @@ update_non_waive <- function(old, new) {
 }
 
 #' @importFrom vctrs vec_set_difference
-update_layout_design <- function(old, new) {
+update_design <- function(old, new) {
     guides <- .subset2(new, "guides")
     new$guides <- NULL # guides need special consideration
     old <- update_non_waive(old, new)
@@ -202,7 +202,7 @@ update_layout_design <- function(old, new) {
 
 #' @export
 alignpatches_add.layout_design <- function(object, plot, object_name) {
-    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
+    plot$layout <- update_design(.subset2(plot, "layout"), object)
     plot
 }
 
@@ -218,7 +218,7 @@ alignpatches_add.plot_layout <- function(object, plot, object_name) {
     } else if (identical(object$guides, "keep")) {
         object["guides"] <- list(NULL)
     }
-    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
+    plot$layout <- update_design(.subset2(plot, "layout"), object)
     plot
 }
 
@@ -297,7 +297,7 @@ layout_annotation <- function(theme = waiver(), ...) {
     )
 }
 
-update_layout_theme <- function(old, new) {
+update_theme <- function(old, new) {
     if (is.waive(new)) return(old) # styler: off
     if (is.null(old) || is.null(new)) return(new) # styler: off
     old + new
@@ -309,7 +309,7 @@ alignpatches_add.layout_annotation <- function(object, plot, object_name) {
         .subset2(plot, "annotation"),
         .subset2(object, "annotation")
     )
-    plot$theme <- update_layout_theme(
+    plot$theme <- update_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )
@@ -322,7 +322,7 @@ alignpatches_add.plot_annotation <- function(object, plot, object_name) {
         .subset2(plot, "titles"),
         .subset(object, names(layout_title()))
     )
-    plot$theme <- update_layout_theme(
+    plot$theme <- update_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )

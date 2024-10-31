@@ -38,7 +38,6 @@ reference:
     ensuring they align and interact correctly within the defined structure.
   contents:
   - ggalign
-  - ggpanel
   - gplot
 
 - title: Layout Customization

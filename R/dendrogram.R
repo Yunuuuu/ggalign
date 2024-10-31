@@ -5,16 +5,16 @@
 #' `"euclidean"`, `"maximum"`, `"manhattan"`, `"canberra"`, `"binary"` or
 #' `"minkowski"`.  Correlation coefficient can be also used, including
 #' `"pearson"`, `"spearman"` or `"kendall"`. In this way, `1 - cor` will be used
-#' as the distance. In addition, you can also provide a [dist][stats::dist]
-#' object directly or a function return a [dist][stats::dist] object. Use
+#' as the distance. In addition, you can also provide a [`dist`][stats::dist]
+#' object directly or a function return a [`dist`][stats::dist] object. Use
 #' `NULL`, if you don't want to calculate the distance.
 #' @param method A string of the agglomeration method to be used. This should be
 #' (an unambiguous abbreviation of) one of `"ward.D"`, `"ward.D2"`, `"single"`,
 #' `"complete"`, `"average"` (= UPGMA), `"mcquitty"` (= WPGMA), `"median"` (=
 #' WPGMC) or `"centroid"` (= UPGMC). You can also provide a function which
 #' accepts the calculated distance (or the input matrix if `distance` is `NULL`)
-#' and returns a [hclust][stats::hclust] object. Alternative, you can supply an
-#' object which can be coerced to [hclust][stats::hclust].
+#' and returns a [`hclust`][stats::hclust] object. Alternative, you can supply
+#' an object which can be coerced to [`hclust`][stats::hclust].
 #' @param use_missing An optional character string giving a method for computing
 #' covariances in the presence of missing values. This must be (an abbreviation
 #' of) one of the strings `"everything"`, `"all.obs"`, `"complete.obs"`,

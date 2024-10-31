@@ -9,8 +9,8 @@ testthat::test_that("`ggheatmap` works well", {
 
     # heatmap with no data
     p <- ggheatmap()
-    expect_identical(p@nobs_list$x, NULL)
-    expect_identical(p@nobs_list$y, NULL)
+    expect_identical(p@horizontal, new_layout_params())
+    expect_identical(p@vertical, new_layout_params())
 
     # heatmap with data
     expect_doppelganger("heatmap-numeric", ggheatmap(1:10))
@@ -24,75 +24,40 @@ testthat::test_that("`ggheatmap` works well", {
     expect_doppelganger("heatmap-data.frame", ggheatmap(data.frame(1:10)))
 })
 
-testthat::test_that("add `layout_annotation()` works well", {
-    expect_doppelganger(
-        "heatmap-layout-theme",
-        ggheatmap(matrix(1:9, nrow = 3L)) +
-            layout_annotation(
-                theme = theme(plot.background = element_rect(fill = "red"))
-            )
-    )
-})
-
-testthat::test_that("add `layout_title()` works well", {
-    expect_doppelganger(
-        "heatmap-layout-annotation",
-        ggheatmap(matrix(1:9, nrow = 3L)) +
-            layout_title(title = "I'm layout title") +
-            layout_annotation(
-                theme = theme(plot.title = element_text(face = "bold"))
-            )
-    )
-})
-
-testthat::test_that("add `hmanno()` works well", {
+testthat::test_that("`ggheatmap` add `quad_switch()` works well", {
     expect_doppelganger(
         "heatmap-hmanno-width",
-        ggheatmap(matrix(1:9, nrow = 3L)) + hmanno(width = unit(1, "cm"))
+        ggheatmap(matrix(1:9, nrow = 3L)) +
+            quad_active(width = unit(1, "cm"))
     )
     expect_doppelganger(
         "heatmap-hmanno-height",
-        ggheatmap(matrix(1:9, nrow = 3L)) + hmanno(height = unit(1, "cm"))
+        ggheatmap(matrix(1:9, nrow = 3L)) + quad_active(height = unit(1, "cm"))
     )
     expect_doppelganger(
         "heatmap-hmanno-null-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
-            hmanno(action = plot_action(guides = NULL)) +
-            hmanno("r") +
+            quad_active(action = plot_action(guides = NULL)) +
+            quad_anno("r") +
             align_dendro()
     )
     expect_doppelganger(
         "heatmap-hmanno-stack-action-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
-            hmanno("l", action = plot_action(guides = "l")) +
+            quad_anno("l", action = plot_action(guides = "l")) +
             align_dendro(aes(color = branch))
     )
     expect_doppelganger(
         "heatmap-hmanno-align-action-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
             scale_fill_viridis_c() +
-            hmanno(action = plot_action(guides = NULL)) +
-            hmanno("r") +
+            quad_active(action = plot_action(guides = NULL)) +
+            quad_anno("r") +
             align_dendro() +
             plot_action(guides = "l")
     )
-})
-
-testthat::test_that("add `Align` object works well", {
-    p <- ggheatmap(matrix(1:9, nrow = 3L))
-    expect_error(p + align_dendro())
-    p2 <- p + hmanno("t") + align_dendro()
-    stack <- p2@top
-    expect_identical(get_panel(stack), get_panel(p2, "x"))
-    expect_identical(get_index(stack), get_index(p2, "x"))
-    expect_identical(get_nobs(stack), get_nobs(p2, "x"))
-})
-
-testthat::test_that("`ggsave()` works well", {
-    p <- ggheatmap(1:10)
-    expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
 })
 
 testthat::test_that("`ggoncoplot` works well", {
@@ -110,17 +75,17 @@ testthat::test_that("`ggoncoplot` works well", {
     expect_doppelganger(
         "oncoplot-with-annotation",
         ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
-            # Note that guide legends from `geom_tile` and `geom_bar` are different.
-            # Although they appear similar, the internal mechanisms won't collapse
-            # the guide legends. Therefore, we remove the guide legends from
-            # `geom_tile`.
+            # Note that guide legends from `geom_tile` and `geom_bar` are
+            # different. Although they appear similar, the internal mechanisms
+            # won't collapse the guide legends. Therefore, we remove the guide
+            # legends from `geom_tile`.
             guides(fill = "none") +
-            hmanno("t", size = 0.5) +
+            anno_top(size = 0.5) +
             ggalign() +
             geom_bar(aes(fill = value), data = function(x) {
                 subset(x, !is.na(value))
             }) +
-            hmanno("r", size = 0.5) +
+            anno_right(size = 0.5) +
             ggalign() +
             geom_bar(aes(fill = value), orientation = "y", data = function(x) {
                 subset(x, !is.na(value))

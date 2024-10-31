@@ -16,20 +16,34 @@
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' function provided in `stat` argument.
 #' @inheritParams align_order
+#' @param data A `matrix`, `data frame`, or atomic vector used as the input for
+#' the `stat` function. Alternatively, you can specify a `function` (including
+#' purrr-like lambda syntax) that will be applied to the layout matrix,
+#' transforming it as necessary for statistic calculations. By default, it will
+#' inherit from the layout matrix.
 #' @inherit align return
+#' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("l") +
+#'     anno_left() +
 #'     align_reorder(hclust2)
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
 #' @export
 align_reorder <- function(stat, ..., reverse = FALSE,
                           strict = TRUE, data = NULL,
-                          set_context = FALSE, name = NULL) {
+                          context = NULL, set_context = deprecated(),
+                          name = deprecated()) {
     stat <- rlang::as_function(stat)
     assert_bool(strict)
     assert_bool(reverse)
+    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    context <- update_context(context, new_context(
+        active = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    context <- deprecate_context(context, "align_order",
+        set_context = set_context, name = name
+    )
     align(
         align_class = AlignReorder,
         params = list(
@@ -38,8 +52,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
             reverse = reverse,
             strict = strict
         ),
-        set_context = set_context,
-        name = name, order = NULL,
+        context = context,
         check.param = TRUE,
         data = data %||% waiver()
     )

@@ -45,7 +45,7 @@ in the theme:
 ```{r}
 ggheatmap(small_mat) +
     scale_fill_viridis_c() +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_y_continuous(expand = expansion()) &
     theme(plot.margin = margin())
@@ -72,7 +72,7 @@ index <- NULL
 set.seed(2L)
 group <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
 h <- ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(group)
 ```
 

@@ -168,7 +168,7 @@ assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
 
 assert_action <- function(x, arg = caller_arg(x), call = caller_call()) {
     if (!inherits(x, "plot_action")) {
-        cli::cli_abort("{.arg {arg}} must be created with {.fn plot_action}")
+        cli::cli_abort("{.arg {arg}} must be created by {.fn plot_action}")
     }
 }
 
@@ -179,5 +179,11 @@ check_action <- function(x, data, arg = caller_arg(x), call = caller_call()) {
     } else {
         assert_action(x, arg = arg, call = call)
         update_action(ans, x)
+    }
+}
+
+assert_context <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!inherits(x, "plot_context")) {
+        cli::cli_abort("{.arg {arg}} must be created by {.fn plot_context}")
     }
 }

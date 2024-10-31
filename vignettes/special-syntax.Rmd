@@ -137,7 +137,7 @@ print(xlabels[index])
 
 ggheatmap(small_mat) +
     scale_x_continuous(labels = xlabels) +
-    hmanno("t") +
+    anno_top() +
     align_order(index)
 ```
 
@@ -148,7 +148,7 @@ and apply it to each plot to ensure proper axis alignment.
 ```{r}
 ggheatmap(small_mat) +
     scale_x_continuous(expand = expansion(mult = 0.1)) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_x_continuous(expand = expansion(mult = 0.1))
 ```
@@ -169,7 +169,7 @@ ggheatmap(small_mat) +
         ),
         axis.ticks.length.x = unit(rep(c(1, 4), times = c(4, 5)), "mm")
     ) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_y_continuous(expand = expansion()) &
     theme(plot.margin = margin())
@@ -187,7 +187,7 @@ ggheatmap(small_mat) +
         ),
         axis.ticks.length.x = I(unit(rep(c(1, 4), times = c(4, 5)), "mm"))
     ) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_y_continuous(expand = expansion()) &
     theme(plot.margin = margin())
@@ -210,7 +210,7 @@ in the plot area.
 ggheatmap(small_mat) +
     facet_grid(labeller = labeller(.column_panel = function(x) letters[as.integer(x)])) +
     theme(strip.text = element_text()) +
-    hmanno("top") +
+    anno_top() +
     align_kmeans(centers = 3L)
 ```
 
