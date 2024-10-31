@@ -5,12 +5,13 @@
 \alias{ggfree}
 \title{Add ggplot to layout}
 \usage{
-free_gg(x, ..., size = NULL, action = NULL, context = NULL)
+free_gg(x = waiver(), ..., size = NULL, action = NULL, context = NULL)
 }
 \arguments{
-\item{x}{Default dataset to initialize the \code{\link[ggplot2:ggplot]{ggplot}}.
-Alternatively, you can provide a \code{\link[ggplot2:ggplot]{ggplot}} object directly;
-you can use \code{\link[=ggwrap]{ggwrap()}} to convert any graphic into a ggplot.}
+\item{x}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}} object.
+Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
+provided directly. By default, it will inherit from the parent layout if
+applicable.}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:ggplot]{ggplot()}}.}
 

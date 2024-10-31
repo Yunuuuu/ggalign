@@ -15,11 +15,11 @@ align_initialize <- function(object, direction, position,
     # 2. if not, we run `nobs()` method to initialize the layout nobs
     if (!is.null(input_data)) { # this `Align` object require data
         if (is.waive(input_data)) { # inherit from the layout
-            abort_no_layout_data(layout_data, call)
+            abort_no_layout_data(layout_data, object_name, call)
             data <- layout_data
         } else {
             if (is.function(input_data)) {
-                abort_no_layout_data(layout_data, call)
+                abort_no_layout_data(layout_data, object_name, call)
                 data <- input_data(layout_data)
             } else {
                 data <- input_data
@@ -162,18 +162,23 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 }
 
 ############################################################
-abort_no_layout_data <- function(data, call = NULL, call_name = NULL) {
+abort_no_layout_data <- function(data, object_name = NULL, call = NULL) {
     if (is.null(data) || is.waive(data)) {
-        if (!is.null(call)) {
-            cli::cli_abort(c(
+        if (is.null(object_name)) {
+            msg <- c(
                 "you must provide {.arg data} argument",
                 i = "no data was found in the layout"
-            ), call = call)
-        } else if (!is.null(call_name)) {
-            cli::cli_abort(c(
-                "you must provide {.arg data} argument in {.var {call_name}}",
+            )
+        } else {
+            msg <- c(
+                "you must provide {.arg data} argument in {.var {object_name}}",
                 i = "no data was found in the layout"
-            ))
+            )
+        }
+        if (is.null(call)) {
+            cli::cli_abort(msg)
+        } else {
+            cli::cli_abort(msg, call = call)
         }
     }
 }

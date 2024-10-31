@@ -2,9 +2,10 @@
 #'
 #' `ggfree` is an alias for `free_gg`.
 #'
-#' @param x Default dataset to initialize the [`ggplot`][ggplot2::ggplot].
-#' Alternatively, you can provide a [`ggplot`][ggplot2::ggplot] object directly;
-#' you can use [`ggwrap()`] to convert any graphic into a ggplot.
+#' @param x A dataset used to initialize a [`ggplot`][ggplot2::ggplot] object.
+#' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
+#' provided directly. By default, it will inherit from the parent layout if
+#' applicable.
 #' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
 #' @param size Plot size, specified as a [`unit`][grid::unit] object.
 #' @param action A [`plot_action()`] object used for the plot. By default,
@@ -17,7 +18,8 @@
 #'     ggfree(mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(x, ..., size = NULL, action = NULL, context = NULL) {
+free_gg <- function(x = waiver(), ..., size = NULL,
+                    action = NULL, context = NULL) {
     rlang::check_dots_used()
     UseMethod("free_gg")
 }
@@ -29,7 +31,7 @@ ggfree <- free_gg
 
 #' @importFrom ggplot2 ggplot
 #' @export
-free_gg.default <- function(x, ..., size = NULL,
+free_gg.default <- function(x = waiver(), ..., size = NULL,
                             action = NULL, context = NULL) {
     data <- fortify_data_frame(x)
     new_free_gg(ggplot(data = NULL, ...), data,
@@ -38,7 +40,7 @@ free_gg.default <- function(x, ..., size = NULL,
 }
 
 #' @export
-free_gg.ggplot <- function(x, ..., size = NULL,
+free_gg.ggplot <- function(x = waiver(), ..., size = NULL,
                            action = NULL, context = NULL) {
     data <- .subset2(x, "data")
     x["data"] <- list(NULL)

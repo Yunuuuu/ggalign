@@ -109,10 +109,11 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         input_data <- .subset2(object, "data")
         layout_data <- stack@data
         if (is.waive(input_data)) { # inherit from the layout
-            abort_no_layout_data(layout_data, call_name = object_name)
-            data <- layout_data
+            data <- layout_data %|w|% NULL
         } else if (is.function(input_data)) {
-            abort_no_layout_data(layout_data, call_name = object_name)
+            abort_no_layout_data(layout_data, object_name,
+                call = quote(ggfree())
+            )
             data <- input_data(layout_data)
         } else {
             data <- input_data
