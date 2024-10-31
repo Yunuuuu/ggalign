@@ -239,12 +239,13 @@ quad_alignb.uneval <- function(data, ...) {
 }
 
 #####################################################
+#' @importFrom ggplot2 ggplot
 new_quad_layout <- function(name, data, horizontal, vertical,
                             mapping = aes(),
                             action = NULL, theme = NULL, context = NULL,
                             width = NA, height = NA, class = "QuadLayout",
                             call = caller_call()) {
-    plot <- ggplot2::ggplot(mapping = mapping)
+    plot <- ggplot(mapping = mapping)
     # for `QuadLayout`, we use `NULL` to inherit data
     # since `QuadLayout` must have data, and won't be waiver()
     # if inherit from the parent layout data, we'll inherit

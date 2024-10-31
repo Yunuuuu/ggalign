@@ -155,7 +155,7 @@ print.align_area <- function(x, ...) {
 
 #' @importFrom vctrs vec_seq_along vec_data
 #' @importFrom grid unit
-#' @importFrom ggplot2 aes margin theme
+#' @importFrom ggplot2 aes margin theme ggplot
 #' @export
 plot.align_area <- function(x, ...) {
     data <- vec_data(x)
@@ -172,7 +172,7 @@ plot.align_area <- function(x, ...) {
         }
         lim[-c(1, length(lim))]
     }
-    ggplot2::ggplot(data) +
+    ggplot(data) +
         ggplot2::geom_rect(aes(
             xmin = .data$l, xmax = .data$r,
             ymin = .data$t, ymax = .data$b, fill = .data$name

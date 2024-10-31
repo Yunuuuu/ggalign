@@ -36,12 +36,12 @@
 #'     mar = c(0, 2, 0, 0), bg = NA
 #' ))
 #'
-#' @importFrom ggplot2 theme element_blank
+#' @importFrom ggplot2 theme element_blank ggplot
 #' @importFrom grid is.grob
 #' @export
 ggwrap <- function(plot, ..., align = "panel", on_top = TRUE,
                    clip = TRUE, vp = NULL) {
-    patch <- ggplot2::ggplot() +
+    patch <- ggplot() +
         theme(
             plot.background = element_blank(),
             panel.background = element_blank()

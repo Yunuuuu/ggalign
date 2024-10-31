@@ -101,7 +101,7 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
 ggalign <- align_gg
 
 #' @importFrom vctrs vec_names
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto ggplot
 AlignGG <- ggproto("AlignGG", Align,
     nobs = function(self) {
         axis <- to_coord_axis(.subset2(self, "direction"))
@@ -128,7 +128,7 @@ AlignGG <- ggproto("AlignGG", Align,
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
-        ans <- ggplot2::ggplot(
+        ans <- ggplot(
             mapping = add_default_mapping(mapping, switch_direction(
                 direction,
                 aes(y = .data$.y),

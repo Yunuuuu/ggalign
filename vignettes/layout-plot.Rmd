@@ -162,6 +162,48 @@ ggheatmap(small_mat) +
     patch_titles(right = "right patch title")
 ```
 
+## `free_gg`
+The `free_gg()` function allows you to incorporate a ggplot object into your
+layout while maintaining alignment with other plot elements. Unlike
+`align_gg()`, which aligns every axis value precisely, `free_gg()` focuses more
+on layout integration without enforcing strict axis alignment. `ggfree()` is an
+alias for `free_gg`.
+
+```{r}
+ggheatmap(small_mat) +
+    anno_top() +
+    ggfree(mtcars, aes(wt, mpg)) +
+    geom_point()
+```
+
+Alternatively, you can directly input the ggplot object.
+```{r}
+ggheatmap(small_mat) +
+    anno_top() +
+    ggfree(ggplot(mtcars, aes(wt, mpg))) +
+    geom_point()
+```
+
+You can also wrap objects that can be converted into a `grob` (graphical object)
+using `ggwrap()`, which converts them into a `ggplot` for plotting:
+```{r}
+library(grid)
+ggheatmap(small_mat) +
+    anno_top() +
+    # ggwrap will create a `ggplot` object, we use `gplot` to add it into the layout
+    ggfree(ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full")) +
+    # we can then add any inset grobs (the same as ggwrap, it can take any objects
+    # which can be converted to a `grob`)
+    inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
+    inset(textGrob("Here are some text", gp = gpar(color = "black")),
+        align = "panel"
+    )
+```
+You can also integrate base plots, pheatmap, ComplexHeatmap, e.g., and explore
+more with the `patch()` function for combining such plots within the same
+layout. This makes it versatile for mixing different types of plots and objects
+into a cohesive visual layout.
+
 ## Session information
 ```{r}
 sessionInfo()

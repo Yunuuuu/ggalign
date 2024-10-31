@@ -369,13 +369,13 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         list(panel, index)
     },
-    #' @importFrom ggplot2 aes
+    #' @importFrom ggplot2 aes ggplot
     ggplot = function(self, plot_dendrogram, mapping, segment_params) {
         if (!plot_dendrogram) {
             return(NULL)
         }
         direction <- .subset2(self, "direction")
-        ggplot2::ggplot(
+        ggplot(
             mapping = add_default_mapping(
                 mapping, aes(x = .data$x, y = .data$y)
             )
