@@ -205,9 +205,12 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
     }
 
     # set the facets and coord ---------------------------
-    p <- p + quad_melt_facet(p$facet, default_facet) +
-        facet_ggalign(x = column_params, y = row_params) +
-        coord_ggalign(xlim_list = xlim_list, ylim_list = ylim_list)
+    # we don't align observations for `quad_free()`
+    if (!is.null(row_params) || !is.null(column_params)) {
+        p <- p + quad_melt_facet(p$facet, default_facet) +
+            facet_ggalign(x = column_params, y = row_params) +
+            coord_ggalign(xlim_list = xlim_list, ylim_list = ylim_list)
+    }
 
     # add action ----------------------------------------
     p <- plot_add_action(p, inherit_action(quad@body_action, action))
