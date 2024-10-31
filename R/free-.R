@@ -60,8 +60,7 @@ new_free_gg <- function(plot, data, size, action, context,
     structure(
         list(
             plot = plot, data = data,
-            size = size, action = action, context = context,
-            call = call
+            size = size, action = action, context = context
         ),
         class = "free_gg"
     )

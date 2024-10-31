@@ -106,14 +106,13 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         stack@plots[[active_index]] <- plot
     } else {
         plots <- stack@plots
-        call <- .subset2(object, "call")
         input_data <- .subset2(object, "data")
         layout_data <- stack@data
         if (is.waive(input_data)) { # inherit from the layout
-            abort_no_layout_data(layout_data, call)
+            abort_no_layout_data(layout_data, call_name = object_name)
             data <- layout_data
         } else if (is.function(input_data)) {
-            abort_no_layout_data(layout_data, call)
+            abort_no_layout_data(layout_data, call_name = object_name)
             data <- input_data(layout_data)
         } else {
             data <- input_data

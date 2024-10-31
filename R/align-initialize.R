@@ -162,11 +162,18 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 }
 
 ############################################################
-abort_no_layout_data <- function(data, call) {
+abort_no_layout_data <- function(data, call = NULL, call_name = NULL) {
     if (is.null(data) || is.waive(data)) {
-        cli::cli_abort(c(
-            "you must provide {.arg data} argument",
-            i = "no data was found in the layout"
-        ), call = call)
+        if (!is.null(call)) {
+            cli::cli_abort(c(
+                "you must provide {.arg data} argument",
+                i = "no data was found in the layout"
+            ), call = call)
+        } else if (!is.null(call_name)) {
+            cli::cli_abort(c(
+                "you must provide {.arg data} argument in {.var {call_name}}",
+                i = "no data was found in the layout"
+            ))
+        }
     }
 }
