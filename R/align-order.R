@@ -16,8 +16,8 @@
 #' purrr-like lambda syntax) that will be applied to the layout matrix,
 #' transforming it as necessary for weight calculations. By default, it will
 #' inherit from the layout matrix.
+#' @inheritParams align_dendro
 #' @inheritParams align
-#' @inheritParams heatmap_layout
 #' @inherit align return
 #' @inheritSection align Aligned Axis
 #' @examples

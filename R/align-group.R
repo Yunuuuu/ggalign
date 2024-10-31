@@ -1,8 +1,7 @@
 #' Group and align layout based on categorical or factor levels.
 #'
 #' @param group A character define the groups of the observations.
-#' @inheritParams align
-#' @inheritParams heatmap_layout
+#' @inheritParams align_dendro
 #' @inherit align return
 #' @examples
 #' set.seed(1L)

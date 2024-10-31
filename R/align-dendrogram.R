@@ -4,11 +4,10 @@
 #' If not specified, must be supplied in each layer added to the plot.
 #' @param data A matrix-like object. By default, it inherits from the `layout
 #'   matrix`.
+#' @inheritParams free_gg
 #' @inheritParams align
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`geom_segment()`][ggplot2::geom_segment].
-#' @param action A [`plot_action()`] object used for the plot. By default,
-#' it inherits from the parent layout.
 #' @inheritParams hclust2
 #' @inheritParams dendrogram_data
 #' @param reorder_dendrogram A single boolean value indicating whether to
