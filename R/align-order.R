@@ -18,7 +18,7 @@
 #' inherit from the layout matrix.
 #' @inheritParams align_dendro
 #' @inheritParams align
-#' @inherit align return
+#' @return A `"AlignOrder"` object.
 #' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

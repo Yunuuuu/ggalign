@@ -137,7 +137,7 @@ instead.}
 instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignDendro"} object.
 }
 \description{
 Reorder or Group layout based on hierarchical clustering

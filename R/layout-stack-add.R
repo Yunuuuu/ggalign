@@ -20,6 +20,8 @@ stack_layout_add.default <- function(object, stack, object_name) {
         plot <- quad_layout_add(object, plot, object_name)
     } else if (is_align(plot)) {
         plot <- align_add(object, plot, object_name)
+    } else if (is_free(plot)) {
+        plot <- free_add(object, plot, object_name)
     }
     stack@plots[[active_index]] <- plot
     stack
@@ -94,6 +96,58 @@ stack_layout_add.Align <- function(object, stack, object_name) {
 
     # set the layout -------------------------------------
     update_layout_params(stack, direction = stack@direction, params = layout)
+}
+
+#' @export
+stack_layout_add.free_gg <- function(object, stack, object_name) {
+    if (!is.null(active_index <- stack@active) &&
+        is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
+        plot <- quad_layout_add(object, plot, object_name)
+        stack@plots[[active_index]] <- plot
+    } else {
+        plots <- stack@plots
+        call <- .subset2(object, "call")
+        input_data <- .subset2(object, "data")
+        layout_data <- stack@data
+        if (is.waive(input_data)) { # inherit from the layout
+            abort_no_layout_data(layout_data, call)
+            data <- layout_data
+        } else if (is.function(input_data)) {
+            abort_no_layout_data(layout_data, call)
+            data <- input_data(layout_data)
+        } else {
+            data <- input_data
+        }
+
+        # convert the data into a data frame
+        object$plot$data <- fortify_data_frame(data)
+
+        # set up context index ------------------------------
+        if (.subset2(.subset2(object, "context"), "active")) {
+            active_index <- length(plots) + 1L
+        } else {
+            active_index <- stack@active
+        }
+
+        # check annotation name is unique --------------------
+        if (!is.na(name <- .subset2(.subset2(object, "context"), "name"))) {
+            if (any(names(plots) == name)) {
+                cli::cli_warn("{object_name}: {name} plot is already present")
+            }
+            plots[[name]] <- object
+        } else {
+            plots <- c(plots, list(object))
+        }
+        # add annotation -------------------------------------
+        stack@plots <- plots
+        stack@active <- active_index
+    }
+    stack
+}
+
+#' @export
+stack_layout_add.ggplot <- function(object, stack, object_name) {
+    stack_layout_add(free_gg(object), stack, object_name)
 }
 
 #' @export
@@ -319,15 +373,4 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
 stack_layout_add.list <- function(object, stack, object_name) {
     for (o in object) stack <- stack_layout_add(o, stack, object_name)
     stack
-}
-
-#' @export
-stack_layout_add.ggplot <- function(object, stack, object_name) {
-    cli::cli_abort(c(
-        "Cannot add {.code {object_name}} to the stack layout",
-        i = paste(
-            "try to use {.fn ggalign} to create a {.cls ggplot}",
-            "or use {.fn gplot} to add this plot"
-        )
-    ))
 }

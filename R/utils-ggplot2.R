@@ -91,6 +91,9 @@ set_limits <- function(axis, params) {
 #' @importFrom vctrs vec_unique_count
 #' @export
 ggplot_add.coord_ggalign <- function(object, plot, object_name) {
+    if (all(vapply(object, is.null, logical(1L), USE.NAMES = FALSE))) {
+        return(plot)
+    }
     Parent <- .subset2(plot, "coordinates")
     plot$coordinates <- ggproto(
         NULL, Parent,

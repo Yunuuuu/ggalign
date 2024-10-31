@@ -3,6 +3,10 @@
 #' This function converts various objects to a data frame. By default, it calls
 #' [`fortify()`][ggplot2::fortify] to perform the conversion.
 #'
+#' When `data` is a matrix, it will automatically be transformed into a
+#' long-form data frame, where each row represents a unique combination of
+#' matrix indices and their corresponding values.
+#'
 #' @param data Any objects to be converted to a data frame.
 #' @inheritParams rlang::args_dots_used
 #' @return A data frame.
@@ -13,11 +17,16 @@ fortify_data_frame <- function(data, ...) {
     UseMethod("fortify_data_frame")
 }
 
+#' @export
+fortify_data_frame.default <- function(data, ...) {
+    ggplot2::fortify(model = data, ...)
+}
+
 #' @importFrom vctrs new_data_frame vec_names
 #' @export
 fortify_data_frame.character <- function(data, ...) {
-    ans <- list(name = vec_names(data), value = data)
-    if (is.null(.subset2(ans, "name"))) ans$name <- NULL
+    ans <- list(.names = vec_names(data), value = data)
+    if (is.null(.subset2(ans, ".names"))) ans$.names <- NULL
     new_data_frame(ans)
 }
 
@@ -25,12 +34,22 @@ fortify_data_frame.character <- function(data, ...) {
 fortify_data_frame.numeric <- fortify_data_frame.character
 
 #' @export
-fortify_data_frame.default <- function(data, ...) {
-    ggplot2::fortify(model = data, ...)
-}
-
-#' @export
 fortify_data_frame.waiver <- function(data, ...) data
 
 #' @export
 fortify_data_frame.NULL <- function(data, ...) data
+
+#' @importFrom vctrs vec_names new_data_frame vec_rep_each vec_rep
+#' @export
+fortify_data_frame.matrix <- function(data, ...) {
+    row_nms <- vec_names(data)
+    col_nms <- colnames(data)
+    data <- new_data_frame(list(
+        .row_index = vec_rep(seq_len(nrow(data)), ncol(data)),
+        .column_index = vec_rep_each(seq_len(ncol(data)), nrow(data)),
+        value = c(data)
+    ))
+    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
+    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    data
+}

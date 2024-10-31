@@ -45,7 +45,7 @@ argument instead.}
 instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignKmeans"} object.
 }
 \description{
 Split layout by k-means clustering groups.

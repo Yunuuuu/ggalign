@@ -3,7 +3,7 @@
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
 #' @inheritParams align_dendro
-#' @inherit align return
+#' @return A `"AlignKmeans"` object.
 #' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

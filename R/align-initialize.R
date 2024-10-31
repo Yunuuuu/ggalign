@@ -15,11 +15,11 @@ align_initialize <- function(object, direction, position,
     # 2. if not, we run `nobs()` method to initialize the layout nobs
     if (!is.null(input_data)) { # this `Align` object require data
         if (is.waive(input_data)) { # inherit from the layout
-            align_abort_no_layout_data(layout_data, call)
+            abort_no_layout_data(layout_data, call)
             data <- layout_data
         } else {
             if (is.function(input_data)) {
-                align_abort_no_layout_data(layout_data, call)
+                abort_no_layout_data(layout_data, call)
                 data <- input_data(layout_data)
             } else {
                 data <- input_data
@@ -162,11 +162,11 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 }
 
 ############################################################
-align_abort_no_layout_data <- function(data, call) {
+abort_no_layout_data <- function(data, call) {
     if (is.null(data) || is.waive(data)) {
         cli::cli_abort(c(
             "you must provide {.arg data} argument",
-            i = "no data was found in the {.fn stack_align} layout"
+            i = "no data was found in the layout"
         ), call = call)
     }
 }

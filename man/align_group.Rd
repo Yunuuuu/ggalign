@@ -24,7 +24,7 @@ argument instead.}
 instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignGroup"} object.
 }
 \description{
 Group and align layout based on categorical or factor levels.

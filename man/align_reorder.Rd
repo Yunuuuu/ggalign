@@ -44,7 +44,7 @@ argument instead.}
 instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignReorder"} object.
 }
 \description{
 Reorders layout observations based on specific statistics.

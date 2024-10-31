@@ -65,8 +65,8 @@
 #'     and correspond to both nodes of each edge.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
-#' @inherit align return
 #' @inheritSection align Aligned Axis
+#' @return A `"AlignDendro"` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
@@ -218,7 +218,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             stats::nobs(tree)
         }
     },
-    #' @importFrom vctrs vec_slice
+    #' @importFrom vctrs vec_slice vec_names
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendrogram, k = NULL, h = NULL, cutree = NULL) {
         data <- .subset2(self, "data")
@@ -238,7 +238,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             }
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
-            labels <- rownames(data)
+            labels <- vec_names(data)
 
             # we do clustering within each group ---------------
             for (g in levels(panel)) {

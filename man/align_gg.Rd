@@ -76,7 +76,7 @@ instead.}
 argument instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignGG"} object.
 }
 \description{
 \code{ggalign} is an alias of \code{align_gg}.
@@ -87,29 +87,28 @@ A new \code{Align} object.
 
 \code{align_gg()} always applies a default mapping for the axis of the data index
 in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
-layout (including left and right heatmap annotation) and \code{aes(x = .data$.x)}
-for vertical stack layout (including top and bottom heatmap annotation).
+layout (including left and right annotation) and \code{aes(x = .data$.x)}
+for vertical stack layout (including top and bottom annotation).
 
-For ggplot usage, matrix (including a simple vector) data is converted into a
-long-format data frame. The data in the underlying \code{ggplot} object will
-contain following columns:
+The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
-\item \code{.panel}: the panel for current layout axis. It means \code{x-axis} for
+\item \code{.panel}: the panel for current aligned axis. It means \code{x-axis} for
 vertical stack layout, \code{y-axis} for horizontal stack layout.
-\item \code{.index}: the index of the original layout data (only applicable if \code{data}
-is \code{NULL}).
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
-\item \code{.row_names} and \code{.row_index}: A factor of the row names and an integer of
-row index of the original matrix or data frame.
+\item \code{.names} and \code{.index}: A factor of the names and an integer of index of
+the original data. (\code{\link[vctrs:vec_names]{vec_names()}} and
+\code{\link[vctrs:vec_size]{vec_size()}})
+\item \code{.row_names} and \code{.row_index}: the row names and an integer of
+row index of the original matrix (only applicable if \code{data} is a
+\code{matrix})..
 \item \code{.column_names} and \code{.column_index}: the column names and column index of
 the original matrix (only applicable if \code{data} is a \code{matrix}).
-\item \code{value}: the actual matrix value  (only applicable if \code{data} is a
-\code{matrix}).
+\item \code{value}: the actual value (only applicable if \code{data} is a \code{matrix} or
+atomic vector).
 }
 
 In the case where the input data is already a data frame, three additional
-columns (\code{.row_names}, \code{.row_index}, and \code{.panel}) are added to the data
-frame.
+columns (\code{.names}, \code{.index}, and \code{.panel}) are added to the data frame.
 
 If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, an additional
 column will be added.

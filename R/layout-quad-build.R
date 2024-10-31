@@ -48,7 +48,7 @@ quad_build <- function(quad, action = quad@action) UseMethod("quad_build")
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-#' @importFrom vctrs vec_rep_each vec_rep
+#' @importFrom vctrs vec_rep_each vec_rep vec_names
 #' @export
 quad_build.QuadLayout <- function(quad, action = quad@action) {
     data <- quad@data
@@ -195,7 +195,7 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
     if (is.null(row_params)) {
         ylim_list <- NULL
     } else {
-        row_params$labels <- rownames(data)
+        row_params$labels <- vec_names(data)
         ylim_list <- set_limits("y", row_params)
         if (!is.null(column_params)) {
             ylim_list <- vec_rep_each(ylim_list,
@@ -286,7 +286,7 @@ quad_build_data <- function(data, row_params, column_params) {
         by.x <- ".row_index"
         by.y <- ".yindex"
     }
-    ans <- melt_matrix(data)
+    ans <- fortify_data_frame.matrix(data)
     ans <- full_join(ans, coords, by.x = by.x, by.y = by.y)
     if (!is.null(.subset2(ans, ".row_names")) &&
         !is.null(.subset2(ans, ".y"))) {

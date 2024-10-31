@@ -11,7 +11,6 @@
 #'  - A `function` (including purrr-like `lambda` syntax), which will be applied
 #'    to the `layout matrix`.
 #'
-#' @param size Plot size, specified as a [`unit`][grid::unit] object.
 #' @param action Options for `action`:
 #'  - `NULL`: For `align_*()` functions that do not add a plot.
 #'  - [`waiver()`]: Uses the default [`plot_action()`].
@@ -23,8 +22,8 @@
 #'   `FALSE`, `limits` will also be set to `FALSE`.
 #' @param free_guides `r lifecycle::badge("deprecated")` Please use `action`
 #' argument instead.
+#' @inheritParams free_gg
 #' @inheritParams hmanno
-#' @inheritParams quad_layout
 #' @param check.param Logical; if `TRUE`, checks the supplied parameters and
 #'   provides warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting

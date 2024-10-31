@@ -20,33 +20,32 @@
 #'
 #' `align_gg()` always applies a default mapping for the axis of the data index
 #' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack
-#' layout (including left and right heatmap annotation) and `aes(x = .data$.x)`
-#' for vertical stack layout (including top and bottom heatmap annotation).
+#' layout (including left and right annotation) and `aes(x = .data$.x)`
+#' for vertical stack layout (including top and bottom annotation).
 #'
-#' For ggplot usage, matrix (including a simple vector) data is converted into a
-#' long-format data frame. The data in the underlying `ggplot` object will
-#' contain following columns:
+#' The data in the underlying `ggplot` object will contain following columns:
 #'
-#'  - `.panel`: the panel for current layout axis. It means `x-axis` for
+#'  - `.panel`: the panel for current aligned axis. It means `x-axis` for
 #'    vertical stack layout, `y-axis` for horizontal stack layout.
-#'
-#'  - `.index`: the index of the original layout data (only applicable if `data`
-#'    is `NULL`).
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
-#'  - `.row_names` and `.row_index`: A factor of the row names and an integer of
-#'    row index of the original matrix or data frame.
+#'  - `.names` and `.index`: A factor of the names and an integer of index of
+#'    the original data. ([`vec_names()`][vctrs::vec_names] and
+#'    [`vec_size()`][vctrs::vec_size()])
+#'
+#'  - `.row_names` and `.row_index`: the row names and an integer of
+#'    row index of the original matrix (only applicable if `data` is a
+#'    `matrix`)..
 #'
 #'  - `.column_names` and `.column_index`: the column names and column index of
 #'    the original matrix (only applicable if `data` is a `matrix`).
 #'
-#'  - `value`: the actual matrix value  (only applicable if `data` is a
-#'    `matrix`).
+#'  - `value`: the actual value (only applicable if `data` is a `matrix` or
+#'    atomic vector).
 #'
 #' In the case where the input data is already a data frame, three additional
-#' columns (`.row_names`, `.row_index`, and `.panel`) are added to the data
-#' frame.
+#' columns (`.names`, `.index`, and `.panel`) are added to the data frame.
 #'
 #' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], an additional
 #' column will be added.
@@ -54,7 +53,7 @@
 #'  - `.extra_panel`: the panel information for column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
-#' @inherit align return
+#' @return A `"AlignGG"` object.
 #' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
@@ -101,6 +100,7 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
+#' @importFrom vctrs vec_names
 #' @importFrom ggplot2 ggproto
 AlignGG <- ggproto("AlignGG", Align,
     nobs = function(self) {
@@ -111,20 +111,20 @@ AlignGG <- ggproto("AlignGG", Align,
         ), call = .subset2(self, "call"))
     },
     setup_data = function(self, params, data) {
-        # matrix: will be reshaped to the long-format data.frame
-        # data.frame: won't do any thing special
+        ans <- fortify_data_frame(data)
+        # we always add `.names` and `.index` to align the observations
         if (is.matrix(data)) {
-            data <- melt_matrix(data)
-        } else if (is.data.frame(data)) {
-            if (!is.null(old_rownames <- rownames(data))) {
-                data$.row_names <- old_rownames
+            if (!is.null(old_names <- vec_names(data))) {
+                ans$.names <- vec_rep(old_names, NCOL(data))
             }
-            data$.row_index <- seq_len(nrow(data))
+            ans$.index <- vec_rep(seq_len(vec_size(data)), NCOL(data))
         } else {
-            data <- fortify_data_frame(data)
-            data$.row_index <- seq_len(vec_size(data))
+            if (!is.null(old_names <- vec_names(data))) {
+                ans$.names <- old_names
+            }
+            ans$.index <- seq_len(vec_size(data))
         }
-        data
+        ans
     },
     ggplot = function(self, mapping) {
         direction <- .subset2(self, "direction")
@@ -174,18 +174,16 @@ AlignGG <- ggproto("AlignGG", Align,
             ans <- vec_cbind(ans$col, ans$row)
             if (!is.null(data)) {
                 ans <- full_join(data, ans,
-                    by.x = c(".column_index", ".row_index"),
+                    by.x = c(".column_index", ".index"),
                     by.y = c(".extra_index", ".index")
                 )
             }
         } else if (!is.null(data)) {
-            ans <- full_join(data, ans,
-                by.x = ".row_index", by.y = ".index"
-            )
+            ans <- full_join(data, ans, by.x = ".index", by.y = ".index")
         }
-        if (!is.null(.subset2(ans, ".row_names"))) {
-            ans$.row_names <- reorder(
-                .subset2(ans, ".row_names"),
+        if (!is.null(.subset2(ans, ".names"))) {
+            ans$.names <- reorder(
+                .subset2(ans, ".names"),
                 .subset2(ans, coord_name),
                 order = FALSE
             )

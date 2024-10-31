@@ -257,20 +257,6 @@ full_join <- function(x, y, by = intersect(names(x), names(y)),
     ans
 }
 
-#' @importFrom vctrs new_data_frame vec_rep vec_rep_each
-melt_matrix <- function(matrix) {
-    row_nms <- rownames(matrix)
-    col_nms <- colnames(matrix)
-    data <- new_data_frame(list(
-        .row_index = vec_rep(seq_len(nrow(matrix)), ncol(matrix)),
-        .column_index = vec_rep_each(seq_len(ncol(matrix)), nrow(matrix)),
-        value = c(matrix)
-    ))
-    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
-    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
-    data
-}
-
 fct_rev <- function(x) {
     ans <- as.factor(x)
     factor(ans, levels = rev(levels(ans)))

@@ -2,7 +2,7 @@
 #'
 #' @param group A character define the groups of the observations.
 #' @inheritParams align_dendro
-#' @inherit align return
+#' @return A `"AlignGroup"` object.
 #' @examples
 #' set.seed(1L)
 #' small_mat <- matrix(rnorm(81), nrow = 9)

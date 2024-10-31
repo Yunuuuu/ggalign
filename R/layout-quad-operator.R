@@ -34,11 +34,3 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
     }
     quad
 }
-
-#' @export
-quad_layout_and_add.ggplot <- function(object, quad, object_name) {
-    cli::cli_abort(c(
-        "Cannot add {.var {object_name}} into the quad layout",
-        i = "try to use {.fn ggalign} to initialize the {.cls ggplot}"
-    ))
-}

@@ -21,7 +21,7 @@
 #' purrr-like lambda syntax) that will be applied to the layout matrix,
 #' transforming it as necessary for statistic calculations. By default, it will
 #' inherit from the layout matrix.
-#' @inherit align return
+#' @return A `"AlignReorder"` object.
 #' @inheritSection align Aligned Axis
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

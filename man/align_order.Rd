@@ -47,7 +47,7 @@ argument instead.}
 instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignOrder"} object.
 }
 \description{
 Order layout observations based on weights

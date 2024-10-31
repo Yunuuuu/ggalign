@@ -24,7 +24,6 @@ quad_build.HeatmapLayout <- function(quad, action = quad@action) {
             tile = ggplot2::geom_tile(mapping = mapping)
         ))
     }
-
     # add class to set the default color mapping --------
     ans$plots$main <- add_class(ans$plots$main, "ggalign_heatmap")
     ans

@@ -15,18 +15,18 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
 
     # we remove the plot without actual plot area
     keep <- vapply(plots, function(plot) {
-        (is_align(plot) && !is.null(.subset2(plot, "plot"))) ||
-            is_quad_layout(plot)
+        # we remove align objects without plot area
+        !is_align(plot) || !is.null(.subset2(plot, "plot"))
     }, logical(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, keep)
     if (is_empty(plots)) return(NULL) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
-        if (is_align(plot)) {
-            .subset2(.subset2(plot, "context"), "order")
-        } else {
+        if (is_layout(plot)) {
             .subset2(plot@context, "order")
+        } else {
+            .subset2(.subset2(plot, "context"), "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, make_order(plot_order))
@@ -43,28 +43,38 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
     stack_spaces <- .subset2(action, "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
     layout <- set_layout_params(stack@layout)
+
     for (plot in plots) {
-        if (is_align(plot)) {
-            align_action <- inherit_action(.subset2(plot, "action"), action)
+        if (is_align(plot) || is_free(plot)) {
+            cur_action <- inherit_action(.subset2(plot, "action"), action)
             if (remove_spaces) {
-                align_spaces <- .subset2(align_action, "free_spaces")
-                if (is_string(align_spaces)) {
-                    align_spaces <- setdiff_position(align_spaces, stack_spaces)
-                    if (nchar(align_spaces) == 0L) align_spaces <- NULL
-                    align_action["free_spaces"] <- list(align_spaces)
+                cur_spaces <- .subset2(cur_action, "free_spaces")
+                if (is_string(cur_spaces)) {
+                    cur_spaces <- setdiff_position(cur_spaces, stack_spaces)
+                    if (nchar(cur_spaces) == 0L) cur_spaces <- NULL
+                    cur_action["free_spaces"] <- list(cur_spaces)
                 }
             }
-            patch <- align_build(plot,
-                panel = .subset2(layout, "panel"),
-                index = .subset2(layout, "index"),
-                action = align_action,
-                extra_layout = extra_layout
-            )
-            patches <- stack_patch_add_align(
-                patches,
-                .subset2(patch, "plot"),
-                .subset2(patch, "size")
-            )
+            if (is_align(plot)) {
+                patch <- align_build(plot,
+                    panel = .subset2(layout, "panel"),
+                    index = .subset2(layout, "index"),
+                    action = cur_action,
+                    extra_layout = extra_layout
+                )
+                patches <- stack_patch_add_center_plot(
+                    patches,
+                    .subset2(patch, "plot"),
+                    .subset2(patch, "size")
+                )
+            } else if (is_free(plot)) {
+                patch <- free_build(plot, cur_action, direction = direction)
+                patches <- stack_patch_add_center_plot(
+                    patches,
+                    .subset2(patch, "plot"),
+                    .subset2(patch, "size")
+                )
+            }
         } else if (is_quad_layout(plot)) {
             patch <- quad_build(plot, inherit_action(plot@action, action))
             quad_plots <- .subset2(patch, "plots")
@@ -130,7 +140,7 @@ stack_patch_add_plot <- function(area, plot, t, l, b = t, r = l) {
 }
 
 #' @importFrom rlang is_empty
-stack_patch_add_align <- function(area, plot, size) {
+stack_patch_add_center_plot <- function(area, plot, size) {
     if (is.null(plot)) {
         return(area)
     }
@@ -152,12 +162,12 @@ stack_patch_add_align <- function(area, plot, size) {
 #' @importFrom grid unit.c unit
 stack_patch_add_quad <- function(area, plots, sizes) {
     if (is_horizontal(attr(area, "direction"))) {
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "left"),
             .subset2(sizes, "left")
         )
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "main"),
             .subset2(.subset2(sizes, "main"), "width")
@@ -182,18 +192,18 @@ stack_patch_add_quad <- function(area, plots, sizes) {
                 t = attr(area, "align") + 1L, l = l
             )
         }
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "right"),
             .subset2(sizes, "right")
         )
     } else {
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "top"),
             .subset2(sizes, "top")
         )
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "main"),
             .subset2(.subset2(sizes, "main"), "height")
@@ -218,7 +228,7 @@ stack_patch_add_quad <- function(area, plots, sizes) {
                 t = t, l = attr(area, "align") + 1L
             )
         }
-        area <- stack_patch_add_align(
+        area <- stack_patch_add_center_plot(
             area,
             .subset2(plots, "bottom"),
             .subset2(sizes, "bottom")

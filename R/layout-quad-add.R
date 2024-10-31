@@ -63,6 +63,25 @@ quad_layout_add.Align <- function(object, quad, object_name) {
 }
 
 #' @export
+quad_layout_add.free_gg <- function(object, quad, object_name) {
+    if (is.null(position <- quad@active)) {
+        cli::cli_abort(c(
+            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            i = "no active annotation stack",
+            i = "try to activate an annotation stack with {.fn anno_*}"
+        ))
+    }
+
+    # add annotation -----------------------------
+    stack <- stack_layout_add(object, slot(quad, position), object_name)
+    slot(quad, position) <- stack
+    quad
+}
+
+#' @export
+quad_layout_add.ggplot <- quad_layout_add.free_gg
+
+#' @export
 quad_layout_add.quad_active <- function(object, quad, object_name) {
     if (!is.null(width <- .subset2(object, "width"))) {
         quad@width <- width

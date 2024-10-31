@@ -64,7 +64,7 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'  - `n_samples`: Total of samples
 #'  - `breaks`: factor levels of `Variant_Classification`, if `collapse_vars =
 #'    TRUE`, `"Multi_Hit"` will be added in the end.
-#' @importFrom vctrs new_data_frame vec_unique_count vec_group_loc vec_chop vec_cbind
+#' @importFrom vctrs new_data_frame vec_unique_count vec_group_loc vec_chop vec_cbind vec_slice
 #' @export
 #' @rdname fortify_matrix.MAF
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
@@ -87,13 +87,14 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     if (is.null(genes)) {
         genes <- gene_anno$Hugo_Symbol
     } else { # reorder the gene annotation based on the provided genes
-        genes <- unique(as.character(genes))
-        gene_anno <- gene_anno[match(genes, gene_anno$genes), ]
+        genes <- intersect(as.character(genes), gene_anno$genes)
+        gene_anno <- vec_slice(gene_anno, match(genes, gene_anno$genes))
     }
     if (!is.null(n_top)) {
-        gene_anno <- gene_anno[
-            order(gene_anno$AlteredSamples, decreasing = TRUE),
-        ][seq_len(n_top), ]
+        gene_anno <- vec_slice(
+            gene_anno,
+            order(gene_anno$AlteredSamples, decreasing = TRUE)[seq_len(n_top)]
+        )
         genes <- gene_anno$Hugo_Symbol
     }
     data <- vec_slice(data, .subset2(data, "Hugo_Symbol") %in% genes)
@@ -112,7 +113,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
             }, character(1L),
             USE.NAMES = FALSE
         )
-        lvls <- c(lvls, "Multi_Hit")
+        if (any(vars == "Multi_Hit")) lvls <- c(lvls, "Multi_Hit")
     } else {
         vars <- vapply(
             vec_chop(as.character(vars), indices = .subset2(indices, "loc")),

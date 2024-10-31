@@ -18,6 +18,11 @@ A data frame.
 This function converts various objects to a data frame. By default, it calls
 \code{\link[ggplot2:fortify]{fortify()}} to perform the conversion.
 }
+\details{
+When \code{data} is a matrix, it will automatically be transformed into a
+long-form data frame, where each row represents a unique combination of
+matrix indices and their corresponding values.
+}
 \seealso{
 \code{\link[ggplot2:fortify]{fortify}}
 }
