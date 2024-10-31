@@ -13,19 +13,25 @@ reference:
   contents:
   - heatmap_layout
   - stack_layout
+  - quad_layout
+  - quad_free
+  - stack_free
   - ggoncoplot
 
 - title: Layout Building
   desc: >
-    All plots begin with a call to `ggheatmap()` or `ggstack()`, supplying default 
-    data. You then reorder the layout, or group the layout into panels, and add 
-    plots, layers, scales, coords with `+`. Use `hmanno()` or `stack_active()` to 
-    control the layout attributes. To save a plot to disk, use `ggsave()`.
+    All plots begin with a call to `ggheatmap()`/`quad_layout` or `ggstack()`, supplying 
+    default data. You then reorder the layout, or group the layout into panels, and add 
+    plots, layers, scales, coords with `+`. Use `quad_switch()` or `stack_switch()` to 
+    switch the active context. To save a plot to disk, use `ggsave()`.
   contents:
   - layout-add
-  - hmanno
-  - stack_active
+  - anno_init
+  - quad_switch
+  - quad_anno
+  - stack_switch
   - plot_action
+  - plot_context
   - layout-operator
   - theme_ggalign
   - layout_design
@@ -38,7 +44,7 @@ reference:
     ensuring they align and interact correctly within the defined structure.
   contents:
   - ggalign
-  - gplot
+  - ggfree
 
 - title: Layout Customization
   desc: >
@@ -82,21 +88,22 @@ reference:
   - ggalignGrob
   - ggalign_attr
   - ggalign_stat
-  - fortify_heatmap
+  - fortify_data_frame
+  - fortify_matrix
   - fortify_stack
   - geom_pie
   - align
   - hclust2
   - order2
   - dendrogram_data
-  - is_ggheatmap
-  - is_ggstack
+  - is_layout
   - read_example
 
 - title: internal
   contents:
   - starts_with("patch.")
-  - starts_with("fortify_heatmap.")
+  - starts_with("fortify_matrix.")
+  - starts_with("fortify_data_frame.")
 
 articles:
 - title: Building plots
