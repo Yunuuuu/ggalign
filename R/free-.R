@@ -83,22 +83,6 @@ ggplot_add.free_gg <- function(object, plot, object_name) {
 }
 
 free_build <- function(x, action, direction) {
-    plot <- plot_add_action(
-        .subset2(x, "plot"), action,
-        theme = switch_direction(
-            direction,
-            theme(
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank()
-            ),
-            theme(
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank()
-            )
-        ),
-        call = .subset2(x, "call")
-    )
+    plot <- plot_add_action(.subset2(x, "plot"), action, call = quote(ggfree()))
     list(plot = plot, size = .subset2(x, "size"))
 }
