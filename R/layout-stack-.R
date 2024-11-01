@@ -109,7 +109,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     }
     layout <- new_layout_params(nobs = nobs)
     new_stack_layout(
-        name = "stack_free",
+        name = "stack_align",
         data = data, direction = direction, layout = layout,
         action = action, theme = theme, sizes = sizes
     )

@@ -52,29 +52,10 @@ stack_layout_add.Align <- function(object, stack, object_name) {
         layout <- slot(plot, stack@direction)
     } else if (is.null(layout <- stack@layout)) {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to a free {.fn stack_layout}",
-            i = "free {.fn stack_layout} won't align observations"
+            "Cannot add {.code {object_name}} to a {.fn {stack@name}}",
+            i = "{.fn {stack@name}} won't align observations"
         ))
     } else {
-        plots <- stack@plots
-
-        # set up context index ------------------------------
-        if (.subset2(.subset2(object, "context"), "active")) {
-            active_index <- length(plots) + 1L
-        } else {
-            active_index <- stack@active
-        }
-
-        # check annotation name is unique --------------------
-        if (!is.na(name <- .subset2(.subset2(object, "context"), "name"))) {
-            if (any(names(plots) == name)) {
-                cli::cli_warn("{object_name}: {name} plot is already present")
-            }
-            plots[[name]] <- object
-        } else {
-            plots <- c(plots, list(object))
-        }
-
         # make layout ----------------------------------------
         # this step the object will act with the stack layout
         # group rows into panel or reorder rows
@@ -88,10 +69,12 @@ stack_layout_add.Align <- function(object, stack, object_name) {
             layout_nobs = .subset2(layout, "nobs"),
             object_name = object_name
         )
-
-        # add annotation -------------------------------------
-        stack@plots <- plots
-        stack@active <- active_index
+        stack <- stack_add_plot(
+            stack, object,
+            .subset2(.subset2(object, "context"), "active"),
+            .subset2(.subset2(object, "context"), "name"),
+            object_name
+        )
     }
 
     # set the layout -------------------------------------
@@ -105,14 +88,13 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         plot <- quad_layout_add(object, plot, object_name)
         stack@plots[[active_index]] <- plot
     } else {
-        plots <- stack@plots
         input_data <- .subset2(object, "data")
         layout_data <- stack@data
         if (is.waive(input_data)) { # inherit from the layout
             data <- layout_data %|w|% NULL
         } else if (is.function(input_data)) {
             abort_no_layout_data(layout_data, object_name,
-                call = quote(ggfree())
+                call = quote(free_gg())
             )
             data <- input_data(layout_data)
         } else {
@@ -122,25 +104,12 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         # convert the data into a data frame
         object$plot$data <- fortify_data_frame(data)
 
-        # set up context index ------------------------------
-        if (.subset2(.subset2(object, "context"), "active")) {
-            active_index <- length(plots) + 1L
-        } else {
-            active_index <- stack@active
-        }
-
-        # check annotation name is unique --------------------
-        if (!is.na(name <- .subset2(.subset2(object, "context"), "name"))) {
-            if (any(names(plots) == name)) {
-                cli::cli_warn("{object_name}: {name} plot is already present")
-            }
-            plots[[name]] <- object
-        } else {
-            plots <- c(plots, list(object))
-        }
-        # add annotation -------------------------------------
-        stack@plots <- plots
-        stack@active <- active_index
+        stack <- stack_add_plot(
+            stack, object,
+            .subset2(.subset2(object, "context"), "active"),
+            .subset2(.subset2(object, "context"), "name"),
+            object_name
+        )
     }
     stack
 }
@@ -187,7 +156,7 @@ stack_layout_add.quad_switch <- function(object, stack, object_name) {
         return(stack)
     } else {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to the stack layout",
+            "Cannot add {.code {object_name}} to {.fn {stack@name}}",
             i = "Did you forget to add a {.fn quad_layout}?"
         ))
     }
@@ -207,18 +176,19 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         # both StackLayout and QuadLayout are free from aligning obervations
         # check if we should initialize the quad-layout data
         if (is.null(quad_data) || is.function(quad_data)) {
-            if (is.null(stack_data <- stack@data)) {
+            if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
                 cli::cli_abort(c(
                     paste(
                         "you must provide {.arg data} argument in",
                         "{.var {object_name}}"
                     ),
-                    i = "no data was found in {.fn {snake_class(stack)}}"
+                    i = "no data was found in {.fn {stack@name}}"
                 ))
             }
             data <- stack_data # a data frame since `stack_layout` is free
             extra_layout <- slot(
-                object, setdiff(c("vertical", "horizontal"), direction)
+                object,
+                vec_set_difference(c("vertical", "horizontal"), direction)
             )
             if (is.function(quad_data)) {
                 data <- quad_data(data)
@@ -241,7 +211,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 # we require user input the matrix
                 cli::cli_abort(c(
                     "you must provide {.arg data} matrix in {.var {object_name}}",
-                    i = "data in {.fn {snake_class(stack)}} is a {.cls data.frame}"
+                    i = "data in {.fn {stack@name}} is a {.cls data.frame}"
                 ))
             }
 
@@ -261,10 +231,10 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
     } else if (!is.null(stack_layout) && !is.null(quad_layout)) {
         # if QuadLayout need align observations, we need a matrix
         if (is.null(quad_data) || is.function(quad_data)) {
-            if (is.null(stack_data <- stack@data)) {
+            if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
                 cli::cli_abort(c(
                     "you must provide {.arg data} argument in {.var {object_name}}",
-                    i = "no data was found in {.fn {snake_class(stack)}}"
+                    i = "no data was found in {.fn {stack@name}}"
                 ))
             }
             # set QuadLayout data
@@ -344,42 +314,50 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         layout <- new_layout_params(panel, index, nobs)
     } else if (is.null(stack_layout)) {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to a free {.fn stack_layout}",
-            i = "free {.fn stack_layout} cannot align observations"
+            "Cannot add {.code {object_name}} to a free {.fn {stack@name}}",
+            i = "free {.fn {stack@name}} cannot align observations"
         ))
     } else {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to a aligned {.fn stack_layout}",
+            "Cannot add {.code {object_name}} to a aligned {.fn {stack@name}}",
             i = "{.code {object_name}} cannot align observations in {direction} direction"
         ))
     }
+    stack <- stack_add_plot(
+        stack, object,
+        .subset2(object@context, "active"),
+        .subset2(object@context, "name"),
+        object_name
+    )
+    # set the layout ------------------------------------
+    if (!is.null(layout)) stack <- update_layout_params(stack, params = layout)
+    stack
+}
 
+stack_add_plot <- function(stack, plot, active, name, object_name) {
     # set up context index ------------------------------
     plots <- stack@plots
-    if (.subset2(object@context, "active")) {
+    if (active) {
         active_index <- length(plots) + 1L
     } else {
         active_index <- stack@active
     }
 
     # check QuadLayout name is unique ----------------------
-    if (!is.na(name <- .subset2(object@context, "name"))) {
+    if (!is.na(name)) {
         if (any(names(plots) == name)) {
             cli::cli_warn(
-                "{.var {object_name}}: {name} plot is already present"
+                "Adding {.var {object_name}} will replace existing {.field {name}} plot"
             )
         }
-        plots[[name]] <- object
+        plots[[name]] <- plot
     } else {
-        plots <- c(plots, list(object))
+        plots <- c(plots, list(plot))
     }
 
     # add QuadLayout ---------------------------------------
     stack@plots <- plots
     stack@active <- active_index
-
-    # set the layout ------------------------------------
-    if (!is.null(layout)) stack <- update_layout_params(stack, params = layout)
     stack
 }
 

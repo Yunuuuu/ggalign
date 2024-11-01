@@ -165,12 +165,12 @@ abort_no_layout_data <- function(data, object_name = NULL, call = NULL) {
     if (is.null(data) || is.waive(data)) {
         if (is.null(object_name)) {
             msg <- c(
-                "you must provide {.arg data} argument",
+                "you must provide {.arg data}",
                 i = "no data was found in the layout"
             )
         } else {
             msg <- c(
-                "you must provide {.arg data} argument in {.var {object_name}}",
+                "you must provide {.arg data} in {.var {object_name}}",
                 i = "no data was found in the layout"
             )
         }
