@@ -180,7 +180,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 cli::cli_abort(c(
                     paste(
                         "you must provide {.arg data} argument in",
-                        "{.var {object_name}}"
+                        "{.fn {object@name}}"
                     ),
                     i = "no data was found in {.fn {stack@name}}"
                 ))
@@ -196,13 +196,13 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 if (is.null(extra_layout)) { # we need a data frame
                     if (!is.data.frame(data)) {
                         cli::cli_abort(paste(
-                            "{.arg data} in {.var {object_name}} must return",
+                            "{.arg data} in {.fn {object@name}} must return",
                             "a {.cls data.frame}"
                         ))
                     }
                 } else if (!is.matrix(data)) { # we need a matrix
                     cli::cli_abort(paste(
-                        "{.arg data} in {.var {object_name}} must return",
+                        "{.arg data} in {.fn {object@name}} must return",
                         "a {.cls matrix}"
                     ))
                 }
@@ -210,7 +210,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 # the data from the stack is a data frame
                 # we require user input the matrix
                 cli::cli_abort(c(
-                    "you must provide {.arg data} matrix in {.var {object_name}}",
+                    "you must provide {.arg data} matrix in {.fn {object@name}}",
                     i = "data in {.fn {stack@name}} is a {.cls data.frame}"
                 ))
             }
@@ -234,7 +234,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         if (is.null(quad_data) || is.function(quad_data)) {
             if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
                 cli::cli_abort(c(
-                    "you must provide {.arg data} argument in {.var {object_name}}",
+                    "you must provide {.arg data} argument in {.fn {object@name}}",
                     i = "no data was found in {.fn {stack@name}}"
                 ))
             }
@@ -244,7 +244,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 data <- quad_data(data)
                 if (!is.matrix(data)) {
                     cli::cli_abort(paste(
-                        "{.arg data} in {.var {object_name}} must return",
+                        "{.arg data} in {.fn {object@name}} must return",
                         "a matrix"
                     ))
                 }
@@ -274,8 +274,8 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             nobs <- quad_nobs
         } else if (!identical(quad_nobs, stack_nobs)) {
             cli::cli_abort(sprintf(
-                "{.var {object_name}} (%d) is not compatible with the %s (%d)",
-                quad_nobs, "{.field {direction}} stack layout", stack_nobs
+                "{.fn {object@name}} (%d) is not compatible with the %s (%d)",
+                quad_nobs, "{.field {direction}} {.fn {stack@name}}", stack_nobs
             ))
         } else {
             nobs <- quad_nobs
@@ -290,7 +290,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             panel <- quad_panel
         } else if (!(quad_panel %nest% stack_panel)) {
             cli::cli_abort(paste(
-                "{.var {object_name}} disrupt the previously",
+                "{.fn {object@name}} disrupt the previously",
                 "established layout panel of the stack"
             ))
         } else {
@@ -307,7 +307,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         # we always prevent from reordering the layout twice.
         if (!is.null(stack_index) && !all(stack_index == index)) {
             cli::cli_abort(sprintf(
-                "{.var {object_name}} disrupt the previously %s %s-axis",
+                "{.fn {object@name}} disrupt the previously %s %s-axis",
                 "established layout order of the stack",
                 to_coord_axis(direction)
             ))
@@ -315,13 +315,13 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         layout <- new_layout_params(panel, index, nobs)
     } else if (is.null(stack_layout)) {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to a free {.fn {stack@name}}",
+            "Cannot add {.fn {object@name}} to a {.fn {stack@name}}",
             i = "free {.fn {stack@name}} cannot align observations"
         ))
     } else {
         cli::cli_abort(c(
-            "Cannot add {.code {object_name}} to a aligned {.fn {stack@name}}",
-            i = "{.code {object_name}} cannot align observations in {direction} direction"
+            "Cannot add {.fn {object@name}} to a {.fn {stack@name}}",
+            i = "{.fn {object@name}} cannot align observations in {.field {direction}} direction"
         ))
     }
     stack <- stack_add_plot(
