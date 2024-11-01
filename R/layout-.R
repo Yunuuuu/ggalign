@@ -63,10 +63,7 @@ methods::setMethod("$", "Layout", function(x, name) {
 
 ###########################################################
 default_layout <- function(layout) {
-    # we always remove panel border from the default theme
-    layout@theme <- default_theme() +
-        theme(panel.border = element_blank()) +
-        layout@theme
+    layout@theme <- default_theme() + layout@theme
     # we by default, collect all guides
     layout@action["guides"] <- list(
         .subset2(layout@action, "guides") %|w|% "tlbr"
