@@ -1,32 +1,25 @@
-default_theme <- function() {
-    opt <- sprintf("%s.default_theme", pkg_nm())
-    if (is.null(ans <- getOption(opt, default = NULL))) {
-        ans <- theme_ggalign()
-    } else if (!inherits(ans, "theme")) {
-        cli::cli_abort(c(
-            "{.arg {opt}} must be a {.fn theme} object",
-            i = "You have provided a {.obj_type_friendly {ans}}"
-        ))
-    }
-    ans
-}
-
-#' Complete theme for layout plots
+#' Theme for Layout Plots
 #'
 #' Default theme for `r rd_layout()`.
 #'
 #' @details
-#' You can use the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`
-#' to change the default theme.
+#' You can change the default theme using the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`. 
+#' This option should be set to a function that returns a
+#' [`theme()`][ggplot2::theme] object. 
 #'
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic
-#' @return A [theme][ggplot2::theme] object.
+#' @return A [`theme()`][ggplot2::theme] object that customizes the appearance of layout plots.
 #' @examples
+#' # Setting a new default theme
 #' old <- options(ggalign.default_theme = theme_bw())
+#'
+#' # Creating a heatmap with the new theme
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
 #'     align_dendro(k = 3L)
+#'
+#' # Restoring the old default theme
 #' options(ggalign.default_theme = old)
 #' @export
 theme_ggalign <- function(...) {
@@ -38,6 +31,27 @@ theme_ggalign <- function(...) {
         )
 }
 
+default_theme <- function() {
+    opt <- sprintf("%s.default_theme", pkg_nm())
+    if (is.null(ans <- getOption(opt, default = NULL))) {
+        return(theme_ggalign())
+    }
+    if (is.function(ans <- allow_lambda(ans))) {
+        if (!inherits(ans <- rlang::exec(ans), "theme")) {
+            cli::cli_abort(c(
+                "{.arg {opt}} must return a {.fn theme} object",
+                i = "You have provided {.obj_type_friendly {ans}}"
+            ))
+        }
+    } else {
+        cli::cli_abort(c(
+            "{.arg {opt}} must be a {.cls function}",
+            i = "You have provided {.obj_type_friendly {ans}}"
+        ))
+    }
+    ans
+}
+
 #' Remove axis elements
 #'
 #' @param axes Which axes elements should be removed? A string containing
@@ -47,8 +61,9 @@ theme_ggalign <- function(...) {
 #' @param title If `TRUE`, will remove the axis title.
 #' @param line If `TRUE`, will remove the axis line.
 #' @return A [`theme()`][ggplot2::theme] object.
-#' @examples 
-#' p <- ggplot() + geom_point(aes(x = wt, y = qsec), data = mtcars)
+#' @examples
+#' p <- ggplot() +
+#'     geom_point(aes(x = wt, y = qsec), data = mtcars)
 #' p + theme_no_axes()
 #' p + theme_no_axes("b")
 #' p + theme_no_axes("l")
