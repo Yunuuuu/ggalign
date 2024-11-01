@@ -17,7 +17,7 @@ theme_ggalign(...)
   }}
 }
 \value{
-A \code{\link[ggplot2:theme]{theme()}} object that customizes the appearance of layout plots.
+A \code{\link[ggplot2:theme]{theme()}} object.
 }
 \description{
 Default theme for \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.
@@ -29,7 +29,7 @@ This option should be set to a function that returns a
 }
 \examples{
 # Setting a new default theme
-old <- options(ggalign.default_theme = theme_bw())
+old <- options(ggalign.default_theme = function() theme_bw())
 
 # Creating a heatmap with the new theme
 ggheatmap(matrix(rnorm(81), nrow = 9)) +

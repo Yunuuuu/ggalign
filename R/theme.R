@@ -3,16 +3,16 @@
 #' Default theme for `r rd_layout()`.
 #'
 #' @details
-#' You can change the default theme using the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`. 
+#' You can change the default theme using the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`.
 #' This option should be set to a function that returns a
-#' [`theme()`][ggplot2::theme] object. 
+#' [`theme()`][ggplot2::theme] object.
 #'
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic
-#' @return A [`theme()`][ggplot2::theme] object that customizes the appearance of layout plots.
+#' @return A [`theme()`][ggplot2::theme] object.
 #' @examples
 #' # Setting a new default theme
-#' old <- options(ggalign.default_theme = theme_bw())
+#' old <- options(ggalign.default_theme = function() theme_bw())
 #'
 #' # Creating a heatmap with the new theme
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
