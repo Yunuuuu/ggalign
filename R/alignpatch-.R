@@ -65,7 +65,7 @@ RIGHT_BORDER <- 7L + 1L
 setdiff_position <- function(x, y) gsub(sprintf("[%s]", y), "", x)
 union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
 split_position <- function(x) {
-    unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
+    vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 setup_pos <- function(x) {
     complete_pos(split_position(x))
