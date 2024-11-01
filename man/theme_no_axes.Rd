@@ -31,7 +31,8 @@ A \code{\link[ggplot2:theme]{theme()}} object.
 Remove axis elements
 }
 \examples{
-p <- ggplot() + geom_point(aes(x = wt, y = qsec), data = mtcars)
+p <- ggplot() +
+    geom_point(aes(x = wt, y = qsec), data = mtcars)
 p + theme_no_axes()
 p + theme_no_axes("b")
 p + theme_no_axes("l")

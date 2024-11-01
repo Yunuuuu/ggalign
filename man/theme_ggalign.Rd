@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme.R
 \name{theme_ggalign}
 \alias{theme_ggalign}
-\title{Complete theme for layout plots}
+\title{Theme for Layout Plots}
 \usage{
 theme_ggalign(...)
 }
@@ -17,19 +17,25 @@ theme_ggalign(...)
   }}
 }
 \value{
-A \link[ggplot2:theme]{theme} object.
+A \code{\link[ggplot2:theme]{theme()}} object that customizes the appearance of layout plots.
 }
 \description{
 Default theme for \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.
 }
 \details{
-You can use the option \code{"ggalign.default_theme"}
-to change the default theme.
+You can change the default theme using the option \code{"ggalign.default_theme"}.
+This option should be set to a function that returns a
+\code{\link[ggplot2:theme]{theme()}} object.
 }
 \examples{
+# Setting a new default theme
 old <- options(ggalign.default_theme = theme_bw())
+
+# Creating a heatmap with the new theme
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top() +
     align_dendro(k = 3L)
+
+# Restoring the old default theme
 options(ggalign.default_theme = old)
 }
