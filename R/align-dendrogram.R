@@ -218,7 +218,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
             stats::nobs(tree)
         }
     },
-    #' @importFrom vctrs vec_slice vec_names
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendrogram, k = NULL, h = NULL, cutree = NULL) {
         data <- .subset2(self, "data")
@@ -273,7 +272,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         hclust2(data, distance, method, use_missing)
     },
-    #' @importFrom vctrs vec_unique_count
     #' @importFrom stats order.dendrogram
     layout = function(self, panel, index, distance, method, use_missing,
                       reorder_dendrogram, merge_dendro, reorder_group,
@@ -397,7 +395,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ggplot2::labs(y = "height")
             )
     },
-    #' @importFrom vctrs vec_rbind
     draw = function(self, panel, index, extra_panel, extra_index,
                     # other argumentds
                     plot_cut_height, center, type, root) {

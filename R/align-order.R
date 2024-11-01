@@ -24,7 +24,6 @@
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
 #'     align_order(I("rowMeans"))
-#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 waiver
 #' @export
 align_order <- function(wts = rowMeans, ...,
@@ -78,7 +77,6 @@ align_order <- function(wts = rowMeans, ...,
     )
 }
 
-#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 ggproto
 AlignOrder <- ggproto("AlignOrder", Align,
     nobs = function(params) length(.subset2(params, "wts")),

@@ -82,8 +82,6 @@ alignpatch.free_border <- function(x) {
                 t = t, l = l, b = b, r = r, gt = gt
             )
         },
-
-        #' @importFrom vctrs vec_set_difference
         free_border = function(self, borders, gt = self$gt) {
             borders <- vec_set_difference(borders, self$free_borders)
             if (length(borders)) {

@@ -157,7 +157,6 @@ make_dist <- function(matrix, distance, use_missing,
 #' @examples
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
-#' @importFrom vctrs vec_rbind
 #' @importFrom stats order.dendrogram
 #' @export
 dendrogram_data <- function(tree,

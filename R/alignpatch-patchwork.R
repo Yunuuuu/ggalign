@@ -33,7 +33,6 @@ alignpatch.patchwork <- function(x) {
     ))
 }
 
-#' @importFrom vctrs vec_set_difference
 #' @export
 alignpatch.free_plot <- function(x) {
     if (inherits(x, "patchwork")) {

@@ -88,7 +88,6 @@ set_limits <- function(axis, params) {
 }
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @importFrom vctrs vec_unique_count
 #' @export
 ggplot_add.coord_ggalign <- function(object, plot, object_name) {
     if (all(vapply(object, is.null, logical(1L), USE.NAMES = FALSE))) {
@@ -244,7 +243,6 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
     plot
 }
 
-#' @importFrom vctrs vec_slice
 align_scales <- function(facet, scale, axis, params, panel_scales) {
     panel <- .subset2(params, "panel")
     index <- .subset2(params, "index")
@@ -405,7 +403,6 @@ identity_trans <- function(scale) {
     scale
 }
 
-#' @importFrom vctrs vec_cast
 get_breaks <- function(scale, layout_breaks, layout_labels) {
     breaks <- scale$breaks
     if (identical(breaks, NA)) {

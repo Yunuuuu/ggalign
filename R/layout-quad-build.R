@@ -48,7 +48,6 @@ quad_build <- function(quad, action = quad@action) UseMethod("quad_build")
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
-#' @importFrom vctrs vec_rep_each vec_rep vec_names
 #' @export
 quad_build.QuadLayout <- function(quad, action = quad@action) {
     data <- quad@data
@@ -251,7 +250,6 @@ quad_melt_facet <- function(user_facet, default_facet) {
     ggproto(NULL, user_facet, params = params)
 }
 
-#' @importFrom vctrs vec_expand_grid vec_cbind
 #' @importFrom stats reorder
 quad_build_data <- function(data, row_params, column_params) {
     if (is.null(data) || (is.null(row_params) && is.null(column_params))) {

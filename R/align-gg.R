@@ -100,7 +100,6 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
-#' @importFrom vctrs vec_names
 #' @importFrom ggplot2 ggproto ggplot
 AlignGG <- ggproto("AlignGG", Align,
     nobs = function(self) {
@@ -154,7 +153,6 @@ AlignGG <- ggproto("AlignGG", Align,
         ans
     },
 
-    #' @importFrom vctrs vec_expand_grid vec_cbind
     #' @importFrom stats reorder
     draw = function(self, panel, index, extra_panel, extra_index) {
         data <- .subset2(self, "data")

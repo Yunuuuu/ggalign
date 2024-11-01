@@ -74,7 +74,6 @@ override_call <- function(call = NULL) {
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
 
-#' @importFrom vctrs vec_unrep vec_set_difference vec_c
 make_order <- function(order) {
     l <- length(order)
     index <- seq_len(l)
@@ -163,7 +162,6 @@ make_order <- function(order) {
 #> 4 nest_data_table 402.71µs 459.55µs   1918.    985.25KB     4.00
 #> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3
 #> 6 nest_table      183.52ms 189.87ms      5.20  576.35MB     8.67
-#' @importFrom vctrs new_data_frame vec_unique_loc vec_duplicate_any
 `%nest%` <- function(x, y) {
     # we don't check the inputs for performance
     loc <- vec_unique_loc(new_data_frame(list(x = x, y = y)))
@@ -220,7 +218,6 @@ to_matrix_axis <- function(direction) {
 }
 
 ##########################################################
-#' @importFrom vctrs data_frame
 data_frame0 <- function(...) data_frame(..., .name_repair = "minimal")
 
 as_data_frame0 <- function(data, ...) {
@@ -239,7 +236,6 @@ quickdf <- function(x) {
 }
 
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_locate_matches vec_slice
 full_join <- function(x, y, by = intersect(names(x), names(y)),
                       by.x = by, by.y = by) {
     loc <- vec_locate_matches(x[by.x], set_names(y[by.y], by.x), remaining = NA)
@@ -269,7 +265,6 @@ imap <- function(.x, .f, ...) {
     out
 }
 
-#' @importFrom vctrs list_sizes
 compact <- function(.x) .x[list_sizes(.x) > 0L]
 
 #' Rename elements in a list, data.frame or vector
@@ -286,7 +281,6 @@ compact <- function(.x) .x[list_sizes(.x) > 0L]
 #'
 #' @keywords internal
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_slice<-
 #' @noRd
 rename <- function(x, replace) {
     set_names(x, function(nms) {

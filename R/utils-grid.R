@@ -14,7 +14,6 @@ is_absolute_unit <- function(x) {
 #' @importFrom grid unitType
 is_null_unit <- function(x) unitType(x) == "null"
 
-#' @importFrom vctrs vec_slice
 #' @importFrom gtable gtable_trim
 subset_gt <- function(gt, index, trim = TRUE) {
     gt$layout <- vec_slice(.subset2(gt, "layout"), index)

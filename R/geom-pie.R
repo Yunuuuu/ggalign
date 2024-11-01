@@ -40,7 +40,6 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' @importFrom ggplot2 ggproto aes .pt resolution
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_slice<- vec_cbind vec_rbind vec_rep_each vec_cast
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,
     default_aes = aes(

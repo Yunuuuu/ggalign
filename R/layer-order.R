@@ -15,7 +15,6 @@
 #' ggplot(faithfuld, aes(waiting, eruptions)) +
 #'     geom_raster(aes(fill = density)) +
 #'     layer_order(geom_point(color = "red", size = 1))
-#' @importFrom vctrs vec_cast
 #' @export
 layer_order <- function(layer, order = 0) {
     assert_s3_class(layer, "Layer")
@@ -36,7 +35,6 @@ layer_order <- function(layer, order = 0) {
 }
 
 #' @importFrom ggplot2 ggplot_add
-#' @importFrom vctrs vec_slice
 #' @export
 ggplot_add.layer_order <- function(object, plot, object_name) {
     if (is.null(params <- attr(object, "layer_order"))) {

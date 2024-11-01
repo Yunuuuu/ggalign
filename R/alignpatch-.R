@@ -170,8 +170,6 @@ Patch <- ggproto(c("Patch", "ggalign"), NULL,
     patch_gtable = function(self, plot = self$plot) {
         abort_no_method(self$plot, "patch_gtable")
     },
-
-    #' @importFrom vctrs vec_slice
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
         layout <- .subset2(gt, "layout")

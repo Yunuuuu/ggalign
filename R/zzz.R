@@ -1,4 +1,3 @@
-#' @importFrom vctrs s3_register
 .onLoad <- function(libname, pkgname) {
     theme_elements()
     # register method for 

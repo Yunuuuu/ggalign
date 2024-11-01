@@ -38,11 +38,11 @@ ggplot.}
 If you want to override the parent layout theme, set \code{complete=TRUE}.
 }
 
-\strong{Note:} Axis titles and labels that are parallel to the layout axis will
-always be removed by default. For vertical stack layouts, this refers to the
-x-axis; for horizontal stack layouts, this refers to the y-axis. To display
-these axis titles or labels, you must manually add the appropriate
-\link[ggplot2:theme]{theme()} elements for the parallel axis.}
+\strong{Note:} for \verb{align_*()} function, titles and labels in the the axes used
+for alignment will always be removed by default. For vertical stack layouts,
+this refers to the x-axis; for horizontal stack layouts, this refers to the
+y-axis. To display these axis titles or labels, you must manually add the
+appropriate \link[ggplot2:theme]{theme()} elements for these axes.}
 
 \item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
 which side of guide legends should be collected. Defaults to

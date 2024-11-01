@@ -52,7 +52,6 @@
 #'
 #' # Compare to not using named plot arguments
 #' align_plots(p1, p2, design = design)
-#' @importFrom vctrs vec_set_difference
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, design = NULL,
@@ -187,7 +186,6 @@ update_non_waive <- function(old, new) {
     )
 }
 
-#' @importFrom vctrs vec_set_difference
 update_design <- function(old, new) {
     guides <- .subset2(new, "guides")
     new$guides <- NULL # guides need special consideration

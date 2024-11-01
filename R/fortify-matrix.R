@@ -64,7 +64,6 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'  - `n_samples`: Total of samples
 #'  - `breaks`: factor levels of `Variant_Classification`, if `collapse_vars =
 #'    TRUE`, `"Multi_Hit"` will be added in the end.
-#' @importFrom vctrs new_data_frame vec_unique_count vec_group_loc vec_chop vec_cbind vec_slice
 #' @export
 #' @rdname fortify_matrix.MAF
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,

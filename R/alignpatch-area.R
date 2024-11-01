@@ -44,7 +44,6 @@
 #'
 #' # Apply it to a alignpatches
 #' align_plots(p1, p2, p3, design = layout)
-#' @importFrom vctrs df_list vec_cast new_data_frame
 #' @export
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
@@ -84,7 +83,6 @@ as_areas.NULL <- function(x) NULL
 #' @export
 as_areas.align_area <- function(x) x
 
-#' @importFrom vctrs vec_rbind list_sizes
 #' @export
 as_areas.character <- function(x) {
     call <- current_call() # used for message only
@@ -122,11 +120,9 @@ as_areas.character <- function(x) {
     do.call(c, area_list)
 }
 
-#' @importFrom vctrs vec_rbind
 #' @export
 c.align_area <- function(...) vec_rbind(...)
 
-#' @importFrom vctrs vec_slice
 #' @export
 `[.align_area` <- function(x, i) vec_slice(x, i)
 
@@ -134,11 +130,9 @@ c.align_area <- function(...) vec_rbind(...)
 #' @export
 as_areas.patch_area <- function(x) add_class(x, "align_area")
 
-#' @importFrom vctrs vec_size
 #' @export
 length.align_area <- function(x) vec_size(x)
 
-#' @importFrom vctrs new_data_frame vec_data vec_set_names vec_seq_along
 #' @export
 print.align_area <- function(x, ...) {
     data <- x
@@ -153,7 +147,6 @@ print.align_area <- function(x, ...) {
     invisible(data)
 }
 
-#' @importFrom vctrs vec_seq_along vec_data
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme ggplot
 #' @export

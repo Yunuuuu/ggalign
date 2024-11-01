@@ -50,7 +50,6 @@
 #'
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
-#' @importFrom vctrs vec_set_difference
 #' @importFrom lifecycle deprecated
 #' @export
 #' @keywords internal
@@ -270,7 +269,7 @@ Align <- ggproto("Align",
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
-#' @importFrom vctrs vec_set_difference
+
 align_method_params <- function(f, remove = c("panel", "index")) {
     vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }

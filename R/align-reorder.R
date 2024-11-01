@@ -58,7 +58,6 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     )
 }
 
-#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 ggproto
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, stat, stat_params, strict) {

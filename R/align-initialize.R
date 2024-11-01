@@ -1,5 +1,4 @@
 #' `Align` is an environment, it won't be copied, and will modify in place
-#' @importFrom vctrs vec_set_names vec_names vec_size
 #' @noRd
 align_initialize <- function(object, direction, position,
                              layout_data, layout_panel, layout_index,

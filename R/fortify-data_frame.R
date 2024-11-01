@@ -22,7 +22,6 @@ fortify_data_frame.default <- function(data, ...) {
     ggplot2::fortify(model = data, ...)
 }
 
-#' @importFrom vctrs new_data_frame vec_names
 #' @export
 fortify_data_frame.character <- function(data, ...) {
     ans <- list(.names = vec_names(data), value = data)
@@ -39,7 +38,6 @@ fortify_data_frame.waiver <- function(data, ...) data
 #' @export
 fortify_data_frame.NULL <- function(data, ...) data
 
-#' @importFrom vctrs vec_names new_data_frame vec_rep_each vec_rep
 #' @export
 fortify_data_frame.matrix <- function(data, ...) {
     row_nms <- vec_names(data)

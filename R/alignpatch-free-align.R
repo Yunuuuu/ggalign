@@ -95,7 +95,6 @@ free_align.ggplot <- function(plot, axes = "tlbr") {
 #' @export
 free_align.alignpatches <- free_align.ggplot
 
-#' @importFrom vctrs vec_set_difference
 #' @export
 free_align.free_lab <- function(plot, axes = "tlbr") {
     assert_position(axes)

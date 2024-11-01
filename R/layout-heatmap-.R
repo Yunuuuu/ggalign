@@ -82,7 +82,6 @@ heatmap_layout <- function(data = NULL, mapping = aes(),
 ggheatmap <- heatmap_layout
 
 #' @importFrom lifecycle deprecated
-#' @importFrom vctrs vec_cast
 #' @importFrom ggplot2 aes
 #' @importFrom rlang arg_match0
 #' @export

@@ -4,7 +4,6 @@ alignpatch.alignpatches <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
-#' @importFrom vctrs new_data_frame
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     # We by default won't collect any guides
     guides = NULL, theme = NULL,
@@ -15,7 +14,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
-    #' @importFrom vctrs vec_slice
     patch_gtable = function(self, top_level = FALSE, plot = self$plot) {
         patches <- lapply(.subset2(plot, "plots"), alignpatch)
         layout <- .subset2(plot, "layout")
@@ -206,7 +204,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             patch$align_border(t = t, l = l, b = b, r = r, gt = grob)
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
-    #' @importFrom vctrs vec_set_difference
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         collected_guides <- self$collected_guides
         # for guides not collected by the top-level, we attach the guides
@@ -339,7 +336,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
 
     #' @importFrom gtable gtable_add_grob
-    #' @importFrom vctrs vec_slice
     set_grobs = function(self, design, patches, gt = self$gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")

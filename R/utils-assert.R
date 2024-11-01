@@ -110,7 +110,6 @@ check_action_data <- function(data, arg = caller_arg(data),
     data
 }
 
-#' @importFrom vctrs vec_cast
 check_stack_context <- function(what, arg = caller_arg(what),
                                 call = caller_call()) {
     if (is.null(what)) return(what) # styler: off
