@@ -25,13 +25,6 @@ add_default_mapping <- function(mapping, default_mapping) {
     default_mapping
 }
 
-#' @importFrom rlang env_clone
-ggproto_clone <- function(ggproto) {
-    ans <- env_clone(ggproto)
-    class(ans) <- class(ggproto)
-    ans
-}
-
 #######################################################################
 # ggplot2 add default scales in `compute_aesthetics` process
 # then ggplot2 transform all scales

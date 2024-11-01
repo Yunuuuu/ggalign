@@ -85,6 +85,7 @@ reference:
   desc: A handful of helpers
   contents:
   - layer_order
+  - theme_no_axes
   - ggalignGrob
   - ggalign_attr
   - ggalign_stat

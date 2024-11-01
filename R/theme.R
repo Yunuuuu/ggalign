@@ -38,6 +38,40 @@ theme_ggalign <- function(...) {
         )
 }
 
+#' Remove axis elements
+#'
+#' @param axes Which axes elements should be removed? A string containing
+#' one or more of `r oxford_and(.tlbr)`.
+#' @param text If `TRUE`, will remove the axis labels.
+#' @param ticks If `TRUE`, will remove the axis ticks.
+#' @param title If `TRUE`, will remove the axis title.
+#' @param line If `TRUE`, will remove the axis line.
+#' @return A [`theme()`][ggplot2::theme] object.
+#' @examples 
+#' p <- ggplot() + geom_point(aes(x = wt, y = qsec), data = mtcars)
+#' p + theme_no_axes()
+#' p + theme_no_axes("b")
+#' p + theme_no_axes("l")
+#' @importFrom rlang arg_match0
+#' @importFrom ggplot2 theme element_blank
+#' @export
+theme_no_axes <- function(axes = "tlbr", text = TRUE, ticks = TRUE,
+                          title = TRUE, line = FALSE) {
+    assert_position(axes)
+    positions <- setup_pos(axes)
+    el <- list(text = text, ticks = ticks, title = title, line = line)
+    el <- names(el)[vapply(el, isTRUE, logical(1L), USE.NAMES = FALSE)]
+    el <- vec_expand_grid(pos = positions, el = el)
+    el <- paste("axis",
+        .subset2(el, "el"),
+        ifelse(.subset2(el, "pos") %in% c("top", "bottom"), "x", "y"),
+        .subset2(el, "pos"),
+        sep = "."
+    )
+    el <- vec_set_names(el, el)
+    theme(!!!lapply(el, function(x) element_blank()), validate = FALSE)
+}
+
 #' @importFrom rlang try_fetch
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
