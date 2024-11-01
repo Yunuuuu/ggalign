@@ -190,6 +190,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 object,
                 vec_set_difference(c("vertical", "horizontal"), direction)
             )
+            # check the data format is correct
             if (is.function(quad_data)) {
                 data <- quad_data(data)
                 if (is.null(extra_layout)) { # we need a data frame
@@ -199,22 +200,21 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                             "a {.cls data.frame}"
                         ))
                     }
-                } else { # we need a matrix
-                    if (!is.matrix(data)) {
-                        cli::cli_abort(paste(
-                            "{.arg data} in {.var {object_name}} must return",
-                            "a {.cls matrix}"
-                        ))
-                    }
+                } else if (!is.matrix(data)) { # we need a matrix
+                    cli::cli_abort(paste(
+                        "{.arg data} in {.var {object_name}} must return",
+                        "a {.cls matrix}"
+                    ))
                 }
             } else if (!is.null(extra_layout)) {
+                # the data from the stack is a data frame
                 # we require user input the matrix
                 cli::cli_abort(c(
                     "you must provide {.arg data} matrix in {.var {object_name}}",
                     i = "data in {.fn {stack@name}} is a {.cls data.frame}"
                 ))
             }
-
+            # we initialize the nobs for the layout
             if (is_horizontal(direction)) {
                 if (!is.null(slot(object, "vertical"))) {
                     slot(object, "vertical")$nobs <- ncol(data)
@@ -230,6 +230,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         layout <- NULL
     } else if (!is.null(stack_layout) && !is.null(quad_layout)) {
         # if QuadLayout need align observations, we need a matrix
+        # and the stack_layout data should be a matrix
         if (is.null(quad_data) || is.function(quad_data)) {
             if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
                 cli::cli_abort(c(
