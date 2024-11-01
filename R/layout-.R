@@ -153,39 +153,6 @@ update_layout_params.StackLayout <- function(x, ..., params) {
     x
 }
 
-########################################################
-#' @keywords internal
-update_active <- function(x, active) UseMethod("update_active")
-
-#' @export
-update_active.QuadLayout <- function(x, active) {
-    x@active <- active
-    x
-}
-
-#' @export
-update_active.StackLayout <- function(x, active) {
-    if (is.null(active)) {
-    } else if ((l <- length(x@plots)) == 0L) {
-        cli::cli_abort("No contexts in the stack layout to be activated")
-    } else if (is.character(name <- active)) {
-        active <- match(name, names(x@plots))
-        if (is.na(active)) {
-            cli::cli_abort("Cannot find {name} plot in this stack layout")
-        }
-    } else if (active > l) {
-        cli::cli_abort(c(
-            "Cannot set the active context",
-            i = paste(
-                "the stack layout has only {l} context{?s} but you provided",
-                "an integer index ({context})"
-            )
-        ))
-    }
-    x@active <- active
-    x
-}
-
 ############################################################
 #' Plot context related actions
 #'

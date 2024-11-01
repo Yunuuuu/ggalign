@@ -152,14 +152,28 @@ stack_layout_add.ggplot <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_add.stack_switch <- function(object, stack, object_name) {
-    if (!is.waive(what <- .subset2(object, "what"))) {
-        stack <- update_active(stack, what)
-    }
+    stack <- update_stack_active(
+        stack, .subset2(object, "what"),
+        quote(stack_switch())
+    )
     if (!is.null(sizes <- .subset2(object, "sizes"))) {
         stack@sizes <- sizes
     }
     if (!is.null(new_action <- .subset2(object, "action"))) {
         stack@action <- update_action(stack@action, new_action)
+    }
+    stack
+}
+
+update_stack_active <- function(stack, what, call = caller_call()) {
+    if (!is.waive(what)) {
+        if (!is.null(what)) {
+            what <- vec_as_location2(
+                what, vec_size(stack@plots), vec_names(stack@plots),
+                missing = "error", arg = "what", call = call
+            )
+        }
+        stack@active <- what
     }
     stack
 }

@@ -92,7 +92,8 @@ quad_layout_add.quad_active <- function(object, quad, object_name) {
     if (!is.null(new_action <- .subset2(object, "action"))) {
         quad@action <- update_action(quad@action, new_action)
     }
-    update_active(quad, NULL)
+    quad@active <- NULL
+    quad
 }
 
 #' @importFrom methods slot
@@ -160,8 +161,12 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     if (!is.null(new_action <- .subset2(object, "action"))) {
         stack@action <- update_action(stack@action, new_action)
     }
+    stack <- update_stack_active(
+        stack, .subset2(object, "what"), quote(quad_anno())
+    )
     slot(quad, position) <- stack
-    update_active(quad, position)
+    quad@active <- position
+    quad
 }
 
 #' @export
@@ -277,7 +282,8 @@ quad_layout_add.anno_init <- function(object, quad, object_name) {
             direction = direction, params = layout
         )
     }
-    update_active(quad, position)
+    quad@active <- position
+    quad
 }
 
 #######################################################
