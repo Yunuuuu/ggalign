@@ -53,7 +53,7 @@ ggheatmap(small_mat) +
 
 ## Why can't I add two dendrograms with different `reorder` settings?
 
-> Note: We always prevent users from reordering the layout axis twice.
+> Note: We always prevent users from reordering layout direction twice.
 
 When `reorder_group = FALSE` is used, reordering of the heatmap occurs within
 each group. As long as the ordering within each group remains consistent, these
@@ -93,9 +93,9 @@ new_index <- stats::order.dendrogram(ggalign_stat(h2, "top", 2L))
 all(index == new_index)
 ```
 
-To prevent reordering of the layout axis twice, we ensure that the `new_index`
-matches the `index` (if `index` is not NULL). This is done to maintain
-consistency and prevent conflicts in the ordering of the heatmap.
+To prevent reordering of the axis twice, we ensure that the `new_index` matches
+the `index` (if `index` is not NULL). This is done to maintain consistency and
+prevent conflicts in the ordering of the heatmap.
 
 ## Session information
 ```{r}

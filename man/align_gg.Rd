@@ -39,8 +39,7 @@ it inherits from the parent layout.}
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
 layout matrix, and must return a matrix. If you want to transform the final
 plot data, please use \code{action} argument.
-\item A \code{matrix}, \verb{data frame}, or atomic vector. If an atomic vector is
-provided, it is converted into a single-column data frame.
+\item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
 \item{limits}{Logical; determines if layout limits are set for the plot.}
@@ -95,12 +94,13 @@ The data in the underlying \code{ggplot} object will contain following columns:
 \item \code{.panel}: the panel for current aligned axis. It means \code{x-axis} for
 vertical stack layout, \code{y-axis} for horizontal stack layout.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
-\item \code{.names} and \code{.index}: A factor of the names and an integer of index of
-the original data. (\code{\link[vctrs:vec_names]{vec_names()}} and
-\code{\link[vctrs:vec_size]{vec_size()}})
+\item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
+(\code{\link[vctrs:vec_size]{vec_size()}}): A factor of the names (only
+applicable when names exists) and an integer of index of the original
+data.
 \item \code{.row_names} and \code{.row_index}: the row names and an integer of
 row index of the original matrix (only applicable if \code{data} is a
-\code{matrix})..
+\code{matrix}).
 \item \code{.column_names} and \code{.column_index}: the column names and column index of
 the original matrix (only applicable if \code{data} is a \code{matrix}).
 \item \code{value}: the actual value (only applicable if \code{data} is a \code{matrix} or

@@ -1,8 +1,8 @@
 ---
-title: "Special Syntax for Layout Axis"
+title: "Difference with ggplot2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Special Syntax for Layout Axis}
+  %\VignetteIndexEntry{Difference with ggplot2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,16 +16,19 @@ knitr::opts_chunk$set(
 
 `ggalign` focuses on aligning observations across multiple plots. While it
 builds on the `ggplot2` framework, there are key differences in how scales,
-facets, and coordinates are handled in the layout axis. This vignette highlights
-the differences in syntax between `ggalign` and `ggplot2`.
+facets, and coordinates are handled in the the axes used for alignment. This
+vignette highlights the differences in syntax between `ggalign` and `ggplot2`.
 
-## Layout Axis
-The layout axis refers to the axes used for alignment:
+Following syntax applies to all `align_*` functions which would add a plot area,
+and the main plot in `quad_layout()` when need alignment.
+
+## Axes used for alignment
+This refers to:
 - x-axis in vertical stack layouts
 
 - x-axis in horizontal stack layouts
 
-- x- and y axes in the heatmap body
+- x- and y axes in the `quad_layout()` main plot
 
 `ggalign` introduces special syntax and handling for these axes, differing from
 the default behavior in `ggplot2`. These adjustments ensure that observations

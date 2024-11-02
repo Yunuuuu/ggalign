@@ -18,8 +18,8 @@ The `ggalign` package offers several `align_*` functions that allow you to
 precisely control plot layout and integrate additional plots. Currently, there
 are two primary `align_*` functions for adding plots:
 
-  - `align_gg()`/`ggalign()`: Create ggplot object with a customized data.
-  - `align_panel()`/`ggpanel()`: Create ggplot object with the layout panel
+  - `align_gg()`/`ggalign()`: Create ggplot object and align the observations.
+  - `free_gg()`/`ggfree()`: Create ggplot object but not align the observations
     data.
 
 ```{r setup}
@@ -59,7 +59,7 @@ ggheatmap(small_mat) +
 If `data = NULL`, the data in the underlying `ggplot` object contains following
 columns: 
 
- - `.panel`: the panel for current layout axis.
+ - `.panel`: the panel for the axis used for alignment.
  - `.index`: the index of the original layout data.
  - `.x` or `.y`: the `x` or `y` coordinates
 

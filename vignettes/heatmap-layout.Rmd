@@ -138,7 +138,7 @@ redirect additions back to the heatmap body, you can use `quad_active()`. The
 
 We also provide `quad_switch()`/`hmanno()` which integrates `quad_active()` and
 `quad_anno()` into one function for ease of use. Feel free to use any of these
-functions to streamline your annotation process. 
+functions to streamline your annotation process.
 
 You may wonder about the prefix `quad_`. The `ggheatmap()` function is a
 specialized version of `quad_layout()`, designed to simplify the creation of
@@ -244,7 +244,7 @@ can be used in the `action` argument of layout functions like
 `quad_anno()`/`quad_active` or `stack_switch()`/`stack_active()` to set global
 actions for all plots in the layout. Additionally, `plot_action()` can be
 applied directly to specific plots through the `action` argument in the
-`align_*()` functions, or it can be added directly to a plot.
+`align_*()`/`ggfree()` functions, or it can be added directly to a plot.
 
 ## guides
 By default, `ggheatmap()` will collect all guide legends on the side from which

@@ -4,8 +4,8 @@
 #' It can be used in the `action` argument of layout functions like
 #' [`quad_switch()`] or [`stack_switch()`] to set global actions for all plots
 #' in the layout. Additionally, `plot_action()` can be applied directly to
-#' specific plots through the `action` argument in the `align_*()` functions, or
-#' it can be added directly to a plot.
+#' specific plots through the `action` argument in the `align_*()`/`ggfree()`
+#' functions, or it can be added directly to a plot.
 #'
 #' @param data A function to transform the plot data before rendering, referred
 #' to as action data. Defaults will attempt to inherit from the parent layout if

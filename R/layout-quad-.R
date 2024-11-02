@@ -58,17 +58,18 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #' Arrange Plots in the Quad-Side of a main plot
 #'
 #' These functions arrange plots around a main plot, allowing for flexible
-#' alignment of observations in different directions.
+#' alignment of observations in different directions. `ggfree` is an alias for
+#' `quad_free`.
 #'
 #' @description
-#' - `quad_free`: Never align observations.
+#' - `quad_free`/`ggfree`: Never align observations.
 #' - `quad_alignh`: Align observations in the horizontal direction.
 #' - `quad_alignv`: Align observations in the vertical direction.
 #' - `quad_alignb`: Align observations in both horizontal and vertical
 #'   directions.
 #' @param data `r rd_layout_data()`.
-#' - For `quad_free`, the function uses [`fortify_data_frame()`] to convert
-#'   the data into a data frame.
+#' - For `quad_free`/`ggfree`, the function uses [`fortify_data_frame()`] to
+#'   convert the data into a data frame.
 #' - For all other functions, it employs [`fortify_matrix()`] to convert
 #'   the data into a matrix.
 #' @param mapping Default list of aesthetic mappings to use for the main plot.
@@ -89,6 +90,11 @@ quad_free <- function(data = NULL, mapping = aes(),
                       width = NA, height = NA) {
     UseMethod("quad_free")
 }
+
+#' @usage NULL
+#' @export
+#' @rdname quad_free
+ggside <- quad_free
 
 #' @export
 quad_free.default <- function(data = NULL, mapping = aes(),

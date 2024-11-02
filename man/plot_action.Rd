@@ -76,8 +76,8 @@ The \code{plot_action()} function defines the behavior of plots within a layout.
 It can be used in the \code{action} argument of layout functions like
 \code{\link[=quad_switch]{quad_switch()}} or \code{\link[=stack_switch]{stack_switch()}} to set global actions for all plots
 in the layout. Additionally, \code{plot_action()} can be applied directly to
-specific plots through the \code{action} argument in the \verb{align_*()} functions, or
-it can be added directly to a plot.
+specific plots through the \code{action} argument in the \verb{align_*()}/\code{ggfree()}
+functions, or it can be added directly to a plot.
 }
 \examples{
 # used in the layout, define the default action for all plots in the layout

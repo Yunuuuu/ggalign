@@ -96,19 +96,15 @@ ggheatmap(small_mat) +
 ```
 
 Some `align_*` functions accept a `data` argument. This can be a matrix, a data
-frame, or even a simple vector, which will be converted into a one-column
-matrix. If the `data` argument is `NULL`, the function will use the layout data,
-as demonstrated in the previous example. The `data` argument can also accept a
-function (purrr-like lambda syntax is supported), which will be applied to the
-layout data. 
+frame, or even a simple vector. The `data` argument can also accept a function
+(purrr-like lambda syntax is supported), which will be applied to the layout
+data. It is important to note that all `align_*` functions consider the `rows`
+as the observations. It means the `NROW(data)` must return the same number with
+the observations in axis used for alignment.
 
-It is important to note that all `align_*` functions consider the `rows` as
-the observations. It means the `NROW(data)` must return the same number with
-the specific `layout` axis.
-
- - `heatmap_layout()`/`ggheatmap()`: for column annotation, the `layout` data
- will be transposed before using (If data is a `function`, it will be applied
- with the transposed matrix). This is necessary because column annotation uses
+ - `quad_layout()`/`ggheatmap()`: for column annotation, the `layout` data will
+ be transposed before using (If data is a `function`, it will be applied with
+ the transposed matrix). This is necessary because column annotation uses
  heatmap columns as observations, but we need rows.
 
  - `stack_layout()`/`ggstack()`: the `layout` data will be used as it is since
@@ -132,10 +128,9 @@ ggheatmap(small_mat) +
     align_kmeans(3L)
 ```
 
-It's important to note that all `align_*` functions which define groups must not
-break the previous established groups. This means the new groups must nest in
-the old groups, in this way, usually they cannot be used if groups already
-exist.
+Note that all `align_*` functions which define groups must not break the
+previous established groups. This means the new groups must nest in the old
+groups, in this way, usually they cannot be used if groups already exist.
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +

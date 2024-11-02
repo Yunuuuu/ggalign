@@ -8,8 +8,7 @@
 #' - A `function` (including purrr-like lambda syntax) that is applied to the
 #'   layout matrix, and must return a matrix. If you want to transform the final
 #'   plot data, please use `action` argument.
-#' - A `matrix`, `data frame`, or atomic vector. If an atomic vector is
-#'   provided, it is converted into a single-column data frame.
+#' - A `matrix`, `data frame`, or atomic vector.
 #' @inheritParams align_dendro
 #' @inheritParams align
 #' @inheritParams heatmap_layout
@@ -30,13 +29,14 @@
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
-#'  - `.names` and `.index`: A factor of the names and an integer of index of
-#'    the original data. ([`vec_names()`][vctrs::vec_names] and
-#'    [`vec_size()`][vctrs::vec_size()])
+#'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
+#'    ([`vec_size()`][vctrs::vec_size()]): A factor of the names (only
+#'    applicable when names exists) and an integer of index of the original
+#'    data.
 #'
 #'  - `.row_names` and `.row_index`: the row names and an integer of
 #'    row index of the original matrix (only applicable if `data` is a
-#'    `matrix`)..
+#'    `matrix`).
 #'
 #'  - `.column_names` and `.column_index`: the column names and column index of
 #'    the original matrix (only applicable if `data` is a `matrix`).

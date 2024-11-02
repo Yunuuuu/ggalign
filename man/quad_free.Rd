@@ -2,6 +2,7 @@
 % Please edit documentation in R/layout-quad-.R
 \name{quad_free}
 \alias{quad_free}
+\alias{ggside}
 \alias{quad_alignh}
 \alias{quad_alignv}
 \alias{quad_alignb}
@@ -54,8 +55,8 @@ quad_alignb(
 \arguments{
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout.
 \itemize{
-\item For \code{quad_free}, the function uses \code{\link[=fortify_data_frame]{fortify_data_frame()}} to convert
-the data into a data frame.
+\item For \code{quad_free}/\code{ggfree}, the function uses \code{\link[=fortify_data_frame]{fortify_data_frame()}} to
+convert the data into a data frame.
 \item For all other functions, it employs \code{\link[=fortify_matrix]{fortify_matrix()}} to convert
 the data into a matrix.
 }}
@@ -81,7 +82,7 @@ added to a layout.}
 }
 \description{
 \itemize{
-\item \code{quad_free}: Never align observations.
+\item \code{quad_free}/\code{ggfree}: Never align observations.
 \item \code{quad_alignh}: Align observations in the horizontal direction.
 \item \code{quad_alignv}: Align observations in the vertical direction.
 \item \code{quad_alignb}: Align observations in both horizontal and vertical
@@ -90,5 +91,6 @@ directions.
 }
 \details{
 These functions arrange plots around a main plot, allowing for flexible
-alignment of observations in different directions.
+alignment of observations in different directions. \code{ggfree} is an alias for
+\code{quad_free}.
 }

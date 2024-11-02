@@ -28,8 +28,7 @@ align(
 \arguments{
 \item{data}{Options for \code{data}:
 \itemize{
-\item A matrix, data frame, or atomic vector. If an atomic vector is provided,
-it will be converted into a one-column matrix.
+\item A matrix, data frame, or atomic vector.
 \item \code{\link[=waiver]{waiver()}}: Uses the \verb{layout matrix}.
 \item \code{NULL}: No data is set.
 \item A \code{function} (including purrr-like \code{lambda} syntax), which will be applied

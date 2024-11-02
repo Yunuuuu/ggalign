@@ -4,8 +4,7 @@
 #' observations and, in some cases, add plot components to the `layout`.
 #'
 #' @param data Options for `data`:
-#'  - A matrix, data frame, or atomic vector. If an atomic vector is provided,
-#'    it will be converted into a one-column matrix.
+#'  - A matrix, data frame, or atomic vector.
 #'  - [`waiver()`]: Uses the `layout matrix`.
 #'  - `NULL`: No data is set.
 #'  - A `function` (including purrr-like `lambda` syntax), which will be applied

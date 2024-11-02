@@ -30,7 +30,7 @@ base_mean <- rowMeans(mat)
 mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
 
-ggstack(data = mat_scaled) +
+ggstack(data = mat_scaled, "h") +
     stack_active(sizes = c(0.2, 1, 1)) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +

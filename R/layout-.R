@@ -79,14 +79,6 @@ update_layout_annotation <- function(object, layout, object_name) {
     layout
 }
 
-update_plot_annotation <- function(object, layout, object_name) {
-    layout@titles <- update_non_waive(
-        layout@titles, .subset(object, names(layout_title()))
-    )
-    layout@theme <- update_theme(layout@theme, .subset2(object, "theme"))
-    layout
-}
-
 ######################################################################
 new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
     list(panel = panel, index = index, nobs = nobs)
