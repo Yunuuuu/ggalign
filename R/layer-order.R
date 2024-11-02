@@ -3,7 +3,7 @@
 #' This function allows you to change the order in which layers are added to a
 #' ggplot.
 #'
-#' @param layer A [layer geometry][ggplot2::layer_geoms] object to be added.
+#' @param layer A [`layer geometry`][ggplot2::layer_geoms] object to be added.
 #' @param order An integer indicating the position at which the layer should be
 #' added. If `<= 0`, the layer will be added at the beginning. If greater than
 #' the number of plot layers, it will be added at the end.

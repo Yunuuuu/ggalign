@@ -31,6 +31,17 @@ with_options <- function(code, ...) {
     force(code)
 }
 
+#' @param ans Whether to assign the final results into the 'ans' variable.
+#' @noRd
+body_append <- function(fn, ..., ans = FALSE) {
+    args <- rlang::fn_fmls(fn)
+    body <- rlang::fn_body(fn)
+    body <- as.list(body)
+    if (ans) body[[length(body)]] <- rlang::expr(ans <- !!body[[length(body)]])
+    body <- as.call(c(body, rlang::enexprs(...)))
+    rlang::new_function(args, body)
+}
+
 # This will work with most things but be aware that it might fail with some
 # complex objects. For example, according to `?S3Methods`, calling foo on
 # matrix(1:4, 2, 2) would try `foo.matrix`, then `foo.numeric`, then

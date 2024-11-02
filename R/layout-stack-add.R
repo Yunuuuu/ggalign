@@ -41,6 +41,12 @@ stack_layout_add.layout_annotation <- function(object, stack, object_name) {
     stack
 }
 
+#' @export
+stack_layout_add.layout_title <- function(object, stack, object_name) {
+    stack@titles <- update_non_waive(stack@titles, object)
+    stack
+}
+
 ###################################################################
 # `Align` can be added for both heatmap and stack layout
 #' @export

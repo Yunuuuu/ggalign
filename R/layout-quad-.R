@@ -275,7 +275,8 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         data = data, theme = theme, action = action,
         context = update_context(context, new_context(
             order = NA_integer_, active = TRUE, name = NA_character_
-        )), name = name,
+        )),
+        name = name,
         # used by the main body
         body_action = default_action(waiver()),
         # following parameters can be controlled by `quad_switch`
@@ -307,6 +308,34 @@ methods::setClass(
         top = NULL, left = NULL, bottom = NULL, right = NULL
     )
 )
+
+#' @aliases +.QuadLayout &.QuadLayout -.QuadLayout
+#' @aliases +.HeatmapLayout &.HeatmapLayout -.HeatmapLayout
+#' @aliases +.ggheatmap &.ggheatmap -.ggheatmap
+#' @aliases +.ggfree &.ggfree -.ggfree
+#' @importFrom methods Ops
+#' @export
+#' @rdname layout-operator
+methods::setMethod("Ops", c("QuadLayout", "ANY"), function(e1, e2) {
+    if (missing(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code {.Generic}} with a single argument.",
+            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    switch(.Generic, # nolint
+        `+` = quad_layout_add(e2, e1, e2name),
+        `-` = quad_layout_subtract(e2, e1, e2name),
+        `&` = quad_layout_and_add(e2, e1, e2name),
+        stop_incompatible_op(.Generic, e1, e2)
+    )
+})
 
 # used to create the heatmap layout
 #' @keywords internal

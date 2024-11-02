@@ -20,12 +20,18 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_subtract.ggplot <- function(object, stack, object_name) {
+stack_layout_subtract.layout_title <- function(object, stack, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code -} to add a {.cls ggplot}",
+        "Cannot use {.code -} to add {.obj_type_friendly {object}}",
         i = "Try to use {.code +} instead"
     ))
 }
+
+#' @export
+stack_layout_subtract.ggplot <- stack_layout_subtract.layout_title
+
+#' @export
+stack_layout_subtract.free_gg <- stack_layout_subtract.layout_title
 
 #' @export
 stack_layout_subtract.Align <- function(object, stack, object_name) {
@@ -34,6 +40,9 @@ stack_layout_subtract.Align <- function(object, stack, object_name) {
         i = "Try to use {.code +} instead"
     ))
 }
+
+#' @export
+stack_layout_subtract.layout_annotation <- stack_layout_subtract.layout_title
 
 ##################################################################
 #' @keywords internal
@@ -58,12 +67,27 @@ stack_layout_and_add.default <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_and_add.ggplot <- function(object, stack, object_name) {
+stack_layout_and_add.theme <- function(object, stack, object_name) {
+    ans <- NextMethod()
+    # to align with `patchwork`, we also modify the layout theme
+    # when using `&` to add the theme object.
+    ans@theme <- ans@theme + object
+    ans
+}
+
+#' @export
+stack_layout_and_add.layout_title <- function(object, stack, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code &} to add a {.cls ggplot}",
+        "Cannot use {.code &} to add {.obj_type_friendly {object}}",
         i = "Try to use {.code +} instead"
     ))
 }
+
+#' @export
+stack_layout_and_add.ggplot <- stack_layout_and_add.layout_title
+
+#' @export
+stack_layout_and_add.free_gg <- stack_layout_and_add.layout_title
 
 #' @export
 stack_layout_and_add.Align <- function(object, stack, object_name) {
@@ -72,3 +96,6 @@ stack_layout_and_add.Align <- function(object, stack, object_name) {
         i = "Try to use {.code +} instead"
     ))
 }
+
+#' @export
+stack_layout_and_add.layout_annotation <- stack_layout_and_add.layout_title

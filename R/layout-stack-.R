@@ -212,3 +212,28 @@ methods::setClass(
         )
     )
 )
+
+#' @aliases +.StackLayout &.StackLayout -.StackLayout
+#' @importFrom methods Ops
+#' @export
+#' @rdname layout-operator
+methods::setMethod("Ops", c("StackLayout", "ANY"), function(e1, e2) {
+    if (missing(e2)) {
+        cli::cli_abort(c(
+            "Cannot use {.code {.Generic}} with a single argument.",
+            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    switch(.Generic, # nolint
+        `+` = stack_layout_add(e2, e1, e2name),
+        `-` = stack_layout_subtract(e2, e1, e2name),
+        `&` = stack_layout_and_add(e2, e1, e2name),
+        stop_incompatible_op(.Generic, e1, e2)
+    )
+})

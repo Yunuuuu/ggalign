@@ -24,6 +24,12 @@ quad_layout_add.list <- function(object, quad, object_name) {
     quad
 }
 
+#' @export
+quad_layout_add.layout_title <- function(object, quad, object_name) {
+    quad@titles <- update_non_waive(quad@titles, object)
+    quad
+}
+
 ##############################################################
 # Preventing from adding following elements
 #' @export

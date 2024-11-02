@@ -61,6 +61,54 @@ methods::setMethod("$", "Layout", function(x, name) {
     slot(x, name)
 })
 
+#########################################################
+#' Layout operator
+#'
+#' @details
+#' In order to reduce code repetition `ggalign` provides two operators for
+#' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
+#' `r rd_layout()`.
+#'
+#' Like `patchwork`, `&` add the element to all plots in the plot. If the
+#' element is a [theme][ggplot2::theme], this will also modify the layout
+#' theme.
+#'
+#' Unlike `patchwork`, the `-` operator adds ggplot2 elements (geoms, themes,
+#' facets, etc.) rather than a ggplot plot. The key difference between `&` and
+#' `-` is in how they behave in [`heatmap_layout()`]. The `-` operator only
+#' applies the element to the current active context in [`heatmap_layout()`].
+#' Using `-` might seem unintuitive if you think of the operator as "subtract",
+#' the underlying reason is that `-` is the only operator in the same precedence
+#' group as `+`.
+#'
+#' @param e1 A `r rd_layout()`.
+#' @param e2 An object to be added to the plot.
+#' @return A modified `Layout` object.
+#' @examples
+#' mat <- matrix(rnorm(56), nrow = 7)
+#' ggheatmap(mat) +
+#'     hmanno("t") +
+#'     ggalign() +
+#'     geom_point(aes(y = value))
+#'
+#' ggheatmap(mat) +
+#'     anno_top() +
+#'     align_dendro() &
+#'     theme(panel.border = element_rect(
+#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
+#'     ))
+#' ggheatmap(mat) +
+#'     anno_top() +
+#'     align_dendro() -
+#'     theme(panel.border = element_rect(
+#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
+#'     ))
+#'
+#' @name layout-operator
+NULL
+
+utils::globalVariables(".Generic")
+
 ###########################################################
 default_layout <- function(layout) {
     layout@theme <- default_theme() + layout@theme
