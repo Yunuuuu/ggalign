@@ -25,8 +25,7 @@ ggalign_build.QuadLayout <- function(x) {
         do.call(unit.c, out)
     })
     keep <- !vapply(plots, is.null, logical(1L), USE.NAMES = FALSE)
-
-    design <- trim_area(do.call(c, design[keep]))
+    design <- trim_area(vec_c(!!!vec_set_names(vec_slice(design, keep), NULL)))
     titles <- x@titles
     align_plots(
         !!!.subset(plots, keep),

@@ -38,22 +38,22 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 .subset2(layout, "byrow")
             )
         } else {
-            dims <- c(max(.subset2(design, "b")), max(.subset2(design, "r")))
+            dims <- c(max(field(design, "b")), max(field(design, "r")))
         }
 
         # filter `plots` based on the design areas --------------------
-        if (nrow(design) < length(patches)) {
+        if (vec_size(design) < vec_size(patches)) {
             cli::cli_warn(
                 "Too few patch areas to hold all plots. Dropping plots"
             )
-            plots <- patches[seq_len(nrow(design))]
+            plots <- vec_slice(patches, vec_seq_along(design))
         } else {
             design <- vec_slice(design, seq_along(patches))
         }
 
         # remove NULL patch -----------------------------------
         keep <- !vapply(patches, is.null, logical(1L), USE.NAMES = FALSE)
-        patches <- .subset(patches, keep)
+        patches <- vec_slice(patches, keep)
 
         # if no plots, we return empty gtable -----------------
         if (is_empty(patches)) return(make_patch_table()) # styler: off
@@ -62,14 +62,14 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         design <- vec_slice(design, keep)
         for (i in seq_along(patches)) {
             patches[[i]]$borders <- c(
-                if (.subset2(design, "t")[i] == 1L) "top" else NULL,
-                if (.subset2(design, "l")[i] == 1L) "left" else NULL,
-                if (.subset2(design, "b")[i] == .subset(dims, 1L)) {
+                if (field(design, "t")[i] == 1L) "top" else NULL,
+                if (field(design, "l")[i] == 1L) "left" else NULL,
+                if (field(design, "b")[i] == .subset(dims, 1L)) {
                     "bottom"
                 } else {
                     NULL
                 },
-                if (.subset2(design, "r")[i] == .subset(dims, 2L)) {
+                if (field(design, "r")[i] == .subset(dims, 2L)) {
                     "right"
                 } else {
                     NULL
@@ -244,8 +244,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # if it cannot be fixed and aligned, the strip, axis and labs will be
         # attached into the panel
         # the plot to be fixed must in only one square of the area
-        need_fix <- .subset2(design, "l") == .subset2(design, "r") &
-            .subset2(design, "t") == .subset2(design, "b") &
+        need_fix <- field(design, "l") == field(design, "r") &
+            field(design, "t") == field(design, "b") &
             vapply(
                 patches,
                 function(patch) patch$respect(),
@@ -258,8 +258,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # heights based on the fixed aspect ratio
         guess_widths <- which(is.na(as.numeric(panel_widths)))
         guess_heights <- which(is.na(as.numeric(panel_heights)))
-        cols <- .subset2(design, "l")
-        rows <- .subset2(design, "t")
+        cols <- field(design, "l")
+        rows <- field(design, "t")
         patch_index <- order(
             # we first set the widths for the fixed plot with heights set by
             # user
@@ -343,13 +343,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             loc <- vec_slice(design, i)
             # We must align the borders for the gtable grob with the
             # final plot area sizes
-            l <- (.subset2(loc, "l") - 1L) * TABLE_COLS + 1L
+            l <- (field(loc, "l") - 1L) * TABLE_COLS + 1L
             l_widths <- widths[seq(l, l + LEFT_BORDER - 1L)]
-            r <- .subset2(loc, "r") * TABLE_COLS
+            r <- field(loc, "r") * TABLE_COLS
             r_widths <- widths[seq(r - RIGHT_BORDER + 1L, r)]
-            t <- (.subset2(loc, "t") - 1L) * TABLE_ROWS + 1L
+            t <- (field(loc, "t") - 1L) * TABLE_ROWS + 1L
             t_heights <- heights[seq(t, t + TOP_BORDER - 1L)]
-            b <- .subset2(loc, "b") * TABLE_ROWS
+            b <- field(loc, "b") * TABLE_ROWS
             b_heights <- heights[seq(b - BOTTOM_BORDER + 1L, b)]
             patch <- .subset2(patches, i)
 
@@ -579,7 +579,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         col_loc <- i %% TABLE_COLS
         if (col_loc == 0L) col_loc <- TABLE_COLS
         area_side <- if (col_loc <= LEFT_BORDER + 1L) "l" else "r"
-        idx <- .subset2(design, area_side) == area_col
+        idx <- field(design, area_side) == area_col
         if (any(idx)) {
             max(
                 vapply(.subset(widths, idx), .subset, numeric(1L), col_loc),
@@ -597,7 +597,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         row_loc <- i %% TABLE_ROWS
         if (row_loc == 0L) row_loc <- TABLE_ROWS
         area_side <- if (row_loc <= TOP_BORDER + 1L) "t" else "b"
-        idx <- .subset2(design, area_side) == area_row
+        idx <- field(design, area_side) == area_row
         if (any(idx)) {
             max(
                 vapply(

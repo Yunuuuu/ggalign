@@ -51,16 +51,6 @@ gtable_trim_heights <- function(gt) {
     gt
 }
 
-trim_area <- function(area) {
-    w <- min(.subset2(area, "l"), .subset2(area, "r"))
-    h <- min(.subset2(area, "t"), .subset2(area, "b"))
-    area$l <- .subset2(area, "l") - w + 1L
-    area$r <- .subset2(area, "r") - w + 1L
-    area$t <- .subset2(area, "t") - h + 1L
-    area$b <- .subset2(area, "b") - h + 1L
-    area
-}
-
 liberate_area <- function(gt, top, left, bottom, right,
                           clip = "inherit", name = NULL, vp = NULL) {
     if (any(remove <- grob_in_area(gt, top, right, bottom, left))) {

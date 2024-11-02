@@ -12,7 +12,7 @@ area(t, l, b = t, r = l)
 \item{l, r}{The left and right bounds of the area int the grid}
 }
 \value{
-A \code{align_area} object.
+A \code{ggalign_area} object.
 }
 \description{
 This is a small helper used to specify a single area in a rectangular grid
