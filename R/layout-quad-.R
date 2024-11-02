@@ -262,10 +262,11 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         call = call
     )
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
+
     # check arguments -----------------------------------
     width <- check_size(width, call = call)
     height <- check_size(height, call = call)
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_s3_class(context, "plot_context", null_ok = TRUE, call = call)
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(

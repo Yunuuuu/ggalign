@@ -98,6 +98,12 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # from matrix
     data <- fortify_matrix(data = data, ...)
 
+    # if inherit from the parent layout data, we'll inherit the action data
+    # function.
+    action <- check_action(action,
+        data = if (is.waive(data)) waiver() else NULL
+    )
+
     # `waiver()` is used for further extension, it indicates data will
     # inherit from the parent layout. Now, `waiver()` won't be used as a
     # child layout.
@@ -139,6 +145,11 @@ stack_freeh <- function(data = NULL, ...) {
 stack_free.default <- function(data = NULL, direction = NULL, ...,
                                action = NULL, theme = NULL, sizes = NA) {
     data <- fortify_data_frame(data = data, ...)
+    # if inherit from the parent layout data, we'll inherit the action data
+    # function.
+    action <- check_action(action,
+        data = if (is.waive(data)) waiver() else NULL
+    )
     new_stack_layout(
         name = "stack_free",
         data = data, direction = direction, layout = NULL,
@@ -155,6 +166,28 @@ stack_free.uneval <- function(data, ...) {
     ))
 }
 
+new_stack_layout <- function(name, data, direction, layout,
+                             action = NULL, theme = NULL, sizes = NA,
+                             call = caller_call()) {
+    sizes <- check_stack_sizes(sizes, call = call)
+    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
+    if (!is.null(direction)) {
+        direction <- match.arg(direction, c("horizontal", "vertical"))
+    } else {
+        lifecycle::deprecate_warn(
+            when = "0.0.5",
+            what = sprintf("%s(direction = 'must be provided')", name),
+            details = "no default value of 'direction' argument in the next release"
+        )
+        direction <- "horizontal"
+    }
+    methods::new("StackLayout",
+        name = name, data = data, direction = direction,
+        theme = theme, action = action, # used by the layout
+        sizes = sizes, layout = layout
+    )
+}
+
 # Used to place multiple objects in one axis
 # usually the heatmap annotations
 #' @importFrom grid unit
@@ -164,6 +197,7 @@ methods::setClass(
     "StackLayout",
     contains = "Layout",
     list(
+        name = "character",
         data = "ANY", plots = "list", direction = "character",
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
@@ -178,41 +212,3 @@ methods::setClass(
         )
     )
 )
-
-new_stack_layout <- function(name, data, direction, layout,
-                             action, theme, sizes, call = caller_call()) {
-    if (!is.null(direction)) {
-        direction <- match.arg(direction, c("horizontal", "vertical"))
-    } else {
-        lifecycle::deprecate_warn(
-            when = "0.0.5",
-            what = sprintf("%s(direction = 'must be provided')", name),
-            details = "no default value of 'direction' argument in the next release"
-        )
-        direction <- "horizontal"
-    }
-    sizes <- check_stack_sizes(sizes, call = call)
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    # if inherit from the parent layout data, we'll inherit the action data
-    # function. Now, waiver() won't be used as a child layout.
-    action_data <- if (is.waive(data)) waiver() else NULL
-    .stack_layout(
-        data = data, action_data = action_data,
-        direction = direction, sizes = sizes,
-        action = action, theme = theme, layout = layout,
-        call = call
-    )
-}
-
-.stack_layout <- function(data, action_data,
-                          direction = NULL, sizes = NA,
-                          action = NULL, theme = NULL,
-                          layout = NULL, call = caller_call()) {
-    action <- check_action(action, data = action_data, call = call)
-    methods::new("StackLayout",
-        data = data,
-        direction = direction,
-        theme = theme, action = action, # used by the layout
-        sizes = sizes, layout = layout
-    )
-}

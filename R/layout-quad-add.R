@@ -140,13 +140,14 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 i = "Try using {.fn anno_init} to initialize the {position} annotation with self-customized data."
             ))
         }
-        stack <- .stack_layout( # initialize the annotation stack
+        stack <- new_stack_layout( # initialize the annotation stack
+            name = if (is.null(layout)) "stack_free" else "stack_align",
             data = data,
-            # we'll inherit the action data function
-            action_data = waiver(),
             direction = direction,
             # restore the alinged parameters from the QuadLayout
-            layout = layout
+            layout = layout,
+            # we'll inherit the action data function
+            action = default_action(waiver())
         )
         stack@heatmap$position <- position
     }
@@ -271,11 +272,14 @@ quad_layout_add.anno_init <- function(object, quad, object_name) {
         }
         layout$nobs <- nrow(stack_data)
     }
-    slot(quad, position) <- .stack_layout( # initialize the annotation stack
+    slot(quad, position) <- new_stack_layout( # initialize the annotation stack
+        name = if (is.null(layout)) "stack_free" else "stack_align",
         data = stack_data,
-        action_data = action_data,
         direction = direction,
-        layout = layout
+        # restore the alinged parameters from the QuadLayout
+        layout = layout,
+        # we'll inherit the action data function
+        action = default_action(action_data)
     )
     if (!is.null(layout)) {
         quad <- update_layout_params(quad,
