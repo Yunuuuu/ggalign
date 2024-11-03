@@ -11,11 +11,11 @@
 #'   plot data, please use [`plot_data()`].
 #' - A `matrix`, `data frame`, or atomic vector.
 #' @inheritParams align
-#' @param set_context `r lifecycle::badge("deprecated")` Please use `context`
+#' @param set_context `r lifecycle::badge("deprecated")` Please use `active`
 #' argument instead.
-#' @param order `r lifecycle::badge("deprecated")` Please use `context` argument
+#' @param order `r lifecycle::badge("deprecated")` Please use `active` argument
 #' instead.
-#' @param name `r lifecycle::badge("deprecated")` Please use `context` argument
+#' @param name `r lifecycle::badge("deprecated")` Please use `active` argument
 #' instead.
 #' @importFrom ggplot2 aes
 #'
@@ -77,17 +77,17 @@
 #' @export
 align_gg <- function(mapping = aes(), size = NULL,
                      data = waiver(), limits = TRUE, facet = TRUE,
-                     no_axes = NULL, context = NULL, set_context = deprecated(),
+                     no_axes = NULL, active = NULL, set_context = deprecated(),
                      order = deprecated(), name = deprecated(),
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
     assert_mapping(mapping)
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = TRUE, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = TRUE, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "align_gg",
+    active <- deprecate_active(active, "align_gg",
         set_context = set_context, order = order, name = name
     )
     align(AlignGG,
@@ -97,7 +97,7 @@ align_gg <- function(mapping = aes(), size = NULL,
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        facet = facet, limits = limits, no_axes = no_axes, context = context
+        facet = facet, limits = limits, no_axes = no_axes, active = active
     )
 }
 

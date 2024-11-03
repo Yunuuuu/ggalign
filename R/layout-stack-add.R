@@ -80,8 +80,8 @@ stack_layout_add.Align <- function(object, stack, object_name) {
         )
         stack <- stack_add_plot(
             stack, object,
-            .subset2(.subset2(object, "context"), "active"),
-            .subset2(.subset2(object, "context"), "name"),
+            .subset2(.subset2(object, "active"), "use"),
+            .subset2(.subset2(object, "active"), "name"),
             object_name
         )
     }
@@ -115,8 +115,8 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
 
         stack <- stack_add_plot(
             stack, object,
-            .subset2(.subset2(object, "context"), "active"),
-            .subset2(.subset2(object, "context"), "name"),
+            .subset2(.subset2(object, "active"), "use"),
+            .subset2(.subset2(object, "active"), "name"),
             object_name
         )
     }
@@ -332,8 +332,8 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
     }
     stack <- stack_add_plot(
         stack, object,
-        .subset2(object@context, "active"),
-        .subset2(object@context, "name"),
+        .subset2(object@plot_active, "use"),
+        .subset2(object@plot_active, "name"),
         object_name
     )
     # set the layout ------------------------------------
@@ -341,10 +341,10 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
     stack
 }
 
-stack_add_plot <- function(stack, plot, active, name, object_name) {
+stack_add_plot <- function(stack, plot, use, name, object_name) {
     # set up context index ------------------------------
     plots <- stack@plots
-    if (active) {
+    if (use) {
         active_index <- length(plots) + 1L
     } else {
         active_index <- stack@active

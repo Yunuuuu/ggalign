@@ -17,7 +17,7 @@ ggoncoplot(
   height = NA,
   filling = waiver(),
   theme = NULL,
-  context = NULL
+  active = NULL
 )
 
 \method{ggoncoplot}{default}(
@@ -32,7 +32,7 @@ ggoncoplot(
   height = NA,
   filling = waiver(),
   theme = NULL,
-  context = NULL
+  active = NULL
 )
 }
 \arguments{
@@ -60,7 +60,7 @@ alterations.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
 }
 \value{

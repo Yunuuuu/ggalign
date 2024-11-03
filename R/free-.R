@@ -15,7 +15,7 @@
 #'     ggfree(mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(x = waiver(), ..., size = NULL, context = NULL) {
+free_gg <- function(x = waiver(), ..., size = NULL, active = NULL) {
     rlang::check_dots_used()
     UseMethod("free_gg")
 }
@@ -27,35 +27,35 @@ ggfree <- free_gg
 
 #' @importFrom ggplot2 ggplot
 #' @export
-free_gg.default <- function(x = waiver(), ..., size = NULL, context = NULL) {
+free_gg.default <- function(x = waiver(), ..., size = NULL, active = NULL) {
     data <- fortify_data_frame(x)
     new_free_gg(ggplot(data = NULL, ...), data,
-        size = size, context = context
+        size = size, active = active
     )
 }
 
 #' @export
-free_gg.ggplot <- function(x = waiver(), ..., size = NULL, context = NULL) {
+free_gg.ggplot <- function(x = waiver(), ..., size = NULL, active = NULL) {
     data <- .subset2(x, "data")
     x["data"] <- list(NULL)
-    new_free_gg(x, data, size = size, context = context)
+    new_free_gg(x, data, size = size, active = active)
 }
 
-new_free_gg <- function(plot, data, size, context,
+new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
     if (is.null(size)) {
         size <- unit(NA, "null")
     } else {
         size <- check_size(size, call = call)
     }
-    assert_context(context)
-    context <- update_context(context, new_context(
-        order = NA_integer_, active = TRUE, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        order = NA_integer_, use = TRUE, name = NA_character_
     ))
     structure(
         list(
             plot = plot, data = data,
-            size = size, context = context,
+            size = size, active = active,
             controls = new_controls()
         ),
         class = "free_gg"

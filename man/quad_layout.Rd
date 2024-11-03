@@ -10,7 +10,7 @@ quad_layout(
   mapping = aes(),
   ...,
   theme = NULL,
-  context = NULL,
+  active = NULL,
   width = NA,
   height = NA
 )
@@ -45,7 +45,7 @@ If not specified, must be supplied in each layer added to the plot.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
 
 \item{width, height}{The relative width/height of the main plot, can be a

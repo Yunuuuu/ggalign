@@ -10,19 +10,19 @@
 #'     anno_top() +
 #'     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 #' @export
-align_group <- function(group, context = NULL, set_context = deprecated(),
+align_group <- function(group, active = NULL, set_context = deprecated(),
                         name = deprecated()) {
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = FALSE, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "align_group",
+    active <- deprecate_active(active, "align_group",
         set_context = set_context, name = name
     )
     align(
         align_class = AlignGroup,
         params = list(group = group),
-        data = NULL, context = context,
+        data = NULL, active = active,
         check.param = TRUE
     )
 }

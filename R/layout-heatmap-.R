@@ -63,7 +63,7 @@
 heatmap_layout <- function(data = NULL, mapping = aes(),
                            ...,
                            width = NA, height = NA, filling = waiver(),
-                           theme = NULL, context = NULL,
+                           theme = NULL, active = NULL,
                            set_context = deprecated(),
                            order = deprecated(), name = deprecated(),
                            guides = deprecated()) {
@@ -81,7 +81,7 @@ ggheatmap <- heatmap_layout
 heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    ...,
                                    width = NA, height = NA, filling = waiver(),
-                                   theme = NULL, context = NULL,
+                                   theme = NULL, active = NULL,
                                    set_context = deprecated(),
                                    order = deprecated(), name = deprecated(),
                                    guides = deprecated()) {
@@ -103,11 +103,11 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         nrows <- NULL
         ncols <- NULL
     }
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = TRUE, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = TRUE, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "ggheatmap",
+    active <- deprecate_active(active, "ggheatmap",
         set_context = set_context, order = order, name = name
     )
     ans <- new_quad_layout(
@@ -115,7 +115,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = new_layout_params(nobs = nrows),
         vertical = new_layout_params(nobs = ncols),
-        mapping = mapping, theme = theme, context = context,
+        mapping = mapping, theme = theme, active = active,
         width = width, height = height,
         class = "HeatmapLayout"
     )

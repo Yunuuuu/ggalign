@@ -11,19 +11,19 @@
 #'     align_kmeans(3L)
 #' @export
 align_kmeans <- function(centers, ..., data = NULL,
-                         context = NULL, set_context = deprecated(),
+                         active = NULL, set_context = deprecated(),
                          name = deprecated()) {
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = FALSE, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "align_group",
+    active <- deprecate_active(active, "align_group",
         set_context = set_context, name = name
     )
     align(
         align_class = AlignKmeans,
         params = list(centers = centers, params = rlang::list2(...)),
-        context = context,
+        active = active,
         data = data %||% waiver()
     )
 }

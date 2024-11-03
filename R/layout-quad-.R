@@ -22,7 +22,7 @@
 #' @export
 quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
                         ...,
-                        theme = NULL, context = NULL,
+                        theme = NULL, active = NULL,
                         width = NA, height = NA) {
     if (!is.null(align)) {
         align <- match.arg(align, c("horizontal", "vertical", "both"))
@@ -30,24 +30,24 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
     if (is.null(align)) {
         quad_free(
             data = data, mapping = mapping,
-            ..., context = context, theme = theme,
+            ..., active = active, theme = theme,
             width = width, height = height
         )
     } else {
         switch(align,
             both = quad_alignb(
                 data = data, mapping = mapping,
-                ..., context = context, theme = theme,
+                ..., active = active, theme = theme,
                 width = width, height = height
             ),
             horizontal = quad_alignh(
                 data = data, mapping = mapping,
-                ..., context = context, theme = theme,
+                ..., active = active, theme = theme,
                 width = width, height = height
             ),
             vertical = quad_alignv(
                 data = data, mapping = mapping,
-                ..., context = context, theme = theme,
+                ..., active = active, theme = theme,
                 width = width, height = height
             )
         )
@@ -82,7 +82,7 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #' @export
 quad_free <- function(data = NULL, mapping = aes(),
                       ...,
-                      theme = NULL, context = NULL,
+                      theme = NULL, active = NULL,
                       width = NA, height = NA) {
     UseMethod("quad_free")
 }
@@ -95,14 +95,14 @@ ggside <- quad_free
 #' @export
 quad_free.default <- function(data = NULL, mapping = aes(),
                               ...,
-                              theme = NULL, context = NULL,
+                              theme = NULL, active = NULL,
                               width = NA, height = NA) {
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
     new_quad_layout(
         name = "quad_free",
         data = data, horizontal = NULL, vertical = NULL,
-        mapping = mapping, context = context, theme = theme,
+        mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -120,7 +120,7 @@ quad_free.uneval <- function(data, ...) {
 #' @rdname quad_free
 quad_alignh <- function(data = NULL, mapping = aes(),
                         ...,
-                        theme = NULL, context = NULL,
+                        theme = NULL, active = NULL,
                         width = NA, height = NA) {
     UseMethod("quad_alignh")
 }
@@ -128,7 +128,7 @@ quad_alignh <- function(data = NULL, mapping = aes(),
 #' @export
 quad_alignh.default <- function(data = NULL, mapping = aes(),
                                 ...,
-                                theme = NULL, context = NULL,
+                                theme = NULL, active = NULL,
                                 width = NA, height = NA) {
     data <- data %|w|% NULL
     # we need a matrix to melted into long formated data frame
@@ -143,7 +143,7 @@ quad_alignh.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = new_layout_params(nobs = nrows),
         vertical = NULL,
-        mapping = mapping, context = context, theme = theme,
+        mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -161,7 +161,7 @@ quad_alignh.uneval <- function(data, ...) {
 #' @rdname quad_free
 quad_alignv <- function(data = NULL, mapping = aes(),
                         ...,
-                        theme = NULL, context = NULL,
+                        theme = NULL, active = NULL,
                         width = NA, height = NA) {
     UseMethod("quad_alignv")
 }
@@ -169,7 +169,7 @@ quad_alignv <- function(data = NULL, mapping = aes(),
 #' @export
 quad_alignv.default <- function(data = NULL, mapping = aes(),
                                 ...,
-                                theme = NULL, context = NULL,
+                                theme = NULL, active = NULL,
                                 width = NA, height = NA) {
     data <- data %|w|% NULL
     # we need a matrix to melted into long formated data frame
@@ -184,7 +184,7 @@ quad_alignv.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = NULL,
         vertical = new_layout_params(nobs = ncols),
-        mapping = mapping, context = context, theme = theme,
+        mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -202,7 +202,7 @@ quad_alignv.uneval <- function(data, ...) {
 #' @rdname quad_free
 quad_alignb <- function(data = NULL, mapping = aes(),
                         ...,
-                        theme = NULL, context = NULL,
+                        theme = NULL, active = NULL,
                         width = NA, height = NA) {
     UseMethod("quad_alignb")
 }
@@ -210,7 +210,7 @@ quad_alignb <- function(data = NULL, mapping = aes(),
 #' @export
 quad_alignb.default <- function(data = NULL, mapping = aes(),
                                 ...,
-                                theme = NULL, context = NULL,
+                                theme = NULL, active = NULL,
                                 width = NA, height = NA) {
     data <- data %|w|% NULL
     # we need a matrix to melted into long formated data frame
@@ -227,7 +227,7 @@ quad_alignb.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = new_layout_params(nobs = nrows),
         vertical = new_layout_params(nobs = ncols),
-        mapping = mapping, context = context, theme = theme,
+        mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -243,7 +243,7 @@ quad_alignb.uneval <- function(data, ...) {
 #####################################################
 #' @importFrom ggplot2 ggplot
 new_quad_layout <- function(name, data, horizontal, vertical,
-                            mapping = aes(), theme = NULL, context = NULL,
+                            mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA, class = "QuadLayout",
                             call = caller_call()) {
     plot <- ggplot(mapping = mapping)
@@ -259,7 +259,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
     # check arguments -----------------------------------
     width <- check_size(width, call = call)
     height <- check_size(height, call = call)
-    assert_context(context, call = call)
+    assert_active(active, call = call)
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
     methods::new(
@@ -267,8 +267,8 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         # used by the layout
         data = data, theme = theme,
         controls = controls,
-        context = update_context(context, new_context(
-            order = NA_integer_, active = TRUE, name = NA_character_
+        plot_active = update_active(active, new_active(
+            order = NA_integer_, use = TRUE, name = NA_character_
         )),
         name = name,
         # used by the main body
@@ -290,7 +290,7 @@ methods::setClass(
         width = "ANY", height = "ANY",
         # If we regard QuadLayout as a plot, and put it into the stack
         # layout, we need following arguments to control it's behavour
-        context = "ANY",
+        plot_active = "ANY",
         # Used by the layout itself:
         horizontal = "ANY", vertical = "ANY",
         # top, left, bottom, right must be a StackLayout object.

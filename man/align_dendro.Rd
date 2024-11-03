@@ -24,7 +24,7 @@ align_dendro(
   size = NULL,
   data = NULL,
   no_axes = NULL,
-  context = NULL,
+  active = NULL,
   free_guides = deprecated(),
   free_spaces = deprecated(),
   plot_data = deprecated(),
@@ -113,7 +113,7 @@ removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{t
 default, will controled by the option-
 \code{"ggalign.align_no_axes"}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
@@ -131,13 +131,13 @@ added to a layout.}
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{\link[=plot_align]{plot_align()}} function instead.}
 
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
+\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
 argument instead.}
 
-\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context} argument
+\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
 instead.}
 
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context} argument
+\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
 instead.}
 }
 \value{

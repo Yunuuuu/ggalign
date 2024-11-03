@@ -24,9 +24,9 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plots, function(plot) {
         if (is_layout(plot)) {
-            .subset2(plot@context, "order")
+            .subset2(plot@plot_active, "order")
         } else {
-            .subset2(.subset2(plot, "context"), "order")
+            .subset2(.subset2(plot, "active"), "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
     plots <- .subset(plots, make_order(plot_order))

@@ -15,7 +15,7 @@ align(
   limits = TRUE,
   facet = TRUE,
   no_axes = NULL,
-  context = NULL,
+  active = NULL,
   free_guides = deprecated(),
   free_spaces = deprecated(),
   plot_data = deprecated(),
@@ -58,7 +58,7 @@ removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{t
 default, will controled by the option-
 \code{"ggalign.align_no_axes"}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use

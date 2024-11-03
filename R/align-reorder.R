@@ -32,16 +32,16 @@
 #' @export
 align_reorder <- function(stat, ..., reverse = FALSE,
                           strict = TRUE, data = NULL,
-                          context = NULL, set_context = deprecated(),
+                          active = NULL, set_context = deprecated(),
                           name = deprecated()) {
     stat <- rlang::as_function(stat)
     assert_bool(strict)
     assert_bool(reverse)
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = FALSE, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "align_order",
+    active <- deprecate_active(active, "align_order",
         set_context = set_context, name = name
     )
     align(
@@ -52,7 +52,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
             reverse = reverse,
             strict = strict
         ),
-        context = context,
+        active = active,
         check.param = TRUE,
         data = data %||% waiver()
     )

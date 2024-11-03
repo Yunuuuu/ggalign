@@ -5,7 +5,7 @@
 \alias{ggfree}
 \title{Add ggplot to layout}
 \usage{
-free_gg(x = waiver(), ..., size = NULL, context = NULL)
+free_gg(x = waiver(), ..., size = NULL, active = NULL)
 }
 \arguments{
 \item{x}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}} object.
@@ -18,7 +18,7 @@ applicable.}
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
 }
 \value{

@@ -87,7 +87,7 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
                          size = NULL, data = NULL,
-                         no_axes = NULL, context = NULL,
+                         no_axes = NULL, active = NULL,
                          free_guides = deprecated(), free_spaces = deprecated(),
                          plot_data = deprecated(), theme = deprecated(),
                          free_labs = deprecated(), set_context = deprecated(),
@@ -113,11 +113,11 @@ align_dendro <- function(mapping = aes(), ...,
             data <- waiver()
         }
     }
-    assert_context(context)
-    context <- update_context(context, new_context(
-        active = plot_dendrogram, order = NA_integer_, name = NA_character_
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = plot_dendrogram, order = NA_integer_, name = NA_character_
     ))
-    context <- deprecate_context(context, "align_dendro",
+    active <- deprecate_active(active, "align_dendro",
         set_context = set_context, order = order, name = name
     )
     align(
@@ -137,7 +137,7 @@ align_dendro <- function(mapping = aes(), ...,
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        no_axes = no_axes, context = context,
+        no_axes = no_axes, active = active,
         size = size,
         controls = new_controls(),
         data = data

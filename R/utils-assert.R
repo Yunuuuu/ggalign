@@ -173,8 +173,8 @@ assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
     }
 }
 
-assert_context <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!is.null(x) && !inherits(x, "ggalign_context")) {
+assert_active <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!is.null(x) && !inherits(x, "ggalign_active")) {
         cli::cli_abort("{.arg {arg}} must be created by {.fn context}",
             call = call
         )

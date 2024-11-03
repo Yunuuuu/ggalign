@@ -60,7 +60,7 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
                        width = NA, height = NA, filling = waiver(),
-                       theme = NULL, context = NULL) {
+                       theme = NULL, active = NULL) {
     UseMethod("ggoncoplot")
 }
 
@@ -83,7 +83,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,
                                width = NA, height = NA, filling = waiver(),
-                               theme = NULL, context = NULL) {
+                               theme = NULL, active = NULL) {
     # prepare the matrix
     data <- fortify_matrix(data = data, ...)
     if (!is.character(data)) {
@@ -138,7 +138,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     ans <- heatmap_layout(
         data = data, mapping = mapping,
         width = width, height = height,
-        theme = theme, context = context, filling = NULL
+        theme = theme, active = active, filling = NULL
     )
     if (reorder_row) {
         ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)

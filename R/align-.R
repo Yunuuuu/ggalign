@@ -25,7 +25,7 @@
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
 #'   default, will controled by the option-
 #'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
-#' @param context A [`context()`] object that defines the context settings when
+#' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
 #' @param free_guides `r lifecycle::badge("superseded")` Please use
 #'   [`plot_align()`] function instead.
@@ -66,7 +66,7 @@
 #' @export
 #' @keywords internal
 align <- function(align_class, params, data, size = NULL, controls = NULL,
-                  limits = TRUE, facet = TRUE, no_axes = NULL, context = NULL,
+                  limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
                   free_labs = deprecated(),
@@ -133,7 +133,7 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
         size = size,
         # should we allow user switch between different plot with a string name?
         # Should I remove "name" argument from the user input?
-        context = context,
+        active = active,
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
