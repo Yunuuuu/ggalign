@@ -75,13 +75,11 @@ methods::setMethod("$", "Layout", function(x, name) {
 #' element is a [theme][ggplot2::theme], this will also modify the layout
 #' theme.
 #'
-#' Unlike `patchwork`, the `-` operator adds ggplot2 elements (geoms, themes,
-#' facets, etc.) rather than a ggplot plot. The key difference between `&` and
-#' `-` is in how they behave in [`heatmap_layout()`]. The `-` operator only
-#' applies the element to the current active context in [`heatmap_layout()`].
-#' Using `-` might seem unintuitive if you think of the operator as "subtract",
-#' the underlying reason is that `-` is the only operator in the same precedence
-#' group as `+`.
+#' The key difference between `&` and `-` is in how they behave in
+#' [`quad_layout()`]. The `-` operator only applies the element to the current
+#' active context in [`quad_layout()`].  Using `-` might seem unintuitive if you
+#' think of the operator as "subtract", the underlying reason is that `-` is the
+#' only operator in the same precedence group as `+`.
 #'
 #' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot.
@@ -124,8 +122,8 @@ utils::globalVariables(".Generic")
 default_layout <- function(layout) {
     layout@theme <- default_theme() + layout@theme
     # we by default, collect all guides
-    layout@controls$action["guides"] <- list(
-        .subset2(.subset2(layout@controls, "action"), "guides") %|w|% "tlbr"
+    layout@controls$plot_align["guides"] <- list(
+        .subset2(.subset2(layout@controls, "plot_align"), "guides") %|w|% "tlbr"
     )
     layout@controls$theme <- default_theme() +
         .subset2(layout@controls, "theme")

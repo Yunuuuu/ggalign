@@ -2,10 +2,10 @@ new_option <- function(name, option, ..., class = character()) {
     new_vctr(option, name = name, ..., class = c(class, "ggalign_controls"))
 }
 
-new_controls <- function(data = new_plot_data(),
-                         action = new_plot_action(),
+new_controls <- function(plot_data = new_plot_data(),
+                         plot_align = new_plot_align(),
                          theme = NULL) {
-    list(data = data, theme = theme, action = action)
+    list(plot_data = plot_data, theme = theme, plot_align = plot_align)
 }
 
 #' Used to update global data
@@ -19,8 +19,8 @@ update_option.default <- function(new_option, old_option, object_name) {
     new_option
 }
 
-update_layout_option <- function(layout, object, object_name) {
-    name <- attr(object, "name")
+update_layout_option <- function(layout, object, object_name, name = NULL) {
+    name <- name %||% attr(object, "name")
     layout@controls[name] <- list(update_option(
         object, .subset2(layout@controls, name), object_name
     ))
@@ -28,10 +28,7 @@ update_layout_option <- function(layout, object, object_name) {
 }
 
 update_layout_option_theme <- function(layout, object, object_name) {
-    layout@controls["theme"] <- list(update_option(
-        object, .subset2(layout@controls, "theme"), object_name
-    ))
-    layout
+    update_layout_option(layout, object, object_name, "theme")
 }
 
 # By default, we'll always initialize the default value when building the layout

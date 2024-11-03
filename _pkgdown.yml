@@ -30,7 +30,7 @@ reference:
   - quad_switch
   - quad_anno
   - stack_switch
-  - plot_action
+  - plot_align
   - plot_context
   - layout-operator
   - theme_ggalign

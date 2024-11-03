@@ -16,14 +16,14 @@ knitr::opts_chunk$set(
 
 `ggalign` focuses on aligning observations across multiple plots. While it
 builds on the `ggplot2` framework, there are key differences in how scales,
-facets, and coordinates are handled in the the axes used for alignment. This
-vignette highlights the differences in syntax between `ggalign` and `ggplot2`.
+facets, and coordinates are handled in alignment axes. This vignette highlights
+these syntax differences. 
 
-Following syntax applies to all `align_*` functions which would add a plot area,
-and the main plot in `quad_layout()` when need alignment.
+The following syntax applies to all `align_*` functions that add a plot area,
+and to the main plot in `quad_layout()` when alignment is needed. 
 
 ## Axes used for alignment
-This refers to:
+Axes used for alignment in `ggalign` refer to:
 - x-axis in vertical stack layouts
 
 - x-axis in horizontal stack layouts
@@ -46,13 +46,13 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
 ## Position Scales
-We introduce some adjustments to better align with the layout concept in
-`breaks`, `labels` and `expand`.
+To better fit the alignment-based layout, `ggalign` introduces adjustments to
+`breaks`, `labels`, and `expand` arguments. 
 
 ### breaks
 `breaks` and `labels` are typically handled similarly to discrete scales, as we
 focus on aligning observations (which should be regarded as discrete variables)
-in the layout axis; however, a continuous scale can also be provided. 
+in the layout axis; however, a continuous scale can remain be used.
 
 `breaks` should be one of:
 
@@ -131,7 +131,8 @@ ggheatmap(small_mat) +
 
 ### data ordering
 Both `breaks` and `labels` should be provided in the original order of the raw
-data, the internal will reorder them accordingly if you reorder the layout axis.
+data, the internal will reorder them accordingly if you reorder the
+observations.
 
 ```{r}
 index <- order(colMeans(small_mat))
@@ -145,9 +146,9 @@ ggheatmap(small_mat) +
 ```
 
 ### expand
-By default, we utilize zero expansion for the layout axis. This is typically the
-desired setting. If you wish to introduce expansion, you must manually adjust it
-and apply it to each plot to ensure proper axis alignment.
+By default, we utilize zero expansion for the aligned axis. This is typically
+the desired setting. If you wish to introduce expansion, you must manually
+adjust it and apply it to each plot to ensure proper axis alignment.
 ```{r}
 ggheatmap(small_mat) +
     scale_x_continuous(expand = expansion(mult = 0.1)) +
@@ -201,9 +202,8 @@ When working with facets, manual configuration of the panel using the
 `facet_*()` functions is not possible since the internal structure will use
 `facet_grid()` to set the row/column groups defined by `align_*()` functions.
 However, you can still use `facet_grid()` or `facet_null()` (if no panel) to
-control other arguments except layout axis panels (`rows` in horizontal stack
-layout or `cols` in vertical stack layout, or both `rows` and `cols` in heatmap
-body). 
+control other arguments except aligned panels (`rows` in horizontal stack layout
+or `cols` in vertical stack layout, or both `rows` and `cols` in heatmap body). 
 
 A common use case is to modify the panel strip text. The default theme
 (`theme_ggalign()`) will always remove the panel strip text, you can override

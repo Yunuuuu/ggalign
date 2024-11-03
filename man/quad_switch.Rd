@@ -54,10 +54,10 @@ A single number or string of the plot elements in the stack layout. If \code{NUL
 \item{...}{These dots are for future extensions and must be empty.}
 
 \item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 
 \item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{\link[=plot_data]{plot_data()}} function instead.}
@@ -66,7 +66,7 @@ A single number or string of the plot elements in the stack layout. If \code{NUL
 \code{\link[=layout-operator]{-}} method instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 }
 \value{
 An object that can be added to \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}.

@@ -12,7 +12,7 @@
 
 * new `fortify_heatmap()` method for `MAF` object.
 
-* `plot_action()` gains a new argument `inherit` to control the inheritance of `data` argument
+* `plot_align()` gains a new argument `inherit` to control the inheritance of `data` argument
 
 * new `ggoncoplot()` function to draw oncoprint
 
@@ -20,7 +20,7 @@
 
 * `align()`, `stack_active()`, and `hmanno()` functions gain a new argument `action`, and deprecate `free_guides`, `free_spaces`, `plot_data`, `theme`, `free_labs`, and `guides` arguments.
 
-* new `plot_action()` function to control specifications of the plot in layout
+* new `plot_align()` function to control specifications of the plot in layout
 
 * `merge` function has been implemented with `vctrs` for performance
 

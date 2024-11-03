@@ -50,7 +50,7 @@ removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{t
 default, will controled by the option-
 \code{"ggalign.align_no_axes"}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
+\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -63,10 +63,10 @@ instead.}
 instead.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 
 \item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{\link[=plot_data]{plot_data()}} function instead.}
@@ -75,7 +75,7 @@ instead.}
 \code{\link[=layout-operator]{-}} method instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 }
 \value{
 A \code{"AlignGG"} object.

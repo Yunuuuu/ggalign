@@ -25,18 +25,18 @@
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
 #'   default, will controled by the option-
 #'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
-#' @param context A [`context()`] object that defines the active context when
+#' @param context A [`context()`] object that defines the context settings when
 #'   added to a layout.
 #' @param free_guides `r lifecycle::badge("superseded")` Please use
-#'   [`plot_action()`] function instead.
+#'   [`plot_align()`] function instead.
 #' @param free_spaces `r lifecycle::badge("deprecated")` Please use
-#' [`plot_action()`] function instead.
+#' [`plot_align()`] function instead.
 #' @param plot_data `r lifecycle::badge("deprecated")` Please use
 #' [`plot_data()`] function instead.
 #' @param theme `r lifecycle::badge("deprecated")` Please use
 #' [`-`][layout-operator] method instead.
 #' @param free_labs `r lifecycle::badge("deprecated")` Please use
-#' [`plot_action()`] function instead.
+#' [`plot_align()`] function instead.
 #' @param check.param Logical; if `TRUE`, checks parameters and provides
 #'   warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting

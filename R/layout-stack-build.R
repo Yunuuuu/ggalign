@@ -40,7 +40,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
     # we shouln't use it for a single plot. Otherwise, the guide legends
     # collected by the layout will overlap with the plot axis.
     # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(.subset2(controls, "action"), "free_spaces")
+    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
     layout <- set_layout_params(stack@layout)
 
@@ -117,7 +117,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
             stack@sizes[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = .subset2(.subset2(controls, "action"), "guides"),
+        guides = .subset2(.subset2(controls, "plot_align"), "guides"),
         theme = stack@theme
     ) + layout_title(
         title = .subset2(titles, "title"),

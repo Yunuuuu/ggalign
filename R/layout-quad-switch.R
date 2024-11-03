@@ -221,3 +221,28 @@ hmanno <- function(position = NULL, size = NULL,
     )
     ans
 }
+
+#' Modify `-` Operator Context in `quad_layout()`
+#'
+#' @description
+#' `r lifecycle::badge('experimental')` By default, the `-` operator acts on all
+#' plots at the same position as the current active annotation in
+#' [`quad_layout()`]. Wrapping objects with `with_position` allows you to change
+#' the subtraction `-` operator's context.
+#'
+#' @param x Objects to add to the layout using the `-` operator.
+#' @param context A vector specifying the layout context:
+#'   - **`with_position`**: Use this option to change the context in
+#'     [`quad_layout()`]. By default, `waiver()` is used, which triggers the
+#'     following behavior: If the current active context in [`quad_layout()`]
+#'     is `top` or `bottom`, the operator will also act on the corresponding
+#'     `bottom` or `top` annotation. If the context is `left` or `right`, the
+#'     operator will also act on the `right` or `left` annotation, respectively.
+#' @return The input object with an additional attribute that specifies the
+#' selected context.
+#' @export
+with_position <- function(x, position = waiver()) {
+    assert_layout_position(position)
+    attr(x, sprintf("__%s.quad_active_position__", pkg_nm())) <- list(position)
+    x
+}

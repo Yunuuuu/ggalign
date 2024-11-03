@@ -153,12 +153,12 @@ testthat::test_that("add `stack_active` object works well", {
     # change parameters for stack self
     p <- stack_alignh(small_mat)
     p2 <- p + stack_active(sizes = unit(1, "cm")) -
-        plot_action(guides = "tlbr", free_labs = "tlbr")
+        plot_align(guides = "tlbr", free_labs = "tlbr")
     expect_identical(p2@sizes, unit(rep_len(1L, 3L), "cm"))
     controls <- p2@controls
-    expect_identical(controls$action$guides, "tlbr")
-    expect_identical(controls$action$free_labs, "tlbr")
-    expect_identical(controls$data, new_plot_data(NULL))
+    expect_identical(controls$plot_align$guides, "tlbr")
+    expect_identical(controls$plot_align$free_labs, "tlbr")
+    expect_identical(controls$plot_data, new_plot_data(NULL))
 })
 
 testthat::test_that("`ggsave()` works well", {

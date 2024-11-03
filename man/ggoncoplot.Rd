@@ -60,7 +60,7 @@ alterations.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
+\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
 added to a layout.}
 }
 \value{

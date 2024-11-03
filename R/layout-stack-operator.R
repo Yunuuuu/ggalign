@@ -28,9 +28,7 @@ stack_layout_subtract.theme <- function(object, stack, object_name) {
             plot, object, object_name
         )
     } else {
-        stack <- update_layout_option_theme(
-            stack, object, object_name
-        )
+        stack <- update_layout_option_theme(stack, object, object_name)
     }
     stack
 }
@@ -43,9 +41,7 @@ stack_layout_subtract.ggalign_controls <- function(object, stack, object_name) {
             plot, object, object_name
         )
     } else {
-        stack <- update_layout_option(
-            stack, object, object_name
-        )
+        stack <- update_layout_option(stack, object, object_name)
     }
     stack
 }

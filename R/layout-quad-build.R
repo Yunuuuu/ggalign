@@ -32,7 +32,7 @@ ggalign_build.QuadLayout <- function(x) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(.subset2(x@controls, "action"), "guides"),
+        guides = .subset2(.subset2(x@controls, "plot_align"), "guides"),
         theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -60,31 +60,31 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     column_params <- set_layout_params(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
-    vertical_action <- horizontal_action <- action <-
-        .subset2(controls, "action")
-    if (!is.null(layout_labs <- .subset2(action, "free_labs")) &&
+    vertical_align <- horizontal_align <- align <-
+        .subset2(controls, "plot_align")
+    if (!is.null(layout_labs <- .subset2(align, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
-        horizontal_action$free_labs <- gsub("[lr]", "", layout_labs)
-        vertical_action$free_labs <- gsub("[tb]", "", layout_labs)
-        if (nchar(horizontal_action$free_labs) == 0L) {
-            horizontal_action["free_labs"] <- list(NULL)
+        horizontal_align$free_labs <- gsub("[lr]", "", layout_labs)
+        vertical_align$free_labs <- gsub("[tb]", "", layout_labs)
+        if (nchar(horizontal_align$free_labs) == 0L) {
+            horizontal_align["free_labs"] <- list(NULL)
         }
-        if (nchar(vertical_action$free_labs) == 0L) {
-            vertical_action["free_labs"] <- list(NULL)
+        if (nchar(vertical_align$free_labs) == 0L) {
+            vertical_align["free_labs"] <- list(NULL)
         }
     }
 
     # inherit from the parent stack layout
-    if (!is.null(layout_spaces <- .subset2(action, "free_spaces")) &&
+    if (!is.null(layout_spaces <- .subset2(align, "free_spaces")) &&
         !is.waive(layout_spaces)) {
-        horizontal_action$free_spaces <- gsub("[lr]", "", layout_spaces)
-        vertical_action$free_spaces <- gsub("[tb]", "", layout_spaces)
-        if (nchar(horizontal_action$free_spaces) == 0L) {
-            horizontal_action["free_spaces"] <- list(NULL)
+        horizontal_align$free_spaces <- gsub("[lr]", "", layout_spaces)
+        vertical_align$free_spaces <- gsub("[tb]", "", layout_spaces)
+        if (nchar(horizontal_align$free_spaces) == 0L) {
+            horizontal_align["free_spaces"] <- list(NULL)
         }
-        if (nchar(vertical_action$free_spaces) == 0L) {
-            vertical_action["free_spaces"] <- list(NULL)
+        if (nchar(vertical_align$free_spaces) == 0L) {
+            vertical_align["free_spaces"] <- list(NULL)
         }
     }
 
@@ -94,13 +94,13 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             return(list(plot = NULL, size = NULL))
         }
         stack_controls <- controls
-        # inherit from horizontal action or vertical action
+        # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
             params <- column_params
-            stack_controls$action <- horizontal_action
+            stack_controls$plot_align <- horizontal_align
         } else {
             params <- row_params
-            stack_controls$action <- vertical_action
+            stack_controls$plot_align <- vertical_align
         }
         plot <- stack_build(stack,
             controls = inherit_controls(stack@controls, stack_controls),
@@ -135,7 +135,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
             # we also apply the `free_spaces` for the whole annotation stack
             free_spaces <- .subset2(
-                .subset2(stack_controls, "action"), "free_spaces"
+                .subset2(stack_controls, "plot_align"), "free_spaces"
             ) %|w|% NULL
             if (!is.null(free_spaces)) {
                 plot <- free_space(free_border(plot, free_spaces), free_spaces)

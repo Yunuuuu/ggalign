@@ -45,13 +45,11 @@ Like \code{patchwork}, \code{&} add the element to all plots in the plot. If the
 element is a \link[ggplot2:theme]{theme}, this will also modify the layout
 theme.
 
-Unlike \code{patchwork}, the \code{-} operator adds ggplot2 elements (geoms, themes,
-facets, etc.) rather than a ggplot plot. The key difference between \code{&} and
-\code{-} is in how they behave in \code{\link[=heatmap_layout]{heatmap_layout()}}. The \code{-} operator only
-applies the element to the current active context in \code{\link[=heatmap_layout]{heatmap_layout()}}.
-Using \code{-} might seem unintuitive if you think of the operator as "subtract",
-the underlying reason is that \code{-} is the only operator in the same precedence
-group as \code{+}.
+The key difference between \code{&} and \code{-} is in how they behave in
+\code{\link[=quad_layout]{quad_layout()}}. The \code{-} operator only applies the element to the current
+active context in \code{\link[=quad_layout]{quad_layout()}}.  Using \code{-} might seem unintuitive if you
+think of the operator as "subtract", the underlying reason is that \code{-} is the
+only operator in the same precedence group as \code{+}.
 }
 \examples{
 mat <- matrix(rnorm(56), nrow = 7)

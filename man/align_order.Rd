@@ -37,7 +37,7 @@ the \code{weights} function. Alternatively, you can specify a \code{function}
 matrix, transforming it as necessary for weight calculations. By default, it
 will inherit from the layout matrix.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
+\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}

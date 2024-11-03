@@ -1,13 +1,11 @@
-#' Plot Action Specifications in the Layout
+#' Align Specifications in the Layout
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
-#' The `plot_action()` function defines the behavior of plots within a layout.
-#' It can be used in the `action` argument of layout functions like
-#' [`quad_switch()`] or [`stack_switch()`] to set global actions for all plots
-#' in the layout. Additionally, `plot_action()` can be applied directly to
-#' specific plots through the `action` argument in the `align_*()`/`ggfree()`
-#' functions, or it can be added directly to a plot.
+#' `r lifecycle::badge('experimental')` The `plot_align()` function defines the
+#' behavior of plots within a layout.  It can be used in the `action` argument
+#' of layout functions like [`quad_switch()`] or [`stack_switch()`] to set
+#' global actions for all plots in the layout. Additionally, `plot_align()` can
+#' be added directly to a plot.
 #'
 #' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
 #' which side of guide legends should be collected. Defaults to
@@ -29,7 +27,7 @@
 #' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
 #' will be aligned.
 #'
-#' @return A `plot_action` object.
+#' @return A `plot_align` object.
 #' @examples
 #' # used in the layout, define the default action for all plots in the layout
 #' ggheatmap(matrix(rnorm(72), nrow = 8)) -
@@ -42,32 +40,32 @@
 #'     theme(plot.background = element_rect(fill = "blue"))
 #'
 #' @export
-plot_action <- function(guides = NA, free_spaces = NA, free_labs = NA) {
+plot_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
     if (!identical(guides, NA)) assert_layout_position(guides)
-    new_plot_action(
+    new_plot_align(
         free_spaces = free_spaces, free_labs = free_labs,
         guides = guides
     )
 }
 
-new_plot_action <- function(guides = waiver(), free_spaces = waiver(),
-                            free_labs = waiver()) {
+new_plot_align <- function(guides = waiver(), free_spaces = waiver(),
+                           free_labs = waiver()) {
     new_option(
-        name = "action",
+        name = "plot_align",
         list(free_spaces = free_spaces, free_labs = free_labs, guides = guides),
-        class = "plot_action"
+        class = "plot_align"
     )
 }
 
 #' @export
-update_option.plot_action <- function(new_option, old_option, object_name) {
-    update_action(old_option, new_option)
+update_option.plot_align <- function(new_option, old_option, object_name) {
+    update_plot_align(old_option, new_option)
 }
 
 #' @importFrom utils modifyList
-update_action <- function(old, new) {
+update_plot_align <- function(old, new) {
     modifyList(old,
         new[!vapply(new, identical, logical(1L), y = NA, USE.NAMES = FALSE)],
         keep.null = TRUE
@@ -75,7 +73,7 @@ update_action <- function(old, new) {
 }
 
 #' @export
-inherit_option.plot_action <- function(option, poption) {
+inherit_option.plot_align <- function(option, poption) {
     # `align_plots` control how to inherit `guides` from the layout
     # we don't need to inherit it here
     option["free_spaces"] <- list(.subset2(option, "free_spaces") %|w|%
@@ -87,7 +85,7 @@ inherit_option.plot_action <- function(option, poption) {
 
 #' @param theme Additional default theme elements to be added for the plot
 #' @noRd
-plot_add.plot_action <- function(option, plot) {
+plot_add.plot_align <- function(option, plot) {
     if (!is.waive(free_guides <- .subset2(option, "guides"))) {
         plot <- free_guide(plot, free_guides)
     }
@@ -113,7 +111,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_guides)", fun),
-            "plot_action()",
+            "plot_align()",
             env = call
         )
     }
@@ -121,7 +119,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(guides)", fun),
-            "plot_action()",
+            "plot_align()",
             env = call
         )
     }
@@ -129,7 +127,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_spaces)", fun),
-            "plot_action()",
+            "plot_align()",
             env = call
         )
     }
@@ -137,7 +135,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_labs)", fun),
-            "plot_action()",
+            "plot_align()",
             env = call
         )
     }

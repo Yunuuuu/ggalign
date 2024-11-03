@@ -1,12 +1,14 @@
 #' Plot context settings
 #'
-#' These settings control the arrangement and behavior of individual plot areas
-#' within the layout. By default, the active context is set only for functions
-#' that add plot areas. This approach allows users to seamlessly add other
-#' `ggplot2` elements—such as `geoms`, `stats`, `scales`, or `themes`—to the
-#' current plot area. The default ordering of plot areas is from top to bottom
-#' or from left to right, depending on layout orientation. However, users can
-#' customize this order using the `order` argument.
+#' @description
+#' `r lifecycle::badge('experimental')` These settings control the arrangement
+#' and behavior of individual plot areas within the layout. By default, the
+#' active context is set only for functions that add plot areas. This approach
+#' allows users to seamlessly add other `ggplot2` elements—such as `geoms`,
+#' `stats`, `scales`, or `themes`—to the current plot area. The default ordering
+#' of plot areas is from top to bottom or from left to right, depending on
+#' layout orientation. However, users can customize this order using the `order`
+#' argument.
 #'
 #' @param order An integer specifying the order of the plot area within the
 #'   layout.

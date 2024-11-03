@@ -165,9 +165,9 @@ assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
     }
 }
 
-assert_action <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!inherits(x, "plot_action")) {
-        cli::cli_abort("{.arg {arg}} must be created by {.fn plot_action}",
+assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!inherits(x, "plot_align")) {
+        cli::cli_abort("{.arg {arg}} must be created by {.fn plot_align}",
             call = call
         )
     }

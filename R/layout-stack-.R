@@ -101,7 +101,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # if inherit from the parent layout data, we'll inherit the `plot_data`
     # function.
     controls <- new_controls(
-        data = new_plot_data(if (is.waive(data)) waiver() else NULL)
+        new_plot_data(if (is.waive(data)) waiver() else NULL)
     )
 
     # `waiver()` is used for further extension, it indicates data will
@@ -148,7 +148,7 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
     # if inherit from the parent layout data, we'll inherit the action data
     # function.
     controls <- new_controls(
-        data = new_plot_data(if (is.waive(data)) waiver() else NULL)
+        new_plot_data(if (is.waive(data)) waiver() else NULL)
     )
     new_stack_layout(
         name = "stack_free",

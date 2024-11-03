@@ -40,7 +40,7 @@ ggstack(data = mat_scaled, "h") +
     scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
     scale_x_continuous(breaks = NULL, name = NULL) +
     # add a heatmap plot in the stack
-    ggheatmap(action = plot_action(free_spaces = "l")) +
+    ggheatmap(action = plot_align(free_spaces = "l")) +
     scale_y_continuous(breaks = NULL) +
     scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
@@ -86,7 +86,7 @@ ggstack(data = mat_scaled, "h") +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
-    anno_top(action = plot_action(free_spaces = "lr")) +
+    anno_top(action = plot_align(free_spaces = "lr")) +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),

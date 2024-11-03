@@ -58,7 +58,7 @@ option settings.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
+\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -71,17 +71,17 @@ instead.}
 instead.}
 
 \item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_action]{plot_action()}} function instead.}
+\code{\link[=plot_align]{plot_align()}} function instead.}
 }
 \value{
 A \code{HeatmapLayout} object.
 }
 \description{
-\code{heatmap_layout} is a specialized version of \code{\link[=quad_alignb]{quad_alignb()}}, which
-simplifies the creation of heatmap plots by integrating essential elements
-for a standard heatmap layout, ensuring that the appropriate data mapping and
-visualization layers are automatically applied. \code{ggheatmap} is an alias for
-\code{heatmap_layout}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}} \code{heatmap_layout} is a specialized version of
+\code{\link[=quad_alignb]{quad_alignb()}}, which simplifies the creation of heatmap plots by
+integrating essential elements for a standard heatmap layout, ensuring that
+the appropriate data mapping and visualization layers are automatically
+applied. \code{ggheatmap} is an alias for \code{heatmap_layout}.
 }
 \section{ggplot2 specification}{
 

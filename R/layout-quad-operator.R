@@ -4,40 +4,71 @@ quad_layout_subtract <- function(object, quad, object_name) {
     UseMethod("quad_layout_subtract")
 }
 
+quad_active_layout <- function(quad, object) {
+    context <- attr(object,
+        sprintf("__%s.quad_active_position__", pkg_nm()),
+        exact = TRUE
+    )
+    position <- quad@active
+    if (is.null(context)) { # if not set
+        context <- position
+        # if wrap with `with_position`
+    } else if (is.waive(context <- .subset2(context, 1L))) {
+        if (is.null(position)) {
+            context <- NULL
+        } else {
+            context <- c(position, opposite_pos(position))
+        }
+    } else if (!is.null(context)) {
+        context <- setup_pos(context)
+    }
+    context
+}
+
+#' @importFrom rlang is_string
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
+    context <- quad_active_layout(quad, object)
+    if (is.null(context)) {
         quad <- quad_body_add(object, quad, object_name)
-        return(quad)
+        context <- .TLBR
     }
-    slot(quad, position) <- stack_layout_subtract(
-        object, slot(quad, position), object_name
-    )
+    for (position in context) {
+        slot(quad, position) <- stack_layout_subtract(
+            object, slot(quad, position), object_name
+        )
+    }
     quad
 }
 
 # for objects can inherit from layout
 #' @export
 quad_layout_subtract.theme <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
+    context <- quad_active_layout(quad, object)
+    if (is.null(context)) {
         quad <- update_layout_option_theme(quad, object, object_name)
-        return(quad)
+    } else {
+        for (position in context) {
+            slot(quad, position) <- update_layout_option_theme(
+                slot(quad, position), object, object_name
+            )
+        }
     }
-    slot(quad, position) <- update_layout_option_theme(
-        slot(quad, position), object, object_name
-    )
     quad
 }
 
 #' @export
 quad_layout_subtract.ggalign_controls <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
+    context <- quad_active_layout(quad, object)
+    if (is.null(context)) {
         quad <- update_layout_option(quad, object, object_name)
-        return(quad)
+    } else {
+        for (position in context) {
+            slot(quad, position) <- update_layout_option(
+                slot(quad, position), object, object_name
+            )
+        }
     }
-    slot(quad, position) <- update_layout_option(
-        slot(quad, position), object, object_name
-    )
     quad
 }
 

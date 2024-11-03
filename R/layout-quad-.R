@@ -253,7 +253,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
     # if inherit from the parent layout data, we'll inherit
     # the action data function
     controls <- new_controls(
-        data = new_plot_data(if (is.null(data)) waiver() else NULL)
+        new_plot_data(if (is.null(data)) waiver() else NULL)
     )
 
     # check arguments -----------------------------------

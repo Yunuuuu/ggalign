@@ -32,7 +32,7 @@ plot_data <- function(data, inherit = FALSE) {
 
 new_plot_data <- function(data = NULL, inherit = FALSE) {
     new_option(
-        name = "data",
+        name = "plot_data",
         option = list(data = data, inherit = inherit),
         class = "plot_data"
     )

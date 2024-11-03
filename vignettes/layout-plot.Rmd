@@ -71,12 +71,9 @@ ggheatmap(small_mat) +
     anno_top(size = unit(1, "cm")) +
     align_kmeans(centers = 3L) +
     ggalign(data = NULL) +
+    plot_data(~ aggregate(.x ~ .panel, .x, FUN = median)) +
     geom_tile(aes(y = 1L, fill = .panel, color = .panel)) +
-    geom_text(aes(y = 1L, label = .panel),
-        data = function(data) {
-            aggregate(.x ~ .panel, data, FUN = median)
-        }
-    )
+    geom_text(aes(y = 1L, label = .panel))
 ```
 
 ### action data

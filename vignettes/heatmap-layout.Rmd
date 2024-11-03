@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 ```
 
 The `heatmap_layout()`/`ggheatmap()` function provides a powerful way to create
-customizable heatmaps in R using ggplot2. This vignette will guide you through
+customizable heatmaps in R using `ggplot2`. This vignette will guide you through
 its usage.
 
 # input data
@@ -60,9 +60,9 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-You can treat the `heatmap_layout()` object as a standard ggplot2 object with
-default mapping and data. This means you can add ggplot2 layers or elements just
-like in any ggplot object.
+You can treat the `heatmap_layout()` object as a standard `ggplot2` object with
+default mapping and data. This means you can add `ggplot2` layers or elements just
+like in any `ggplot` object.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
@@ -119,11 +119,11 @@ object internally, capable of holding multiple plots, and can be placed at the
 `top`, `left`, `bottom`, or `right`.
 
 Note that `ggalign` use the concept of `"number of observations"` in the
-[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package or `NROW()`
-function. When aligning the observations, you must ensure the number of
-observations is equal. For column annotations, the layout matrix will be
-transposed before use. This is necessary because column annotations use heatmap
-columns as observations, but we need rows.
+[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package. When aligning
+the observations, you must ensure the number of observations is equal. For
+column annotations, the layout matrix will be transposed before use. This is
+necessary because column annotations use heatmap columns as observations, but we
+need rows.
 
 By default, `heatmap_layout()`/`ggheatmap()` do not initialize an active
 context, which means that all additions are directed within the heatmap body.
@@ -143,9 +143,8 @@ functions to streamline your annotation process.
 You may wonder about the prefix `quad_`. The `ggheatmap()` function is a
 specialized version of `quad_layout()`, designed to simplify the creation of
 heatmap plots by integrating essential elements for a standard heatmap layout.
-This ensures that the appropriate data mapping and visualization layers are
-automatically applied. Both `quad_anno()` and `quad_active()` are functions
-designed for `quad_layout()`. 
+Both `quad_anno()` and `quad_active()` are functions designed for
+`quad_layout()`. 
 
 The annotations allows for custom layout adjustments and the addition of various
 plot types. In the following example, `align_kmeans()` is used to group the
@@ -154,7 +153,9 @@ bottom since it won't add a plot area:
 
 ```{r}
 ggheatmap(small_mat) +
+  # we set the active context to the top annotation
   anno_top() +
+  # we split the observations into 3 groups by kmeans
   align_kmeans(3L)
 ```
 
@@ -164,9 +165,13 @@ We can add any `align_*()` function to the annotation. For more details on
 
 ```{r}
 ggheatmap(small_mat) +
+  # in the heatmap body, we set the axis text theme
   theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+  # we set the active context to the right annotation
   anno_right() +
+  # in the right annotation, we add a dendrogram
   align_dendro(k = 3L) +
+  # in the dendrogram, we add a point layer
   geom_point(aes(color = factor(branch)))
 ```
 
@@ -212,7 +217,7 @@ ggheatmap(small_mat) +
   align_dendro()
 ```
 
-You can also specify an exact size using `unit()`:
+You can also specify it as an absolute size using `unit()`:
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
@@ -221,10 +226,10 @@ ggheatmap(small_mat) +
 ```
 
 ## Single Plot Size
-All `align_*()` functions that add plots in the annotation stack have a `size`
-argument to control the relative width (for left and right annotations) or
-height (for top and bottom annotations) of the single plot in the annotation
-stack.
+All `align_*()`/`ggfree()` functions that add plots in the annotation stack have
+a `size` argument to control the relative `width` (for left and right
+annotations) or `height` (for top and bottom annotations) of the single plot in
+the annotation stack.
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
@@ -232,17 +237,24 @@ ggheatmap(small_mat) +
   ggalign(data = rowSums, aes(x = value), size = unit(10, "mm")) +
   geom_bar(
     aes(y = .y, fill = factor(.y)),
-    stat = "identity",
-    orientation = "y"
+    stat = "identity", orientation = "y"
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none")
 ```
 
+# Operators
+
+- `+`: add elements to the active plot in the active layout.
+- `-`: add elements to all plots in the active layout.
+- `&`: add elements to all plots for the layout.
+
+For `quad_layout()`/`ggheatmap()`, 
+
 # Plot actions
-The `plot_action()` function defines the behavior of plots within a layout. It
+The `plot_align()` function defines the behavior of plots within a layout. It
 can be used in the `action` argument of layout functions like
 `quad_anno()`/`quad_active` or `stack_switch()`/`stack_active()` to set global
-actions for all plots in the layout. Additionally, `plot_action()` can be
+actions for all plots in the layout. Additionally, `plot_align()` can be
 applied directly to specific plots through the `action` argument in the
 `align_*()`/`ggfree()` functions, or it can be added directly to a plot.
 
@@ -290,18 +302,18 @@ heatmap_collect_all_guides +
   # reset the active context to the heatmap layout
   quad_active() -
   # we only collect guides in the top and bottom side
-  plot_action(guides = "tb")
+  plot_align(guides = "tb")
 ```
 
-You can also apply the `plot_action()` function directly to specific plots:
+You can also apply the `plot_align()` function directly to specific plots:
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
   # reset the active context to the heatmap layout
   quad_active() -
   # we only collect guides in the top and bottom side
-  plot_action(guides = "tb") +
+  plot_align(guides = "tb") +
   # for the heatmap body, we collect guide in the right side
-  plot_action(guides = "r")
+  plot_align(guides = "r")
 ```
 
 As previously mentioned, the annotation is represented as a stack_layout()
@@ -314,13 +326,13 @@ heatmap_collect_all_guides +
   # reset the active context to the heatmap layout
   quad_active() -
   # we only collect guides in the top and bottom side
-  plot_action(guides = "tb") +
+  plot_align(guides = "tb") +
   # we ensure the active context is in the bottom annotation
   # By default, it inherits "guides" argument from the heamtap layout, which
   # means it'll collect "guides" in the top and bottom side
   anno_bottom() +
   # for the dendrogram in the bottom annotation, we collect guide in the left side
-  plot_action(guides = "l")
+  plot_align(guides = "l")
 ```
 
 Here, the guide legend is collected by the bottom annotation but will not be
@@ -330,7 +342,7 @@ stack will be put around the annotation stack layout.
 
 To override this guide collection behavior for the heatmap annotation, you can
 use the `free_guides` argument of the `quad_anno()` function. This differs from the
-`guides` argument in `plot_action()`, which controls the behavior for the plots
+`guides` argument in `plot_align()`, which controls the behavior for the plots
 in the layout. The `free_guides` argument specifies which guide legends from the
 annotation stack layout should be collected by the heatmap layout. 
 ```{r fig.dim = c(12, 12)}
@@ -338,12 +350,12 @@ heatmap_collect_all_guides +
   # reset the active context to the heatmap layout
   quad_active() -
   # we only collect guides in the top and bottom side
-  plot_action(guides = "tb") +
+  plot_align(guides = "tb") +
   # we also collect guides in the left side for the bottom annotation stack
   # layout in the heatmap layout
   anno_bottom(free_guides = "l") +
   # for the dendrogram in the bottom annotation, we collect guide in the left side
-  plot_action(guides = "l")
+  plot_align(guides = "l")
 ```
 
 >Note: The heatmap layout will only collect guide legends from the annotation
@@ -376,7 +388,7 @@ remove the left borders around the panel of the top annotation stack by setting
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
   anno_top(size = unit(30, "mm")) -
-  plot_action(free_spaces = "l") +
+  plot_align(free_spaces = "l") +
   align_dendro() +
   scale_y_continuous(
     expand = expansion(),
@@ -392,16 +404,16 @@ the annotations. (Note the guide legend from the bottom annotation):
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side
   quad_active() -
-  plot_action(guides = "tb") +
+  plot_align(guides = "tb") +
   # 1. in the bottom annotation stack layout, we collect the legends in the
   #    left side
   # 2. we remove the spaces of the left border in the annotation
   anno_bottom() -
-  plot_action(guides = "l", free_spaces = "l")
+  plot_align(guides = "l", free_spaces = "l")
 ```
 
 In `ggheatmap()` and `quad_layout()`, the behavior of the `free_spaces` and
-`free_labs` arguments differs from other arguments in `plot_action()` when
+`free_labs` arguments differs from other arguments in `plot_align()` when
 inheriting from the parent layout:
   - For `top` and `bottom` annotations, it inherits from the left ("l") and
   right ("r") axes.
@@ -425,7 +437,7 @@ which axis titles should be free from alignment.
 
 ```{r}
 ggheatmap(small_mat) -
-  plot_action(free_labs = NULL) +
+  plot_align(free_labs = NULL) +
   scale_fill_viridis_c() +
   ylab("Heatmap title") +
   anno_top(size = unit(30, "mm")) +

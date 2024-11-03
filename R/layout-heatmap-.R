@@ -1,10 +1,10 @@
 #' Arrange Plots in a Heatmap
 #'
-#' `heatmap_layout` is a specialized version of [`quad_alignb()`], which
-#' simplifies the creation of heatmap plots by integrating essential elements
-#' for a standard heatmap layout, ensuring that the appropriate data mapping and
-#' visualization layers are automatically applied. `ggheatmap` is an alias for
-#' `heatmap_layout`.
+#' `r lifecycle::badge('stable')` `heatmap_layout` is a specialized version of
+#' [`quad_alignb()`], which simplifies the creation of heatmap plots by
+#' integrating essential elements for a standard heatmap layout, ensuring that
+#' the appropriate data mapping and visualization layers are automatically
+#' applied. `ggheatmap` is an alias for `heatmap_layout`.
 #'
 #' @param data `r rd_layout_data()`. If not already a matrix, will be converted
 #' to one by [`fortify_matrix()`].
@@ -34,7 +34,7 @@
 #'
 #' @inheritParams align_gg
 #' @param guides `r lifecycle::badge("deprecated")` Please use
-#' [`plot_action()`] function instead.
+#' [`plot_align()`] function instead.
 #' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -121,10 +121,10 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     )
     if (lifecycle::is_present(guides)) {
         lifecycle::deprecate_warn(
-            "0.0.5", "ggheatmap(guides)", "ggheatmap(action)"
+            "0.0.5", "ggheatmap(guides)", "plot_align()"
         )
         assert_layout_position(guides)
-        ans@controls$action["guides"] <- list(guides)
+        ans@controls$plot_align["guides"] <- list(guides)
     }
     # always remove default axis titles
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function

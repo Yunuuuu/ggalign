@@ -18,7 +18,7 @@ applicable.}
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
 
-\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
+\item{context}{A \code{\link[=context]{context()}} object that defines the context settings when
 added to a layout.}
 }
 \value{

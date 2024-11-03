@@ -9,7 +9,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     guides = NULL, theme = NULL,
     set_guides = function(self, guides, plot = self$plot) guides,
     set_theme = function(self, theme, plot = self$plot) {
+        # theme is from parent layout
         if (is.null(t <- .subset2(plot, "theme"))) return(theme) # styler: off
+        # we'll always initialize the parent layout theme
+        # so it won't be NULL
         theme + t
     },
     #' @importFrom gtable gtable gtable_add_grob
