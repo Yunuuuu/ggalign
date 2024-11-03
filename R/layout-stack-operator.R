@@ -5,17 +5,28 @@ stack_layout_subtract <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_subtract.default <- function(object, stack, object_name) {
-    stack@plots <- lapply(stack@plots, function(plot) {
-        if (is_quad_layout(plot)) {
-            plot <- quad_layout_subtract(object, plot, object_name)
-        } else if (is_free(plot)) {
-            plot <- free_add(object, plot, object_name)
-        } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
-            # if `align` has plot, we added the object
-            plot <- align_add(object, plot, object_name)
-        }
-        plot
-    })
+    if (!is.null(active_index <- stack@active) &&
+        is_layout(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- quad_layout_subtract(
+            object, plot, object_name
+        )
+    } else {
+        stack@plots <- lapply(stack@plots, function(plot) {
+            if (is_free(plot)) {
+                plot <- free_add(object, plot, object_name)
+            } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
+                # if `align` has plot, we added the object
+                plot <- align_add(object, plot, object_name)
+            } else if (is_quad_layout(plot)) {
+                # we always apply to all plots of
+                plot <- quad_layout_subtract(
+                    with_position(object, NULL),
+                    plot, object_name
+                )
+            }
+            plot
+        })
+    }
     stack
 }
 
@@ -24,11 +35,11 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 stack_layout_subtract.theme <- function(object, stack, object_name) {
     if (!is.null(active_index <- stack@active) &&
         is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- update_layout_option_theme(
-            plot, object, object_name
+        stack@plots[[active_index]] <- quad_layout_subtract(
+            object, plot, object_name
         )
     } else {
-        stack <- update_layout_option_theme(stack, object, object_name)
+        stack <- update_layout_option_theme(object, stack, object_name)
     }
     stack
 }
@@ -37,11 +48,11 @@ stack_layout_subtract.theme <- function(object, stack, object_name) {
 stack_layout_subtract.ggalign_controls <- function(object, stack, object_name) {
     if (!is.null(active_index <- stack@active) &&
         is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- update_layout_option(
-            plot, object, object_name
+        stack@plots[[active_index]] <- quad_layout_subtract(
+            object, plot, object_name
         )
     } else {
-        stack <- update_layout_option(stack, object, object_name)
+        stack <- update_layout_option(object, stack, object_name)
     }
     stack
 }

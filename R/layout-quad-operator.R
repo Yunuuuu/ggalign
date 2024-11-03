@@ -75,12 +75,12 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 quad_layout_subtract.theme <- function(object, quad, object_name) {
     context <- quad_active_context(quad, object)
     if (is.null(context)) {
-        quad <- update_layout_option_theme(quad, object, object_name)
+        quad <- update_layout_option_theme(object, quad, object_name)
     } else {
         for (position in context) {
             if (!is.null(slot(quad, position))) {
                 slot(quad, position) <- update_layout_option_theme(
-                    slot(quad, position), object, object_name
+                    object, slot(quad, position), object_name
                 )
             }
         }
@@ -92,12 +92,12 @@ quad_layout_subtract.theme <- function(object, quad, object_name) {
 quad_layout_subtract.ggalign_controls <- function(object, quad, object_name) {
     context <- quad_active_context(quad, object)
     if (is.null(context)) {
-        quad <- update_layout_option(quad, object, object_name)
+        quad <- update_layout_option(object, quad, object_name)
     } else {
         for (position in context) {
             if (!is.null(slot(quad, position))) {
                 slot(quad, position) <- update_layout_option(
-                    slot(quad, position), object, object_name
+                    object, slot(quad, position), object_name
                 )
             }
         }

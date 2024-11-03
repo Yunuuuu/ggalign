@@ -19,7 +19,7 @@ update_option.default <- function(new_option, old_option, object_name) {
     new_option
 }
 
-update_layout_option <- function(layout, object, object_name, name = NULL) {
+update_layout_option <- function(object, layout, object_name, name = NULL) {
     name <- name %||% attr(object, "name")
     layout@controls[name] <- list(update_option(
         object, .subset2(layout@controls, name), object_name
@@ -27,8 +27,8 @@ update_layout_option <- function(layout, object, object_name, name = NULL) {
     layout
 }
 
-update_layout_option_theme <- function(layout, object, object_name) {
-    update_layout_option(layout, object, object_name, "theme")
+update_layout_option_theme <- function(object, layout, object_name) {
+    update_layout_option(object, layout, object_name, "theme")
 }
 
 # By default, we'll always initialize the default value when building the layout
