@@ -4,7 +4,35 @@ quad_layout_subtract <- function(object, quad, object_name) {
     UseMethod("quad_layout_subtract")
 }
 
-quad_active_layout <- function(quad, object) {
+#' Modify `-` Operator Context in `quad_layout()`
+#'
+#' @description
+#' `r lifecycle::badge('experimental')` By default, the `-` operator acts on all
+#' plots at the same position as the current active annotation in
+#' [`quad_layout()`]. If there is no active annotation stack, it will act on all
+#' plots in the `quad_layout()`. Wrapping objects with `with_position` allows
+#' you to change the context of the subtraction `-` operator.
+#'
+#' @param x Objects to add to the layout using the `-` operator.
+#' @param position A string containing one or more of `r oxford_and(.tlbr)`
+#' indicating which annotation stack should be used as the context. If `NULL`,
+#' the context will default to the [`quad_layout()`] itself. By default,
+#' `waiver()` is used, which triggers the following behavior: If the current
+#' active context in [`quad_layout()`] is `top` or `bottom`, the operator will
+#' also act on the corresponding `bottom` or `top` annotation. If the context is
+#' `left` or `right`, the operator will also act on the `right` or `left`
+#' annotation, respectively. If there is no active annotation stack, it defaults
+#' to `NULL`.
+#' @return The input object with an additional attribute that specifies the
+#' selected context.
+#' @export
+with_position <- function(x, position = waiver()) {
+    assert_layout_position(position)
+    attr(x, sprintf("__%s.quad_active_position__", pkg_nm())) <- list(position)
+    x
+}
+
+quad_active_context <- function(quad, object) {
     context <- attr(object,
         sprintf("__%s.quad_active_position__", pkg_nm()),
         exact = TRUE
@@ -28,15 +56,17 @@ quad_active_layout <- function(quad, object) {
 #' @importFrom rlang is_string
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    context <- quad_active_layout(quad, object)
+    context <- quad_active_context(quad, object)
     if (is.null(context)) {
         quad <- quad_body_add(object, quad, object_name)
         context <- .TLBR
     }
     for (position in context) {
-        slot(quad, position) <- stack_layout_subtract(
-            object, slot(quad, position), object_name
-        )
+        if (!is.null(slot(quad, position))) {
+            slot(quad, position) <- stack_layout_subtract(
+                object, slot(quad, position), object_name
+            )
+        }
     }
     quad
 }
@@ -44,14 +74,16 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 # for objects can inherit from layout
 #' @export
 quad_layout_subtract.theme <- function(object, quad, object_name) {
-    context <- quad_active_layout(quad, object)
+    context <- quad_active_context(quad, object)
     if (is.null(context)) {
         quad <- update_layout_option_theme(quad, object, object_name)
     } else {
         for (position in context) {
-            slot(quad, position) <- update_layout_option_theme(
-                slot(quad, position), object, object_name
-            )
+            if (!is.null(slot(quad, position))) {
+                slot(quad, position) <- update_layout_option_theme(
+                    slot(quad, position), object, object_name
+                )
+            }
         }
     }
     quad
@@ -59,14 +91,16 @@ quad_layout_subtract.theme <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.ggalign_controls <- function(object, quad, object_name) {
-    context <- quad_active_layout(quad, object)
+    context <- quad_active_context(quad, object)
     if (is.null(context)) {
         quad <- update_layout_option(quad, object, object_name)
     } else {
         for (position in context) {
-            slot(quad, position) <- update_layout_option(
-                slot(quad, position), object, object_name
-            )
+            if (!is.null(slot(quad, position))) {
+                slot(quad, position) <- update_layout_option(
+                    slot(quad, position), object, object_name
+                )
+            }
         }
     }
     quad
