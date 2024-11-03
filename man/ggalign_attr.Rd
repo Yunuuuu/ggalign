@@ -23,6 +23,5 @@ unavailable.
 \description{
 This function extracts data from the \code{ggalign} attribute retained in the data
 when rendering \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object. The \code{ggalign} attribute holds supplementary
-information for input data, making it useful for transforming parent layout
-data within a \code{data} function.
+information for input data.
 }

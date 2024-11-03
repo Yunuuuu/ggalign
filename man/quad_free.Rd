@@ -12,7 +12,6 @@ quad_free(
   data = NULL,
   mapping = aes(),
   ...,
-  action = NULL,
   theme = NULL,
   context = NULL,
   width = NA,
@@ -23,7 +22,6 @@ quad_alignh(
   data = NULL,
   mapping = aes(),
   ...,
-  action = NULL,
   theme = NULL,
   context = NULL,
   width = NA,
@@ -34,7 +32,6 @@ quad_alignv(
   data = NULL,
   mapping = aes(),
   ...,
-  action = NULL,
   theme = NULL,
   context = NULL,
   width = NA,
@@ -45,7 +42,6 @@ quad_alignb(
   data = NULL,
   mapping = aes(),
   ...,
-  action = NULL,
   theme = NULL,
   context = NULL,
   width = NA,
@@ -55,34 +51,31 @@ quad_alignb(
 \arguments{
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout.
 \itemize{
-\item For \code{quad_free}/\code{ggfree}, the function uses \code{\link[=fortify_data_frame]{fortify_data_frame()}} to
+\item For \code{quad_free}/\code{ggside}, the function uses \code{\link[=fortify_data_frame]{fortify_data_frame()}} to
 convert the data into a data frame.
 \item For all other functions, it employs \code{\link[=fortify_matrix]{fortify_matrix()}} to convert
 the data into a matrix.
 }}
 
-\item{mapping}{Default list of aesthetic mappings to use for the main plot.
+\item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}} or
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
-
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
-\code{\link[grid:unit]{unit}} object}
+\code{\link[grid:unit]{unit}} object.}
 }
 \description{
 \itemize{
-\item \code{quad_free}/\code{ggfree}: Never align observations.
+\item \code{quad_free}/\code{ggside}: Never align observations.
 \item \code{quad_alignh}: Align observations in the horizontal direction.
 \item \code{quad_alignv}: Align observations in the vertical direction.
 \item \code{quad_alignb}: Align observations in both horizontal and vertical
@@ -91,6 +84,6 @@ directions.
 }
 \details{
 These functions arrange plots around a main plot, allowing for flexible
-alignment of observations in different directions. \code{ggfree} is an alias for
+alignment of observations in different directions. \code{ggside} is an alias for
 \code{quad_free}.
 }

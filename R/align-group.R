@@ -1,7 +1,7 @@
 #' Group and align layout based on categorical or factor levels.
 #'
 #' @param group A character define the groups of the observations.
-#' @inheritParams align_dendro
+#' @inheritParams align_gg
 #' @return A `"AlignGroup"` object.
 #' @examples
 #' set.seed(1L)
@@ -12,7 +12,7 @@
 #' @export
 align_group <- function(group, context = NULL, set_context = deprecated(),
                         name = deprecated()) {
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = FALSE, order = NA_integer_, name = NA_character_
     ))

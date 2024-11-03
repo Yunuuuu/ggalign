@@ -1,5 +1,5 @@
 #' @export
-quad_build.HeatmapLayout <- function(quad, action = quad@action) {
+quad_build.HeatmapLayout <- function(quad, controls = quad@controls) {
     ans <- NextMethod()
 
     # add heatmap filling in the first layer --------------

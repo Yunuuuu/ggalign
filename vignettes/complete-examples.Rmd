@@ -102,7 +102,7 @@ ggheatmap(small_mat) +
 # Multiple heatmaps
 ## Horizontal layout
 ```{r}
-(ggstack(small_mat) +
+(ggstack(small_mat, "h") +
     ggheatmap() +
     ggheatmap() &
     scale_fill_viridis_c() &
@@ -115,10 +115,8 @@ ggheatmap(small_mat) +
 ## Vertical layout
 ```{r fig.height = 6}
 ggstack(small_mat, "v") +
-    align_dendro(aes(color = branch),
-        k = 4L, size = 0.2,
-        theme = theme(axis.text.x = element_blank())
-    ) +
+    align_dendro(aes(color = branch), k = 4L, size = 0.2) -
+    theme(axis.text.x = element_blank()) +
     scale_color_brewer(palette = "Dark2") +
     ggheatmap() +
     ggheatmap() &
@@ -128,23 +126,18 @@ ggstack(small_mat, "v") +
 
 # marginal plots
 ```{r}
-ggside(mpg, aes(displ, hwy, colour = class),
+ggside(mpg, aes(displ, hwy, colour = class)) -
     # set default theme for all plots in the layout
-    action = plot_action(theme = theme_bw())
-) +
+    theme_bw() +
     geom_point(size = 2) +
-    anno_top(
-        size = 0.3,
-        # set default theme for the top annotation
-        action = plot_action(theme = theme_no_axes("tb"))
-    ) +
+    anno_top(size = 0.3) -
+    # set default theme for the top annotation
+    theme_no_axes("tb") +
     ggfree() +
     geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
-    anno_right(
-        size = 0.3,
-        # set default theme for the right annotation
-        action = plot_action(theme = theme_no_axes("lr"))
-    ) +
+    anno_right(size = 0.3) -
+    # set default theme for the right annotation
+    theme_no_axes("lr") +
     ggfree() +
     geom_density(aes(x = after_stat(density), hwy, colour = class),
         position = "stack"

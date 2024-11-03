@@ -1,9 +1,24 @@
+#' @export
+inherit_option.theme <- function(option, poption) {
+    # By default, we'll always complete the theme when building the layout
+    # so parent always exist.
+    poption + option
+}
+
+#' @export
+plot_add.theme <- function(option, plot) {
+    # setup plot theme
+    plot$theme <- option + .subset2(plot, "theme")
+    plot
+}
+
 #' Theme for Layout Plots
 #'
 #' Default theme for `r rd_layout()`.
 #'
 #' @details
-#' You can change the default theme using the option `r code_quote(sprintf("%s.default_theme", pkg_nm()))`.
+#' You can change the default theme using the option
+#' `r code_quote(sprintf("%s.default_theme", pkg_nm()))`.
 #' This option should be set to a function that returns a
 #' [`theme()`][ggplot2::theme] object.
 #'
@@ -55,7 +70,7 @@ default_theme <- function() {
 #' Remove axis elements
 #'
 #' @param axes Which axes elements should be removed? A string containing
-#' one or more of `r oxford_and(.tlbr)`.
+#' one or more of `r oxford_and(c(.tlbr, "x", "y"))`.
 #' @param text If `TRUE`, will remove the axis labels.
 #' @param ticks If `TRUE`, will remove the axis ticks.
 #' @param title If `TRUE`, will remove the axis title.
@@ -70,10 +85,23 @@ default_theme <- function() {
 #' @importFrom rlang arg_match0
 #' @importFrom ggplot2 theme element_blank
 #' @export
-theme_no_axes <- function(axes = "tlbr", text = TRUE, ticks = TRUE,
+theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
                           title = TRUE, line = FALSE) {
-    assert_position(axes)
-    positions <- setup_pos(axes)
+    assert_string(axes, empty_ok = FALSE)
+    if (grepl("[^tlbrxy]", axes)) {
+        cli::cli_abort(sprintf(
+            "{.arg axes} can only contain the %s characters",
+            oxford_and(c(.tlbr, "x", "y"))
+        ))
+    }
+    positions <- .subset(
+        list(
+            t = "top", l = "left", b = "bottom", r = "right",
+            x = c("top", "bottom"), y = c("left", "right")
+        ),
+        split_position(axes)
+    )
+    positions <- vec_unique(unlist(positions, FALSE, FALSE))
     el <- list(text = text, ticks = ticks, title = title, line = line)
     el <- names(el)[vapply(el, isTRUE, logical(1L), USE.NAMES = FALSE)]
     el <- vec_expand_grid(pos = positions, el = el)
@@ -83,8 +111,8 @@ theme_no_axes <- function(axes = "tlbr", text = TRUE, ticks = TRUE,
         .subset2(el, "pos"),
         sep = "."
     )
-    el <- vec_set_names(el, el)
-    theme(!!!lapply(el, function(x) element_blank()), validate = FALSE)
+    el <- vec_set_names(vec_rep(list(element_blank()), length(el)), el)
+    theme(!!!el, validate = FALSE)
 }
 
 #' @importFrom rlang try_fetch

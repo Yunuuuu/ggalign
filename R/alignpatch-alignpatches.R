@@ -9,7 +9,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     guides = NULL, theme = NULL,
     set_guides = function(self, guides, plot = self$plot) guides,
     set_theme = function(self, theme, plot = self$plot) {
-        inherit_theme(.subset2(plot, "theme"), theme)
+        if (is.null(t <- .subset2(plot, "theme"))) return(theme) # styler: off
+        theme + t
     },
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit

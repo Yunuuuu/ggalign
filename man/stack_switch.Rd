@@ -5,10 +5,9 @@
 \alias{stack_active}
 \title{Determine the active context of stack layout}
 \usage{
-stack_switch(action = NULL, sizes = NULL, what = waiver())
+stack_switch(sizes = NULL, what = waiver())
 
 stack_active(
-  action = NULL,
   sizes = NULL,
   what = NULL,
   ...,
@@ -20,9 +19,6 @@ stack_active(
 )
 }
 \arguments{
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
-
 \item{sizes}{A numeric or a \code{\link[grid:unit]{unit}} object of length \code{3}
 indicating the relative heights (for \code{direction = "horizontal"}) or widths
 (for \code{direction = "vertical"}).}
@@ -35,20 +31,20 @@ into the \code{\link[=stack_layout]{stack_layout()}}.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 
-\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
-instead.}
+\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_data]{plot_data()}} function instead.}
 
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
-instead.}
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=layout-operator]{-}} method instead.}
 
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 }
 \value{
 A \code{stack_active} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.

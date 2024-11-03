@@ -93,7 +93,8 @@ ggheatmap(small_mat) +
     scale_fill_viridis_c(guide = "none") +
     anno_top() +
     align_kmeans(3L) +
-    ggalign(action = plot_action(data = function(data) subset(data, .panel == 1L))) +
+    ggalign() +
+    plot_data(~ subset(.x, .panel == 1L)) +
     geom_bar(aes(y = value, fill = .row_names), stat = "identity")
 ```
 

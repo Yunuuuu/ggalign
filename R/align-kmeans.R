@@ -4,7 +4,7 @@
 #' @inheritDotParams stats::kmeans -x -centers
 #' @inheritParams align_dendro
 #' @return A `"AlignKmeans"` object.
-#' @inheritSection align Aligned Axis
+#' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
@@ -13,7 +13,7 @@
 align_kmeans <- function(centers, ..., data = NULL,
                          context = NULL, set_context = deprecated(),
                          name = deprecated()) {
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = FALSE, order = NA_integer_, name = NA_character_
     ))

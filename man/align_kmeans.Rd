@@ -33,9 +33,10 @@ align_kmeans(
     produced.  Higher values may produce more tracing information.}
   }}
 
-\item{data}{A matrix-like object. By default, it inherits from the \verb{layout matrix}.}
+\item{data}{A matrix-like object. By default, it inherits from the layout
+\code{matrix}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -50,19 +51,19 @@ A \code{"AlignKmeans"} object.
 \description{
 Split layout by k-means clustering groups.
 }
-\section{Aligned Axis}{
+\section{Axis Alignment for Observations}{
 
 It is important to note that we consider rows as observations, meaning
-\code{NROW(data)} must match the number of observations along the specified layout
-axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
-layout).
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 \itemize{
-\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: for column annotation, the
-\verb{layout matrix} will be transposed before using (If data is a function, it
-will be applied with the transposed matrix). This is necessary because
-column annotation uses columns as observations, but we need rows.
-\item \code{\link[=stack_layout]{stack_layout()}}: the \verb{layout matrix} will be used as it is since we
-place all plots along a single axis.
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
 }
 }
 

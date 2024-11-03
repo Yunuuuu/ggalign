@@ -9,35 +9,21 @@
 \alias{anno_right}
 \title{Determine the Active Context of Quad-Layout}
 \usage{
-quad_active(action = NULL, width = NULL, height = NULL)
+quad_active(width = NULL, height = NULL)
 
-quad_anno(
-  position,
-  size = NULL,
-  action = NULL,
-  free_guides = waiver(),
-  what = waiver()
-)
+quad_anno(position, size = NULL, free_guides = waiver(), what = waiver())
 
-anno_top(size = NULL, action = NULL, free_guides = waiver(), what = waiver())
+anno_top(size = NULL, free_guides = waiver(), what = waiver())
 
-anno_left(size = NULL, action = NULL, free_guides = waiver(), what = waiver())
+anno_left(size = NULL, free_guides = waiver(), what = waiver())
 
-anno_bottom(
-  size = NULL,
-  action = NULL,
-  free_guides = waiver(),
-  what = waiver()
-)
+anno_bottom(size = NULL, free_guides = waiver(), what = waiver())
 
-anno_right(size = NULL, action = NULL, free_guides = waiver(), what = waiver())
+anno_right(size = NULL, free_guides = waiver(), what = waiver())
 }
 \arguments{
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
-
 \item{width, height}{The relative width/height of the main plot, can be a
-\code{\link[grid:unit]{unit}} object}
+\code{\link[grid:unit]{unit}} object.}
 
 \item{position}{A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"} indicates which annotation stack should be activated.}
 

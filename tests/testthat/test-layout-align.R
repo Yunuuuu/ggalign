@@ -8,7 +8,8 @@ testthat::test_that("`align_group` works well", {
     expect_error(p + anno_top() + align_group(row_group))
 
     # adding plot gave error
-    expect_error(p + anno_top() + align_group(1:4, set_context = TRUE) +
+    expect_error(p + anno_top() +
+        align_group(1:4, context = context(active = TRUE)) +
         geom_point())
 
     # cannot do sub-group
@@ -47,7 +48,8 @@ testthat::test_that("`align_order` works well", {
         align_order())
 
     # adding plot gave error
-    expect_error(p + anno_top() + align_order(set_context = TRUE) +
+    expect_error(p + anno_top() +
+        align_order(context = context(active = TRUE)) +
         geom_point())
 
     expect_doppelganger(
@@ -105,7 +107,8 @@ testthat::test_that("`align_reorder` works well", {
         align_reorder())
 
     # adding plot gave error
-    expect_error(p + anno_top() + align_reorder(set_context = TRUE) +
+    expect_error(p + anno_top() +
+        align_reorder(context = context(active = TRUE)) +
         geom_point())
 
     # reorder plot
@@ -145,7 +148,8 @@ testthat::test_that("`align_kmeans` works well", {
         align_kmeans(3L))
 
     # adding plot gave error
-    expect_error(p + anno_top() + align_kmeans(3L, set_context = TRUE) +
+    expect_error(p + anno_top() +
+        align_kmeans(3L, context = context(active = TRUE)) +
         geom_point())
 
     set.seed(1L)

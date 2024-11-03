@@ -7,10 +7,7 @@
 #' provided directly. By default, it will inherit from the parent layout if
 #' applicable.
 #' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
-#' @param size Plot size, specified as a [`unit`][grid::unit] object.
-#' @param action A [`plot_action()`] object used for the plot. By default,
-#' it inherits from the parent layout.
-#' @inheritParams quad_free
+#' @inheritParams align
 #' @return A `free_gg` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
@@ -18,8 +15,7 @@
 #'     ggfree(mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(x = waiver(), ..., size = NULL,
-                    action = NULL, context = NULL) {
+free_gg <- function(x = waiver(), ..., size = NULL, context = NULL) {
     rlang::check_dots_used()
     UseMethod("free_gg")
 }
@@ -31,38 +27,36 @@ ggfree <- free_gg
 
 #' @importFrom ggplot2 ggplot
 #' @export
-free_gg.default <- function(x = waiver(), ..., size = NULL,
-                            action = NULL, context = NULL) {
+free_gg.default <- function(x = waiver(), ..., size = NULL, context = NULL) {
     data <- fortify_data_frame(x)
     new_free_gg(ggplot(data = NULL, ...), data,
-        size = size, action = action, context = context
+        size = size, context = context
     )
 }
 
 #' @export
-free_gg.ggplot <- function(x = waiver(), ..., size = NULL,
-                           action = NULL, context = NULL) {
+free_gg.ggplot <- function(x = waiver(), ..., size = NULL, context = NULL) {
     data <- .subset2(x, "data")
     x["data"] <- list(NULL)
-    new_free_gg(x, data, size = size, action = action, context = context)
+    new_free_gg(x, data, size = size, context = context)
 }
 
-new_free_gg <- function(plot, data, size, action, context,
+new_free_gg <- function(plot, data, size, context,
                         call = caller_call()) {
     if (is.null(size)) {
         size <- unit(NA, "null")
     } else {
         size <- check_size(size, call = call)
     }
-    action <- check_action(action, NULL, call = call)
-    assert_s3_class(context, "plot_context", null_ok = TRUE, call = call)
+    assert_context(context)
     context <- update_context(context, new_context(
         order = NA_integer_, active = TRUE, name = NA_character_
     ))
     structure(
         list(
             plot = plot, data = data,
-            size = size, action = action, context = context
+            size = size, context = context,
+            controls = new_controls()
         ),
         class = "free_gg"
     )
@@ -94,12 +88,15 @@ free_add.default <- function(object, free, object_name) {
 }
 
 #' @export
-free_add.plot_action <- function(object, free, object_name) {
-    free$action <- update_action(free$action, object)
+free_add.ggalign_controls <- function(object, free, object_name) {
+    name <- attr(object, "name")
+    free$controls[name] <- list(update_option(
+        object, .subset2(free$controls, name), object_name
+    ))
     free
 }
 
-free_build <- function(x, action, direction) {
-    plot <- plot_add_action(.subset2(x, "plot"), action, call = quote(ggfree()))
+free_build <- function(x, controls, direction) {
+    plot <- plot_add_controls(.subset2(x, "plot"), controls)
     list(plot = plot, size = .subset2(x, "size"))
 }

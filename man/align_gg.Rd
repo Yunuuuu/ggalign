@@ -8,10 +8,10 @@
 align_gg(
   mapping = aes(),
   size = NULL,
-  action = NULL,
   data = waiver(),
   limits = TRUE,
   facet = TRUE,
+  no_axes = NULL,
   context = NULL,
   set_context = deprecated(),
   order = deprecated(),
@@ -24,13 +24,11 @@ align_gg(
 )
 }
 \arguments{
-\item{mapping}{Additional default list of aesthetic mappings to use for plot.
+\item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
-\item{size}{Plot size, specified as a \code{\link[grid:unit]{unit}} object.}
-
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot. By default,
-it inherits from the parent layout.}
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
 
 \item{data}{A flexible input that specifies the data to be used
 \itemize{
@@ -38,16 +36,21 @@ it inherits from the parent layout.}
 \item \code{\link[=waiver]{waiver()}}: Uses the layout matrix.
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
 layout matrix, and must return a matrix. If you want to transform the final
-plot data, please use \code{action} argument.
+plot data, please use \code{\link[=plot_data]{plot_data()}}.
 \item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
-\item{limits}{Logical; determines if layout limits are set for the plot.}
+\item{limits}{Logical; if \code{TRUE}, sets layout limits for the plot.}
 
-\item{facet}{Logical; determines if layout facets are set for the plot. If
-\code{FALSE}, \code{limits} will also be set to \code{FALSE}.}
+\item{facet}{Logical; if \code{TRUE}, applies facets to the layout. If \code{FALSE},
+\code{limits} will also be set to \code{FALSE}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will controled by the option-
+\code{"ggalign.align_no_axes"}.}
+
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -59,20 +62,20 @@ instead.}
 \item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context} argument
 instead.}
 
-\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_data]{plot_data()}} function instead.}
 
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
-instead.}
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=layout-operator]{-}} method instead.}
 
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 }
 \value{
 A \code{"AlignGG"} object.
@@ -91,8 +94,8 @@ for vertical stack layout (including top and bottom annotation).
 
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
-\item \code{.panel}: the panel for current aligned axis. It means \code{x-axis} for
-vertical stack layout, \code{y-axis} for horizontal stack layout.
+\item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
+stack layout, \code{y-axis} for horizontal stack layout.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 \item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
 (\code{\link[vctrs:vec_size]{vec_size()}}): A factor of the names (only
@@ -118,19 +121,19 @@ annotation) or row (top or bottom annotation).
 }
 }
 
-\section{Aligned Axis}{
+\section{Axis Alignment for Observations}{
 
 It is important to note that we consider rows as observations, meaning
-\code{NROW(data)} must match the number of observations along the specified layout
-axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
-layout).
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 \itemize{
-\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: for column annotation, the
-\verb{layout matrix} will be transposed before using (If data is a function, it
-will be applied with the transposed matrix). This is necessary because
-column annotation uses columns as observations, but we need rows.
-\item \code{\link[=stack_layout]{stack_layout()}}: the \verb{layout matrix} will be used as it is since we
-place all plots along a single axis.
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
 }
 }
 

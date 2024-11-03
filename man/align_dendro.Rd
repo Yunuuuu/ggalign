@@ -22,8 +22,8 @@ align_dendro(
   center = FALSE,
   type = "rectangle",
   size = NULL,
-  action = NULL,
   data = NULL,
+  no_axes = NULL,
   context = NULL,
   free_guides = deprecated(),
   free_spaces = deprecated(),
@@ -36,7 +36,7 @@ align_dendro(
 )
 }
 \arguments{
-\item{mapping}{Additional default list of aesthetic mappings to use for plot.
+\item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
@@ -102,30 +102,34 @@ middle of all direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
-\item{size}{Plot size, specified as a \code{\link[grid:unit]{unit}} object.}
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot. By default,
-it inherits from the parent layout.}
+\item{data}{A matrix-like object. By default, it inherits from the layout
+\code{matrix}.}
 
-\item{data}{A matrix-like object. By default, it inherits from the \verb{layout matrix}.}
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will controled by the option-
+\code{"ggalign.align_no_axes"}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
-\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_data]{plot_data()}} function instead.}
 
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
-instead.}
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=layout-operator]{-}} method instead.}
 
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
 argument instead.}
@@ -177,19 +181,19 @@ and correspond to both nodes of each edge.
 }
 }
 
-\section{Aligned Axis}{
+\section{Axis Alignment for Observations}{
 
 It is important to note that we consider rows as observations, meaning
-\code{NROW(data)} must match the number of observations along the specified layout
-axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
-layout).
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 \itemize{
-\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: for column annotation, the
-\verb{layout matrix} will be transposed before using (If data is a function, it
-will be applied with the transposed matrix). This is necessary because
-column annotation uses columns as observations, but we need rows.
-\item \code{\link[=stack_layout]{stack_layout()}}: the \verb{layout matrix} will be used as it is since we
-place all plots along a single axis.
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
 }
 }
 

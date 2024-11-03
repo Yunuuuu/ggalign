@@ -1,11 +1,9 @@
 #' Reorder or Group layout based on hierarchical clustering
 #'
-#' @param mapping Additional default list of aesthetic mappings to use for plot.
-#' If not specified, must be supplied in each layer added to the plot.
-#' @param data A matrix-like object. By default, it inherits from the `layout
-#'   matrix`.
-#' @inheritParams free_gg
+#' @param data A matrix-like object. By default, it inherits from the layout
+#'   `matrix`.
 #' @inheritParams align
+#' @inheritParams align_gg
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`geom_segment()`][ggplot2::geom_segment].
 #' @inheritParams hclust2
@@ -32,7 +30,6 @@
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
 #' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
-#' @inheritParams heatmap_layout
 #' @section ggplot2 specification:
 #' `align_dendro` initializes a ggplot `data` and `mapping`.
 #'
@@ -65,7 +62,7 @@
 #'     and correspond to both nodes of each edge.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
-#' @inheritSection align Aligned Axis
+#' @inheritSection align Axis Alignment for Observations
 #' @return A `"AlignDendro"` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
@@ -89,8 +86,8 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
-                         size = NULL, action = NULL,
-                         data = NULL, context = NULL,
+                         size = NULL, data = NULL,
+                         no_axes = NULL, context = NULL,
                          free_guides = deprecated(), free_spaces = deprecated(),
                          plot_data = deprecated(), theme = deprecated(),
                          free_labs = deprecated(), set_context = deprecated(),
@@ -116,7 +113,7 @@ align_dendro <- function(mapping = aes(), ...,
             data <- waiver()
         }
     }
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = plot_dendrogram, order = NA_integer_, name = NA_character_
     ))
@@ -140,9 +137,9 @@ align_dendro <- function(mapping = aes(), ...,
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        context = context,
+        no_axes = no_axes, context = context,
         size = size,
-        action = action %||% waiver(), action_data = NULL,
+        controls = new_controls(),
         data = data
     )
 }

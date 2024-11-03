@@ -12,8 +12,8 @@ namespace_link <- function() NULL
 #' @keywords internal
 methods::setClass("Layout",
     list(
-        active = "ANY",
-        action = "ANY", # used to control the default plot behaviour
+        active = "ANY", # current active plot
+        controls = "list", # used to provide global parameters for all plots
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
         annotation = "list", # To-DO add `pacth_titles` for layout
@@ -21,7 +21,9 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, titles = list(), annotation = list(), theme = NULL,
+        active = NULL,
+        controls = list(theme = NULL, action = NULL, data = NULL),
+        titles = list(), annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )
@@ -67,7 +69,7 @@ methods::setMethod("$", "Layout", function(x, name) {
 #' @details
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' `r rd_layout()`.
+#' `r rd_layout()`: `-` and `&`.
 #'
 #' Like `patchwork`, `&` add the element to all plots in the plot. If the
 #' element is a [theme][ggplot2::theme], this will also modify the layout
@@ -104,6 +106,15 @@ methods::setMethod("$", "Layout", function(x, name) {
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
 #'
+#' # used in the layout, define the default action for all plots in the layout
+#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
+#'     theme(plot.background = element_rect(fill = "red"))
+#'
+#' # You can also add it for a single plot
+#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
+#'     theme(plot.background = element_rect(fill = "red")) +
+#'     # here, we modify the plot action for the heatmap body
+#'     theme(plot.background = element_rect(fill = "blue"))
 #' @name layout-operator
 NULL
 
@@ -113,21 +124,16 @@ utils::globalVariables(".Generic")
 default_layout <- function(layout) {
     layout@theme <- default_theme() + layout@theme
     # we by default, collect all guides
-    layout@action["guides"] <- list(
-        .subset2(layout@action, "guides") %|w|% "tlbr"
+    layout@controls$action["guides"] <- list(
+        .subset2(.subset2(layout@controls, "action"), "guides") %|w|% "tlbr"
     )
-    layout
-}
-
-update_layout_annotation <- function(object, layout, object_name) {
-    layout@annotation <- update_non_waive(
-        layout@annotation, .subset2(object, "annotation")
-    )
-    layout@theme <- update_theme(layout@theme, .subset2(object, "theme"))
+    layout@controls$theme <- default_theme() +
+        .subset2(layout@controls, "theme")
     layout
 }
 
 ######################################################################
+# layout params are used to align the observations
 new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
     list(panel = panel, index = index, nobs = nobs)
 }
@@ -150,114 +156,47 @@ reorder_index <- function(panel, index = NULL) {
 }
 
 #' @keywords internal
-update_layout_params <- function(x, ..., params) {
+update_layout_params <- function(layout, ..., params) {
     UseMethod("update_layout_params")
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_params.QuadLayout <- function(x, direction, ..., params) {
-    slot(x, direction) <- params
+update_layout_params.QuadLayout <- function(layout, direction, ..., params) {
+    slot(layout, direction) <- params
     if (is_horizontal(direction)) {
-        if (!is.null(left <- x@left)) {
-            x@left <- update_layout_params(left, params = params)
+        if (!is.null(left <- layout@left)) {
+            layout@left <- update_layout_params(left, params = params)
         }
-        if (!is.null(right <- x@right)) {
-            x@right <- update_layout_params(right, params = params)
+        if (!is.null(right <- layout@right)) {
+            layout@right <- update_layout_params(right, params = params)
         }
     } else {
-        if (!is.null(top <- x@top)) {
-            x@top <- update_layout_params(top, params = params)
+        if (!is.null(top <- layout@top)) {
+            layout@top <- update_layout_params(top, params = params)
         }
-        if (!is.null(bottom <- x@bottom)) {
-            x@bottom <- update_layout_params(bottom, params = params)
+        if (!is.null(bottom <- layout@bottom)) {
+            layout@bottom <- update_layout_params(bottom, params = params)
         }
     }
-    x
+    layout
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_params.StackLayout <- function(x, ..., params) {
-    slot(x, "layout") <- params
-    x@plots <- lapply(x@plots, function(plot) {
+update_layout_params.StackLayout <- function(layout, ..., params) {
+    slot(layout, "layout") <- params
+    layout@plots <- lapply(layout@plots, function(plot) {
         if (is_layout(plot)) {
-            update_layout_params(plot, direction = x@direction, params = params)
+            update_layout_params(plot,
+                direction = layout@direction,
+                params = params
+            )
         } else {
             plot
         }
     })
-    x
-}
-
-############################################################
-#' Plot context related actions
-#'
-#' @param order An integer number specifying the order of the plot area in the
-#' layout.
-#' @param active A single boolean value; if `TRUE`, sets the active context to
-#'   the current plot when added to a layout, so all subsequent `ggplot`
-#'   elements are added to this plot.
-#' @param name A single string specifying the plot name, used to switch active
-#'   contexts in `what` argument of [`quad_anno()`]/[`stack_switch()`].
-#' @export
-plot_context <- function(order = waiver(), active = waiver(), name = waiver()) {
-    if (!is.waive(order)) order <- check_order(order)
-    if (!is.waive(active)) assert_bool(active)
-    if (!is.waive(name)) {
-        assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = FALSE)
-    }
-    new_context(order, active, name)
-}
-
-new_context <- function(order, active, name) {
-    structure(
-        list(order = order, active = active, name = name),
-        class = "plot_context"
-    )
-}
-
-#' @importFrom utils modifyList
-update_context <- function(context, default) {
-    if (is.null(context)) return(default) # styler: off
-    modifyList(default,
-        context[!vapply(context, is.waive, logical(1L), USE.NAMES = FALSE)],
-        keep.null = TRUE
-    )
-}
-
-deprecate_context <- function(context, fun,
-                              set_context = deprecated(),
-                              order = deprecated(), name = deprecated(),
-                              call = caller_call()) {
-    if (lifecycle::is_present(set_context)) {
-        lifecycle::deprecate_stop(
-            "0.0.5",
-            sprintf("%s(set_context)", fun),
-            sprintf("%s(context)", fun)
-        )
-        assert_bool(set_context, call = call)
-        context["active"] <- list(set_context)
-    }
-    if (lifecycle::is_present(order)) {
-        lifecycle::deprecate_warn(
-            "0.0.5",
-            sprintf("%s(order)", fun),
-            sprintf("%s(context)", fun)
-        )
-        order <- check_order(order, call = call)
-        context["order"] <- list(order)
-    }
-    if (lifecycle::is_present(name)) {
-        lifecycle::deprecate_warn(
-            "0.0.5",
-            sprintf("%s(name)", fun),
-            sprintf("%s(context)", fun)
-        )
-        assert_string(name, empty_ok = FALSE, na_ok = TRUE, call = call)
-        context["name"] <- list(name)
-    }
-    context
+    layout
 }
 
 ############################################################
@@ -313,8 +252,7 @@ restore_attr_ggalign <- function(data, original) {
 #'
 #' This function extracts data from the `ggalign` attribute retained in the data
 #' when rendering `r rd_layout()`. The `ggalign` attribute holds supplementary
-#' information for input data, making it useful for transforming parent layout
-#' data within a `data` function.
+#' information for input data.
 #'
 #' @param x Input data for the function used to transform the layout data.
 #' @param field A string specifying the particular data to retrieve from the

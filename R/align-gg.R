@@ -2,16 +2,21 @@
 #'
 #' `ggalign` is an alias of `align_gg`.
 #'
+#' @inheritParams ggplot2::ggplot
 #' @param data A flexible input that specifies the data to be used
 #' - `NULL`: No data is set.
 #' - [`waiver()`]: Uses the layout matrix.
 #' - A `function` (including purrr-like lambda syntax) that is applied to the
 #'   layout matrix, and must return a matrix. If you want to transform the final
-#'   plot data, please use `action` argument.
+#'   plot data, please use [`plot_data()`].
 #' - A `matrix`, `data frame`, or atomic vector.
-#' @inheritParams align_dendro
 #' @inheritParams align
-#' @inheritParams heatmap_layout
+#' @param set_context `r lifecycle::badge("deprecated")` Please use `context`
+#' argument instead.
+#' @param order `r lifecycle::badge("deprecated")` Please use `context` argument
+#' instead.
+#' @param name `r lifecycle::badge("deprecated")` Please use `context` argument
+#' instead.
 #' @importFrom ggplot2 aes
 #'
 #' @section ggplot2 specification:
@@ -24,8 +29,8 @@
 #'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
-#'  - `.panel`: the panel for current aligned axis. It means `x-axis` for
-#'    vertical stack layout, `y-axis` for horizontal stack layout.
+#'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
+#'    stack layout, `y-axis` for horizontal stack layout.
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
@@ -54,7 +59,7 @@
 #'    annotation) or row (top or bottom annotation).
 #'
 #' @return A `"AlignGG"` object.
-#' @inheritSection align Aligned Axis
+#' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
@@ -70,15 +75,15 @@
 #'     geom_tile(aes(y = 1L, fill = .panel))
 #'
 #' @export
-align_gg <- function(mapping = aes(), size = NULL, action = NULL,
+align_gg <- function(mapping = aes(), size = NULL,
                      data = waiver(), limits = TRUE, facet = TRUE,
-                     context = NULL, set_context = deprecated(),
+                     no_axes = NULL, context = NULL, set_context = deprecated(),
                      order = deprecated(), name = deprecated(),
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
     assert_mapping(mapping)
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = TRUE, order = NA_integer_, name = NA_character_
     ))
@@ -87,11 +92,12 @@ align_gg <- function(mapping = aes(), size = NULL, action = NULL,
     )
     align(AlignGG,
         params = list(mapping = mapping),
-        size = size, data = data, action = action %||% waiver(),
+        size = size, data = data,
+        controls = waiver(),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        facet = facet, limits = limits, context = context
+        facet = facet, limits = limits, no_axes = no_axes, context = context
     )
 }
 

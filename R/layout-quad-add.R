@@ -19,6 +19,9 @@ quad_layout_add.default <- function(object, quad, object_name) {
 }
 
 #' @export
+quad_layout_add.ggalign_controls <- quad_layout_add.default
+
+#' @export
 quad_layout_add.list <- function(object, quad, object_name) {
     for (o in object) quad <- quad_layout_add(o, quad, object_name)
     quad
@@ -95,9 +98,6 @@ quad_layout_add.quad_active <- function(object, quad, object_name) {
     if (!is.null(height <- .subset2(object, "height"))) {
         quad@height <- height
     }
-    if (!is.null(new_action <- .subset2(object, "action"))) {
-        quad@action <- update_action(quad@action, new_action)
-    }
     quad@active <- NULL
     quad
 }
@@ -153,7 +153,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
             # restore the alinged parameters from the QuadLayout
             layout = layout,
             # we'll inherit the action data function
-            action = default_action(waiver())
+            controls = new_controls(plot_data(waiver()))
         )
         stack@heatmap$position <- position
     }
@@ -164,9 +164,6 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     }
     if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
         stack@heatmap$free_guides <- free_guides
-    }
-    if (!is.null(new_action <- .subset2(object, "action"))) {
-        stack@action <- update_action(stack@action, new_action)
     }
     stack <- update_stack_active(
         stack, .subset2(object, "what"), quote(quad_anno())
@@ -285,7 +282,7 @@ quad_layout_add.anno_init <- function(object, quad, object_name) {
         # restore the alinged parameters from the QuadLayout
         layout = layout,
         # we'll inherit the action data function
-        action = default_action(action_data)
+        controls = new_controls(plot_data(action_data))
     )
     if (!is.null(layout)) {
         quad <- update_layout_params(quad,
@@ -328,7 +325,10 @@ quad_body_add.layout_annotation <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.plot_action <- function(object, quad, object_name) {
-    quad@body_action <- update_action(quad@body_action, object)
+quad_body_add.ggalign_controls <- function(object, quad, object_name) {
+    name <- attr(object, "name")
+    quad@body_controls[name] <- list(update_option(
+        object, .subset2(quad@body_controls, name), object_name
+    ))
     quad
 }

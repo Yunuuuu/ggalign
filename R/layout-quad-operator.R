@@ -16,6 +16,32 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
     quad
 }
 
+# for objects can inherit from layout
+#' @export
+quad_layout_subtract.theme <- function(object, quad, object_name) {
+    if (is.null(position <- quad@active)) {
+        quad <- update_layout_option_theme(quad, object, object_name)
+        return(quad)
+    }
+    slot(quad, position) <- update_layout_option_theme(
+        slot(quad, position), object, object_name
+    )
+    quad
+}
+
+#' @export
+quad_layout_subtract.ggalign_controls <- function(object, quad, object_name) {
+    if (is.null(position <- quad@active)) {
+        quad <- update_layout_option(quad, object, object_name)
+        return(quad)
+    }
+    slot(quad, position) <- update_layout_option(
+        slot(quad, position), object, object_name
+    )
+    quad
+}
+
+# for objects should only be added with `+`
 #' @export
 quad_layout_subtract.ggplot <- function(object, quad, object_name) {
     cli::cli_abort(c(
@@ -33,7 +59,7 @@ quad_layout_subtract.free_gg <- quad_layout_subtract.ggplot
 #' @export
 quad_layout_subtract.Align <- function(object, quad, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code -} to add a {.fn {snake_class(object)}}",
+        "Cannot use {.code -} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))
 }
@@ -86,7 +112,7 @@ quad_layout_and_add.free_gg <- quad_layout_and_add.layout_title
 #' @export
 quad_layout_and_add.Align <- function(object, quad, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code &} to add a {.fn {snake_class(object)}}",
+        "Cannot use {.code &} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))
 }

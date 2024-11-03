@@ -13,12 +13,11 @@
 #' @return An object that can be added to `r rd_quad()`.
 #' @export
 #' @rdname quad_active
-quad_active <- function(action = NULL, width = NULL, height = NULL) {
-    if (!is.null(action)) assert_action(action)
+quad_active <- function(width = NULL, height = NULL) {
     if (!is.null(width)) width <- check_size(width)
     if (!is.null(height)) height <- check_size(height)
     structure(
-        list(action = action, width = width, height = height),
+        list(width = width, height = height),
         class = c("quad_active", "quad_switch")
     )
 }
@@ -50,8 +49,8 @@ quad_active <- function(action = NULL, width = NULL, height = NULL) {
 #' - [`anno_init()`]
 #' @export
 #' @rdname quad_active
-quad_anno <- function(position, size = NULL, action = NULL,
-                      free_guides = waiver(), what = waiver()) {
+quad_anno <- function(position, size = NULL, free_guides = waiver(),
+                      what = waiver()) {
     if (is.null(position)) {
         cli::cli_abort(c(
             paste(
@@ -63,7 +62,7 @@ quad_anno <- function(position, size = NULL, action = NULL,
     }
     position <- match.arg(position, .TLBR)
     quad_switch_anno(
-        size = size, action = action,
+        size = size,
         free_guides = free_guides, what = what,
         position = position
     )
@@ -71,57 +70,52 @@ quad_anno <- function(position, size = NULL, action = NULL,
 
 #' @export
 #' @rdname quad_active
-anno_top <- function(size = NULL, action = NULL, free_guides = waiver(),
+anno_top <- function(size = NULL, free_guides = waiver(),
                      what = waiver()) {
     quad_switch_anno(
-        size = size, action = action,
-        free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides, what = what,
         position = "top"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_left <- function(size = NULL, action = NULL, free_guides = waiver(),
+anno_left <- function(size = NULL, free_guides = waiver(),
                       what = waiver()) {
     quad_switch_anno(
-        size = size, action = action,
-        free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides, what = what,
         position = "left"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_bottom <- function(size = NULL, action = NULL, free_guides = waiver(),
+anno_bottom <- function(size = NULL, free_guides = waiver(),
                         what = waiver()) {
     quad_switch_anno(
-        size = size, action = action,
-        free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides, what = what,
         position = "bottom"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_right <- function(size = NULL, action = NULL, free_guides = waiver(),
+anno_right <- function(size = NULL, free_guides = waiver(),
                        what = waiver()) {
     quad_switch_anno(
-        size = size, action = action,
-        free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides, what = what,
         position = "right"
     )
 }
 
-quad_switch_anno <- function(position, size, action, free_guides, what,
+quad_switch_anno <- function(position, size, free_guides, what,
                              call = caller_call()) {
-    if (!is.null(action)) assert_action(action, call = call)
     if (!is.null(size)) size <- check_size(size, call = call)
     assert_layout_position(free_guides, call = call)
     if (!is.waive(what)) what <- check_stack_context(what, call = call)
     structure(
         list(
-            position = position, size = size, action = action,
+            position = position, size = size,
             free_guides = free_guides, what = what
         ),
         class = c("quad_anno", "quad_switch")
@@ -184,35 +178,26 @@ anno_init <- function(position, data = waiver(), ...) {
 #' - [`quad_active()`]/[`quad_anno()`]
 #' - [`anno_init()`]
 #' @export
-quad_switch <- function(position = NULL, size = NULL, action = NULL,
+quad_switch <- function(position = NULL, size = NULL,
                         width = NULL, height = NULL, free_guides = waiver(),
                         what = waiver()) {
     if (is.null(position)) {
-        quad_active(action = action, width = width, height = height)
+        quad_active(width = width, height = height)
     } else {
         position <- match.arg(position, .TLBR)
         quad_switch_anno(
-            size = size, action = action,
+            size = size,
             free_guides = free_guides, what = what,
             position = position
         )
     }
 }
 
-#' @param guides `r lifecycle::badge("deprecated")` Please use `action` argument
-#' instead.
-#' @param free_spaces `r lifecycle::badge("deprecated")` Please use `action`
-#' argument instead.
-#' @param plot_data `r lifecycle::badge("deprecated")` Please use `action`
-#' argument instead.
-#' @param theme `r lifecycle::badge("deprecated")` Please use `action` argument
-#' instead.
-#' @param free_labs `r lifecycle::badge("deprecated")` Please use `action`
-#' argument instead.
-#' @importFrom lifecycle deprecated
+#' @inheritParams align_gg
+#' @inheritParams heatmap_layout
 #' @export
 #' @rdname quad_switch
-hmanno <- function(position = NULL, size = NULL, action = NULL,
+hmanno <- function(position = NULL, size = NULL,
                    width = NULL, height = NULL, free_guides = waiver(),
                    what = waiver(), ...,
                    # following parameters have replaced with `action`
@@ -221,16 +206,18 @@ hmanno <- function(position = NULL, size = NULL, action = NULL,
                    free_spaces = deprecated(), plot_data = deprecated(),
                    theme = deprecated(), free_labs = deprecated()) {
     rlang::check_dots_empty()
+    deprecate_action(
+        "hmanno",
+        guides = guides,
+        free_spaces = free_spaces,
+        plot_data = plot_data,
+        theme = theme,
+        free_labs = free_labs
+    )
     ans <- quad_switch(
-        position = position, size = size, action = action,
+        position = position, size = size,
         width = width, height = height, free_guides = free_guides,
         what = what
-    )
-    ans$action <- deprecate_action(
-        ans$action %||% plot_action(),
-        "hmanno", plot_data, theme,
-        free_spaces, free_labs,
-        guides = guides
     )
     ans
 }

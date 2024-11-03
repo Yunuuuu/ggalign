@@ -5,7 +5,7 @@
 \alias{ggfree}
 \title{Add ggplot to layout}
 \usage{
-free_gg(x = waiver(), ..., size = NULL, action = NULL, context = NULL)
+free_gg(x = waiver(), ..., size = NULL, context = NULL)
 }
 \arguments{
 \item{x}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}} object.
@@ -15,12 +15,10 @@ applicable.}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:ggplot]{ggplot()}}.}
 
-\item{size}{Plot size, specified as a \code{\link[grid:unit]{unit}} object.}
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot. By default,
-it inherits from the parent layout.}
-
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 }
 \value{

@@ -5,7 +5,7 @@
 \title{Order layout observations based on weights}
 \usage{
 align_order(
-  wts = rowMeans,
+  weights = rowMeans,
   ...,
   reverse = FALSE,
   strict = TRUE,
@@ -16,14 +16,14 @@ align_order(
 )
 }
 \arguments{
-\item{wts}{A summary function which accepts a data and returns the weights
-for each observations. Alternatively, you can provide an ordering index as
-either an integer or a character. Since characters have been designated as
-character indices, if you wish to specify a function name as a string, you
-must enclose it with \code{\link[=I]{I()}}.}
+\item{weights}{A summary function which accepts a data and returns the
+weights for each observations. Alternatively, you can provide an ordering
+index as either an integer or a character. Since characters have been
+designated as character indices, if you wish to specify a function name as a
+string, you must enclose it with \code{\link[=I]{I()}}.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
-function provided in \code{wts} argument.}
+function provided in \code{weights} argument.}
 
 \item{reverse}{A boolean value. Should the sort order be in reverse?}
 
@@ -32,12 +32,12 @@ If previous groups has been established, and strict is \code{FALSE}, this will
 reorder the observations in each group.}
 
 \item{data}{A \code{matrix}, \verb{data frame}, or atomic vector used as the input for
-the \code{wts} function. Alternatively, you can specify a \code{function} (including
-purrr-like lambda syntax) that will be applied to the layout matrix,
-transforming it as necessary for weight calculations. By default, it will
-inherit from the layout matrix.}
+the \code{weights} function. Alternatively, you can specify a \code{function}
+(including purrr-like lambda syntax) that will be applied to the layout
+matrix, transforming it as necessary for weight calculations. By default, it
+will inherit from the layout matrix.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -52,19 +52,19 @@ A \code{"AlignOrder"} object.
 \description{
 Order layout observations based on weights
 }
-\section{Aligned Axis}{
+\section{Axis Alignment for Observations}{
 
 It is important to note that we consider rows as observations, meaning
-\code{NROW(data)} must match the number of observations along the specified layout
-axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
-layout).
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 \itemize{
-\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: for column annotation, the
-\verb{layout matrix} will be transposed before using (If data is a function, it
-will be applied with the transposed matrix). This is necessary because
-column annotation uses columns as observations, but we need rows.
-\item \code{\link[=stack_layout]{stack_layout()}}: the \verb{layout matrix} will be used as it is since we
-place all plots along a single axis.
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
 }
 }
 

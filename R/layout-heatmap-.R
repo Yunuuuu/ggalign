@@ -1,16 +1,15 @@
 #' Arrange Plots in a Heatmap
 #'
-#' `heatmap_layout` is a specialized version of [`quad_alignb()`], which always
-#' includes a default mapping of `aes(.data$.x, .data$.y)` and a default filling
-#' layer. This function simplifies the creation of heatmap plots by integrating
-#' essential elements for a standard heatmap layout, ensuring that the
-#' appropriate data mapping and visualization layers are automatically applied.
-#' `ggheatmap` is an alias for `heatmap_layout`.
+#' `heatmap_layout` is a specialized version of [`quad_alignb()`], which
+#' simplifies the creation of heatmap plots by integrating essential elements
+#' for a standard heatmap layout, ensuring that the appropriate data mapping and
+#' visualization layers are automatically applied. `ggheatmap` is an alias for
+#' `heatmap_layout`.
 #'
 #' @param data `r rd_layout_data()`. If not already a matrix, will be converted
 #' to one by [`fortify_matrix()`].
 #' @param ... Additional arguments passed to [`fortify_matrix()`].
-#' @inheritParams quad_layout
+#' @inheritParams quad_free
 #' @param filling A single string of `r oxford_or(c("raster", "tile"))` to
 #' indicate the filling style. By default, `waiver()` is used, which means that
 #' if the input matrix has more than 20,000 cells (`nrow * ncol > 20000`),
@@ -33,13 +32,9 @@
 #' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for details on
 #' option settings.
 #'
-#' @param set_context `r lifecycle::badge("deprecated")` Please use `context`
-#' argument instead.
-#' @param order `r lifecycle::badge("deprecated")` Please use `context` argument
-#' instead.
-#' @param name `r lifecycle::badge("deprecated")` Please use `context` argument
-#' instead.
-#' @inheritParams hmanno
+#' @inheritParams align_gg
+#' @param guides `r lifecycle::badge("deprecated")` Please use
+#' [`plot_action()`] function instead.
 #' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -64,12 +59,11 @@
 #' ggheatmap(letters)
 #' ggheatmap(matrix(rnorm(81), nrow = 9L))
 #' @importFrom ggplot2 aes
-#' @importFrom lifecycle deprecated
 #' @export
 heatmap_layout <- function(data = NULL, mapping = aes(),
                            ...,
                            width = NA, height = NA, filling = waiver(),
-                           action = NULL, theme = NULL, context = NULL,
+                           theme = NULL, context = NULL,
                            set_context = deprecated(),
                            order = deprecated(), name = deprecated(),
                            guides = deprecated()) {
@@ -81,14 +75,13 @@ heatmap_layout <- function(data = NULL, mapping = aes(),
 #' @rdname heatmap_layout
 ggheatmap <- heatmap_layout
 
-#' @importFrom lifecycle deprecated
 #' @importFrom ggplot2 aes
 #' @importFrom rlang arg_match0
 #' @export
 heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    ...,
                                    width = NA, height = NA, filling = waiver(),
-                                   action = NULL, theme = NULL, context = NULL,
+                                   theme = NULL, context = NULL,
                                    set_context = deprecated(),
                                    order = deprecated(), name = deprecated(),
                                    guides = deprecated()) {
@@ -110,7 +103,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         nrows <- NULL
         ncols <- NULL
     }
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = TRUE, order = NA_integer_, name = NA_character_
     ))
@@ -122,7 +115,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = new_layout_params(nobs = nrows),
         vertical = new_layout_params(nobs = ncols),
-        mapping = mapping, action = action, theme = theme, context = context,
+        mapping = mapping, theme = theme, context = context,
         width = width, height = height,
         class = "HeatmapLayout"
     )
@@ -131,7 +124,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
             "0.0.5", "ggheatmap(guides)", "ggheatmap(action)"
         )
         assert_layout_position(guides)
-        ans@action["guides"] <- list(guides)
+        ans@controls$action["guides"] <- list(guides)
     }
     # always remove default axis titles
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function

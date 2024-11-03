@@ -7,7 +7,7 @@ ggalign_build.StackLayout <- function(x) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 #' @noRd
-stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
+stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
 
@@ -40,26 +40,30 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
     # we shouln't use it for a single plot. Otherwise, the guide legends
     # collected by the layout will overlap with the plot axis.
     # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(action, "free_spaces")
+    stack_spaces <- .subset2(.subset2(controls, "action"), "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
     layout <- set_layout_params(stack@layout)
 
     for (plot in plots) {
         if (is_align(plot) || is_free(plot)) {
-            cur_action <- inherit_action(.subset2(plot, "action"), action)
+            cur_controls <- inherit_controls(
+                .subset2(plot, "controls"), controls
+            )
             if (remove_spaces) {
-                cur_spaces <- .subset2(cur_action, "free_spaces")
+                cur_spaces <- .subset2(
+                    .subset2(controls, "cur_controls"), "free_spaces"
+                )
                 if (is_string(cur_spaces)) {
                     cur_spaces <- setdiff_position(cur_spaces, stack_spaces)
                     if (nchar(cur_spaces) == 0L) cur_spaces <- NULL
-                    cur_action["free_spaces"] <- list(cur_spaces)
+                    cur_controls$controls["free_spaces"] <- list(cur_spaces)
                 }
             }
             if (is_align(plot)) {
                 patch <- align_build(plot,
                     panel = .subset2(layout, "panel"),
                     index = .subset2(layout, "index"),
-                    action = cur_action,
+                    controls = cur_controls,
                     extra_layout = extra_layout
                 )
                 patches <- stack_patch_add_center_plot(
@@ -68,7 +72,7 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
                     .subset2(patch, "size")
                 )
             } else if (is_free(plot)) {
-                patch <- free_build(plot, cur_action, direction = direction)
+                patch <- free_build(plot, cur_controls, direction = direction)
                 patches <- stack_patch_add_center_plot(
                     patches,
                     .subset2(patch, "plot"),
@@ -76,7 +80,7 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
                 )
             }
         } else if (is_quad_layout(plot)) {
-            patch <- quad_build(plot, inherit_action(plot@action, action))
+            patch <- quad_build(plot, inherit_controls(plot@controls, controls))
             quad_plots <- .subset2(patch, "plots")
             patches <- stack_patch_add_quad(
                 patches, quad_plots,
@@ -113,13 +117,52 @@ stack_build <- function(stack, action = stack@action, extra_layout = NULL) {
             stack@sizes[c(has_top, TRUE, has_bottom)],
             do.call(unit.c, attr(patches, "sizes"))
         ),
-        guides = .subset2(action, "guides"),
+        guides = .subset2(.subset2(controls, "action"), "guides"),
         theme = stack@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
     )
+}
+
+make_order <- function(order) {
+    l <- length(order)
+    index <- seq_len(l)
+
+    # for order not set by user, we use heuristic algorithm to define the order
+    need_action <- is.na(order)
+    if (all(need_action)) { # shorthand for the usual way, we don't set any
+        return(index)
+    } else if (all(!need_action)) { # we won't need do something special
+        return(order(order))
+    }
+
+    # 1. for outliers, we always put them in the two tail
+    # 2. for order has been set and is not the outliers,
+    #    we always follow the order
+    # 3. non-outliers were always regarded as the integer index
+    used <- as.integer(order[!need_action & order >= 1L & order <= l])
+
+    # we flatten user index to continuous integer sequence
+    sequence <- vec_unrep(used) # key is the sequence start
+    start <- .subset2(sequence, "key")
+    end <- pmin(
+        start + .subset2(sequence, "times") - 1L,
+        vec_c(start[-1L] - 1L, l) # the next start - 1L
+    )
+    used <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
+
+    # following index can be used
+    unused <- vec_set_difference(index, unlist(used, FALSE, FALSE))
+
+    # we assign the candidate index to the order user not set.
+    order[need_action] <- unused[seq_len(sum(need_action))]
+
+    # make_order(c(NA, 1, NA)): c(2, 1, 3)
+    # make_order(c(NA, 1, 3)): c(2, 1, 3)
+    # make_order(c(NA, 1, 3, 1)): c(2, 4, 3, 1)
+    order(order)
 }
 
 stack_patch <- function(direction) {

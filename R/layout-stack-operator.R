@@ -19,6 +19,38 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
     stack
 }
 
+# for objects can inherit from layout
+#' @export
+stack_layout_subtract.theme <- function(object, stack, object_name) {
+    if (!is.null(active_index <- stack@active) &&
+        is_layout(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- update_layout_option_theme(
+            plot, object, object_name
+        )
+    } else {
+        stack <- update_layout_option_theme(
+            stack, object, object_name
+        )
+    }
+    stack
+}
+
+#' @export
+stack_layout_subtract.ggalign_controls <- function(object, stack, object_name) {
+    if (!is.null(active_index <- stack@active) &&
+        is_layout(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- update_layout_option(
+            plot, object, object_name
+        )
+    } else {
+        stack <- update_layout_option(
+            stack, object, object_name
+        )
+    }
+    stack
+}
+
+# for objects should only be added with `+`
 #' @export
 stack_layout_subtract.layout_title <- function(object, stack, object_name) {
     cli::cli_abort(c(
@@ -36,7 +68,7 @@ stack_layout_subtract.free_gg <- stack_layout_subtract.layout_title
 #' @export
 stack_layout_subtract.Align <- function(object, stack, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code -} to add a {.fn {snake_class(object)}}",
+        "Cannot use {.code -} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))
 }
@@ -92,7 +124,7 @@ stack_layout_and_add.free_gg <- stack_layout_and_add.layout_title
 #' @export
 stack_layout_and_add.Align <- function(object, stack, object_name) {
     cli::cli_abort(c(
-        "Cannot use {.code &} to add a {.fn {snake_class(object)}}",
+        "Cannot use {.code &} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))
 }

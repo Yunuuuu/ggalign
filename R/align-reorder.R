@@ -15,14 +15,14 @@
 #' statistic, which we'll call [`order2()`] to extract the ordering information.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' function provided in `stat` argument.
-#' @inheritParams align_order
 #' @param data A `matrix`, `data frame`, or atomic vector used as the input for
 #' the `stat` function. Alternatively, you can specify a `function` (including
 #' purrr-like lambda syntax) that will be applied to the layout matrix,
 #' transforming it as necessary for statistic calculations. By default, it will
 #' inherit from the layout matrix.
+#' @inheritParams align_order
 #' @return A `"AlignReorder"` object.
-#' @inheritSection align Aligned Axis
+#' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
@@ -37,7 +37,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     stat <- rlang::as_function(stat)
     assert_bool(strict)
     assert_bool(reverse)
-    assert_s3_class(context, "plot_context", null_ok = TRUE)
+    assert_context(context)
     context <- update_context(context, new_context(
         active = FALSE, order = NA_integer_, name = NA_character_
     ))

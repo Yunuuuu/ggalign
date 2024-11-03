@@ -28,6 +28,9 @@ stack_layout_add.default <- function(object, stack, object_name) {
 }
 
 #' @export
+stack_layout_add.ggalign_controls <- stack_layout_add.default
+
+#' @export
 stack_layout_add.layout_annotation <- function(object, stack, object_name) {
     active_index <- stack@active
     if (!is.null(active_index) &&
@@ -133,9 +136,6 @@ stack_layout_add.stack_switch <- function(object, stack, object_name) {
     )
     if (!is.null(sizes <- .subset2(object, "sizes"))) {
         stack@sizes <- sizes
-    }
-    if (!is.null(new_action <- .subset2(object, "action"))) {
-        stack@action <- update_action(stack@action, new_action)
     }
     stack
 }

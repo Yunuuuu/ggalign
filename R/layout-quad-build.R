@@ -32,7 +32,7 @@ ggalign_build.QuadLayout <- function(x) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(x@action, "guides"),
+        guides = .subset2(.subset2(x@controls, "action"), "guides"),
         theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -41,14 +41,14 @@ ggalign_build.QuadLayout <- function(x) {
     )
 }
 
-quad_build <- function(quad, action = quad@action) UseMethod("quad_build")
+quad_build <- function(quad, controls = quad@controls) UseMethod("quad_build")
 
 #######################################################################
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 #' @export
-quad_build.QuadLayout <- function(quad, action = quad@action) {
+quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     data <- quad@data
     if (is.function(data) || is.null(data)) {
         cli::cli_abort(c(
@@ -60,7 +60,8 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
     column_params <- set_layout_params(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
-    vertical_action <- horizontal_action <- action
+    vertical_action <- horizontal_action <- action <-
+        .subset2(controls, "action")
     if (!is.null(layout_labs <- .subset2(action, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
@@ -92,14 +93,19 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
         if (is_empty(stack <- slot(quad, position))) {
             return(list(plot = NULL, size = NULL))
         }
+        stack_controls <- controls
+        # inherit from horizontal action or vertical action
         if (is_horizontal(to_direction(position))) {
             params <- column_params
-            stack_action <- inherit_action(stack@action, horizontal_action)
+            stack_controls$action <- horizontal_action
         } else {
             params <- row_params
-            stack_action <- inherit_action(stack@action, vertical_action)
+            stack_controls$action <- vertical_action
         }
-        plot <- stack_build(stack, action = stack_action, extra_layout = params)
+        plot <- stack_build(stack,
+            controls = inherit_controls(stack@controls, stack_controls),
+            extra_layout = params
+        )
         if (!is.null(plot)) {
             # for annotation, we should always make them next to
             # the main body
@@ -122,12 +128,15 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
                     right = "left"
                 )
             )
+
             # whether we should override the `guides` collection for the whole
             # annotation stack
             free_guides <- .subset2(stack@heatmap, "free_guides")
             if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
             # we also apply the `free_spaces` for the whole annotation stack
-            free_spaces <- .subset2(stack_action, "free_spaces") %|w|% NULL
+            free_spaces <- .subset2(
+                .subset2(stack_controls, "action"), "free_spaces"
+            ) %|w|% NULL
             if (!is.null(free_spaces)) {
                 plot <- free_space(free_border(plot, free_spaces), free_spaces)
             }
@@ -211,7 +220,7 @@ quad_build.QuadLayout <- function(quad, action = quad@action) {
     }
 
     # add action ----------------------------------------
-    p <- plot_add_action(p, inherit_action(quad@body_action, action))
+    p <- plot_add_controls(p, inherit_controls(quad@body_controls, controls))
 
     # collect all plots and sizes ----------------------
     plots <- c(plots, list(main = p))

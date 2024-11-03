@@ -7,7 +7,7 @@
 #' variations, and other genomic alterations in cancer research.
 #'
 #' @details
-#' `ggoncoplot()` is a wrapper around the [ggheatmap()] function, designed to
+#' `ggoncoplot()` is a wrapper around the [`ggheatmap()`] function, designed to
 #' simplify the creation of `OncoPrint`-style visualizations. The function
 #' automatically processes the input character matrix by splitting the encoded
 #' alterations (delimited by regex `[;:,|]`) into individual genomic events and
@@ -25,7 +25,7 @@
 #' @param reorder_row,reorder_column A boolean value indicating whether to
 #' reorder the rows/columns based on the frequency or characteristics of the
 #' alterations.
-#' @param filling Same as [ggheatmap()], but only `"tile"` can be used.
+#' @param filling Same as [`ggheatmap()`], but only `"tile"` can be used.
 #' @examples
 #' # A simple example from `ComplexHeatmap`
 #' mat <- read.table(textConnection(
@@ -60,7 +60,7 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
                        width = NA, height = NA, filling = waiver(),
-                       action = NULL, theme = NULL, context = NULL) {
+                       theme = NULL, context = NULL) {
     UseMethod("ggoncoplot")
 }
 
@@ -83,7 +83,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,
                                width = NA, height = NA, filling = waiver(),
-                               action = NULL, theme = NULL, context = NULL) {
+                               theme = NULL, context = NULL) {
     # prepare the matrix
     data <- fortify_matrix(data = data, ...)
     if (!is.character(data)) {
@@ -118,7 +118,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         }
     }
 
-    # prepare the action data
+    # prepare the plot data action
     action_data <- function(data) {
         value_list <- strsplit(data$value,
             split = "\\s*[;:,|]\\s*", perl = TRUE
@@ -138,7 +138,6 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     ans <- heatmap_layout(
         data = data, mapping = mapping,
         width = width, height = height,
-        action = plot_action(data = action_data),
         theme = theme, context = context, filling = NULL
     )
     if (reorder_row) {
@@ -155,10 +154,10 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
             align_order(order(column_scores, decreasing = TRUE))
     }
     # always make sure user provided action override the default action
-    ans <- ans + quad_active(action = action)
+    ans <- ans + quad_active() - plot_data(data = action_data)
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
-        ans <- ans + plot_action(data = action_data)
+        ans <- ans + plot_data(data = action_data)
 
         # set mapping for width and height
         tile_mapping <- aes(

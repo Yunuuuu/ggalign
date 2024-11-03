@@ -12,9 +12,9 @@
 \alias{+.ggheatmap}
 \alias{&.ggheatmap}
 \alias{-.ggheatmap}
-\alias{+.ggfree}
-\alias{&.ggfree}
-\alias{-.ggfree}
+\alias{+.ggside}
+\alias{&.ggside}
+\alias{-.ggside}
 \alias{Ops,StackLayout,ANY-method}
 \alias{+.StackLayout}
 \alias{&.StackLayout}
@@ -39,7 +39,7 @@ Layout operator
 \details{
 In order to reduce code repetition \code{ggalign} provides two operators for
 adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.
+\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}.
 
 Like \code{patchwork}, \code{&} add the element to all plots in the plot. If the
 element is a \link[ggplot2:theme]{theme}, this will also modify the layout
@@ -73,4 +73,13 @@ ggheatmap(mat) +
         colour = "red", fill = NA, linewidth = unit(2, "mm")
     ))
 
+# used in the layout, define the default action for all plots in the layout
+ggheatmap(matrix(rnorm(72), nrow = 8)) -
+    theme(plot.background = element_rect(fill = "red"))
+
+# You can also add it for a single plot
+ggheatmap(matrix(rnorm(72), nrow = 8)) -
+    theme(plot.background = element_rect(fill = "red")) +
+    # here, we modify the plot action for the heatmap body
+    theme(plot.background = element_rect(fill = "blue"))
 }

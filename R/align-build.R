@@ -1,5 +1,5 @@
 #' @importFrom ggplot2 theme element_blank
-align_build <- function(x, panel, index, action, extra_layout) {
+align_build <- function(x, panel, index, controls, extra_layout) {
     # we lock the Align object to prevent user from modifying this object
     # in `$draw` method, we shouldn't do any calculations in `$draw` method
     x$lock()
@@ -72,22 +72,12 @@ align_build <- function(x, panel, index, action, extra_layout) {
                 )
         }
     }
-    plot <- plot_add_action(plot, action,
-        theme = switch_direction(
-            direction,
-            theme(
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank()
-            ),
-            theme(
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank()
-            )
-        ),
-        call = .subset2(x, "call")
-    )
+    # remove axis titles, text, ticks used for alignment
+    if (.subset2(x, "no_axes")) {
+        controls$theme <- .subset2(controls, "theme") +
+            theme_no_axes(switch_direction(direction, "y", "x"))
+    }
+    plot <- plot_add_controls(plot, controls)
     list(plot = plot, size = .subset2(x, "size"))
 }
 

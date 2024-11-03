@@ -22,25 +22,16 @@
 #'     stack_active() +
 #'     # here we add a dendrogram to the stack.
 #'     align_dendro()
-#' @importFrom lifecycle deprecated
 #' @export
-stack_switch <- function(action = NULL, sizes = NULL, what = waiver()) {
-    if (is.null(action)) {
-        action <- plot_action() # To-DO: Use `NULL` to indicates the default
-    } else {
-        assert_action(action)
-    }
+stack_switch <- function(sizes = NULL, what = waiver()) {
     if (!is.waive(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
-    structure(
-        list(what = what, sizes = sizes, action = action),
-        class = "stack_switch"
-    )
+    structure(list(what = what, sizes = sizes), class = "stack_switch")
 }
 
 #' @export
 #' @rdname stack_switch
-stack_active <- function(action = NULL, sizes = NULL, what = NULL,
+stack_active <- function(sizes = NULL, what = NULL,
                          ...,
                          # following parameters have replaced with `action`
                          # argument
@@ -48,6 +39,14 @@ stack_active <- function(action = NULL, sizes = NULL, what = NULL,
                          free_spaces = deprecated(), plot_data = deprecated(),
                          theme = deprecated(), free_labs = deprecated()) {
     rlang::check_dots_empty()
+    deprecate_action(
+        "stack_active",
+        plot_data = plot_data,
+        theme = theme,
+        free_spaces = free_spaces,
+        free_labs = free_labs,
+        guides = guides
+    )
     if (!is.null(what)) {
         lifecycle::deprecate_warn(
             when = "0.0.5",
@@ -58,11 +57,6 @@ stack_active <- function(action = NULL, sizes = NULL, what = NULL,
     } else {
         what <- NULL
     }
-    ans <- stack_switch(action, sizes, what)
-    ans$action <- deprecate_action(
-        ans$action, "stack_active", plot_data, theme,
-        free_spaces, free_labs,
-        guides = guides
-    )
+    ans <- stack_switch(sizes, what)
     ans
 }

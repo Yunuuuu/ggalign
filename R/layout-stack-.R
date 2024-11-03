@@ -73,7 +73,7 @@ ggstack <- stack_layout
 #'     align_dendro()
 #' @export
 stack_align <- function(data = NULL, direction = NULL, ...,
-                        action = NULL, theme = NULL, sizes = NA) {
+                        theme = NULL, sizes = NA) {
     UseMethod("stack_align")
 }
 
@@ -91,17 +91,17 @@ stack_alignh <- function(data = NULL, ...) {
 
 #' @export
 stack_align.default <- function(data = NULL, direction = NULL, ...,
-                                action = NULL, theme = NULL, sizes = NA) {
+                                theme = NULL, sizes = NA) {
     # the observations are rows, we use matrix to easily
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
     # from matrix
     data <- fortify_matrix(data = data, ...)
 
-    # if inherit from the parent layout data, we'll inherit the action data
+    # if inherit from the parent layout data, we'll inherit the `plot_data`
     # function.
-    action <- check_action(action,
-        data = if (is.waive(data)) waiver() else NULL
+    controls <- new_controls(
+        data = new_plot_data(if (is.waive(data)) waiver() else NULL)
     )
 
     # `waiver()` is used for further extension, it indicates data will
@@ -109,7 +109,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # child layout.
     if (!is.null(data) && !is.function(data) && !is.waive(data)) {
         # if we have provided data, we initialize the `nobs`
-        nobs <- NROW(data)
+        nobs <- vec_size(data)
     } else {
         nobs <- NULL
     }
@@ -117,7 +117,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     new_stack_layout(
         name = "stack_align",
         data = data, direction = direction, layout = layout,
-        action = action, theme = theme, sizes = sizes
+        controls = controls, theme = theme, sizes = sizes
     )
 }
 
@@ -125,7 +125,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
 #' @export
 #' @rdname stack_align
 stack_free <- function(data = NULL, direction = NULL, ...,
-                       action = NULL, theme = NULL, sizes = NA) {
+                       theme = NULL, sizes = NA) {
     UseMethod("stack_free")
 }
 
@@ -143,17 +143,17 @@ stack_freeh <- function(data = NULL, ...) {
 
 #' @export
 stack_free.default <- function(data = NULL, direction = NULL, ...,
-                               action = NULL, theme = NULL, sizes = NA) {
+                               theme = NULL, sizes = NA) {
     data <- fortify_data_frame(data = data, ...)
     # if inherit from the parent layout data, we'll inherit the action data
     # function.
-    action <- check_action(action,
-        data = if (is.waive(data)) waiver() else NULL
+    controls <- new_controls(
+        data = new_plot_data(if (is.waive(data)) waiver() else NULL)
     )
     new_stack_layout(
         name = "stack_free",
         data = data, direction = direction, layout = NULL,
-        action = action, theme = theme, sizes = sizes
+        controls = controls, theme = theme, sizes = sizes
     )
 }
 
@@ -166,8 +166,8 @@ stack_free.uneval <- function(data, ...) {
     ))
 }
 
-new_stack_layout <- function(name, data, direction, layout,
-                             action = NULL, theme = NULL, sizes = NA,
+new_stack_layout <- function(name, data, direction, layout, controls = NULL,
+                             theme = NULL, sizes = NA,
                              call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
@@ -183,7 +183,7 @@ new_stack_layout <- function(name, data, direction, layout,
     }
     methods::new("StackLayout",
         name = name, data = data, direction = direction,
-        theme = theme, action = action, # used by the layout
+        theme = theme, controls = controls, # used by the layout
         sizes = sizes, layout = layout
     )
 }
@@ -197,8 +197,8 @@ methods::setClass(
     "StackLayout",
     contains = "Layout",
     list(
-        name = "character",
-        data = "ANY", plots = "list", direction = "character",
+        name = "character", data = "ANY", direction = "character",
+        plots = "list", # save the list of plots
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
         layout = "ANY" # used to align observations

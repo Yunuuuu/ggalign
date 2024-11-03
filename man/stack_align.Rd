@@ -9,27 +9,13 @@
 \alias{stack_freeh}
 \title{Arrange Plots Horizontally or Vertically}
 \usage{
-stack_align(
-  data = NULL,
-  direction = NULL,
-  ...,
-  action = NULL,
-  theme = NULL,
-  sizes = NA
-)
+stack_align(data = NULL, direction = NULL, ..., theme = NULL, sizes = NA)
 
 stack_alignv(data = NULL, ...)
 
 stack_alignh(data = NULL, ...)
 
-stack_free(
-  data = NULL,
-  direction = NULL,
-  ...,
-  action = NULL,
-  theme = NULL,
-  sizes = NA
-)
+stack_free(data = NULL, direction = NULL, ..., theme = NULL, sizes = NA)
 
 stack_freev(data = NULL, ...)
 
@@ -49,9 +35,6 @@ either \code{"horizontal"} or \code{"vertical"}.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
 \code{\link[=fortify_matrix]{fortify_matrix()}}.}
-
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and

@@ -16,7 +16,6 @@ ggoncoplot(
   width = NA,
   height = NA,
   filling = waiver(),
-  action = NULL,
   theme = NULL,
   context = NULL
 )
@@ -32,7 +31,6 @@ ggoncoplot(
   width = NA,
   height = NA,
   filling = waiver(),
-  action = NULL,
   theme = NULL,
   context = NULL
 )
@@ -41,7 +39,7 @@ ggoncoplot(
 \item{data}{A character matrix which encodes the alterations, you can use
 regex \verb{[;:,|]} to separate multiple alterations.}
 
-\item{mapping}{Default list of aesthetic mappings to use for the main plot.
+\item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
@@ -54,18 +52,15 @@ reorder the rows/columns based on the frequency or characteristics of the
 alterations.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
-\code{\link[grid:unit]{unit}} object}
+\code{\link[grid:unit]{unit}} object.}
 
 \item{filling}{Same as \code{\link[=ggheatmap]{ggheatmap()}}, but only \code{"tile"} can be used.}
-
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 }
 \value{

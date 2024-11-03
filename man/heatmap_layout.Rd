@@ -12,7 +12,6 @@ heatmap_layout(
   width = NA,
   height = NA,
   filling = waiver(),
-  action = NULL,
   theme = NULL,
   context = NULL,
   set_context = deprecated(),
@@ -25,13 +24,13 @@ heatmap_layout(
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout. If not already a matrix, will be converted
 to one by \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
-\item{mapping}{Default list of aesthetic mappings to use for the main plot.
+\item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
-\code{\link[grid:unit]{unit}} object}
+\code{\link[grid:unit]{unit}} object.}
 
 \item{filling}{A single string of \code{"raster"} or \code{"tile"} to
 indicate the filling style. By default, \code{waiver()} is used, which means that
@@ -55,14 +54,11 @@ default heatmap body filling color scale. See
 \code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for details on
 option settings.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used to define the default action
-for the plots in the layout.}
-
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{context}{A \code{\link[=plot_context]{plot_context()}} object that defines the action when
+\item{context}{A \code{\link[=context]{context()}} object that defines the active context when
 added to a layout.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context}
@@ -74,19 +70,18 @@ instead.}
 \item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{context} argument
 instead.}
 
-\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
-instead.}
+\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_action]{plot_action()}} function instead.}
 }
 \value{
 A \code{HeatmapLayout} object.
 }
 \description{
-\code{heatmap_layout} is a specialized version of \code{\link[=quad_alignb]{quad_alignb()}}, which always
-includes a default mapping of \code{aes(.data$.x, .data$.y)} and a default filling
-layer. This function simplifies the creation of heatmap plots by integrating
-essential elements for a standard heatmap layout, ensuring that the
-appropriate data mapping and visualization layers are automatically applied.
-\code{ggheatmap} is an alias for \code{heatmap_layout}.
+\code{heatmap_layout} is a specialized version of \code{\link[=quad_alignb]{quad_alignb()}}, which
+simplifies the creation of heatmap plots by integrating essential elements
+for a standard heatmap layout, ensuring that the appropriate data mapping and
+visualization layers are automatically applied. \code{ggheatmap} is an alias for
+\code{heatmap_layout}.
 }
 \section{ggplot2 specification}{
 

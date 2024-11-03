@@ -3,43 +3,57 @@
 #' An `Align` object interacts with the `layout` object to reorder or split
 #' observations and, in some cases, add plot components to the `layout`.
 #'
+#' @param align_class A `Align` object.
+#' @param params A list of parameters for `align_class`.
 #' @param data Options for `data`:
 #'  - A matrix, data frame, or atomic vector.
 #'  - [`waiver()`]: Uses the `layout matrix`.
 #'  - `NULL`: No data is set.
-#'  - A `function` (including purrr-like `lambda` syntax), which will be applied
-#'    to the `layout matrix`.
+#'  - A `function` (including purrr-like lambda syntax) applied to the layout
+#'    `matrix`.
 #'
-#' @param action Options for `action`:
-#'  - `NULL`: For `align_*()` functions that do not add a plot.
-#'  - [`waiver()`]: Uses the default [`plot_action()`].
-#'  - A [`plot_action()`] object to define specific plot actions.
-#' @param action_data Default action data, inferred from the `data` argument by
-#' default.
-#' @param limits Logical; determines if layout limits are set for the plot.
-#' @param facet Logical; determines if layout facets are set for the plot. If
-#'   `FALSE`, `limits` will also be set to `FALSE`.
-#' @param free_guides `r lifecycle::badge("deprecated")` Please use `action`
-#' argument instead.
-#' @inheritParams free_gg
-#' @inheritParams hmanno
-#' @param check.param Logical; if `TRUE`, checks the supplied parameters and
-#'   provides warnings as necessary.
+#' @param size The relative size of the plot, can be specified as a
+#' [`unit`][grid::unit].
+#' @param controls Options for `controls`:
+#'  - `NULL`: Used when `align_*()` functions do not add a plot.
+#'  - [`waiver()`]: Try to infer `controls` based on `data`.
+#'
+#' @param limits Logical; if `TRUE`, sets layout limits for the plot.
+#' @param facet Logical; if `TRUE`, applies facets to the layout. If `FALSE`,
+#'   `limits` will also be set to `FALSE`.
+#' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
+#'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
+#'   default, will controled by the option-
+#'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
+#' @param context A [`context()`] object that defines the active context when
+#'   added to a layout.
+#' @param free_guides `r lifecycle::badge("superseded")` Please use
+#'   [`plot_action()`] function instead.
+#' @param free_spaces `r lifecycle::badge("deprecated")` Please use
+#' [`plot_action()`] function instead.
+#' @param plot_data `r lifecycle::badge("deprecated")` Please use
+#' [`plot_data()`] function instead.
+#' @param theme `r lifecycle::badge("deprecated")` Please use
+#' [`-`][layout-operator] method instead.
+#' @param free_labs `r lifecycle::badge("deprecated")` Please use
+#' [`plot_action()`] function instead.
+#' @param check.param Logical; if `TRUE`, checks parameters and provides
+#'   warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting
 #'   messages.
 #'
-#' @section Aligned Axis:
+#' @section Axis Alignment for Observations:
 #' It is important to note that we consider rows as observations, meaning
-#' `NROW(data)` must match the number of observations along the specified layout
-#' axis (x-axis for a vertical stack layout, y-axis for a horizontal stack
-#' layout).
+#' `vec_size(data)`/`NROW(data)` must match the number of observations along the
+#' axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+#' horizontal stack layout).
 #'
-#'  - [`quad_layout()`]/[`ggheatmap()`]: for column annotation, the
-#'    `layout matrix` will be transposed before using (If data is a function, it
-#'    will be applied with the transposed matrix). This is necessary because
-#'    column annotation uses columns as observations, but we need rows.
-#'  - [`stack_layout()`]: the `layout matrix` will be used as it is since we
-#'    place all plots along a single axis.
+#'  - [`quad_layout()`]/[`ggheatmap()`]: For column annotation, the layout
+#'    `matrix` will be transposed before use (if `data` is a function, it is
+#'    applied to the transposed matrix), as column annotation uses columns as
+#'    observations but alignment requires rows.
+#'  - [`stack_layout()`]: The layout matrix is used as is, aligning all plots
+#'    along a single axis.
 #'
 #' @return A new `Align` object.
 #'
@@ -49,12 +63,10 @@
 #'
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
-#' @importFrom lifecycle deprecated
 #' @export
 #' @keywords internal
-align <- function(align_class, params, data, size = NULL,
-                  action = NULL, action_data = NA,
-                  limits = TRUE, facet = TRUE, context = NULL,
+align <- function(align_class, params, data, size = NULL, controls = NULL,
+                  limits = TRUE, facet = TRUE, no_axes = NULL, context = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
                   free_labs = deprecated(),
@@ -62,6 +74,15 @@ align <- function(align_class, params, data, size = NULL,
     if (override_call(call)) {
         call <- current_call()
     }
+    deprecate_action(
+        snake_class(align_class),
+        plot_data = plot_data,
+        theme = theme,
+        free_guides = free_guides,
+        free_spaces = free_spaces,
+        free_labs = free_labs,
+        call = call
+    )
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
@@ -72,26 +93,13 @@ align <- function(align_class, params, data, size = NULL,
     }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
+    assert_bool(no_axes, null_ok = TRUE, call = call)
+    no_axes <- no_axes %||%
+        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
 
-    if (!is.null(action)) {
-        if (identical(action_data, NA)) {
-            # set the default action data behaviour
-            # if inherit from the layout data, we'll also inherit the
-            # action data function
-            action_data <- if (is.waive(data)) waiver() else NULL
-        }
-        action <- check_action(
-            action %|w|% NULL,
-            data = action_data,
-            arg = "action",
-            call = call
-        )
-        action <- deprecate_action(
-            action, snake_class(align_class),
-            plot_data, theme,
-            free_spaces, free_labs,
-            free_guides = free_guides,
-            call = call
+    if (is.waive(controls)) {
+        controls <- new_controls(
+            new_plot_data(if (is.waive(data)) waiver() else NULL)
         )
     }
 
@@ -119,7 +127,7 @@ align <- function(align_class, params, data, size = NULL,
         plot = NULL,
         data = NULL,
         params = NULL,
-        labels = NULL, # the original rownames of the input data
+        labels = NULL, # the original `vec_names()` of the `input_data`
 
         # user input -------------------------------
         size = size,
@@ -129,9 +137,10 @@ align <- function(align_class, params, data, size = NULL,
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
-        action = action,
+        controls = controls,
         facet = facet,
         limits = limits,
+        no_axes = no_axes,
 
         # collect parameters
         input_params = params[intersect(names(params), all)],
@@ -267,7 +276,6 @@ Align <- ggproto("Align",
 }
 
 ggproto_formals <- function(x) formals(environment(x)$f)
-
 
 align_method_params <- function(f, remove = c("panel", "index")) {
     vec_set_difference(names(ggproto_formals(f)), c("self", remove))

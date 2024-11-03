@@ -287,15 +287,19 @@ gathered. In the following example, we'll collect the guide legends only on the
 `top` and `bottom` sides: 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
+  # reset the active context to the heatmap layout
+  quad_active() -
   # we only collect guides in the top and bottom side
-  quad_active(action = plot_action(guides = "tb"))
+  plot_action(guides = "tb")
 ```
 
 You can also apply the `plot_action()` function directly to specific plots:
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
+  # reset the active context to the heatmap layout
+  quad_active() -
   # we only collect guides in the top and bottom side
-  quad_active(action = plot_action(guides = "tb")) +
+  plot_action(guides = "tb") +
   # for the heatmap body, we collect guide in the right side
   plot_action(guides = "r")
 ```
@@ -307,8 +311,10 @@ integration. By default, it inherits the guides arguments from the heatmap
 layout. See following example: 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
-  # we only collect guides in the top and bottom side in the heatmap layout
-  quad_active(action = plot_action(guides = "tb")) +
+  # reset the active context to the heatmap layout
+  quad_active() -
+  # we only collect guides in the top and bottom side
+  plot_action(guides = "tb") +
   # we ensure the active context is in the bottom annotation
   # By default, it inherits "guides" argument from the heamtap layout, which
   # means it'll collect "guides" in the top and bottom side
@@ -329,8 +335,10 @@ in the layout. The `free_guides` argument specifies which guide legends from the
 annotation stack layout should be collected by the heatmap layout. 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
-  # we only collect guides in the top and bottom side in the heatmap layout
-  quad_active(action = plot_action(guides = "tb")) +
+  # reset the active context to the heatmap layout
+  quad_active() -
+  # we only collect guides in the top and bottom side
+  plot_action(guides = "tb") +
   # we also collect guides in the left side for the bottom annotation stack
   # layout in the heatmap layout
   anno_bottom(free_guides = "l") +
@@ -367,7 +375,8 @@ remove the left borders around the panel of the top annotation stack by setting
 ```{r}
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
-  anno_top(size = unit(30, "mm"), action = plot_action(free_spaces = "l")) +
+  anno_top(size = unit(30, "mm")) -
+  plot_action(free_spaces = "l") +
   align_dendro() +
   scale_y_continuous(
     expand = expansion(),
@@ -382,11 +391,13 @@ the annotations. (Note the guide legend from the bottom annotation):
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
   # we only collect guides in the top and bottom side
-  quad_active(action = plot_action(guides = "tb")) +
+  quad_active() -
+  plot_action(guides = "tb") +
   # 1. in the bottom annotation stack layout, we collect the legends in the
   #    left side
   # 2. we remove the spaces of the left border in the annotation
-  anno_bottom(action = plot_action(guides = "l", free_spaces = "l"))
+  anno_bottom() -
+  plot_action(guides = "l", free_spaces = "l")
 ```
 
 In `ggheatmap()` and `quad_layout()`, the behavior of the `free_spaces` and
@@ -413,7 +424,8 @@ string containing one or more of axis positions ("t", "l", "b", "r") to indicate
 which axis titles should be free from alignment.
 
 ```{r}
-ggheatmap(small_mat, action = plot_action(free_labs = NULL)) +
+ggheatmap(small_mat) -
+  plot_action(free_labs = NULL) +
   scale_fill_viridis_c() +
   ylab("Heatmap title") +
   anno_top(size = unit(30, "mm")) +
