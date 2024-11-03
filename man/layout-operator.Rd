@@ -47,7 +47,8 @@ theme.
 
 The key difference between \code{&} and \code{-} is in how they behave in
 \code{\link[=quad_layout]{quad_layout()}}. The \code{-} operator only applies the element to the current
-active context in \code{\link[=quad_layout]{quad_layout()}}.  Using \code{-} might seem unintuitive if you
+active context in \code{\link[=quad_layout]{quad_layout()}}, if no active context, it will apply to
+all plots in the \code{\link[=quad_layout]{quad_layout()}}. Using \code{-} might seem unintuitive if you
 think of the operator as "subtract", the underlying reason is that \code{-} is the
 only operator in the same precedence group as \code{+}.
 }

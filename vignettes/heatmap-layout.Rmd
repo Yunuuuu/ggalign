@@ -245,7 +245,8 @@ ggheatmap(small_mat) +
 # Operators
 
 - `+`: add elements to the active plot in the active layout.
-- `-`: add elements to all plots in the active layout.
+- `-`: add elements to all plots in the active layout and the nested layout of
+the active layout.
 - `&`: add elements to all plots for the layout.
 
 For `quad_layout()`/`ggheatmap()`, 

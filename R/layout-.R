@@ -77,7 +77,8 @@ methods::setMethod("$", "Layout", function(x, name) {
 #'
 #' The key difference between `&` and `-` is in how they behave in
 #' [`quad_layout()`]. The `-` operator only applies the element to the current
-#' active context in [`quad_layout()`].  Using `-` might seem unintuitive if you
+#' active context in [`quad_layout()`], if no active context, it will apply to
+#' all plots in the [`quad_layout()`]. Using `-` might seem unintuitive if you
 #' think of the operator as "subtract", the underlying reason is that `-` is the
 #' only operator in the same precedence group as `+`.
 #'

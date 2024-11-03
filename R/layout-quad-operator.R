@@ -1,9 +1,3 @@
-###############################################################
-#' @keywords internal
-quad_layout_subtract <- function(object, quad, object_name) {
-    UseMethod("quad_layout_subtract")
-}
-
 #' Modify `-` Operator Context in `quad_layout()`
 #'
 #' @description
@@ -53,7 +47,12 @@ quad_active_context <- function(quad, object) {
     context
 }
 
-#' @importFrom rlang is_string
+###############################################################
+#' @keywords internal
+quad_layout_subtract <- function(object, quad, object_name) {
+    UseMethod("quad_layout_subtract")
+}
+
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
     context <- quad_active_context(quad, object)
