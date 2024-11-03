@@ -27,6 +27,6 @@ selected context.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} By default, the \code{-} operator acts on all
 plots at the same position as the current active annotation in
 \code{\link[=quad_layout]{quad_layout()}}. If there is no active annotation stack, it will act on all
-plots in the \code{quad_layout()}. Wrapping objects with \code{with_position} allows
+plots in the \code{\link[=quad_layout]{quad_layout()}}. Wrapping objects with \code{with_position} allows
 you to change the context of the subtraction \code{-} operator.
 }

@@ -4,7 +4,7 @@
 #' `r lifecycle::badge('experimental')` By default, the `-` operator acts on all
 #' plots at the same position as the current active annotation in
 #' [`quad_layout()`]. If there is no active annotation stack, it will act on all
-#' plots in the `quad_layout()`. Wrapping objects with `with_position` allows
+#' plots in the [`quad_layout()`]. Wrapping objects with `with_position` allows
 #' you to change the context of the subtraction `-` operator.
 #'
 #' @param x Objects to add to the layout using the `-` operator.
