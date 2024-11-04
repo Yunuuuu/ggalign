@@ -21,14 +21,12 @@ ggalign_option_name <- function(x) {
 
 #' Used to update global data
 #' @noRd
-update_option <- function(new_option, old_option, object_name) {
+update_option <- function(new, old, object_name) {
     UseMethod("update_option")
 }
 
 #' @export
-update_option.default <- function(new_option, old_option, object_name) {
-    new_option
-}
+update_option.default <- function(new, old, object_name) new
 
 update_layout_option <- function(object, layout, object_name) {
     name <- ggalign_option_name(object)

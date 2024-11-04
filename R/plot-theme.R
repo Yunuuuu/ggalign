@@ -56,8 +56,8 @@ new_plot_theme.theme <- function(th = theme()) {
 new_plot_theme.plot_theme <- function(th = theme()) th
 
 #' @export
-update_option.plot_theme <- function(new_option, old_option, object_name) {
-    ggfun("add_theme")(old_option, new_option, object_name)
+update_option.plot_theme <- function(new, old, object_name) {
+    ggfun("add_theme")(old, new, object_name)
 }
 
 #' @export

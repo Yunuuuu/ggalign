@@ -57,8 +57,8 @@ new_plot_align <- function(guides = waiver(), free_spaces = waiver(),
 }
 
 #' @export
-update_option.plot_align <- function(new_option, old_option, object_name) {
-    update_plot_align(old_option, new_option)
+update_option.plot_align <- function(new, old, object_name) {
+    update_plot_align(old, new)
 }
 
 #' @importFrom utils modifyList
