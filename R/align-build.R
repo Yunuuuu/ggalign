@@ -74,7 +74,7 @@ align_build <- function(x, panel, index, controls, extra_layout) {
     }
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(.subset2(x, "no_axes"))) {
-        controls$theme <- .subset2(controls, "theme") +
+        controls$plot_theme <- .subset2(controls, "plot_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
     plot <- plot_add_controls(plot, controls)

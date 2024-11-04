@@ -6,7 +6,7 @@
 #' @importFrom ggplot2 theme
 #' @export
 plot_theme <- rlang::new_function(
-    rlang::fn_fmls(theme),
+    rlang::fn_fmls(theme), # we can utilize the editor completion
     quote({
         elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
         new_plot_theme(theme(!!!elements))
@@ -21,7 +21,7 @@ new_plot_theme <- function(th = theme()) {
         vec_set_difference(names(attrs), c("names", "class"))
     )
     rlang::inject(new_option(
-        name = "theme", th, !!!attrs,
+        name = "plot_theme", th, !!!attrs,
         class = c("plot_theme", class(th))
     ))
 }

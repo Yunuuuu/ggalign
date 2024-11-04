@@ -1,7 +1,11 @@
 new_controls <- function(plot_data = new_plot_data(),
                          plot_align = new_plot_align(),
-                         theme = new_plot_theme()) {
-    list(plot_data = plot_data, theme = theme, plot_align = plot_align)
+                         plot_theme = new_plot_theme()) {
+    list(
+        plot_data = plot_data,
+        plot_theme = plot_theme,
+        plot_align = plot_align
+    )
 }
 
 new_option <- function(name, option, ..., class = character()) {

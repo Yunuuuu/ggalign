@@ -127,8 +127,8 @@ default_layout <- function(layout) {
         .subset2(.subset2(layout@controls, "plot_align"), "guides") %|w|% "tlbr"
     )
     # we by default, use `default_theme()`
-    layout@controls$theme <- update_option(
-        .subset2(layout@controls, "theme"),
+    layout@controls$plot_theme <- update_option(
+        .subset2(layout@controls, "plot_theme"),
         new_plot_theme(default_theme())
     )
     layout
