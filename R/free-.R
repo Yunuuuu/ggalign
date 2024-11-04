@@ -48,7 +48,7 @@ new_free_gg <- function(plot, data, size, active,
     } else {
         size <- check_size(size, call = call)
     }
-    assert_active(active)
+    assert_active(active, call = call)
     active <- update_active(active, new_active(
         order = NA_integer_, use = TRUE, name = NA_character_
     ))
