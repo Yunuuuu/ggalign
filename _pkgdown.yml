@@ -31,12 +31,11 @@ reference:
   - quad_anno
   - stack_switch
   - plot_align
-  - plot_context
+  - plot_data
+  - plot_theme
+  - active
   - layout-operator
   - theme_ggalign
-  - layout_design
-  - layout_title
-  - layout_annotation
 
 - title: Layout Plot
   desc: >
@@ -73,6 +72,9 @@ reference:
   - area
   - inset
   - ggwrap
+  - layout_design
+  - layout_title
+  - layout_annotation
 
 - title: Extending Plot Composer
   desc: >
@@ -113,8 +115,9 @@ articles:
   - heatmap-layout
   - layout-customize
   - layout-plot
+  - marginal-plots
   - stack-layout
-  - special-syntax
+  - difference-with-ggplot2
   - complete-examples
 
 - title: Plot composer

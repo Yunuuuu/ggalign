@@ -1,4 +1,4 @@
-#' Plot data action
+#' Plot data Specifications
 #'
 #' @param data A function to transform the plot data before rendering, referred
 #' to as `plot_data`. Acceptable values include:

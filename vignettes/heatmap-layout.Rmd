@@ -243,207 +243,129 @@ ggheatmap(small_mat) +
 ```
 
 # Operators
-
-- `+`: add elements to the active plot in the active layout.
-- `-`: add elements to all plots in the active layout and the nested layout of
-the active layout.
-- `&`: add elements to all plots for the layout.
-
-For `quad_layout()`/`ggheatmap()`, 
-
-# Plot actions
-The `plot_align()` function defines the behavior of plots within a layout. It
-can be used in the `action` argument of layout functions like
-`quad_anno()`/`quad_active` or `stack_switch()`/`stack_active()` to set global
-actions for all plots in the layout. Additionally, `plot_align()` can be
-applied directly to specific plots through the `action` argument in the
-`align_*()`/`ggfree()` functions, or it can be added directly to a plot.
-
-## guides
-By default, `ggheatmap()` will collect all guide legends on the side from which
-they originate. 
-
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides <- ggheatmap(small_mat, width = 2, height = 2L) +
-  scale_fill_viridis_c(name = "I'm from heatmap body") +
-  theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
-  anno_top() +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from top annotation", palette = "Dark2",
-    guide = guide_legend(position = "right")
-  ) +
-  anno_left() +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from left annotation", palette = "Dark2",
-    guide = guide_legend(position = "top", direction = "vertical")
-  ) +
-  anno_bottom() +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from bottom annotation", palette = "Dark2",
-    guide = guide_legend(position = "left")
-  ) +
-  anno_right() +
-  align_dendro(aes(color = branch), k = 3L) +
-  scale_color_brewer(
-    name = "I'm from right annotation", palette = "Dark2",
-    guide = guide_legend(position = "bottom", direction = "vertical")
-  ) &
-  theme(plot.margin = margin())
-heatmap_collect_all_guides
-```
-
-Use the `guides` argument control which side of guide legends should be
-gathered. In the following example, we'll collect the guide legends only on the
-`top` and `bottom` sides: 
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-  # reset the active context to the heatmap layout
-  quad_active() -
-  # we only collect guides in the top and bottom side
-  plot_align(guides = "tb")
-```
-
-You can also apply the `plot_align()` function directly to specific plots:
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-  # reset the active context to the heatmap layout
-  quad_active() -
-  # we only collect guides in the top and bottom side
-  plot_align(guides = "tb") +
-  # for the heatmap body, we collect guide in the right side
-  plot_align(guides = "r")
-```
-
-As previously mentioned, the annotation is represented as a stack_layout()
-object. The guide legends within the annotation stack are first collected by the
-stack_layout() itself and then passed to the overall heatmap layout for further
-integration. By default, it inherits the guides arguments from the heatmap
-layout. See following example: 
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-  # reset the active context to the heatmap layout
-  quad_active() -
-  # we only collect guides in the top and bottom side
-  plot_align(guides = "tb") +
-  # we ensure the active context is in the bottom annotation
-  # By default, it inherits "guides" argument from the heamtap layout, which
-  # means it'll collect "guides" in the top and bottom side
-  anno_bottom() +
-  # for the dendrogram in the bottom annotation, we collect guide in the left side
-  plot_align(guides = "l")
-```
-
-Here, the guide legend is collected by the bottom annotation but will not be
-collected by the heatmap layout since the heatmap layout only gathers guides
-from the `top` and `bottom`. In this way, the guide legends of the annotation
-stack will be put around the annotation stack layout.
-
-To override this guide collection behavior for the heatmap annotation, you can
-use the `free_guides` argument of the `quad_anno()` function. This differs from the
-`guides` argument in `plot_align()`, which controls the behavior for the plots
-in the layout. The `free_guides` argument specifies which guide legends from the
-annotation stack layout should be collected by the heatmap layout. 
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-  # reset the active context to the heatmap layout
-  quad_active() -
-  # we only collect guides in the top and bottom side
-  plot_align(guides = "tb") +
-  # we also collect guides in the left side for the bottom annotation stack
-  # layout in the heatmap layout
-  anno_bottom(free_guides = "l") +
-  # for the dendrogram in the bottom annotation, we collect guide in the left side
-  plot_align(guides = "l")
-```
-
->Note: The heatmap layout will only collect guide legends from the annotation
-stack if the stack layout collects its own guides first. 
-
-## free_spaces
-By default, `ggheatmap()` will align all elements of the plot, which can
-sometimes lead to unwanted spacing. Consider the following example:
-
+## Addition operator
+> `+`: adds elements to the active plot in the active layout.
+The `+` operator is straightforward and should be used as needed. In
+`ggheatmap()`/`quad_layout()`, four nested layouts are available for
+annotations: `top`, `left`, `bottom`, and `right`. If no active annotation is
+set, `ggheatmap()`/`quad_layout()` treat themselves as the active layout. Since
+there is only one main plot in the `ggheatmap()`/`quad_layout()`, the main plot
+is always treated as the active plot in this context.
 ```{r}
+# Initialize the heatmap; by default, no active annotation will be set.
+# The active layout is the heatmap layout, and the active plot in the layout is
+# the main plot.
 ggheatmap(small_mat) +
+  # Add elements to the main plot
   scale_fill_viridis_c() +
-  anno_top(size = unit(30, "mm")) +
+  # Change the active layout to the left annotation
+  anno_left(size = 0.2) +
+  # Add a dendrogram in the left annotation
   align_dendro() +
-  scale_y_continuous(
-    expand = expansion(),
-    labels = ~ paste("very very long labels", .x)
-  ) +
-  anno_left(unit(20, "mm")) +
+  # Change the active layout to the right annotation
+  anno_right(size = 0.2) +
+  # Add a dendrogram in the right annotation
   align_dendro()
 ```
 
-In this case, the left annotation stack is positioned far from the heatmap body
-due to the wide axis labels in the top annotation stack. This occurs because the
-top annotation stack is aligned with the heatmap body. To fix this, you can
-remove the left borders around the panel of the top annotation stack by setting
-`free_spaces = "l"`.
-
+## logical AND operator
+> `&`: applies elements to all plots in the layout.
+The `&` operator works similarly to `patchwork`, applying an element across all
+plots in a layout. If the element is a `theme()`, it modifies the layout’s
+theme, which includes settings for guides, titles, subtitles, captions, margins,
+panel borders, and backgrounds. This `theme` is provided as an input argument in
+functions like `ggheatmap()`/`quad_layout()`. Since `&` has lower precedence
+than `+`, it’s generally best to use it at the end of an expression or wrap it
+in parentheses when needed. 
 ```{r}
+# Initialize the heatmap with color scales and annotations.
 ggheatmap(small_mat) +
   scale_fill_viridis_c() +
-  anno_top(size = unit(30, "mm")) -
-  plot_align(free_spaces = "l") +
-  align_dendro() +
-  scale_y_continuous(
-    expand = expansion(),
-    labels = ~ paste("very long labels", .x)
-  ) +
-  anno_left(unit(20, "mm")) +
-  align_dendro()
+  anno_left(size = 0.2) +
+  # Add a dendrogram in the left annotation and split the dendrogram into 3 groups
+  align_dendro(aes(color = branch), k = 3L) +
+  anno_right(size = 0.2) +
+  # Add a dendrogram in the right annotation and split the dendrogram into 3 groups
+  align_dendro(aes(color = branch), k = 3L) &
+  # Set color scale for all plots
+  scale_color_brewer(palette = "Dark2")
 ```
 
-One useful way to utilize `free_spaces` is to position the guide legends next to
-the annotations. (Note the guide legend from the bottom annotation): 
-```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-  # we only collect guides in the top and bottom side
+## Subtraction operator
+>`-`: Adds elements to all plots in the active layout, as well as to any nested
+layouts within it (this behavior differs in `stack_layout()`; refer to
+`vignette("layout-customize")` for more details).
+
+Using `-` might seem unintuitive if you think of the operator as `"subtract"`,
+the underlying reason is that `-` is the only operator in the same precedence
+group as `+`, allowing for seamless combination with `+`.
+
+If the active layout is the `ggheatmap()`/`quad_layout()`, `-` functions
+similarly to `&`.
+```{r}
+# Initialize the heatmap with color scales and annotations.
+my_plot <- ggheatmap(small_mat) +
+  scale_fill_viridis_c() +
+  anno_left(size = 0.2) +
+  align_dendro(aes(color = branch), k = 3L) +
+  anno_right(size = 0.2) +
+  align_dendro(aes(color = branch), k = 3L) +
+  # Remove any active annotation
   quad_active() -
-  plot_align(guides = "tb") +
-  # 1. in the bottom annotation stack layout, we collect the legends in the
-  #    left side
-  # 2. we remove the spaces of the left border in the annotation
-  anno_bottom() -
-  plot_align(guides = "l", free_spaces = "l")
+  # Set color scale for all plots, since the active layout is the `ggheatmap()`/`quad_layout()`
+  scale_color_brewer(palette = "Dark2") +
+  # No need for parentheses; we can directly add other elements
+  # Change the active layout to the top annotation
+  anno_top(size = 0.2) +
+  # Add a dendrogram in the top annotation
+  align_dendro()
+my_plot
 ```
 
-In `ggheatmap()` and `quad_layout()`, the behavior of the `free_spaces` and
-`free_labs` arguments differs from other arguments in `plot_align()` when
-inheriting from the parent layout:
-  - For `top` and `bottom` annotations, it inherits from the left ("l") and
-  right ("r") axes.
-  - For `left` and `right` annotations, it inherits from the top ("t") and
-  bottom ("b") axes.
-
-## free_labs
-By default, `ggheatmap()` won't align the axis titles.
+If the active layout is not the `ggheatmap()`/`quad_layout()`, the `-` operator
+will only add elements to all plots in the active annotation stack: 
 ```{r}
-ggheatmap(small_mat) +
-  scale_fill_viridis_c() +
-  ylab("Heatmap title") +
-  anno_top(size = unit(30, "mm")) +
-  align_dendro() +
-  ylab("Annotation title")
+my_plot +
+  # Change the active layout to the left annotation
+  anno_left() -
+  # Modify the background of all plots in the left annotation
+  theme(plot.background = element_rect(fill = "red"))
 ```
 
-To align axis titles, you can set `free_labs = NULL`. Alternatively, A single
-string containing one or more of axis positions ("t", "l", "b", "r") to indicate
-which axis titles should be free from alignment.
+### `with_position`
+Along with the `-` operator, `with_position()` can be used to modify the operated
+context in `ggheatmap()`/`quad_layout()`.
 
+It accepts two arguments: the object operated on by the `-` operator and the
+operated context. 
+
+By default, if the current active context in `ggheatmap()`/`quad_layout()` is
+`top` or `bottom`, the operator will also act on the corresponding `bottom` or
+`top` annotation. If the context is `left` or `right`, the operator will also
+act on the `right` or `left` annotation, respectively. If there is no active
+annotation stack, it defaults to `NULL`.
 ```{r}
-ggheatmap(small_mat) -
-  plot_align(free_labs = NULL) +
-  scale_fill_viridis_c() +
-  ylab("Heatmap title") +
-  anno_top(size = unit(30, "mm")) +
-  align_dendro() +
-  ylab("Annotation title")
+my_plot +
+  # Change the active layout to the left annotation
+  anno_left() -
+  # Modify the background of all plots in the left and the opposite annotation
+  with_position(theme(plot.background = element_rect(fill = "red")))
+```
+
+The second argument can be a string containing one or more of `r
+ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack should
+be used as the context. The above example is equivalent to: 
+```{r}
+my_plot -
+  # Modify the background of all plots in the left and right annotation
+  with_position(theme(plot.background = element_rect(fill = "red")), "lr")
+```
+
+If it is `NULL`, it removes any active annotation stack:
+```{r}
+my_plot -
+  # Modify the background of all plots in all annotation
+  with_position(theme(plot.background = element_rect(fill = "red")), NULL)
 ```
 
 # Session information

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-data.R
 \name{plot_data}
 \alias{plot_data}
-\title{Plot data action}
+\title{Plot data Specifications}
 \usage{
 plot_data(data, inherit = FALSE)
 }
@@ -27,7 +27,7 @@ rendering by \code{ggplot2}. The returned data must be a data frame for ggplot.}
 Defaults to \code{FALSE}.}
 }
 \description{
-Plot data action
+Plot data Specifications
 }
 \details{
 Defaults will attempt to inherit from the parent layout if the actual data is

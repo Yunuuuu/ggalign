@@ -32,10 +32,7 @@ A \code{plot_align} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The \code{plot_align()} function defines the
-behavior of plots within a layout.  It can be used in the \code{action} argument
-of layout functions like \code{\link[=quad_switch]{quad_switch()}} or \code{\link[=stack_switch]{stack_switch()}} to set
-global actions for all plots in the layout. Additionally, \code{plot_align()} can
-be added directly to a plot.
+align Specifications for plots.
 }
 \examples{
 # used in the layout, define the default action for all plots in the layout

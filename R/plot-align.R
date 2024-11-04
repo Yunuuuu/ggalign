@@ -2,10 +2,7 @@
 #'
 #' @description
 #' `r lifecycle::badge('experimental')` The `plot_align()` function defines the
-#' behavior of plots within a layout.  It can be used in the `action` argument
-#' of layout functions like [`quad_switch()`] or [`stack_switch()`] to set
-#' global actions for all plots in the layout. Additionally, `plot_align()` can
-#' be added directly to a plot.
+#' align Specifications for plots.
 #'
 #' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
 #' which side of guide legends should be collected. Defaults to

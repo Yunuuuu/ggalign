@@ -21,9 +21,7 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL,
-        controls = list(theme = NULL, action = NULL, data = NULL),
-        titles = list(), annotation = list(), theme = NULL,
+        active = NULL, titles = list(), annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )
@@ -71,7 +69,7 @@ methods::setMethod("$", "Layout", function(x, name) {
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
 #' `r rd_layout()`: `-` and `&`.
 #'
-#' Like `patchwork`, `&` add the element to all plots in the plot. If the
+#' Like `patchwork`, `&` add the element to all plots in the layout. If the
 #' element is a [theme][ggplot2::theme], this will also modify the layout
 #' theme.
 #'

@@ -32,7 +32,7 @@ logo <- ggstack(data = mat_scaled) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +
     # add a block plot for each group in the stack
-    ggpanel(size = unit(1, "cm")) +
+    ggalign(size = unit(1, "cm"), data = NULL) +
     geom_tile(aes(x = 1, fill = factor(.panel))) +
     scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
     scale_x_continuous(breaks = NULL, name = NULL) +
@@ -74,7 +74,7 @@ logo <- ggstack(data = mat_scaled) +
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
     # add another heatmap and set the heatmap body width
-    ggheatmap(expr$type, .width = unit(2, "cm")) +
+    ggheatmap(expr$type, width = unit(2, "cm")) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
@@ -87,7 +87,7 @@ logo <- ggstack(data = mat_scaled) +
     scale_x_discrete() +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    theme(plot.margin = margin()) &
+    plot_theme(plot.margin = margin()) &
     theme(
         plot.background = element_blank(), panel.background = element_blank(),
         legend.background = element_blank()

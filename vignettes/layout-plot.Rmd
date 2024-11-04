@@ -188,9 +188,9 @@ using `ggwrap()`, which converts them into a `ggplot` for plotting:
 library(grid)
 ggheatmap(small_mat) +
     anno_top() +
-    # ggwrap will create a `ggplot` object, we use `gplot` to add it into the layout
+    # `ggwrap()` will create a `ggplot` object, we use `ggfree` to add it into the layout
     ggfree(ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full")) +
-    # we can then add any inset grobs (the same as ggwrap, it can take any objects
+    # we can then add any inset grobs (the same as `ggwrap()`, it can take any objects
     # which can be converted to a `grob`)
     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
     inset(textGrob("Here are some text", gp = gpar(color = "black")),

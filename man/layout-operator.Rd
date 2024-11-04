@@ -41,7 +41,7 @@ In order to reduce code repetition \code{ggalign} provides two operators for
 adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
 \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}.
 
-Like \code{patchwork}, \code{&} add the element to all plots in the plot. If the
+Like \code{patchwork}, \code{&} add the element to all plots in the layout. If the
 element is a \link[ggplot2:theme]{theme}, this will also modify the layout
 theme.
 

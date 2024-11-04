@@ -114,9 +114,9 @@ ggheatmap(small_mat) +
 
 ## Vertical layout
 ```{r fig.height = 6}
-ggstack(small_mat, "v") +
-    align_dendro(aes(color = branch), k = 4L, size = 0.2) -
-    theme(axis.text.x = element_blank()) +
+ggstack(small_mat, "v") -
+    plot_theme(axis.text.x = element_blank()) +
+    align_dendro(aes(color = branch), k = 4L, size = 0.2) +
     scale_color_brewer(palette = "Dark2") +
     ggheatmap() +
     ggheatmap() &
@@ -128,16 +128,16 @@ ggstack(small_mat, "v") +
 ```{r}
 ggside(mpg, aes(displ, hwy, colour = class)) -
     # set default theme for all plots in the layout
-    theme_bw() +
+    plot_theme(theme_bw()) +
     geom_point(size = 2) +
     anno_top(size = 0.3) -
     # set default theme for the top annotation
-    theme_no_axes("tb") +
+    plot_theme(theme_no_axes("tb")) +
     ggfree() +
     geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
     anno_right(size = 0.3) -
     # set default theme for the right annotation
-    theme_no_axes("lr") +
+    plot_theme(theme_no_axes("lr")) +
     ggfree() +
     geom_density(aes(x = after_stat(density), hwy, colour = class),
         position = "stack"

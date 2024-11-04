@@ -40,10 +40,10 @@ more details, see: <https://www.tidyverse.org/blog/2024/09/patchwork-1-3-0/>.
 
 The plot composer function in `ggalign` is `align_plots()`, which behaves
 similarly to `cowplot::align_plots()` and `patchwork::wrap_plots()`. However,
-you can directly use `align_plots()` with `ggheatmap()` and `ggstack()`,
-ensuring that they align correctly by plot panel. Additionally, `align_plots()`
-can align `pheatmap` and `ComplexHeatmap` objects, although they won't align by
-panel area with ggplot2. 
+you can directly use `align_plots()` with `quad_layout()`/`ggheatmap()` and
+`ggstack()`, ensuring that they align correctly by plot panel. Additionally,
+`align_plots()` can align `pheatmap` and `ComplexHeatmap` objects, although they
+won't align by panel area with ggplot2. 
 
 ## Plot Assembly
 We'll start with a few well-known example plots:
