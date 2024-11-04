@@ -1,4 +1,4 @@
-#' Plot default theme options
+#' Plot default theme
 #'
 #' @inherit ggplot2::theme
 #' @param ... A [`theme()`][ggplot2::theme] object or additional element
@@ -8,12 +8,21 @@
 #' @examples
 #' plot_theme()
 #' @importFrom ggplot2 theme
+#' @importFrom rlang inject
 #' @export
 plot_theme <- rlang::new_function(
-    rlang::fn_fmls(theme), # we can utilize the editor completion
+    # we can utilize the editor completion, we put all theme arguments here
+    # we move dots in the start
+    c(
+        rlang::exprs(... = ),
+        .subset(
+            rlang::fn_fmls(theme),
+            vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+        )
+    ),
     quote({
         elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-        ans <- theme(!!!elements)
+        ans <- inject(theme(!!!elements)) # for ggplot2 version < 3.5.0
         th <- NULL
         for (i in seq_len(...length())) {
             if (inherits(t <- ...elt(i), "theme")) {
@@ -30,13 +39,14 @@ new_plot_theme <- function(th = theme()) {
     UseMethod("new_plot_theme", th)
 }
 
+#' @importFrom rlang inject
 #' @export
 new_plot_theme.theme <- function(th = theme()) {
     attrs <- attributes(th)
     attrs <- vec_slice(
         attrs, vec_set_difference(names(attrs), c("names", "class"))
     )
-    rlang::inject(new_option(
+    inject(new_option(
         name = "plot_theme", th, !!!attrs,
         class = c("plot_theme", class(th))
     ))
@@ -133,7 +143,7 @@ default_theme <- function() {
 #' p + theme_no_axes()
 #' p + theme_no_axes("b")
 #' p + theme_no_axes("l")
-#' @importFrom rlang arg_match0
+#' @importFrom rlang arg_match0 inject
 #' @importFrom ggplot2 theme element_blank
 #' @export
 theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
@@ -163,7 +173,7 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
         sep = "."
     )
     el <- vec_set_names(vec_rep(list(element_blank()), length(el)), el)
-    theme(!!!el, validate = FALSE)
+    inject(theme(!!!el, validate = FALSE))
 }
 
 #' @importFrom rlang try_fetch
