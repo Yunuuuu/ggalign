@@ -1,12 +1,45 @@
+#' Plot default theme options
+#'
+#' @inherit ggplot2::theme
+#' @examples
+#' plot_theme()
+#' @importFrom ggplot2 theme
 #' @export
-inherit_option.theme <- function(option, poption) {
+plot_theme <- rlang::new_function(
+    rlang::fn_fmls(theme),
+    quote({
+        elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
+        new_plot_theme(theme(!!!elements))
+    })
+)
+
+#' @importFrom ggplot2 theme
+new_plot_theme <- function(th = theme()) {
+    attrs <- attributes(th)
+    attrs <- vec_slice(
+        attrs,
+        vec_set_difference(names(attrs), c("names", "class"))
+    )
+    rlang::inject(new_option(
+        name = "theme", th, !!!attrs,
+        class = c("plot_theme", class(th))
+    ))
+}
+
+#' @export
+update_option.plot_theme <- function(new_option, old_option, object_name) {
+    ggfun("add_theme")(old_option, new_option, object_name)
+}
+
+#' @export
+inherit_option.plot_theme <- function(option, poption) {
     # By default, we'll always complete the theme when building the layout
     # so parent always exist.
     poption + option
 }
 
 #' @export
-plot_add.theme <- function(option, plot) {
+plot_add.plot_theme <- function(option, plot) {
     # setup plot theme
     plot$theme <- option + .subset2(plot, "theme")
     plot
@@ -18,9 +51,8 @@ plot_add.theme <- function(option, plot) {
 #'
 #' @details
 #' You can change the default theme using the option
-#' `r code_quote(sprintf("%s.default_theme", pkg_nm()))`.
-#' This option should be set to a function that returns a
-#' [`theme()`][ggplot2::theme] object.
+#' `r code_quote(sprintf("%s.default_theme", pkg_nm()))`. This option should be
+#' set to a function that returns a [`theme()`][ggplot2::theme] object.
 #'
 #' @inheritDotParams ggplot2::theme_classic
 #' @importFrom ggplot2 theme_classic

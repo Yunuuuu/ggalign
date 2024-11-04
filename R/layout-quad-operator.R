@@ -26,11 +26,12 @@ with_position <- function(x, position = waiver()) {
     x
 }
 
+quad_active_position <- function(x) {
+    attr(x, sprintf("__%s.quad_active_position__", pkg_nm()), exact = TRUE)
+}
+
 quad_active_context <- function(quad, object) {
-    context <- attr(object,
-        sprintf("__%s.quad_active_position__", pkg_nm()),
-        exact = TRUE
-    )
+    context <- quad_active_position(object)
     position <- quad@active
     if (is.null(context)) { # if not set
         context <- position
@@ -72,24 +73,7 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 
 # for objects can inherit from layout
 #' @export
-quad_layout_subtract.theme <- function(object, quad, object_name) {
-    context <- quad_active_context(quad, object)
-    if (is.null(context)) {
-        quad <- update_layout_option_theme(object, quad, object_name)
-    } else {
-        for (position in context) {
-            if (!is.null(slot(quad, position))) {
-                slot(quad, position) <- update_layout_option_theme(
-                    object, slot(quad, position), object_name
-                )
-            }
-        }
-    }
-    quad
-}
-
-#' @export
-quad_layout_subtract.ggalign_controls <- function(object, quad, object_name) {
+quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
     context <- quad_active_context(quad, object)
     if (is.null(context)) {
         quad <- update_layout_option(object, quad, object_name)

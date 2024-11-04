@@ -33,7 +33,7 @@ with_options <- function(code, ...) {
 
 #' @param ans Whether to assign the final results into the 'ans' variable.
 #' @noRd
-body_append <- function(fn, ..., ans = FALSE) {
+fn_body_append <- function(fn, ..., ans = FALSE) {
     args <- rlang::fn_fmls(fn)
     body <- rlang::fn_body(fn)
     body <- as.list(body)

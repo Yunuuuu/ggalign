@@ -28,7 +28,7 @@ stack_layout_add.default <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_add.ggalign_controls <- stack_layout_add.default
+stack_layout_add.ggalign_option <- stack_layout_add.default
 
 #' @export
 stack_layout_add.layout_annotation <- function(object, stack, object_name) {

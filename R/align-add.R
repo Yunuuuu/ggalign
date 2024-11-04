@@ -28,8 +28,8 @@ align_add.Coord <- function(object, align, object_name) {
 }
 
 #' @export
-align_add.ggalign_controls <- function(object, align, object_name) {
-    name <- attr(object, "name")
+align_add.ggalign_option <- function(object, align, object_name) {
+    name <- ggalign_option_name(object)
     align$controls[name] <- list(update_option(
         object, .subset2(align$controls, name), object_name
     ))

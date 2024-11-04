@@ -88,8 +88,8 @@ free_add.default <- function(object, free, object_name) {
 }
 
 #' @export
-free_add.ggalign_controls <- function(object, free, object_name) {
-    name <- attr(object, "name")
+free_add.ggalign_option <- function(object, free, object_name) {
+    name <- ggalign_option_name(object)
     free$controls[name] <- list(update_option(
         object, .subset2(free$controls, name), object_name
     ))

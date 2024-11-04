@@ -24,9 +24,8 @@ Default theme for \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatm
 }
 \details{
 You can change the default theme using the option
-\code{"ggalign.default_theme"}.
-This option should be set to a function that returns a
-\code{\link[ggplot2:theme]{theme()}} object.
+\code{"ggalign.default_theme"}. This option should be
+set to a function that returns a \code{\link[ggplot2:theme]{theme()}} object.
 }
 \examples{
 # Setting a new default theme

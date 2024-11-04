@@ -19,7 +19,7 @@ quad_layout_add.default <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_add.ggalign_controls <- quad_layout_add.default
+quad_layout_add.ggalign_option <- quad_layout_add.default
 
 #' @export
 quad_layout_add.list <- function(object, quad, object_name) {
@@ -325,8 +325,8 @@ quad_body_add.layout_annotation <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.ggalign_controls <- function(object, quad, object_name) {
-    name <- attr(object, "name")
+quad_body_add.ggalign_option <- function(object, quad, object_name) {
+    name <- ggalign_option_name(object)
     quad@body_controls[name] <- list(update_option(
         object, .subset2(quad@body_controls, name), object_name
     ))
