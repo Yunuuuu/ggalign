@@ -1,6 +1,10 @@
 #' Plot default theme options
 #'
 #' @inherit ggplot2::theme
+#' @param ... A [`theme()`][ggplot2::theme] object or additional element
+#' specifications not part of base ggplot2. In general, these should also be
+#' defined in the `⁠element tree`⁠ argument. [`Splicing`][rlang::splice] a list
+#' is also supported.
 #' @examples
 #' plot_theme()
 #' @importFrom ggplot2 theme
@@ -9,22 +13,36 @@ plot_theme <- rlang::new_function(
     rlang::fn_fmls(theme), # we can utilize the editor completion
     quote({
         elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-        new_plot_theme(theme(!!!elements))
+        ans <- theme(!!!elements)
+        th <- NULL
+        for (i in seq_len(...length())) {
+            if (inherits(t <- ...elt(i), "theme")) {
+                th <- ggfun("add_theme")(th, t)
+            }
+        }
+        new_plot_theme(ggfun("add_theme")(th, ans))
     })
 )
 
 #' @importFrom ggplot2 theme
 new_plot_theme <- function(th = theme()) {
+    UseMethod("new_plot_theme", th)
+}
+
+#' @export
+new_plot_theme.theme <- function(th = theme()) {
     attrs <- attributes(th)
     attrs <- vec_slice(
-        attrs,
-        vec_set_difference(names(attrs), c("names", "class"))
+        attrs, vec_set_difference(names(attrs), c("names", "class"))
     )
     rlang::inject(new_option(
         name = "plot_theme", th, !!!attrs,
         class = c("plot_theme", class(th))
     ))
 }
+
+#' @export
+new_plot_theme.plot_theme <- function(th = theme()) th
 
 #' @export
 update_option.plot_theme <- function(new_option, old_option, object_name) {
@@ -55,7 +73,6 @@ plot_add.plot_theme <- function(option, plot) {
 #' set to a function that returns a [`theme()`][ggplot2::theme] object.
 #'
 #' @inheritDotParams ggplot2::theme_classic
-#' @importFrom ggplot2 theme_classic
 #' @return A [`theme()`][ggplot2::theme] object.
 #' @examples
 #' # Setting a new default theme
@@ -68,6 +85,7 @@ plot_add.plot_theme <- function(option, plot) {
 #'
 #' # Restoring the old default theme
 #' options(ggalign.default_theme = old)
+#' @importFrom ggplot2 theme_classic
 #' @export
 theme_ggalign <- function(...) {
     theme_classic(...) +

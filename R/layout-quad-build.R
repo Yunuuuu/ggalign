@@ -52,7 +52,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     data <- quad@data
     if (is.function(data) || is.null(data)) {
         cli::cli_abort(c(
-            "You must provide {.arg data} argument to plot {.fn {snake_class(layout)}}",
+            "You must provide {.arg data} argument to plot {.fn {quad@name}}",
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
