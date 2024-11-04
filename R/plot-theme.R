@@ -26,6 +26,7 @@ plot_theme <- rlang::new_function(
 
 #' @importFrom ggplot2 theme
 new_plot_theme <- function(th = theme()) {
+    # I don't know why, if I omit the `object = th` argument, it won't work
     UseMethod("new_plot_theme", th)
 }
 
