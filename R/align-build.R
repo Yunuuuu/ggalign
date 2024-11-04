@@ -1,4 +1,5 @@
 #' @importFrom ggplot2 theme element_blank
+#' @importFrom rlang inject
 align_build <- function(x, panel, index, controls, extra_layout) {
     # we lock the Align object to prevent user from modifying this object
     # in `$draw` method, we shouldn't do any calculations in `$draw` method
@@ -26,9 +27,8 @@ align_build <- function(x, panel, index, controls, extra_layout) {
         extra_panel <- .subset2(extra_layout, "panel")
         extra_index <- .subset2(extra_layout, "index")
     }
-    plot <- rlang::inject(x$draw(
-        panel, index, extra_panel, extra_index,
-        !!!draw_params
+    plot <- inject(x$draw(
+        panel, index, extra_panel, extra_index, !!!draw_params
     ))
 
     # only when user use the internal facet, we'll setup the limits

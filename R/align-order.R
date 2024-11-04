@@ -78,6 +78,7 @@ align_order <- function(weights = rowMeans, ...,
 }
 
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang inject
 AlignOrder <- ggproto("AlignOrder", Align,
     nobs = function(params) length(.subset2(params, "weights")),
     setup_params = function(self, nobs, params) {
@@ -94,7 +95,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
         assert_reorder(self, panel, strict)
         if (is.function(weights)) {
             data <- .subset2(self, "data")
-            ans <- rlang::inject(weights(data, !!!weights_params))
+            ans <- inject(weights(data, !!!weights_params))
             if (!rlang::is_atomic(ans)) {
                 cli::cli_abort(
                     "{.arg weights} must return an atomic weights",

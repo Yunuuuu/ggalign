@@ -56,6 +56,7 @@ align_initialize <- function(object, direction, position,
     c(vec_set_names(ans, c("panel", "index")), list(nobs = layout_nobs))
 }
 
+#' @importFrom rlang inject
 align_initialize_layout <- function(object, layout_nobs, direction,
                                     layout_panel, layout_index,
                                     object_name) {
@@ -67,7 +68,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
     compute_params <- params[
         intersect(names(params), align_method_params(object$compute))
     ]
-    object$statistics <- rlang::inject(
+    object$statistics <- inject(
         object$compute(layout_panel, layout_index, !!!compute_params)
     )
 
@@ -75,7 +76,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
     layout_params <- params[
         intersect(names(params), align_method_params(object$layout))
     ]
-    layout <- rlang::inject(
+    layout <- inject(
         object$layout(layout_panel, layout_index, !!!layout_params)
     )
     new_panel <- .subset2(layout, 1L)
@@ -153,7 +154,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
             align_method_params(object$ggplot, character())
         )
     ]
-    p <- rlang::inject(object$ggplot(!!!ggplot_params))
+    p <- inject(object$ggplot(!!!ggplot_params))
     object$plot <- p
 
     # add annotation -------------------------------------

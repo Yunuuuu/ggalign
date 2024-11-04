@@ -59,11 +59,12 @@ align_reorder <- function(stat, ..., reverse = FALSE,
 }
 
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang inject
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, stat, stat_params, strict) {
         assert_reorder(self, panel, strict)
         data <- .subset2(self, "data")
-        rlang::inject(stat(data, !!!stat_params))
+        inject(stat(data, !!!stat_params))
     },
     layout = function(self, panel, index, reverse) {
         index <- vec_cast(

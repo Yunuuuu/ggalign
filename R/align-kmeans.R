@@ -29,6 +29,7 @@ align_kmeans <- function(centers, ..., data = NULL,
 }
 
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", Align,
     setup_data = function(self, params, data) {
         ans <- fortify_matrix(data)
@@ -40,7 +41,7 @@ AlignKmeans <- ggproto("AlignKmeans", Align,
     },
     compute = function(self, panel, index, centers, params) {
         data <- .subset2(self, "data")
-        rlang::inject(stats::kmeans(x = data, centers = centers, !!!params))
+        inject(stats::kmeans(x = data, centers = centers, !!!params))
     },
     layout = function(self, panel, index) {
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)

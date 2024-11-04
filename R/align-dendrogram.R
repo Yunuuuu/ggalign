@@ -365,6 +365,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         list(panel, index)
     },
     #' @importFrom ggplot2 aes ggplot
+    #' @importFrom rlang inject
     ggplot = function(self, plot_dendrogram, mapping, segment_params) {
         if (!plot_dendrogram) {
             return(NULL)
@@ -375,7 +376,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 mapping, aes(x = .data$x, y = .data$y)
             )
         ) +
-            rlang::inject(
+            inject(
                 ggplot2::geom_segment(
                     mapping = aes(
                         x = .data$x, y = .data$y,

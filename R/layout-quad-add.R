@@ -173,6 +173,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     quad
 }
 
+#' @importFrom rlang inject
 #' @export
 quad_layout_add.anno_init <- function(object, quad, object_name) {
     position <- .subset2(object, "position")
@@ -254,13 +255,13 @@ quad_layout_add.anno_init <- function(object, quad, object_name) {
     } else if (is.null(stack_data)) {
         action_data <- NULL
     } else if (is.null(layout)) { # the stack need a data frame
-        stack_data <- rlang::inject(fortify_data_frame(
+        stack_data <- inject(fortify_data_frame(
             data = stack_data,
             !!!.subset2(object, "params")
         ))
         action_data <- NULL
     } else { # the stack need a matrix
-        stack_data <- rlang::inject(fortify_matrix(
+        stack_data <- inject(fortify_matrix(
             data = stack_data,
             !!!.subset2(object, "params")
         ))
