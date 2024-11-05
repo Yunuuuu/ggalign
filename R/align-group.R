@@ -29,10 +29,10 @@ align_group <- function(group, active = NULL, set_context = deprecated(),
 
 #' @importFrom ggplot2 ggproto
 AlignGroup <- ggproto("AlignGroup", Align,
-    nobs = function(self, params) length(.subset2(params, "group")),
+    nobs = function(self, params) vec_size(.subset2(params, "group")),
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(self, nobs,
-            length(.subset2(params, "group")),
+            vec_size(.subset2(params, "group")),
             msg = "must be an atomic vector",
             arg = "group"
         )
