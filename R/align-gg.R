@@ -197,3 +197,23 @@ AlignGG <- ggproto("AlignGG", Align,
         plot
     }
 )
+
+#' Create ggplot object with layout panel data
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because we realised that it's a special case of
+#' the [`ggalian()`][align_gg] function. Please use `ggalign(data = NULL)`
+#' instead.
+#' @export
+#' @keywords internal
+align_panel <- function(...) {
+    lifecycle::deprecate_stop("0.0.5", "align_panel()", "ggalign(data = NULL)")
+}
+
+#' @export
+#' @rdname align_panel
+ggpanel <- function(...) {
+    lifecycle::deprecate_stop("0.0.5", "ggpanel()", "ggalign(data = NULL)")
+}
