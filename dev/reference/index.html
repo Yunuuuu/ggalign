@@ -21,11 +21,13 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
@@ -71,16 +73,34 @@
 
       <dl><dt>
 
-          <code><a href="heatmap_layout.html">heatmap_layout()</a></code> <code><a href="heatmap_layout.html">ggheatmap()</a></code>
-
+          <code><a href="heatmap_layout.html">heatmap_layout()</a></code>
+          <span class="badge lifecycle lifecycle-stable">stable</span>
         </dt>
-        <dd>Arrange plots in a Heatmap</dd>
+        <dd>Arrange Plots in a Heatmap</dd>
       </dl><dl><dt>
 
-          <code><a href="stack_layout.html">stack_layout()</a></code> <code><a href="stack_layout.html">ggstack()</a></code>
+          <code><a href="stack_layout.html">stack_layout()</a></code>
 
         </dt>
         <dd>Put plots horizontally or vertically</dd>
+      </dl><dl><dt>
+
+          <code><a href="quad_layout.html">quad_layout()</a></code>
+
+        </dt>
+        <dd>Arrange Plots in the Quad-Side of a main plot</dd>
+      </dl><dl><dt>
+
+          <code><a href="quad_free.html">quad_free()</a></code> <code><a href="quad_free.html">quad_alignh()</a></code> <code><a href="quad_free.html">quad_alignv()</a></code> <code><a href="quad_free.html">quad_alignb()</a></code>
+
+        </dt>
+        <dd>Arrange Plots in the Quad-Side of a main plot</dd>
+      </dl><dl><dt>
+
+          <code><a href="stack_align.html">stack_align()</a></code> <code><a href="stack_align.html">stack_alignv()</a></code> <code><a href="stack_align.html">stack_alignh()</a></code> <code><a href="stack_align.html">stack_free()</a></code> <code><a href="stack_align.html">stack_freev()</a></code> <code><a href="stack_align.html">stack_freeh()</a></code>
+
+        </dt>
+        <dd>Arrange Plots Horizontally or Vertically</dd>
       </dl><dl><dt>
 
           <code><a href="ggoncoplot.html">ggoncoplot()</a></code>
@@ -90,7 +110,7 @@
       </dl></div><div class="section level2">
       <h2 id="layout-building">Layout Building<a class="anchor" aria-label="anchor" href="#layout-building"></a></h2>
 
-      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the layout, or group the layout into panels, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/hmanno.html">hmanno()</a></code> or <code><a href="../reference/stack_active.html">stack_active()</a></code> to control the layout attributes. To save a plot to disk, use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>.</p></div>
+      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>.</p></div>
 
 
     </div><div class="section level2">
@@ -100,87 +120,52 @@
 
       <dl><dt>
 
-          <code><a href="layout-add.html">`+`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Add components to <code>Layout</code></dd>
-      </dl><dl><dt>
-
-          <code><a href="hmanno.html">hmanno()</a></code>
-
-        </dt>
-        <dd>Determine the active context of heatmap layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="stack_active.html">stack_active()</a></code>
-
-        </dt>
-        <dd>Determine the active context of stack layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="plot_action.html">plot_action()</a></code>
-
-        </dt>
-        <dd>Plot Action Specifications in the Layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="layout-operator.html">`&amp;`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="layout-operator.html">`-`(<i>&lt;Layout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
+          <code><a href="layout-operator.html">Ops(<i>&lt;QuadLayout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="layout-operator.html">Ops(<i>&lt;StackLayout&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code>
 
         </dt>
         <dd>Layout operator</dd>
       </dl><dl><dt>
 
+          <code><a href="quad_switch.html">quad_switch()</a></code> <code><a href="quad_switch.html">hmanno()</a></code>
+
+        </dt>
+        <dd>Determine the Active Context of Quad-Layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="quad_active.html">quad_active()</a></code> <code><a href="quad_active.html">quad_anno()</a></code> <code><a href="quad_active.html">anno_top()</a></code> <code><a href="quad_active.html">anno_left()</a></code> <code><a href="quad_active.html">anno_bottom()</a></code> <code><a href="quad_active.html">anno_right()</a></code>
+
+        </dt>
+        <dd>Determine the Active Context of Quad-Layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="anno_init.html">anno_init()</a></code>
+
+        </dt>
+        <dd>Initialize Quad-Layout Annotation</dd>
+      </dl><dl><dt>
+
+          <code><a href="with_position.html">with_position()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Modify <code>-</code> Operator Context in <code><a href="../reference/quad_layout.html">quad_layout()</a></code></dd>
+      </dl><dl><dt>
+
+          <code><a href="stack_switch.html">stack_switch()</a></code> <code><a href="stack_switch.html">stack_active()</a></code>
+
+        </dt>
+        <dd>Determine the active context of stack layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="active.html">active()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Plot Adding Settings</dd>
+      </dl><dl><dt>
+
           <code><a href="theme_ggalign.html">theme_ggalign()</a></code>
 
         </dt>
-        <dd>Complete theme for layout plots</dd>
-      </dl><dl><dt>
-
-          <code><a href="layout_design.html">layout_design()</a></code>
-
-        </dt>
-        <dd>Define the grid to compose plots in</dd>
-      </dl><dl><dt>
-
-          <code><a href="layout_title.html">layout_title()</a></code>
-
-        </dt>
-        <dd>Annotate the whole layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="layout_annotation.html">layout_annotation()</a></code>
-
-        </dt>
-        <dd>Modify components of the layout</dd>
-      </dl></div><div class="section level2">
-      <h2 id="layout-plot">Layout Plot<a class="anchor" aria-label="anchor" href="#layout-plot"></a></h2>
-
-      <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="align_gg.html">align_gg()</a></code> <code><a href="align_gg.html">ggalign()</a></code>
-
-        </dt>
-        <dd>Create ggplot object with a customized data</dd>
-      </dl><dl><dt>
-
-          <code><a href="align_panel.html">align_panel()</a></code> <code><a href="align_panel.html">ggpanel()</a></code>
-
-        </dt>
-        <dd>Create ggplot object with layout panel data</dd>
-      </dl><dl><dt>
-
-          <code><a href="align_ggplot.html">align_ggplot()</a></code> <code><a href="align_ggplot.html">gplot()</a></code>
-
-        </dt>
-        <dd>Add ggplot to layout</dd>
+        <dd>Theme for Layout Plots</dd>
       </dl></div><div class="section level2">
       <h2 id="layout-customization">Layout Customization<a class="anchor" aria-label="anchor" href="#layout-customization"></a></h2>
 
@@ -222,6 +207,58 @@
 
         </dt>
         <dd>Reorders layout observations based on specific statistics.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="layout-plot">Layout Plot<a class="anchor" aria-label="anchor" href="#layout-plot"></a></h2>
+
+      <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="align_gg.html">align_gg()</a></code>
+          <span class="badge lifecycle lifecycle-stable">stable</span>
+        </dt>
+        <dd>Create ggplot object</dd>
+      </dl><dl><dt>
+
+          <code><a href="free_gg.html">free_gg()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Add ggplot to layout</dd>
+      </dl></div><div class="section level2">
+      <h2 id="plot-options">Plot options<a class="anchor" aria-label="anchor" href="#plot-options"></a></h2>
+
+      <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="plot_align.html">plot_align()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Align Specifications in the Layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="plot_data.html">plot_data()</a></code>
+
+        </dt>
+        <dd>Plot data Specifications</dd>
+      </dl><dl><dt>
+
+          <code><a href="plot_theme.html">plot_theme()</a></code>
+
+        </dt>
+        <dd>Plot default theme</dd>
       </dl></div><div class="section level2">
       <h2 id="plot-composer">Plot composer<a class="anchor" aria-label="anchor" href="#plot-composer"></a></h2>
 
@@ -269,6 +306,24 @@
 
         </dt>
         <dd>Wrap Arbitrary Graphics to ggplot</dd>
+      </dl><dl><dt>
+
+          <code><a href="layout_design.html">layout_design()</a></code>
+
+        </dt>
+        <dd>Define the grid to compose plots in</dd>
+      </dl><dl><dt>
+
+          <code><a href="layout_title.html">layout_title()</a></code>
+
+        </dt>
+        <dd>Annotate the whole layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="layout_annotation.html">layout_annotation()</a></code>
+
+        </dt>
+        <dd>Modify components of the layout</dd>
       </dl></div><div class="section level2">
       <h2 id="extending-plot-composer">Extending Plot Composer<a class="anchor" aria-label="anchor" href="#extending-plot-composer"></a></h2>
 
@@ -305,10 +360,22 @@
 
       <dl><dt>
 
+          <code><a href="geom_pie.html">geom_pie()</a></code>
+
+        </dt>
+        <dd>Pie charts</dd>
+      </dl><dl><dt>
+
           <code><a href="layer_order.html">layer_order()</a></code>
 
         </dt>
         <dd>Change the layer adding order</dd>
+      </dl><dl><dt>
+
+          <code><a href="theme_no_axes.html">theme_no_axes()</a></code>
+
+        </dt>
+        <dd>Remove axis elements</dd>
       </dl><dl><dt>
 
           <code><a href="ggalignGrob.html">ggalignGrob()</a></code>
@@ -320,7 +387,7 @@
           <code><a href="ggalign_attr.html">ggalign_attr()</a></code>
 
         </dt>
-        <dd>Get a field data from the <code>ggalign</code> attribute</dd>
+        <dd>Get data from the <code>ggalign</code> attribute</dd>
       </dl><dl><dt>
 
           <code><a href="ggalign_stat.html">ggalign_stat()</a></code>
@@ -329,10 +396,16 @@
         <dd>Get the statistics from the layout</dd>
       </dl><dl><dt>
 
-          <code><a href="fortify_heatmap.html">fortify_heatmap()</a></code>
+          <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>
 
         </dt>
-        <dd>Build data for the heatmap layout</dd>
+        <dd>Build a data frame</dd>
+      </dl><dl><dt>
+
+          <code><a href="fortify_matrix.html">fortify_matrix()</a></code>
+
+        </dt>
+        <dd>Build a Matrix</dd>
       </dl><dl><dt>
 
           <code><a href="fortify_stack.html">fortify_stack()</a></code>
@@ -341,16 +414,10 @@
         <dd>Build data for the stack layout</dd>
       </dl><dl><dt>
 
-          <code><a href="geom_pie.html">geom_pie()</a></code>
-
-        </dt>
-        <dd>Pie charts</dd>
-      </dl><dl><dt>
-
           <code><a href="align.html">align()</a></code>
-
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
-        <dd>Create a new <code>Align</code> object</dd>
+        <dd>Create a New <code>Align</code> Object</dd>
       </dl><dl><dt>
 
           <code><a href="hclust2.html">hclust2()</a></code>
@@ -371,16 +438,10 @@
         <dd>Dengrogram x and y coordinates</dd>
       </dl><dl><dt>
 
-          <code><a href="is_ggheatmap.html">is_ggheatmap()</a></code>
+          <code><a href="is_layout.html">is_layout()</a></code> <code><a href="is_layout.html">is_quad_layout()</a></code> <code><a href="is_layout.html">is_stack_layout()</a></code> <code><a href="is_layout.html">is_heatmap_layout()</a></code> <code><a href="is_layout.html">is_ggheatmap()</a></code>
 
         </dt>
-        <dd>Reports whether <code>x</code> is a <code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code> object</dd>
-      </dl><dl><dt>
-
-          <code><a href="is_ggstack.html">is_ggstack()</a></code>
-
-        </dt>
-        <dd>Reports whether <code>x</code> is a <code>StackLayout</code> object</dd>
+        <dd>Reports whether <code>x</code> is layout object</dd>
       </dl><dl><dt>
 
           <code><a href="read_example.html">read_example()</a></code>

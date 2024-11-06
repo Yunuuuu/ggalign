@@ -27,11 +27,13 @@ variations, and other genomic alterations in cancer research."><meta property="o
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
@@ -85,13 +87,9 @@ variations, and other genomic alterations in cancer research.</p>
 <span>  reorder_column <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filling <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  active <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
@@ -105,13 +103,9 @@ variations, and other genomic alterations in cancer research.</p>
 <span>  reorder_column <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  action <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filling <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  set_context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  guides <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  active <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -125,12 +119,12 @@ regex <code>[;:,|]</code> to separate multiple alterations.</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
-<dd><p>Default list of aesthetic mappings to use for plot. In
-addition, we will always add mapping <code>aes(.data$.x, .data$.y)</code>.</p></dd>
+<dd><p>Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <code><a href="fortify_heatmap.html">fortify_heatmap()</a></code>.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="fortify_matrix.html">fortify_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-map-width-map-height">map_width, map_height<a class="anchor" aria-label="anchor" href="#arg-map-width-map-height"></a></dt>
@@ -145,12 +139,12 @@ alterations.</p></dd>
 
 
 <dt id="arg-width-height">width, height<a class="anchor" aria-label="anchor" href="#arg-width-height"></a></dt>
-<dd><p>Heatmap body width/height, can be a <a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a> object.</p></dd>
+<dd><p>The relative width/height of the main plot, can be a
+<code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object.</p></dd>
 
 
-<dt id="arg-action">action<a class="anchor" aria-label="anchor" href="#arg-action"></a></dt>
-<dd><p>A <code><a href="plot_action.html">plot_action()</a></code> object used to define the default plot action
-in the layout.</p></dd>
+<dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
+<dd><p>Same as <code><a href="heatmap_layout.html">ggheatmap()</a></code>, but only <code>"tile"</code> can be used.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
@@ -159,31 +153,9 @@ in the layout.</p></dd>
 <code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
 
 
-<dt id="arg-filling">filling<a class="anchor" aria-label="anchor" href="#arg-filling"></a></dt>
-<dd><p>Same as <code><a href="heatmap_layout.html">ggheatmap()</a></code>, but only <code>"tile"</code> can be used.</p></dd>
-
-
-<dt id="arg-set-context">set_context<a class="anchor" aria-label="anchor" href="#arg-set-context"></a></dt>
-<dd><p>A single boolean value indicates whether to set the active
-context to current plot. If <code>TRUE</code>, all subsequent ggplot elements will be
-added into this plot.</p></dd>
-
-
-<dt id="arg-order">order<a class="anchor" aria-label="anchor" href="#arg-order"></a></dt>
-<dd><p>An single integer for the plot area order.</p></dd>
-
-
-<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p>A string of the plot name. Used to switch the active context in
-<code><a href="hmanno.html">hmanno()</a></code> or <code><a href="stack_active.html">stack_active()</a></code>.</p></dd>
-
-
-<dt id="arg-guides">guides<a class="anchor" aria-label="anchor" href="#arg-guides"></a></dt>
-<dd><p>A string with one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code> indicating
-which side of guide legends should be collected. Defaults to
-<code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout.  If
-there is no parent layout, or if <code>NULL</code> is provided, no guides will be
-collected.</p></dd>
+<dt id="arg-active">active<a class="anchor" aria-label="anchor" href="#arg-active"></a></dt>
+<dd><p>A <code><a href="active.html">active()</a></code> object that defines the context settings when
+added to a layout.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -218,12 +190,12 @@ the organization of the alterations.</p>
 <span class="r-in"><span>    <span class="co"># the guide legends. Therefore, we remove the guide legends from</span></span></span>
 <span class="r-in"><span>    <span class="co"># `geom_tile`.</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="align_gg.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="align_gg.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></span>
