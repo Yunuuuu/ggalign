@@ -112,7 +112,7 @@
 <p>Alternatively, install the development version from <a href="https://yunuuuu.r-universe.dev/ggalign" class="external-link">r-universe</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggalign"</span>,</span>
-<span>    repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://yunuuuu.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://yunuuuu.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>or from <a href="https://github.com/Yunuuuu/ggalign" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -128,16 +128,16 @@
 <li>Customize the layout with:
 <ul>
 <li>
-<code><a href="reference/align_group.html">align_group()</a></code>: Group layout axis into panel with a group variable.</li>
+<code><a href="reference/align_group.html">align_group()</a></code>: Group observations into panel with a group variable.</li>
 <li>
-<code><a href="reference/align_kmeans.html">align_kmeans()</a></code>: Group layout axis into panel by kmeans.</li>
+<code><a href="reference/align_kmeans.html">align_kmeans()</a></code>: Group observations into panel by kmeans.</li>
 <li>
 <code><a href="reference/align_order.html">align_order()</a></code>: Reorder layout observations based on statistical weights or by manually specifying the observation index.</li>
 <li>
 <code><a href="reference/align_dendro.html">align_dendro()</a></code>: Reorder or Group layout based on hierarchical clustering.</li>
 </ul>
 </li>
-<li>Adding plots with <code><a href="reference/align_gg.html">ggalign()</a></code>, <code><a href="reference/align_panel.html">ggpanel()</a></code>, or <code><a href="reference/ggwrap.html">ggwrap()</a></code>, and then layer additional ggplot2 elements such as geoms, stats, or scales.</li>
+<li>Adding plots with <code><a href="reference/align_gg.html">ggalign()</a></code> or <code><a href="reference/free_gg.html">ggfree()</a></code>, and then layer additional ggplot2 elements such as geoms, stats, or scales.</li>
 </ul>
 <p>For documents of the release version, please see <a href="https://yunuuuu.github.io/ggalign" class="uri">https://yunuuuu.github.io/ggalign</a>, for documents of the development version, please see <a href="https://yunuuuu.github.io/ggalign/dev" class="uri">https://yunuuuu.github.io/ggalign/dev</a>.</p>
 </div>
@@ -154,16 +154,16 @@
 <span></span>
 <span><span class="co"># initialize the heatmap layout, we can regard it as a normal ggplot object</span></span>
 <span><span class="fu"><a href="reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># we can directly modify geoms, scales and other ggplot2 components</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># add annotation in the top</span></span>
-<span>    <span class="fu"><a href="reference/quad_switch.html">hmanno</a></span><span class="op">(</span><span class="st">"top"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># in the top annotation, we add a dendrogram, and split observations into 3 groups</span></span>
-<span>    <span class="fu"><a href="reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># in the dendrogram we add a point geom</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># change color mapping for the dendrogram</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="co"># we can directly modify geoms, scales and other ggplot2 components</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># add annotation in the top</span></span>
+<span>  <span class="fu"><a href="reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># in the top annotation, we add a dendrogram, and split observations into 3 groups</span></span>
+<span>  <span class="fu"><a href="reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># in the dendrogram we add a point geom</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># change color mapping for the dendrogram</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="https://yunuuuu.github.io/ggalign/dev/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png"></p>
 </div>
 <div class="section level2">
