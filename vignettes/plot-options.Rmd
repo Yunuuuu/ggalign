@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Waiting for complete ...
+
 Currently, the package provides three actions (each prefixed with `plot_`):
   - `plot_data`: Transforms the plot data. Many functions in this package
   require a specific data format to align observations, `plot_data()` helps

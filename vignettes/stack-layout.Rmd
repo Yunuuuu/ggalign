@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Waiting for complete ...
+
 `stack_layout()` put plots horizontally or vertically. You can also use the
 alias `ggstack()`.
 

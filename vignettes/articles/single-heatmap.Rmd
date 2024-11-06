@@ -594,6 +594,8 @@ By default, the facet strip text is removed. You can override this behavior with
 `theme(strip.text = element_text())`. Since `align_group()` does not create a
 new plot, the panel title can only be added to the heatmap plot.
 
+waiting for complete ...
+
 ## Graphic parameters for splitting
 ```{r}
 ggh4x::facet_grid2(strip = ggh4x::strip_themed(
