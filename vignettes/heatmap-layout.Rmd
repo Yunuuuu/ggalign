@@ -248,6 +248,7 @@ ggheatmap(small_mat) +
 # Operators
 ## Addition operator
 > `+`: adds elements to the active plot in the active layout.
+
 The `+` operator is straightforward and should be used as needed. In
 `ggheatmap()`/`quad_layout()`, four nested layouts are available for
 annotations: `top`, `left`, `bottom`, and `right`. If no active annotation is
@@ -273,6 +274,7 @@ ggheatmap(small_mat) +
 
 ## logical AND operator
 > `&`: applies elements to all plots in the layout.
+
 The `&` operator works similarly to `patchwork`, applying an element across all
 plots in a layout. If the element is a `theme()`, it modifies the layout's
 theme, which includes settings for guides, titles, subtitles, captions, margins,
