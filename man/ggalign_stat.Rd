@@ -2,18 +2,18 @@
 % Please edit documentation in R/layout-.R
 \name{ggalign_stat}
 \alias{ggalign_stat}
-\alias{ggalign_stat.HeatmapLayout}
+\alias{ggalign_stat.QuadLayout}
 \alias{ggalign_stat.StackLayout}
 \title{Get the statistics from the layout}
 \usage{
 ggalign_stat(x, ...)
 
-\method{ggalign_stat}{HeatmapLayout}(x, position, ...)
+\method{ggalign_stat}{QuadLayout}(x, position, ...)
 
 \method{ggalign_stat}{StackLayout}(x, what, ...)
 }
 \arguments{
-\item{x}{A \code{\link[=heatmap_layout]{heatmap_layout()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
+\item{x}{A \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
 
 \item{...}{Arguments passed to methods.}
 

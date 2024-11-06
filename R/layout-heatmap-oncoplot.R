@@ -7,7 +7,7 @@
 #' variations, and other genomic alterations in cancer research.
 #'
 #' @details
-#' `ggoncoplot()` is a wrapper around the [ggheatmap()] function, designed to
+#' `ggoncoplot()` is a wrapper around the [`ggheatmap()`] function, designed to
 #' simplify the creation of `OncoPrint`-style visualizations. The function
 #' automatically processes the input character matrix by splitting the encoded
 #' alterations (delimited by regex `[;:,|]`) into individual genomic events and
@@ -25,7 +25,7 @@
 #' @param reorder_row,reorder_column A boolean value indicating whether to
 #' reorder the rows/columns based on the frequency or characteristics of the
 #' alterations.
-#' @param filling Same as [ggheatmap()], but only `"tile"` can be used.
+#' @param filling Same as [`ggheatmap()`], but only `"tile"` can be used.
 #' @examples
 #' # A simple example from `ComplexHeatmap`
 #' mat <- read.table(textConnection(
@@ -41,12 +41,12 @@
 #'     # the guide legends. Therefore, we remove the guide legends from
 #'     # `geom_tile`.
 #'     guides(fill = "none") +
-#'     hmanno("t", size = 0.5) +
+#'     anno_top(size = 0.5) +
 #'     ggalign() +
 #'     geom_bar(aes(fill = value), data = function(x) {
 #'         subset(x, !is.na(value))
 #'     }) +
-#'     hmanno("r", size = 0.5) +
+#'     anno_right(size = 0.5) +
 #'     ggalign() +
 #'     geom_bar(aes(fill = value), orientation = "y", data = function(x) {
 #'         subset(x, !is.na(value))
@@ -59,10 +59,8 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        map_width = NULL, map_height = NULL,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
-                       width = NA, height = NA,
-                       action = NULL, theme = NULL, filling = waiver(),
-                       set_context = TRUE, order = NULL, name = NULL,
-                       guides = deprecated()) {
+                       width = NA, height = NA, filling = waiver(),
+                       theme = NULL, active = NULL) {
     UseMethod("ggoncoplot")
 }
 
@@ -77,7 +75,6 @@ ggoncoplot.functon <- ggoncoplot.NULL
 #' @export
 ggoncoplot.formula <- ggoncoplot.functon
 
-#' @importFrom vctrs vec_slice list_sizes vec_rep_each
 #' @importFrom ggplot2 aes
 #' @export
 #' @rdname ggoncoplot
@@ -85,12 +82,10 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,
-                               width = NA, height = NA,
-                               action = NULL, theme = NULL, filling = waiver(),
-                               set_context = TRUE, order = NULL, name = NULL,
-                               guides = deprecated()) {
+                               width = NA, height = NA, filling = waiver(),
+                               theme = NULL, active = NULL) {
     # prepare the matrix
-    data <- fortify_heatmap(data = data, ...)
+    data <- fortify_matrix(data = data, ...)
     if (!is.character(data)) {
         cli::cli_abort("{.arg data} must be a character matrix")
     }
@@ -123,7 +118,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         }
     }
 
-    # prepare the action data
+    # prepare the plot data action
     action_data <- function(data) {
         value_list <- strsplit(data$value,
             split = "\\s*[;:,|]\\s*", perl = TRUE
@@ -143,13 +138,10 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     ans <- heatmap_layout(
         data = data, mapping = mapping,
         width = width, height = height,
-        action = plot_action(data = action_data),
-        theme = theme, filling = NULL,
-        set_context = set_context, order = order, name = name,
-        guides = guides
+        theme = theme, active = active, filling = NULL
     )
     if (reorder_row) {
-        ans <- ans + hmanno("l") + align_order(row_index, reverse = TRUE)
+        ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
     }
     if (reorder_column) {
         column_scores <- apply(vec_slice(counts, row_index), 2L, function(x) {
@@ -158,14 +150,14 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
             sum(score)
         })
         ans <- ans +
-            hmanno("t") +
+            anno_top() +
             align_order(order(column_scores, decreasing = TRUE))
     }
     # always make sure user provided action override the default action
-    ans <- ans + hmanno(NULL, action = action)
+    ans <- ans + quad_active() - plot_data(data = action_data)
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
-        ans <- ans + plot_action(data = action_data)
+        ans <- ans + plot_data(data = action_data)
 
         # set mapping for width and height
         tile_mapping <- aes(

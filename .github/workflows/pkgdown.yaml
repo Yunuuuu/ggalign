@@ -41,6 +41,7 @@ jobs:
             any::gplots 
             any::ComplexHeatmap
             any::seriation, 
+            any::ggh4x, 
             local::.
           needs: website
 

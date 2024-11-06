@@ -1,6 +1,6 @@
 #' @importFrom ggplot2 theme element_blank
-align_build <- function(x, panel, index, action,
-                        extra_panel, extra_index) {
+#' @importFrom rlang inject
+align_build <- function(x, panel, index, controls, extra_layout) {
     # we lock the Align object to prevent user from modifying this object
     # in `$draw` method, we shouldn't do any calculations in `$draw` method
     x$lock()
@@ -20,10 +20,17 @@ align_build <- function(x, panel, index, action,
             )
         )
     ]
-    plot <- rlang::inject(x$draw(
-        panel, index, extra_panel, extra_index,
-        !!!draw_params
+    if (is.null(extra_layout)) {
+        extra_panel <- NULL
+        extra_index <- NULL
+    } else {
+        extra_panel <- .subset2(extra_layout, "panel")
+        extra_index <- .subset2(extra_layout, "index")
+    }
+    plot <- inject(x$draw(
+        panel, index, extra_panel, extra_index, !!!draw_params
     ))
+
     # only when user use the internal facet, we'll setup the limits
     if (.subset2(x, "facet")) {
         # set up facets
@@ -44,42 +51,33 @@ align_build <- function(x, panel, index, action,
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        params <- list(
+        layout <- list(
             panel = panel, index = index,
             labels = .subset2(x, "labels")
         )
         plot <- plot + align_melt_facet(plot$facet, default_facet, direction) +
             switch_direction(
                 direction,
-                facet_ggalign(y = params),
-                facet_ggalign(x = params)
+                facet_ggalign(y = layout),
+                facet_ggalign(x = layout)
             )
+
         # set up coord limits to align each observation
         if (.subset2(x, "limits")) {
             plot <- plot +
                 switch_direction(
                     direction,
-                    coord_ggalign(ylim_list = set_limits("y", params)),
-                    coord_ggalign(xlim_list = set_limits("x", params))
+                    coord_ggalign(ylim_list = set_limits("y", layout)),
+                    coord_ggalign(xlim_list = set_limits("x", layout))
                 )
         }
     }
-    plot <- plot_add_action(plot, action,
-        theme = switch_direction(
-            direction,
-            theme(
-                axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank()
-            ),
-            theme(
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank()
-            )
-        ),
-        call = .subset2(x, "call")
-    )
+    # remove axis titles, text, ticks used for alignment
+    if (isTRUE(.subset2(x, "no_axes"))) {
+        controls$plot_theme <- .subset2(controls, "plot_theme") +
+            theme_no_axes(switch_direction(direction, "y", "x"))
+    }
+    plot <- plot_add_controls(plot, controls)
     list(plot = plot, size = .subset2(x, "size"))
 }
 

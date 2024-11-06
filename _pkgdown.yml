@@ -13,33 +13,26 @@ reference:
   contents:
   - heatmap_layout
   - stack_layout
+  - quad_layout
+  - quad_free
+  - stack_free
   - ggoncoplot
 
 - title: Layout Building
   desc: >
-    All plots begin with a call to `ggheatmap()` or `ggstack()`, supplying default 
-    data. You then reorder the layout, or group the layout into panels, and add 
-    plots, layers, scales, coords with `+`. Use `hmanno()` or `stack_active()` to 
-    control the layout attributes. To save a plot to disk, use `ggsave()`.
+    All plots begin with a call to `ggheatmap()`/`quad_layout()` or `ggstack()`, supplying 
+    default data. You then reorder the observations, or split the observations into groups, 
+    and add plots, layers, scales, coords with `+`. Use `quad_switch()`/`hmanno()` or 
+    `stack_switch()` to switch the active context. To save a plot to disk, use `ggsave()`.
   contents:
-  - layout-add
-  - hmanno
-  - stack_active
-  - plot_action
   - layout-operator
+  - quad_switch
+  - quad_anno
+  - anno_init
+  - with_position
+  - stack_switch
+  - active
   - theme_ggalign
-  - layout_design
-  - layout_title
-  - layout_annotation
-
-- title: Layout Plot
-  desc: >
-    This section covers essential functions to add individual plots to the layout, 
-    ensuring they align and interact correctly within the defined structure.
-  contents:
-  - ggalign
-  - ggpanel
-  - gplot
 
 - title: Layout Customization
   desc: >
@@ -51,6 +44,23 @@ reference:
   - align_kmeans
   - align_order
   - align_reorder
+
+- title: Layout Plot
+  desc: >
+    This section covers essential functions to add individual plots to the layout, 
+    ensuring they align and interact correctly within the defined structure.
+  contents:
+  - ggalign
+  - ggfree
+
+- title: Plot options
+  desc: >
+    This section covers essential functions to add individual plots to the layout, 
+    ensuring they align and interact correctly within the defined structure.
+  contents:
+  - plot_align
+  - plot_data
+  - plot_theme
 
 - title: Plot composer
   desc: >
@@ -68,6 +78,9 @@ reference:
   - area
   - inset
   - ggwrap
+  - layout_design
+  - layout_title
+  - layout_annotation
 
 - title: Extending Plot Composer
   desc: >
@@ -79,25 +92,27 @@ reference:
 - title: helpers
   desc: A handful of helpers
   contents:
+  - geom_pie
   - layer_order
+  - theme_no_axes
   - ggalignGrob
   - ggalign_attr
   - ggalign_stat
-  - fortify_heatmap
+  - fortify_data_frame
+  - fortify_matrix
   - fortify_stack
-  - geom_pie
   - align
   - hclust2
   - order2
   - dendrogram_data
-  - is_ggheatmap
-  - is_ggstack
+  - is_layout
   - read_example
 
 - title: internal
   contents:
   - starts_with("patch.")
-  - starts_with("fortify_heatmap.")
+  - starts_with("fortify_matrix.")
+  - starts_with("fortify_data_frame.")
 
 articles:
 - title: Building plots
@@ -106,14 +121,16 @@ articles:
   - heatmap-layout
   - layout-customize
   - layout-plot
+  - plot-options
+  - quad-layout
   - stack-layout
-  - special-syntax
-  - complete-examples
 
-- title: Plot composer
+- title: Others
   navbar: " "
   contents:
-  - plot-composer
+  - articles/difference-with-ggplot2
+  - articles/complete-examples
+  - articles/plot-composer
 
 - title: FAQ
   navbar: " "

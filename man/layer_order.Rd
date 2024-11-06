@@ -7,7 +7,7 @@
 layer_order(layer, order = 0)
 }
 \arguments{
-\item{layer}{A \link[ggplot2:layer_geoms]{layer geometry} object to be added.}
+\item{layer}{A \code{\link[ggplot2:layer_geoms]{layer geometry}} object to be added.}
 
 \item{order}{An integer indicating the position at which the layer should be
 added. If \verb{<= 0}, the layer will be added at the beginning. If greater than

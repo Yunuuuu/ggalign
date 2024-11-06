@@ -4,28 +4,35 @@
 \alias{align_group}
 \title{Group and align layout based on categorical or factor levels.}
 \usage{
-align_group(group, set_context = FALSE, name = NULL)
+align_group(
+  group,
+  active = NULL,
+  set_context = deprecated(),
+  name = deprecated()
+)
 }
 \arguments{
-\item{group}{A character define the groups, this will split the
-axis into different panel.}
+\item{group}{A character define the groups of the observations.}
 
-\item{set_context}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 
-\item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
+\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
+argument instead.}
+
+\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
+instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignGroup"} object.
 }
 \description{
 Group and align layout based on categorical or factor levels.
 }
 \examples{
+set.seed(1L)
 small_mat <- matrix(rnorm(81), nrow = 9)
 ggheatmap(small_mat) +
-    hmanno("top") +
+    anno_top() +
     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 }

@@ -27,13 +27,24 @@ example_file <- function(..., base = "extdata") {
 
 with_options <- function(code, ...) {
     opts <- options(...)
-    on.exit(rlang::inject(options(!!!opts)))
+    on.exit(options(opts))
     force(code)
+}
+
+#' @param ans Whether to assign the final results into the 'ans' variable.
+#' @noRd
+fn_body_append <- function(fn, ..., ans = FALSE) {
+    args <- rlang::fn_fmls(fn)
+    body <- rlang::fn_body(fn)
+    body <- as.list(body)
+    if (ans) body[[length(body)]] <- rlang::expr(ans <- !!body[[length(body)]])
+    body <- as.call(c(body, rlang::enexprs(...)))
+    rlang::new_function(args, body)
 }
 
 # This will work with most things but be aware that it might fail with some
 # complex objects. For example, according to `?S3Methods`, calling foo on
-# matrix(1:4, 2, 2) would try foo.matrix, then `foo.numeric`, then
+# matrix(1:4, 2, 2) would try `foo.matrix`, then `foo.numeric`, then
 # `foo.default`; whereas this code will just look for `foo.matrix` and
 # `foo.default`.
 #' @importFrom utils getS3method
@@ -54,59 +65,25 @@ has_method <- function(x, f, inherit = TRUE, default = TRUE) {
     return(FALSE)
 }
 
+#' For functions with a `call` argument, we check if the call originates from
+#' the current package. If it does, we use the caller's call; if not, we use the
+#' current call directly. Used by `align()` and `free()`
+#' @noRd
+#' @importFrom utils packageName
+override_call <- function(call = NULL) {
+    # if no caller call
+    if (is.null(call) || is.function(f <- .subset2(call, 1L))) {
+        return(TRUE)
+    }
+    # if call from the current package
+    !identical(
+        packageName(environment(eval(f))),
+        pkg_nm()
+    )
+}
+
 #' @importFrom utils packageName
 pkg_nm <- function() packageName(topenv(environment()))
-
-#' @param ans Whether to assign the final results into the 'ans' variable.
-#' @noRd
-body_append <- function(fn, ..., ans = TRUE) {
-    args <- rlang::fn_fmls(fn)
-    body <- rlang::fn_body(fn)
-    body <- as.list(body)
-    if (ans) body[[length(body)]] <- rlang::expr(ans <- !!body[[length(body)]])
-    body <- as.call(c(body, rlang::enexprs(...)))
-    rlang::new_function(args, body)
-}
-
-#' @importFrom vctrs vec_unrep vec_set_difference vec_c
-make_order <- function(order) {
-    l <- length(order)
-    index <- seq_len(l)
-
-    # for order not set by user, we use heuristic algorithm to define the order
-    need_action <- is.na(order)
-    if (all(need_action)) { # shorthand for the usual way, we don't set any
-        return(index)
-    } else if (all(!need_action)) { # we won't need do something special
-        return(order(order))
-    }
-
-    # 1. for outliers, we always put them in the two tail
-    # 2. for order has been set and is not the outliers,
-    #    we always follow the order
-    # 3. non-outliers were always regarded as the integer index
-    used <- as.integer(order[!need_action & order >= 1L & order <= l])
-
-    # we flatten user index to continuous integer sequence
-    sequence <- vec_unrep(used) # key is the sequence start
-    start <- .subset2(sequence, "key")
-    end <- pmin(
-        start + .subset2(sequence, "times") - 1L,
-        vec_c(start[-1L] - 1L, l) # the next start - 1L
-    )
-    used <- .mapply(function(s, e) s:e, list(s = start, e = end), NULL)
-
-    # following index can be used
-    unused <- vec_set_difference(index, unlist(used, FALSE, FALSE))
-
-    # we assign the candidate index to the order user not set.
-    order[need_action] <- unused[seq_len(sum(need_action))]
-
-    # make_order(c(NA, 1, NA)): c(2, 1, 3)
-    # make_order(c(NA, 1, 3)): c(2, 1, 3)
-    # make_order(c(NA, 1, 3, 1)): c(2, 4, 3, 1)
-    order(order)
-}
 
 # library(data.table)
 # library(vctrs)
@@ -157,7 +134,6 @@ make_order <- function(order) {
 #> 4 nest_data_table 402.71µs 459.55µs   1918.    985.25KB     4.00
 #> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3
 #> 6 nest_table      183.52ms 189.87ms      5.20  576.35MB     8.67
-#' @importFrom vctrs new_data_frame vec_unique_loc vec_duplicate_any
 `%nest%` <- function(x, y) {
     # we don't check the inputs for performance
     loc <- vec_unique_loc(new_data_frame(list(x = x, y = y)))
@@ -214,7 +190,6 @@ to_matrix_axis <- function(direction) {
 }
 
 ##########################################################
-#' @importFrom vctrs data_frame
 data_frame0 <- function(...) data_frame(..., .name_repair = "minimal")
 
 as_data_frame0 <- function(data, ...) {
@@ -233,7 +208,6 @@ quickdf <- function(x) {
 }
 
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_locate_matches vec_slice
 full_join <- function(x, y, by = intersect(names(x), names(y)),
                       by.x = by, by.y = by) {
     loc <- vec_locate_matches(x[by.x], set_names(y[by.y], by.x), remaining = NA)
@@ -251,20 +225,6 @@ full_join <- function(x, y, by = intersect(names(x), names(y)),
     ans
 }
 
-#' @importFrom vctrs new_data_frame vec_rep vec_rep_each
-melt_matrix <- function(matrix) {
-    row_nms <- rownames(matrix)
-    col_nms <- colnames(matrix)
-    data <- new_data_frame(list(
-        .row_index = vec_rep(seq_len(nrow(matrix)), ncol(matrix)),
-        .column_index = vec_rep_each(seq_len(ncol(matrix)), nrow(matrix)),
-        value = c(matrix)
-    ))
-    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
-    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
-    data
-}
-
 fct_rev <- function(x) {
     ans <- as.factor(x)
     factor(ans, levels = rev(levels(ans)))
@@ -277,7 +237,6 @@ imap <- function(.x, .f, ...) {
     out
 }
 
-#' @importFrom vctrs list_sizes
 compact <- function(.x) .x[list_sizes(.x) > 0L]
 
 #' Rename elements in a list, data.frame or vector
@@ -292,9 +251,8 @@ compact <- function(.x) .x[list_sizes(.x) > 0L]
 #'
 #' @return `x`, with new names according to `replace`
 #'
-#' @keywords internal
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_slice<-
+#' @keywords internal
 #' @noRd
 rename <- function(x, replace) {
     set_names(x, function(nms) {
@@ -333,4 +291,18 @@ transpose <- function(.l) {
     .l <- lapply(.l, as.list)
 
     lapply(fields, function(i) lapply(.l, .subset2, i))
+}
+
+oxford_and <- function(chr, code = TRUE, quote = TRUE, sep = ", ") {
+    oxford_comma(code_quote(chr, code, quote), sep = sep, final = "and")
+}
+
+oxford_or <- function(chr, code = TRUE, quote = TRUE, sep = ", ") {
+    oxford_comma(code_quote(chr, code, quote), sep = sep, final = "or")
+}
+
+code_quote <- function(x, code = TRUE, quote = TRUE) {
+    if (quote) x <- paste0("\"", x, "\"")
+    if (code) x <- paste0("`", x, "`")
+    x
 }

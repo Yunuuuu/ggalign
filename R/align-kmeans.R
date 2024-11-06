@@ -2,28 +2,37 @@
 #'
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
-#' @inheritParams align
-#' @inherit align return
+#' @inheritParams align_dendro
+#' @return A `"AlignKmeans"` object.
+#' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("t") +
+#'     anno_top() +
 #'     align_kmeans(3L)
 #' @export
-align_kmeans <- function(centers, ...,
-                         data = NULL, set_context = FALSE, name = NULL) {
+align_kmeans <- function(centers, ..., data = NULL,
+                         active = NULL, set_context = deprecated(),
+                         name = deprecated()) {
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    active <- deprecate_active(active, "align_group",
+        set_context = set_context, name = name
+    )
     align(
         align_class = AlignKmeans,
         params = list(centers = centers, params = rlang::list2(...)),
-        set_context = set_context,
-        name = name, order = NULL,
+        active = active,
         data = data %||% waiver()
     )
 }
 
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", Align,
     setup_data = function(self, params, data) {
-        ans <- as.matrix(data)
+        ans <- fortify_matrix(data)
         assert_(
             ans, is.numeric, "a numeric matrix",
             arg = "data", call = .subset2(self, "call")
@@ -32,7 +41,7 @@ AlignKmeans <- ggproto("AlignKmeans", Align,
     },
     compute = function(self, panel, index, centers, params) {
         data <- .subset2(self, "data")
-        rlang::inject(stats::kmeans(x = data, centers = centers, !!!params))
+        inject(stats::kmeans(x = data, centers = centers, !!!params))
     },
     layout = function(self, panel, index) {
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)

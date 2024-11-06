@@ -2,6 +2,8 @@
 
 ## features:
 
+* new `theme_no_axes()` function to remove axis elements
+
 * new `geom_pie()` function to draw pie charts
 
 * new `gplot()` function to wrap ggplot to the layout
@@ -12,7 +14,7 @@
 
 * new `fortify_heatmap()` method for `MAF` object.
 
-* `plot_action()` gains a new argument `inherit` to control the inheritance of `data` argument
+* `plot_align()` gains a new argument `inherit` to control the inheritance of `data` argument
 
 * new `ggoncoplot()` function to draw oncoprint
 
@@ -20,7 +22,7 @@
 
 * `align()`, `stack_active()`, and `hmanno()` functions gain a new argument `action`, and deprecate `free_guides`, `free_spaces`, `plot_data`, `theme`, `free_labs`, and `guides` arguments.
 
-* new `plot_action()` function to control specifications of the plot in layout
+* new `plot_align()` function to control specifications of the plot in layout
 
 * `merge` function has been implemented with `vctrs` for performance
 
@@ -41,6 +43,8 @@
 * fix bug when provide a function in `distance` argument of `align_dendro()`
 
 * fix bug when provide `hclust` or `dendrogram` in method argument of `align_dendro()`
+
+* fix bug of `coord_ggalign()` for discrete scale
 
 # ggalign 0.0.4
 

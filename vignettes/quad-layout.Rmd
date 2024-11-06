@@ -1,0 +1,215 @@
+---
+title: "Quad-Layout"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quad-Layout}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+As discussed in `vignette("heatmap-layout")`, the `ggheatmap()` function is a
+specialized form of `quad_layout()`. Specifically, it is a variant of
+`quad_alignb()`, which aligns observations both horizontally and vertically. 
+
+`quad_layout()` arranges plots in the Quad-Side of a main plot. Depending on
+whether you want to align observations in the `horizontal` or `vertical`
+direction, there are four main types of `quad_layout()`: 
+ - `quad_free`/`ggside`: Never align observations.
+ - `quad_alignh`: Align observations in the horizontal direction.
+ - `quad_alignv`: Align observations in the vertical direction.
+ - `quad_alignb`: Align observations in both horizontal and vertical
+   directions.
+
+```{r setup}
+library(ggalign)
+```
+
+# `quad_free()`
+`quad_free()` won't align observations. `ggside()` is an alias of `quad_free()`.
+It do the same function of
+[ggside](https://cran.rstudio.com/web/packages/ggside/index.html) packge. This
+is particularly useful for metadata for summary graphics on a continuous axis 
+
+## input data
+Like `ggplot`, you'll need to provide input that can be converted into a data
+frame. Internally, the `fortify_data_frame()` function is used to handle this
+conversion. 
+
+```{r}
+ggside(mpg) +
+    geom_point(aes(displ, hwy, colour = class))
+```
+
+## annotation
+Like `ggheatmap()`, annotations in `quad_free()` can be placed at the top, left,
+bottom, and right sides, but all annotations here use `stack_free()`, meaning they
+don't align observations.
+
+```{r}
+ggside(mpg, aes(displ, hwy, colour = class)) -
+    # set default theme for all plots in the layout
+    plot_theme(theme_bw()) +
+    geom_point(size = 2) +
+    # add top annotation
+    anno_top(size = 0.3) -
+    # set default theme for the top annotation
+    plot_theme(theme_no_axes("tb")) +
+    # add a plot in the top annotation
+    ggfree() +
+    geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
+    # add right annotation
+    anno_right(size = 0.3) -
+    # set default theme for the right annotation
+    plot_theme(theme_no_axes("lr")) +
+    # add a plot in the right annotation
+    ggfree() +
+    geom_density(aes(x = after_stat(density), hwy, colour = class),
+        position = "stack"
+    ) +
+    theme(axis.text.x = element_text(angle = 90, vjust = .5))
+```
+
+Unlike `ggheatmap()`/`heatmap_layout()`, `ggside()`/`quad_free()` allows
+facetting for the main plot, which also needs to be applied to the annotations
+for proper alignment.
+```{r}
+i2 <- iris
+i2$Species2 <- rep(c("A", "B"), 75)
+ggside(i2, aes(Sepal.Width, Sepal.Length, color = Species)) -
+    # set default theme for all plots in the layout
+    plot_theme(theme_bw()) +
+    geom_point(size = 2) +
+    facet_grid(Species ~ Species2) +
+    # add top annotation
+    anno_top(size = 0.3) -
+    # set default theme for the top annotation
+    plot_theme(theme_no_axes("tb")) +
+    # add a plot in the top annotation
+    ggfree() +
+    geom_density(aes(Sepal.Width, y = after_stat(density), colour = Species),
+        position = "stack"
+    ) -
+    # we can utilize the `-` to set facet for all plots in the annotation
+    facet_grid(cols = vars(Species2)) +
+    # add right annotation
+    anno_right(size = 0.3) -
+    # set default theme for the right annotation
+    plot_theme(theme_no_axes("lr")) +
+    # add a plot in the right annotation
+    ggfree() +
+    geom_density(aes(x = after_stat(density), Sepal.Length, colour = Species),
+        position = "stack"
+    ) +
+    theme(axis.text.x = element_text(angle = 90, vjust = .5)) -
+    # we can utilize the `-` to set facet for all plots in the annotation
+    facet_grid(rows = vars(Species))
+```
+
+# `quad_alignh()`/`quad_alignv()`
+`quad_alignh()` aligns observations horizontally, while `quad_alignv()` aligns
+observations vertically.
+
+## input data
+To align observations in the horizontal/vertical direction, you'll need to
+provide input that can be converted into a matrix. Internally, the
+`fortify_matrix()` function is used to handle this conversion, ensuring the
+input is in the correct format for alignment.
+
+The underlying ggplot data is the same with `ggheatmap()`/`heatmap_layout()`, it
+is recommended to use `.y`, or `.row_names` as the `y` mapping in the main plot
+for `quad_alignh()` but use `.x` or `.column_names` as the `x` mapping in the
+main plot for `quad_alignv()`.
+
+```{r setup_data}
+set.seed(123)
+small_mat <- matrix(rnorm(56), nrow = 8)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
+```{r}
+# we'll align the horizontal direction
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+    scale_fill_brewer(palette = "Dark2")
+```
+
+```{r}
+# we'll align the vertical direction
+quad_alignv(small_mat) +
+    geom_boxplot(aes(.column_names, value, fill = .column_names)) +
+    scale_fill_brewer(palette = "Dark2")
+```
+
+## annotation
+the same with `ggheatmap()`/`heatmap_layout()`, we can add annotation in top,
+left, bottom, and right side. but the top and bottom annotation in
+`quad_alignh()` is a `stack_free()` which won't align observations and left and
+right annotation in `quad_alignv()`is a `stack_free()` which won't align
+observations.
+
+For left and right annotation in `quad_alignh()`, they are a `stack_align()`
+layout which will align observations, and require a matrix in the layout data.
+So it can inherit from the parent `quad_layout()` and we can add both
+`ggalign()` and `ggfree()` and other `align_*()` functions to the annotation.
+```{r}
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+    scale_fill_brewer(palette = "Dark2") +
+    anno_left() +
+    align_dendro()
+```
+
+For top and bottom annotation in `quad_alignh()`, they are a `stack_free()`
+which won't align observations, and require a data frame in the layout data. In
+this way, we won't transform the matrix to a data frame and always prevent user
+from inheriting from the parent layout matrix.
+
+```{r error=TRUE}
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+    scale_fill_brewer(palette = "Dark2") +
+    anno_top()
+```
+Manual initialization of annotations with `anno_init()` is required in such
+cases: 
+```{r}
+quad_alignv(small_mat) +
+    geom_boxplot(aes(.column_names, value, fill = .column_names)) +
+    scale_fill_brewer(palette = "Dark2") +
+    # initialize the left annotation with a self-defined data frame
+    anno_init("left", data = mpg) +
+    # add a plot in the top annotation
+    ggfree(aes(displ, hwy, colour = class)) +
+    geom_point(aes(displ, hwy, colour = class))
+```
+
+The same with `quad_alignh()`, we need to manually initialize the left and right
+annotations in `quad_alignv()`.
+```{r}
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+    scale_fill_brewer(palette = "Dark2") +
+    # initialize the top annotation with a self-defined data frame
+    anno_init("top", data = mpg) +
+    # add a plot in the top annotation
+    ggfree(aes(displ, hwy, colour = class)) +
+    geom_point(aes(displ, hwy, colour = class))
+```
+
+# `quad_alignb()`
+`quad_alignb` aligns observations in both horizontal and vertical directions. It
+is a base version of `ggheatmap()`/`heatmap_layout()`, it won't add the
+main plot geoms and default mapping automatically.
+
+# Session information
+```{r}
+sessionInfo()
+```

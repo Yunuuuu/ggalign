@@ -17,7 +17,7 @@
 #' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
 #' object.
 #' @param axes Which axes shouldn't be aligned? A string containing
-#' one or more of `r rd_values(.tlbr)`.
+#' one or more of `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_align`: A modified version of `plot` with a `free_align` class.
 #' @examples
@@ -95,7 +95,6 @@ free_align.ggplot <- function(plot, axes = "tlbr") {
 #' @export
 free_align.alignpatches <- free_align.ggplot
 
-#' @importFrom vctrs vec_set_difference
 #' @export
 free_align.free_lab <- function(plot, axes = "tlbr") {
     assert_position(axes)

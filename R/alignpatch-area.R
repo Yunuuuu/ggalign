@@ -23,7 +23,7 @@
 #'           A#B
 #'           ##B"
 #' ```
-#' @return A `align_area` object.
+#' @return A `ggalign_area` object.
 #' @examples
 #' p1 <- ggplot(mtcars) +
 #'     geom_point(aes(mpg, disp))
@@ -44,7 +44,6 @@
 #'
 #' # Apply it to a alignpatches
 #' align_plots(p1, p2, p3, design = layout)
-#' @importFrom vctrs df_list vec_cast new_data_frame
 #' @export
 area <- function(t, l, b = t, r = l) {
     if (missing(t) || missing(l)) {
@@ -68,7 +67,39 @@ area <- function(t, l, b = t, r = l) {
             cli::cli_abort("{.arg l} must be less than {.arg r}")
         }
     }
-    new_data_frame(one_area, class = c("align_area", "patch_area"))
+    new_areas(one_area)
+}
+
+new_areas <- function(x) new_rcrd(x, class = c("ggalign_area", "patch_area"))
+
+#' @export
+format.ggalign_area <- function(x, ...) {
+    x <- vec_data(x)
+    x <- vec_set_names(x, paste0(vec_seq_along(x), ": "))
+    format(x)
+}
+
+#' @export
+obj_print_footer.ggalign_area <- function(x, ...) {
+    cat(
+        "\n<Spanning",
+        max(field(x, "r")), "columns and",
+        max(field(x, "b")), "rows>\n"
+    )
+}
+
+#' @export
+vec_ptype_abbr.ggalign_area <- function(x, ...) "areas"
+
+trim_area <- function(area) {
+    area <- vec_data(area)
+    w <- min(.subset2(area, "l"), .subset2(area, "r"))
+    h <- min(.subset2(area, "t"), .subset2(area, "b"))
+    area$l <- .subset2(area, "l") - w + 1L
+    area$r <- .subset2(area, "r") - w + 1L
+    area$t <- .subset2(area, "t") - h + 1L
+    area$b <- .subset2(area, "b") - h + 1L
+    new_areas(area)
 }
 
 as_areas <- function(x) UseMethod("as_areas")
@@ -82,9 +113,8 @@ as_areas.default <- function(x) {
 as_areas.NULL <- function(x) NULL
 
 #' @export
-as_areas.align_area <- function(x) x
+as_areas.ggalign_area <- function(x) x
 
-#' @importFrom vctrs vec_rbind list_sizes
 #' @export
 as_areas.character <- function(x) {
     call <- current_call() # used for message only
@@ -105,7 +135,10 @@ as_areas.character <- function(x) {
     # here, area will be reordered by the levels of `x`
     area_list <- imap(split(seq_along(x), x), function(i, name) {
         if (identical(name, "#")) {
-            return(area())
+            return(new_areas(list(
+                t = integer(0L), l = integer(0L),
+                b = integer(0L), r = integer(0L)
+            )))
         }
         area_rows <- range(row[i])
         area_cols <- range(col[i])
@@ -117,47 +150,19 @@ as_areas.character <- function(x) {
             x[.subset(i, 1L)])) {
             cli::cli_abort("Patch areas must be rectangular", call = call)
         }
-        area(t = t, l = l, b = b, r = r)
+        new_areas(list(t = t, l = l, b = b, r = r))
     })
-    do.call(c, area_list)
+    vec_c(!!!vec_set_names(area_list, NULL))
 }
-
-#' @importFrom vctrs vec_rbind
-#' @export
-c.align_area <- function(...) vec_rbind(...)
-
-#' @importFrom vctrs vec_slice
-#' @export
-`[.align_area` <- function(x, i) vec_slice(x, i)
 
 # For area from patchwork
 #' @export
-as_areas.patch_area <- function(x) add_class(x, "align_area")
+as_areas.patch_area <- function(x) add_class(x, "ggalign_area")
 
-#' @importFrom vctrs vec_size
-#' @export
-length.align_area <- function(x) vec_size(x)
-
-#' @importFrom vctrs new_data_frame vec_data vec_set_names vec_seq_along
-#' @export
-print.align_area <- function(x, ...) {
-    data <- x
-    x <- vec_data(x)
-    x <- vec_set_names(x, paste0(vec_seq_along(data), ": "))
-    cat(
-        length(data), "patch areas, spanning",
-        max(.subset2(data, "r")), "columns and",
-        max(.subset2(data, "b")), "rows\n\n"
-    )
-    NextMethod()
-    invisible(data)
-}
-
-#' @importFrom vctrs vec_seq_along vec_data
 #' @importFrom grid unit
-#' @importFrom ggplot2 aes margin theme
+#' @importFrom ggplot2 aes margin theme ggplot
 #' @export
-plot.align_area <- function(x, ...) {
+plot.ggalign_area <- function(x, ...) {
     data <- vec_data(x)
     data$l <- data$l - 0.45
     data$r <- data$r + 0.45
@@ -172,7 +177,7 @@ plot.align_area <- function(x, ...) {
         }
         lim[-c(1, length(lim))]
     }
-    ggplot2::ggplot(data) +
+    ggplot(data) +
         ggplot2::geom_rect(aes(
             xmin = .data$l, xmax = .data$r,
             ymin = .data$t, ymax = .data$b, fill = .data$name

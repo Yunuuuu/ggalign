@@ -1,13 +1,13 @@
 #' Wrap Arbitrary Graphics to ggplot
 #'
 #' The `ggwrap()` function allows non-ggplot2 elements to be converted into a
-#' compliant representation for use with [align_plots()]. This is useful for
-#' adding any graphics that can be converted into a [grob][grid::grob] with the
-#' [patch()] method.
+#' compliant representation for use with [`align_plots()`]. This is useful for
+#' adding any graphics that can be converted into a [`grob`][grid::grob] with
+#' the [`patch()`] method.
 #'
-#' @param plot Any graphic that can be converted into a [grob][grid::grob] using
-#' [patch()].
-#' @param ... Additional arguments passed to the [patch()] method.
+#' @param plot Any graphic that can be converted into a [`grob`][grid::grob]
+#' using [`patch()`].
+#' @param ... Additional arguments passed to the [`patch()`] method.
 #' @param align A string specifying the area to place the plot: `"full"` for the
 #' full area, `"plot"` for the full plotting area (including the axis label), or
 #' `"panel"` for only the actual area where data is drawn.
@@ -16,10 +16,10 @@
 #' @param on_top A single boolean value indicates whether the graphic plot
 #' should be put frontmost. Note: the graphic plot will always put above the
 #' background.
-#' @param vp A [viewport][grid::viewport] object, you can use this to define the
-#' plot area.
+#' @param vp A [`viewport`][grid::viewport] object, you can use this to define
+#' the plot area.
 #' @return A `wrapped_plot` object that can be directly placed into
-#' [align_plots()].
+#' [`align_plots()`].
 #' @inherit patch seealso
 #' @examples
 #' library(grid)
@@ -36,12 +36,12 @@
 #'     mar = c(0, 2, 0, 0), bg = NA
 #' ))
 #'
-#' @importFrom ggplot2 theme element_blank
+#' @importFrom ggplot2 theme element_blank ggplot
 #' @importFrom grid is.grob
 #' @export
 ggwrap <- function(plot, ..., align = "panel", on_top = TRUE,
                    clip = TRUE, vp = NULL) {
-    patch <- ggplot2::ggplot() +
+    patch <- ggplot() +
         theme(
             plot.background = element_blank(),
             panel.background = element_blank()

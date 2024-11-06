@@ -22,8 +22,8 @@ Currently, there are four key `align_*` functions available for layout customiza
 
 - **`align_group`**: Group and align plots based on categorical factors.
 - **`align_order`**: Reorder layout observations based on statistical weights
- or allows for manual reordering based on user-defined criteria.
-- **`align_kmeans`**: Arrange plots by k-means clustering results.
+ or allows for manual reordering based on user-defined ordering index.
+- **`align_kmeans`**: Group observations by k-means clustering results.
 - **`align_dendro`**: Align plots according to hierarchical clustering or dendrograms.
 
 ```{r setup}
@@ -44,7 +44,7 @@ panels. It doesn't add any plot area.
 
 ```{r align_group_top}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
 
@@ -54,7 +54,7 @@ new plot, the panel title can only be added to the heatmap plot.
 ```{r align_group_left}
 ggheatmap(small_mat) +
     theme(strip.text = element_text()) +
-    hmanno("l") +
+    anno_left() +
     align_group(sample(letters[1:4], nrow(small_mat), replace = TRUE))
 ```
 
@@ -65,7 +65,7 @@ weights, Like `align_group()`, it doesn't add a plot area.
 Here, we order the rows based on the means.
 ```{r align_order}
 ggheatmap(small_mat) +
-    hmanno("l") +
+    anno_left() +
     align_order(rowMeans)
 ```
 
@@ -75,14 +75,14 @@ argument.
 my_order <- sample(nrow(small_mat))
 print(rownames(small_mat)[my_order])
 ggheatmap(small_mat) +
-    hmanno("l") +
+    anno_left() +
     align_order(my_order)
 ```
 
 We can also provide the ordering character index.
 ```{r align_order_character_index}
 ggheatmap(small_mat) +
-    hmanno("l") +
+    anno_left() +
     align_order(rownames(small_mat)[my_order])
 ```
 
@@ -91,24 +91,20 @@ the summary function's output (from bottom to top for rows, or from left to
 right for columns). To reverse this order, you can set `reverse = TRUE`: 
 ```{r align_order_reverse}
 ggheatmap(small_mat) +
-    hmanno("l") +
+    anno_left() +
     align_order(rowMeans, reverse = TRUE)
 ```
 
 Some `align_*` functions accept a `data` argument. This can be a matrix, a data
-frame, or even a simple vector, which will be converted into a one-column
-matrix. If the `data` argument is `NULL`, the function will use the layout data,
-as demonstrated in the previous example. The `data` argument can also accept a
-function (purrr-like lambda syntax is supported), which will be applied to the
-layout data. 
+frame, or even a simple vector. The `data` argument can also accept a function
+(purrr-like lambda syntax is supported), which will be applied to the layout
+data. It is important to note that all `align_*` functions consider the `rows`
+as the observations. It means the `NROW(data)` must return the same number with
+the observations in axis used for alignment.
 
-It is important to note that all `align_*` functions consider the `rows` as
-the observations. It means the `NROW(data)` must return the same number with
-the specific `layout` axis.
-
- - `heatmap_layout()`/`ggheatmap()`: for column annotation, the `layout` data
- will be transposed before using (If data is a `function`, it will be applied
- with the transposed matrix). This is necessary because column annotation uses
+ - `quad_layout()`/`ggheatmap()`: for column annotation, the `layout` data will
+ be transposed before using (If data is a `function`, it will be applied with
+ the transposed matrix). This is necessary because column annotation uses
  heatmap columns as observations, but we need rows.
 
  - `stack_layout()`/`ggstack()`: the `layout` data will be used as it is since
@@ -119,7 +115,7 @@ mean value across all columns.
 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_order(rowMeans)
 ```
 
@@ -128,25 +124,24 @@ The `align_kmeans()` function groups heatmap rows or columns based on k-means
 clustering. Like the previous functions, it does not add a plot area. 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_kmeans(3L)
 ```
 
-It's important to note that all `align_*` functions which define groups must not
-break the previous established groups. This means the new groups must nest in
-the old groups, in this way, usually they cannot be used if groups already
-exist.
+Note that all `align_*` functions which define groups must not break the
+previous established groups. This means the new groups must nest in the old
+groups, in this way, usually they cannot be used if groups already exist.
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE)) +
     align_kmeans(3L)
 ```
 
 ```{r error=TRUE}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_kmeans(3L) +
     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
@@ -158,7 +153,7 @@ particularly useful for working with heatmap plots.
 
 ```{r align_dendro}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro()
 ```
 
@@ -178,14 +173,14 @@ matrix will be transposed automatically.
 
 ```{r align_dendro_distance_pearson}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(distance = "pearson") +
     patch_titles(top = "pre-defined distance method (1 - pearson)")
 ```
 
 ```{r align_dendro_distance_function}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(distance = function(m) dist(m)) +
     patch_titles(top = "a function that calculates distance matrix")
 ```
@@ -197,7 +192,7 @@ object.
 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(method = "ward.D2")
 ```
 
@@ -206,7 +201,7 @@ specify `k` or `h`, which work similarly to `cutree()`:
 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(k = 3L)
 ```
 
@@ -218,7 +213,7 @@ plot area.
 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro() +
     geom_point(aes(y = y))
 ```
@@ -231,7 +226,7 @@ dendrogram tree. One useful variable in both `node` and `edge` data is the
 
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3) +
     geom_point(aes(color = branch, y = y))
 ```
@@ -240,11 +235,11 @@ You can reorder the dendrogram based on the mean values of the observations by
 setting `reorder_dendrogram = TRUE`.
 ```{r fig.width=10}
 h1 <- ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3, reorder_dendrogram = TRUE) +
     ggtitle("reorder_dendrogram = TRUE")
 h2 <- ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_dendro(aes(color = branch), k = 3) +
     ggtitle("reorder_dendrogram = FALSE")
 align_plots(h1, h2)
@@ -258,7 +253,7 @@ cannot specify `k` or `h`:
 set.seed(3L)
 column_groups <- sample(letters[1:3], ncol(small_mat), replace = TRUE)
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(column_groups) +
     align_dendro(aes(color = branch))
 ```
@@ -266,7 +261,7 @@ ggheatmap(small_mat) +
 You can reorder the groups by setting `reorder_group = TRUE`.
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(column_groups) +
     align_dendro(aes(color = branch), reorder_group = TRUE)
 ```
@@ -274,7 +269,7 @@ ggheatmap(small_mat) +
 You can merge the sub-tree in each group by settting `merge_dendrogram = TRUE`.
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(column_groups) +
     align_dendro(aes(color = branch), merge_dendrogram = TRUE)
 ```
@@ -282,13 +277,13 @@ ggheatmap(small_mat) +
 You can reorder the dendrogram and merge simutaneously.
 ```{r}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(column_groups) +
     align_dendro(aes(color = branch),
         reorder_group = TRUE,
         merge_dendrogram = TRUE
     ) +
-    hmanno("b") +
+    anno_bottom() +
     align_dendro(aes(color = branch),
         reorder_group = FALSE,
         merge_dendrogram = TRUE
@@ -300,7 +295,7 @@ principle applies to `align_dendro()`, where new groups must be nested within
 the previously established groups.  
 ```{r error=TRUE}
 ggheatmap(small_mat) +
-    hmanno("t") +
+    anno_top() +
     align_group(column_groups) +
     align_dendro(k = 2L)
 ```

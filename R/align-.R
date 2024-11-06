@@ -1,81 +1,89 @@
-#' Create a new `Align` object
+#' Create a New `Align` Object
 #'
-#' `Align` object will act with the `layout` object, reorder or split the
-#' observations, some of them can also add plot components into the `layout`
-#' object.
+#' `r lifecycle::badge('experimental')` An `Align` object interacts with the
+#' `layout` object to reorder or split observations and, in some cases, add plot
+#' components to the `layout`.
 #'
-#' @param data A matrix, data frame, or a simple vector. If an atomic vector is
-#' provided, it will be converted into a one-column matrix. When `data = NULL`,
-#' the internal `layout` data will be used by default. Additionally, `data` can
-#' be a function (including purrr-like lambdas), which will be applied to the
-#' `layout` data.
+#' @param align_class A `Align` object.
+#' @param params A list of parameters for `align_class`.
+#' @param data Options for `data`:
+#'  - A matrix, data frame, or atomic vector.
+#'  - [`waiver()`]: Uses the `layout matrix`.
+#'  - `NULL`: No data is set.
+#'  - A `function` (including purrr-like lambda syntax) applied to the layout
+#'    `matrix`.
 #'
-#' It is important to note that we consider the `rows` as the observations. It
-#' means the `NROW(data)` must return the same number with the specific `layout`
-#' axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
-#' stack layout).
+#' @param size The relative size of the plot, can be specified as a
+#' [`unit`][grid::unit].
+#' @param controls Options for `controls`:
+#'  - `NULL`: Used when `align_*()` functions do not add a plot.
+#'  - [`waiver()`]: Try to infer `controls` based on `data`.
 #'
-#'  - `heatmap_layout()`: for column annotation, the `layout` data will be
-#'  transposed before using (If data is a `function`, it will be applied with
-#'  the transposed matrix). This is necessary because column annotation uses
-#'  heatmap columns as observations, but we need rows.
+#' @param limits Logical; if `TRUE`, sets layout limits for the plot.
+#' @param facet Logical; if `TRUE`, applies facets to the layout. If `FALSE`,
+#'   `limits` will also be set to `FALSE`.
+#' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
+#'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
+#'   default, will controled by the option-
+#'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
+#' @param active A [`active()`] object that defines the context settings when
+#'   added to a layout.
+#' @param free_guides `r lifecycle::badge("superseded")` Please use
+#'   [`plot_align()`] function instead.
+#' @param free_spaces `r lifecycle::badge("deprecated")` Please use
+#' [`plot_align()`] function instead.
+#' @param plot_data `r lifecycle::badge("deprecated")` Please use
+#' [`plot_data()`] function instead.
+#' @param theme `r lifecycle::badge("deprecated")` Please use
+#' [`-`][layout-operator] method instead.
+#' @param free_labs `r lifecycle::badge("deprecated")` Please use
+#' [`plot_align()`] function instead.
+#' @param check.param Logical; if `TRUE`, checks parameters and provides
+#'   warnings as necessary.
+#' @param call The `call` used to construct the `Align` object, for reporting
+#'   messages.
 #'
-#'  - `stack_layout()`: the `layout` data will be used as it is since we place
-#'    all plots along a single axis.
+#' @section Axis Alignment for Observations:
+#' It is important to note that we consider rows as observations, meaning
+#' `vec_size(data)`/`NROW(data)` must match the number of observations along the
+#' axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+#' horizontal stack layout).
 #'
-#' @param size Plot size, can be an [unit][grid::unit] object.
-#' @param action A [plot_action()] object used for the plot.
-#' @param action_data Default action data, which by default tries to infer 
-#' from the `data` argument.
-#' @param limits A boolean value indicates whether to set the layout limtis for
-#' the plot.
-#' @param facet A boolean value indicates whether to set the layout facet for
-#' the plot. If this is `FALSE`, `limits` will always be `FALSE` too.
-#' @param set_context A single boolean value indicates whether to set the active
-#' context to current plot. If `TRUE`, all subsequent ggplot elements will be
-#' added into this plot.
-#' @param order An single integer for the plot area order.
-#' @param name A string of the plot name. Used to switch the active context in
-#' [hmanno()] or [stack_active()].
-#' @inheritParams hmanno
-#' @param check.param A single boolean value indicates whether to check the
-#' supplied parameters and warn.
-#' @param call The `call` used to construct the `Align` for reporting messages.
+#'  - [`quad_layout()`]/[`ggheatmap()`]: For column annotation, the layout
+#'    `matrix` will be transposed before use (if `data` is a function, it is
+#'    applied to the transposed matrix), as column annotation uses columns as
+#'    observations but alignment requires rows.
+#'  - [`stack_layout()`]: The layout matrix is used as is, aligning all plots
+#'    along a single axis.
+#'
 #' @return A new `Align` object.
+#'
 #' @examples
 #' align_gg()
 #' align_dendro()
+#'
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
-#' @importFrom vctrs vec_set_difference
-#' @importFrom lifecycle deprecated
 #' @export
 #' @keywords internal
-align <- function(align_class, params,
-                  # this function is used for adding more `Align` Class
-                  # Not used by the user.
-                  # The `data` argument is different from the documents in which
-                  # `NULL` means this `Align` object won't need any data,
-                  # and `waiver()` will indicates inherit from the layout.
-                  # So when adding a new `Align` object where user should input
-                  # data, always remember transfrom `NULL` to `waiver()`
-                  #
-                  # Details see `initialize_align()`
-                  data, size = NULL,
-                  # The `action` argument is different from the documents in
-                  # which `NULL` means this `Align` object won't plot,
-                  # and `waiver()` will indicates we should set the default
-                  # action for this `Align` object.
-                  action = NULL, action_data = NA,
-                  limits = TRUE, facet = TRUE,
-                  set_context = TRUE, order = NULL, name = NULL,
+align <- function(align_class, params, data, size = NULL, controls = NULL,
+                  limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
                   free_labs = deprecated(),
                   check.param = TRUE, call = caller_call()) {
-    if (align_override_call(call)) {
+    if (override_call(call)) {
         call <- current_call()
     }
+    deprecate_action(
+        snake_class(align_class),
+        plot_data = plot_data,
+        theme = theme,
+        free_guides = free_guides,
+        free_spaces = free_spaces,
+        free_labs = free_labs,
+        call = call
+    )
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
@@ -86,32 +94,13 @@ align <- function(align_class, params,
     }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
-    assert_bool(set_context, call = call)
-    order <- check_order(order, call = call)
-    assert_string(name,
-        empty_ok = FALSE, na_ok = TRUE,
-        null_ok = TRUE, call = call
-    )
+    assert_bool(no_axes, null_ok = TRUE, call = call)
+    no_axes <- no_axes %||%
+        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
 
-    if (!is.null(action)) {
-        if (identical(action_data, NA)) {
-            # set the default action data behaviour
-            # if inherit from the layout data, we'll also inherit the
-            # action data function
-            action_data <- if (is.waive(data)) waiver() else NULL
-        }
-        action <- check_action(
-            action %|w|% NULL,
-            data = action_data,
-            arg = "action",
-            call = call
-        )
-        action <- deprecate_action(
-            action, snake_class(align_class),
-            plot_data, theme,
-            free_spaces, free_labs,
-            free_guides = free_guides,
-            call = call
+    if (is.waive(controls)) {
+        controls <- new_controls(
+            new_plot_data(if (is.waive(data)) waiver() else NULL)
         )
     }
 
@@ -139,38 +128,26 @@ align <- function(align_class, params,
         plot = NULL,
         data = NULL,
         params = NULL,
-        labels = NULL, # the original rownames of the input data
+        labels = NULL, # the original `vec_names()` of the `input_data`
 
         # user input -------------------------------
         size = size,
         # should we allow user switch between different plot with a string name?
         # Should I remove "name" argument from the user input?
-        name = name %||% NA_character_,
-        order = order,
-        set_context = set_context,
+        active = active,
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
-        action = action,
+        controls = controls,
         facet = facet,
         limits = limits,
+        no_axes = no_axes,
 
         # collect parameters
         input_params = params[intersect(names(params), all)],
 
         # used to provide error message
         call = call
-    )
-}
-
-#' @importFrom utils packageName
-align_override_call <- function(call = NULL) {
-    if (is.null(call) || is.function(f <- .subset2(call, 1L))) {
-        return(TRUE)
-    }
-    !identical(
-        packageName(environment(eval(f))),
-        pkg_nm()
     )
 }
 
@@ -182,19 +159,18 @@ plot.Align <- function(x, ...) {
 
 is_align <- function(x) inherits(x, "Align")
 
-#' @section Align:
-#' Each of the `Align*` objects is just a [ggproto()][ggplot2::ggproto] object,
-#' descended from the top-level `Align`, and each implements various
+#' @details
+#' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
+#' object, descended from the top-level `Align`, and each implements various
 #' methods and fields.
 #'
 #' To create a new type of `Align*` object, you typically will want to
 #' override one or more of the following:
-#'  - `setup_params`: Prepare parameter or check parameters used by this
-#'    annotation.
-#'  - `setup_data`: Prepare data used by this annotation.
+#'  - `setup_params`: Prepare parameter or check parameters used by this plot.
+#'  - `setup_data`: Prepare data used by this plot.
 #'  - `compute`: A method used to compute statistics.
-#'  - `layout`: A method used to group heamap rows/columns into panel or
-#'    reorder heamtap rows/columns.
+#'  - `layout`: A method used to group observations into panel or reorder
+#'    observations.
 #'  - `draw`: A method used to draw the plot. Must return a `ggplot` object.
 #' @importFrom ggplot2 ggproto
 #' @export
@@ -249,7 +225,7 @@ Align <- ggproto("Align",
     #  - the second one should be the heatmap row/column order index, and will
     #    determine the order in each grouped panel.
     #
-    # See `align_layout` function for details
+    # See `align_initialize_layout` function for details
     # There will have following situations (the input is old index and old
     # panel):
     #
@@ -274,7 +250,7 @@ Align <- ggproto("Align",
     #
     # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
-    #    index, this will be checked in `align_layout` function.
+    #    index, this will be checked in `align_initialize_layout` function.
     layout = function(self, panel, index) list(panel, index),
 
     # initialize the ggplot object, if `NULL`, no plot area will be added.  we
@@ -302,7 +278,6 @@ Align <- ggproto("Align",
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
-#' @importFrom vctrs vec_set_difference
 align_method_params <- function(f, remove = c("panel", "index")) {
     vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }

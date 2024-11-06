@@ -15,21 +15,35 @@
 #' statistic, which we'll call [`order2()`] to extract the ordering information.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' function provided in `stat` argument.
+#' @param data A `matrix`, `data frame`, or atomic vector used as the input for
+#' the `stat` function. Alternatively, you can specify a `function` (including
+#' purrr-like lambda syntax) that will be applied to the layout matrix,
+#' transforming it as necessary for statistic calculations. By default, it will
+#' inherit from the layout matrix.
 #' @inheritParams align_order
-#' @inherit align return
+#' @return A `"AlignReorder"` object.
+#' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("l") +
+#'     anno_left() +
 #'     align_reorder(hclust2)
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
 #' @export
 align_reorder <- function(stat, ..., reverse = FALSE,
                           strict = TRUE, data = NULL,
-                          set_context = FALSE, name = NULL) {
+                          active = NULL, set_context = deprecated(),
+                          name = deprecated()) {
     stat <- rlang::as_function(stat)
     assert_bool(strict)
     assert_bool(reverse)
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    active <- deprecate_active(active, "align_order",
+        set_context = set_context, name = name
+    )
     align(
         align_class = AlignReorder,
         params = list(
@@ -38,20 +52,19 @@ align_reorder <- function(stat, ..., reverse = FALSE,
             reverse = reverse,
             strict = strict
         ),
-        set_context = set_context,
-        name = name, order = NULL,
+        active = active,
         check.param = TRUE,
         data = data %||% waiver()
     )
 }
 
-#' @importFrom vctrs vec_cast vec_duplicate_any
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang inject
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, stat, stat_params, strict) {
         assert_reorder(self, panel, strict)
         data <- .subset2(self, "data")
-        rlang::inject(stat(data, !!!stat_params))
+        inject(stat(data, !!!stat_params))
     },
     layout = function(self, panel, index, reverse) {
         index <- vec_cast(

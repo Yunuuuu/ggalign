@@ -3,7 +3,7 @@
 #' This function allows you to change the order in which layers are added to a
 #' ggplot.
 #'
-#' @param layer A [layer geometry][ggplot2::layer_geoms] object to be added.
+#' @param layer A [`layer geometry`][ggplot2::layer_geoms] object to be added.
 #' @param order An integer indicating the position at which the layer should be
 #' added. If `<= 0`, the layer will be added at the beginning. If greater than
 #' the number of plot layers, it will be added at the end.
@@ -15,7 +15,6 @@
 #' ggplot(faithfuld, aes(waiting, eruptions)) +
 #'     geom_raster(aes(fill = density)) +
 #'     layer_order(geom_point(color = "red", size = 1))
-#' @importFrom vctrs vec_cast
 #' @export
 layer_order <- function(layer, order = 0) {
     assert_s3_class(layer, "Layer")
@@ -36,7 +35,6 @@ layer_order <- function(layer, order = 0) {
 }
 
 #' @importFrom ggplot2 ggplot_add
-#' @importFrom vctrs vec_slice
 #' @export
 ggplot_add.layer_order <- function(object, plot, object_name) {
     if (is.null(params <- attr(object, "layer_order"))) {

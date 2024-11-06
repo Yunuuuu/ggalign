@@ -12,8 +12,8 @@ namespace_link <- function() NULL
 #' @keywords internal
 methods::setClass("Layout",
     list(
-        active = "ANY",
-        action = "ANY", # used to control the default plot behaviour
+        active = "ANY", # current active plot
+        controls = "list", # used to provide global parameters for all plots
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
         annotation = "list", # To-DO add `pacth_titles` for layout
@@ -25,19 +25,6 @@ methods::setClass("Layout",
         `_namespace` = namespace_link
     )
 )
-
-layout_default <- function(layout) {
-    # we always remove panel border from the default theme
-    layout@theme <- default_theme() + theme(panel.border = element_blank()) +
-        layout@theme
-    # we by default, collect all guides
-    layout@action["guides"] <- list(
-        .subset2(layout@action, "guides") %|w|% "tlbr"
-    )
-    layout
-}
-
-is_layout <- function(x) methods::is(x, "Layout")
 
 #' @export
 print.Layout <- print.alignpatches
@@ -74,184 +61,148 @@ methods::setMethod("$", "Layout", function(x, name) {
     slot(x, name)
 })
 
-#############################################################
-#' Add components to `Layout`
-#'
-#' @param e1 A `r rd_layout()`.
-#' @param e2 An object to be added to the plot, including [gg][ggplot2::+.gg]
-#' elements or [align] object.
-#' @return A modified `Layout` object.
-#' @examples
-#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("t") +
-#'     ggalign() +
-#'     geom_point(aes(y = value))
-#' @name layout-add
-#' @aliases +.Layout +.HeatmapLayout +.ggheatmap +.StackLayout +.ggstack
-NULL
-
-#' @importFrom utils modifyList
-#' @export
-#' @rdname layout-add
-methods::setMethod("+", c("Layout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code +} with a single argument.",
-            "i" = "Did you accidentally put {.code +} on a new line?"
-        ))
-    }
-    if (is.null(e2)) return(e1) # styler: off
-    if (inherits(e2, "layout_title")) {
-        e1@titles <- update_non_waive(e1@titles, e2)
-        return(e1)
-    }
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    layout_add(e1, e2, e2name)
-})
-
-#' @keywords internal
-layout_add <- function(layout, object, object_name) {
-    UseMethod("layout_add")
-}
-
-#' @export
-layout_add.HeatmapLayout <- function(layout, object, object_name) {
-    layout_heatmap_add(object, layout, object_name)
-}
-
-#' @export
-layout_add.StackLayout <- function(layout, object, object_name) {
-    layout_stack_add(object, layout, object_name)
-}
-
 #########################################################
 #' Layout operator
 #'
+#'  - `+`: adds elements to the active plot in the active layout.
+#'  - `&`: applies elements to all plots in the layout.
+#'  - `-`:
+#'    * `quad_layout()`: Adds elements to all plots in the active layout, as
+#'      well as to any nested layouts within it.
+#'    * `stack_layout()`:
 #' @details
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' `r rd_layout()`.
+#' `r rd_layout()`: `-` and `&`.
 #'
-#' Like `patchwork`, `&` add the element to all plots in the plot. If the
+#' Like `patchwork`, `&` add the element to all plots in the layout. If the
 #' element is a [theme][ggplot2::theme], this will also modify the layout
 #' theme.
 #'
-#' Unlike `patchwork`, the `-` operator adds ggplot2 elements (geoms, themes,
-#' facets, etc.) rather than a ggplot plot. The key difference between `&` and
-#' `-` is in how they behave in [heatmap_layout()]. The `-` operator only
-#' applies the element to the current active context in [heatmap_layout()].
-#' Using `-` might seem unintuitive if you think of the operator as "subtract",
-#' the underlying reason is that `-` is the only operator in the same precedence
-#' group as `+`.
+#' The key difference between `&` and `-` is in how they behave in
+#' [`quad_layout()`]. The `-` operator only applies the element to the current
+#' active context in [`quad_layout()`], if no active context, it will apply to
+#' all plots in the [`quad_layout()`]. Using `-` might seem unintuitive if you
+#' think of the operator as "subtract", the underlying reason is that `-` is the
+#' only operator in the same precedence group as `+`.
 #'
 #' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot.
 #' @return A modified `Layout` object.
 #' @examples
-#' mat <- matrix(rnorm(81), nrow = 9)
+#' mat <- matrix(rnorm(56), nrow = 7)
 #' ggheatmap(mat) +
-#'     hmanno("top") +
+#'     hmanno("t") +
+#'     ggalign() +
+#'     geom_point(aes(y = value))
+#'
+#' ggheatmap(mat) +
+#'     anno_top() +
 #'     align_dendro() &
 #'     theme(panel.border = element_rect(
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
 #' ggheatmap(mat) +
-#'     hmanno("top") +
+#'     anno_top() +
 #'     align_dendro() -
 #'     theme(panel.border = element_rect(
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
 #'
+#' # used in the layout, define the default action for all plots in the layout
+#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
+#'     theme(plot.background = element_rect(fill = "red"))
+#'
+#' # You can also add it for a single plot
+#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
+#'     theme(plot.background = element_rect(fill = "red")) +
+#'     # here, we modify the plot action for the heatmap body
+#'     theme(plot.background = element_rect(fill = "blue"))
 #' @name layout-operator
 NULL
 
-#' @aliases &.Layout &.HeatmapLayout &.ggheatmap &.StackLayout &.ggstack
-#' @rdname layout-operator
-#' @export
-methods::setMethod("&", c("Layout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code &} with a single argument.",
-            "i" = "Did you accidentally put {.code &} on a new line?"
-        ))
-    }
-    if (is.null(e2)) return(e1) # styler: off
-    if (inherits(e2, "layout_title")) {
-        cli::cli_abort(c(
-            "Cannot use {.code &} to change the layout titles",
-            i = "Try to use {.code +} instead"
-        ))
-    }
+utils::globalVariables(".Generic")
 
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    e1 <- layout_and_add(e1, e2, e2name)
+###########################################################
+default_layout <- function(layout) {
+    layout@theme <- default_theme() + layout@theme
+    # we by default, collect all guides
+    layout@controls$plot_align["guides"] <- list(
+        .subset2(.subset2(layout@controls, "plot_align"), "guides") %|w|% "tlbr"
+    )
+    # we by default, use `default_theme()`
+    layout@controls$plot_theme <- update_option(
+        .subset2(layout@controls, "plot_theme"),
+        new_plot_theme(default_theme())
+    )
+    layout
+}
 
-    # to align with `patchwork`, we also modify the layout theme
-    # when using `&` to add the theme object.
-    if (inherits(e2, "theme")) {
-        e1@theme <- e1@theme + e2
+######################################################################
+# layout params are used to align the observations
+new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
+    list(panel = panel, index = index, nobs = nobs)
+}
+
+set_layout_params <- function(params) {
+    if (is.null(params)) return(NULL) # styler: off
+    # if `nobs` is not initialized, it means no `Align` object exist
+    # it's not necessary to initialize the `panel` and `index`
+    if (is.null(nobs <- .subset2(params, "nobs"))) {
+        return(params)
     }
-    e1
-})
+    panel <- .subset2(params, "panel") %||% factor(rep_len(1L, nobs))
+    index <- .subset2(params, "index") %||% reorder_index(panel)
+    new_layout_params(panel, index, nobs)
+}
+
+reorder_index <- function(panel, index = NULL) {
+    index <- index %||% seq_along(panel)
+    unlist(split(index, panel[index]), recursive = FALSE, use.names = FALSE)
+}
 
 #' @keywords internal
-layout_and_add <- function(layout, object, object_name) {
-    UseMethod("layout_and_add")
+update_layout_params <- function(layout, ..., params) {
+    UseMethod("update_layout_params")
 }
 
+#' @importFrom methods slot slot<-
 #' @export
-layout_and_add.HeatmapLayout <- function(layout, object, object_name) {
-    layout_heatmap_and_add(object, layout, object_name)
-}
-
-#' @export
-layout_and_add.StackLayout <- function(layout, object, object_name) {
-    layout_stack_and_add(object, layout, object_name)
-}
-
-#########################################################
-#' @aliases -.Layout -.HeatmapLayout -.ggheatmap -.StackLayout -.ggstack
-#' @rdname layout-operator
-#' @export
-methods::setMethod("-", c("Layout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli::cli_abort(c(
-            "Cannot use {.code -} with a single argument.",
-            "i" = "Did you accidentally put {.code -} on a new line?"
-        ))
+update_layout_params.QuadLayout <- function(layout, direction, ..., params) {
+    slot(layout, direction) <- params
+    if (is_horizontal(direction)) {
+        if (!is.null(left <- layout@left)) {
+            layout@left <- update_layout_params(left, params = params)
+        }
+        if (!is.null(right <- layout@right)) {
+            layout@right <- update_layout_params(right, params = params)
+        }
+    } else {
+        if (!is.null(top <- layout@top)) {
+            layout@top <- update_layout_params(top, params = params)
+        }
+        if (!is.null(bottom <- layout@bottom)) {
+            layout@bottom <- update_layout_params(bottom, params = params)
+        }
     }
-    if (is.null(e2)) return(e1) # styler: off
-    if (inherits(e2, "layout_title")) {
-        cli::cli_abort(c(
-            "Cannot use {.code -} to change the layout titles",
-            i = "Try to use {.code +} instead"
-        ))
-    }
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    layout_subtract(e1, e2, e2name)
-})
-
-#' @keywords internal
-layout_subtract <- function(layout, object, object_name) {
-    UseMethod("layout_subtract")
+    layout
 }
 
+#' @importFrom methods slot slot<-
 #' @export
-layout_subtract.HeatmapLayout <- function(layout, object, object_name) {
-    layout_heatmap_subtract(object, layout, object_name)
-}
-
-#' @export
-layout_subtract.StackLayout <- function(layout, object, object_name) {
-    layout_stack_subtract(object, layout, object_name)
+update_layout_params.StackLayout <- function(layout, ..., params) {
+    slot(layout, "layout") <- params
+    layout@plots <- lapply(layout@plots, function(plot) {
+        if (is_layout(plot)) {
+            update_layout_params(plot,
+                direction = layout@direction,
+                params = params
+            )
+        } else {
+            plot
+        }
+    })
+    layout
 }
 
 ############################################################
@@ -266,15 +217,15 @@ ggalign_stat <- function(x, ...) {
     UseMethod("ggalign_stat")
 }
 
-#' @param position A string of `"top"`, `"left"`, `"bottom"`, or `"right"`.
-#' @param what A single number or string of the plot elements in the stack
-#' layout.
+#' @param position A string of `r oxford_or(.TLBR)`.
 #' @export
 #' @rdname ggalign_stat
-ggalign_stat.HeatmapLayout <- function(x, position, ...) {
+ggalign_stat.QuadLayout <- function(x, position, ...) {
     ggalign_stat(x = slot(x, position), ...)
 }
 
+#' @param what A single number or string of the plot elements in the stack
+#' layout.
 #' @export
 #' @rdname ggalign_stat
 ggalign_stat.StackLayout <- function(x, what, ...) {
@@ -287,6 +238,11 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 #' @export
 ggalign_stat.Align <- function(x, ...) .subset2(x, "statistics")
 
+#' @export
+ggalign_stat.default <- function(x, ...) {
+    cli::cli_abort("no statistics found for {.obj_type_friendly {x}}")
+}
+
 ####################################################
 # we keep an attribute `ggalign` across all data
 # this is used to pass additional annotation informations
@@ -298,26 +254,27 @@ restore_attr_ggalign <- function(data, original) {
     data
 }
 
-#' Get a field data from the `ggalign` attribute
+#' Get data from the `ggalign` attribute
 #'
-#' When rendering the layout with `r rd_layout()`, a special attribute is kept
-#' in the data called `"ggalign"`, which can be used to pass additional
-#' information for the input data. This function helps extract data from that
-#' attribute. This is particularly useful in the `data` function for
-#' transforming the parent layout data.
+#' This function extracts data from the `ggalign` attribute retained in the data
+#' when rendering `r rd_layout()`. The `ggalign` attribute holds supplementary
+#' information for input data.
 #'
 #' @param x Input data for the function used to transform the layout data.
-#' @param field A single string indicating which data to use. Typically, this
-#' list of data is attached by the [fortify_heatmap()] function (see the
-#' `ggalign attributes` section in the documentation). Check
-#' [fortify_heatmap.MAF()] for examples.
+#' @param field A string specifying the particular data to retrieve from the
+#' `ggalign` attribute. If `NULL`, the entire `ggalign` attribute will be
+#' returned.  Commonly, this attribute list is attached by [`fortify_matrix()`]
+#' or [`fortify_data_frame()`] functions (refer to the `ggalign attributes`
+#' section in the documentation for details). For examples, see
+#' [`fortify_matrix.MAF()`].
 #'
-#' @return The requested data field or `NULL` if not found.
+#' @return The specified data from the `ggalign` attribute or `NULL` if it is
+#' unavailable.
 #'
 #' @export
-ggalign_attr <- function(x, field) {
-    if (is.null(x <- attr(x, "ggalign"))) {
-        return(NULL)
+ggalign_attr <- function(x, field = NULL) {
+    if (is.null(x <- attr(x, "ggalign")) || is.null(field)) {
+        return(x)
     }
     .subset2(x, field)
 }
@@ -331,80 +288,47 @@ add_ggalign_attr <- function(x, values) {
     x
 }
 
-############################################################
-############################################################
-# layout should be one of "index", "nobs", "panel"
-get_layout <- function(x, layout, ...) UseMethod("get_layout")
-
-#' @importFrom methods slot
+#############################################################
+#' Reports whether `x` is layout object
+#'
+#' @param x An object to test.
+#' @return A single boolean value.
+#' @examples
+#' is_layout(ggheatmap(1:10))
+#'
+#' @importFrom methods is
 #' @export
-get_layout.HeatmapLayout <- function(x, layout, axis, ...) {
-    .subset2(slot(x, paste(layout, "list", sep = "_")), axis)
-}
+is_layout <- function(x) is(x, "Layout")
 
-#' @importFrom methods slot
+#' @examples
+#' # for quad_layout()
+#' is_quad_layout(quad_alignb(1:10))
+#' is_quad_layout(quad_alignh(1:10))
+#' is_quad_layout(quad_alignv(1:10))
+#' is_quad_layout(quad_free(mtcars))
+#'
 #' @export
-get_layout.StackLayout <- function(x, layout, ...) {
-    slot(x, layout)
-}
+#' @rdname is_layout
+is_quad_layout <- function(x) is(x, "QuadLayout")
 
-set_layout <- function(x, layout, ..., value) UseMethod("set_layout")
-
-#' @importFrom methods slot slot<-
+#' @examples
+#' # for stack_layout()
+#' is_stack_layout(stack_align(1:10))
+#' is_stack_layout(stack_free(1:10))
+#'
 #' @export
-set_layout.HeatmapLayout <- function(x, layout, axis, ..., value) {
-    slot(x, paste(layout, "list", sep = "_"))[[axis]] <- value
-    if (axis == "x") {
-        if (!is.null(top <- x@top)) {
-            x@top <- set_layout(top, layout, value = value)
-        }
-        if (!is.null(bottom <- x@bottom)) {
-            x@bottom <- set_layout(bottom, layout, value = value)
-        }
-    } else {
-        if (!is.null(left <- x@left)) {
-            x@left <- set_layout(left, layout, value = value)
-        }
-        if (!is.null(right <- x@right)) {
-            x@right <- set_layout(right, layout, value = value)
-        }
-    }
-    x
-}
+#' @rdname is_layout
+is_stack_layout <- function(x) is(x, "StackLayout")
 
-#' @importFrom methods slot slot<-
+#' @examples
+#' # for heatmap_layout()
+#' is_heatmap_layout(ggheatmap(1:10))
 #' @export
-set_layout.StackLayout <- function(x, layout, ..., value) {
-    slot(x, layout) <- value
-    axis <- to_coord_axis(x@direction)
-    x@plots <- lapply(x@plots, function(plot) {
-        if (is_ggheatmap(plot)) {
-            set_layout(plot, layout = layout, axis = axis, value = value)
-        } else {
-            plot
-        }
-    })
-    x
-}
+#' @rdname is_layout
+is_heatmap_layout <- function(x) is(x, "HeatmapLayout")
 
-get_panel <- function(x, axis) {
-    get_layout(x = x, layout = "panel", axis = axis)
-}
-get_index <- function(x, axis) {
-    get_layout(x = x, layout = "index", axis = axis)
-}
-get_nobs <- function(x, axis) {
-    get_layout(x = x, layout = "nobs", axis = axis)
-}
-
-set_panel <- function(x, ..., axis, value) {
-    set_layout(x = x, layout = "panel", ..., axis = axis, value = value)
-}
-
-set_index <- function(x, ..., axis, value) {
-    set_layout(x = x, layout = "index", ..., axis = axis, value = value)
-}
-
-set_nobs <- function(x, ..., axis, value) {
-    set_layout(x = x, layout = "nobs", ..., axis = axis, value = value)
-}
+#' @examples
+#' is_ggheatmap(ggheatmap(1:10))
+#' @export
+#' @rdname is_layout
+is_ggheatmap <- is_heatmap_layout

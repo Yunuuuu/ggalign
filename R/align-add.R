@@ -28,7 +28,10 @@ align_add.Coord <- function(object, align, object_name) {
 }
 
 #' @export
-align_add.plot_action <- function(object, align, object_name) {
-    align$action <- update_action(align$action, object)
+align_add.ggalign_option <- function(object, align, object_name) {
+    name <- ggalign_option_name(object)
+    align$controls[name] <- list(update_option(
+        object, .subset2(align$controls, name), object_name
+    ))
     align
 }

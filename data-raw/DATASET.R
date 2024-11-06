@@ -32,17 +32,17 @@ logo <- ggstack(data = mat_scaled) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +
     # add a block plot for each group in the stack
-    ggpanel(size = unit(1, "cm")) +
+    ggalign(size = unit(1, "cm"), data = NULL) +
     geom_tile(aes(x = 1, fill = factor(.panel))) +
     scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
     scale_x_continuous(breaks = NULL, name = NULL) +
     # add a heatmap plot in the stack
     ggheatmap() +
-    hmanno(free_spaces = "l") +
+    quad_active(free_spaces = "l") +
     scale_y_continuous(breaks = NULL) +
     scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
-    hmanno("t") +
+    anno_top() +
     align_dendro() +
     # add a block for the heatmap column
     ggalign(data = type, size = unit(1, "cm")) +
@@ -56,7 +56,7 @@ logo <- ggstack(data = mat_scaled) +
     scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
     # set the active context of the heatmap to the top
     # and set the size of the top stack
-    hmanno("t", size = unit(4, "cm")) +
+    anno_top(size = unit(4, "cm")) +
     # add box plot in the heatmap top
     ggalign() +
     geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
@@ -74,11 +74,11 @@ logo <- ggstack(data = mat_scaled) +
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
     # add another heatmap and set the heatmap body width
-    ggheatmap(expr$type, .width = unit(2, "cm")) +
+    ggheatmap(expr$type, width = unit(2, "cm")) +
     scale_fill_brewer(palette = "Set3", name = "gene type") +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
-    hmanno("t", free_spaces = "lr") +
+    anno_top(free_spaces = "lr") +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
@@ -87,7 +87,7 @@ logo <- ggstack(data = mat_scaled) +
     scale_x_discrete() +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    theme(plot.margin = margin()) &
+    plot_theme(plot.margin = margin()) &
     theme(
         plot.background = element_blank(), panel.background = element_blank(),
         legend.background = element_blank()

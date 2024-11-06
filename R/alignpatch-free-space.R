@@ -1,5 +1,5 @@
 #' @param spaces Which border spaces should be removed? A string containing one
-#' or more of `r rd_values(.tlbr)`.
+#' or more of `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_space`: A modified version of `plot` with a `free_space` class.
 #' @export

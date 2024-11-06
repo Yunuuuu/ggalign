@@ -1,5 +1,5 @@
 #' @param borders Which border shouldn't be aligned? A string containing one or
-#' more of `r rd_values(.tlbr)`.
+#' more of `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_border`: A modified version of `plot` with a `free_border` class.
 #' @export
@@ -82,8 +82,6 @@ alignpatch.free_border <- function(x) {
                 t = t, l = l, b = b, r = r, gt = gt
             )
         },
-
-        #' @importFrom vctrs vec_set_difference
         free_border = function(self, borders, gt = self$gt) {
             borders <- vec_set_difference(borders, self$free_borders)
             if (length(borders)) {

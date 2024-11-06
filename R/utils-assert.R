@@ -59,7 +59,7 @@ assert_position <- function(position, arg = caller_arg(position),
     if (grepl("[^tlbr]", position)) {
         cli::cli_abort(sprintf(
             "{.arg {arg}} can only contain the %s characters",
-            oxford_comma(paste0("\"", .tlbr, "\""))
+            oxford_and(.tlbr)
         ), call = call)
     }
 }
@@ -98,8 +98,8 @@ check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
     size
 }
 
-check_action_data <- function(data, arg = caller_arg(data),
-                              call = caller_call()) {
+check_plot_data <- function(data, arg = caller_arg(data),
+                            call = caller_call()) {
     data <- allow_lambda(data)
     if (!is.waive(data) && !is.null(data) && !is.function(data)) {
         cli::cli_abort(paste(
@@ -110,7 +110,6 @@ check_action_data <- function(data, arg = caller_arg(data),
     data
 }
 
-#' @importFrom vctrs vec_cast
 check_stack_context <- function(what, arg = caller_arg(what),
                                 call = caller_call()) {
     if (is.null(what)) return(what) # styler: off
@@ -166,18 +165,18 @@ assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
     }
 }
 
-assert_action <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!inherits(x, "plot_action")) {
-        cli::cli_abort("{.arg {arg}} must be created with {.fn plot_action}")
+assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!inherits(x, "plot_align")) {
+        cli::cli_abort("{.arg {arg}} must be created by {.fn plot_align}",
+            call = call
+        )
     }
 }
 
-check_action <- function(x, data, arg = caller_arg(x), call = caller_call()) {
-    ans <- default_action(data)
-    if (is.null(x)) {
-        ans
-    } else {
-        assert_action(x, arg = arg, call = call)
-        update_action(ans, x)
+assert_active <- function(x, arg = caller_arg(x), call = caller_call()) {
+    if (!is.null(x) && !inherits(x, "ggalign_active")) {
+        cli::cli_abort("{.arg {arg}} must be created by {.fn context}",
+            call = call
+        )
     }
 }

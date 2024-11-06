@@ -1,5 +1,5 @@
 #' @param labs Which axis labs to be free? A string containing one or more of
-#' `r rd_values(.tlbr)`.
+#' `r oxford_and(.tlbr)`.
 #' @return
 #' - `free_lab`: A modified version of `plot` with a `free_lab` class.
 #' @export
@@ -63,7 +63,6 @@ alignpatch.free_lab <- function(x) {
             )
             ans
         },
-        #' @importFrom vctrs vec_set_difference
         free_lab = function(self, labs, gt = self$gt) {
             if (length(labs <- vec_set_difference(labs, self$free_labs))) {
                 gt <- ggproto_parent(Parent, self)$free_lab(

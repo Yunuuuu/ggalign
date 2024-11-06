@@ -1,15 +1,18 @@
 #' Reorder or Group layout based on hierarchical clustering
 #'
+#' @param data A matrix-like object. By default, it inherits from the layout
+#'   `matrix`.
+#' @inheritParams align
 #' @inheritParams align_gg
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
-#' [geom_segment()][ggplot2::geom_segment].
+#' [`geom_segment()`][ggplot2::geom_segment].
 #' @inheritParams hclust2
 #' @inheritParams dendrogram_data
 #' @param reorder_dendrogram A single boolean value indicating whether to
 #' reorder the dendrogram based on the means. Alternatively, you can provide a
-#' custom function that accepts an [hclust][stats::hclust] object and the data
-#' used to generate the tree, returning either an [hclust][stats::hclust] or
-#' [dendrogram][stats::as.dendrogram] object. Default is `FALSE`.
+#' custom function that accepts an [`hclust`][stats::hclust] object and the data
+#' used to generate the tree, returning either an [`hclust`][stats::hclust] or
+#' [`dendrogram`][stats::as.dendrogram] object. Default is `FALSE`.
 #' @param merge_dendrogram A single boolean value, indicates whether we should
 #' merge multiple dendrograms, only used when previous groups have been
 #' established. Default: `FALSE`.
@@ -27,16 +30,16 @@
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
 #' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
-#' @inheritParams align
 #' @section ggplot2 specification:
 #' `align_dendro` initializes a ggplot `data` and `mapping`.
 #'
 #' The internal will always use a default mapping of `aes(x = .data$x, y =
 #' .data$y)`.
 #'
-#' The default ggplot data is the `node` coordinates, in addition, a
-#' [geom_segment][ggplot2::geom_segment] layer with a data of the tree segments
-#' `edge` coordinates will be added.
+#' The default ggplot data is the `node` coordinates with `edge` data attached
+#' in [`ggalign`][ggalign_attr()] attribute, in addition, a
+#' [`geom_segment`][ggplot2::geom_segment] layer with a data of the `edge`
+#' coordinates will be added.
 #'
 #' `node` and tree segments `edge` coordinates contains following columns:
 #'   - `index`: the original index in the tree for the current node
@@ -48,7 +51,7 @@
 #'   - `branch`: which branch current node or edge is. You can use this column
 #'               to color different groups.
 #'   - `panel`: which panel current node is, if we split the plot into panel
-#'              using [facet_grid][ggplot2::facet_grid], this column will show
+#'              using [`facet_grid`][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes may
 #'              fall outside panel (between two panel), so there are possible
 #'              `NA` values in this column.
@@ -59,13 +62,14 @@
 #'     and correspond to both nodes of each edge.
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
-#' @inherit align return
+#' @inheritSection align Axis Alignment for Observations
+#' @return A `"AlignDendro"` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("top") +
+#'     anno_top() +
 #'     align_dendro()
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     hmanno("top") +
+#'     anno_top() +
 #'     align_dendro(k = 3L)
 #' @seealso
 #' - [dendrogram_data()]
@@ -82,12 +86,12 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_dendrogram = TRUE,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
-                         size = NULL, action = NULL,
+                         size = NULL, data = NULL,
+                         no_axes = NULL, active = NULL,
                          free_guides = deprecated(), free_spaces = deprecated(),
                          plot_data = deprecated(), theme = deprecated(),
-                         free_labs = deprecated(),
-                         data = NULL, set_context = NULL,
-                         order = NULL, name = NULL) {
+                         free_labs = deprecated(), set_context = deprecated(),
+                         order = deprecated(), name = deprecated()) {
     reorder_dendrogram <- allow_lambda(reorder_dendrogram)
     if (!rlang::is_bool(reorder_dendrogram) &&
         !is.null(reorder_dendrogram) &&
@@ -109,6 +113,13 @@ align_dendro <- function(mapping = aes(), ...,
             data <- waiver()
         }
     }
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = plot_dendrogram, order = NA_integer_, name = NA_character_
+    ))
+    active <- deprecate_active(active, "align_dendro",
+        set_context = set_context, order = order, name = name
+    )
     align(
         align_class = AlignDendro,
         params = list(
@@ -126,10 +137,9 @@ align_dendro <- function(mapping = aes(), ...,
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,
-        set_context = set_context %||% plot_dendrogram,
-        name = name, order = order,
+        no_axes = no_axes, active = active,
         size = size,
-        action = action %||% waiver(), action_data = NULL,
+        controls = new_controls(),
         data = data
     )
 }
@@ -187,7 +197,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         params
     },
     setup_data = function(self, params, data) {
-        ans <- as.matrix(data)
+        ans <- fortify_matrix(data)
         assert_(
             ans, function(x) is.numeric(x),
             "numeric",
@@ -205,7 +215,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
             stats::nobs(tree)
         }
     },
-    #' @importFrom vctrs vec_slice
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendrogram, k = NULL, h = NULL, cutree = NULL) {
         data <- .subset2(self, "data")
@@ -225,7 +234,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             }
             children <- vector("list", nlevels(panel))
             names(children) <- levels(panel)
-            labels <- rownames(data)
+            labels <- vec_names(data)
 
             # we do clustering within each group ---------------
             for (g in levels(panel)) {
@@ -260,7 +269,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         hclust2(data, distance, method, use_missing)
     },
-    #' @importFrom vctrs vec_unique_count
     #' @importFrom stats order.dendrogram
     layout = function(self, panel, index, distance, method, use_missing,
                       reorder_dendrogram, merge_dendro, reorder_group,
@@ -356,18 +364,19 @@ AlignDendro <- ggproto("AlignDendro", Align,
         }
         list(panel, index)
     },
-    #' @importFrom ggplot2 aes
+    #' @importFrom ggplot2 aes ggplot
+    #' @importFrom rlang inject
     ggplot = function(self, plot_dendrogram, mapping, segment_params) {
         if (!plot_dendrogram) {
             return(NULL)
         }
         direction <- .subset2(self, "direction")
-        ggplot2::ggplot(
+        ggplot(
             mapping = add_default_mapping(
                 mapping, aes(x = .data$x, y = .data$y)
             )
         ) +
-            rlang::inject(
+            inject(
                 ggplot2::geom_segment(
                     mapping = aes(
                         x = .data$x, y = .data$y,
@@ -384,7 +393,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ggplot2::labs(y = "height")
             )
     },
-    #' @importFrom vctrs vec_rbind
     draw = function(self, panel, index, extra_panel, extra_index,
                     # other argumentds
                     plot_cut_height, center, type, root) {

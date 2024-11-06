@@ -40,7 +40,6 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' @importFrom ggplot2 ggproto aes .pt resolution
 #' @importFrom rlang set_names
-#' @importFrom vctrs vec_slice<- vec_cbind vec_rbind vec_rep_each vec_cast
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,
     default_aes = aes(
@@ -90,7 +89,7 @@ GeomPie <- ggproto("GeomPie",
                           clockwise = TRUE, lineend = "butt",
                           linejoin = "round", linemitre = 10) {
         # Expand x, y, radius data to points along circle
-        circular_data <- Map(
+        circular_data <- .mapply(
             function(x, y, radius, ang, ang0) {
                 if (clockwise) {
                     ang0 <- 90 - ang0
@@ -106,8 +105,11 @@ GeomPie <- ggproto("GeomPie",
                     y = c(y, sin(radians) * radius + y)
                 )
             },
-            x = data$x, y = data$y,
-            radius = data$radius, ang = data$angle, ang0 = data$angle0
+            list(
+                x = data$x, y = data$y,
+                radius = data$radius, ang = data$angle, ang0 = data$angle0
+            ),
+            MoreArgs = NULL
         )
         circular_data <- vec_rbind(!!!circular_data)
 
@@ -122,9 +124,13 @@ GeomPie <- ggproto("GeomPie",
             default.units = "native",
             gp = grid::gpar(
                 col = data$colour,
-                fill = ggplot2::fill_alpha(
-                    data$fill,
-                    data$alpha
+                fill = try_fetch(
+                    # for version >= 3.5.0
+                    ggplot2::fill_alpha(data$fill, data$alpha),
+                    error = function(cnd) {
+                    # for version < 3.5.0
+                        ggplot2::alpha(data$fill, data$alpha)
+                    }
                 ),
                 lwd = data$linewidth,
                 lty = data$linetype,

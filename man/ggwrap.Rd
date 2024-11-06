@@ -7,8 +7,8 @@
 ggwrap(plot, ..., align = "panel", on_top = TRUE, clip = TRUE, vp = NULL)
 }
 \arguments{
-\item{plot}{Any graphic that can be converted into a \link[grid:grid.grob]{grob} using
-\code{\link[=patch]{patch()}}.}
+\item{plot}{Any graphic that can be converted into a \code{\link[grid:grid.grob]{grob}}
+using \code{\link[=patch]{patch()}}.}
 
 \item{...}{Additional arguments passed to the \code{\link[=patch]{patch()}} method.}
 
@@ -23,8 +23,8 @@ background.}
 \item{clip}{A single boolean value indicating whether the grob should be
 clipped if they expand outside their designated area.}
 
-\item{vp}{A \link[grid:viewport]{viewport} object, you can use this to define the
-plot area.}
+\item{vp}{A \code{\link[grid:viewport]{viewport}} object, you can use this to define
+the plot area.}
 }
 \value{
 A \code{wrapped_plot} object that can be directly placed into
@@ -33,8 +33,8 @@ A \code{wrapped_plot} object that can be directly placed into
 \description{
 The \code{ggwrap()} function allows non-ggplot2 elements to be converted into a
 compliant representation for use with \code{\link[=align_plots]{align_plots()}}. This is useful for
-adding any graphics that can be converted into a \link[grid:grid.grob]{grob} with the
-\code{\link[=patch]{patch()}} method.
+adding any graphics that can be converted into a \code{\link[grid:grid.grob]{grob}} with
+the \code{\link[=patch]{patch()}} method.
 }
 \examples{
 library(grid)
@@ -54,17 +54,17 @@ align_plots(p1, ggwrap(
 }
 \seealso{
 \itemize{
-\item \link{patch.grob} / \link{patch.gList}
-\item \link{patch.ggplot}
-\item \link{patch.patch_ggplot}
-\item \link{patch.patchwork}
-\item \link{patch.patch}
-\item \link{patch.trellis}
-\item \link{patch.formula} / \link{patch.function}
-\item \link{patch.recordedplot}
-\item \link{patch.Heatmap}
-\item \link{patch.HeatmapList}
-\item \link{patch.HeatmapAnnotation}
-\item \link{patch.pheatmap}
+\item \code{\link{patch.grob}} / \code{\link{patch.gList}}
+\item \code{\link{patch.ggplot}}
+\item \code{\link{patch.patch_ggplot}}
+\item \code{\link{patch.patchwork}}
+\item \code{\link{patch.patch}}
+\item \code{\link{patch.trellis}}
+\item \code{\link{patch.formula}} / \code{\link{patch.function}}
+\item \code{\link{patch.recordedplot}}
+\item \code{\link{patch.Heatmap}}
+\item \code{\link{patch.HeatmapList}}
+\item \code{\link{patch.HeatmapAnnotation}}
+\item \code{\link{patch.pheatmap}}
 }
 }

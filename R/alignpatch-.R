@@ -65,7 +65,7 @@ RIGHT_BORDER <- 7L + 1L
 setdiff_position <- function(x, y) gsub(sprintf("[%s]", y), "", x)
 union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
 split_position <- function(x) {
-    unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
+    vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 setup_pos <- function(x) {
     complete_pos(split_position(x))
@@ -170,8 +170,6 @@ Patch <- ggproto(c("Patch", "ggalign"), NULL,
     patch_gtable = function(self, plot = self$plot) {
         abort_no_method(self$plot, "patch_gtable")
     },
-
-    #' @importFrom vctrs vec_slice
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
         layout <- .subset2(gt, "layout")

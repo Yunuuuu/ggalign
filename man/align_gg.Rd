@@ -3,35 +3,19 @@
 \name{align_gg}
 \alias{align_gg}
 \alias{ggalign}
-\title{Create ggplot object with a customized data}
+\title{Create ggplot object}
 \usage{
 align_gg(
   mapping = aes(),
   size = NULL,
-  action = NULL,
-  data = NULL,
+  data = waiver(),
   limits = TRUE,
   facet = TRUE,
-  set_context = TRUE,
-  order = NULL,
-  name = NULL,
-  free_guides = deprecated(),
-  free_spaces = deprecated(),
-  plot_data = deprecated(),
-  theme = deprecated(),
-  free_labs = deprecated()
-)
-
-ggalign(
-  mapping = aes(),
-  size = NULL,
-  action = NULL,
-  data = NULL,
-  limits = TRUE,
-  facet = TRUE,
-  set_context = TRUE,
-  order = NULL,
-  name = NULL,
+  no_axes = NULL,
+  active = NULL,
+  set_context = deprecated(),
+  order = deprecated(),
+  name = deprecated(),
   free_guides = deprecated(),
   free_spaces = deprecated(),
   plot_data = deprecated(),
@@ -40,67 +24,69 @@ ggalign(
 )
 }
 \arguments{
-\item{mapping}{Additional default list of aesthetic mappings to use for plot.}
+\item{mapping}{Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.}
 
-\item{size}{Plot size, can be an \link[grid:unit]{unit} object.}
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
 
-\item{action}{A \code{\link[=plot_action]{plot_action()}} object used for the plot.}
-
-\item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
-provided, it will be converted into a one-column matrix. When \code{data = NULL},
-the internal \code{layout} data will be used by default. Additionally, \code{data} can
-be a function (including purrr-like lambdas), which will be applied to the
-\code{layout} data.
-
-It is important to note that we consider the \code{rows} as the observations. It
-means the \code{NROW(data)} must return the same number with the specific \code{layout}
-axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
-stack layout).
+\item{data}{A flexible input that specifies the data to be used
 \itemize{
-\item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
-transposed before using (If data is a \code{function}, it will be applied with
-the transposed matrix). This is necessary because column annotation uses
-heatmap columns as observations, but we need rows.
-\item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
-all plots along a single axis.
+\item \code{NULL}: No data is set.
+\item \code{\link[=waiver]{waiver()}}: Uses the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax) that is applied to the
+layout matrix, and must return a matrix. If you want to transform the final
+plot data, please use \code{\link[=plot_data]{plot_data()}}.
+\item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
-\item{limits}{A boolean value indicates whether to set the layout limtis for
-the plot.}
+\item{limits}{Logical; if \code{TRUE}, sets layout limits for the plot.}
 
-\item{facet}{A boolean value indicates whether to set the layout facet for
-the plot. If this is \code{FALSE}, \code{limits} will always be \code{FALSE} too.}
+\item{facet}{Logical; if \code{TRUE}, applies facets to the layout. If \code{FALSE},
+\code{limits} will also be set to \code{FALSE}.}
 
-\item{set_context}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will controled by the option-
+\code{"ggalign.align_no_axes"}.}
 
-\item{order}{An single integer for the plot area order.}
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 
-\item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
-
-\item{free_guides}{Override the \code{guides} collection behavior specified in the
-heatmap layout for the annotation stack layout. Only used when \code{position} is
-a string.}
-
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
+\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
 argument instead.}
 
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
-
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action} argument
+\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
 instead.}
 
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{action}
-argument instead.}
+\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
+instead.}
+
+\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
+\code{\link[=plot_align]{plot_align()}} function instead.}
+
+\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_align]{plot_align()}} function instead.}
+
+\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_data]{plot_data()}} function instead.}
+
+\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=layout-operator]{-}} method instead.}
+
+\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{\link[=plot_align]{plot_align()}} function instead.}
 }
 \value{
-A \code{AlignGG} object.
+A \code{"AlignGG"} object.
 }
 \description{
-\code{ggalign} is just an alias of \code{align_gg}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}} \code{align_gg()} is similar to \code{ggplot} in that it
+initializes a \code{ggplot} data and \code{mapping}. Same with other \verb{align_*}
+functions. \code{align_gg()} allowing you to provide data in various formats,
+including matrices, data frames, or simple vectors. By default, it will
+inherit from the layout. If a function, it will apply with the layout matrix.
+\code{ggalign} is an alias of \code{align_gg}.
 }
 \section{ggplot2 specification}{
 
@@ -108,39 +94,70 @@ A \code{AlignGG} object.
 
 \code{align_gg()} always applies a default mapping for the axis of the data index
 in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
-layout (including left and right heatmap annotation) and \code{aes(x = .data$.x)}
-for vertical stack layout (including top and bottom heatmap annotation).
+layout (including left and right annotation) and \code{aes(x = .data$.x)}
+for vertical stack layout (including top and bottom annotation).
 
-For ggplot usage, matrix (including a simple vector) data is converted into a
-long-format data frame. The data in the underlying \code{ggplot} object will
-contain following columns:
+The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
-\item \code{.panel}: the panel for current layout axis. It means \code{x-axis} for
-vertical stack layout, \code{y-axis} for horizontal stack layout.
+\item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
+stack layout (including top and bottom annotation), \code{y-axis} for
+horizontal stack layout (including left and right annotation).
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
-\item \code{.row_names} and \code{.row_index}: A factor of the row names and an integer of
-row index of the original matrix or data frame.
+\item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
+(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): A factor of the names
+(only applicable when names exists) and an integer of index of the
+original data.
+\item \code{.row_names} and \code{.row_index}: the row names and an integer of
+row index of the original matrix (only applicable if \code{data} is a
+\code{matrix}).
 \item \code{.column_names} and \code{.column_index}: the column names and column index of
 the original matrix (only applicable if \code{data} is a \code{matrix}).
-\item \code{value}: the actual matrix value  (only applicable if \code{data} is a
-\code{matrix}).
+\item \code{value}: the actual value (only applicable if \code{data} is a \code{matrix} or
+atomic vector).
 }
 
-In the case where the input data is already a data frame, three additional
-columns (\code{.row_names}, \code{.row_index}, and \code{.panel}) are added to the data
+In the case where the input data is already a data frame, 4 additional
+columns (\code{.x}/\code{.y}, \code{.names}, \code{.index}, and \code{.panel}) are added to the data
 frame.
 
-If the data is inherit from \code{\link[=heatmap_layout]{heatmap_layout()}}, an additional column will be
-added.
+It is recommended to use \code{.x}/\code{.y}, or \code{.names} as the \code{x}/\code{y} mapping.
+
+If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, an additional
+column will be added.
 \itemize{
 \item \code{.extra_panel}: the panel information for column (left or right
 annotation) or row (top or bottom annotation).
 }
 }
 
+\section{Axis Alignment for Observations}{
+
+It is important to note that we consider rows as observations, meaning
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
+\itemize{
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
+}
+}
+
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
-    hmanno("top") +
+    anno_top() +
     ggalign() +
     geom_point(aes(y = value))
+
+# if data is `NULL`, a three column data frame will be created
+# (`.panel`, `.index`, `.x`/`.y`)
+ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    anno_top(size = 0.5) +
+    align_dendro(k = 3L) +
+    ggalign(data = NULL, size = 0.2) +
+    geom_tile(aes(y = 1L, fill = .panel))
+
 }

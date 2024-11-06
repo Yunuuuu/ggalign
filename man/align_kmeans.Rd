@@ -4,7 +4,14 @@
 \alias{align_kmeans}
 \title{Split layout by k-means clustering groups.}
 \usage{
-align_kmeans(centers, ..., data = NULL, set_context = FALSE, name = NULL)
+align_kmeans(
+  centers,
+  ...,
+  data = NULL,
+  active = NULL,
+  set_context = deprecated(),
+  name = deprecated()
+)
 }
 \arguments{
 \item{centers}{either the number of clusters, say \eqn{k}, or a set of
@@ -26,40 +33,42 @@ align_kmeans(centers, ..., data = NULL, set_context = FALSE, name = NULL)
     produced.  Higher values may produce more tracing information.}
   }}
 
-\item{data}{A matrix, data frame, or a simple vector. If an atomic vector is
-provided, it will be converted into a one-column matrix. When \code{data = NULL},
-the internal \code{layout} data will be used by default. Additionally, \code{data} can
-be a function (including purrr-like lambdas), which will be applied to the
-\code{layout} data.
+\item{data}{A matrix-like object. By default, it inherits from the layout
+\code{matrix}.}
 
-It is important to note that we consider the \code{rows} as the observations. It
-means the \code{NROW(data)} must return the same number with the specific \code{layout}
-axis (meaning the x-axis for vertical stack layout, or y-axis for horizontal
-stack layout).
-\itemize{
-\item \code{heatmap_layout()}: for column annotation, the \code{layout} data will be
-transposed before using (If data is a \code{function}, it will be applied with
-the transposed matrix). This is necessary because column annotation uses
-heatmap columns as observations, but we need rows.
-\item \code{stack_layout()}: the \code{layout} data will be used as it is since we place
-all plots along a single axis.
-}}
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 
-\item{set_context}{A single boolean value indicates whether to set the active
-context to current plot. If \code{TRUE}, all subsequent ggplot elements will be
-added into this plot.}
+\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
+argument instead.}
 
-\item{name}{A string of the plot name. Used to switch the active context in
-\code{\link[=hmanno]{hmanno()}} or \code{\link[=stack_active]{stack_active()}}.}
+\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
+instead.}
 }
 \value{
-A new \code{Align} object.
+A \code{"AlignKmeans"} object.
 }
 \description{
 Split layout by k-means clustering groups.
 }
+\section{Axis Alignment for Observations}{
+
+It is important to note that we consider rows as observations, meaning
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
+\itemize{
+\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
+\code{matrix} will be transposed before use (if \code{data} is a function, it is
+applied to the transposed matrix), as column annotation uses columns as
+observations but alignment requires rows.
+\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
+along a single axis.
+}
+}
+
 \examples{
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
-    hmanno("t") +
+    anno_top() +
     align_kmeans(3L)
 }

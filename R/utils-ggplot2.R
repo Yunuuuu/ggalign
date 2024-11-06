@@ -25,13 +25,6 @@ add_default_mapping <- function(mapping, default_mapping) {
     default_mapping
 }
 
-#' @importFrom rlang env_clone
-ggproto_clone <- function(ggproto) {
-    ans <- env_clone(ggproto)
-    class(ans) <- class(ggproto)
-    ans
-}
-
 #######################################################################
 # ggplot2 add default scales in `compute_aesthetics` process
 # then ggplot2 transform all scales
@@ -88,9 +81,11 @@ set_limits <- function(axis, params) {
 }
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @importFrom vctrs vec_unique_count
 #' @export
 ggplot_add.coord_ggalign <- function(object, plot, object_name) {
+    if (all(vapply(object, is.null, logical(1L), USE.NAMES = FALSE))) {
+        return(plot)
+    }
     Parent <- .subset2(plot, "coordinates")
     plot$coordinates <- ggproto(
         NULL, Parent,
@@ -107,11 +102,35 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
             cur_panel <- self$panel_counter + 1L
             if (!is.null(xlim_list <- .subset2(object, "xlim_list")) &&
                 length(xlim_list) >= cur_panel) {
-                self$limits$x <- .subset2(xlim_list, cur_panel)
+                if (scale_x$is_discrete()) {
+                    # for discrete scale, the limits starts from zero in each
+                    # panel
+                    self$limits$x <- .subset2(xlim_list, cur_panel) -
+                        (min(.subset2(xlim_list, cur_panel)) - 0.5)
+                    # we reset the breaks into character breaks
+                    # we match it by the original labels
+                    domain <- intersect(scale_x$labels, scale_x$get_limits())
+                    keep <- match(domain, scale_x$labels)
+                    scale_x$labels <- scale_x$breaks <- scale_x$labels[keep]
+                } else {
+                    self$limits$x <- .subset2(xlim_list, cur_panel)
+                }
             }
             if (!is.null(ylim_list <- .subset2(object, "ylim_list")) &&
                 length(ylim_list) >= cur_panel) {
-                self$limits$y <- .subset2(ylim_list, cur_panel)
+                if (scale_y$is_discrete()) {
+                    # for discrete scale, the limits starts from zero in each
+                    # panel
+                    self$limits$y <- .subset2(ylim_list, cur_panel) -
+                        (min(.subset2(ylim_list, cur_panel)) - 0.5)
+                    # we reset the breaks into character breaks
+                    # we match it by the original labels
+                    domain <- intersect(scale_y$labels, scale_y$get_limits())
+                    keep <- match(domain, scale_y$labels)
+                    scale_y$labels <- scale_y$breaks <- scale_y$labels[keep]
+                } else {
+                    self$limits$y <- .subset2(ylim_list, cur_panel)
+                }
             }
             self$panel_counter <- cur_panel
             ggproto_parent(Parent, self)$setup_panel_params(
@@ -183,7 +202,9 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
             coord <- ggproto(NULL, ParentCoord,
                 render_axis_h = function(self, panel_params, theme) {
                     if (!is.null(x_params)) {
-                        x <- .subset2(panel_params, "x")$get_breaks()
+                        x <- .subset2(panel_params, "x")$scale[[
+                            "_ggalign_breaks"
+                        ]]
                         theme <- subset_theme("x", theme, x)
                     }
                     ggproto_parent(ParentCoord, self)$render_axis_h(
@@ -192,7 +213,9 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
                 },
                 render_axis_v = function(self, panel_params, theme) {
                     if (!is.null(y_params)) {
-                        y <- .subset2(panel_params, "y")$get_breaks()
+                        y <- .subset2(panel_params, "y")$scale[[
+                            "_ggalign_breaks"
+                        ]]
                         theme <- subset_theme("y", theme, y)
                     }
                     ggproto_parent(ParentCoord, self)$render_axis_v(
@@ -200,6 +223,8 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
                     )
                 }
             )
+
+
             ggproto_parent(Parent, self)$draw_panels(
                 panels = panels, layout = layout,
                 x_scales = x_scales, y_scales = y_scales,
@@ -211,7 +236,6 @@ ggplot_add.facet_ggalign <- function(object, plot, object_name) {
     plot
 }
 
-#' @importFrom vctrs vec_slice
 align_scales <- function(facet, scale, axis, params, panel_scales) {
     panel <- .subset2(params, "panel")
     index <- .subset2(params, "index")
@@ -266,7 +290,8 @@ align_scales <- function(facet, scale, axis, params, panel_scales) {
             in_domain <- match(data_index, breaks)
             keep <- !is.na(in_domain)
             if (any(keep)) {
-                s$breaks <- plot_coord[keep]
+                # `_ggalign_breaks` used to match theme element values
+                s[["_ggalign_breaks"]] <- s$breaks <- plot_coord[keep]
                 s$labels <- labels[in_domain[keep]]
             } else {
                 s$breaks <- NULL
@@ -371,7 +396,6 @@ identity_trans <- function(scale) {
     scale
 }
 
-#' @importFrom vctrs vec_cast
 get_breaks <- function(scale, layout_breaks, layout_labels) {
     breaks <- scale$breaks
     if (identical(breaks, NA)) {

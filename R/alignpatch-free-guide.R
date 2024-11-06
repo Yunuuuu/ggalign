@@ -1,4 +1,4 @@
-#' @param guides A string containing one or more of `r rd_values(.tlbr)`
+#' @param guides A string containing one or more of `r oxford_and(.tlbr)`
 #' indicates which side of guide legends should be collected for the plot. If
 #' `NULL`, no guide legends will be collected.
 #' @return

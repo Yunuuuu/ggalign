@@ -1,9 +1,8 @@
-#' object is an environment, it won't be copied, and will modify in place
+#' `Align` is an environment, it won't be copied, and will modify in place
 #' @noRd
-initialize_align <- function(object, direction, position,
-                             layout_data,
-                             layout_panel, layout_index,
-                             nobs, object_name) {
+align_initialize <- function(object, direction, position,
+                             layout_data, layout_panel, layout_index,
+                             layout_nobs, object_name) {
     object$direction <- direction
     object$position <- position
     input_data <- .subset2(object, "input_data")
@@ -12,56 +11,53 @@ initialize_align <- function(object, direction, position,
 
     # we must have the same observations across all plots
     # 1. if Align require data, the `nobs` should be nrow(data)
-    # 2. if not, we run `nobs()` method to get the `nobs`
-    # we need check the arguments user passed are compatible with `nobs`
+    # 2. if not, we run `nobs()` method to initialize the layout nobs
     if (!is.null(input_data)) { # this `Align` object require data
         if (is.waive(input_data)) { # inherit from the layout
-            if (is.null(layout_data)) {
-                cli::cli_abort(c(
-                    "{.arg data} argument must be provided",
-                    i = "No data was found in the layout"
-                ), call = call)
-            }
+            abort_no_layout_data(layout_data, object_name, call)
             data <- layout_data
         } else {
-            data <- align_setup_data(input_data, layout_data)
+            if (is.function(input_data)) {
+                abort_no_layout_data(layout_data, object_name, call)
+                data <- input_data(layout_data)
+            } else {
+                data <- input_data
+            }
             # we always regard rows as the observations
-            if (is.null(nobs)) {
-                nobs <- NROW(data)
-            } else if (NROW(data) != nobs) {
+            if (is.null(layout_nobs)) {
+                layout_nobs <- NROW(data)
+            } else if (NROW(data) != layout_nobs) {
                 cli::cli_abort(paste(
                     "{.arg data} must have compatible",
                     "observations with the layout"
                 ), call = call)
             }
         }
-        object$labels <- rownames(data)
-        params <- object$setup_params(nobs, input_params)
+        object$labels <- vec_names(data)
+        params <- object$setup_params(layout_nobs, input_params)
         object$data <- restore_attr_ggalign(
             object$setup_data(params, data),
             layout_data
         )
     } else { # this `Align` object doesn't require any data
         # If `nobs` is `NULL`, it means we don't initialize the layout
-        # observations So we call `$nobs` method to initialize the layout
-        # observations
-        if (is.null(nobs)) nobs <- object$nobs(input_params)
-        # `Align` will use `NULL` to indicate it doesn't require the
-        # initialization of the latyout observations
-        params <- object$setup_params(nobs, input_params)
+        # observations, we initialize `nobs` with the `Align` obect
+        if (is.null(layout_nobs)) layout_nobs <- object$nobs(input_params)
+        params <- object$setup_params(layout_nobs, input_params)
     }
     # save the parameters into the object ------------
     object$params <- params
 
     # prepare the data -------------------------------
-    ans <- initialize_align_layout(
-        object, nobs, direction,
+    ans <- align_initialize_layout(
+        object, layout_nobs, direction,
         layout_panel, layout_index, object_name
     )
-    c(ans, list(nobs = nobs))
+    c(vec_set_names(ans, c("panel", "index")), list(nobs = layout_nobs))
 }
 
-initialize_align_layout <- function(object, nobs, direction,
+#' @importFrom rlang inject
+align_initialize_layout <- function(object, layout_nobs, direction,
                                     layout_panel, layout_index,
                                     object_name) {
     axis <- to_coord_axis(direction)
@@ -72,7 +68,7 @@ initialize_align_layout <- function(object, nobs, direction,
     compute_params <- params[
         intersect(names(params), align_method_params(object$compute))
     ]
-    object$statistics <- rlang::inject(
+    object$statistics <- inject(
         object$compute(layout_panel, layout_index, !!!compute_params)
     )
 
@@ -80,10 +76,9 @@ initialize_align_layout <- function(object, nobs, direction,
     layout_params <- params[
         intersect(names(params), align_method_params(object$layout))
     ]
-    layout <- rlang::inject(
+    layout <- inject(
         object$layout(layout_panel, layout_index, !!!layout_params)
     )
-
     new_panel <- .subset2(layout, 1L)
     if (!is.null(new_panel)) {
         if (anyNA(new_panel)) {
@@ -96,16 +91,15 @@ initialize_align_layout <- function(object, nobs, direction,
                 "{.fn {snake_class(object)}}: invalid layout panel",
                 i = "layout panel must be an atomic vector"
             ), call = call)
-        } else if (is.null(nobs) || length(new_panel) != nobs) {
+        } else if (is.null(layout_nobs) || length(new_panel) != layout_nobs) {
             cli::cli_abort(paste(
-                "{.fn layout} panel of {.fn {snake_class(object)}}",
+                "layout panel of {.fn {snake_class(object)}}",
                 "is not compatible with {axis}-axis"
             ), call = call)
         } else if (!is.null(layout_panel) && !(new_panel %nest% layout_panel)) {
             cli::cli_abort(paste0(
                 "{.fn {snake_class(object)}} disrupt the previously ",
-                "established panel groups of the layout ",
-                axis, "-axis"
+                "established panel groups of the layout {axis}-axis"
             ), call = call)
         }
     }
@@ -127,7 +121,7 @@ initialize_align_layout <- function(object, nobs, direction,
                 "{.fn {snake_class(object)}}: invalid layout index",
                 i = "layout index must be integer"
             ), call = call)
-        } else if (is.null(nobs) || length(new_index) != nobs) {
+        } else if (is.null(layout_nobs) || length(new_index) != layout_nobs) {
             cli::cli_abort(paste(
                 "layout index of {.fn {snake_class(object)}}",
                 "is not compatible with {axis}-axis"
@@ -160,45 +154,31 @@ initialize_align_layout <- function(object, nobs, direction,
             align_method_params(object$ggplot, character())
         )
     ]
-    p <- rlang::inject(object$ggplot(!!!ggplot_params))
+    p <- inject(object$ggplot(!!!ggplot_params))
     object$plot <- p
 
     # add annotation -------------------------------------
     list(new_panel, new_index)
 }
 
-reorder_index <- function(panel, index = NULL, reverse = FALSE) {
-    index <- index %||% seq_along(panel)
-    unlist(split(index, panel[index]), recursive = FALSE, use.names = FALSE)
-}
-
-####################################################################
-#' @keywords internal
-align_setup_data <- function(data, layout_data) {
-    UseMethod("align_setup_data")
-}
-
-#' @export
-align_setup_data.data.frame <- function(data, layout_data) {
-    data
-}
-
-#' @export
-align_setup_data.matrix <- align_setup_data.data.frame
-
-#' @export
-align_setup_data.numeric <- function(data, layout_data) {
-    as.matrix(data)
-}
-
-#' @export
-align_setup_data.character <- align_setup_data.numeric
-
-#' @export
-align_setup_data.function <- function(data, layout_data) {
-    # fix R CMD check note: Found the following calls to data() loading into the
-    # global environment
-    fn <- data
-    data <- fn(layout_data)
-    align_setup_data(data, layout_data)
+############################################################
+abort_no_layout_data <- function(data, object_name = NULL, call = NULL) {
+    if (is.null(data) || is.waive(data)) {
+        if (is.null(object_name)) {
+            msg <- c(
+                "you must provide {.arg data}",
+                i = "no data was found in the layout"
+            )
+        } else {
+            msg <- c(
+                "you must provide {.arg data} in {.var {object_name}}",
+                i = "no data was found in the layout"
+            )
+        }
+        if (is.null(call)) {
+            cli::cli_abort(msg)
+        } else {
+            cli::cli_abort(msg, call = call)
+        }
+    }
 }
