@@ -46,7 +46,7 @@ Alternatively, install the development version from
 
 ``` r
 install.packages("ggalign",
-    repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
+  repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
 )
 ```
 
@@ -64,14 +64,15 @@ syntax, the typical workflow includes:
 
 - Initialize the layout using `ggheatmap()` or `ggstack()`.
 - Customize the layout with:
-  - `align_group()`: Group layout axis into panel with a group variable.
-  - `align_kmeans()`: Group layout axis into panel by kmeans.
+  - `align_group()`: Group observations into panel with a group
+    variable.
+  - `align_kmeans()`: Group observations into panel by kmeans.
   - `align_order()`: Reorder layout observations based on statistical
     weights or by manually specifying the observation index.
   - `align_dendro()`: Reorder or Group layout based on hierarchical
     clustering.
-- Adding plots with `ggalign()`, `ggpanel()`, or `ggwrap()`, and then
-  layer additional ggplot2 elements such as geoms, stats, or scales.
+- Adding plots with `ggalign()` or `ggfree()`, and then layer additional
+  ggplot2 elements such as geoms, stats, or scales.
 
 For documents of the release version, please see
 <https://yunuuuu.github.io/ggalign>, for documents of the development
@@ -91,16 +92,16 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # initialize the heatmap layout, we can regard it as a normal ggplot object
 ggheatmap(small_mat) +
-    # we can directly modify geoms, scales and other ggplot2 components
-    scale_fill_viridis_c() +
-    # add annotation in the top
-    hmanno("top") +
-    # in the top annotation, we add a dendrogram, and split observations into 3 groups
-    align_dendro(aes(color = branch), k = 3) +
-    # in the dendrogram we add a point geom
-    geom_point(aes(color = branch, y = y)) +
-    # change color mapping for the dendrogram
-    scale_color_brewer(palette = "Dark2")
+  # we can directly modify geoms, scales and other ggplot2 components
+  scale_fill_viridis_c() +
+  # add annotation in the top
+  anno_top() +
+  # in the top annotation, we add a dendrogram, and split observations into 3 groups
+  align_dendro(aes(color = branch), k = 3) +
+  # in the dendrogram we add a point geom
+  geom_point(aes(color = branch, y = y)) +
+  # change color mapping for the dendrogram
+  scale_color_brewer(palette = "Dark2")
 ```
 
 ![](https://yunuuuu.github.io/ggalign/dev/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
