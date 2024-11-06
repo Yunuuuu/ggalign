@@ -14,6 +14,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+Currently, the package provides three actions (each prefixed with `plot_`):
+  - `plot_data`: Transforms the plot data. Many functions in this package
+  require a specific data format to align observations, `plot_data()` helps
+  reformat data frames as needed. 
+  - `plot_align`: Defines alignment specifications for plots within the layout.
+  - `plot_theme`: Sets the default theme for the plot.
+
 ```{r setup}
 library(ggalign)
 ```
@@ -25,12 +32,31 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
-# Plot actions
+# `plot_data`
+`align_gg()`/`ggalign()` requires the specific data format for its operations.
+If you need to transform or filter data for individual `geoms`, you can use the
+`data` argument within each `geom`. However, if you have multiple `geoms` and
+want a consistent transformation applied across all, you can utilize the plot
+action argument `data` in the `align_gg()`/`ggalign()` function. This allows you
+to transform the default data for all subsequent geoms. 
+
+```{r}
+set.seed(1234L)
+ggheatmap(small_mat) +
+  scale_fill_viridis_c(guide = "none") +
+  anno_top() +
+  align_kmeans(3L) +
+  ggalign() +
+  plot_data(~ subset(.x, .panel == 1L)) +
+  geom_bar(aes(y = value, fill = .row_names), stat = "identity")
+```
+
+# `plot_align`
 The `plot_align()` function defines the behavior of plots within a layout. It
 can be used in the `action` argument of layout functions like
 `quad_anno()`/`quad_active` or `stack_switch()`/`stack_active()` to set global
-actions for all plots in the layout. Additionally, `plot_align()` can be
-applied directly to specific plots through the `action` argument in the
+actions for all plots in the layout. Additionally, `plot_align()` can be applied
+directly to specific plots through the `action` argument in the
 `align_*()`/`ggfree()` functions, or it can be added directly to a plot.
 
 ## guides

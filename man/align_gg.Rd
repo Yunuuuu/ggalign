@@ -81,6 +81,11 @@ instead.}
 A \code{"AlignGG"} object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}} \code{align_gg()} is similar to \code{ggplot} in that it
+initializes a \code{ggplot} data and \code{mapping}. Same with other \verb{align_*}
+functions. \code{align_gg()} allowing you to provide data in various formats,
+including matrices, data frames, or simple vectors. By default, it will
+inherit from the layout. If a function, it will apply with the layout matrix.
 \code{ggalign} is an alias of \code{align_gg}.
 }
 \section{ggplot2 specification}{
@@ -95,12 +100,13 @@ for vertical stack layout (including top and bottom annotation).
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
 \item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
-stack layout, \code{y-axis} for horizontal stack layout.
+stack layout (including top and bottom annotation), \code{y-axis} for
+horizontal stack layout (including left and right annotation).
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
 \item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
-(\code{\link[vctrs:vec_size]{vec_size()}}): A factor of the names (only
-applicable when names exists) and an integer of index of the original
-data.
+(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): A factor of the names
+(only applicable when names exists) and an integer of index of the
+original data.
 \item \code{.row_names} and \code{.row_index}: the row names and an integer of
 row index of the original matrix (only applicable if \code{data} is a
 \code{matrix}).
@@ -110,8 +116,11 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 atomic vector).
 }
 
-In the case where the input data is already a data frame, three additional
-columns (\code{.names}, \code{.index}, and \code{.panel}) are added to the data frame.
+In the case where the input data is already a data frame, 4 additional
+columns (\code{.x}/\code{.y}, \code{.names}, \code{.index}, and \code{.panel}) are added to the data
+frame.
+
+It is recommended to use \code{.x}/\code{.y}, or \code{.names} as the \code{x}/\code{y} mapping.
 
 If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, an additional
 column will be added.
@@ -143,8 +152,8 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     ggalign() +
     geom_point(aes(y = value))
 
-# if data is `NULL`, a three column data frame
-# will be created (`.panel`, `.index`, `.x`/`.y`)
+# if data is `NULL`, a three column data frame will be created
+# (`.panel`, `.index`, `.x`/`.y`)
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top(size = 0.5) +
     align_dendro(k = 3L) +

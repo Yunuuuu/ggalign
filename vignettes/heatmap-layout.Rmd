@@ -60,18 +60,18 @@ ggplot object contains following columns:
 
   - `value`: the actual matrix value.
 
-You can treat the `heatmap_layout()` object as a standard `ggplot2` object with
-default mapping and data. This means you can add `ggplot2` layers or elements just
-like in any `ggplot` object.
+You can treat the `ggheatmap()`/`heatmap_layout()` object as a standard
+`ggplot2` object with default mapping and data. This means you can add `ggplot2`
+layers or elements just like in any `ggplot` object.
 ```{r}
 ggheatmap(small_mat) + geom_point() + scale_fill_viridis_c()
 ```
 
-By default, `ggheatmap()` adds a heatmap layer. If the matrix has more than
-20,000 cells (`nrow * ncol > 20000`), it uses `geom_raster()` for performance
-efficiency; for smaller matrices, `geom_tile()` is used. You can explicitly
-choose the layer by providing a single string (`"raster"` or `"tile"`) in the
-`filling` argument.
+By default, `ggheatmap()`/`heatmap_layout()` adds a heatmap layer. If the matrix
+has more than 20,000 cells (`nrow * ncol > 20000`), it uses `geom_raster()` for
+performance efficiency; for smaller matrices, `geom_tile()` is used. You can
+explicitly choose the layer by providing a single string (`"raster"` or
+`"tile"`) in the `filling` argument.
 ```{r}
 ggheatmap(small_mat, filling = "raster")
 ```
@@ -94,6 +94,8 @@ ggheatmap(matrix(runif(360L), nrow = 20L), filling = NULL) +
   geom_pie(aes(angle = value * 360, fill = value))
 ```
 
+If you want to more complex pie charts, try `ggforce::geom_arc_bar()` instead.
+
 You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or
 [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) to rasterize
@@ -113,10 +115,11 @@ ggrastr::rasterise(ggheatmap(small_mat), dev = "ragg")
 ```
 
 # heatmap annotations
-A heatmap typically has two observation axes, you can reorder the observations,
-or provide additional information for them. An annotation is a `stack_layout()`
-object internally, capable of holding multiple plots, and can be placed at the
-`top`, `left`, `bottom`, or `right`.
+A heatmap typically has two observation axes (rows and columns), which can be
+reordered or supplemented with additional information. In `ggheatmap()`,
+annotations are handled by a `stack_layout()` object, specifically
+`stack_align()`, which aligns the observations. This object can hold multiple
+plots and can be positioned at the top, left, bottom, or right of the heatmap. 
 
 Note that `ggalign` use the concept of `"number of observations"` in the
 [vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package. When aligning
@@ -248,7 +251,7 @@ ggheatmap(small_mat) +
 The `+` operator is straightforward and should be used as needed. In
 `ggheatmap()`/`quad_layout()`, four nested layouts are available for
 annotations: `top`, `left`, `bottom`, and `right`. If no active annotation is
-set, `ggheatmap()`/`quad_layout()` treat themselves as the active layout. Since
+set, `ggheatmap()`/`quad_layout()` treat itself as the active layout. Since
 there is only one main plot in the `ggheatmap()`/`quad_layout()`, the main plot
 is always treated as the active plot in this context.
 ```{r}
@@ -271,11 +274,11 @@ ggheatmap(small_mat) +
 ## logical AND operator
 > `&`: applies elements to all plots in the layout.
 The `&` operator works similarly to `patchwork`, applying an element across all
-plots in a layout. If the element is a `theme()`, it modifies the layout’s
+plots in a layout. If the element is a `theme()`, it modifies the layout's
 theme, which includes settings for guides, titles, subtitles, captions, margins,
 panel borders, and backgrounds. This `theme` is provided as an input argument in
 functions like `ggheatmap()`/`quad_layout()`. Since `&` has lower precedence
-than `+`, it’s generally best to use it at the end of an expression or wrap it
+than `+`, it's generally best to use it at the end of an expression or wrap it
 in parentheses when needed. 
 ```{r}
 # Initialize the heatmap with color scales and annotations.
@@ -294,7 +297,7 @@ ggheatmap(small_mat) +
 ## Subtraction operator
 >`-`: Adds elements to all plots in the active layout, as well as to any nested
 layouts within it (this behavior differs in `stack_layout()`; refer to
-`vignette("layout-customize")` for more details).
+`vignette("stack-layout")` for more details).
 
 Using `-` might seem unintuitive if you think of the operator as `"subtract"`,
 the underlying reason is that `-` is the only operator in the same precedence
@@ -333,8 +336,8 @@ my_plot +
 ```
 
 ### `with_position`
-Along with the `-` operator, `with_position()` can be used to modify the operated
-context in `ggheatmap()`/`quad_layout()`.
+Along with the `-` operator, `with_position()` can be used to modify the
+operated context in `ggheatmap()`/`quad_layout()`.
 
 It accepts two arguments: the object operated on by the `-` operator and the
 operated context. 
@@ -343,7 +346,8 @@ By default, if the current active context in `ggheatmap()`/`quad_layout()` is
 `top` or `bottom`, the operator will also act on the corresponding `bottom` or
 `top` annotation. If the context is `left` or `right`, the operator will also
 act on the `right` or `left` annotation, respectively. If there is no active
-annotation stack, it defaults to `NULL`.
+annotation stack, it defaults to `NULL` (this behavior differs in
+`stack_layout()`; refer to `vignette("stack-layout")` for more details).
 ```{r}
 my_plot +
   # Change the active layout to the left annotation
@@ -364,8 +368,60 @@ my_plot -
 If it is `NULL`, it removes any active annotation stack:
 ```{r}
 my_plot -
-  # Modify the background of all plots in all annotation
+  # Modify the background of all plots
   with_position(theme(plot.background = element_rect(fill = "red")), NULL)
+```
+
+### Plot options
+Plot options control the action of plots in the layout. This package allows a
+flexible way to set these options. While we'll dive deeper into plot options in
+`vignette("plot-options")`, I wanted to introduce it here, as they rely heavily
+on the `-` operator.
+
+>Plot options inherit properties from parent layout options hierarchically.
+
+All plot options can be set at the layout level to define global options, or
+they can be applied to individual plots. Here, we'll take `plot_theme()` as a
+example since it is just a enhanced `theme()` which sets the default theme for
+the plot.
+
+To set a plot option for a single plot, simply use the `+` operator:
+```{r}
+my_plot +
+  # Change the active layout to the top annotation
+  anno_top() +
+  # change the default theme of the dendrogram in the top annotation
+  plot_theme(plot.background = element_rect(fill = "red"))
+```
+
+Note that `plot_theme()` serves as the default theme and will always be
+overridden by any `theme()` settings applied directly to the plot. The default
+theme (`plot_theme()`) is applied first, followed by any specific `theme()`
+settings, even if `theme()` is added before `plot_theme()`.
+```{r}
+my_plot +
+  # Change the active layout to the top annotation
+  anno_top() +
+  # change the plot theme of the dendrogram in the top annotation
+  theme(plot.background = element_rect(fill = "blue")) +
+  # change the default theme of the dendrogram in the top annotation
+  plot_theme(plot.background = element_rect(fill = "red"))
+```
+
+By using the `-` operator with plot options, we apply them directly to the
+active layout. As mentioned earlier, the `-` operator applies specified elements
+to all plots within the current layout, making it ideal for setting layout-level
+plot options. Additionally, we can combine `with_position()` with the `-`
+operator.
+```{r}
+my_plot +
+  # Change the active layout to the top annotation
+  anno_top() +
+  ggalign(aes(.names, value, fill = factor(.names)), data = rowSums) +
+  geom_bar(stat = "identity") -
+  # Change the default theme of the top annotation
+  # All plots in the top annotation will inherit this default theme
+  plot_theme(plot.background = element_rect(fill = "red"))
 ```
 
 # Session information

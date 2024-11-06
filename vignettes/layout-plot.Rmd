@@ -14,13 +14,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `ggalign` package offers several `align_*` functions that allow you to
-precisely control plot layout and integrate additional plots. Currently, there
-are two primary `align_*` functions for adding plots:
+The `ggalign` package offers several `align_*` functions that allow for precise
+control over plot layouts. In addition, there are two primary functions for
+adding plots: 
 
-  - `align_gg()`/`ggalign()`: Create ggplot object and align the observations.
-  - `free_gg()`/`ggfree()`: Create ggplot object but not align the observations
-    data.
+  - `align_gg()`/`ggalign()`: Create a ggplot object and aligns the observation
+  data.
+  - `free_gg()`/`ggfree()`: Create a ggplot object without aligning the
+  observation data.
+
+`align_gg()`/`ggalign()` can only be used with a `stack_layout()` that aligns
+observations (`stack_align()`), while `free_gg()`/`ggfree()` can also be added
+to a `stack_layout()` that does not align the observations (`stack_free()`). 
 
 ```{r setup}
 library(ggalign)
@@ -33,11 +38,12 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
-## `align_gg`
+# `align_gg`/`ggalign`
 `align_gg()` is similar to `ggplot` in that it initializes a `ggplot` data and
 `mapping`. Same with other `align_*` functions. `align_gg()` allowing you to
 provide data in various formats, including matrices, data frames, or simple
-vectors. This data can be also inherited from the layout. 
+vectors. By default, it will inherit from the layout. If a function, it will
+apply with the layout matrix.
 
 `align_gg()` always applies a default mapping for the axis of the data index in
 the layout. This mapping is `aes(y = .data$.y)` for horizontal stacking
@@ -47,6 +53,29 @@ information, refer to the "ggplot2 Specification" section in the `align_gg()`
 documentation.
 
 You can also use the `ggalign()` function, which is an alias for `align_gg()`.
+
+The data in the underlying `ggplot` object will contain following columns:
+
+  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
+    stack layout (including top and bottom annotation), `y-axis` for
+    horizontal stack layout (including left and right annotation). 
+
+  - `.x` or `.y`: the `x` or `y` coordinates.
+
+  - `.names` and `.index`: A factor of the names (only applicable when names
+  exists) and an integer of index of the original data.
+
+  - `.row_names` and `.row_index`: the row names and an integer of
+    row index of the original matrix (only applicable if `data` is a
+    `matrix`).
+
+  - `.column_names` and `.column_index`: the column names and column index of
+    the original matrix (only applicable if `data` is a `matrix`).
+
+  - `value`: the actual value (only applicable if `data` is a `matrix` or
+    atomic vector).
+
+>It is recommended to use `.x`/`.y`, or `.names` as the `x`/`y` mapping.
 
 ```{r}
 ggheatmap(small_mat) +
@@ -63,8 +92,8 @@ columns:
  - `.index`: the index of the original layout data.
  - `.x` or `.y`: the `x` or `y` coordinates
 
-You can use it to integrate additional elements, such as block
-annotation or customized panel title, into your layout.
+You can use it to integrate additional elements, such as block annotation or
+customized panel title, into your layout.
 
 ```{r}
 ggheatmap(small_mat) +
@@ -76,32 +105,13 @@ ggheatmap(small_mat) +
     geom_text(aes(y = 1L, label = .panel))
 ```
 
-### action data
-`align_gg()`/`ggalign()` requires the specific data format for its operations.
-If you need to transform or filter data for individual `geoms`, you can use the
-`data` argument within each `geom`. However, if you have multiple `geoms` and
-want a consistent transformation applied across all, you can utilize the plot
-action argument `data` in the `align_gg()`/`ggalign()` function. This allows you
-to transform the default data for all subsequent geoms. 
-
-```{r}
-set.seed(1234L)
-ggheatmap(small_mat) +
-    scale_fill_viridis_c(guide = "none") +
-    anno_top() +
-    align_kmeans(3L) +
-    ggalign() +
-    plot_data(~ subset(.x, .panel == 1L)) +
-    geom_bar(aes(y = value, fill = .row_names), stat = "identity")
-```
-
-### Cross panel sumamry
-When used in a heatmap layout, and the data is inherited from the heatmap data,
+## Cross panel sumamry
+When used in a `ggheatmap()`, and the data is inherited from the `ggheatmap()`,
 a special column `.extra_panel` will be added, which is the panel information
 for column (left or right annotation) or row (top or bottom annotation). This is
 useful if you want to create summary plot using another axis panel. In such
 cases, it's often necessary to disable the automatic setting of limits (`limits
-= FALSE` in `align_gg()`).
+= FALSE` in `ggalign()`).
 
 ```{r fig.dim = c(5, 10)}
 set.seed(1L)
@@ -140,7 +150,7 @@ ggheatmap(small_mat) +
     scale_fill_brewer(palette = "Dark2", name = "branch")
 ```
 
-### Plot titles
+## Plot titles
 `ggplot2` only allow add titles in the top or add caption in the bottom.
 The ggalign package extends this capability, allowing you to place titles around
 any border of the plot using the `patch_titles()` function. 
@@ -160,49 +170,95 @@ ggheatmap(small_mat) +
     patch_titles(right = "right patch title")
 ```
 
-## `free_gg`
+# `free_gg`/`ggfree`
 The `free_gg()` function allows you to incorporate a ggplot object into your
-layout while maintaining alignment with other plot elements. Unlike
-`align_gg()`, which aligns every axis value precisely, `free_gg()` focuses more
-on layout integration without enforcing strict axis alignment. `ggfree()` is an
-alias for `free_gg`.
+layout. Unlike `align_gg()`, which aligns every axis value precisely,
+`free_gg()` focuses more on layout integration without enforcing strict axis
+alignment. `ggfree()` is an alias for `free_gg`.
 
+Internally, the function uses `fortify_data_frame()` to transform the input into
+a data frame. For matrices, it converts them into a long-formatted data frame.
+Note that `ggfree()` does not provide a default aesthetic mapping, which
+contrasts with `ggalign()`. You will need to manually provide the default
+mappings. When used in a `stack_align()`, you typically do not want to inherit
+from the layout matrix and should input a data frame manually. The `data`
+argument must be explicitly provided, as it comes after `...`. This is rarely
+necessary in a `stack_align()`, and it is more commonly used in a
+`stack_free()`, where you usually want to inherit from the layout data frame. 
+
+All annotations in `ggheatmap()` are `stack_align()`.
 ```{r}
 ggheatmap(small_mat) +
     anno_top() +
-    ggfree(mtcars, aes(wt, mpg)) +
+    ggfree(aes(wt, mpg), data = mtcars) +
     geom_point()
+```
+
+All annotations in `ggside()` are `stack_free()`.
+```{r}
+ggside(mpg, aes(displ, hwy, colour = class)) -
+    geom_point(size = 2) +
+    anno_top(size = 0.3) +
+    ggfree() +
+    geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
+    anno_right(size = 0.3) +
+    ggfree() +
+    geom_density(aes(x = after_stat(density), hwy, colour = class),
+        position = "stack"
+    ) +
+    theme(axis.text.x = element_text(angle = 90, vjust = .5))
 ```
 
 Alternatively, you can directly input the ggplot object.
 ```{r}
 ggheatmap(small_mat) +
     anno_top() +
-    ggfree(ggplot(mtcars, aes(wt, mpg))) +
+    ggfree(data = ggplot(mtcars, aes(wt, mpg))) +
     geom_point()
 ```
 
-You can also wrap objects that can be converted into a `grob` (graphical object)
-using `ggwrap()`, which converts them into a `ggplot` for plotting:
+You can also add the `ggplot` object directly without using `ggfree()`. However,
+doing so will limit control over the plot (like plot area `size`, and `active`
+components):
+```{r}
+ggheatmap(small_mat) +
+    anno_top() +
+    ggplot(mtcars, aes(wt, mpg)) +
+    geom_point()
+```
+
+# `ggwrap()` and `inset()`
+The `ggwrap()` function allows you to wrap objects that can be converted into a
+grob, turning them into a `ggplot` for plotting. Further you can still add
+ggplot elements like title, subtitle, tag, caption, and geoms using the same
+approach as with normal ggplots (using `ggtitle()`, `labs()`, `geom_*()`) as
+well as styling using `theme()`. This enables you to pass these wrapped objects
+into `ggfree()`.
 ```{r}
 library(grid)
 ggheatmap(small_mat) +
     anno_top() +
     # `ggwrap()` will create a `ggplot` object, we use `ggfree` to add it into the layout
-    ggfree(ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full")) +
-    # we can then add any inset grobs (the same as `ggwrap()`, it can take any objects
+    ggfree(data = ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full"))
+```
+You can also integrate base plots, pheatmap, ComplexHeatmap, e.g.
+
+Additionally, you can add any graphics as a inset to a ggplot using the
+`inset()` function. Like `ggwrap()`, `inset()` can accept any object that can be
+converted to a grob.
+```{r}
+ggheatmap(small_mat) +
+    anno_top() +
+    ggfree(data = ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full")) +
+    # we can then add any inset grobs (the same as ggwrap, it can take any objects
     # which can be converted to a `grob`)
     inset(rectGrob(gp = gpar(fill = "steelblue")), align = "panel") +
     inset(textGrob("Here are some text", gp = gpar(color = "black")),
         align = "panel"
     )
 ```
-You can also integrate base plots, pheatmap, ComplexHeatmap, e.g., and explore
-more with the `patch()` function for combining such plots within the same
-layout. This makes it versatile for mixing different types of plots and objects
-into a cohesive visual layout.
 
-## Session information
+# Session information
 ```{r}
 sessionInfo()
 ```

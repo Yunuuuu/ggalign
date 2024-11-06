@@ -85,6 +85,15 @@ stack_layout_subtract.ggplot <- stack_layout_subtract.layout_title
 stack_layout_subtract.free_gg <- stack_layout_subtract.layout_title
 
 #' @export
+stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
+
+#' @export
+stack_layout_subtract.quad_anno <- stack_layout_subtract.ggplot
+
+#' @export
+stack_layout_subtract.anno_init <- stack_layout_subtract.ggplot
+
+#' @export
 stack_layout_subtract.Align <- function(object, stack, object_name) {
     cli::cli_abort(c(
         "Cannot use {.code -} to add {.fn {snake_class(object)}}",

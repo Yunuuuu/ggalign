@@ -25,8 +25,8 @@ align_initialize <- function(object, direction, position,
             }
             # we always regard rows as the observations
             if (is.null(layout_nobs)) {
-                layout_nobs <- vec_size(data)
-            } else if (vec_size(data) != layout_nobs) {
+                layout_nobs <- NROW(data)
+            } else if (NROW(data) != layout_nobs) {
                 cli::cli_abort(paste(
                     "{.arg data} must have compatible",
                     "observations with the layout"

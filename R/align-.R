@@ -1,7 +1,8 @@
 #' Create a New `Align` Object
 #'
-#' An `Align` object interacts with the `layout` object to reorder or split
-#' observations and, in some cases, add plot components to the `layout`.
+#' `r lifecycle::badge('experimental')` An `Align` object interacts with the
+#' `layout` object to reorder or split observations and, in some cases, add plot
+#' components to the `layout`.
 #'
 #' @param align_class A `Align` object.
 #' @param params A list of parameters for `align_class`.

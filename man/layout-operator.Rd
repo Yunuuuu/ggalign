@@ -34,7 +34,16 @@
 A modified \code{Layout} object.
 }
 \description{
-Layout operator
+\itemize{
+\item \code{+}: adds elements to the active plot in the active layout.
+\item \code{&}: applies elements to all plots in the layout.
+\item \code{-}:
+\itemize{
+\item \code{quad_layout()}: Adds elements to all plots in the active layout, as
+well as to any nested layouts within it.
+\item \code{stack_layout()}:
+}
+}
 }
 \details{
 In order to reduce code repetition \code{ggalign} provides two operators for

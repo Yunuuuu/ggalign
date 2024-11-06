@@ -296,7 +296,6 @@ layout_annotation <- function(theme = waiver(), ...) {
 }
 
 # Used by add `layout_annotation` to the `Layout` objects
-#' @keywords internal
 update_layout_annotation <- function(object, layout, object_name) {
     layout@annotation <- update_non_waive(
         layout@annotation, .subset2(object, "annotation")

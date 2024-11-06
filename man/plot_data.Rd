@@ -27,7 +27,9 @@ rendering by \code{ggplot2}. The returned data must be a data frame for ggplot.}
 Defaults to \code{FALSE}.}
 }
 \description{
-Plot data Specifications
+Transforms the plot data. Many functions in this package require a specific
+data format to align observations, \code{plot_data()} helps reformat data frames
+as needed.
 }
 \details{
 Defaults will attempt to inherit from the parent layout if the actual data is

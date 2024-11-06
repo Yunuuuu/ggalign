@@ -22,8 +22,8 @@ Currently, there are four key `align_*` functions available for layout customiza
 
 - **`align_group`**: Group and align plots based on categorical factors.
 - **`align_order`**: Reorder layout observations based on statistical weights
- or allows for manual reordering based on user-defined criteria.
-- **`align_kmeans`**: Arrange plots by k-means clustering results.
+ or allows for manual reordering based on user-defined ordering index.
+- **`align_kmeans`**: Group observations by k-means clustering results.
 - **`align_dendro`**: Align plots according to hierarchical clustering or dendrograms.
 
 ```{r setup}

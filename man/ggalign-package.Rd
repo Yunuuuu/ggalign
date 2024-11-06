@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Yun Peng \email{yunyunp96@163.com} (\href{https://orcid.org/0000-0003-2801-3332}{ORCID}) [copyright holder]
+\strong{Maintainer}: Yun Peng \email{yunyunp96@163.com} (\href{https://orcid.org/0000-0003-2801-3332}{ORCID})
 
 }
 \keyword{internal}

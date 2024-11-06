@@ -72,7 +72,6 @@ schemes.
 # ComplexHeatmap::Heatmap(mat)
 dim(mat)
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
@@ -412,7 +411,6 @@ section for more details.
 #     column_names_side = "top", column_dend_side = "bottom"
 # )
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     scale_x_continuous(position = "top") +
     scale_y_continuous(position = "right") +
     theme(axis.text.x = element_text(angle = 60, hjust = 0)) +
@@ -428,7 +426,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     scale_y_continuous(breaks = NULL) +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
@@ -441,7 +438,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(
         axis.text.x = element_text(angle = -60, hjust = 0),
         axis.text.y = element_text(face = "bold", size = 16)
@@ -456,7 +452,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(
         axis.text.x = element_text(angle = -60, hjust = 0),
         axis.text.y = element_text(
@@ -476,7 +471,6 @@ ggheatmap(mat) +
 ## Split by k-means clustering
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_kmeans(2L) +
@@ -489,7 +483,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_dendro(reorder_dendrogram = TRUE) +
@@ -502,7 +495,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_kmeans(2L) +
@@ -519,7 +511,6 @@ The dendrogram was calculated in each group defined by kmeans.
 ## Split by categorical variables
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_group(rep(c("A", "B"), 9)) +
@@ -536,7 +527,6 @@ When you splitted by a dendrogram, the cutted height will be indicated with a
 dashed line.
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_dendro(k = 3L, reorder_dendrogram = TRUE) +
@@ -548,7 +538,6 @@ ggheatmap(mat) +
 
 ```{r}
 ggheatmap(mat) +
-    scale_fill_gradient2(low = "blue", high = "red") +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_right(size = unit(15, "mm")) +
     align_dendro(aes(color = branch), k = 3L, reorder_dendrogram = TRUE) +
@@ -557,6 +546,63 @@ ggheatmap(mat) +
     align_dendro(k = 2L, reorder_dendrogram = TRUE) +
     quad_active() &
     theme(plot.margin = margin())
+```
+
+## Order of slices (panels)
+The order of the panels always follow the factor level. Note: the merging of
+dendrogram between `ComplexHeatmap` and `ggalign` is a little different.
+```{r}
+ggheatmap(mat) +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    anno_right(size = unit(15, "mm")) +
+    align_group(rep(LETTERS[1:3], 6)) +
+    align_dendro(aes(color = branch),
+        reorder_dendrogram = TRUE,
+        reorder_group = TRUE,
+        merge_dendrogram = TRUE
+    ) +
+    scale_color_brewer(palette = "Dark2") +
+    anno_top(size = unit(15, "mm")) +
+    align_group(rep(letters[1:6], 4)) +
+    align_dendro(aes(color = branch),
+        reorder_dendrogram = TRUE,
+        reorder_group = TRUE,
+        merge_dendrogram = TRUE
+    ) +
+    quad_active() -
+    with_position(theme(strip.text = element_text()), "tr") &
+    theme(plot.margin = margin())
+```
+
+```{r}
+ggheatmap(mat) +
+    theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
+    anno_right(size = unit(15, "mm")) +
+    align_group(rep(LETTERS[1:3], 6)) +
+    align_dendro(aes(color = branch), reorder_dendrogram = TRUE) +
+    scale_color_brewer(palette = "Dark2") +
+    anno_top(size = unit(15, "mm")) +
+    align_group(rep(letters[1:6], 4)) +
+    align_dendro(aes(color = branch), reorder_dendrogram = TRUE) +
+    quad_active() -
+    with_position(theme(strip.text = element_text()), "tr") &
+    theme(plot.margin = margin())
+```
+
+## Titles for splitting (facet strip text)
+By default, the facet strip text is removed. You can override this behavior with
+`theme(strip.text = element_text())`. Since `align_group()` does not create a
+new plot, the panel title can only be added to the heatmap plot.
+
+## Graphic parameters for splitting
+```{r}
+ggh4x::facet_grid2(strip = ggh4x::strip_themed(
+    background_x = list(
+        element_rect(fill = "red"),
+        element_rect(fill = "blue"),
+        element_rect(fill = "green")
+    )
+))
 ```
 
 # Session information

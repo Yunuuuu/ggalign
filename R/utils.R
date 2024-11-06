@@ -251,8 +251,8 @@ compact <- function(.x) .x[list_sizes(.x) > 0L]
 #'
 #' @return `x`, with new names according to `replace`
 #'
-#' @keywords internal
 #' @importFrom rlang set_names
+#' @keywords internal
 #' @noRd
 rename <- function(x, replace) {
     set_names(x, function(nms) {

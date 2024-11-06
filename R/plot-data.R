@@ -1,5 +1,9 @@
 #' Plot data Specifications
 #'
+#' Transforms the plot data. Many functions in this package require a specific
+#' data format to align observations, `plot_data()` helps reformat data frames
+#' as needed.
+#'
 #' @param data A function to transform the plot data before rendering, referred
 #' to as `plot_data`. Acceptable values include:
 #'

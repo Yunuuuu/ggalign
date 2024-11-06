@@ -48,25 +48,25 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 ############################################################
 #' Convert Object into a Grob
 #'
-#' The `patch()` function is used by [ggwrap()] and [inset()] to convert objects
-#' into a [grob][grid::grob].
+#' The `patch()` function is used by [`ggwrap()`] and [inset()] to convert
+#' objects into a [`grob`][grid::grob].
 #'
-#' @param x An object to be converted into a [grob][grid::grob].
+#' @param x An object to be converted into a [`grob`][grid::grob].
 #' @param ... Additional arguments passed to specific methods.
-#' @return A [grob][grid::grob] object.
+#' @return A [`grob`][grid::grob] object.
 #' @seealso
-#' - [patch.grob] / [patch.gList]
-#' - [patch.ggplot]
-#' - [patch.patch_ggplot]
-#' - [patch.patchwork]
-#' - [patch.patch]
-#' - [patch.trellis]
-#' - [patch.formula] / [patch.function]
-#' - [patch.recordedplot]
-#' - [patch.Heatmap]
-#' - [patch.HeatmapList]
-#' - [patch.HeatmapAnnotation]
-#' - [patch.pheatmap]
+#' - [`patch.grob`] / [`patch.gList`]
+#' - [`patch.ggplot`]
+#' - [`patch.patch_ggplot`]
+#' - [`patch.patchwork`]
+#' - [`patch.patch`]
+#' - [`patch.trellis`]
+#' - [`patch.formula`] / [`patch.function`]
+#' - [`patch.recordedplot`]
+#' - [`patch.Heatmap`]
+#' - [`patch.HeatmapList`]
+#' - [`patch.HeatmapAnnotation`]
+#' - [`patch.pheatmap`]
 #' @export
 #' @keywords internal
 patch <- function(x, ...) {
@@ -183,7 +183,6 @@ patch.function <- function(x, ..., device = NULL, name = NULL) {
 #' @export
 patch.recordedplot <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from recordedplot")
-
     gridGraphics::echoGrob(x, device = device %||% offscreen)
 }
 
@@ -238,6 +237,4 @@ patch.HeatmapAnnotation <- patch.HeatmapList
 #' @seealso [pheatmap][pheatmap::pheatmap]
 #' @export
 #' @rdname patch.pheatmap
-patch.pheatmap <- function(x, ...) {
-    .subset2(x, "gtable")
-}
+patch.pheatmap <- function(x, ...) .subset2(x, "gtable")

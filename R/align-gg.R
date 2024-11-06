@@ -1,5 +1,10 @@
 #' Create ggplot object
 #'
+#' `r lifecycle::badge('stable')` `align_gg()` is similar to `ggplot` in that it
+#' initializes a `ggplot` data and `mapping`. Same with other `align_*`
+#' functions. `align_gg()` allowing you to provide data in various formats,
+#' including matrices, data frames, or simple vectors. By default, it will
+#' inherit from the layout. If a function, it will apply with the layout matrix.
 #' `ggalign` is an alias of `align_gg`.
 #'
 #' @inheritParams ggplot2::ggplot
@@ -30,14 +35,15 @@
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
 #'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
-#'    stack layout, `y-axis` for horizontal stack layout.
+#'    stack layout (including top and bottom annotation), `y-axis` for
+#'    horizontal stack layout (including left and right annotation).
 #'
 #'  - `.x` or `.y`: the `x` or `y` coordinates
 #'
 #'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
-#'    ([`vec_size()`][vctrs::vec_size()]): A factor of the names (only
-#'    applicable when names exists) and an integer of index of the original
-#'    data.
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): A factor of the names
+#'    (only applicable when names exists) and an integer of index of the
+#'    original data.
 #'
 #'  - `.row_names` and `.row_index`: the row names and an integer of
 #'    row index of the original matrix (only applicable if `data` is a
@@ -49,8 +55,11 @@
 #'  - `value`: the actual value (only applicable if `data` is a `matrix` or
 #'    atomic vector).
 #'
-#' In the case where the input data is already a data frame, three additional
-#' columns (`.names`, `.index`, and `.panel`) are added to the data frame.
+#' In the case where the input data is already a data frame, 4 additional
+#' columns (`.x`/`.y`, `.names`, `.index`, and `.panel`) are added to the data
+#' frame.
+#'
+#' It is recommended to use `.x`/`.y`, or `.names` as the `x`/`y` mapping.
 #'
 #' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], an additional
 #' column will be added.
@@ -66,8 +75,8 @@
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
-#' # if data is `NULL`, a three column data frame
-#' # will be created (`.panel`, `.index`, `.x`/`.y`)
+#' # if data is `NULL`, a three column data frame will be created
+#' # (`.panel`, `.index`, `.x`/`.y`)
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top(size = 0.5) +
 #'     align_dendro(k = 3L) +
@@ -122,12 +131,12 @@ AlignGG <- ggproto("AlignGG", Align,
             if (!is.null(old_names <- vec_names(data))) {
                 ans$.names <- vec_rep(old_names, NCOL(data))
             }
-            ans$.index <- vec_rep(seq_len(vec_size(data)), NCOL(data))
+            ans$.index <- vec_rep(seq_len(NROW(data)), NCOL(data))
         } else {
             if (!is.null(old_names <- vec_names(data))) {
                 ans$.names <- old_names
             }
-            ans$.index <- seq_len(vec_size(data))
+            ans$.index <- seq_len(NROW(data))
         }
         ans
     },
@@ -171,10 +180,13 @@ AlignGG <- ggproto("AlignGG", Align,
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
             # Align object always regard row as the observations
-            ans <- vec_expand_grid(col = data_frame0(
-                .extra_panel = extra_panel[extra_index],
-                .extra_index = extra_index
-            ), row = ans)
+            ans <- vec_expand_grid(
+                col = data_frame0(
+                    .extra_panel = extra_panel[extra_index],
+                    .extra_index = extra_index
+                ),
+                row = ans
+            )
             ans <- vec_cbind(ans$col, ans$row)
             if (!is.null(data)) {
                 ans <- full_join(data, ans,

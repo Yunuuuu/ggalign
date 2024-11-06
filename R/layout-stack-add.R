@@ -125,7 +125,7 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_add.ggplot <- function(object, stack, object_name) {
-    stack_layout_add(free_gg(object), stack, object_name)
+    stack_layout_add(free_gg(data = object), stack, object_name)
 }
 
 #' @export
@@ -154,7 +154,7 @@ update_stack_active <- function(stack, what, call = caller_call()) {
 }
 
 #' @export
-stack_layout_add.quad_switch <- function(object, stack, object_name) {
+stack_layout_add.quad_active <- function(object, stack, object_name) {
     if (!is.null(active_index <- stack@active) &&
         is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
         plot <- quad_layout_add(object, plot, object_name)
@@ -167,6 +167,12 @@ stack_layout_add.quad_switch <- function(object, stack, object_name) {
         ))
     }
 }
+
+#' @export
+stack_layout_add.quad_anno <- stack_layout_add.quad_active
+
+#' @export
+stack_layout_add.anno_init <- stack_layout_add.quad_active
 
 #' @importFrom rlang try_fetch
 #' @importFrom methods slot

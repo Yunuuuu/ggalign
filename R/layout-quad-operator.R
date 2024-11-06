@@ -102,6 +102,15 @@ quad_layout_subtract.layout_title <- quad_layout_subtract.ggplot
 quad_layout_subtract.free_gg <- quad_layout_subtract.ggplot
 
 #' @export
+quad_layout_subtract.quad_active <- quad_layout_subtract.ggplot
+
+#' @export
+quad_layout_subtract.quad_anno <- quad_layout_subtract.ggplot
+
+#' @export
+quad_layout_subtract.anno_init <- quad_layout_subtract.ggplot
+
+#' @export
 quad_layout_subtract.Align <- function(object, quad, object_name) {
     cli::cli_abort(c(
         "Cannot use {.code -} to add {.fn {snake_class(object)}}",

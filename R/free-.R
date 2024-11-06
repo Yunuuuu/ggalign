@@ -1,23 +1,28 @@
 #' Add ggplot to layout
 #'
-#' `ggfree` is an alias for `free_gg`.
+#' `r lifecycle::badge('experimental')` The `free_gg()` function allows you to
+#' incorporate a ggplot object into your layout. Unlike `align_gg()`, which
+#' aligns every axis value precisely, `free_gg()` focuses more on layout
+#' integration without enforcing strict axis alignment. `ggfree()` is an alias
+#' for `free_gg`.
 #'
-#' @param x A dataset used to initialize a [`ggplot`][ggplot2::ggplot] object.
-#' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
-#' provided directly. By default, it will inherit from the parent layout if
-#' applicable.
 #' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
+#' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]
+#' object. Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can
+#' be provided directly. By default, it will inherit from the parent layout if
+#' applicable.
 #' @inheritParams align
 #' @return A `free_gg` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
-#'     ggfree(mtcars, aes(wt, mpg)) +
+#'     align_dendro() +
+#'     ggfree(data = mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(x = waiver(), ..., size = NULL, active = NULL) {
+free_gg <- function(..., data = waiver(), size = NULL, active = NULL) {
     rlang::check_dots_used()
-    UseMethod("free_gg")
+    UseMethod("free_gg", data)
 }
 
 #' @usage NULL
@@ -27,18 +32,19 @@ ggfree <- free_gg
 
 #' @importFrom ggplot2 ggplot
 #' @export
-free_gg.default <- function(x = waiver(), ..., size = NULL, active = NULL) {
-    data <- fortify_data_frame(x)
+free_gg.default <- function(..., data = waiver(), size = NULL, active = NULL) {
+    data <- fortify_data_frame(data)
     new_free_gg(ggplot(data = NULL, ...), data,
         size = size, active = active
     )
 }
 
 #' @export
-free_gg.ggplot <- function(x = waiver(), ..., size = NULL, active = NULL) {
-    data <- .subset2(x, "data")
-    x["data"] <- list(NULL)
-    new_free_gg(x, data, size = size, active = active)
+free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
+    plot <- data
+    data <- .subset2(plot, "data")
+    plot["data"] <- list(NULL)
+    new_free_gg(plot, data, size = size, active = active)
 }
 
 new_free_gg <- function(plot, data, size, active,

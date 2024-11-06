@@ -64,6 +64,12 @@ methods::setMethod("$", "Layout", function(x, name) {
 #########################################################
 #' Layout operator
 #'
+#'  - `+`: adds elements to the active plot in the active layout.
+#'  - `&`: applies elements to all plots in the layout.
+#'  - `-`:
+#'    * `quad_layout()`: Adds elements to all plots in the active layout, as
+#'      well as to any nested layouts within it.
+#'    * `stack_layout()`:
 #' @details
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in

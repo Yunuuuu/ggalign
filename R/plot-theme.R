@@ -11,8 +11,10 @@
 #' @importFrom rlang inject
 #' @export
 plot_theme <- rlang::new_function(
-    # we can utilize the editor completion, we put all theme arguments here
-    # we move dots in the start
+    # We utilize editor completion by listing all theme arguments here.
+    # By placing `...` at the beginning, we can check if the first
+    # following argument is a `theme()` object rather than individual theme
+    # elements.
     c(
         rlang::exprs(... = ),
         .subset(

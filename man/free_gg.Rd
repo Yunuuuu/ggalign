@@ -5,15 +5,15 @@
 \alias{ggfree}
 \title{Add ggplot to layout}
 \usage{
-free_gg(x = waiver(), ..., size = NULL, active = NULL)
+free_gg(..., data = waiver(), size = NULL, active = NULL)
 }
 \arguments{
-\item{x}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}} object.
-Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
-provided directly. By default, it will inherit from the parent layout if
-applicable.}
-
 \item{...}{Additional arguments passed to \code{\link[ggplot2:ggplot]{ggplot()}}.}
+
+\item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}
+object. Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can
+be provided directly. By default, it will inherit from the parent layout if
+applicable.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
@@ -25,11 +25,16 @@ added to a layout.}
 A \code{free_gg} object.
 }
 \description{
-\code{ggfree} is an alias for \code{free_gg}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The \code{free_gg()} function allows you to
+incorporate a ggplot object into your layout. Unlike \code{align_gg()}, which
+aligns every axis value precisely, \code{free_gg()} focuses more on layout
+integration without enforcing strict axis alignment. \code{ggfree()} is an alias
+for \code{free_gg}.
 }
 \examples{
 ggheatmap(matrix(rnorm(56), nrow = 7)) +
     anno_top() +
-    ggfree(mtcars, aes(wt, mpg)) +
+    align_dendro() +
+    ggfree(data = mtcars, aes(wt, mpg)) +
     geom_point()
 }

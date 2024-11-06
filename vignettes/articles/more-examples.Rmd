@@ -21,7 +21,6 @@ library(ggalign)
 In this thread, we'll use `ggalign` to draw all the heatmap in
 <https://jokergoo.github.io/ComplexHeatmap-reference/book/more-examples.html>. 
 
-
 # Add more information for gene expression matrix
 ```{r fig.dim = c(12, 10)}
 expr <- read_example("gene_expression.rds")
@@ -30,7 +29,7 @@ base_mean <- rowMeans(mat)
 mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
 
-ggstack(data = mat_scaled, "h") +
+stack_alignh(mat_scaled) +
     stack_active(sizes = c(0.2, 1, 1)) +
     # group stack rows into 5 groups
     align_kmeans(centers = 5L) +
