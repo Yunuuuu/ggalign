@@ -459,8 +459,9 @@ specified otherwise. If no annotation stack is active, <code><a href="../referen
 <span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-20-1.png"><!-- --></p>
-<p>The <code>position</code> argument can be a string containing one or more of <code>r ggalign:::oxford_and(ggalign:::.tlbr)</code>, indicating which annotation stack should
-be used as the context. When the <code>position</code> argument is manually set, the
+<p>The <code>position</code> argument can be a string containing one or more of
+<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>, indicating which annotation stack
+should be used as the context. When the <code>position</code> argument is manually set, the
 default value of the main argument will be <code>FALSE</code>. The example above is
 equivalent to:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -520,10 +521,7 @@ settings, even if <code><a href="https://ggplot2.tidyverse.org/reference/theme.h
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-24-1.png"><!-- --></p>
 <p>By using the <code>-</code> operator with plot options, we apply them directly to the
-active layout. As mentioned earlier, the <code>-</code> operator applies specified elements
-to all plots within the current layout, making it ideal for setting layout-level
-plot options. Additionally, we can combine <code><a href="../reference/with_quad.html">with_quad()</a></code> with the <code>-</code>
-operator.</p>
+active layout. Additionally, we can combine <code><a href="../reference/with_quad.html">with_quad()</a></code> with the <code>-</code> operator.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
 <span>    <span class="co"># Change the active layout to the top annotation</span></span>
