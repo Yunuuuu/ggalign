@@ -11,7 +11,7 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
             object, plot, object_name
         )
     } else {
-        context <- quad_active_position(object) # nolint
+        context <- quad_active_context(object) # nolint
         direction <- stack@direction
         stack@plots <- lapply(stack@plots, function(plot) {
             if (is_free(plot)) {
@@ -37,14 +37,10 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
                             )
                         }
                     }
-                } else if (is.waive(context <- .subset2(context, 1L))) {
+                } else if (is.waive(context <- .subset2(context, "position"))) {
                     # do nothing, default behaviour for object wrap
-                    # with `with_position()`
+                    # with `with_quad()`
                 } else {
-                    # we always add `object` to the main plot
-                    if (!is.null(context)) {
-                        plot <- quad_body_add(object, plot, object_name)
-                    }
                     # we respect the context setting
                     plot <- quad_layout_subtract(object, plot, object_name)
                 }

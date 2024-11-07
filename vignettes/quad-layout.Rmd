@@ -24,8 +24,7 @@ direction, there are four main types of `quad_layout()`:
  - `quad_free`/`ggside`: Never align observations.
  - `quad_alignh`: Align observations in the horizontal direction.
  - `quad_alignv`: Align observations in the vertical direction.
- - `quad_alignb`: Align observations in both horizontal and vertical
-   directions.
+ - `quad_alignb`: Align observations in both horizontal and vertical directions. 
 
 ```{r setup}
 library(ggalign)
@@ -49,8 +48,8 @@ ggside(mpg) +
 
 ## annotation
 Like `ggheatmap()`, annotations in `quad_free()` can be placed at the top, left,
-bottom, and right sides, but all annotations here use `stack_free()`, meaning they
-don't align observations.
+bottom, and right sides, but all annotations here use `stack_free()`, meaning
+they don't align observations.
 
 ```{r}
 ggside(mpg, aes(displ, hwy, colour = class)) -
@@ -77,8 +76,8 @@ ggside(mpg, aes(displ, hwy, colour = class)) -
 ```
 
 Unlike `ggheatmap()`/`heatmap_layout()`, `ggside()`/`quad_free()` allows
-facetting for the main plot, which also needs to be applied to the annotations
-for proper alignment.
+facetting for the main plot, which should also be applied to the annotations for
+proper alignment.
 ```{r}
 i2 <- iris
 i2$Species2 <- rep(c("A", "B"), 75)
@@ -178,14 +177,15 @@ quad_alignh(small_mat) +
     scale_fill_brewer(palette = "Dark2") +
     anno_top()
 ```
+
 Manual initialization of annotations with `anno_init()` is required in such
 cases: 
 ```{r}
-quad_alignv(small_mat) +
-    geom_boxplot(aes(.column_names, value, fill = .column_names)) +
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
     scale_fill_brewer(palette = "Dark2") +
-    # initialize the left annotation with a self-defined data frame
-    anno_init("left", data = mpg) +
+    # initialize the top annotation with a self-defined data frame
+    anno_init("top", data = mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))
@@ -194,11 +194,11 @@ quad_alignv(small_mat) +
 The same with `quad_alignh()`, we need to manually initialize the left and right
 annotations in `quad_alignv()`.
 ```{r}
-quad_alignh(small_mat) +
-    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+quad_alignv(small_mat) +
+    geom_boxplot(aes(.column_names, value, fill = .column_names)) +
     scale_fill_brewer(palette = "Dark2") +
-    # initialize the top annotation with a self-defined data frame
-    anno_init("top", data = mpg) +
+    # initialize the left annotation with a self-defined data frame
+    anno_init("left", data = mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))

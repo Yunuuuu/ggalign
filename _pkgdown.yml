@@ -29,7 +29,7 @@ reference:
   - quad_switch
   - quad_anno
   - anno_init
-  - with_position
+  - with_quad
   - stack_switch
   - active
   - theme_ggalign

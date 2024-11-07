@@ -1,8 +1,9 @@
 #' Modify `-` Operator Context in `quad_layout()`
 #'
 #' @description
-#' `r lifecycle::badge('experimental')` Wrapping objects with `with_position`
-#' allows you to change the context of the subtraction `-` operator.
+#' `r lifecycle::badge('experimental')` Wrapping objects with `with_quad`
+#' allows you to change the context of the subtraction `-` operator in
+#' `quad_layout()`.
 #'
 #' @param x Objects to add to the layout using the `-` operator.
 #' @param position A string containing one or more of `r oxford_and(.tlbr)`
@@ -14,35 +15,45 @@
 #' `left` or `right`, the operator will also act on the `right` or `left`
 #' annotation, respectively. If there is no active annotation stack, it defaults
 #' to `NULL`.
+#' @param main A single boolean value indicates whether to apply `x` for the
+#' main plot.
 #' @return The input object with an additional attribute that specifies the
 #' selected context.
 #' @export
-with_position <- function(x, position = waiver()) {
+with_quad <- function(x, position = waiver(), main = NULL) {
     assert_layout_position(position)
-    attr(x, sprintf("__%s.quad_active_position__", pkg_nm())) <- list(position)
+    assert_bool(main, null_ok = TRUE)
+    attr(x, sprintf("__%s.quad_active_context__", pkg_nm())) <- list(
+        position = position, main = main
+    )
     x
 }
 
-quad_active_position <- function(x) {
-    attr(x, sprintf("__%s.quad_active_position__", pkg_nm()), exact = TRUE)
+quad_active_context <- function(x) {
+    attr(x, sprintf("__%s.quad_active_context__", pkg_nm()), exact = TRUE)
 }
 
-quad_active_context <- function(quad, object) {
-    context <- quad_active_position(object)
-    position <- quad@active
-    if (is.null(context)) { # if not set
-        context <- position
-        # if wrap with `with_position`
-    } else if (is.waive(context <- .subset2(context, 1L))) {
+quad_subtract_actives <- function(context, position) {
+    if (is.null(context)) { # if not set, use the actual active position
+        ans <- position
+    } else if (is.waive(ans <- .subset2(context, "position"))) {
+        # if wrap with `with_quad`
+        # we determine the `actives` from current actual layout active
         if (is.null(position)) {
-            context <- NULL
+            ans <- NULL
         } else {
-            context <- c(position, opposite_pos(position))
+            ans <- c(position, opposite_pos(position))
+            if (is.null(main <- .subset2(context, "main")) || main) {
+                ans <- c(ans, list(NULL))
+            }
         }
-    } else if (!is.null(context)) {
-        context <- setup_pos(context)
+    } else if (!is.null(ans)) { # if set manually
+        ans <- setup_pos(ans)
+        if (!is.null(main <- .subset2(context, "main")) && main) {
+            ans <- c(ans, list(NULL))
+        }
     }
-    context
+    ans
 }
 
 ###############################################################
@@ -53,15 +64,15 @@ quad_layout_subtract <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    context <- quad_active_context(quad, object)
-    if (is.null(context)) {
-        quad <- quad_body_add(object, quad, object_name)
-        context <- .TLBR
-    }
-    for (position in context) {
-        if (!is.null(slot(quad, position))) {
-            slot(quad, position) <- stack_layout_subtract(
-                object, slot(quad, position), object_name
+    context <- quad_active_context(object)
+    actives <- quad_subtract_actives(context, quad@active)
+    if (is.null(actives)) actives <- c(.TLBR, list(NULL))
+    for (act in actives) {
+        if (is.null(act)) {
+            quad <- quad_body_add(object, quad, object_name)
+        } else if (!is.null(slot(quad, act))) {
+            slot(quad, act) <- stack_layout_subtract(
+                object, slot(quad, act), object_name
             )
         }
     }
@@ -71,14 +82,17 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 # for objects can inherit from layout
 #' @export
 quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
-    context <- quad_active_context(quad, object)
-    if (is.null(context)) {
+    context <- quad_active_context(object)
+    actives <- quad_subtract_actives(context, quad@active)
+    if (is.null(actives)) {
         quad <- update_layout_option(object, quad, object_name)
     } else {
-        for (position in context) {
-            if (!is.null(slot(quad, position))) {
-                slot(quad, position) <- update_layout_option(
-                    object, slot(quad, position), object_name
+        for (act in actives) {
+            if (is.null(act)) {
+                quad <- quad_body_add(object, quad, object_name)
+            } else if (!is.null(slot(quad, act))) {
+                slot(quad, act) <- update_layout_option(
+                    object, slot(quad, act), object_name
                 )
             }
         }
