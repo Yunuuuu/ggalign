@@ -435,32 +435,46 @@ will only add elements to all plots in the active annotation stack:</p>
 </h2>
 <p>Along with the <code>-</code> operator, <code><a href="../reference/with_quad.html">with_quad()</a></code> can be used to modify the
 operated context in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
-<p>It accepts three arguments: the object operated on by the <code>-</code> operator and the
-operated context, and a single boolean value indicates whether we should operate
-on the main plot of <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
-<p>By default, if the current active context in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> is
-<code>top</code> or <code>bottom</code>, the operator will also act on the corresponding <code>bottom</code> or
-<code>top</code> annotation. If the context is <code>left</code> or <code>right</code>, the operator will also
-act on the <code>right</code> or <code>left</code> annotation, respectively. If there is no active
-annotation stack, it defaults to <code>NULL</code> (this behavior differs in
-<code><a href="../reference/stack_layout.html">stack_layout()</a></code>; refer to <code><a href="../articles/stack-layout.html">vignette("stack-layout")</a></code> for more details).</p>
+<p>This function accepts three arguments:
+1. <strong>x</strong>: The object to be applied using the <code>-</code> operator.
+2. <strong>position</strong>: A string indicating the annotation stack to target (<code>top</code>,
+<code>bottom</code>, <code>left</code>, <code>right</code>, or combinations thereof). This specifies the
+context for applying <code>x</code>.
+3. <strong>main</strong>: A boolean that determines whether <code>x</code> should also apply to the main
+plot within <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
+<p>By default, when the active context in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> is set to
+<code>top</code> or <code>bottom</code>, the <code>-</code> operator will apply changes not only to that
+annotation but also to the opposite one (i.e., bottom if top is active, and vice
+versa). The same principle applies to the left and right contexts. In these
+cases, the object will also be applied to the main plot by default unless
+specified otherwise. If no annotation stack is active, <code><a href="../reference/with_quad.html">with_quad()</a></code> defaults to
+<code>NULL</code>. (this behavior differs in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>; refer to
+<code><a href="../articles/stack-layout.html">vignette("stack-layout")</a></code> for more details)</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
 <span>    <span class="co"># Change the active layout to the left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="co"># Modify the background of all plots in the left and the opposite annotation</span></span>
+<span>    <span class="co"># in this way, the `main` argument by default would be `TRUE`</span></span>
 <span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-20-1.png"><!-- --></p>
-<p>The second argument can be a string containing one or more of <code>r ggalign:::oxford_and(ggalign:::.tlbr)</code>, indicating which annotation stack should
-be used as the context. The above example is equivalent to:</p>
+<p>The <code>position</code> argument can be a string containing one or more of <code>r ggalign:::oxford_and(ggalign:::.tlbr)</code>, indicating which annotation stack should
+be used as the context. When the <code>position</code> argument is manually set, the
+default value of the main argument will be <code>FALSE</code>. The example above is
+equivalent to:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">-</span></span>
 <span>    <span class="co"># Modify the background of all plots in the left and right annotation</span></span>
-<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"lr"</span><span class="op">)</span></span>
+<span>    <span class="co"># and the main plot</span></span>
+<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        <span class="st">"lr"</span>, main <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-21-1.png"><!-- --></p>
-<p>If it is <code>NULL</code>, it removes any active annotation stack:</p>
+<p>Setting <code>position</code> to <code>NULL</code> removes any active annotation stack, meaning the
+object will apply to all plots in the layout, including annotation stacks:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">-</span></span>
 <span>    <span class="co"># Modify the background of all plots</span></span>

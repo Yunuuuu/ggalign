@@ -99,14 +99,22 @@
 
     
     
-<p>Waiting for complete …</p>
+<p>Plot options control the action of plots in the layout, they can be
+set at the layout level to define global options for all plots in the
+layout, or they can be applied to individual plots.</p>
+<ul>
+<li>To set a plot option for a single plot, simply use the
+<code>+</code> operator</li>
+<li>To set a plot aption in the layout level, simply use the
+<code>-</code> operator.</li>
+</ul>
 <p>Currently, the package provides three actions (each prefixed with
-<code>plot_</code>): - <code>plot_data</code>: Transforms the plot data.
-Many functions in this package require a specific data format to align
+<code>plot_</code>): - <code>plot_theme</code>: Sets the default theme
+for the plot. - <code>plot_data</code>: Transforms the plot data. Many
+functions in this package require a specific data format to align
 observations, <code><a href="../reference/plot_data.html">plot_data()</a></code> helps reformat data frames as
 needed. - <code>plot_align</code>: Defines alignment specifications for
-plots within the layout. - <code>plot_theme</code>: Sets the default
-theme for the plot.</p>
+plots within the layout.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
@@ -315,9 +323,9 @@ bottom annotation):</p>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
-<p>In <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the
-behavior of the <code>free_spaces</code> and <code>free_labs</code>
-arguments differs from other arguments in <code><a href="../reference/plot_align.html">plot_align()</a></code> when
+<p>In <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the behavior
+of the <code>free_spaces</code> and <code>free_labs</code> arguments
+differs from other arguments in <code><a href="../reference/plot_align.html">plot_align()</a></code> when
 inheriting from the parent layout: - For <code>top</code> and
 <code>bottom</code> annotations, it inherits from the left (“l”) and
 right (“r”) axes. - For <code>left</code> and <code>right</code>
