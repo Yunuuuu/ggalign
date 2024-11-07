@@ -427,10 +427,7 @@ my_plot +
 ```
 
 By using the `-` operator with plot options, we apply them directly to the
-active layout. As mentioned earlier, the `-` operator applies specified elements
-to all plots within the current layout, making it ideal for setting layout-level
-plot options. Additionally, we can combine `with_quad()` with the `-`
-operator.
+active layout. Additionally, we can combine `with_quad()` with the `-` operator.
 ```{r}
 my_plot +
     # Change the active layout to the top annotation
