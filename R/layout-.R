@@ -96,12 +96,14 @@ methods::setMethod("$", "Layout", function(x, name) {
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
+#' # `&` operator apply it to all plots
 #' ggheatmap(mat) +
 #'     anno_top() +
 #'     align_dendro() &
 #'     theme(panel.border = element_rect(
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
+#' # `-` operator only apply it to the active annotation
 #' ggheatmap(mat) +
 #'     anno_top() +
 #'     align_dendro() -
@@ -109,15 +111,6 @@ methods::setMethod("$", "Layout", function(x, name) {
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
 #'
-#' # used in the layout, define the default action for all plots in the layout
-#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
-#'     theme(plot.background = element_rect(fill = "red"))
-#'
-#' # You can also add it for a single plot
-#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
-#'     theme(plot.background = element_rect(fill = "red")) +
-#'     # here, we modify the plot action for the heatmap body
-#'     theme(plot.background = element_rect(fill = "blue"))
 #' @name layout-operator
 NULL
 
