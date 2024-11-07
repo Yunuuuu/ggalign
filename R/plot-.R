@@ -9,7 +9,7 @@ new_controls <- function(plot_data = new_plot_data(),
 }
 
 new_option <- function(name, option, ..., class = character()) {
-    new_vctr(option,
+    structure(option,
         `__ggalign.option_name__` = name, ...,
         class = c(class, "ggalign_option")
     )
