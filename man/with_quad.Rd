@@ -2,32 +2,34 @@
 % Please edit documentation in R/layout-quad-operator.R
 \name{with_quad}
 \alias{with_quad}
-\title{Modify \code{-} Operator Context in \code{quad_layout()}}
+\title{Modify Context for the \code{-} Operator in \code{quad_layout()}}
 \usage{
 with_quad(x, position = waiver(), main = NULL)
 }
 \arguments{
-\item{x}{Objects to add to the layout using the \code{-} operator.}
+\item{x}{The object to be added to the layout using the \code{-} operator.}
 
-\item{position}{A string containing one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}
-indicating which annotation stack should be used as the context. If \code{NULL},
-the context will default to the \code{\link[=quad_layout]{quad_layout()}} itself. By default,
-\code{waiver()} is used, which triggers the following behavior: If the current
-active context in \code{\link[=quad_layout]{quad_layout()}} is \code{top} or \code{bottom}, the operator will
-also act on the corresponding \code{bottom} or \code{top} annotation. If the context is
-\code{left} or \code{right}, the operator will also act on the \code{right} or \code{left}
-annotation, respectively. If there is no active annotation stack, it defaults
-to \code{NULL}.}
+\item{position}{A string specifying one or more positions—
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}— to indicate the annotation stack context for the
+operator \code{\link[=layout-operator]{-}}. By default, \code{waiver()} is used, which sets
+the behavior as follows: if the active context in \code{quad_layout()} is \code{top} or
+\code{bottom}, the operator will also apply to the corresponding \code{bottom} or \code{top}
+annotation, respectively. Similarly, if the context is \code{left} or \code{right}, the
+operator applies to the \code{right} or \code{left} annotation. When no annotation
+stack is active, the context defaults to \code{NULL}.}
 
-\item{main}{A single boolean value indicates whether to apply \code{x} for the
-main plot.}
+\item{main}{A single boolean value indicating whether \code{x} should apply to the
+main plot, used only when \code{position} is not \code{NULL}. By default, if \code{position}
+is \code{waiver()} and the active context of \code{quad_layout()} is an annotation
+stack, \code{main} will be set to \code{TRUE}; otherwise, it defaults to \code{FALSE}.}
 }
 \value{
-The input object with an additional attribute that specifies the
-selected context.
+The original object with an added attribute that sets the specified
+layout context.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Wrapping objects with \code{with_quad}
-allows you to change the context of the subtraction \code{-} operator in
-\code{quad_layout()}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The \code{with_quad} function allows you to
+adjust the context in which the subtraction \code{-} operator is applied within
+\code{quad_layout()}. This function wraps objects to specify their target layout
+contexts when using \code{-} in \code{quad_layout()}.
 }

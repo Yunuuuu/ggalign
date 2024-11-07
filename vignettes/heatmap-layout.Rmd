@@ -341,34 +341,49 @@ my_plot +
 Along with the `-` operator, `with_quad()` can be used to modify the
 operated context in `ggheatmap()`/`quad_layout()`.
 
-It accepts three arguments: the object operated on by the `-` operator and the
-operated context, and a single boolean value indicates whether we should operate
-on the main plot of `ggheatmap()`/`quad_layout()`.
+This function accepts three arguments:
+ 1. **x**: The object to be applied using the `-` operator.
+ 2. **position**: A string indicating the annotation stack to target (`top`,
+  `bottom`, `left`, `right`, or combinations thereof). This specifies the
+  context for applying `x`. 
+ 3. **main**: A boolean that determines whether `x` should also apply to the main
+  plot within `ggheatmap()`/`quad_layout()`.
 
-By default, if the current active context in `ggheatmap()`/`quad_layout()` is
-`top` or `bottom`, the operator will also act on the corresponding `bottom` or
-`top` annotation. If the context is `left` or `right`, the operator will also
-act on the `right` or `left` annotation, respectively. If there is no active
-annotation stack, it defaults to `NULL` (this behavior differs in
-`stack_layout()`; refer to `vignette("stack-layout")` for more details).
+By default, when the active context in `ggheatmap()`/`quad_layout()` is set to
+`top` or `bottom`, the `-` operator will apply changes not only to that
+annotation but also to the opposite one (i.e., bottom if top is active, and vice
+versa). The same principle applies to the left and right contexts. In these
+cases, the object will also be applied to the main plot by default unless
+specified otherwise. If no annotation stack is active, `with_quad()` defaults to
+`NULL`. (this behavior differs in `stack_layout()`; refer to
+`vignette("stack-layout")` for more details) 
+
 ```{r}
 my_plot +
     # Change the active layout to the left annotation
     anno_left() -
     # Modify the background of all plots in the left and the opposite annotation
+    # in this way, the `main` argument by default would be `TRUE`
     with_quad(theme(plot.background = element_rect(fill = "red")))
 ```
 
-The second argument can be a string containing one or more of `r
+The `position` argument can be a string containing one or more of `r
 ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack should
-be used as the context. The above example is equivalent to: 
+be used as the context. When the `position` argument is manually set, the
+default value of the main argument will be `FALSE`. The example above is
+equivalent to: 
 ```{r}
 my_plot -
     # Modify the background of all plots in the left and right annotation
-    with_quad(theme(plot.background = element_rect(fill = "red")), "lr")
+    # and the main plot
+    with_quad(
+        theme(plot.background = element_rect(fill = "red")),
+        "lr", main = TRUE
+    )
 ```
 
-If it is `NULL`, it removes any active annotation stack:
+Setting `position` to `NULL` removes any active annotation stack, meaning the
+object will apply to all plots in the layout, including annotation stacks: 
 ```{r}
 my_plot -
     # Modify the background of all plots

@@ -14,14 +14,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-Waiting for complete ...
+Plot options control the action of plots in the layout, they can be set at the
+layout level to define global options for all plots in the layout, or they can
+be applied to individual plots.
+
+ - To set a plot option for a single plot, simply use the `+` operator
+ - To set a plot aption in the layout level, simply use the `-` operator.
 
 Currently, the package provides three actions (each prefixed with `plot_`):
+  - `plot_theme`: Sets the default theme for the plot.
   - `plot_data`: Transforms the plot data. Many functions in this package
   require a specific data format to align observations, `plot_data()` helps
-  reformat data frames as needed. 
+  reformat data frames as needed.
   - `plot_align`: Defines alignment specifications for plots within the layout.
-  - `plot_theme`: Sets the default theme for the plot.
 
 ```{r setup}
 library(ggalign)
@@ -215,7 +220,7 @@ heatmap_collect_all_guides +
     plot_align(guides = "l", free_spaces = "l")
 ```
 
-In `ggheatmap()` and `quad_layout()`, the behavior of the `free_spaces` and
+In `ggheatmap()`/`quad_layout()`, the behavior of the `free_spaces` and
 `free_labs` arguments differs from other arguments in `plot_align()` when
 inheriting from the parent layout:
   - For `top` and `bottom` annotations, it inherits from the left ("l") and

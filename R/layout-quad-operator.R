@@ -1,24 +1,26 @@
-#' Modify `-` Operator Context in `quad_layout()`
+#' Modify Context for the `-` Operator in `quad_layout()`
 #'
 #' @description
-#' `r lifecycle::badge('experimental')` Wrapping objects with `with_quad`
-#' allows you to change the context of the subtraction `-` operator in
-#' `quad_layout()`.
+#' `r lifecycle::badge('experimental')` The `with_quad` function allows you to
+#' adjust the context in which the subtraction `-` operator is applied within
+#' `quad_layout()`. This function wraps objects to specify their target layout
+#' contexts when using `-` in `quad_layout()`.
 #'
-#' @param x Objects to add to the layout using the `-` operator.
-#' @param position A string containing one or more of `r oxford_and(.tlbr)`
-#' indicating which annotation stack should be used as the context. If `NULL`,
-#' the context will default to the [`quad_layout()`] itself. By default,
-#' `waiver()` is used, which triggers the following behavior: If the current
-#' active context in [`quad_layout()`] is `top` or `bottom`, the operator will
-#' also act on the corresponding `bottom` or `top` annotation. If the context is
-#' `left` or `right`, the operator will also act on the `right` or `left`
-#' annotation, respectively. If there is no active annotation stack, it defaults
-#' to `NULL`.
-#' @param main A single boolean value indicates whether to apply `x` for the
-#' main plot.
-#' @return The input object with an additional attribute that specifies the
-#' selected context.
+#' @param x The object to be added to the layout using the `-` operator.
+#' @param position A string specifying one or more positions—
+#' `r oxford_and(.tlbr)`— to indicate the annotation stack context for the
+#' operator [`-`][layout-operator]. By default, `waiver()` is used, which sets
+#' the behavior as follows: if the active context in `quad_layout()` is `top` or
+#' `bottom`, the operator will also apply to the corresponding `bottom` or `top`
+#' annotation, respectively. Similarly, if the context is `left` or `right`, the
+#' operator applies to the `right` or `left` annotation. When no annotation
+#' stack is active, the context defaults to `NULL`.
+#' @param main A single boolean value indicating whether `x` should apply to the
+#' main plot, used only when `position` is not `NULL`. By default, if `position`
+#' is `waiver()` and the active context of `quad_layout()` is an annotation
+#' stack, `main` will be set to `TRUE`; otherwise, it defaults to `FALSE`.
+#' @return The original object with an added attribute that sets the specified
+#' layout context.
 #' @export
 with_quad <- function(x, position = waiver(), main = NULL) {
     assert_layout_position(position)
