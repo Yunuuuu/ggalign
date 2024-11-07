@@ -129,7 +129,7 @@ testthat::test_that("add `anno_init()` works well", {
     expect_no_error(quad_alignb(small_mat) + anno_init("l", small_mat))
 })
 
-testthat::test_that("add `Align` object works well", {
+testthat::test_that("add `align` object works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -152,7 +152,7 @@ testthat::test_that("add `Align` object works well", {
 
     # quad_alignh()
     # for vertical direction, we must manually provide the data frame
-    # we cannot add `Align` object in top and bottom
+    # we cannot add `align` object in top and bottom
     expect_error(quad_alignh(small_mat) +
         anno_init("t", mtcars) +
         align_dendro())
@@ -170,7 +170,7 @@ testthat::test_that("add `Align` object works well", {
 
     # quad_alignv()
     # for horizontal direction, we must manually provide the data frame
-    # we cannot add `Align` object in left and right
+    # we cannot add `align` object in left and right
     expect_error(quad_alignv(small_mat) +
         anno_init("l", mtcars) +
         align_dendro())

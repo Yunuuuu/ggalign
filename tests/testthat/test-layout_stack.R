@@ -36,7 +36,7 @@ testthat::test_that("`stack_free` works well", {
     expect_identical(x@layout, NULL)
 })
 
-testthat::test_that("`stack_align` add `Align` object", {
+testthat::test_that("`stack_align` add `align` object", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))

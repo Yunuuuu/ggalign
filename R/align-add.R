@@ -1,5 +1,5 @@
 ####################################################################
-# Following methods are used to add elements to `Align` object
+# Following methods are used to add elements to `align` object
 align_add <- function(object, align, object_name) UseMethod("align_add")
 
 #' @importFrom ggplot2 ggplot_add

@@ -4,7 +4,7 @@
 \name{align}
 \alias{align}
 \alias{Align}
-\title{Create a New \code{Align} Object}
+\title{Create a New \code{align} Object}
 \usage{
 align(
   align_class,
@@ -83,10 +83,10 @@ warnings as necessary.}
 messages.}
 }
 \value{
-A new \code{Align} object.
+A new \code{align} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} An \code{Align} object interacts with the
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} An \code{align} object interacts with the
 \code{layout} object to reorder or split observations and, in some cases, add plot
 components to the \code{layout}.
 }

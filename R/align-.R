@@ -1,6 +1,6 @@
-#' Create a New `Align` Object
+#' Create a New `align` Object
 #'
-#' `r lifecycle::badge('experimental')` An `Align` object interacts with the
+#' `r lifecycle::badge('experimental')` An `align` object interacts with the
 #' `layout` object to reorder or split observations and, in some cases, add plot
 #' components to the `layout`.
 #'
@@ -56,7 +56,7 @@
 #'  - [`stack_layout()`]: The layout matrix is used as is, aligning all plots
 #'    along a single axis.
 #'
-#' @return A new `Align` object.
+#' @return A new `align` object.
 #'
 #' @examples
 #' align_gg()
