@@ -6,12 +6,22 @@
 #' defined in the `⁠element tree`⁠ argument. [`Splicing`][rlang::splice] a list
 #' is also supported.
 #' @examples
-#' plot_theme()
+#' set.seed(123)
+#' small_mat <- matrix(rnorm(81), nrow = 9)
+#' ggheatmap(small_mat) +
+#'     plot_theme(plot.background = element_rect(fill = "red"))
+#' 
+#' # `plot_theme()` serves as the default theme and will always be
+#' # overridden by any `theme()` settings applied directly to the plot
+#' ggheatmap(small_mat) +
+#'     theme(plot.background = element_rect(fill = "blue")) +
+#'     plot_theme(plot.background = element_rect(fill = "red"))
+#' 
 #' @importFrom ggplot2 theme
 #' @importFrom rlang inject
 #' @export
 plot_theme <- rlang::new_function(
-    # We utilize editor completion by listing all theme arguments here.
+    # We utilize editor completion by listing all `theme()` arguments here.
     # By placing `...` at the beginning, we can check if the first
     # following argument is a `theme()` object rather than individual theme
     # elements.

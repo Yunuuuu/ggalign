@@ -397,7 +397,17 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
 \examples{
-plot_theme()
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+ggheatmap(small_mat) +
+    plot_theme(plot.background = element_rect(fill = "red"))
+
+# `plot_theme()` serves as the default theme and will always be
+# overridden by any `theme()` settings applied directly to the plot
+ggheatmap(small_mat) +
+    theme(plot.background = element_rect(fill = "blue")) +
+    plot_theme(plot.background = element_rect(fill = "red"))
+
 }
 \seealso{
 \code{\link[ggplot2:+.gg]{+.gg()}} and \link[ggplot2]{\%+replace\%},
