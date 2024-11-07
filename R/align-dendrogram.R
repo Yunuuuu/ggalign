@@ -393,7 +393,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 ggplot2::labs(y = "height")
             )
     },
-    draw = function(self, panel, index, extra_panel, extra_index,
+    draw = function(self, plot, panel, index, extra_panel, extra_index,
                     # other argumentds
                     plot_cut_height, center, type, root) {
         direction <- .subset2(self, "direction")
@@ -464,7 +464,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
             )
             node <- rename(node, c(x = "y", y = "x"))
         }
-        plot <- .subset2(self, "plot")
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data in `ggalign` attribute
         plot$data <- structure(node, ggalign = list(edge = edge))

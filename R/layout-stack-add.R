@@ -53,7 +53,7 @@ stack_layout_add.layout_title <- function(object, stack, object_name) {
 ###################################################################
 # `Align` can be added for both heatmap and stack layout
 #' @export
-stack_layout_add.Align <- function(object, stack, object_name) {
+stack_layout_add.align <- function(object, stack, object_name) {
     if (!is.null(active_index <- stack@active) &&
         is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
         plot <- quad_layout_add(object, plot, object_name)
@@ -68,7 +68,7 @@ stack_layout_add.Align <- function(object, stack, object_name) {
         # make layout ----------------------------------------
         # this step the object will act with the stack layout
         # group rows into panel or reorder rows
-        layout <- align_initialize(
+        data <- align_initialize(
             object,
             direction = stack@direction,
             position = .subset2(stack@heatmap, "position"),
@@ -78,12 +78,15 @@ stack_layout_add.Align <- function(object, stack, object_name) {
             layout_nobs = .subset2(layout, "nobs"),
             object_name = object_name
         )
+        # initialize the plot
+        object$plot <- .subset2(data, "plot")
         stack <- stack_add_plot(
             stack, object,
             .subset2(.subset2(object, "active"), "use"),
             .subset2(.subset2(object, "active"), "name"),
             object_name
         )
+        layout <- .subset2(data, "layout")
     }
 
     # set the layout -------------------------------------

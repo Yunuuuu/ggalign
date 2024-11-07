@@ -1,22 +1,24 @@
 #' @importFrom ggplot2 theme element_blank
 #' @importFrom rlang inject
-align_build <- function(x, panel, index, controls, extra_layout) {
-    # we lock the Align object to prevent user from modifying this object
-    # in `$draw` method, we shouldn't do any calculations in `$draw` method
-    x$lock()
-    on.exit(x$unlock())
-
-    # let `align` to determine how to draw
+align_build <- function(align, panel, index, controls, extra_layout) {
+    # let `Align` to determine how to draw
     # 1. add default layer
     # 2. add plot data
-    direction <- .subset2(x, "direction")
-    params <- .subset2(x, "params")
+    object <- .subset2(align, "Object") # `Align` object
+
+    # we lock the Align object to prevent user from modifying this object
+    # in `$draw` method, we shouldn't do any calculations in `$draw` method
+    object$lock()
+    on.exit(object$unlock())
+
+    direction <- .subset2(object, "direction")
+    params <- .subset2(object, "params")
     draw_params <- params[
-        intersect(
+        vec_set_intersect(
             names(params),
             align_method_params(
-                x$draw,
-                c("panel", "index", "extra_panel", "extra_index")
+                object$draw,
+                c("plot", "panel", "index", "extra_panel", "extra_index")
             )
         )
     ]
@@ -27,12 +29,14 @@ align_build <- function(x, panel, index, controls, extra_layout) {
         extra_panel <- .subset2(extra_layout, "panel")
         extra_index <- .subset2(extra_layout, "index")
     }
-    plot <- inject(x$draw(
-        panel, index, extra_panel, extra_index, !!!draw_params
+    plot <- inject(object$draw(
+        .subset2(align, "plot"),
+        panel, index, extra_panel,
+        extra_index, !!!draw_params
     ))
 
     # only when user use the internal facet, we'll setup the limits
-    if (.subset2(x, "facet")) {
+    if (.subset2(align, "facet")) {
         # set up facets
         if (nlevels(panel) > 1L) {
             default_facet <- switch_direction(
@@ -53,7 +57,7 @@ align_build <- function(x, panel, index, controls, extra_layout) {
         }
         layout <- list(
             panel = panel, index = index,
-            labels = .subset2(x, "labels")
+            labels = .subset2(object, "labels")
         )
         plot <- plot + align_melt_facet(plot$facet, default_facet, direction) +
             switch_direction(
@@ -63,7 +67,7 @@ align_build <- function(x, panel, index, controls, extra_layout) {
             )
 
         # set up coord limits to align each observation
-        if (.subset2(x, "limits")) {
+        if (.subset2(align, "limits")) {
             plot <- plot +
                 switch_direction(
                     direction,
@@ -73,12 +77,12 @@ align_build <- function(x, panel, index, controls, extra_layout) {
         }
     }
     # remove axis titles, text, ticks used for alignment
-    if (isTRUE(.subset2(x, "no_axes"))) {
+    if (isTRUE(.subset2(align, "no_axes"))) {
         controls$plot_theme <- .subset2(controls, "plot_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
     plot <- plot_add_controls(plot, controls)
-    list(plot = plot, size = .subset2(x, "size"))
+    list(plot = plot, size = .subset2(align, "size"))
 }
 
 #' @importFrom ggplot2 ggproto

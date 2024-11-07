@@ -45,7 +45,7 @@ quad_layout_add.data.frame <- quad_layout_add.matrix
 
 ##################################################################
 #' @export
-quad_layout_add.Align <- function(object, quad, object_name) {
+quad_layout_add.align <- function(object, quad, object_name) {
     if (is.null(position <- quad@active)) {
         cli::cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",

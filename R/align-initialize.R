@@ -1,8 +1,9 @@
 #' `Align` is an environment, it won't be copied, and will modify in place
 #' @noRd
-align_initialize <- function(object, direction, position,
+align_initialize <- function(align, direction, position,
                              layout_data, layout_panel, layout_index,
                              layout_nobs, object_name) {
+    object <- .subset2(align, "Object")
     object$direction <- direction
     object$position <- position
     input_data <- .subset2(object, "input_data")
@@ -49,11 +50,21 @@ align_initialize <- function(object, direction, position,
     object$params <- params
 
     # prepare the data -------------------------------
-    ans <- align_initialize_layout(
+    layout <- align_initialize_layout(
         object, layout_nobs, direction,
         layout_panel, layout_index, object_name
     )
-    c(vec_set_names(ans, c("panel", "index")), list(nobs = layout_nobs))
+
+    # in the finally, Let us initialize the annotation plot -----
+    # must return a ggplot object
+    ggplot_params <- params[
+        vec_set_intersect(
+            names(params),
+            align_method_params(object$ggplot, character())
+        )
+    ]
+    plot <- inject(object$ggplot(!!!ggplot_params))
+    list(layout = vec_c(layout, list(nobs = layout_nobs)), plot = plot)
 }
 
 #' @importFrom rlang inject
@@ -66,7 +77,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 
     # compute statistics ---------------------------------
     compute_params <- params[
-        intersect(names(params), align_method_params(object$compute))
+        vec_set_intersect(names(params), align_method_params(object$compute))
     ]
     object$statistics <- inject(
         object$compute(layout_panel, layout_index, !!!compute_params)
@@ -74,7 +85,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 
     # make the new layout -------------------------------
     layout_params <- params[
-        intersect(names(params), align_method_params(object$layout))
+        vec_set_intersect(names(params), align_method_params(object$layout))
     ]
     layout <- inject(
         object$layout(layout_panel, layout_index, !!!layout_params)
@@ -146,19 +157,8 @@ align_initialize_layout <- function(object, layout_nobs, direction,
         ), call = call)
     }
 
-    # in the finally, Let us initialize the annotation plot -----
-    # must return a ggplot object
-    ggplot_params <- params[
-        intersect(
-            names(params),
-            align_method_params(object$ggplot, character())
-        )
-    ]
-    p <- inject(object$ggplot(!!!ggplot_params))
-    object$plot <- p
-
     # add annotation -------------------------------------
-    list(new_panel, new_index)
+    list(panel = new_panel, index = new_index)
 }
 
 ############################################################

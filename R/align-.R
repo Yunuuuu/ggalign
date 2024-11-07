@@ -115,49 +115,59 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
         }
     }
 
-    # wrap all elements into this annotation ---------------------
-    ggproto(
-        NULL,
-        align_class,
-        isLock = FALSE,
-        # Following fields will be initialzed when added into the layout
-        # and will be saved and accessed across the plot rendering process
-        statistics = NULL,
-        direction = NULL,
-        position = NULL,
-        plot = NULL,
-        data = NULL,
-        params = NULL,
-        labels = NULL, # the original `vec_names()` of the `input_data`
+    new_align(
+        # wrap all elements into this annotation ---------------------
+        Object = ggproto(
+            NULL,
+            align_class,
+            isLock = FALSE,
+            # Following fields will be initialzed when added into the layout
+            # and will be saved and accessed across the plot rendering process
+            direction = NULL,
+            position = NULL,
+            params = NULL, # `$setup_params` method
+            data = NULL, # $setup_data method
+            statistics = NULL, # `$compute` method
+            labels = NULL, # the original `vec_names()` of the `input_data`
 
-        # user input -------------------------------
-        size = size,
-        # should we allow user switch between different plot with a string name?
-        # Should I remove "name" argument from the user input?
-        active = active,
-        # use `NULL` if this align don't require any data
-        # use `waiver()` to inherit from the layout data
-        input_data = data,
+            # use `NULL` if this align don't require any data
+            # use `waiver()` to inherit from the layout data
+            input_data = data,
+
+            # collect parameters
+            input_params = params[vec_set_intersect(names(params), all)],
+
+            # used to provide error message
+            call = call
+        ),
+        no_axes = no_axes,
         controls = controls,
         facet = facet,
         limits = limits,
-        no_axes = no_axes,
 
-        # collect parameters
-        input_params = params[intersect(names(params), all)],
+        # user input -------------------------------
+        size = size,
 
-        # used to provide error message
-        call = call
+        # should we allow user switch between different plot with a string name?
+        # Should I remove "name" argument from the user input?
+        active = active,
+        plot = NULL
     )
 }
 
-#' @export
-#' @keywords internal
-plot.Align <- function(x, ...) {
-    cli::cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
+#' We create the align entity when initialize the Align object.
+#' @noRd
+new_align <- function(Object, ..., plot = NULL) {
+    structure(list(Object = Object, ..., plot = plot), class = "align")
 }
 
-is_align <- function(x) inherits(x, "Align")
+is_align <- function(x) inherits(x, "align")
+
+#' @export
+#' @keywords internal
+plot.align <- function(x, ...) {
+    cli::cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
+}
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
@@ -185,7 +195,7 @@ Align <- ggproto("Align",
             align_method_params(self$ggplot, character()),
             align_method_params(
                 self$draw,
-                c("panel", "index", "extra_panel", "extra_index")
+                c("plot", "panel", "index", "extra_panel", "extra_index")
             ),
             self$extra_params
         )
@@ -261,7 +271,7 @@ Align <- ggproto("Align",
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
-    draw = function(self, panel, index, extra_panel, extra_index) self$plot
+    draw = function(self, plot, panel, index, extra_panel, extra_index) plot
 )
 
 # Used to lock the `Align` object

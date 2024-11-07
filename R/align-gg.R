@@ -169,7 +169,7 @@ AlignGG <- ggproto("AlignGG", Align,
     },
 
     #' @importFrom stats reorder
-    draw = function(self, panel, index, extra_panel, extra_index) {
+    draw = function(self, plot, panel, index, extra_panel, extra_index) {
         data <- .subset2(self, "data")
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
@@ -204,7 +204,6 @@ AlignGG <- ggproto("AlignGG", Align,
                 order = FALSE
             )
         }
-        plot <- .subset2(self, "plot")
         plot$data <- restore_attr_ggalign(ans, data)
         plot
     }
