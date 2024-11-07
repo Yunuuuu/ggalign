@@ -14,14 +14,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-Plot options control the action of plots in the layout, they can be set at the
-layout level to define global options for all plots in the layout, or they can
-be applied to individual plots.
+Plot options control the behavior of plots within the layout. These options can
+be applied either globally to all plots in the layout or individually to
+specific plots.
 
- - To set a plot option for a single plot, simply use the `+` operator
- - To set a plot aption in the layout level, simply use the `-` operator.
+ - To apply a plot option to a single plot, use the `+` operator.
+ - To set a plot option at the layout level (affecting all plots), use the `-`
+ operator. 
 
-Currently, the package provides three actions (each prefixed with `plot_`):
+The package currently provides three plot actions, each prefixed with `plot_`:
   - `plot_theme`: Sets the default theme for the plot.
   - `plot_data`: Transforms the plot data. Many functions in this package
   require a specific data format to align observations, `plot_data()` helps
@@ -43,9 +44,9 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 `align_gg()`/`ggalign()` requires the specific data format for its operations.
 If you need to transform or filter data for individual `geoms`, you can use the
 `data` argument within each `geom`. However, if you have multiple `geoms` and
-want a consistent transformation applied across all, you can utilize the plot
-action argument `data` in the `align_gg()`/`ggalign()` function. This allows you
-to transform the default data for all subsequent geoms. 
+want a consistent transformation applied across all, you can utilize the
+`plot_data` function. This allows you to transform the default data for all
+subsequent geoms.
 
 ```{r}
 set.seed(1234L)
@@ -59,12 +60,7 @@ ggheatmap(small_mat) +
 ```
 
 # `plot_align`
-The `plot_align()` function defines the behavior of plots within a layout. It
-can be used in the `action` argument of layout functions like
-`quad_anno()`/`quad_active` or `stack_switch()`/`stack_active()` to set global
-actions for all plots in the layout. Additionally, `plot_align()` can be applied
-directly to specific plots through the `action` argument in the
-`align_*()`/`ggfree()` functions, or it can be added directly to a plot.
+The `plot_align()` function defines the align Specifications for plots.
 
 ## guides
 By default, `ggheatmap()` will collect all guide legends on the side from which
@@ -109,6 +105,7 @@ gathered. In the following example, we'll collect the guide legends only on the
 heatmap_collect_all_guides +
     # reset the active context to the heatmap layout
     quad_active() -
+    # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top and bottom side
     plot_align(guides = "tb")
 ```
@@ -118,21 +115,23 @@ You can also apply the `plot_align()` function directly to specific plots:
 heatmap_collect_all_guides +
     # reset the active context to the heatmap layout
     quad_active() -
+    # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top and bottom side
     plot_align(guides = "tb") +
+    # `+` apply it to the current active plot
     # for the heatmap body, we collect guide in the right side
     plot_align(guides = "r")
 ```
 
-As previously mentioned, the annotation is represented as a stack_layout()
-object. The guide legends within the annotation stack are first collected by the
-stack_layout() itself and then passed to the overall heatmap layout for further
-integration. By default, it inherits the guides arguments from the heatmap
-layout. See following example: 
+The guide legends within the annotation stack are first collected by the
+`stack_layout()` itself and then passed to the overall heatmap layout for
+further integration. By default, it inherits the `guides` arguments from the
+heatmap layout. See following example: 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
     # reset the active context to the heatmap layout
     quad_active() -
+    # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top and bottom side
     plot_align(guides = "tb") +
     # we ensure the active context is in the bottom annotation
@@ -149,14 +148,16 @@ from the `top` and `bottom`. In this way, the guide legends of the annotation
 stack will be put around the annotation stack layout.
 
 To override this guide collection behavior for the heatmap annotation, you can
-use the `free_guides` argument of the `quad_anno()` function. This differs from the
-`guides` argument in `plot_align()`, which controls the behavior for the plots
-in the layout. The `free_guides` argument specifies which guide legends from the
-annotation stack layout should be collected by the heatmap layout. 
+use the `free_guides` argument of the `quad_anno()`/`anno_*()` function. This
+differs from the `guides` argument in `plot_align()`, which controls the
+behavior for the plots in the layout. The `free_guides` argument specifies which
+guide legends from the annotation stack layout should be collected by the
+heatmap layout. 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides +
     # reset the active context to the heatmap layout
     quad_active() -
+    # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top and bottom side
     plot_align(guides = "tb") +
     # we also collect guides in the left side for the bottom annotation stack
@@ -167,7 +168,7 @@ heatmap_collect_all_guides +
 ```
 
 >Note: The heatmap layout will only collect guide legends from the annotation
-stack if the stack layout collects its own guides first. 
+stack if the stack layout collects its own guides first.
 
 ## free_spaces
 By default, `ggheatmap()` will align all elements of the plot, which can
@@ -221,7 +222,7 @@ heatmap_collect_all_guides +
 ```
 
 In `ggheatmap()`/`quad_layout()`, the behavior of the `free_spaces` and
-`free_labs` arguments differs from other arguments in `plot_align()` when
+`free_labs` arguments differs from `guides` arguments in `plot_align()` when
 inheriting from the parent layout:
   - For `top` and `bottom` annotations, it inherits from the left ("l") and
   right ("r") axes.
