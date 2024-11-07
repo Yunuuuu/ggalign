@@ -99,17 +99,17 @@
 
     
     
-<p>Plot options control the action of plots in the layout, they can be
-set at the layout level to define global options for all plots in the
-layout, or they can be applied to individual plots.</p>
+<p>Plot options control the behavior of plots within the layout. These
+options can be applied either globally to all plots in the layout or
+individually to specific plots.</p>
 <ul>
-<li>To set a plot option for a single plot, simply use the
-<code>+</code> operator</li>
-<li>To set a plot aption in the layout level, simply use the
-<code>-</code> operator.</li>
+<li>To apply a plot option to a single plot, use the <code>+</code>
+operator.</li>
+<li>To set a plot option at the layout level (affecting all plots), use
+the <code>-</code> operator.</li>
 </ul>
-<p>Currently, the package provides three actions (each prefixed with
-<code>plot_</code>): - <code>plot_theme</code>: Sets the default theme
+<p>The package currently provides three plot actions, each prefixed with
+<code>plot_</code>: - <code>plot_theme</code>: Sets the default theme
 for the plot. - <code>plot_data</code>: Transforms the plot data. Many
 functions in this package require a specific data format to align
 observations, <code><a href="../reference/plot_data.html">plot_data()</a></code> helps reformat data frames as
@@ -132,9 +132,8 @@ data format for its operations. If you need to transform or filter data
 for individual <code>geoms</code>, you can use the <code>data</code>
 argument within each <code>geom</code>. However, if you have multiple
 <code>geoms</code> and want a consistent transformation applied across
-all, you can utilize the plot action argument <code>data</code> in the
-<code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code> function. This allows you
-to transform the default data for all subsequent geoms.</p>
+all, you can utilize the <code>plot_data</code> function. This allows
+you to transform the default data for all subsequent geoms.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
@@ -151,15 +150,8 @@ to transform the default data for all subsequent geoms.</p>
 <h2 id="plot_align">
 <code>plot_align</code><a class="anchor" aria-label="anchor" href="#plot_align"></a>
 </h2>
-<p>The <code><a href="../reference/plot_align.html">plot_align()</a></code> function defines the behavior of plots
-within a layout. It can be used in the <code>action</code> argument of
-layout functions like <code><a href="../reference/quad_active.html">quad_anno()</a></code>/<code>quad_active</code>
-or <code><a href="../reference/stack_switch.html">stack_switch()</a></code>/<code><a href="../reference/stack_switch.html">stack_active()</a></code> to set global
-actions for all plots in the layout. Additionally,
-<code><a href="../reference/plot_align.html">plot_align()</a></code> can be applied directly to specific plots
-through the <code>action</code> argument in the
-<code>align_*()</code>/<code><a href="../reference/free_gg.html">ggfree()</a></code> functions, or it can be
-added directly to a plot.</p>
+<p>The <code><a href="../reference/plot_align.html">plot_align()</a></code> function defines the align
+Specifications for plots.</p>
 <div class="section level3">
 <h3 id="guides">guides<a class="anchor" aria-label="anchor" href="#guides"></a>
 </h3>
@@ -205,6 +197,7 @@ sides:</p>
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
 <span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
@@ -215,21 +208,24 @@ specific plots:</p>
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
 <span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># `+` apply it to the current active plot</span></span>
 <span>    <span class="co"># for the heatmap body, we collect guide in the right side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
-<p>As previously mentioned, the annotation is represented as a
-stack_layout() object. The guide legends within the annotation stack are
-first collected by the stack_layout() itself and then passed to the
-overall heatmap layout for further integration. By default, it inherits
-the guides arguments from the heatmap layout. See following example:</p>
+<p>The guide legends within the annotation stack are first collected by
+the <code><a href="../reference/stack_layout.html">stack_layout()</a></code> itself and then passed to the overall
+heatmap layout for further integration. By default, it inherits the
+<code>guides</code> arguments from the heatmap layout. See following
+example:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
 <span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># we ensure the active context is in the bottom annotation</span></span>
@@ -247,15 +243,16 @@ this way, the guide legends of the annotation stack will be put around
 the annotation stack layout.</p>
 <p>To override this guide collection behavior for the heatmap
 annotation, you can use the <code>free_guides</code> argument of the
-<code><a href="../reference/quad_active.html">quad_anno()</a></code> function. This differs from the
-<code>guides</code> argument in <code><a href="../reference/plot_align.html">plot_align()</a></code>, which
-controls the behavior for the plots in the layout. The
+<code><a href="../reference/quad_active.html">quad_anno()</a></code>/<code>anno_*()</code> function. This differs
+from the <code>guides</code> argument in <code><a href="../reference/plot_align.html">plot_align()</a></code>,
+which controls the behavior for the plots in the layout. The
 <code>free_guides</code> argument specifies which guide legends from the
 annotation stack layout should be collected by the heatmap layout.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
 <span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
 <span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># we also collect guides in the left side for the bottom annotation stack</span></span>
@@ -325,8 +322,8 @@ bottom annotation):</p>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
 <p>In <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the behavior
 of the <code>free_spaces</code> and <code>free_labs</code> arguments
-differs from other arguments in <code><a href="../reference/plot_align.html">plot_align()</a></code> when
-inheriting from the parent layout: - For <code>top</code> and
+differs from <code>guides</code> arguments in <code><a href="../reference/plot_align.html">plot_align()</a></code>
+when inheriting from the parent layout: - For <code>top</code> and
 <code>bottom</code> annotations, it inherits from the left (“l”) and
 right (“r”) axes. - For <code>left</code> and <code>right</code>
 annotations, it inherits from the top (“t”) and bottom (“b”) axes.</p>
