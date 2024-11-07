@@ -330,14 +330,14 @@ the annotation stack.</p>
 <h3 id="addition-operator">Addition operator<a class="anchor" aria-label="anchor" href="#addition-operator"></a>
 </h3>
 <blockquote>
-<p><code>+</code>: adds elements to the active plot in the active layout.
-The <code>+</code> operator is straightforward and should be used as needed. In
+<p><code>+</code>: adds elements to the active plot in the active layout.</p>
+</blockquote>
+<p>The <code>+</code> operator is straightforward and should be used as needed. In
 <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, four nested layouts are available for
 annotations: <code>top</code>, <code>left</code>, <code>bottom</code>, and <code>right</code>. If no active annotation is
 set, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> treat itself as the active layout. Since
 there is only one main plot in the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the main plot
 is always treated as the active plot in this context.</p>
-</blockquote>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Initialize the heatmap; by default, no active annotation will be set.</span></span>
 <span><span class="co"># The active layout is the heatmap layout, and the active plot in the layout is</span></span>
@@ -360,15 +360,15 @@ is always treated as the active plot in this context.</p>
 <h3 id="logical-and-operator">logical AND operator<a class="anchor" aria-label="anchor" href="#logical-and-operator"></a>
 </h3>
 <blockquote>
-<p><code>&amp;</code>: applies elements to all plots in the layout.
-The <code>&amp;</code> operator works similarly to <code>patchwork</code>, applying an element across all
+<p><code>&amp;</code>: applies elements to all plots in the layout.</p>
+</blockquote>
+<p>The <code>&amp;</code> operator works similarly to <code>patchwork</code>, applying an element across all
 plots in a layout. If the element is a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, it modifies the layout’s
 theme, which includes settings for guides, titles, subtitles, captions, margins,
 panel borders, and backgrounds. This <code>theme</code> is provided as an input argument in
 functions like <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>. Since <code>&amp;</code> has lower precedence
 than <code>+</code>, it’s generally best to use it at the end of an expression or wrap it
 in parentheses when needed.</p>
-</blockquote>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Initialize the heatmap with color scales and annotations.</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
