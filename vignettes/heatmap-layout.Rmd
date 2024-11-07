@@ -367,9 +367,9 @@ my_plot +
     with_quad(theme(plot.background = element_rect(fill = "red")))
 ```
 
-The `position` argument can be a string containing one or more of `r
-ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack should
-be used as the context. When the `position` argument is manually set, the
+The `position` argument can be a string containing one or more of 
+`r ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack
+should be used as the context. When the `position` argument is manually set, the
 default value of the main argument will be `FALSE`. The example above is
 equivalent to: 
 ```{r}
