@@ -191,17 +191,20 @@ annotations are handled by a <code><a href="../reference/stack_layout.html">stac
 <code><a href="../reference/stack_align.html">stack_align()</a></code>, which aligns the observations. This object can hold multiple
 plots and can be positioned at the top, left, bottom, or right of the heatmap.</p>
 <p>Note that <code>ggalign</code> use the concept of <code>"number of observations"</code> in the
-<a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vctrs</a> package. When aligning
-the observations, you must ensure the number of observations is equal. For
-column annotations, the layout matrix will be transposed before use. This is
-necessary because column annotations use heatmap columns as observations, but we
-need rows.</p>
+<a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vctrs</a> package or <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code>
+function. When aligning the observations, you must ensure the number of
+observations is equal. For column annotations, the layout matrix will be
+transposed before use. This is necessary because column annotations use heatmap
+columns as observations, but we need rows.</p>
+<div class="section level3">
+<h3 id="quad_anno">
+<code>quad_anno()</code><a class="anchor" aria-label="anchor" href="#quad_anno"></a>
+</h3>
 <p>By default, <code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> do not initialize an active
 context, which means that all additions are directed within the heatmap body.
 You can use <code><a href="../reference/quad_active.html">quad_anno()</a></code> to set the active context, directing all subsequent
-additions to the specified annotation position. To remove the active context and
-redirect additions back to the heatmap body, you can use <code><a href="../reference/quad_active.html">quad_active()</a></code>. The
-<code><a href="../reference/quad_active.html">quad_anno()</a></code> function has the following aliases:</p>
+additions to the specified annotation position. The <code><a href="../reference/quad_active.html">quad_anno()</a></code> function has
+the following aliases:</p>
 <ul>
 <li>
 <code>anno_top</code>: A special case of <code>quad_anno</code> with <code>position = "top"</code>.</li>
@@ -212,14 +215,6 @@ redirect additions back to the heatmap body, you can use <code><a href="../refer
 <li>
 <code>anno_right</code>: A special case of <code>quad_anno</code> with <code>position = "right"</code>.</li>
 </ul>
-<p>We also provide <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> which integrates <code><a href="../reference/quad_active.html">quad_active()</a></code> and
-<code><a href="../reference/quad_active.html">quad_anno()</a></code> into one function for ease of use. Feel free to use any of these
-functions to streamline your annotation process.</p>
-<p>You may wonder about the prefix <code>quad_</code>. The <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function is a
-specialized version of <code><a href="../reference/quad_layout.html">quad_layout()</a></code>, designed to simplify the creation of
-heatmap plots by integrating essential elements for a standard heatmap layout.
-Both <code><a href="../reference/quad_active.html">quad_anno()</a></code> and <code><a href="../reference/quad_active.html">quad_active()</a></code> are functions designed for
-<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
 <p>The annotations allows for custom layout adjustments and the addition of various
 plot types. In the following example, <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code> is used to group the
 columns into three panels. It doesn’t matter if this is added to the top or
@@ -259,6 +254,63 @@ context and sets itself as the active plot in the annotation stack.</li>
 within the annotation stack, here, it means the <code><a href="../reference/align_dendro.html">align_dendro()</a></code> plot.</li>
 </ul>
 </div>
+<div class="section level3">
+<h3 id="quad_active">
+<code>quad_active()</code><a class="anchor" aria-label="anchor" href="#quad_active"></a>
+</h3>
+<p>To remove the active context and redirect additions back to the heatmap body,
+you can use <code><a href="../reference/quad_active.html">quad_active()</a></code>.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the active context to the top annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we split the observations into 3 groups by kmeans</span></span>
+<span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># remove any active annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># set fill color scale for the heatmap body</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="quad_switchhmanno">
+<code>quad_switch()</code>/<code>hmanno()</code><a class="anchor" aria-label="anchor" href="#quad_switchhmanno"></a>
+</h3>
+<p>We also provide <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> (heatmap annotation) which integrates
+<code><a href="../reference/quad_active.html">quad_active()</a></code> and <code><a href="../reference/quad_active.html">quad_anno()</a></code> into one function for ease of use. Feel free
+to use any of these functions to streamline your annotation process.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the active context to the top annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_switch.html">quad_switch</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we split the observations into 3 groups by kmeans</span></span>
+<span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># remove any active annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_switch.html">quad_switch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># set fill color scale for the heatmap body</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the active context to the top annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_switch.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we split the observations into 3 groups by kmeans</span></span>
+<span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># remove any active annotation</span></span>
+<span>    <span class="fu"><a href="../reference/quad_switch.html">hmanno</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># set fill color scale for the heatmap body</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
+<p>You may wonder about the prefix <code>quad_</code>. The <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function is a
+specialized version of <code><a href="../reference/quad_layout.html">quad_layout()</a></code>, designed to simplify the creation of
+heatmap plots by integrating essential elements for a standard heatmap layout.
+Both <code><a href="../reference/quad_active.html">quad_anno()</a></code> and <code><a href="../reference/quad_active.html">quad_active()</a></code> are functions designed for
+<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
+</div>
+</div>
 <div class="section level2">
 <h2 id="plot-size">Plot Size<a class="anchor" aria-label="anchor" href="#plot-size"></a>
 </h2>
@@ -267,23 +319,23 @@ within the annotation stack, here, it means the <code><a href="../reference/alig
 </h3>
 <p>You can specify the relative sizes of the heatmap body using the <code>width</code> and
 <code>height</code> arguments in the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
 <p>Alternatively, the <code><a href="../reference/quad_active.html">quad_active()</a></code> function allows you to control the heatmap
 body sizes.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="annotation-stack-size">Annotation Stack Size<a class="anchor" aria-label="anchor" href="#annotation-stack-size"></a>
@@ -292,21 +344,21 @@ body sizes.</p>
 size. The <code>size</code> argument controls the relative width (for left and right
 annotations) or height (for top and bottom annotations) of the whole annotation
 stack.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
 <p>You can also specify it as an absolute size using <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit()</a></code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="single-plot-size">Single Plot Size<a class="anchor" aria-label="anchor" href="#single-plot-size"></a>
@@ -315,7 +367,7 @@ stack.</p>
 a <code>size</code> argument to control the relative <code>width</code> (for left and right
 annotations) or <code>height</code> (for top and bottom annotations) of the single plot in
 the annotation stack.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -326,224 +378,13 @@ the annotation stack.</p>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="operators">Operators<a class="anchor" aria-label="anchor" href="#operators"></a>
-</h2>
-<div class="section level3">
-<h3 id="addition-operator">Addition operator<a class="anchor" aria-label="anchor" href="#addition-operator"></a>
-</h3>
-<blockquote>
-<p><code>+</code>: adds elements to the active plot in the active layout.</p>
-</blockquote>
-<p>The <code>+</code> operator is straightforward and should be used as needed. In
-<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, four nested layouts are available for
-annotations: <code>top</code>, <code>left</code>, <code>bottom</code>, and <code>right</code>. If no active annotation is
-set, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> treat itself as the active layout. Since
-there is only one main plot in the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the main plot
-is always treated as the active plot in this context.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Initialize the heatmap; by default, no active annotation will be set.</span></span>
-<span><span class="co"># The active layout is the heatmap layout, and the active plot in the layout is</span></span>
-<span><span class="co"># the main plot.</span></span>
-<span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add elements to the main plot</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the left annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add a dendrogram in the left annotation</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the right annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add a dendrogram in the right annotation</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
-</div>
-<div class="section level3">
-<h3 id="logical-and-operator">logical AND operator<a class="anchor" aria-label="anchor" href="#logical-and-operator"></a>
-</h3>
-<blockquote>
-<p><code>&amp;</code>: applies elements to all plots in the layout.</p>
-</blockquote>
-<p>The <code>&amp;</code> operator works similarly to <code>patchwork</code>, applying an element across all
-plots in a layout. If the element is a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, it modifies the layout’s
-theme, which includes settings for guides, titles, subtitles, captions, margins,
-panel borders, and backgrounds. This <code>theme</code> is provided as an input argument in
-functions like <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>. Since <code>&amp;</code> has lower precedence
-than <code>+</code>, it’s generally best to use it at the end of an expression or wrap it
-in parentheses when needed.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Initialize the heatmap with color scales and annotations.</span></span>
-<span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add a dendrogram in the left annotation and split the dendrogram into 3 groups</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add a dendrogram in the right annotation and split the dendrogram into 3 groups</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="co"># Set color scale for all plots</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
-</div>
-<div class="section level3">
-<h3 id="subtraction-operator">Subtraction operator<a class="anchor" aria-label="anchor" href="#subtraction-operator"></a>
-</h3>
-<blockquote>
-<p><code>-</code>: Adds elements to all plots in the active layout, as well as to any nested
-layouts within it (this behavior differs in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>; refer to
-<code><a href="../articles/stack-layout.html">vignette("stack-layout")</a></code> for more details).</p>
-</blockquote>
-<p>Using <code>-</code> might seem unintuitive if you think of the operator as <code>"subtract"</code>,
-the underlying reason is that <code>-</code> is the only operator in the same precedence
-group as <code>+</code>, allowing for seamless combination with <code>+</code>.</p>
-<p>If the active layout is the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, <code>-</code> functions
-similarly to <code>&amp;</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Initialize the heatmap with color scales and annotations.</span></span>
-<span><span class="va">my_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Remove any active annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># Set color scale for all plots, since the active layout is the `ggheatmap()`/`quad_layout()`</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># No need for parentheses; we can directly add other elements</span></span>
-<span>    <span class="co"># Change the active layout to the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># Add a dendrogram in the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">my_plot</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-18-1.png"><!-- --></p>
-<p>If the active layout is not the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the <code>-</code> operator
-will only add elements to all plots in the active annotation stack:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the left annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># Modify the background of all plots in the left annotation</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-19-1.png"><!-- --></p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="with_quad">
-<code>with_quad</code><a class="anchor" aria-label="anchor" href="#with_quad"></a>
-</h2>
-<p>Along with the <code>-</code> operator, <code><a href="../reference/with_quad.html">with_quad()</a></code> can be used to modify the
-operated context in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
-<p>This function accepts three arguments:
-1. <strong>x</strong>: The object to be applied using the <code>-</code> operator.
-2. <strong>position</strong>: A string indicating the annotation stack to target (<code>top</code>,
-<code>bottom</code>, <code>left</code>, <code>right</code>, or combinations thereof). This specifies the
-context for applying <code>x</code>.
-3. <strong>main</strong>: A boolean that determines whether <code>x</code> should also apply to the main
-plot within <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
-<p>By default, when the active context in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> is set to
-<code>top</code> or <code>bottom</code>, the <code>-</code> operator will apply changes not only to that
-annotation but also to the opposite one (i.e., bottom if top is active, and vice
-versa). The same principle applies to the left and right contexts. In these
-cases, the object will also be applied to the main plot by default unless
-specified otherwise. If no annotation stack is active, <code><a href="../reference/with_quad.html">with_quad()</a></code> defaults to
-<code>NULL</code>. (this behavior differs in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>; refer to
-<code><a href="../articles/stack-layout.html">vignette("stack-layout")</a></code> for more details)</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the left annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># Modify the background of all plots in the left and the opposite annotation</span></span>
-<span>    <span class="co"># in this way, the `main` argument by default would be `TRUE`</span></span>
-<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-20-1.png"><!-- --></p>
-<p>The <code>position</code> argument can be a string containing one or more of
-<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>, indicating which annotation stack
-should be used as the context. When the <code>position</code> argument is manually set, the
-default value of the main argument will be <code>FALSE</code>. The example above is
-equivalent to:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">-</span></span>
-<span>    <span class="co"># Modify the background of all plots in the left and right annotation</span></span>
-<span>    <span class="co"># and the main plot</span></span>
-<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        <span class="st">"lr"</span>, main <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-21-1.png"><!-- --></p>
-<p>Setting <code>position</code> to <code>NULL</code> removes any active annotation stack, meaning the
-object will apply to all plots in the layout, including annotation stacks:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">-</span></span>
-<span>    <span class="co"># Modify the background of all plots</span></span>
-<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-22-1.png"><!-- --></p>
-</div>
-<div class="section level2">
-<h2 id="plot-options">Plot options<a class="anchor" aria-label="anchor" href="#plot-options"></a>
-</h2>
-<p>Plot options control the action of plots in the layout. This package allows a
-flexible way to set these options. While we’ll dive deeper into plot options in
-<code><a href="../articles/plot-options.html">vignette("plot-options")</a></code>, I wanted to introduce it here, as they rely heavily
-on the <code>-</code> operator.</p>
-<blockquote>
-<p>Plot options inherit properties from parent layout options hierarchically.</p>
-</blockquote>
-<p>All plot options can be set at the layout level to define global options, or
-they can be applied to individual plots. Here, we’ll take <code><a href="../reference/plot_theme.html">plot_theme()</a></code> as a
-example since it is just a enhanced <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> which sets the default theme for
-the plot.</p>
-<p>To set a plot option for a single plot, simply use the <code>+</code> operator:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># change the default theme of the dendrogram in the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-23-1.png"><!-- --></p>
-<p>Note that <code><a href="../reference/plot_theme.html">plot_theme()</a></code> serves as the default theme and will always be
-overridden by any <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> settings applied directly to the plot. The default
-theme (<code><a href="../reference/plot_theme.html">plot_theme()</a></code>) is applied first, followed by any specific <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>
-settings, even if <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> is added before <code><a href="../reference/plot_theme.html">plot_theme()</a></code>.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># change the plot theme of the dendrogram in the top annotation</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># change the default theme of the dendrogram in the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-24-1.png"><!-- --></p>
-<p>By using the <code>-</code> operator with plot options, we apply them directly to the
-active layout. Additionally, we can combine <code><a href="../reference/with_quad.html">with_quad()</a></code> with the <code>-</code> operator.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_plot</span> <span class="op">+</span></span>
-<span>    <span class="co"># Change the active layout to the top annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">.names</span>, <span class="va">value</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">.names</span><span class="op">)</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">rowSums</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># Change the default theme of the top annotation</span></span>
-<span>    <span class="co"># All plots in the top annotation will inherit this default theme</span></span>
-<span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-25-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
