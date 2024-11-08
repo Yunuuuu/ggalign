@@ -72,6 +72,8 @@ A single number or string of the plot elements in the stack layout. If \code{NUL
 An object that can be added to \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 \code{quad_switch()} integrates \code{\link[=quad_active]{quad_active()}} and \code{\link[=quad_anno]{quad_anno()}} into one
 function for ease of use. This function allows you to quickly change the
 active context of the \code{\link[=quad_layout]{quad_layout()}} and its annotations.

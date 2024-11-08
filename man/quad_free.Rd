@@ -74,6 +74,12 @@ added to a layout.}
 \code{\link[grid:unit]{unit}} object.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+These functions arrange plots around a main plot, allowing for flexible
+alignment of observations in different directions. \code{ggside} is an alias for
+\code{quad_free}.
+
 \itemize{
 \item \code{quad_free}/\code{ggside}: Never align observations.
 \item \code{quad_alignh}: Align observations in the horizontal direction.
@@ -81,11 +87,6 @@ added to a layout.}
 \item \code{quad_alignb}: Align observations in both horizontal and vertical
 directions.
 }
-}
-\details{
-These functions arrange plots around a main plot, allowing for flexible
-alignment of observations in different directions. \code{ggside} is an alias for
-\code{quad_free}.
 }
 \section{ggplot2 specification}{
 

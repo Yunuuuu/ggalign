@@ -1,6 +1,8 @@
 #' Determine the Active Context of Quad-Layout
 #'
 #' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' - `quad_active`: Sets the active context to the `r rd_quad()` itself.
 #' - `quad_anno`: Sets the active context to the specified annotation stack
 #'   based on the `position` argument.
@@ -124,6 +126,11 @@ quad_switch_anno <- function(position, size, free_guides, what,
 
 #' Initialize Quad-Layout Annotation
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#' Initializes an annotation stack with a user-specified data.
+#'
 #' @param position `r rd_quad_position("initialized")`.
 #' @param data Default dataset to use for the annotation stack. If not
 #' specified, a dataset must be provided for each plot added to the layout.
@@ -158,6 +165,8 @@ anno_init <- function(position, data = waiver(), ...) {
 
 #' @inherit quad_active title return
 #' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' `quad_switch()` integrates [`quad_active()`] and [`quad_anno()`] into one
 #' function for ease of use. This function allows you to quickly change the
 #' active context of the [quad_layout()] and its annotations.

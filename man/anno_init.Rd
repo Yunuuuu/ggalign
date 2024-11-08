@@ -32,5 +32,7 @@ data into a data frame.
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 }
 \description{
-Initialize Quad-Layout Annotation
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Initializes an annotation stack with a user-specified data.
 }

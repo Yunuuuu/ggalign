@@ -46,6 +46,7 @@ A single number or string of the plot elements in the stack layout. If \code{NUL
 An object that can be added to \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 \itemize{
 \item \code{quad_active}: Sets the active context to the \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} itself.
 \item \code{quad_anno}: Sets the active context to the specified annotation stack

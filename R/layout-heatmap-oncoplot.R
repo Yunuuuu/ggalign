@@ -1,6 +1,8 @@
 #' Create `OncoPrint` Visualizations from Genetic Alteration Data
 #'
 #' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' The `ggoncoplot()` function generates `oncoPrint` visualizations that display
 #' genetic alterations in a matrix format. This function is especially useful
 #' for visualizing complex genomic data, such as mutations, copy number

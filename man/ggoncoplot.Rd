@@ -67,6 +67,8 @@ added to a layout.}
 A \code{HeatmapLayout} object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The \code{ggoncoplot()} function generates \code{oncoPrint} visualizations that display
 genetic alterations in a matrix format. This function is especially useful
 for visualizing complex genomic data, such as mutations, copy number

@@ -60,6 +60,9 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 ##########################################################
 #' Arrange Plots in the Quad-Side of a main plot
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' These functions arrange plots around a main plot, allowing for flexible
 #' alignment of observations in different directions. `ggside` is an alias for
 #' `quad_free`.

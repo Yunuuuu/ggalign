@@ -1,6 +1,9 @@
 #########################################################
 #' Determine the active context of stack layout
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' `stack_active` is an alias for `stack_switch()`, which sets `what = NULL` by
 #' default, with additional arguments for backward compatibility.
 #'

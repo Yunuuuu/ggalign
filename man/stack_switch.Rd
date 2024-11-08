@@ -50,6 +50,8 @@ into the \code{\link[=stack_layout]{stack_layout()}}.}
 A \code{stack_active} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 \code{stack_active} is an alias for \code{stack_switch()}, which sets \code{what = NULL} by
 default, with additional arguments for backward compatibility.
 }
