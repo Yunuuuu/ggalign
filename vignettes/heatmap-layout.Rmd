@@ -133,7 +133,8 @@ context, which means that all additions are directed within the heatmap body.
 You can use `quad_anno()` to set the active context, directing all subsequent
 additions to the specified annotation position. To remove the active context and
 redirect additions back to the heatmap body, you can use `quad_active()`. The
-`quad_anno()` function has the following aliases: 
+`quad_anno()` function has the following aliases:
+
   - `anno_top`: A special case of `quad_anno` with `position = "top"`.
   - `anno_left`: A special case of `quad_anno` with `position = "left"`.
   - `anno_bottom`: A special case of `quad_anno` with `position = "bottom"`.
