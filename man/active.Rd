@@ -19,12 +19,14 @@ contexts through the \code{what} argument in functions like
 \code{\link[=quad_anno]{quad_anno()}}/\code{\link[=stack_switch]{stack_switch()}}.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} These settings control the behavior of
-the plot when added to a layout, as well as the arrangement of individual
-plot areas within the layout. By default, the active context is set only for
-functions that add plot areas. This approach allows users to seamlessly add
-other \code{ggplot2} elements—such as \code{geoms}, \code{stats}, \code{scales}, or \code{themes}—to
-the current plot area. The default ordering of plot areas is from top to
-bottom or from left to right, depending on the layout orientation. However,
-users can customize this order using the \code{order} argument.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+These settings control the behavior of the plot when added to a layout, as
+well as the arrangement of individual plot areas within the layout. By
+default, the active context is set only for functions that add plot areas.
+This approach allows users to seamlessly add other \code{ggplot2} elements—such as
+\code{geoms}, \code{stats}, \code{scales}, or \code{themes}—to the current plot area. The default
+ordering of plot areas is from top to bottom or from left to right, depending
+on the layout orientation. However, users can customize this order using the
+\code{order} argument.
 }

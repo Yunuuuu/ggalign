@@ -1,10 +1,12 @@
 #' Add ggplot to layout
 #'
-#' `r lifecycle::badge('experimental')` The `free_gg()` function allows you to
-#' incorporate a ggplot object into your layout. Unlike `align_gg()`, which
-#' aligns every axis value precisely, `free_gg()` focuses more on layout
-#' integration without enforcing strict axis alignment. `ggfree()` is an alias
-#' for `free_gg`.
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#' The `free_gg()` function allows you to incorporate a ggplot object into your
+#' layout. Unlike `align_gg()`, which aligns every axis value precisely,
+#' `free_gg()` focuses more on layout integration without enforcing strict axis
+#' alignment. `ggfree()` is an alias for `free_gg`.
 #'
 #' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
 #' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]

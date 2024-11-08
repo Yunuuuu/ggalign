@@ -25,11 +25,12 @@ added to a layout.}
 A \code{free_gg} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The \code{free_gg()} function allows you to
-incorporate a ggplot object into your layout. Unlike \code{align_gg()}, which
-aligns every axis value precisely, \code{free_gg()} focuses more on layout
-integration without enforcing strict axis alignment. \code{ggfree()} is an alias
-for \code{free_gg}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+The \code{free_gg()} function allows you to incorporate a ggplot object into your
+layout. Unlike \code{align_gg()}, which aligns every axis value precisely,
+\code{free_gg()} focuses more on layout integration without enforcing strict axis
+alignment. \code{ggfree()} is an alias for \code{free_gg}.
 }
 \examples{
 ggheatmap(matrix(rnorm(56), nrow = 7)) +

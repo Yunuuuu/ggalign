@@ -28,8 +28,10 @@ The original object with an added attribute that sets the specified
 layout context.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The \code{with_quad} function allows you to
-adjust the context in which the subtraction \code{-} operator is applied within
-\code{quad_layout()}. This function wraps objects to specify their target layout
-contexts when using \code{-} in \code{quad_layout()}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+The \code{with_quad} function allows you to adjust the context in which the
+subtraction \code{-} operator is applied within \code{quad_layout()}. This function
+wraps objects to specify their target layout contexts when using \code{-} in
+\code{quad_layout()}.
 }

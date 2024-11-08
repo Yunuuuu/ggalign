@@ -86,9 +86,10 @@ messages.}
 A new \code{align} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} An \code{align} object interacts with the
-\code{layout} object to reorder or split observations and, in some cases, add plot
-components to the \code{layout}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+An \code{align} object interacts with the \code{layout} object to reorder or split
+observations and, in some cases, add plot components to the \code{layout}.
 }
 \details{
 Each of the \verb{Align*} objects is just a \code{\link[ggplot2:ggproto]{ggproto()}}

@@ -1,8 +1,9 @@
 #' Align Specifications in the Layout
 #'
 #' @description
-#' `r lifecycle::badge('experimental')` The `plot_align()` function defines the
-#' align Specifications for plots.
+#' `r lifecycle::badge('experimental')`
+#'
+#' The `plot_align()` function defines the align Specifications for plots.
 #'
 #' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
 #' which side of guide legends should be collected. Defaults to

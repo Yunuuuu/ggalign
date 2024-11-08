@@ -1,10 +1,12 @@
 #' Modify Context for the `-` Operator in `quad_layout()`
 #'
 #' @description
-#' `r lifecycle::badge('experimental')` The `with_quad` function allows you to
-#' adjust the context in which the subtraction `-` operator is applied within
-#' `quad_layout()`. This function wraps objects to specify their target layout
-#' contexts when using `-` in `quad_layout()`.
+#' `r lifecycle::badge('experimental')`
+#'
+#' The `with_quad` function allows you to adjust the context in which the
+#' subtraction `-` operator is applied within `quad_layout()`. This function
+#' wraps objects to specify their target layout contexts when using `-` in
+#' `quad_layout()`.
 #'
 #' @param x The object to be added to the layout using the `-` operator.
 #' @param position A string specifying one or more positions—
