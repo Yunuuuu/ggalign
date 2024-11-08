@@ -149,7 +149,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(theme)", fun),
-            I("`-` method"),
+            "plot_theme()",
             env = call
         )
     }

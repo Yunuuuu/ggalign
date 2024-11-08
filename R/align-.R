@@ -37,7 +37,7 @@
 #' @param plot_data `r lifecycle::badge("deprecated")` Please use
 #' [`plot_data()`] function instead.
 #' @param theme `r lifecycle::badge("deprecated")` Please use
-#' [`-`][layout-operator] method instead.
+#' [`plot_theme()`] function instead.
 #' @param free_labs `r lifecycle::badge("deprecated")` Please use
 #' [`plot_align()`] function instead.
 #' @param check.param Logical; if `TRUE`, checks parameters and provides

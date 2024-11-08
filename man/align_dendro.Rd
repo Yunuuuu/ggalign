@@ -126,7 +126,7 @@ added to a layout.}
 \code{\link[=plot_data]{plot_data()}} function instead.}
 
 \item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=layout-operator]{-}} method instead.}
+\code{\link[=plot_theme]{plot_theme()}} function instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{\link[=plot_align]{plot_align()}} function instead.}
