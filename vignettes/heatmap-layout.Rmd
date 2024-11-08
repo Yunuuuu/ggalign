@@ -122,33 +122,23 @@ annotations are handled by a `stack_layout()` object, specifically
 plots and can be positioned at the top, left, bottom, or right of the heatmap. 
 
 Note that `ggalign` use the concept of `"number of observations"` in the
-[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package. When aligning
-the observations, you must ensure the number of observations is equal. For
-column annotations, the layout matrix will be transposed before use. This is
-necessary because column annotations use heatmap columns as observations, but we
-need rows.
+[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package or `NROW()`
+function. When aligning the observations, you must ensure the number of
+observations is equal. For column annotations, the layout matrix will be
+transposed before use. This is necessary because column annotations use heatmap
+columns as observations, but we need rows.
 
+## `quad_anno()`
 By default, `heatmap_layout()`/`ggheatmap()` do not initialize an active
 context, which means that all additions are directed within the heatmap body.
 You can use `quad_anno()` to set the active context, directing all subsequent
-additions to the specified annotation position. To remove the active context and
-redirect additions back to the heatmap body, you can use `quad_active()`. The
-`quad_anno()` function has the following aliases:
+additions to the specified annotation position. The `quad_anno()` function has
+the following aliases:
 
   - `anno_top`: A special case of `quad_anno` with `position = "top"`.
   - `anno_left`: A special case of `quad_anno` with `position = "left"`.
   - `anno_bottom`: A special case of `quad_anno` with `position = "bottom"`.
   - `anno_right`: A special case of `quad_anno` with `position = "right"`.
-
-We also provide `quad_switch()`/`hmanno()` which integrates `quad_active()` and
-`quad_anno()` into one function for ease of use. Feel free to use any of these
-functions to streamline your annotation process.
-
-You may wonder about the prefix `quad_`. The `ggheatmap()` function is a
-specialized version of `quad_layout()`, designed to simplify the creation of
-heatmap plots by integrating essential elements for a standard heatmap layout.
-Both `quad_anno()` and `quad_active()` are functions designed for
-`quad_layout()`. 
 
 The annotations allows for custom layout adjustments and the addition of various
 plot types. In the following example, `align_kmeans()` is used to group the
@@ -186,6 +176,55 @@ In this example:
  context and sets itself as the active plot in the annotation stack. 
  - `geom_point(aes(color = factor(branch)))` is then added to this active plot
  within the annotation stack, here, it means the `align_dendro()` plot.
+
+## `quad_active()`
+To remove the active context and redirect additions back to the heatmap body,
+you can use `quad_active()`. 
+```{r}
+ggheatmap(small_mat) +
+    # we set the active context to the top annotation
+    anno_top() +
+    # we split the observations into 3 groups by kmeans
+    align_kmeans(3L) +
+    # remove any active annotation
+    quad_active() +
+    # set fill color scale for the heatmap body
+    scale_fill_viridis_c()
+```
+
+## `quad_switch()`/`hmanno()`
+We also provide `quad_switch()`/`hmanno()` (heatmap annotation) which integrates
+`quad_active()` and `quad_anno()` into one function for ease of use. Feel free
+to use any of these functions to streamline your annotation process.
+```{r}
+ggheatmap(small_mat) +
+    # we set the active context to the top annotation
+    quad_switch("t") +
+    # we split the observations into 3 groups by kmeans
+    align_kmeans(3L) +
+    # remove any active annotation
+    quad_switch() +
+    # set fill color scale for the heatmap body
+    scale_fill_viridis_c()
+```
+
+```{r}
+ggheatmap(small_mat) +
+    # we set the active context to the top annotation
+    hmanno("t") +
+    # we split the observations into 3 groups by kmeans
+    align_kmeans(3L) +
+    # remove any active annotation
+    hmanno() +
+    # set fill color scale for the heatmap body
+    scale_fill_viridis_c()
+```
+
+You may wonder about the prefix `quad_`. The `ggheatmap()` function is a
+specialized version of `quad_layout()`, designed to simplify the creation of
+heatmap plots by integrating essential elements for a standard heatmap layout.
+Both `quad_anno()` and `quad_active()` are functions designed for
+`quad_layout()`. 
 
 # Plot Size
 ## Heatmap Body Size
@@ -244,200 +283,6 @@ ggheatmap(small_mat) +
         stat = "identity", orientation = "y"
     ) +
     scale_fill_brewer(palette = "Set1", guide = "none")
-```
-
-# Operators
-## Addition operator
-> `+`: adds elements to the active plot in the active layout.
-
-The `+` operator is straightforward and should be used as needed. In
-`ggheatmap()`/`quad_layout()`, four nested layouts are available for
-annotations: `top`, `left`, `bottom`, and `right`. If no active annotation is
-set, `ggheatmap()`/`quad_layout()` treat itself as the active layout. Since
-there is only one main plot in the `ggheatmap()`/`quad_layout()`, the main plot
-is always treated as the active plot in this context.
-```{r}
-# Initialize the heatmap; by default, no active annotation will be set.
-# The active layout is the heatmap layout, and the active plot in the layout is
-# the main plot.
-ggheatmap(small_mat) +
-    # Add elements to the main plot
-    scale_fill_viridis_c() +
-    # Change the active layout to the left annotation
-    anno_left(size = 0.2) +
-    # Add a dendrogram in the left annotation
-    align_dendro() +
-    # Change the active layout to the right annotation
-    anno_right(size = 0.2) +
-    # Add a dendrogram in the right annotation
-    align_dendro()
-```
-
-## logical AND operator
-> `&`: applies elements to all plots in the layout.
-
-The `&` operator works similarly to `patchwork`, applying an element across all
-plots in a layout. If the element is a `theme()`, it modifies the layout's
-theme, which includes settings for guides, titles, subtitles, captions, margins,
-panel borders, and backgrounds. This `theme` is provided as an input argument in
-functions like `ggheatmap()`/`quad_layout()`. Since `&` has lower precedence
-than `+`, it's generally best to use it at the end of an expression or wrap it
-in parentheses when needed. 
-```{r}
-# Initialize the heatmap with color scales and annotations.
-ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
-    anno_left(size = 0.2) +
-    # Add a dendrogram in the left annotation and split the dendrogram into 3 groups
-    align_dendro(aes(color = branch), k = 3L) +
-    anno_right(size = 0.2) +
-    # Add a dendrogram in the right annotation and split the dendrogram into 3 groups
-    align_dendro(aes(color = branch), k = 3L) &
-    # Set color scale for all plots
-    scale_color_brewer(palette = "Dark2")
-```
-
-## Subtraction operator
->`-`: Adds elements to all plots in the active layout, as well as to any nested
-layouts within it (this behavior differs in `stack_layout()`; refer to
-`vignette("stack-layout")` for more details).
-
-Using `-` might seem unintuitive if you think of the operator as `"subtract"`,
-the underlying reason is that `-` is the only operator in the same precedence
-group as `+`, allowing for seamless combination with `+`.
-
-If the active layout is the `ggheatmap()`/`quad_layout()`, `-` functions
-similarly to `&`.
-```{r}
-# Initialize the heatmap with color scales and annotations.
-my_plot <- ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
-    anno_left(size = 0.2) +
-    align_dendro(aes(color = branch), k = 3L) +
-    anno_right(size = 0.2) +
-    align_dendro(aes(color = branch), k = 3L) +
-    # Remove any active annotation
-    quad_active() -
-    # Set color scale for all plots, since the active layout is the `ggheatmap()`/`quad_layout()`
-    scale_color_brewer(palette = "Dark2") +
-    # No need for parentheses; we can directly add other elements
-    # Change the active layout to the top annotation
-    anno_top(size = 0.2) +
-    # Add a dendrogram in the top annotation
-    align_dendro()
-my_plot
-```
-
-If the active layout is not the `ggheatmap()`/`quad_layout()`, the `-` operator
-will only add elements to all plots in the active annotation stack: 
-```{r}
-my_plot +
-    # Change the active layout to the left annotation
-    anno_left() -
-    # Modify the background of all plots in the left annotation
-    theme(plot.background = element_rect(fill = "red"))
-```
-
-# `with_quad`
-Along with the `-` operator, `with_quad()` can be used to modify the
-operated context in `ggheatmap()`/`quad_layout()`.
-
-This function accepts three arguments:
- 1. **x**: The object to be applied using the `-` operator.
- 2. **position**: A string indicating the annotation stack to target (`top`,
-  `bottom`, `left`, `right`, or combinations thereof). This specifies the
-  context for applying `x`. 
- 3. **main**: A boolean that determines whether `x` should also apply to the main
-  plot within `ggheatmap()`/`quad_layout()`.
-
-By default, when the active context in `ggheatmap()`/`quad_layout()` is set to
-`top` or `bottom`, the `-` operator will apply changes not only to that
-annotation but also to the opposite one (i.e., bottom if top is active, and vice
-versa). The same principle applies to the left and right contexts. In these
-cases, the object will also be applied to the main plot by default unless
-specified otherwise. If no annotation stack is active, `with_quad()` defaults to
-`NULL`. (this behavior differs in `stack_layout()`; refer to
-`vignette("stack-layout")` for more details) 
-
-```{r}
-my_plot +
-    # Change the active layout to the left annotation
-    anno_left() -
-    # Modify the background of all plots in the left and the opposite annotation
-    # in this way, the `main` argument by default would be `TRUE`
-    with_quad(theme(plot.background = element_rect(fill = "red")))
-```
-
-The `position` argument can be a string containing one or more of 
-`r ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack
-should be used as the context. When the `position` argument is manually set, the
-default value of the main argument will be `FALSE`. The example above is
-equivalent to: 
-```{r}
-my_plot -
-    # Modify the background of all plots in the left and right annotation
-    # and the main plot
-    with_quad(
-        theme(plot.background = element_rect(fill = "red")),
-        "lr", main = TRUE
-    )
-```
-
-Setting `position` to `NULL` removes any active annotation stack, meaning the
-object will apply to all plots in the layout, including annotation stacks: 
-```{r}
-my_plot -
-    # Modify the background of all plots
-    with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
-```
-
-# Plot options
-Plot options control the action of plots in the layout. This package allows a
-flexible way to set these options. While we'll dive deeper into plot options in
-`vignette("plot-options")`, I wanted to introduce it here, as they rely heavily
-on the `-` operator.
-
->Plot options inherit properties from parent layout options hierarchically.
-
-All plot options can be set at the layout level to define global options, or
-they can be applied to individual plots. Here, we'll take `plot_theme()` as a
-example since it is just a enhanced `theme()` which sets the default theme for
-the plot.
-
-To set a plot option for a single plot, simply use the `+` operator:
-```{r}
-my_plot +
-    # Change the active layout to the top annotation
-    anno_top() +
-    # change the default theme of the dendrogram in the top annotation
-    plot_theme(plot.background = element_rect(fill = "red"))
-```
-
-Note that `plot_theme()` serves as the default theme and will always be
-overridden by any `theme()` settings applied directly to the plot. The default
-theme (`plot_theme()`) is applied first, followed by any specific `theme()`
-settings, even if `theme()` is added before `plot_theme()`.
-```{r}
-my_plot +
-    # Change the active layout to the top annotation
-    anno_top() +
-    # change the plot theme of the dendrogram in the top annotation
-    theme(plot.background = element_rect(fill = "blue")) +
-    # change the default theme of the dendrogram in the top annotation
-    plot_theme(plot.background = element_rect(fill = "red"))
-```
-
-By using the `-` operator with plot options, we apply them directly to the
-active layout. Additionally, we can combine `with_quad()` with the `-` operator.
-```{r}
-my_plot +
-    # Change the active layout to the top annotation
-    anno_top() +
-    ggalign(aes(.names, value, fill = factor(.names)), data = rowSums) +
-    geom_bar(stat = "identity") -
-    # Change the default theme of the top annotation
-    # All plots in the top annotation will inherit this default theme
-    plot_theme(plot.background = element_rect(fill = "red"))
 ```
 
 # Session information
