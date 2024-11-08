@@ -2,7 +2,7 @@
 % Please edit documentation in R/active.R
 \name{active}
 \alias{active}
-\title{Plot Adding Settings}
+\title{Plot Adding Context Settings}
 \usage{
 active(order = waiver(), use = waiver(), name = waiver())
 }
@@ -26,10 +26,10 @@ well as the arrangement of individual plot areas within the layout.
 }
 \details{
 By default, the active context is set only for functions that add plot areas.
-This approach allows users to seamlessly add other \code{ggplot2} elements—such as
-\code{geoms}, \code{stats}, \code{scales}, or \code{themes}—to the current plot area.
+This allows other \code{ggplot2} elements—such as \code{geoms}, \code{stats}, \code{scales}, or
+\code{themes}— to be seamlessly added to the current plot area.
 
-The default ordering of plot areas is from top to bottom or from left to
+The default ordering of the plot areas is from top to bottom or from left to
 right, depending on the layout orientation. However, users can customize this
 order using the \code{order} argument.
 }
