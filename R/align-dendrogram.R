@@ -1,4 +1,11 @@
-#' Reorder or Group layout based on hierarchical clustering
+#' Reorder or Group observations based on hierarchical clustering
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' This function aligns observations within the layout according to a
+#' hierarchical clustering tree, enabling reordering or grouping of elements
+#' based on clustering results.
 #'
 #' @param data A matrix-like object. By default, it inherits from the layout
 #'   `matrix`.

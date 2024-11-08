@@ -81,12 +81,13 @@ instead.}
 A \code{"AlignGG"} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}} \code{align_gg()} is similar to \code{ggplot} in that it
-initializes a \code{ggplot} data and \code{mapping}. Same with other \verb{align_*}
-functions. \code{align_gg()} allowing you to provide data in various formats,
-including matrices, data frames, or simple vectors. By default, it will
-inherit from the layout. If a function, it will apply with the layout matrix.
-\code{ggalign} is an alias of \code{align_gg}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{align_gg()} is similar to \code{ggplot} in that it initializes a \code{ggplot} data
+and \code{mapping}. Same with other \verb{align_*} functions. \code{align_gg()} allowing you
+to provide data in various formats, including matrices, data frames, or
+simple vectors. By default, it will inherit from the layout. If a function,
+it will apply with the layout matrix.  \code{ggalign} is an alias of \code{align_gg}.
 }
 \section{ggplot2 specification}{
 

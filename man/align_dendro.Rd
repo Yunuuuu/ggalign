@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-dendrogram.R
 \name{align_dendro}
 \alias{align_dendro}
-\title{Reorder or Group layout based on hierarchical clustering}
+\title{Reorder or Group observations based on hierarchical clustering}
 \usage{
 align_dendro(
   mapping = aes(),
@@ -144,7 +144,11 @@ instead.}
 A \code{"AlignDendro"} object.
 }
 \description{
-Reorder or Group layout based on hierarchical clustering
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function aligns observations within the layout according to a
+hierarchical clustering tree, enabling reordering or grouping of elements
+based on clustering results.
 }
 \section{ggplot2 specification}{
 

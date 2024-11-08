@@ -1,10 +1,13 @@
 #' Arrange Plots in a Heatmap
 #'
-#' `r lifecycle::badge('stable')` `heatmap_layout` is a specialized version of
-#' [`quad_alignb()`], which simplifies the creation of heatmap plots by
-#' integrating essential elements for a standard heatmap layout, ensuring that
-#' the appropriate data mapping and visualization layers are automatically
-#' applied. `ggheatmap` is an alias for `heatmap_layout`.
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' `heatmap_layout` is a specialized version of [`quad_alignb()`], which
+#' simplifies the creation of heatmap plots by integrating essential elements
+#' for a standard heatmap layout, ensuring that the appropriate data mapping and
+#' visualization layers are automatically applied. `ggheatmap` is an alias for
+#' `heatmap_layout`.
 #'
 #' @param data `r rd_layout_data()`. If not already a matrix, will be converted
 #' to one by [`fortify_matrix()`].

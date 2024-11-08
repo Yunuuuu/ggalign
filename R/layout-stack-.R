@@ -1,5 +1,8 @@
 #' Put plots horizontally or vertically
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' This function integrates the functionalities of `stack_free()` and
 #' `stack_align()` into a single interface. `ggstack` is an alias for
 #' `stack_layout`.
@@ -43,6 +46,8 @@ ggstack <- stack_layout
 #' Arrange Plots Horizontally or Vertically
 #'
 #' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' The `stack_align` function aligns observations, while `stack_free` does not.
 #'
 #' Several aliases are provided for convenience:

@@ -77,11 +77,13 @@ instead.}
 A \code{HeatmapLayout} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}} \code{heatmap_layout} is a specialized version of
-\code{\link[=quad_alignb]{quad_alignb()}}, which simplifies the creation of heatmap plots by
-integrating essential elements for a standard heatmap layout, ensuring that
-the appropriate data mapping and visualization layers are automatically
-applied. \code{ggheatmap} is an alias for \code{heatmap_layout}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{heatmap_layout} is a specialized version of \code{\link[=quad_alignb]{quad_alignb()}}, which
+simplifies the creation of heatmap plots by integrating essential elements
+for a standard heatmap layout, ensuring that the appropriate data mapping and
+visualization layers are automatically applied. \code{ggheatmap} is an alias for
+\code{heatmap_layout}.
 }
 \section{ggplot2 specification}{
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-order.R
 \name{align_order}
 \alias{align_order}
-\title{Order layout observations based on weights}
+\title{Order observations based on weights}
 \usage{
 align_order(
   weights = rowMeans,
@@ -50,7 +50,10 @@ instead.}
 A \code{"AlignOrder"} object.
 }
 \description{
-Order layout observations based on weights
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Ordering observations based on summary weights or a specified ordering
+character or integer index.
 }
 \section{Axis Alignment for Observations}{
 

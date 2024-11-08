@@ -1,5 +1,13 @@
 #' Plot default theme
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#' `plot_theme()` serves as the default theme and will always be overridden by
+#' any `theme()` settings applied directly to the plot. The default theme
+#' (`plot_theme()`) is applied first, followed by any specific `theme()`
+#' settings, even if `theme()` is added before `plot_theme()`.
+#'
 #' @inherit ggplot2::theme
 #' @param ... A [`theme()`][ggplot2::theme] object or additional element
 #' specifications not part of base ggplot2. In general, these should also be
@@ -10,13 +18,13 @@
 #' small_mat <- matrix(rnorm(81), nrow = 9)
 #' ggheatmap(small_mat) +
 #'     plot_theme(plot.background = element_rect(fill = "red"))
-#' 
+#'
 #' # `plot_theme()` serves as the default theme and will always be
 #' # overridden by any `theme()` settings applied directly to the plot
 #' ggheatmap(small_mat) +
 #'     theme(plot.background = element_rect(fill = "blue")) +
 #'     plot_theme(plot.background = element_rect(fill = "red"))
-#' 
+#'
 #' @importFrom ggplot2 theme
 #' @importFrom rlang inject
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-kmeans.R
 \name{align_kmeans}
 \alias{align_kmeans}
-\title{Split layout by k-means clustering groups.}
+\title{Split observations by k-means clustering groups.}
 \usage{
 align_kmeans(
   centers,
@@ -49,7 +49,10 @@ instead.}
 A \code{"AlignKmeans"} object.
 }
 \description{
-Split layout by k-means clustering groups.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Aligns and groups observations based on k-means clustering, enabling
+observation splits by cluster groups.
 }
 \section{Axis Alignment for Observations}{
 

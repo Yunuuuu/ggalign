@@ -1,4 +1,10 @@
-#' Split layout by k-means clustering groups.
+#' Split observations by k-means clustering groups.
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' Aligns and groups observations based on k-means clustering, enabling
+#' observation splits by cluster groups.
 #'
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers

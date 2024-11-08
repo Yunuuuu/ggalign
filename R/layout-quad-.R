@@ -1,5 +1,8 @@
 #' Arrange Plots in the Quad-Side of a main plot
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' This function integrates the functionalities of `quad_free()`,
 #' `quad_alignh()`, `quad_alignv()`, and `quad_alignb()` into a single
 #' interface.

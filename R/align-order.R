@@ -1,4 +1,10 @@
-#' Order layout observations based on weights
+#' Order observations based on weights
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' Ordering observations based on summary weights or a specified ordering
+#' character or integer index.
 #'
 #' @param weights A summary function which accepts a data and returns the
 #' weights for each observations. Alternatively, you can provide an ordering

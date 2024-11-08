@@ -1,5 +1,8 @@
 #' Plot data Specifications
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' Transforms the plot data. Many functions in this package require a specific
 #' data format to align observations, `plot_data()` helps reformat data frames
 #' as needed.

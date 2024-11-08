@@ -1,11 +1,13 @@
 #' Create ggplot object
 #'
-#' `r lifecycle::badge('stable')` `align_gg()` is similar to `ggplot` in that it
-#' initializes a `ggplot` data and `mapping`. Same with other `align_*`
-#' functions. `align_gg()` allowing you to provide data in various formats,
-#' including matrices, data frames, or simple vectors. By default, it will
-#' inherit from the layout. If a function, it will apply with the layout matrix.
-#' `ggalign` is an alias of `align_gg`.
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' `align_gg()` is similar to `ggplot` in that it initializes a `ggplot` data
+#' and `mapping`. Same with other `align_*` functions. `align_gg()` allowing you
+#' to provide data in various formats, including matrices, data frames, or
+#' simple vectors. By default, it will inherit from the layout. If a function,
+#' it will apply with the layout matrix.  `ggalign` is an alias of `align_gg`.
 #'
 #' @inheritParams ggplot2::ggplot
 #' @param data A flexible input that specifies the data to be used

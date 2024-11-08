@@ -27,6 +27,8 @@ rendering by \code{ggplot2}. The returned data must be a data frame for ggplot.}
 Defaults to \code{FALSE}.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Transforms the plot data. Many functions in this package require a specific
 data format to align observations, \code{plot_data()} helps reformat data frames
 as needed.

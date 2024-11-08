@@ -1,4 +1,9 @@
-#' Group and align layout based on categorical or factor levels.
+#' Group and align observations based on a group vector
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' Splits observations into groups, with slice ordering based on group levels.
 #'
 #' @param group A character define the groups of the observations.
 #' @inheritParams align_gg

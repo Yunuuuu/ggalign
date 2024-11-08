@@ -45,6 +45,8 @@ indicating the relative heights (for \code{direction = "horizontal"}) or widths
 (for \code{direction = "vertical"}).}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The \code{stack_align} function aligns observations, while \code{stack_free} does not.
 
 Several aliases are provided for convenience:

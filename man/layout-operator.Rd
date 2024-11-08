@@ -34,6 +34,7 @@
 A modified \code{Layout} object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \itemize{
 \item \code{+}: adds elements to the active plot in the active layout.
 \item \code{&}: applies elements to all plots in the layout.

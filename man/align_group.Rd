@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-group.R
 \name{align_group}
 \alias{align_group}
-\title{Group and align layout based on categorical or factor levels.}
+\title{Group and align observations based on a group vector}
 \usage{
 align_group(
   group,
@@ -27,7 +27,9 @@ instead.}
 A \code{"AlignGroup"} object.
 }
 \description{
-Group and align layout based on categorical or factor levels.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Splits observations into groups, with slice ordering based on group levels.
 }
 \examples{
 set.seed(1L)

@@ -50,6 +50,8 @@ A \code{"AlignReorder"} object.
 Reorders layout observations based on specific statistics.
 }
 \details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The \code{align_reorder()} function differs from \code{align_order()} in that the \code{wts}
 argument in \code{align_order()} must return atomic weights for each observation.
 In contrast, the \code{stat} argument in \code{align_reorder()} can return more complex

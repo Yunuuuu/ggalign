@@ -373,13 +373,12 @@ elements.}
 \item{validate}{\code{TRUE} to run \code{validate_element()}, \code{FALSE} to bypass checks.}
 }
 \description{
-Themes are a powerful way to customize the non-data components of your plots:
-i.e. titles, labels, fonts, background, gridlines, and legends. Themes can be
-used to give plots a consistent customized look. Modify a single plot's theme
-using \code{theme()}; see \code{\link[ggplot2:theme_update]{theme_update()}} if you want modify the active theme, to
-affect all subsequent plots. Use the themes available in \link[ggplot2:theme_bw]{complete themes} if you would like to use a complete theme such as
-\code{theme_bw()}, \code{theme_minimal()}, and more. Theme elements are documented
-together according to inheritance, read more about theme inheritance below.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+\code{plot_theme()} serves as the default theme and will always be overridden by
+any \code{theme()} settings applied directly to the plot. The default theme
+(\code{plot_theme()}) is applied first, followed by any specific \code{theme()}
+settings, even if \code{theme()} is added before \code{plot_theme()}.
 }
 \section{Theme inheritance}{
 

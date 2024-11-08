@@ -1,6 +1,8 @@
 #' Reorders layout observations based on specific statistics.
 #'
 #' @details
+#' `r lifecycle::badge('experimental')`
+#'
 #' The `align_reorder()` function differs from `align_order()` in that the `wts`
 #' argument in `align_order()` must return atomic weights for each observation.
 #' In contrast, the `stat` argument in `align_reorder()` can return more complex
