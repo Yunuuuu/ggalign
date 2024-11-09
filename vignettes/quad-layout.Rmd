@@ -49,7 +49,13 @@ ggside(mpg) +
 ## annotation
 Like `ggheatmap()`, annotations in `quad_free()` can be placed at the top, left,
 bottom, and right sides, but all annotations here use `stack_free()`, meaning
-they don't align observations.
+they don't align observations. The data will be directly inherited which is
+different from the `quad_alignb()`/`quad_alignh()`/`quad_alignv()` where the
+column annotation will transpose the layout matrix 
+
+Additionally, annotations can be manually initialized with user-specified data
+using `anno_init()`, I'll demonstrate it in `quad_alignh()`/`quad_alignv()`
+section where manual initialization is required.
 
 ```{r}
 ggside(mpg, aes(displ, hwy, colour = class)) -
@@ -151,7 +157,7 @@ quad_alignv(small_mat) +
 the same with `ggheatmap()`/`heatmap_layout()`, we can add annotation in top,
 left, bottom, and right side. but the top and bottom annotation in
 `quad_alignh()` is a `stack_free()` which won't align observations and left and
-right annotation in `quad_alignv()`is a `stack_free()` which won't align
+right annotation in `quad_alignv()` is a `stack_free()` which won't align
 observations.
 
 For left and right annotation in `quad_alignh()`, they are a `stack_align()`

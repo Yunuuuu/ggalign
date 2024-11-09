@@ -121,9 +121,10 @@ articles:
   - heatmap-layout
   - layout-customize
   - layout-plot
-  - plot-options
   - quad-layout
   - stack-layout
+  - plot-options
+  - operator
 
 - title: Others
   navbar: " "

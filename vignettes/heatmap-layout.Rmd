@@ -94,7 +94,8 @@ ggheatmap(matrix(runif(360L), nrow = 20L), filling = NULL) +
     geom_pie(aes(angle = value * 360, fill = value))
 ```
 
-If you want to more complex pie charts, try `ggforce::geom_arc_bar()` instead.
+If you want more complex customization of pie charts, try using
+`ggforce::geom_arc_bar()` instad.
 
 You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or

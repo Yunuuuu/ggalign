@@ -14,10 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-Waiting for complete ...
-
 `stack_layout()` put plots horizontally or vertically. You can also use the
-alias `ggstack()`.
+alias `ggstack()`. Depend on whether you want to align observations along the
+stack. There are two types:
+  - `stack_align()`: align the observations along the stack.
+  - `stack_free()`: don't align the observations.
 
 ```{r setup}
 library(ggalign)
@@ -65,34 +66,6 @@ ggstack(small_mat, "v") + align_dendro()
 >Note that vertical stack take the `x-axis` as the observations, but horizontal
 stack take the `y-axis` as the observations.
 
-## Data frame Input
-Unlike `heatmap_layout()`/`ggheatmap()`, data frames are not automatically
-converted into a matrix within `ggstack()`.
-
-When using data frames, be cautious as many `align_*()` functions only accept
-matrix. If the necessary data is not explicitly provided to an `align_*()`
-function, the data frame from `ggstack()` will be passed to the function and
-internally converted into a matrix, which may result in missing values. 
-
-An exception is the `align_gg()`/`ggalign()` function, which can handle both
-matrix and data frames. When the input is a matrix (or a simple vector), it will
-be transformed into a long-format data frame. When the input is a data frame,
-only the necessary panel and axis information will be added to the data frame.
-
-```{r}
-stack_alignh() +
-    ggalign(data = mtcars, aes(mpg, .y)) +
-    geom_point()
-```
-
-Note `align_gg()`/`ggalign()` always applies a default mapping for the parallel
-axes of the data index within the layout. This mapping is `aes(y = .data$.y)`
-for horizontal stack and `aes(x = .data$.x)` for vertical stack. So here we only
-provide mapping for the `x-axis`.
-
-For more information on adding plots, refer to the vignette:
-`vignette("layout-plot")`.
-
 ## Heatmap plot
 Besides the `align_*()` functions, we can also add the
 `heatmap_layout()`/`ggheatmap()` into the stack layout.
@@ -103,9 +76,10 @@ stack_alignh(small_mat) +
 ```
 
 As mentioned earlier, vertical stacks use the `x-axis` for observations, while
-horizontal stacks use the `y-axis`. However, heatmap layouts always use the y-axis
-for observations. When a heatmap layout is added to a vertical stack layout, the
-inherited data is automatically converted to a matrix and transposed before use. 
+horizontal stacks use the `y-axis`. However, heatmap layouts always use the
+y-axis for observations. When a heatmap layout is added to a vertical stack
+layout, the inherited data is automatically converted to a matrix and transposed
+before use. 
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap()
@@ -144,7 +118,7 @@ stack_alignv(small_mat) +
     scale_fill_viridis_c()
 ```
 
-## Control sizes
+# Control sizes
 A length of 3 sizes should be provided in `ggstack()` when putting a heatmap
 with flank annotation into the stack layout. For vertical stacks, this means
 heatmaps with left or right annotations; for horizontal stacks, this means
