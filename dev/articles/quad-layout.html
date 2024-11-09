@@ -43,9 +43,10 @@
 <li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -143,7 +144,14 @@ conversion.</p>
 <p>Like <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>, annotations in
 <code><a href="../reference/quad_free.html">quad_free()</a></code> can be placed at the top, left, bottom, and
 right sides, but all annotations here use <code><a href="../reference/stack_align.html">stack_free()</a></code>,
-meaning they don’t align observations.</p>
+meaning they don’t align observations. The data will be directly
+inherited which is different from the
+<code><a href="../reference/quad_free.html">quad_alignb()</a></code>/<code><a href="../reference/quad_free.html">quad_alignh()</a></code>/<code><a href="../reference/quad_free.html">quad_alignv()</a></code>
+where the column annotation will transpose the layout matrix</p>
+<p>Additionally, annotations can be manually initialized with
+user-specified data using <code><a href="../reference/anno_init.html">anno_init()</a></code>, I’ll demonstrate it
+in <code><a href="../reference/quad_free.html">quad_alignh()</a></code>/<code><a href="../reference/quad_free.html">quad_alignv()</a></code> section where
+manual initialization is required.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quad_free.html">ggside</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="co"># set default theme for all plots in the layout</span></span>
@@ -251,7 +259,7 @@ but use <code>.x</code> or <code>.column_names</code> as the
 we can add annotation in top, left, bottom, and right side. but the top
 and bottom annotation in <code><a href="../reference/quad_free.html">quad_alignh()</a></code> is a
 <code><a href="../reference/stack_align.html">stack_free()</a></code> which won’t align observations and left and
-right annotation in <code><a href="../reference/quad_free.html">quad_alignv()</a></code>is a
+right annotation in <code><a href="../reference/quad_free.html">quad_alignv()</a></code> is a
 <code><a href="../reference/stack_align.html">stack_free()</a></code> which won’t align observations.</p>
 <p>For left and right annotation in <code><a href="../reference/quad_free.html">quad_alignh()</a></code>, they are
 a <code><a href="../reference/stack_align.html">stack_align()</a></code> layout which will align observations, and
