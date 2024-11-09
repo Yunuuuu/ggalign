@@ -1,16 +1,24 @@
 # Standalone file: do not edit by hand
-# Source: <https://github.com/Yunuuuu/biomisc/blob/main/R/standalone-obj-type.R>
+# Source: <https://github.com/Yunuuuu/standalone/blob/main/R/standalone-obj-type.R>
 # ----------------------------------------------------------------------
 #
 # ---
-# repo: Yunuuuu/biomisc
+# repo: Yunuuuu/standalone
 # file: standalone-obj-type.R
-# last-updated: 2023-05-01
+# last-updated: 2024-02-14
 # license: https://unlicense.org
 # imports: rlang (>= 1.1.0)
 # ---
 #
 # ## Changelog
+# 2024-11-10:
+# - `obj_type_friendly()` gains a `length` argument to control whether to show
+#   the length of the vector.
+# - `stop_input_type()` gains a `show_length` argument passed to
+#   `obj_type_friendly`.
+#
+# 2024-02-14:
+# - `obj_type_friendly()` now works for S7 objects.
 #
 # 2023-05-01:
 # - `obj_type_friendly()` now only displays the first class of S3 objects.
@@ -51,8 +59,51 @@
 # - Added support for matrices and arrays (#141).
 # - Added documentation.
 # - Added changelog.
+#
+# nocov start
 
-# Following code was modified from rlang
+#' @param x The object type which does not conform to `what`. Its
+#'   `obj_type_friendly()` is taken and mentioned in the error message.
+#' @param what The friendly expected type as a string. Can be a
+#'   character vector of expected types, in which case the error
+#'   message mentions all of them in an "or" enumeration.
+#' @param show_value Passed to `value` argument of `obj_type_friendly()`.
+#' @param show_length Passed to `length` argument of `obj_type_friendly()`.
+#' @param ... Arguments passed to [abort()].
+#' @inheritParams args_error_context
+#' @importFrom rlang caller_arg caller_env abort
+#' @noRd
+stop_input_type <- function(x,
+                            what,
+                            ...,
+                            allow_na = FALSE,
+                            allow_null = FALSE,
+                            show_value = TRUE,
+                            show_length = FALSE,
+                            arg = caller_arg(x),
+                            call = caller_env()) {
+    if (allow_na) {
+        what <- c(what, "`NA`")
+    }
+    if (allow_null) {
+        what <- c(what, "`NULL`")
+    }
+    if (length(what)) {
+        what <- .standalone_oxford_comma(what, final = "or")
+    }
+    if (inherits(arg, "AsIs")) {
+        format_arg <- identity
+    } else {
+        format_arg <- function(x) sprintf("`%s`", x)
+    }
+    message <- sprintf(
+        "%s must be %s, not %s.",
+        format_arg(arg), what,
+        obj_type_friendly(x, value = show_value, length = show_length)
+    )
+    abort(message, ..., call = call, arg = arg)
+}
+
 #' Return English-friendly type
 #' @param x Any R object.
 #' @param value Whether to describe the value of `x`. Special values
@@ -121,14 +172,22 @@ obj_type_friendly <- function(x, value = TRUE, length = FALSE) {
 
                 if (is.numeric(x) || is.complex(x)) {
                     number <- as.character(round(x, 2))
-                    what <- if (is.complex(x)) "the complex number" else "the number"
+                    what <- if (is.complex(x)) {
+                        "the complex number"
+                    } else {
+                        "the number"
+                    }
                     return(paste(what, number))
                 }
 
                 return(switch(typeof(x),
                     logical = if (x) "`TRUE`" else "`FALSE`",
                     character = {
-                        what <- if (nzchar(x)) "the string" else "the empty string"
+                        what <- if (nzchar(x)) {
+                            "the string"
+                        } else {
+                            "the empty string"
+                        }
                         paste(what, str_encode(x, quote = "\""))
                     },
                     raw = paste("the raw value", as.character(x)),
@@ -164,53 +223,59 @@ obj_type_friendly <- function(x, value = TRUE, length = FALSE) {
     vec_type_friendly(x, length = length)
 }
 
+#' @importFrom rlang abort
 vec_type_friendly <- function(x, length = FALSE) {
     if (!rlang::is_vector(x)) {
-        rlang::abort("`x` must be a vector.")
+        abort("`x` must be a vector.")
     }
     type <- typeof(x)
-    dims <- dim(x)
-    n_dim <- length(dims)
+    n_dim <- length(dim(x))
+
+    add_length <- function(type) {
+        if (length && !n_dim) {
+            paste0(type, sprintf(" of length %s", length(x)))
+        } else {
+            type
+        }
+    }
 
     if (type == "list") {
         if (n_dim < 2) {
-            out <- "a list"
+            return(add_length("a list"))
         } else if (is.data.frame(x)) {
-            out <- "a data frame"
+            return("a data frame")
         } else if (n_dim == 2) {
-            out <- "a list matrix"
+            return("a list matrix")
         } else {
-            out <- "a list array"
+            return("a list array")
         }
-    } else {
-        type <- switch(type,
-            logical = "a logical %s",
-            integer = "an integer %s",
-            numeric = ,
-            double = "a double %s",
-            complex = "a complex %s",
-            character = "a character %s",
-            raw = "a raw %s",
-            type = paste0("a ", type, " %s")
-        )
-        if (n_dim < 2) {
-            kind <- "vector"
-        } else if (n_dim == 2) {
-            kind <- "matrix"
-        } else {
-            kind <- "array"
-        }
-        out <- sprintf(type, kind)
     }
 
-    if (length) {
-        if (n_dim) {
-            out <- paste0(out, " (", paste0(dims, collapse = "*"), ")")
-        } else {
-            out <- paste0(out, sprintf(" of length %s", length(x)))
-        }
+    type <- switch(type,
+        logical = "a logical %s",
+        integer = "an integer %s",
+        numeric = ,
+        double = "a double %s",
+        complex = "a complex %s",
+        character = "a character %s",
+        raw = "a raw %s",
+        type = paste0("a ", type, " %s")
+    )
+
+    if (n_dim < 2) {
+        kind <- "vector"
+    } else if (n_dim == 2) {
+        kind <- "matrix"
+    } else {
+        kind <- "array"
     }
-    out
+    out <- sprintf(type, kind)
+
+    if (n_dim >= 2) {
+        out
+    } else {
+        add_length(out)
+    }
 }
 
 .rlang_as_friendly_type <- function(type) {
@@ -239,29 +304,52 @@ vec_type_friendly <- function(x, length = FALSE) {
     )
 }
 
-.rlang_stop_unexpected_typeof <- function(x, call = rlang::caller_env()) {
-    rlang::abort(sprintf("Unexpected type <%s>.", typeof(x)), call = call)
+#' @importFrom rlang abort caller_env
+.rlang_stop_unexpected_typeof <- function(x, call = caller_env()) {
+    abort(sprintf("Unexpected type <%s>.", typeof(x)), call = call)
 }
 
 #' Return OO type
 #' @param x Any R object.
 #' @return One of `"bare"` (for non-OO objects), `"S3"`, `"S4"`,
-#'   `"R6"`, or `"R7"`.
+#'   `"R6"`, or `"S7"`.
 #' @noRd
 obj_type_oo <- function(x) {
     if (!is.object(x)) {
         return("bare")
     }
 
-    class <- inherits(x, c("R6", "R7_object"), which = TRUE)
+    class <- inherits(x, c("R6", "S7_object"), which = TRUE)
 
     if (class[[1]]) {
         "R6"
     } else if (class[[2]]) {
-        "R7"
+        "S7"
     } else if (isS4(x)) {
         "S4"
     } else {
         "S3"
     }
 }
+
+.standalone_oxford_comma <- function(chr, sep = ", ", final = "and") {
+    n <- length(chr)
+
+    if (n < 2L) {
+        return(chr)
+    }
+
+    head <- chr[seq_len(n - 1L)]
+    last <- chr[n]
+
+    head <- paste(head, collapse = sep)
+
+    # Write a or b. But a, b, or c.
+    if (n > 2L) {
+        paste0(head, sep, final, " ", last)
+    } else {
+        paste0(head, " ", final, " ", last)
+    }
+}
+
+# nocov end

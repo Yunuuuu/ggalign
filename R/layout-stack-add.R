@@ -112,7 +112,6 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         } else {
             data <- input_data
         }
-
         # convert the data into a data frame
         object$plot$data <- fortify_data_frame(data)
 

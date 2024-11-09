@@ -58,6 +58,7 @@ Several aliases are provided for convenience:
 }
 }
 \examples{
+set.seed(123)
 stack_align(matrix(rnorm(56), nrow = 7L), "h") +
     align_dendro()
 }

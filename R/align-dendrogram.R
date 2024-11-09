@@ -110,7 +110,7 @@ align_dendro <- function(mapping = aes(), ...,
     assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
     cutree <- allow_lambda(cutree)
-    assert_(cutree, is.function, "a function", null_ok = TRUE)
+    assert_(cutree, is.function, "a function", allow_null = TRUE)
     assert_bool(plot_dendrogram)
     assert_mapping(mapping)
     if (is.null(data)) {
@@ -156,16 +156,15 @@ AlignDendro <- ggproto("AlignDendro", Align,
     #' @importFrom stats reorder
     setup_params = function(self, nobs, params) {
         call <- .subset2(self, "call")
-        assert_number(.subset2(params, "k"),
-            null_ok = TRUE, arg = "k",
-            call = call
+        assert_number_whole(.subset2(params, "k"),
+            allow_null = TRUE, arg = "k", call = call
         )
-        assert_number(.subset2(params, "h"),
-            null_ok = TRUE, arg = "h", call = call
+        assert_number_decimal(.subset2(params, "h"),
+            allow_null = TRUE, arg = "h", call = call
         )
         assert_bool(
             .subset2(params, "plot_cut_height"),
-            null_ok = TRUE,
+            allow_null = TRUE,
             arg = "plot_cut_height", call = call
         )
         # setup the default value for `plot_cut_height`

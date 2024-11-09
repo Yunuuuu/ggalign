@@ -18,7 +18,7 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
         error = function(e) {
             if (inherits(e, "simpleError") &&
                 deparse(conditionCall(e)[[1L]]) == "grid.Call") {
-                error_name <- style_cls(obj_type_friendly(x))
+                error_name <- obj_type_friendly(x)
                 if (Sys.getenv("RSTUDIO") == "1") {
                     cli::cli_abort(c(paste(
                         "The RStudio {.field Plots} window may be",

@@ -28,7 +28,7 @@ active <- function(order = waiver(), use = waiver(), name = waiver()) {
     if (!is.waive(order)) order <- check_order(order)
     if (!is.waive(use)) assert_bool(use)
     if (!is.waive(name)) {
-        assert_string(name, empty_ok = FALSE, na_ok = TRUE, null_ok = FALSE)
+        assert_string(name, empty_ok = FALSE, allow_na = TRUE, allow_null = FALSE)
     }
     new_active(order, use, name)
 }
@@ -77,7 +77,7 @@ deprecate_active <- function(active, fun,
             sprintf("%s(name)", fun),
             sprintf("%s(active)", fun)
         )
-        assert_string(name, empty_ok = FALSE, na_ok = TRUE, call = call)
+        assert_string(name, empty_ok = FALSE, allow_na = TRUE, call = call)
         active["name"] <- list(name)
     }
     active

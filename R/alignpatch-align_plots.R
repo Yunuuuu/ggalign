@@ -288,7 +288,7 @@ alignpatches_add.layout_title <- function(object, plot, object_name) {
 #' @export
 layout_annotation <- function(theme = waiver(), ...) {
     rlang::check_dots_empty()
-    if (!is.waive(theme)) assert_s3_class(theme, "theme", null_ok = TRUE)
+    if (!is.waive(theme)) assert_s3_class(theme, "theme", allow_null = TRUE)
     structure(
         list(annotation = list(), theme = theme),
         class = c("layout_annotation", "plot_annotation")

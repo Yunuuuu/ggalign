@@ -96,7 +96,7 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
     }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
-    assert_bool(no_axes, null_ok = TRUE, call = call)
+    assert_bool(no_axes, allow_null = TRUE, call = call)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
 

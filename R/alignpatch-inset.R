@@ -28,7 +28,7 @@ make_inset <- function(plot, ..., align, on_top, clip, vp,
     assert_bool(on_top, call = call)
     align <- arg_match0(align, c("panel", "plot", "full"), error_call = call)
     assert_bool(clip, call = call)
-    assert_s3_class(vp, "viewport", null_ok = TRUE, call = call)
+    assert_s3_class(vp, "viewport", allow_null = TRUE, call = call)
     if (!is.grob(grob <- patch(x = plot, ...))) {
         cli::cli_abort("{.fn patch} must return a {.cls grob}", call = call)
     }

@@ -26,7 +26,7 @@
 #' @export
 with_quad <- function(x, position = waiver(), main = NULL) {
     assert_layout_position(position)
-    assert_bool(main, null_ok = TRUE)
+    assert_bool(main, allow_null = TRUE)
     attr(x, sprintf("__%s.quad_active_context__", pkg_nm())) <- list(
         position = position, main = main
     )

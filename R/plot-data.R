@@ -68,12 +68,11 @@ inherit_option.plot_data <- function(option, poption) {
 #' @export
 plot_add.plot_data <- function(option, plot) {
     # by default, we won't change the data
-    if (!is.null(plot_data <- .subset2(option, "data") %|w|% NULL)) {
+    if (!is.null(plot_data <- .subset2(option, "data") %|w|% NULL) &&
+        !is.null(raw_data <- .subset2(plot, "data"))) {
         # To be compatible with ggplot2, it must be a data frame
-        if (!is.data.frame(data <- plot_data(.subset2(plot, "data")))) {
-            cli::cli_abort(
-                "{.fn plot_data} must return a {.cls data.frame}"
-            )
+        if (!is.data.frame(data <- plot_data(raw_data))) {
+            cli::cli_abort("{.fn plot_data} must return a {.cls data.frame}")
         }
         plot$data <- data
     }

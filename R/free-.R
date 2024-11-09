@@ -64,7 +64,9 @@ new_free_gg <- function(plot, data, size, active,
         list(
             plot = plot, data = data,
             size = size, active = active,
-            controls = new_controls()
+            controls = new_controls(
+                new_plot_data(if (is.waive(data)) waiver() else NULL)
+            )
         ),
         class = "free_gg"
     )

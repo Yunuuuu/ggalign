@@ -36,11 +36,12 @@ This function integrates the functionalities of \code{stack_free()} and
 \code{stack_layout}.
 }
 \examples{
+set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7L)
-stack_layout(small_mat, "horizontal", "align") + align_dendro()
+stack_layout(small_mat, "h", "align") + align_dendro()
 
 # ggstack is an alias for `stack_layout`
-ggstack(small_mat, "horizontal") + align_dendro()
+ggstack(small_mat, "h", "align") + align_dendro()
 
 # this is the same with:
 stack_align(small_mat, "h") + align_dendro()
