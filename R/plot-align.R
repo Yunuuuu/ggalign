@@ -27,16 +27,33 @@
 #'
 #' @return A `plot_align` object.
 #' @examples
+#' set.seed(123)
+#' mat <- matrix(rnorm(72), nrow = 8)
 #' # used in the layout, define the default action for all plots in the layout
-#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
-#'     theme(plot.background = element_rect(fill = "red"))
+#' ggheatmap(mat) -
+#'     plot_align(guides = NULL) +
+#'     anno_right() +
+#'     align_dendro(aes(color = branch), k = 3)
 #'
 #' # You can also add it for a single plot
-#' ggheatmap(matrix(rnorm(72), nrow = 8)) -
-#'     theme(plot.background = element_rect(fill = "red")) +
-#'     # here, we modify the plot action for the heatmap body
-#'     theme(plot.background = element_rect(fill = "blue"))
+#' ggheatmap(mat) -
+#'     # for all plots in the layout, we default won't collect any guide legends
+#'     plot_align(guides = NULL) +
+#'     # for the heatmap body, we collect guide legends in the right
+#'     # note, the guide legends will be collected to the right side of the
+#'     # layout which will overlap the legends in the right annotation
+#'     plot_align(guides = "r") +
+#'     anno_right() +
+#'     align_dendro(aes(color = branch), k = 3)
 #'
+#' # to avoid overlapping, we can also collect the guide legends in the 
+#' # right annotation
+#' ggheatmap(mat) -
+#'     plot_align(guides = NULL) +
+#'     plot_align(guides = "r") +
+#'     anno_right() +
+#'     align_dendro(aes(color = branch), k = 3) +
+#'     plot_align(guides = "r")
 #' @export
 plot_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
