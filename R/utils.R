@@ -153,7 +153,7 @@ add_class <- function(x, ...) {
     x
 }
 
-na_if <- function(x, y) ifelse(is.na(x), y, x)
+na_if <- function(x, y) if_else(is.na(x), y, x)
 
 ###########################################################
 switch_position <- function(position, x, y) {
@@ -207,24 +207,6 @@ quickdf <- function(x) {
     x
 }
 
-#' @importFrom rlang set_names
-full_join <- function(x, y, by = intersect(names(x), names(y)),
-                      by.x = by, by.y = by) {
-    loc <- vec_locate_matches(x[by.x], set_names(y[by.y], by.x), remaining = NA)
-    x_slicer <- .subset2(loc, "needles")
-    y_slicer <- .subset2(loc, "haystack")
-    ans <- vec_cbind(
-        vec_slice(x, x_slicer),
-        # drop duplicated join column
-        vec_slice(y[setdiff(names(y), by.y)], y_slicer)
-    )
-    if (anyNA(x_slicer)) {
-        new_rows <- which(is.na(x_slicer)) # should come from `y`
-        ans[new_rows, by.x] <- vec_slice(y[by.y], y_slicer[new_rows])
-    }
-    ans
-}
-
 fct_rev <- function(x) {
     ans <- as.factor(x)
     factor(ans, levels = rev(levels(ans)))
@@ -236,8 +218,6 @@ imap <- function(.x, .f, ...) {
     if (!is.null(nms)) names(out) <- nms
     out
 }
-
-compact <- function(.x) .x[list_sizes(.x) > 0L]
 
 #' Rename elements in a list, data.frame or vector
 #'

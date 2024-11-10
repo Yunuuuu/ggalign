@@ -228,10 +228,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             unlist(lapply(ans, .subset2, guide_pos), FALSE, FALSE)
         })
         names(ans) <- .TLBR
-        ans <- compact(ans)
+        ans <- list_drop_empty(ans)
         # remove duplicated guides
         ans <- lapply(ans, collapse_guides)
-        compact(ans)
+        list_drop_empty(ans)
     },
     #' @importFrom grid is.unit unit
     set_sizes = function(self, design, dims,
