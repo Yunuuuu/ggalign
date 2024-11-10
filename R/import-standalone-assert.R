@@ -5,11 +5,17 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-assert.R
-# last-updated: 2023-09-07
+# last-updated: 2024-11-10
 # license: https://unlicense.org
 # dependencies: [standalone-obj-type.R]
 # imports: rlang (>= 1.1.0)
 # ---
+
+# ## Changelog
+# 2024-11-10:
+# - Added support for S3 object
+#
+# nocov start
 
 #' Report if an argument is a specific class
 #'
@@ -174,6 +180,7 @@ assert_number_whole <- function(x,
     )
 }
 
+#' @importFrom rlang abort
 .stop_not_number <- function(x,
                              ...,
                              exit_code,
@@ -238,6 +245,7 @@ assert_bool <- function(x,
 }
 
 # atomic vector ------------------------------------
+#' @importFrom rlang abort
 assert_character <- function(x,
                              ...,
                              allow_na = TRUE,
@@ -264,12 +272,14 @@ assert_character <- function(x,
         x,
         "a character vector",
         ...,
+        allow_na = FALSE,
         allow_null = allow_null,
         arg = arg,
         call = call
     )
 }
 
+#' @importFrom rlang abort
 assert_logical <- function(x,
                            ...,
                            allow_na = TRUE,
