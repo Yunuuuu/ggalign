@@ -232,13 +232,13 @@ setting of limits (<code>limits = FALSE</code> in
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, name <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-4-1.png" width="480"></p>
-<pre><code><span><span class="co">#&gt;   .row_index .column_index      value .index .extra_panel .panel .x</span></span>
-<span><span class="co">#&gt; 1          1             1 -0.6264538      1            b      1  1</span></span>
-<span><span class="co">#&gt; 2          1             2  0.1836433      1            b      1  1</span></span>
-<span><span class="co">#&gt; 3          1             3 -0.8356286      1            b      1  1</span></span>
-<span><span class="co">#&gt; 4          1             4  1.5952808      1            a      1  1</span></span>
-<span><span class="co">#&gt; 5          1             5  0.3295078      1            a      1  1</span></span>
-<span><span class="co">#&gt; 6          1             6 -0.8204684      1            a      1  1</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;   .row_index .column_index      value .index .panel .x .extra_panel</span></span>
+<span><span class="co">#&gt; 1          1             1 -0.6264538      1      1  1            b</span></span>
+<span><span class="co">#&gt; 2          1             2  0.1836433      1      1  1            b</span></span>
+<span><span class="co">#&gt; 3          1             3 -0.8356286      1      1  1            b</span></span>
+<span><span class="co">#&gt; 4          1             4  1.5952808      1      1  1            a</span></span>
+<span><span class="co">#&gt; 5          1             5  0.3295078      1      1  1            a</span></span>
+<span><span class="co">#&gt; 6          1             6 -0.8204684      1      1  1            a</span></span></code></pre>
 <p>This approach replicates the functionality of <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#summary-annotation" class="external-link">ComplexHeatmap::anno_summary()</a>,
 but is versatile enough to be used with any heatmap, not just
 single-column or single-row heatmaps.</p>
