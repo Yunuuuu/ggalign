@@ -217,29 +217,6 @@ imap <- function(.x, .f, ...) {
     out
 }
 
-#' Rename elements in a list, data.frame or vector
-#'
-#' This is akin to `dplyr::rename` and `plyr::rename`. It renames elements given
-#' as names in the `replace` vector to the values in the `replace` vector
-#' without touching elements not referenced.
-#'
-#' @param x A data.frame or a named vector or list
-#' @param replace A named character vector. The names identifies the elements in
-#' `x` that should be renamed and the values gives the new names.
-#'
-#' @return `x`, with new names according to `replace`
-#'
-#' @importFrom rlang set_names
-#' @keywords internal
-#' @noRd
-rename <- function(x, replace) {
-    set_names(x, function(nms) {
-        nms <- set_names(nms)
-        vec_slice(nms, names(replace)) <- replace
-        nms
-    })
-}
-
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
 
 fclass <- function(x) .subset(class(x), 1L)
