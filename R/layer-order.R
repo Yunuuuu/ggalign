@@ -21,19 +21,18 @@
 #' @export
 layer_order <- function(layer, order = 0) {
     assert_s3_class(layer, "Layer")
-    if (!is_scalar(order)) {
-        cli::cli_abort("{.arg order} must be a single number")
-    }
-    if (is.na(order)) {
-        cli::cli_abort("{.arg order} cannot be missing value")
-    }
+    assert_number_decimal(order)
     if (!is.infinite(order)) order <- vec_cast(order, integer())
-    layer <- add_class(layer, "layer_order")
-    attr(layer, "layer_order") <- list(
-        order = order,
-        # used for `ggplot_add`
-        object_name = deparse(substitute(layer))
-    )
+    if (inherits(layer, "layer_order")) {
+        attr(layer, "layer_order")$order <- order
+    } else {
+        layer <- add_class(layer, "layer_order")
+        attr(layer, "layer_order") <- list(
+            order = order,
+            # used for `ggplot_add`
+            object_name = deparse(substitute(layer))
+        )
+    }
     layer
 }
 
