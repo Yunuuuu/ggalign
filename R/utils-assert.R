@@ -71,24 +71,27 @@ assert_layout_position <- function(position, arg = caller_arg(position),
     }
 }
 
+#' @importFrom grid is.unit
 check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
                               call = caller_call()) {
-    l <- length(sizes)
-    if (!(l == 1L || l == 3L) ||
-        !(all(is.na(sizes)) || is.numeric(sizes) || is.unit(sizes))) {
-        cli::cli_abort(paste(
-            "{.arg {arg}} must be",
-            "a numeric or unit object of length 3"
-        ), call = call)
+    if (!(all(is.na(sizes)) || is.numeric(sizes) || is.unit(sizes))) {
+        cli::cli_abort(
+            "{.arg {arg}} must be a numeric or {.cls unit} object",
+            call = call
+        )
     }
-    if (l == 1L) sizes <- rep(sizes, length.out = 3L)
+    if (length(sizes) == 1L) {
+        sizes <- rep(sizes, length.out = 3L)
+    } else {
+        vec_check_size(sizes, size = 3L, arg = arg, call = call)
+    }
     if (!is.unit(sizes)) sizes <- unit(sizes, "null")
     sizes
 }
 
 check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
-    if (!is_scalar(size) ||
-        !(is.na(size) || is.numeric(size) || is.unit(size))) {
+    vec_check_size(size, size = 1L, arg = arg, call = call)
+    if (!(is.na(size) || is.numeric(size) || is.unit(size))) {
         cli::cli_abort(
             "{.arg {arg}} must be a single numeric or unit object",
             call = call
