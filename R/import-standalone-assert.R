@@ -81,8 +81,8 @@ assert_string <- function(x,
                                     allow_empty,
                                     allow_na,
                                     allow_null) {
-    if (is_string(x)) {
-        if (allow_empty || !is_string(x, "")) {
+    if (is_string(x) && !is.na(x)) {
+        if (allow_empty || x != "") {
             return(TRUE)
         }
     }
