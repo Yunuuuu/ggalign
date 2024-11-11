@@ -33,8 +33,8 @@ full_join <- function(x, y, by = vec_set_intersect(names(x), names(y)),
         # drop duplicated join column
         vec_slice(y[vec_set_difference(names(y), by.y)], y_slicer)
     )
-    if (vec_any_missing(x_slicer)) {
-        new_rows <- which(vec_detect_missing(x_slicer)) # should come from `y`
+    new_rows <- which(vec_detect_missing(x_slicer)) # should come from `y`
+    if (length(new_rows)) {
         ans[new_rows, by.x] <- vec_slice(y[by.y], y_slicer[new_rows])
     }
     ans
