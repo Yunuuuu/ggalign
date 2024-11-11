@@ -282,8 +282,7 @@ quad_build_data <- function(data, row_params, column_params) {
         )
     }
     if (!is.null(row_params) && !is.null(column_params)) {
-        coords <- vec_expand_grid(y = row_coords, x = column_coords)
-        coords <- vec_cbind(coords$x, coords$y)
+        coords <- cross_join(row_coords, column_coords)
         by.x <- c(".column_index", ".row_index")
         by.y <- c(".xindex", ".yindex")
     } else if (is.null(row_params)) {
