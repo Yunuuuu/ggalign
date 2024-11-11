@@ -165,8 +165,8 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         tile_mapping <- aes(
             .data$.x, .data$.y,
             fill = .data$value,
-            width = na_if(map_width[.data$value], 1),
-            height = na_if(map_height[.data$value], 1)
+            width = replace_na(map_width[.data$value], 1),
+            height = replace_na(map_height[.data$value], 1)
         )
         if (!is.null(map_width)) {
             if (!rlang::is_named(map_width) || !is.numeric(map_width)) {

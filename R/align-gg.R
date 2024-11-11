@@ -182,14 +182,12 @@ AlignGG <- ggproto("AlignGG", Align,
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
             # Align object always regard row as the observations
-            ans <- vec_expand_grid(
-                col = data_frame0(
+            ans <- cross_join(
+                ans, data_frame0(
                     .extra_panel = extra_panel[extra_index],
                     .extra_index = extra_index
-                ),
-                row = ans
+                )
             )
-            ans <- vec_cbind(ans$col, ans$row)
             if (!is.null(data)) {
                 ans <- full_join(data, ans,
                     by.x = c(".column_index", ".index"),
