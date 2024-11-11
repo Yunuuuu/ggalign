@@ -8,7 +8,7 @@
 # last-updated: 2024-11-10
 # license: https://unlicense.org
 # dependencies: [standalone-obj-type.R]
-# imports: rlang (>= 1.1.0)
+# imports: rlang
 # ---
 
 # ## Changelog
@@ -27,6 +27,7 @@
 #' @param show_value Passed to `value` argument of `obj_type_friendly()`.
 #' @param show_length Passed to `length` argument of `obj_type_friendly()`.
 #' @param ... Arguments passed to [rlang::abort()].
+#' @importFrom rlang is_missing
 #' @noRd
 assert_ <- function(x, check, what,
                     allow_null = FALSE,
@@ -36,7 +37,7 @@ assert_ <- function(x, check, what,
                     ...,
                     arg = caller_arg(x),
                     call = caller_env()) {
-    if (!missing(x) && ((allow_null && is.null(x)) || check(x))) {
+    if (!is_missing(x) && ((allow_null && is.null(x)) || check(x))) {
         return(invisible(NULL))
     }
     stop_input_type(x, what,
@@ -102,7 +103,7 @@ IS_NUMBER_true <- 0
 IS_NUMBER_false <- 1
 IS_NUMBER_oob <- 2
 
-#' @importFrom rlang ffi_standalone_check_number_1.0.7
+#' @importFrom rlang ffi_standalone_check_number_1.0.7 is_missing
 assert_number_decimal <- function(x,
                                   ...,
                                   min = NULL,
@@ -112,7 +113,7 @@ assert_number_decimal <- function(x,
                                   allow_null = FALSE,
                                   arg = caller_arg(x),
                                   call = caller_env()) {
-    if (missing(x)) {
+    if (is_missing(x)) {
         exit_code <- IS_NUMBER_false
     } else if (0 == (exit_code <- .Call(
         ffi_standalone_check_number_1.0.7,
@@ -141,7 +142,7 @@ assert_number_decimal <- function(x,
     )
 }
 
-#' @importFrom rlang ffi_standalone_check_number_1.0.7
+#' @importFrom rlang ffi_standalone_check_number_1.0.7 is_missing
 assert_number_whole <- function(x,
                                 ...,
                                 min = NULL,
@@ -151,7 +152,7 @@ assert_number_whole <- function(x,
                                 allow_null = FALSE,
                                 arg = caller_arg(x),
                                 call = caller_env()) {
-    if (missing(x)) {
+    if (is_missing(x)) {
         exit_code <- IS_NUMBER_false
     } else if (0 == (exit_code <- .Call(
         ffi_standalone_check_number_1.0.7,
@@ -257,8 +258,7 @@ assert_character <- function(x,
             if (!allow_na && anyNA(x)) {
                 abort(
                     sprintf("`%s` can't contain NA values.", arg),
-                    arg = arg,
-                    call = call
+                    arg = arg, call = call
                 )
             }
             return(invisible(NULL))
@@ -313,14 +313,14 @@ assert_logical <- function(x,
 }
 
 # S3 object ----------------------------------------
-#' @importFrom rlang is_string
+#' @importFrom rlang is_string is_missing
 assert_s3_class <- function(x, is_class, what, ...,
                             arg = caller_arg(x),
                             call = caller_env()) {
     if (is_string(is_class)) {
         class <- is_class
         is_class <- function(x) inherits(x, what = class)
-        if (missing(what)) what <- sprintf("a <%s>", class)
+        if (is_missing(what)) what <- sprintf("a <%s>", class)
     }
     assert_(
         x = x, check = is_class,

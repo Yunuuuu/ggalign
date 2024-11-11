@@ -111,9 +111,10 @@ stop_input_type <- function(x,
 #' @param length Whether to mention the length of vectors and lists.
 #' @return A string describing the type. Starts with an indefinite
 #'   article, e.g. "an integer vector".
+#' @importFrom rlang is_missing is_vector
 #' @noRd
 obj_type_friendly <- function(x, value = TRUE, length = FALSE) {
-    if (rlang::is_missing(x)) {
+    if (is_missing(x)) {
         return("absent")
     }
 
@@ -126,15 +127,15 @@ obj_type_friendly <- function(x, value = TRUE, length = FALSE) {
         return(sprintf("a <%s> object", type))
     }
 
-    if (!rlang::is_vector(x)) {
+    if (!is_vector(x)) {
         return(.rlang_as_friendly_type(typeof(x)))
     }
 
     n_dim <- length(dim(x))
 
     if (!n_dim) {
-        if (!rlang::is_list(x) && length(x) == 1) {
-            if (rlang::is_na(x)) {
+        if (!is.list(x) && length(x) == 1) {
+            if (is.na(x)) {
                 return(switch(typeof(x),
                     logical = "`NA`",
                     integer = "an integer `NA`",
@@ -223,9 +224,9 @@ obj_type_friendly <- function(x, value = TRUE, length = FALSE) {
     vec_type_friendly(x, length = length)
 }
 
-#' @importFrom rlang abort
+#' @importFrom rlang is_vector abort
 vec_type_friendly <- function(x, length = FALSE) {
-    if (!rlang::is_vector(x)) {
+    if (!is_vector(x)) {
         abort("`x` must be a vector.")
     }
     type <- typeof(x)
