@@ -23,18 +23,6 @@
 
 map <- function(.x, .f, ...) lapply(.x, .f, ...)
 
-imap <- function(.x, .f, ...) {
-    nms <- names(.x)
-    if (is.null(nms)) {
-        data <- list(.x, seq_along(.x))
-    } else {
-        data <- list(.x, nms)
-    }
-    out <- .mapply(.f, data, list(...))
-    if (!is.null(nms)) names(out) <- nms
-    out
-}
-
 walk <- function(.x, .f, ...) {
     lapply(.x, .f, ...)
     invisible(.x)
@@ -56,36 +44,89 @@ map_chr <- function(.x, .f, ...) {
     vapply(X = .x, FUN = .f, character(1L), ...)
 }
 
-
-map2 <- function(.x, .y, .f, ...) {
-    mapply(.f, .x, .y, MoreArgs = list(...), SIMPLIFY = FALSE)
-}
-
-map2_lgl <- function(.x, .y, .f, ...) {
-    as.vector(map2(.x, .y, .f, ...), "logical")
-}
-
-map2_int <- function(.x, .y, .f, ...) {
-    as.vector(map2(.x, .y, .f, ...), "integer")
-}
-
-map2_dbl <- function(.x, .y, .f, ...) {
-    as.vector(map2(.x, .y, .f, ...), "double")
-}
-
-map2_chr <- function(.x, .y, .f, ...) {
-    as.vector(map2(.x, .y, .f, ...), "character")
-}
-
 pmap <- function(.l, .f, ...) {
-    lens <- lengths(.l)
-    n <- max(lens)
-    stopifnot(all(lens == 1L | lens == n))
-    to_recycle <- lens != n
-    .l[to_recycle] <- lapply(.l[to_recycle], function(x) rep.int(x, n))
     out <- .mapply(.f, .l, list(...))
     if (!is.null(nms <- names(.subset2(.l, 1L)))) names(out) <- nms
     out
+}
+
+pmap_lgl <- function(.l, .f, ...) {
+    .purrr_pmap_mold(.l, .f, ..., mold = logical(1L))
+}
+
+pmap_int <- function(.l, .f, ...) {
+    .purrr_pmap_mold(.l, .f, ..., mold = integer(1L))
+}
+
+pmap_dbl <- function(.l, .f, ...) {
+    .purrr_pmap_mold(.l, .f, ..., mold = double(1L))
+}
+
+pmap_chr <- function(.l, .f, ...) {
+    .purrr_pmap_mold(.l, .f, ..., mold = character(1L))
+}
+
+.purrr_pmap_mold <- function(.l, .f, ..., mold) {
+    nms <- names(.subset2(.l, 1L))
+    dots <- list(...)
+    out <- vapply(seq_along(nms), function(i) {
+        do.call(.f, args = c(lapply(.l, .subset2, i), dots))
+    }, mold, USE.NAMES = FALSE)
+    if (!is.null(nms)) names(out) <- nms
+    out
+}
+
+map2 <- function(.x, .y, .f, ...) pmap(list(.x, .y), .f, ...)
+
+map2_lgl <- function(.x, .y, .f, ...) {
+    .purrr_pmap_mold(list(.x, .y), .f, ..., mold = logical(1L))
+}
+
+map2_int <- function(.x, .y, .f, ...) {
+    .purrr_pmap_mold(list(.x, .y), .f, ..., mold = integer(1L))
+}
+
+map2_dbl <- function(.x, .y, .f, ...) {
+    .purrr_pmap_mold(list(.x, .y), .f, ..., mold = double(1L))
+}
+
+map2_chr <- function(.x, .y, .f, ...) {
+    .purrr_pmap_mold(list(.x, .y), .f, ..., mold = character(1L))
+}
+
+imap <- function(.x, .f, ...) {
+    nms <- names(.x)
+    if (is.null(nms)) {
+        .l <- list(.x, seq_along(.x))
+    } else {
+        .l <- list(.x, nms)
+    }
+    pmap(.l, .f, ...)
+}
+
+.purrr_imap_mold <- function(.x, .f, ..., mold) {
+    if (is.null(nms <- names(.x))) {
+        .l <- list(.x, seq_along(.x))
+    } else {
+        .l <- list(.x, nms)
+    }
+    .purrr_pmap_mold(.l, .f, ..., mold = mold)
+}
+
+imap_lgl <- function(.l, .f, ...) {
+    .purrr_imap_mold(.l, .f, ..., mold = logical(1L))
+}
+
+imap_int <- function(.l, .f, ...) {
+    .purrr_imap_mold(.l, .f, ..., mold = integer(1L))
+}
+
+imap_dbl <- function(.l, .f, ...) {
+    .purrr_imap_mold(.l, .f, ..., mold = double(1L))
+}
+
+imap_chr <- function(.l, .f, ...) {
+    .purrr_imap_mold(.l, .f, ..., mold = character(1L))
 }
 
 transpose <- function(.l) {
