@@ -210,13 +210,6 @@ fct_rev <- function(x) {
     factor(ans, levels = rev(levels(ans)))
 }
 
-imap <- function(.x, .f, ...) {
-    nms <- names(.x)
-    out <- .mapply(.f, list(.x, nms %||% seq_along(.x)), NULL)
-    if (!is.null(nms)) names(out) <- nms
-    out
-}
-
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
 
 fclass <- function(x) .subset(class(x), 1L)
@@ -225,27 +218,6 @@ is_scalar <- function(x) length(x) == 1L
 
 is_scalar_numeric <- function(x) {
     length(x) == 1L && is.numeric(x)
-}
-
-transpose <- function(.l) {
-    if (!length(.l)) return(.l) # styler: off
-    inner_names <- names(.l[[1L]])
-    if (is.null(inner_names)) {
-        fields <- seq_along(.l[[1L]])
-    } else {
-        fields <- inner_names
-        names(fields) <- fields
-        .l <- lapply(.l, function(x) {
-            if (is.null(names(x))) names(x) <- inner_names # styler: off
-            x
-        })
-    }
-
-    # This way missing fields are subsetted as `NULL` instead of causing
-    # an error
-    .l <- lapply(.l, as.list)
-
-    lapply(fields, function(i) lapply(.l, .subset2, i))
 }
 
 # utils function to collapse characters ---------------------------
