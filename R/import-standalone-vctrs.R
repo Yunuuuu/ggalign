@@ -5,7 +5,7 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-vctrs.R
-# last-updated: 2024-11-10
+# last-updated: 2024-11-11
 # license: https://unlicense.org
 # imports: [vctrs (>= 0.5.0), rlang]
 # ---
@@ -27,7 +27,10 @@
 # - Added `cross_join`
 # - Added `replace_na`
 # - Added `coalesce`
-# - Added `na_if`
+# - Added `deframe`
+# - Added `enframe`
+# - Added `remove_rownames`
+# - Added `rownames_to_column`
 #
 # 2024-11-10:
 # - Added `full_join`
@@ -175,6 +178,36 @@ na_if <- function(x, y) {
     y <- vec_recycle(y, size = vec_size(x), x_arg = "y")
     na <- vec_init(x)
     vec_assign(x, vec_equal(x, y, na_equal = TRUE), na)
+}
+
+deframe <- function(x) {
+    if (ncol(x) == 1L) {
+        return(x[[1]])
+    }
+    vec_set_names(x[[1L]], x[[2]])
+}
+
+enframe <- function(x, name = "name", value = "value") {
+    if (!is.null(names(x))) {
+        data <- list(names(x), unname(x))
+    } else {
+        data <- list(seq_along(x), unname(x))
+    }
+    new_data_frame(vec_set_names(data, c(name, value)))
+}
+
+remove_rownames <- function(.data) {
+    rownames(.data) <- NULL
+    .data
+}
+
+rownames_to_column <- function(.data, var = "rowname") {
+    if (!is.null(var_col <- rownames(.data))) {
+        nms <- names(.data)
+        .data[[var]] <- var_col
+        .data <- .data[c(var, nms)]
+    }
+    .data
 }
 
 # nocov end
