@@ -10,10 +10,13 @@
 # imports: [vctrs (>= 0.5.0), rlang]
 # ---
 
-# when developing R package, instead of depending on `dplyr`
+# when developing R package, instead of depending on `dplyr`, `tidyr`, `tibble`.
 # we prefer use the basic function from `vctrs`
 #
 # Note: these functions won't check arguments
+#
+# Since `vctrs` also depends on `rlang`, it's no harm to use function from
+# `rlang`.
 #
 # Please initialize the package docs and import vctrs
 # 1. run `usethis::use_package_doc()`
