@@ -176,7 +176,6 @@ stack_layout_add.quad_anno <- stack_layout_add.quad_active
 #' @export
 stack_layout_add.anno_init <- stack_layout_add.quad_active
 
-#' @importFrom rlang try_fetch
 #' @importFrom methods slot
 #' @export
 stack_layout_add.QuadLayout <- function(object, stack, object_name) {
