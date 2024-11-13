@@ -9,8 +9,8 @@ with_quad(x, position = waiver(), main = NULL)
 \arguments{
 \item{x}{The object to be added to the layout using the \code{-} operator.}
 
-\item{position}{A string specifying one or more positions—
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}— to indicate the annotation stack context for the
+\item{position}{A string specifying one or more positions-
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}- to indicate the annotation stack context for the
 operator \code{\link[=layout-operator]{-}}. By default, \code{waiver()} is used, which sets
 the behavior as follows: if the active context in \code{quad_layout()} is \code{top} or
 \code{bottom}, the operator will also apply to the corresponding \code{bottom} or \code{top}

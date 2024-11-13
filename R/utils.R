@@ -125,13 +125,13 @@ pkg_nm <- function() packageName(topenv(environment()))
 # )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
-#> # A tibble: 6 × 6
+#> # A tibble: 6 x 6
 #>   expression           min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>      <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
 #> 1 nest_unique       5.37ms   7.49ms    134.      1.33MB    69.2
-#> 2 nest_vctrs       200.3µs 214.57µs   3591.     754.7KB     6.00
-#> 3 nest_vctrs_loc  193.99µs 207.29µs   4490.    706.95KB     6.00
-#> 4 nest_data_table 402.71µs 459.55µs   1918.    985.25KB     4.00
+#> 2 nest_vctrs       200.3us 214.57us   3591.     754.7KB     6.00
+#> 3 nest_vctrs_loc  193.99us 207.29us   4490.    706.95KB     6.00
+#> 4 nest_data_table 402.71us 459.55us   1918.    985.25KB     4.00
 #> 5 nest_split       11.87ms  14.08ms     69.8     1.15MB    54.3
 #> 6 nest_table      183.52ms 189.87ms      5.20  576.35MB     8.67
 `%nest%` <- function(x, y) {

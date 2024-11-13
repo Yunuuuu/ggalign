@@ -9,8 +9,8 @@
 #' `quad_layout()`.
 #'
 #' @param x The object to be added to the layout using the `-` operator.
-#' @param position A string specifying one or more positions—
-#' `r oxford_and(.tlbr)`— to indicate the annotation stack context for the
+#' @param position A string specifying one or more positions-
+#' `r oxford_and(.tlbr)`- to indicate the annotation stack context for the
 #' operator [`-`][layout-operator]. By default, `waiver()` is used, which sets
 #' the behavior as follows: if the active context in `quad_layout()` is `top` or
 #' `bottom`, the operator will also apply to the corresponding `bottom` or `top`

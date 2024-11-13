@@ -8,8 +8,8 @@
 #'
 #' @details
 #' By default, the active context is set only for functions that add plot areas.
-#' This allows other `ggplot2` elements—such as `geoms`, `stats`, `scales`, or
-#' `themes`— to be seamlessly added to the current plot area.
+#' This allows other `ggplot2` elements-such as `geoms`, `stats`, `scales`, or
+#' `themes`- to be seamlessly added to the current plot area.
 #'
 #' The default ordering of the plot areas is from top to bottom or from left to
 #' right, depending on the layout orientation. However, users can customize this

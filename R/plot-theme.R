@@ -11,7 +11,7 @@
 #' @inherit ggplot2::theme
 #' @param ... A [`theme()`][ggplot2::theme] object or additional element
 #' specifications not part of base ggplot2. In general, these should also be
-#' defined in the `⁠element tree`⁠ argument. [`Splicing`][rlang::splice] a list
+#' defined in the `element tree` argument. [`Splicing`][rlang::splice] a list
 #' is also supported.
 #' @examples
 #' set.seed(123)
