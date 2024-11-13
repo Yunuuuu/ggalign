@@ -24,7 +24,6 @@
 
 # ## Changelog
 # 2024-11-13
-# - `replace_na()` now can handle vector in y
 # - fix wrong results in `coalesce()`: we should assign value in the missing
 #   index
 #
@@ -184,12 +183,11 @@ if_else <- function(condition, true, false, na = NULL) {
 }
 
 #' Replace NAs with specified values
+#' @param value A single value.
 #' @noRd
-replace_na <- function(x, y) {
-    y <- vec_cast(x = y, to = x, x_arg = "y", to_arg = "x")
-    y <- vec_recycle(y, size = vec_size(x), x_arg = "y")
-    index <- vec_detect_missing(x)
-    vec_assign(x, index, value = vec_slice(y, index))
+replace_na <- function(x, value) {
+    value <- vec_cast(x = value, to = x, x_arg = "value", to_arg = "x")
+    vec_assign(x, vec_detect_missing(x), value)
 }
 
 #' Find the first non-missing element
