@@ -175,23 +175,31 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
             oxford_and(c(.tlbr, "x", "y"))
         ))
     }
-    positions <- .subset(
-        list(
-            t = "top", l = "left", b = "bottom", r = "right",
-            x = c("top", "bottom"), y = c("left", "right")
-        ),
-        split_position(axes)
-    )
-    positions <- vec_unique(unlist(positions, FALSE, FALSE))
+    axes <- split_position(axes)
     el <- list(text = text, ticks = ticks, title = title, line = line)
     el <- names(el)[vapply(el, isTRUE, logical(1L), USE.NAMES = FALSE)]
-    el <- vec_expand_grid(pos = positions, el = el)
-    el <- paste("axis",
-        .subset2(el, "el"),
-        ifelse(.subset2(el, "pos") %in% c("top", "bottom"), "x", "y"),
-        .subset2(el, "pos"),
-        sep = "."
-    )
+    el_axis <- el_pos <- NULL
+    if (length(positions <- vec_set_intersect(axes, .tlbr))) {
+        positions <- .subset(
+            c(t = "top", l = "left", b = "bottom", r = "right"),
+            positions
+        )
+        el_pos <- vec_expand_grid(pos = positions, el = el)
+        el_pos <- paste("axis",
+            .subset2(el_pos, "el"),
+            if_else(.subset2(el_pos, "pos") %in% c("top", "bottom"), "x", "y"),
+            .subset2(el_pos, "pos"),
+            sep = "."
+        )
+    }
+    if (length(axes <- vec_set_intersect(axes, c("x", "y")))) {
+        el_axis <- vec_expand_grid(axes = axes, el = el)
+        el_axis <- paste("axis",
+            .subset2(el_axis, "el"), .subset2(el_axis, "axes"),
+            sep = "."
+        )
+    }
+    el <- c(el_axis, el_pos)
     el <- vec_set_names(vec_rep(list(element_blank()), length(el)), el)
     inject(theme(!!!el, validate = FALSE))
 }
