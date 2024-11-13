@@ -121,8 +121,8 @@ articles:
   - heatmap-layout
   - layout-customize
   - layout-plot
-  - quad-layout
-  - stack-layout
+  - articles/quad-layout
+  - articles/stack-layout
   - operator
   - plot-options
 
