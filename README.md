@@ -46,7 +46,7 @@ Alternatively, install the development version from
 
 ``` r
 install.packages("ggalign",
-  repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
+    repos = c("https://yunuuuu.r-universe.dev", "https://cloud.r-project.org")
 )
 ```
 
@@ -62,8 +62,8 @@ remotes::install_github("Yunuuuu/ggalign")
 The usage of `ggalign` is simple if you’re familiar with `ggplot2`
 syntax, the typical workflow includes:
 
-- Initialize the layout using `ggheatmap()`/`ggside()`, `quad_layout()`
-  or `ggstack()`.
+- Initialize the layout using `quad_layout()` (`ggheatmap()`/`ggside()`)
+  or `stack_layout()` (`ggstack()`).
 - Customize the layout with:
   - `align_group()`: Group observations into panel with a group
     variable.
@@ -86,26 +86,83 @@ heatmap with a `dendrogram`.
 
 ``` r
 library(ggalign)
+#> Loading required package: ggplot2
+```
+
+``` r
 set.seed(123)
-small_mat <- matrix(rnorm(81), nrow = 9)
+small_mat <- matrix(rnorm(72), nrow = 9)
 rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # initialize the heatmap layout, we can regard it as a normal ggplot object
-ggheatmap(small_mat) +
-  # we can directly modify geoms, scales and other ggplot2 components
-  scale_fill_viridis_c() +
-  # add annotation in the top
-  anno_top() +
-  # in the top annotation, we add a dendrogram, and split observations into 3 groups
-  align_dendro(aes(color = branch), k = 3) +
-  # in the dendrogram we add a point geom
-  geom_point(aes(color = branch, y = y)) +
-  # change color mapping for the dendrogram
-  scale_color_brewer(palette = "Dark2")
+my_heatplot <- ggheatmap(small_mat) +
+    # we can directly modify geoms, scales and other ggplot2 components
+    scale_fill_viridis_c() +
+    # add annotation in the top
+    anno_top() +
+    # in the top annotation, we add a dendrogram, and split observations into 3 groups
+    align_dendro(aes(color = branch), k = 3) +
+    # in the dendrogram we add a point geom
+    geom_point(aes(color = branch, y = y)) +
+    # change color mapping for the dendrogram
+    scale_color_brewer(palette = "Dark2")
+my_heatplot
+#> → heatmap built with `geom_tile()`
 ```
 
-![](https://yunuuuu.github.io/ggalign/dev/articles/complete-examples_files/figure-html/unnamed-chunk-3-1.png)
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+Marginal plots can also be created with similar syntax:
+
+``` r
+my_sideplot <- ggside(mpg, aes(displ, hwy, colour = class)) -
+    # set default theme for all plots in the layout
+    plot_theme(theme_bw()) +
+    geom_point(size = 2) +
+    # add top annotation
+    anno_top(size = 0.3) -
+    # set default theme for the top annotation
+    plot_theme(theme_no_axes("tb")) +
+    # add a plot in the top annotation
+    ggfree() +
+    geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
+    anno_right(size = 0.3) -
+    # set default theme for the right annotation
+    plot_theme(theme_no_axes("lr")) +
+    # add a plot in the right annotation
+    ggfree() +
+    geom_density(aes(x = after_stat(density), hwy, colour = class),
+        position = "stack"
+    ) +
+    theme(axis.text.x = element_text(angle = 90, vjust = .5)) &
+    scale_color_brewer(palette = "Dark2")
+my_sideplot
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+Multiple heatmaps can be stacked together:
+
+``` r
+stack_alignv() +
+    my_heatplot +
+    my_heatplot
+#> → heatmap built with `geom_tile()`
+#> → heatmap built with `geom_tile()`
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+Similarly, multiple marginal plots can be stacked together:
+
+``` r
+stack_freev(sizes = c(1, 1, 0.3)) +
+    my_sideplot +
+    my_sideplot
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 ## Compare with other ggplot2 heatmap extension
 

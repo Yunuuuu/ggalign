@@ -32,9 +32,9 @@ library(ggalign)
 
 # `quad_free()`
 `quad_free()` won't align observations. `ggside()` is an alias of `quad_free()`.
-It do the same function of
-[ggside](https://cran.rstudio.com/web/packages/ggside/index.html) packge. This
-is particularly useful for metadata for summary graphics on a continuous axis 
+It do the same function of [ggside](https://cran.r-project.org/package=ggside)
+packge. This is particularly useful for metadata for summary graphics on a
+continuous axis 
 
 ## input data
 Like `ggplot`, you'll need to provide input that can be converted into a data
