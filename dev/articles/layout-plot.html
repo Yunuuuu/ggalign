@@ -45,8 +45,8 @@
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
     <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -285,23 +285,21 @@ to place titles around any border of the plot using the
 </h2>
 <p>The <code><a href="../reference/free_gg.html">free_gg()</a></code> function allows you to incorporate a
 ggplot object into your layout. Unlike <code><a href="../reference/align_gg.html">align_gg()</a></code>, which
-aligns every axis value precisely, <code><a href="../reference/free_gg.html">free_gg()</a></code> focuses more
-on layout integration without enforcing strict axis alignment.
+aligns every axis value precisely, <code><a href="../reference/free_gg.html">free_gg()</a></code> focuses on
+layout integration without enforcing strict axis alignment.
 <code><a href="../reference/free_gg.html">ggfree()</a></code> is an alias for <code>free_gg</code>.</p>
 <p>Internally, the function uses <code><a href="../reference/fortify_data_frame.html">fortify_data_frame()</a></code> to
 transform the input into a data frame. For matrices, it converts them
 into a long-formatted data frame. Note that <code><a href="../reference/free_gg.html">ggfree()</a></code> does
 not provide a default aesthetic mapping, which contrasts with
 <code><a href="../reference/align_gg.html">ggalign()</a></code>. You will need to manually provide the default
-mappings. When used in a <code><a href="../reference/stack_align.html">stack_align()</a></code>, you typically do
-not want to inherit from the layout matrix and should input a data frame
-manually. The <code>data</code> argument must be explicitly provided, as
-it comes after <code>...</code>. This is rarely necessary in a
-<code><a href="../reference/stack_align.html">stack_align()</a></code>, and it is more commonly used in a
-<code><a href="../reference/stack_align.html">stack_free()</a></code>, where you usually want to inherit from the
-layout data frame.</p>
+mappings.</p>
 <p>All annotations in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are
-<code><a href="../reference/stack_align.html">stack_align()</a></code>.</p>
+<code><a href="../reference/stack_align.html">stack_align()</a></code>. When used in a <code><a href="../reference/stack_align.html">stack_align()</a></code>,
+you typically do not want to inherit from the layout matrix and should
+input a data frame manually. The <code>data</code> argument must be
+explicitly provided, as it comes after <code>...</code>, but we rarely
+used it in a <code><a href="../reference/stack_align.html">stack_align()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -309,8 +307,9 @@ layout data frame.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-plot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>All annotations in <code><a href="../reference/quad_free.html">ggside()</a></code> are
-<code><a href="../reference/stack_align.html">stack_free()</a></code>.</p>
+<p>It is more commonly used in a <code><a href="../reference/stack_align.html">stack_free()</a></code>, where you
+usually want to inherit from the layout data frame. All annotations in
+<code><a href="../reference/quad_free.html">ggside()</a></code> are <code><a href="../reference/stack_align.html">stack_free()</a></code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quad_free.html">ggside</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
