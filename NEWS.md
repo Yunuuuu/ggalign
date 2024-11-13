@@ -1,4 +1,4 @@
-# ggalign (development version)
+# ggalign 0.0.5
 
 ## Breaking changes
 
