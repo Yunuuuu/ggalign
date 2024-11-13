@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,15 +42,21 @@
 <li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -87,7 +93,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Layout Customization</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/vignettes/layout-customize.Rmd" class="external-link"><code>vignettes/layout-customize.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/vignettes/layout-customize.Rmd" class="external-link"><code>vignettes/layout-customize.Rmd</code></a></small>
       <div class="d-none name"><code>layout-customize.Rmd</code></div>
     </div>
 
@@ -106,10 +112,10 @@ based on categorical factors.</li>
 <li>
 <strong><code>align_order</code></strong>: Reorder layout
 observations based on statistical weights or allows for manual
-reordering based on user-defined criteria.</li>
+reordering based on user-defined ordering index.</li>
 <li>
-<strong><code>align_kmeans</code></strong>: Arrange plots by k-means
-clustering results.</li>
+<strong><code>align_kmeans</code></strong>: Group observations by
+k-means clustering results.</li>
 <li>
 <strong><code>align_dendro</code></strong>: Align plots according to
 hierarchical clustering or dendrograms.</li>
@@ -130,8 +136,9 @@ hierarchical clustering or dendrograms.</li>
 rows/columns into separate panels. It doesn’t add any plot area.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_group_top-1.png" width="700"></p>
 <p>By default, the facet strip text is removed. You can override this
 behavior with <code>theme(strip.text = element_text())</code>. Since
@@ -140,8 +147,9 @@ can only be added to the heatmap plot.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_group_left-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -154,8 +162,9 @@ a plot area.</p>
 <p>Here, we order the rows based on the means.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_order-1.png" width="700"></p>
 <p>In addition, we can provide the ordering integer index directly in
 the <code>order</code> argument.</p>
@@ -164,14 +173,16 @@ the <code>order</code> argument.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "row3" "row1" "row7" "row6" "row2" "row8" "row9" "row5" "row4"</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">my_order</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_order_integer_index-1.png" width="700"></p>
 <p>We can also provide the ordering character index.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span><span class="op">[</span><span class="va">my_order</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_order_character_index-1.png" width="700"></p>
 <p>By default, <code><a href="../reference/align_order.html">align_order()</a></code> reorders the rows or columns
 in ascending order of the summary function’s output (from bottom to top
@@ -179,26 +190,24 @@ for rows, or from left to right for columns). To reverse this order, you
 can set <code>reverse = TRUE</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_order_reverse-1.png" width="700"></p>
 <p>Some <code>align_*</code> functions accept a <code>data</code>
-argument. This can be a matrix, a data frame, or even a simple vector,
-which will be converted into a one-column matrix. If the
-<code>data</code> argument is <code>NULL</code>, the function will use
-the layout data, as demonstrated in the previous example. The
-<code>data</code> argument can also accept a function (purrr-like lambda
-syntax is supported), which will be applied to the layout data.</p>
-<p>It is important to note that all <code>align_*</code> functions
-consider the <code>rows</code> as the observations. It means the
-<code>NROW(data)</code> must return the same number with the specific
-<code>layout</code> axis.</p>
+argument. This can be a matrix, a data frame, or even a simple vector.
+The <code>data</code> argument can also accept a function (purrr-like
+lambda syntax is supported), which will be applied to the layout data.
+It is important to note that all <code>align_*</code> functions consider
+the <code>rows</code> as the observations. It means the
+<code>NROW(data)</code> must return the same number with the
+observations in axis used for alignment.</p>
 <ul>
-<li><p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>: for
-column annotation, the <code>layout</code> data will be transposed
-before using (If data is a <code>function</code>, it will be applied
-with the transposed matrix). This is necessary because column annotation
-uses heatmap columns as observations, but we need rows.</p></li>
+<li><p><code><a href="../reference/quad_layout.html">quad_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>: for column
+annotation, the <code>layout</code> data will be transposed before using
+(If data is a <code>function</code>, it will be applied with the
+transposed matrix). This is necessary because column annotation uses
+heatmap columns as observations, but we need rows.</p></li>
 <li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code>: the
 <code>layout</code> data will be used as it is since we place all plots
 along a single axis.</p></li>
@@ -208,8 +217,9 @@ along a single axis.</p></li>
 columns.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="va">rowMeans</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -221,16 +231,17 @@ columns based on k-means clustering. Like the previous functions, it
 does not add a plot area.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>It’s important to note that all <code>align_*</code> functions which
-define groups must not break the previous established groups. This means
-the new groups must nest in the old groups, in this way, usually they
-cannot be used if groups already exist.</p>
+<p>Note that all <code>align_*</code> functions which define groups must
+not break the previous established groups. This means the new groups
+must nest in the old groups, in this way, usually they cannot be used if
+groups already exist.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_kmeans()`:</span></span></span>
@@ -238,7 +249,7 @@ cannot be used if groups already exist.</p>
 <span><span class="co">#&gt;   the layout x-axis</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_group()`:</span></span></span>
@@ -254,8 +265,9 @@ clustering. This is particularly useful for working with heatmap
 plots.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_dendro-1.png" width="700"></p>
 <p>Hierarchical clustering is performed in two steps: calculate the
 distance matrix and apply clustering. You can use the
@@ -275,15 +287,17 @@ columns, the matrix will be transposed automatically.</li>
 </ul>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"pre-defined distance method (1 - pearson)"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"pre-defined distance method (1 - pearson)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_dendro_distance_pearson-1.png" width="700"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>distance <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"a function that calculates distance matrix"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/patch_titles.html">patch_titles</a></span><span class="op">(</span>top <span class="op">=</span> <span class="st">"a function that calculates distance matrix"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/align_dendro_distance_function-1.png" width="700"></p>
 <p>Method to perform hierarchical clustering can be specified by
 <code>method</code>. Possible methods are those supported in
@@ -292,16 +306,18 @@ function, which accepts the distance object and return a
 <code>hclust</code> object.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"ward.D2"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"ward.D2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The dendrogram can also be used to cut the columns/rows into groups.
 You can specify <code>k</code> or <code>h</code>, which work similarly
 to <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>In contrast to <code><a href="../reference/align_group.html">align_group()</a></code>,
 <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>, and <code><a href="../reference/align_order.html">align_order()</a></code>,
@@ -311,9 +327,10 @@ meaning it will set the active context of the annotation stack layout.
 In this way, we can add any ggplot elements to this plot area.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>The <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function creates default
 <code>node</code> data for the ggplot. See
@@ -325,22 +342,25 @@ dendrogram tree. One useful variable in both <code>node</code> and
 to the <code>cutree</code> result:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>You can reorder the dendrogram based on the mean values of the
 observations by setting <code>reorder_dendrogram = TRUE</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span>, reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"reorder_dendrogram = TRUE"</span><span class="op">)</span></span>
 <span><span class="va">h2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"reorder_dendrogram = FALSE"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">h1</span>, <span class="va">h2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">h1</span>, <span class="va">h2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-10-1.png" width="960"></p>
 <p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> can also perform clustering between
 groups, meaning it can be used even if there are existing groups present
@@ -350,40 +370,44 @@ in the layout, in this way, you cannot specify <code>k</code> or
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span>
 <span><span class="va">column_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>You can reorder the groups by setting
 <code>reorder_group = TRUE</code>.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, reorder_group <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>You can merge the sub-tree in each group by settting
 <code>merge_dendrogram = TRUE</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>You can reorder the dendrogram and merge simutaneously.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>,</span>
 <span>        reorder_group <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_bottom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>,</span>
 <span>        reorder_group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        merge_dendrogram <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>    <span class="op">)</span></span></code></pre></div>
+<span>    <span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="layout-customize_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>If you specify <code>k</code> or <code>h</code>, this will always
 turn off sub-clustering. The same principle applies to
@@ -391,7 +415,7 @@ turn off sub-clustering. The same principle applies to
 previously established groups.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_dendro()`:</span></span></span>
@@ -403,7 +427,7 @@ previously established groups.</p>
 </h2>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
+<span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -424,21 +448,20 @@ previously established groups.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] ggalign_0.0.4 ggplot2_3.5.1</span></span>
+<span><span class="co">#&gt; [1] ggalign_0.0.5 ggplot2_3.5.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] gtable_0.3.5      jsonlite_1.8.9    highr_0.11        dplyr_1.1.4      </span></span>
-<span><span class="co">#&gt;  [5] compiler_4.4.1    tidyselect_1.2.1  jquerylib_0.1.4   systemfonts_1.1.0</span></span>
-<span><span class="co">#&gt;  [9] scales_1.3.0      textshaping_0.4.0 yaml_2.3.10       fastmap_1.2.0    </span></span>
-<span><span class="co">#&gt; [13] R6_2.5.1          labeling_0.4.3    generics_0.1.3    knitr_1.48       </span></span>
-<span><span class="co">#&gt; [17] tibble_3.2.1      desc_1.4.3        munsell_0.5.1     bslib_0.8.0      </span></span>
-<span><span class="co">#&gt; [21] pillar_1.9.0      rlang_1.1.4       utf8_1.2.4        cachem_1.1.0     </span></span>
-<span><span class="co">#&gt; [25] xfun_0.48         fs_1.6.4          sass_0.4.9        cli_3.6.3        </span></span>
-<span><span class="co">#&gt; [29] pkgdown_2.1.1     withr_3.0.1       magrittr_2.0.3    digest_0.6.37    </span></span>
-<span><span class="co">#&gt; [33] grid_4.4.1        lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.1   </span></span>
-<span><span class="co">#&gt; [37] glue_1.8.0        data.table_1.16.2 farver_2.1.2      ragg_1.3.3       </span></span>
-<span><span class="co">#&gt; [41] fansi_1.0.6       colorspace_2.1-1  rmarkdown_2.28    tools_4.4.1      </span></span>
-<span><span class="co">#&gt; [45] pkgconfig_2.0.3   htmltools_0.5.8.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] vctrs_0.6.5       cli_3.6.3         knitr_1.49        rlang_1.1.4      </span></span>
+<span><span class="co">#&gt;  [5] xfun_0.49         textshaping_0.4.0 jsonlite_1.8.9    labeling_0.4.3   </span></span>
+<span><span class="co">#&gt;  [9] glue_1.8.0        colorspace_2.1-1  htmltools_0.5.8.1 ragg_1.3.3       </span></span>
+<span><span class="co">#&gt; [13] sass_0.4.9        fansi_1.0.6       scales_1.3.0      rmarkdown_2.29   </span></span>
+<span><span class="co">#&gt; [17] grid_4.4.2        tibble_3.2.1      evaluate_1.0.1    munsell_0.5.1    </span></span>
+<span><span class="co">#&gt; [21] jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.10       lifecycle_1.0.4  </span></span>
+<span><span class="co">#&gt; [25] compiler_4.4.2    fs_1.6.5          pkgconfig_2.0.3   farver_2.1.2     </span></span>
+<span><span class="co">#&gt; [29] systemfonts_1.1.0 digest_0.6.37     R6_2.5.1          utf8_1.2.4       </span></span>
+<span><span class="co">#&gt; [33] pillar_1.9.0      magrittr_2.0.3    bslib_0.8.0       withr_3.0.2      </span></span>
+<span><span class="co">#&gt; [37] tools_4.4.2       gtable_0.3.6      pkgdown_2.1.1     cachem_1.1.0     </span></span>
+<span><span class="co">#&gt; [41] desc_1.4.3</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

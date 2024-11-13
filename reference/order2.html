@@ -9,7 +9,7 @@ ascending order."><meta property="og:image" content="https://yunuuuu.github.io/g
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,15 +23,21 @@ ascending order."><meta property="og:image" content="https://yunuuuu.github.io/g
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -55,7 +61,7 @@ ascending order."><meta property="og:image" content="https://yunuuuu.github.io/g
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Ordering Permutation</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/align-reorder.R" class="external-link"><code>R/align-reorder.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/align-reorder.R" class="external-link"><code>R/align-reorder.R</code></a></small>
       <div class="d-none name"><code>order2.Rd</code></div>
     </div>
 
@@ -98,7 +104,7 @@ elements, when it is a double vector.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">order2</span><span class="op">(</span><span class="fu"><a href="hclust2.html">hclust2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100L</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  9  7  8  4  2  6  3  5  1 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  5  6  2  3  9  1  4  8  7 10</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

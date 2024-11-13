@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -53,9 +59,50 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.5" id="ggalign-005">ggalign 0.0.5<a class="anchor" aria-label="anchor" href="#ggalign-005"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-0-5">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-5"></a></h3>
+<ul><li><p><code>direction</code> argument in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code> is soft-deprecated now, user must provide it manually.</p></li>
+<li><p><code>set_context</code>, <code>order</code>, and <code>name</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are soft-deprecated, which is advised to use <code>active</code> argument.</p></li>
+<li><p><code>guides</code>, <code>free_guides</code>, <code>free_spaces</code>, <code>free_labs</code>, and <code>plot_data</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are deprecated, which is advised to use <code>plot_align</code> function instead.</p></li>
+<li><p><code>theme</code> argument in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> is deprecated, which is advised to use <code>plot_theme</code> function.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="features-0-0-5">features:<a class="anchor" aria-label="anchor" href="#features-0-0-5"></a></h3>
+<ul><li><p>new <code><a href="../reference/quad_layout.html">quad_layout()</a></code> to create layout free from alignment.</p></li>
+<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code> now gains a <code>type</code> argument to control whether the layout should align observations.</p></li>
+<li><p>new <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> function to draw oncoprint</p></li>
+<li><p>new <code><a href="../reference/free_gg.html">ggfree()</a></code> function to add ggplot to the layout</p></li>
+<li><p>new <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> function to convert any objects to a matrix, and add <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> method for <code>MAF</code> object.</p></li>
+<li><p>new <code><a href="../reference/fortify_data_frame.html">fortify_data_frame()</a></code> function to convert any objects to a data frame.</p></li>
+<li><p>now, a special attribute <code>ggalign</code> can be used to pass additional informations across the building process, and a new function <code><a href="../reference/ggalign_attr.html">ggalign_attr()</a></code> can be used to extract the data.</p></li>
+<li><p>new <code><a href="../reference/plot_theme.html">plot_theme()</a></code> function to control the default theme of the plot in layout</p></li>
+<li><p>new <code><a href="../reference/plot_data.html">plot_data()</a></code> function to control the data transformation of the plot in layout</p></li>
+<li><p>new <code><a href="../reference/plot_align.html">plot_align()</a></code> function to control specifications of the plot in layout</p></li>
+<li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain a new argument <code>cutree</code> to customize the process of tree cutting</p></li>
+<li><p><code>reorder_dendrogram</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function now can accept a function to reorder the tree.</p></li>
+<li><p>new <code><a href="../reference/layer_order.html">layer_order()</a></code> function to change the ggplot2 layer adding order</p></li>
+<li><p>new <code><a href="../reference/theme_no_axes.html">theme_no_axes()</a></code> function to remove axis elements</p></li>
+<li><p>new <code><a href="../reference/geom_pie.html">geom_pie()</a></code> function to draw pie charts</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-5">Bug fixes:<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-5"></a></h3>
+<ul><li><p>fix bug when apply <code>free_border</code> in <code>alignpatches</code> object.</p></li>
+<li><p>fix bug when provide a function in <code>distance</code> argument of <code><a href="../reference/align_dendro.html">align_dendro()</a></code></p></li>
+<li><p>fix bug when provide <code>hclust</code> or <code>dendrogram</code> in method argument of <code><a href="../reference/align_dendro.html">align_dendro()</a></code></p></li>
+<li><p>fix bug of <code>coord_ggalign()</code> for discrete scale</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-0-5">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-5"></a></h3>
+<ul><li><p><code>merge</code> function has been implemented with <code>vctrs</code> for performance</p></li>
+<li><p>for large matrix (&gt; 20000 cells), automatically use <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code></p></li>
+<li><p>{data.table} is now removed from the dependency</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.4" id="ggalign-004">ggalign 0.0.4<a class="anchor" aria-label="anchor" href="#ggalign-004"></a></h2><p class="text-muted">CRAN release: 2024-10-12</p>
 <ul><li><p><code>layout_heatmap()</code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> arguments width/height have been renamed <code>.width</code>/<code>.height</code> to helps avoid conflicts with arguments from <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code>.</p></li>
@@ -85,13 +132,13 @@
 <li><p>fix <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> order not work when put in a stack layout</p></li>
 <li><p><code>method</code> in <code><a href="../reference/hclust2.html">hclust2()</a></code> can now return any objects which can be coerced into hclust, or you can provide such object directly in <code>method</code>.</p></li>
 <li><p><code><a href="../reference/hclust2.html">hclust2()</a></code> now can accept <code>distance = NULL</code></p></li>
-<li><p><code><a href="../reference/hmanno.html">hmanno()</a></code>, <code><a href="../reference/stack_active.html">stack_active()</a></code>, and <code>align_*()</code> functions gain a new argument <code>theme</code> to control the theme for the plot.</p></li>
+<li><p><code><a href="../reference/quad_switch.html">hmanno()</a></code>, <code><a href="../reference/stack_switch.html">stack_active()</a></code>, and <code>align_*()</code> functions gain a new argument <code>theme</code> to control the theme for the plot.</p></li>
 <li><p>new <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> and <code>layout_theme()</code> to modify the layout components</p></li>
 <li><p><code>borders</code> argument in <code><a href="../reference/free.html">free_space()</a></code> has been renamed to <code>spaces</code></p></li>
 <li><p>{tibble} is now removed from the dependency</p></li>
 <li><p><code><a href="../reference/align_plots.html">align_plots()</a></code> now can accept <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code>, we have added <code>alignpatch</code> method for these objects.</p></li>
 <li><p>add <code>patch</code> method for <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code></p></li>
-<li><p>fix a bug in <code><a href="../reference/wrap.html">wrap()</a></code> function where duplicated names in gtable cause some grobs missing</p></li>
+<li><p>fix a bug in <code>wrap()</code> function where duplicated names in gtable cause some grobs missing</p></li>
 <li><p>new <code><a href="../reference/free.html">free_vp()</a></code> function to customize the viewport when aligning.</p></li>
 <li><p><code>StackLayout</code> and <code>HeatmapLayout</code> methods have been collapsed into one method for <code>Layout</code> class</p></li>
 <li><p>New <code>Patch</code> class, now we can extend the alignment process of any object and customize the building process with <code>ggproto</code>.</p></li>
@@ -114,7 +161,7 @@
 <h3 id="features-0-0-1">Features<a class="anchor" aria-label="anchor" href="#features-0-0-1"></a></h3>
 <p><code>ggalign</code> pacakge provides two layout to arrange ggplot objects:</p>
 <ul><li><p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>: Arrange ggplot into a Heatmap layout. See <code><a href="../articles/heatmap-layout.html">vignette("heatmap-layout")</a></code> for details.</p></li>
-<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code>: Arrange ggplot vertically or horizontally. See <code><a href="../articles/stack-layout.html">vignette("stack-layout")</a></code> for details.</p></li>
+<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code>: Arrange ggplot vertically or horizontally. See <code>vignette("stack-layout")</code> for details.</p></li>
 </ul><p>To further customize these layouts, we offer following functions:</p>
 <ul><li>
 <code><a href="../reference/align_group.html">align_group()</a></code>: Group layout axis into panel with a group variable.</li>

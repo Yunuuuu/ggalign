@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -53,7 +59,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get the statistics from the layout</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/layout-.R" class="external-link"><code>R/layout-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/layout-.R" class="external-link"><code>R/layout-.R</code></a></small>
       <div class="d-none name"><code>ggalign_stat.Rd</code></div>
     </div>
 
@@ -65,7 +71,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalign_stat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'HeatmapLayout'</span></span>
+<span><span class="co"># S3 method for class 'QuadLayout'</span></span>
 <span><span class="fu">ggalign_stat</span><span class="op">(</span><span class="va">x</span>, <span class="va">position</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'StackLayout'</span></span>
@@ -77,7 +83,7 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A <code><a href="heatmap_layout.html">heatmap_layout()</a></code> or <code><a href="stack_layout.html">stack_layout()</a></code> object.</p></dd>
+<dd><p>A <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code> or <code><a href="stack_layout.html">stack_layout()</a></code> object.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -53,7 +59,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Create a ggplot inset</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/alignpatch-inset.R" class="external-link"><code>R/alignpatch-inset.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-inset.R" class="external-link"><code>R/alignpatch-inset.R</code></a></small>
       <div class="d-none name"><code>inset.Rd</code></div>
     </div>
 
@@ -71,8 +77,8 @@
 
 
 <dl><dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
-<dd><p>Any graphic that can be converted into a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a> using
-<code><a href="patch.html">patch()</a></code>.</p></dd>
+<dd><p>Any graphic that can be converted into a <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a></code>
+using <code><a href="patch.html">patch()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -97,8 +103,8 @@ clipped if they expand outside their designated area.</p></dd>
 
 
 <dt id="arg-vp">vp<a class="anchor" aria-label="anchor" href="#arg-vp"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a> object, you can use this to define the
-plot area.</p></dd>
+<dd><p>A <code><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></code> object, you can use this to define
+the plot area.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -108,18 +114,18 @@ plot area.</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><a href="patch.grob.html">patch.grob</a> / <a href="patch.grob.html">patch.gList</a></p></li>
-<li><p><a href="patch.ggplot.html">patch.ggplot</a></p></li>
-<li><p><a href="patch.patch_ggplot.html">patch.patch_ggplot</a></p></li>
-<li><p><a href="patch.patchwork.html">patch.patchwork</a></p></li>
-<li><p><a href="patch.patch.html">patch.patch</a></p></li>
-<li><p><a href="patch.trellis.html">patch.trellis</a></p></li>
-<li><p><a href="patch.formula.html">patch.formula</a> / <a href="patch.formula.html">patch.function</a></p></li>
-<li><p><a href="patch.recordedplot.html">patch.recordedplot</a></p></li>
-<li><p><a href="patch.Heatmap.html">patch.Heatmap</a></p></li>
-<li><p><a href="patch.Heatmap.html">patch.HeatmapList</a></p></li>
-<li><p><a href="patch.Heatmap.html">patch.HeatmapAnnotation</a></p></li>
-<li><p><a href="patch.pheatmap.html">patch.pheatmap</a></p></li>
+<ul><li><p><code><a href="patch.grob.html">patch.grob</a></code> / <code><a href="patch.grob.html">patch.gList</a></code></p></li>
+<li><p><code><a href="patch.ggplot.html">patch.ggplot</a></code></p></li>
+<li><p><code><a href="patch.patch_ggplot.html">patch.patch_ggplot</a></code></p></li>
+<li><p><code><a href="patch.patchwork.html">patch.patchwork</a></code></p></li>
+<li><p><code><a href="patch.patch.html">patch.patch</a></code></p></li>
+<li><p><code><a href="patch.trellis.html">patch.trellis</a></code></p></li>
+<li><p><code><a href="patch.formula.html">patch.formula</a></code> / <code><a href="patch.formula.html">patch.function</a></code></p></li>
+<li><p><code><a href="patch.recordedplot.html">patch.recordedplot</a></code></p></li>
+<li><p><code><a href="patch.Heatmap.html">patch.Heatmap</a></code></p></li>
+<li><p><code><a href="patch.Heatmap.html">patch.HeatmapList</a></code></p></li>
+<li><p><code><a href="patch.Heatmap.html">patch.HeatmapAnnotation</a></code></p></li>
+<li><p><code><a href="patch.pheatmap.html">patch.pheatmap</a></code></p></li>
 </ul></div>
     </div>
 

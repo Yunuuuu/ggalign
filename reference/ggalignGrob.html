@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -53,7 +59,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate a plot grob.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/alignpatch-.R" class="external-link"><code>R/alignpatch-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/alignpatch-.R" class="external-link"><code>R/alignpatch-.R</code></a></small>
       <div class="d-none name"><code>ggalignGrob.Rd</code></div>
     </div>
 
@@ -84,12 +90,12 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ggalignGrob</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TableGrob (20 x 17) "layout": 26 grobs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     z         cells               name                                   grob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0 ( 1-20, 1-17)         background       rect[plot.background..rect.2501]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0 ( 1-20, 1-17)         background       rect[plot.background..rect.2440]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   5 ( 9- 9, 7- 7)             spacer                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   7 (11-11, 7- 7)             axis-l                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3 (13-13, 7- 7)             spacer                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   6 ( 9- 9, 9- 9)             axis-t                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   1 (11-11, 9- 9)              panel              gTree[panel-1.gTree.2496]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   1 (11-11, 9- 9)              panel              gTree[panel-1.gTree.2435]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   9 (13-13, 9- 9)             axis-b                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   4 ( 9- 9,11-11)             spacer                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   8 (11-11,11-11)             axis-r                         zeroGrob[NULL]</span>
@@ -103,9 +109,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17 16 (17-17, 9- 9)   guide-box-bottom                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18 17 ( 5- 5, 9- 9)      guide-box-top                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19 18 (11-11, 9- 9)   guide-box-inside                         zeroGrob[NULL]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 19 ( 4- 4, 9- 9)           subtitle zeroGrob[plot.subtitle..zeroGrob.2498]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 20 ( 3- 3, 9- 9)              title    zeroGrob[plot.title..zeroGrob.2497]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 21 (18-18, 9- 9)            caption  zeroGrob[plot.caption..zeroGrob.2499]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 19 ( 4- 4, 9- 9)           subtitle zeroGrob[plot.subtitle..zeroGrob.2437]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 20 ( 3- 3, 9- 9)              title    zeroGrob[plot.title..zeroGrob.2436]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 21 (18-18, 9- 9)            caption  zeroGrob[plot.caption..zeroGrob.2438]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 23 22 ( 7- 7, 9- 9)    patch-title-top                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 24 23 (11-11, 5- 5)   patch-title-left                         zeroGrob[NULL]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 25 24 (15-15, 9- 9) patch-title-bottom                         zeroGrob[NULL]</span>

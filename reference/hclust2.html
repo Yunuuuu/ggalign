@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,15 +21,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>ComplexHeatmap</h6></li>
     <li><a class="dropdown-item" href="../articles/single-heatmap.html">ComplexHeatmap: single-heatmap</a></li>
@@ -53,7 +59,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate Tree Structures with Hierarchical Clustering</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/update-pkgdown-0-0-4/R/dendrogram.R" class="external-link"><code>R/dendrogram.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/dendrogram.R" class="external-link"><code>R/dendrogram.R</code></a></small>
       <div class="d-none name"><code>hclust2.Rd</code></div>
     </div>
 
@@ -84,8 +90,8 @@
 <code>"euclidean"</code>, <code>"maximum"</code>, <code>"manhattan"</code>, <code>"canberra"</code>, <code>"binary"</code> or
 <code>"minkowski"</code>.  Correlation coefficient can be also used, including
 <code>"pearson"</code>, <code>"spearman"</code> or <code>"kendall"</code>. In this way, <code>1 - cor</code> will be used
-as the distance. In addition, you can also provide a <a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a>
-object directly or a function return a <a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a> object. Use
+as the distance. In addition, you can also provide a <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code>
+object directly or a function return a <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code> object. Use
 <code>NULL</code>, if you don't want to calculate the distance.</p></dd>
 
 
@@ -94,9 +100,9 @@ object directly or a function return a <a href="https://rdrr.io/r/stats/dist.htm
 (an unambiguous abbreviation of) one of <code>"ward.D"</code>, <code>"ward.D2"</code>, <code>"single"</code>,
 <code>"complete"</code>, <code>"average"</code> (= UPGMA), <code>"mcquitty"</code> (= WPGMA), <code>"median"</code> (=
 WPGMC) or <code>"centroid"</code> (= UPGMC). You can also provide a function which
-accepts the distance and returns a <a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a> object.
-Alternative, you can supply an object which can be coerced to
-<a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a>.</p></dd>
+accepts the calculated distance (or the input matrix if <code>distance</code> is <code>NULL</code>)
+and returns a <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code> object. Alternative, you can supply
+an object which can be coerced to <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code>.</p></dd>
 
 
 <dt id="arg-use-missing">use_missing<a class="anchor" aria-label="anchor" href="#arg-use-missing"></a></dt>

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,11 +42,14 @@
 <li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
     <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
+    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/special-syntax.html">Special Syntax for Layout Axis</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
+    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
+    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete Examples</a></li>
     <li><a class="dropdown-item" href="../articles/plot-composer.html">Plot composer</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
@@ -100,7 +103,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jokergoo/ComplexHeatmap" class="external-link">ComplexHeatmap</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: grid</span></span>
 <span><span class="co">#&gt; ========================================</span></span>
-<span><span class="co">#&gt; ComplexHeatmap version 2.20.0</span></span>
+<span><span class="co">#&gt; ComplexHeatmap version 2.22.0</span></span>
 <span><span class="co">#&gt; Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/</span></span>
 <span><span class="co">#&gt; Github page: https://github.com/jokergoo/ComplexHeatmap</span></span>
 <span><span class="co">#&gt; Documentation: http://jokergoo.github.io/ComplexHeatmap-reference</span></span>
@@ -152,7 +155,10 @@
 <span>    <span class="op">}</span>,</span>
 <span>    <span class="st">"Heatmap()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">mat</span>, cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>, cluster_columns <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">mat</span>,</span>
+<span>            cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>, cluster_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>            use_raster <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>        <span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>        <span class="cn">NULL</span></span>
 <span>    <span class="op">}</span>,</span>
@@ -164,23 +170,27 @@
 <span>    <span class="op">}</span>,</span>
 <span>    <span class="st">"ggalign()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>        <span class="cn">NULL</span></span>
 <span>    <span class="op">}</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_raster()`</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_raster()`</span></span>
+<span><span class="co">#&gt; 'magick' package is suggested to install to give better rasterization.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span><span class="co">#&gt; 'magick' package is suggested to install to give better rasterization.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Set `ht_opt$message = FALSE` to turn off this message.</span></span>
 <span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
 <span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   154.03ms  159.3ms     6.16    139.1MB     7.71</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.43s    2.43s     0.412   224.2MB     1.65</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      3.38s    3.38s     0.295     785MB     3.25</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  690.62ms 690.62ms     1.45    124.1MB     2.90</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      2.57s    2.57s     0.390     2.5GB     9.35</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()    162.3ms 279.82ms     3.57   139.11MB    1.79 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.26s    2.26s     0.443  224.23MB    0.886</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.22s    4.22s     0.237  805.38MB    3.08 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  635.83ms 635.83ms     1.57    124.1MB    3.15 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      2.41s    2.41s     0.414    2.51GB   10.4</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -198,7 +208,10 @@
 <span>    <span class="op">}</span>,</span>
 <span>    <span class="st">"Heatmap()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">mat</span>, row_dend_reorder <span class="op">=</span> <span class="cn">FALSE</span>, column_dend_reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">mat</span>,</span>
+<span>            row_dend_reorder <span class="op">=</span> <span class="cn">FALSE</span>, column_dend_reorder <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>            use_raster <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>        <span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>        <span class="cn">NULL</span></span>
 <span>    <span class="op">}</span>,</span>
@@ -210,25 +223,29 @@
 <span>    <span class="op">}</span>,</span>
 <span>    <span class="st">"ggalign()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu"><a href="../reference/hmanno.html">hmanno</a></span><span class="op">(</span><span class="st">"r"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="st">"raster"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>        <span class="cn">NULL</span></span>
 <span>    <span class="op">}</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_raster()`</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_raster()`</span></span>
+<span><span class="co">#&gt; 'magick' package is suggested to install to give better rasterization.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span><span class="co">#&gt; 'magick' package is suggested to install to give better rasterization.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Set `ht_opt$message = FALSE` to turn off this message.</span></span>
 <span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
 <span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.72s    2.72s     0.367  173.72MB    1.47 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    3.15s    3.15s     0.318  223.41MB    0.954</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.49s    4.49s     0.223    1.51GB    2.23 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.31s    2.31s     0.432  177.53MB    0.432</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      5.19s    5.19s     0.193    2.57GB    4.62</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.77s    2.77s     0.361  173.72MB    2.88 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    3.21s    3.21s     0.311  223.41MB    2.18 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()       5.3s     5.3s     0.189    1.53GB    1.89 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.25s    2.25s     0.445  177.53MB    0.445</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      4.79s    4.79s     0.209    2.58GB    4.81</span></span></code></pre></div>
   </main>
 </div>
 
