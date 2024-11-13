@@ -165,6 +165,7 @@ Along with the `-` operator, `with_quad()` can be used to modify the operated
 context of `ggheatmap()`/`quad_layout()`.
 
 This function accepts three arguments:
+
  1. **x**: The object to be applied using the `-` operator.
  2. **position**: A string containing one or more of 
     `r ggalign:::oxford_and(ggalign:::.tlbr)` specifies the context for applying
