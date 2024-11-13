@@ -5,7 +5,7 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-vctrs.R
-# last-updated: 2024-11-12
+# last-updated: 2024-11-13
 # license: https://unlicense.org
 # imports: [vctrs (>= 0.5.0), rlang]
 # ---
@@ -23,6 +23,11 @@
 # 2. in package docs, please add #' @import vctrs
 
 # ## Changelog
+# 2024-11-13
+# - `replace_na()` now can handle vector in y
+# - fix wrong results in `coalesce()`: we should assign value in the missing
+#   index
+#
 # 2024-11-12
 # - Added `rename`
 # - coalesce() now will return value immediately when no missing value exists.
@@ -181,7 +186,10 @@ if_else <- function(condition, true, false, na = NULL) {
 #' Replace NAs with specified values
 #' @noRd
 replace_na <- function(x, y) {
-    vec_assign(x = x, i = vec_detect_missing(x), value = y)
+    y <- vec_cast(x = y, to = x, x_arg = "y", to_arg = "x")
+    y <- vec_recycle(y, size = vec_size(x), x_arg = "y")
+    index <- vec_detect_missing(x)
+    vec_assign(x, index, value = vec_slice(y, index))
 }
 
 #' Find the first non-missing element
@@ -190,10 +198,12 @@ replace_na <- function(x, y) {
 coalesce <- function(...) {
     dots <- vec_recycle_common(...)
     out <- .subset2(dots, 1L)
-    for (i in 2:...length()) {
-        missing <- vec_detect_missing(out)
-        if (any(missing)) {
-            out <- vec_assign(out, missing, value = .subset2(dots, i))
+    for (i in 2:length(dots)) {
+        if (vec_any_missing(out)) {
+            missing <- vec_detect_missing(out)
+            out <- vec_assign(
+                out, missing, vec_slice(.subset2(dots, i), missing)
+            )
         } else {
             return(out)
         }
