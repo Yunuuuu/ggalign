@@ -10,9 +10,9 @@
 #'
 #' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
 #' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]
-#' object. Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can
-#' be provided directly. By default, it will inherit from the parent layout if
-#' applicable.
+#' object. By default, it will inherit from the parent layout if applicable.
+#' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
+#' provided directly.
 #' @inheritParams align
 #' @return A `free_gg` object.
 #' @examples

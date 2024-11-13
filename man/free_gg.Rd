@@ -11,9 +11,9 @@ free_gg(..., data = waiver(), size = NULL, active = NULL)
 \item{...}{Additional arguments passed to \code{\link[ggplot2:ggplot]{ggplot()}}.}
 
 \item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}
-object. Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can
-be provided directly. By default, it will inherit from the parent layout if
-applicable.}
+object. By default, it will inherit from the parent layout if applicable.
+Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
+provided directly.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
