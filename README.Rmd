@@ -140,14 +140,14 @@ my_sideplot
 ```
 
 Multiple heatmaps can be stacked together:
-```{r}
+```{r fig.height=8}
 stack_alignv() +
     my_heatplot +
     my_heatplot
 ```
 
 Similarly, multiple marginal plots can be stacked together:
-```{r}
+```{r fig.height=8}
 stack_freev(sizes = c(1, 1, 0.3)) +
     my_sideplot +
     my_sideplot
