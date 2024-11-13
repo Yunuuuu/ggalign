@@ -21,7 +21,8 @@ stack is active, the context defaults to \code{NULL}.}
 \item{main}{A single boolean value indicating whether \code{x} should apply to the
 main plot, used only when \code{position} is not \code{NULL}. By default, if \code{position}
 is \code{waiver()} and the active context of \code{quad_layout()} is an annotation
-stack, \code{main} will be set to \code{TRUE}; otherwise, it defaults to \code{FALSE}.}
+stack or the active context of \code{stack_layout} is itself, \code{main} will be set
+to \code{TRUE}; otherwise, it defaults to \code{FALSE}.}
 }
 \value{
 The original object with an added attribute that sets the specified
@@ -34,4 +35,40 @@ The \code{with_quad} function allows you to adjust the context in which the
 subtraction \code{-} operator is applied within \code{quad_layout()}. This function
 wraps objects to specify their target layout contexts when using \code{-} in
 \code{quad_layout()}.
+}
+\examples{
+set.seed(123)
+small_mat <- matrix(rnorm(56), nrow = 7)
+
+# when the active context in `ggheatmap()`/`quad_layout()` is set to `top` or
+# `bottom`, by wrapping object with `with_quad()`, the `-` operator will
+# apply changes not only to that annotation but also to the opposite one
+# (i.e., bottom if top is active, and vice versa). The same principle
+# applies to the left and right annotation.
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    anno_left(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) +
+    # Change the active layout to the left annotation
+    anno_top(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) +
+    anno_bottom(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) -
+    # Modify the color scale of all plots in the bottom and the opposite
+    # annotation
+    # in this way, the `main` argument by default would be `TRUE`
+    with_quad(scale_color_brewer(palette = "Dark2", name = "Top and bottom"))
+
+# When the `position` argument is manually set, the
+# default value of the `main` argument will be `FALSE`.
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    anno_left(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) +
+    anno_top(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) +
+    anno_bottom(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) -
+    # Modify the background of all plots in the left and top annotation
+    with_quad(theme(plot.background = element_rect(fill = "red")), "tl")
 }

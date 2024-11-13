@@ -21,10 +21,12 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
                 plot <- align_add(object, plot, object_name)
             } else if (is_quad_layout(plot)) {
                 if (is.null(context)) { # if not set
+                    # do nothing
+                } else if (is.waive(.subset2(context, "position"))) {
+                    # default behaviour for object wrap with `with_quad()`
                     # we add the object along the stack layout
                     # if means for horizontal stack, we'll add it
                     # to the left and right annotation, and the main plot
-                    plot <- quad_body_add(object, plot, object_name)
                     positions <- switch_direction(
                         direction,
                         c("left", "right"),
@@ -37,9 +39,9 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
                             )
                         }
                     }
-                } else if (is.waive(context <- .subset2(context, "position"))) {
-                    # do nothing, default behaviour for object wrap
-                    # with `with_quad()`
+                    if (is.null(main <- .subset2(context, "main")) || main) {
+                        plot <- quad_body_add(object, plot, object_name)
+                    }
                 } else {
                     # we respect the context setting
                     plot <- quad_layout_subtract(object, plot, object_name)

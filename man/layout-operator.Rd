@@ -36,52 +36,60 @@ A modified \code{Layout} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \itemize{
-\item \code{+}: adds elements to the active plot in the active layout.
-\item \code{&}: applies elements to all plots in the layout.
-\item \code{-}:
-\itemize{
-\item \code{quad_layout()}: Adds elements to all plots in the active layout, as
-well as to any nested layouts within it.
-\item \code{stack_layout()}:
-}
+\item \code{+}: Adds elements to the active plot in the active layout.
+\item \code{&}: Applies elements to all plots in the layout.
+\item \code{-}: Adds elements to multiple plots in the layout.
 }
 }
 \details{
+The \code{+} operator is straightforward and should be used as needed.
+
 In order to reduce code repetition \code{ggalign} provides two operators for
 adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}.
-
-Like \code{patchwork}, \code{&} add the element to all plots in the layout. If the
-element is a \link[ggplot2:theme]{theme}, this will also modify the layout
-theme.
-
-The key difference between \code{&} and \code{-} is in how they behave in
-\code{\link[=quad_layout]{quad_layout()}}. The \code{-} operator only applies the element to the current
-active context in \code{\link[=quad_layout]{quad_layout()}}, if no active context, it will apply to
-all plots in the \code{\link[=quad_layout]{quad_layout()}}. Using \code{-} might seem unintuitive if you
-think of the operator as "subtract", the underlying reason is that \code{-} is the
-only operator in the same precedence group as \code{+}.
+\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}. See \code{vignette("operator")} for details.
 }
 \examples{
-mat <- matrix(rnorm(56), nrow = 7)
-ggheatmap(mat) +
-    hmanno("t") +
+set.seed(123)
+small_mat <- matrix(rnorm(56), nrow = 7)
+ggheatmap(small_mat) +
+    anno_top() +
     ggalign() +
     geom_point(aes(y = value))
 
 # `&` operator apply it to all plots
-ggheatmap(mat) +
+ggheatmap(small_mat) +
     anno_top() +
     align_dendro() &
     theme(panel.border = element_rect(
         colour = "red", fill = NA, linewidth = unit(2, "mm")
     ))
-# `-` operator only apply it to the active annotation
-ggheatmap(mat) +
-    anno_top() +
-    align_dendro() -
-    theme(panel.border = element_rect(
-        colour = "red", fill = NA, linewidth = unit(2, "mm")
-    ))
+
+# If the active layout is the annotation stack, the `-` operator will only
+# add the elements to all plots in the active annotation stack:
+ggheatmap(small_mat) +
+    scale_fill_viridis_c() +
+    anno_left(size = 0.2) +
+    align_dendro(aes(color = branch), k = 3L) +
+    align_dendro(aes(color = branch), k = 3L) -
+    # Modify the the color scales of all plots in the left annotation
+    scale_color_brewer(palette = "Dark2")
+
+# If the active layout is the `ggstack()`/`stack_layout()` itself, `-`
+# applies the elements to all plots in the layout except the nested
+# `ggheatmap()`/`quad_layout()`.
+stack_alignv(small_mat) +
+    align_dendro() +
+    ggtitle("I'm from the parent stack") +
+    ggheatmap() +
+    # remove any active context
+    stack_active() +
+    align_dendro() +
+    ggtitle("I'm from the parent stack") -
+    # Modify the the color scales of all plots in the stack layout except the
+    # heatmap layout
+    scale_color_brewer(palette = "Dark2") -
+    # set the background of all plots in the stack layout except the heatmap
+    # layout
+    theme(plot.background = element_rect(fill = "red"))
 
 }

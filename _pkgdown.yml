@@ -123,8 +123,8 @@ articles:
   - layout-plot
   - quad-layout
   - stack-layout
-  - plot-options
   - operator
+  - plot-options
 
 - title: Others
   navbar: " "

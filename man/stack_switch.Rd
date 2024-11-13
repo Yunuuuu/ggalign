@@ -47,7 +47,7 @@ into the \code{\link[=stack_layout]{stack_layout()}}.}
 \code{\link[=plot_align]{plot_align()}} function instead.}
 }
 \value{
-A \code{stack_active} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.
+A \code{stack_switch} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

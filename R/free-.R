@@ -106,7 +106,7 @@ free_add.ggalign_option <- function(object, free, object_name) {
     free
 }
 
-free_build <- function(x, controls, direction) {
+free_build <- function(x, controls) {
     plot <- plot_add_controls(.subset2(x, "plot"), controls)
     list(plot = plot, size = .subset2(x, "size"))
 }

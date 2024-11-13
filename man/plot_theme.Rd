@@ -397,7 +397,7 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 set.seed(123)
-small_mat <- matrix(rnorm(81), nrow = 9)
+small_mat <- matrix(rnorm(56), nrow = 8)
 ggheatmap(small_mat) +
     plot_theme(plot.background = element_rect(fill = "red"))
 

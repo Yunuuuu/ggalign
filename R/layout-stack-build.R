@@ -72,7 +72,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
                     .subset2(patch, "size")
                 )
             } else if (is_free(plot)) {
-                patch <- free_build(plot, cur_controls, direction = direction)
+                patch <- free_build(plot, cur_controls)
                 patches <- stack_patch_add_center_plot(
                     patches,
                     .subset2(patch, "plot"),

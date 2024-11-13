@@ -102,7 +102,7 @@ ggheatmap(small_mat) +
 # Multiple heatmaps
 ## Horizontal layout
 ```{r}
-(ggstack(small_mat, "h") +
+(stack_alignh(small_mat) +
     ggheatmap() +
     ggheatmap() &
     scale_fill_viridis_c() &
@@ -114,7 +114,7 @@ ggheatmap(small_mat) +
 
 ## Vertical layout
 ```{r fig.height = 6}
-ggstack(small_mat, "v") -
+stack_alignv(small_mat) -
     plot_theme(axis.text.x = element_blank()) +
     align_dendro(aes(color = branch), k = 4L, size = 0.2) +
     scale_color_brewer(palette = "Dark2") +

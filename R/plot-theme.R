@@ -15,7 +15,7 @@
 #' is also supported.
 #' @examples
 #' set.seed(123)
-#' small_mat <- matrix(rnorm(81), nrow = 9)
+#' small_mat <- matrix(rnorm(56), nrow = 8)
 #' ggheatmap(small_mat) +
 #'     plot_theme(plot.background = element_rect(fill = "red"))
 #'
@@ -115,7 +115,7 @@ plot_add.plot_theme <- function(option, plot) {
 #'     align_dendro(k = 3L)
 #'
 #' # Restoring the old default theme
-#' options(ggalign.default_theme = old)
+#' options(old)
 #' @importFrom ggplot2 theme_classic
 #' @export
 theme_ggalign <- function(...) {

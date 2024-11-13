@@ -67,53 +67,63 @@ methods::setMethod("$", "Layout", function(x, name) {
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#'  - `+`: adds elements to the active plot in the active layout.
-#'  - `&`: applies elements to all plots in the layout.
-#'  - `-`:
-#'    * `quad_layout()`: Adds elements to all plots in the active layout, as
-#'      well as to any nested layouts within it.
-#'    * `stack_layout()`:
+#'  - `+`: Adds elements to the active plot in the active layout.
+#'  - `&`: Applies elements to all plots in the layout.
+#'  - `-`: Adds elements to multiple plots in the layout.
 #'
 #' @details
+#' The `+` operator is straightforward and should be used as needed.
+#'
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' `r rd_layout()`: `-` and `&`.
-#'
-#' Like `patchwork`, `&` add the element to all plots in the layout. If the
-#' element is a [theme][ggplot2::theme], this will also modify the layout
-#' theme.
-#'
-#' The key difference between `&` and `-` is in how they behave in
-#' [`quad_layout()`]. The `-` operator only applies the element to the current
-#' active context in [`quad_layout()`], if no active context, it will apply to
-#' all plots in the [`quad_layout()`]. Using `-` might seem unintuitive if you
-#' think of the operator as "subtract", the underlying reason is that `-` is the
-#' only operator in the same precedence group as `+`.
+#' `r rd_layout()`: `-` and `&`. See `vignette("operator")` for details.
 #'
 #' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot.
 #' @return A modified `Layout` object.
 #' @examples
-#' mat <- matrix(rnorm(56), nrow = 7)
-#' ggheatmap(mat) +
-#'     hmanno("t") +
+#' set.seed(123)
+#' small_mat <- matrix(rnorm(56), nrow = 7)
+#' ggheatmap(small_mat) +
+#'     anno_top() +
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
 #' # `&` operator apply it to all plots
-#' ggheatmap(mat) +
+#' ggheatmap(small_mat) +
 #'     anno_top() +
 #'     align_dendro() &
 #'     theme(panel.border = element_rect(
 #'         colour = "red", fill = NA, linewidth = unit(2, "mm")
 #'     ))
-#' # `-` operator only apply it to the active annotation
-#' ggheatmap(mat) +
-#'     anno_top() +
-#'     align_dendro() -
-#'     theme(panel.border = element_rect(
-#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
-#'     ))
+#'
+#' # If the active layout is the annotation stack, the `-` operator will only
+#' # add the elements to all plots in the active annotation stack:
+#' ggheatmap(small_mat) +
+#'     scale_fill_viridis_c() +
+#'     anno_left(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     align_dendro(aes(color = branch), k = 3L) -
+#'     # Modify the the color scales of all plots in the left annotation
+#'     scale_color_brewer(palette = "Dark2")
+#'
+#' # If the active layout is the `ggstack()`/`stack_layout()` itself, `-`
+#' # applies the elements to all plots in the layout except the nested
+#' # `ggheatmap()`/`quad_layout()`.
+#' stack_alignv(small_mat) +
+#'     align_dendro() +
+#'     ggtitle("I'm from the parent stack") +
+#'     ggheatmap() +
+#'     # remove any active context
+#'     stack_active() +
+#'     align_dendro() +
+#'     ggtitle("I'm from the parent stack") -
+#'     # Modify the the color scales of all plots in the stack layout except the
+#'     # heatmap layout
+#'     scale_color_brewer(palette = "Dark2") -
+#'     # set the background of all plots in the stack layout except the heatmap
+#'     # layout
+#'     theme(plot.background = element_rect(fill = "red"))
 #'
 #' @name layout-operator
 NULL

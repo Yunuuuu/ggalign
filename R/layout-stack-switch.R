@@ -14,7 +14,7 @@
 #' [`quad_layout()`] object, where any `align_*()` will be added to the
 #' [`quad_layout()`]. By removing the active context, we can add `align_*()`
 #' into the [`stack_layout()`].
-#' @return A `stack_active` object which can be added to [stack_layout()].
+#' @return A `stack_switch` object which can be added to [stack_layout()].
 #' @examples
 #' stack_align(matrix(1:9, nrow = 3L), "h") +
 #'     ggheatmap() +

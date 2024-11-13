@@ -173,20 +173,19 @@ ggheatmap(small_mat) +
 # `free_gg`/`ggfree`
 The `free_gg()` function allows you to incorporate a ggplot object into your
 layout. Unlike `align_gg()`, which aligns every axis value precisely,
-`free_gg()` focuses more on layout integration without enforcing strict axis
+`free_gg()` focuses on layout integration without enforcing strict axis
 alignment. `ggfree()` is an alias for `free_gg`.
 
 Internally, the function uses `fortify_data_frame()` to transform the input into
 a data frame. For matrices, it converts them into a long-formatted data frame.
 Note that `ggfree()` does not provide a default aesthetic mapping, which
 contrasts with `ggalign()`. You will need to manually provide the default
-mappings. When used in a `stack_align()`, you typically do not want to inherit
-from the layout matrix and should input a data frame manually. The `data`
-argument must be explicitly provided, as it comes after `...`. This is rarely
-necessary in a `stack_align()`, and it is more commonly used in a
-`stack_free()`, where you usually want to inherit from the layout data frame. 
+mappings.
 
-All annotations in `ggheatmap()` are `stack_align()`.
+All annotations in `ggheatmap()` are `stack_align()`. When used in a
+`stack_align()`, you typically do not want to inherit from the layout matrix and
+should input a data frame manually. The `data` argument must be explicitly
+provided, as it comes after `...`, but we rarely used it in a `stack_align()`.
 ```{r}
 ggheatmap(small_mat) +
     anno_top() +
@@ -194,7 +193,8 @@ ggheatmap(small_mat) +
     geom_point()
 ```
 
-All annotations in `ggside()` are `stack_free()`.
+It is more commonly used in a `stack_free()`, where you usually want to inherit
+from the layout data frame. All annotations in `ggside()` are `stack_free()`.
 ```{r}
 ggside(mpg, aes(displ, hwy, colour = class)) -
     geom_point(size = 2) +

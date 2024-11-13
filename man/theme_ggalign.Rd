@@ -37,5 +37,5 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     align_dendro(k = 3L)
 
 # Restoring the old default theme
-options(ggalign.default_theme = old)
+options(old)
 }

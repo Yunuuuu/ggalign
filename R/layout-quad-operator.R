@@ -20,9 +20,45 @@
 #' @param main A single boolean value indicating whether `x` should apply to the
 #' main plot, used only when `position` is not `NULL`. By default, if `position`
 #' is `waiver()` and the active context of `quad_layout()` is an annotation
-#' stack, `main` will be set to `TRUE`; otherwise, it defaults to `FALSE`.
+#' stack or the active context of `stack_layout` is itself, `main` will be set
+#' to `TRUE`; otherwise, it defaults to `FALSE`.
 #' @return The original object with an added attribute that sets the specified
 #' layout context.
+#' @examples
+#' set.seed(123)
+#' small_mat <- matrix(rnorm(56), nrow = 7)
+#'
+#' # when the active context in `ggheatmap()`/`quad_layout()` is set to `top` or
+#' # `bottom`, by wrapping object with `with_quad()`, the `-` operator will
+#' # apply changes not only to that annotation but also to the opposite one
+#' # (i.e., bottom if top is active, and vice versa). The same principle
+#' # applies to the left and right annotation.
+#' ggheatmap(small_mat) +
+#'     scale_fill_viridis_c() +
+#'     anno_left(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     # Change the active layout to the left annotation
+#'     anno_top(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     anno_bottom(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) -
+#'     # Modify the color scale of all plots in the bottom and the opposite
+#'     # annotation
+#'     # in this way, the `main` argument by default would be `TRUE`
+#'     with_quad(scale_color_brewer(palette = "Dark2", name = "Top and bottom"))
+#'
+#' # When the `position` argument is manually set, the
+#' # default value of the `main` argument will be `FALSE`.
+#' ggheatmap(small_mat) +
+#'     scale_fill_viridis_c() +
+#'     anno_left(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     anno_top(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     anno_bottom(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) -
+#'     # Modify the background of all plots in the left and top annotation
+#'     with_quad(theme(plot.background = element_rect(fill = "red")), "tl")
 #' @export
 with_quad <- function(x, position = waiver(), main = NULL) {
     assert_layout_position(position)
