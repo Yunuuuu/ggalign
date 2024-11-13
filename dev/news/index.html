@@ -65,24 +65,29 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
 <div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li><p><code>direction</code> argument in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code> is soft-deprecated now, user must provide it manually.</p></li>
+<li><p><code>set_context</code>, <code>order</code>, and <code>name</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are soft-deprecated, which is advised to use <code>active</code> argument.</p></li>
+<li><p><code>guides</code>, <code>free_guides</code>, <code>free_spaces</code>, <code>free_labs</code>, and <code>plot_data</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are deprecated, which is advised to use <code>plot_align</code> function instead.</p></li>
+<li><p><code>theme</code> argument in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> is deprecated, which is advised to use <code>plot_theme</code> function.</p></li>
+</ul></div>
+<div class="section level3">
 <h3 id="features-development-version">features:<a class="anchor" aria-label="anchor" href="#features-development-version"></a></h3>
-<ul><li><p>new <code><a href="../reference/theme_no_axes.html">theme_no_axes()</a></code> function to remove axis elements</p></li>
-<li><p>new <code><a href="../reference/geom_pie.html">geom_pie()</a></code> function to draw pie charts</p></li>
-<li><p>new <code>gplot()</code> function to wrap ggplot to the layout</p></li>
-<li><p>new <code><a href="../reference/fortify_stack.html">fortify_stack()</a></code> function to convert any objects for plot with [ggstack()]</p></li>
-<li><p>now, a special attribute <code>ggalign</code> can be used to pass additional informations across the building process, and a new function <code><a href="../reference/ggalign_attr.html">ggalign_attr()</a></code> can be used to extract the data.</p></li>
-<li><p>new <code>fortify_heatmap()</code> method for <code>MAF</code> object.</p></li>
-<li><p><code><a href="../reference/plot_align.html">plot_align()</a></code> gains a new argument <code>inherit</code> to control the inheritance of <code>data</code> argument</p></li>
+<ul><li><p>new <code><a href="../reference/quad_layout.html">quad_layout()</a></code> to create layout free from alignment.</p></li>
+<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code> now gains a <code>type</code> argument to control whether the layout should align observations.</p></li>
 <li><p>new <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> function to draw oncoprint</p></li>
-<li><p>new <code>fortity_heatmap()</code> function to convert any objects for plot with [ggheatmap()]</p></li>
-<li><p><code><a href="../reference/align.html">align()</a></code>, <code><a href="../reference/stack_switch.html">stack_active()</a></code>, and <code><a href="../reference/quad_switch.html">hmanno()</a></code> functions gain a new argument <code>action</code>, and deprecate <code>free_guides</code>, <code>free_spaces</code>, <code>plot_data</code>, <code>theme</code>, <code>free_labs</code>, and <code>guides</code> arguments.</p></li>
+<li><p>new <code><a href="../reference/free_gg.html">ggfree()</a></code> function to add ggplot to the layout</p></li>
+<li><p>new <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> function to convert any objects to a matrix, and add <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> method for <code>MAF</code> object.</p></li>
+<li><p>new <code><a href="../reference/fortify_data_frame.html">fortify_data_frame()</a></code> function to convert any objects to a data frame.</p></li>
+<li><p>now, a special attribute <code>ggalign</code> can be used to pass additional informations across the building process, and a new function <code><a href="../reference/ggalign_attr.html">ggalign_attr()</a></code> can be used to extract the data.</p></li>
+<li><p>new <code><a href="../reference/plot_theme.html">plot_theme()</a></code> function to control the default theme of the plot in layout</p></li>
+<li><p>new <code><a href="../reference/plot_data.html">plot_data()</a></code> function to control the data transformation of the plot in layout</p></li>
 <li><p>new <code><a href="../reference/plot_align.html">plot_align()</a></code> function to control specifications of the plot in layout</p></li>
-<li><p><code>merge</code> function has been implemented with <code>vctrs</code> for performance</p></li>
-<li><p>{data.table} is now removed from the dependency</p></li>
-<li><p><code>reorder_dendrogram</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function now can accept a function to reorder the tree.</p></li>
 <li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain a new argument <code>cutree</code> to customize the process of tree cutting</p></li>
-<li><p>for large matrix (&gt; 20000 cells), automatically use <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code></p></li>
-<li><p>a new <code><a href="../reference/layer_order.html">layer_order()</a></code> function to change the ggplot2 layer adding order</p></li>
+<li><p><code>reorder_dendrogram</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> function now can accept a function to reorder the tree.</p></li>
+<li><p>new <code><a href="../reference/layer_order.html">layer_order()</a></code> function to change the ggplot2 layer adding order</p></li>
+<li><p>new <code><a href="../reference/theme_no_axes.html">theme_no_axes()</a></code> function to remove axis elements</p></li>
+<li><p>new <code><a href="../reference/geom_pie.html">geom_pie()</a></code> function to draw pie charts</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes:<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
@@ -90,6 +95,12 @@
 <li><p>fix bug when provide a function in <code>distance</code> argument of <code><a href="../reference/align_dendro.html">align_dendro()</a></code></p></li>
 <li><p>fix bug when provide <code>hclust</code> or <code>dendrogram</code> in method argument of <code><a href="../reference/align_dendro.html">align_dendro()</a></code></p></li>
 <li><p>fix bug of <code>coord_ggalign()</code> for discrete scale</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
+<ul><li><p><code>merge</code> function has been implemented with <code>vctrs</code> for performance</p></li>
+<li><p>for large matrix (&gt; 20000 cells), automatically use <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code></p></li>
+<li><p>{data.table} is now removed from the dependency</p></li>
 </ul></div>
 </div>
     <div class="section level2">
