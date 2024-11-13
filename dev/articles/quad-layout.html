@@ -94,14 +94,14 @@
       <img src="../logo.png" class="logo" alt=""><h1>Quad-Layout</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/vignettes/quad-layout.Rmd" class="external-link"><code>vignettes/quad-layout.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/vignettes/articles/quad-layout.Rmd" class="external-link"><code>vignettes/articles/quad-layout.Rmd</code></a></small>
       <div class="d-none name"><code>quad-layout.Rmd</code></div>
     </div>
 
     
     
-<p>As discussed in <code><a href="../articles/heatmap-layout.html">vignette("heatmap-layout")</a></code>, the
-<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function is a specialized form of
+<p>As discussed in <a href="https://yunuuuu.github.io/ggalign/dev/articles/heatmap-layout.html">heatmap-layout</a>,
+the <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function is a specialized form of
 <code><a href="../reference/quad_layout.html">quad_layout()</a></code>. Specifically, it is a variant of
 <code><a href="../reference/quad_free.html">quad_alignb()</a></code>, which aligns observations both horizontally
 and vertically.</p>
@@ -136,7 +136,7 @@ conversion.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quad_free.html">ggside</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="annotation">annotation<a class="anchor" aria-label="anchor" href="#annotation"></a>
@@ -174,7 +174,7 @@ manual initialization is required.</p>
 <span>        position <span class="op">=</span> <span class="st">"stack"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>Unlike <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>,
 <code><a href="../reference/quad_free.html">ggside()</a></code>/<code><a href="../reference/quad_free.html">quad_free()</a></code> allows facetting for the
 main plot, which should also be applied to the annotations for proper
@@ -210,7 +210,7 @@ alignment.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="co"># we can utilize the `-` to set facet for all plots in the annotation</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -244,13 +244,13 @@ but use <code>.x</code> or <code>.column_names</code> as the
 <span><span class="fu"><a href="../reference/quad_free.html">quad_alignh</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, <span class="va">.row_names</span>, fill <span class="op">=</span> <span class="va">.row_names</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># we'll align the vertical direction</span></span>
 <span><span class="fu"><a href="../reference/quad_free.html">quad_alignv</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">.column_names</span>, <span class="va">value</span>, fill <span class="op">=</span> <span class="va">.column_names</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="annotation-1">annotation<a class="anchor" aria-label="anchor" href="#annotation-1"></a>
@@ -273,7 +273,7 @@ the annotation.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>For top and bottom annotation in <code><a href="../reference/quad_free.html">quad_alignh()</a></code>, they are
 a <code><a href="../reference/stack_align.html">stack_free()</a></code> which won’t align observations, and require
 a data frame in the layout data. In this way, we won’t transform the
@@ -300,7 +300,7 @@ required in such cases:</p>
 <span>    <span class="co"># add a plot in the top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/free_gg.html">ggfree</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>The same with <code><a href="../reference/quad_free.html">quad_alignh()</a></code>, we need to manually
 initialize the left and right annotations in
 <code><a href="../reference/quad_free.html">quad_alignv()</a></code>.</p>
@@ -313,7 +313,7 @@ initialize the left and right annotations in
 <span>    <span class="co"># add a plot in the top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/free_gg.html">ggfree</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quad-layout_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="quad-layout_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
