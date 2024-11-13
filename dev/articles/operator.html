@@ -283,15 +283,21 @@ same time? refer to the following section.</p>
 <p>Along with the <code>-</code> operator, <code><a href="../reference/with_quad.html">with_quad()</a></code> can
 be used to modify the operated context of
 <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p>
-<p>This function accepts three arguments: 1. <strong>x</strong>: The
-object to be applied using the <code>-</code> operator. 2.
+<p>This function accepts three arguments:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>x</strong>: The object to be applied using the
+<code>-</code> operator.</li>
+<li>
 <strong>position</strong>: A string containing one or more of
 <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and
-<code>"r"</code> specifies the context for applying <code>x</code>. 3.
+<code>"r"</code> specifies the context for applying <code>x</code>.</li>
+<li>
 <strong>main</strong>: A single boolean value indicates whether
 <code>x</code> should also apply to the main plot within
 <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>. Only used when
-<code>position</code> is not <code>NULL</code>.</p>
+<code>position</code> is not <code>NULL</code>.</li>
+</ol>
 <div class="section level3">
 <h3 id="quad_layout-1">quad_layout()<a class="anchor" aria-label="anchor" href="#quad_layout-1"></a>
 </h3>
