@@ -276,7 +276,9 @@ dendrogram_data <- function(tree,
             y <- attr(dend, "height")
 
             # for the children nodes ---------------------------------
-            data <- transpose(lapply(dend, .dendrogram_data, from_root = FALSE))
+            data <- list_transpose(
+                lapply(dend, .dendrogram_data, from_root = FALSE)
+            )
 
             # node should be the direct children
             node <- vec_rbind(!!!.subset2(data, "node"))

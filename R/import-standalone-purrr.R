@@ -5,7 +5,7 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-purrr.R
-# last-updated: 2024-11-12
+# last-updated: 2024-11-13
 # license: https://unlicense.org
 # ---
 
@@ -16,6 +16,9 @@
 # Note: these functions won't support lambda syntax.
 
 # ## Changelog
+# 2024-11-13:
+# rename `transpose()` to `list_transpose()`
+#
 # 2024-11-12:
 # First release
 #
@@ -129,7 +132,7 @@ imap_chr <- function(.l, .f, ...) {
     .purrr_imap_mold(.l, .f, ..., mold = character(1L))
 }
 
-transpose <- function(.l) {
+list_transpose <- function(.l) {
     if (!length(.l)) return(.l) # styler: off
     inner_names <- names(.subset2(.l, 1L))
     if (is.null(inner_names)) {

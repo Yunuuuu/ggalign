@@ -438,7 +438,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 )
                 start <- end
             }
-            data <- lapply(transpose(data), function(dat) {
+            data <- lapply(list_transpose(data), function(dat) {
                 ans <- vec_rbind(!!!dat, .names_to = "parent")
                 ans$.panel <- factor(.subset2(ans, ".panel"), branches)
                 ans

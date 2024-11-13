@@ -147,7 +147,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         list(plot = plot, size = size)
     })
     names(stack_list) <- .TLBR
-    stack_list <- transpose(stack_list)
+    stack_list <- list_transpose(stack_list)
     plots <- .subset2(stack_list, 1L) # the annotation plot itself
     sizes <- .subset2(stack_list, 2L) # annotation size
 
