@@ -47,7 +47,7 @@ By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 }
 
 \seealso{
-Other \code{\link[=fortify_matrix]{fortify_matrix()}} methods: 
+Other fortify_matrix methods: 
 \code{\link{fortify_matrix.default}()}
 }
-\concept{\code{\link[=fortify_matrix]{fortify_matrix()}} methods}
+\concept{fortify_matrix methods}

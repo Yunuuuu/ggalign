@@ -21,7 +21,7 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \seealso{
 \code{\link[=align_plots]{alignpatches}}
 
-Other \code{patch} methods: 
+Other patch methods: 
 \code{\link{patch.Heatmap}()},
 \code{\link{patch.formula}()},
 \code{\link{patch.ggplot}()},
@@ -33,4 +33,4 @@ Other \code{patch} methods:
 \code{\link{patch.recordedplot}()},
 \code{\link{patch.trellis}()}
 }
-\concept{\code{patch} methods}
+\concept{patch methods}

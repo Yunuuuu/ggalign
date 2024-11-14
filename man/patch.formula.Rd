@@ -35,7 +35,7 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \seealso{
 \code{\link[=plot]{plot()}}
 
-Other \code{patch} methods: 
+Other patch methods: 
 \code{\link{patch.Heatmap}()},
 \code{\link{patch.alignpatches}()},
 \code{\link{patch.ggplot}()},
@@ -47,4 +47,4 @@ Other \code{patch} methods:
 \code{\link{patch.recordedplot}()},
 \code{\link{patch.trellis}()}
 }
-\concept{\code{patch} methods}
+\concept{patch methods}

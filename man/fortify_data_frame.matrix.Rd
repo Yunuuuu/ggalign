@@ -20,9 +20,9 @@ long-form data frame, where each row represents a unique combination of
 matrix indices and their corresponding values.
 }
 \seealso{
-Other \code{\link[=fortify_data_frame]{fortify_data_frame()}} methods: 
+Other fortify_data_frame methods: 
 \code{\link{fortify_data_frame.character}()},
 \code{\link{fortify_data_frame.default}()},
 \code{\link{fortify_data_frame.numeric}()}
 }
-\concept{\code{\link[=fortify_data_frame]{fortify_data_frame()}} methods}
+\concept{fortify_data_frame methods}

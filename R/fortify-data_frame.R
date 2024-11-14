@@ -20,7 +20,7 @@ fortify_data_frame <- function(data, ...) {
 #' @description
 #' By default, it calls [`fortify()`][ggplot2::fortify] to build the
 #' data frame.
-#' @family [`fortify_data_frame()`] methods
+#' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.default <- function(data, ...) {
     ggplot2::fortify(model = data, ...)
@@ -34,7 +34,7 @@ fortify_data_frame.default <- function(data, ...) {
 #'  - `.names`: the names for the vector (only applicable if names exist).
 #'  - `value`: the actual value of the vector.
 #'
-#' @family [`fortify_data_frame()`] methods
+#' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.character <- function(data, ...) {
     ans <- list(.names = vec_names(data), value = data)
@@ -43,7 +43,7 @@ fortify_data_frame.character <- function(data, ...) {
 }
 
 #' @inherit fortify_data_frame.character
-#' @family [`fortify_data_frame()`] methods
+#' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.numeric <- fortify_data_frame.character
 
@@ -58,7 +58,7 @@ fortify_data_frame.NULL <- function(data, ...) data
 #' When `data` is a matrix, it will automatically be transformed into a
 #' long-form data frame, where each row represents a unique combination of
 #' matrix indices and their corresponding values.
-#' @family [`fortify_data_frame()`] methods
+#' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.matrix <- function(data, ...) {
     row_nms <- vec_names(data)

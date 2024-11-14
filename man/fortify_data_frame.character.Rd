@@ -23,9 +23,9 @@ following columns:
 }
 }
 \seealso{
-Other \code{\link[=fortify_data_frame]{fortify_data_frame()}} methods: 
+Other fortify_data_frame methods: 
 \code{\link{fortify_data_frame.default}()},
 \code{\link{fortify_data_frame.matrix}()},
 \code{\link{fortify_data_frame.numeric}()}
 }
-\concept{\code{\link[=fortify_data_frame]{fortify_data_frame()}} methods}
+\concept{fortify_data_frame methods}

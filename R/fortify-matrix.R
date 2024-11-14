@@ -17,7 +17,7 @@ fortify_matrix <- function(data, ...) {
 #' @inherit fortify_matrix
 #' @description
 #' By default, it calls [`as.matrix()`] to build a matrix.
-#' @family [`fortify_matrix()`] methods
+#' @family fortify_matrix methods
 #' @importFrom rlang try_fetch
 #' @export
 fortify_matrix.default <- function(data, ...) {
@@ -65,7 +65,7 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'  - `n_samples`: Total of samples
 #'  - `breaks`: factor levels of `Variant_Classification`, if `collapse_vars =
 #'    TRUE`, `"Multi_Hit"` will be added in the end.
-#' @family [`fortify_matrix()`] methods
+#' @family fortify_matrix methods
 #' @export
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,

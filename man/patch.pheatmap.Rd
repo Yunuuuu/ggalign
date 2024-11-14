@@ -21,7 +21,7 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \seealso{
 \code{\link[pheatmap:pheatmap]{pheatmap()}}
 
-Other \code{patch} methods: 
+Other patch methods: 
 \code{\link{patch.Heatmap}()},
 \code{\link{patch.alignpatches}()},
 \code{\link{patch.formula}()},
@@ -33,4 +33,4 @@ Other \code{patch} methods:
 \code{\link{patch.recordedplot}()},
 \code{\link{patch.trellis}()}
 }
-\concept{\code{patch} methods}
+\concept{patch methods}
