@@ -80,16 +80,31 @@ is_free <- function(x) inherits(x, "free_gg")
 
 #' @export
 print.free_gg <- function(x, ...) {
-    print(.subset2(x, "plot"))
+    p <- free_gg_build_plot(.subset2(x, "plot"), .subset2(x, "data"))
+    print(p)
     invisible(x)
+}
+
+free_gg_build_plot <- function(plot, data) {
+    if (is.function(data)) {
+        data <- waiver()
+    } else if (is.null(data)) {
+        # `ggplot2::fortify()` will convert `NULL` to `waiver()`
+        data <- waiver()
+    }
+    plot$data <- data
+    plot
 }
 
 # For patchwork
 #' @importFrom ggplot2 ggplot_add
 #' @export
 ggplot_add.free_gg <- function(object, plot, object_name) {
-    object$plot <- ggplot_add(.subset2(object, "plot"), plot, object_name)
-    object
+    object <- free_gg_build_plot(
+        .subset2(object, "plot"),
+        .subset2(object, "data")
+    )
+    ggplot_add(object, plot, object_name)
 }
 
 free_add <- function(object, free, object_name) UseMethod("free_add")

@@ -103,7 +103,7 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         input_data <- .subset2(object, "data")
         layout_data <- stack@data
         if (is.waive(input_data)) { # inherit from the layout
-            data <- layout_data %|w|% NULL
+            data <- layout_data
         } else if (is.function(input_data)) {
             abort_no_layout_data(layout_data, object_name,
                 call = quote(free_gg())
@@ -112,8 +112,10 @@ stack_layout_add.free_gg <- function(object, stack, object_name) {
         } else {
             data <- input_data
         }
+        data <- fortify_data_frame(data)
+
         # convert the data into a data frame
-        object$plot$data <- fortify_data_frame(data)
+        object$plot <- free_gg_build_plot(.subset2(object, "plot"), data)
 
         stack <- stack_add_plot(
             stack, object,
