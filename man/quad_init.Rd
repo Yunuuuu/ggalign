@@ -13,7 +13,7 @@ quad_init(position, data = waiver(), ...)
 specified, a dataset must be provided for each plot added to the layout.
 Possible values:
 \itemize{
-\item \code{\link[=waiver]{waiver()}}: try to inherit from the \code{\link[=quad_layout]{quad_layout()}}.
+\item \code{\link[ggplot2:waiver]{waiver()}}: try to inherit from the \code{\link[=quad_layout]{quad_layout()}}.
 \item \code{NULL}: no data for the annotation stack.
 \item Any data which can be coerced by
 \code{\link[=fortify_matrix]{fortify_matrix()}}/\code{\link[=fortify_data_frame]{fortify_data_frame()}}

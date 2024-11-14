@@ -50,6 +50,8 @@ assert_ <- function(x, check, what,
     )
 }
 
+.standalone_types_check_assert_call <- .Call
+
 # scalar object ----------------------------------
 assert_string <- function(x,
                           ...,
@@ -115,7 +117,7 @@ assert_number_decimal <- function(x,
                                   call = caller_env()) {
     if (is_missing(x)) {
         exit_code <- IS_NUMBER_false
-    } else if (0 == (exit_code <- .Call(
+    } else if (0 == (exit_code <- .standalone_types_check_assert_call(
         ffi_standalone_check_number_1.0.7,
         x,
         allow_decimal = TRUE,
@@ -154,7 +156,7 @@ assert_number_whole <- function(x,
                                 call = caller_env()) {
     if (is_missing(x)) {
         exit_code <- IS_NUMBER_false
-    } else if (0 == (exit_code <- .Call(
+    } else if (0 == (exit_code <- .standalone_types_check_assert_call(
         ffi_standalone_check_number_1.0.7,
         x,
         allow_decimal = FALSE,

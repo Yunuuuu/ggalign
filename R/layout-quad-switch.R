@@ -135,7 +135,7 @@ quad_switch_anno <- function(position, size, free_guides, what,
 #' @param data Default dataset to use for the annotation stack. If not
 #' specified, a dataset must be provided for each plot added to the layout.
 #' Possible values:
-#'  - [`waiver()`]: try to inherit from the [quad_layout()].
+#'  - [`waiver()`][ggplot2::waiver]: try to inherit from the [quad_layout()].
 #'  - `NULL`: no data for the annotation stack.
 #'  - Any data which can be coerced by
 #'    [`fortify_matrix()`]/[`fortify_data_frame()`]
