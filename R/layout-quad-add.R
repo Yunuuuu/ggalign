@@ -128,7 +128,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                         "{.obj_type_friendly {quad_data}},",
                         "but we need a {.cls data.frame}."
                     ),
-                    i = "Try using {.fn anno_init} to initialize the {position} annotation with self-customized data."
+                    i = "Try using {.fn quad_init} to initialize the {position} annotation with self-customized data."
                 ))
             }
         } else if (is.matrix(quad_data)) { # the stack need a matrix
@@ -143,7 +143,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                     "{.obj_type_friendly {quad_data}},",
                     "but we need a {.cls matrix}."
                 ),
-                i = "Try using {.fn anno_init} to initialize the {position} annotation with self-customized data."
+                i = "Try using {.fn quad_init} to initialize the {position} annotation with self-customized data."
             ))
         }
         stack <- new_stack_layout( # initialize the annotation stack
@@ -175,7 +175,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
 
 #' @importFrom rlang inject
 #' @export
-quad_layout_add.anno_init <- function(object, quad, object_name) {
+quad_layout_add.quad_init <- function(object, quad, object_name) {
     position <- .subset2(object, "position")
     if (!is.null(slot(quad, position))) {
         cli::cli_abort(c(

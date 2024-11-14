@@ -12,7 +12,7 @@
 #' @inheritParams ggplot2::ggplot
 #' @param data A flexible input that specifies the data to be used
 #' - `NULL`: No data is set.
-#' - [`waiver()`]: Uses the layout matrix.
+#' - [`waiver()`][ggplot2::waiver]: Uses the layout matrix.
 #' - A `function` (including purrr-like lambda syntax) that is applied to the
 #'   layout matrix, and must return a matrix. If you want to transform the final
 #'   plot data, please use [`plot_data()`].

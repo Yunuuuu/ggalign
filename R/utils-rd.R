@@ -25,3 +25,9 @@ rd_layout_data <- function() {
         "inherit from parent layout"
     )
 }
+
+rd_gg_aesthetics <- function(...) {
+    ans <- ggfun("rd_aesthetics")(...)
+    ans <- sub("link[=", "link[ggplot2:", ans, fixed = TRUE)
+    sub("(vignette\\([^)]+)\\)", "\\1, package = \"ggplot2\")", ans)
+}

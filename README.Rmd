@@ -84,8 +84,8 @@ typical workflow includes:
  - Adding plots with `ggalign()` or `ggfree()`, and then layer additional
  ggplot2 elements such as geoms, stats, or scales.
 
-For documents of the release version, please see <`r params$release`>, for
-documents of the development version, please see <`r params$devel`>.
+For documents of the release version, please see <`r sprintf("%s/", params$release)`>, for
+documents of the development version, please see <`r sprintf("%s/", params$devel)`>.
 
 ## Basic example
 Below, we'll walk through a basic example of using `ggalign` to create a heatmap

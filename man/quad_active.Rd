@@ -65,12 +65,12 @@ between \code{\link[=quad_layout]{quad_layout()}} and the required format for th
 This often occurs in \code{\link[=quad_alignh]{quad_alignh()}} and \code{\link[=quad_alignv]{quad_alignv()}}, where the
 layout data is a matrix, but top and bottom annotations (in
 \code{\link[=quad_alignh]{quad_alignh()}}) or left and right annotations (in \code{\link[=quad_alignv]{quad_alignv()}})
-require a data frame. In such cases, you must use \code{\link[=anno_init]{anno_init()}} to manually
+require a data frame. In such cases, you must use \code{\link[=quad_init]{quad_init()}} to manually
 initialize the annotation stack.
 }
 \seealso{
 \itemize{
 \item \code{\link[=quad_switch]{quad_switch()}}
-\item \code{\link[=anno_init]{anno_init()}}
+\item \code{\link[=quad_init]{quad_init()}}
 }
 }

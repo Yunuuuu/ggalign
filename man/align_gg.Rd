@@ -33,7 +33,7 @@ If not specified, must be supplied in each layer added to the plot.}
 \item{data}{A flexible input that specifies the data to be used
 \itemize{
 \item \code{NULL}: No data is set.
-\item \code{\link[=waiver]{waiver()}}: Uses the layout matrix.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the layout matrix.
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
 layout matrix, and must return a matrix. If you want to transform the final
 plot data, please use \code{\link[=plot_data]{plot_data()}}.

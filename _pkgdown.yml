@@ -28,7 +28,7 @@ reference:
   - layout-operator
   - quad_switch
   - quad_anno
-  - anno_init
+  - quad_init
   - with_quad
   - stack_switch
   - active

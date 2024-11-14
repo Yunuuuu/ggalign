@@ -10,7 +10,7 @@
 #' @param params A list of parameters for `align_class`.
 #' @param data Options for `data`:
 #'  - A matrix, data frame, or atomic vector.
-#'  - [`waiver()`]: Uses the `layout matrix`.
+#'  - [`waiver()`][ggplot2::waiver]: Uses the `layout matrix`.
 #'  - `NULL`: No data is set.
 #'  - A `function` (including purrr-like lambda syntax) applied to the layout
 #'    `matrix`.
@@ -19,7 +19,7 @@
 #' [`unit`][grid::unit].
 #' @param controls Options for `controls`:
 #'  - `NULL`: Used when `align_*()` functions do not add a plot.
-#'  - [`waiver()`]: Try to infer `controls` based on `data`.
+#'  - [`waiver()`][ggplot2::waiver]: Try to infer `controls` based on `data`.
 #'
 #' @param limits Logical; if `TRUE`, sets layout limits for the plot.
 #' @param facet Logical; if `TRUE`, applies facets to the layout. If `FALSE`,

@@ -65,7 +65,7 @@ different from the `quad_alignb()`/`quad_alignh()`/`quad_alignv()` where the
 column annotation will transpose the layout matrix 
 
 Additionally, annotations can be manually initialized with user-specified data
-using `anno_init()`, I'll demonstrate it in `quad_alignh()`/`quad_alignv()`
+using `quad_init()`, I'll demonstrate it in `quad_alignh()`/`quad_alignv()`
 section where manual initialization is required.
 
 ```{r}
@@ -195,14 +195,14 @@ quad_alignh(small_mat) +
     anno_top()
 ```
 
-Manual initialization of annotations with `anno_init()` is required in such
+Manual initialization of annotations with `quad_init()` is required in such
 cases: 
 ```{r}
 quad_alignh(small_mat) +
     geom_boxplot(aes(value, .row_names, fill = .row_names)) +
     scale_fill_brewer(palette = "Dark2") +
     # initialize the top annotation with a self-defined data frame
-    anno_init("top", data = mpg) +
+    quad_init("top", data = mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))
@@ -215,7 +215,7 @@ quad_alignv(small_mat) +
     geom_boxplot(aes(.column_names, value, fill = .column_names)) +
     scale_fill_brewer(palette = "Dark2") +
     # initialize the left annotation with a self-defined data frame
-    anno_init("left", data = mpg) +
+    quad_init("left", data = mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))

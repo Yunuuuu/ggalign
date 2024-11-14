@@ -9,7 +9,7 @@
 #' @param steps An integer indicating the number of steps to generate the pie
 #' chart radian. Increasing this value results in a smoother pie circular.
 #' @param clockwise A single boolean value indicates clockwise or not.
-#' @eval ggfun("rd_aesthetics")("geom", "pie")
+#' @eval rd_gg_aesthetics("geom", "pie")
 #' @examples
 #' ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
 #'     geom_pie(aes(x, y, angle = value * 360))
@@ -38,7 +38,7 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
-#' @importFrom ggplot2 ggproto aes .pt resolution
+#' @importFrom ggplot2 ggproto aes resolution
 #' @importFrom rlang set_names
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,
@@ -75,12 +75,14 @@ GeomPie <- ggproto("GeomPie",
                     vapply(
                         split(data$x, data$PANEL, drop = TRUE),
                         resolution, numeric(1),
-                        zero = FALSE
+                        zero = FALSE,
+                        USE.NAMES = FALSE
                     ),
                     vapply(
                         split(data$y, data$PANEL, drop = TRUE),
                         resolution, numeric(1),
-                        zero = FALSE
+                        zero = FALSE,
+                        USE.NAMES = FALSE
                     )
                 ) * 0.45)
         data

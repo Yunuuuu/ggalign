@@ -89,6 +89,6 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
 \seealso{
 \itemize{
 \item \code{\link[=quad_active]{quad_active()}}/\code{\link[=quad_anno]{quad_anno()}}
-\item \code{\link[=anno_init]{anno_init()}}
+\item \code{\link[=quad_init]{quad_init()}}
 }
 }

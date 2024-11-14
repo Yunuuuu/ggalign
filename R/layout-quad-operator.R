@@ -162,7 +162,7 @@ quad_layout_subtract.quad_active <- quad_layout_subtract.ggplot
 quad_layout_subtract.quad_anno <- quad_layout_subtract.ggplot
 
 #' @export
-quad_layout_subtract.anno_init <- quad_layout_subtract.ggplot
+quad_layout_subtract.quad_init <- quad_layout_subtract.ggplot
 
 #' @export
 quad_layout_subtract.Align <- function(object, quad, object_name) {

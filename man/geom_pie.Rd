@@ -136,19 +136,19 @@ Pie charts
 
 \code{geom_pie()} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
-\item \strong{\code{\link[=aes_position]{x}}}
-\item \strong{\code{\link[=aes_position]{y}}}
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
 \item \strong{\code{angle}}
-\item \code{\link[=aes_colour_fill_alpha]{alpha}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
 \item \code{angle0}
-\item \code{\link[=aes_colour_fill_alpha]{colour}}
-\item \code{\link[=aes_colour_fill_alpha]{fill}}
-\item \code{\link[=aes_group_order]{group}}
-\item \code{\link[=aes_linetype_size_shape]{linetype}}
-\item \code{\link[=aes_linetype_size_shape]{linewidth}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
+\item \code{\link[ggplot2:aes_group_order]{group}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
 \item \code{radius}
 }
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
 \examples{

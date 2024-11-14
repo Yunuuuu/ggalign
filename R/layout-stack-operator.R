@@ -89,7 +89,7 @@ stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
 stack_layout_subtract.quad_anno <- stack_layout_subtract.ggplot
 
 #' @export
-stack_layout_subtract.anno_init <- stack_layout_subtract.ggplot
+stack_layout_subtract.quad_init <- stack_layout_subtract.ggplot
 
 #' @export
 stack_layout_subtract.Align <- function(object, stack, object_name) {

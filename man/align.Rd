@@ -33,7 +33,7 @@ align(
 \item{data}{Options for \code{data}:
 \itemize{
 \item A matrix, data frame, or atomic vector.
-\item \code{\link[=waiver]{waiver()}}: Uses the \verb{layout matrix}.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the \verb{layout matrix}.
 \item \code{NULL}: No data is set.
 \item A \code{function} (including purrr-like lambda syntax) applied to the layout
 \code{matrix}.
@@ -45,7 +45,7 @@ align(
 \item{controls}{Options for \code{controls}:
 \itemize{
 \item \code{NULL}: Used when \verb{align_*()} functions do not add a plot.
-\item \code{\link[=waiver]{waiver()}}: Try to infer \code{controls} based on \code{data}.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Try to infer \code{controls} based on \code{data}.
 }}
 
 \item{limits}{Logical; if \code{TRUE}, sets layout limits for the plot.}

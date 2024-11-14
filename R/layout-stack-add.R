@@ -174,7 +174,7 @@ stack_layout_add.quad_active <- function(object, stack, object_name) {
 stack_layout_add.quad_anno <- stack_layout_add.quad_active
 
 #' @export
-stack_layout_add.anno_init <- stack_layout_add.quad_active
+stack_layout_add.quad_init <- stack_layout_add.quad_active
 
 #' @importFrom methods slot
 #' @export

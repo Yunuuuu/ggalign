@@ -32,7 +32,7 @@ quad_active <- function(width = NULL, height = NULL) {
 #' This often occurs in [`quad_alignh()`] and [`quad_alignv()`], where the
 #' layout data is a matrix, but top and bottom annotations (in
 #' [`quad_alignh()`]) or left and right annotations (in [`quad_alignv()`])
-#' require a data frame. In such cases, you must use [`anno_init()`] to manually
+#' require a data frame. In such cases, you must use [`quad_init()`] to manually
 #' initialize the annotation stack.
 #'
 #' @param position `r rd_quad_position("activated")`.
@@ -48,7 +48,7 @@ quad_active <- function(width = NULL, height = NULL) {
 #' `r rd_stack_what()`.
 #' @seealso
 #' - [`quad_switch()`]
-#' - [`anno_init()`]
+#' - [`quad_init()`]
 #' @export
 #' @rdname quad_active
 quad_anno <- function(position, size = NULL, free_guides = waiver(),
@@ -148,7 +148,7 @@ quad_switch_anno <- function(position, size, free_guides, what,
 #'     data into a data frame.
 #' @inheritParams quad_free
 #' @export
-anno_init <- function(position, data = waiver(), ...) {
+quad_init <- function(position, data = waiver(), ...) {
     if (is.null(position)) {
         cli::cli_abort(paste(
             "{.arg position} must be a single string of",
@@ -159,7 +159,7 @@ anno_init <- function(position, data = waiver(), ...) {
     data <- allow_lambda(data)
     structure(
         list(data = data, position = position, params = rlang::list2(...)),
-        class = c("anno_init", "quad_anno", "quad_switch")
+        class = c("quad_init", "quad_anno", "quad_switch")
     )
 }
 
@@ -185,7 +185,7 @@ anno_init <- function(position, data = waiver(), ...) {
 #' @importFrom ggplot2 waiver
 #' @seealso
 #' - [`quad_active()`]/[`quad_anno()`]
-#' - [`anno_init()`]
+#' - [`quad_init()`]
 #' @export
 quad_switch <- function(position = NULL, size = NULL,
                         width = NULL, height = NULL, free_guides = waiver(),

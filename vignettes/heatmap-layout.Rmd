@@ -104,7 +104,7 @@ ggheatmap(matrix(runif(360L), nrow = 20L), filling = NULL) +
 ```
 
 If you want more complex customization of pie charts, try using
-`ggforce::geom_arc_bar()` instad.
+`ggforce::geom_arc_bar()` instead.
 
 You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or
