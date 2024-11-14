@@ -232,7 +232,12 @@ assert_bool <- function(x,
                         arg = caller_arg(x),
                         call = caller_env()) {
     if (!missing(x) &&
-        .Call(ffi_standalone_is_bool_1.0.7, x, allow_na, allow_null)) {
+        .standalone_types_check_assert_call(
+            ffi_standalone_is_bool_1.0.7,
+            x,
+            allow_na,
+            allow_null
+        )) {
         return(invisible(NULL))
     }
 
