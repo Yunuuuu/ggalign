@@ -19,5 +19,18 @@ The \code{patch()} function is used by \code{\link[=ggwrap]{ggwrap()}} and \code
 objects into a \code{\link[grid:grid.grob]{grob}}.
 }
 \seealso{
-\link[patchwork:patchworkGrob]{patchwork}
+\code{\link[patchwork:patchworkGrob]{patchwork}}
+
+Other \code{patch} methods: 
+\code{\link{patch.Heatmap}()},
+\code{\link{patch.alignpatches}()},
+\code{\link{patch.formula}()},
+\code{\link{patch.ggplot}()},
+\code{\link{patch.grob}()},
+\code{\link{patch.patch}()},
+\code{\link{patch.patch_ggplot}()},
+\code{\link{patch.pheatmap}()},
+\code{\link{patch.recordedplot}()},
+\code{\link{patch.trellis}()}
 }
+\concept{\code{patch} methods}

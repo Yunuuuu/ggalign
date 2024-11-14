@@ -2,24 +2,22 @@
 #'
 #' This function converts various objects into a matrix format.
 #'
-#' @param data Any objects to be converted to a matrix.
+#' @param data An object to be converted to a matrix.
 #' @inheritParams rlang::args_dots_used
-#' @return A matrix containing the converted data.
+#' @return A matrix.
 #' @seealso
-#' - [`fortify_matrix.MAF`] for converting [`MAF`][maftools::read.maf] objects.
+#' - [`fortify_matrix.default()`]
+#' - [`fortify_matrix.MAF()`]
 #' @export
 fortify_matrix <- function(data, ...) {
     rlang::check_dots_used()
     UseMethod("fortify_matrix")
 }
 
-#' @inherit fortify_matrix title description return
-#' @inheritParams fortify_matrix
-#' @param ... Not used currently.
-#' @export
-#' @rdname fortify_matrix.matrix
-fortify_matrix.matrix <- function(data, ...) data
-
+#' @inherit fortify_matrix
+#' @description
+#' By default, it calls [`as.matrix()`] to build a matrix.
+#' @family [`fortify_matrix()`] methods
 #' @importFrom rlang try_fetch
 #' @export
 fortify_matrix.default <- function(data, ...) {
@@ -36,6 +34,9 @@ fortify_matrix.default <- function(data, ...) {
 }
 
 #' @export
+fortify_matrix.matrix <- function(data, ...) data
+
+#' @export
 fortify_matrix.waiver <- function(data, ...) data
 
 #' @export
@@ -47,8 +48,8 @@ fortify_matrix.function <- function(data, ...) data
 #' @export
 fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 
-#' @inherit fortify_matrix title description return
-#' @inheritParams fortify_matrix
+#' @inherit fortify_matrix.default
+#' @inheritParams fortify_matrix.default
 #' @param ... Not used currently.
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
@@ -64,8 +65,8 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'  - `n_samples`: Total of samples
 #'  - `breaks`: factor levels of `Variant_Classification`, if `collapse_vars =
 #'    TRUE`, `"Multi_Hit"` will be added in the end.
+#' @family [`fortify_matrix()`] methods
 #' @export
-#' @rdname fortify_matrix.MAF
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
                                collapse_vars = FALSE) {

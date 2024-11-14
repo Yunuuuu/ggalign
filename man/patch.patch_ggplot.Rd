@@ -20,8 +20,21 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 }
 \seealso{
 \itemize{
-\item \link{patch_titles}
-\item \link{inset}
-\item \link{ggwrap}
+\item \code{\link[=patch_titles]{patch_titles()}}
+\item \code{\link[=inset]{inset()}}
+\item \code{\link[=ggwrap]{ggwrap()}}
 }
+
+Other \code{patch} methods: 
+\code{\link{patch.Heatmap}()},
+\code{\link{patch.alignpatches}()},
+\code{\link{patch.formula}()},
+\code{\link{patch.ggplot}()},
+\code{\link{patch.grob}()},
+\code{\link{patch.patch}()},
+\code{\link{patch.patchwork}()},
+\code{\link{patch.pheatmap}()},
+\code{\link{patch.recordedplot}()},
+\code{\link{patch.trellis}()}
 }
+\concept{\code{patch} methods}

@@ -7,18 +7,19 @@
 fortify_matrix(data, ...)
 }
 \arguments{
-\item{data}{Any objects to be converted to a matrix.}
+\item{data}{An object to be converted to a matrix.}
 
 \item{...}{Arguments passed to methods.}
 }
 \value{
-A matrix containing the converted data.
+A matrix.
 }
 \description{
 This function converts various objects into a matrix format.
 }
 \seealso{
 \itemize{
-\item \code{\link{fortify_matrix.MAF}} for converting \code{\link[maftools:read.maf]{MAF}} objects.
+\item \code{\link[=fortify_matrix.default]{fortify_matrix.default()}}
+\item \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}
 }
 }

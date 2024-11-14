@@ -32,7 +32,20 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 }
 \seealso{
 \itemize{
-\item \link[ComplexHeatmap:Heatmap]{Heatmap}
-\item \link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation}
+\item \code{\link[ComplexHeatmap:Heatmap]{Heatmap()}}
+\item \code{\link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation()}}
 }
+
+Other \code{patch} methods: 
+\code{\link{patch.alignpatches}()},
+\code{\link{patch.formula}()},
+\code{\link{patch.ggplot}()},
+\code{\link{patch.grob}()},
+\code{\link{patch.patch}()},
+\code{\link{patch.patch_ggplot}()},
+\code{\link{patch.patchwork}()},
+\code{\link{patch.pheatmap}()},
+\code{\link{patch.recordedplot}()},
+\code{\link{patch.trellis}()}
 }
+\concept{\code{patch} methods}

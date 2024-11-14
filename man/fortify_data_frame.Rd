@@ -7,7 +7,7 @@
 fortify_data_frame(data, ...)
 }
 \arguments{
-\item{data}{Any objects to be converted to a data frame.}
+\item{data}{An object to be converted to a data frame.}
 
 \item{...}{Arguments passed to methods.}
 }
@@ -15,14 +15,13 @@ fortify_data_frame(data, ...)
 A data frame.
 }
 \description{
-This function converts various objects to a data frame. By default, it calls
-\code{\link[ggplot2:fortify]{fortify()}} to perform the conversion.
-}
-\details{
-When \code{data} is a matrix, it will automatically be transformed into a
-long-form data frame, where each row represents a unique combination of
-matrix indices and their corresponding values.
+This function converts various objects to a data frame.
 }
 \seealso{
-\code{\link[ggplot2:fortify]{fortify}}
+\itemize{
+\item \code{\link[=fortify_data_frame.default]{fortify_data_frame.default()}}
+\item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}
+\item \code{\link[=fortify_data_frame.numeric]{fortify_data_frame.numeric()}}
+\item \code{\link[=fortify_data_frame.matrix]{fortify_data_frame.matrix()}}
+}
 }

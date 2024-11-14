@@ -1,27 +1,40 @@
 #' Build a data frame
 #'
-#' This function converts various objects to a data frame. By default, it calls
-#' [`fortify()`][ggplot2::fortify] to perform the conversion.
+#' This function converts various objects to a data frame.
 #'
-#' When `data` is a matrix, it will automatically be transformed into a
-#' long-form data frame, where each row represents a unique combination of
-#' matrix indices and their corresponding values.
-#'
-#' @param data Any objects to be converted to a data frame.
+#' @param data An object to be converted to a data frame.
 #' @inheritParams rlang::args_dots_used
 #' @return A data frame.
-#' @seealso [`fortify`][ggplot2::fortify]
+#' @seealso
+#' - [`fortify_data_frame.default()`]
+#' - [`fortify_data_frame.character()`]
+#' - [`fortify_data_frame.numeric()`]
+#' - [`fortify_data_frame.matrix()`]
 #' @export
 fortify_data_frame <- function(data, ...) {
     rlang::check_dots_used()
     UseMethod("fortify_data_frame")
 }
 
+#' @inherit fortify_data_frame
+#' @description
+#' By default, it calls [`fortify()`][ggplot2::fortify] to build the
+#' data frame.
+#' @family [`fortify_data_frame()`] methods
 #' @export
 fortify_data_frame.default <- function(data, ...) {
     ggplot2::fortify(model = data, ...)
 }
 
+#' @inherit fortify_data_frame.default
+#' @description
+#' When `data` is an atomic vector, it'll be converted to a data frame with
+#' following columns:
+#'
+#'  - `.names`: the names for the vector (only applicable if names exist).
+#'  - `value`: the actual value of the vector.
+#'
+#' @family [`fortify_data_frame()`] methods
 #' @export
 fortify_data_frame.character <- function(data, ...) {
     ans <- list(.names = vec_names(data), value = data)
@@ -29,6 +42,8 @@ fortify_data_frame.character <- function(data, ...) {
     new_data_frame(ans)
 }
 
+#' @inherit fortify_data_frame.character
+#' @family [`fortify_data_frame()`] methods
 #' @export
 fortify_data_frame.numeric <- fortify_data_frame.character
 
@@ -38,6 +53,12 @@ fortify_data_frame.waiver <- function(data, ...) data
 #' @export
 fortify_data_frame.NULL <- function(data, ...) data
 
+#' @inherit fortify_data_frame.default
+#' @description
+#' When `data` is a matrix, it will automatically be transformed into a
+#' long-form data frame, where each row represents a unique combination of
+#' matrix indices and their corresponding values.
+#' @family [`fortify_data_frame()`] methods
 #' @export
 fortify_data_frame.matrix <- function(data, ...) {
     row_nms <- vec_names(data)

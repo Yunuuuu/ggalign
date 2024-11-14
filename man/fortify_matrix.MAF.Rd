@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{data}{Any objects to be converted to a matrix.}
+\item{data}{An object to be converted to a matrix.}
 
 \item{...}{Not used currently.}
 
@@ -30,10 +30,10 @@ multiple alterations in the same sample and gene into a single value
 \code{"Multi_Hit"}.}
 }
 \value{
-A matrix containing the converted data.
+A matrix.
 }
 \description{
-This function converts various objects into a matrix format.
+By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 }
 \section{ggalign attributes}{
 
@@ -46,3 +46,8 @@ This function converts various objects into a matrix format.
 }
 }
 
+\seealso{
+Other \code{\link[=fortify_matrix]{fortify_matrix()}} methods: 
+\code{\link{fortify_matrix.default}()}
+}
+\concept{\code{\link[=fortify_matrix]{fortify_matrix()}} methods}
