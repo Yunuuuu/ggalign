@@ -163,7 +163,7 @@ schemes.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"green"</span>, high <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -175,7 +175,7 @@ schemes.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p><code>oob</code> argument in the <code>scale_fill_*</code> function
 can be used to deal with the outliers.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -196,7 +196,7 @@ can be used to deal with the outliers.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can use <code><a href="../reference/align_plots.html">align_plots()</a></code> to arrange them.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
@@ -239,7 +239,7 @@ can be used to deal with the outliers.</p>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-6-1.png" width="960"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-7-1.png" width="960"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">rainbow</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -251,7 +251,7 @@ can be used to deal with the outliers.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>For character matrix, you can use ggplot2 discrete filling
 scales.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -266,14 +266,14 @@ scales.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">discrete_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, names <span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">discrete_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">colors</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mat_with_na</span> <span class="op">&lt;-</span> <span class="va">mat</span></span>
 <span><span class="va">na_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
@@ -291,7 +291,7 @@ scales.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>We won’t compare the LAB and RGB space. If you want to convert color
 between different color space, try to use <a href="https://farver.data-imaginist.com/" class="external-link">farver</a> pacakge.</p>
 <p>In ggplot2, you can use <code>panel.border</code> argument in
@@ -308,7 +308,7 @@ between different color space, try to use <a href="https://farver.data-imaginist
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>You can use the <code>filling</code> argument to turn off the heatmap
 cell filling, allowing you to customize the heatmap body geoms. Use the
 <code>color</code> aesthetic to specify the cell border color and the
@@ -322,7 +322,7 @@ cell filling, allowing you to customize the heatmap body geoms. Use the
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>To draw a blank heatmap body:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -332,7 +332,7 @@ cell filling, allowing you to customize the heatmap body geoms. Use the
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="titles">Titles<a class="anchor" aria-label="anchor" href="#titles"></a>
@@ -353,7 +353,7 @@ appearance.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.patch_title.top <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
@@ -376,7 +376,7 @@ appearance.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.patch_title.top <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ComplexHeatmap::Heatmap(mat,</span></span>
 <span><span class="co">#     name = "mat", clustering_distance_rows = function(m) dist(m),</span></span>
@@ -392,7 +392,7 @@ appearance.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.patch_title.top <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="clustering-methods">Clustering methods<a class="anchor" aria-label="anchor" href="#clustering-methods"></a>
@@ -413,7 +413,7 @@ appearance.</p>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>Use <code>distance = NULL</code> if you don’t want to calculate the
 distance.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -431,7 +431,7 @@ distance.</p>
 <span>    <span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="render-dendrograms">Render dendrograms<a class="anchor" aria-label="anchor" href="#render-dendrograms"></a>
@@ -448,7 +448,7 @@ the color mapping, since <code>ggalign</code> will add the
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>reorder_dendrogram <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -470,7 +470,7 @@ the color mapping, since <code>ggalign</code> will add the
 <span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="seriation">Seriation<a class="anchor" aria-label="anchor" href="#seriation"></a>
@@ -489,7 +489,7 @@ information.</p>
 <span>    <span class="fu"><a href="../reference/align_reorder.html">align_reorder</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/seriation/man/seriate.html" class="external-link">seriate</a></span>, method <span class="op">=</span> <span class="st">"BEA_TSP"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p>The above code will execute <code>seriate()</code> twice—once for
 each dimension. However, since a single run of <code>seriate()</code>
 can provide the ordering for both dimensions, we can manually extract
@@ -505,16 +505,16 @@ the ordering indices to avoid redundancy.</p>
 <span>    <span class="fu"><a href="../reference/align_order.html">align_order</a></span><span class="op">(</span><span class="fu">seriation</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/seriation/man/get_order.html" class="external-link">get_order</a></span><span class="op">(</span><span class="va">o</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-22-1.png" width="700">
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-23-1.png" width="700">
 For more use of the <code>seriate()</code> function, please refer to the
-<a href="https://cran.r-project.org/web/packages/seriation/index.html" class="external-link">seriation</a>
+<a href="https://CRAN.R-project.org/package=seriation" class="external-link">seriation</a>
 package.</p>
 </div>
 <div class="section level2">
 <h2 id="dimension-labels">Dimension labels<a class="anchor" aria-label="anchor" href="#dimension-labels"></a>
 </h2>
 <p><code>ggplot2</code> use scales and theme to control the axis labels,
-Please see <a href="https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html#scales">scales</a>
+Please see <a href="https://yunuuuu.github.io/ggalign/articles/difference-with-ggplot2.html#position-scales">scales</a>
 section for more details.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ComplexHeatmap::Heatmap(mat,</span></span>
@@ -534,7 +534,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -546,7 +546,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
@@ -560,7 +560,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
@@ -579,7 +579,7 @@ section for more details.</p>
 <span><span class="co">#&gt; Warning: Vectorized input to `element_text()` is not officially supported.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Results may be unexpected or may change in future versions of ggplot2.</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="heatmap-split">Heatmap split<a class="anchor" aria-label="anchor" href="#heatmap-split"></a>
@@ -598,7 +598,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -610,7 +610,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -623,7 +623,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
 <p>The dendrogram was calculated in each group defined by kmeans.</p>
 </div>
 <div class="section level3">
@@ -641,7 +641,7 @@ section for more details.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="split-by-dendrogram">Split by dendrogram<a class="anchor" aria-label="anchor" href="#split-by-dendrogram"></a>
@@ -658,7 +658,7 @@ indicated with a dashed line.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-32-1.png" width="700"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -670,7 +670,7 @@ indicated with a dashed line.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-32-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="order-of-slices-panels">Order of slices (panels)<a class="anchor" aria-label="anchor" href="#order-of-slices-panels"></a>
@@ -700,7 +700,7 @@ merging of dendrogram between <code>ComplexHeatmap</code> and
 <span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, <span class="st">"tr"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-34-1.png" width="700"></p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -715,7 +715,7 @@ merging of dendrogram between <code>ComplexHeatmap</code> and
 <span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, <span class="st">"tr"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="single-heatmap_files/figure-html/unnamed-chunk-34-1.png" width="700"></p>
+<p><img src="single-heatmap_files/figure-html/unnamed-chunk-35-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="titles-for-splitting-facet-strip-text">Titles for splitting (facet strip text)<a class="anchor" aria-label="anchor" href="#titles-for-splitting-facet-strip-text"></a>
