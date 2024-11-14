@@ -1,6 +1,10 @@
 ---
 title: "ComplexHeatmap: single-heatmap"
 output: rmarkdown::html_vignette
+params:
+  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
+  release: "https://yunuuuu.github.io/ggalign"
+  devel: "https://yunuuuu.github.io/ggalign/dev"
 vignette: >
   %\VignetteIndexEntry{ComplexHeatmap: single-heatmap}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,6 +16,11 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
+```
+
+```{r echo=FALSE}
+mode <- params$mode
+url <- params[[mode]]
 ```
 
 In this thread, we'll use `ggalign` to draw all the heatmap in
@@ -398,12 +407,11 @@ ggheatmap(mat2) +
     theme(plot.margin = margin())
 ```
 For more use of the `seriate()` function, please refer to the
-[seriation](https://cran.r-project.org/web/packages/seriation/index.html)
-package. 
+[seriation](https://CRAN.R-project.org/package=seriation) package.
 
 # Dimension labels
 `ggplot2` use scales and theme to control the axis labels, Please see
-[scales](https://yunuuuu.github.io/ggalign/articles/scales-and-facets.html#scales)
+[scales](`r sprintf("%s/articles/difference-with-ggplot2.html#position-scales", url)`)
 section for more details.
 ```{r}
 # ComplexHeatmap::Heatmap(mat,
