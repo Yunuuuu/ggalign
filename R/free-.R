@@ -48,7 +48,8 @@ free_gg.default <- function(mapping = aes(), ...,
 #' @rdname free_gg
 free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
     plot <- data
-    data <- .subset2(plot, "data")
+    # In ggplot2, `waiver()` was regard to no data
+    data <- .subset2(plot, "data") %|w|% NULL
     plot["data"] <- list(NULL)
     new_free_gg(plot, data, size = size, active = active)
 }
