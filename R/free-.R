@@ -5,10 +5,10 @@
 #'
 #' The `free_gg()` function allows you to incorporate a ggplot object into your
 #' layout. Unlike `align_gg()`, which aligns every axis value precisely,
-#' `free_gg()` focuses more on layout integration without enforcing strict axis
+#' `free_gg()` focuses on layout integration without enforcing strict axis
 #' alignment. `ggfree()` is an alias for `free_gg`.
 #'
-#' @param ... Additional arguments passed to [`ggplot()`][ggplot2::ggplot].
+#' @param ... Additional arguments passed to [`fortify_data_frame()`].
 #' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]
 #' object. By default, it will inherit from the parent layout if applicable.
 #' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
@@ -19,7 +19,7 @@
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
 #'     align_dendro() +
-#'     ggfree(data = mtcars, aes(wt, mpg)) +
+#'     ggfree(aes(wt, mpg), data = mtcars) +
 #'     geom_point()
 #' @export
 free_gg <- function(..., data = waiver(), size = NULL, active = NULL) {
@@ -32,16 +32,20 @@ free_gg <- function(..., data = waiver(), size = NULL, active = NULL) {
 #' @rdname free_gg
 ggfree <- free_gg
 
+#' @inheritParams ggplot2::ggplot
 #' @importFrom ggplot2 ggplot
 #' @export
-free_gg.default <- function(..., data = waiver(), size = NULL, active = NULL) {
-    data <- fortify_data_frame(data)
-    new_free_gg(ggplot(data = NULL, ...), data,
+#' @rdname free_gg
+free_gg.default <- function(mapping = aes(), ...,
+                            data = waiver(), size = NULL, active = NULL) {
+    data <- fortify_data_frame(data = data, ...)
+    new_free_gg(ggplot(data = NULL, mapping = mapping), data,
         size = size, active = active
     )
 }
 
 #' @export
+#' @rdname free_gg
 free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
     plot <- data
     data <- .subset2(plot, "data")

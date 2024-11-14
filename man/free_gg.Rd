@@ -3,12 +3,18 @@
 \name{free_gg}
 \alias{free_gg}
 \alias{ggfree}
+\alias{free_gg.default}
+\alias{free_gg.ggplot}
 \title{Add ggplot to layout}
 \usage{
 free_gg(..., data = waiver(), size = NULL, active = NULL)
+
+\method{free_gg}{default}(mapping = aes(), ..., data = waiver(), size = NULL, active = NULL)
+
+\method{free_gg}{ggplot}(..., data = waiver(), size = NULL, active = NULL)
 }
 \arguments{
-\item{...}{Additional arguments passed to \code{\link[ggplot2:ggplot]{ggplot()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
 \item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}
 object. By default, it will inherit from the parent layout if applicable.
@@ -20,6 +26,9 @@ provided directly.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
+
+\item{mapping}{Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.}
 }
 \value{
 A \code{free_gg} object.
@@ -29,13 +38,13 @@ A \code{free_gg} object.
 
 The \code{free_gg()} function allows you to incorporate a ggplot object into your
 layout. Unlike \code{align_gg()}, which aligns every axis value precisely,
-\code{free_gg()} focuses more on layout integration without enforcing strict axis
+\code{free_gg()} focuses on layout integration without enforcing strict axis
 alignment. \code{ggfree()} is an alias for \code{free_gg}.
 }
 \examples{
 ggheatmap(matrix(rnorm(56), nrow = 7)) +
     anno_top() +
     align_dendro() +
-    ggfree(data = mtcars, aes(wt, mpg)) +
+    ggfree(aes(wt, mpg), data = mtcars) +
     geom_point()
 }
