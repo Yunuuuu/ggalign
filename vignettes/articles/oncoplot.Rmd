@@ -127,7 +127,11 @@ The `ggoncoplot()` function supports `MAF` objects from the `maftools` package
 using the `fortify_matrix.MAF()` method. It includes options to control data
 generation for `ggoncoplot()`/`ggheatmap()`, such as drawing the top `n_top`
 genes.
-```{r eval=rlang::is_installed("maftools")}
+```{r echo=FALSE}
+can_read_maf <- rlang::is_installed("maftools") &&
+    rlang::is_installed("R.utils")
+```
+```{r eval=can_read_maf}
 # load data from `maftools`
 laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
 # clinical information containing survival information and histology. This is optional
@@ -145,7 +149,7 @@ ggoncoplot(laml, n_top = 20) +
 
 By default, samples without alterations in the selected genes are removed. To
 include all samples, set `remove_empty_samples = FALSE`: 
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 align_plots(
     ggoncoplot(laml, n_top = 20L, remove_empty_samples = FALSE) +
         scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
@@ -169,7 +173,7 @@ and hard to interpret.
 In such cases, disabling the default filling and defining a custom heatmap layer
 with `geom_subtile()` is more effective. This function subdivides each cell into
 smaller rectangles, allowing the distinct alterations to be clearly displayed.
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
@@ -178,7 +182,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 
 To focus only on cells with multiple alterations, filter the data before
 applying `geom_subtile()`:
-```{r eval=rlang::is_installed("maftools") && rlang::is_installed("dplyr")}
+```{r eval=can_read_maf && rlang::is_installed("dplyr")}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     plot_data(function(data) {
         dplyr::filter(data, dplyr::n() > 1L, .by = c(".x", ".y"))
@@ -262,7 +266,7 @@ extract these attributes using the `ggalign_attr()` function.
 
 Below is an example of how to extract the sample summary data (e.g., TMB) using
 `ggalign_attr()` and add it to the top annotation of an oncoplot:
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +
@@ -279,7 +283,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 ```
 
 Here's how you might visualize the number of samples for each gene:
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +
@@ -298,7 +302,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 
 To visualize the Transition/Transversion (Ti/Tv) ratio, you can extract the
 fraction contribution:
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +
@@ -314,7 +318,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 ```
 
 We can combine all of these elements as follows:
-```{r eval=rlang::is_installed("maftools")}
+```{r eval=can_read_maf}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +

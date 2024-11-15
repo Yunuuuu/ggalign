@@ -43,6 +43,7 @@ jobs:
             any::seriation, 
             any::ggh4x, 
             any::maftools, 
+            any::R.utils, 
             any::dplyr, 
             any::tidyr, 
             local::.
