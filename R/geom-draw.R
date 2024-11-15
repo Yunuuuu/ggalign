@@ -12,8 +12,8 @@
 #' @eval rd_gg_aesthetics("geom", "draw")
 #' @examples
 #' library(grid)
-#' ggheatmap(letters[seq_len(7)], filling = FALSE) +
-#'     geom_draw(aes(draw = value, fill = value)) +
+#' ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
+#'     geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
 #'     scale_draw_manual(values = list(
 #'         a = function(x, y, width, height, fill) {
 #'             rectGrob(x, y,
@@ -36,24 +36,18 @@
 #'                 default.units = "native"
 #'             )
 #'         },
-#'         d = function(x, y, width, height, fill) {
-#'             rectGrob(x, y,
-#'                 width = width, height = height,
-#'                 gp = gpar(fill = fill),
-#'                 default.units = "native"
+#'         d = function(x, y, width, height, shape) {
+#'             gList(
+#'                 pointsGrob(x, y, pch = shape),
+#'                 # To ensure the rectangle color is shown in the legends, you
+#'                 # must explicitly provide a color argument and include it in
+# '                # the `gpar()` of the graphical object
+#'                 rectGrob(x, y, width, height,
+#'                     gp = gpar(col = "black", fill = NA)
+#'                 )
 #'             )
 #'         },
-#'         e = function(x, y, width, height, fill, linewidth) {
-#'             rectGrob(x, y,
-#'                 width = width, height = height,
-#'                 gp = gpar(fill = fill, lwd = linewidth),
-#'                 default.units = "native"
-#'             )
-#'         },
-#'         f = function(x, y, shape) {
-#'             pointsGrob(x, y, pch = shape)
-#'         },
-#'         g = function(xmin, xmax, ymin, ymax) {
+#'         e = function(xmin, xmax, ymin, ymax) {
 #'             segmentsGrob(
 #'                 xmin,
 #'                 ymin,
@@ -63,8 +57,8 @@
 #'             )
 #'         }
 #'     )) +
-#'     scale_fill_brewer(palette = "Dark2")
-#'
+#'     scale_fill_brewer(palette = "Dark2") +
+#'     theme_void()
 #' @export
 geom_draw <- function(mapping = NULL, data = NULL, stat = "identity",
                       position = "identity", ...,
