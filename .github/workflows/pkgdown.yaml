@@ -42,6 +42,9 @@ jobs:
             any::ComplexHeatmap
             any::seriation, 
             any::ggh4x, 
+            any::maftools, 
+            any::dplyr, 
+            any::tidyr, 
             local::.
           needs: website
 
