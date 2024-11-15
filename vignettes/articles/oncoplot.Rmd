@@ -335,7 +335,9 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
         stat = "identity"
     ) +
     ylab("TMB") +
-    anno_right(size = 0.2) +
+    anno_right(size = 0.2) -
+    # remove bottom spaces when aligning
+    plot_align(free_spaces = "b") +
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "gene_summary")
         as.matrix(data[2:8])
