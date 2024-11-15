@@ -15,7 +15,7 @@ variations, and other genomic alterations in cancer research."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.4.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,7 @@ variations, and other genomic alterations in cancer research."><meta property="o
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
     <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
     <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -119,7 +120,7 @@ variations, and other genomic alterations in cancer research.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A character matrix which encodes the alterations, you can use
-regex <code>[;:,|]</code> to separate multiple alterations.</p></dd>
+<code>";"</code>, <code>":"</code>, <code>","</code>, or <code>"|"</code> to separate multiple alterations.</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
@@ -171,8 +172,8 @@ added to a layout.</p></dd>
     <p><code>ggoncoplot()</code> is a wrapper around the <code><a href="heatmap_layout.html">ggheatmap()</a></code> function, designed to
 simplify the creation of <code>OncoPrint</code>-style visualizations. The function
 automatically processes the input character matrix by splitting the encoded
-alterations (delimited by regex <code>[;:,|]</code>) into individual genomic events and
-unnesting the columns for visualization.</p>
+alterations (delimited by <code>";"</code>, <code>":"</code>, <code>","</code>, or <code>"|"</code>) into
+individual genomic events and unnesting the columns for visualization.</p>
 <p>Additionally, a predefined reordering function, adapted from
 <a href="https://gist.github.com/armish/564a65ab874a770e2c26" class="external-link">https://gist.github.com/armish/564a65ab874a770e2c26</a>, is included to enhance
 the organization of the alterations.</p>

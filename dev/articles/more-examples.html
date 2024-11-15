@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.4.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,7 @@
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
     <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
     <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -247,20 +248,21 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] ggalign_0.0.4.9000 ggplot2_3.5.1     </span></span>
+<span><span class="co">#&gt; [1] ggalign_0.0.5.9000 ggplot2_3.5.1     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] vctrs_0.6.5        cli_3.6.3          knitr_1.49         rlang_1.1.4       </span></span>
-<span><span class="co">#&gt;  [5] xfun_0.49          textshaping_0.4.0  jsonlite_1.8.9     labeling_0.4.3    </span></span>
-<span><span class="co">#&gt;  [9] glue_1.8.0         colorspace_2.1-1   htmltools_0.5.8.1  ragg_1.3.3        </span></span>
-<span><span class="co">#&gt; [13] sass_0.4.9         fansi_1.0.6        scales_1.3.0       rmarkdown_2.29    </span></span>
-<span><span class="co">#&gt; [17] grid_4.4.2         tibble_3.2.1       evaluate_1.0.1     munsell_0.5.1     </span></span>
-<span><span class="co">#&gt; [21] jquerylib_0.1.4    fastmap_1.2.0      yaml_2.3.10        lifecycle_1.0.4   </span></span>
-<span><span class="co">#&gt; [25] compiler_4.4.2     RColorBrewer_1.1-3 fs_1.6.5           pkgconfig_2.0.3   </span></span>
-<span><span class="co">#&gt; [29] farver_2.1.2       systemfonts_1.1.0  digest_0.6.37      viridisLite_0.4.2 </span></span>
-<span><span class="co">#&gt; [33] R6_2.5.1           utf8_1.2.4         pillar_1.9.0       magrittr_2.0.3    </span></span>
-<span><span class="co">#&gt; [37] bslib_0.8.0        withr_3.0.2        tools_4.4.2        gtable_0.3.6      </span></span>
-<span><span class="co">#&gt; [41] pkgdown_2.1.1      cachem_1.1.0       desc_1.4.3</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] gtable_0.3.6       jsonlite_1.8.9     dplyr_1.1.4        compiler_4.4.2    </span></span>
+<span><span class="co">#&gt;  [5] tidyselect_1.2.1   jquerylib_0.1.4    systemfonts_1.1.0  scales_1.3.0      </span></span>
+<span><span class="co">#&gt;  [9] textshaping_0.4.0  yaml_2.3.10        fastmap_1.2.0      R6_2.5.1          </span></span>
+<span><span class="co">#&gt; [13] labeling_0.4.3     generics_0.1.3     knitr_1.49         tibble_3.2.1      </span></span>
+<span><span class="co">#&gt; [17] desc_1.4.3         munsell_0.5.1      bslib_0.8.0        pillar_1.9.0      </span></span>
+<span><span class="co">#&gt; [21] RColorBrewer_1.1-3 rlang_1.1.4        utf8_1.2.4         cachem_1.1.0      </span></span>
+<span><span class="co">#&gt; [25] xfun_0.49          fs_1.6.5           sass_0.4.9         viridisLite_0.4.2 </span></span>
+<span><span class="co">#&gt; [29] cli_3.6.3          pkgdown_2.1.1      withr_3.0.2        magrittr_2.0.3    </span></span>
+<span><span class="co">#&gt; [33] digest_0.6.37      grid_4.4.2         lifecycle_1.0.4    vctrs_0.6.5       </span></span>
+<span><span class="co">#&gt; [37] evaluate_1.0.1     glue_1.8.0         farver_2.1.2       ragg_1.3.3        </span></span>
+<span><span class="co">#&gt; [41] fansi_1.0.6        colorspace_2.1-1   rmarkdown_2.29     tools_4.4.2       </span></span>
+<span><span class="co">#&gt; [45] pkgconfig_2.0.3    htmltools_0.5.8.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

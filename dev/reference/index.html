@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.4.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +25,7 @@
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
     <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
     <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -139,7 +140,7 @@
         <dd>Determine the Active Context of Quad-Layout</dd>
       </dl><dl><dt>
 
-          <code><a href="anno_init.html">anno_init()</a></code>
+          <code><a href="quad_init.html">quad_init()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Initialize Quad-Layout Annotation</dd>
@@ -367,10 +368,10 @@
         <dd>Pie charts</dd>
       </dl><dl><dt>
 
-          <code><a href="layer_order.html">layer_order()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+          <code><a href="geom_subrect.html">geom_subrect()</a></code> <code><a href="geom_subrect.html">geom_subtile()</a></code>
+
         </dt>
-        <dd>Change the layer adding order</dd>
+        <dd>Subdivide Rectangles</dd>
       </dl><dl><dt>
 
           <code><a href="theme_no_axes.html">theme_no_axes()</a></code>
@@ -379,16 +380,40 @@
         <dd>Remove axis elements</dd>
       </dl><dl><dt>
 
+          <code><a href="layer_order.html">layer_order()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Change the layer adding order</dd>
+      </dl><dl><dt>
+
+          <code><a href="geom_draw.html">geom_draw()</a></code>
+
+        </dt>
+        <dd>Layer with customized draw function</dd>
+      </dl><dl><dt>
+
+          <code><a href="scale_draw_manual.html">scale_draw_manual()</a></code>
+
+        </dt>
+        <dd>Scale for <code>draw</code> aesthetic</dd>
+      </dl><dl><dt>
+
+          <code><a href="draw_key_draw.html">draw_key_draw()</a></code>
+
+        </dt>
+        <dd>Key glyphs for legends</dd>
+      </dl><dl><dt>
+
           <code><a href="ggalignGrob.html">ggalignGrob()</a></code>
 
         </dt>
         <dd>Generate a plot grob.</dd>
       </dl><dl><dt>
 
-          <code><a href="ggalign_attr.html">ggalign_attr()</a></code>
+          <code><a href="ggalign_attr.html">ggalign_attr()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_set()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_get()</a></code>
 
         </dt>
-        <dd>Get data from the <code>ggalign</code> attribute</dd>
+        <dd>Get Data from the Attached Attribute in the Rendering Process</dd>
       </dl><dl><dt>
 
           <code><a href="ggalign_stat.html">ggalign_stat()</a></code>

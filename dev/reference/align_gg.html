@@ -17,7 +17,7 @@ it will apply with the layout matrix.  ggalign is an alias of align_gg."><meta p
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.4.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@ it will apply with the layout matrix.  ggalign is an alias of align_gg."><meta p
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
     <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
     <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
+    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip> </h6></li>
     <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
@@ -201,6 +202,7 @@ instead.</p></dd>
 in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal stack
 layout (including left and right annotation) and <code>aes(x = .data$.x)</code>
 for vertical stack layout (including top and bottom annotation).</p>
+<p><code>matrix</code> input will be automatically melted into a long foramted data frame.</p>
 <p>The data in the underlying <code>ggplot</code> object will contain following columns:</p><ul><li><p><code>.panel</code>: the panel for the aligned axis. It means <code>x-axis</code> for vertical
 stack layout (including top and bottom annotation), <code>y-axis</code> for
 horizontal stack layout (including left and right annotation).</p></li>
