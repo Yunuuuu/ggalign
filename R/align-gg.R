@@ -204,7 +204,7 @@ AlignGG <- ggproto("AlignGG", Align,
                 order = FALSE
             )
         }
-        plot$data <- restore_attr_ggalign(ans, data)
+        plot$data <- ggalign_attr_restore(ans, data)
         plot
     }
 )

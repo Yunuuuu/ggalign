@@ -253,48 +253,53 @@ ggalign_stat.default <- function(x, ...) {
 }
 
 ####################################################
-# we keep an attribute `ggalign` across all data
-# this is used to pass additional annotation informations
-restore_attr_ggalign <- function(data, original) {
-    if (is.null(attr(data, "ggalign")) &&
-        !is.null(ggalign_params <- attr(original, "ggalign"))) {
-        attr(data, "ggalign") <- ggalign_params
-    }
-    data
-}
-
-#' Get data from the `ggalign` attribute
+#' Get data from the attribute attached across the building process
 #'
-#' This function extracts data from the `ggalign` attribute retained in the data
-#' when rendering `r rd_layout()`. The `ggalign` attribute holds supplementary
-#' information for input data.
+#' This function extracts data from the attached attribute when rendering
+#' `r rd_layout()`. The attached attribute usually holds supplementary
+#' information for the input data.
 #'
-#' @param x Input data for the function used to transform the layout data.
-#' @param field A string specifying the particular data to retrieve from the
-#' `ggalign` attribute. If `NULL`, the entire `ggalign` attribute will be
-#' returned.  Commonly, this attribute list is attached by [`fortify_matrix()`]
+#' @details
+#' Commonly, this attribute list is attached by [`fortify_matrix()`]
 #' or [`fortify_data_frame()`] functions (refer to the `ggalign attributes`
 #' section in the documentation for details). For examples, see
 #' [`fortify_matrix.MAF()`].
 #'
-#' @return The specified data from the `ggalign` attribute or `NULL` if it is
+#' @param x Input data for the function used to transform the layout data.
+#' @param field A string specifying the particular data to retrieve from the
+#' attached attribute. If `NULL`, the entire attached attribute list will be
+#' returned.
+#'
+#' @return The specified data from the attached attribute or `NULL` if it is
 #' unavailable.
 #'
 #' @export
 ggalign_attr <- function(x, field = NULL) {
-    if (is.null(x <- attr(x, "ggalign")) || is.null(field)) {
+    if (is.null(x <- ggalign_attr_get(x)) || is.null(field)) {
         return(x)
     }
     .subset2(x, field)
 }
 
-add_ggalign_attr <- function(x, values) {
-    if (is.null(suppl <- attr(x, "ggalign"))) {
-        attr(x, "ggalign") <- values
-    } else {
-        attr(x, "ggalign") <- c(suppl, values)
-    }
+ggalign_attr_set <- function(x, values) {
+    attr(x, ".__ggalign_data__") <- values
     x
+}
+
+ggalign_attr_get <- function(x) attr(x, ".__ggalign_data__", exact = TRUE)
+
+ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)
+
+# we keep a special attribute across all data
+# this is used to pass additional annotation informations
+ggalign_attr_restore <- function(data, original) {
+    if (is.null(ggalign_attr_get(data)) && # no attached attribute
+        # the original has attached attribute
+        !is.null(ggalign_data <- ggalign_attr_get(original))) {
+        ggalign_attr_set(data, ggalign_data)
+    } else {
+        data
+    }
 }
 
 #############################################################

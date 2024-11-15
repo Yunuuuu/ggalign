@@ -258,7 +258,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 }
             }
             # restore the ggalign attribute
-            object@data <- restore_attr_ggalign(data, stack_data)
+            object@data <- ggalign_attr_restore(data, stack_data)
         }
         layout <- NULL
     } else if (!is.null(stack_layout)) {
@@ -294,7 +294,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                 }
             }
             # restore the ggalign attribute
-            object@data <- restore_attr_ggalign(data, stack_data)
+            object@data <- ggalign_attr_restore(data, stack_data)
         }
 
         # check the observations is compatible ----------------

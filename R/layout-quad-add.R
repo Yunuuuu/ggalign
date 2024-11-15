@@ -133,7 +133,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
             }
         } else if (is.matrix(quad_data)) { # the stack need a matrix
             if (!is_horizontal(direction)) {
-                data <- restore_attr_ggalign(t(data), data)
+                data <- ggalign_attr_restore(t(data), data)
             }
         } else { # this shouldn't occur
             cli::cli_abort(c(
@@ -194,11 +194,11 @@ quad_layout_add.quad_init <- function(object, quad, object_name) {
             ))
         } else if (is.matrix(quad_data)) {
             if (!is_horizontal(direction)) {
-                quad_data <- restore_attr_ggalign(t(quad_data), quad_data)
+                quad_data <- ggalign_attr_restore(t(quad_data), quad_data)
             }
         }
         if (is.function(stack_data)) {
-            action_data <- NULL
+            pdata <- NULL
             # we'll apply with the layout data
             stack_data <- stack_data(quad_data)
             # check the returned data satisfied
@@ -228,7 +228,7 @@ quad_layout_add.quad_init <- function(object, quad, object_name) {
             }
         } else {
             stack_data <- quad_data
-            action_data <- waiver()
+            pdata <- waiver()
             # check the inherited data satisfied
             if (is.null(layout)) { # the stack need a data frame
                 if (!is.data.frame(stack_data)) {
@@ -253,19 +253,19 @@ quad_layout_add.quad_init <- function(object, quad, object_name) {
             }
         }
     } else if (is.null(stack_data)) {
-        action_data <- NULL
+        pdata <- NULL
     } else if (is.null(layout)) { # the stack need a data frame
         stack_data <- inject(fortify_data_frame(
             data = stack_data,
             !!!.subset2(object, "params")
         ))
-        action_data <- NULL
+        pdata <- NULL
     } else { # the stack need a matrix
         stack_data <- inject(fortify_matrix(
             data = stack_data,
             !!!.subset2(object, "params")
         ))
-        action_data <- NULL
+        pdata <- NULL
         layout_nobs <- .subset2(layout, "nobs")
         # we check the observations is compatible with the [quad_layout()]
         if (!is.null(layout_nobs) && nrow(stack_data) != layout_nobs) {
@@ -283,7 +283,7 @@ quad_layout_add.quad_init <- function(object, quad, object_name) {
         # restore the alinged parameters from the QuadLayout
         layout = layout,
         # we'll inherit the action data function
-        controls = new_controls(plot_data(action_data))
+        controls = new_controls(plot_data(pdata))
     )
     if (!is.null(layout)) {
         quad <- update_layout_params(quad,

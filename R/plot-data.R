@@ -55,11 +55,11 @@ inherit_option.plot_data <- function(option, poption) {
     # if both are function, we check if we should call parent first then call
     # itself
     if (.subset2(option, "inherit")) {
-        user_function <- o # current action data function
+        user_plot_data <- o # current action data function
         option$data <- function(data) {
-            # we always restore the `ggalign` attribute
-            ans <- restore_attr_ggalign(p_function(data), data)
-            user_function(ans)
+            # we always restore the attached attribute
+            ans <- ggalign_attr_restore(p_function(data), data)
+            user_plot_data(ans)
         }
     }
     option

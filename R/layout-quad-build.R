@@ -312,5 +312,5 @@ quad_build_data <- function(data, row_params, column_params) {
             order = FALSE
         )
     }
-    restore_attr_ggalign(ans, data)
+    ggalign_attr_restore(ans, data)
 }

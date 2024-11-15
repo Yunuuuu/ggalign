@@ -36,7 +36,7 @@ align_initialize <- function(align, direction, position,
         }
         object$labels <- vec_names(data)
         params <- object$setup_params(layout_nobs, input_params)
-        object$data <- restore_attr_ggalign(
+        object$data <- ggalign_attr_restore(
             object$setup_data(params, data),
             layout_data
         )

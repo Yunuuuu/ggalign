@@ -471,8 +471,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
             node <- rename(node, c(x = "y", y = "x"))
         }
         # we do some tricks, since ggplot2 won't remove the attributes
-        # we attach the `edge` data in `ggalign` attribute
-        plot$data <- structure(node, ggalign = list(edge = edge))
+        # we attach the `edge` data
+        plot$data <- ggalign_attr_set(node, list(edge = edge))
         position <- .subset2(self, "position")
         if (is.null(position) || !isTRUE(plot$coordinates$default)) {
             # if the dendrogram is in a normal stack layout
