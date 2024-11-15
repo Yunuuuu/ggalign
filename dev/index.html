@@ -196,20 +196,6 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></span>
 <span><span class="va">my_sideplot</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
-<p>Multiple heatmaps can be stacked together:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/stack_align.html">stack_alignv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">my_heatplot</span> <span class="op">+</span></span>
-<span>    <span class="va">my_heatplot</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
-<p>Similarly, multiple marginal plots can be stacked together:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/stack_align.html">stack_freev</a></span><span class="op">(</span>sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">my_sideplot</span> <span class="op">+</span></span>
-<span>    <span class="va">my_sideplot</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="compare-with-other-ggplot2-heatmap-extension">Compare with other ggplot2 heatmap extension<a class="anchor" aria-label="anchor" href="#compare-with-other-ggplot2-heatmap-extension"></a>
@@ -246,8 +232,9 @@
 <h2 id="more-complex-examples">More Complex Examples<a class="anchor" aria-label="anchor" href="#more-complex-examples"></a>
 </h2>
 <p>Here are some more advanced visualizations using <code>ggalign</code>:</p>
-<p><img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png"></p>
-<p><img src="https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png"></p>
+<p><img src="https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png"></p>
+<p><img src="https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png"></p>
+<p><img src="https://yunuuuu.github.io/ggalign/dev/articles/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
