@@ -144,6 +144,7 @@ combine_aes <- function(...) {
 GeomDraw <- ggproto(
     "GeomDraw",
     ggplot2::Geom,
+    optional_aes = c("x", "y"),
     default_aes = combine_aes(
         ggplot2::GeomPoint$default_aes,
         ggplot2::GeomSegment$default_aes,

@@ -131,6 +131,8 @@ requirements.
 \item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
 \item \code{stroke}
+\item \code{\link[ggplot2:aes_position]{x}}
+\item \code{\link[ggplot2:aes_position]{y}}
 }
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
