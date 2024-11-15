@@ -41,7 +41,7 @@
 #'                 pointsGrob(x, y, pch = shape),
 #'                 # To ensure the rectangle color is shown in the legends, you
 #'                 # must explicitly provide a color argument and include it in
-# '                # the `gpar()` of the graphical object
+#'                 # the `gpar()` of the graphical object
 #'                 rectGrob(x, y, width, height,
 #'                     gp = gpar(col = "black", fill = NA)
 #'                 )
@@ -49,10 +49,8 @@
 #'         },
 #'         e = function(xmin, xmax, ymin, ymax) {
 #'             segmentsGrob(
-#'                 xmin,
-#'                 ymin,
-#'                 xmax,
-#'                 ymax,
+#'                 xmin, ymin,
+#'                 xmax, ymax,
 #'                 gp = gpar(lwd = 2)
 #'             )
 #'         }
@@ -115,10 +113,12 @@ draw_key_draw <- function(data, params, size) {
         }
     }
     if (any(args == "...")) {
-        inject(draw(!!!data))
+        ans <- inject(draw(!!!data))
     } else {
-        inject(draw(!!!.subset(data, args)))
+        ans <- inject(draw(!!!.subset(data, args)))
     }
+    if (inherits(ans, "gList")) ans <- grid::gTree(children = ans)
+    ans
 }
 
 combine_aes <- function(...) {

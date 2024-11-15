@@ -136,6 +136,7 @@ ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
                 pointsGrob(x, y, pch = shape),
                 # To ensure the rectangle color is shown in the legends, you
                 # must explicitly provide a color argument and include it in
+                # the `gpar()` of the graphical object
                 rectGrob(x, y, width, height,
                     gp = gpar(col = "black", fill = NA)
                 )
@@ -143,10 +144,8 @@ ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
         },
         e = function(xmin, xmax, ymin, ymax) {
             segmentsGrob(
-                xmin,
-                ymin,
-                xmax,
-                ymax,
+                xmin, ymin,
+                xmax, ymax,
                 gp = gpar(lwd = 2)
             )
         }
