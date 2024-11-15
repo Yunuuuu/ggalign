@@ -318,7 +318,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 ```
 
 We can combine all of these elements as follows:
-```{r eval=can_read_maf}
+```{r eval=can_read_maf, fig.dim = c(10, 8)}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +
