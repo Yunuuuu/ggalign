@@ -180,4 +180,4 @@ Here are some more advanced visualizations using `ggalign`:
 
 ![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
 
-![](https://yunuuuu.github.io/ggalign/dev/articles/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png)
+![](https://yunuuuu.github.io/ggalign/dev/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png)

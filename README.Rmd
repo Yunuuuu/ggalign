@@ -171,4 +171,4 @@ Here are some more advanced visualizations using `ggalign`:
 
 `r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)", url)`
 
-`r sprintf("![](%s/articles/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png)", url)`
+`r sprintf("![](%s/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png)", url)`
