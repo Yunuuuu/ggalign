@@ -54,9 +54,9 @@ ggoncoplot(mat)
 
 # oncoPrint main plot
 By default, all alterations are represented with tiles of equal width and
-height, which may lead to overlapping (we'll introduce more well way to deal
-with overlapping). You can control the `width` and `height`
-of the tiles using the `map_width` and `map_height` arguments: 
+height, which may lead to overlapping. You can control the `width` and `height`
+of the tiles using the `map_width` and `map_height` arguments (we will introduce
+another more effective ways to handle this in the `maftools object` section):
 ```{r}
 ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9))
 ```
