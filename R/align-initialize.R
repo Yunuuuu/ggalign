@@ -41,6 +41,8 @@ align_initialize <- function(align, direction, position,
             layout_data
         )
     } else { # this `Align` object doesn't require any data
+        # we keep the names from the layout data for usage
+        object$labels <- vec_names(layout_data)
         # If `nobs` is `NULL`, it means we don't initialize the layout
         # observations, we initialize `nobs` with the `Align` obect
         if (is.null(layout_nobs)) layout_nobs <- object$nobs(input_params)

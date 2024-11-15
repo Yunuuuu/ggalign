@@ -39,7 +39,7 @@ align_order <- function(weights = rowMeans, ...,
     if (is.numeric(weights) ||
         (is.character(weights) && !inherits(weights, "AsIs"))) {
         # vec_duplicate_any is slight faster than `anyDuplicated`
-        if (anyNA(weights) || vec_duplicate_any(weights)) {
+        if (vec_any_missing(weights) || vec_duplicate_any(weights)) {
             cli::cli_abort(paste(
                 "{.arg order} must be an ordering numeric or character",
                 "without missing value or ties"
@@ -55,7 +55,7 @@ align_order <- function(weights = rowMeans, ...,
         }
         # we always inherit from parent layout
         # in this way, we obtain the names of the layout data
-        data <- waiver()
+        data <- NULL
     } else {
         weights <- rlang::as_function(weights)
         data <- data %||% waiver()
@@ -84,14 +84,14 @@ align_order <- function(weights = rowMeans, ...,
 }
 
 #' @importFrom ggplot2 ggproto
-#' @importFrom rlang inject
+#' @importFrom rlang inject is_atomic
 AlignOrder <- ggproto("AlignOrder", Align,
     nobs = function(params) length(.subset2(params, "weights")),
     setup_params = function(self, nobs, params) {
-        if (!is.function(.subset2(params, "weights"))) {
-            assert_mismatch_nobs(self, nobs,
-                length(.subset2(params, "weights")),
-                msg = "must be an ordering integer index or character of",
+        if (!is.function(weights <- .subset2(params, "weights"))) {
+            assert_mismatch_nobs(
+                self, nobs, length(weights),
+                msg = "must be an ordering integer or character index of",
                 arg = "weights"
             )
         }
@@ -102,7 +102,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
         if (is.function(weights)) {
             data <- .subset2(self, "data")
             ans <- inject(weights(data, !!!weights_params))
-            if (!rlang::is_atomic(ans)) {
+            if (!is_atomic(ans)) {
                 cli::cli_abort(
                     "{.arg weights} must return an atomic weights",
                     call = .subset2(self, "call")
@@ -119,36 +119,21 @@ AlignOrder <- ggproto("AlignOrder", Align,
         ans
     },
     layout = function(self, panel, index, weights, reverse) {
-        if (!is.function(weights)) {
-            if (is.numeric(weights)) {
-                index <- weights
-                if (any(index < 1L) || any(index > length(weights))) {
-                    cli::cli_abort(paste(
-                        "Outliers found in the provided ordering",
-                        "integer index {.arg weights}"
-                    ), call = .subset2(self, "call"))
-                } else if (vec_duplicate_any(index)) {
-                    cli::cli_abort(
-                        "find ties when coercing {.arg weights} into integer",
-                        call = .subset2(self, "call")
-                    )
-                }
-            } else if (is.null(layout_labels <- .subset2(self, "labels"))) {
+        if (is.function(weights)) {
+            index <- order(.subset2(self, "statistics"))
+        } else {
+            index <- vec_as_location(weights,
+                n = length(weights),
+                names = .subset2(self, "labels"),
+                missing = "error",
+                call = .subset2(self, "call")
+            )
+            if (vec_duplicate_any(index)) {
                 cli::cli_abort(
-                    c(sprintf(
-                        "No names found in layout %s-axis",
-                        to_coord_axis(.subset2(self, "direction"))
-                    ), i = "Cannot use ordering character index {.arg weights}"),
+                    "find ties in the ordering index {.arg weights}",
                     call = .subset2(self, "call")
                 )
-            } else if (anyNA(index <- match(weights, layout_labels))) {
-                cli::cli_abort(sprintf(
-                    "{.arg weights} contains invalid names: %s",
-                    style_val(weights[is.na(index)])
-                ), call = .subset2(self, "call"))
             }
-        } else {
-            index <- order(.subset2(self, "statistics"))
         }
         if (reverse) index <- rev(index)
         list(panel, index)
