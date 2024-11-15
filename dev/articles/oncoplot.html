@@ -143,10 +143,11 @@ All empty string will be converted to <code>NA</code> value.</p>
 <h2 id="oncoprint-main-plot">oncoPrint main plot<a class="anchor" aria-label="anchor" href="#oncoprint-main-plot"></a>
 </h2>
 <p>By default, all alterations are represented with tiles of equal width
-and height, which may lead to overlapping (we’ll introduce more well way
-to deal with overlapping). You can control the <code>width</code> and
-<code>height</code> of the tiles using the <code>map_width</code> and
-<code>map_height</code> arguments:</p>
+and height, which may lead to overlapping. You can control the
+<code>width</code> and <code>height</code> of the tiles using the
+<code>map_width</code> and <code>map_height</code> arguments (we will
+introduce another more effective ways to handle this in the
+<code>maftools object</code> section):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span>, map_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>snv <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, map_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>indel <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="oncoplot_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
