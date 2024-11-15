@@ -2,9 +2,15 @@
 % Please edit documentation in R/layout-.R
 \name{ggalign_attr}
 \alias{ggalign_attr}
-\title{Get data from the attribute attached across the building process}
+\alias{ggalign_attr_set}
+\alias{ggalign_attr_get}
+\title{Get Data from the Attached Attribute in the Rendering Process}
 \usage{
 ggalign_attr(x, field = NULL)
+
+ggalign_attr_set(x, values)
+
+ggalign_attr_get(x)
 }
 \arguments{
 \item{x}{Input data for the function used to transform the layout data.}
@@ -12,19 +18,44 @@ ggalign_attr(x, field = NULL)
 \item{field}{A string specifying the particular data to retrieve from the
 attached attribute. If \code{NULL}, the entire attached attribute list will be
 returned.}
+
+\item{values}{A list to be attached.}
 }
 \value{
 The specified data from the attached attribute or \code{NULL} if it is
 unavailable.
 }
 \description{
-This function extracts data from the attached attribute when rendering
-\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object. The attached attribute usually holds supplementary
-information for the input data.
+This function provides access to supplementary information stored as
+attributes during the layout rendering process in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object. These
+attributes, commonly attached during data transformation by functions like
+\code{\link[=fortify_matrix]{fortify_matrix()}} or \code{\link[=fortify_data_frame]{fortify_data_frame()}}, can include essential
+details such as filtered or supplementary data that inform downstream
+operations.
 }
 \details{
-Commonly, this attribute list is attached by \code{\link[=fortify_matrix]{fortify_matrix()}}
-or \code{\link[=fortify_data_frame]{fortify_data_frame()}} functions (refer to the \verb{ggalign attributes}
-section in the documentation for details). For examples, see
-\code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}.
+The attached attributes play a vital role in cases where input data undergo
+transformations that limit access to complete information, such as the total
+number of observations. For example, \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}} may filter
+mutation data while adding relevant attributes for detailed analysis.
+
+Users can utilize the \code{ggalign_attr} function to extract this information
+during the rendering process. Additionally, developers can use
+\code{ggalign_attr_set} and \code{ggalign_attr_get} to manage these attributes while
+defining new methods or extensions for \code{\link[=fortify_matrix]{fortify_matrix()}} or
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}.
+
+User-Facing:
+\itemize{
+\item \code{ggalign_attr}: Retrieves specific or complete data from the attached
+attributes for use in the rendering process.
+}
+
+Developer-Focused:
+\itemize{
+\item \code{ggalign_attr_set}: Attaches supplementary data to the input, facilitating
+downstream use.
+\item \code{ggalign_attr_get}: Extracts previously attached supplementary data during
+the transformation process.
+}
 }
