@@ -93,8 +93,12 @@ reference:
   desc: A handful of helpers
   contents:
   - geom_pie
-  - layer_order
+  - geom_subrect
   - theme_no_axes
+  - layer_order
+  - geom_draw
+  - scale_draw_manual
+  - draw_key_draw
   - ggalignGrob
   - ggalign_attr
   - ggalign_stat
@@ -125,6 +129,7 @@ articles:
   - articles/stack-layout
   - operator
   - plot-options
+  - articles/oncoplot
 
 - title: Others
   navbar: " "
