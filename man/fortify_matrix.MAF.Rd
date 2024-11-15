@@ -48,7 +48,7 @@ By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 \item \code{n_genes}: Total of genes.
 \item \code{n_samples}: Total of samples.
 \item \code{titv}: A list of \code{data.frames} with Transitions and Transversions
-summary.
+summary. See \code{maftools::titv()} for details.
 }
 }
 

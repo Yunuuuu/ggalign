@@ -67,7 +67,7 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'  - `n_genes`: Total of genes.
 #'  - `n_samples`: Total of samples.
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
-#'    summary.
+#'    summary. See `maftools::titv()` for details.
 #' @family fortify_matrix methods
 #' @importFrom utils getFromNamespace
 #' @export
@@ -156,7 +156,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ))
 
     # if `maftools` is installed, `data.table` must have been installed
-    # No need to check if data.table is installed
+    # No need to check if `data.table` is installed
     dcast <- getFromNamespace("dcast", "data.table")
     setDT <- getFromNamespace("setDT", "data.table")
     setDF <- getFromNamespace("setDF", "data.table")
@@ -172,32 +172,40 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     # reorder the rows based on the `genes` specified
     ans <- vec_slice(ans, genes)
 
-    # filter by samples
-    sample_summary$Tumor_Sample_Barcode <- as.character(
-        sample_summary$Tumor_Sample_Barcode
-    )
+    # filter samples when necessary
+    if (remove_empty_samples) {
+        keep <- colSums(!is.na(ans)) > 0L
+        ans <- ans[, keep, drop = FALSE]
+    }
+
+    # reorder columns based on the sample ordering
     sample_summary <- vec_slice(
         sample_summary,
         vec_as_location(
             colnames(ans),
-            n = ncol(ans),
-            names = sample_summary$Tumor_Sample_Barcode
+            n = vec_size(sample_summary),
+            names = vec_cast(sample_summary$Tumor_Sample_Barcode, character())
         )
     )
     sample_anno <- vec_slice(
         sample_anno,
         vec_as_location(
             colnames(ans),
-            n = ncol(ans),
+            n = vec_size(sample_anno),
             names = sample_anno$Tumor_Sample_Barcode
         )
     )
-    if (remove_empty_samples) {
-        keep <- colSums(!is.na(ans)) > 0L
-        sample_summary <- vec_slice(sample_summary, keep)
-        sample_anno <- vec_slice(sample_anno, keep)
-        ans <- ans[, keep, drop = FALSE]
-    }
+    titv <- lapply(titv, function(data) {
+        data <- left_join(
+            data_frame0(Tumor_Sample_Barcode = colnames(ans)),
+            data
+        )
+        vec_slice(data, vec_as_location(
+            colnames(ans),
+            n = vec_size(data),
+            names = vec_cast(data$Tumor_Sample_Barcode, character())
+        ))
+    })
     ggalign_attr_set(ans, list(
         sample_summary = sample_summary,
         gene_summary = gene_summary,
