@@ -142,28 +142,6 @@ my_sideplot
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-Multiple heatmaps can be stacked together:
-
-``` r
-stack_alignv() +
-    my_heatplot +
-    my_heatplot
-#> → heatmap built with `geom_tile()`
-#> → heatmap built with `geom_tile()`
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
-
-Similarly, multiple marginal plots can be stacked together:
-
-``` r
-stack_freev(sizes = c(1, 1, 0.3)) +
-    my_sideplot +
-    my_sideplot
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
-
 ## Compare with other ggplot2 heatmap extension
 
 `ggalign` offers advantages over extensions like
@@ -198,6 +176,8 @@ annotation function in
 
 Here are some more advanced visualizations using `ggalign`:
 
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
+![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
 
-![](https://yunuuuu.github.io/ggalign/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
+![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
+
+![](https://yunuuuu.github.io/ggalign/dev/articles/articles/oncoplot_files/figure-html/unnamed-chunk-19-1.png)
