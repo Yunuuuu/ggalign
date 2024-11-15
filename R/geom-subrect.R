@@ -25,7 +25,7 @@
 #'
 #' # arranges by column
 #' ggplot(data.frame(value = letters[seq_len(9)])) +
-#'     geom_subtile(aes(x = 1, y = 1, fill = value))
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), byrow = FALSE)
 #'
 #' # one-row
 #' ggplot(data.frame(value = letters[seq_len(4)])) +
