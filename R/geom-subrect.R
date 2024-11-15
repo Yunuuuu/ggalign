@@ -1,24 +1,52 @@
 #' Subdivide Rectangles
 #'
 #' @description
-#' `geom_subrect()` and `geom_subtile()` do the same thing, but are
-#' parameterised differently: `geom_subrect()` uses the locations of the four
-#' corners (`xmin`, `xmax`, `ymin` and `ymax`), while `geom_subtile()` uses the
-#' center of the tile and its size (`x`, `y`, `width`, `height`)
+#' These geoms subdivide rectangles with shared borders into a grid. Both geoms
+#' achieve the same result but differ in how the rectangles are parameterized:
+#' - **`geom_subrect()`**: Defines rectangles using their four corners (`xmin`,
+#'   `xmax`, `ymin`, `ymax`).
+#' - **`geom_subtile()`**: Defines rectangles using the center (`x`, `y`) and
+#'   dimensions (`width`, `height`).
 #'
-#' @param direction A string indicates the divide direction, either
-#' `"horizontal"` or `"vertical"`.
+#' @param direction A string specifying the arrangement direction:
+#' - `"horizontal"`: Creates a single row (one-row layout).
+#' - `"vertical"`: Creates a single column (one-column layout).
+#' - `NULL`: Automatically determines the layout dimensions using logic similar
+#'   to [`facet_wrap()`][ggplot2::facet_wrap].
+#' @param byrow A single boolean value indicates whether we should arrange the
+#' divided rectangles in the row-major order.
 #' @inheritParams ggplot2::geom_rect
 #' @inheritParams ggplot2::geom_segment
 #' @eval rd_gg_aesthetics("geom", "subrect")
+#' @examples
+#' # arranges by row
+#' ggplot(data.frame(value = letters[seq_len(5)])) +
+#'     geom_subtile(aes(x = 1, y = 1, fill = value))
+#'
+#' # arranges by column
+#' ggplot(data.frame(value = letters[seq_len(9)])) +
+#'     geom_subtile(aes(x = 1, y = 1, fill = value))
+#'
+#' # one-row
+#' ggplot(data.frame(value = letters[seq_len(4)])) +
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), direction = "h")
+#'
+#' # one-column
+#' ggplot(data.frame(value = letters[seq_len(4)])) +
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
+#'
 #' @importFrom rlang list2
 #' @export
 geom_subrect <- function(mapping = NULL, data = NULL,
                          stat = "identity", position = "identity",
                          ...,
-                         direction = NULL, lineend = "butt", linejoin = "mitre",
+                         byrow = TRUE, direction = NULL,
+                         lineend = "butt", linejoin = "mitre",
                          na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-    direction <- match.arg(direction, c("horizontal", "vertical"))
+    assert_bool(byrow)
+    if (!is.null(direction)) {
+        direction <- match.arg(direction, c("horizontal", "vertical"))
+    }
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -28,6 +56,7 @@ geom_subrect <- function(mapping = NULL, data = NULL,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list2(
+            byrow = byrow,
             direction = direction,
             lineend = lineend,
             linejoin = linejoin,
@@ -39,45 +68,82 @@ geom_subrect <- function(mapping = NULL, data = NULL,
 
 #' @importFrom rlang inject
 #' @importFrom methods formalArgs
-#' @importFrom ggplot2 ggproto ggproto_parent
+#' @importFrom ggplot2 ggproto ggproto_parent wrap_dims
 GeomSubrect <- ggproto(
     "GeomSubrect",
     ggplot2::GeomRect,
-    extra_params = c(ggplot2::GeomRect$extra_params, "direction"),
+    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "direction"),
     setup_data = function(self, data, params) {
         data <- ggproto_parent(ggplot2::GeomRect, self)$setup_data(data, params)
         indices <- vec_group_loc(data[c("xmin", "xmax", "ymin", "ymax")])
         data_list <- vec_chop(data, indices = .subset2(indices, "loc"))
+        max_n_tiles <- max(list_sizes(data_list))
+        if (max_n_tiles == 1L) return(data) # styler: off
+        cli::cli_inform(paste(
+            "{.fn {snake_class(self)}} subdivide tile into a maximal",
+            "of {max_n_tiles} rectangles"
+        ))
         vec_rbind(!!!lapply(data_list, function(data) {
             n <- vec_size(data)
             if (n == 1L) return(data) # styler: off
-            if (n == 4L) {
-                width <- (data$xmax - data$xmin) / 2L
-                height <- (data$ymax - data$ymin) / 2L
-                data$xmin <- data$xmin + vec_rep_each(c(0L, width), 2L)
-                data$xmax <- data$xmax - vec_rep_each(c(width, 0L), 2L)
-                data$ymin <- data$ymin + vec_rep(c(0L, height), 2L)
-                data$ymax <- data$ymax - vec_rep(c(height, 0L), 2L)
+            if (is.null(direction <- .subset2(params, "direction"))) {
+                n_rows <- n_cols <- NULL
+            } else if (is_horizontal(direction)) {
+                n_rows <- 1L
+                n_cols <- NULL
             } else {
-                if (n > 4L) {
-                    cli::cli_warn(
-                        "Using {.fn {snake_class(self)}} with more than 4 groups ({n}) is not advised"
-                    )
-                }
-                if (is_horizontal(.subset2(params, "direction"))) {
-                    width <- data$xmax - data$xmin
-                    data$xmin <- data$xmin +
-                        (width / n * (seq_len(n) - 1L))
-                    data$xmax <- data$xmax -
-                        (width / n * rev(seq_len(n) - 1L))
-                } else {
-                    height <- data$ymax - data$ymin
-                    data$ymin <- data$ymin +
-                        (height / n * (seq_len(n) - 1L))
-                    data$ymax <- data$ymax -
-                        (height / n * rev(seq_len(n) - 1L))
-                }
+                n_rows <- NULL
+                n_cols <- 1L
             }
+            dims <- wrap_dims(n, nrow = n_rows, ncol = n_cols)
+            n_rows <- dims[1L]
+            n_cols <- dims[2L]
+            one_row <- vec_slice(data, 1L)
+            width <- (one_row$xmax - one_row$xmin) / n_cols
+            height <- (one_row$ymax - one_row$ymin) / n_rows
+
+            if (.subset2(params, "byrow")) {
+                # we arrange the rectangles from from left to
+                # right, then from top to bottom
+                data$xmin <- data$xmin +
+                    vec_rep(width * (seq_len(n_cols) - 1L), n_rows)[
+                        seq_len(n)
+                    ]
+                data$xmax <- data$xmax -
+                    vec_rep(width * rev(seq_len(n_cols) - 1L), n_rows)[
+                        seq_len(n)
+                    ]
+
+                data$ymin <- data$ymin +
+                    vec_rep_each(height * rev(seq_len(n_rows) - 1L), n_cols)[
+                        seq_len(n)
+                    ]
+                data$ymax <- data$ymax -
+                    vec_rep_each(height * (seq_len(n_rows) - 1L), n_cols)[
+                        seq_len(n)
+                    ]
+            } else {
+                # we arrange the rectangles from top to bottom,
+                # then from left to right
+                data$xmin <- data$xmin +
+                    vec_rep_each(width * (seq_len(n_cols) - 1L), n_rows)[
+                        seq_len(n)
+                    ]
+                data$xmax <- data$xmax -
+                    vec_rep_each(width * rev(seq_len(n_cols) - 1L), n_rows)[
+                        seq_len(n)
+                    ]
+
+                data$ymin <- data$ymin +
+                    vec_rep(height * rev(seq_len(n_rows) - 1L), n_cols)[
+                        seq_len(n)
+                    ]
+                data$ymax <- data$ymax -
+                    vec_rep(height * (seq_len(n_rows) - 1L), n_cols)[
+                        seq_len(n)
+                    ]
+            }
+
             data
         }))
     }
@@ -89,9 +155,13 @@ GeomSubrect <- ggproto(
 geom_subtile <- function(mapping = NULL, data = NULL,
                          stat = "identity", position = "identity",
                          ...,
-                         direction = NULL, lineend = "butt", linejoin = "mitre",
+                         byrow = TRUE, direction = NULL,
+                         lineend = "butt", linejoin = "mitre",
                          na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-    direction <- match.arg(direction, c("horizontal", "vertical"))
+    assert_bool(byrow)
+    if (!is.null(direction)) {
+        direction <- match.arg(direction, c("horizontal", "vertical"))
+    }
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -101,6 +171,7 @@ geom_subtile <- function(mapping = NULL, data = NULL,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list2(
+            byrow = byrow,
             direction = direction,
             lineend = lineend,
             linejoin = linejoin,
@@ -114,7 +185,7 @@ geom_subtile <- function(mapping = NULL, data = NULL,
 GeomSubtile <- ggproto(
     "GeomSubtile",
     ggplot2::GeomTile,
-    extra_params = c(ggplot2::GeomRect$extra_params, "direction"),
+    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "direction"),
     setup_data = function(self, data, params) {
         data <- ggproto_parent(ggplot2::GeomTile, self)$setup_data(data, params)
         ggproto_parent(GeomSubrect, self)$setup_data(data, params)

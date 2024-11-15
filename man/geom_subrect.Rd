@@ -11,6 +11,7 @@ geom_subrect(
   stat = "identity",
   position = "identity",
   ...,
+  byrow = TRUE,
   direction = NULL,
   lineend = "butt",
   linejoin = "mitre",
@@ -25,6 +26,7 @@ geom_subtile(
   stat = "identity",
   position = "identity",
   ...,
+  byrow = TRUE,
   direction = NULL,
   lineend = "butt",
   linejoin = "mitre",
@@ -108,8 +110,16 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
-\item{direction}{A string indicates the divide direction, either
-\code{"horizontal"} or \code{"vertical"}.}
+\item{byrow}{A single boolean value indicates whether we should arrange the
+divided rectangles in the row-major order.}
+
+\item{direction}{A string specifying the arrangement direction:
+\itemize{
+\item \code{"horizontal"}: Creates a single row (one-row layout).
+\item \code{"vertical"}: Creates a single column (one-column layout).
+\item \code{NULL}: Automatically determines the layout dimensions using logic similar
+to \code{\link[ggplot2:facet_wrap]{facet_wrap()}}.
+}}
 
 \item{lineend}{Line end style (round, butt, square).}
 
@@ -130,10 +140,14 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-\code{geom_subrect()} and \code{geom_subtile()} do the same thing, but are
-parameterised differently: \code{geom_subrect()} uses the locations of the four
-corners (\code{xmin}, \code{xmax}, \code{ymin} and \code{ymax}), while \code{geom_subtile()} uses the
-center of the tile and its size (\code{x}, \code{y}, \code{width}, \code{height})
+These geoms subdivide rectangles with shared borders into a grid. Both geoms
+achieve the same result but differ in how the rectangles are parameterized:
+\itemize{
+\item \strong{\code{geom_subrect()}}: Defines rectangles using their four corners (\code{xmin},
+\code{xmax}, \code{ymin}, \code{ymax}).
+\item \strong{\code{geom_subtile()}}: Defines rectangles using the center (\code{x}, \code{y}) and
+dimensions (\code{width}, \code{height}).
+}
 }
 \section{Aesthetics}{
 
@@ -153,3 +167,21 @@ center of the tile and its size (\code{x}, \code{y}, \code{width}, \code{height}
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
+\examples{
+# arranges by row
+ggplot(data.frame(value = letters[seq_len(5)])) +
+    geom_subtile(aes(x = 1, y = 1, fill = value))
+
+# arranges by column
+ggplot(data.frame(value = letters[seq_len(9)])) +
+    geom_subtile(aes(x = 1, y = 1, fill = value))
+
+# one-row
+ggplot(data.frame(value = letters[seq_len(4)])) +
+    geom_subtile(aes(x = 1, y = 1, fill = value), direction = "h")
+
+# one-column
+ggplot(data.frame(value = letters[seq_len(4)])) +
+    geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
+
+}
