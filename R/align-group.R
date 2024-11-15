@@ -36,8 +36,8 @@ align_group <- function(group, active = NULL, set_context = deprecated(),
 AlignGroup <- ggproto("AlignGroup", Align,
     nobs = function(self, params) vec_size(.subset2(params, "group")),
     setup_params = function(self, nobs, params) {
-        assert_mismatch_nobs(self, nobs,
-            vec_size(.subset2(params, "group")),
+        assert_mismatch_nobs(
+            self, nobs, self$nobs(params),
             msg = "must be an atomic vector",
             arg = "group"
         )
