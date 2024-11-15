@@ -1,5 +1,17 @@
 # ggalign (development version)
 
+## New features
+
+* new `ggalign_attr_set()` and `ggalign_attr_get()` for basic operations of attached attribute.
+
+* new `geom_draw()` function to draw ggplot2 layer with customized draw function.
+
+* new `geom_subrect()` and `geom_subtile()` to subdivide rectangles with shared borders into a grid.
+
+## Bug fixes
+
+* fix wrong results of `fortify_matrix.MAF()` method
+
 # ggalign 0.0.5
 
 ## Breaking changes
