@@ -98,6 +98,8 @@ in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
 layout (including left and right annotation) and \code{aes(x = .data$.x)}
 for vertical stack layout (including top and bottom annotation).
 
+\code{matrix} input will be automatically melted into a long foramted data frame.
+
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
 \item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical

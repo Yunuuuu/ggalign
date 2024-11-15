@@ -34,6 +34,8 @@
 #' layout (including left and right annotation) and `aes(x = .data$.x)`
 #' for vertical stack layout (including top and bottom annotation).
 #'
+#' `matrix` input will be automatically melted into a long foramted data frame.
+#'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
 #'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
