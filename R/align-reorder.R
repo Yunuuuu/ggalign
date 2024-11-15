@@ -31,6 +31,7 @@
 #'     align_reorder(hclust2)
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
+#' @importFrom rlang list2
 #' @export
 align_reorder <- function(stat, ..., reverse = FALSE,
                           strict = TRUE, data = NULL,
@@ -50,7 +51,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
         align_class = AlignReorder,
         params = list(
             stat = stat,
-            stat_params = rlang::list2(...),
+            stat_params = list2(...),
             reverse = reverse,
             strict = strict
         ),

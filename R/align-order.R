@@ -31,6 +31,7 @@
 #'     anno_left() +
 #'     align_order(I("rowMeans"))
 #' @importFrom ggplot2 waiver
+#' @importFrom rlang list2
 #' @export
 align_order <- function(weights = rowMeans, ...,
                         reverse = FALSE, strict = TRUE, data = NULL,
@@ -73,7 +74,7 @@ align_order <- function(weights = rowMeans, ...,
         align_class = AlignOrder,
         params = list(
             weights = weights,
-            weights_params = rlang::list2(...),
+            weights_params = list2(...),
             reverse = reverse,
             strict = strict
         ),

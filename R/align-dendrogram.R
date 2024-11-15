@@ -81,6 +81,8 @@
 #' @seealso
 #' - [dendrogram_data()]
 #' - [hclust2()]
+#' @importFrom ggplot2 aes
+#' @importFrom rlang list2
 #' @export
 align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
@@ -132,7 +134,7 @@ align_dendro <- function(mapping = aes(), ...,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
-            segment_params = rlang::list2(...),
+            segment_params = list2(...),
             center = center, type = type, root = root,
             reorder_dendrogram = reorder_dendrogram,
             merge_dendro = merge_dendrogram,

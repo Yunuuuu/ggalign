@@ -147,6 +147,7 @@ quad_switch_anno <- function(position, size, free_guides, what,
 #'   - If not aligned, [`fortify_data_frame()`] will be used to convert the
 #'     data into a data frame.
 #' @inheritParams quad_free
+#' @importFrom rlang list2
 #' @export
 quad_init <- function(position, data = waiver(), ...) {
     if (is.null(position)) {
@@ -158,7 +159,7 @@ quad_init <- function(position, data = waiver(), ...) {
     position <- match.arg(position, .TLBR)
     data <- allow_lambda(data)
     structure(
-        list(data = data, position = position, params = rlang::list2(...)),
+        list(data = data, position = position, params = list2(...)),
         class = c("quad_init", "quad_anno", "quad_switch")
     )
 }

@@ -15,6 +15,7 @@
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
 #'     align_kmeans(3L)
+#' @importFrom rlang list2
 #' @export
 align_kmeans <- function(centers, ..., data = NULL,
                          active = NULL, set_context = deprecated(),
@@ -28,7 +29,7 @@ align_kmeans <- function(centers, ..., data = NULL,
     )
     align(
         align_class = AlignKmeans,
-        params = list(centers = centers, params = rlang::list2(...)),
+        params = list(centers = centers, params = list2(...)),
         active = active,
         data = data %||% waiver()
     )
