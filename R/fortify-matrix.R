@@ -61,11 +61,11 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #' @param use_syn A single boolean value indicates whether to include synonymous
 #' variants when Classifies SNPs into transitions and transversions.
 #' @section ggalign attributes:
-#'  - `gene_summary`: gene summary informations
-#'  - `sample_summary`: sample summary informations
-#'  - `sample_anno`: sample clinical informations
-#'  - `n_genes`: Total of genes
-#'  - `n_samples`: Total of samples
+#'  - `gene_summary`: gene summary informations.
+#'  - `sample_summary`: sample summary informations.
+#'  - `sample_anno`: sample clinical informations.
+#'  - `n_genes`: Total of genes.
+#'  - `n_samples`: Total of samples.
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
 #'    summary.
 #' @family fortify_matrix methods
@@ -120,11 +120,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         genes <- vec_slice(genes, index)
         gene_summary <- vec_slice(gene_summary, index)
     }
-    data <- vec_slice(data, vec_as_location(
-        genes,
-        n = vec_size(data),
-        names = .subset2(data, "Hugo_Symbol")
-    ))
+    data <- vec_slice(data, .subset2(data, "Hugo_Symbol") %in% genes)
     indices <- vec_group_loc(data[c("Tumor_Sample_Barcode", "Hugo_Symbol")])
     vars <- .subset2(data, "Variant_Classification")
     lvls <- levels(vars) %||% sort(vec_unique(vars))
@@ -172,7 +168,9 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     rownms <- .subset2(ans, "Hugo_Symbol")
     ans <- as.matrix(ans[setdiff(names(ans), "Hugo_Symbol")])
     rownames(ans) <- rownms
-    ans <- ans[match(genes, rownms), , drop = FALSE]
+
+    # reorder the rows based on the `genes` specified
+    ans <- vec_slice(ans, genes)
 
     # filter by samples
     sample_summary$Tumor_Sample_Barcode <- as.character(
@@ -180,15 +178,19 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     )
     sample_summary <- vec_slice(
         sample_summary,
-        match(colnames(ans), sample_summary$Tumor_Sample_Barcode)
-    )
-
-    sample_anno$Tumor_Sample_Barcode <- as.character(
-        sample_anno$Tumor_Sample_Barcode
+        vec_as_location(
+            colnames(ans),
+            n = ncol(ans),
+            names = sample_summary$Tumor_Sample_Barcode
+        )
     )
     sample_anno <- vec_slice(
         sample_anno,
-        match(colnames(ans), sample_anno$Tumor_Sample_Barcode)
+        vec_as_location(
+            colnames(ans),
+            n = ncol(ans),
+            names = sample_anno$Tumor_Sample_Barcode
+        )
     )
     if (remove_empty_samples) {
         keep <- colSums(!is.na(ans)) > 0L
