@@ -5,7 +5,7 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-vctrs.R
-# last-updated: 2024-11-13
+# last-updated: 2024-11-14
 # license: https://unlicense.org
 # imports: [vctrs (>= 0.5.0), rlang]
 # ---
@@ -23,6 +23,9 @@
 # 2. in package docs, please add #' @import vctrs
 
 # ## Changelog
+# 2024-11-14
+# - Added `column_to_rownames()`
+#
 # 2024-11-13
 # - fix wrong results in `coalesce()`: we should assign value in the missing
 #   index
@@ -245,6 +248,12 @@ rownames_to_column <- function(.data, var = "rowname") {
         .data[[var]] <- var_col
         .data <- .data[c(var, nms)]
     }
+    .data
+}
+
+column_to_rownames <- function(.data, var = 1L) {
+    rownames(.data) <- .subset2(.data, var)
+    .data[[var]] <- NULL
     .data
 }
 
