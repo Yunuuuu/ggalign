@@ -12,15 +12,15 @@
 #' `ggoncoplot()` is a wrapper around the [`ggheatmap()`] function, designed to
 #' simplify the creation of `OncoPrint`-style visualizations. The function
 #' automatically processes the input character matrix by splitting the encoded
-#' alterations (delimited by regex `[;:,|]`) into individual genomic events and
-#' unnesting the columns for visualization.
+#' alterations (delimited by `r oxford_or(c(";", ":", ",", "|"))`) into
+#' individual genomic events and unnesting the columns for visualization.
 #'
 #' Additionally, a predefined reordering function, adapted from
 #' <https://gist.github.com/armish/564a65ab874a770e2c26>, is included to enhance
 #' the organization of the alterations.
 #'
 #' @param data A character matrix which encodes the alterations, you can use
-#' regex `[;:,|]` to separate multiple alterations.
+#' `r oxford_or(c(";", ":", ",", "|"))` to separate multiple alterations.
 #' @inheritParams heatmap_layout
 #' @param map_width,map_height A named numeric value defines the width/height of
 #' each alterations.
@@ -121,18 +121,15 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     }
 
     # prepare the plot data action
-    action_data <- function(data) {
+    pdata <- function(data) {
         value_list <- strsplit(data$value,
             split = "\\s*[;:,|]\\s*", perl = TRUE
         )
-        lvls <- ggalign_attr(data, "breaks")
+        lvls <- ggalign_attr(data, ".__ggalign_oncoplot_breaks__")
         data <- vec_rep_each(data, list_sizes(value_list))
         value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
-        if (!is.null(lvls)) {
-            data$value <- factor(value, levels = lvls)
-        } else {
-            data$value <- value
-        }
+        if (!is.null(lvls)) value <- factor(value, levels = lvls)
+        data$value <- value
         data
     }
 
@@ -141,7 +138,9 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         data = data, mapping = mapping,
         width = width, height = height,
         theme = theme, active = active, filling = NULL
-    )
+    ) -
+        # set the default `plot_data()`
+        plot_data(data = pdata)
     if (reorder_row) {
         ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
     }
@@ -155,11 +154,11 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
             anno_top() +
             align_order(order(column_scores, decreasing = TRUE))
     }
-    # always make sure user provided action override the default action
-    ans <- ans + quad_active() - plot_data(data = action_data)
+    # reset the active context
+    ans <- ans + quad_active()
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
-        ans <- ans + plot_data(data = action_data)
+        ans <- ans + plot_data(data = pdata)
 
         # set mapping for width and height
         tile_mapping <- aes(

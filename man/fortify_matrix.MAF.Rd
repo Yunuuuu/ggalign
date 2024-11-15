@@ -10,7 +10,8 @@
   genes = NULL,
   n_top = NULL,
   remove_empty_samples = TRUE,
-  collapse_vars = FALSE
+  collapse_vars = TRUE,
+  use_syn = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ samples without any genomic alterations.}
 \item{collapse_vars}{A single boolean value indicating whether to collapse
 multiple alterations in the same sample and gene into a single value
 \code{"Multi_Hit"}.}
+
+\item{use_syn}{A single boolean value indicates whether to include synonymous
+variants when Classifies SNPs into transitions and transversions.}
 }
 \value{
 A matrix.
@@ -38,11 +42,13 @@ By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 \section{ggalign attributes}{
 
 \itemize{
-\item \code{gene_anno}: gene summary informations
-\item \code{sample_anno}: sample summary informations
+\item \code{gene_summary}: gene summary informations
+\item \code{sample_summary}: sample summary informations
+\item \code{sample_anno}: sample clinical informations
 \item \code{n_genes}: Total of genes
 \item \code{n_samples}: Total of samples
-\item \code{breaks}: factor levels of \code{Variant_Classification}, if \code{collapse_vars = TRUE}, \code{"Multi_Hit"} will be added in the end.
+\item \code{titv}: A list of \code{data.frames} with Transitions and Transversions
+summary.
 }
 }
 

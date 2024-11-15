@@ -37,7 +37,7 @@ ggoncoplot(
 }
 \arguments{
 \item{data}{A character matrix which encodes the alterations, you can use
-regex \verb{[;:,|]} to separate multiple alterations.}
+\code{";"}, \code{":"}, \code{","}, or \code{"|"} to separate multiple alterations.}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
@@ -78,8 +78,8 @@ variations, and other genomic alterations in cancer research.
 \code{ggoncoplot()} is a wrapper around the \code{\link[=ggheatmap]{ggheatmap()}} function, designed to
 simplify the creation of \code{OncoPrint}-style visualizations. The function
 automatically processes the input character matrix by splitting the encoded
-alterations (delimited by regex \verb{[;:,|]}) into individual genomic events and
-unnesting the columns for visualization.
+alterations (delimited by \code{";"}, \code{":"}, \code{","}, or \code{"|"}) into
+individual genomic events and unnesting the columns for visualization.
 
 Additionally, a predefined reordering function, adapted from
 \url{https://gist.github.com/armish/564a65ab874a770e2c26}, is included to enhance

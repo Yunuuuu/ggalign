@@ -58,23 +58,36 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #' @param collapse_vars A single boolean value indicating whether to collapse
 #' multiple alterations in the same sample and gene into a single value
 #' `"Multi_Hit"`.
+#' @param use_syn A single boolean value indicates whether to include synonymous
+#' variants when Classifies SNPs into transitions and transversions.
 #' @section ggalign attributes:
-#'  - `gene_anno`: gene summary informations
-#'  - `sample_anno`: sample summary informations
+#'  - `gene_summary`: gene summary informations
+#'  - `sample_summary`: sample summary informations
+#'  - `sample_anno`: sample clinical informations
 #'  - `n_genes`: Total of genes
 #'  - `n_samples`: Total of samples
-#'  - `breaks`: factor levels of `Variant_Classification`, if `collapse_vars =
-#'    TRUE`, `"Multi_Hit"` will be added in the end.
+#'  - `titv`: A list of `data.frames` with Transitions and Transversions
+#'    summary.
 #' @family fortify_matrix methods
+#' @importFrom utils getFromNamespace
 #' @export
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
-                               collapse_vars = FALSE) {
+                               collapse_vars = TRUE,
+                               use_syn = TRUE) {
     rlang::check_installed(
-        "maftools", "to make mutation matrix from `MAF` object"
+        "maftools", "to make alterations matrix from `MAF` object"
     )
-    sample_anno <- data@variant.classification.summary
-    gene_anno <- data@gene.summary
+    getSampleSummary <- getFromNamespace("getSampleSummary", "maftools")
+    getGeneSummary <- getFromNamespace("getGeneSummary", "maftools")
+    getClinicalData <- getFromNamespace("getClinicalData", "maftools")
+    sample_summary <- new_data_frame(getSampleSummary(data))
+    gene_summary <- new_data_frame(getGeneSummary(data))
+    sample_anno <- new_data_frame(getClinicalData(data))
+
+    titv <- getFromNamespace("titv", "maftools")
+    titv <- titv(data, useSyn = use_syn, plot = FALSE)
+    titv <- lapply(titv, new_data_frame)
 
     # we transform the data into a normal data frame
     data <- new_data_frame(data@data)[
@@ -84,53 +97,68 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     n_samples <- vec_unique_count(.subset2(data, "Tumor_Sample_Barcode"))
 
     # filter by genes
-    if (is.null(genes)) {
-        genes <- gene_anno$Hugo_Symbol
-    } else { # reorder the gene annotation based on the provided genes
-        genes <- intersect(as.character(genes), gene_anno$genes)
-        gene_anno <- vec_slice(gene_anno, match(genes, gene_anno$genes))
-    }
-    if (!is.null(n_top)) {
-        gene_anno <- vec_slice(
-            gene_anno,
-            order(gene_anno$AlteredSamples, decreasing = TRUE)[seq_len(n_top)]
+    if (!is.null(genes)) {
+        # reorder the gene annotation based on the provided genes
+        gene_summary <- vec_slice(
+            gene_summary,
+            vec_as_location(
+                vec_unique(vec_cast(genes, character())),
+                n = vec_size(gene_summary),
+                names = .subset2(gene_summary, "Hugo_Symbol"),
+                missing = "remove"
+            )
         )
-        genes <- gene_anno$Hugo_Symbol
     }
-    data <- vec_slice(data, .subset2(data, "Hugo_Symbol") %in% genes)
+    genes <- .subset2(gene_summary, "Hugo_Symbol")
+    if (!is.null(n_top)) {
+        n_top <- min(n_top, vec_size(genes))
+        index <- vec_slice(
+            order(gene_summary$AlteredSamples, decreasing = TRUE),
+            seq_len(n_top)
+        )
+        index <- sort(index) # don't change the order, we do only subset
+        genes <- vec_slice(genes, index)
+        gene_summary <- vec_slice(gene_summary, index)
+    }
+    data <- vec_slice(data, vec_as_location(
+        genes,
+        n = vec_size(data),
+        names = .subset2(data, "Hugo_Symbol")
+    ))
     indices <- vec_group_loc(data[c("Tumor_Sample_Barcode", "Hugo_Symbol")])
     vars <- .subset2(data, "Variant_Classification")
-    lvls <- levels(vars) %||% sort(unique(vars))
+    lvls <- levels(vars) %||% sort(vec_unique(vars))
+    var_list <- vec_chop(as.character(vars), indices = .subset2(indices, "loc"))
     if (collapse_vars) {
-        vars <- vapply(
-            vec_chop(as.character(vars), indices = .subset2(indices, "loc")),
-            function(var) {
-                if (length(var) > 1L) {
-                    return("Multi_Hit")
-                } else {
-                    var
-                }
-            }, character(1L),
-            USE.NAMES = FALSE
-        )
+        vars <- vapply(var_list, function(var) {
+            var <- vec_unique(var)
+            if (length(var) > 1L) {
+                return("Multi_Hit")
+            } else {
+                var
+            }
+        }, character(1L), USE.NAMES = FALSE)
         if (any(vars == "Multi_Hit")) lvls <- c(lvls, "Multi_Hit")
     } else {
-        vars <- vapply(
-            vec_chop(as.character(vars), indices = .subset2(indices, "loc")),
-            function(var) {
-                if (length(var) > 1L) {
-                    paste(var, collapse = ";")
-                } else {
-                    var
-                }
-            }, character(1L),
-            USE.NAMES = FALSE
-        )
+        vars <- vapply(var_list, function(var) {
+            var <- vec_unique(var)
+            if (length(var) > 1L) {
+                paste(var, collapse = ";")
+            } else {
+                var
+            }
+        }, character(1L), USE.NAMES = FALSE)
     }
     ans <- vec_cbind(
         .subset2(indices, "key"),
         new_data_frame(list(Variant_Classification = vars))
     )
+
+    # restore all samples
+    ans <- right_join(ans, data_frame0(
+        Tumor_Sample_Barcode = vec_unique(sample_summary$Tumor_Sample_Barcode)
+    ))
+
     # if `maftools` is installed, `data.table` must have been installed
     # No need to check if data.table is installed
     dcast <- getFromNamespace("dcast", "data.table")
@@ -147,19 +175,33 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ans <- ans[match(genes, rownms), , drop = FALSE]
 
     # filter by samples
+    sample_summary$Tumor_Sample_Barcode <- as.character(
+        sample_summary$Tumor_Sample_Barcode
+    )
+    sample_summary <- vec_slice(
+        sample_summary,
+        match(colnames(ans), sample_summary$Tumor_Sample_Barcode)
+    )
+
     sample_anno$Tumor_Sample_Barcode <- as.character(
         sample_anno$Tumor_Sample_Barcode
     )
-    sample_anno <- sample_anno[
-        match(colnames(ans), sample_anno$Tumor_Sample_Barcode),
-    ]
+    sample_anno <- vec_slice(
+        sample_anno,
+        match(colnames(ans), sample_anno$Tumor_Sample_Barcode)
+    )
     if (remove_empty_samples) {
-        keep <- sample_anno$total > 0L
-        sample_anno <- sample_anno[keep, ]
+        keep <- colSums(!is.na(ans)) > 0L
+        sample_summary <- vec_slice(sample_summary, keep)
+        sample_anno <- vec_slice(sample_anno, keep)
         ans <- ans[, keep, drop = FALSE]
     }
-    structure(ans, ggalign = list(
-        gene_anno = gene_anno, sample_anno = sample_anno,
-        n_genes = n_genes, n_samples = n_samples, breaks = lvls
+    ggalign_attr_set(ans, list(
+        sample_summary = sample_summary,
+        gene_summary = gene_summary,
+        # gene_summary = gene_summary,
+        sample_anno = sample_anno,
+        n_genes = n_genes, n_samples = n_samples,
+        titv = titv, .__ggalign_oncoplot_breaks__ = lvls
     ))
 }
