@@ -1,8 +1,8 @@
 ---
-title: "Plot options"
+title: "Plot Options"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plot options}
+  %\VignetteIndexEntry{Plot Options}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
