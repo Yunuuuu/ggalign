@@ -191,16 +191,13 @@ GeomDraw <- ggproto(
 #' Scale for `draw` aesthetic
 #'
 #' @inheritDotParams ggplot2::discrete_scale -expand -position -aesthetics -palette -scale_name
-#' @param values A list of functions that define how each cell's grob (graphical
-#' object) should be drawn.
+#' @param values A list of functions (including purrr-like lambda syntax) that
+#' define how each cell's grob (graphical object) should be drawn.
 #' @inheritParams ggplot2::scale_discrete_manual
 #' @inherit geom_draw
 #' @export
 scale_draw_manual <- function(..., values, aesthetics = "draw",
                               breaks = waiver(), na.value = NA) {
-    if (!rlang::is_named(values) || !is.list(values)) {
-        cli::cli_abort("{.arg values} must be a named list")
-    }
     ggplot2::scale_discrete_manual(
         aesthetics = aesthetics,
         values = .mapply(function(f, i) {

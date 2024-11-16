@@ -53,8 +53,8 @@ every level in a legend, the layer should use \code{show.legend = TRUE}.}
     \item{\code{super}}{The super class to use for the constructed scale}
   }}
 
-\item{values}{A list of functions that define how each cell's grob (graphical
-object) should be drawn.}
+\item{values}{A list of functions (including purrr-like lambda syntax) that
+define how each cell's grob (graphical object) should be drawn.}
 
 \item{aesthetics}{Character string or vector of character strings listing the
 name(s) of the aesthetic(s) that this scale works with. This can be useful, for
