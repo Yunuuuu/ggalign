@@ -82,8 +82,8 @@ ggoncoplot(mat, reorder_row = FALSE, reorder_column = FALSE) +
 # plot_data()
 `ggoncoplot()` is built on `ggheatmap()` with a default `plot_data()` 
 [plot option](`r sprintf("%s/articles/plot-options.html", url)`), which splits
-the nested alterations and unnests the column, similar to the following
-function (See `ggheatmap()` ggplot2 specification section for the input data of
+the nested alterations and unnests the column, similar to the following function
+(See `ggplot2 specification` section in `ggheatmap()` for the input data of
 `plot_data()`):
 ```{r eval=rlang::is_installed("tidyr")}
 pdata <- function(data) {
@@ -196,22 +196,22 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 ```
 
 # geom_draw
-If you're aiming for a strategy similar to that of `ComplexHeatmap`, consider
-using `geom_draw()`. Although `geom_subtile()` often suffices for most
-scenarios, `geom_draw()` provides greater flexibility for complex customization. 
+`geom_subtile()` often suffices for most scenarios. However, if you require a
+strategy similar to that of `ComplexHeatmap`, consider using `geom_draw()`,
+which offers greater flexibility for complex customizations.
 
 Key Features of `geom_draw()`:
 
  - Custom Drawing Logic: Accepts a `draw` aesthetic, allowing each cell to be
  rendered as a specific graphical object (`grob`). 
  - Manual Scaling: Requires `scale_draw_manual()` to map `draw` values to
- corresponding drawing functions. Functions mapped through `scale_draw_manual()`
+ corresponding drawing functions.
+ - Flexible Aesthetic Mapping: Functions mapped through `scale_draw_manual()`
  can utilize any number of ggplot2 aesthetics and output custom graphical
- objects (`grob`).
- - Beyond the `x`, `y`, `xmin`, `xmax`, `width`, and `height` aesthetics, you
- may want to rely solely on mapped aesthetics (`aes()`). Unmapped aesthetics
- will default to ggplot2's behavior, which might not produce the desired
- outcome. And always use `native` unit.
+ objects (`grob`). Beyond the `x`, `y`, `xmin`, `xmax`, `width`, and `height`
+ aesthetics, you may want to rely solely on mapped aesthetics (`aes()`).
+ Unmapped aesthetics will default to ggplot2's behavior, which might not produce
+ the desired outcome. And always use `native` unit.
 
 ```{r fig.dim = c(2, 7)}
 library(grid)
