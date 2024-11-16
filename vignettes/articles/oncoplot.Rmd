@@ -239,10 +239,7 @@ ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
         },
         d = function(x, y, width, height, shape) {
             gList(
-                pointsGrob(x, y,
-                    pch = shape,
-                    default.units = "native"
-                ),
+                pointsGrob(x, y, pch = shape),
                 # To ensure the rectangle color is shown in the legends, you
                 # must explicitly provide a color argument and include it in the
                 # `gpar()` of the graphical object

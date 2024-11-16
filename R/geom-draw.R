@@ -91,7 +91,6 @@ geom_draw <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @importFrom rlang inject
 #' @importFrom methods formalArgs
 #' @importFrom ggplot2 zeroGrob
-#' @importFrom grid is.grob
 #' @export
 draw_key_draw <- function(data, params, size) {
     draw <- .subset2(data$draw, 1L)
@@ -120,7 +119,9 @@ draw_key_draw <- function(data, params, size) {
     } else {
         ans <- inject(draw(!!!.subset(data, args)))
     }
-    if (!is.grob(ans)) return(zeroGrob()) # styler: off
+    if (!inherits(ans, c("grob", "gList", "gTree"))) {
+        return(zeroGrob())
+    }
     if (inherits(ans, "gList")) ans <- grid::gTree(children = ans)
     ans
 }
@@ -136,7 +137,7 @@ combine_aes <- function(...) {
     ans
 }
 
-#' @importFrom grid is.grob
+#' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 #' @importFrom methods formalArgs
 GeomDraw <- ggproto(
@@ -181,7 +182,12 @@ GeomDraw <- ggproto(
                     )
                 ))
             }
-            if (is.grob(ans)) ans else NULL
+            if (inherits(ans, c("grob", "gList", "gTree"))) {
+                ans
+            } else {
+                browser()
+                NULL
+            }
         }, list(draw = .subset2(indices, "key"), data = coords), NULL)
         inject(grid::gList(!!!grobs[lengths(grobs) > 0L]))
     },
