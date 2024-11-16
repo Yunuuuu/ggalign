@@ -10,6 +10,8 @@ geom_draw(
   stat = "identity",
   position = "identity",
   ...,
+  lineend = "butt",
+  linejoin = "mitre",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -90,6 +92,10 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
 
@@ -119,20 +125,18 @@ requirements.
 
 \code{geom_draw()} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
 \item \strong{\code{draw}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
 \item \code{\link[ggplot2:aes_group_order]{group}}
-\item \code{lineend}
-\item \code{linejoin}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
 \item \code{stroke}
-\item \code{\link[ggplot2:aes_position]{x}}
-\item \code{\link[ggplot2:aes_position]{y}}
 }
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }

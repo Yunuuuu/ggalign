@@ -87,20 +87,18 @@ requirements.
 
 \code{geom_draw()} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
 \item \strong{\code{draw}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
 \item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
 \item \code{\link[ggplot2:aes_group_order]{group}}
-\item \code{lineend}
-\item \code{linejoin}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
 \item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
 \item \code{stroke}
-\item \code{\link[ggplot2:aes_position]{x}}
-\item \code{\link[ggplot2:aes_position]{y}}
 }
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }

@@ -2,6 +2,7 @@
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
+#' @inheritParams geom_subrect
 #' @details
 #' `geom_draw` depends on the new aesthetics `draw`, which should always be
 #' provided with [`scale_draw_manual()`], in which, we can provide a list of
@@ -60,7 +61,7 @@
 #' @export
 geom_draw <- function(mapping = NULL, data = NULL, stat = "identity",
                       position = "identity", ...,
-                      na.rm = FALSE,
+                      lineend = "butt", linejoin = "mitre", na.rm = FALSE,
                       show.legend = NA, inherit.aes = TRUE) {
     ggplot2::layer(
         data = data,
@@ -70,7 +71,11 @@ geom_draw <- function(mapping = NULL, data = NULL, stat = "identity",
         position = position,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, ...)
+        params = list(
+            lineend = lineend,
+            linejoin = linejoin,
+            na.rm = na.rm, ...
+        )
     )
 }
 
@@ -85,15 +90,13 @@ geom_draw <- function(mapping = NULL, data = NULL, stat = "identity",
 #'
 #' @importFrom rlang inject
 #' @importFrom methods formalArgs
+#' @importFrom ggplot2 zeroGrob
+#' @importFrom grid is.grob
 #' @export
 draw_key_draw <- function(data, params, size) {
-    if (is.null(draw <- .subset2(data$draw, 1L))) {
-        cli::cli_abort(
-            "{.fn draw_key_draw} can be used only for {.field draw} aesthetic"
-        )
-    }
+    draw <- .subset2(data$draw, 1L)
+    if (!is.function(draw)) return(zeroGrob()) # styler: off
     data$draw <- NULL
-    if (!is.null(data$.draw)) data$.draw <- NULL
     args <- formalArgs(draw)
     for (aes in args) {
         if (is.null(.subset2(data, aes))) {
@@ -117,6 +120,7 @@ draw_key_draw <- function(data, params, size) {
     } else {
         ans <- inject(draw(!!!.subset(data, args)))
     }
+    if (!is.grob(ans)) return(zeroGrob()) # styler: off
     if (inherits(ans, "gList")) ans <- grid::gTree(children = ans)
     ans
 }
@@ -132,36 +136,54 @@ combine_aes <- function(...) {
     ans
 }
 
+#' @importFrom grid is.grob
 #' @importFrom rlang inject
 #' @importFrom methods formalArgs
-#' @importFrom ggplot2 ggproto
 GeomDraw <- ggproto(
     "GeomDraw",
-    ggplot2::Geom,
-    optional_aes = c("x", "y"),
+    ggplot2::GeomTile,
+    required_aes = c(ggplot2::GeomTile$required_aes, "draw"),
     default_aes = combine_aes(
         ggplot2::GeomPoint$default_aes,
-        ggplot2::GeomSegment$default_aes,
-        ggplot2::GeomRect$default_aes,
-        aes(lineend = "butt", linejoin = "mitre")
+        ggplot2::GeomRect$default_aes
     ),
-    required_aes = "draw",
-    setup_data = ggplot2::GeomTile$setup_data,
-    draw_panel = function(data, panel_params, coord, ...) {
+    draw_panel = function(data, panel_params, coord,
+                          lineend = "butt", linejoin = "mitre") {
         coords <- coord$transform(data, panel_params)
         # restore width and height
         coords$width <- coords$xmax - coords$xmin
         coords$height <- coords$ymax - coords$ymin
         coords$color <- coords$colour
-        grobs <- .mapply(function(draw, ..., PANEL, group) {
+        indices <- vec_group_loc(.subset2(coords, "draw"))
+        ordering <- vapply(
+            .subset2(indices, "key"),
+            function(draw) {
+                attr(draw, "drawing_order", exact = TRUE) %||% NA_integer_
+            }, integer(1L),
+            USE.NAMES = FALSE
+        )
+        indices <- vec_slice(indices, order(ordering))
+        coords <- vec_chop(
+            coords[vec_set_difference(names(coords), "draw")],
+            indices = .subset2(indices, "loc")
+        )
+        grobs <- .mapply(function(draw, data) {
+            if (!is.function(draw)) return(NULL) # styler: off
             args <- formalArgs(draw)
             if (any(args == "...")) {
-                draw(...)
+                ans <- inject(draw(!!!data,
+                    lineend = lineend, linejoin = linejoin
+                ))
             } else {
-                inject(draw(!!!.subset(list(...), args)))
+                ans <- inject(draw(
+                    !!!.subset(
+                        c(data, list(lineend = lineend, linejoin = linejoin)), args
+                    )
+                ))
             }
-        }, coords, NULL)
-        inject(grid::gList(!!!grobs))
+            if (is.grob(ans)) ans else NULL
+        }, list(draw = .subset2(indices, "key"), data = coords), NULL)
+        inject(grid::gList(!!!grobs[lengths(grobs) > 0L]))
     },
     draw_key = draw_key_draw
 )
@@ -176,9 +198,16 @@ GeomDraw <- ggproto(
 #' @export
 scale_draw_manual <- function(..., values, aesthetics = "draw",
                               breaks = waiver(), na.value = NA) {
+    if (!rlang::is_named(values) || !is.list(values)) {
+        cli::cli_abort("{.arg values} must be a named list")
+    }
     ggplot2::scale_discrete_manual(
         aesthetics = aesthetics,
-        values = values,
+        values = .mapply(function(f, i) {
+            f <- allow_lambda(f)
+            attr(f, "drawing_order") <- i # save the drawing order
+            f
+        }, list(values, seq_along(values)), NULL),
         breaks = breaks,
         na.value = na.value,
         ...
