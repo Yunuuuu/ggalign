@@ -211,6 +211,13 @@ Key Features of `geom_draw()`:
  Unmapped aesthetics will default to ggplot2's behavior, which might not produce
  the desired outcome. And always use `native` unit.
 
+:) Sorry, I cannot deal with a pretty example for this, but the function
+provided in `values` argument of `scale_draw_manual` operates similarly to
+`alter_fun` in ComplexHeatmap. Currently, `geom_subtile()` performs well enough
+for most cases, making `geom_draw()` somewhat cumbersome to use. Managing
+alteration types, especially in the case of overlapping alterations, requires
+meticulous design to ensure that the visual elements do not interfere with each
+other.
 ```{r fig.dim = c(2, 7)}
 library(grid)
 ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
