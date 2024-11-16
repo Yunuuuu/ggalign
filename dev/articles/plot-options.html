@@ -150,9 +150,12 @@ operator:</p>
 <span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>Using a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> Object in <code><a href="../reference/plot_theme.html">plot_theme()</a></code>.</p>
+<p>You can use a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> object directly in
+<code><a href="../reference/plot_theme.html">plot_theme()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we reduce the heatmap body cell width and height</span></span>
+<span>    <span class="co"># in this way, we can see the background of `theme_bw()` in the panel.</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.9</span>, height <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># change the default theme of the heatmap body</span></span>
 <span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span>, plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -255,47 +258,42 @@ Specifications for plots.</p>
 on the side from which they originate.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, width <span class="op">=</span> <span class="fl">2</span>, height <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"I'm from heatmap body"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the legend to the left side</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span></span>
+<span>        name <span class="op">=</span> <span class="st">"I'm from heatmap body"</span>,</span>
+<span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="op">-</span><span class="fl">60</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we add a top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># in the top annotation, we add a dendrogram</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the legends of the dendrogram to the left side</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
 <span>        name <span class="op">=</span> <span class="st">"I'm from top annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
-<span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
+<span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we add a left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we set the legends of the dendrogram to the top side</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
 <span>        name <span class="op">=</span> <span class="st">"I'm from left annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
 <span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"top"</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_bottom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>        name <span class="op">=</span> <span class="st">"I'm from bottom annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
-<span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">branch</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span></span>
-<span>        name <span class="op">=</span> <span class="st">"I'm from right annotation"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
-<span>        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"bottom"</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="co"># we remove all margins for all plots</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">heatmap_collect_all_guides</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
-<p>Use the <code>guides</code> argument control which side of guide
-legends should be gathered. In the following example, we’ll collect the
-guide legends only on the <code>top</code> and <code>bottom</code>
-sides:</p>
+<p>The guides argument controls which side of guide legends should be
+gathered. In the following example, we’ll collect the guide legends only
+on the top (<code>t</code>) sides:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
-<span>    <span class="co"># reset the active context to the heatmap layout</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
-<span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for `the heatmap layout`</span></span>
+<span>    <span class="co"># we only collect guides in the top side</span></span>
+<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"t"</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
 <p>You can also apply the <code><a href="../reference/plot_align.html">plot_align()</a></code> function directly to
@@ -305,56 +303,70 @@ specific plots:</p>
 <span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
-<span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we only collect guides in the top side</span></span>
+<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># `+` apply it to the current active plot</span></span>
-<span>    <span class="co"># for the heatmap body, we collect guide in the right side</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"r"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="plot-options_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
-<p>The guide legends within the annotation stack are first collected by
-the <code><a href="../reference/stack_layout.html">stack_layout()</a></code> itself and then passed to the overall
-heatmap layout for further integration. By default, it inherits the
-<code>guides</code> arguments from the heatmap layout. See following
-example:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
-<span>    <span class="co"># reset the active context to the heatmap layout</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
-<span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># we ensure the active context is in the bottom annotation</span></span>
-<span>    <span class="co"># By default, it inherits "guides" argument from the heamtap layout, which</span></span>
-<span>    <span class="co"># means it'll collect "guides" in the top and bottom side</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_bottom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># for the dendrogram in the bottom annotation, we collect guide in the left side</span></span>
+<span>    <span class="co"># for the heatmap body, we collect guide in the left side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="plot-options_files/figure-html/unnamed-chunk-11-1.png" width="1152"></p>
-<p>Here, the guide legend is collected by the bottom annotation but will
-not be collected by the heatmap layout since the heatmap layout only
-gathers guides from the <code>top</code> and <code>bottom</code>. In
-this way, the guide legends of the annotation stack will be put around
-the annotation stack layout.</p>
-<p>To override this guide collection behavior for the heatmap
-annotation, you can use the <code>free_guides</code> argument of the
-<code><a href="../reference/quad_active.html">quad_anno()</a></code>/<code>anno_*()</code> function. This differs
-from the <code>guides</code> argument in <code><a href="../reference/plot_align.html">plot_align()</a></code>,
-which controls the behavior for the plots in the layout. The
-<code>free_guides</code> argument specifies which guide legends from the
-annotation stack layout should be collected by the heatmap layout.</p>
+<p><img src="plot-options_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
+<p>Note: The legend on the left side of the heatmap body is collected
+and positioned on the left side at the layout level.</p>
+<p>If you’re annoyed by the large space between the left annotation and
+the heatmap body, don’t worry! This issue can be addressed using the
+<code>free_spaces</code> feature, which is covered in its dedicated
+section.</p>
+<p>Let’s dive deeper into the guide collection process.</p>
+<p>In the last example, we set the <code>guides</code> argument for the
+heatmap body. But what happens when we set the <code>guides</code> for
+the dendrogram in the top annotation?</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for `the heatmap layout`</span></span>
+<span>    <span class="co"># we only collect guides in the top side in the heatmap layout</span></span>
+<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"t"</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># `+` apply it to the current active plot</span></span>
+<span>    <span class="co"># for the dendrogram in the top annotation, we collect guide in the left side</span></span>
+<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
+<p><img src="plot-options_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p>Nothing seems to have changed, right? This is because guide legends
+within annotation stacks are first collected by the annotation
+<code><a href="../reference/stack_layout.html">stack_layout()</a></code> and only then passed to the top-level layout
+for further integration.</p>
+<p>By default, the annotation stack inherits the <code>guides</code>
+arguments from the heatmap layout, followed by the inherited of
+individual plot in the annotation. So <code>guides</code> argument set
+at top-level (heatmap layout) will affect all guide collection
+behaviour.</p>
+<p>In this example:</p>
+<ul>
+<li>The legend on the left side of the dendrogram in the top annotation
+is collected first at the annotation level.</li>
+<li>Since the heatmap layout is not set to collect legends from the left
+side, it remains at the left side within the annotation stack.</li>
+<li>For this specific case, the top annotation contains only one plot,
+so its annotation-level placement is identical to plot-level
+placement.</li>
+</ul>
+<p>To override this, you can use the <code>free_guides</code> argument
+of the <code><a href="../reference/quad_active.html">quad_anno()</a></code>/<code>anno_*()</code> function. This
+differs from the <code>guides</code> argument in
+<code><a href="../reference/plot_align.html">plot_align()</a></code>, which controls the behavior for the plots in
+the layout. The <code>free_guides</code> argument specifies which guide
+legends from at the annotation stack layout level should be collected by
+the heatmap layout.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
-<span>    <span class="co"># reset the active context to the heatmap layout</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
-<span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># we also collect guides in the left side for the bottom annotation stack</span></span>
-<span>    <span class="co"># layout in the heatmap layout</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_bottom</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># for the dendrogram in the bottom annotation, we collect guide in the left side</span></span>
+<code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">-</span></span>
+<span>    <span class="co"># we set global `guides` argument for `the heatmap layout`</span></span>
+<span>    <span class="co"># we only collect guides in the top side in the heatmap layout</span></span>
+<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"t"</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># we also collect guides in the left side for the top annotation stack</span></span>
+<span>    <span class="co"># in the heatmap layout</span></span>
+<span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>free_guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># `+` apply it to the current active plot</span></span>
+<span>    <span class="co"># for the dendrogram in the top annotation, we collect guide in the left side</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-12-1.png" width="1152"></p>
@@ -371,14 +383,18 @@ plot, which can sometimes lead to unwanted spacing. Consider the
 following example:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add a dendrogram to the top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># here, we use long labels for visual example</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
 <span>        expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add a dendrogram to the left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
@@ -389,15 +405,20 @@ body. To fix this, you can remove the left borders around the panel of
 the top annotation stack by setting <code>free_spaces = "l"</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="co"># we remove the spaces of the left borders in the top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add a dendrogram to the top annotation</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># here, we use long labels for visual example</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
 <span>        expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
+<span>        labels <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"very very long labels"</span>, <span class="va">.x</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_left</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">20</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># add a dendrogram to the left annotation</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
@@ -406,16 +427,19 @@ guide legends next to the annotations. (Note the guide legend from the
 bottom annotation):</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_collect_all_guides</span> <span class="op">+</span></span>
-<span>    <span class="co"># we only collect guides in the top and bottom side</span></span>
+<span>    <span class="co"># reset the active context to the heatmap layout</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">quad_active</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"tb"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># 1. in the bottom annotation stack layout, we collect the legends in the</span></span>
-<span>    <span class="co">#    left side</span></span>
-<span>    <span class="co"># 2. we remove the spaces of the left border in the annotation</span></span>
-<span>    <span class="fu"><a href="../reference/quad_active.html">anno_bottom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span>, free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
+<span>    <span class="co"># we set global `guides` argument for the heatmap layout</span></span>
+<span>    <span class="co"># we only collect guides in the top side</span></span>
+<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"t"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># `+` apply it to the current active plot</span></span>
+<span>    <span class="co"># for the heatmap body, we collect guide in the left side</span></span>
+<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="fu"><a href="../reference/with_quad.html">with_quad</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span>, <span class="st">"t"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-15-1.png" width="1152"></p>
+<p>Usually you want to apply <code>free_spaces</code> with the whole
+layout, instead of individual plots.</p>
 <p>In <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>, the behavior
 of the <code>free_spaces</code> and <code>free_labs</code> arguments
 differs from <code>guides</code> arguments in <code><a href="../reference/plot_align.html">plot_align()</a></code>
