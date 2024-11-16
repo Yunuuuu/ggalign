@@ -165,6 +165,22 @@ dimensions (\code{width}, \code{height}).
 \item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
 }
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
+
+
+\code{geom_subtile()} understands the following aesthetics (required aesthetics are in bold):
+\itemize{
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
+\item \code{\link[ggplot2:aes_group_order]{group}}
+\item \code{height}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
+\item \code{width}
+}
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
 \examples{

@@ -149,6 +149,7 @@ GeomSubrect <- ggproto(
     }
 )
 
+#' @eval rd_gg_aesthetics("geom", "subtile")
 #' @importFrom rlang list2
 #' @export
 #' @rdname geom_subrect
