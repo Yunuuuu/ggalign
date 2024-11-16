@@ -203,6 +203,10 @@ in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal sta
 layout (including left and right annotation) and <code>aes(x = .data$.x)</code>
 for vertical stack layout (including top and bottom annotation).</p>
 <p><code>matrix</code> input will be automatically melted into a long foramted data frame.</p>
+<p>Atomic vector will be put in the <code>value</code> column of the data frame.</p>
+<p>In the case where the input data is already a data frame, 4 additional
+columns (<code>.x</code>/<code>.y</code>, <code>.names</code>, <code>.index</code>, and <code>.panel</code>) are added to the data
+frame.</p>
 <p>The data in the underlying <code>ggplot</code> object will contain following columns:</p><ul><li><p><code>.panel</code>: the panel for the aligned axis. It means <code>x-axis</code> for vertical
 stack layout (including top and bottom annotation), <code>y-axis</code> for
 horizontal stack layout (including left and right annotation).</p></li>
@@ -218,10 +222,7 @@ row index of the original matrix (only applicable if <code>data</code> is a
 the original matrix (only applicable if <code>data</code> is a <code>matrix</code>).</p></li>
 <li><p><code>value</code>: the actual value (only applicable if <code>data</code> is a <code>matrix</code> or
 atomic vector).</p></li>
-</ul><p>In the case where the input data is already a data frame, 4 additional
-columns (<code>.x</code>/<code>.y</code>, <code>.names</code>, <code>.index</code>, and <code>.panel</code>) are added to the data
-frame.</p>
-<p>It is recommended to use <code>.x</code>/<code>.y</code>, or <code>.names</code> as the <code>x</code>/<code>y</code> mapping.</p>
+</ul><p>It is recommended to use <code>.x</code>/<code>.y</code>, or <code>.names</code> as the <code>x</code>/<code>y</code> mapping.</p>
 <p>If the data inherits from <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code>, an additional
 column will be added.</p><ul><li><p><code>.extra_panel</code>: the panel information for column (left or right
 annotation) or row (top or bottom annotation).</p></li>
