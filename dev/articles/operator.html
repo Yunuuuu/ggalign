@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>operator • ggalign</title>
+<title>Operator • ggalign</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="operator">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Operator">
 <meta name="robots" content="noindex">
 </head>
 <body>
@@ -45,7 +45,7 @@
     <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plot</a></li>
     <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
     <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">operator</a></li>
+    <li><a class="dropdown-item" href="../articles/operator.html">Operator</a></li>
     <li><a class="dropdown-item" href="../articles/plot-options.html">Plot options</a></li>
     <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
     <li><hr class="dropdown-divider"></li>
@@ -92,7 +92,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>operator</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Operator</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/vignettes/operator.Rmd" class="external-link"><code>vignettes/operator.Rmd</code></a></small>
@@ -210,7 +210,8 @@ is that <code>-</code> shares the same precedence group as
 <code>+</code>, which allows it to seamlessly combine with
 <code>+</code>.</p>
 <div class="section level4">
-<h4 id="quad_layout">quad_layout()<a class="anchor" aria-label="anchor" href="#quad_layout"></a>
+<h4 id="quad_layout">
+<code>quad_layout()</code><a class="anchor" aria-label="anchor" href="#quad_layout"></a>
 </h4>
 <p>If the active layout is the
 <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> itself, the
@@ -245,7 +246,8 @@ annotation stack:</p>
 <p><img src="operator_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div class="section level4">
-<h4 id="stack_layout">stack_layout()<a class="anchor" aria-label="anchor" href="#stack_layout"></a>
+<h4 id="stack_layout">
+<code>stack_layout()</code><a class="anchor" aria-label="anchor" href="#stack_layout"></a>
 </h4>
 <p>If the active layout is the
 <code><a href="../reference/stack_layout.html">ggstack()</a></code>/<code><a href="../reference/stack_layout.html">stack_layout()</a></code> itself,
@@ -300,7 +302,8 @@ be used to modify the operated context of
 <code>position</code> is not <code>NULL</code>.</li>
 </ol>
 <div class="section level3">
-<h3 id="quad_layout-1">quad_layout()<a class="anchor" aria-label="anchor" href="#quad_layout-1"></a>
+<h3 id="quad_layout-1">
+<code>quad_layout()</code><a class="anchor" aria-label="anchor" href="#quad_layout-1"></a>
 </h3>
 <p>By default, if the active layout is the
 <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> itself,
@@ -365,7 +368,8 @@ layout, including annotation stacks:</p>
 <p><img src="operator_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="stack_layout-1">stack_layout()<a class="anchor" aria-label="anchor" href="#stack_layout-1"></a>
+<h3 id="stack_layout-1">
+<code>stack_layout()</code><a class="anchor" aria-label="anchor" href="#stack_layout-1"></a>
 </h3>
 <p>By default, when the active layout is the <code><a href="../reference/stack_layout.html">stack_layout()</a></code>
 itself, by wrapping object with <code><a href="../reference/with_quad.html">with_quad()</a></code>, <code>-</code>
