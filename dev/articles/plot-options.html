@@ -187,9 +187,11 @@ option directly to the active layout.</p>
 <span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="plot-options_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>Unlike individual ggplot2 elements added to each plot, layout-level
-options set by <code>-</code> operator are inherited by all plots in the
-layout when rendered. Any plot-specific options will override these
+<p>Unlike individual ggplot2 elements, which will be added directly to
+each plot by <code>-</code> operator, <strong>layout-level
+options</strong> set by <code>-</code> operator are
+<strong>inherited</strong> by all plots in the layout when
+<code>rendered</code>. Any plot-specific options will override these
 layout-level options, regardless of the order in which they are
 added.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
