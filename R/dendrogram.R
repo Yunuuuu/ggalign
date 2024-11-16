@@ -88,9 +88,7 @@ make_dist <- function(matrix, distance, use_missing,
             kendall = stats::as.dist(
                 1 - stats::cor(t(matrix), use = use_missing, method = distance)
             ),
-            cli::cli_abort("Unsupported {.arg {arg}} method specified",
-                call = call
-            )
+            cli::cli_abort("Unsupported {.arg {arg}} specified", call = call)
         )
     } else if (is.function(distance)) {
         if (!inherits(d <- distance(matrix), "dist")) {
