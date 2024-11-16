@@ -17,6 +17,39 @@ test_that("`layer_order()` works well", {
     )
 })
 
+test_that("`geom_subrect()` works well", {
+    expect_doppelganger(
+        "geom_subrect_by_row",
+        ggplot(data.frame(value = letters[seq_len(5)])) +
+            geom_subrect(
+                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value)
+            )
+    )
+    expect_doppelganger(
+        "geom_subrect_by_column",
+        ggplot(data.frame(value = letters[seq_len(9)])) +
+            geom_subrect(
+                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value)
+            )
+    )
+    expect_doppelganger(
+        "geom_subrect_horizontal",
+        ggplot(data.frame(value = letters[seq_len(4)])) +
+            geom_subrect(
+                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value),
+                direction = "h"
+            )
+    )
+    expect_doppelganger(
+        "geom_subrect_vertical",
+        ggplot(data.frame(value = letters[seq_len(4)])) +
+            geom_subrect(
+                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value),
+                direction = "v"
+            )
+    )
+})
+
 test_that("`geom_subtile()` works well", {
     expect_doppelganger(
         "geom_subtile_by_row",
