@@ -174,9 +174,9 @@ to define the layout design.</p>
 <p><code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> is built on <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> with a
 default <code><a href="../reference/plot_data.html">plot_data()</a></code> <a href="https://yunuuuu.github.io/ggalign/dev/articles/plot-options.html">plot
 option</a>, which splits the nested alterations and unnests the column,
-similar to the following function (See <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> ggplot2
-specification section for the input data of
-<code><a href="../reference/plot_data.html">plot_data()</a></code>):</p>
+similar to the following function (See
+<code>ggplot2 specification</code> section in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>
+for the input data of <code><a href="../reference/plot_data.html">plot_data()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdata</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate_longer_delim.html" class="external-link">separate_longer_delim</a></span><span class="op">(</span><span class="va">data</span>,</span>
@@ -290,22 +290,21 @@ before applying <code><a href="../reference/geom_subrect.html">geom_subtile()</a
 <div class="section level2">
 <h2 id="geom_draw">geom_draw<a class="anchor" aria-label="anchor" href="#geom_draw"></a>
 </h2>
-<p>If you’re aiming for a strategy similar to that of
-<code>ComplexHeatmap</code>, consider using <code><a href="../reference/geom_draw.html">geom_draw()</a></code>.
-Although <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> often suffices for most scenarios,
-<code><a href="../reference/geom_draw.html">geom_draw()</a></code> provides greater flexibility for complex
-customization.</p>
+<p><code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> often suffices for most scenarios.
+However, if you require a strategy similar to that of
+<code>ComplexHeatmap</code>, consider using <code><a href="../reference/geom_draw.html">geom_draw()</a></code>,
+which offers greater flexibility for complex customizations.</p>
 <p>Key Features of <code><a href="../reference/geom_draw.html">geom_draw()</a></code>:</p>
 <ul>
 <li>Custom Drawing Logic: Accepts a <code>draw</code> aesthetic,
 allowing each cell to be rendered as a specific graphical object
 (<code>grob</code>).</li>
 <li>Manual Scaling: Requires <code><a href="../reference/scale_draw_manual.html">scale_draw_manual()</a></code> to map
-<code>draw</code> values to corresponding drawing functions. Functions
-mapped through <code><a href="../reference/scale_draw_manual.html">scale_draw_manual()</a></code> can utilize any number
-of ggplot2 aesthetics and output custom graphical objects
-(<code>grob</code>).</li>
-<li>Beyond the <code>x</code>, <code>y</code>, <code>xmin</code>,
+<code>draw</code> values to corresponding drawing functions.</li>
+<li>Flexible Aesthetic Mapping: Functions mapped through
+<code><a href="../reference/scale_draw_manual.html">scale_draw_manual()</a></code> can utilize any number of ggplot2
+aesthetics and output custom graphical objects (<code>grob</code>).
+Beyond the <code>x</code>, <code>y</code>, <code>xmin</code>,
 <code>xmax</code>, <code>width</code>, and <code>height</code>
 aesthetics, you may want to rely solely on mapped aesthetics
 (<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>). Unmapped aesthetics will default to ggplot2’s
