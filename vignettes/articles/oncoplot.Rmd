@@ -275,9 +275,12 @@ ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
 Except for the data used for the main plot, `fortify_matrix.MAF()` also attaches
 several useful attributes.
 
-  - `gene_summary`: gene summary informations.
-  - `sample_summary`: sample summary informations.
-  - `sample_anno`: sample clinical informations.
+  - `gene_summary`: gene summary informations. See
+    `maftools::getGeneSummary()` for details.
+  - `sample_summary`: sample summary informations. See
+    `maftools::getSampleSummary()` for details.
+  - `sample_anno`: sample clinical informations. See
+    `maftools::getClinicalData()` for details.
   - `n_genes`: Total of genes.
   - `n_samples`: Total of samples.
   - `titv`: A list of `data.frames` with Transitions and Transversions

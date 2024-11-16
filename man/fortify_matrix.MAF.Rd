@@ -42,9 +42,12 @@ By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 \section{ggalign attributes}{
 
 \itemize{
-\item \code{gene_summary}: gene summary informations.
-\item \code{sample_summary}: sample summary informations.
-\item \code{sample_anno}: sample clinical informations.
+\item \code{gene_summary}: gene summary informations. See
+\code{maftools::getGeneSummary()} for details.
+\item \code{sample_summary}: sample summary informations. See
+\code{maftools::getSampleSummary()} for details.
+\item \code{sample_anno}: sample clinical informations. See
+\code{maftools::getClinicalData()} for details.
 \item \code{n_genes}: Total of genes.
 \item \code{n_samples}: Total of samples.
 \item \code{titv}: A list of \code{data.frames} with Transitions and Transversions

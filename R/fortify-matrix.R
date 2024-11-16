@@ -61,9 +61,12 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #' @param use_syn A single boolean value indicates whether to include synonymous
 #' variants when Classifies SNPs into transitions and transversions.
 #' @section ggalign attributes:
-#'  - `gene_summary`: gene summary informations.
-#'  - `sample_summary`: sample summary informations.
-#'  - `sample_anno`: sample clinical informations.
+#'  - `gene_summary`: gene summary informations. See
+#'    `maftools::getGeneSummary()` for details.
+#'  - `sample_summary`: sample summary informations. See
+#'    `maftools::getSampleSummary()` for details.
+#'  - `sample_anno`: sample clinical informations. See
+#'    `maftools::getClinicalData()` for details.
 #'  - `n_genes`: Total of genes.
 #'  - `n_samples`: Total of samples.
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
