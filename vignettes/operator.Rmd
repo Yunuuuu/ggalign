@@ -104,7 +104,7 @@ addition of elements to multiple plots. While its use might initially seem
 unintuitive, the reason behind this is that `-` shares the same precedence group
 as `+`, which allows it to seamlessly combine with `+`.
 
-### quad_layout()
+### `quad_layout()`
 If the active layout is the `ggheatmap()`/`quad_layout()` itself, the `-`
 operator behaves similarly to `&`. It applies the specified elements to all
 plots within the layout. 
@@ -134,7 +134,7 @@ ggheatmap(small_mat) +
     scale_color_brewer(palette = "Dark2")
 ```
 
-### stack_layout()
+### `stack_layout()`
 If the active layout is the `ggstack()`/`stack_layout()` itself, `-` applies the
 elements to all plots in the layout except the nested
 `ggheatmap()`/`quad_layout()`.
@@ -174,7 +174,7 @@ This function accepts three arguments:
  the main plot within `ggheatmap()`/`quad_layout()`. Only used when `position`
  is not `NULL`.
 
-## quad_layout()
+## `quad_layout()`
 By default, if the active layout is the `ggheatmap()`/`quad_layout()` itself,
 `with_quad()` won't do something special. But when the active context in
 `ggheatmap()`/`quad_layout()` is set to `top` or `bottom`, by wrapping object
@@ -231,7 +231,7 @@ ggheatmap(small_mat) +
     with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
 ```
 
-## stack_layout()
+## `stack_layout()`
 By default, when the active layout is the `stack_layout()` itself, by wrapping
 object with `with_quad()`, `-` operator will apply changes to all plots along
 the `stack_layout()`, which means if the stack layout is in horizontal, `-`
