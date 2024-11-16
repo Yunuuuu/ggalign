@@ -122,7 +122,7 @@ ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
 # Integration with maftools
 The `ggoncoplot()` function supports `MAF` objects from the `maftools` package
 using the `fortify_matrix.MAF()` method. It includes options to control data
-generation for `ggoncoplot(), such as drawing the top `n_top` genes.
+generation for `ggoncoplot()`, such as drawing the top `n_top` genes.
 
 ```{r echo=FALSE}
 can_read_maf <- rlang::is_installed("maftools") &&
@@ -147,7 +147,7 @@ ggoncoplot(laml, n_top = 20) +
 
 By default, samples without alterations in the selected genes are removed. To
 include all samples, set `remove_empty_samples = FALSE`: 
-```{r eval=can_read_maf}
+```{r eval=can_read_maf, fig.height=7}
 align_plots(
     ggoncoplot(laml, n_top = 20L, remove_empty_samples = FALSE) +
         scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
