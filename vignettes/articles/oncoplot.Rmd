@@ -109,7 +109,7 @@ ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
     anno_top(size = 0.2) +
     ggalign() +
     # by setting `inherti = TRUE`, we apply the parent layout `plot_data()`
-    # firstly, then remove `NA` value
+    # (from the ggoncoplot() layout) firstly, then remove `NA` value
     plot_data(~ subset(.x, !is.na(value)), inherit = TRUE) +
     geom_bar(aes(.x, after_stat(count), fill = value)) +
     # note: `ggoncoplot()` use `geom_tile()` to draw the oncoPrint,
