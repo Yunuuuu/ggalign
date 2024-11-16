@@ -160,7 +160,7 @@ principles as in the `ggheatmap()`/`quad_layout()`.
 Want apply elements for plots in both `stack_layout()` and the nested
 `ggheatmap()`/`quad_layout()` at the same time? refer to the following section.
 
-# `with_quad`
+# `with_quad()`
 Along with the `-` operator, `with_quad()` can be used to modify the operated
 context of `ggheatmap()`/`quad_layout()`.
 

@@ -90,10 +90,10 @@ ggheatmap(small_mat) +
     plot_theme(plot.background = element_rect(fill = "red"))
 ```
 
-Unlike individual ggplot2 elements added to each plot, layout-level options set
-by `-` operator are inherited by all plots in the layout when rendered. Any
-plot-specific options will override these layout-level options, regardless of
-the order in which they are added.
+Unlike individual ggplot2 elements, which will be added directly to each plot by
+`-` operator, **layout-level options** set by `-` operator are **inherited** by
+all plots in the layout when `rendered`. Any plot-specific options will override
+these layout-level options, regardless of the order in which they are added.
 
 ```{r}
 ggheatmap(small_mat) +
