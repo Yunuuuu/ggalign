@@ -1,8 +1,8 @@
 ---
-title: "Performance"
+title: "Benchmarks"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Performance}
+  %\VignetteIndexEntry{Benchmarks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -7,6 +7,52 @@ template:
 development:
   mode: auto
 
+navbar:
+  structure:
+    left:  [intro, reference, vignettes, articles, news, benchmarks, faq]
+    right: [search, github, lightswitch]
+  components:
+    vignettes:
+      text: Vignettes
+      menu:
+        - text: Heatmap Layout
+          href: articles/heatmap-layout.html
+        - text: Layout Customization
+          href: articles/layout-customize.html
+        - text: Layout Plots
+          href: articles/layout-plot.html
+        - text: Quad-Layout
+          href: articles/quad-layout.html
+        - text: Stack Layout
+          href: articles/stack-layout.html
+        - text: Operators
+          href: articles/operator.html
+        - text: Plot Options
+          href: articles/plot-options.html
+        - text: Oncoplot
+          href: articles/oncoplot.html
+    articles:
+      text: Articles
+      menu:
+        - text: Plot Composer
+          href: articles/plot-composer.html
+        - text: Difference with ggplot2
+          href: articles/difference-with-ggplot2.html
+        - text: Complete examples
+          href: articles/complete-examples.html
+        - text: ——–
+        - text: "Examples from ComplexHeatmap"
+        - text: single heatmap
+          href: articles/single-heatmap.html
+        - text: more examples
+          href: articles/more-examples.html
+    benchmarks:
+      text: Benchmarks
+      href: articles/benchmarks.html
+    faq: 
+      text: FAQ
+      href: articles/FAQ.html
+
 reference:
 - title: Layout Class
   desc: A `Layout` object defines how to place the plots.
@@ -45,7 +91,7 @@ reference:
   - align_order
   - align_reorder
 
-- title: Layout Plot
+- title: Layout Plots
   desc: >
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
@@ -117,39 +163,3 @@ reference:
   - starts_with("patch.")
   - starts_with("fortify_matrix.")
   - starts_with("fortify_data_frame.")
-
-articles:
-- title: Building plots
-  navbar: ~
-  contents:
-  - heatmap-layout
-  - layout-customize
-  - layout-plot
-  - articles/quad-layout
-  - articles/stack-layout
-  - operator
-  - plot-options
-  - articles/oncoplot
-
-- title: Others
-  navbar: " "
-  contents:
-  - articles/difference-with-ggplot2
-  - articles/complete-examples
-  - articles/plot-composer
-
-- title: FAQ
-  navbar: " "
-  contents:
-  - articles/FAQ
-
-- title: Performance
-  navbar: " "
-  contents:
-  - articles/performance
-
-- title: ComplexHeatmap
-  navbar: ComplexHeatmap
-  contents:
-  - articles/single-heatmap
-  - articles/more-examples

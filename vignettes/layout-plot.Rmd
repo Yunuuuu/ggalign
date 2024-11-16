@@ -1,8 +1,8 @@
 ---
-title: "Layout Plot"
+title: "Layout Plots"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Layout Plot}
+  %\VignetteIndexEntry{Layout Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
