@@ -24,7 +24,9 @@ following columns:
 }
 \seealso{
 Other fortify_data_frame methods: 
+\code{\link{fortify_data_frame.complex}()},
 \code{\link{fortify_data_frame.default}()},
+\code{\link{fortify_data_frame.logical}()},
 \code{\link{fortify_data_frame.matrix}()},
 \code{\link{fortify_data_frame.numeric}()}
 }

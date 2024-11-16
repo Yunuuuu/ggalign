@@ -47,6 +47,16 @@ fortify_data_frame.character <- function(data, ...) {
 #' @export
 fortify_data_frame.numeric <- fortify_data_frame.character
 
+#' @inherit fortify_data_frame.character
+#' @family fortify_data_frame methods
+#' @export
+fortify_data_frame.logical <- fortify_data_frame.character
+
+#' @inherit fortify_data_frame.character
+#' @family fortify_data_frame methods
+#' @export
+fortify_data_frame.complex <- fortify_data_frame.character
+
 #' @export
 fortify_data_frame.waiver <- function(data, ...) data
 
