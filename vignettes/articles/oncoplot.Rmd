@@ -94,7 +94,8 @@ pdata <- function(data) {
     )
 }
 # Note: `ggoncoplot()` will automatically convert any empty strings to `NA`
-#        before pass it to `ggheatmap`.
+#        before pass it to `ggheatmap`. So this figure will contain an empty
+#        string value.
 ggheatmap(mat) -
     plot_data(pdata) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
@@ -102,14 +103,16 @@ ggheatmap(mat) -
 
 By default, the `plot_data()` is inherited from the parent layout if the data of
 the plot is inherited from the layout. You can apply the parent `plot_data()`
-first and then apply another transformation by setting `inherit = TRUE`. 
-
+first and then apply another transformation by setting `inherit = TRUE`. This
+functionality is especially useful when working with `ggoncoplot()`.
 ```{r}
 ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
     anno_top(size = 0.2) +
     ggalign() +
     # by setting `inherti = TRUE`, we apply the parent layout `plot_data()`
-    # (from the ggoncoplot() layout) firstly, then remove `NA` value
+    # (from the `ggoncoplot()` layout) firstly, which will split the alteration
+    # string and unnested the columns.
+    # Here: We then remove `NA` value
     plot_data(~ subset(.x, !is.na(value)), inherit = TRUE) +
     geom_bar(aes(.x, after_stat(count), fill = value)) +
     # note: `ggoncoplot()` use `geom_tile()` to draw the oncoPrint,
@@ -186,7 +189,8 @@ applying `geom_subtile()`:
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     plot_data(function(data) {
         dplyr::filter(data, dplyr::n() > 1L, .by = c(".x", ".y"))
-        # we apply the parent layout `plot_data()` first: `inherit = TRUE`
+        # we apply the parent layout `plot_data()` first (`inherit = TRUE`),
+        # which will split the alteration string and unnested the columns.
     }, inherit = TRUE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
@@ -296,6 +300,8 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     anno_top(size = 0.2) +
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "sample_summary")
+        # matrix input will be automatically melted into a long foramted data
+        # frame in `ggalign()` function.
         as.matrix(data[2:(ncol(data) - 1L)])
     }) +
     geom_bar(aes(.x, value, fill = .column_names),
@@ -320,6 +326,8 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     anno_top(size = 0.2) +
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "sample_summary")
+        # matrix input will be automatically melted into a long foramted data
+        # frame in `ggalign()` function.
         as.matrix(data[2:(ncol(data) - 1L)])
     }) +
     geom_bar(aes(.x, value, fill = .column_names),
@@ -332,6 +340,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     plot_align(free_spaces = "b") +
     # add the text percent for the alterated samples in the right annotation
     ggalign(data = function(data) {
+        # Atomic vector will be put in the `value` column of the data frame.
         ggalign_attr(data, "gene_summary")$AlteredSamples /
             ggalign_attr(data, "n_samples")
     }) +
@@ -345,6 +354,8 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     # add the bar plot in the right annotation
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "gene_summary")
+        # matrix input will be automatically melted into a long foramted data
+        # frame in `ggalign()` function.
         as.matrix(data[2:8])
     }) +
     geom_bar(aes(value, fill = .column_names),
@@ -366,6 +377,8 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     # add bar plot in the bottom annotation
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "titv")$fraction.contribution
+        # matrix input will be automatically melted into a long foramted data
+        # frame in `ggalign()` function.
         as.matrix(data[2:7])
     }) +
     geom_bar(aes(y = value, fill = .column_names), stat = "identity") +

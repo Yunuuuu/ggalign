@@ -100,6 +100,12 @@ for vertical stack layout (including top and bottom annotation).
 
 \code{matrix} input will be automatically melted into a long foramted data frame.
 
+Atomic vector will be put in the \code{value} column of the data frame.
+
+In the case where the input data is already a data frame, 4 additional
+columns (\code{.x}/\code{.y}, \code{.names}, \code{.index}, and \code{.panel}) are added to the data
+frame.
+
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
 \item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
@@ -118,10 +124,6 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 \item \code{value}: the actual value (only applicable if \code{data} is a \code{matrix} or
 atomic vector).
 }
-
-In the case where the input data is already a data frame, 4 additional
-columns (\code{.x}/\code{.y}, \code{.names}, \code{.index}, and \code{.panel}) are added to the data
-frame.
 
 It is recommended to use \code{.x}/\code{.y}, or \code{.names} as the \code{x}/\code{y} mapping.
 

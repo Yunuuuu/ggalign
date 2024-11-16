@@ -36,6 +36,12 @@
 #'
 #' `matrix` input will be automatically melted into a long foramted data frame.
 #'
+#' Atomic vector will be put in the `value` column of the data frame.
+#'
+#' In the case where the input data is already a data frame, 4 additional
+#' columns (`.x`/`.y`, `.names`, `.index`, and `.panel`) are added to the data
+#' frame.
+#'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
 #'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
@@ -58,10 +64,6 @@
 #'
 #'  - `value`: the actual value (only applicable if `data` is a `matrix` or
 #'    atomic vector).
-#'
-#' In the case where the input data is already a data frame, 4 additional
-#' columns (`.x`/`.y`, `.names`, `.index`, and `.panel`) are added to the data
-#' frame.
 #'
 #' It is recommended to use `.x`/`.y`, or `.names` as the `x`/`y` mapping.
 #'
