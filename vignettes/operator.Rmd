@@ -1,8 +1,8 @@
 ---
-title: "operator"
+title: "Operator"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{operator}
+  %\VignetteIndexEntry{Operator}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
