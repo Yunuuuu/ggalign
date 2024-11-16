@@ -2,6 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  articles/benchmarks: benchmarks.html
   articles/complete-examples: complete-examples.html
   articles/difference-with-ggplot2: difference-with-ggplot2.html
   articles/FAQ: FAQ.html
@@ -11,13 +12,12 @@ articles:
   articles/more-examples: more-examples.html
   articles/oncoplot: oncoplot.html
   operator: operator.html
-  articles/performance: performance.html
   articles/plot-composer: plot-composer.html
   plot-options: plot-options.html
   articles/quad-layout: quad-layout.html
   articles/single-heatmap: single-heatmap.html
   articles/stack-layout: stack-layout.html
-last_built: 2024-11-16T21:07Z
+last_built: 2024-11-16T22:32Z
 urls:
   reference: https://yunuuuu.github.io/ggalign/reference
   article: https://yunuuuu.github.io/ggalign/articles
