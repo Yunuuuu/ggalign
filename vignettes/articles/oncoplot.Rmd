@@ -327,7 +327,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     ggalign(data = function(data) {
         ggalign_attr(data, "gene_summary")$AlteredSamples /
             ggalign_attr(data, "n_samples")
-    }, size = 0.5) +
+    }) +
     geom_text(aes(1, label = scales::label_percent()(value)), hjust = 1) +
     scale_x_continuous(
         expand = expansion(),
