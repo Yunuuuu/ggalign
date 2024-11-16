@@ -165,7 +165,7 @@ align_plots(
 # Specialized Geoms
 ## geom_subtile()
 When multiple alterations occur in the same sample and gene, they are combined
-into a single value, "Multi_Hit", by default. To visualize these alterations
+into a single value, `"Multi_Hit"`, by default. To visualize these alterations
 separately, you can set `collapse_vars = FALSE`. However, doing so can lead to
 overlapping alterations within the same cell, making the visualization cluttered
 and hard to interpret.
