@@ -131,6 +131,7 @@ genes.
 can_read_maf <- rlang::is_installed("maftools") &&
     rlang::is_installed("R.utils")
 ```
+
 ```{r eval=can_read_maf}
 # load data from `maftools`
 laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
@@ -164,6 +165,7 @@ align_plots(
 )
 ```
 
+# geom_subtile
 When multiple alterations occur in the same sample and gene, they are combined
 into a single value, "Multi_Hit", by default. To visualize these alterations
 separately, you can set `collapse_vars = FALSE`. However, doing so can lead to
@@ -193,6 +195,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     theme_no_axes("x")
 ```
 
+# geom_draw
 If you're aiming for a strategy similar to that of `ComplexHeatmap`, consider
 using `geom_draw()`. Although `geom_subtile()` often suffices for most
 scenarios, `geom_draw()` provides greater flexibility for complex customization. 
@@ -205,9 +208,12 @@ Key Features of `geom_draw()`:
  corresponding drawing functions. Functions mapped through `scale_draw_manual()`
  can utilize any number of ggplot2 aesthetics and output custom graphical
  objects (`grob`).
+ - Beyond the `x`, `y`, `xmin`, `xmax`, `width`, and `height` aesthetics, you
+ may want to rely solely on mapped aesthetics (`aes()`). Unmapped aesthetics
+ will default to ggplot2's behavior, which might not produce the desired
+ outcome. And always use `native` unit.
 
-
-```{r}
+```{r fig.dim = c(2, 7)}
 library(grid)
 ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
     geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
@@ -336,7 +342,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     ) +
     ylab("TMB") +
     anno_right(size = 0.2) -
-    # remove bottom spaces when aligning
+    # remove bottom spaces of the right annotation when aligning
     plot_align(free_spaces = "b") +
     ggalign(data = function(data) {
         data <- ggalign_attr(data, "gene_summary")
