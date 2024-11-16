@@ -73,8 +73,8 @@ remotes::install_github("Yunuuuu/ggalign")
 The usage of `ggalign` is simple if you're familiar with `ggplot2` syntax, the
 typical workflow includes: 
 
- - Initialize the layout using `quad_layout()` (`ggheatmap()`/`ggside()`) or
- `stack_layout()` (`ggstack()`).
+ - Initialize the layout using `quad_layout()`
+ (`ggside()`/`ggheatmap()`/`ggoncoplot()`) or `stack_layout()` (`ggstack()`).
  - Customize the layout with:
    - `align_group()`: Group observations into panel with a group variable.
    - `align_kmeans()`: Group observations into panel by kmeans.
