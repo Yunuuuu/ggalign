@@ -301,7 +301,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 We can draw the example from 
 [maftools vignette](https://bioconductor.org/packages/release/bioc/vignettes/maftools/inst/doc/oncoplots.html).
 
-```{r eval=can_read_maf, fig.dim = c(10, 7)}
+```{r eval=can_read_maf, fig.dim = c(12, 7)}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
     theme_no_axes("x") +
