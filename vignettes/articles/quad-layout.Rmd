@@ -1,10 +1,6 @@
 ---
 title: "Quad-Layout"
 output: rmarkdown::html_vignette
-params:
-  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
-  release: "https://yunuuuu.github.io/ggalign"
-  devel: "https://yunuuuu.github.io/ggalign/dev"
 vignette: >
   %\VignetteIndexEntry{Quad-Layout}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,16 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r echo=FALSE}
-mode <- params$mode
-url <- params[[mode]]
-```
-
-As discussed in 
-[heatmap-layout](`r sprintf("%s/articles/heatmap-layout.html", url)`), the
-`ggheatmap()` function is a specialized form of `quad_layout()`. Specifically,
-it is a variant of `quad_alignb()`, which aligns observations both horizontally
-and vertically.
+As discussed in `vignette("heatmap-layout")`, the `ggheatmap()` function is a
+specialized form of `quad_layout()`. Specifically, it is a variant of
+`quad_alignb()`, which aligns observations both horizontally and vertically.
 
 `quad_layout()` arranges plots in the Quad-Side of a main plot. Depending on
 whether you want to align observations in the `horizontal` or `vertical`

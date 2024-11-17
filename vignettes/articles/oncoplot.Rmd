@@ -1,10 +1,6 @@
 ---
 title: "Oncoplot"
 output: rmarkdown::html_vignette
-params:
-  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
-  release: "https://yunuuuu.github.io/ggalign"
-  devel: "https://yunuuuu.github.io/ggalign/dev"
 vignette: >
   %\VignetteIndexEntry{Oncoplot}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,11 +12,6 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
-```
-
-```{r echo=FALSE}
-mode <- params$mode
-url <- params[[mode]]
 ```
 
 # ggoncoplot
@@ -74,7 +65,7 @@ The function automatically reorders rows and columns based on alteration
 frequency. Disable this with `reorder_row = FALSE` and `reorder_column = FALSE`.
 
 You can further customize layouts using methods from
-[layout-customize](`r sprintf("%s/articles/layout-customize.html", url)`).
+`vignette("layout-customize")`.
 ```{r}
 ggoncoplot(mat, reorder_row = FALSE, reorder_column = FALSE) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)

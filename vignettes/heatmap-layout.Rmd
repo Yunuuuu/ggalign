@@ -7,10 +7,6 @@ output:
     fig_caption: yes
     fig_width: 7
     fig_height: 5
-params:
-  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
-  release: "https://yunuuuu.github.io/ggalign"
-  devel: "https://yunuuuu.github.io/ggalign/dev"
 vignette: >
   %\VignetteIndexEntry{Heatmap Layout}
   %\VignetteEngine{knitr::rmarkdown}
@@ -24,11 +20,6 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
-```
-
-```{r echo=FALSE}
-mode <- params$mode
-url <- params[[mode]]
 ```
 
 The `heatmap_layout()`/`ggheatmap()` function provides a powerful way to create
@@ -164,9 +155,8 @@ ggheatmap(small_mat) +
 ```
 
 We can add any `align_*()` function to the annotation. For more details on
-`align_*()` functions, refer to
-[layout-customize](`r sprintf("%s/articles/layout-customize.html", url)`) and
-[layout-plot](`r sprintf("%s/articles/layout-plot.html", url)`).
+`align_*()` functions, refer to `vignette("layout-customize")` and
+`vignette("layout-plot")`.
 
 ```{r}
 ggheatmap(small_mat) +
