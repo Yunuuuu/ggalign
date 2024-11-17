@@ -93,6 +93,11 @@ test_that("geom_pie works well", {
 
 test_that("geom_draw() workds well", {
     library(grid)
+    expect_error(ggplot2::ggsave(
+        tempfile(fileext = ".png"),
+        plot = ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
+            geom_draw(aes(x = 1, y = y, draw = value, fill = value))
+    ))
     draw_mapping <- list(
         function(x, y, width, height, fill) {
             rectGrob(x, y,
