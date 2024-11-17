@@ -150,7 +150,8 @@ they originate.
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides <- ggheatmap(small_mat, width = 2, height = 2L) +
     # we set the legend to the left side
-    scale_fill_viridis_c(
+    scale_fill_gradient2(
+        low = "blue", high = "red",
         name = "I'm from heatmap body",
         guide = guide_legend(position = "left")
     ) +
@@ -339,7 +340,6 @@ inheriting from the parent layout:
 By default, we won't align the axis titles.
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     ylab("Heatmap title") +
     anno_top(size = unit(30, "mm")) +
     align_dendro() +
@@ -353,7 +353,6 @@ which axis titles should be free from alignment.
 ```{r}
 ggheatmap(small_mat) -
     plot_align(free_labs = NULL) +
-    scale_fill_viridis_c() +
     ylab("Heatmap title") +
     anno_top(size = unit(30, "mm")) +
     align_dendro() +
