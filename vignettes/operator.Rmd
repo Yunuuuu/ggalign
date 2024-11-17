@@ -85,9 +85,9 @@ plots in a layout. Since `&` has lower precedence than `+`, it's generally best
 to use it at the end of an expression or you should wrap it in parentheses when
 needed.
 ```{r}
-# Initialize the heatmap with color scales and annotations.
+# Initialize the heatmap
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     # Add a dendrogram in the left annotation and split the dendrogram into 3 groups
     align_dendro(aes(color = branch), k = 3L) +
@@ -111,7 +111,7 @@ plots within the layout.
 ```{r}
 # Initialize the heatmap
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     anno_right(size = 0.2) +
@@ -126,7 +126,7 @@ If the active layout is the annotation stack, the `-` operator will only add
 the elements to all plots in the active annotation stack: 
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     align_dendro(aes(color = branch), k = 3L) -
@@ -186,7 +186,7 @@ specified by `main` argument otherwise.
 
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     # Change the active layout to the left annotation
@@ -205,7 +205,7 @@ should be used as the context. When the `position` argument is manually set, the
 default value of the `main` argument will be `FALSE`.
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     anno_top(size = 0.2) +
@@ -220,7 +220,7 @@ Setting `position` to `NULL` removes any active annotation stack, meaning the
 object will apply to all plots in the layout, including annotation stacks: 
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     anno_top(size = 0.2) +
