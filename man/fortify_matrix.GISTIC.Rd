@@ -34,7 +34,7 @@ samples without any genomic alterations.}
 A matrix.
 }
 \description{
-By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
+This function converts various objects into a matrix format.
 }
 \section{ggalign attributes}{
 

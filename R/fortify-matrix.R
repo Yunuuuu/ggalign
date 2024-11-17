@@ -49,7 +49,7 @@ fortify_matrix.function <- function(data, ...) data
 #' @export
 fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 
-#' @inherit fortify_matrix.default
+#' @inherit fortify_matrix
 #' @inheritParams fortify_matrix.default
 #' @param ... Not used currently.
 #' @param genes An atomic character defines the genes to draw.
@@ -237,7 +237,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ))
 }
 
-#' @inherit fortify_matrix.default
+#' @inherit fortify_matrix
 #' @inheritParams fortify_matrix.default
 #' @param ... Not used currently.
 #' @param n_top A single number indicates how many top bands to be drawn.
