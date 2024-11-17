@@ -137,7 +137,7 @@ Internally, <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
 <span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="oncoprint-customization">oncoPrint Customization<a class="anchor" aria-label="anchor" href="#oncoprint-customization"></a>
@@ -150,7 +150,7 @@ introduce another more effective ways to handle this in the
 <code>Specialized Geoms</code> section):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span>, map_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>snv <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, map_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>indel <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>By default, all empty string will be converted to <code>NA</code>
 value and <code>ggplot2</code> will translate the <code>NA</code> values
 and render it in the legend. To prevent this, you can turn off the
@@ -158,22 +158,24 @@ translation using <code>na.translate = FALSE</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The function automatically reorders rows and columns based on
 alteration frequency. Disable this with <code>reorder_row = FALSE</code>
 and <code>reorder_column = FALSE</code>.</p>
-<p>You can further customize layouts using methods from <a href="https://yunuuuu.github.io/ggalign/dev/articles/layout-customize.html">layout-customize</a>.</p>
+<p>You can further customize layouts using methods from
+<code><a href="../articles/layout-customize.html">vignette("layout-customize")</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span>, reorder_row <span class="op">=</span> <span class="cn">FALSE</span>, reorder_column <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="advanced-data-handling">Advanced Data Handling<a class="anchor" aria-label="anchor" href="#advanced-data-handling"></a>
 </h2>
 <p><code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> is built on <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> with a
-default <a href="https://yunuuuu.github.io/ggalign/dev/articles/plot-options.html"><code>plot_data()</code></a>,
-which splits alterations into separate entries for visualization. (See
+default <code><a href="../reference/plot_data.html">plot_data()</a></code> (see
+<code><a href="../articles/plot-options.html">vignette("plot-options")</a></code> for details), which splits
+alterations into separate entries for visualization. (See
 <code>ggplot2 specification</code> section in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>
 for the input data of <code><a href="../reference/plot_data.html">plot_data()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -190,7 +192,7 @@ for the input data of <code><a href="../reference/plot_data.html">plot_data()</a
 <span>    <span class="fu"><a href="../reference/plot_data.html">plot_data</a></span><span class="op">(</span><span class="va">pdata</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>By default, the <code><a href="../reference/plot_data.html">plot_data()</a></code> is inherited from the parent
 layout if the data of the plot is inherited from the layout. You can
 apply the parent <code><a href="../reference/plot_data.html">plot_data()</a></code> first and then apply another
@@ -212,7 +214,7 @@ functionality is especially useful when working with
 <span>    <span class="co"># like the same, we remove the guide of `geom_bar()` plot</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="integration-with-maftools">Integration with maftools<a class="anchor" aria-label="anchor" href="#integration-with-maftools"></a>
@@ -236,7 +238,7 @@ data generation for <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a
 <span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">laml</span>, n_top <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/theme_no_axes.html">theme_no_axes</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>By default, samples without alterations in the selected genes are
 removed. To include all samples, set
 <code>remove_empty_samples = FALSE</code>:</p>
@@ -253,7 +255,7 @@ removed. To include all samples, set
 <span>    ncol <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>    guides <span class="op">=</span> <span class="st">"tlbr"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="specialized-geoms">Specialized Geoms<a class="anchor" aria-label="anchor" href="#specialized-geoms"></a>
@@ -277,7 +279,7 @@ distinct alterations to be clearly displayed.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/theme_no_axes.html">theme_no_axes</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `geom_subtile()` subdivide tile into a maximal of 3 rectangles</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>To focus only on cells with multiple alterations, filter the data
 before applying <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -291,7 +293,7 @@ before applying <code><a href="../reference/geom_subrect.html">geom_subtile()</a
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/theme_no_axes.html">theme_no_axes</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `geom_subtile()` subdivide tile into a maximal of 3 rectangles</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="geom_draw">geom_draw()<a class="anchor" aria-label="anchor" href="#geom_draw"></a>
@@ -377,7 +379,7 @@ with each other.</p>
 <span>    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-15-1.png" width="192"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-14-1.png" width="192"></p>
 </div>
 </div>
 <div class="section level2">
@@ -427,7 +429,7 @@ oncoplot:</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"TMB"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `geom_subtile()` subdivide tile into a maximal of 3 rectangles</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>We can draw the example from <a href="https://bioconductor.org/packages/release/bioc/vignettes/maftools/inst/doc/oncoplots.html" class="external-link">maftools
 vignette</a>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -503,7 +505,7 @@ vignette</a>.</p>
 <span><span class="co">#&gt; Warning: Removed 24 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_bar()`).</span></span>
 <span><span class="co">#&gt; `geom_subtile()` subdivide tile into a maximal of 3 rectangles</span></span></code></pre></div>
-<p><img src="oncoplot_files/figure-html/unnamed-chunk-17-1.png" width="1152"></p>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-16-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>

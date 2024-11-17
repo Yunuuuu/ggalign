@@ -140,7 +140,7 @@ layers or elements just like in any <code>ggplot</code> object.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-3-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-2-1.png"><!-- --></p>
 <p>By default, <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code> adds a heatmap layer. If the matrix
 has more than 20,000 cells (<code>nrow * ncol &gt; 20000</code>), it uses <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code> for
 performance efficiency; for smaller matrices, <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> is used. You can
@@ -148,22 +148,22 @@ explicitly choose the layer by providing a single string (<code>"raster"</code> 
 <code>"tile"</code>) in the <code>filling</code> argument.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="st">"raster"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-4-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-3-1.png"><!-- --></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="st">"tile"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-5-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-4-1.png"><!-- --></p>
 <p>If you set <code>filling = NULL</code>, a blank heatmap will be drawn, allowing for
 customized filling geoms. In this way, you must set <code>fill</code> mapping manually.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"black"</span>, width <span class="op">=</span> <span class="fl">0.9</span>, height <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-6-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-5-1.png"><!-- --></p>
 <p>A heatmap pie charts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">360L</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">20L</span><span class="op">)</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/geom_pie.html">geom_pie</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="va">value</span> <span class="op">*</span> <span class="fl">360</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-6-1.png"><!-- --></p>
 <p>If you want more complex customization of pie charts, try using
 <code>ggforce::geom_arc_bar()</code> instead.</p>
 <p>You can use external packages like
@@ -175,14 +175,14 @@ image filters that can be applied to ggplot2 layers.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-8-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
 <p>You can rasterize all plots in the layout directly with <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code>.
 This method works for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code>
 objects.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-9-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-8-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="heatmap-annotations">heatmap annotations<a class="anchor" aria-label="anchor" href="#heatmap-annotations"></a>
@@ -228,11 +228,10 @@ bottom since it won’t add a plot area:</p>
 <span>    <span class="co"># we split the observations into 3 groups by kmeans</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-9-1.png"><!-- --></p>
 <p>We can add any <code>align_*()</code> function to the annotation. For more details on
-<code>align_*()</code> functions, refer to
-<a href="https://yunuuuu.github.io/ggalign/dev/articles/layout-customize.html">layout-customize</a> and
-<a href="https://yunuuuu.github.io/ggalign/dev/articles/layout-plot.html">layout-plot</a>.</p>
+<code>align_*()</code> functions, refer to <code><a href="../articles/layout-customize.html">vignette("layout-customize")</a></code> and
+<code><a href="../articles/layout-plot.html">vignette("layout-plot")</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># in the heatmap body, we set the axis text theme</span></span>
@@ -244,7 +243,7 @@ bottom since it won’t add a plot area:</p>
 <span>    <span class="co"># in the dendrogram, we add a point layer</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">branch</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-10-1.png"><!-- --></p>
 <p>In this example:</p>
 <ul>
 <li>
@@ -274,7 +273,7 @@ you can use <code><a href="../reference/quad_active.html">quad_active()</a></cod
 <span>    <span class="co"># set fill color scale for the heatmap body</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-11-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="quad_switchhmanno">
@@ -294,7 +293,7 @@ to use any of these functions to streamline your annotation process.</p>
 <span>    <span class="co"># set fill color scale for the heatmap body</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># we set the active context to the top annotation</span></span>
@@ -306,7 +305,7 @@ to use any of these functions to streamline your annotation process.</p>
 <span>    <span class="co"># set fill color scale for the heatmap body</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-13-1.png"><!-- --></p>
 <p>You may wonder about the prefix <code>quad_</code>. The <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> function is a
 specialized version of <code><a href="../reference/quad_layout.html">quad_layout()</a></code>, designed to simplify the creation of
 heatmap plots by integrating essential elements for a standard heatmap layout.
@@ -328,7 +327,7 @@ Both <code><a href="../reference/quad_active.html">quad_anno()</a></code> and <c
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-14-1.png"><!-- --></p>
 <p>Alternatively, the <code><a href="../reference/quad_active.html">quad_active()</a></code> function allows you to control the heatmap
 body sizes.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -338,7 +337,7 @@ body sizes.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-15-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="annotation-stack-size">Annotation Stack Size<a class="anchor" aria-label="anchor" href="#annotation-stack-size"></a>
@@ -353,7 +352,7 @@ stack.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-16-1.png"><!-- --></p>
 <p>You can also specify it as an absolute size using <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit()</a></code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
@@ -361,7 +360,7 @@ stack.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-18-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-17-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="single-plot-size">Single Plot Size<a class="anchor" aria-label="anchor" href="#single-plot-size"></a>
@@ -381,7 +380,7 @@ the annotation stack.</p>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
-<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-19-1.png"><!-- --></p>
+<p><img src="heatmap-layout_files/figure-html/unnamed-chunk-18-1.png"><!-- --></p>
 </div>
 </div>
 <div class="section level2">
@@ -417,15 +416,14 @@ the annotation stack.</p>
 <span><span class="co">#&gt;  [5] tidyselect_1.2.1   ggbeeswarm_0.7.2   jquerylib_0.1.4    systemfonts_1.1.0 </span></span>
 <span><span class="co">#&gt;  [9] scales_1.3.0       textshaping_0.4.0  yaml_2.3.10        fastmap_1.2.0     </span></span>
 <span><span class="co">#&gt; [13] R6_2.5.1           labeling_0.4.3     generics_0.1.3     knitr_1.49        </span></span>
-<span><span class="co">#&gt; [17] tibble_3.2.1       bookdown_0.41      desc_1.4.3         munsell_0.5.1     </span></span>
-<span><span class="co">#&gt; [21] RColorBrewer_1.1-3 bslib_0.8.0        pillar_1.9.0       rlang_1.1.4       </span></span>
-<span><span class="co">#&gt; [25] utf8_1.2.4         cachem_1.1.0       xfun_0.49          sass_0.4.9        </span></span>
-<span><span class="co">#&gt; [29] viridisLite_0.4.2  cli_3.6.3          withr_3.0.2        magrittr_2.0.3    </span></span>
-<span><span class="co">#&gt; [33] digest_0.6.37      grid_4.4.2         beeswarm_0.4.0     lifecycle_1.0.4   </span></span>
-<span><span class="co">#&gt; [37] vipor_0.4.7        ggrastr_1.0.2      vctrs_0.6.5        evaluate_1.0.1    </span></span>
-<span><span class="co">#&gt; [41] glue_1.8.0         farver_2.1.2       ragg_1.3.3         fansi_1.0.6       </span></span>
-<span><span class="co">#&gt; [45] colorspace_2.1-1   rmarkdown_2.29     tools_4.4.2        pkgconfig_2.0.3   </span></span>
-<span><span class="co">#&gt; [49] htmltools_0.5.8.1</span></span></code></pre></div>
+<span><span class="co">#&gt; [17] tibble_3.2.1       bookdown_0.41      munsell_0.5.1      RColorBrewer_1.1-3</span></span>
+<span><span class="co">#&gt; [21] bslib_0.8.0        pillar_1.9.0       rlang_1.1.4        utf8_1.2.4        </span></span>
+<span><span class="co">#&gt; [25] cachem_1.1.0       xfun_0.49          sass_0.4.9         viridisLite_0.4.2 </span></span>
+<span><span class="co">#&gt; [29] cli_3.6.3          withr_3.0.2        magrittr_2.0.3     digest_0.6.37     </span></span>
+<span><span class="co">#&gt; [33] grid_4.4.2         beeswarm_0.4.0     lifecycle_1.0.4    vipor_0.4.7       </span></span>
+<span><span class="co">#&gt; [37] ggrastr_1.0.2      vctrs_0.6.5        evaluate_1.0.1     glue_1.8.0        </span></span>
+<span><span class="co">#&gt; [41] farver_2.1.2       ragg_1.3.3         fansi_1.0.6        colorspace_2.1-1  </span></span>
+<span><span class="co">#&gt; [45] rmarkdown_2.29     tools_4.4.2        pkgconfig_2.0.3    htmltools_0.5.8.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
