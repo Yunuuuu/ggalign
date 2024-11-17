@@ -68,7 +68,7 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
 
 #' @export
 ggoncoplot.NULL <- function(data = NULL, mapping = aes(), ...) {
-    cli::cli_abort("{.fn ggoncoplot} only accept a valid character matrix")
+    cli_abort("{.fn ggoncoplot} only accept a valid character matrix")
 }
 
 #' @export
@@ -89,7 +89,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     # prepare the matrix
     data <- fortify_matrix(data = data, ...)
     if (!is.character(data)) {
-        cli::cli_abort("{.arg data} must be a character matrix")
+        cli_abort("{.arg data} must be a character matrix")
     }
 
     assert_bool(reorder_column)
@@ -115,7 +115,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     } else if (!is.null(filling)) {
         filling <- arg_match0(filling, c("tile", "raster"))
         if (filling == "raster") {
-            cli::cli_warn("Cannot use {.fn geom_raster} in oncoplot")
+            cli_warn("Cannot use {.fn geom_raster} in oncoplot")
             filling <- "tile"
         }
     }
@@ -169,14 +169,14 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         )
         if (!is.null(map_width)) {
             if (!rlang::is_named(map_width) || !is.numeric(map_width)) {
-                cli::cli_abort("{.arg map_width} must be a named numeric")
+                cli_abort("{.arg map_width} must be a named numeric")
             }
         } else {
             tile_mapping$width <- NULL
         }
         if (!is.null(map_height)) {
             if (!rlang::is_named(map_height) || !is.numeric(map_height)) {
-                cli::cli_abort("{.arg map_height} must be a named numeric")
+                cli_abort("{.arg map_height} must be a named numeric")
             }
         } else {
             tile_mapping$height <- NULL

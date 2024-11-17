@@ -28,7 +28,7 @@ align_initialize <- function(align, direction, position,
             if (is.null(layout_nobs)) {
                 layout_nobs <- NROW(data)
             } else if (NROW(data) != layout_nobs) {
-                cli::cli_abort(paste(
+                cli_abort(paste(
                     "{.arg data} must have compatible",
                     "observations with the layout"
                 ), call = call)
@@ -95,22 +95,22 @@ align_initialize_layout <- function(object, layout_nobs, direction,
     new_panel <- .subset2(layout, 1L)
     if (!is.null(new_panel)) {
         if (anyNA(new_panel)) {
-            cli::cli_abort(
+            cli_abort(
                 "{.fn {snake_class(object)}}: find `NA` in layout panel",
                 call = call
             )
         } else if (!is.atomic(new_panel)) {
-            cli::cli_abort(c(
+            cli_abort(c(
                 "{.fn {snake_class(object)}}: invalid layout panel",
                 i = "layout panel must be an atomic vector"
             ), call = call)
         } else if (is.null(layout_nobs) || length(new_panel) != layout_nobs) {
-            cli::cli_abort(paste(
+            cli_abort(paste(
                 "layout panel of {.fn {snake_class(object)}}",
                 "is not compatible with {axis}-axis"
             ), call = call)
         } else if (!is.null(layout_panel) && !(new_panel %nest% layout_panel)) {
-            cli::cli_abort(paste0(
+            cli_abort(paste0(
                 "{.fn {snake_class(object)}} disrupt the previously ",
                 "established panel groups of the layout {axis}-axis"
             ), call = call)
@@ -125,17 +125,17 @@ align_initialize_layout <- function(object, layout_nobs, direction,
     new_index <- .subset2(layout, 2L)
     if (!is.null(new_index)) {
         if (anyNA(new_index)) {
-            cli::cli_abort(
+            cli_abort(
                 "{.fn {snake_class(object)}}: find `NA` in layout index",
                 call = call
             )
         } else if (!is.integer(new_index)) {
-            cli::cli_abort(c(
+            cli_abort(c(
                 "{.fn {snake_class(object)}}: invalid layout index",
                 i = "layout index must be integer"
             ), call = call)
         } else if (is.null(layout_nobs) || length(new_index) != layout_nobs) {
-            cli::cli_abort(paste(
+            cli_abort(paste(
                 "layout index of {.fn {snake_class(object)}}",
                 "is not compatible with {axis}-axis"
             ), call = call)
@@ -152,7 +152,7 @@ align_initialize_layout <- function(object, layout_nobs, direction,
 
     # we always prevent from reordering layout twice.
     if (!is.null(layout_index) && !all(layout_index == new_index)) {
-        cli::cli_abort(paste0(
+        cli_abort(paste0(
             "{.fn {snake_class(object)}} disrupt the previously ",
             "established ordered index of the layout ",
             axis, "-axis"
@@ -178,9 +178,9 @@ abort_no_layout_data <- function(data, object_name = NULL, call = NULL) {
             )
         }
         if (is.null(call)) {
-            cli::cli_abort(msg)
+            cli_abort(msg)
         } else {
-            cli::cli_abort(msg, call = call)
+            cli_abort(msg, call = call)
         }
     }
 }

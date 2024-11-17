@@ -47,7 +47,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # filter `plots` based on the design areas --------------------
         if (vec_size(design) < vec_size(patches)) {
-            cli::cli_warn(
+            cli_warn(
                 "Too few patch areas to hold all plots. Dropping plots"
             )
             plots <- vec_slice(patches, vec_seq_along(design))

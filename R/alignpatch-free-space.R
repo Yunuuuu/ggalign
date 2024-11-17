@@ -10,7 +10,7 @@ free_space <- function(plot, spaces = "tlbr") {
 
 #' @export
 free_space.default <- function(plot, spaces = "tlbr") {
-    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @export

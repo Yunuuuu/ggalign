@@ -70,7 +70,7 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
 # for objects should only be added with `+`
 #' @export
 stack_layout_subtract.layout_title <- function(object, stack, object_name) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "Cannot use {.code -} to add {.obj_type_friendly {object}}",
         i = "Try to use {.code +} instead"
     ))
@@ -93,7 +93,7 @@ stack_layout_subtract.quad_init <- stack_layout_subtract.ggplot
 
 #' @export
 stack_layout_subtract.Align <- function(object, stack, object_name) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "Cannot use {.code -} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))
@@ -135,7 +135,7 @@ stack_layout_and_add.theme <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_and_add.layout_title <- function(object, stack, object_name) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "Cannot use {.code &} to add {.obj_type_friendly {object}}",
         i = "Try to use {.code +} instead"
     ))
@@ -149,7 +149,7 @@ stack_layout_and_add.free_gg <- stack_layout_and_add.layout_title
 
 #' @export
 stack_layout_and_add.Align <- function(object, stack, object_name) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "Cannot use {.code &} to add {.fn {snake_class(object)}}",
         i = "Try to use {.code +} instead"
     ))

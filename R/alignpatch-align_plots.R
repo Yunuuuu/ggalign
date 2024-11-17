@@ -71,7 +71,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     design <- as_areas(design)
     for (plot in plots) {
         if (!has_method(plot, "alignpatch", default = FALSE)) {
-            cli::cli_abort("Cannot align {.obj_type_friendly {plot}}")
+            cli_abort("Cannot align {.obj_type_friendly {plot}}")
         }
     }
 
@@ -121,7 +121,7 @@ new_alignpatches <- function(plots, layout = NULL,
 #' @export
 `+.alignpatches` <- function(e1, e2) {
     if (missing(e2)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             "Cannot use {.code +} with a single argument.",
             "i" = "Did you accidentally put {.code +} on a new line?"
         ))

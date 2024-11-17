@@ -115,7 +115,7 @@ quad_free.default <- function(data = NULL, mapping = aes(),
 
 #' @export
 quad_free.uneval <- function(data, ...) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn quad_free}"
     ))
@@ -173,7 +173,7 @@ quad_alignh.default <- function(data = NULL, mapping = aes(),
 
 #' @export
 quad_alignh.uneval <- function(data, ...) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn quad_alignh}"
     ))
@@ -214,7 +214,7 @@ quad_alignv.default <- function(data = NULL, mapping = aes(),
 
 #' @export
 quad_alignv.uneval <- function(data, ...) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn quad_alignv}"
     ))
@@ -257,7 +257,7 @@ quad_alignb.default <- function(data = NULL, mapping = aes(),
 
 #' @export
 quad_alignb.uneval <- function(data, ...) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn quad_alignb}"
     ))
@@ -335,7 +335,7 @@ methods::setClass(
 #' @rdname layout-operator
 methods::setMethod("Ops", c("QuadLayout", "ANY"), function(e1, e2) {
     if (missing(e2)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             "Cannot use {.code {.Generic}} with a single argument.",
             "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
         ))

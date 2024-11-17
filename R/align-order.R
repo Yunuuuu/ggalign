@@ -41,7 +41,7 @@ align_order <- function(weights = rowMeans, ...,
         (is.character(weights) && !inherits(weights, "AsIs"))) {
         # vec_duplicate_any is slight faster than `anyDuplicated`
         if (vec_any_missing(weights) || vec_duplicate_any(weights)) {
-            cli::cli_abort(paste(
+            cli_abort(paste(
                 "{.arg order} must be an ordering numeric or character",
                 "without missing value or ties"
             ))
@@ -49,7 +49,7 @@ align_order <- function(weights = rowMeans, ...,
             weights <- vec_cast(weights, integer())
         }
         if (!is.null(data) && !is.waive(data)) {
-            cli::cli_warn(c(
+            cli_warn(c(
                 "{.arg data} won't be used",
                 i = "{.arg order} is not a {.cls function}"
             ))
@@ -104,7 +104,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
             data <- .subset2(self, "data")
             ans <- inject(weights(data, !!!weights_params))
             if (!is_atomic(ans)) {
-                cli::cli_abort(
+                cli_abort(
                     "{.arg weights} must return an atomic weights",
                     call = .subset2(self, "call")
                 )
@@ -130,7 +130,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
                 call = .subset2(self, "call")
             )
             if (vec_duplicate_any(index)) {
-                cli::cli_abort(
+                cli_abort(
                     "find ties in the ordering index {.arg weights}",
                     call = .subset2(self, "call")
                 )

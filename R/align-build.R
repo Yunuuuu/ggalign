@@ -107,14 +107,14 @@ align_melt_facet <- function(user_facet, default_facet, direction) {
         } else if (is_horizontal(direction)) {
             # for horizontal stack, we cannot facet by rows
             if (!is.null(params$rows)) {
-                cli::cli_warn(
+                cli_warn(
                     "Canno facet by rows in {.field {direction}} stack"
                 )
                 params$rows <- NULL
             }
         } else if (!is.null(params$cols)) {
             # for vertical stack, we cannot facet by cols
-            cli::cli_warn("Canno facet by cols in {.field {direction}} stack")
+            cli_warn("Canno facet by cols in {.field {direction}} stack")
             params$cols <- NULL
         }
         ggproto(NULL, user_facet, params = params)

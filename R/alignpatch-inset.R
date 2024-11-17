@@ -30,7 +30,7 @@ make_inset <- function(plot, ..., align, on_top, clip, vp,
     assert_bool(clip, call = call)
     assert_s3_class(vp, "viewport", allow_null = TRUE, call = call)
     if (!is.grob(grob <- patch(x = plot, ...))) {
-        cli::cli_abort("{.fn patch} must return a {.cls grob}", call = call)
+        cli_abort("{.fn patch} must return a {.cls grob}", call = call)
     }
     attr(grob, "align") <- align
     attr(grob, "clip") <- if (clip) "on" else "off"
@@ -77,7 +77,7 @@ patch <- function(x, ...) {
 # Following methods much are copied from `cowplot` or `ggplotify`
 #' @export
 patch.default <- function(x, ...) {
-    cli::cli_abort("Cannot make grob from {.obj_type_friendly {x}}")
+    cli_abort("Cannot make grob from {.obj_type_friendly {x}}")
 }
 
 #' @inherit patch title description return

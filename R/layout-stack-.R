@@ -167,7 +167,7 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
 # Added to avoid `aes()` end in `stack_free.default`
 #' @export
 stack_free.uneval <- function(data, ...) {
-    cli::cli_abort(c(
+    cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn stack_free}"
     ))
@@ -226,7 +226,7 @@ methods::setClass(
 #' @rdname layout-operator
 methods::setMethod("Ops", c("StackLayout", "ANY"), function(e1, e2) {
     if (missing(e2)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             "Cannot use {.code {.Generic}} with a single argument.",
             "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
         ))

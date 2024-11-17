@@ -144,7 +144,7 @@ free_align.free_align <- function(plot, axes = "tlbr") {
 
 #' @export
 free_align.default <- function(plot, axes = "tlbr") {
-    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent

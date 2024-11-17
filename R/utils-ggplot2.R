@@ -387,7 +387,7 @@ theme_element_lapply <- function(.theme, .element, .fn, ...,
 identity_trans <- function(scale) {
     # for continuous scale, we don't allow the trans
     if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
-        cli::cli_warn(sprintf(
+        cli_warn(sprintf(
             "{.arg trans} must be {.field identity} in {.code %s}",
             deparse(scale$call)
         ))
@@ -399,7 +399,7 @@ identity_trans <- function(scale) {
 get_breaks <- function(scale, layout_breaks, layout_labels) {
     breaks <- scale$breaks
     if (identical(breaks, NA)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             "Invalid {.arg breaks} specification.",
             i = "Use {.code NULL}, not {.code NA}."
         ), call = scale$call)
@@ -444,7 +444,7 @@ get_labels <- function(scale, breaks, layout_labels) {
     }
 
     if (identical(labels, NA)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             "Invalid {.arg labels} specification.",
             i = "Use {.code NULL}, not {.code NA}."
         ), call = scale$call)

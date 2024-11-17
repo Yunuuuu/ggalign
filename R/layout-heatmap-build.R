@@ -12,10 +12,10 @@ quad_build.HeatmapLayout <- function(quad, controls = quad@controls) {
         }
         if (is.waive(filling)) {
             if (nrow(quad@data) * ncol(quad@data) > 20000L) {
-                cli::cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
+                cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
                 filling <- "raster"
             } else {
-                cli::cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
+                cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
                 filling <- "tile"
             }
         }

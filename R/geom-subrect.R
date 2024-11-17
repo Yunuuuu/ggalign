@@ -79,7 +79,7 @@ GeomSubrect <- ggproto(
         data_list <- vec_chop(data, indices = .subset2(indices, "loc"))
         max_n_tiles <- max(list_sizes(data_list))
         if (max_n_tiles == 1L) return(data) # styler: off
-        cli::cli_inform(paste(
+        cli_inform(paste(
             "{.fn {snake_class(self)}} subdivide tile into a maximal",
             "of {max_n_tiles} rectangles"
         ))

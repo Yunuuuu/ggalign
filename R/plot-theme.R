@@ -134,13 +134,13 @@ default_theme <- function() {
     }
     if (is.function(ans <- allow_lambda(ans))) {
         if (!inherits(ans <- rlang::exec(ans), "theme")) {
-            cli::cli_abort(c(
+            cli_abort(c(
                 "{.arg {opt}} must return a {.fn theme} object",
                 i = "You have provided {.obj_type_friendly {ans}}"
             ))
         }
     } else {
-        cli::cli_abort(c(
+        cli_abort(c(
             "{.arg {opt}} must be a {.cls function}",
             i = "You have provided {.obj_type_friendly {ans}}"
         ))
@@ -170,7 +170,7 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
                           title = TRUE, line = FALSE) {
     assert_string(axes, empty_ok = FALSE)
     if (grepl("[^tlbrxy]", axes)) {
-        cli::cli_abort(sprintf(
+        cli_abort(sprintf(
             "{.arg axes} can only contain the %s characters",
             oxford_and(c(.tlbr, "x", "y"))
         ))

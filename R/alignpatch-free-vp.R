@@ -12,7 +12,7 @@ free_vp <- function(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...) {
 #' @export
 free_vp.default <- function(plot, x = 0.5, y = 0.5,
                             width = NA, height = NA, ...) {
-    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 #' @export

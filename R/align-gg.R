@@ -125,7 +125,7 @@ ggalign <- align_gg
 AlignGG <- ggproto("AlignGG", Align,
     nobs = function(self) {
         axis <- to_coord_axis(.subset2(self, "direction"))
-        cli::cli_abort(c(
+        cli_abort(c(
             "You cannot add {.fn {snake_class(self)}}",
             i = "layout {axis}-axis is not initialized or you must provide {.arg data}"
         ), call = .subset2(self, "call"))

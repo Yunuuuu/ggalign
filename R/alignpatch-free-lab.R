@@ -43,7 +43,7 @@ free_lab.free_lab <- function(plot, labs = "tlbr") {
 
 #' @export
 free_lab.default <- function(plot, labs = "tlbr") {
-    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 ####################################################

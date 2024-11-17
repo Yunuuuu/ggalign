@@ -72,7 +72,7 @@ plot_add.plot_data <- function(option, plot) {
         !is.null(raw_data <- .subset2(plot, "data"))) {
         # To be compatible with ggplot2, it must be a data frame
         if (!is.data.frame(data <- plot_data(raw_data))) {
-            cli::cli_abort("{.fn plot_data} must return a {.cls data.frame}")
+            cli_abort("{.fn plot_data} must return a {.cls data.frame}")
         }
         plot$data <- data
     }

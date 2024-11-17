@@ -52,7 +52,7 @@ free_border.free_border <- function(plot, borders = "tlbr") {
 
 #' @export
 free_border.default <- function(plot, borders = "tlbr") {
-    cli::cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
 }
 
 ################################################################

@@ -218,7 +218,7 @@ scale_draw_manual <- function(..., values, aesthetics = "draw",
 
 # `draw` should be provided manually
 scale_draw_discrete <- function(name = waiver(), ...) {
-    cli::cli_abort(
+    cli_abort(
         "You must provide {.field draw} scale with {.fn scale_draw_manual}"
     )
 }

@@ -26,7 +26,7 @@ fortify_stack.NULL <- function(data, ...) NULL
 
 #' @export
 fortify_stack.function <- function(data, ...) {
-    cli::cli_abort("Cannot use function in {.field stack} layout")
+    cli_abort("Cannot use function in {.field stack} layout")
 }
 
 #' @export
@@ -34,7 +34,7 @@ fortify_stack.formula <- fortify_stack.function
 
 #' @export
 fortify_stack.default <- function(data, ...) {
-    cli::cli_abort(paste0(
+    cli_abort(paste0(
         "{.arg data} must be a a numeric or character vector, a matrix, ",
         "a data frame, or an object coercible by {.fn fortify_stack}"
     ))

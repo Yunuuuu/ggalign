@@ -61,10 +61,10 @@ area <- function(t, l, b = t, r = l) {
             r = vec_cast(r, integer())
         )
         if (any(.subset2(one_area, "t") > .subset2(one_area, "b"))) {
-            cli::cli_abort("{.arg t} must be less than {.arg b}")
+            cli_abort("{.arg t} must be less than {.arg b}")
         }
         if (any(.subset2(one_area, "l") > .subset2(one_area, "r"))) {
-            cli::cli_abort("{.arg l} must be less than {.arg r}")
+            cli_abort("{.arg l} must be less than {.arg r}")
         }
     }
     new_areas(one_area)
@@ -106,7 +106,7 @@ as_areas <- function(x) UseMethod("as_areas")
 
 #' @export
 as_areas.default <- function(x) {
-    cli::cli_abort("Cannot convert {.obj_type_friendly {x}} into a design area")
+    cli_abort("Cannot convert {.obj_type_friendly {x}} into a design area")
 }
 
 #' @export
@@ -127,7 +127,7 @@ as_areas.character <- function(x) {
     ncols <- list_sizes(x)
     ncol <- .subset(ncols, 1L)
     if (any(ncols != ncol)) {
-        cli::cli_abort("character layout must be rectangular", call = call)
+        cli_abort("character layout must be rectangular", call = call)
     }
     row <- rep(seq_along(x), each = ncol)
     col <- rep(seq_len(ncol), length(x))
@@ -148,7 +148,7 @@ as_areas.character <- function(x) {
         r <- .subset(area_cols, 2L)
         if (!all(x[row >= t & row <= b & col >= l & col <= r] ==
             x[.subset(i, 1L)])) {
-            cli::cli_abort("Patch areas must be rectangular", call = call)
+            cli_abort("Patch areas must be rectangular", call = call)
         }
         new_areas(list(t = t, l = l, b = b, r = r))
     })

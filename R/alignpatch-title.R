@@ -55,7 +55,7 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     } else if (inherits(text, "element_text")) {
         text <- merge_element(text, old_text)
     } else {
-        cli::cli_abort(paste(
+        cli_abort(paste(
             "Theme element {.var plot.patch_title} must be a",
             "{.cls element_text}."
         ), call = quote(theme()))
@@ -83,7 +83,7 @@ setup_patch_titles <- function(table, patch_titles, theme) {
             } else if (inherits(el, "element_text")) {
                 el <- merge_element(el, text)
             } else {
-                cli::cli_abort(paste(
+                cli_abort(paste(
                     "Theme element {.var {name}} must have",
                     "class {.cls element_text}."
                 ), call = quote(theme()))

@@ -40,7 +40,7 @@ layer_order <- function(layer, order = 0) {
 #' @export
 ggplot_add.layer_order <- function(object, plot, object_name) {
     if (is.null(params <- attr(object, "layer_order"))) {
-        cli::cli_abort("Invalid {.cls layer_order} object")
+        cli_abort("Invalid {.cls layer_order} object")
     }
     # ggplot2 will do something special for the layer
     # add layer_name, we re-call the method for the layer

@@ -36,7 +36,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
         ans <- try_fetch(
             stats::as.hclust(method),
             error = function(cnd) {
-                cli::cli_abort(paste(
+                cli_abort(paste(
                     "{.arg method} can only be a {.cls string},",
                     "{.cls function} or an object which can be coerced to",
                     "{.cls hclust}."
@@ -57,7 +57,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
         ans <- try_fetch(
             stats::as.hclust(ans),
             error = function(cnd) {
-                cli::cli_abort(paste(
+                cli_abort(paste(
                     "{.arg method} must return an object which",
                     "can be coerced to {.cls hclust}"
                 ), parent = cnd)
@@ -88,11 +88,11 @@ make_dist <- function(matrix, distance, use_missing,
             kendall = stats::as.dist(
                 1 - stats::cor(t(matrix), use = use_missing, method = distance)
             ),
-            cli::cli_abort("Unsupported {.arg {arg}} specified", call = call)
+            cli_abort("Unsupported {.arg {arg}} specified", call = call)
         )
     } else if (is.function(distance)) {
         if (!inherits(d <- distance(matrix), "dist")) {
-            cli::cli_abort(
+            cli_abort(
                 "{.arg {arg}} must return a {.cls dist} object",
                 call = call
             )
@@ -100,7 +100,7 @@ make_dist <- function(matrix, distance, use_missing,
     } else if (inherits(distance, "dist")) {
         d <- distance
     } else {
-        cli::cli_abort(paste(
+        cli_abort(paste(
             "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
             "object, or a {.cls function} return {.cls dist}"
         ), call = call)
@@ -176,7 +176,7 @@ dendrogram_data <- function(tree,
     if (is.null(leaf_pos)) {
         leaf_pos <- seq_len(N)
     } else if (length(leaf_pos) != N) {
-        cli::cli_abort(
+        cli_abort(
             "{.arg leaf_pos} must be of the same length of {.arg tree}"
         )
     }
@@ -185,9 +185,9 @@ dendrogram_data <- function(tree,
     if (is.null(leaf_braches)) {
         root <- root %||% "root"
     } else if (anyNA(leaf_braches)) {
-        cli::cli_abort("`NA` is not allowed in {.arg leaf_braches}")
+        cli_abort("`NA` is not allowed in {.arg leaf_braches}")
     } else if (length(leaf_braches) != N) {
-        cli::cli_abort(
+        cli_abort(
             "{.arg leaf_braches} must be of the same length of {.arg tree}"
         )
     } else if (is.character(leaf_braches)) {
@@ -198,7 +198,7 @@ dendrogram_data <- function(tree,
     } else if (is.numeric(leaf_braches)) {
         root <- root %||% (min(leaf_braches) - 1L)
     } else {
-        cli::cli_abort("{.arg leaf_braches} must be a character or numeric")
+        cli_abort("{.arg leaf_braches} must be a character or numeric")
     }
 
     if (!is.null(leaf_braches) && reorder_branches) {
@@ -209,21 +209,21 @@ dendrogram_data <- function(tree,
     # and the length must be equal to `length(unique(leaf_braches)) - 1L`
     if (is.numeric(branch_gap)) {
         if (!is_scalar(branch_gap)) {
-            cli::cli_abort("{.arg branch_gap} must be of length 1")
+            cli_abort("{.arg branch_gap} must be of length 1")
         }
     } else if (is.null(branch_gap)) {
         branch_gap <- 0
     } else {
-        cli::cli_abort("{.arg branch_gap} must be numeric value.")
+        cli_abort("{.arg branch_gap} must be numeric value.")
     }
 
     # the root value shouldn't be the same of leaf branches.
     if (!is_scalar(root)) {
-        cli::cli_abort("{.arg root} must be of length 1")
+        cli_abort("{.arg root} must be of length 1")
     } else if (anyNA(root)) {
-        cli::cli_abort("{.arg root} cannot be `NA`")
+        cli_abort("{.arg root} cannot be `NA`")
     } else if (any(root == leaf_braches)) {
-        cli::cli_abort(
+        cli_abort(
             "{.arg root} cannot contain value in {.arg leaf_braches}"
         )
     }
@@ -473,7 +473,7 @@ dendrogram_data <- function(tree,
                 panel = panel, ggpanel = ggpanel
             )
         } else {
-            cli::cli_abort("{.arg dend} must be a {.cls dendrogram} object")
+            cli_abort("{.arg dend} must be a {.cls dendrogram} object")
         }
     }
     ans <- .dendrogram_data(dend)
@@ -542,11 +542,11 @@ reorder_dendrogram <- function(dend, wts) {
 
 cutree_k_to_h <- function(tree, k) {
     if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
-        cli::cli_abort("invalid {.arg tree} ({.field merge} component)")
+        cli_abort("invalid {.arg tree} ({.field merge} component)")
     }
     n <- n1 + 1
     if (is.unsorted(tree$height)) {
-        cli::cli_abort(
+        cli_abort(
             "the 'height' component of 'tree' is not sorted (increasingly)"
         )
     }
@@ -572,7 +572,7 @@ check_dendrogram <- function(tree, arg = caller_arg(tree),
     } else if (inherits(tree, "dendrogram")) {
         tree
     } else {
-        cli::cli_abort(paste(
+        cli_abort(paste(
             "{.arg {arg}} must be a {.cls hclust}",
             "or a {.cls dendrogram} object."
         ), call = call)

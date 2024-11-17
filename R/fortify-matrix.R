@@ -24,7 +24,7 @@ fortify_matrix.default <- function(data, ...) {
     try_fetch(
         as.matrix(data),
         error = function(cnd) {
-            cli::cli_abort(paste0(
+            cli_abort(paste0(
                 "{.arg data} must be a {.cls matrix}, ",
                 "or an object coercible by {.fn fortify_matrix}, or a valid ",
                 "{.cls matrix}-like object coercible by {.fn as.matrix}"

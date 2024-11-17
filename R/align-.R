@@ -110,10 +110,10 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
     all <- align_class$parameters()
     if (isTRUE(check.param)) {
         if (length(extra_param <- vec_set_difference(names(params), all))) { # nolint
-            cli::cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
+            cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
         }
         if (length(missing <- vec_set_difference(all, names(params)))) { # nolint
-            cli::cli_abort("missing parameters: {missing}", call = call)
+            cli_abort("missing parameters: {missing}", call = call)
         }
     }
 
@@ -168,7 +168,7 @@ is_align <- function(x) inherits(x, "align")
 #' @export
 #' @keywords internal
 plot.align <- function(x, ...) {
-    cli::cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
+    cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 
 #' @details
@@ -280,7 +280,7 @@ Align <- ggproto("Align",
 #' @export
 `$<-.Align` <- function(x, name, value) {
     if (.subset2(x, "isLock")) {
-        cli::cli_abort("{.fn {snake_class(x)}} is locked",
+        cli_abort("{.fn {snake_class(x)}} is locked",
             call = .subset2(x, "call")
         )
     }

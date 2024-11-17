@@ -135,14 +135,14 @@ alignpatch <- function(x) UseMethod("alignpatch")
 
 #' @export
 alignpatch.default <- function(x) {
-    cli::cli_abort("Cannot align {.obj_type_friendly {x}}")
+    cli_abort("Cannot align {.obj_type_friendly {x}}")
 }
 
 #' @export
 alignpatch.NULL <- function(x) NULL
 
 abort_no_method <- function(plot, method) {
-    cli::cli_abort("no {.fn {method}} method for {.obj_type_friendly {plot}}")
+    cli_abort("no {.fn {method}} method for {.obj_type_friendly {plot}}")
 }
 
 #' @importFrom ggplot2 ggproto

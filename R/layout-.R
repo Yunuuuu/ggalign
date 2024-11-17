@@ -237,7 +237,7 @@ ggalign_stat.QuadLayout <- function(x, position, ...) {
 #' @rdname ggalign_stat
 ggalign_stat.StackLayout <- function(x, what, ...) {
     if (is.null(ans <- .subset2(x@plots, what))) {
-        cli::cli_abort("Cannot find {what} plot in this stack layout")
+        cli_abort("Cannot find {what} plot in this stack layout")
     }
     ggalign_stat(x = ans, ...)
 }
@@ -249,7 +249,7 @@ ggalign_stat.align <- function(x, ...) {
 
 #' @export
 ggalign_stat.default <- function(x, ...) {
-    cli::cli_abort("no statistics found for {.obj_type_friendly {x}}")
+    cli_abort("no statistics found for {.obj_type_friendly {x}}")
 }
 
 ####################################################

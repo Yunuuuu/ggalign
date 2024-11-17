@@ -105,7 +105,7 @@ align_dendro <- function(mapping = aes(), ...,
     if (!rlang::is_bool(reorder_dendrogram) &&
         !is.null(reorder_dendrogram) &&
         !is.function(reorder_dendrogram)) {
-        cli::cli_abort(
+        cli_abort(
             "{.arg reorder_dendrogram} must be a single boolean value or a function"
         )
     }
@@ -190,7 +190,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 if (!inherits(tree, "hclust")) tree <- stats::as.hclust(tree)
                 ans <- user_reorder(tree, data)
                 if (!inherits(ans, "hclust") && !inherits(ans, "dendrogram")) {
-                    cli::cli_abort(
+                    cli_abort(
                         "{.fn reorder_dendrogram} must return a {.cls hclust} or {.cls dendrogram} object",
                         call = call
                     )
@@ -227,7 +227,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                        reorder_dendrogram, k = NULL, h = NULL, cutree = NULL) {
         data <- .subset2(self, "data")
         if (!is.null(data) && nrow(data) < 2L) {
-            cli::cli_abort(c(
+            cli_abort(c(
                 "Cannot do Hierarchical Clustering",
                 i = "must have >= 2 observations to cluster"
             ), call = .subset2(self, "call"))
@@ -235,7 +235,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(k) && is.null(h) && is.null(cutree)) {
             if (is.null(data)) {
-                cli::cli_abort(c(
+                cli_abort(c(
                     "Cannot do sub-clustering",
                     i = "Try to provide the {.arg data}"
                 ), call = .subset2(self, "call"))
@@ -412,7 +412,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             # we can change the panel level name, but we prevent
             # from changing the underlying factor level
             !all(as.integer(dendrogram_panel) == as.integer(panel))) {
-            cli::cli_abort("you cannot do sub-splitting in dendrogram groups")
+            cli_abort("you cannot do sub-splitting in dendrogram groups")
         }
 
         if (self$multiple_tree) {
@@ -447,7 +447,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
             })
         } else {
             if (nlevels(panel) > 1L && type == "triangle") {
-                cli::cli_warn(c(paste(
+                cli_warn(c(paste(
                     "{.arg type} of {.arg triangle}",
                     "is not well support for facet dendrogram"
                 ), i = "will use {.filed rectangle} dendrogram instead"))

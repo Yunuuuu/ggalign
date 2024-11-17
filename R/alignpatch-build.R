@@ -20,12 +20,12 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
                 deparse(conditionCall(e)[[1L]]) == "grid.Call") {
                 error_name <- obj_type_friendly(x)
                 if (Sys.getenv("RSTUDIO") == "1") {
-                    cli::cli_abort(c(paste(
+                    cli_abort(c(paste(
                         "The RStudio {.field Plots} window may be",
                         "too small to show", error_name
                     ), i = "Please make the window larger."), parent = e)
                 } else {
-                    cli::cli_abort(c(
+                    cli_abort(c(
                         "The viewport may be too small to show {error_name}.",
                         i = "Please make the window larger."
                     ), parent = e)

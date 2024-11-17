@@ -54,7 +54,7 @@ quad_active <- function(width = NULL, height = NULL) {
 quad_anno <- function(position, size = NULL, free_guides = waiver(),
                       what = waiver()) {
     if (is.null(position)) {
-        cli::cli_abort(c(
+        cli_abort(c(
             paste(
                 "{.arg position} must be a single string of",
                 "{oxford_or(.TLBR)}, not `NULL`"
@@ -151,7 +151,7 @@ quad_switch_anno <- function(position, size, free_guides, what,
 #' @export
 quad_init <- function(position, data = waiver(), ...) {
     if (is.null(position)) {
-        cli::cli_abort(paste(
+        cli_abort(paste(
             "{.arg position} must be a single string of",
             "{oxford_or(.TLBR)}, not `NULL`"
         ))
