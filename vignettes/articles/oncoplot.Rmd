@@ -381,6 +381,25 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     scale_fill_brewer("Ti/Tv", palette = "Set2")
 ```
 
+# Integration with GISTIC results from maftools
+The package also includes a `fortify_matrix.GISTIC()` method designed to handle
+`GISTIC` objects from the `maftools` package. This allows you to seamlessly
+apply the same operations to visualize `GISTIC` results.
+```{r eval=can_read_maf}
+# Ensure the maftools package is installed and load the example GISTIC data
+all.lesions <- system.file("extdata", "all_lesions.conf_99.txt", package = "maftools")
+amp.genes <- system.file("extdata", "amp_genes.conf_99.txt", package = "maftools")
+del.genes <- system.file("extdata", "del_genes.conf_99.txt", package = "maftools")
+scores.gistic <- system.file("extdata", "scores.gistic", package = "maftools")
+laml.gistic <- maftools::readGistic(
+    gisticAllLesionsFile = all.lesions, gisticAmpGenesFile = amp.genes,
+    gisticDelGenesFile = del.genes, gisticScoresFile = scores.gistic
+)
+ggoncoplot(laml.gistic) +
+    scale_fill_brewer("CNV", palette = "Dark2", na.translate = FALSE) +
+    theme_no_axes("x")
+```
+
 # Session information
 ```{r}
 sessionInfo()

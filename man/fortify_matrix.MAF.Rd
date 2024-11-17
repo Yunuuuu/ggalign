@@ -58,6 +58,7 @@ summary. See \code{maftools::titv()} for details.
 
 \seealso{
 Other fortify_matrix methods: 
+\code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.default}()}
 }
 \concept{fortify_matrix methods}

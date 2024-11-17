@@ -19,6 +19,7 @@ By default, it calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 }
 \seealso{
 Other fortify_matrix methods: 
+\code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.MAF}()}
 }
 \concept{fortify_matrix methods}

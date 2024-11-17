@@ -231,7 +231,90 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         gene_summary = gene_summary,
         # gene_summary = gene_summary,
         sample_anno = sample_anno,
-        n_genes = n_genes, n_samples = n_samples,
+        n_samples = n_samples, n_genes = n_genes,
         titv = titv, .__ggalign_oncoplot_breaks__ = lvls
     ))
+}
+
+#' @inherit fortify_matrix.default
+#' @inheritParams fortify_matrix.default
+#' @param ... Not used currently.
+#' @param n_top A single number indicates how many top bands to be drawn.
+#' @param bands An atomic character defines the bands to draw.
+#' @param ignored_bands An atomic character defines the bands to be ignored.
+#' @param sample_anno A data frame of sample clinical features to be added.
+#' @param remove_empty_samples A single boolean value indicating whether to drop
+#' samples without any genomic alterations.
+#' @section ggalign attributes:
+#'  - `sample_anno`: sample clinical informations provided in `sample_anno`.
+#'  - `sample_summary`: sample copy number summary informations. See
+#'    `data@@cnv.summary` for details.
+#'  - `cytoband_summary`: cytoband summary informations. See
+#'    `data@@cytoband.summary` for details.
+#'  - `gene_summary`: gene summary informations. See
+#'    `data@@gene.summary` for details.
+#'  - `summary`: A data frame of summary information. See `data@@summary` for
+#'    details.
+#' @family fortify_matrix methods
+#' @export
+fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
+                                  ignored_bands = NULL, sample_anno = NULL,
+                                  remove_empty_samples = TRUE) {
+    cn_mat <- data@cnMatrix
+    if (is.null(bands)) {
+        bands <- rownames(cn_mat)
+    } else {
+        bands <- intersect(bands, rownames(cn_mat))
+    }
+    if (!is.null(ignored_bands)) {
+        bands <- setdiff(bands, ignored_bands)
+    }
+    if (!is.null(bands)) {
+        cn_mat <- vec_slice(cn_mat, rownames(cn_mat) %in% bands)
+    }
+    if (!is.null(n_top)) {
+        cn_mat <- vec_slice(cn_mat, seq_len(min(n_top, nrow(cn_mat))))
+    }
+    if (remove_empty_samples) {
+        keep <- colSums(cn_mat != "") > 0L
+        cn_mat <- cn_mat[, keep, drop = FALSE]
+    }
+    if (!is.null(sample_anno)) {
+        loc <- vec_locate_matches(
+            colnames(cn_mat),
+            .subset2(sample_anno, "Tumor_Sample_Barcode") %||%
+                sample_anno[[1L]],
+            relationship = "one-to-one",
+            needles_arg = "data",
+            haystack_arg = "sample_anno"
+        )
+        sample_anno <- vec_slice(sample_anno, .subset2(loc, "haystack"))
+    }
+    sample_summary <- new_data_frame(data@cnv.summary)
+    sample_summary <- vec_slice(
+        sample_summary,
+        vec_as_location(
+            colnames(cn_mat),
+            n = vec_size(sample_summary),
+            names = vec_cast(sample_summary$Tumor_Sample_Barcode, character())
+        )
+    )
+    gene_summary <- new_data_frame(data@gene.summary)
+    cytoband_sumamry <- new_data_frame(data@cytoband.summary)
+    cytoband_sumamry <- vec_slice(
+        cytoband_sumamry,
+        vec_as_location(
+            rownames(cn_mat),
+            n = vec_size(cytoband_sumamry),
+            names = vec_cast(cytoband_sumamry$Unique_Name, character())
+        )
+    )
+    attrs <- list(
+        sample_anno = sample_anno,
+        sample_summary = sample_summary,
+        cytoband_sumamry = cytoband_sumamry,
+        gene_summary = gene_summary,
+        sumamry = data@summary
+    )
+    ggalign_attr_set(cn_mat, attrs)
 }
