@@ -329,6 +329,7 @@ individual plots.
 In `ggheatmap()`/`quad_layout()`, the behavior of the `free_spaces` and
 `free_labs` arguments differs from `guides` arguments in `plot_align()` when
 inheriting from the parent layout:
+
   - For `top` and `bottom` annotations, it inherits from the left ("l") and
   right ("r") axes.
   - For `left` and `right` annotations, it inherits from the top ("t") and
