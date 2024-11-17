@@ -72,3 +72,85 @@ test_that("`geom_subtile()` works well", {
             geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
     )
 })
+
+test_that("geom_pie works well", {
+    expect_doppelganger(
+        "geom_pie_clockwise",
+        ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
+            geom_pie(aes(x, y, angle = value * 360))
+    )
+    expect_doppelganger(
+        "geom_pie_no_clockwise",
+        ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
+            geom_pie(aes(x, y, angle = value * 360), clockwise = FALSE)
+    )
+    expect_doppelganger(
+        "geom_pie_angle0",
+        ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
+            geom_pie(aes(x, y, angle = value * 360), angle0 = 30)
+    )
+})
+
+test_that("geom_draw() workds well", {
+    library(grid)
+    draw_mapping <- list(
+        function(x, y, width, height, fill) {
+            rectGrob(x, y,
+                width = width, height = height,
+                gp = gpar(fill = fill),
+                default.units = "native"
+            )
+        },
+        function(x, y, width, height, fill) {
+            rectGrob(x, y,
+                width = width, height = height,
+                gp = gpar(fill = fill),
+                default.units = "native"
+            )
+        },
+        function(x, y, width, height, fill) {
+            rectGrob(x, y,
+                width = width, height = height,
+                gp = gpar(fill = fill),
+                default.units = "native"
+            )
+        },
+        function(x, y, width, height, shape) {
+            gList(
+                pointsGrob(x, y, pch = shape),
+                # To ensure the rectangle color is shown in the legends, you
+                # must explicitly provide a color argument and include it in
+                # the `gpar()` of the graphical object
+                rectGrob(x, y, width, height,
+                    gp = gpar(col = "black", fill = NA)
+                )
+            )
+        },
+        function(xmin, xmax, ymin, ymax) {
+            segmentsGrob(
+                xmin, ymin,
+                xmax, ymax,
+                gp = gpar(lwd = 2)
+            )
+        }
+    )
+    expect_doppelganger(
+        "geom_draw",
+        ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
+            geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
+            scale_draw_manual(values = draw_mapping) +
+            scale_fill_brewer(palette = "Dark2")
+    )
+    set.seed(1L)
+    value <- sample(letters, 5L)
+    expect_doppelganger(
+        "geom_draw_order",
+        ggplot(data.frame(
+            value = c(value, value[5L]),
+            y = c(1, 2, 3, 1, 2, 3)
+        )) +
+            geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
+            scale_draw_manual(values = draw_mapping) +
+            scale_fill_brewer(palette = "Dark2")
+    )
+})
