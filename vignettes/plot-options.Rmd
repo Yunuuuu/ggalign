@@ -19,8 +19,9 @@ be applied either globally to all plots in the layout or individually to
 specific plots.
 
  - To apply a plot option to a single plot, use the `+` operator.
- - To set a plot option at the layout level, use the `-` operator. plot options
- at layout-level will be inherited by all plots in the layout.
+ - To set a plot option at the layout level, use the `-` operator. Plot options
+ set at the layout level will be inherited by all plots when rendering the
+ layout.
 
 >Plot options inherit properties from parent layout options hierarchically.
 
