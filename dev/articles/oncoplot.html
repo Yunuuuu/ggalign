@@ -517,7 +517,25 @@ vignette</a>.</p>
 <p>The package also includes a <code><a href="../reference/fortify_matrix.GISTIC.html">fortify_matrix.GISTIC()</a></code>
 method designed to handle <code>GISTIC</code> objects from the
 <code>maftools</code> package. This allows you to seamlessly apply the
-same operations to visualize <code>GISTIC</code> results.</p>
+same operations to visualize <code>GISTIC</code> results. The following
+ggalign attributes are generated as part of the analysis:</p>
+<ul>
+<li>
+<code>sample_anno</code>: sample clinical informations provided in
+<code>sample_anno</code> argument.</li>
+<li>
+<code>sample_summary</code>: sample copy number summary
+informations. See <code>data@cnv.summary</code> for details.</li>
+<li>
+<code>cytoband_summary</code>: cytoband summary informations. See
+<code>data@cytoband.summary</code> for details.</li>
+<li>
+<code>gene_summary</code>: gene summary informations. See
+<code>data@gene.summary</code> for details.</li>
+<li>
+<code>summary</code>: A data frame of summary information. See
+<code>data@summary</code> for details.</li>
+</ul>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Ensure the maftools package is installed and load the example GISTIC data</span></span>
 <span><span class="va">all.lesions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"all_lesions.conf_99.txt"</span>, package <span class="op">=</span> <span class="st">"maftools"</span><span class="op">)</span></span>
