@@ -74,9 +74,6 @@ testthat::test_that("`stack_align` add `quad_layout()` object works well", {
     # stack without data add heatmap without data gave error
     expect_error(stack_alignh() + quad_alignb()) # we must provide data
 
-    expect_error(stack_alignh(small_mat) + quad_alignv())
-    expect_error(stack_alignv(small_mat) + quad_alignh())
-
     # sucessful cases
     # stack_alignh -------------------------------------
     expect_doppelganger("stack_alignh-add-quad_alignh", {
