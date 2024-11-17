@@ -55,7 +55,7 @@ ggheatmap(mat) -
     anno_right() +
     align_dendro(aes(color = branch), k = 3)
 
-# to avoid overlapping, we can also collect the guide legends in the 
+# to avoid overlapping, we can also collect the guide legends in the
 # right annotation
 ggheatmap(mat) -
     plot_align(guides = NULL) +
