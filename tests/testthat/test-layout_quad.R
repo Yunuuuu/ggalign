@@ -185,6 +185,62 @@ testthat::test_that("add `align` object works well", {
     )
 })
 
+testthat::test_that("add `with_quad()` works as expected", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    expect_doppelganger(
+        "add_with_quad_default",
+        ggheatmap(small_mat) +
+            anno_left(size = 0.2) +
+            align_dendro() +
+            with_quad(theme(plot.background = element_rect(fill = "red")))
+    )
+    expect_doppelganger(
+        "add_with_quad_set_position_null",
+        ggheatmap(small_mat) +
+            anno_left(size = 0.2) +
+            align_dendro() +
+            with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+    )
+    expect_doppelganger(
+        "subtract_with_quad_default",
+        ggheatmap(small_mat) +
+            anno_left(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_top(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_bottom(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) -
+            with_quad(
+                scale_color_brewer(palette = "Dark2", name = "Top and bottom")
+            )
+    )
+    expect_doppelganger(
+        "subtract_with_quad_set_position",
+        ggheatmap(small_mat) +
+            anno_left(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_top(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_bottom(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) -
+            with_quad(theme(plot.background = element_rect(fill = "red")), "tl")
+    )
+    expect_doppelganger(
+        "subtract_with_quad_set_position_null",
+        ggheatmap(small_mat) +
+            anno_left(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_top(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) +
+            anno_bottom(size = 0.2) +
+            align_dendro(aes(color = branch), k = 3L) -
+            with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+    )
+})
+
 testthat::test_that("`ggsave()` works well", {
     p <- ggheatmap(1:10)
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))

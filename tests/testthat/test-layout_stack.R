@@ -187,6 +187,71 @@ testthat::test_that("add `stack_active` object works well", {
     expect_identical(controls$plot_data, new_plot_data(NULL))
 })
 
+testthat::test_that("add `with_quad()` works as expected", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    expect_doppelganger(
+        "subtract_with_quad_default",
+        stack_alignv(small_mat) +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") +
+            ggheatmap() +
+            anno_top() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            anno_left() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            stack_active() +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") -
+            scale_color_brewer(palette = "Dark2") -
+            with_quad(theme(plot.background = element_rect(fill = "red")))
+    )
+    expect_doppelganger(
+        "subtract_with_quad_set_position_null",
+        stack_alignv(small_mat) +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") +
+            ggheatmap() +
+            anno_top() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            anno_left() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            stack_active() +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") -
+            scale_color_brewer(palette = "Dark2") -
+            with_quad(
+                theme(plot.background = element_rect(fill = "red")), NULL
+            )
+    )
+    expect_doppelganger(
+        "subtract_with_quad_set_position",
+        stack_alignv(small_mat) +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") +
+            ggheatmap() +
+            anno_top() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            anno_left() +
+            align_dendro() +
+            ggtitle("I'm from the nested heatmap") +
+            stack_active() +
+            align_dendro() +
+            ggtitle("I'm from the parent stack") -
+            scale_color_brewer(palette = "Dark2") -
+            with_quad(
+                theme(plot.background = element_rect(fill = "red")), "l"
+            )
+    )
+})
+
 testthat::test_that("`ggsave()` works well", {
     p <- ggstack(matrix(seq_len(81), nrow = 9L), "h") +
         ggheatmap() +
