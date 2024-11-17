@@ -72,11 +72,10 @@ ggoncoplot(mat, reorder_row = FALSE, reorder_column = FALSE) +
 ```
 
 # Advanced Data Handling
-`ggoncoplot()` is built on `ggheatmap()` with a default 
-[`plot_data()`](`r sprintf("%s/articles/plot-options.html", url)`), which splits
-alterations into separate entries for visualization. (See 
-`ggplot2 specification` section in `ggheatmap()` for the input data of
-`plot_data()`): 
+`ggoncoplot()` is built on `ggheatmap()` with a default `plot_data()` (see
+`vignette("plot-options")` for details), which splits alterations into separate
+entries for visualization. (See `ggplot2 specification` section in `ggheatmap()`
+for the input data of `plot_data()`):
 ```{r eval=rlang::is_installed("tidyr")}
 pdata <- function(data) {
     tidyr::separate_longer_delim(data,
