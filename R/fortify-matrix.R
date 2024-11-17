@@ -8,6 +8,7 @@
 #' @seealso
 #' - [`fortify_matrix.default()`]
 #' - [`fortify_matrix.MAF()`]
+#' - [`fortify_matrix.GISTIC()`]
 #' @export
 fortify_matrix <- function(data, ...) {
     rlang::check_dots_used()
