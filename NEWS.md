@@ -2,6 +2,8 @@
 
 ## New features
 
+* new `fortify_matrix.GISTIC` method for `GISTIC` object from `maftools` package.
+
 * `+` operator now will respect `with_quad()`.
 
 * new `ggalign_attr_set()` and `ggalign_attr_get()` for basic operations of attached attribute.
