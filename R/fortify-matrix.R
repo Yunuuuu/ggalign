@@ -260,6 +260,15 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                                   ignored_bands = NULL, sample_anno = NULL,
                                   remove_empty_samples = TRUE) {
+    rlang::check_installed(
+        "maftools",
+        "to make CNV matrix from `GISTIC` object"
+    )
+    assert_number_whole(n_top, allow_null = TRUE)
+    assert_character(bands, allow_null = TRUE)
+    assert_character(ignored_bands, allow_null = TRUE)
+    assert_s3_class(sample_anno, "data.frame", allow_null = TRUE)
+    assert_bool(remove_empty_samples)
     cn_mat <- data@cnMatrix
     if (is.null(bands)) {
         bands <- rownames(cn_mat)
