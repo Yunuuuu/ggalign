@@ -11,7 +11,7 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
             object, plot, object_name
         )
     } else {
-        context <- quad_active_context(object) # nolint
+        context <- quad_with_context(object) # nolint
         direction <- stack@direction
         stack@plots <- lapply(stack@plots, function(plot) {
             if (is_free(plot)) {

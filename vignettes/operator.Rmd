@@ -161,12 +161,15 @@ Want apply elements for plots in both `stack_layout()` and the nested
 `ggheatmap()`/`quad_layout()` at the same time? refer to the following section.
 
 # `with_quad()`
-Along with the `-` operator, `with_quad()` can be used to modify the operated
-context of `ggheatmap()`/`quad_layout()`.
+The `with_quad()` function modifies the application context of elements in
+`ggheatmap()`/`quad_layout()`. It controls how objects like themes, scales, or
+other plot modifications apply to specific annotation stacks or the main plot
+without altering the currently active layout or plot.
 
 This function accepts three arguments:
 
- 1. **x**: The object to be applied using the `-` operator.
+ 1. **x**: An object which can be added to the ggplot, including
+    **plot options** (see `vignette("plot-options")` for details).
  2. **position**: A string containing one or more of 
     `r ggalign:::oxford_and(ggalign:::.tlbr)` specifies the context for applying
     `x`. 
@@ -175,15 +178,32 @@ This function accepts three arguments:
  is not `NULL`.
 
 ## `quad_layout()`
-By default, if the active layout is the `ggheatmap()`/`quad_layout()` itself,
-`with_quad()` won't do something special. But when the active context in
-`ggheatmap()`/`quad_layout()` is set to `top` or `bottom`, by wrapping object
-with `with_quad()`, the `-` operator will apply changes not only to that
-annotation but also to the opposite one (i.e., bottom if top is active, and vice
-versa). The same principle applies to the left and right annotation. In these
-cases, the object will also be applied to the main plot by default unless
-specified by `main` argument otherwise.
+Default Behavior by wrapping object with `with_quad()`:
 
+  - When `ggheatmap()`/`quad_layout()` has no active annotation stack, objects
+  added via `+` or `-` operate normally without `with_quad()`. 
+  - When the active annotation stack is set, `with_quad()` ensures the applied
+  object also modifies: 
+    * The main plot (by default).
+    * Opposite annotation stacks when using `-`.
+
+By wrapping object with `with_quad()`, the `+` operator will apply the object
+not only to the active plot in the annotation stack, but also to the main plot
+unless specified by `main` argument otherwise.
+```{r}
+ggheatmap(small_mat) +
+    # initialize the left annotation
+    anno_left(size = 0.2) +
+    align_dendro() +
+    # apply the object not only to the active plot in the annotation stack, but
+    # also to the main plot
+    with_quad(theme(plot.background = element_rect(fill = "red")))
+```
+
+By wrapping object with `with_quad()`, the `-` operator will apply the object
+not only to that annotation stack but also to the opposite one (i.e., bottom if
+top is active, and vice versa). In these cases, the object will also be applied
+to the main plot by default unless specified by `main` argument otherwise.
 ```{r}
 ggheatmap(small_mat) +
     # initialize the left annotation
@@ -203,28 +223,42 @@ The `position` argument can be a string containing one or more of
 `r ggalign:::oxford_and(ggalign:::.tlbr)`, indicating which annotation stack
 should be used as the context. When the `position` argument is manually set, the
 default value of the `main` argument will be `FALSE`.
+
 ```{r}
 ggheatmap(small_mat) +
     # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
+    # initialize the top annotation
     anno_top(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
+    # initialize the bottom annotation
     anno_bottom(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) -
     # Modify the background of all plots in the left and top annotation
     with_quad(theme(plot.background = element_rect(fill = "red")), "tl")
 ```
 
-Setting `position` to `NULL` removes any active annotation stack, meaning the
-object will apply to all plots in the layout, including annotation stacks: 
+Setting `position` to `NULL` change the context to the
+`ggheatmap()`/`quad_layout()` itself.
+```{r}
+ggheatmap(small_mat) +
+    # initialize the left annotation
+    anno_left(size = 0.2) +
+    align_dendro() +
+    # we apply the theme to the main plot only
+    with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+```
+
 ```{r}
 ggheatmap(small_mat) +
     # initialize the left annotation
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
+    # initialize the top annotation
     anno_top(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
+    # initialize the bottom annotation
     anno_bottom(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) -
     # Modify the background of all plots
@@ -232,7 +266,7 @@ ggheatmap(small_mat) +
 ```
 
 ## `stack_layout()`
-By default, when the active layout is the `stack_layout()` itself, by wrapping
+When the active layout is the `stack_layout()` itself, by default, by wrapping
 object with `with_quad()`, `-` operator will apply changes to all plots along
 the `stack_layout()`, which means if the stack layout is in horizontal, `-`
 operator will also add the element to the left and right annotation, if the
@@ -257,9 +291,12 @@ stack_alignv(small_mat) +
     with_quad(theme(plot.background = element_rect(fill = "red")))
 ```
 
-When the active layout is the nested `ggheatmap()`/`quad_layout()`, the `-`
+`+` operator won't do anything special for when the active layout is the
+`stack_layout()` itself.
+
+When the active layout is the nested `ggheatmap()`/`quad_layout()`, the `+`/`-`
 operator applies the elements to this nested layout, following the same
-principles as for `ggheatmap()`/`quad_layout()`. 
+principles as for `ggheatmap()`/`quad_layout()`.
 
 # Session information
 ```{r}

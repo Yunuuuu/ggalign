@@ -5,10 +5,11 @@ quad_layout_subtract <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    context <- quad_active_context(object)
-    actives <- quad_subtract_actives(context, quad@active)
-    if (is.null(actives)) actives <- c(.TLBR, list(NULL))
-    for (act in actives) {
+    context <- quad_operated_context(
+        quad_with_context(object), quad@active, "-"
+    )
+    if (is.null(context)) context <- c(.TLBR, list(NULL))
+    for (act in context) {
         if (is.null(act)) {
             quad <- quad_body_add(object, quad, object_name)
         } else if (!is.null(slot(quad, act))) {
@@ -23,12 +24,13 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 # for objects can inherit from layout
 #' @export
 quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
-    context <- quad_active_context(object)
-    actives <- quad_subtract_actives(context, quad@active)
-    if (is.null(actives)) {
+    context <- quad_operated_context(
+        quad_with_context(object), quad@active, "-"
+    )
+    if (is.null(context)) {
         quad <- update_layout_option(object, quad, object_name)
     } else {
-        for (act in actives) {
+        for (act in context) {
             if (is.null(act)) {
                 quad <- quad_body_add(object, quad, object_name)
             } else if (!is.null(slot(quad, act))) {

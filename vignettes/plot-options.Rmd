@@ -19,8 +19,8 @@ be applied either globally to all plots in the layout or individually to
 specific plots.
 
  - To apply a plot option to a single plot, use the `+` operator.
- - To set a plot option at the layout level (affecting all plots), use the `-`
- operator. 
+ - To set a plot option at the layout level, use the `-` operator. plot options
+ at layout-level will be inherited by all plots in the layout.
 
 >Plot options inherit properties from parent layout options hierarchically.
 
@@ -190,15 +190,13 @@ heatmap_collect_all_guides -
 
 You can also apply the `plot_align()` function directly to specific plots:
 ```{r fig.dim = c(12, 12)}
-heatmap_collect_all_guides +
-    # reset the active context to the heatmap layout
-    quad_active() -
+heatmap_collect_all_guides -
     # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top side
-    plot_align(guides = "t") +
-    # `+` apply it to the current active plot
+    with_quad(plot_align(guides = "t"), NULL) +
+    # `+` apply it to the active plot
     # for the heatmap body, we collect guide in the left side
-    plot_align(guides = "l")
+    with_quad(plot_align(guides = "l"), NULL)
 ```
 
 Note: The legend on the left side of the heatmap body is collected and
@@ -208,7 +206,7 @@ If you're annoyed by the large space between the left annotation and the heatmap
 body, don't worry! This issue can be addressed using the `free_spaces` feature,
 which is covered in its dedicated section.
 
-Let's dive deeper into the guide collection process.
+Now, Let's dive deeper into the guide collection process.
 
 In the last example, we set the `guides` argument for the heatmap body. But what
 happens when we set the `guides` for the dendrogram in the top annotation? 
@@ -217,10 +215,9 @@ heatmap_collect_all_guides -
     # we set global `guides` argument for `the heatmap layout`
     # we only collect guides in the top side in the heatmap layout
     with_quad(plot_align(guides = "t"), NULL) +
-    anno_top() +
-    # `+` apply it to the current active plot
+    # `+` apply it to the active plot
     # for the dendrogram in the top annotation, we collect guide in the left side
-    plot_align(guides = "l")
+    with_quad(plot_align(guides = "l"), "t")
 ```
 
 Nothing seems to have changed, right? This is because guide legends within
@@ -254,7 +251,7 @@ heatmap_collect_all_guides -
     # we also collect guides in the left side for the top annotation stack
     # in the heatmap layout
     anno_top(free_guides = "l") +
-    # `+` apply it to the current active plot
+    # `+` apply it to the active plot
     # for the dendrogram in the top annotation, we collect guide in the left side
     plot_align(guides = "l")
 ```

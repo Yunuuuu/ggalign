@@ -7,46 +7,82 @@
 with_quad(x, position = waiver(), main = NULL)
 }
 \arguments{
-\item{x}{The object to be added to the layout using the \code{-} operator.}
+\item{x}{An object which can be added to the ggplot, including
+\strong{plot options} (see \code{vignette("plot-options")} for details).}
 
 \item{position}{A string specifying one or more positions-
-\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}- to indicate the annotation stack context for the
-operator \code{\link[=layout-operator]{-}}. By default, \code{waiver()} is used, which sets
-the behavior as follows: if the active context in \code{quad_layout()} is \code{top} or
-\code{bottom}, the operator will also apply to the corresponding \code{bottom} or \code{top}
-annotation, respectively. Similarly, if the context is \code{left} or \code{right}, the
-operator applies to the \code{right} or \code{left} annotation. When no annotation
-stack is active, the context defaults to \code{NULL}.}
+\code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}- to indicate the annotation stack context for \code{x}. If
+\code{NULL}, will change the operated context to the \code{quad_layout()} itself. For
+default behaivours, see \code{details} section.}
 
 \item{main}{A single boolean value indicating whether \code{x} should apply to the
 main plot, used only when \code{position} is not \code{NULL}. By default, if \code{position}
 is \code{waiver()} and the active context of \code{quad_layout()} is an annotation
-stack or the active context of \code{stack_layout} is itself, \code{main} will be set
+stack or the active context of \code{stack_layout()} is itself, \code{main} will be set
 to \code{TRUE}; otherwise, it defaults to \code{FALSE}.}
 }
 \value{
 The original object with an added attribute that sets the specified
-layout context.
+context.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-The \code{with_quad} function allows you to adjust the context in which the
-subtraction \code{-} operator is applied within \code{quad_layout()}. This function
-wraps objects to specify their target layout contexts when using \code{-} in
-\code{quad_layout()}.
+The \code{with_quad()} function modifies the application context of elements in
+\code{ggheatmap()}/\code{quad_layout()}. It controls how objects like themes, scales,
+or other plot modifications apply to specific annotation stacks or the main
+plot without altering the currently active layout or plot.
+}
+\details{
+Default Behavior by wrapping object with \code{with_quad()}:
+
+For \code{quad_layout()} object:
+\itemize{
+\item When \code{ggheatmap()}/\code{quad_layout()} has no active annotation stack, objects
+added via \code{+} or \code{-} operate normally without \code{with_quad()}.
+\item When the active annotation stack is set, \code{with_quad()} ensures the applied
+object also modifies:
+\itemize{
+\item The main plot (by default).
+\item Opposite annotation stacks when using \code{-}.
+}
+}
+
+For \code{stack_layout()} object:
+\itemize{
+\item When the active layout is the \code{stack_layout()} itself:
+\itemize{
+\item \code{-} operator will apply changes to all plots along the
+\code{stack_layout()}, which means if the stack layout is in \code{horizontal},
+\code{-} operator will also add the element to the \code{left} and \code{right}
+annotation, if the stack layout is in \code{vertical}, \code{-} operator will
+also add element to the \code{top} and \code{bottom} annotation.
+\item \code{+} operator won't do anything special.
+}
+\item When the active layout is the nested \code{ggheatmap()}/\code{quad_layout()}, the
+\code{+}/\code{-} operator applies the elements to this nested layout, following the
+same principles as for \code{ggheatmap()}/\code{quad_layout()}.
+}
 }
 \examples{
 set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7)
 
-# when the active context in `ggheatmap()`/`quad_layout()` is set to `top` or
-# `bottom`, by wrapping object with `with_quad()`, the `-` operator will
-# apply changes not only to that annotation but also to the opposite one
-# (i.e., bottom if top is active, and vice versa). The same principle
-# applies to the left and right annotation.
+# By wrapping object with `with_quad()`, the `+` operator will apply the
+# object not only to the active plot in the annotation stack, but also to
+# the main plot unless specified by `main` argument otherwise.
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
+    # initialize the left annotation
+    anno_left(size = 0.2) +
+    align_dendro() +
+    # apply the object not only to the active plot in the annotation stack,
+    # but also to the main plot
+    with_quad(theme(plot.background = element_rect(fill = "red")))
+
+# the `-` operator will apply changes not only to the active annotation
+# stack but also to the opposite one (i.e., bottom if top is active, and
+# vice versa). The same principle applies to the left and right annotation.
+ggheatmap(small_mat) +
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     # Change the active layout to the left annotation
@@ -55,14 +91,12 @@ ggheatmap(small_mat) +
     anno_bottom(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) -
     # Modify the color scale of all plots in the bottom and the opposite
-    # annotation
-    # in this way, the `main` argument by default would be `TRUE`
+    # annotation, in this way, the `main` argument by default would be `TRUE`
     with_quad(scale_color_brewer(palette = "Dark2", name = "Top and bottom"))
 
 # When the `position` argument is manually set, the
 # default value of the `main` argument will be `FALSE`.
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     anno_top(size = 0.2) +

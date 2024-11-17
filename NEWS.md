@@ -2,6 +2,8 @@
 
 ## New features
 
+* `+` operator now will respect `with_quad()`.
+
 * new `ggalign_attr_set()` and `ggalign_attr_get()` for basic operations of attached attribute.
 
 * new `geom_draw()` function to draw ggplot2 layer with customized draw function.
