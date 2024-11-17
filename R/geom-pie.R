@@ -131,7 +131,7 @@ GeomPie <- ggproto("GeomPie",
                     # for version >= 3.5.0
                     ggplot2::fill_alpha(data$fill, data$alpha),
                     error = function(cnd) {
-                    # for version < 3.5.0
+                        # for version < 3.5.0
                         ggplot2::alpha(data$fill, data$alpha)
                     }
                 ),

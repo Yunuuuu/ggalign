@@ -9,8 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -49,16 +49,16 @@ won't align by panel area with ggplot2.
 We'll start with a few well-known example plots:
 ```{r}
 p1 <- ggplot(mtcars) +
-  geom_point(aes(mpg, disp))
+    geom_point(aes(mpg, disp))
 p2 <- ggplot(mtcars) +
-  geom_boxplot(aes(gear, disp, group = gear))
+    geom_boxplot(aes(gear, disp, group = gear))
 p3 <- ggplot(mtcars) +
-  geom_bar(aes(gear)) +
-  facet_wrap(~cyl)
+    geom_bar(aes(gear)) +
+    facet_wrap(~cyl)
 p4 <- ggplot(mtcars) +
-  geom_bar(aes(carb))
+    geom_bar(aes(carb))
 p5 <- ggplot(mtcars) +
-  geom_violin(aes(cyl, mpg, group = cyl))
+    geom_violin(aes(cyl, mpg, group = cyl))
 ```
 
 Either add the plots as single arguments
@@ -100,27 +100,27 @@ be placed between the plot panel and the guide legend.
 
 ```{r}
 p_right <- ggplot(mtcars) +
-  geom_point(aes(hp, wt, colour = mpg)) +
-  patch_titles("right") +
-  labs(color = "right")
+    geom_point(aes(hp, wt, colour = mpg)) +
+    patch_titles("right") +
+    labs(color = "right")
 p_top <- p_right +
-  patch_titles("top") +
-  scale_color_continuous(
-    name = "top",
-    guide = guide_colorbar(position = "top")
-  )
+    patch_titles("top") +
+    scale_color_continuous(
+        name = "top",
+        guide = guide_colorbar(position = "top")
+    )
 p_left <- p_right +
-  patch_titles("left") +
-  scale_color_continuous(
-    name = "left",
-    guide = guide_colorbar(position = "left")
-  )
+    patch_titles("left") +
+    scale_color_continuous(
+        name = "left",
+        guide = guide_colorbar(position = "left")
+    )
 p_bottom <- p_right +
-  patch_titles("bottom") +
-  scale_color_continuous(
-    name = "bottom",
-    guide = guide_colorbar(position = "bottom")
-  )
+    patch_titles("bottom") +
+    scale_color_continuous(
+        name = "bottom",
+        guide = guide_colorbar(position = "bottom")
+    )
 align_plots(p_right, p_bottom, p_top, p_left, guides = "tlbr")
 ```
 
@@ -135,21 +135,21 @@ The `free_guide()` function allows you to override the `guides` argument for a
 single plot.
 ```{r}
 align_plots(
-  free_guide(p_right, NULL),
-  free_guide(p_bottom, NULL),
-  free_guide(p_top, NULL),
-  free_guide(p_left, NULL),
-  guides = "tlbr"
+    free_guide(p_right, NULL),
+    free_guide(p_bottom, NULL),
+    free_guide(p_top, NULL),
+    free_guide(p_left, NULL),
+    guides = "tlbr"
 )
 ```
 
 You can also specify which guide positions to be collected for individual plots.
 ```{r}
 align_plots(
-  free_guide(p_right, "r"),
-  free_guide(p_bottom, "b"),
-  free_guide(p_top, "t"),
-  free_guide(p_left, "l")
+    free_guide(p_right, "r"),
+    free_guide(p_bottom, "b"),
+    free_guide(p_top, "t"),
+    free_guide(p_left, "l")
 )
 ```
 
