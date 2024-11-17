@@ -512,9 +512,36 @@ vignette</a>.</p>
 <p><img src="oncoplot_files/figure-html/unnamed-chunk-17-1.png" width="1152"></p>
 </div>
 <div class="section level2">
+<h2 id="integration-with-gistic-results-from-maftools">Integration with GISTIC results from maftools<a class="anchor" aria-label="anchor" href="#integration-with-gistic-results-from-maftools"></a>
+</h2>
+<p>The package also includes a <code><a href="../reference/fortify_matrix.GISTIC.html">fortify_matrix.GISTIC()</a></code>
+method designed to handle <code>GISTIC</code> objects from the
+<code>maftools</code> package. This allows you to seamlessly apply the
+same operations to visualize <code>GISTIC</code> results.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Ensure the maftools package is installed and load the example GISTIC data</span></span>
+<span><span class="va">all.lesions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"all_lesions.conf_99.txt"</span>, package <span class="op">=</span> <span class="st">"maftools"</span><span class="op">)</span></span>
+<span><span class="va">amp.genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"amp_genes.conf_99.txt"</span>, package <span class="op">=</span> <span class="st">"maftools"</span><span class="op">)</span></span>
+<span><span class="va">del.genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"del_genes.conf_99.txt"</span>, package <span class="op">=</span> <span class="st">"maftools"</span><span class="op">)</span></span>
+<span><span class="va">scores.gistic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"scores.gistic"</span>, package <span class="op">=</span> <span class="st">"maftools"</span><span class="op">)</span></span>
+<span><span class="va">laml.gistic</span> <span class="op">&lt;-</span> <span class="fu">maftools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maftools/man/readGistic.html" class="external-link">readGistic</a></span><span class="op">(</span></span>
+<span>    gisticAllLesionsFile <span class="op">=</span> <span class="va">all.lesions</span>, gisticAmpGenesFile <span class="op">=</span> <span class="va">amp.genes</span>,</span>
+<span>    gisticDelGenesFile <span class="op">=</span> <span class="va">del.genes</span>, gisticScoresFile <span class="op">=</span> <span class="va">scores.gistic</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; -Processing Gistic files..</span></span>
+<span><span class="co">#&gt; --Processing amp_genes.conf_99.txt</span></span>
+<span><span class="co">#&gt; --Processing del_genes.conf_99.txt</span></span>
+<span><span class="co">#&gt; --Processing scores.gistic</span></span>
+<span><span class="co">#&gt; --Summarizing by samples</span></span>
+<span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">laml.gistic</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span><span class="st">"CNV"</span>, palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/theme_no_axes.html">theme_no_axes</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="oncoplot_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+</div>
+<div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
