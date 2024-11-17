@@ -64,37 +64,66 @@ testthat::test_that("`stack_align` add `align` object", {
 })
 
 testthat::test_that("`stack_align` add `quad_layout()` object works well", {
-    # error cases
-    expect_error(stack_alignh() + quad_alignv())
-    expect_error(stack_alignv() + quad_alignh())
-    # stack without data add heatmap without data gave error
-    expect_error(stack_alignh() + quad_alignb()) # we must provide data
-
     # successful cases
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-    expect_doppelganger("add-quad_alignh", {
+
+    # error cases
+    # stack without data add heatmap without data gave error
+    expect_error(stack_alignh() + quad_alignb()) # we must provide data
+
+    expect_error(stack_alignh(small_mat) + quad_alignv())
+    expect_error(stack_alignv(small_mat) + quad_alignh())
+
+    # sucessful cases
+    # stack_alignh -------------------------------------
+    expect_doppelganger("stack_alignh-add-quad_alignh", {
         stack_alignh(small_mat) +
             quad_alignh() +
             geom_boxplot(aes(value, factor(.y)))
     })
-    expect_doppelganger("add-quad_alignv", {
-        stack_alignv(small_mat) +
+    expect_doppelganger("stack_alignh-add-quad_alignv", {
+        stack_alignh(small_mat) +
             quad_alignv() +
             geom_boxplot(aes(factor(.x), value))
     })
-    expect_doppelganger("add-quad_alignb", {
+    expect_doppelganger("stack_alignh-add-quad_alignb", {
         stack_alignh(small_mat) +
             quad_alignb(NULL, aes(.x, .y)) +
             geom_tile(aes(fill = value))
     })
-    expect_doppelganger("add-ggheatmap", {
+    expect_doppelganger("stack_alignh-add-ggheatmap", {
         stack_alignh(small_mat) + ggheatmap()
     })
-    expect_doppelganger("add-ggheatmap_with_name_as_mapping", {
+    expect_doppelganger("stack_alignh-add-ggheatmap_with_name_as_mapping", {
         stack_alignh(small_mat) +
+            ggheatmap(filling = NULL) +
+            geom_tile(aes(.column_names, .row_names, fill = value))
+    })
+
+    # stack_alignv -------------------------------------
+    expect_doppelganger("stack_alignv-add-quad_alignh", {
+        stack_alignv(small_mat) +
+            quad_alignh() +
+            geom_boxplot(aes(value, factor(.y)))
+    })
+    expect_doppelganger("stack_alignv-add-quad_alignv", {
+        stack_alignv(small_mat) +
+            quad_alignv() +
+            geom_boxplot(aes(factor(.x), value))
+    })
+    expect_doppelganger("stack_alignv-add-quad_alignb", {
+        stack_alignv(small_mat) +
+            quad_alignb(NULL, aes(.x, .y)) +
+            geom_tile(aes(fill = value))
+    })
+    expect_doppelganger("stack_alignv-add-ggheatmap", {
+        stack_alignv(small_mat) + ggheatmap()
+    })
+    expect_doppelganger("stack_alignv-add-ggheatmap_with_name_as_mapping", {
+        stack_alignv(small_mat) +
             ggheatmap(filling = NULL) +
             geom_tile(aes(.column_names, .row_names, fill = value))
     })
