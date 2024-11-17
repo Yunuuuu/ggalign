@@ -384,7 +384,20 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
 # Integration with GISTIC results from maftools
 The package also includes a `fortify_matrix.GISTIC()` method designed to handle
 `GISTIC` objects from the `maftools` package. This allows you to seamlessly
-apply the same operations to visualize `GISTIC` results.
+apply the same operations to visualize `GISTIC` results. The following ggalign
+attributes are generated as part of the analysis:
+
+  - `sample_anno`: sample clinical informations provided in `sample_anno`
+  argument.
+  - `sample_summary`: sample copy number summary informations. See
+    `data@cnv.summary` for details.
+  - `cytoband_summary`: cytoband summary informations. See
+    `data@cytoband.summary` for details.
+  - `gene_summary`: gene summary informations. See
+    `data@gene.summary` for details.
+  - `summary`: A data frame of summary information. See `data@summary` for
+    details.
+
 ```{r eval=can_read_maf}
 # Ensure the maftools package is installed and load the example GISTIC data
 all.lesions <- system.file("extdata", "all_lesions.conf_99.txt", package = "maftools")
