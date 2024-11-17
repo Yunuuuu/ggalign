@@ -185,7 +185,6 @@ GeomDraw <- ggproto(
             if (inherits(ans, c("grob", "gList", "gTree"))) {
                 ans
             } else {
-                browser()
                 NULL
             }
         }, list(draw = .subset2(indices, "key"), data = coords), NULL)
