@@ -28,7 +28,8 @@ samples without any genomic alterations.}
 
 \item{collapse_vars}{A single boolean value indicating whether to collapse
 multiple alterations in the same sample and gene into a single value
-\code{"Multi_Hit"}.}
+\code{"Multi_Hit"}. Alternatively, you can provide a single string indicates the
+collapsed values.}
 
 \item{use_syn}{A single boolean value indicates whether to include synonymous
 variants when Classifies SNPs into transitions and transversions.}

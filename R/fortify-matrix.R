@@ -57,7 +57,8 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #' samples without any genomic alterations.
 #' @param collapse_vars A single boolean value indicating whether to collapse
 #' multiple alterations in the same sample and gene into a single value
-#' `"Multi_Hit"`.
+#' `"Multi_Hit"`. Alternatively, you can provide a single string indicates the
+#' collapsed values.
 #' @param use_syn A single boolean value indicates whether to include synonymous
 #' variants when Classifies SNPs into transitions and transversions.
 #' @section ggalign attributes:
@@ -73,6 +74,7 @@ fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
 #'    summary. See `maftools::titv()` for details.
 #' @family fortify_matrix methods
 #' @importFrom utils getFromNamespace
+#' @importFrom rlang is_string
 #' @export
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
@@ -81,6 +83,19 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     rlang::check_installed(
         "maftools", "to make alterations matrix from `MAF` object"
     )
+    if (isTRUE(collapse_vars)) {
+        collapse_vars <- "Multi_Hit"
+    } else if (is_string(collapse_vars)) {
+
+    } else if (isFALSE(collapse_vars)) {
+        collapse_vars <- NULL
+    } else {
+        cli_abort(paste(
+            "{.arg collapse_vars} must be a single boolean value or a string,",
+            "but you provide {.obj_type_friendly {collapse_vars}}"
+        ))
+    }
+
     getSampleSummary <- getFromNamespace("getSampleSummary", "maftools")
     getGeneSummary <- getFromNamespace("getGeneSummary", "maftools")
     getClinicalData <- getFromNamespace("getClinicalData", "maftools")
@@ -128,17 +143,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     vars <- .subset2(data, "Variant_Classification")
     lvls <- levels(vars) %||% sort(vec_unique(vars))
     var_list <- vec_chop(as.character(vars), indices = .subset2(indices, "loc"))
-    if (collapse_vars) {
-        vars <- vapply(var_list, function(var) {
-            var <- vec_unique(var)
-            if (length(var) > 1L) {
-                return("Multi_Hit")
-            } else {
-                var
-            }
-        }, character(1L), USE.NAMES = FALSE)
-        if (any(vars == "Multi_Hit")) lvls <- c(lvls, "Multi_Hit")
-    } else {
+    if (is.null(collapse_vars)) {
         vars <- vapply(var_list, function(var) {
             var <- vec_unique(var)
             if (length(var) > 1L) {
@@ -147,6 +152,16 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                 var
             }
         }, character(1L), USE.NAMES = FALSE)
+    } else {
+        vars <- vapply(var_list, function(var) {
+            var <- vec_unique(var)
+            if (length(var) > 1L) {
+                return(collapse_vars)
+            } else {
+                var
+            }
+        }, character(1L), USE.NAMES = FALSE)
+        if (any(vars == collapse_vars)) lvls <- c(lvls, collapse_vars)
     }
     ans <- vec_cbind(
         .subset2(indices, "key"),
