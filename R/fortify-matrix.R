@@ -292,7 +292,7 @@ fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
         loc <- vec_locate_matches(
             colnames(cn_mat),
             .subset2(sample_anno, "Tumor_Sample_Barcode") %||%
-                sample_anno[[1L]],
+                .subset2(sample_anno, 1L),
             relationship = "one-to-one",
             needles_arg = "data",
             haystack_arg = "sample_anno"
