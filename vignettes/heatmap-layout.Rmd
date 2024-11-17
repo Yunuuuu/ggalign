@@ -233,7 +233,6 @@ You can specify the relative sizes of the heatmap body using the `width` and
 `height` arguments in the `ggheatmap()` function.
 ```{r}
 ggheatmap(small_mat, height = 2) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_dendro()
 ```
@@ -243,7 +242,6 @@ body sizes.
 ```{r}
 ggheatmap(small_mat) +
     quad_active(height = 2) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_dendro()
 ```
@@ -256,7 +254,6 @@ stack.
 
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top(size = 1) +
     align_dendro()
 ```
@@ -264,7 +261,6 @@ ggheatmap(small_mat) +
 You can also specify it as an absolute size using `unit()`:
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top(size = unit(30, "mm")) +
     align_dendro()
 ```
@@ -276,7 +272,6 @@ annotations) or `height` (for top and bottom annotations) of the single plot in
 the annotation stack.
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_left(size = 0.2) +
     ggalign(data = rowSums, aes(x = value), size = unit(10, "mm")) +
     geom_bar(

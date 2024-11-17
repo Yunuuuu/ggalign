@@ -110,15 +110,14 @@ When used in a `ggheatmap()`, and the data is inherited from the `ggheatmap()`,
 a special column `.extra_panel` will be added, which is the panel information
 for column (left or right annotation) or row (top or bottom annotation). This is
 useful if you want to create summary plot using another axis panel. In such
-cases, it's often necessary to disable the automatic setting of limits (`limits
-= FALSE` in `ggalign()`).
+cases, it's often necessary to disable the automatic setting of limits
+(`limits = FALSE` in `ggalign()`).
 
 ```{r fig.dim = c(5, 10)}
 set.seed(1L)
 v <- stats::rnorm(50L)
 split <- sample(letters[1:2], 50L, replace = TRUE)
 ggheatmap(v) +
-    scale_fill_viridis_c() +
     theme(strip.text = element_text(), strip.background = element_rect()) +
     anno_right() +
     align_group(split) +

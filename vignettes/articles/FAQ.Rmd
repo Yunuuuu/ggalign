@@ -44,7 +44,6 @@ You can resolve this by removing the scale expansion and adjusting the margins
 in the theme: 
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_y_continuous(expand = expansion()) &

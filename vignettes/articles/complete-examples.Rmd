@@ -28,14 +28,13 @@ colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # Simple heatmap
 ```{r}
-ggheatmap(small_mat) + scale_fill_viridis_c()
+ggheatmap(small_mat)
 ```
 
 # heatmap layout customize
 ## Based on dendrogram
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_dendro(aes(color = branch), k = 3) +
     geom_point(aes(color = branch, y = y)) +
@@ -45,7 +44,6 @@ ggheatmap(small_mat) +
 ## Based on kmeans
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_kmeans(3L)
 ```
@@ -53,7 +51,6 @@ ggheatmap(small_mat) +
 ## Based on a group variable
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))
 ```
@@ -62,7 +59,6 @@ ggheatmap(small_mat) +
 Here, we ordered the heatmap rows based on the row means.
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_left() +
     align_order(rowMeans)
 ```
@@ -70,7 +66,6 @@ ggheatmap(small_mat) +
 # Heatmap annotation plot
 ```{r}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top() +
     align_dendro(aes(color = branch), k = 3) +
     geom_point(aes(color = branch, y = y)) +
@@ -82,7 +77,6 @@ ggheatmap(small_mat) +
 
 ```{r fig.dim = c(10, 8)}
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_top(size = 0.5) +
     align_dendro(aes(color = branch), k = 3L) +
     ggalign(aes(y = value), data = rowSums) +
@@ -105,7 +99,6 @@ ggheatmap(small_mat) +
 (stack_alignh(small_mat) +
     ggheatmap() +
     ggheatmap() &
-    scale_fill_viridis_c() &
     theme(axis.text.x = element_text(angle = -60, hjust = 0))) +
     stack_active() +
     align_dendro(aes(color = branch), k = 4L, size = 0.2) +
@@ -123,8 +116,7 @@ stack_alignv(small_mat) -
     scale_color_brewer(palette = "Dark2") +
     ggheatmap() +
     ggheatmap() +
-    theme(axis.text.x = element_text(angle = -60, hjust = 0)) &
-    scale_fill_viridis_c()
+    theme(axis.text.x = element_text(angle = -60, hjust = 0))
 ```
 
 # marginal plots

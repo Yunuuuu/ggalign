@@ -67,7 +67,6 @@ ggheatmap(small_mat) +
 # If the active layout is the annotation stack, the `-` operator will only
 # add the elements to all plots in the active annotation stack:
 ggheatmap(small_mat) +
-    scale_fill_viridis_c() +
     anno_left(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) +
     align_dendro(aes(color = branch), k = 3L) -

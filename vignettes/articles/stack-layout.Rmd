@@ -145,8 +145,7 @@ be applied to this `ggheatmap()`/`quad_layout()`. You can include `align_*`
 elements or any ggplot2 components for the `quad_layout()`.
 ```{r}
 stack_alignh(small_mat) +
-    ggheatmap() +
-    scale_fill_viridis_c()
+    ggheatmap()
 ```
 
 If you'd like to add elements to the stack layout rather than the
@@ -155,7 +154,6 @@ If you'd like to add elements to the stack layout rather than the
 ```{r}
 stack_alignh(small_mat) +
     ggheatmap() +
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     stack_active() +
     ggalign(data = rowSums) +
@@ -169,8 +167,7 @@ to another heatmap layout. Therefore, you can directly add a
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap() +
-    ggheatmap() &
-    scale_fill_viridis_c()
+    ggheatmap()
 ```
 
 # Control sizes
@@ -186,7 +183,6 @@ By default the three rows/columns will have equal sizes.
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap() +
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_left() +
     align_dendro(aes(color = .panel), k = 3L) +
@@ -203,7 +199,6 @@ stack_alignv(small_mat) +
 # the right annotation will have a relative size 1
 stack_alignv(small_mat, sizes = c(1, 2, 1)) +
     ggheatmap() +
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_left() +
     align_dendro(aes(color = .panel), k = 3L) +
@@ -219,7 +214,6 @@ In this way, heatmap body width/height specified in `quad_active()` or
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap(width = unit(2, "null")) + # not work
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     anno_left() +
     align_dendro(aes(color = .panel), k = 3L) +
@@ -235,7 +229,6 @@ still control the size of heatmap annotation in `quad_anno()`.
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap() +
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     # the left annotation will have a total size 2cm
     anno_left(size = unit(2, "cm")) +
@@ -251,7 +244,6 @@ You can also use `npc` unit.
 ```{r}
 stack_alignv(small_mat) +
     ggheatmap() +
-    scale_fill_viridis_c() +
     theme(axis.text.x = element_text(angle = -60, hjust = 0)) +
     # the left annotation will have a total width 1/2 npc
     anno_left(size = unit(0.5, "npc")) +

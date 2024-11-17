@@ -36,8 +36,7 @@ testthat::test_that("`ggheatmap` add `quad_switch()` works well", {
     )
     expect_doppelganger(
         "heatmap-hmanno-null-guides",
-        ggheatmap(matrix(1:9, nrow = 3L)) +
-            scale_fill_viridis_c() -
+        ggheatmap(matrix(1:9, nrow = 3L)) -
             plot_align(guides = NULL) +
             quad_anno("r") +
             align_dendro()
@@ -45,15 +44,13 @@ testthat::test_that("`ggheatmap` add `quad_switch()` works well", {
     expect_doppelganger(
         "heatmap-hmanno-stack-action-guides",
         ggheatmap(matrix(1:9, nrow = 3L)) +
-            scale_fill_viridis_c() +
             quad_anno("l") -
             plot_align(guides = "l") +
             align_dendro(aes(color = branch))
     )
     expect_doppelganger(
         "heatmap-hmanno-align-action-guides",
-        ggheatmap(matrix(1:9, nrow = 3L)) +
-            scale_fill_viridis_c() -
+        ggheatmap(matrix(1:9, nrow = 3L)) -
             plot_align(guides = NULL) +
             quad_anno("r") +
             align_dendro() +
