@@ -83,9 +83,10 @@ pdata <- function(data) {
         delim = stringr::regex("\\s*[;:,|]\\s*")
     )
 }
-# Note: `ggoncoplot()` will automatically convert any empty strings to `NA`
-#        before pass it to `ggheatmap`. So this figure will contain an empty
-#        string value.
+# Note: this figure will contain an empty string value.
+#
+# `ggoncoplot()` will automatically convert any empty strings to `NA`
+# before pass it to `ggheatmap`.
 ggheatmap(mat) -
     plot_data(pdata) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
