@@ -86,12 +86,12 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     )
     if (isTRUE(collapse_vars)) {
         collapse_vars <- "Multi_Hit"
-    } else if (is_string(collapse_vars)) {
-        if (collapse_vars == "") {
-            cli_abort("{.arg collapse_vars} cannot be a empty string")
-        }
     } else if (isFALSE(collapse_vars)) {
         collapse_vars <- NULL
+    } else if (is_string(collapse_vars)) {
+        if (collapse_vars == "") {
+            cli_abort("{.arg collapse_vars} cannot be an empty string")
+        }
     } else {
         cli_abort(paste(
             "{.arg collapse_vars} must be a single boolean value or a string,",
