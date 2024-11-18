@@ -5,20 +5,16 @@ stack_layout_subtract <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_subtract.default <- function(object, stack, object_name) {
-    if (!is.null(active_index <- stack@active) &&
-        is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- quad_layout_subtract(
-            object, plot, object_name
-        )
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
     } else {
         stack@plots <- lapply(stack@plots, function(plot) {
-            if (is_free(plot)) {
-                plot <- free_add(object, plot, object_name)
-            } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
-                # if `align` has plot, we added the object
-                plot <- align_add(object, plot, object_name)
+            if (stack_active_is_layout(plot)) {
+                return(plot)
             }
-            plot
+            stack_plot_add(plot, object, object_name, force = FALSE)
         })
     }
     stack
@@ -27,11 +23,10 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 # for objects can inherit from layout
 #' @export
 stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
-    if (!is.null(active_index <- stack@active) &&
-        is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- quad_layout_subtract(
-            object, plot, object_name
-        )
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
     } else {
         stack <- update_layout_option(object, stack, object_name)
     }
@@ -40,22 +35,25 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_subtract.with_quad <- function(object, stack, object_name) {
-    if (!is.null(active_index <- stack@active) &&
-        is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- quad_layout_subtract(
-            object, plot, object_name
-        )
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
     } else {
         inner <- .subset2(object, "object")
         inner_name <- .subset2(object, "object_name")
+
+        # subtract set at layout level, if it is a plot option
+        # we only apply to current active layout
+        if (inherits(inner, "ggalign_option")) {
+            stack <- update_layout_option(inner, stack, inner_name)
+            return(stack)
+        }
+
+        # otherwise, we apply the object to all plots in the stack layout
         direction <- stack@direction
         stack@plots <- lapply(stack@plots, function(plot) {
-            if (is_free(plot)) {
-                plot <- free_add(inner, plot, inner_name)
-            } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
-                # if `align` has plot, we added the object
-                plot <- align_add(inner, plot, inner_name)
-            } else if (is_quad_layout(plot)) {
+            if (stack_active_is_layout(plot)) {
                 if (is.waive(.subset2(object, "position"))) {
                     # default behaviour for object wrap with `with_quad()`
                     # we add the object along the stack layout
@@ -80,6 +78,8 @@ stack_layout_subtract.with_quad <- function(object, stack, object_name) {
                     # we respect the context setting
                     plot <- quad_layout_subtract(object, plot, object_name)
                 }
+            } else {
+                plot <- stack_plot_add(plot, inner, inner_name, force = FALSE)
             }
             plot
         })
@@ -131,13 +131,10 @@ stack_layout_and_add <- function(object, stack, object_name) {
 #' @export
 stack_layout_and_add.default <- function(object, stack, object_name) {
     stack@plots <- lapply(stack@plots, function(plot) {
-        if (is_quad_layout(plot)) {
+        if (stack_active_is_layout(plot)) {
             plot <- quad_layout_and_add(object, plot, object_name)
-        } else if (is_free(plot)) {
-            plot <- free_add(object, plot, object_name)
-        } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
-            # if `align` has plot, we added the object
-            plot <- align_add(object, plot, object_name)
+        } else {
+            plot <- stack_plot_add(plot, object, object_name, force = FALSE)
         }
         plot
     })

@@ -3,9 +3,21 @@ stack_layout_add <- function(object, stack, object_name) {
     UseMethod("stack_layout_add")
 }
 
+stack_plot_add <- function(plot, object, object_name, force) {
+    if (is_free(plot)) {
+        plot <- free_add(object, plot, object_name)
+    } else if (force || !is.null(.subset2(plot, "plot"))) {
+        # if `align` has plot, we added the object
+        plot <- align_add(object, plot, object_name)
+    }
+    plot
+}
+
+stack_active_is_layout <- is_quad_layout
+
 #' @export
 stack_layout_add.default <- function(object, stack, object_name) {
-    if (is.null(active_index <- stack@active)) {
+    if (is.null(active <- stack@active)) {
         cli_abort(c(
             "Cannot add {.code {object_name}} to the stack layout",
             i = "No active {.cls ggplot} object",
@@ -15,15 +27,13 @@ stack_layout_add.default <- function(object, stack, object_name) {
             )
         ))
     }
-    plot <- .subset2(stack@plots, active_index)
-    if (is_quad_layout(plot)) {
+    plot <- .subset2(stack@plots, active)
+    if (stack_active_is_layout(plot)) {
         plot <- quad_layout_add(object, plot, object_name)
-    } else if (is_align(plot)) {
-        plot <- align_add(object, plot, object_name)
-    } else if (is_free(plot)) {
-        plot <- free_add(object, plot, object_name)
+    } else {
+        plot <- stack_plot_add(plot, object, object_name, TRUE)
     }
-    stack@plots[[active_index]] <- plot
+    stack@plots[[active]] <- plot
     stack
 }
 
@@ -35,16 +45,14 @@ stack_layout_add.list <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_add.with_quad <- function(object, stack, object_name) {
-    active_index <- stack@active
-    if (!is.null(active_index) &&
-        is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- quad_layout_add(
-            object, plot, object_name
-        )
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
     } else {
         cli_abort(c(
-            "Cannot add {.code {object_name}} to the stack layout",
-            i = "No active {.fn quad_layout}"
+            "Cannot add {.code {object_name}} to {.fn {stack@name}}",
+            i = "Did you forget to add a {.fn quad_layout}?"
         ))
     }
     stack
@@ -52,12 +60,10 @@ stack_layout_add.with_quad <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_add.layout_annotation <- function(object, stack, object_name) {
-    active_index <- stack@active
-    if (!is.null(active_index) &&
-        is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- quad_layout_add(
-            object, plot, object_name
-        )
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
     } else {
         stack <- update_layout_annotation(object, stack, object_name)
     }
@@ -74,10 +80,10 @@ stack_layout_add.layout_title <- function(object, stack, object_name) {
 # `Align` can be added for both heatmap and stack layout
 #' @export
 stack_layout_add.align <- function(object, stack, object_name) {
-    if (!is.null(active_index <- stack@active) &&
-        is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
+    if (!is.null(active <- stack@active) &&
+        is_quad_layout(plot <- .subset2(stack@plots, active))) {
         plot <- quad_layout_add(object, plot, object_name)
-        stack@plots[[active_index]] <- plot
+        stack@plots[[active]] <- plot
         layout <- slot(plot, stack@direction)
     } else if (is.null(layout <- stack@layout)) {
         cli_abort(c(
@@ -178,19 +184,7 @@ update_stack_active <- function(stack, what, call = caller_call()) {
 }
 
 #' @export
-stack_layout_add.quad_active <- function(object, stack, object_name) {
-    if (!is.null(active_index <- stack@active) &&
-        is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
-        plot <- quad_layout_add(object, plot, object_name)
-        stack@plots[[active_index]] <- plot
-        return(stack)
-    } else {
-        cli_abort(c(
-            "Cannot add {.code {object_name}} to {.fn {stack@name}}",
-            i = "Did you forget to add a {.fn quad_layout}?"
-        ))
-    }
-}
+stack_layout_add.quad_active <- stack_layout_add.with_quad
 
 #' @export
 stack_layout_add.quad_anno <- stack_layout_add.quad_active
