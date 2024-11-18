@@ -11,41 +11,12 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
             object, plot, object_name
         )
     } else {
-        context <- quad_with_context(object) # nolint
-        direction <- stack@direction
         stack@plots <- lapply(stack@plots, function(plot) {
             if (is_free(plot)) {
                 plot <- free_add(object, plot, object_name)
             } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
                 # if `align` has plot, we added the object
                 plot <- align_add(object, plot, object_name)
-            } else if (is_quad_layout(plot)) {
-                if (is.null(context)) { # if not set
-                    # do nothing
-                } else if (is.waive(.subset2(context, "position"))) {
-                    # default behaviour for object wrap with `with_quad()`
-                    # we add the object along the stack layout
-                    # if means for horizontal stack, we'll add it
-                    # to the left and right annotation, and the main plot
-                    positions <- switch_direction(
-                        direction,
-                        c("left", "right"),
-                        c("top", "bottom")
-                    )
-                    for (position in positions) {
-                        if (!is.null(slot(plot, position))) {
-                            slot(plot, position) <- stack_layout_subtract(
-                                object, slot(plot, position), object_name
-                            )
-                        }
-                    }
-                    if (is.null(main <- .subset2(context, "main")) || main) {
-                        plot <- quad_body_add(object, plot, object_name)
-                    }
-                } else {
-                    # we respect the context setting
-                    plot <- quad_layout_subtract(object, plot, object_name)
-                }
             }
             plot
         })
@@ -63,6 +34,55 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
         )
     } else {
         stack <- update_layout_option(object, stack, object_name)
+    }
+    stack
+}
+
+#' @export
+stack_layout_subtract.with_quad <- function(object, stack, object_name) {
+    if (!is.null(active_index <- stack@active) &&
+        is_layout(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- quad_layout_subtract(
+            object, plot, object_name
+        )
+    } else {
+        inner <- .subset2(object, "object")
+        inner_name <- .subset2(object, "object_name")
+        direction <- stack@direction
+        stack@plots <- lapply(stack@plots, function(plot) {
+            if (is_free(plot)) {
+                plot <- free_add(inner, plot, inner_name)
+            } else if (is_align(plot) && !is.null(.subset2(plot, "plot"))) {
+                # if `align` has plot, we added the object
+                plot <- align_add(inner, plot, inner_name)
+            } else if (is_quad_layout(plot)) {
+                if (is.waive(.subset2(object, "position"))) {
+                    # default behaviour for object wrap with `with_quad()`
+                    # we add the object along the stack layout
+                    # if means for horizontal stack, we'll add it
+                    # to the left and right annotation, and the main plot
+                    positions <- switch_direction(
+                        direction,
+                        c("left", "right"),
+                        c("top", "bottom")
+                    )
+                    for (position in positions) {
+                        if (!is.null(slot(plot, position))) {
+                            slot(plot, position) <- stack_layout_subtract(
+                                inner, slot(plot, position), inner_name
+                            )
+                        }
+                    }
+                    if (is.null(main <- .subset2(object, "main")) || main) {
+                        plot <- quad_body_add(inner, plot, inner_name)
+                    }
+                } else {
+                    # we respect the context setting
+                    plot <- quad_layout_subtract(object, plot, object_name)
+                }
+            }
+            plot
+        })
     }
     stack
 }

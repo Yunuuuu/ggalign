@@ -28,14 +28,34 @@ stack_layout_add.default <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_add.ggalign_option <- stack_layout_add.default
+stack_layout_add.list <- function(object, stack, object_name) {
+    for (o in object) stack <- stack_layout_add(o, stack, object_name)
+    stack
+}
+
+#' @export
+stack_layout_add.with_quad <- function(object, stack, object_name) {
+    active_index <- stack@active
+    if (!is.null(active_index) &&
+        is_layout(plot <- stack@plots[[active_index]])) {
+        stack@plots[[active_index]] <- quad_layout_add(
+            object, plot, object_name
+        )
+    } else {
+        cli_abort(c(
+            "Cannot add {.code {object_name}} to the stack layout",
+            i = "No active {.fn quad_layout}"
+        ))
+    }
+    stack
+}
 
 #' @export
 stack_layout_add.layout_annotation <- function(object, stack, object_name) {
     active_index <- stack@active
     if (!is.null(active_index) &&
         is_layout(plot <- stack@plots[[active_index]])) {
-        stack@plots[[active_index]] <- update_layout_annotation(
+        stack@plots[[active_index]] <- quad_layout_add(
             object, plot, object_name
         )
     } else {
@@ -386,11 +406,5 @@ stack_add_plot <- function(stack, plot, use, name, object_name) {
     # add QuadLayout ---------------------------------------
     stack@plots <- plots
     stack@active <- active_index
-    stack
-}
-
-#' @export
-stack_layout_add.list <- function(object, stack, object_name) {
-    for (o in object) stack <- stack_layout_add(o, stack, object_name)
     stack
 }
