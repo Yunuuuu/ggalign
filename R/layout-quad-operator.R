@@ -112,6 +112,13 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
 }
 
 #' @export
+quad_layout_and_add.with_quad <- function(object, stack, object_name) {
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    NextMethod()
+}
+
+#' @export
 quad_layout_and_add.theme <- function(object, quad, object_name) {
     ans <- NextMethod()
     # to align with `patchwork`, we also modify the layout theme
