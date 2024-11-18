@@ -159,3 +159,11 @@ quad_operated_context <- function(with, active, operator) {
     }
     ans
 }
+
+#' @importFrom ggplot2 ggplot_add
+#' @export
+ggplot_add.with_quad <- function(object, plot, object_name) {
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    NextMethod()
+}
