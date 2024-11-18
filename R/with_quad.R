@@ -117,13 +117,16 @@ with_quad.layout_title <- function(x, position = waiver(), main = NULL) {
 }
 
 #' @export
-with_quad.quad_active <- with_quad.align
+with_quad.quad_active <- with_quad.layout_title
 
 #' @export
-with_quad.quad_anno <- with_quad.align
+with_quad.quad_anno <- with_quad.layout_title
 
 #' @export
-with_quad.quad_init <- with_quad.align
+with_quad.quad_init <- with_quad.layout_title
+
+#' @export
+with_quad.stack_switch <- with_quad.layout_title
 
 quad_operated_context <- function(with, active, operator) {
     if (is.waive(ans <- .subset2(with, "position"))) {
