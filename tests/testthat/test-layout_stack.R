@@ -207,7 +207,6 @@ testthat::test_that("add `with_quad()` works as expected", {
             stack_active() +
             align_dendro() +
             ggtitle("I'm from the parent stack") -
-            scale_color_brewer(palette = "Dark2") -
             with_quad(theme(plot.background = element_rect(fill = "red")))
     )
     expect_doppelganger(
@@ -225,7 +224,6 @@ testthat::test_that("add `with_quad()` works as expected", {
             stack_active() +
             align_dendro() +
             ggtitle("I'm from the parent stack") -
-            scale_color_brewer(palette = "Dark2") -
             with_quad(
                 theme(plot.background = element_rect(fill = "red")), NULL
             )
@@ -245,7 +243,6 @@ testthat::test_that("add `with_quad()` works as expected", {
             stack_active() +
             align_dendro() +
             ggtitle("I'm from the parent stack") -
-            scale_color_brewer(palette = "Dark2") -
             with_quad(
                 theme(plot.background = element_rect(fill = "red")), "l"
             )
