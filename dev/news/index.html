@@ -64,7 +64,7 @@
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li><p>new <code>fortify_matrix.GISTIC</code> method for <code>GISTIC</code> object from <code>maftools</code> package.</p></li>
+<ul><li><p>new <code><a href="../reference/fortify_matrix.GISTIC.html">fortify_matrix.GISTIC()</a></code> method for <code>GISTIC</code> object from <code>maftools</code> package (<a href="https://github.com/Yunuuuu/ggalign/issues/24" class="external-link">#24</a>).</p></li>
 <li><p><code>+</code> operator now will respect <code><a href="../reference/with_quad.html">with_quad()</a></code>.</p></li>
 <li><p>new <code><a href="../reference/ggalign_attr.html">ggalign_attr_set()</a></code> and <code><a href="../reference/ggalign_attr.html">ggalign_attr_get()</a></code> for basic operations of attached attribute.</p></li>
 <li><p>new <code><a href="../reference/geom_draw.html">geom_draw()</a></code> function to draw ggplot2 layer with customized draw function.</p></li>
@@ -73,6 +73,10 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li>fix wrong results of <code><a href="../reference/fortify_matrix.MAF.html">fortify_matrix.MAF()</a></code> method</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
+<ul><li>Now, with_quad() wraps the object into a list with the class with_quad. This approach offers greater flexibility in defining the actions associated with with_quad, allowing for more customizable behavior (<a href="https://github.com/Yunuuuu/ggalign/issues/26" class="external-link">#26</a>, <a href="https://github.com/Yunuuuu" class="external-link">@Yunuuuu</a>).</li>
 </ul></div>
 </div>
     <div class="section level2">
