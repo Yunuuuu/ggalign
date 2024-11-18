@@ -1,175 +1,9 @@
-#' Modify operated Context in `quad_layout()`
-#'
-#' @description
-#' `r lifecycle::badge('experimental')`
-#'
-#' The `with_quad()` function modifies the application context of elements in
-#' `ggheatmap()`/`quad_layout()`. It controls how objects like themes, scales,
-#' or other plot modifications apply to specific annotation stacks or the main
-#' plot without altering the currently active layout or plot.
-#'
-#' @param x An object which can be added to the ggplot, including
-#' **plot options** (see `vignette("plot-options")` for details).
-#' @param position A string specifying one or more positions-
-#' `r oxford_and(.tlbr)`- to indicate the annotation stack context for `x`. If
-#' `NULL`, will change the operated context to the `quad_layout()` itself. For
-#' default behaivours, see `details` section.
-#' @param main A single boolean value indicating whether `x` should apply to the
-#' main plot, used only when `position` is not `NULL`. By default, if `position`
-#' is `waiver()` and the active context of `quad_layout()` is an annotation
-#' stack or the active context of `stack_layout()` is itself, `main` will be set
-#' to `TRUE`; otherwise, it defaults to `FALSE`.
-#' @return The original object with an added attribute that sets the specified
-#' context.
-#' @details
-#' Default Behavior by wrapping object with `with_quad()`:
-#'
-#' For `quad_layout()` object:
-#'
-#'  - When `ggheatmap()`/`quad_layout()` has no active annotation stack, objects
-#'  added via `+` or `-` operate normally without `with_quad()`.
-#'  - When the active annotation stack is set, `with_quad()` ensures the applied
-#'  object also modifies:
-#'    * The main plot (by default).
-#'    * Opposite annotation stacks when using `-`.
-#'
-#' For `stack_layout()` object:
-#'
-#'   - When the active layout is the `stack_layout()` itself:
-#'     * `-` operator will apply changes to all plots along the
-#'         `stack_layout()`, which means if the stack layout is in `horizontal`,
-#'         `-` operator will also add the element to the `left` and `right`
-#'         annotation, if the stack layout is in `vertical`, `-` operator will
-#'         also add element to the `top` and `bottom` annotation.
-#'     * `+` operator won't do anything special.
-#'   - When the active layout is the nested `ggheatmap()`/`quad_layout()`, the
-#'   `+`/`-` operator applies the elements to this nested layout, following the
-#'   same principles as for `ggheatmap()`/`quad_layout()`.
-#'
-#' @examples
-#' set.seed(123)
-#' small_mat <- matrix(rnorm(56), nrow = 7)
-#'
-#' # By wrapping object with `with_quad()`, the `+` operator will apply the
-#' # object not only to the active plot in the annotation stack, but also to
-#' # the main plot unless specified by `main` argument otherwise.
-#' ggheatmap(small_mat) +
-#'     # initialize the left annotation
-#'     anno_left(size = 0.2) +
-#'     align_dendro() +
-#'     # apply the object not only to the active plot in the annotation stack,
-#'     # but also to the main plot
-#'     with_quad(theme(plot.background = element_rect(fill = "red")))
-#'
-#' # the `-` operator will apply changes not only to the active annotation
-#' # stack but also to the opposite one (i.e., bottom if top is active, and
-#' # vice versa). The same principle applies to the left and right annotation.
-#' ggheatmap(small_mat) +
-#'     anno_left(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     # Change the active layout to the left annotation
-#'     anno_top(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     anno_bottom(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) -
-#'     # Modify the color scale of all plots in the bottom and the opposite
-#'     # annotation, in this way, the `main` argument by default would be `TRUE`
-#'     with_quad(scale_color_brewer(palette = "Dark2", name = "Top and bottom"))
-#'
-#' # When the `position` argument is manually set, the
-#' # default value of the `main` argument will be `FALSE`.
-#' ggheatmap(small_mat) +
-#'     anno_left(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     anno_top(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     anno_bottom(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) -
-#'     # Modify the background of all plots in the left and top annotation
-#'     with_quad(theme(plot.background = element_rect(fill = "red")), "tl")
-#' @export
-with_quad <- function(x, position = waiver(), main = NULL) {
-    assert_layout_position(position)
-    assert_bool(main, allow_null = TRUE)
-    attr(x, sprintf("__%s.quad_active_context__", pkg_nm())) <- list(
-        position = position, main = main
-    )
-    x
-}
-
-quad_with_context <- function(x) {
-    attr(x, sprintf("__%s.quad_active_context__", pkg_nm()), exact = TRUE)
-}
-
-quad_operated_context <- function(with, active, operator) {
-    if (is.null(with)) { # if not set, use the actual active position
-        ans <- active
-    } else if (is.waive(ans <- .subset2(with, "position"))) {
-        if (operator == "-") {
-            # if wrap with `with_quad`
-            # we determine the `context` from current actual active position
-            if (is.null(active)) {
-                ans <- NULL
-            } else {
-                ans <- c(active, opposite_pos(active))
-                if (is.null(main <- .subset2(with, "main")) || main) {
-                    ans <- c(ans, list(NULL))
-                }
-            }
-        } else if (operator == "+") {
-            ans <- active
-            if (!is.null(ans)) {
-                if (is.null(main <- .subset2(with, "main")) || main) {
-                    ans <- c(ans, list(NULL))
-                }
-            }
-        } else {
-            cli_abort("Not implement for {operator}")
-        }
-    } else if (!is.null(ans)) { # if set manually
-        ans <- setup_pos(ans)
-        if (!is.null(main <- .subset2(with, "main")) && main) {
-            ans <- c(ans, list(NULL))
-        }
-    }
-    ans
-}
-
-#############################################################
 #' @keywords internal
 quad_layout_add <- function(object, quad, object_name) {
     UseMethod("quad_layout_add")
 }
 
-# Add elements for the main body or the annotation
-#' @importFrom methods slot slot<-
-#' @export
-quad_layout_add.default <- function(object, quad, object_name) {
-    context <- quad_operated_context(
-        quad_with_context(object),
-        quad@active, "+"
-    ) %||% list(NULL) # we wrap NULL to a list for `for loop`.
-    for (act in context) {
-        if (is.null(act)) {
-            quad <- quad_body_add(object, quad, object_name)
-        } else {
-            slot(quad, act) <- stack_layout_add(
-                object, slot(quad, act), object_name
-            )
-        }
-    }
-    quad
-}
-
-#' @export
-quad_layout_add.ggalign_option <- quad_layout_add.default
-
-#' @export
-quad_layout_add.list <- function(object, quad, object_name) {
-    for (o in object) quad <- quad_layout_add(o, quad, object_name)
-    quad
-}
-
+#############################################################
 #' @export
 quad_layout_add.layout_title <- function(object, quad, object_name) {
     quad@titles <- update_non_waive(quad@titles, object)
@@ -185,6 +19,42 @@ quad_layout_add.matrix <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_add.data.frame <- quad_layout_add.matrix
+
+#############################################################
+# Add elements for the main body or the annotation
+#' @importFrom methods slot slot<-
+#' @export
+quad_layout_add.default <- function(object, quad, object_name) {
+    if (is.null(active <- quad@active)) {
+        quad <- quad_body_add(object, quad, object_name)
+    } else {
+        slot(quad, active) <- stack_layout_add(
+            object, slot(quad, active), object_name
+        )
+    }
+    quad
+}
+
+#' @export
+quad_layout_add.list <- function(object, quad, object_name) {
+    for (o in object) quad <- quad_layout_add(o, quad, object_name)
+    quad
+}
+
+#' @export
+quad_layout_add.with_quad <- function(object, quad, object_name) {
+    old <- quad@active
+    context <- quad_operated_context(object, old, "+") %||%
+        list(NULL) # we wrap `NULL` to a list for `for loop`.
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    for (active in context) {
+        quad@active <- active
+        quad <- quad_layout_add(object, quad, object_name)
+    }
+    quad@active <- old
+    quad
+}
 
 ##################################################################
 #' @export
@@ -213,25 +83,6 @@ quad_layout_add.align <- function(object, quad, object_name) {
     slot(quad, position) <- stack
     update_layout_params(quad, direction = direction, params = stack@layout)
 }
-
-#' @export
-quad_layout_add.free_gg <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "no active annotation stack",
-            i = "try to activate an annotation stack with {.fn anno_*}"
-        ))
-    }
-
-    # add annotation -----------------------------
-    stack <- stack_layout_add(object, slot(quad, position), object_name)
-    slot(quad, position) <- stack
-    quad
-}
-
-#' @export
-quad_layout_add.ggplot <- quad_layout_add.free_gg
 
 #' @export
 quad_layout_add.quad_active <- function(object, quad, object_name) {
@@ -476,3 +327,15 @@ quad_body_add.ggalign_option <- function(object, quad, object_name) {
     ))
     quad
 }
+
+#' @export
+quad_body_add.free_gg <- function(object, quad, object_name) {
+    cli_abort(c(
+        "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+        i = "no active annotation stack",
+        i = "try to activate an annotation stack with {.fn anno_*}"
+    ))
+}
+
+#' @export
+quad_body_add.ggplot <- quad_body_add.free_gg

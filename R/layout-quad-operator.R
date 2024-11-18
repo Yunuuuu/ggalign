@@ -1,3 +1,4 @@
+# `subtract` operates at layout-level
 #' @keywords internal
 quad_layout_subtract <- function(object, quad, object_name) {
     UseMethod("quad_layout_subtract")
@@ -5,41 +6,54 @@ quad_layout_subtract <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    context <- quad_operated_context(
-        quad_with_context(object), quad@active, "-"
-    )
-    if (is.null(context)) context <- c(.TLBR, list(NULL))
-    for (act in context) {
-        if (is.null(act)) {
+    if (is.null(context <- quad@active)) context <- c(.TLBR, list(NULL))
+    for (active in context) {
+        if (is.null(active)) {
             quad <- quad_body_add(object, quad, object_name)
-        } else if (!is.null(slot(quad, act))) {
-            slot(quad, act) <- stack_layout_subtract(
-                object, slot(quad, act), object_name
+        } else if (!is.null(slot(quad, active))) {
+            slot(quad, active) <- stack_layout_subtract(
+                object, slot(quad, active), object_name
             )
         }
     }
     quad
 }
 
-# for objects can inherit from layout
+# for object can set at layout level
 #' @export
 quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
-    context <- quad_operated_context(
-        quad_with_context(object), quad@active, "-"
-    )
-    if (is.null(context)) {
+    if (is.null(context <- quad@active)) {
         quad <- update_layout_option(object, quad, object_name)
     } else {
-        for (act in context) {
-            if (is.null(act)) {
+        slot(quad, context) <- update_layout_option(
+            object, slot(quad, context), object_name
+        )
+    }
+    quad
+}
+
+#' @export
+quad_layout_subtract.with_quad <- function(object, quad, object_name) {
+    old <- quad@active
+    context <- quad_operated_context(object, old, "-")
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    # `subtract` operates at layout-level
+    if (is.null(context)) {
+        quad@active <- context
+        quad <- quad_layout_subtract(object, quad, object_name)
+    } else {
+        for (active in context) {
+            if (is.null(active)) {
                 quad <- quad_body_add(object, quad, object_name)
-            } else if (!is.null(slot(quad, act))) {
-                slot(quad, act) <- update_layout_option(
-                    object, slot(quad, act), object_name
+            } else if (!is.null(slot(quad, active))) {
+                slot(quad, active) <- stack_layout_subtract(
+                    object, slot(quad, active), object_name
                 )
             }
         }
     }
+    quad@active <- old
     quad
 }
 
@@ -95,6 +109,13 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
         )
     }
     quad
+}
+
+#' @export
+quad_layout_and_add.with_quad <- function(object, quad, object_name) {
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    NextMethod()
 }
 
 #' @export
