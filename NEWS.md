@@ -2,7 +2,7 @@
 
 ## New features
 
-* new `fortify_matrix.GISTIC` method for `GISTIC` object from `maftools` package.
+* new `fortify_matrix.GISTIC()` method for `GISTIC` object from `maftools` package (#24).
 
 * `+` operator now will respect `with_quad()`.
 
@@ -15,6 +15,10 @@
 ## Bug fixes
 
 * fix wrong results of `fortify_matrix.MAF()` method
+
+## Improvements
+
+* Now, with_quad() wraps the object into a list with the class with_quad. This approach offers greater flexibility in defining the actions associated with with_quad, allowing for more customizable behavior (#26, @Yunuuuu).
 
 # ggalign 0.0.5
 
