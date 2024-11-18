@@ -112,7 +112,7 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_and_add.with_quad <- function(object, stack, object_name) {
+quad_layout_and_add.with_quad <- function(object, quad, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     NextMethod()
