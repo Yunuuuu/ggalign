@@ -214,9 +214,9 @@ ggheatmap(small_mat) +
     align_dendro(aes(color = branch), k = 3L) +
     anno_bottom(size = 0.2) +
     align_dendro(aes(color = branch), k = 3L) -
-    # Modify the color scale of all plots in the bottom and the opposite annotation
+    # Modify the theme of all plots in the bottom and the opposite annotation
     # in this way, the `main` argument by default would be `TRUE`
-    with_quad(scale_color_brewer(palette = "Dark2", name = "Top and bottom"))
+    with_quad(theme(plot.background = element_rect(fill = "red")))
 ```
 
 The `position` argument can be a string containing one or more of 
