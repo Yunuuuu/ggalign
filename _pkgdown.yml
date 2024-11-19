@@ -64,7 +64,7 @@ reference:
   - stack_free
   - ggoncoplot
 
-- title: Layout Building
+- title: Plot Building
   desc: >
     All plots begin with a call to `ggheatmap()`/`quad_layout()` or `ggstack()`, supplying 
     default data. You then reorder the observations, or split the observations into groups, 
@@ -108,6 +108,15 @@ reference:
   - plot_data
   - plot_theme
 
+- title: Extending ggalign
+  desc: >
+    Functions to enhance and customize the capabilities of ggalign.
+  contents:
+  - align
+  - fortify_data_frame
+  - fortify_matrix
+  - ggalign_attr
+
 - title: Plot composer
   desc: >
     This section outlines essential functions for composing plots into a grid,
@@ -135,8 +144,9 @@ reference:
   - alignpatch
   - patch
 
-- title: helpers
-  desc: A handful of helpers
+- title: Extension of ggplot2
+  desc: >
+    Extending ggplot2 with additional geoms, scales, and other functionalities.
   contents:
   - geom_pie
   - geom_subrect
@@ -146,17 +156,16 @@ reference:
   - geom_draw
   - scale_draw_manual
   - draw_key_draw
+
+- title: helpers
+  desc: A collection of utility functions to enhance usability and functionality.
+  contents:
   - ggalignGrob
-  - ggalign_attr
   - ggalign_stat
-  - fortify_data_frame
-  - fortify_matrix
-  - fortify_stack
-  - align
+  - is_layout
   - hclust2
   - order2
   - dendrogram_data
-  - is_layout
   - read_example
 
 - title: internal
