@@ -155,11 +155,11 @@ reference:
   - geom_draw
   - scale_draw_manual
   - draw_key_draw
+  - theme_ggalign
 
 - title: helpers
   desc: A collection of utility functions to enhance usability and functionality.
   contents:
-  - theme_ggalign
   - ggalignGrob
   - ggalign_stat
   - is_layout
