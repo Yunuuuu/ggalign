@@ -23,7 +23,10 @@
 #'
 #' # Use `magick::filter_types()` to check available `filter` arguments
 #' plots <- lapply(
-#'     c("tile", "raster", magick::filter_types()),
+#'     c(
+#'         "tile", "raster", "Lanczos", "Lanczos2",
+#'         "Lanczos2Sharp", "LanczosRadius", "LanczosSharp"
+#'     ),
 #'     function(filter) {
 #'         ggheatmap(mat, filling = FALSE) +
 #'             switch(filter,
