@@ -1,5 +1,8 @@
 #' Build a Matrix
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#' 
 #' This function converts various objects into a matrix format.
 #'
 #' @param data An object to be converted to a matrix.

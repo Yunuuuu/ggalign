@@ -29,7 +29,7 @@ aligned plots (\code{\link[=stack_align]{stack_align()}}) or \code{"free"} for f
 A \code{StackLayout} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 This function integrates the functionalities of \code{stack_free()} and
 \code{stack_align()} into a single interface. \code{ggstack} is an alias for

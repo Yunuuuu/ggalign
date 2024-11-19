@@ -17,8 +17,6 @@ the number of plot layers, it will be added at the end.}
 A \code{layer_order} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function allows you to change the order in which layers are added to a
 ggplot.
 }

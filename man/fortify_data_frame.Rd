@@ -15,6 +15,8 @@ fortify_data_frame(data, ...)
 A data frame.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 This function converts various objects to a data frame.
 }
 \seealso{

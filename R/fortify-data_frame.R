@@ -1,5 +1,8 @@
 #' Build a data frame
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' This function converts various objects to a data frame.
 #'
 #' @param data An object to be converted to a data frame.

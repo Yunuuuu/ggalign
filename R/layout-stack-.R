@@ -1,7 +1,7 @@
 #' Put plots horizontally or vertically
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' This function integrates the functionalities of `stack_free()` and
 #' `stack_align()` into a single interface. `ggstack` is an alias for

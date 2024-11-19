@@ -1,8 +1,6 @@
 #' Change the layer adding order
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
-#'
 #' This function allows you to change the order in which layers are added to a
 #' ggplot.
 #'
