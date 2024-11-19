@@ -14,7 +14,7 @@
 #' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
 #' provided directly.
 #' @inheritParams align
-#' @return A `free_gg` object.
+#' @return A `ggalign_free_gg` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
@@ -73,14 +73,14 @@ new_free_gg <- function(plot, data, size, active,
                 new_plot_data(if (is.waive(data)) waiver() else NULL)
             )
         ),
-        class = "free_gg"
+        class = "ggalign_free_gg"
     )
 }
 
-is_free <- function(x) inherits(x, "free_gg")
+is_free <- function(x) inherits(x, "ggalign_free_gg")
 
 #' @export
-print.free_gg <- function(x, ...) {
+print.ggalign_free_gg <- function(x, ...) {
     p <- free_gg_build_plot(.subset2(x, "plot"), .subset2(x, "data"))
     print(p)
     invisible(x)
@@ -100,7 +100,7 @@ free_gg_build_plot <- function(plot, data) {
 # For patchwork
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.free_gg <- function(object, plot, object_name) {
+ggplot_add.ggalign_free_gg <- function(object, plot, object_name) {
     object <- free_gg_build_plot(
         .subset2(object, "plot"),
         .subset2(object, "data")

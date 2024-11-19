@@ -102,7 +102,7 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
             object_name = deparse(substitute(x)),
             position = position, main = main
         ),
-        class = "with_quad"
+        class = "ggalign_with_quad"
     )
 }
 
@@ -162,7 +162,7 @@ quad_operated_context <- function(with, active, operator) {
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.with_quad <- function(object, plot, object_name) {
+ggplot_add.ggalign_with_quad <- function(object, plot, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     NextMethod()

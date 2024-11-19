@@ -33,7 +33,7 @@ quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_subtract.with_quad <- function(object, quad, object_name) {
+quad_layout_subtract.ggalign_with_quad <- function(object, quad, object_name) {
     old <- quad@active
     context <- quad_operated_context(object, old, "-")
     object <- .subset2(object, "object")
@@ -70,7 +70,7 @@ quad_layout_subtract.ggplot <- function(object, quad, object_name) {
 quad_layout_subtract.layout_title <- quad_layout_subtract.ggplot
 
 #' @export
-quad_layout_subtract.free_gg <- quad_layout_subtract.ggplot
+quad_layout_subtract.ggalign_free_gg <- quad_layout_subtract.ggplot
 
 #' @export
 quad_layout_subtract.quad_active <- quad_layout_subtract.ggplot
@@ -112,7 +112,7 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_and_add.with_quad <- function(object, quad, object_name) {
+quad_layout_and_add.ggalign_with_quad <- function(object, quad, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     NextMethod()
@@ -139,7 +139,7 @@ quad_layout_and_add.layout_title <- function(object, quad, object_name) {
 quad_layout_and_add.ggplot <- quad_layout_and_add.layout_title
 
 #' @export
-quad_layout_and_add.free_gg <- quad_layout_and_add.layout_title
+quad_layout_and_add.ggalign_free_gg <- quad_layout_and_add.layout_title
 
 #' @export
 quad_layout_and_add.Align <- function(object, quad, object_name) {

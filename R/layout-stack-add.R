@@ -44,7 +44,7 @@ stack_layout_add.list <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_add.with_quad <- function(object, stack, object_name) {
+stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
     active <- stack@active
     if (!is.null(active) &&
         stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
@@ -120,7 +120,7 @@ stack_layout_add.align <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_add.free_gg <- function(object, stack, object_name) {
+stack_layout_add.ggalign_free_gg <- function(object, stack, object_name) {
     if (!is.null(active_index <- stack@active) &&
         is_quad_layout(plot <- .subset2(stack@plots, active_index))) {
         plot <- quad_layout_add(object, plot, object_name)
@@ -184,7 +184,7 @@ update_stack_active <- function(stack, what, call = caller_call()) {
 }
 
 #' @export
-stack_layout_add.quad_active <- stack_layout_add.with_quad
+stack_layout_add.quad_active <- stack_layout_add.ggalign_with_quad
 
 #' @export
 stack_layout_add.quad_anno <- stack_layout_add.quad_active

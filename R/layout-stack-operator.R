@@ -34,7 +34,7 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_subtract.with_quad <- function(object, stack, object_name) {
+stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) {
     active <- stack@active
     if (!is.null(active) &&
         stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
@@ -100,7 +100,7 @@ stack_layout_subtract.layout_title <- function(object, stack, object_name) {
 stack_layout_subtract.ggplot <- stack_layout_subtract.layout_title
 
 #' @export
-stack_layout_subtract.free_gg <- stack_layout_subtract.layout_title
+stack_layout_subtract.ggalign_free_gg <- stack_layout_subtract.layout_title
 
 #' @export
 stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
@@ -142,7 +142,7 @@ stack_layout_and_add.default <- function(object, stack, object_name) {
 }
 
 #' @export
-stack_layout_and_add.with_quad <- function(object, stack, object_name) {
+stack_layout_and_add.ggalign_with_quad <- function(object, stack, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     NextMethod()
@@ -169,7 +169,7 @@ stack_layout_and_add.layout_title <- function(object, stack, object_name) {
 stack_layout_and_add.ggplot <- stack_layout_and_add.layout_title
 
 #' @export
-stack_layout_and_add.free_gg <- stack_layout_and_add.layout_title
+stack_layout_and_add.ggalign_free_gg <- stack_layout_and_add.layout_title
 
 #' @export
 stack_layout_and_add.Align <- function(object, stack, object_name) {

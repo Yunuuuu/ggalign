@@ -42,7 +42,7 @@ quad_layout_add.list <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_add.with_quad <- function(object, quad, object_name) {
+quad_layout_add.ggalign_with_quad <- function(object, quad, object_name) {
     old <- quad@active
     context <- quad_operated_context(object, old, "+") %||%
         list(NULL) # we wrap `NULL` to a list for `for loop`.
@@ -329,7 +329,7 @@ quad_body_add.ggalign_option <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.free_gg <- function(object, quad, object_name) {
+quad_body_add.ggalign_free_gg <- function(object, quad, object_name) {
     cli_abort(c(
         "Cannot add {.var {object_name}} to {.fn {quad@name}}",
         i = "no active annotation stack",
@@ -338,4 +338,4 @@ quad_body_add.free_gg <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.ggplot <- quad_body_add.free_gg
+quad_body_add.ggplot <- quad_body_add.ggalign_free_gg
