@@ -7,16 +7,7 @@
 alignpatch(x)
 }
 \arguments{
-\item{x}{A plot object to be prepared for alignment.
-\code{ggalign} has implement \code{alignpatch} method for following objects:
-\itemize{
-\item \link[ggplot2:ggplot]{ggplot}
-\item \link[=align_plots]{alignpatches}
-\item \link[=ggwrap]{wrapped_plot}
-\item \link[patchwork:patchGrob]{patch}
-\item \link[patchwork:wrap_elements]{wrapped_patch}
-\item \link[patchwork:plot_spacer]{spacer}
-}}
+\item{x}{A plot object to be prepared for alignment.}
 }
 \value{
 A \code{Patch} object.
@@ -24,10 +15,21 @@ A \code{Patch} object.
 \description{
 Prepare plots to be aligned with \code{align_plots}
 }
+\details{
+\code{ggalign} has implement \code{alignpatch} method for following objects:
+\itemize{
+\item \code{\link[ggplot2:ggplot]{ggplot}}
+\item \code{\link[=align_plots]{alignpatches}}
+\item \code{\link[=ggwrap]{wrapped_plot}}
+\item \code{\link[patchwork:patchGrob]{patch}}
+\item \code{\link[patchwork:wrap_elements]{wrapped_patch}}
+\item \code{\link[patchwork:plot_spacer]{spacer}}
+}
+}
 \examples{
 alignpatch(ggplot())
 }
 \seealso{
-\link{align_plots}
+\code{\link[=align_plots]{align_plots()}}
 }
 \keyword{internal}

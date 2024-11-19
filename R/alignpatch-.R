@@ -67,12 +67,13 @@ union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
 split_position <- function(x) {
     vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
-setup_pos <- function(x) {
-    complete_pos(split_position(x))
-}
+
+setup_pos <- function(x) complete_pos(split_position(x))
+
 complete_pos <- function(x) {
     .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
 }
+
 opposite_pos <- function(pos) {
     switch(pos,
         top = "bottom",
@@ -100,7 +101,7 @@ make_patch_table <- function() {
 #' Generate a plot grob.
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
-#' @return A [grob()][grid::grob] object.
+#' @return A [`grob()`][grid::grob] object.
 #' @examples
 #' ggalignGrob(ggplot())
 #' @export
@@ -117,18 +118,19 @@ ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 #' Prepare plots to be aligned with `align_plots`
 #'
 #' @param x A plot object to be prepared for alignment.
+#' @details
 #' `ggalign` has implement `alignpatch` method for following objects:
-#'   - [ggplot][ggplot2::ggplot]
-#'   - [alignpatches][align_plots]
-#'   - [wrapped_plot][ggwrap]
-#'   - [patch][patchwork::patchGrob]
-#'   - [wrapped_patch][patchwork::wrap_elements]
-#'   - [spacer][patchwork::plot_spacer]
+#'   - [`ggplot`][ggplot2::ggplot]
+#'   - [`alignpatches`][align_plots]
+#'   - [`wrapped_plot`][ggwrap]
+#'   - [`patch`][patchwork::patchGrob]
+#'   - [`wrapped_patch`][patchwork::wrap_elements]
+#'   - [`spacer`][patchwork::plot_spacer]
 #'
 #' @return A `Patch` object.
 #' @examples
 #' alignpatch(ggplot())
-#' @seealso [align_plots]
+#' @seealso [`align_plots()`]
 #' @export
 #' @keywords internal
 alignpatch <- function(x) UseMethod("alignpatch")

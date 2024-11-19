@@ -10,7 +10,7 @@ ggalignGrob(x)
 \item{x}{An object to be converted into a \link[grid:grid.grob]{grob}.}
 }
 \value{
-A \link[grid:grid.grob]{grob()} object.
+A \code{\link[grid:grid.grob]{grob()}} object.
 }
 \description{
 Generate a plot grob.
