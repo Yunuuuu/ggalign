@@ -255,7 +255,7 @@ ggalign_stat.default <- function(x, ...) {
 #' Get Data from the Attached Attribute in the Rendering Process
 #'
 #' @description
-#' This function provides access to supplementary information stored as
+#' `ggalign_attr` provides access to supplementary information stored as
 #' attributes during the layout rendering process in `r rd_layout()`. These
 #' attributes, commonly attached during data transformation by functions like
 #' [`fortify_matrix()`] or [`fortify_data_frame()`], can include essential
@@ -263,28 +263,13 @@ ggalign_stat.default <- function(x, ...) {
 #' operations.
 #'
 #' @details
-#' The attached attributes play a vital role in cases where input data undergo
-#' transformations that limit access to complete information, such as the total
-#' number of observations. For example, [`fortify_matrix.MAF()`] may filter
-#' mutation data while adding relevant attributes for detailed analysis.
+#' Attributes attached to the data are particularly useful when input data is
+#' transformed in ways that restrict access to the complete dataset. For
+#' instance, [`fortify_matrix.MAF()`] might filter mutation data while adding
+#' attributes that retain essential context, such as the total number of
+#' observations, for detailed or aggregated analyses.
 #'
-#' Users can utilize the `ggalign_attr` function to extract this information
-#' during the rendering process. Additionally, developers can use
-#' `ggalign_attr_set` and `ggalign_attr_get` to manage these attributes while
-#' defining new methods or extensions for [`fortify_matrix()`] or
-#' [`fortify_data_frame()`].
-#'
-#' User-Facing:
-#' - `ggalign_attr`: Retrieves specific or complete data from the attached
-#'   attributes for use in the rendering process.
-#'
-#' Developer-Focused:
-#' - `ggalign_attr_set`: Attaches supplementary data to the input, facilitating
-#'   downstream use.
-#' - `ggalign_attr_get`: Extracts previously attached supplementary data during
-#'   the transformation process.
-#'
-#' @param x Input data for the function used to transform the layout data.
+#' @param x Data used, typically inherited from the layout `r rd_layout()`.
 #' @param field A string specifying the particular data to retrieve from the
 #' attached attribute. If `NULL`, the entire attached attribute list will be
 #' returned.
@@ -300,16 +285,26 @@ ggalign_attr <- function(x, field = NULL) {
     .subset2(x, field)
 }
 
+#' Set or get the Attached Attribute across the Rendering Process
+#'
+#' @description
+#' - `ggalign_attr_set`: Attaches supplementary data to the input, facilitating
+#'   downstream use.
+#' - `ggalign_attr_get`: Extracts previously attached supplementary data during
+#'   the transformation process.
+#'
+#' @param x Input data for the layout.
 #' @param values A list to be attached.
+#' @inherit ggalign_attr details
+#' @seealso [`ggalign_attr()`]
 #' @export
-#' @rdname ggalign_attr
 ggalign_attr_set <- function(x, values) {
     attr(x, ".__ggalign_data__") <- values
     x
 }
 
 #' @export
-#' @rdname ggalign_attr
+#' @rdname ggalign_attr_set
 ggalign_attr_get <- function(x) attr(x, ".__ggalign_data__", exact = TRUE)
 
 ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)

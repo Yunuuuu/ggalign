@@ -115,6 +115,7 @@ reference:
   - align
   - fortify_data_frame
   - fortify_matrix
+  - ggalign_attr_set
 
 - title: Plot composer
   desc: >
