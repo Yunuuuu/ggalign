@@ -107,7 +107,7 @@
         </dt>
         <dd>Create <code>OncoPrint</code> Visualizations from Genetic Alteration Data</dd>
       </dl></div><div class="section level2">
-      <h2 id="layout-building">Layout Building<a class="anchor" aria-label="anchor" href="#layout-building"></a></h2>
+      <h2 id="plot-building">Plot Building<a class="anchor" aria-label="anchor" href="#plot-building"></a></h2>
 
       <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>.</p></div>
 
@@ -259,6 +259,41 @@
         </dt>
         <dd>Plot default theme</dd>
       </dl></div><div class="section level2">
+      <h2 id="extending-ggalign">Extending ggalign<a class="anchor" aria-label="anchor" href="#extending-ggalign"></a></h2>
+
+      <div class="section-desc"><p>Functions to enhance and customize the capabilities of ggalign.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="align.html">align()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Create a New <code>align</code> Object</dd>
+      </dl><dl><dt>
+
+          <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>
+
+        </dt>
+        <dd>Build a data frame</dd>
+      </dl><dl><dt>
+
+          <code><a href="fortify_matrix.html">fortify_matrix()</a></code>
+
+        </dt>
+        <dd>Build a Matrix</dd>
+      </dl><dl><dt>
+
+          <code><a href="ggalign_attr.html">ggalign_attr()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_set()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_get()</a></code>
+
+        </dt>
+        <dd>Get Data from the Attached Attribute in the Rendering Process</dd>
+      </dl></div><div class="section level2">
       <h2 id="plot-composer">Plot composer<a class="anchor" aria-label="anchor" href="#plot-composer"></a></h2>
 
       <div class="section-desc"><p>This section outlines essential functions for composing plots into a grid, intended for internal use. The core code is derived from the <code>patchwork</code> package, with the hope of eventually integrating and merging these functions into the <code>patchwork</code> project.</p></div>
@@ -347,9 +382,9 @@
         </dt>
         <dd>Convert Object into a Grob</dd>
       </dl></div><div class="section level2">
-      <h2 id="helpers">helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+      <h2 id="extension-of-ggplot-">Extension of ggplot2<a class="anchor" aria-label="anchor" href="#extension-of-ggplot-"></a></h2>
 
-      <div class="section-desc"><p>A handful of helpers</p></div>
+      <div class="section-desc"><p>Extending ggplot2 with additional geoms, scales, and other functionalities.</p></div>
 
 
     </div><div class="section level2">
@@ -405,18 +440,23 @@
 
         </dt>
         <dd>Key glyphs for legends</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="helpers">helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+
+      <div class="section-desc"><p>A collection of utility functions to enhance usability and functionality.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="ggalignGrob.html">ggalignGrob()</a></code>
 
         </dt>
         <dd>Generate a plot grob.</dd>
-      </dl><dl><dt>
-
-          <code><a href="ggalign_attr.html">ggalign_attr()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_set()</a></code> <code><a href="ggalign_attr.html">ggalign_attr_get()</a></code>
-
-        </dt>
-        <dd>Get Data from the Attached Attribute in the Rendering Process</dd>
       </dl><dl><dt>
 
           <code><a href="ggalign_stat.html">ggalign_stat()</a></code>
@@ -425,28 +465,10 @@
         <dd>Get the statistics from the layout</dd>
       </dl><dl><dt>
 
-          <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>
+          <code><a href="is_layout.html">is_layout()</a></code> <code><a href="is_layout.html">is_quad_layout()</a></code> <code><a href="is_layout.html">is_stack_layout()</a></code> <code><a href="is_layout.html">is_heatmap_layout()</a></code> <code><a href="is_layout.html">is_ggheatmap()</a></code>
 
         </dt>
-        <dd>Build a data frame</dd>
-      </dl><dl><dt>
-
-          <code><a href="fortify_matrix.html">fortify_matrix()</a></code>
-
-        </dt>
-        <dd>Build a Matrix</dd>
-      </dl><dl><dt>
-
-          <code><a href="fortify_stack.html">fortify_stack()</a></code>
-
-        </dt>
-        <dd>Build data for the stack layout</dd>
-      </dl><dl><dt>
-
-          <code><a href="align.html">align()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
-        </dt>
-        <dd>Create a New <code>align</code> Object</dd>
+        <dd>Reports whether <code>x</code> is layout object</dd>
       </dl><dl><dt>
 
           <code><a href="hclust2.html">hclust2()</a></code>
@@ -465,12 +487,6 @@
 
         </dt>
         <dd>Dengrogram x and y coordinates</dd>
-      </dl><dl><dt>
-
-          <code><a href="is_layout.html">is_layout()</a></code> <code><a href="is_layout.html">is_quad_layout()</a></code> <code><a href="is_layout.html">is_stack_layout()</a></code> <code><a href="is_layout.html">is_heatmap_layout()</a></code> <code><a href="is_layout.html">is_ggheatmap()</a></code>
-
-        </dt>
-        <dd>Reports whether <code>x</code> is layout object</dd>
       </dl><dl><dt>
 
           <code><a href="read_example.html">read_example()</a></code>
