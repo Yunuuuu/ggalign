@@ -27,6 +27,7 @@ Suggests:
     ggrastr,
     gridGraphics,
     knitr,
+    magick,
     patchwork,
     ragg,
     rmarkdown,
