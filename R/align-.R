@@ -1,7 +1,7 @@
 #' Create a New `align` Object
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' An `align` object interacts with the `layout` object to reorder or split
 #' observations and, in some cases, add plot components to the `layout`.

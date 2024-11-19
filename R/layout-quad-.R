@@ -1,7 +1,7 @@
 #' Arrange Plots in the Quad-Side of a main plot
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' This function integrates the functionalities of `quad_free()`,
 #' `quad_alignh()`, `quad_alignv()`, and `quad_alignb()` into a single
@@ -61,7 +61,7 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #' Arrange Plots in the Quad-Side of a main plot
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' These functions arrange plots around a main plot, allowing for flexible
 #' alignment of observations in different directions. `ggside` is an alias for

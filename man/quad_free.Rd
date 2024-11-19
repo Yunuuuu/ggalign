@@ -74,7 +74,7 @@ added to a layout.}
 \code{\link[grid:unit]{unit}} object.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 These functions arrange plots around a main plot, allowing for flexible
 alignment of observations in different directions. \code{ggside} is an alias for

@@ -47,7 +47,7 @@ ggstack <- stack_layout
 #' Arrange Plots Horizontally or Vertically
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' The `stack_align` function aligns observations, while `stack_free` does not.
 #'
