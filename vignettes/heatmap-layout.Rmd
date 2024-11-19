@@ -97,12 +97,18 @@ ggheatmap(matrix(runif(360L), nrow = 20L), filling = NULL) +
 If you want more complex customization of pie charts, try using
 `ggforce::geom_arc_bar()` instead.
 
-You can use external packages like
+If you want to use `magick` to post-processing the raster image like
+`ComplexHeatmap`, Please use `geom_magick()` instead.
+```{r}
+ggheatmap(small_mat, filling = NULL) +
+    # Use `magick::filter_types()` to check available `filter` arguments
+    geom_magick(aes(fill = value), filter = "Lanczos")
+```
+
+Additionally, You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or
 [ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) to rasterize
-the heatmap body. Additionally,
-[ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) offers many
-image filters that can be applied to ggplot2 layers.
+the heatmap body.
 ```{r eval=rlang::is_installed("ragg")}
 ggheatmap(small_mat, filling = FALSE) +
     ggrastr::rasterise(geom_tile(aes(fill = value)), dev = "ragg")
@@ -114,6 +120,10 @@ objects.
 ```{r eval=rlang::is_installed("ragg")}
 ggrastr::rasterise(ggheatmap(small_mat), dev = "ragg")
 ```
+
+Furthermore,
+[ggfx](https://ggfx.data-imaginist.com/reference/with_raster.html) offers many
+image filters that can be applied to ggplot2 layers.
 
 # heatmap annotations
 A heatmap typically has two observation axes (rows and columns), which can be

@@ -152,7 +152,7 @@ for (i in 1:5000) {
     ) * i / 1000
 }
 
-# Use `magick::filter_types()` to check available filter arguments
+# Use `magick::filter_types()` to check available `filter` arguments
 plots <- lapply(
     c("tile", "raster", magick::filter_types()),
     function(filter) {
