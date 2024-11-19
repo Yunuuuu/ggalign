@@ -2,6 +2,8 @@
 
 ## New features
 
+* new `geom_magick()` function to post-processing the image raster with `magick` package was added.
+
 * new `fortify_matrix.GISTIC()` method for `GISTIC` object from `maftools` package (#24).
 
 * `+` operator now will respect `with_quad()`.
