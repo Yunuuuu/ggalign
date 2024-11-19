@@ -78,7 +78,7 @@ reference:
   - with_quad
   - stack_switch
   - active
-  - theme_ggalign
+  - ggalign_attr
 
 - title: Layout Customization
   desc: >
@@ -115,7 +115,6 @@ reference:
   - align
   - fortify_data_frame
   - fortify_matrix
-  - ggalign_attr
 
 - title: Plot composer
   desc: >
@@ -160,6 +159,7 @@ reference:
 - title: helpers
   desc: A collection of utility functions to enhance usability and functionality.
   contents:
+  - theme_ggalign
   - ggalignGrob
   - ggalign_stat
   - is_layout
