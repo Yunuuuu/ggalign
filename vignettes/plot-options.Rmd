@@ -203,7 +203,7 @@ heatmap_collect_all_guides -
 Note: The legend on the left side of the heatmap body is collected and
 positioned on the left side at the layout level.
 
-If you're annoyed by the large space between the left annotation and the heatmap
+>If you're annoyed by the large space between the left annotation and the heatmap
 body, don't worry! This issue can be addressed using the `free_spaces` feature,
 which is covered in its dedicated section.
 
