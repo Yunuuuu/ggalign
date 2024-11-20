@@ -166,12 +166,13 @@ customized filling geoms. In this way, you must set <code>fill</code> mapping ma
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-6-1.png"><!-- --></p>
 <p>If you want more complex customization of pie charts, try using
 <code>ggforce::geom_arc_bar()</code> instead.</p>
-<p>If you want to use <code>magick</code> to post-processing the raster image like
-<code>ComplexHeatmap</code>, Please use <code><a href="../reference/geom_magick.html">geom_magick()</a></code> instead.</p>
+<p>For raster image post-processing similar to what is done in <code>ComplexHeatmap</code>,
+you can use <code><a href="../reference/geom_raster_magick.html">geom_raster_resize()</a></code>. This function leverages
+<code><a href="https://docs.ropensci.org/magick/reference/transform.html" class="external-link">magick::image_resize()</a></code> to resize raster images with custom filters.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># Use `magick::filter_types()` to check available `filter` arguments</span></span>
-<span>    <span class="fu"><a href="../reference/geom_magick.html">geom_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, filter <span class="op">=</span> <span class="st">"Lanczos"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="../reference/geom_raster_magick.html">geom_raster_resize</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, filter <span class="op">=</span> <span class="st">"Lanczos"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
 <p>Additionally, You can use external packages like
 <a href="https://github.com/VPetukhov/ggrastr" class="external-link">ggrastr</a> or
