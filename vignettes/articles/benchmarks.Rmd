@@ -23,10 +23,22 @@ library(ggalign)
 
 ```{r setup_data}
 set.seed(123)
-n <- 1000
+n <- 2000
 mat <- matrix(rnorm(n * n), nrow = n)
 ```
 
+```{r}
+bench::mark(
+    geom_raster = print(ggheatmap(mat, filling = "raster")),
+    no_dpi = print(ggheatmap(mat, filling = NULL) +
+        raster_magick(geom_tile(aes(fill = value)), dpi = NULL)),
+    set_dpi = print(ggheatmap(mat, filling = NULL) +
+        raster_magick(geom_tile(aes(fill = value)), dpi = 5)),
+    check = FALSE, max_iterations = 1
+)
+```
+
+# Compared with other packages
 A simple heatmap.
 ```{r}
 bench::mark(

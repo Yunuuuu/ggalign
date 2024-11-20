@@ -150,9 +150,9 @@ reference:
   contents:
   - geom_pie
   - geom_subrect
-  - geom_raster_magick
   - theme_no_axes
   - layer_order
+  - raster_magick
   - geom_draw
   - scale_draw_manual
   - draw_key_draw
