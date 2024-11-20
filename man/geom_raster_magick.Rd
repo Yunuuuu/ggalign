@@ -24,7 +24,7 @@ geom_raster_magick(
 
 geom_raster_resize(..., filter = NULL, geometry = NULL)
 
-geom_raster_sample(..., geometry = NULL)
+geom_raster_sample(..., geometry)
 
 geom_raster_scale(..., geometry = NULL)
 }

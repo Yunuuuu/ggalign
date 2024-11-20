@@ -120,7 +120,7 @@ geom_raster_resize <- function(..., filter = NULL, geometry = NULL) {
 #' @inheritParams magick::image_sample
 #' @export
 #' @rdname geom_raster_magick
-geom_raster_sample <- function(..., geometry = NULL) {
+geom_raster_sample <- function(..., geometry) {
     force(geometry)
     geom_raster_magick(
         ...,
