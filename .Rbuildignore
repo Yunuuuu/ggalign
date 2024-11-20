@@ -16,3 +16,4 @@
 ^codecov\.yml$
 ^\.covrignore$
 ^revdep$
+^CODE_OF_CONDUCT\.md$
