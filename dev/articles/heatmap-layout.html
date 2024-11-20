@@ -173,7 +173,7 @@ customized filling geoms. In this way, you must set <code>fill</code> mapping ma
 <p>When working with large heatmaps, it’s often beneficial to rasterize the heatmap
 body layer. This reduces the resolution of only the heatmap body, which can
 improve performance. You can achieve this by using the <code><a href="../reference/raster_magick.html">raster_magick()</a></code>
-function with the dpi argument. By default, the dpi will match the resolution of
+function with the <code>dpi</code> argument. By default, the <code>dpi</code> will match the resolution of
 the current device, but specifying a different value can reduce the resolution
 of the rasterized heatmap body, potentially improving performance compared to
 using the pure <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code> approach.</p>
