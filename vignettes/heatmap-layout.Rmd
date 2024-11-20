@@ -97,12 +97,13 @@ ggheatmap(matrix(runif(360L), nrow = 20L), filling = NULL) +
 If you want more complex customization of pie charts, try using
 `ggforce::geom_arc_bar()` instead.
 
-If you want to use `magick` to post-processing the raster image like
-`ComplexHeatmap`, Please use `geom_magick()` instead.
+For raster image post-processing similar to what is done in `ComplexHeatmap`,
+you can use `geom_raster_resize()`. This function leverages
+`magick::image_resize()` to resize raster images with custom filters.
 ```{r}
 ggheatmap(small_mat, filling = NULL) +
     # Use `magick::filter_types()` to check available `filter` arguments
-    geom_magick(aes(fill = value), filter = "Lanczos")
+    geom_raster_resize(aes(fill = value), filter = "Lanczos")
 ```
 
 Additionally, You can use external packages like

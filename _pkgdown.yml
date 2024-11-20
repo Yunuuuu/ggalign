@@ -150,7 +150,7 @@ reference:
   contents:
   - geom_pie
   - geom_subrect
-  - geom_magick
+  - geom_raster_magick
   - theme_no_axes
   - layer_order
   - geom_draw
