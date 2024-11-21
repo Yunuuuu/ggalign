@@ -27,7 +27,7 @@ free_space.alignpatches <- free_space.ggplot
 free_space.free_align <- function(plot, spaces = "tlbr") {
     assert_position(spaces)
     spaces <- setdiff_position(spaces, attr(plot, "free_axes"))
-    if (nchar(spaces) == 0L) {
+    if (!nzchar(spaces)) {
         return(plot)
     }
     NextMethod()

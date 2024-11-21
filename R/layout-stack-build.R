@@ -55,7 +55,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
                 )
                 if (is_string(cur_spaces)) {
                     cur_spaces <- setdiff_position(cur_spaces, stack_spaces)
-                    if (nchar(cur_spaces) == 0L) cur_spaces <- NULL
+                    if (!nzchar(cur_spaces)) cur_spaces <- NULL
                     cur_controls$controls["free_spaces"] <- list(cur_spaces)
                 }
             }

@@ -22,7 +22,7 @@ free_border.alignpatches <- free_border.ggplot
 free_border.free_align <- function(plot, borders = "tlbr") {
     assert_position(borders)
     borders <- setdiff_position(borders, attr(plot, "free_axes"))
-    if (nchar(borders) == 0L) {
+    if (!nzchar(borders)) {
         return(plot)
     }
     NextMethod()
@@ -32,11 +32,11 @@ free_border.free_align <- function(plot, borders = "tlbr") {
 free_border.free_lab <- function(plot, borders = "tlbr") {
     assert_position(borders)
     free_labs <- setdiff_position(attr(plot, "free_labs"), borders)
-    if (nchar(free_labs) == 0L) {
+    if (nzchar(free_labs)) {
+        attr(plot, "free_labs") <- free_labs
+    } else {
         attr(plot, "free_labs") <- NULL
         class(plot) <- setdiff(class(plot), "free_lab")
-    } else {
-        attr(plot, "free_labs") <- free_labs
     }
     NextMethod()
 }

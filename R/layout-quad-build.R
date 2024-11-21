@@ -67,10 +67,10 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         # prepare labs for child stack layout
         horizontal_align$free_labs <- gsub("[lr]", "", layout_labs)
         vertical_align$free_labs <- gsub("[tb]", "", layout_labs)
-        if (nchar(horizontal_align$free_labs) == 0L) {
+        if (!nzchar(horizontal_align$free_labs)) {
             horizontal_align["free_labs"] <- list(NULL)
         }
-        if (nchar(vertical_align$free_labs) == 0L) {
+        if (!nzchar(vertical_align$free_labs)) {
             vertical_align["free_labs"] <- list(NULL)
         }
     }
@@ -80,10 +80,10 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         !is.waive(layout_spaces)) {
         horizontal_align$free_spaces <- gsub("[lr]", "", layout_spaces)
         vertical_align$free_spaces <- gsub("[tb]", "", layout_spaces)
-        if (nchar(horizontal_align$free_spaces) == 0L) {
+        if (!nzchar(horizontal_align$free_spaces)) {
             horizontal_align["free_spaces"] <- list(NULL)
         }
-        if (nchar(vertical_align$free_spaces) == 0L) {
+        if (!nzchar(vertical_align$free_spaces)) {
             vertical_align["free_spaces"] <- list(NULL)
         }
     }

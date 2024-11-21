@@ -22,7 +22,7 @@ free_lab.alignpatches <- free_lab.ggplot
 free_lab.free_align <- function(plot, labs = "tlbr") {
     assert_position(labs)
     labs <- setdiff_position(labs, attr(plot, "free_axes"))
-    if (nchar(labs) == 0L) return(plot) # styler: off
+    if (!nzchar(labs)) return(plot) # styler: off
     NextMethod()
 }
 
@@ -30,7 +30,7 @@ free_lab.free_align <- function(plot, labs = "tlbr") {
 free_lab.free_borders <- function(plot, labs = "tlbr") {
     assert_position(labs)
     labs <- setdiff_position(labs, attr(plot, "free_borders"))
-    if (nchar(labs) == 0L) return(plot) # styler: off
+    if (!nzchar(labs)) return(plot) # styler: off
     NextMethod()
 }
 
