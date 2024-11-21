@@ -273,6 +273,7 @@ Align <- ggproto("Align",
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
+    # Note: panel input will be reordered by index
     draw = function(self, plot, panel, index, extra_panel, extra_index) plot
 )
 

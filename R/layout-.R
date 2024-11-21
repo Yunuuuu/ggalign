@@ -150,16 +150,19 @@ new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
     list(panel = panel, index = index, nobs = nobs)
 }
 
+# Initialize the index and panel
+# Reorder the panel based the ordering index and
 set_layout_params <- function(params) {
     if (is.null(params)) return(NULL) # styler: off
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`
+    # this is for `stack_layout` which may have no data
     if (is.null(nobs <- .subset2(params, "nobs"))) {
         return(params)
     }
     panel <- .subset2(params, "panel") %||% factor(rep_len(1L, nobs))
     index <- .subset2(params, "index") %||% reorder_index(panel)
-    new_layout_params(panel, index, nobs)
+    new_layout_params(panel[index], index, nobs)
 }
 
 reorder_index <- function(panel, index = NULL) {

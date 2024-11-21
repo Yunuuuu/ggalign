@@ -407,7 +407,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
         direction <- .subset2(self, "direction")
         statistics <- .subset2(self, "statistics")
         priority <- switch_direction(direction, "left", "right")
-        dendrogram_panel <- self$panel
+        dendrogram_panel <- self$panel[index]
         if (!is.null(dendrogram_panel) &&
             # we can change the panel level name, but we prevent
             # from changing the underlying factor level
@@ -458,7 +458,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 priority = priority,
                 center = center,
                 type = type,
-                leaf_braches = .subset(as.character(panel), index),
+                leaf_braches = as.character(panel),
                 reorder_branches = FALSE,
                 root = root
             )

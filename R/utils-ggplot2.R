@@ -70,8 +70,6 @@ set_limits <- function(axis, params) {
     panel <- .subset2(params, "panel")
     index <- .subset2(params, "index")
 
-    # rearrange panel based on the index
-    panel <- panel[index]
     # For y-axis, ggplot arrange panel from top to bottom,
     # we always choose to reverse the panel order
     if (axis == "y") panel <- fct_rev(panel)
@@ -241,8 +239,6 @@ align_scales <- function(facet, scale, axis, params, panel_scales) {
     index <- .subset2(params, "index")
     labels <- .subset2(params, "labels")
 
-    # rearrange panel based on the index
-    panel <- panel[index]
     # For y-axis, ggplot arrange panel from top to bottom,
     # we always choose to reverse the panel order
     if (axis == "y") panel <- fct_rev(panel)

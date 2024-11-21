@@ -180,7 +180,7 @@ AlignGG <- ggproto("AlignGG", Align,
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
-        ans <- data_frame0(.panel = panel[index], .index = index)
+        ans <- data_frame0(.panel = panel, .index = index)
         ans[[coord_name]] <- seq_along(index)
         # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
@@ -188,8 +188,7 @@ AlignGG <- ggproto("AlignGG", Align,
             # Align object always regard row as the observations
             ans <- cross_join(
                 ans, data_frame0(
-                    .extra_panel = extra_panel[extra_index],
-                    .extra_index = extra_index
+                    .extra_panel = extra_panel, .extra_index = extra_index
                 )
             )
             if (!is.null(data)) {

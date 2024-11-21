@@ -267,7 +267,7 @@ quad_build_data <- function(data, row_params, column_params) {
         row_panel <- .subset2(row_params, "panel")
         row_index <- .subset2(row_params, "index")
         row_coords <- data_frame0(
-            .ypanel = row_panel[row_index],
+            .ypanel = row_panel,
             .yindex = row_index,
             .y = seq_along(row_index)
         )
@@ -276,7 +276,7 @@ quad_build_data <- function(data, row_params, column_params) {
         column_panel <- .subset2(column_params, "panel")
         column_index <- .subset2(column_params, "index")
         column_coords <- data_frame0(
-            .xpanel = column_panel[column_index],
+            .xpanel = column_panel,
             .xindex = column_index,
             .x = seq_along(column_index)
         )
