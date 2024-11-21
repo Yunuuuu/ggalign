@@ -160,14 +160,14 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
 #' We create the align entity when initialize the Align object.
 #' @noRd
 new_align <- function(Object, ..., plot = NULL) {
-    structure(list(Object = Object, ..., plot = plot), class = "align")
+    structure(list(Object = Object, ..., plot = plot), class = "ggalign_align")
 }
 
-is_align <- function(x) inherits(x, "align")
+is_align <- function(x) inherits(x, "ggalign_align")
 
 #' @export
 #' @keywords internal
-plot.align <- function(x, ...) {
+plot.ggalign_align <- function(x, ...) {
     cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 

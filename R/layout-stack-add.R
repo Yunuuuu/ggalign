@@ -79,7 +79,7 @@ stack_layout_add.layout_title <- function(object, stack, object_name) {
 ###################################################################
 # `Align` can be added for both heatmap and stack layout
 #' @export
-stack_layout_add.align <- function(object, stack, object_name) {
+stack_layout_add.ggalign_align <- function(object, stack, object_name) {
     if (!is.null(active <- stack@active) &&
         is_quad_layout(plot <- .subset2(stack@plots, active))) {
         plot <- quad_layout_add(object, plot, object_name)

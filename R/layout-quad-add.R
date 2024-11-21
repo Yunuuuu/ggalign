@@ -58,7 +58,7 @@ quad_layout_add.ggalign_with_quad <- function(object, quad, object_name) {
 
 ##################################################################
 #' @export
-quad_layout_add.align <- function(object, quad, object_name) {
+quad_layout_add.ggalign_align <- function(object, quad, object_name) {
     if (is.null(position <- quad@active)) {
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
