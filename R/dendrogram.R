@@ -126,7 +126,7 @@ make_dist <- function(matrix, distance, use_missing,
 #' @param leaf_braches Branches of the leaf node. Must be the same length of the
 #' number of observations in `tree`. Usually come from [cutree][stats::cutree].
 #' @param reorder_branches A single boolean value, indicates whether reorder the
-#' provided leaf_braches based on the actual index.
+#' provided `leaf_braches` based on the actual index.
 #' @param branch_gap A single numeric value indicates the gap between different
 #' branches.
 #' @param root A length one string or numeric indicates the root branch.
