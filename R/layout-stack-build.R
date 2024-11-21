@@ -42,7 +42,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
     # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
     remove_spaces <- is_string(stack_spaces) && !is.null(position)
-    layout <- set_layout_params(stack@layout)
+    layout <- setup_layout_params(stack@layout)
 
     for (plot in plots) {
         if (is_align(plot) || is_free(plot)) {

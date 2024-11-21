@@ -152,7 +152,7 @@ new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
 
 # Initialize the index and panel
 # Reorder the panel based the ordering index and
-set_layout_params <- function(params) {
+setup_layout_params <- function(params) {
     if (is.null(params)) return(NULL) # styler: off
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`

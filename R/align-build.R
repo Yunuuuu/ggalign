@@ -71,8 +71,8 @@ align_build <- function(align, panel, index, controls, extra_layout) {
             plot <- plot +
                 switch_direction(
                     direction,
-                    coord_ggalign(ylim_list = set_limits("y", layout)),
-                    coord_ggalign(xlim_list = set_limits("x", layout))
+                    coord_ggalign(ylim_list = setup_limits("y", layout)),
+                    coord_ggalign(xlim_list = setup_limits("x", layout))
                 )
         }
     }

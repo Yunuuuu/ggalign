@@ -56,8 +56,8 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
-    row_params <- set_layout_params(quad@horizontal)
-    column_params <- set_layout_params(quad@vertical)
+    row_params <- setup_layout_params(quad@horizontal)
+    column_params <- setup_layout_params(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- align <-
@@ -192,7 +192,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         xlim_list <- NULL
     } else {
         column_params$labels <- colnames(data)
-        xlim_list <- set_limits("x", column_params)
+        xlim_list <- setup_limits("x", column_params)
         if (!is.null(row_params)) {
             xlim_list <- vec_rep(xlim_list,
                 times = nlevels(.subset2(row_params, "panel"))
@@ -203,7 +203,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         ylim_list <- NULL
     } else {
         row_params$labels <- vec_names(data)
-        ylim_list <- set_limits("y", row_params)
+        ylim_list <- setup_limits("y", row_params)
         if (!is.null(column_params)) {
             ylim_list <- vec_rep_each(ylim_list,
                 times = nlevels(.subset2(column_params, "panel"))

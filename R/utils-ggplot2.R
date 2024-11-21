@@ -66,7 +66,7 @@ coord_ggalign <- function(xlim_list = NULL, ylim_list = NULL) {
     )
 }
 
-set_limits <- function(axis, params) {
+setup_limits <- function(axis, params) {
     panel <- .subset2(params, "panel")
     index <- .subset2(params, "index")
 
