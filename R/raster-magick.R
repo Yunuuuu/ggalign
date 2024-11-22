@@ -149,7 +149,7 @@ makeContext.ggalign_raster_magick <- function(x) {
     image <- magick::image_graph(
         width = width, height = height,
         bg = NA, res = res,
-        antialias = FALSE
+        clip = FALSE, antialias = FALSE
     )
     grid::pushViewport(vp)
     grid::grid.draw(x)
@@ -159,7 +159,9 @@ makeContext.ggalign_raster_magick <- function(x) {
         image <- magick(image)
         on.exit(magick::image_destroy(image), add = TRUE)
     }
-    raster <- grDevices::as.raster(image)
+
+    # Use native raster instead
+    raster <- grDevices::as.raster(image, native = TRUE)
 
     # Forward raster grob
     grid::rasterGrob(
