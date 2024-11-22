@@ -4,15 +4,7 @@
 \alias{raster_magick}
 \title{Rasterize the input object}
 \usage{
-raster_magick(
-  x,
-  magick = NULL,
-  ...,
-  dpi = NULL,
-  dev = NULL,
-  backend = waiver(),
-  interpolate = FALSE
-)
+raster_magick(x, magick = NULL, ..., res = NULL, interpolate = FALSE)
 }
 \arguments{
 \item{x}{An object to rasterize, can be a \code{\link[grid:grid.grob]{grob()}},
@@ -27,18 +19,7 @@ image.}
 
 \item{...}{Not used currently.}
 
-\item{dpi}{An integer Sets the desired resolution in dots per inch, if NULL,
-the function estimates the DPI based on the current device.}
-
-\item{dev}{A string of \code{"png"}, \code{"jpeg"}, or \code{"tiff"} indicates The
-graphical output format for rasterization. If the rendering backend is set to
-\code{"agg"} or \code{"cairo"}, by default, no explicit device will be
-used, otherwise, the default device used is "png".}
-
-\item{backend}{A string of \code{"agg"} or \code{"cairo"}. If the parameter
-is set to \code{NULL}, the function will using the \code{grDevices} package for
-rendering. Defaults to either \code{agg} or \code{cairo} (whichever is available). If
-neither is available, falls back to \code{grDevices}.}
+\item{res}{An integer sets the desired resolution in pixels.}
 
 \item{interpolate}{
     A logical value indicating whether to linearly interpolate the
