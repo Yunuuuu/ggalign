@@ -133,7 +133,8 @@ refer to
 [ImageMagick's resize documentation](https://usage.imagemagick.org/resize/).
 
 You can rasterize all plots in the layout directly with `raster_magick()`. This
-method works for both `ggheatmap()`/`quad_layout()` and `ggstack()` objects. 
+method works for both `ggheatmap()`/`quad_layout()` and
+`ggstack()`/`stack_layout()` objects.
 
 Additionally, You can use external packages like
 [ggrastr](https://github.com/VPetukhov/ggrastr) or
@@ -145,8 +146,8 @@ ggheatmap(small_mat, filling = FALSE) +
 ```
 
 You can also rasterize all plots in the layout directly with
-`ggrastr::rasterise()`. This method works for both
-`ggheatmap()`/`quad_layout()` and `ggstack()` objects. Indeed, the core code of
+`ggrastr::rasterise()`. This method works for both `ggheatmap()`/`quad_layout()`
+and `ggstack()`/`stack_layout()` objects. Indeed, the core code of
 `raster_magick()` was adopted from `ggrastr::rasterise()`.
 ```{r eval=rlang::is_installed("ragg")}
 ggrastr::rasterise(ggheatmap(small_mat), dev = "ragg")
