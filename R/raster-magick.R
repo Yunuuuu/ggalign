@@ -46,8 +46,8 @@ raster_magick <- function(x, magick = NULL, ...,
     }
     assert_number_whole(res, min = 1, allow_null = TRUE)
     .raster_magick(
-        x = x, ...,
-        magick = magick, interpolate = interpolate
+        x = x, ..., magick = magick, 
+        res = res, interpolate = interpolate
     )
 }
 
