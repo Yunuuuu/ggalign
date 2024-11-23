@@ -202,7 +202,8 @@ distort the image data (though subtle). For more information on image resizing,
 refer to
 <a href="https://usage.imagemagick.org/resize/" class="external-link">ImageMagick’s resize documentation</a>.</p>
 <p>You can rasterize all plots in the layout directly with <code><a href="../reference/raster_magick.html">raster_magick()</a></code>. This
-method works for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code> objects.</p>
+method works for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> and
+<code><a href="../reference/stack_layout.html">ggstack()</a></code>/<code><a href="../reference/stack_layout.html">stack_layout()</a></code> objects.</p>
 <p>Additionally, You can use external packages like
 <a href="https://github.com/VPetukhov/ggrastr" class="external-link">ggrastr</a> or
 <a href="https://ggfx.data-imaginist.com/reference/with_raster.html" class="external-link">ggfx</a> to rasterize
@@ -212,8 +213,8 @@ the heatmap body.</p>
 <span>    <span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-9-1.png"><!-- --></p>
 <p>You can also rasterize all plots in the layout directly with
-<code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code>. This method works for both
-<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code> objects. Indeed, the core code of
+<code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code>. This method works for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code>
+and <code><a href="../reference/stack_layout.html">ggstack()</a></code>/<code><a href="../reference/stack_layout.html">stack_layout()</a></code> objects. Indeed, the core code of
 <code><a href="../reference/raster_magick.html">raster_magick()</a></code> was adopted from <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">ggrastr::rasterise()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggrastr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrastr/man/rasterise.html" class="external-link">rasterise</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, dev <span class="op">=</span> <span class="st">"ragg"</span><span class="op">)</span></span>
