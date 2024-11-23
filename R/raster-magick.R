@@ -121,16 +121,18 @@ raster_magick <- function(x, magick = NULL, ...,
 #' @importFrom grid makeContext unit convertHeight convertWidth viewport
 #' @export
 makeContext.ggalign_raster_magick <- function(x) {
+    vp <- .subset2(x, "vp") %||% viewport()
+    grid::pushViewport(vp)
+
     # Grab viewport information
-    width <- convertWidth(unit(1, "npc"), "inch", valueOnly = TRUE)
-    height <- convertHeight(unit(1, "npc"), "inch", valueOnly = TRUE)
+    width <- convertWidth(unit(1, "npc"), "pt", valueOnly = TRUE)
+    height <- convertHeight(unit(1, "npc"), "pt", valueOnly = TRUE)
 
     # Grab grob metadata
-    vp <- .subset2(x, "vp") %||% viewport()
     params <- .subset2(x, "ggalign_raster_magick")
-    res <- .subset2(params, "res") %||%
-        # If missing, take current DPI
-        convertWidth(unit(1, "inch"), "pt", valueOnly = TRUE)
+    plot_res <- convertWidth(unit(1, "inch"), "pt", valueOnly = TRUE)
+    res <- .subset2(params, "res") %||% plot_res
+
     magick <- .subset2(params, "magick")
     interpolate <- .subset2(params, "interpolate")
 
@@ -144,10 +146,12 @@ makeContext.ggalign_raster_magick <- function(x) {
     old_dev <- grDevices::dev.cur()
     # Reset current device upon function exit
     on.exit(grDevices::dev.set(old_dev), add = TRUE)
+    on.exit(grid::popViewport(), add = TRUE)
 
     # Render layer
     image <- magick::image_graph(
-        width = width, height = height,
+        width = width * res / plot_res,
+        height = height * res / plot_res,
         bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
@@ -167,8 +171,8 @@ makeContext.ggalign_raster_magick <- function(x) {
     grid::rasterGrob(
         raster,
         x = 0.5, y = 0.5,
-        height = unit(height, "inch"),
-        width = unit(width, "inch"),
+        height = unit(height, "pt"),
+        width = unit(width, "pt"),
         default.units = "npc",
         just = "center",
         interpolate = interpolate,
