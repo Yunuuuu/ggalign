@@ -8,10 +8,10 @@ recycle_whole <- function(x, len) {
 
 # `vec_rep_each`
 recycle_each <- function(x, len = NULL) {
-    if (length(len)) {
-        ceiling(x / len)
-    } else {
+    if (is.null(len)) {
         x
+    } else {
+        (x - 1L) %/% len + 1L
     }
 }
 
