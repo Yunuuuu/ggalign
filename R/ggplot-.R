@@ -24,3 +24,15 @@ add_default_mapping <- function(mapping, default_mapping) {
     }
     default_mapping
 }
+
+identity_trans <- function(scale) {
+    # for continuous scale, we don't allow the trans
+    if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
+        cli_warn(sprintf(
+            "{.arg trans} must be {.field identity} in {.code %s}",
+            deparse(scale$call)
+        ))
+        scale$trans <- scales::as.transform("identity")
+    }
+    scale
+}

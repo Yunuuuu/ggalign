@@ -68,6 +68,8 @@ align_build <- function(align, panel, index, controls, extra_layout) {
                 coord_ggalign(x = layout)
             )
     }
+    plot <- plot + theme_recycle()
+
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(.subset2(align, "no_axes"))) {
         controls$plot_theme <- .subset2(controls, "plot_theme") +

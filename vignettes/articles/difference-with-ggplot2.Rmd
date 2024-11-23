@@ -102,7 +102,7 @@ ggheatmap(small_mat, filling = FALSE) +
     align_dendro(k = 3L)
 ```
 
-Integer-based breaks are interpreted as data indices:
+Integer-based `breaks` are interpreted as data indices:
 ```{r}
 ggheatmap(small_mat) +
     scale_x_continuous(breaks = c(3, 5)) +
@@ -202,11 +202,12 @@ ggheatmap(small_mat) +
     scale_x_continuous(expand = expansion(mult = 0.1))
 ```
 
+You can utilize `ggh4x::facetted_pos_scales()` to set scales for each panel.
+
 ## theme
 Although ggplot2 does not officially support vectorized input for theme
-elements, we can still utilize it. For layout axis theme elements such as
-`axis.text`, `axis.ticks`, and `axis.ticks.length`, these will be reordered
-according to the layout axis ordering. 
+elements, we can still utilize it. `ggalign` extends this feature, allowing
+theme elements to be vectorized and applied across panels.
 ```{r}
 ggheatmap(small_mat) +
     theme(
@@ -217,24 +218,6 @@ ggheatmap(small_mat) +
             colour = c(rep("red", 4), rep("blue", 5))
         ),
         axis.ticks.length.x = unit(rep(c(1, 4), times = c(4, 5)), "mm")
-    ) +
-    anno_top() +
-    align_dendro(aes(color = branch), k = 3L) +
-    scale_y_continuous(expand = expansion()) &
-    theme(plot.margin = margin())
-```
-
-To prevent the reordering, wrap the values with `I()`:
-```{r}
-ggheatmap(small_mat) +
-    theme(
-        axis.text.x = element_text(
-            colour = I(c(rep("red", 4), rep("blue", 5)))
-        ),
-        axis.ticks.x = element_line(
-            colour = I(c(rep("red", 4), rep("blue", 5)))
-        ),
-        axis.ticks.length.x = I(unit(rep(c(1, 4), times = c(4, 5)), "mm"))
     ) +
     anno_top() +
     align_dendro(aes(color = branch), k = 3L) +

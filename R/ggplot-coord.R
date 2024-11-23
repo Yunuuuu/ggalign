@@ -35,7 +35,7 @@
 #               - call `guide$draw`:
 #           - call `facet$attach_strips`:
 
-#' Set limits for each panel
+#' Set `limits`, `breaks`, `labels` for each panel
 #'
 #' @param x,y A list of layout parameters.
 #'  - panel: panel group ordered by index.
@@ -169,8 +169,7 @@ align_scales <- function(axis, params, scales) {
             labels <- .subset2(data_labels, i)
             scale$breaks <- get_breaks(scale, pindex, dindex, labels)
             scale$labels <- get_labels(
-                scale, scale$breaks,
-                pindex, dindex, labels
+                scale, scale$breaks, pindex, dindex, labels
             )
         }
         # by default we elways remove any expansion
@@ -180,6 +179,7 @@ align_scales <- function(axis, params, scales) {
 
 #' @importFrom rlang is_empty
 get_breaks <- function(scale, pindex, dindex, labels) {
+    if (scale$is_empty()) return(numeric()) # styler: off
     breaks <- scale$breaks
     if (identical(breaks, NA)) {
         cli_abort(c(

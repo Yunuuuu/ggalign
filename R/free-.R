@@ -128,5 +128,5 @@ free_add.ggalign_option <- function(object, free, object_name) {
 
 free_build <- function(x, controls) {
     plot <- plot_add_controls(.subset2(x, "plot"), controls)
-    list(plot = plot, size = .subset2(x, "size"))
+    list(plot = plot + theme_recycle(), size = .subset2(x, "size"))
 }

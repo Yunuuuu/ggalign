@@ -207,6 +207,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         p <- p + quad_melt_facet(p$facet, default_facet) +
             coord_ggalign(x = column_params, y = row_params)
     }
+    p <- p + theme_recycle()
 
     # add action ----------------------------------------
     p <- plot_add_controls(p, inherit_controls(quad@body_controls, controls))

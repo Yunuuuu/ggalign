@@ -148,7 +148,7 @@ makeContext.ggalign_raster_magick <- function(x) {
     # Render layer
     image <- magick::image_graph(
         width = width, height = height,
-        bg = NA, res = res,
+        bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
     grid::pushViewport(vp)
