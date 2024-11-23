@@ -91,3 +91,158 @@ testthat::test_that("`ggoncoplot` works well", {
             scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
     )
 })
+
+testthat::test_that("`breaks` of `scale_*_()` works well", {
+    set.seed(123)
+    small_mat <- matrix(rnorm(72), nrow = 9)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    # continuous scales
+    expect_doppelganger(
+        "no_names_no_breaks_and_labels",
+        {
+            no_names <- small_mat
+            colnames(no_names) <- NULL
+            ggheatmap(no_names) + scale_x_continuous()
+        }
+    )
+    expect_doppelganger(
+        "continuous_no_breaks",
+        ggheatmap(small_mat) + scale_x_continuous(breaks = NULL)
+    )
+    expect_doppelganger(
+        "continuous_character_breaks",
+        ggheatmap(small_mat) +
+            scale_x_continuous(breaks = c("column3", "column5")) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "continuous_integer_breaks",
+        ggheatmap(small_mat) +
+            scale_x_continuous(breaks = c(3, 5)) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_error(
+        ggplot2::ggsave(tempfile(fileext = ".png"),
+            plot = ggheatmap(small_mat) + scale_x_continuous(breaks = c(3.5, 5))
+        )
+    )
+    expect_doppelganger(
+        "continuous_integer_as_is_breaks",
+        ggheatmap(small_mat) +
+            scale_x_continuous(breaks = I(3:4)) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+
+    # discrete scales
+    expect_doppelganger(
+        "discrete_no_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = NULL)
+    )
+    expect_doppelganger(
+        "discrete_character_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = c("column3", "column5")) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "discrete_integer_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = c(3, 5)) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "discrete_integer_as_is_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = I(3:4)) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+})
+
+testthat::test_that("`labels` of `scale_*_()` works well", {
+    set.seed(123)
+    small_mat <- matrix(rnorm(72), nrow = 9)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    # continuous scales
+    expect_doppelganger(
+        "continuous_no_labels",
+        ggheatmap(small_mat) +
+            scale_x_continuous(labels = NULL) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "continuous_labels",
+        ggheatmap(small_mat) +
+            scale_x_continuous(labels = letters[seq_len(ncol(small_mat))]) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "continuous_labels_as_is",
+        ggheatmap(small_mat) +
+            scale_x_continuous(labels = I(letters[seq_len(ncol(small_mat))])) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "continuous_labels_match_breaks",
+        ggheatmap(small_mat) +
+            scale_x_continuous(breaks = c(5, 3), labels = c("a", "b"))
+    )
+    expect_doppelganger(
+        "continuous_labels_as_is_match_breaks",
+        ggheatmap(small_mat) +
+            scale_x_continuous(breaks = c(5, 3), labels = I(c("a", "b")))
+    )
+
+    # discrete scales
+    expect_doppelganger(
+        "discrete_no_labels",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(labels = NULL) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "discrete_labels",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(labels = letters[seq_len(ncol(small_mat))]) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "discrete_labels_as_is",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(labels = I(letters[seq_len(ncol(small_mat))])) +
+            anno_top() +
+            align_dendro(k = 3L)
+    )
+    expect_doppelganger(
+        "discrete_labels_match_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = c(5, 3), labels = c("a", "b"))
+    )
+    expect_doppelganger(
+        "discrete_labels_as_is_match_breaks",
+        ggheatmap(small_mat, filling = FALSE) +
+            geom_tile(aes(.column_names, .row_names, fill = value)) +
+            scale_x_discrete(breaks = c(5, 3), labels = I(c("a", "b")))
+    )
+})

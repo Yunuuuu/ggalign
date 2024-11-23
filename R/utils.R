@@ -1,5 +1,21 @@
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
+# `vec_rep`
+recycle_whole <- function(x, len) {
+    out <- x %% len
+    if (out == 0L) len else out
+}
+
+# `vec_rep_each`
+recycle_each <- function(x, len = NULL) {
+    if (is.null(len)) {
+        x
+    } else {
+        (x - 1L) %/% len + 1L
+    }
+}
+
+#################################################################
 #' Read Example Data
 #'
 #' This function reads example data from the file. If no file is specified, it
@@ -149,7 +165,7 @@ save_png <- function(code, width = 400L, height = 400L) {
 }
 
 add_class <- function(x, ...) {
-    class(x) <- c(..., class(x))
+    class(x) <- vec_unique(c(..., class(x)))
     x
 }
 
@@ -216,9 +232,7 @@ fclass <- function(x) .subset(class(x), 1L)
 
 is_scalar <- function(x) length(x) == 1L
 
-is_scalar_numeric <- function(x) {
-    length(x) == 1L && is.numeric(x)
-}
+is_scalar_numeric <- function(x) length(x) == 1L && is.numeric(x)
 
 # utils function to collapse characters ---------------------------
 oxford_and <- function(chr, code = TRUE, quote = TRUE, sep = ", ") {

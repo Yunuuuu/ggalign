@@ -56,26 +56,20 @@ align_build <- function(align, panel, index, controls, extra_layout) {
             default_facet <- ggplot2::facet_null()
         }
         layout <- list(
-            panel = panel, index = index,
-            labels = .subset2(object, "labels")
+            panel = panel,
+            index = index,
+            labels = .subset(.subset2(object, "labels"), index),
+            limits = .subset2(align, "limits")
         )
         plot <- plot + align_melt_facet(plot$facet, default_facet, direction) +
             switch_direction(
                 direction,
-                facet_ggalign(y = layout),
-                facet_ggalign(x = layout)
+                coord_ggalign(y = layout),
+                coord_ggalign(x = layout)
             )
-
-        # set up coord limits to align each observation
-        if (.subset2(align, "limits")) {
-            plot <- plot +
-                switch_direction(
-                    direction,
-                    coord_ggalign(ylim_list = setup_limits("y", layout)),
-                    coord_ggalign(xlim_list = setup_limits("x", layout))
-                )
-        }
     }
+    plot <- plot + theme_recycle()
+
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(.subset2(align, "no_axes"))) {
         controls$plot_theme <- .subset2(controls, "plot_theme") +
