@@ -16,6 +16,8 @@
 
 ## Bug fixes
 
+* fix breaks and labels not work well in discrete scale
+
 * fix wrong results of `fortify_matrix.MAF()` method
 
 ## Improvements
