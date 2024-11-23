@@ -137,31 +137,13 @@
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">2000</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="va">n</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
-<span>    geom_raster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    no_dpi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>        <span class="fu"><a href="../reference/raster_magick.html">raster_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, dpi <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    set_dpi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>        <span class="fu"><a href="../reference/raster_magick.html">raster_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, dpi <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    check <span class="op">=</span> <span class="cn">FALSE</span>, max_iterations <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="benchmarks_files/figure-html/unnamed-chunk-2-1.png" width="700"><img src="benchmarks_files/figure-html/unnamed-chunk-2-2.png" width="700"><img src="benchmarks_files/figure-html/unnamed-chunk-2-3.png" width="700"><img src="benchmarks_files/figure-html/unnamed-chunk-2-4.png" width="700"><img src="benchmarks_files/figure-html/unnamed-chunk-2-5.png" width="700"><img src="benchmarks_files/figure-html/unnamed-chunk-2-6.png" width="700"></p>
-<pre><code><span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
-<span><span class="co">#&gt; disabled.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> geom_raster    6.24s    6.24s    0.160     9.98GB     2.88</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> no_dpi        10.94s   10.94s    0.091<span style="text-decoration: underline;">4</span>    9.99GB     1.01</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> set_dpi       10.82s   10.82s    0.092<span style="text-decoration: underline;">4</span>    10.4GB     1.11</span></span></code></pre>
 <div class="section level2">
 <h2 id="compared-with-other-packages">Compared with other packages<a class="anchor" aria-label="anchor" href="#compared-with-other-packages"></a>
 </h2>
 <p>A simple heatmap.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>    <span class="st">"heatmap()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
@@ -202,13 +184,13 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   565.96ms 565.96ms    1.77    551.42MB    0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()   16.16s   16.16s    0.061<span style="text-decoration: underline;">9</span>  890.73MB    0.247</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()     12.43s   12.43s    0.080<span style="text-decoration: underline;">4</span>    3.03GB    0.724</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.58s    2.58s    0.388    490.2MB    0.388</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      5.62s    5.62s    0.178     9.97GB    1.25</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()    153.4ms 266.93ms     3.75   139.11MB    5.62 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.24s    2.24s     0.446  224.23MB    0.892</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.27s    4.27s     0.234  792.59MB    2.81 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  635.98ms 635.98ms     1.57    124.1MB    1.57 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      2.11s    2.11s     0.473    2.51GB    9.94</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>    <span class="st">"heatmap()"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
@@ -251,11 +233,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      17.1s    17.1s    0.058<span style="text-decoration: underline;">6</span>  691.73MB    0.469</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    19.7s    19.7s    0.050<span style="text-decoration: underline;">7</span>  890.02MB    0.355</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      30.3s    30.3s    0.033<span style="text-decoration: underline;">0</span>    6.02GB    0.362</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     19.3s    19.3s    0.051<span style="text-decoration: underline;">9</span>  705.65MB    0.104</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      25.4s    25.4s    0.039<span style="text-decoration: underline;">4</span>   10.23GB    1.10</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.91s    2.91s     0.343  173.72MB    2.40 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.72s    2.72s     0.368  223.41MB    2.21 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      5.48s    5.48s     0.183    1.51GB    1.83 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.25s    2.25s     0.445  177.53MB    0.445</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      5.21s    5.21s     0.192    2.58GB    5.37</span></span></code></pre></div>
 </div>
   </main>
 </div>
