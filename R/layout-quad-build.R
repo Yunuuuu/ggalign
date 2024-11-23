@@ -188,35 +188,24 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     }
 
     # set limits ----------------------------------------
-    if (is.null(column_params)) {
-        xlim_list <- NULL
-    } else {
-        column_params$labels <- colnames(data)
-        xlim_list <- setup_limits("x", column_params)
-        if (!is.null(row_params)) {
-            xlim_list <- vec_rep(xlim_list,
-                times = nlevels(.subset2(row_params, "panel"))
-            )
-        }
+    if (!is.null(column_params)) {
+        column_params$labels <- .subset(
+            colnames(data),
+            .subset2(column_params, "index")
+        )
     }
-    if (is.null(row_params)) {
-        ylim_list <- NULL
-    } else {
-        row_params$labels <- vec_names(data)
-        ylim_list <- setup_limits("y", row_params)
-        if (!is.null(column_params)) {
-            ylim_list <- vec_rep_each(ylim_list,
-                times = nlevels(.subset2(column_params, "panel"))
-            )
-        }
+    if (!is.null(row_params)) {
+        row_params$labels <- .subset(
+            vec_names(data),
+            .subset2(row_params, "index")
+        )
     }
 
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
     if (!is.null(row_params) || !is.null(column_params)) {
         p <- p + quad_melt_facet(p$facet, default_facet) +
-            facet_ggalign(x = column_params, y = row_params) +
-            coord_ggalign(xlim_list = xlim_list, ylim_list = ylim_list)
+            coord_ggalign(x = column_params, y = row_params)
     }
 
     # add action ----------------------------------------

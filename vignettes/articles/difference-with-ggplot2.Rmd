@@ -51,8 +51,8 @@ To better fit the alignment-based layout, `ggalign` introduces adjustments to
 
 ### breaks
 `breaks` and `labels` are typically handled similarly to discrete scales, as we
-focus on aligning observations (which should be regarded as discrete variables)
-in the layout axis; however, a continuous scale can remain be used.
+focus on aligning observations (which should be regarded as discrete variables);
+no matter what you use is continuous scale or discrete scale.
 
 `breaks` should be one of:
 
@@ -65,34 +65,70 @@ in the layout axis; however, a continuous scale can remain be used.
 
     - A numeric vector of data index (must be an integer).
 
-    - A function that takes the data limits or the data index as input and
+    - A function that takes the data names or the data index as input and
     returns breaks as output. Also accepts rlang lambda function notation. 
 
-```{r}
-ggheatmap(small_mat) + scale_x_continuous(breaks = NULL)
-```
-
-```{r}
-ggheatmap(small_mat) + scale_x_continuous()
-```
-
+Default `breaks` without names:
 ```{r}
 no_names <- small_mat
 colnames(no_names) <- NULL
 ggheatmap(no_names) + scale_x_continuous()
 ```
 
+No breaks:
 ```{r}
-ggheatmap(small_mat) + scale_x_continuous(breaks = c("column3", "column5"))
+ggheatmap(small_mat) + scale_x_continuous(breaks = NULL)
 ```
 
 ```{r}
-ggheatmap(small_mat) + scale_x_continuous(breaks = c(3, 5))
+ggheatmap(small_mat, filling = FALSE) +
+    geom_tile(aes(.column_names, .row_names, fill = value)) +
+    scale_x_discrete(breaks = NULL)
 ```
 
-Floating number were not allowed in `breaks`.
+Character-based `breaks` use data names (or `indices` if names are absent)
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(breaks = c("column3", "column5")) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+```{r}
+ggheatmap(small_mat, filling = FALSE) +
+    geom_tile(aes(.column_names, .row_names, fill = value)) +
+    scale_x_discrete(breaks = c("column3", "column5")) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+Integer-based breaks are interpreted as data indices:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(breaks = c(3, 5)) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+```{r}
+ggheatmap(small_mat, filling = FALSE) +
+    geom_tile(aes(.column_names, .row_names, fill = value)) +
+    scale_x_discrete(breaks = c(3, 5)) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+Floating numbers are invalid for breaks
 ```{r error=TRUE}
 ggheatmap(small_mat) + scale_x_continuous(breaks = c(3.5, 5))
+```
+
+To interpret integers as plot-specific coordinate indices, wrap them with `I()`:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(breaks = I(3:4)) +
+    anno_top() +
+    align_dendro(k = 3L)
 ```
 
 ### labels
@@ -107,42 +143,51 @@ ggheatmap(small_mat) + scale_x_continuous(breaks = c(3.5, 5))
     - An expression vector (must be the same length as breaks). See `?plotmath`
     for details. 
 
-    - A function that takes the data names (or breaks if data has no names) as
-    input and returns labels as output. This can be also a rlang lambda
+    - A function that takes the data names (or data index if data has no names)
+    as input and returns labels as output. This can be also a rlang lambda
     function.
 
+The default labels are the data names (or indices if names are absent):
 ```{r}
-ggheatmap(small_mat) + scale_x_continuous(labels = NULL)
-```
-
-```{r}
-ggheatmap(small_mat) + scale_x_continuous()
-```
-
-```{r}
-ggheatmap(small_mat) +
-    scale_x_continuous(labels = letters[seq_len(ncol(small_mat))])
-```
-
-```{r}
-ggheatmap(small_mat) +
-    scale_x_continuous(breaks = c(3, 5), labels = c("a", "b"))
-```
-
-### data ordering
-Both `breaks` and `labels` should be provided in the original order of the raw
-data, the internal will reorder them accordingly if you reorder the
-observations.
-
-```{r}
-index <- order(colMeans(small_mat))
-xlabels <- letters[seq_len(ncol(small_mat))]
-print(xlabels[index])
-
-ggheatmap(small_mat) +
-    scale_x_continuous(labels = xlabels) +
+ggheatmap(small_mat) + scale_x_continuous() +
     anno_top() +
-    align_order(index)
+    align_dendro(k = 3L)
+```
+
+No labels:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(labels = NULL) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+Character labels will be reordered based on the data's ordering:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(labels = letters[seq_len(ncol(small_mat))]) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+To retain the original order of character labels, wrap them with `I()`:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(labels = I(letters[seq_len(ncol(small_mat))])) +
+    anno_top() +
+    align_dendro(k = 3L)
+```
+
+By default, labels correspond to `breaks`:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(breaks = c(5, 3), labels = c("a", "b"))
+```
+
+To override the default matching, wrap the labels vector with `I()`:
+```{r}
+ggheatmap(small_mat) +
+    scale_x_continuous(breaks = c(5, 3), labels = I(c("a", "b")))
 ```
 
 ### expand
