@@ -45,8 +45,9 @@ raster_magick <- function(x, magick = NULL, ...,
         cli_abort("{.arg magick} must be a function")
     }
     assert_number_whole(res, min = 1, allow_null = TRUE)
+    assert_bool(interpolate)
     .raster_magick(
-        x = x, ..., magick = magick, 
+        x = x, ..., magick = magick,
         res = res, interpolate = interpolate
     )
 }
@@ -159,10 +160,8 @@ makeContext.ggalign_raster_magick <- function(x) {
     grid::grid.draw(x)
     grid::popViewport()
     grDevices::dev.off()
-    if (!is.null(magick)) {
-        image <- magick(image)
-        on.exit(magick::image_destroy(image), add = TRUE)
-    }
+    on.exit(magick::image_destroy(image), add = TRUE)
+    if (!is.null(magick)) image <- magick(image)
 
     # Use native raster instead
     raster <- grDevices::as.raster(image, native = TRUE)
