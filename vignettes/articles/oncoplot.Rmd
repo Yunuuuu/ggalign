@@ -57,7 +57,7 @@ By default, all empty string will be converted to `NA` value and `ggplot2` will
 translate the `NA` values and render it in the legend. To prevent this, you can
 turn off the translation using `na.translate = FALSE`: 
 ```{r}
-ggoncoplot(mat) +
+ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
 ```
 
@@ -67,7 +67,10 @@ frequency. Disable this with `reorder_row = FALSE` and `reorder_column = FALSE`.
 You can further customize layouts using methods from
 `vignette("layout-customize")`.
 ```{r}
-ggoncoplot(mat, reorder_row = FALSE, reorder_column = FALSE) +
+ggoncoplot(mat,
+    map_width = c(snv = 0.5), map_height = c(indel = 0.9),
+    reorder_row = FALSE, reorder_column = FALSE
+) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
 ```
 
