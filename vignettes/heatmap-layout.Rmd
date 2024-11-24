@@ -101,13 +101,13 @@ If you want more complex customization of pie charts, try using
 When working with large heatmaps, it's often beneficial to rasterize the heatmap
 body layer. This reduces the resolution of only the heatmap body, which can
 improve performance. You can achieve this by using the `raster_magick()`
-function with the `dpi` argument. By default, the `dpi` will match the resolution of
-the current device, but specifying a different value can reduce the resolution
-of the rasterized heatmap body, potentially improving performance compared to
-using the pure `geom_raster()` approach.
+function with the `res` argument. By default, the `res` will match the
+resolution of the current device, but specifying a different value can reduce
+the resolution of the rasterized heatmap body, potentially improving performance
+compared to using the pure `geom_raster()` approach.
 ```{r}
 ggheatmap(small_mat, filling = NULL) +
-    raster_magick(geom_tile(aes(fill = value)), dpi = 20)
+    raster_magick(geom_tile(aes(fill = value)), res = 50)
 ```
 
 For raster image post-processing, similar to the approach in `ComplexHeatmap`,
