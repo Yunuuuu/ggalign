@@ -171,23 +171,23 @@ customized filling geoms. In this way, you must set <code>fill</code> mapping ma
 <h2 id="rasterization">rasterization<a class="anchor" aria-label="anchor" href="#rasterization"></a>
 </h2>
 <p>When working with large heatmaps, it’s often beneficial to rasterize the heatmap
-body layer. This reduces the resolution of only the heatmap body, which can
-improve performance. You can achieve this by using the <code><a href="../reference/raster_magick.html">raster_magick()</a></code>
-function with the <code>res</code> argument. By default, the <code>res</code> will match the
-resolution of the current device, but specifying a different value can reduce
-the resolution of the rasterized heatmap body, potentially improving performance
-compared to using the pure <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code> approach.</p>
+body layer. You can achieve this by using the <code><a href="../reference/raster_magick.html">raster_magick()</a></code> function. By
+default, the <code>res</code> will match the resolution of the current device, but
+specifying a different value can reduce the resolution of the rasterized heatmap
+body.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/raster_magick.html">raster_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, res <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
 <p><img src="heatmap-layout_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
 <p>For raster image post-processing, similar to the approach in <code>ComplexHeatmap</code>,
 you can leverage the <code><a href="../reference/raster_magick.html">raster_magick()</a></code> function. This function uses the <code>magick</code>
-package to apply custom image resizing with filters.</p>
+package to apply custom image resizing with filters. Based on a rough testing,
+rasterization becomes advantageous for heatmaps with more than <code>5000 x 5000</code>
+cells compared to using pure <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># Use `magick::filter_types()` to check available `filter` arguments</span></span>
-<span>    <span class="fu"><a href="../reference/raster_magick.html">raster_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/raster_magick.html">raster_magick</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>        magick <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span></span>
 <span>            <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/transform.html" class="external-link">image_resize</a></span><span class="op">(</span><span class="va">image</span>,</span>
 <span>                <span class="co"># we resize to the 50% of width</span></span>
