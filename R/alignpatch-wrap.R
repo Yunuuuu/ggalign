@@ -56,11 +56,14 @@ ggwrap <- function(plot, ..., align = "panel", on_top = TRUE,
 make_wrap <- function(patch, grob) UseMethod("make_wrap")
 
 #' @export
-make_wrap.ggplot <- function(patch, grob) {
-    if (!inherits(patch, "patch_ggplot")) {
-        patch <- add_class(patch, "patch_ggplot")
-    }
+make_wrap.patch_ggplot <- function(patch, grob) {
     patch <- add_class(patch, "wrapped_plot")
+    make_wrap(patch, grob)
+}
+
+#' @export
+make_wrap.ggplot <- function(patch, grob) {
+    patch <- add_class(patch, "patch_ggplot")
     make_wrap(patch, grob)
 }
 
