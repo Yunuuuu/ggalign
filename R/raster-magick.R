@@ -122,9 +122,6 @@ raster_magick <- function(x, magick = NULL, ...,
 #' @importFrom grid makeContext unit convertHeight convertWidth viewport
 #' @export
 makeContext.ggalign_raster_magick <- function(x) {
-    vp <- .subset2(x, "vp") %||% viewport()
-    grid::pushViewport(vp)
-
     # Grab viewport information
     width <- convertWidth(unit(1, "npc"), "pt", valueOnly = TRUE)
     height <- convertHeight(unit(1, "npc"), "pt", valueOnly = TRUE)
@@ -148,7 +145,6 @@ makeContext.ggalign_raster_magick <- function(x) {
 
     # Reset current device upon function exit
     on.exit(grDevices::dev.set(old_dev), add = TRUE)
-    on.exit(grid::popViewport(), add = TRUE)
 
     # Render layer
     image <- magick::image_graph(
@@ -157,18 +153,8 @@ makeContext.ggalign_raster_magick <- function(x) {
         bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
-
-    # reset viewport width and height
-    vp2 <- grid::editViewport(
-        vp,
-        x = unit(0.5, "npc"),
-        y = unit(0.5, "npc"),
-        just = "center",
-        width = unit(1, "npc"),
-        height = unit(1, "npc")
-    )
-    grid::pushViewport(vp2)
-    grid::grid.draw(x)
+    grid::pushViewport(viewport())
+    grid::grid.draw(x) # should respect the viewport of `x`
     grid::popViewport()
     grDevices::dev.off()
     on.exit(magick::image_destroy(image), add = TRUE)
@@ -179,13 +165,12 @@ makeContext.ggalign_raster_magick <- function(x) {
 
     # Forward raster grob
     grid::rasterGrob(
-        raster,
+        raster, # should contain current area of full viewport
         x = 0.5, y = 0.5,
         height = unit(height, "pt"),
         width = unit(width, "pt"),
         default.units = "npc",
         just = "center",
-        interpolate = interpolate,
-        vp = .subset2(x, "vp")
+        interpolate = interpolate
     )
 }
