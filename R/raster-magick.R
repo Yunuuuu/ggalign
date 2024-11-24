@@ -134,30 +134,32 @@ makeContext.ggalign_raster_magick <- function(x) {
     magick <- .subset2(params, "magick")
     interpolate <- .subset2(params, "interpolate")
 
-    # Clean up grob, why ??
-    # remove following code won't work
-    # it seems we can modify `x` in place here
-    x$ggalign_raster_magick <- NULL
-    class(x) <- setdiff(class(x), "ggalign_raster_magick")
-
     # Track current device
     old_dev <- grDevices::dev.cur()
 
     # Reset current device upon function exit
     on.exit(grDevices::dev.set(old_dev), add = TRUE)
 
-    # Render layer
+    # open the magick raster device
     image <- magick::image_graph(
         width = width * res / plot_res,
         height = height * res / plot_res,
         bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
+
+    # Render the grob
     grid::pushViewport(viewport())
+
+    # Clean up the grob for rendering
+    x$ggalign_raster_magick <- NULL
+    class(x) <- setdiff(class(x), "ggalign_raster_magick")
     grid::grid.draw(x) # should respect the viewport of `x`
     grid::popViewport()
     grDevices::dev.off()
     on.exit(magick::image_destroy(image), add = TRUE)
+
+    # run `magick` when necessary
     if (!is.null(magick)) image <- magick(image)
 
     # Use native raster instead
