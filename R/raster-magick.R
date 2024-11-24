@@ -156,7 +156,7 @@ makeContext.ggalign_raster_magick <- function(x) {
         bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
-    grid::pushViewport(vp)
+    grid::pushViewport(viewport())
     grid::grid.draw(x)
     grid::popViewport()
     grDevices::dev.off()
