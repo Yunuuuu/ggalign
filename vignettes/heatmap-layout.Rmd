@@ -99,12 +99,10 @@ If you want more complex customization of pie charts, try using
 
 # rasterization
 When working with large heatmaps, it's often beneficial to rasterize the heatmap
-body layer. This reduces the resolution of only the heatmap body, which can
-improve performance. You can achieve this by using the `raster_magick()`
-function with the `res` argument. By default, the `res` will match the
-resolution of the current device, but specifying a different value can reduce
-the resolution of the rasterized heatmap body, potentially improving performance
-compared to using the pure `geom_raster()` approach.
+body layer. You can achieve this by using the `raster_magick()` function. By
+default, the `res` will match the resolution of the current device, but
+specifying a different value can reduce the resolution of the rasterized heatmap
+body.
 ```{r}
 ggheatmap(small_mat, filling = NULL) +
     raster_magick(geom_tile(aes(fill = value)), res = 50)
@@ -112,11 +110,13 @@ ggheatmap(small_mat, filling = NULL) +
 
 For raster image post-processing, similar to the approach in `ComplexHeatmap`,
 you can leverage the `raster_magick()` function. This function uses the `magick`
-package to apply custom image resizing with filters.
+package to apply custom image resizing with filters. Based on a rough testing,
+rasterization becomes advantageous for heatmaps with more than `5000 x 5000`
+cells compared to using pure `geom_raster()`. 
 ```{r}
 ggheatmap(small_mat, filling = NULL) +
     # Use `magick::filter_types()` to check available `filter` arguments
-    raster_magick(geom_tile(aes(fill = value)),
+    raster_magick(geom_raster(aes(fill = value)),
         magick = function(image) {
             magick::image_resize(image,
                 # we resize to the 50% of width
