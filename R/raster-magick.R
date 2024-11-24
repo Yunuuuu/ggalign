@@ -145,6 +145,7 @@ makeContext.ggalign_raster_magick <- function(x) {
 
     # Track current device
     old_dev <- grDevices::dev.cur()
+
     # Reset current device upon function exit
     on.exit(grDevices::dev.set(old_dev), add = TRUE)
     on.exit(grid::popViewport(), add = TRUE)
@@ -156,13 +157,16 @@ makeContext.ggalign_raster_magick <- function(x) {
         bg = NA_character_, res = res,
         clip = FALSE, antialias = FALSE
     )
+
     # reset viewport width and height
-    vp2 <- vp
-    vp2$x <- unit(0.5, "npc")
-    vp2$y <- unit(0.5, "npc")
-    vp2$just <- "center"
-    vp2$width <- unit(1, "npc")
-    vp2$height <- unit(1, "npc")
+    vp2 <- grid::editViewport(
+        vp,
+        x = unit(0.5, "npc"),
+        y = unit(0.5, "npc"),
+        just = "center",
+        width = unit(1, "npc"),
+        height = unit(1, "npc")
+    )
     grid::pushViewport(vp2)
     grid::grid.draw(x)
     grid::popViewport()
@@ -182,6 +186,6 @@ makeContext.ggalign_raster_magick <- function(x) {
         default.units = "npc",
         just = "center",
         interpolate = interpolate,
-        vp = vp
+        vp = .subset2(x, "vp")
     )
 }
