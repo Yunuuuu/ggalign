@@ -174,8 +174,8 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     theme_no_axes("x")
 ```
 
-To focus only on cells with multiple alterations, filter the data before
-applying `geom_subtile()`:
+We focus exclusively on cells with multiple alterations to highlight the
+differences, by filtering the data before applying `geom_subtile()`:
 ```{r eval=can_read_maf && rlang::is_installed("dplyr")}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     plot_data(function(data) {
