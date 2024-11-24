@@ -126,7 +126,7 @@ ggheatmap(small_mat, filling = NULL) +
     )
 ```
 
-Note: When using `magick::image_resize()`, you must specify the `geometry`
+Note: When using `magick::image_resize()`, you should specify the `geometry`
 argument to resize the image. If only the `filter` is specified, it will only
 distort the image data (though subtle). For more information on image resizing,
 refer to
