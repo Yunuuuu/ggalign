@@ -65,9 +65,7 @@ setup_limits <- function(axis, params) {
 ggplot_add.coord_ggalign <- function(object, plot, object_name) {
     x_params <- .subset2(object, "x")
     y_params <- .subset2(object, "y")
-    if (is.null(x_params) && is.null(y_params)) {
-        return(plot)
-    }
+
     # we will set limits by default
     if (!is.null(x_params) && (.subset2(x_params, "limits") %||% TRUE)) {
         xlim_list <- setup_limits("x", x_params)

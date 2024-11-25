@@ -55,20 +55,24 @@ align_build <- function(align, panel, index, controls, extra_layout) {
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        layout <- list(
-            panel = panel,
-            index = index,
-            labels = .subset(.subset2(object, "labels"), index),
-            limits = .subset2(align, "limits")
-        )
-        plot <- plot + align_melt_facet(plot$facet, default_facet, direction) +
-            switch_direction(
-                direction,
-                coord_ggalign(y = layout),
-                coord_ggalign(x = layout)
-            )
+        plot <- plot + align_melt_facet(plot$facet, default_facet, direction)
+        limits <- .subset2(align, "limits")
+    } else {
+        limits <- FALSE
     }
-    plot <- plot + theme_recycle()
+
+    # set limits and default scales
+    layout <- list(
+        panel = panel,
+        index = index,
+        labels = .subset(.subset2(object, "labels"), index),
+        limits = limits
+    )
+    plot <- plot + switch_direction(
+        direction,
+        coord_ggalign(y = layout),
+        coord_ggalign(x = layout)
+    ) + theme_recycle()
 
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(.subset2(align, "no_axes"))) {

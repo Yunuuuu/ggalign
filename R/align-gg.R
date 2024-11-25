@@ -134,14 +134,8 @@ AlignGG <- ggproto("AlignGG", Align,
         ans <- fortify_data_frame(data)
         # we always add `.names` and `.index` to align the observations
         if (is.matrix(data)) {
-            if (!is.null(old_names <- vec_names(data))) {
-                ans$.names <- vec_rep(old_names, NCOL(data))
-            }
             ans$.index <- vec_rep(seq_len(NROW(data)), NCOL(data))
         } else {
-            if (!is.null(old_names <- vec_names(data))) {
-                ans$.names <- old_names
-            }
             ans$.index <- seq_len(NROW(data))
         }
         ans
@@ -180,7 +174,10 @@ AlignGG <- ggproto("AlignGG", Align,
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
-        ans <- data_frame0(.panel = panel, .index = index)
+        ans <- data_frame0(
+            .panel = panel, .index = index,
+            .names = .subset(self$labels, index)
+        )
         ans[[coord_name]] <- seq_along(index)
         # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
