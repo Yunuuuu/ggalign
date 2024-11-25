@@ -138,6 +138,7 @@ AlignGG <- ggproto("AlignGG", Align,
         } else {
             ans$.index <- seq_len(NROW(data))
         }
+        ans$.names <- NULL # always remove names, we'll add it in `draw()`
         ans
     },
     ggplot = function(self, mapping) {
@@ -179,6 +180,7 @@ AlignGG <- ggproto("AlignGG", Align,
             .names = .subset(self$labels, index)
         )
         ans[[coord_name]] <- seq_along(index)
+
         # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the heatmap data
