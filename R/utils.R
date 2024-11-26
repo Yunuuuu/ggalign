@@ -65,7 +65,7 @@ fn_body_append <- function(fn, ..., ans = FALSE) {
 # `foo.default`.
 #' @importFrom utils getS3method
 #' @importFrom methods extends
-has_method <- function(x, f, inherit = TRUE, default = TRUE) {
+has_method <- function(x, f, inherit = TRUE, default = inherit) {
     x_class <- class(x)
     if (inherit) {
         if (isS4(x)) x_class <- extends(x_class)
