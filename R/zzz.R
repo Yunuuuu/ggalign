@@ -1,5 +1,7 @@
 .onLoad <- function(libname, pkgname) {
+    # register ggplot2 theme elements
     theme_elements()
+
     # register method for
     s3_register("ggrastr::rasterise", "ggalign_align")
     s3_register("ggrastr::rasterise", "ggalign_free_gg")
