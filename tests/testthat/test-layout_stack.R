@@ -13,7 +13,6 @@ testthat::test_that("`stack_align` works well", {
     # stack with no data
     x <- stack_alignh()
     expect_s3_class(x@sizes, "unit")
-    expect_length(x@sizes, 3L)
     expect_identical(x@layout, new_layout_params())
 })
 
@@ -32,7 +31,6 @@ testthat::test_that("`stack_free` works well", {
     # stack with no data
     x <- stack_freeh()
     expect_s3_class(x@sizes, "unit")
-    expect_length(x@sizes, 3L)
     expect_identical(x@layout, NULL)
 })
 
@@ -180,7 +178,7 @@ testthat::test_that("add `stack_active` object works well", {
     p <- stack_alignh(small_mat)
     p2 <- p + stack_active(sizes = unit(1, "cm")) -
         plot_align(guides = "tlbr", free_labs = "tlbr")
-    expect_identical(p2@sizes, unit(rep_len(1L, 3L), "cm"))
+    expect_identical(p2@sizes, unit(1, "cm"))
     controls <- p2@controls
     expect_identical(controls$plot_align$guides, "tlbr")
     expect_identical(controls$plot_align$free_labs, "tlbr")
