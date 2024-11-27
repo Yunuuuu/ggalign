@@ -34,7 +34,7 @@ or other plot modifications apply to specific annotation stacks or the main
 plot without altering the currently active layout or plot.
 }
 \details{
-Default Behavior by wrapping object with \code{with_quad()}:
+Default Behavior when adding object wrapped with \code{with_quad()}:
 
 For \code{quad_layout()} object:
 \itemize{

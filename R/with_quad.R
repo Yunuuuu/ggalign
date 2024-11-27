@@ -22,7 +22,7 @@
 #' @return The original object with an added attribute that sets the specified
 #' context.
 #' @details
-#' Default Behavior by wrapping object with `with_quad()`:
+#' Default Behavior when adding object wrapped with `with_quad()`:
 #'
 #' For `quad_layout()` object:
 #'
