@@ -304,6 +304,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
 }
 
 # Used to create the QuadLayout
+#' @include layout-.R
 methods::setClass(
     "QuadLayout",
     contains = "Layout",
@@ -353,11 +354,3 @@ methods::setMethod("Ops", c("QuadLayout", "ANY"), function(e1, e2) {
         stop_incompatible_op(.Generic, e1, e2)
     )
 })
-
-# used to create the heatmap layout
-#' @keywords internal
-methods::setClass(
-    "HeatmapLayout",
-    contains = "QuadLayout",
-    list(filling = "ANY") # parameters for heatmap body
-)

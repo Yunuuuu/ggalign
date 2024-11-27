@@ -200,6 +200,7 @@ new_stack_layout <- function(name, data, direction, layout, controls = NULL,
 #' @importFrom grid unit
 #' @importFrom ggplot2 waiver
 #' @keywords internal
+#' @include layout-.R
 methods::setClass(
     "StackLayout",
     contains = "Layout",
