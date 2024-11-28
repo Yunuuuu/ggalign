@@ -22,7 +22,9 @@
 
 ## Improvements
 
-* Now, with_quad() wraps the object into a list with the class with_quad. This approach offers greater flexibility in defining the actions associated with with_quad, allowing for more customizable behavior (#26, @Yunuuuu).
+* Now, `with_quad()` wraps the object into a list with the class `with_quad`. This approach offers greater flexibility in defining the actions associated with `with_quad`, allowing for more customizable behavior (#26, @Yunuuuu).
+
+* Now, `panel` will be reordered when initializing the layout parameters, we don't need to reorder the `panel` when drawing.
 
 # ggalign 0.0.5
 
