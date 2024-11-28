@@ -8,9 +8,9 @@ ggalign_build.QuadLayout <- function(x) {
     design <- list(
         top = area(1, 2),
         left = area(2, 1),
+        main = area(2, 2),
         bottom = area(3, 2),
-        right = area(2, 3),
-        main = area(2, 2)
+        right = area(2, 3)
     )
     sizes <- imap(list(
         height = c("top", "main", "bottom"),
@@ -213,10 +213,12 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     p <- plot_add_controls(p, inherit_controls(quad@body_controls, controls))
 
     # collect all plots and sizes ----------------------
-    plots <- c(plots, list(main = p))
-    sizes <- c(sizes, list(
-        main = list(width = quad@width, height = quad@height)
-    ))
+    plots <- append(plots, list(main = p), 2L)
+    sizes <- append(
+        sizes, 
+        list(main = list(width = quad@width, height = quad@height)),
+        3L
+    )
     list(plots = plots, sizes = sizes)
 }
 
