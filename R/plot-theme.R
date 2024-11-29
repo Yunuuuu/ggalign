@@ -123,7 +123,8 @@ theme_ggalign <- function(...) {
         theme(
             axis.line = element_blank(),
             strip.text = element_blank(),
-            strip.background = element_blank()
+            strip.background = element_blank(),
+            plot.background = element_blank()
         )
 }
 
