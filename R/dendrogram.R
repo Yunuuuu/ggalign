@@ -205,8 +205,7 @@ dendrogram_data <- function(tree,
         leaf_braches <- .subset(leaf_braches, order.dendrogram(dend))
     }
 
-    # branch_gap must be a numeric value
-    # and the length must be equal to `length(unique(leaf_braches)) - 1L`
+    # check `branch_gap`
     if (is.numeric(branch_gap)) {
         if (!is_scalar(branch_gap)) {
             cli_abort("{.arg branch_gap} must be of length 1")

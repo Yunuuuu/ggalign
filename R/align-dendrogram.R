@@ -455,6 +455,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 center = center,
                 type = type,
                 leaf_braches = as.character(panel),
+                # panel has been reordered by the dendrogram index
                 reorder_branches = FALSE,
                 root = root
             )
