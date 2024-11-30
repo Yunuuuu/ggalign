@@ -25,15 +25,10 @@ quad_active <- function(width = NULL, height = NULL) {
 }
 
 #' @details
-#' By default, `quad_anno()` will try to initialize the annotation stack layout
-#' using data from `r rd_quad()`. However, there are situations where the
-#' annotation stack cannot be initialized due to incompatible data formats
-#' between [`quad_layout()`] and the required format for the annotation stack.
-#' This often occurs in [`quad_alignh()`] and [`quad_alignv()`], where the
-#' layout data is a matrix, but top and bottom annotations (in
-#' [`quad_alignh()`]) or left and right annotations (in [`quad_alignv()`])
-#' require a data frame. In such cases, you must use [`quad_init()`] to manually
-#' initialize the annotation stack.
+#' By default, `quad_anno()` attempts to initialize the annotation stack layout
+#' using data from `r rd_quad()`. However, in situations where you want to use
+#' different data for the annotation stack, you can set `initialize = FALSE` 
+#' and then provide a custom `stack_layout()`.
 #'
 #' @param position `r rd_quad_position("activated")`.
 #' @param size A numeric value or an [`unit`][grid::unit] object to set the
@@ -44,14 +39,14 @@ quad_active <- function(width = NULL, height = NULL) {
 #' annotation.
 #' @param free_guides Override the `guides` collection behavior specified in the
 #' `r rd_quad()` for the annotation stack.
-#' @param initialize A boolean value indicates whether the annotation stack
-#' should be initialized if it is not initialized. By default, it will try to
-#' initialize the annotation stack layout when the data is compatible.
+#' @param initialize A boolean indicating whether the annotation stack should be
+#' initialized if it is not already. By default, the annotation stack layout
+#' will attempt to initialize when the data is compatible. If set to `TRUE`, and
+#' the data in `r rd_quad()` is incompatible with the annotation stack, no
+#' data will be used in the stack.
 #' @param what What should get activated in the annotation stack?
 #' `r rd_stack_what()`.
-#' @seealso
-#' - [`quad_switch()`]
-#' - [`quad_init()`]
+#' @seealso [`quad_switch()`]
 #' @export
 #' @rdname quad_active
 quad_anno <- function(position, size = NULL, free_guides = waiver(),

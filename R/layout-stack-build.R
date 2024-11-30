@@ -41,7 +41,7 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
     stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
     remove_spaces <- is_string(stack_spaces) &&
         !is.null(.subset2(stack@heatmap, "position"))
-    layout <- setup_layout_params(stack@layout)
+    layout <- setup_layout_coords(stack@layout)
 
     for (plot in plots) {
         if (is_layout(plot)) {

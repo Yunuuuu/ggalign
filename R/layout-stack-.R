@@ -115,7 +115,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     new_stack_layout(
         name = "stack_align",
         data = data, direction = direction,
-        layout = new_layout_params(nobs = nobs),
+        layout = new_layout_coords(nobs = nobs),
         controls = controls, theme = theme, sizes = sizes
     )
 }

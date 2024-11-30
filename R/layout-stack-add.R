@@ -155,9 +155,9 @@ stack_layout_add.ggalign_align <- function(object, stack, object_name) {
     }
 
     # set the layout -------------------------------------
-    update_layout_params(stack,
+    update_layout_coords(stack,
         direction = stack@direction,
-        params = layout_coords
+        coords = layout_coords
     )
 }
 
@@ -348,7 +348,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             # restore the ggalign attribute
             object@data <- ggalign_attr_restore(data, stack_data)
         }
-        layout_coords <- check_layout_params(
+        layout_coords <- check_layout_coords(
             quad_coords, stack_coords,
             old_name = stack_name(stack),
             new_name = object_name
@@ -365,7 +365,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         .subset2(object@plot_active, "name"),
         object_name
     )
-    update_layout_params(stack, params = layout_coords)
+    update_layout_coords(stack, coords = layout_coords)
 }
 
 stack_add_plot <- function(stack, plot, use, name, object_name) {

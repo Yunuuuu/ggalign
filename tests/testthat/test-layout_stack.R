@@ -3,17 +3,17 @@ testthat::test_that("`stack_align` works well", {
     x <- stack_alignh(1:10)
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
-    expect_identical(x@layout, new_layout_params(nobs = 10L))
+    expect_identical(x@layout, new_layout_coords(nobs = 10L))
 
     x <- stack_alignh(letters)
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
-    expect_identical(x@layout, new_layout_params(nobs = length(letters)))
+    expect_identical(x@layout, new_layout_coords(nobs = length(letters)))
 
     # stack with no data
     x <- stack_alignh()
     expect_s3_class(x@sizes, "unit")
-    expect_identical(x@layout, new_layout_params())
+    expect_identical(x@layout, new_layout_coords())
 })
 
 testthat::test_that("`stack_free` works well", {

@@ -284,12 +284,12 @@ Align <- ggproto("Align",
                 intersect(names(params), align_method_params(self$layout))
             ])
         )
-        new_coords <- new_layout_params(
+        new_coords <- new_layout_coords(
             .subset2(new_coords, 1L),
             .subset2(new_coords, 2L),
             layout_nobs
         )
-        check_layout_params(layout_coords, new_coords, layout_name, object_name)
+        check_layout_coords(layout_coords, new_coords, layout_name, object_name)
     },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,

@@ -1,21 +1,21 @@
 # layout params are used to align the observations
-new_layout_params <- function(panel = NULL, index = NULL, nobs = NULL) {
+new_layout_coords <- function(panel = NULL, index = NULL, nobs = NULL) {
     list(panel = panel, index = index, nobs = nobs)
 }
 
 # Initialize the index and panel
 # Reorder the panel based the ordering index and
-setup_layout_params <- function(params) {
-    if (is.null(params)) return(NULL) # styler: off
+setup_layout_coords <- function(coords) {
+    if (is.null(coords)) return(NULL) # styler: off
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`
     # this is for `stack_layout` which may have no data
-    if (is.null(nobs <- .subset2(params, "nobs"))) {
-        return(params)
+    if (is.null(nobs <- .subset2(coords, "nobs"))) {
+        return(coords)
     }
-    panel <- .subset2(params, "panel") %||% factor(rep_len(1L, nobs))
-    index <- .subset2(params, "index") %||% reorder_index(panel)
-    new_layout_params(panel[index], index, nobs)
+    panel <- .subset2(coords, "panel") %||% factor(rep_len(1L, nobs))
+    index <- .subset2(coords, "index") %||% reorder_index(panel)
+    new_layout_coords(panel[index], index, nobs)
 }
 
 reorder_index <- function(panel, index = NULL) {
@@ -24,30 +24,30 @@ reorder_index <- function(panel, index = NULL) {
 }
 
 #' @keywords internal
-update_layout_params <- function(layout, ..., params) {
-    UseMethod("update_layout_params")
+update_layout_coords <- function(layout, ..., coords) {
+    UseMethod("update_layout_coords")
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_params.QuadLayout <- function(layout, direction, ..., params) {
-    if (is.null(params) || is.null(slot(layout, direction))) {
+update_layout_coords.QuadLayout <- function(layout, direction, ..., coords) {
+    if (is.null(coords) || is.null(slot(layout, direction))) {
         return(layout)
     }
-    slot(layout, direction) <- params
+    slot(layout, direction) <- coords
     if (is_horizontal(direction)) {
         if (!is.null(left <- layout@left)) {
-            layout@left <- update_layout_params(left, params = params)
+            layout@left <- update_layout_coords(left, coords = coords)
         }
         if (!is.null(right <- layout@right)) {
-            layout@right <- update_layout_params(right, params = params)
+            layout@right <- update_layout_coords(right, coords = coords)
         }
     } else {
         if (!is.null(top <- layout@top)) {
-            layout@top <- update_layout_params(top, params = params)
+            layout@top <- update_layout_coords(top, coords = coords)
         }
         if (!is.null(bottom <- layout@bottom)) {
-            layout@bottom <- update_layout_params(bottom, params = params)
+            layout@bottom <- update_layout_coords(bottom, coords = coords)
         }
     }
     layout
@@ -55,16 +55,15 @@ update_layout_params.QuadLayout <- function(layout, direction, ..., params) {
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_params.StackLayout <- function(layout, ..., params) {
-    if (is.null(params) || is.null(slot(layout, "layout"))) {
+update_layout_coords.StackLayout <- function(layout, ..., coords) {
+    if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }
-    slot(layout, "layout") <- params
+    slot(layout, "layout") <- coords
     layout@plots <- lapply(layout@plots, function(plot) {
         if (is_layout(plot)) {
-            update_layout_params(plot,
-                direction = layout@direction,
-                params = params
+            update_layout_coords(plot,
+                direction = layout@direction, coords = coords
             )
         } else {
             plot
@@ -74,7 +73,7 @@ update_layout_params.StackLayout <- function(layout, ..., params) {
 }
 
 ############################################################
-check_layout_params <- function(old, new, old_name, new_name,
+check_layout_coords <- function(old, new, old_name, new_name,
                                 call = caller_call()) {
     old_nobs <- .subset2(old, "nobs")
     new_nobs <- .subset2(new, "nobs")
@@ -160,5 +159,5 @@ check_layout_params <- function(old, new, old_name, new_name,
             new_name, old_name
         ), call = call)
     }
-    new_layout_params(panel, index, nobs)
+    new_layout_coords(panel, index, nobs)
 }

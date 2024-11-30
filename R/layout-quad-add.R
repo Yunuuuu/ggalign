@@ -72,7 +72,7 @@ quad_layout_add.ggalign_align <- function(object, quad, object_name) {
     # add annotation -----------------------------
     stack <- stack_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
-    update_layout_params(quad, direction = direction, params = stack@layout)
+    update_layout_coords(quad, direction = direction, coords = stack@layout)
 }
 
 #' @export
@@ -118,12 +118,12 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     if (is.null(stack) && !isFALSE(initialize)) {
         # try to initialize the annotation stack with the layout data
         direction <- to_direction(position)
-        layout_params <- slot(quad, direction)
+        layout_coords <- slot(quad, direction)
         # for the annotation stack, we try to take the data from the
         # quad layout
         quad_data <- quad@data
         data <- waiver()
-        if (is.null(layout_params)) { # the stack need a data frame
+        if (is.null(layout_coords)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
                     cli_warn(paste(
@@ -160,7 +160,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         }
         if (!is.waive(data)) { # initialize the annotation stack
             stack <- new_stack_layout(
-                name = if (is.null(layout_params)) {
+                name = if (is.null(layout_coords)) {
                     "stack_free"
                 } else {
                     "stack_align"
@@ -168,7 +168,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 data = data,
                 direction = direction,
                 # the layout parameters should be the same with `quad_layout()`
-                layout = layout_params,
+                layout = layout_coords,
                 # we'll inherit the action data function when
                 controls = new_controls(plot_data(
                     if (is.null(data)) NULL else waiver()
@@ -225,16 +225,16 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     }
     # check quad layout is compatible with stack layout
     direction <- to_direction(active)
-    quad_params <- slot(quad, direction)
-    stack_params <- object@layout
+    quad_coords <- slot(quad, direction)
+    stack_coords <- object@layout
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
-    if (is.null(stack_params)) {
-        layout_params <- NULL
-    } else if (!is.null(quad_params)) {
+    if (is.null(stack_coords)) {
+        layout_coords <- NULL
+    } else if (!is.null(quad_coords)) {
         # both `quad_layout()` and `stack_layout()` need align observations
-        layout_params <- check_layout_params(
-            quad_params, stack_params,
+        layout_coords <- check_layout_coords(
+            quad_coords, stack_coords,
             old_name = sprintf("{.fn %s}", quad@name),
             new_name = object_name
         )
@@ -245,7 +245,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     slot(quad, position) <- object
-    update_layout_params(quad, direction = direction, params = layout_params)
+    update_layout_coords(quad, direction = direction, coords = layout_coords)
 }
 
 #######################################################

@@ -166,7 +166,7 @@ quad_alignh.default <- function(data = NULL, mapping = aes(),
     new_quad_layout(
         name = "quad_alignh",
         data = data,
-        horizontal = new_layout_params(nobs = nrows),
+        horizontal = new_layout_coords(nobs = nrows),
         vertical = NULL,
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
@@ -208,7 +208,7 @@ quad_alignv.default <- function(data = NULL, mapping = aes(),
         name = "quad_alignv",
         data = data,
         horizontal = NULL,
-        vertical = new_layout_params(nobs = ncols),
+        vertical = new_layout_coords(nobs = ncols),
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
@@ -250,8 +250,8 @@ quad_alignb.default <- function(data = NULL, mapping = aes(),
     new_quad_layout(
         name = "quad_alignb",
         data = data,
-        horizontal = new_layout_params(nobs = nrows),
-        vertical = new_layout_params(nobs = ncols),
+        horizontal = new_layout_coords(nobs = nrows),
+        vertical = new_layout_coords(nobs = ncols),
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )

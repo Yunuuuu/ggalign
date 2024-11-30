@@ -56,8 +56,8 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
-    row_params <- setup_layout_params(quad@horizontal)
-    column_params <- setup_layout_params(quad@vertical)
+    row_params <- setup_layout_coords(quad@horizontal)
+    column_params <- setup_layout_coords(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- align <-
