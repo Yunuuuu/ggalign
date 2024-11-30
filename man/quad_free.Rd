@@ -58,8 +58,9 @@ convert the data into a data frame.
 the data into a matrix.
 }}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}} or
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}

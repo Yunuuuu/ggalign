@@ -80,7 +80,9 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #'   convert the data into a data frame.
 #' - For all other functions, it employs [`fortify_matrix()`] to convert
 #'   the data into a matrix.
-#' @inheritParams ggplot2::ggplot
+#' @param mapping Default list of aesthetic mappings to use for main plot in the
+#' layout. If not specified, must be supplied in each layer added to the main
+#' plot.
 #' @param ... Additional arguments passed to [`fortify_matrix()`] or
 #' [`fortify_data_frame()`].
 #' @inheritParams align_plots

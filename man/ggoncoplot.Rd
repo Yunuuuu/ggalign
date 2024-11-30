@@ -39,8 +39,9 @@ ggoncoplot(
 \item{data}{A character matrix which encodes the alterations, you can use
 \code{";"}, \code{":"}, \code{","}, or \code{"|"} to separate multiple alterations.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 

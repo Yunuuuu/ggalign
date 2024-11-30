@@ -66,14 +66,15 @@ ggstack <- stack_layout
 #'    a data frame.
 #'  - For `stack_align`, [`fortify_matrix()`] will be used to convert data to a
 #'    matrix.
-#' @param direction A string indicating the direction of the stack layout,
-#' either `"horizontal"` or `"vertical"`.
+#' @param direction A string indicating the direction of the layout, either
+#' `"horizontal"` or `"vertical"`.
 #' @param ... Additional arguments passed to [`fortify_data_frame()`] or
 #' [`fortify_matrix()`].
 #' @inheritParams quad_layout
 #' @param sizes A numeric or a [`unit`][grid::unit] object of length `3`
 #' indicating the relative heights (for `direction = "horizontal"`) or widths
-#' (for `direction = "vertical"`).
+#' (for `direction = "vertical"`). This is only used if you include a nested
+#' `quad_layout()` in the layout.
 #' @examples
 #' set.seed(123)
 #' stack_align(matrix(rnorm(56), nrow = 7L), "h") +
