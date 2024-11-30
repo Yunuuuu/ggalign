@@ -119,7 +119,9 @@ testthat::test_that("add `with_quad()` works as expected", {
         ggheatmap(small_mat) +
             anno_left(size = 0.2) +
             align_dendro() +
-            with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+            with_quad(
+                theme(plot.background = element_rect(fill = "red")), NULL
+            )
     )
     expect_doppelganger(
         "subtract_with_quad_default",
@@ -158,6 +160,74 @@ testthat::test_that("add `with_quad()` works as expected", {
                 theme(plot.background = element_rect(fill = "red")), NULL
             )
     )
+})
+
+testthat::test_that("add `stack_layout()` works as expected", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    # quad_free() ------------------------------------------
+    expect_error(quad_free(mpg) + stack_freev())
+    # annotaion has been initialized
+    expect_error(quad_free(mpg) + anno_top() + stack_freev())
+    # add nested layout
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
+    # incompatible direction
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        stack_freeh())
+    # incompatible aligning type
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        stack_alignv())
+
+    # quad_alignh() ---------------------------------------
+    expect_error(quad_alignh(small_mat) + stack_alignh())
+    expect_error(quad_alignh(small_mat) + stack_freev())
+
+    # annotaion has been initialized
+    expect_error(quad_alignh(small_mat) +
+        anno_top(initialize = TRUE) +
+        stack_freev())
+    expect_error(quad_alignh(mpsmall_matg) + anno_left() + stack_alignh())
+
+    # add nested layout
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
+    expect_error(quad_alignh(small_mat) + anno_left(initialize = FALSE) +
+        (stack_alignh() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+
+    # incompatible direction
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        stack_freeh())
+
+    # incompatible aligning type
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        stack_alignv())
+
+    # quad_alignv() ---------------------------------------
+    expect_error(quad_alignv(small_mat) + stack_alignv())
+    expect_error(quad_alignv(small_mat) + stack_freeh())
+
+    # annotaion has been initialized
+    expect_error(quad_alignv(small_mat) + anno_top() + stack_freeh())
+    expect_error(quad_alignv(small_mat) + anno_left(initialize = TRUE) +
+        stack_alignv())
+
+    # add nested layout
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        (stack_freeh() + quad_free(mpg) + quad_free(mpg)))
+    expect_error(quad_alignv(small_mat) + anno_left(initialize = FALSE) +
+        (stack_alignv() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+
+    # incompatible direction
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        stack_freeh())
+
+    # incompatible aligning type
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        stack_alignh())
 })
 
 testthat::test_that("`ggsave()` works well", {

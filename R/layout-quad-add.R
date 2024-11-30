@@ -217,14 +217,20 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
             i = "{position} annotation stack exists"
         ))
     }
+    # cannot contain nested layout
     if (any(vapply(object@plots, is_layout, logical(1L), USE.NAMES = FALSE))) {
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "{object@name} cannot contain nested layout"
+            i = "annotation stack cannot contain nested layout"
         ))
     }
     # check quad layout is compatible with stack layout
-    direction <- to_direction(position)
+    if (!identical(direction <- to_direction(position), object@direction)) {
+        cli_abort(c(
+            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            i = "only {.field {direction}} stack is allowed in {position} annotation"
+        ))
+    }
     quad_coords <- slot(quad, direction)
     stack_coords <- object@layout
     # check if we can align in this direction
@@ -240,8 +246,8 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         )
     } else {
         cli_abort(c(
-            "Cannot add {.fn {object@name}} to a {.fn {quad@name}}",
-            i = "{.fn {quad@name}} cannot align observations in {direction}"
+            "Cannot add {.var {object_name}} to a {.fn {quad@name}}",
+            i = "{.fn {quad@name}} cannot align observations in {.field {direction}} direction"
         ))
     }
     slot(quad, position) <- object
