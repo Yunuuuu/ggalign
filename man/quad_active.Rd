@@ -11,15 +11,41 @@
 \usage{
 quad_active(width = NULL, height = NULL)
 
-quad_anno(position, size = NULL, free_guides = waiver(), what = waiver())
+quad_anno(
+  position,
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_top(size = NULL, free_guides = waiver(), what = waiver())
+anno_top(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_left(size = NULL, free_guides = waiver(), what = waiver())
+anno_left(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_bottom(size = NULL, free_guides = waiver(), what = waiver())
+anno_bottom(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_right(size = NULL, free_guides = waiver(), what = waiver())
+anno_right(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 }
 \arguments{
 \item{width, height}{The relative width/height of the main plot, can be a
@@ -38,6 +64,10 @@ annotation.
 
 \item{free_guides}{Override the \code{guides} collection behavior specified in the
 \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} for the annotation stack.}
+
+\item{initialize}{A boolean value indicates whether the annotation stack
+should be initialized if it is not initialized. By default, it will try to
+initialize the annotation stack layout when the data is compatible.}
 
 \item{what}{What should get activated in the annotation stack?
 A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context.}

@@ -3,6 +3,16 @@ stack_layout_add <- function(object, stack, object_name) {
     UseMethod("stack_layout_add")
 }
 
+stack_name <- function(stack) {
+    ans <- sprintf("{.fn %s}", stack@name)
+    if (!is.null(position <- stack@heatmap$position)) {
+        ans <- sprintf("the %s annotation %s", position, ans)
+    } else {
+        ans <- sprintf("a %s", ans)
+    }
+    ans
+}
+
 stack_plot_add <- function(plot, object, object_name, force) {
     if (is_free(plot)) {
         plot <- free_add(object, plot, object_name)
@@ -13,14 +23,72 @@ stack_plot_add <- function(plot, object, object_name, force) {
     plot
 }
 
+#' @export
+stack_layout_add.layout_title <- function(object, stack, object_name) {
+    stack@titles <- update_layout_title(stack@titles, object)
+    stack
+}
+
+#' @export
+stack_layout_add.list <- function(object, stack, object_name) {
+    for (o in object) stack <- stack_layout_add(o, stack, object_name)
+    stack
+}
+
+# add elements for nested `quad_layout()`.
+#' @export
+stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
+    active <- stack@active
+    if (!is.null(active) &&
+        is_quad_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
+    } else {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.code {object_name}} to %s",
+                stack_name(stack)
+            ),
+            i = "Did you forget to add a {.fn quad_layout}?"
+        ))
+    }
+    stack
+}
+
+#' @export
+stack_layout_add.quad_active <- stack_layout_add.ggalign_with_quad
+
+#' @export
+stack_layout_add.quad_anno <- stack_layout_add.quad_active
+
+#' @export
+stack_layout_add.quad_init <- stack_layout_add.quad_active
+
+###################################################################
+# add elements to the nested layout or the stack layout
+# Now, only one possible nested layout: `quad_layout()`
 stack_active_is_layout <- is_quad_layout
+
+#' @export
+stack_layout_add.layout_annotation <- function(object, stack, object_name) {
+    active <- stack@active
+    if (!is.null(active) &&
+        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
+        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
+    } else {
+        stack <- update_layout_annotation(object, stack, object_name)
+    }
+    stack
+}
 
 #' @export
 stack_layout_add.default <- function(object, stack, object_name) {
     if (is.null(active <- stack@active)) {
         cli_abort(c(
-            "Cannot add {.code {object_name}} to the stack layout",
-            i = "No active {.cls ggplot} object",
+            sprintf(
+                "Cannot add {.code {object_name}} to %s",
+                stack_name(stack)
+            ),
+            i = "No active plot component",
             i = paste(
                 "Did you forget to initialize a {.cls ggplot} object",
                 "with {.fn ggalign} or {.fn ggfree}?"
@@ -37,46 +105,6 @@ stack_layout_add.default <- function(object, stack, object_name) {
     stack
 }
 
-#' @export
-stack_layout_add.list <- function(object, stack, object_name) {
-    for (o in object) stack <- stack_layout_add(o, stack, object_name)
-    stack
-}
-
-#' @export
-stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
-    active <- stack@active
-    if (!is.null(active) &&
-        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
-        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
-    } else {
-        cli_abort(c(
-            "Cannot add {.code {object_name}} to {.fn {stack@name}}",
-            i = "Did you forget to add a {.fn quad_layout}?"
-        ))
-    }
-    stack
-}
-
-#' @export
-stack_layout_add.layout_annotation <- function(object, stack, object_name) {
-    active <- stack@active
-    if (!is.null(active) &&
-        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
-        stack@plots[[active]] <- quad_layout_add(object, plot, object_name)
-    } else {
-        stack <- update_layout_annotation(object, stack, object_name)
-    }
-    stack
-}
-
-#' @export
-stack_layout_add.layout_title <- function(object, stack, object_name) {
-    stack@titles <- update_non_waive(stack@titles, object)
-    stack
-}
-
-###################################################################
 # `Align` can be added for both heatmap and stack layout
 #' @export
 stack_layout_add.ggalign_align <- function(object, stack, object_name) {
@@ -84,39 +112,53 @@ stack_layout_add.ggalign_align <- function(object, stack, object_name) {
         is_quad_layout(plot <- .subset2(stack@plots, active))) {
         plot <- quad_layout_add(object, plot, object_name)
         stack@plots[[active]] <- plot
-        layout <- slot(plot, stack@direction)
-    } else if (is.null(layout <- stack@layout)) {
+        layout_coords <- slot(plot, stack@direction)
+    } else if (is.null(layout_coords <- stack@layout)) {
         cli_abort(c(
-            "Cannot add {.code {object_name}} to a {.fn {stack@name}}",
-            i = "{.fn {stack@name}} won't align observations"
+            sprintf(
+                "Cannot add {.code {object_name}} to %s",
+                stack_name(stack)
+            ),
+            i = sprintf("%s won't align observations", stack_name(stack))
         ))
     } else {
-        # make layout ----------------------------------------
+        # internal `Align` object
+        workflow <- .subset2(object, "Object")
+
+        # make the layout panels ----------------------------
         # this step the object will act with the stack layout
         # group rows into panel or reorder rows
-        data <- align_initialize(
-            object,
+        layout_coords <- workflow$initialize(
             direction = stack@direction,
             position = .subset2(stack@heatmap, "position"),
+            object_name = object_name,
             layout_data = stack@data,
-            layout_panel = .subset2(layout, "panel"),
-            layout_index = .subset2(layout, "index"),
-            layout_nobs = .subset2(layout, "nobs"),
-            object_name = object_name
+            layout_coords = layout_coords,
+            layout_name = stack_name(stack)
         )
-        # initialize the plot
-        object$plot <- .subset2(data, "plot")
+
+        # in the finally, Let us initialize the annotation plot -----
+        # must return a ggplot object
+        object$plot <- inject(workflow$ggplot(!!!workflow$params[
+            intersect(
+                names(workflow$params),
+                align_method_params(workflow$ggplot, character())
+            )
+        ]))
+
         stack <- stack_add_plot(
             stack, object,
             .subset2(.subset2(object, "active"), "use"),
             .subset2(.subset2(object, "active"), "name"),
             object_name
         )
-        layout <- .subset2(data, "layout")
     }
 
     # set the layout -------------------------------------
-    update_layout_params(stack, direction = stack@direction, params = layout)
+    update_layout_params(stack,
+        direction = stack@direction,
+        params = layout_coords
+    )
 }
 
 #' @export
@@ -131,9 +173,12 @@ stack_layout_add.ggalign_free_gg <- function(object, stack, object_name) {
         if (is.waive(input_data)) { # inherit from the layout
             data <- layout_data
         } else if (is.function(input_data)) {
-            abort_no_layout_data(layout_data, object_name,
-                call = quote(free_gg())
-            )
+            if (is.null(layout_data)) {
+                cli_abort(c(
+                    "{.arg data} in {.var {object_name}} cannot be a function",
+                    i = sprintf("no data was found in %s", stack_name(stack))
+                ))
+            }
             data <- input_data(layout_data)
         } else {
             data <- input_data
@@ -183,15 +228,7 @@ update_stack_active <- function(stack, what, call = caller_call()) {
     stack
 }
 
-#' @export
-stack_layout_add.quad_active <- stack_layout_add.ggalign_with_quad
-
-#' @export
-stack_layout_add.quad_anno <- stack_layout_add.quad_active
-
-#' @export
-stack_layout_add.quad_init <- stack_layout_add.quad_active
-
+# add elements to the stack_layout()
 #' @importFrom methods slot
 #' @export
 stack_layout_add.QuadLayout <- function(object, stack, object_name) {
@@ -199,13 +236,13 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
     quad_data <- object@data
 
     # check quad layout is compatible with stack layout
-    stack_layout <- stack@layout
-    quad_layout <- slot(object, direction)
-    if (is.null(quad_layout)) {
-        # `QuadLayout` are free from aligning obervations in this axis
+    stack_coords <- stack@layout
+    quad_coords <- slot(object, direction)
+    if (is.null(quad_coords)) {
+        # `quad_layout()` are free from aligning obervations in this axis
         if (is.null(quad_data) || is.function(quad_data)) {
-            # check if we should initialize the `quad-layout` data
-            if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
+            # check if we should initialize the `quad_layout()` data
+            if (is.null(stack_data <- stack@data)) {
                 cli_abort(c(
                     paste(
                         "you must provide {.arg data} argument in",
@@ -214,14 +251,14 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                     i = "no data was found in {.fn {stack@name}}"
                 ))
             }
-            extra_layout <- slot(object, vec_set_difference(
+            extra_params <- slot(object, vec_set_difference(
                 c("vertical", "horizontal"), direction
             ))
             if (is.matrix(data <- stack_data)) {
                 data <- switch_direction(direction, data, t(data))
             }
             if (is.null(quad_data)) { # inherit from the stack layout
-                if (is.null(extra_layout)) { # we need a data frame
+                if (is.null(extra_params)) { # we need a data frame
                     if (!is.data.frame(data)) {
                         cli_abort(c(
                             "Cannot add {.fn {object@name}} to a {.fn {stack@name}}",
@@ -247,7 +284,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             } else { # `quad_data` is a function
                 data <- quad_data(data)
                 # check the data format is correct
-                if (is.null(extra_layout)) { # we need a data frame
+                if (is.null(extra_params)) { # we need a data frame
                     if (!is.data.frame(data)) {
                         cli_abort(paste(
                             "{.arg data} in {.fn {object@name}} must return",
@@ -261,7 +298,8 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                     ))
                 }
             }
-            # we initialize the `nobs` for the `quad_layout()`
+            # we initialize the `nobs` of the extra_coords for the
+            # `quad_layout()`
             if (is_horizontal(direction)) {
                 if (!is.null(slot(object, "vertical"))) {
                     slot(object, "vertical")$nobs <- ncol(data)
@@ -274,17 +312,17 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             # restore the ggalign attribute
             object@data <- ggalign_attr_restore(data, stack_data)
         }
-        layout <- NULL
-    } else if (!is.null(stack_layout)) {
+        layout_coords <- NULL
+    } else if (!is.null(stack_coords)) {
         # both `quad_layout()` and `stack_layout()` need align observations
         if (is.null(quad_data) || is.function(quad_data)) {
-            if (is.null(stack_data <- stack@data) || is.function(stack_data)) {
+            if (is.null(stack_data <- stack@data)) {
                 cli_abort(c(
                     "you must provide {.arg data} argument in {.fn {object@name}}",
                     i = "no data was found in {.fn {stack@name}}"
                 ))
             }
-            # set QuadLayout data
+            # set `quad_layout()` data
             data <- switch_direction(direction, stack_data, t(stack_data))
             if (is.function(quad_data)) {
                 data <- quad_data(data)
@@ -295,14 +333,14 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                     ))
                 }
             }
-            # set the `nobs` for QuadLayout
+            # set the `nobs` for `quad_layout()`
             if (is_horizontal(direction)) {
-                quad_layout$nobs <- nrow(data)
+                quad_coords$nobs <- nrow(data)
                 if (!is.null(slot(object, "vertical"))) {
                     slot(object, "vertical")$nobs <- ncol(data)
                 }
             } else {
-                quad_layout$nobs <- ncol(data)
+                quad_coords$nobs <- ncol(data)
                 if (!is.null(slot(object, "horizontal"))) {
                     slot(object, "horizontal")$nobs <- nrow(data)
                 }
@@ -310,59 +348,15 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             # restore the ggalign attribute
             object@data <- ggalign_attr_restore(data, stack_data)
         }
-
-        # check the observations is compatible ----------------
-        stack_nobs <- .subset2(stack_layout, "nobs")
-        quad_nobs <- .subset2(quad_layout, "nobs")
-        if (is.null(quad_nobs)) {
-            nobs <- stack_nobs
-        } else if (is.null(stack_nobs)) {
-            nobs <- quad_nobs
-        } else if (!identical(quad_nobs, stack_nobs)) {
-            cli_abort(sprintf(
-                "{.fn {object@name}} (%d) is not compatible with the %s (%d)",
-                quad_nobs, "{.field {direction}} {.fn {stack@name}}", stack_nobs
-            ))
-        } else {
-            nobs <- quad_nobs
-        }
-
-        # check panel and index ------------------------------
-        stack_panel <- .subset2(stack_layout, "panel")
-        quad_panel <- .subset2(quad_layout, "panel")
-        if (is.null(quad_panel)) {
-            panel <- stack_panel
-        } else if (is.null(stack_panel)) {
-            panel <- quad_panel
-        } else if (!(quad_panel %nest% stack_panel)) {
-            cli_abort(paste(
-                "{.fn {object@name}} disrupt the previously",
-                "established layout panel of the stack"
-            ))
-        } else {
-            panel <- quad_panel
-        }
-
-        stack_index <- .subset2(stack_layout, "index")
-        quad_index <- .subset2(quad_layout, "index")
-        index <- quad_index %||% stack_index
-        if (!is.null(panel) && !is.null(index)) {
-            index <- reorder_index(panel, index)
-        }
-
-        # we always prevent from reordering the layout twice.
-        if (!is.null(stack_index) && !all(stack_index == index)) {
-            cli_abort(sprintf(
-                "{.fn {object@name}} disrupt the previously %s %s-axis",
-                "established layout order of the stack",
-                to_coord_axis(direction)
-            ))
-        }
-        layout <- new_layout_params(panel, index, nobs)
+        layout_coords <- check_layout_params(
+            quad_coords, stack_coords,
+            old_name = stack_name(stack),
+            new_name = object_name
+        )
     } else {
         cli_abort(c(
-            "Cannot add {.fn {object@name}} to a {.fn {stack@name}}",
-            i = "{.fn {stack@name}} cannot align observations"
+            sprintf("Cannot add {.fn {object@name}} to %s", stack_name(stack)),
+            i = sprintf("%s cannot align observations", stack_name(stack))
         ))
     }
     stack <- stack_add_plot(
@@ -371,9 +365,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
         .subset2(object@plot_active, "name"),
         object_name
     )
-    # set the layout ------------------------------------
-    if (!is.null(layout)) stack <- update_layout_params(stack, params = layout)
-    stack
+    update_layout_params(stack, params = layout_coords)
 }
 
 stack_add_plot <- function(stack, plot, use, name, object_name) {

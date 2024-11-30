@@ -74,7 +74,6 @@ reference:
   - layout-operator
   - quad_switch
   - quad_anno
-  - quad_init
   - with_quad
   - stack_switch
   - active

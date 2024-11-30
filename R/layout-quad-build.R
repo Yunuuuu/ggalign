@@ -104,7 +104,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         }
         plot <- stack_build(stack,
             controls = inherit_controls(stack@controls, stack_controls),
-            extra_layout = params
+            extra_coords = params
         )
         if (!is.null(plot)) {
             # for annotation, we should always make them next to

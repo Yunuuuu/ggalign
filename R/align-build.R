@@ -1,6 +1,6 @@
 #' @importFrom ggplot2 theme element_blank
 #' @importFrom rlang inject
-align_build <- function(align, panel, index, controls, extra_layout) {
+align_build <- function(align, panel, index, controls, extra_coords) {
     # let `Align` to determine how to draw
     # 1. add default layer
     # 2. add plot data
@@ -22,12 +22,12 @@ align_build <- function(align, panel, index, controls, extra_layout) {
             )
         )
     ]
-    if (is.null(extra_layout)) {
+    if (is.null(extra_coords)) {
         extra_panel <- NULL
         extra_index <- NULL
     } else {
-        extra_panel <- .subset2(extra_layout, "panel")
-        extra_index <- .subset2(extra_layout, "index")
+        extra_panel <- .subset2(extra_coords, "panel")
+        extra_index <- .subset2(extra_coords, "index")
     }
     plot <- inject(object$draw(
         .subset2(align, "plot"),

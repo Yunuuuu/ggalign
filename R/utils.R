@@ -15,6 +15,14 @@ recycle_each <- function(x, len = NULL) {
     }
 }
 
+#' @importFrom utils modifyList
+update_non_waive <- function(old, new, keep_null = TRUE) {
+    modifyList(old,
+        new[!vapply(new, is.waive, logical(1L), USE.NAMES = FALSE)],
+        keep.null = keep_null
+    )
+}
+
 #################################################################
 #' Read Example Data
 #'

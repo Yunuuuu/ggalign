@@ -3,11 +3,11 @@ ggalign_build.StackLayout <- function(x) {
     stack_build(default_layout(x)) %||% align_plots()
 }
 
-#' @param extra_layout layout parameters of the axis vertically with the stack.
+#' @param extra_coords layout parameters of the axis vertically with the stack.
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 #' @noRd
-stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
+stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
     plots <- stack@plots
     direction <- stack@direction
 
@@ -69,7 +69,7 @@ stack_build <- function(stack, controls = stack@controls, extra_layout = NULL) {
             composer = composer,
             controls = plot_controls,
             layout = layout,
-            extra_layout = extra_layout
+            extra_coords = extra_coords
         )
     }
     if (is_empty(plots <- .subset2(composer, "plots"))) {

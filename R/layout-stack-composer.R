@@ -55,13 +55,13 @@ stack_composer_add <- function(plot, composer, controls, ...) {
 
 #' @export
 stack_composer_add.ggalign_align <- function(plot, composer, controls, ...,
-                                              layout, extra_layout) {
+                                             layout, extra_coords) {
     plot_and_size <- align_build(
         align = plot,
         panel = .subset2(layout, "panel"),
         index = .subset2(layout, "index"),
         controls = controls,
-        extra_layout = extra_layout
+        extra_coords = extra_coords
     )
     stack_composer_align_plot(
         composer,

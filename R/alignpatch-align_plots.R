@@ -178,15 +178,7 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     ), class = c("layout_design", "plot_layout"))
 }
 
-#' @importFrom utils modifyList
-update_non_waive <- function(old, new) {
-    modifyList(old,
-        new[!vapply(new, is.waive, logical(1L), USE.NAMES = FALSE)],
-        keep.null = TRUE
-    )
-}
-
-update_design <- function(old, new) {
+update_layout_design <- function(old, new) {
     guides <- .subset2(new, "guides")
     new$guides <- NULL # guides need special consideration
     old <- update_non_waive(old, new)
@@ -200,7 +192,7 @@ update_design <- function(old, new) {
 
 #' @export
 alignpatches_add.layout_design <- function(object, plot, object_name) {
-    plot$layout <- update_design(.subset2(plot, "layout"), object)
+    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
     plot
 }
 
@@ -216,7 +208,7 @@ alignpatches_add.plot_layout <- function(object, plot, object_name) {
     } else if (identical(object$guides, "keep")) {
         object["guides"] <- list(NULL)
     }
-    plot$layout <- update_design(.subset2(plot, "layout"), object)
+    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
     plot
 }
 
@@ -250,6 +242,8 @@ alignpatches_add.layout_title <- function(object, plot, object_name) {
     plot$titles <- update_non_waive(.subset2(plot, "titles"), object)
     plot
 }
+
+update_layout_title <- function(old, new) update_non_waive(old, new)
 
 ##############################################################
 #' Modify components of the layout
@@ -295,19 +289,21 @@ layout_annotation <- function(theme = waiver(), ...) {
     )
 }
 
+update_annotation_theme <- function(old, new) {
+    if (is.waive(new)) return(old) # styler: off
+    if (is.null(old) || is.null(new)) return(new) # styler: off
+    old + new
+}
+
 # Used by add `layout_annotation` to the `Layout` objects
 update_layout_annotation <- function(object, layout, object_name) {
     layout@annotation <- update_non_waive(
         layout@annotation, .subset2(object, "annotation")
     )
-    layout@theme <- update_theme(layout@theme, .subset2(object, "theme"))
+    layout@theme <- update_annotation_theme(
+        layout@theme, .subset2(object, "theme")
+    )
     layout
-}
-
-update_theme <- function(old, new) {
-    if (is.waive(new)) return(old) # styler: off
-    if (is.null(old) || is.null(new)) return(new) # styler: off
-    old + new
 }
 
 #' @export
@@ -316,7 +312,7 @@ alignpatches_add.layout_annotation <- function(object, plot, object_name) {
         .subset2(plot, "annotation"),
         .subset2(object, "annotation")
     )
-    plot$theme <- update_theme(
+    plot$theme <- update_annotation_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )
@@ -329,7 +325,7 @@ alignpatches_add.plot_annotation <- function(object, plot, object_name) {
         .subset2(plot, "titles"),
         .subset(object, names(layout_title()))
     )
-    plot$theme <- update_theme(
+    plot$theme <- update_annotation_theme(
         .subset2(plot, "theme"),
         .subset2(object, "theme")
     )

@@ -208,6 +208,89 @@ Align <- ggproto("Align",
     unlock = function(self) {
         assign("isLock", value = FALSE, envir = self)
     },
+    initialize = function(self, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
+        self$direction <- direction
+        self$position <- position
+        input_data <- .subset2(self, "input_data")
+        input_params <- .subset2(self, "input_params")
+        call <- .subset2(self, "call")
+        layout_panel <- .subset2(layout_coords, "panel")
+        layout_index <- .subset2(layout_coords, "index")
+        layout_nobs <- .subset2(layout_coords, "nobs")
+
+        # we must have the same observations across all plots
+        # 1. if `Align` require data, the `nobs` should be nrow(data)
+        # 2. if not, we run `nobs()` method to initialize the layout nobs
+        if (!is.null(input_data)) { # this `Align` object require data
+            if (is.waive(input_data)) { # inherit from the layout
+                if (is.null(data <- layout_data)) {
+                    cli_abort(c(
+                        "you must provide {.arg data} in {.var {object_name}}",
+                        i = sprintf("no data was found in %s", layout_name)
+                    ))
+                }
+            } else {
+                if (is.function(input_data)) {
+                    if (is.null(data <- layout_data)) {
+                        cli_abort(c(
+                            "{.arg data} in {.var {object_name}} cannot be a function",
+                            i = sprintf("no data was found in %s", layout_name)
+                        ))
+                    }
+                    data <- input_data(layout_data)
+                } else {
+                    data <- input_data
+                }
+                # we always regard rows as the observations
+                if (is.null(layout_nobs)) {
+                    layout_nobs <- NROW(data)
+                } else if (NROW(data) != layout_nobs) {
+                    cli_abort(sprintf(
+                        "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
+                        object_name, NROW(data), layout_name, layout_nobs
+                    ))
+                }
+            }
+            self$labels <- vec_names(data)
+            params <- self$setup_params(layout_nobs, input_params)
+            self$data <- ggalign_attr_restore(
+                self$setup_data(params, data),
+                layout_data
+            )
+        } else { # this `Align` object doesn't require any data
+            # we keep the names from the layout data for usage
+            self$labels <- vec_names(layout_data)
+            # If `nobs` is `NULL`, it means we don't initialize the layout
+            # observations, we initialize `nobs` with the `Align` obect
+            if (is.null(layout_nobs)) layout_nobs <- self$nobs(input_params)
+            params <- self$setup_params(layout_nobs, input_params)
+        }
+
+        # save the parameters into the object ------------
+        self$params <- params
+
+        # prepare the data -------------------------------
+        # compute statistics ---------------------------------
+        self$statistics <- inject(
+            self$compute(layout_panel, layout_index, !!!params[
+                intersect(names(params), align_method_params(self$compute))
+            ])
+        )
+
+        # make the new layout -------------------------------
+        new_coords <- inject(
+            self$layout(layout_panel, layout_index, !!!params[
+                intersect(names(params), align_method_params(self$layout))
+            ])
+        )
+        new_coords <- new_layout_params(
+            .subset2(new_coords, 1L),
+            .subset2(new_coords, 2L),
+            layout_nobs
+        )
+        check_layout_params(layout_coords, new_coords, layout_name, object_name)
+    },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,
     # `layout()` and `draw()`. However, some additional parameters may be
