@@ -103,30 +103,34 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
     # from matrix
+    data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-
-    # if inherit from the parent layout data, we'll inherit the `plot_data`
-    # function.
-    controls <- new_controls(
-        new_plot_data(if (is.waive(data)) waiver() else NULL)
-    )
-
-    # `waiver()` is used for further extension, it indicates data will
-    # inherit from the parent layout. Now, `waiver()` won't be used as a
-    # child layout.
-    if (!is.null(data) && !is.function(data) && !is.waive(data)) {
+    controls <- new_controls()
+    if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
     } else {
         nobs <- NULL
     }
-    layout <- new_layout_params(nobs = nobs)
     new_stack_layout(
         name = "stack_align",
-        data = data, direction = direction, layout = layout,
+        data = data, direction = direction,
+        layout = new_layout_params(nobs = nobs),
         controls = controls, theme = theme, sizes = sizes
     )
 }
+
+#' @export
+stack_align.function <- function(data = NULL, direction = NULL, ...) {
+    cli_abort(paste0(
+        "{.arg data} must be a {.cls matrix}, ",
+        "or an object coercible by {.fn fortify_matrix}, or a valid ",
+        "{.cls matrix}-like object coercible by {.fn as.matrix}"
+    ))
+}
+
+#' @export
+stack_align.formula <- stack_align.function
 
 ################################################################
 #' @export
@@ -151,12 +155,9 @@ stack_freeh <- function(data = NULL, ...) {
 #' @export
 stack_free.default <- function(data = NULL, direction = NULL, ...,
                                theme = NULL, sizes = NA) {
+    data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    # if inherit from the parent layout data, we'll inherit the action data
-    # function.
-    controls <- new_controls(
-        new_plot_data(if (is.waive(data)) waiver() else NULL)
-    )
+    controls <- new_controls()
     new_stack_layout(
         name = "stack_free",
         data = data, direction = direction, layout = NULL,
@@ -164,14 +165,17 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
     )
 }
 
-# Added to avoid `aes()` end in `stack_free.default`
 #' @export
-stack_free.uneval <- function(data, ...) {
-    cli_abort(c(
-        "{.arg data} cannot be {.obj_type_friendly {data}}",
-        "i" = "Have you misspelled the {.arg data} argument in {.fn stack_free}"
+stack_free.function <- function(data = NULL, direction = NULL, ...) {
+    cli_abort(paste0(
+        "{.arg data} must be a {.cls data.frame}, ",
+        "or an object coercible by {.fn fortify_data_frame}, or a valid ",
+        "{.cls data.frame}-like object coercible by {.fn as.data.frame}"
     ))
 }
+
+#' @export
+stack_free.formula <- stack_free.function
 
 new_stack_layout <- function(name, data, direction, layout, controls = NULL,
                              theme = NULL, sizes = NA,

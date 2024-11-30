@@ -9,8 +9,9 @@
 #' visualization layers are automatically applied. `ggheatmap` is an alias for
 #' `heatmap_layout`.
 #'
-#' @param data `r rd_layout_data()`. If not already a matrix, will be converted
-#' to one by [`fortify_matrix()`].
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout. If not already a matrix, will be converted to one by
+#' [`fortify_matrix()`].
 #' @param ... Additional arguments passed to [`fortify_matrix()`].
 #' @inheritParams quad_free
 #' @param filling A single string of `r oxford_or(c("raster", "tile"))` to

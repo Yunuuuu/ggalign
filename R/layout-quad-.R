@@ -7,8 +7,9 @@
 #' `quad_alignh()`, `quad_alignv()`, and `quad_alignb()` into a single
 #' interface.
 #'
-#' @param data `r rd_layout_data()`. The conversion of data depends on the
-#' `align` argument and will use, [`fortify_data_frame()`]
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout. The conversion of data depends on the `align` argument and
+#' will use, [`fortify_data_frame()`]
 #' or [`fortify_matrix()`]:
 #'  - If `align` is `NULL`, a data frame is required. When inherited by the
 #'    annotation stack, no transposition will be applied.
@@ -73,7 +74,8 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #' - `quad_alignv`: Align observations in the vertical direction.
 #' - `quad_alignb`: Align observations in both horizontal and vertical
 #'   directions.
-#' @param data `r rd_layout_data()`.
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout.
 #' - For `quad_free`/`ggside`, the function uses [`fortify_data_frame()`] to
 #'   convert the data into a data frame.
 #' - For all other functions, it employs [`fortify_matrix()`] to convert
