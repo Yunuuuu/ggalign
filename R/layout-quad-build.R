@@ -56,8 +56,8 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
-    row_params <- setup_layout_coords(quad@horizontal)
-    column_params <- setup_layout_coords(quad@vertical)
+    row_coords <- setup_layout_coords(quad@horizontal)
+    column_coords <- setup_layout_coords(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- align <-
@@ -96,15 +96,15 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         stack_controls <- controls
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
-            params <- column_params
+            extra_coords <- column_coords
             stack_controls$plot_align <- horizontal_align
         } else {
-            params <- row_params
+            extra_coords <- row_coords
             stack_controls$plot_align <- vertical_align
         }
         plot <- stack_build(stack,
             controls = inherit_controls(stack@controls, stack_controls),
-            extra_coords = params
+            extra_coords = extra_coords
         )
         if (!is.null(plot)) {
             # for annotation, we should always make them next to
@@ -155,13 +155,13 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     p <- quad@plot
 
     # add default data ----------------------------------
-    p$data <- quad_build_data(data, row_params, column_params)
+    p$data <- quad_build_data(data, row_coords, column_coords)
 
     # setup the facet -----------------------------------
-    do_row_facet <- !is.null(row_params) &&
-        nlevels(.subset2(row_params, "panel")) > 1L
-    do_column_facet <- !is.null(column_params) &&
-        nlevels(.subset2(column_params, "panel")) > 1L
+    do_row_facet <- !is.null(row_coords) &&
+        nlevels(.subset2(row_coords, "panel")) > 1L
+    do_column_facet <- !is.null(column_coords) &&
+        nlevels(.subset2(column_coords, "panel")) > 1L
 
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
@@ -188,24 +188,24 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     }
 
     # set limits ----------------------------------------
-    if (!is.null(column_params)) {
-        column_params$labels <- .subset(
+    if (!is.null(column_coords)) {
+        column_coords$labels <- .subset(
             colnames(data),
-            .subset2(column_params, "index")
+            .subset2(column_coords, "index")
         )
     }
-    if (!is.null(row_params)) {
-        row_params$labels <- .subset(
+    if (!is.null(row_coords)) {
+        row_coords$labels <- .subset(
             vec_names(data),
-            .subset2(row_params, "index")
+            .subset2(row_coords, "index")
         )
     }
 
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
-    if (!is.null(row_params) || !is.null(column_params)) {
+    if (!is.null(row_coords) || !is.null(column_coords)) {
         p <- p + quad_melt_facet(p$facet, default_facet) +
-            coord_ggalign(x = column_params, y = row_params)
+            coord_ggalign(x = column_coords, y = row_coords)
     }
     p <- p + theme_recycle()
 
@@ -251,33 +251,33 @@ quad_melt_facet <- function(user_facet, default_facet) {
 }
 
 #' @importFrom stats reorder
-quad_build_data <- function(data, row_params, column_params) {
-    if (is.null(data) || (is.null(row_params) && is.null(column_params))) {
+quad_build_data <- function(data, row_coords, column_coords) {
+    if (is.null(data) || (is.null(row_coords) && is.null(column_coords))) {
         return(data)
     }
-    if (!is.null(row_params)) {
-        row_panel <- .subset2(row_params, "panel")
-        row_index <- .subset2(row_params, "index")
+    if (!is.null(row_coords)) {
+        row_panel <- .subset2(row_coords, "panel")
+        row_index <- .subset2(row_coords, "index")
         row_coords <- data_frame0(
             .ypanel = row_panel,
             .yindex = row_index,
             .y = seq_along(row_index)
         )
     }
-    if (!is.null(column_params)) {
-        column_panel <- .subset2(column_params, "panel")
-        column_index <- .subset2(column_params, "index")
+    if (!is.null(column_coords)) {
+        column_panel <- .subset2(column_coords, "panel")
+        column_index <- .subset2(column_coords, "index")
         column_coords <- data_frame0(
             .xpanel = column_panel,
             .xindex = column_index,
             .x = seq_along(column_index)
         )
     }
-    if (!is.null(row_params) && !is.null(column_params)) {
+    if (!is.null(row_coords) && !is.null(column_coords)) {
         coords <- cross_join(row_coords, column_coords)
         by.x <- c(".column_index", ".row_index")
         by.y <- c(".xindex", ".yindex")
-    } else if (is.null(row_params)) {
+    } else if (is.null(row_coords)) {
         coords <- column_coords
         by.x <- ".column_index"
         by.y <- ".xindex"
