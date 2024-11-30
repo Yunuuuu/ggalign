@@ -138,7 +138,7 @@ check_layout_coords <- function(old, new, old_name, new_name,
             i = "layout ordering index must be integer"
         ), call = call)
     } else if (is.null(nobs) || length(new_index) != nobs) {
-        # we have defined panel, but don't define the nobs
+        # we have defined index, but don't define the nobs
         cli_abort(sprintf(
             "layout ordering index defined by %s (nobs: %d) is not compatible with the nobs: %d",
             new_name, length(new_index), nobs %||% 0L
