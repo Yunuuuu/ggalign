@@ -191,7 +191,7 @@ quad_alignh(small_mat) +
     scale_fill_brewer(palette = "Dark2") +
     anno_top(initialize = FALSE) +
     # initialize the top annotation with a self-provided `stack_layout()`
-    stack_free(mpg) +
+    stack_freev(mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))
