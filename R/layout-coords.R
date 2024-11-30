@@ -110,7 +110,7 @@ check_layout_coords <- function(old, new, old_name, new_name,
         # we have defined panel, but don't define the nobs
         cli_abort(sprintf(
             "layout panels defined by %s (nobs: %d) is not compatible with the nobs: %d",
-            new_name, length(new_panel), nobs
+            new_name, length(new_panel), nobs %||% 0L
         ), call = call)
     } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
         cli_abort(sprintf(
@@ -141,7 +141,7 @@ check_layout_coords <- function(old, new, old_name, new_name,
         # we have defined panel, but don't define the nobs
         cli_abort(sprintf(
             "layout ordering index defined by %s (nobs: %d) is not compatible with the nobs: %d",
-            new_name, length(new_index), nobs
+            new_name, length(new_index), nobs %||% 0L
         ), call = call)
     } else {
         index <- new_index
