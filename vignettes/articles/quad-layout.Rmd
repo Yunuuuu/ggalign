@@ -51,11 +51,11 @@ Like `ggheatmap()`, annotations in `quad_free()` can be placed at the top, left,
 bottom, and right sides, but all annotations here use `stack_free()`, meaning
 they don't align observations. The data will be directly inherited which is
 different from the `quad_alignb()`/`quad_alignh()`/`quad_alignv()` where the
-column annotation will transpose the layout matrix 
+column annotation will transpose the layout matrix.
 
-Additionally, annotations can be manually initialized with user-specified data
-using `quad_init()`, I'll demonstrate it in `quad_alignh()`/`quad_alignv()`
-section where manual initialization is required.
+Additionally, annotations `stack_layout()` can be manually added directly, I'll
+demonstrate it in `quad_alignh()`/`quad_alignv()` section where manual
+initialization is required.
 
 ```{r}
 ggside(mpg, aes(displ, hwy, colour = class)) -
@@ -174,26 +174,39 @@ quad_alignh(small_mat) +
 
 For top and bottom annotation in `quad_alignh()`, they are a `stack_free()`
 which won't align observations, and require a data frame in the layout data. In
-this way, we won't transform the matrix to a data frame and always prevent user
-from inheriting from the parent layout matrix.
-
-```{r error=TRUE}
+this way, the annotation stack won't be initialized, resulting in a warning
+message.
+```{r}
 quad_alignh(small_mat) +
     geom_boxplot(aes(value, .row_names, fill = .row_names)) +
     scale_fill_brewer(palette = "Dark2") +
     anno_top()
 ```
 
-Manual initialization of annotations with `quad_init()` is required in such
-cases: 
+Manual adding of a `stack_layout()` is required in such cases, you can set
+`initialize = FALSE` to prevent the warning message. 
 ```{r}
 quad_alignh(small_mat) +
     geom_boxplot(aes(value, .row_names, fill = .row_names)) +
     scale_fill_brewer(palette = "Dark2") +
-    # initialize the top annotation with a self-defined data frame
-    quad_init("top", data = mpg) +
+    anno_top(initialize = FALSE) +
+    # initialize the top annotation with a self-provided `stack_layout()`
+    stack_free(mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
+    geom_point(aes(displ, hwy, colour = class))
+```
+
+Alternatively, you can set `initialize = TRUE`, which will initialize the
+annotation stack layout with no data. In this case, you must provide `data` in
+each plot within the annotation.
+```{r}
+quad_alignh(small_mat) +
+    geom_boxplot(aes(value, .row_names, fill = .row_names)) +
+    scale_fill_brewer(palette = "Dark2") +
+    anno_top(initialize = TRUE) +
+    # add a plot in the top annotation
+    ggfree(data = mpg, aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))
 ```
 
@@ -203,8 +216,9 @@ annotations in `quad_alignv()`.
 quad_alignv(small_mat) +
     geom_boxplot(aes(.column_names, value, fill = .column_names)) +
     scale_fill_brewer(palette = "Dark2") +
-    # initialize the left annotation with a self-defined data frame
-    quad_init("left", data = mpg) +
+    anno_left(initialize = FALSE) +
+    # initialize the left annotation with a self-provided `stack_layout()`
+    stack_free(data = mpg) +
     # add a plot in the top annotation
     ggfree(aes(displ, hwy, colour = class)) +
     geom_point(aes(displ, hwy, colour = class))

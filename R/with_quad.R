@@ -123,9 +123,6 @@ with_quad.quad_active <- with_quad.layout_title
 with_quad.quad_anno <- with_quad.layout_title
 
 #' @export
-with_quad.quad_init <- with_quad.layout_title
-
-#' @export
 with_quad.stack_switch <- with_quad.layout_title
 
 quad_operated_context <- function(with, active, operator) {

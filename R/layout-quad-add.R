@@ -224,7 +224,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     # check quad layout is compatible with stack layout
-    direction <- to_direction(active)
+    direction <- to_direction(position)
     quad_coords <- slot(quad, direction)
     stack_coords <- object@layout
     # check if we can align in this direction
