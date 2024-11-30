@@ -161,9 +161,7 @@ quad_init <- function(position, data = waiver(), ...) {
 #'     anno_top() +
 #'     align_dendro()
 #' @importFrom ggplot2 waiver
-#' @seealso
-#' - [`quad_active()`]/[`quad_anno()`]
-#' - [`quad_init()`]
+#' @seealso [`quad_active()`]/[`quad_anno()`]
 #' @export
 quad_switch <- function(position = NULL, size = NULL,
                         width = NULL, height = NULL, free_guides = waiver(),

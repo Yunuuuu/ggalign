@@ -91,7 +91,7 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
 #' @export
 stack_layout_subtract.layout_title <- function(object, stack, object_name) {
     cli_abort(c(
-        "Cannot use {.code -} to add {.obj_type_friendly {object}}",
+        "Cannot use {.code -} with {.var {object_name}}",
         i = "Try to use {.code +} instead"
     ))
 }
@@ -109,15 +109,10 @@ stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
 stack_layout_subtract.quad_anno <- stack_layout_subtract.ggplot
 
 #' @export
-stack_layout_subtract.quad_init <- stack_layout_subtract.ggplot
+stack_layout_subtract.StackLayout <- stack_layout_subtract.ggplot
 
 #' @export
-stack_layout_subtract.Align <- function(object, stack, object_name) {
-    cli_abort(c(
-        "Cannot use {.code -} to add {.fn {snake_class(object)}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
+stack_layout_subtract.ggalign_align <- stack_layout_subtract.ggplot
 
 #' @export
 stack_layout_subtract.layout_annotation <- stack_layout_subtract.layout_title
@@ -169,15 +164,10 @@ stack_layout_and_add.layout_title <- function(object, stack, object_name) {
 stack_layout_and_add.ggplot <- stack_layout_and_add.layout_title
 
 #' @export
-stack_layout_and_add.ggalign_free_gg <- stack_layout_and_add.layout_title
+stack_layout_and_add.ggalign_free_gg <- stack_layout_and_add.ggplot
 
 #' @export
-stack_layout_and_add.Align <- function(object, stack, object_name) {
-    cli_abort(c(
-        "Cannot use {.code &} to add {.fn {snake_class(object)}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
+stack_layout_and_add.ggalign_align <- stack_layout_and_add.ggplot
 
 #' @export
 stack_layout_and_add.layout_annotation <- stack_layout_and_add.layout_title

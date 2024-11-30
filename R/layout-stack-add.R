@@ -45,7 +45,7 @@ stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
     } else {
         cli_abort(c(
             sprintf(
-                "Cannot add {.code {object_name}} to %s",
+                "Cannot add {.var {object_name}} to %s",
                 stack_name(stack)
             ),
             i = "Did you forget to add a {.fn quad_layout}?"
@@ -61,7 +61,7 @@ stack_layout_add.quad_active <- stack_layout_add.ggalign_with_quad
 stack_layout_add.quad_anno <- stack_layout_add.quad_active
 
 #' @export
-stack_layout_add.quad_init <- stack_layout_add.quad_active
+stack_layout_add.StackLayout <- stack_layout_add.quad_active
 
 ###################################################################
 # add elements to the nested layout or the stack layout
