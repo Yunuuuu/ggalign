@@ -201,7 +201,7 @@ quad_layout_add.ggalign_align_plot <- function(object, quad, object_name) {
     slot(quad, position) <- stack
     # skip the updating of layout coords if there are cross points in
     # bottom or right annotation
-    if (any(position == c("top", "left")) || is_empty(layout@cross_points)) {
+    if (any(position == c("top", "left")) || is_empty(stack@cross_points)) {
         quad <- update_layout_coords(quad,
             direction = direction,
             coords = stack@layout,
