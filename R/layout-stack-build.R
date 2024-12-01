@@ -71,6 +71,8 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
         plot_order <- vapply(plots, function(plot) {
             if (is_layout(plot)) {
                 .subset2(plot@plot_active, "order")
+            } else if (is_cross_link(plot)) {
+                1L
             } else {
                 .subset2(.subset2(plot, "active"), "order")
             }
