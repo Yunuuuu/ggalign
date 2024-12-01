@@ -128,12 +128,3 @@ ggplot_add.ggalign_free_gg <- function(object, plot, object_name) {
     )
     ggplot_add(object, plot, object_name)
 }
-
-#' @export
-plot_build.ggalign_free_gg <- function(plot, ..., controls) {
-    plot <- free_gg_build_plot(
-        .subset2(plot, "plot"),
-        .subset2(plot, "data")
-    )
-    plot_add_controls(plot, controls)
-}

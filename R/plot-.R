@@ -30,7 +30,7 @@ plot.ggalign_plot <- function(x, ...) {
 
 plot_build <- function(plot, ...) UseMethod("plot_build")
 
-# add object to the plot
+# add object to the plot ------------------------------------
 plot_add <- function(plot, object, object_name) UseMethod("plot_add")
 
 ggalign_plot_add <- function(object, plot, object_name) {

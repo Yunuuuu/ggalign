@@ -264,15 +264,3 @@ quad_body_add.ggalign_option <- function(object, quad, object_name) {
     ))
     quad
 }
-
-#' @export
-quad_body_add.ggalign_free_gg <- function(object, quad, object_name) {
-    cli_abort(c(
-        "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-        i = "no active annotation stack",
-        i = "try to activate an annotation stack with {.fn anno_*}"
-    ))
-}
-
-#' @export
-quad_body_add.ggplot <- quad_body_add.ggalign_free_gg

@@ -60,16 +60,6 @@ stack_composer_add.ggalign_plot <- function(plot, composer, ...) {
     stack_composer_align_plot(composer, plot, size)
 }
 
-#' @export
-stack_composer_add.ggalign_free_gg <- function(plot, composer, controls, ...) {
-    plot_and_size <- free_build(plot, controls)
-    stack_composer_align_plot(
-        composer,
-        .subset2(plot_and_size, "plot"),
-        .subset2(plot_and_size, "size")
-    )
-}
-
 #' @importFrom grid unit.c unit
 stack_composer_add.QuadLayout <- function(plot, composer, controls, ...) {
     patches <- quad_build(plot, controls)

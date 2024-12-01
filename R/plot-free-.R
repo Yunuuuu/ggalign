@@ -28,6 +28,10 @@ stack_layout_add.ggalign_free_plot <- function(object, stack, object_name) {
     stack
 }
 
+#' @export
+stack_layout_add.ggplot <- function(object, stack, object_name) {
+    stack_layout_add(free_gg(data = object), stack, object_name)
+}
 
 #' @importFrom methods slot slot<-
 #' @export
@@ -51,9 +55,7 @@ quad_layout_add.ggalign_free_plot <- function(object, quad, object_name) {
 }
 
 #' @export
-stack_layout_add.ggplot <- function(object, stack, object_name) {
-    stack_layout_add(free_gg(data = object), stack, object_name)
-}
+quad_layout_add.ggplot <- quad_layout_add.ggalign_free_plot
 
 #' @export
 plot_build.ggalign_free_plot <- function(plot, ..., controls) {

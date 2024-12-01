@@ -139,8 +139,6 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
     )
 }
 
-is_align <- function(x) inherits(x, "ggalign_align_align")
-
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
 #' object, descended from the top-level `Align`, and each implements various
