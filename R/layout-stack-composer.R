@@ -49,25 +49,15 @@ stack_composer_align_plot <- function(composer, plot, size) {
     stack_composer_add_plot(composer, plot, t, l)
 }
 
-stack_composer_add <- function(plot, composer, controls, ...) {
+stack_composer_add <- function(plot, composer, ...) {
     UseMethod("stack_composer_add")
 }
 
 #' @export
-stack_composer_add.ggalign_align <- function(plot, composer, controls, ...,
-                                             layout, extra_coords) {
-    plot_and_size <- align_build(
-        align = plot,
-        panel = .subset2(layout, "panel"),
-        index = .subset2(layout, "index"),
-        controls = controls,
-        extra_coords = extra_coords
-    )
-    stack_composer_align_plot(
-        composer,
-        .subset2(plot_and_size, "plot"),
-        .subset2(plot_and_size, "size")
-    )
+stack_composer_add.ggalign_plot <- function(plot, composer, ...) {
+    size <- .subset2(plot, "size")
+    plot <- plot_build(plot = plot, ...) + theme_recycle()
+    stack_composer_align_plot(composer, plot, size)
 }
 
 #' @export

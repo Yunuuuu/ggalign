@@ -15,8 +15,8 @@ frame.
 \item If \code{type} is \code{free}, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to get a matrix.
 }}
 
-\item{direction}{A string indicating the direction of the layout, either
-\code{"horizontal"} or \code{"vertical"}.}
+\item{direction}{A string indicating the direction of the stack layout,
+either \code{"horizontal"} or \code{"vertical"}.}
 
 \item{type}{A string indicating the stack layout type: \code{"align"} for
 aligned plots (\code{\link[=stack_align]{stack_align()}}) or \code{"free"} for free stacking

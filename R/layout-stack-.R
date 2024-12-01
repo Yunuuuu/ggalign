@@ -66,15 +66,15 @@ ggstack <- stack_layout
 #'    a data frame.
 #'  - For `stack_align`, [`fortify_matrix()`] will be used to convert data to a
 #'    matrix.
-#' @param direction A string indicating the direction of the layout, either
-#' `"horizontal"` or `"vertical"`.
+#' @param direction A string indicating the direction of the stack layout,
+#' either `"horizontal"` or `"vertical"`.
 #' @param ... Additional arguments passed to [`fortify_data_frame()`] or
 #' [`fortify_matrix()`].
 #' @inheritParams quad_layout
 #' @param sizes A numeric or a [`unit`][grid::unit] object of length `3`
 #' indicating the relative heights (for `direction = "horizontal"`) or widths
 #' (for `direction = "vertical"`). This is only used if you include a nested
-#' `quad_layout()` in the layout.
+#' [`quad_layout()`] in the layout.
 #' @examples
 #' set.seed(123)
 #' stack_align(matrix(rnorm(56), nrow = 7L), "h") +
@@ -114,7 +114,6 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
         nobs <- NULL
     }
     new_stack_layout(
-        name = "stack_align",
         data = data, direction = direction,
         layout = new_layout_coords(nobs = nobs),
         controls = controls, theme = theme, sizes = sizes
@@ -160,7 +159,6 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
     data <- fortify_data_frame(data = data, ...)
     controls <- new_controls()
     new_stack_layout(
-        name = "stack_free",
         data = data, direction = direction, layout = NULL,
         controls = controls, theme = theme, sizes = sizes
     )
@@ -178,11 +176,12 @@ stack_free.function <- function(data = NULL, direction = NULL, ...) {
 #' @export
 stack_free.formula <- stack_free.function
 
-new_stack_layout <- function(name, data, direction, layout, controls = NULL,
+new_stack_layout <- function(data, direction, layout, controls = NULL,
                              theme = NULL, sizes = NA,
                              call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
+    if (is.null(layout)) name <- "stack_free" else name <- "stack_align"
     if (!is.null(direction)) {
         direction <- match.arg(direction, c("horizontal", "vertical"))
     } else {
@@ -211,13 +210,17 @@ methods::setClass(
     contains = "Layout",
     list(
         name = "character", data = "ANY", direction = "character",
-        plots = "list", # save the list of plots
+        plot_list = "list", # save the list of plots
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
-        layout = "ANY" # used to align observations
+        layout = "ANY", # used to align observations
+        index_list = "list", # used by `cross_link()`
+        cross_points = "integer"
     ),
     prototype = list(
-        plots = list(),
+        plot_list = list(),
+        index_list = list(),
+        cross_points = integer(),
         heatmap = list( # used by heatmap annotation
             position = NULL, # annotation position
             size = unit(NA, "null"), # total annotation size
@@ -225,28 +228,3 @@ methods::setClass(
         )
     )
 )
-
-#' @aliases +.StackLayout &.StackLayout -.StackLayout
-#' @importFrom methods Ops
-#' @export
-#' @rdname layout-operator
-methods::setMethod("Ops", c("StackLayout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code {.Generic}} with a single argument.",
-            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
-        ))
-    }
-
-    if (is.null(e2)) return(e1) # styler: off
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    switch(.Generic, # nolint
-        `+` = stack_layout_add(e2, e1, e2name),
-        `-` = stack_layout_subtract(e2, e1, e2name),
-        `&` = stack_layout_and_add(e2, e1, e2name),
-        stop_incompatible_op(.Generic, e1, e2)
-    )
-})

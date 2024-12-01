@@ -66,7 +66,7 @@ inherit_option.plot_data <- function(option, poption) {
 }
 
 #' @export
-plot_add.plot_data <- function(option, plot) {
+plot_add_option.plot_data <- function(option, plot) {
     # by default, we won't change the data
     if (!is.null(plot_data <- .subset2(option, "data") %|w|% NULL) &&
         !is.null(raw_data <- .subset2(plot, "data"))) {

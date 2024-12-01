@@ -100,7 +100,7 @@ inherit_option.plot_align <- function(option, poption) {
 
 #' @param theme Additional default theme elements to be added for the plot
 #' @noRd
-plot_add.plot_align <- function(option, plot) {
+plot_add_option.plot_align <- function(option, plot) {
     if (!is.waive(free_guides <- .subset2(option, "guides"))) {
         plot <- free_guide(plot, free_guides)
     }

@@ -88,7 +88,7 @@ inherit_option.plot_theme <- function(option, poption) {
 }
 
 #' @export
-plot_add.plot_theme <- function(option, plot) {
+plot_add_option.plot_theme <- function(option, plot) {
     # setup plot theme
     plot$theme <- option + .subset2(plot, "theme")
     plot

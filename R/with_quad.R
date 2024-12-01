@@ -108,7 +108,7 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
 
 #' @export
 with_quad.ggalign_align <- function(x, position = waiver(), main = NULL) {
-    cli_abort("Cannot used with {.fn {snake_class(x$Object)}}")
+    cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
 
 #' @export

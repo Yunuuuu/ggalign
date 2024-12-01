@@ -40,7 +40,7 @@ update_layout_option <- function(object, layout, object_name) {
 # so parent has the right class, we dispatch method based on the parent option
 inherit_option <- function(option, poption) UseMethod("inherit_option", poption)
 
-plot_add <- function(option, plot) UseMethod("plot_add")
+plot_add_option <- function(option, plot) UseMethod("plot_add_option")
 
 inherit_controls <- function(controls, pcontrols) {
     options <- vapply(pcontrols, ggalign_option_name,
@@ -55,7 +55,7 @@ inherit_controls <- function(controls, pcontrols) {
 
 plot_add_controls <- function(plot, controls) {
     for (i in seq_along(controls)) {
-        plot <- plot_add(.subset2(controls, i), plot = plot)
+        plot <- plot_add_option(.subset2(controls, i), plot = plot)
     }
     plot
 }

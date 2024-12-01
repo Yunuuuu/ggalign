@@ -6,16 +6,19 @@ stack_layout_subtract <- function(object, stack, object_name) {
 #' @export
 stack_layout_subtract.default <- function(object, stack, object_name) {
     active <- stack@active
-    if (!is.null(active) &&
-        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
-        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
-    } else {
-        stack@plots <- lapply(stack@plots, function(plot) {
-            if (stack_active_is_layout(plot)) {
-                return(plot)
+    if (is.null(active_index <- stack@active) ||
+        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
+        stack@plot_list <- lapply(stack@plot_list, function(plot) {
+            if (is_ggalign_plot(plot)) {
+                stack_plot_add(plot, object, object_name, force = FALSE)
+            } else {
+                plot
             }
-            stack_plot_add(plot, object, object_name, force = FALSE)
         })
+    } else {
+        stack@plot_list[[active]] <- quad_layout_subtract(
+            object, plot, object_name
+        )
     }
     stack
 }
@@ -24,11 +27,13 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 #' @export
 stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
     active <- stack@active
-    if (!is.null(active) &&
-        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
-        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
-    } else {
+    if (is.null(active_index <- stack@active) ||
+        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         stack <- update_layout_option(object, stack, object_name)
+    } else {
+        stack@plot_list[[active]] <- quad_layout_subtract(
+            object, plot, object_name
+        )
     }
     stack
 }
@@ -36,10 +41,8 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
 #' @export
 stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) {
     active <- stack@active
-    if (!is.null(active) &&
-        stack_active_is_layout(plot <- .subset2(stack@plots, active))) {
-        stack@plots[[active]] <- quad_layout_subtract(object, plot, object_name)
-    } else {
+    if (is.null(active_index <- stack@active) ||
+        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         inner <- .subset2(object, "object")
         inner_name <- .subset2(object, "object_name")
 
@@ -52,8 +55,10 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
 
         # otherwise, we apply the object to all plots in the stack layout
         direction <- stack@direction
-        stack@plots <- lapply(stack@plots, function(plot) {
-            if (stack_active_is_layout(plot)) {
+        stack@plot_list <- lapply(stack@plot_list, function(plot) {
+            if (is_ggalign_plot(plot)) {
+                plot <- stack_plot_add(plot, inner, inner_name, force = FALSE)
+            } else {
                 if (is.waive(.subset2(object, "position"))) {
                     # default behaviour for object wrap with `with_quad()`
                     # we add the object along the stack layout
@@ -78,11 +83,13 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
                     # we respect the context setting
                     plot <- quad_layout_subtract(object, plot, object_name)
                 }
-            } else {
-                plot <- stack_plot_add(plot, inner, inner_name, force = FALSE)
             }
             plot
         })
+    } else {
+        stack@plot_list[[active]] <- quad_layout_subtract(
+            object, plot, object_name
+        )
     }
     stack
 }
@@ -125,11 +132,11 @@ stack_layout_and_add <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_and_add.default <- function(object, stack, object_name) {
-    stack@plots <- lapply(stack@plots, function(plot) {
-        if (stack_active_is_layout(plot)) {
-            plot <- quad_layout_and_add(object, plot, object_name)
-        } else {
+    stack@plot_list <- lapply(stack@plot_list, function(plot) {
+        if (is_ggalign_plot(plot)) {
             plot <- stack_plot_add(plot, object, object_name, force = FALSE)
+        } else {
+            plot <- quad_layout_and_add(object, plot, object_name)
         }
         plot
     })

@@ -23,31 +23,67 @@ reorder_index <- function(panel, index = NULL) {
     unlist(split(index, panel[index]), recursive = FALSE, use.names = FALSE)
 }
 
+############################################################
+get_layout_coords <- function(layout, ...) {
+    UseMethod("get_layout_coords")
+}
+
+#' @export
+get_layout_coords.StackLayout <- function(layout, ...) {
+    layout@layout
+}
+
+#' @importFrom methods slot
+#' @export
+get_layout_coords.QuadLayout <- function(layout, ..., direction) {
+    slot(layout, direction)
+}
+
+#' @importFrom methods slot
+#' @export
+get_layout_coords.CrossLayout <- function(layout, ..., hand) {
+    get_layout_coords(
+        layout = slot(layout, hand),
+        direction = layout@direction,
+        hand = hand
+    )
+}
+
+############################################################
 #' @keywords internal
-update_layout_coords <- function(layout, ..., coords) {
+update_layout_coords <- function(layout, ..., coords, object_name) {
     UseMethod("update_layout_coords")
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.QuadLayout <- function(layout, direction, ..., coords) {
+update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
+                                            object_name) {
     if (is.null(coords) || is.null(slot(layout, direction))) {
         return(layout)
     }
     slot(layout, direction) <- coords
     if (is_horizontal(direction)) {
         if (!is.null(left <- layout@left)) {
-            layout@left <- update_layout_coords(left, coords = coords)
+            layout@left <- update_layout_coords(left,
+                coords = coords, object_name = object_name
+            )
         }
         if (!is.null(right <- layout@right)) {
-            layout@right <- update_layout_coords(right, coords = coords)
+            layout@right <- update_layout_coords(right,
+                coords = coords, object_name = object_name
+            )
         }
     } else {
         if (!is.null(top <- layout@top)) {
-            layout@top <- update_layout_coords(top, coords = coords)
+            layout@top <- update_layout_coords(top,
+                coords = coords, object_name = object_name
+            )
         }
         if (!is.null(bottom <- layout@bottom)) {
-            layout@bottom <- update_layout_coords(bottom, coords = coords)
+            layout@bottom <- update_layout_coords(bottom,
+                coords = coords, object_name = object_name
+            )
         }
     }
     layout
@@ -55,12 +91,34 @@ update_layout_coords.QuadLayout <- function(layout, direction, ..., coords) {
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.StackLayout <- function(layout, ..., coords) {
+update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
+    # for quad annotation stack, we may update coords even the annotation stack
+    # won't align observations
     if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }
-    slot(layout, "layout") <- coords
-    layout@plots <- lapply(layout@plots, function(plot) {
+    layout@layout <- coords
+    n_plots <- length(plot_list <- layout@plot_list)
+    if (n_plots == 0L) {
+        return(layout)
+    }
+    layout <- check_stack_index_list(
+        layout,
+        coords = coords,
+        object_name = object_name
+    )
+    # extract the last cross_points
+    if (n_breaks <- length(layout@cross_points)) {
+        # one for the `cross_link()` plot itself
+        index <- layout@cross_points[n_breaks] + 1L + 1L
+    } else {
+        index <- 1L
+    }
+    if (index > n_plots) {
+        return(layout)
+    }
+    index <- index:n_plots
+    layout@plot_list[index] <- lapply(plot_list[index], function(plot) {
         if (is_layout(plot)) {
             update_layout_coords(plot,
                 direction = layout@direction, coords = coords
@@ -73,6 +131,32 @@ update_layout_coords.StackLayout <- function(layout, ..., coords) {
 }
 
 ############################################################
+check_stack_index_list <- function(stack, coords, object_name,
+                                   call = caller_call()) {
+    # update `index_list` when necessary
+    if (!is.null(panel <- .subset2(coords, "panel")) &&
+        length(stack@cross_points)) {
+        index_list <- stack@index_list
+        for (i in seq_along(index_list)) {
+            if (is.null(old <- .subset2(index_list, i))) {
+                next
+            }
+            new <- reorder_index(panel, old)
+            # we always prevent from reordering twice.
+            if (!is.null(old) && !all(old == new)) {
+                cli_abort(sprintf(
+                    "%s disrupt the previously established ordering index of %s (i)",
+                    object_name,
+                    object_name(stack)
+                ), call = call)
+            }
+            index_list[[i]] <- new
+        }
+        stack@index_list <- index_list
+    }
+    stack
+}
+
 check_layout_coords <- function(old, new, old_name, new_name,
                                 call = caller_call()) {
     old_nobs <- .subset2(old, "nobs")

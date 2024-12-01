@@ -9,7 +9,7 @@ rasterise.QuadLayout <- function(input, ...) {
 }
 
 rasterise.StackLayout <- function(input, ...) {
-    input@plots <- lapply(input@plots, ggrastr::rasterise, ...)
+    input@plot_list <- lapply(input@plot_list, ggrastr::rasterise, ...)
     input
 }
 
@@ -39,7 +39,7 @@ rasterise.ggalign_free_gg <- function(input, ...) {
 
 #' @export
 .raster_magick.StackLayout <- function(x, magick = NULL, ...) {
-    x@plots <- lapply(x@plots, .raster_magick, magick = magick, ...)
+    x@plot_list <- lapply(x@plot_list, .raster_magick, magick = magick, ...)
     x
 }
 

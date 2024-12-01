@@ -30,8 +30,8 @@ a data frame.
 matrix.
 }}
 
-\item{direction}{A string indicating the direction of the layout, either
-\code{"horizontal"} or \code{"vertical"}.}
+\item{direction}{A string indicating the direction of the stack layout,
+either \code{"horizontal"} or \code{"vertical"}.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
 \code{\link[=fortify_matrix]{fortify_matrix()}}.}
@@ -43,7 +43,7 @@ matrix.
 \item{sizes}{A numeric or a \code{\link[grid:unit]{unit}} object of length \code{3}
 indicating the relative heights (for \code{direction = "horizontal"}) or widths
 (for \code{direction = "vertical"}). This is only used if you include a nested
-\code{quad_layout()} in the layout.}
+\code{\link[=quad_layout]{quad_layout()}} in the layout.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

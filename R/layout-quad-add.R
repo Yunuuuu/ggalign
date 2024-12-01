@@ -34,45 +34,9 @@ quad_layout_add.default <- function(object, quad, object_name) {
             i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
         ))
     } else {
-        slot(quad, position) <- stack_layout_add(object, stack, object_name)
+        slot(quad, position) <- stack_layout_add(object, layout, object_name)
     }
     quad
-}
-
-#' @importFrom methods slot slot<-
-#' @export
-quad_layout_add.ggalign_align <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "no active annotation stack",
-            i = "try to activate an annotation stack with {.fn anno_*}"
-        ))
-    }
-    if (is.null(stack <- slot(quad, position))) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "the {.field {position}} annotation stack is not initialized",
-            i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
-        ))
-    }
-    direction <- to_direction(position)
-
-    # check if we can align in this direction
-    if (is.null(slot(quad, direction))) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = paste(
-                "{.fn {quad@name}} cannot align observations",
-                "in {.field {direction}} direction"
-            )
-        ))
-    }
-
-    # add annotation -----------------------------
-    stack <- stack_layout_add(object, stack, object_name)
-    slot(quad, position) <- stack
-    update_layout_coords(quad, direction = direction, coords = stack@layout)
 }
 
 #' @export
@@ -160,11 +124,6 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         }
         if (!is.waive(data)) { # initialize the annotation stack
             stack <- new_stack_layout(
-                name = if (is.null(layout_coords)) {
-                    "stack_free"
-                } else {
-                    "stack_align"
-                },
                 data = data,
                 direction = direction,
                 # the layout parameters should be the same with `quad_layout()`
@@ -201,6 +160,14 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
 }
 
 #' @export
+quad_layout_add.QuadLayout <- function(object, quad, object_name) {
+    cli_abort(c(
+        "Cannot add {.var {object_name}} to {.fn {quad@name}}.",
+        i = "Did you mean to place multiple {.fn quad_layout} elements inside a {.fn stack_layout}?"
+    ))
+}
+
+#' @export
 quad_layout_add.StackLayout <- function(object, quad, object_name) {
     # we check if there is an active annotation
     if (is.null(position <- quad@active)) {
@@ -218,7 +185,8 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     # cannot contain nested layout
-    if (any(vapply(object@plots, is_layout, logical(1L), USE.NAMES = FALSE))) {
+    if (any(vapply(object@plot_list, is_layout, logical(1L),
+                   USE.NAMES = FALSE))) { # styler: off
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
             i = "annotation stack cannot contain nested layout"
@@ -251,7 +219,10 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     slot(quad, position) <- object
-    update_layout_coords(quad, direction = direction, coords = layout_coords)
+    update_layout_coords(quad,
+        direction = direction, coords = layout_coords,
+        object_name = object_name
+    )
 }
 
 #######################################################

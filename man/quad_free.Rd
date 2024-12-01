@@ -75,6 +75,9 @@ added to a layout.}
 \item{width, height}{The relative width/height of the main plot, can be a
 \code{\link[grid:unit]{unit}} object.}
 }
+\value{
+A \code{QuadLayout} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

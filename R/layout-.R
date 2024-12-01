@@ -61,74 +61,6 @@ methods::setMethod("$", "Layout", function(x, name) {
     slot(x, name)
 })
 
-#########################################################
-#' Layout operator
-#'
-#' @description
-#' `r lifecycle::badge('experimental')`
-#'
-#'  - `+`: Adds elements to the active plot in the active layout.
-#'  - `&`: Applies elements to all plots in the layout.
-#'  - `-`: Adds elements to multiple plots in the layout.
-#'
-#' @details
-#' The `+` operator is straightforward and should be used as needed.
-#'
-#' In order to reduce code repetition `ggalign` provides two operators for
-#' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' `r rd_layout()`: `-` and `&`. See `vignette("operator")` for details.
-#'
-#' @param e1 A `r rd_layout()`.
-#' @param e2 An object to be added to the plot.
-#' @return A modified `Layout` object.
-#' @examples
-#' set.seed(123)
-#' small_mat <- matrix(rnorm(56), nrow = 7)
-#' ggheatmap(small_mat) +
-#'     anno_top() +
-#'     ggalign() +
-#'     geom_point(aes(y = value))
-#'
-#' # `&` operator apply it to all plots
-#' ggheatmap(small_mat) +
-#'     anno_top() +
-#'     align_dendro() &
-#'     theme(panel.border = element_rect(
-#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
-#'     ))
-#'
-#' # If the active layout is the annotation stack, the `-` operator will only
-#' # add the elements to all plots in the active annotation stack:
-#' ggheatmap(small_mat) +
-#'     anno_left(size = 0.2) +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     align_dendro(aes(color = branch), k = 3L) -
-#'     # Modify the the color scales of all plots in the left annotation
-#'     scale_color_brewer(palette = "Dark2")
-#'
-#' # If the active layout is the `ggstack()`/`stack_layout()` itself, `-`
-#' # applies the elements to all plots in the layout except the nested
-#' # `ggheatmap()`/`quad_layout()`.
-#' stack_alignv(small_mat) +
-#'     align_dendro() +
-#'     ggtitle("I'm from the parent stack") +
-#'     ggheatmap() +
-#'     # remove any active context
-#'     stack_active() +
-#'     align_dendro() +
-#'     ggtitle("I'm from the parent stack") -
-#'     # Modify the the color scales of all plots in the stack layout except the
-#'     # heatmap layout
-#'     scale_color_brewer(palette = "Dark2") -
-#'     # set the background of all plots in the stack layout except the heatmap
-#'     # layout
-#'     theme(plot.background = element_rect(fill = "red"))
-#'
-#' @name layout-operator
-NULL
-
-utils::globalVariables(".Generic")
-
 ###########################################################
 default_layout <- function(layout) {
     layout@theme <- default_theme() + layout@theme
@@ -168,20 +100,24 @@ ggalign_stat.QuadLayout <- function(x, position, ...) {
 #' @export
 #' @rdname ggalign_stat
 ggalign_stat.StackLayout <- function(x, what, ...) {
-    if (is.null(ans <- .subset2(x@plots, what))) {
-        cli_abort("Cannot find {what} plot in this stack layout")
-    }
-    ggalign_stat(x = ans, ...)
+    plot_list <- x@plot_list
+    index <- vec_as_location2(
+        what,
+        n = length(plot_list),
+        names = names(plot_list),
+        missing = "error"
+    )
+    ggalign_stat(x = .subset2(plot_list, index), ...)
 }
 
 #' @export
-ggalign_stat.ggalign_align <- function(x, ...) {
-    .subset2(.subset2(x, "Object"), "statistics")
+ggalign_stat.ggalign_align_align <- function(x, ...) {
+    .subset2(.subset2(x, "workflow"), "statistics")
 }
 
 #' @export
 ggalign_stat.default <- function(x, ...) {
-    cli_abort("no statistics found for {.obj_type_friendly {x}}")
+    cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
 
 ####################################################
