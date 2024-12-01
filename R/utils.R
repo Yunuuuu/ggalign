@@ -55,18 +55,13 @@ object_name.CrossLayout <- function(object, format = "fn") {
 }
 
 #' @export
-object_name.ggalign_align <- function(object, format = "fn") {
-    format_object_name(snake_class(.subset2(object, "Object")), format)
+object_name.ggalign_align_plot <- function(object, format = "fn") {
+    format_object_name(.subset2(object, "workflow"), format)
 }
 
 #' @export
-object_name.Align <- function(object, format = "fn") {
+object_name.AlignProto <- function(object, format = "fn") {
     format_object_name(snake_class(object), format)
-}
-
-#' @export
-object_name.ggalign_cross_link <- function(object, format = "fn") {
-    format_object_name("cross_link", format)
 }
 
 #################################################################

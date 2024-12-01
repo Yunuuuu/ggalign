@@ -104,7 +104,7 @@ stack_layout_subtract.layout_title <- function(object, stack, object_name) {
 stack_layout_subtract.ggplot <- stack_layout_subtract.layout_title
 
 #' @export
-stack_layout_subtract.ggalign_free_gg <- stack_layout_subtract.layout_title
+stack_layout_subtract.ggalign_plot <- stack_layout_subtract.layout_title
 
 #' @export
 stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
@@ -114,9 +114,6 @@ stack_layout_subtract.quad_anno <- stack_layout_subtract.ggplot
 
 #' @export
 stack_layout_subtract.StackLayout <- stack_layout_subtract.ggplot
-
-#' @export
-stack_layout_subtract.ggalign_align <- stack_layout_subtract.ggplot
 
 #' @export
 stack_layout_subtract.layout_annotation <- stack_layout_subtract.layout_title
@@ -168,10 +165,7 @@ stack_layout_and_add.layout_title <- function(object, stack, object_name) {
 stack_layout_and_add.ggplot <- stack_layout_and_add.layout_title
 
 #' @export
-stack_layout_and_add.ggalign_free_gg <- stack_layout_and_add.ggplot
-
-#' @export
-stack_layout_and_add.ggalign_align <- stack_layout_and_add.ggplot
+stack_layout_and_add.ggalign_plot <- stack_layout_and_add.ggplot
 
 #' @export
 stack_layout_and_add.layout_annotation <- stack_layout_and_add.layout_title

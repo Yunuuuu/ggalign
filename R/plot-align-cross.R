@@ -1,4 +1,13 @@
+#' Connect two layout crosswise
+#' @description
+#' `cross_link` resets the layout ordering index of a [`stack_layout()`]. This
+#' allows you to add other `align_*` objects to define a new layout ordering
+#' index. Any objects added after `cross_link` will use this updated layout
+#' ordering index. This feature is particularly useful for creating `tanglegram`
+#' visualizations.
+#' @inheritParams ggalign
 #' @importFrom ggplot2 ggproto aes
+#' @export
 cross_link <- function(mapping = aes(), size = NULL,
                        no_axes = NULL, active = NULL) {
     assert_mapping(mapping)

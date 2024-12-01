@@ -107,7 +107,7 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
 }
 
 #' @export
-with_quad.ggalign_align <- function(x, position = waiver(), main = NULL) {
+with_quad.ggalign_plot <- function(x, position = waiver(), main = NULL) {
     cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
 
@@ -162,5 +162,5 @@ quad_operated_context <- function(with, active, operator) {
 ggplot_add.ggalign_with_quad <- function(object, plot, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
-    NextMethod()
+    ggplot_add(object, plot, object_name)
 }

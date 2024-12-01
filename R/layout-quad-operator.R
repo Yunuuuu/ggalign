@@ -67,10 +67,10 @@ quad_layout_subtract.ggplot <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_subtract.layout_title <- quad_layout_subtract.ggplot
+quad_layout_subtract.ggalign_plot <- quad_layout_subtract.ggplot
 
 #' @export
-quad_layout_subtract.ggalign_free_gg <- quad_layout_subtract.ggplot
+quad_layout_subtract.layout_title <- quad_layout_subtract.ggplot
 
 #' @export
 quad_layout_subtract.quad_active <- quad_layout_subtract.ggplot
@@ -80,9 +80,6 @@ quad_layout_subtract.quad_anno <- quad_layout_subtract.ggplot
 
 #' @export
 quad_layout_subtract.StackLayout <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.ggalign_glign <- quad_layout_subtract.ggplot
 
 #' @export
 quad_layout_subtract.layout_annotation <- quad_layout_subtract.ggplot
@@ -134,10 +131,7 @@ quad_layout_and_add.layout_title <- function(object, quad, object_name) {
 quad_layout_and_add.ggplot <- quad_layout_and_add.layout_title
 
 #' @export
-quad_layout_and_add.ggalign_free_gg <- quad_layout_and_add.layout_title
-
-#' @export
-quad_layout_and_add.ggalign_align <- quad_layout_and_add.layout_title
+quad_layout_and_add.ggalign_plot <- quad_layout_and_add.layout_title
 
 #' @export
 quad_layout_and_add.layout_annotation <- quad_layout_and_add.layout_title
