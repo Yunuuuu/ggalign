@@ -24,109 +24,36 @@ testthat::test_that("add `quad_anno()` works well", {
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-    # successful conditions
-    expect_no_error(quad_free(mtcars) +
+
+    # warning for incompatible data type
+    expect_warning(quad_alignh(small_mat) +
         anno_top())
-    expect_no_error(quad_free(mtcars) +
-        anno_left())
-    expect_no_error(quad_alignh(small_mat) +
-        anno_left())
-    expect_no_error(quad_alignv(small_mat) +
-        anno_top())
-    # error for incompatible data type
-    expect_error(quad_alignh(small_mat) +
-        anno_top())
-    expect_error(quad_alignh(small_mat) +
+    expect_no_warning(quad_alignh(small_mat) +
+        anno_top(initialize = FALSE))
+    expect_no_warning(quad_alignh(small_mat) +
+        anno_top(initialize = TRUE))
+
+    expect_warning(quad_alignh(small_mat) +
         anno_bottom())
-    expect_error(quad_alignv(small_mat) +
+    expect_no_warning(quad_alignh(small_mat) +
+        anno_bottom(initialize = FALSE))
+    expect_no_warning(quad_alignh(small_mat) +
+        anno_bottom(initialize = TRUE))
+
+    # warning for incompatible data type
+    expect_warning(quad_alignv(small_mat) +
         anno_left())
-    expect_error(quad_alignv(small_mat) +
+    expect_no_warning(quad_alignv(small_mat) +
+        anno_left(initialize = FALSE))
+    expect_no_warning(quad_alignv(small_mat) +
+        anno_left(initialize = TRUE))
+
+    expect_warning(quad_alignv(small_mat) +
         anno_right())
-})
-
-testthat::test_that("add `quad_init()` works well", {
-    set.seed(1L)
-    small_mat <- matrix(rnorm(72), nrow = 8)
-    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-    # quad_free
-    # for waiver()
-    expect_error(quad_free() + quad_init("t"))
-    expect_no_error(quad_free(mtcars) + quad_init("t"))
-    # for function()
-    expect_error(quad_free() + quad_init("t"))
-    expect_error(quad_free(mtcars) + quad_init("t", ~small_mat))
-    expect_no_error(quad_free(mtcars) + quad_init("t", ~mtcars))
-    # for `NULL`
-    expect_no_error(quad_free(mtcars) + quad_init("t", NULL))
-    # for others
-    expect_no_error(quad_free(mtcars) + quad_init("t", mtcars[1:10]))
-    expect_no_error(quad_free(mtcars) + quad_init("t", small_mat))
-
-    # quad_alignh
-    # for waiver()
-    expect_error(quad_alignh() + quad_init("l"))
-    # cannot inherit a matrix, the top and bottom need a data frame
-    expect_error(quad_alignh(small_mat) + quad_init("t"))
-    expect_no_error(quad_alignh(small_mat) + quad_init("l"))
-    # for function()
-    expect_error(quad_alignh() + quad_init("l", ~small_mat))
-    expect_error(quad_alignh(small_mat) + quad_init("l", ~mtcars))
-    expect_no_error(quad_alignh(small_mat) + quad_init("t", ~mtcars))
-    expect_error(quad_alignh(small_mat) + quad_init("l", ~ small_mat[1:5, ]))
-    expect_no_error(quad_alignh(small_mat) + quad_init("l", ~small_mat))
-    # for `NULL`
-    expect_no_error(quad_alignh(mtcars) + quad_init("l", NULL))
-    expect_no_error(quad_alignh(mtcars) + quad_init("t", NULL))
-    # for others
-    expect_error(quad_alignh(small_mat) + quad_init("l", small_mat[1:5, ]))
-    expect_no_error(quad_alignh(small_mat) + quad_init("l", small_mat))
-    expect_no_error(quad_alignh(small_mat) + quad_init("t", mtcars))
-
-    # quad_alignv
-    # for waiver()
-    expect_error(quad_alignv() + quad_init("t"))
-    # cannot inherit a matrix, the left and right need a data frame
-    expect_error(quad_alignv(small_mat) + quad_init("l"))
-    expect_no_error(quad_alignv(small_mat) + quad_init("t"))
-    # for function()
-    expect_error(quad_alignv() + quad_init("t", ~small_mat))
-    expect_error(quad_alignv(small_mat) + quad_init("t", ~mtcars))
-    expect_no_error(quad_alignv(small_mat) + quad_init("l", ~mtcars))
-    expect_error(quad_alignv(small_mat) + quad_init("t", ~ small_mat[1:5, ]))
-    expect_error(quad_alignv(small_mat) + quad_init("t", ~small_mat))
-    expect_no_error(quad_alignv(small_mat) + quad_init("t", ~ t(small_mat)))
-    # for `NULL`
-    expect_no_error(quad_alignv(mtcars) + quad_init("t", NULL))
-    expect_no_error(quad_alignv(mtcars) + quad_init("l", NULL))
-    # for others
-    expect_error(quad_alignv(small_mat) + quad_init("t", small_mat[1:5, ]))
-    # should be transposed, so the nobs is not compatible
-    expect_error(quad_alignv(small_mat) + quad_init("t", small_mat))
-    expect_no_error(quad_alignv(small_mat) + quad_init("t", t(small_mat)))
-    expect_no_error(quad_alignv(small_mat) + quad_init("l", mtcars))
-
-    # quad_alignb
-    # for waiver()
-    expect_error(quad_alignb() + quad_init("t"))
-    expect_no_error(quad_alignb(small_mat) + quad_init("l"))
-    expect_no_error(quad_alignb(small_mat) + quad_init("t"))
-    # for function()
-    expect_error(quad_alignb() + quad_init("t", ~small_mat))
-    expect_error(quad_alignb(small_mat) + quad_init("t", ~mtcars))
-    expect_error(quad_alignb(small_mat) + quad_init("l", ~mtcars))
-    expect_error(quad_alignb(small_mat) + quad_init("t", ~small_mat))
-    expect_no_error(quad_alignb(small_mat) + quad_init("l", ~small_mat))
-    expect_no_error(quad_alignb(small_mat) + quad_init("t", ~ t(small_mat)))
-    # for `NULL`
-    expect_no_error(quad_alignb(mtcars) + quad_init("t", NULL))
-    expect_no_error(quad_alignb(mtcars) + quad_init("l", NULL))
-    # for others
-    expect_error(quad_alignb(small_mat) + quad_init("t", small_mat[1:5, ]))
-    # should be transposed, so the nobs is not compatible
-    expect_error(quad_alignb(small_mat) + quad_init("t", small_mat))
-    expect_no_error(quad_alignb(small_mat) + quad_init("t", t(small_mat)))
-    expect_no_error(quad_alignb(small_mat) + quad_init("l", small_mat))
+    expect_no_warning(quad_alignv(small_mat) +
+        anno_right(initialize = FALSE))
+    expect_no_warning(quad_alignv(small_mat) +
+        anno_right(initialize = TRUE))
 })
 
 testthat::test_that("add `align` object works well", {
@@ -151,11 +78,6 @@ testthat::test_that("add `align` object works well", {
     })
 
     # quad_alignh()
-    # for vertical direction, we must manually provide the data frame
-    # we cannot add `align` object in top and bottom
-    expect_error(quad_alignh(small_mat) +
-        quad_init("t", mtcars) +
-        align_dendro())
     expect_doppelganger(
         "alignh-layout-annotation",
         quad_alignh(small_mat) +
@@ -169,11 +91,6 @@ testthat::test_that("add `align` object works well", {
     )
 
     # quad_alignv()
-    # for horizontal direction, we must manually provide the data frame
-    # we cannot add `align` object in left and right
-    expect_error(quad_alignv(small_mat) +
-        quad_init("l", mtcars) +
-        align_dendro())
     expect_doppelganger(
         "alignv-layout-annotation",
         quad_alignv(small_mat) +
@@ -202,7 +119,9 @@ testthat::test_that("add `with_quad()` works as expected", {
         ggheatmap(small_mat) +
             anno_left(size = 0.2) +
             align_dendro() +
-            with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+            with_quad(
+                theme(plot.background = element_rect(fill = "red")), NULL
+            )
     )
     expect_doppelganger(
         "subtract_with_quad_default",
@@ -237,8 +156,78 @@ testthat::test_that("add `with_quad()` works as expected", {
             align_dendro(aes(color = branch), k = 3L) +
             anno_bottom(size = 0.2) +
             align_dendro(aes(color = branch), k = 3L) -
-            with_quad(theme(plot.background = element_rect(fill = "red")), NULL)
+            with_quad(
+                theme(plot.background = element_rect(fill = "red")), NULL
+            )
     )
+})
+
+testthat::test_that("add `stack_layout()` works as expected", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    # quad_free() ------------------------------------------
+    expect_error(quad_free(mpg) + stack_freev())
+    # annotaion has been initialized
+    expect_error(quad_free(mpg) + anno_top() + stack_freev())
+    # add nested layout
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
+    # incompatible direction
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        stack_freeh())
+    # incompatible aligning type
+    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+        stack_alignv())
+
+    # quad_alignh() ---------------------------------------
+    expect_error(quad_alignh(small_mat) + stack_alignh())
+    expect_error(quad_alignh(small_mat) + stack_freev())
+
+    # annotaion has been initialized
+    expect_error(quad_alignh(small_mat) +
+        anno_top(initialize = TRUE) +
+        stack_freev())
+    expect_error(quad_alignh(mpsmall_matg) + anno_left() + stack_alignh())
+
+    # add nested layout
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
+    expect_error(quad_alignh(small_mat) + anno_left(initialize = FALSE) +
+        (stack_alignh() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+
+    # incompatible direction
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        stack_freeh())
+
+    # incompatible aligning type
+    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+        stack_alignv())
+
+    # quad_alignv() ---------------------------------------
+    expect_error(quad_alignv(small_mat) + stack_alignv())
+    expect_error(quad_alignv(small_mat) + stack_freeh())
+
+    # annotaion has been initialized
+    expect_error(quad_alignv(small_mat) + anno_top() + stack_freeh())
+    expect_error(quad_alignv(small_mat) + anno_left(initialize = TRUE) +
+        stack_alignv())
+
+    # add nested layout
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        (stack_freeh() + quad_free(mpg) + quad_free(mpg)))
+    expect_error(quad_alignv(small_mat) + anno_left(initialize = FALSE) +
+        (stack_alignv() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+
+    # incompatible direction
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        stack_freeh())
+
+    # incompatible aligning type
+    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+        stack_alignh())
 })
 
 testthat::test_that("`ggsave()` works well", {

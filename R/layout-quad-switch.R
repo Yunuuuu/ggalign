@@ -25,15 +25,10 @@ quad_active <- function(width = NULL, height = NULL) {
 }
 
 #' @details
-#' By default, `quad_anno()` will try to initialize the annotation stack layout
-#' using data from `r rd_quad()`. However, there are situations where the
-#' annotation stack cannot be initialized due to incompatible data formats
-#' between [`quad_layout()`] and the required format for the annotation stack.
-#' This often occurs in [`quad_alignh()`] and [`quad_alignv()`], where the
-#' layout data is a matrix, but top and bottom annotations (in
-#' [`quad_alignh()`]) or left and right annotations (in [`quad_alignv()`])
-#' require a data frame. In such cases, you must use [`quad_init()`] to manually
-#' initialize the annotation stack.
+#' By default, `quad_anno()` attempts to initialize the annotation stack layout
+#' using data from `r rd_quad()`. However, in situations where you want to use
+#' different data for the annotation stack, you can set `initialize = FALSE` 
+#' and then provide a custom `stack_layout()`.
 #'
 #' @param position `r rd_quad_position("activated")`.
 #' @param size A numeric value or an [`unit`][grid::unit] object to set the
@@ -44,15 +39,18 @@ quad_active <- function(width = NULL, height = NULL) {
 #' annotation.
 #' @param free_guides Override the `guides` collection behavior specified in the
 #' `r rd_quad()` for the annotation stack.
+#' @param initialize A boolean indicating whether the annotation stack should be
+#' initialized if it is not already. By default, the annotation stack layout
+#' will attempt to initialize when the data is compatible. If set to `TRUE`, and
+#' the data in `r rd_quad()` is incompatible with the annotation stack, no
+#' data will be used in the stack.
 #' @param what What should get activated in the annotation stack?
 #' `r rd_stack_what()`.
-#' @seealso
-#' - [`quad_switch()`]
-#' - [`quad_init()`]
+#' @seealso [`quad_switch()`]
 #' @export
 #' @rdname quad_active
 quad_anno <- function(position, size = NULL, free_guides = waiver(),
-                      what = waiver()) {
+                      initialize = NULL, what = waiver()) {
     if (is.null(position)) {
         cli_abort(c(
             paste(
@@ -64,61 +62,67 @@ quad_anno <- function(position, size = NULL, free_guides = waiver(),
     }
     position <- match.arg(position, .TLBR)
     quad_switch_anno(
-        size = size,
-        free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides,
+        initialize = initialize, what = what,
         position = position
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_top <- function(size = NULL, free_guides = waiver(),
+anno_top <- function(size = NULL, free_guides = waiver(), initialize = NULL,
                      what = waiver()) {
     quad_switch_anno(
-        size = size, free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides,
+        initialize = initialize, what = what,
         position = "top"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_left <- function(size = NULL, free_guides = waiver(),
+anno_left <- function(size = NULL, free_guides = waiver(), initialize = NULL,
                       what = waiver()) {
     quad_switch_anno(
-        size = size, free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides,
+        initialize = initialize, what = what,
         position = "left"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_bottom <- function(size = NULL, free_guides = waiver(),
+anno_bottom <- function(size = NULL, free_guides = waiver(), initialize = NULL,
                         what = waiver()) {
     quad_switch_anno(
-        size = size, free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides,
+        initialize = initialize, what = what,
         position = "bottom"
     )
 }
 
 #' @export
 #' @rdname quad_active
-anno_right <- function(size = NULL, free_guides = waiver(),
+anno_right <- function(size = NULL, free_guides = waiver(), initialize = NULL,
                        what = waiver()) {
     quad_switch_anno(
-        size = size, free_guides = free_guides, what = what,
+        size = size, free_guides = free_guides,
+        initialize = initialize, what = what,
         position = "right"
     )
 }
 
-quad_switch_anno <- function(position, size, free_guides, what,
+quad_switch_anno <- function(position, size, free_guides, initialize, what,
                              call = caller_call()) {
     if (!is.null(size)) size <- check_size(size, call = call)
     assert_layout_position(free_guides, call = call)
     if (!is.waive(what)) what <- check_stack_context(what, call = call)
+    assert_bool(initialize, allow_null = TRUE)
     structure(
         list(
             position = position, size = size,
-            free_guides = free_guides, what = what
+            free_guides = free_guides, what = what,
+            initialize = initialize
         ),
         class = c("quad_anno", "quad_switch")
     )
@@ -127,41 +131,14 @@ quad_switch_anno <- function(position, size, free_guides, what,
 #' Initialize Quad-Layout Annotation
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge("deprecated")`
 #'
-#' Initializes an annotation stack with a user-specified data.
+#' This function was deprecated, you can add `stack_layout()` directly.
 #'
-#' @param position `r rd_quad_position("initialized")`.
-#' @param data Default dataset to use for the annotation stack. If not
-#' specified, a dataset must be provided for each plot added to the layout.
-#' Possible values:
-#'  - [`waiver()`][ggplot2::waiver]: try to inherit from the [quad_layout()].
-#'  - `NULL`: no data for the annotation stack.
-#'  - Any data which can be coerced by
-#'    [`fortify_matrix()`]/[`fortify_data_frame()`]
-#'
-#' Data conversion depends on whether the annotation stack will align the
-#' observations:
-#'   - If aligned, [`fortify_matrix()`] will be applied to convert the data
-#'     into a matrix.
-#'   - If not aligned, [`fortify_data_frame()`] will be used to convert the
-#'     data into a data frame.
-#' @inheritParams quad_free
-#' @importFrom rlang list2
 #' @export
+#' @keywords internal
 quad_init <- function(position, data = waiver(), ...) {
-    if (is.null(position)) {
-        cli_abort(paste(
-            "{.arg position} must be a single string of",
-            "{oxford_or(.TLBR)}, not `NULL`"
-        ))
-    }
-    position <- match.arg(position, .TLBR)
-    data <- allow_lambda(data)
-    structure(
-        list(data = data, position = position, params = list2(...)),
-        class = c("quad_init", "quad_anno", "quad_switch")
-    )
+    lifecycle::deprecate_stop("0.0.6", "quad_init()", "stack_layout()")
 }
 
 #' @inherit quad_active title return
@@ -170,7 +147,7 @@ quad_init <- function(position, data = waiver(), ...) {
 #'
 #' `quad_switch()` integrates [`quad_active()`] and [`quad_anno()`] into one
 #' function for ease of use. This function allows you to quickly change the
-#' active context of the [quad_layout()] and its annotations.
+#' active context of the [`quad_layout()`] and its annotations.
 #'
 #' `hmanno` is an alias for `quad_switch`, with additional arguments for
 #' backward compatibility
@@ -184,13 +161,11 @@ quad_init <- function(position, data = waiver(), ...) {
 #'     anno_top() +
 #'     align_dendro()
 #' @importFrom ggplot2 waiver
-#' @seealso
-#' - [`quad_active()`]/[`quad_anno()`]
-#' - [`quad_init()`]
+#' @seealso [`quad_active()`]/[`quad_anno()`]
 #' @export
 quad_switch <- function(position = NULL, size = NULL,
                         width = NULL, height = NULL, free_guides = waiver(),
-                        what = waiver()) {
+                        initialize = NULL, what = waiver()) {
     if (is.null(position)) {
         quad_active(width = width, height = height)
     } else {
@@ -198,6 +173,7 @@ quad_switch <- function(position = NULL, size = NULL,
         quad_switch_anno(
             size = size,
             free_guides = free_guides, what = what,
+            initialize = initialize,
             position = position
         )
     }

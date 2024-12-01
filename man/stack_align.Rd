@@ -22,7 +22,7 @@ stack_freev(data = NULL, ...)
 stack_freeh(data = NULL, ...)
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout:
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout:
 \itemize{
 \item For \code{stack_free}, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to convert data to
 a data frame.
@@ -42,7 +42,8 @@ either \code{"horizontal"} or \code{"vertical"}.}
 
 \item{sizes}{A numeric or a \code{\link[grid:unit]{unit}} object of length \code{3}
 indicating the relative heights (for \code{direction = "horizontal"}) or widths
-(for \code{direction = "vertical"}).}
+(for \code{direction = "vertical"}). This is only used if you include a nested
+\code{\link[=quad_layout]{quad_layout()}} in the layout.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

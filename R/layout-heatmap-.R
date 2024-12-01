@@ -9,8 +9,9 @@
 #' visualization layers are automatically applied. `ggheatmap` is an alias for
 #' `heatmap_layout`.
 #'
-#' @param data `r rd_layout_data()`. If not already a matrix, will be converted
-#' to one by [`fortify_matrix()`].
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout. If not already a matrix, will be converted to one by
+#' [`fortify_matrix()`].
 #' @param ... Additional arguments passed to [`fortify_matrix()`].
 #' @inheritParams quad_free
 #' @param filling A single string of `r oxford_or(c("raster", "tile"))` to
@@ -116,8 +117,8 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     ans <- new_quad_layout(
         name = "ggheatmap",
         data = data,
-        horizontal = new_layout_params(nobs = nrows),
-        vertical = new_layout_params(nobs = ncols),
+        horizontal = new_layout_coords(nobs = nrows),
+        vertical = new_layout_coords(nobs = ncols),
         mapping = mapping, theme = theme, active = active,
         width = width, height = height,
         class = "HeatmapLayout"
@@ -145,3 +146,12 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     ans@filling <- filling
     ans
 }
+
+# used to create the heatmap layout
+#' @keywords internal
+#' @include layout-quad-.R
+methods::setClass(
+    "HeatmapLayout",
+    contains = "QuadLayout",
+    list(filling = "ANY") # parameters for heatmap body
+)

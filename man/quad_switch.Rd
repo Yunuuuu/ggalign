@@ -11,6 +11,7 @@ quad_switch(
   width = NULL,
   height = NULL,
   free_guides = waiver(),
+  initialize = NULL,
   what = waiver()
 )
 
@@ -47,6 +48,12 @@ annotation.
 
 \item{free_guides}{Override the \code{guides} collection behavior specified in the
 \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} for the annotation stack.}
+
+\item{initialize}{A boolean indicating whether the annotation stack should be
+initialized if it is not already. By default, the annotation stack layout
+will attempt to initialize when the data is compatible. If set to \code{TRUE}, and
+the data in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} is incompatible with the annotation stack, no
+data will be used in the stack.}
 
 \item{what}{What should get activated in the annotation stack?
 A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context.}
@@ -87,8 +94,5 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     align_dendro()
 }
 \seealso{
-\itemize{
-\item \code{\link[=quad_active]{quad_active()}}/\code{\link[=quad_anno]{quad_anno()}}
-\item \code{\link[=quad_init]{quad_init()}}
-}
+\code{\link[=quad_active]{quad_active()}}/\code{\link[=quad_anno]{quad_anno()}}
 }

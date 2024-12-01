@@ -85,9 +85,9 @@ been established. Default: \code{FALSE}.}
 \item{cutree}{A function used to cut the \code{\link[stats:hclust]{hclust}} tree. It
 should accept four arguments: the \code{\link[stats:hclust]{hclust}} tree object,
 \code{distance} (only applicable when \code{method} is a string or a function for
-performing hierarchical clustering), k (the number of clusters), and h (the
-height at which to cut the tree). By default, \code{\link[stats:cutree]{cutree()}}
-is used.}
+performing hierarchical clustering), \code{k} (the number of clusters), and \code{h}
+(the height at which to cut the tree). By default,
+\code{\link[stats:cutree]{cutree()}} is used.}
 
 \item{plot_dendrogram}{A boolean value indicates whether plot the dendrogram
 tree.}

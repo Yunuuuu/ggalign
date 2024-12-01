@@ -16,8 +16,9 @@ quad_layout(
 )
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout. The conversion of data depends on the
-\code{align} argument and will use, \code{\link[=fortify_data_frame]{fortify_data_frame()}}
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
+parent layout. The conversion of data depends on the \code{align} argument and
+will use, \code{\link[=fortify_data_frame]{fortify_data_frame()}}
 or \code{\link[=fortify_matrix]{fortify_matrix()}}:
 \itemize{
 \item If \code{align} is \code{NULL}, a data frame is required. When inherited by the
@@ -35,8 +36,9 @@ annotation stack, it will be transposed.
 
 By default, the function does not align observations.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}} or
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}

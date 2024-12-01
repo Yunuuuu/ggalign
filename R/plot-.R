@@ -1,61 +1,59 @@
-new_controls <- function(plot_data = new_plot_data(),
-                         plot_align = new_plot_align(),
-                         plot_theme = new_plot_theme()) {
-    list(
-        plot_data = plot_data,
-        plot_theme = plot_theme,
-        plot_align = plot_align
+new_ggalign_plot <- function(..., plot = NULL, active = NULL, size = NULL,
+                             controls = NULL, class = character(),
+                             call = caller_call()) {
+    if (!inherits(active, "ggalign_active")) {
+        cli_abort("{.arg active} must be created by {.fn active}", call = call)
+    }
+    if (is.null(size)) {
+        size <- unit(NA, "null")
+    } else {
+        size <- check_size(size, call = call)
+    }
+    structure(
+        list(...,
+            controls = controls %||% new_controls(),
+            plot = plot,
+            active = active,
+            size = size
+        ),
+        class = c(class, "ggalign_plot")
     )
 }
 
-new_option <- function(name, option, ..., class = character()) {
-    structure(option,
-        `__ggalign.option_name__` = name, ...,
-        class = c(class, "ggalign_option")
-    )
+is_ggalign_plot <- function(x) inherits(x, "ggalign_plot")
+
+#' @export
+#' @keywords internal
+plot.ggalign_plot <- function(x, ...) {
+    cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 
-ggalign_option_name <- function(x) {
-    attr(x, sprintf("__%s.option_name__", pkg_nm()), exact = TRUE)
-}
+plot_build <- function(plot, ...) UseMethod("plot_build")
 
-#' Used to update global data
-#' @noRd
-update_option <- function(new, old, object_name) {
-    UseMethod("update_option")
+# add object to the plot ------------------------------------
+plot_add <- function(plot, object, object_name) UseMethod("plot_add")
+
+ggalign_plot_add <- function(object, plot, object_name) {
+    UseMethod("ggalign_plot_add")
 }
 
 #' @export
-update_option.default <- function(new, old, object_name) new
+plot_add.ggalign_plot <- function(plot, object, object_name) {
+    ggalign_plot_add(object, plot, object_name)
+}
 
-update_layout_option <- function(object, layout, object_name) {
+#' @importFrom ggplot2 ggplot_add
+#' @export
+ggalign_plot_add.default <- function(object, plot, object_name) {
+    plot$plot <- ggplot_add(object, .subset2(plot, "plot"), object_name)
+    plot
+}
+
+#' @export
+ggalign_plot_add.ggalign_option <- function(object, plot, object_name) {
     name <- ggalign_option_name(object)
-    layout@controls[name] <- list(update_option(
-        object, .subset2(layout@controls, name), object_name
+    plot$controls[name] <- list(update_option(
+        object, .subset2(.subset2(plot, "controls"), name), object_name
     ))
-    layout
-}
-
-# By default, we'll always initialize the default value when building the layout
-# so parent has the right class, we dispatch method based on the parent option
-inherit_option <- function(option, poption) UseMethod("inherit_option", poption)
-
-plot_add <- function(option, plot) UseMethod("plot_add")
-
-inherit_controls <- function(controls, pcontrols) {
-    options <- vapply(pcontrols, ggalign_option_name,
-        character(1L),
-        USE.NAMES = FALSE
-    )
-    ans <- lapply(options, function(opt) {
-        inherit_option(.subset2(controls, opt), .subset2(pcontrols, opt))
-    })
-    vec_set_names(ans, options)
-}
-
-plot_add_controls <- function(plot, controls) {
-    for (i in seq_along(controls)) {
-        plot <- plot_add(.subset2(controls, i), plot = plot)
-    }
     plot
 }

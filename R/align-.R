@@ -89,22 +89,11 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
-    if (is.null(size)) {
-        size <- unit(NA, "null")
-    } else {
-        size <- check_size(size, call = call)
-    }
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
-    assert_bool(no_axes, allow_null = TRUE, call = call)
-    no_axes <- no_axes %||%
-        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
-
-    if (is.waive(controls)) {
-        controls <- new_controls(
-            new_plot_data(if (is.waive(data)) waiver() else NULL)
-        )
-    }
+    controls <- controls %|w|% new_controls(
+        new_plot_data(if (is.waive(data)) waiver() else NULL)
+    )
 
     # Warn about extra params or missing parameters ---------------
     all <- align_class$parameters()
@@ -117,12 +106,11 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
         }
     }
 
-    new_align(
+    new_align_plot(
         # wrap all elements into this annotation ---------------------
-        Object = ggproto(
+        align_class = ggproto(
             NULL,
             align_class,
-            isLock = FALSE,
             # Following fields will be initialzed when added into the layout
             # and will be saved and accessed across the plot rendering process
             direction = NULL,
@@ -132,43 +120,23 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
             statistics = NULL, # `$compute` method
             labels = NULL, # the original `vec_names()` of the `input_data`
 
+            # new fields
+            facet = facet,
+            limits = limits,
+
             # use `NULL` if this align don't require any data
             # use `waiver()` to inherit from the layout data
             input_data = data,
 
             # collect parameters
-            input_params = params[vec_set_intersect(names(params), all)],
-
-            # used to provide error message
-            call = call
+            input_params = params[vec_set_intersect(names(params), all)]
         ),
-        no_axes = no_axes,
-        controls = controls,
-        facet = facet,
-        limits = limits,
-
-        # user input -------------------------------
-        size = size,
-
-        # should we allow user switch between different plot with a string name?
-        # Should I remove "name" argument from the user input?
         active = active,
-        plot = NULL
+        size = size,
+        controls = controls,
+        class = "ggalign_align_align",
+        call = call
     )
-}
-
-#' We create the align entity when initialize the Align object.
-#' @noRd
-new_align <- function(Object, ..., plot = NULL) {
-    structure(list(Object = Object, ..., plot = plot), class = "ggalign_align")
-}
-
-is_align <- function(x) inherits(x, "ggalign_align")
-
-#' @export
-#' @keywords internal
-plot.ggalign_align <- function(x, ...) {
-    cli_abort("You cannot plot {.obj_type_friendly {x}} object directly")
 }
 
 #' @details
@@ -189,7 +157,8 @@ plot.ggalign_align <- function(x, ...) {
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-Align <- ggproto("Align",
+#' @include plot-align-.R
+Align <- ggproto("Align", AlignProto,
     parameters = function(self) {
         c(
             align_method_params(self$compute),
@@ -202,11 +171,158 @@ Align <- ggproto("Align",
             self$extra_params
         )
     },
-    lock = function(self) {
-        assign("isLock", value = TRUE, envir = self)
+    initialize = function(self, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
+        self$direction <- direction
+        self$position <- position
+        input_data <- .subset2(self, "input_data")
+        input_params <- .subset2(self, "input_params")
+        call <- .subset2(self, "call")
+        layout_panel <- .subset2(layout_coords, "panel")
+        layout_index <- .subset2(layout_coords, "index")
+        layout_nobs <- .subset2(layout_coords, "nobs")
+
+        # we must have the same observations across all plots
+        # 1. if `Align` require data, the `nobs` should be nrow(data)
+        # 2. if not, we run `nobs()` method to initialize the layout nobs
+        if (!is.null(input_data)) { # this `Align` object require data
+            if (is.waive(input_data)) { # inherit from the layout
+                if (is.null(data <- layout_data)) {
+                    cli_abort(c(
+                        "you must provide {.arg data} in {.var {object_name}}",
+                        i = sprintf("no data was found in %s", layout_name)
+                    ))
+                }
+            } else {
+                if (is.function(input_data)) {
+                    if (is.null(data <- layout_data)) {
+                        cli_abort(c(
+                            "{.arg data} in {.var {object_name}} cannot be a function",
+                            i = sprintf("no data was found in %s", layout_name)
+                        ))
+                    }
+                    data <- input_data(layout_data)
+                } else {
+                    data <- input_data
+                }
+                # we always regard rows as the observations
+                if (is.null(layout_nobs)) {
+                    layout_nobs <- NROW(data)
+                } else if (NROW(data) != layout_nobs) {
+                    cli_abort(sprintf(
+                        "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
+                        object_name, NROW(data), layout_name, layout_nobs
+                    ))
+                }
+            }
+            self$labels <- vec_names(data)
+            params <- self$setup_params(layout_nobs, input_params)
+            self$data <- ggalign_attr_restore(
+                self$setup_data(params, data),
+                layout_data
+            )
+        } else { # this `Align` object doesn't require any data
+            # we keep the names from the layout data for usage
+            self$labels <- vec_names(layout_data)
+            # If `nobs` is `NULL`, it means we don't initialize the layout
+            # observations, we initialize `nobs` with the `Align` obect
+            if (is.null(layout_nobs)) layout_nobs <- self$nobs(input_params)
+            params <- self$setup_params(layout_nobs, input_params)
+        }
+
+        # save the parameters into the object ------------
+        self$params <- params
+
+        # prepare the data -------------------------------
+        # compute statistics ---------------------------------
+        self$statistics <- inject(
+            self$compute(layout_panel, layout_index, !!!params[
+                intersect(names(params), align_method_params(self$compute))
+            ])
+        )
+
+        # make the new layout -------------------------------
+        new_coords <- inject(
+            self$layout(layout_panel, layout_index, !!!params[
+                intersect(names(params), align_method_params(self$layout))
+            ])
+        )
+
+        # we check the coords
+        check_layout_coords(
+            layout_coords,
+            new_layout_coords(
+                .subset2(new_coords, 1L),
+                .subset2(new_coords, 2L),
+                layout_nobs
+            ),
+            layout_name,
+            object_name
+        )
     },
-    unlock = function(self) {
-        assign("isLock", value = FALSE, envir = self)
+    build = function(self, plot, coords, extra_coords, direction, ...) {
+        params <- .subset2(self, "params")
+        draw_params <- params[
+            vec_set_intersect(
+                names(params),
+                align_method_params(
+                    self$draw,
+                    c("plot", "panel", "index", "extra_panel", "extra_index")
+                )
+            )
+        ]
+        panel <- .subset2(coords, "panel")
+        index <- .subset2(coords, "index")
+        if (is.null(extra_coords)) {
+            extra_panel <- NULL
+            extra_index <- NULL
+        } else {
+            extra_panel <- .subset2(extra_coords, "panel")
+            extra_index <- .subset2(extra_coords, "index")
+        }
+        plot <- inject(self$draw(
+            plot,
+            panel,
+            index,
+            extra_panel,
+            extra_index,
+            !!!draw_params
+        ))
+
+        coords$labels <- .subset(.subset2(self, "labels"), index)
+        # only when user use the internal facet, we'll setup the limits
+        if (.subset2(self, "facet")) {
+            # set up facets
+            if (nlevels(panel) > 1L) {
+                default_facet <- switch_direction(
+                    direction,
+                    ggplot2::facet_grid(
+                        rows = ggplot2::vars(fct_rev(.data$.panel)),
+                        scales = "free_y", space = "free",
+                        drop = FALSE
+                    ),
+                    ggplot2::facet_grid(
+                        cols = ggplot2::vars(.data$.panel),
+                        scales = "free_x", space = "free",
+                        drop = FALSE
+                    )
+                )
+            } else {
+                default_facet <- ggplot2::facet_null()
+            }
+            plot <- plot +
+                align_melt_facet(plot$facet, default_facet, direction)
+            coords$limits <- .subset2(self, "limits")
+        } else {
+            coords$limits <- FALSE
+        }
+
+        # set limits and default scales
+        plot + switch_direction(
+            direction,
+            coord_ggalign(y = coords),
+            coord_ggalign(x = coords)
+        )
     },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,
@@ -277,20 +393,68 @@ Align <- ggproto("Align",
     draw = function(self, plot, panel, index, extra_panel, extra_index) plot
 )
 
-# Used to lock the `Align` object
-#' @export
-`$<-.Align` <- function(x, name, value) {
-    if (.subset2(x, "isLock")) {
-        cli_abort("{.fn {snake_class(x)}} is locked",
-            call = .subset2(x, "call")
-        )
+#' @importFrom ggplot2 ggproto
+align_melt_facet <- function(user_facet, default_facet, direction) {
+    if (inherits(user_facet, "FacetGrid")) {
+        # re-dispatch parameters
+        params <- user_facet$params
+
+        if (inherits(default_facet, "FacetGrid")) {
+            # we always fix the grid rows and cols
+            params$rows <- default_facet$params$rows %||% params$rows
+            params$cols <- default_facet$params$cols %||% params$cols
+            params$drop <- default_facet$params$drop
+
+            # if the default is free, it must be free
+            params$free$x <- params$free$x || default_facet$params$free$x
+            params$space_free$x <- params$space_free$x ||
+                default_facet$params$space_free$x
+            params$free$y <- params$free$y || default_facet$params$free$y
+            params$space_free$y <- params$space_free$x ||
+                default_facet$params$space_free$y
+        } else if (is_horizontal(direction)) {
+            # for horizontal stack, we cannot facet by rows
+            if (!is.null(params$rows)) {
+                cli_warn(
+                    "Canno facet by rows in {.field {direction}} stack"
+                )
+                params$rows <- NULL
+            }
+        } else if (!is.null(params$cols)) {
+            # for vertical stack, we cannot facet by cols
+            cli_warn("Canno facet by cols in {.field {direction}} stack")
+            params$cols <- NULL
+        }
+        ggproto(NULL, user_facet, params = params)
+    } else if (inherits(user_facet, "FacetNull")) {
+        if (inherits(default_facet, "FacetNull")) { # no facet
+            user_facet
+        } else { # we have facet
+            default_facet
+        }
+    } else {
+        default_facet
     }
-    assign(x = name, value = value, envir = x)
-    invisible(x)
 }
 
-ggproto_formals <- function(x) formals(environment(x)$f)
+remove_scales <- function(plot, scale_aesthetics) {
+    scales <- .subset2(plot, "scales")$clone()
+    if (any(prev_aes <- scales$find(scale_aesthetics))) {
+        scales$scales <- scales$scales[!prev_aes]
+    }
+    plot$scales <- scales
+    plot
+}
 
-align_method_params <- function(f, remove = c("panel", "index")) {
-    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
+#' @importFrom rlang is_empty
+extract_scales <- function(plot, axis, n_panel, facet_scales) {
+    # if no facets, or if no facet scales, we replicate the single scale
+    # object to match the panel numbers
+    if (n_panel > 1L &&
+        !is.null(facet_scales) &&
+        !is_empty(ans <- .subset2(facet_scales, axis))) {
+    } else {
+        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
+    }
+    ans
 }

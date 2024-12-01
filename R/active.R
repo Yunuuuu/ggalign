@@ -28,7 +28,10 @@ active <- function(order = waiver(), use = waiver(), name = waiver()) {
     if (!is.waive(order)) order <- check_order(order)
     if (!is.waive(use)) assert_bool(use)
     if (!is.waive(name)) {
-        assert_string(name, empty_ok = FALSE, allow_na = TRUE, allow_null = FALSE)
+        assert_string(name,
+            empty_ok = FALSE, allow_na = TRUE,
+            allow_null = FALSE
+        )
     }
     new_active(order, use, name)
 }

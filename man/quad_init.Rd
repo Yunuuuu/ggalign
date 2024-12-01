@@ -6,33 +6,9 @@
 \usage{
 quad_init(position, data = waiver(), ...)
 }
-\arguments{
-\item{position}{A string of \code{"top"}, \code{"left"}, \code{"bottom"}, or \code{"right"} indicates which annotation stack should be initialized.}
-
-\item{data}{Default dataset to use for the annotation stack. If not
-specified, a dataset must be provided for each plot added to the layout.
-Possible values:
-\itemize{
-\item \code{\link[ggplot2:waiver]{waiver()}}: try to inherit from the \code{\link[=quad_layout]{quad_layout()}}.
-\item \code{NULL}: no data for the annotation stack.
-\item Any data which can be coerced by
-\code{\link[=fortify_matrix]{fortify_matrix()}}/\code{\link[=fortify_data_frame]{fortify_data_frame()}}
-}
-
-Data conversion depends on whether the annotation stack will align the
-observations:
-\itemize{
-\item If aligned, \code{\link[=fortify_matrix]{fortify_matrix()}} will be applied to convert the data
-into a matrix.
-\item If not aligned, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to convert the
-data into a data frame.
-}}
-
-\item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}} or
-\code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
-}
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Initializes an annotation stack with a user-specified data.
+This function was deprecated, you can add \code{stack_layout()} directly.
 }
+\keyword{internal}

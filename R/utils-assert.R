@@ -80,15 +80,18 @@ check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
             call = call
         )
     }
-    if (length(sizes) == 1L) {
-        sizes <- rep(sizes, length.out = 3L)
-    } else {
-        vec_check_size(sizes, size = 3L, arg = arg, call = call)
+    l <- length(sizes)
+    if (l != 1L && l != 3L) {
+        cli_abort(
+            "{.arg {arg}} must have size 1 or 3, not size {l}",
+            call = call
+        )
     }
     if (!is.unit(sizes)) sizes <- unit(sizes, "null")
     sizes
 }
 
+#' @importFrom grid is.unit
 check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
     vec_check_size(size, size = 1L, arg = arg, call = call)
     if (!(is.na(size) || is.numeric(size) || is.unit(size))) {
@@ -176,9 +179,11 @@ assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
     }
 }
 
-assert_active <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!is.null(x) && !inherits(x, "ggalign_active")) {
-        cli_abort("{.arg {arg}} must be created by {.fn context}",
+assert_active <- function(x, allow_null = TRUE,
+                          arg = caller_arg(x), call = caller_call()) {
+    if (is.null(x) && allow_null) return(invisible(NULL))
+    if (!inherits(x, "ggalign_active")) {
+        cli_abort("{.arg {arg}} must be created by {.fn active}",
             call = call
         )
     }

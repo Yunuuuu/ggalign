@@ -31,9 +31,9 @@
 #' @param cutree A function used to cut the [`hclust`][stats::hclust] tree. It
 #' should accept four arguments: the [`hclust`][stats::hclust] tree object,
 #' `distance` (only applicable when `method` is a string or a function for
-#' performing hierarchical clustering), k (the number of clusters), and h (the
-#' height at which to cut the tree). By default, [`cutree()`][stats::cutree()]
-#' is used.
+#' performing hierarchical clustering), `k` (the number of clusters), and `h`
+#' (the height at which to cut the tree). By default,
+#' [`cutree()`][stats::cutree()] is used.
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
 #' tree.
 #' @param plot_cut_height A boolean value indicates whether plot the cut height.
@@ -409,19 +409,15 @@ AlignDendro <- ggproto("AlignDendro", Align,
         priority <- switch_direction(direction, "left", "right")
         dendrogram_panel <- self$panel[index]
         if (!is.null(dendrogram_panel) &&
-            # we can change the panel level name, but we prevent
-            # from changing the underlying factor level
+            # we allow to change the panel level name, but we prevent
+            # from changing the underlying factor level (the underlying
+            # ordering)
             !all(as.integer(dendrogram_panel) == as.integer(panel))) {
             cli_abort("you cannot do sub-splitting in dendrogram groups")
         }
 
         if (self$multiple_tree) {
-            # if we have multiple tree, the underlying panel name may be
-            # changed by other `align_*` functions, here, we match the new
-            # panel level
             branches <- levels(panel)
-            # reorder the children based on the new branches
-            statistics <- statistics[match(branches, levels(dendrogram_panel))]
             data <- vector("list", length(statistics))
             start <- 0L
             for (i in seq_along(data)) {
@@ -459,6 +455,7 @@ AlignDendro <- ggproto("AlignDendro", Align,
                 center = center,
                 type = type,
                 leaf_braches = as.character(panel),
+                # panel has been reordered by the dendrogram index
                 reorder_branches = FALSE,
                 root = root
             )

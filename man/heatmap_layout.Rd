@@ -21,11 +21,13 @@ heatmap_layout(
 )
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout. If not already a matrix, will be converted
-to one by \code{\link[=fortify_matrix]{fortify_matrix()}}.}
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
+parent layout. If not already a matrix, will be converted to one by
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 

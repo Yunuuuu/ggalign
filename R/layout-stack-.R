@@ -73,7 +73,8 @@ ggstack <- stack_layout
 #' @inheritParams quad_layout
 #' @param sizes A numeric or a [`unit`][grid::unit] object of length `3`
 #' indicating the relative heights (for `direction = "horizontal"`) or widths
-#' (for `direction = "vertical"`).
+#' (for `direction = "vertical"`). This is only used if you include a nested
+#' [`quad_layout()`] in the layout.
 #' @examples
 #' set.seed(123)
 #' stack_align(matrix(rnorm(56), nrow = 7L), "h") +
@@ -103,30 +104,33 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
     # from matrix
+    data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-
-    # if inherit from the parent layout data, we'll inherit the `plot_data`
-    # function.
-    controls <- new_controls(
-        new_plot_data(if (is.waive(data)) waiver() else NULL)
-    )
-
-    # `waiver()` is used for further extension, it indicates data will
-    # inherit from the parent layout. Now, `waiver()` won't be used as a
-    # child layout.
-    if (!is.null(data) && !is.function(data) && !is.waive(data)) {
+    controls <- new_controls()
+    if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
     } else {
         nobs <- NULL
     }
-    layout <- new_layout_params(nobs = nobs)
     new_stack_layout(
-        name = "stack_align",
-        data = data, direction = direction, layout = layout,
+        data = data, direction = direction,
+        layout = new_layout_coords(nobs = nobs),
         controls = controls, theme = theme, sizes = sizes
     )
 }
+
+#' @export
+stack_align.function <- function(data = NULL, direction = NULL, ...) {
+    cli_abort(paste0(
+        "{.arg data} must be a {.cls matrix}, ",
+        "or an object coercible by {.fn fortify_matrix}, or a valid ",
+        "{.cls matrix}-like object coercible by {.fn as.matrix}"
+    ))
+}
+
+#' @export
+stack_align.formula <- stack_align.function
 
 ################################################################
 #' @export
@@ -151,33 +155,33 @@ stack_freeh <- function(data = NULL, ...) {
 #' @export
 stack_free.default <- function(data = NULL, direction = NULL, ...,
                                theme = NULL, sizes = NA) {
+    data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    # if inherit from the parent layout data, we'll inherit the action data
-    # function.
-    controls <- new_controls(
-        new_plot_data(if (is.waive(data)) waiver() else NULL)
-    )
+    controls <- new_controls()
     new_stack_layout(
-        name = "stack_free",
         data = data, direction = direction, layout = NULL,
         controls = controls, theme = theme, sizes = sizes
     )
 }
 
-# Added to avoid `aes()` end in `stack_free.default`
 #' @export
-stack_free.uneval <- function(data, ...) {
-    cli_abort(c(
-        "{.arg data} cannot be {.obj_type_friendly {data}}",
-        "i" = "Have you misspelled the {.arg data} argument in {.fn stack_free}"
+stack_free.function <- function(data = NULL, direction = NULL, ...) {
+    cli_abort(paste0(
+        "{.arg data} must be a {.cls data.frame}, ",
+        "or an object coercible by {.fn fortify_data_frame}, or a valid ",
+        "{.cls data.frame}-like object coercible by {.fn as.data.frame}"
     ))
 }
 
-new_stack_layout <- function(name, data, direction, layout, controls = NULL,
+#' @export
+stack_free.formula <- stack_free.function
+
+new_stack_layout <- function(data, direction, layout, controls = NULL,
                              theme = NULL, sizes = NA,
                              call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
+    if (is.null(layout)) name <- "stack_free" else name <- "stack_align"
     if (!is.null(direction)) {
         direction <- match.arg(direction, c("horizontal", "vertical"))
     } else {
@@ -200,18 +204,23 @@ new_stack_layout <- function(name, data, direction, layout, controls = NULL,
 #' @importFrom grid unit
 #' @importFrom ggplot2 waiver
 #' @keywords internal
+#' @include layout-.R
 methods::setClass(
     "StackLayout",
     contains = "Layout",
     list(
         name = "character", data = "ANY", direction = "character",
-        plots = "list", # save the list of plots
+        plot_list = "list", # save the list of plots
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
-        layout = "ANY" # used to align observations
+        layout = "ANY", # used to align observations
+        index_list = "list", # used by `cross_link()`
+        cross_points = "integer"
     ),
     prototype = list(
-        plots = list(),
+        plot_list = list(),
+        index_list = list(),
+        cross_points = integer(),
         heatmap = list( # used by heatmap annotation
             position = NULL, # annotation position
             size = unit(NA, "null"), # total annotation size
@@ -219,28 +228,3 @@ methods::setClass(
         )
     )
 )
-
-#' @aliases +.StackLayout &.StackLayout -.StackLayout
-#' @importFrom methods Ops
-#' @export
-#' @rdname layout-operator
-methods::setMethod("Ops", c("StackLayout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code {.Generic}} with a single argument.",
-            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
-        ))
-    }
-
-    if (is.null(e2)) return(e1) # styler: off
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    switch(.Generic, # nolint
-        `+` = stack_layout_add(e2, e1, e2name),
-        `-` = stack_layout_subtract(e2, e1, e2name),
-        `&` = stack_layout_and_add(e2, e1, e2name),
-        stop_incompatible_op(.Generic, e1, e2)
-    )
-})

@@ -11,15 +11,41 @@
 \usage{
 quad_active(width = NULL, height = NULL)
 
-quad_anno(position, size = NULL, free_guides = waiver(), what = waiver())
+quad_anno(
+  position,
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_top(size = NULL, free_guides = waiver(), what = waiver())
+anno_top(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_left(size = NULL, free_guides = waiver(), what = waiver())
+anno_left(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_bottom(size = NULL, free_guides = waiver(), what = waiver())
+anno_bottom(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 
-anno_right(size = NULL, free_guides = waiver(), what = waiver())
+anno_right(
+  size = NULL,
+  free_guides = waiver(),
+  initialize = NULL,
+  what = waiver()
+)
 }
 \arguments{
 \item{width, height}{The relative width/height of the main plot, can be a
@@ -38,6 +64,12 @@ annotation.
 
 \item{free_guides}{Override the \code{guides} collection behavior specified in the
 \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} for the annotation stack.}
+
+\item{initialize}{A boolean indicating whether the annotation stack should be
+initialized if it is not already. By default, the annotation stack layout
+will attempt to initialize when the data is compatible. If set to \code{TRUE}, and
+the data in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} is incompatible with the annotation stack, no
+data will be used in the stack.}
 
 \item{what}{What should get activated in the annotation stack?
 A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context.}
@@ -58,19 +90,11 @@ based on the \code{position} argument.
 }
 }
 \details{
-By default, \code{quad_anno()} will try to initialize the annotation stack layout
-using data from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}. However, there are situations where the
-annotation stack cannot be initialized due to incompatible data formats
-between \code{\link[=quad_layout]{quad_layout()}} and the required format for the annotation stack.
-This often occurs in \code{\link[=quad_alignh]{quad_alignh()}} and \code{\link[=quad_alignv]{quad_alignv()}}, where the
-layout data is a matrix, but top and bottom annotations (in
-\code{\link[=quad_alignh]{quad_alignh()}}) or left and right annotations (in \code{\link[=quad_alignv]{quad_alignv()}})
-require a data frame. In such cases, you must use \code{\link[=quad_init]{quad_init()}} to manually
-initialize the annotation stack.
+By default, \code{quad_anno()} attempts to initialize the annotation stack layout
+using data from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}. However, in situations where you want to use
+different data for the annotation stack, you can set \code{initialize = FALSE}
+and then provide a custom \code{stack_layout()}.
 }
 \seealso{
-\itemize{
-\item \code{\link[=quad_switch]{quad_switch()}}
-\item \code{\link[=quad_init]{quad_init()}}
-}
+\code{\link[=quad_switch]{quad_switch()}}
 }

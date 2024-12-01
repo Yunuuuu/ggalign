@@ -7,8 +7,9 @@
 #' `quad_alignh()`, `quad_alignv()`, and `quad_alignb()` into a single
 #' interface.
 #'
-#' @param data `r rd_layout_data()`. The conversion of data depends on the
-#' `align` argument and will use, [`fortify_data_frame()`]
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout. The conversion of data depends on the `align` argument and
+#' will use, [`fortify_data_frame()`]
 #' or [`fortify_matrix()`]:
 #'  - If `align` is `NULL`, a data frame is required. When inherited by the
 #'    annotation stack, no transposition will be applied.
@@ -73,18 +74,22 @@ quad_layout <- function(data = NULL, align = NULL, mapping = aes(),
 #' - `quad_alignv`: Align observations in the vertical direction.
 #' - `quad_alignb`: Align observations in both horizontal and vertical
 #'   directions.
-#' @param data `r rd_layout_data()`.
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout.
 #' - For `quad_free`/`ggside`, the function uses [`fortify_data_frame()`] to
 #'   convert the data into a data frame.
 #' - For all other functions, it employs [`fortify_matrix()`] to convert
 #'   the data into a matrix.
-#' @inheritParams ggplot2::ggplot
+#' @param mapping Default list of aesthetic mappings to use for main plot in the
+#' layout. If not specified, must be supplied in each layer added to the main
+#' plot.
 #' @param ... Additional arguments passed to [`fortify_matrix()`] or
 #' [`fortify_data_frame()`].
 #' @inheritParams align_plots
 #' @inheritParams align
 #' @param width,height The relative width/height of the main plot, can be a
 #' [`unit`][grid::unit] object.
+#' @return A `QuadLayout` object.
 #' @export
 quad_free <- function(data = NULL, mapping = aes(),
                       ...,
@@ -164,7 +169,7 @@ quad_alignh.default <- function(data = NULL, mapping = aes(),
     new_quad_layout(
         name = "quad_alignh",
         data = data,
-        horizontal = new_layout_params(nobs = nrows),
+        horizontal = new_layout_coords(nobs = nrows),
         vertical = NULL,
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
@@ -206,7 +211,7 @@ quad_alignv.default <- function(data = NULL, mapping = aes(),
         name = "quad_alignv",
         data = data,
         horizontal = NULL,
-        vertical = new_layout_params(nobs = ncols),
+        vertical = new_layout_coords(nobs = ncols),
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
@@ -248,8 +253,8 @@ quad_alignb.default <- function(data = NULL, mapping = aes(),
     new_quad_layout(
         name = "quad_alignb",
         data = data,
-        horizontal = new_layout_params(nobs = nrows),
-        vertical = new_layout_params(nobs = ncols),
+        horizontal = new_layout_coords(nobs = nrows),
+        vertical = new_layout_coords(nobs = ncols),
         mapping = mapping, active = active, theme = theme,
         width = width, height = height
     )
@@ -304,6 +309,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
 }
 
 # Used to create the QuadLayout
+#' @include layout-.R
 methods::setClass(
     "QuadLayout",
     contains = "Layout",
@@ -324,40 +330,4 @@ methods::setClass(
         # used by QuadLayout
         top = NULL, left = NULL, bottom = NULL, right = NULL
     )
-)
-
-#' @aliases +.QuadLayout &.QuadLayout -.QuadLayout
-#' @aliases +.HeatmapLayout &.HeatmapLayout -.HeatmapLayout
-#' @aliases +.ggheatmap &.ggheatmap -.ggheatmap
-#' @aliases +.ggside &.ggside -.ggside
-#' @importFrom methods Ops
-#' @export
-#' @rdname layout-operator
-methods::setMethod("Ops", c("QuadLayout", "ANY"), function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code {.Generic}} with a single argument.",
-            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
-        ))
-    }
-
-    if (is.null(e2)) return(e1) # styler: off
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    switch(.Generic, # nolint
-        `+` = quad_layout_add(e2, e1, e2name),
-        `-` = quad_layout_subtract(e2, e1, e2name),
-        `&` = quad_layout_and_add(e2, e1, e2name),
-        stop_incompatible_op(.Generic, e1, e2)
-    )
-})
-
-# used to create the heatmap layout
-#' @keywords internal
-methods::setClass(
-    "HeatmapLayout",
-    contains = "QuadLayout",
-    list(filling = "ANY") # parameters for heatmap body
 )

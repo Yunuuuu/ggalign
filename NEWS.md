@@ -14,6 +14,8 @@
 
 * new `geom_subrect()` and `geom_subtile()` to subdivide rectangles with shared borders into a grid.
 
+* new `cross_link` function used to reset the layout ordering index, this is useful to create `tanglegram` visualizations.
+
 ## Bug fixes
 
 * fix breaks and labels not work well in discrete scale (#30, #32)
@@ -22,7 +24,11 @@
 
 ## Improvements
 
-* Now, with_quad() wraps the object into a list with the class with_quad. This approach offers greater flexibility in defining the actions associated with with_quad, allowing for more customizable behavior (#26, @Yunuuuu).
+* Now, `with_quad()` wraps the object into a list with the class `with_quad`. This approach offers greater flexibility in defining the actions associated with `with_quad`, allowing for more customizable behavior (#26, @Yunuuuu).
+
+* Now, `panel` will be reordered when initializing the layout parameters, we don't need to reorder the `panel` when drawing.
+
+* `free_gg`, `align` and the new `cross_link` objects have been collapsed to one class `ggalign_plot`
 
 # ggalign 0.0.5
 

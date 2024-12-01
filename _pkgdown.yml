@@ -72,9 +72,9 @@ reference:
     `stack_switch()` to switch the active context. To save a plot to disk, use `ggsave()`.
   contents:
   - layout-operator
+  - cross_link
   - quad_switch
   - quad_anno
-  - quad_init
   - with_quad
   - stack_switch
   - active

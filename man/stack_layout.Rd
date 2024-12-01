@@ -8,7 +8,7 @@
 stack_layout(data = NULL, direction = NULL, type = NULL, ...)
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout:
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout:
 \itemize{
 \item If \code{type} is \code{align}, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to get a data
 frame.

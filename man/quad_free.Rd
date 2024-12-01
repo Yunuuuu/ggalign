@@ -49,7 +49,8 @@ quad_alignb(
 )
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout.
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
+parent layout.
 \itemize{
 \item For \code{quad_free}/\code{ggside}, the function uses \code{\link[=fortify_data_frame]{fortify_data_frame()}} to
 convert the data into a data frame.
@@ -57,8 +58,9 @@ convert the data into a data frame.
 the data into a matrix.
 }}
 
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
+\item{mapping}{Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}} or
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
@@ -72,6 +74,9 @@ added to a layout.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
 \code{\link[grid:unit]{unit}} object.}
+}
+\value{
+A \code{QuadLayout} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

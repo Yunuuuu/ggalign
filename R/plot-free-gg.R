@@ -39,8 +39,11 @@ ggfree <- free_gg
 free_gg.default <- function(mapping = aes(), ...,
                             data = waiver(), size = NULL, active = NULL) {
     data <- fortify_data_frame(data = data, ...)
-    new_free_gg(ggplot(data = NULL, mapping = mapping), data,
-        size = size, active = active
+    new_free_gg(
+        plot = ggplot(data = NULL, mapping = mapping),
+        data = data,
+        size = size,
+        active = active
     )
 }
 
@@ -56,28 +59,46 @@ free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
 
 new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
-    if (is.null(size)) {
-        size <- unit(NA, "null")
-    } else {
-        size <- check_size(size, call = call)
-    }
-    assert_active(active, call = call)
     active <- update_active(active, new_active(
         order = NA_integer_, use = TRUE, name = NA_character_
     ))
-    structure(
-        list(
-            plot = plot, data = data,
-            size = size, active = active,
-            controls = new_controls(
-                new_plot_data(if (is.waive(data)) waiver() else NULL)
-            )
+    new_free_plot(
+        plot = plot, data = data,
+        size = size, active = active,
+        controls = new_controls(
+            new_plot_data(if (is.waive(data)) waiver() else NULL)
         ),
-        class = "ggalign_free_gg"
+        class = "ggalign_free_gg",
+        call = call
     )
 }
 
-is_free <- function(x) inherits(x, "ggalign_free_gg")
+#' @export
+plot_initialize.ggalign_free_gg <- function(object, layout, object_name) {
+    input_data <- .subset2(object, "data")
+    layout_data <- layout@data
+    if (is.waive(input_data)) { # inherit from the layout
+        data <- layout_data
+    } else if (is.function(input_data)) {
+        if (is.null(layout_data)) {
+            cli_abort(c(
+                "{.arg data} in {.var {object_name}} cannot be a function",
+                i = sprintf(
+                    "no data was found in %s",
+                    object_name(layout)
+                )
+            ))
+        }
+        data <- input_data(layout_data)
+    } else {
+        data <- input_data
+    }
+    data <- fortify_data_frame(data)
+
+    # convert the data into a data frame
+    object$plot <- free_gg_build_plot(.subset2(object, "plot"), data)
+    object
+}
 
 #' @export
 print.ggalign_free_gg <- function(x, ...) {
@@ -106,27 +127,4 @@ ggplot_add.ggalign_free_gg <- function(object, plot, object_name) {
         .subset2(object, "data")
     )
     ggplot_add(object, plot, object_name)
-}
-
-free_add <- function(object, free, object_name) UseMethod("free_add")
-
-#' @importFrom ggplot2 ggplot_add
-#' @export
-free_add.default <- function(object, free, object_name) {
-    free$plot <- ggplot_add(object, .subset2(free, "plot"), object_name)
-    free
-}
-
-#' @export
-free_add.ggalign_option <- function(object, free, object_name) {
-    name <- ggalign_option_name(object)
-    free$controls[name] <- list(update_option(
-        object, .subset2(free$controls, name), object_name
-    ))
-    free
-}
-
-free_build <- function(x, controls) {
-    plot <- plot_add_controls(.subset2(x, "plot"), controls)
-    list(plot = plot + theme_recycle(), size = .subset2(x, "size"))
 }

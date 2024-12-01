@@ -21,8 +21,7 @@ rd_quad_position <- function(action) {
 rd_layout_data <- function() {
     paste(
         "Default dataset to use for the layout. If not specified, it must be",
-        "supplied in each plot added to the layout. By default, it will try to",
-        "inherit from parent layout"
+        "supplied in each plot added to the layout"
     )
 }
 

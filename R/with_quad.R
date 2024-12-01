@@ -22,7 +22,7 @@
 #' @return The original object with an added attribute that sets the specified
 #' context.
 #' @details
-#' Default Behavior by wrapping object with `with_quad()`:
+#' Default Behavior when adding object wrapped with `with_quad()`:
 #'
 #' For `quad_layout()` object:
 #'
@@ -107,8 +107,8 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
 }
 
 #' @export
-with_quad.ggalign_align <- function(x, position = waiver(), main = NULL) {
-    cli_abort("Cannot used with {.fn {snake_class(x$Object)}}")
+with_quad.ggalign_plot <- function(x, position = waiver(), main = NULL) {
+    cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
 
 #' @export
@@ -121,9 +121,6 @@ with_quad.quad_active <- with_quad.layout_title
 
 #' @export
 with_quad.quad_anno <- with_quad.layout_title
-
-#' @export
-with_quad.quad_init <- with_quad.layout_title
 
 #' @export
 with_quad.stack_switch <- with_quad.layout_title
@@ -165,5 +162,5 @@ quad_operated_context <- function(with, active, operator) {
 ggplot_add.ggalign_with_quad <- function(object, plot, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
-    NextMethod()
+    ggplot_add(object, plot, object_name)
 }
