@@ -93,15 +93,41 @@ based on the <code>position</code> argument.</p></li>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">quad_active</span><span class="op">(</span>width <span class="op">=</span> <span class="cn">NULL</span>, height <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">quad_anno</span><span class="op">(</span><span class="va">position</span>, size <span class="op">=</span> <span class="cn">NULL</span>, free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">quad_anno</span><span class="op">(</span></span>
+<span>  <span class="va">position</span>,</span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">anno_top</span><span class="op">(</span>size <span class="op">=</span> <span class="cn">NULL</span>, free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">anno_top</span><span class="op">(</span></span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">anno_left</span><span class="op">(</span>size <span class="op">=</span> <span class="cn">NULL</span>, free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">anno_left</span><span class="op">(</span></span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">anno_bottom</span><span class="op">(</span>size <span class="op">=</span> <span class="cn">NULL</span>, free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">anno_bottom</span><span class="op">(</span></span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">anno_right</span><span class="op">(</span>size <span class="op">=</span> <span class="cn">NULL</span>, free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">anno_right</span><span class="op">(</span></span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -131,6 +157,14 @@ annotation.</p></li>
 <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code> for the annotation stack.</p></dd>
 
 
+<dt id="arg-initialize">initialize<a class="anchor" aria-label="anchor" href="#arg-initialize"></a></dt>
+<dd><p>A boolean indicating whether the annotation stack should be
+initialized if it is not already. By default, the annotation stack layout
+will attempt to initialize when the data is compatible. If set to <code>TRUE</code>, and
+the data in <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code> is incompatible with the annotation stack, no
+data will be used in the stack.</p></dd>
+
+
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
 <dd><p>What should get activated in the annotation stack?
 A single number or string of the plot elements in the stack layout. If <code>NULL</code>, will remove any active context.</p></dd>
@@ -142,22 +176,14 @@ A single number or string of the plot elements in the stack layout. If <code>NUL
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>By default, <code>quad_anno()</code> will try to initialize the annotation stack layout
-using data from <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code>. However, there are situations where the
-annotation stack cannot be initialized due to incompatible data formats
-between <code><a href="quad_layout.html">quad_layout()</a></code> and the required format for the annotation stack.
-This often occurs in <code><a href="quad_free.html">quad_alignh()</a></code> and <code><a href="quad_free.html">quad_alignv()</a></code>, where the
-layout data is a matrix, but top and bottom annotations (in
-<code><a href="quad_free.html">quad_alignh()</a></code>) or left and right annotations (in <code><a href="quad_free.html">quad_alignv()</a></code>)
-require a data frame. In such cases, you must use <code><a href="quad_init.html">quad_init()</a></code> to manually
-initialize the annotation stack.</p>
+    <p>By default, <code>quad_anno()</code> attempts to initialize the annotation stack layout
+using data from <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code>. However, in situations where you want to use
+different data for the annotation stack, you can set <code>initialize = FALSE</code>
+and then provide a custom <code><a href="stack_layout.html">stack_layout()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index">
-<ul><li><p><code><a href="quad_switch.html">quad_switch()</a></code></p></li>
-<li><p><code><a href="quad_init.html">quad_init()</a></code></p></li>
-</ul></div>
+    <div class="dont-index"><p><code><a href="quad_switch.html">quad_switch()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

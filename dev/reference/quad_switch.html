@@ -88,6 +88,7 @@ backward compatibility</p>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  free_guides <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  initialize <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  what <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -135,6 +136,14 @@ annotation.</p></li>
 <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code> for the annotation stack.</p></dd>
 
 
+<dt id="arg-initialize">initialize<a class="anchor" aria-label="anchor" href="#arg-initialize"></a></dt>
+<dd><p>A boolean indicating whether the annotation stack should be
+initialized if it is not already. By default, the annotation stack layout
+will attempt to initialize when the data is compatible. If set to <code>TRUE</code>, and
+the data in <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code> is incompatible with the annotation stack, no
+data will be used in the stack.</p></dd>
+
+
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
 <dd><p>What should get activated in the annotation stack?
 A single number or string of the plot elements in the stack layout. If <code>NULL</code>, will remove any active context.</p></dd>
@@ -175,10 +184,7 @@ A single number or string of the plot elements in the stack layout. If <code>NUL
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index">
-<ul><li><p><code><a href="quad_active.html">quad_active()</a></code>/<code><a href="quad_active.html">quad_anno()</a></code></p></li>
-<li><p><code><a href="quad_init.html">quad_init()</a></code></p></li>
-</ul></div>
+    <div class="dont-index"><p><code><a href="quad_active.html">quad_active()</a></code>/<code><a href="quad_active.html">quad_anno()</a></code></p></div>
     </div>
 
     <div class="section level2">

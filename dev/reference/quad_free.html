@@ -143,7 +143,8 @@ directions.</p></li>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout.</p><ul><li><p>For <code>quad_free</code>/<code>ggside</code>, the function uses <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code> to
+<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
+parent layout.</p><ul><li><p>For <code>quad_free</code>/<code>ggside</code>, the function uses <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code> to
 convert the data into a data frame.</p></li>
 <li><p>For all other functions, it employs <code><a href="fortify_matrix.html">fortify_matrix()</a></code> to convert
 the data into a matrix.</p></li>
@@ -151,8 +152,9 @@ the data into a matrix.</p></li>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
-<dd><p>Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.</p></dd>
+<dd><p>Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -176,6 +178,10 @@ added to a layout.</p></dd>
 <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>QuadLayout</code> object.</p>
+    </div>
     <div class="section level2">
     <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
 

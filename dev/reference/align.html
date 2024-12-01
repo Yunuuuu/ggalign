@@ -216,20 +216,24 @@ along a single axis.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="align_gg.html">align_gg</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Object</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $workflow</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignGG, Align, AlignProto, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     build: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     isLock: FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
@@ -239,7 +243,7 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignGG, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignGG, Align, AlignProto, gg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $no_axes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -288,14 +292,8 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"     "ggalign_option"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $facet</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $limits</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $active</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $order</span>
@@ -310,26 +308,30 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_active"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align_align" "ggalign_align_plot"  "ggalign_plot"       </span>
 <span class="r-in"><span><span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Object</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $workflow</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignDendro, Align, AlignProto, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     build: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     isLock: FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
@@ -339,7 +341,7 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignDendro, Align, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignDendro, Align, AlignProto, gg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $no_axes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -386,14 +388,8 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"     "ggalign_option"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $facet</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $limits</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $active</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $order</span>
@@ -408,11 +404,11 @@ along a single axis.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_active"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align_align" "ggalign_align_plot"  "ggalign_plot"       </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

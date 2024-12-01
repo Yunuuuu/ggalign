@@ -106,7 +106,7 @@ stack_freeh: A special case of stack_free that sets direction = "horizontal".
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout:</p><ul><li><p>For <code>stack_free</code>, <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code> will be used to convert data to
+<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout:</p><ul><li><p>For <code>stack_free</code>, <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code> will be used to convert data to
 a data frame.</p></li>
 <li><p>For <code>stack_align</code>, <code><a href="fortify_matrix.html">fortify_matrix()</a></code> will be used to convert data to a
 matrix.</p></li>
@@ -132,7 +132,8 @@ either <code>"horizontal"</code> or <code>"vertical"</code>.</p></dd>
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
 <dd><p>A numeric or a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object of length <code>3</code>
 indicating the relative heights (for <code>direction = "horizontal"</code>) or widths
-(for <code>direction = "vertical"</code>).</p></dd>
+(for <code>direction = "vertical"</code>). This is only used if you include a nested
+<code><a href="quad_layout.html">quad_layout()</a></code> in the layout.</p></dd>
 
 </dl></div>
 

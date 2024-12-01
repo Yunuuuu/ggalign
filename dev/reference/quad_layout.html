@@ -93,8 +93,9 @@ interface.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from parent layout. The conversion of data depends on the
-<code>align</code> argument and will use, <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>
+<dd><p>Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
+parent layout. The conversion of data depends on the <code>align</code> argument and
+will use, <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>
 or <code><a href="fortify_matrix.html">fortify_matrix()</a></code>:</p><ul><li><p>If <code>align</code> is <code>NULL</code>, a data frame is required. When inherited by the
 annotation stack, no transposition will be applied.</p></li>
 <li><p>If <code>align</code> is a string, a matrix is required. When inherited by the column
@@ -110,8 +111,9 @@ annotation stack, it will be transposed.</p></li>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
-<dd><p>Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.</p></dd>
+<dd><p>Default list of aesthetic mappings to use for main plot in the
+layout. If not specified, must be supplied in each layer added to the main
+plot.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

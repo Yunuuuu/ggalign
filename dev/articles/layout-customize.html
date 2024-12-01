@@ -245,17 +245,18 @@ groups already exist.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_kmeans()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_kmeans()` disrupt the previously established panel groups of</span></span>
-<span><span class="co">#&gt;   the layout x-axis</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `initialize()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> align_kmeans(3L) disrupt the previously established panel groups of</span></span>
+<span><span class="co">#&gt;   the top annotation `stack_align()`</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_kmeans.html">align_kmeans</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_group()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_group()` disrupt the previously established panel groups of the</span></span>
-<span><span class="co">#&gt;   layout x-axis</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `initialize()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> align_group(sample(letters[1:4], ncol(small_mat), replace = TRUE))</span></span>
+<span><span class="co">#&gt;   disrupt the previously established panel groups of the top annotation</span></span>
+<span><span class="co">#&gt;   `stack_align()`</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="align_dendro">align_dendro<a class="anchor" aria-label="anchor" href="#align_dendro"></a>
@@ -419,9 +420,9 @@ previously established groups.</p>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_group.html">align_group</a></span><span class="op">(</span><span class="va">column_groups</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_dendro.html">align_dendro</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `align_dendro()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `align_dendro()` disrupt the previously established panel groups of</span></span>
-<span><span class="co">#&gt;   the layout x-axis</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `initialize()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> align_dendro(k = 2L) disrupt the previously established panel groups</span></span>
+<span><span class="co">#&gt;   of the top annotation `stack_align()`</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>

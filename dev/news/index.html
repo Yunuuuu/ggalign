@@ -70,6 +70,7 @@
 <li><p>new <code><a href="../reference/ggalign_attr_set.html">ggalign_attr_set()</a></code> and <code><a href="../reference/ggalign_attr_set.html">ggalign_attr_get()</a></code> for basic operations of attached attribute.</p></li>
 <li><p>new <code><a href="../reference/geom_draw.html">geom_draw()</a></code> function to draw ggplot2 layer with customized draw function.</p></li>
 <li><p>new <code><a href="../reference/geom_subrect.html">geom_subrect()</a></code> and <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> to subdivide rectangles with shared borders into a grid.</p></li>
+<li><p>new <code>cross_link</code> function used to reset the layout ordering index, this is useful to create <code>tanglegram</code> visualizations.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
@@ -78,7 +79,9 @@
 </ul></div>
 <div class="section level3">
 <h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
-<ul><li>Now, with_quad() wraps the object into a list with the class with_quad. This approach offers greater flexibility in defining the actions associated with with_quad, allowing for more customizable behavior (<a href="https://github.com/Yunuuuu/ggalign/issues/26" class="external-link">#26</a>, <a href="https://github.com/Yunuuuu" class="external-link">@Yunuuuu</a>).</li>
+<ul><li><p>Now, <code><a href="../reference/with_quad.html">with_quad()</a></code> wraps the object into a list with the class <code>with_quad</code>. This approach offers greater flexibility in defining the actions associated with <code>with_quad</code>, allowing for more customizable behavior (<a href="https://github.com/Yunuuuu/ggalign/issues/26" class="external-link">#26</a>, <a href="https://github.com/Yunuuuu" class="external-link">@Yunuuuu</a>).</p></li>
+<li><p>Now, <code>panel</code> will be reordered when initializing the layout parameters, we don’t need to reorder the <code>panel</code> when drawing.</p></li>
+<li><p><code>free_gg</code>, <code>align</code> and the new <code>cross_link</code> objects have been collapsed to one class <code>ggalign_plot</code></p></li>
 </ul></div>
 </div>
     <div class="section level2">
