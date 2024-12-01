@@ -6,6 +6,28 @@
 #' ordering index. This feature is particularly useful for creating `tanglegram`
 #' visualizations.
 #' @inheritParams ggalign
+#' @section ggplot2 specification:
+#' `cross_link` initializes a ggplot `data` and `mapping`.
+#'
+#' `cross_link()` always applies a default mapping for the axis of the data
+#' index in the layout. This mapping is `aes(y = .data$y)` for horizontal stack
+#' layout (including left and right annotation) and `aes(x = .data$x)` for
+#' vertical stack layout (including top and bottom annotation).
+#'
+#' The data in the underlying `ggplot` object will contain following columns:
+#'
+#'  - `panel`: the panel for the aligned axis. It means `x-axis` for vertical
+#'    stack layout (including top and bottom annotation), `y-axis` for
+#'    horizontal stack layout (including left and right annotation).
+#'
+#'  - `index`: an integer of the data index.
+#'
+#'  - `hand`: a factor indicates the index groups.
+#'
+#'  - `x` or `y`: the `x` or `y` coordinates.
+#'
+#' It is recommended to use `x`/`y` as the `x`/`y` mapping.
+#'
 #' @importFrom ggplot2 ggproto aes
 #' @export
 cross_link <- function(mapping = aes(), size = NULL,
@@ -41,15 +63,9 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         layout_coords
     },
     ggplot = function(self, mapping, direction) {
-        if (is_horizontal(direction)) {
-            default_mapping <- aes(y = .data$y)
-            default_expand <- default_expansion(x = expansion())
-        } else {
-            default_mapping <- aes(x = .data$x)
-            default_expand <- default_expansion(y = expansion())
-        }
-        ggplot(mapping = add_default_mapping(mapping, default_mapping)) +
-            default_expand
+        ggplot(mapping = add_default_mapping(mapping, switch_direction(
+            direction, aes(y = .data$y), aes(x = .data$x)
+        )))
     },
     finish = function(layout, layout_coords) {
         # udpate cross_points
@@ -101,12 +117,15 @@ CrossLink <- ggproto("CrossLink", AlignProto,
             default_facet <- ggplot2::facet_null()
         }
         plot$data <- data
+        if (is_horizontal(direction)) {
+            default_coord <- coord_ggalign(y = coords)
+            default_expand <- default_expansion(x = expansion())
+        } else {
+            default_coord <- coord_ggalign(x = coords)
+            default_expand <- default_expansion(y = expansion())
+        }
         plot +
             align_melt_facet(plot$facet, default_facet, direction) +
-            switch_direction(
-                direction,
-                coord_ggalign(y = coords),
-                coord_ggalign(x = coords)
-            )
+            default_coord + default_expand
     }
 )

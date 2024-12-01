@@ -28,3 +28,25 @@ index. Any objects added after \code{cross_link} will use this updated layout
 ordering index. This feature is particularly useful for creating \code{tanglegram}
 visualizations.
 }
+\section{ggplot2 specification}{
+
+\code{cross_link} initializes a ggplot \code{data} and \code{mapping}.
+
+\code{cross_link()} always applies a default mapping for the axis of the data
+index in the layout. This mapping is \code{aes(y = .data$y)} for horizontal stack
+layout (including left and right annotation) and \code{aes(x = .data$x)} for
+vertical stack layout (including top and bottom annotation).
+
+The data in the underlying \code{ggplot} object will contain following columns:
+\itemize{
+\item \code{panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
+stack layout (including top and bottom annotation), \code{y-axis} for
+horizontal stack layout (including left and right annotation).
+\item \code{index}: an integer of the data index.
+\item \code{hand}: a factor indicates the index groups.
+\item \code{x} or \code{y}: the \code{x} or \code{y} coordinates.
+}
+
+It is recommended to use \code{x}/\code{y} as the \code{x}/\code{y} mapping.
+}
+
