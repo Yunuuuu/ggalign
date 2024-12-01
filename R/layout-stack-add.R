@@ -31,7 +31,6 @@ stack_layout_add.list <- function(object, stack, object_name) {
 # add elements for nested `quad_layout()`.
 #' @export
 stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
-    active <- stack@active
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         cli_abort(c(
@@ -42,7 +41,9 @@ stack_layout_add.ggalign_with_quad <- function(object, stack, object_name) {
             i = "Did you forget to add a {.fn quad_layout}?"
         ))
     } else {
-        stack@plot_list[[active]] <- quad_layout_add(object, plot, object_name)
+        stack@plot_list[[active_index]] <- quad_layout_add(
+            object, plot, object_name
+        )
     }
     stack
 }
@@ -61,19 +62,20 @@ stack_layout_add.StackLayout <- stack_layout_add.quad_active
 # Now, only one possible nested layout: `quad_layout()`
 #' @export
 stack_layout_add.layout_annotation <- function(object, stack, object_name) {
-    active <- stack@active
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         stack <- update_layout_annotation(object, stack, object_name)
     } else {
-        stack@plot_list[[active]] <- quad_layout_add(object, plot, object_name)
+        stack@plot_list[[active_index]] <- quad_layout_add(
+            object, plot, object_name
+        )
     }
     stack
 }
 
 #' @export
 stack_layout_add.default <- function(object, stack, object_name) {
-    if (is.null(active <- stack@active)) {
+    if (is.null(active_index <- stack@active)) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s",
@@ -86,13 +88,13 @@ stack_layout_add.default <- function(object, stack, object_name) {
             )
         ))
     }
-    plot <- .subset2(stack@plot_list, active)
+    plot <- .subset2(stack@plot_list, active_index)
     if (is_ggalign_plot(plot)) {
         plot <- stack_plot_add(plot, object, object_name, TRUE)
     } else {
         plot <- quad_layout_add(object, plot, object_name)
     }
-    stack@plot_list[[active]] <- plot
+    stack@plot_list[[active_index]] <- plot
     stack
 }
 

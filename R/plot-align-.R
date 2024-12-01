@@ -87,67 +87,69 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
 
 #' @export
 stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
-    if (!is.null(active <- stack@active) &&
-        is_quad_layout(plot <- .subset2(stack@plot_list, active))) {
-        plot <- quad_layout_add(object, plot, object_name)
-        stack@plot_list[[active]] <- plot
-        new_coords <- slot(plot, stack@direction)
-    } else if (is.null(old_coords <- stack@layout)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(stack)
-            ),
-            i = sprintf("%s cannot align observations", object_name(stack))
-        ))
-    } else {
-        workflow <- .subset2(object, "workflow")
-        dots <- list(
-            direction = stack@direction,
-            position = .subset2(stack@heatmap, "position"),
-            object_name = object_name,
-            layout_data = stack@data,
-            layout_coords = old_coords,
-            layout_name = object_name(stack)
-        )
-        # this step the object will act with the stack layout
-        # group rows into panel or reorder rows
-        new_coords <- inject(workflow$initialize(!!!dots[
-            vec_set_intersect(
-                names(dots),
-                align_method_params(workflow$initialize, character())
+    if (is.null(active_index <- stack@active) ||
+        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
+        if (is.null(old_coords <- stack@layout)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {object_name}} to %s",
+                    object_name(stack)
+                ),
+                i = sprintf("%s cannot align observations", object_name(stack))
+            ))
+        } else {
+            workflow <- .subset2(object, "workflow")
+            dots <- list(
+                direction = stack@direction,
+                position = .subset2(stack@heatmap, "position"),
+                object_name = object_name,
+                layout_data = stack@data,
+                layout_coords = old_coords,
+                layout_name = object_name(stack)
             )
-        ]))
-
-        # initialize the plot object
-        object$plot <- inject(workflow$ggplot(
-            !!!workflow$params[
-                vec_set_intersect(
-                    names(workflow$params),
-                    align_method_params(workflow$ggplot, character())
-                )
-            ],
-            !!!dots[
+            # this step the object will act with the stack layout
+            # group rows into panel or reorder rows
+            new_coords <- inject(workflow$initialize(!!!dots[
                 vec_set_intersect(
                     names(dots),
-                    align_method_params(workflow$ggplot, character())
+                    align_method_params(workflow$initialize, character())
                 )
-            ]
-        ))
-        # finally, we let the object do some changes in the layout
-        stack <- inject(workflow$finish(stack, !!!dots[
-            vec_set_intersect(
-                names(dots),
-                align_method_params(workflow$finish, character())
-            )
-        ]))
+            ]))
 
-        stack <- stack_add_plot(
-            stack, object,
-            .subset2(.subset2(object, "active"), "use"),
-            .subset2(.subset2(object, "active"), "name"),
-            object_name
-        )
+            # initialize the plot object
+            object$plot <- inject(workflow$ggplot(
+                !!!workflow$params[
+                    vec_set_intersect(
+                        names(workflow$params),
+                        align_method_params(workflow$ggplot, character())
+                    )
+                ],
+                !!!dots[
+                    vec_set_intersect(
+                        names(dots),
+                        align_method_params(workflow$ggplot, character())
+                    )
+                ]
+            ))
+            # finally, we let the object do some changes in the layout
+            stack <- inject(workflow$finish(stack, !!!dots[
+                vec_set_intersect(
+                    names(dots),
+                    align_method_params(workflow$finish, character())
+                )
+            ]))
+
+            stack <- stack_add_plot(
+                stack, object,
+                .subset2(.subset2(object, "active"), "use"),
+                .subset2(.subset2(object, "active"), "name"),
+                object_name
+            )
+        }
+    } else { # should be a QuadLayout object
+        plot <- quad_layout_add(object, plot, object_name)
+        stack@plot_list[[active_index]] <- plot
+        new_coords <- slot(plot, stack@direction)
     }
 
     # set the layout -------------------------------------
@@ -195,7 +197,7 @@ quad_layout_add.ggalign_align_plot <- function(object, quad, object_name) {
     }
 
     # add annotation -----------------------------
-    stack <- stack_layout_add(object, layout, object_name)
+    stack <- stack_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
     update_layout_coords(quad,
         direction = direction,

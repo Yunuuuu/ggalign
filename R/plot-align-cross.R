@@ -16,6 +16,8 @@ cross_link <- function(mapping = aes(), size = NULL,
     )
 }
 
+is_cross_link <- function(x) inherits(x, "ggalign_cross_link")
+
 #' @importFrom ggplot2 ggproto ggplot
 CrossLink <- ggproto("CrossLink", AlignProto,
     initialize = function(self, direction, position, layout_coords,

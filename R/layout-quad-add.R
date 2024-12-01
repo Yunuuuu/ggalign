@@ -34,7 +34,7 @@ quad_layout_add.default <- function(object, quad, object_name) {
             i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
         ))
     } else {
-        slot(quad, position) <- stack_layout_add(object, layout, object_name)
+        slot(quad, position) <- stack_layout_add(object, stack, object_name)
     }
     quad
 }

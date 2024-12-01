@@ -28,6 +28,28 @@ stack_layout_add.ggalign_free_plot <- function(object, stack, object_name) {
     stack
 }
 
+
+#' @importFrom methods slot slot<-
+#' @export
+quad_layout_add.ggalign_free_plot <- function(object, quad, object_name) {
+    if (is.null(position <- quad@active)) {
+        cli_abort(c(
+            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            i = "no active annotation stack",
+            i = "try to activate an annotation stack with {.fn anno_*}"
+        ))
+    }
+    if (is.null(stack <- slot(quad, position))) {
+        cli_abort(c(
+            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            i = "the {.field {position}} annotation stack is not initialized",
+            i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
+        ))
+    }
+    slot(quad, position) <- stack_layout_add(object, stack, object_name)
+    quad
+}
+
 #' @export
 stack_layout_add.ggplot <- function(object, stack, object_name) {
     stack_layout_add(free_gg(data = object), stack, object_name)

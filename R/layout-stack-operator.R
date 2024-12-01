@@ -5,7 +5,6 @@ stack_layout_subtract <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_subtract.default <- function(object, stack, object_name) {
-    active <- stack@active
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         stack@plot_list <- lapply(stack@plot_list, function(plot) {
@@ -16,7 +15,7 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
             }
         })
     } else {
-        stack@plot_list[[active]] <- quad_layout_subtract(
+        stack@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
@@ -26,12 +25,11 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 # for objects can inherit from layout
 #' @export
 stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
-    active <- stack@active
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         stack <- update_layout_option(object, stack, object_name)
     } else {
-        stack@plot_list[[active]] <- quad_layout_subtract(
+        stack@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
@@ -40,7 +38,6 @@ stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
 
 #' @export
 stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) {
-    active <- stack@active
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         inner <- .subset2(object, "object")
@@ -87,7 +84,7 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
             plot
         })
     } else {
-        stack@plot_list[[active]] <- quad_layout_subtract(
+        stack@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
