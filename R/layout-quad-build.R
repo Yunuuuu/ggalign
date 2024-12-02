@@ -50,7 +50,11 @@ quad_build <- function(quad, controls = quad@controls) UseMethod("quad_build")
 #' @export
 quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     data <- quad@data
-    if (is.function(data) || is.null(data)) {
+
+    row_coords <- setup_layout_coords(quad@horizontal)
+    column_coords <- setup_layout_coords(quad@vertical)
+    if ((!is.null(row_coords) || !is.null(column_coords)) &&
+        (is.function(data) || is.null(data))) {
         cli_abort(c(
             sprintf(
                 "You must provide {.arg data} argument to plot %s",
@@ -59,9 +63,6 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
-
-    row_coords <- setup_layout_coords(quad@horizontal)
-    column_coords <- setup_layout_coords(quad@vertical)
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- align <-
@@ -257,7 +258,7 @@ quad_melt_facet <- function(user_facet, default_facet) {
 #' @importFrom stats reorder
 quad_build_data <- function(data, row_coords, column_coords) {
     if (is.null(data) || (is.null(row_coords) && is.null(column_coords))) {
-        return(data)
+        return(waiver())
     }
     if (!is.null(row_coords)) {
         row_panel <- .subset2(row_coords, "panel")
