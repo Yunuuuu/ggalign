@@ -22,7 +22,7 @@ default, will controled by the option-
 added to a layout.}
 }
 \description{
-\code{cross_link} resets the layout ordering index of a \code{\link[=stack_layout]{stack_layout()}}. This
+\code{cross_link} resets the layout ordering index of a \code{\link[=cross_align]{cross_align()}}. This
 allows you to add other \verb{align_*} objects to define a new layout ordering
 index. Any objects added after \code{cross_link} will use this updated layout
 ordering index. This feature is particularly useful for creating \code{tanglegram}

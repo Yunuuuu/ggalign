@@ -1,6 +1,6 @@
 #' Connect two layout crosswise
 #' @description
-#' `cross_link` resets the layout ordering index of a [`stack_layout()`]. This
+#' `cross_link` resets the layout ordering index of a [`cross_align()`]. This
 #' allows you to add other `align_*` objects to define a new layout ordering
 #' index. Any objects added after `cross_link` will use this updated layout
 #' ordering index. This feature is particularly useful for creating `tanglegram`
