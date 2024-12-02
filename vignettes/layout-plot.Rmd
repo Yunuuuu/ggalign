@@ -195,7 +195,7 @@ ggheatmap(small_mat) +
 It is more commonly used in a `stack_free()`, where you usually want to inherit
 from the layout data frame. All annotations in `ggside()` are `stack_free()`.
 ```{r}
-ggside(mpg, aes(displ, hwy, colour = class)) -
+ggside(mpg, aes(displ, hwy, colour = class)) +
     geom_point(size = 2) +
     anno_top(size = 0.3) +
     ggfree() +
