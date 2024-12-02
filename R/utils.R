@@ -51,7 +51,7 @@ object_name.QuadLayout <- function(object, format = "fn") {
 
 #' @export
 object_name.ggalign_align_plot <- function(object, format = "fn") {
-    format_object_name(.subset2(object, "workflow"), format)
+    object_name(.subset2(object, "workflow"), format)
 }
 
 #' @export
