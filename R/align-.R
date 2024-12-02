@@ -195,7 +195,7 @@ Align <- ggproto("Align", AlignProto,
                 }
             } else {
                 if (is.function(input_data)) {
-                    if (is.null(data <- layout_data)) {
+                    if (is.null(layout_data)) {
                         cli_abort(c(
                             "{.arg data} in {.var {object_name}} cannot be a function",
                             i = sprintf("no data was found in %s", layout_name)
@@ -205,15 +205,15 @@ Align <- ggproto("Align", AlignProto,
                 } else {
                     data <- input_data
                 }
-                # we always regard rows as the observations
-                if (is.null(layout_nobs)) {
-                    layout_nobs <- NROW(data)
-                } else if (NROW(data) != layout_nobs) {
-                    cli_abort(sprintf(
-                        "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
-                        object_name, NROW(data), layout_name, layout_nobs
-                    ))
-                }
+            }
+            # we always regard rows as the observations
+            if (is.null(layout_nobs)) {
+                layout_nobs <- NROW(data)
+            } else if (NROW(data) != layout_nobs) {
+                cli_abort(sprintf(
+                    "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
+                    object_name, NROW(data), layout_name, layout_nobs
+                ))
             }
             self$labels <- vec_names(data)
             params <- self$setup_params(layout_nobs, input_params)

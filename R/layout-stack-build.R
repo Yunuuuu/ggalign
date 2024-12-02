@@ -4,122 +4,20 @@ ggalign_build.StackLayout <- function(x) {
 }
 
 #' @param extra_coords layout parameters of the axis vertically with the stack.
-#' @importFrom grid unit.c
-#' @importFrom rlang is_empty is_string
 #' @noRd
 stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
-    if (is_empty(plot_list <- stack@plot_list)) {
+    if (is_empty(stack@plot_list)) {
         return(NULL)
     }
-    # check if we should initialize the layout observations
-    layout_coords <- stack@layout
-    if (!is.null(layout_coords) &&
-        is.null(.subset2(layout_coords, "nobs")) &&
-        any(vapply(plot_list, is_cross_link, logical(1L), USE.NAMES = FALSE))) {
-        cli_abort(
-            "You must initialize the layout observations when used with a {.fn cross_link}"
-        )
-    }
-
-    direction <- stack@direction
-    position <- .subset2(stack@heatmap, "position")
-    plot_list <- vec_chop(
-        plot_list,
-        sizes = diff(c(0L, stack@cross_points, length(plot_list)))
-    )
-    index_list <- c(stack@index_list, list(.subset2(layout_coords, "index")))
-
-    # build the stack
-    composer <- stack_composer(stack@direction)
-
-    # for `free_spaces`, if we have applied it in the whole stack layout
-    # we shouln't use it for a single plot. Otherwise, the guide legends
-    # collected by the layout will overlap with the axis of the plot in the
-    # layout.
-    #
-    # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
-    remove_spaces <- is_string(stack_spaces) && !is.null(position)
-    previous_coords <- NULL
-    for (i in seq_along(plot_list)) {
-        plots <- .subset2(plot_list, i)
-        # prepare coords for current group
-        coords <- layout_coords
-        coords["index"] <- list(.subset2(index_list, i))
-        coords <- setup_layout_coords(coords)
-
-        if (is_empty(plots)) {
-            previous_coords <- coords
-            next
-        }
-
-        # we remove the plot without actual plot area
-        keep <- vapply(plots, function(plot) {
-            # we remove align objects without plot area
-            # Now, only `ggalign_align_align` will contain `NULL`
-            !inherits(plot, "ggalign_align_align") ||
-                !is.null(.subset2(plot, "plot"))
-        }, logical(1L), USE.NAMES = FALSE)
-        plots <- .subset(plots, keep)
-
-        if (is_empty(plots)) {
-            previous_coords <- coords
-            next
-        }
-
-        # we reorder the plots based on the `order` slot
-        plot_order <- vapply(plots, function(plot) {
-            if (is_cross_link(plot)) {
-                1L
-            } else if (is_ggalign_plot(plot)) {
-                .subset2(.subset2(plot, "active"), "order")
-            } else {
-                .subset2(plot@plot_active, "order")
-            }
-        }, integer(1L), USE.NAMES = FALSE)
-        plots <- .subset(plots, make_order(plot_order))
-
-        for (plot in plots) {
-            if (is_ggalign_plot(plot)) {
-                # always re-design `free_spaces` for single plot
-                plot_controls <- inherit_controls(
-                    .subset2(plot, "controls"), controls
-                )
-                if (remove_spaces) {
-                    align_spaces <- .subset2(
-                        .subset2(plot_controls, "plot_align"), "free_spaces"
-                    )
-                    if (is_string(align_spaces)) {
-                        align_spaces <- setdiff_position(align_spaces, stack_spaces)
-                        if (!nzchar(align_spaces)) align_spaces <- NULL
-                        plot_controls$plot_align["free_spaces"] <- list(
-                            align_spaces
-                        )
-                    }
-                }
-            } else {
-                plot_controls <- inherit_controls(plot@controls, controls)
-            }
-            composer <- stack_composer_add(
-                plot = plot,
-                composer = composer,
-                controls = plot_controls,
-                coords = coords,
-                extra_coords = extra_coords,
-                previous_coords = previous_coords,
-                direction = direction,
-                position = position
-            )
-        }
-        previous_coords <- coords
-    }
+    composer <- stack_build_composer(stack, controls, extra_coords)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
-
     # arrange plots
     titles <- stack@titles
     sizes <- stack@sizes
+    direction <- stack@direction
+
     # recycle the sizes when necessary
     if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
     sizes <- sizes[
@@ -154,6 +52,83 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
     )
+}
+
+stack_build_composer <- function(stack, controls, extra_coords) {
+    UseMethod("stack_build_composer")
+}
+
+#' @export
+stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
+    plot_list <- stack@plot_list
+    direction <- stack@direction
+    position <- .subset2(stack@heatmap, "position")
+
+    # we remove the plot without actual plot area
+    keep <- vapply(plot_list, function(plot) {
+        # we remove align objects without plot area
+        # Now, only `ggalign_align_align` will contain `NULL`
+        !inherits(plot, "ggalign_align_align") ||
+            !is.null(.subset2(plot, "plot"))
+    }, logical(1L), USE.NAMES = FALSE)
+    plot_list <- .subset(plot_list, keep)
+    if (is_empty(plot_list)) return(NULL) # styler: off
+
+    # we reorder the plots based on the `order` slot
+    plot_order <- vapply(plot_list, function(plot) {
+        if (is_layout(plot)) {
+            .subset2(plot@plot_active, "order")
+        } else {
+            .subset2(.subset2(plot, "active"), "order")
+        }
+    }, integer(1L), USE.NAMES = FALSE)
+    plot_list <- .subset(plot_list, make_order(plot_order))
+
+    # build the stack
+    composer <- stack_composer(stack@direction)
+
+    # for `free_spaces`, if we have applied it in the whole stack layout
+    # we shouln't use it for a single plot. Otherwise, the guide legends
+    # collected by the layout will overlap with the axis of the plot in the
+    # layout.
+    #
+    # this occurs in the annotation stack (`position` is not `NULL`).
+    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
+    remove_spaces <- is_string(stack_spaces) && !is.null(position)
+    coords <- setup_layout_coords(stack@layout)
+
+    for (plot in plot_list) {
+        if (is_ggalign_plot(plot)) {
+            # always re-design `free_spaces` for single plot
+            plot_controls <- inherit_controls(
+                .subset2(plot, "controls"), controls
+            )
+            if (remove_spaces) {
+                align_spaces <- .subset2(
+                    .subset2(plot_controls, "plot_align"), "free_spaces"
+                )
+                if (is_string(align_spaces)) {
+                    align_spaces <- setdiff_position(align_spaces, stack_spaces)
+                    if (!nzchar(align_spaces)) align_spaces <- NULL
+                    plot_controls$plot_align["free_spaces"] <- list(
+                        align_spaces
+                    )
+                }
+            }
+        } else {
+            plot_controls <- inherit_controls(plot@controls, controls)
+        }
+        composer <- stack_composer_add(
+            plot = plot,
+            composer = composer,
+            controls = plot_controls,
+            coords = coords,
+            extra_coords = extra_coords,
+            direction = direction,
+            position = position
+        )
+    }
+    composer
 }
 
 make_order <- function(order) {

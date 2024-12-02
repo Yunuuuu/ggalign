@@ -57,33 +57,6 @@ quad_layout_subtract.ggalign_with_quad <- function(object, quad, object_name) {
     quad
 }
 
-# for objects should only be added with `+`
-#' @export
-quad_layout_subtract.ggplot <- function(object, quad, object_name) {
-    cli_abort(c(
-        "Cannot use {.code -} to add {.var {object_name}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
-
-#' @export
-quad_layout_subtract.ggalign_plot <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.layout_title <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.quad_active <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.quad_anno <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.StackLayout <- quad_layout_subtract.ggplot
-
-#' @export
-quad_layout_subtract.layout_annotation <- quad_layout_subtract.ggplot
-
 ###############################################################
 #' @keywords internal
 quad_layout_and_add <- function(object, quad, object_name) {
@@ -118,20 +91,3 @@ quad_layout_and_add.theme <- function(object, quad, object_name) {
     ans@theme <- ans@theme + object
     ans
 }
-
-#' @export
-quad_layout_and_add.layout_title <- function(object, quad, object_name) {
-    cli_abort(c(
-        "Cannot use {.code &} to add {.var {object_name}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
-
-#' @export
-quad_layout_and_add.ggplot <- quad_layout_and_add.layout_title
-
-#' @export
-quad_layout_and_add.ggalign_plot <- quad_layout_and_add.layout_title
-
-#' @export
-quad_layout_and_add.layout_annotation <- quad_layout_and_add.layout_title

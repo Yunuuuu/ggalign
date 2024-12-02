@@ -55,31 +55,29 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
         stack@plot_list <- lapply(stack@plot_list, function(plot) {
             if (is_ggalign_plot(plot)) {
                 plot <- stack_plot_add(plot, inner, inner_name, force = FALSE)
-            } else {
-                if (is.waive(.subset2(object, "position"))) {
-                    # default behaviour for object wrap with `with_quad()`
-                    # we add the object along the stack layout
-                    # if means for horizontal stack, we'll add it
-                    # to the left and right annotation, and the main plot
-                    positions <- switch_direction(
-                        direction,
-                        c("left", "right"),
-                        c("top", "bottom")
-                    )
-                    for (position in positions) {
-                        if (!is.null(slot(plot, position))) {
-                            slot(plot, position) <- stack_layout_subtract(
-                                inner, slot(plot, position), inner_name
-                            )
-                        }
+            } else if (is.waive(.subset2(object, "position"))) {
+                # default behaviour for object wrap with `with_quad()`
+                # we add the object along the stack layout
+                # if means for horizontal stack, we'll add it
+                # to the left and right annotation, and the main plot
+                positions <- switch_direction(
+                    direction,
+                    c("left", "right"),
+                    c("top", "bottom")
+                )
+                for (position in positions) {
+                    if (!is.null(slot(plot, position))) {
+                        slot(plot, position) <- stack_layout_subtract(
+                            inner, slot(plot, position), inner_name
+                        )
                     }
-                    if (is.null(main <- .subset2(object, "main")) || main) {
-                        plot <- quad_body_add(inner, plot, inner_name)
-                    }
-                } else {
-                    # we respect the context setting
-                    plot <- quad_layout_subtract(object, plot, object_name)
                 }
+                if (is.null(main <- .subset2(object, "main")) || main) {
+                    plot <- quad_body_add(inner, plot, inner_name)
+                }
+            } else {
+                # we respect the context setting
+                plot <- quad_layout_subtract(object, plot, object_name)
             }
             plot
         })
@@ -90,33 +88,6 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
     }
     stack
 }
-
-# for objects should only be added with `+`
-#' @export
-stack_layout_subtract.layout_title <- function(object, stack, object_name) {
-    cli_abort(c(
-        "Cannot use {.code -} with {.var {object_name}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
-
-#' @export
-stack_layout_subtract.ggplot <- stack_layout_subtract.layout_title
-
-#' @export
-stack_layout_subtract.ggalign_plot <- stack_layout_subtract.layout_title
-
-#' @export
-stack_layout_subtract.quad_active <- stack_layout_subtract.ggplot
-
-#' @export
-stack_layout_subtract.quad_anno <- stack_layout_subtract.ggplot
-
-#' @export
-stack_layout_subtract.StackLayout <- stack_layout_subtract.ggplot
-
-#' @export
-stack_layout_subtract.layout_annotation <- stack_layout_subtract.layout_title
 
 ##################################################################
 #' @keywords internal
@@ -152,20 +123,3 @@ stack_layout_and_add.theme <- function(object, stack, object_name) {
     ans@theme <- ans@theme + object
     ans
 }
-
-#' @export
-stack_layout_and_add.layout_title <- function(object, stack, object_name) {
-    cli_abort(c(
-        "Cannot use {.code &} to add {.obj_type_friendly {object}}",
-        i = "Try to use {.code +} instead"
-    ))
-}
-
-#' @export
-stack_layout_and_add.ggplot <- stack_layout_and_add.layout_title
-
-#' @export
-stack_layout_and_add.ggalign_plot <- stack_layout_and_add.ggplot
-
-#' @export
-stack_layout_and_add.layout_annotation <- stack_layout_and_add.layout_title

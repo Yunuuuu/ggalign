@@ -5,8 +5,8 @@ stack_layout_add <- function(object, stack, object_name) {
 
 stack_plot_add <- function(plot, object, object_name, force) {
     if (inherits(plot, "ggalign_align_align")) {
+        # if `align` has plot, we added the object
         if (force || !is.null(.subset2(plot, "plot"))) {
-            # if `align` has plot, we added the object
             plot <- align_add(object, plot, object_name)
         }
     } else {
@@ -56,6 +56,35 @@ stack_layout_add.quad_anno <- stack_layout_add.quad_active
 
 #' @export
 stack_layout_add.StackLayout <- stack_layout_add.quad_active
+
+#' @export
+stack_layout_add.CrossLayout <- function(object, stack, object_name) {
+    # preventing from adding cross_layout with the same direction
+    # in this way, `cross_link()` cannot be added to the heatmap annotation
+    # parallelly with the `stack_layout()`
+    if (identical(object@direction, direction <- stack@direction)) {
+        cli_abort(sprintf(
+            "Cannot add {.var {object_name}} to %s (direction: %s)",
+            object_name(stack), direction
+        ))
+    }
+    NextMethod()
+}
+
+#' @export
+stack_layout_add.ggalign_cross_link <- function(object, stack, object_name) {
+    if (is_cross_layout(stack)) {
+        NextMethod() # call `ggalign_align_plot` method
+    } else {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {object_name}} to %s",
+                object_name(stack)
+            ),
+            i = "Did you want to use {.fn cross_layout} instead?"
+        ))
+    }
+}
 
 ###################################################################
 # add elements to the nested layout or the stack layout
@@ -114,8 +143,11 @@ update_stack_active <- function(stack, what, call = caller_call()) {
     if (!is.waive(what)) {
         if (!is.null(what)) {
             what <- vec_as_location2(
-                what, vec_size(stack@plot_list), vec_names(stack@plot_list),
-                missing = "error", arg = "what", call = call
+                what,
+                vec_size(stack@plot_list),
+                vec_names(stack@plot_list),
+                missing = "error",
+                arg = "what", call = call
             )
         }
         stack@active <- what
@@ -127,7 +159,36 @@ update_stack_active <- function(stack, what, call = caller_call()) {
 #' @importFrom methods slot
 #' @export
 stack_layout_add.QuadLayout <- function(object, stack, object_name) {
-    direction <- stack@direction
+    # preventing from adding cross_layout with the same direction
+    # in this way, `cross_link()` cannot be added to the heatmap annotation
+    # parallelly with the `stack_layout()`
+    if (is_horizontal(direction <- stack@direction)) {
+        if (is_cross_layout(object@left) || is_cross_layout(object@right)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {object_name}} to %s",
+                    object_name(stack)
+                ),
+                i = paste(
+                    "{.field left} or {.field right} annotation",
+                    "contains {.fn cross_layout}"
+                )
+            ))
+        }
+    } else {
+        if (is_cross_layout(object@top) || is_cross_layout(object@bottom)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {object_name}} to %s",
+                    object_name(stack)
+                ),
+                i = paste(
+                    "{.field top} or {.field bottom} annotation",
+                    "contains {.fn cross_layout}"
+                )
+            ))
+        }
+    }
     quad_data <- object@data
 
     # check quad layout is compatible with stack layout
@@ -165,10 +226,10 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                                 object_name(stack)
                             ),
                             i = sprintf(
-                                "{.arg data} in %s is %s, %s",
-                                object_name(object),
+                                "{.arg data} in %s is %s, but %s need a {.cls data.frame}.",
+                                object_name(stack),
                                 "{.obj_type_friendly {data}}",
-                                "but we need a {.cls data.frame}."
+                                object_name(object)
                             ),
                             i = sprintf(
                                 "Try provide {.arg data} in %s",
@@ -183,10 +244,10 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
                             object_name(object), object_name(stack)
                         ),
                         i = sprintf(
-                            "{.arg data} in %s is %s, %s",
-                            object_name(object),
+                            "{.arg data} in %s is %s, but %s need a {.cls matrix}.",
+                            object_name(stack),
                             "{.obj_type_friendly {data}}",
-                            "but we need a {.cls matrix}."
+                            object_name(object)
                         ),
                         i = sprintf(
                             "Try provide {.arg data} in %s",
@@ -268,7 +329,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             object@data <- ggalign_attr_restore(data, stack_data)
         }
         layout_coords <- check_layout_coords(
-            quad_coords, stack_coords,
+            stack_coords, quad_coords,
             old_name = object_name(stack),
             new_name = object_name
         )
@@ -284,12 +345,7 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
             )
         ))
     }
-    stack <- stack_add_plot(
-        stack, object,
-        .subset2(object@plot_active, "use"),
-        .subset2(object@plot_active, "name"),
-        object_name
-    )
+    stack <- stack_add_plot(stack, object, object@plot_active, object_name)
     update_layout_coords(
         stack,
         coords = layout_coords,
@@ -297,17 +353,17 @@ stack_layout_add.QuadLayout <- function(object, stack, object_name) {
     )
 }
 
-stack_add_plot <- function(stack, plot, use, name, object_name) {
+stack_add_plot <- function(stack, plot, active, object_name) {
     # set up context index ------------------------------
     plot_list <- stack@plot_list
-    if (use) {
+    if (.subset2(active, "use")) {
         active_index <- length(plot_list) + 1L
     } else {
         active_index <- stack@active
     }
 
     # check QuadLayout name is unique ----------------------
-    if (!is.na(name)) {
+    if (!is.na(name <- .subset2(active, "name"))) {
         if (any(names(plot_list) == name)) {
             cli_warn(
                 "Adding {.var {object_name}} will replace existing {.field {name}} plot"

@@ -222,6 +222,10 @@ is_quad_layout <- function(x) is(x, "QuadLayout")
 #' @rdname is_layout
 is_stack_layout <- function(x) is(x, "StackLayout")
 
+#' @export
+#' @rdname is_layout
+is_cross_layout <- function(x) is(x, "CrossLayout")
+
 #' @examples
 #' # for heatmap_layout()
 #' is_heatmap_layout(ggheatmap(1:10))

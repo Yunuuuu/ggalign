@@ -123,6 +123,7 @@ layout_subtract.StackLayout <- function(layout, object, object_name) {
 }
 
 #################################################################
+# we use and_add suffix here, since `and` is very similar with `add`.
 layout_and_add <- function(layout, object, object_name) {
     UseMethod("layout_and_add")
 }
@@ -136,3 +137,54 @@ layout_and_add.QuadLayout <- function(layout, object, object_name) {
 layout_and_add.StackLayout <- function(layout, object, object_name) {
     stack_layout_and_add(object, layout, object_name)
 }
+
+# For objects cannot be used with `-` or `&`
+#' @include layout-quad-operator.R
+#' @include layout-stack-operator.R
+lapply(
+    c(
+        "quad_layout_subtract", "stack_layout_subtract",
+        "quad_layout_and_add", "stack_layout_and_add"
+    ),
+    function(genname) {
+        params <- .subset2(strsplit(genname, "_"), 1L)
+
+        # function argument list
+        pairlist <- rlang::pairlist2(object = , layout = , object_name = )
+        names(pairlist) <- c("object", .subset(params, 1L), "object_name")
+        operator <- switch(.subset(params, 3L),
+            subtract = "-",
+            and = "&"
+        )
+        # styler: off
+        for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
+                        "layout_annotation", "ggalign_plot", "StackLayout",
+                        "QuadLayout")) {
+            # styler: on
+            registerS3method(
+                genname, class,
+                rlang::new_function(pairlist, substitute(
+                    {
+                        cli_abort(c(
+                            sprintf(
+                                "Cannot add %s with {.code %s}",
+                                name, operator
+                            ),
+                            i = "Try to use {.code +} instead"
+                        ))
+                    },
+                    list(
+                        name = switch(class,
+                            ggalign_plot = ,
+                            StackLayout = ,
+                            QuadLayout = quote(object_name(object)),
+                            # for all others
+                            "{.var {object_name}}"
+                        ),
+                        operator = operator
+                    )
+                ))
+            )
+        }
+    }
+)

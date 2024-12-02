@@ -16,10 +16,8 @@ stack_layout_add.ggalign_free_plot <- function(object, stack, object_name) {
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         object <- plot_initialize(object, stack)
         stack <- stack_add_plot(
-            stack, object,
-            .subset2(.subset2(object, "active"), "use"),
-            .subset2(.subset2(object, "active"), "name"),
-            object_name
+            stack, object, 
+            .subset2(object, "active"), object_name
         )
     } else {
         plot <- quad_layout_add(object, plot, object_name)

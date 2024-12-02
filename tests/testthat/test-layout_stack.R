@@ -34,25 +34,82 @@ testthat::test_that("`stack_free` works well", {
     expect_identical(x@layout, NULL)
 })
 
-testthat::test_that("`stack_align` add `align` object", {
+testthat::test_that("`stack_align` add `align-` object works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-    expect_doppelganger("add-align-dendro", {
+
+    # stack_alignh() ----------------------------------------
+    # no layout data, we must provide data in `align_*()`
+    expect_snapshot_error(stack_alignh() + align_dendro())
+
+    # layout `index` is updated correctly
+    stack <- stack_alignh(small_mat) +
+        align_dendro()
+    expect_identical(
+        stack@layout$index,
+        order2(ggalign_stat(stack, 1L))
+    )
+    # layout `panel` is updated correctly
+    stack <- stack_alignh(small_mat) + align_dendro(k = 3L)
+    expect_identical(
+        stack@layout$panel,
+        .subset2(stack@plot_list, 1L)$workflow$panel
+    )
+    expect_identical(
+        stack@layout$index,
+        reorder_index(
+            .subset2(stack@plot_list, 1L)$workflow$panel,
+            order2(ggalign_stat(stack, 1L))
+        )
+    )
+    # stack_alignv() ----------------------------------------
+    # no layout data, we must provide data in `align_*()`
+    expect_snapshot_error(stack_alignv() + align_dendro())
+
+    # layout `index` is updated correctly
+    stack <- stack_alignv(small_mat) +
+        align_dendro()
+    expect_identical(
+        stack@layout$index,
+        order2(ggalign_stat(stack, 1L))
+    )
+    # layout `panel` is updated correctly
+    stack <- stack_alignv(small_mat) + align_dendro(k = 3L)
+    expect_identical(
+        stack@layout$panel,
+        .subset2(stack@plot_list, 1L)$workflow$panel
+    )
+    expect_identical(
+        stack@layout$index,
+        reorder_index(
+            .subset2(stack@plot_list, 1L)$workflow$panel,
+            order2(ggalign_stat(stack, 1L))
+        )
+    )
+})
+
+testthat::test_that("`stack_align` add `align-` object builds well", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    # visual test
+    expect_doppelganger("stack_align, add align_dendro()", {
         stack_alignh(small_mat) +
             align_dendro()
     })
-    expect_doppelganger("add-align-dendro-split", {
+    expect_doppelganger("stack_align, add align_dendro(k = 3)", {
         stack_alignh(small_mat) +
             align_dendro(k = 3L)
     })
-    expect_doppelganger("add-align-gg", {
+    expect_doppelganger("stack_align, add ggalign()", {
         stack_alignh(small_mat) +
             ggalign() +
             geom_boxplot()
     })
-    expect_doppelganger("add-align-kmeans", {
+    expect_doppelganger("stack_align, add align_kmeans()", {
         set.seed(1L)
         stack_alignh(small_mat) +
             ggalign() +
@@ -62,15 +119,120 @@ testthat::test_that("`stack_align` add `align` object", {
 })
 
 testthat::test_that("`stack_align` add `quad_layout()` object works well", {
-    # successful cases
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
-    # error cases
-    # stack without data add heatmap without data gave error
-    expect_error(stack_alignh() + quad_alignb()) # we must provide data
+    # stack with no data adds a quad_layout() with no data gave error
+    expect_snapshot_error(stack_alignh() + quad_alignb())
+    expect_snapshot_error(stack_alignh() + quad_alignv())
+    expect_snapshot_error(stack_alignh() + quad_free())
+
+    expect_snapshot_error(stack_alignv() + quad_alignb())
+    expect_snapshot_error(stack_alignv() + quad_alignv())
+    expect_snapshot_error(stack_alignv() + quad_free())
+
+    # `stack_alignh()` update layout coords correctly
+    stack <- stack_alignh(small_mat) + quad_alignv()
+    expect_identical(
+        .subset2(stack@plot_list, 1L)@vertical,
+        new_layout_coords(nobs = ncol(small_mat))
+    )
+    stack <- stack_alignh(small_mat) + quad_alignh()
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@horizontal
+    )
+    stack <- stack_alignh() +
+        (quad_alignh(small_mat) + anno_left() + align_dendro())
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@horizontal
+    )
+    stack <- stack_alignh() +
+        quad_alignh(small_mat) +
+        (quad_alignh(small_mat) + anno_left() + align_dendro())
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@horizontal
+    )
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 2L)@horizontal
+    )
+
+    stack <- stack_alignh() +
+        (quad_alignh(small_mat) + anno_left() + align_dendro(k = 3L))
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@horizontal
+    )
+    stack <- stack_alignh() +
+        quad_alignh(small_mat) +
+        (quad_alignh(small_mat) + anno_left() + align_dendro(k = 3L))
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@horizontal
+    )
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 2L)@horizontal
+    )
+
+    # `stack_alignv()` update layout coords correctly
+    stack <- stack_alignv(small_mat) + quad_alignh()
+    expect_identical(
+        .subset2(stack@plot_list, 1L)@horizontal,
+        new_layout_coords(nobs = ncol(small_mat))
+    )
+    stack <- stack_alignv(small_mat) + quad_alignv()
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@vertical
+    )
+    stack <- stack_alignv() +
+        (quad_alignv(small_mat) + anno_top() + align_dendro())
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@vertical
+    )
+    stack <- stack_alignv() +
+        quad_alignv(small_mat) +
+        (quad_alignv(small_mat) + anno_top() + align_dendro())
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@vertical
+    )
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 2L)@vertical
+    )
+
+    stack <- stack_alignv() +
+        (quad_alignv(small_mat) + anno_top() + align_dendro(k = 3L))
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@vertical
+    )
+    stack <- stack_alignv() +
+        quad_alignv(small_mat) +
+        (quad_alignv(small_mat) + anno_top() + align_dendro(k = 3L))
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 1L)@vertical
+    )
+    expect_identical(
+        stack@layout,
+        .subset2(stack@plot_list, 2L)@vertical
+    )
+})
+
+testthat::test_that("`stack_align` add `quad_layout()` object builds well", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
     # sucessful cases
     # stack_alignh -------------------------------------

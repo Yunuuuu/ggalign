@@ -59,6 +59,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             i = "Do you want to put this in a parent stack layout?"
         ))
     }
+
     row_coords <- setup_layout_coords(quad@horizontal)
     column_coords <- setup_layout_coords(quad@vertical)
 

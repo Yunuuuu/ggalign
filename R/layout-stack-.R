@@ -177,11 +177,14 @@ stack_free.function <- function(data = NULL, direction = NULL, ...) {
 stack_free.formula <- stack_free.function
 
 new_stack_layout <- function(data, direction, layout, controls = NULL,
-                             theme = NULL, sizes = NA,
-                             call = caller_call()) {
+                             theme = NULL, sizes = NA, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    if (is.null(layout)) name <- "stack_free" else name <- "stack_align"
+    if (is.null(layout)) {
+        name <- "stack_free"
+    } else {
+        name <- "stack_align"
+    }
     if (!is.null(direction)) {
         direction <- match.arg(direction, c("horizontal", "vertical"))
     } else {
@@ -192,7 +195,8 @@ new_stack_layout <- function(data, direction, layout, controls = NULL,
         )
         direction <- "horizontal"
     }
-    methods::new("StackLayout",
+    methods::new(
+        "StackLayout",
         name = name, data = data, direction = direction,
         theme = theme, controls = controls, # used by the layout
         sizes = sizes, layout = layout
@@ -213,14 +217,10 @@ methods::setClass(
         plot_list = "list", # save the list of plots
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY", # used by stack layout
-        layout = "ANY", # used to align observations
-        index_list = "list", # used by `cross_link()`
-        cross_points = "integer"
+        layout = "ANY" # used to align observations
     ),
     prototype = list(
         plot_list = list(),
-        index_list = list(),
-        cross_points = integer(),
         heatmap = list( # used by heatmap annotation
             position = NULL, # annotation position
             size = unit(NA, "null"), # total annotation size

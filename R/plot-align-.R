@@ -42,7 +42,7 @@ AlignProto <- ggproto("AlignProto",
     },
     finish = function(layout) layout,
     build = function(plot, composer, controls, coords, extra_coords,
-                     previous_coords, direction, position) {
+                     direction, position) {
         plot
     }
 )
@@ -85,6 +85,12 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
     plot_add_controls(ans, controls)
 }
 
+ggproto_formals <- function(x) formals(environment(x)$f)
+
+align_method_params <- function(f, remove = c("panel", "index")) {
+    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
+}
+
 #' @export
 stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
     if (is.null(active_index <- stack@active) ||
@@ -103,7 +109,7 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                 direction = stack@direction,
                 position = .subset2(stack@heatmap, "position"),
                 object_name = object_name,
-                layout_data = stack@data,
+                layout_data = stack@data, # must be a matrix
                 layout_coords = old_coords,
                 layout_name = object_name(stack)
             )
@@ -138,11 +144,9 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                     align_method_params(workflow$finish, character())
                 )
             ]))
-
             stack <- stack_add_plot(
                 stack, object,
-                .subset2(.subset2(object, "active"), "use"),
-                .subset2(.subset2(object, "active"), "name"),
+                .subset2(object, "active"),
                 object_name
             )
         }
@@ -151,19 +155,11 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
         stack@plot_list[[active_index]] <- plot
         new_coords <- slot(plot, stack@direction)
     }
-
-    # set the layout -------------------------------------
     update_layout_coords(
         stack,
         coords = new_coords,
         object_name = object_name
     )
-}
-
-ggproto_formals <- function(x) formals(environment(x)$f)
-
-align_method_params <- function(f, remove = c("panel", "index")) {
-    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }
 
 #' @importFrom methods slot slot<-
@@ -201,12 +197,18 @@ quad_layout_add.ggalign_align_plot <- function(object, quad, object_name) {
     slot(quad, position) <- stack
     # skip the updating of layout coords if there are cross points in
     # bottom or right annotation
-    if (any(position == c("top", "left")) || is_empty(stack@cross_points)) {
-        quad <- update_layout_coords(quad,
-            direction = direction,
-            coords = stack@layout,
-            object_name = object_name
-        )
+    if (any(position == c("top", "left")) ||
+        !is_cross_layout(stack) ||
+        is_empty(stack@cross_points)) {
+        opposite <- opposite_pos(position)
+        if (!is.null(opposite_stack <- slot(quad, opposite))) {
+            slot(quad, opposite) <- update_layout_coords(
+                opposite_stack,
+                coords = stack@layout,
+                object_name = object_name
+            )
+        }
+        slot(quad, direction) <- stack@layout
     }
     quad
 }

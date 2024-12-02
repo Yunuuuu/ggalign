@@ -181,7 +181,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     if (!is.null(slot(quad, position))) {
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "{position} annotation stack exists"
+            i = "{position} annotation stack already exists"
         ))
     }
     # cannot contain nested layout
@@ -209,9 +209,24 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         # both `quad_layout()` and `stack_layout()` need align observations
         layout_coords <- check_layout_coords(
             quad_coords, stack_coords,
-            old_name = sprintf("{.fn %s}", quad@name),
+            old_name = object_name(quad),
             new_name = object_name
         )
+        # skip the updating of layout coords if there are cross points in
+        # bottom or right annotation
+        if (any(position == c("top", "left")) ||
+            !is_cross_layout(object) ||
+            is_empty(object@cross_points)) {
+            opposite <- opposite_pos(position)
+            if (!is.null(opposite_stack <- slot(quad, opposite))) {
+                slot(quad, opposite) <- update_layout_coords(
+                    opposite_stack,
+                    coords = layout_coords,
+                    object_name = object_name
+                )
+            }
+            slot(quad, direction) <- layout_coords
+        }
     } else {
         cli_abort(c(
             "Cannot add {.var {object_name}} to a {.fn {quad@name}}",
@@ -219,10 +234,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     slot(quad, position) <- object
-    update_layout_coords(quad,
-        direction = direction, coords = layout_coords,
-        object_name = object_name
-    )
+    quad
 }
 
 #######################################################
