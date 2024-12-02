@@ -60,6 +60,7 @@ reference:
   - heatmap_layout
   - stack_layout
   - quad_layout
+  - cross_align
   - quad_free
   - stack_free
   - ggoncoplot
