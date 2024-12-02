@@ -69,20 +69,18 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
 
         # we reorder the plots based on the `order` slot
         plot_order <- vapply(plots, function(plot) {
-            if (is_layout(plot)) {
-                .subset2(plot@plot_active, "order")
-            } else if (is_cross_link(plot)) {
+            if (is_cross_link(plot)) {
                 1L
-            } else {
+            } else if (is_ggalign_plot(plot)) {
                 .subset2(.subset2(plot, "active"), "order")
+            } else {
+                .subset2(plot@plot_active, "order")
             }
         }, integer(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, make_order(plot_order))
 
         for (plot in plots) {
-            if (is_layout(plot)) {
-                plot_controls <- inherit_controls(plot@controls, controls)
-            } else {
+            if (is_ggalign_plot(plot)) {
                 # always re-design `free_spaces` for single plot
                 plot_controls <- inherit_controls(
                     .subset2(plot, "controls"), controls
@@ -99,6 +97,8 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
                         )
                     }
                 }
+            } else {
+                plot_controls <- inherit_controls(plot@controls, controls)
             }
             composer <- stack_composer_add(
                 plot = plot,

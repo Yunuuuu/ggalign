@@ -185,8 +185,8 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     # cannot contain nested layout
-    if (any(vapply(object@plot_list, is_layout, logical(1L),
-                   USE.NAMES = FALSE))) { # styler: off
+    if (!all(vapply(object@plot_list, is_ggalign_plot, logical(1L),
+                    USE.NAMES = FALSE))) { # styler: off
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
             i = "annotation stack cannot contain nested layout"

@@ -24,32 +24,6 @@ reorder_index <- function(panel, index = NULL) {
 }
 
 ############################################################
-get_layout_coords <- function(layout, ...) {
-    UseMethod("get_layout_coords")
-}
-
-#' @export
-get_layout_coords.StackLayout <- function(layout, ...) {
-    layout@layout
-}
-
-#' @importFrom methods slot
-#' @export
-get_layout_coords.QuadLayout <- function(layout, ..., direction) {
-    slot(layout, direction)
-}
-
-#' @importFrom methods slot
-#' @export
-get_layout_coords.CrossLayout <- function(layout, ..., hand) {
-    get_layout_coords(
-        layout = slot(layout, hand),
-        direction = layout@direction,
-        hand = hand
-    )
-}
-
-############################################################
 #' @keywords internal
 update_layout_coords <- function(layout, ..., coords, object_name) {
     UseMethod("update_layout_coords")
@@ -119,13 +93,10 @@ update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
     }
     index <- index:n_plots
     layout@plot_list[index] <- lapply(plot_list[index], function(plot) {
-        if (is_layout(plot)) {
-            update_layout_coords(plot,
-                direction = layout@direction, coords = coords
-            )
-        } else {
-            plot
-        }
+        if (is_ggalign_plot(plot)) return(plot) # styler: off
+        update_layout_coords(plot,
+            direction = layout@direction, coords = coords
+        )
     })
     layout
 }
