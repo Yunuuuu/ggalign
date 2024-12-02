@@ -53,7 +53,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
 
     row_coords <- setup_layout_coords(quad@horizontal)
     column_coords <- setup_layout_coords(quad@vertical)
-    if ((!is.null(row_coords) || !is.null(column_coords)) &&
+    if (!(is.null(row_coords) && is.null(column_coords)) &&
         (is.function(data) || is.null(data))) {
         cli_abort(c(
             sprintf(
@@ -258,7 +258,8 @@ quad_melt_facet <- function(user_facet, default_facet) {
 #' @importFrom stats reorder
 quad_build_data <- function(data, row_coords, column_coords) {
     if (is.null(data) || (is.null(row_coords) && is.null(column_coords))) {
-        return(waiver())
+        # ggplot use waiver() to indicates the NULL data
+        return(data %||% waiver())
     }
     if (!is.null(row_coords)) {
         row_panel <- .subset2(row_coords, "panel")
