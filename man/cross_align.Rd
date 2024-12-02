@@ -39,7 +39,7 @@ indicating the relative heights (for \code{direction = "horizontal"}) or widths
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-The \code{cross_align} function aligns observations, and allow different layourt
+The \code{cross_align} function aligns observations, and allow different layout
 ordering index in a single layout.
 
 Two aliases are provided for convenience:

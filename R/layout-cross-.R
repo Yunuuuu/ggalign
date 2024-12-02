@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' The `cross_align` function aligns observations, and allow different layourt
+#' The `cross_align` function aligns observations, and allow different layout
 #' ordering index in a single layout.
 #'
 #' Two aliases are provided for convenience:
