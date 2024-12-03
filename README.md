@@ -138,7 +138,7 @@ ggside(mpg, aes(displ, hwy, colour = class)) -
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-tanglegram can be created with `ggcross()`:
+tanglegram can be created with `cross_layout()`:
 
 ``` r
 set.seed(1234)

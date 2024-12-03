@@ -138,7 +138,7 @@ ggside(mpg, aes(displ, hwy, colour = class)) -
     scale_color_brewer(palette = "Dark2")
 ```
 
-tanglegram can be created with `ggcross()`:
+tanglegram can be created with `cross_layout()`:
 ```{r}
 set.seed(1234)
 big_mat <- matrix(rnorm(200), nrow = 20)
