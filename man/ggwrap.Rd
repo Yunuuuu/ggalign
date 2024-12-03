@@ -4,7 +4,7 @@
 \alias{ggwrap}
 \title{Wrap Arbitrary Graphics to ggplot}
 \usage{
-ggwrap(plot, ..., align = "panel", on_top = TRUE, clip = TRUE, vp = NULL)
+ggwrap(plot, ..., align = "panel", on_top = FALSE, clip = TRUE, vp = NULL)
 }
 \arguments{
 \item{plot}{Any graphic that can be converted into a \code{\link[grid:grid.grob]{grob}}

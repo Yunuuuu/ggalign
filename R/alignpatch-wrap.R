@@ -39,7 +39,7 @@
 #' @importFrom ggplot2 theme element_blank ggplot
 #' @importFrom grid is.grob
 #' @export
-ggwrap <- function(plot, ..., align = "panel", on_top = TRUE,
+ggwrap <- function(plot, ..., align = "panel", on_top = FALSE,
                    clip = TRUE, vp = NULL) {
     patch <- ggplot() +
         theme(
