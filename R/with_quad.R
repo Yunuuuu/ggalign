@@ -107,6 +107,12 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
 }
 
 #' @export
+print.ggalign_with_quad <- function(x, ...) {
+    print(.subset2(x, "object"))
+    invisible(x)
+}
+
+#' @export
 with_quad.ggalign_plot <- function(x, position = waiver(), main = NULL) {
     cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
