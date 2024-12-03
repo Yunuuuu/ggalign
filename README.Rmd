@@ -157,6 +157,7 @@ cross_alignh(big_mat) +
     geom_line(aes(x = hand, group = index)) +
     # remove x labels and title
     scale_x_discrete(breaks = NULL, name = NULL) +
+    # add another dendrogram based different method
     align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
 ```
 
