@@ -144,6 +144,7 @@ tanglegram can be created with `cross_layout()`:
 set.seed(1234)
 big_mat <- matrix(rnorm(200), nrow = 20)
 cross_alignh(big_mat) +
+    # group the observations based on kmeans clustering
     align_kmeans(3L) +
     # add a dendrogram
     align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
@@ -155,6 +156,7 @@ cross_alignh(big_mat) +
     cross_link() +
     # add connection line
     geom_line(aes(x = hand, group = index)) +
+    # remove x labels and title
     scale_x_discrete(breaks = NULL, name = NULL) +
     align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
 ```
@@ -166,11 +168,15 @@ index:
 
 ``` r
 cross_alignh(big_mat) +
+    # group the observations based on kmeans clustering
     align_kmeans(2L) +
+    # add a new heatmap
     ggheatmap() +
+    # initialize the left annotation
     anno_left() +
-    # add a dendrogram
+    # add a dendrogram in the left annotation
     align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
+    # move to the cross layout 
     stack_active() +
     # reset the ordering index by original dendrogram, and add a plot to
     # indicate the transition from the old layout ordering index # to the new
@@ -178,9 +184,13 @@ cross_alignh(big_mat) +
     cross_link() +
     # add connection line
     geom_line(aes(x = hand, group = index)) +
+    # remove x labels and title
     scale_x_discrete(breaks = NULL, name = NULL) +
+    # add another heatmap
     ggheatmap() +
+    # initialize the right annotation
     anno_right() +
+    # add a dendrogram in the right annotation
     align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
 #> → heatmap built with `geom_tile()`
 #> → heatmap built with `geom_tile()`
