@@ -107,8 +107,9 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             extra_coords <- row_coords
             stack_controls$plot_align <- vertical_align
         }
+        stack_controls <- inherit_controls(stack@controls, stack_controls)
         plot <- stack_build(stack,
-            controls = inherit_controls(stack@controls, stack_controls),
+            controls = stack_controls,
             extra_coords = extra_coords
         )
         if (!is.null(plot)) {
