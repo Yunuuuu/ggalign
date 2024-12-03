@@ -1,10 +1,11 @@
 #' Arrange Plots Horizontally or Vertically
 #'
 #' @description
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
 #' The `cross_align` function aligns observations, and allow different layout
-#' ordering index in a single layout.
+#' ordering index in a single layout. Both `ggcross` and `cross_layout` are
+#' alias for `cross_align`.
 #'
 #' Two aliases are provided for convenience:
 #' - `cross_alignv`: A special case of `cross_align` that sets `direction =
@@ -19,6 +20,16 @@ cross_align <- function(data = NULL, direction, ...,
                         theme = NULL, sizes = NA) {
     UseMethod("cross_align")
 }
+
+#' @usage NULL
+#' @export
+#' @rdname cross_align
+ggcross <- cross_align
+
+#' @usage NULL
+#' @export
+#' @rdname cross_align
+cross_layout <- cross_align
 
 #' @export
 #' @rdname cross_align

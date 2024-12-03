@@ -2,6 +2,8 @@
 % Please edit documentation in R/layout-cross-.R
 \name{cross_align}
 \alias{cross_align}
+\alias{ggcross}
+\alias{cross_layout}
 \alias{cross_alignv}
 \alias{cross_alignh}
 \title{Arrange Plots Horizontally or Vertically}
@@ -37,10 +39,11 @@ indicating the relative heights (for \code{direction = "horizontal"}) or widths
 \code{\link[=quad_layout]{quad_layout()}} in the layout.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 The \code{cross_align} function aligns observations, and allow different layout
-ordering index in a single layout.
+ordering index in a single layout. Both \code{ggcross} and \code{cross_layout} are
+alias for \code{cross_align}.
 
 Two aliases are provided for convenience:
 \itemize{
