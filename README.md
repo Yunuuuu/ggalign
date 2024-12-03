@@ -63,8 +63,8 @@ The usage of `ggalign` is simple if you’re familiar with `ggplot2`
 syntax, the typical workflow includes:
 
 - Initialize the layout using `quad_layout()`
-  (`ggside()`/`ggheatmap()`/`ggoncoplot()`) or `stack_layout()`
-  (`ggstack()`).
+  (`ggside()`/`ggheatmap()`/`ggoncoplot()`), `stack_layout()`
+  (`ggstack()`/`cross_align()`).
 - Customize the layout with:
   - `align_group()`: Group observations into panel with a group
     variable.
@@ -88,16 +88,13 @@ heatmap with a `dendrogram`.
 ``` r
 library(ggalign)
 #> Loading required package: ggplot2
-```
-
-``` r
 set.seed(123)
 small_mat <- matrix(rnorm(72), nrow = 9)
 rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
 # initialize the heatmap layout, we can regard it as a normal ggplot object
-my_heatplot <- ggheatmap(small_mat) +
+ggheatmap(small_mat) +
     # we can directly modify geoms, scales and other ggplot2 components
     scale_fill_viridis_c() +
     # add annotation in the top
@@ -108,7 +105,6 @@ my_heatplot <- ggheatmap(small_mat) +
     geom_point(aes(color = branch, y = y)) +
     # change color mapping for the dendrogram
     scale_color_brewer(palette = "Dark2")
-my_heatplot
 #> → heatmap built with `geom_tile()`
 ```
 
@@ -117,7 +113,7 @@ my_heatplot
 Marginal plots can also be created with similar syntax:
 
 ``` r
-my_sideplot <- ggside(mpg, aes(displ, hwy, colour = class)) -
+ggside(mpg, aes(displ, hwy, colour = class)) -
     # set default theme for all plots in the layout
     plot_theme(theme_bw()) +
     geom_point(size = 2) +
@@ -138,10 +134,59 @@ my_sideplot <- ggside(mpg, aes(displ, hwy, colour = class)) -
     ) +
     theme(axis.text.x = element_text(angle = 90, vjust = .5)) &
     scale_color_brewer(palette = "Dark2")
-my_sideplot
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+tanglegram can be created with `ggcross()`:
+
+``` r
+set.seed(1234)
+big_mat <- matrix(rnorm(200), nrow = 20)
+cross_alignh(big_mat) +
+    align_kmeans(3L) +
+    # add a dendrogram
+    align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
+    # reverse the x-axis of the dendrogram
+    scale_x_reverse() +
+    # reset the ordering index by original dendrogram, and add a plot to
+    # indicate the transition from the old layout ordering index # to the new
+    # ordering index
+    cross_link() +
+    # add connection line
+    geom_line(aes(x = hand, group = index)) +
+    scale_x_discrete(breaks = NULL, name = NULL) +
+    align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+Reveal the relationships between two heatmap with different ordering
+index:
+
+``` r
+cross_alignh(big_mat) +
+    align_kmeans(2L) +
+    ggheatmap() +
+    anno_left() +
+    # add a dendrogram
+    align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
+    stack_active() +
+    # reset the ordering index by original dendrogram, and add a plot to
+    # indicate the transition from the old layout ordering index # to the new
+    # ordering index
+    cross_link() +
+    # add connection line
+    geom_line(aes(x = hand, group = index)) +
+    scale_x_discrete(breaks = NULL, name = NULL) +
+    ggheatmap() +
+    anno_right() +
+    align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
+#> → heatmap built with `geom_tile()`
+#> → heatmap built with `geom_tile()`
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 ## Compare with other ggplot2 heatmap extension
 
