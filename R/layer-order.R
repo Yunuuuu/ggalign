@@ -18,37 +18,50 @@
 #'     layer_order(geom_point(color = "red", size = 1))
 #' @export
 layer_order <- function(layer, order = 0) {
-    assert_s3_class(layer, "Layer")
     assert_number_decimal(order)
+    UseMethod("layer_order")
+}
+
+#' @export
+layer_order.default <- function(layer, order = 0) {
+    cli_abort("{.arg layer} must be a {.fn geom_*} object")
+}
+
+#' @export
+layer_order.Layer <- function(layer, order = 0) {
     if (!is.infinite(order)) order <- vec_cast(order, integer())
-    if (inherits(layer, "layer_order")) {
-        attr(layer, "layer_order")$order <- order
-    } else {
-        layer <- add_class(layer, "layer_order")
-        attr(layer, "layer_order") <- list(
+    structure(
+        list(
+            object = layer,
             order = order,
             # used for `ggplot_add`
             object_name = deparse(substitute(layer))
-        )
-    }
+        ),
+        class = "ggalign_layer_order"
+    )
+}
+
+#' @export
+layer_order.ggalign_layer_order <- function(layer, order = 0) {
+    if (!is.infinite(order)) order <- vec_cast(order, integer())
+    layer$order <- order
     layer
 }
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.layer_order <- function(object, plot, object_name) {
-    if (is.null(params <- attr(object, "layer_order"))) {
-        cli_abort("Invalid {.cls layer_order} object")
-    }
+ggplot_add.ggalign_layer_order <- function(object, plot, object_name) {
     # ggplot2 will do something special for the layer
     # add layer_name, we re-call the method for the layer
-    object_name <- .subset2(params, "object_name")
-    ans <- NextMethod()
+    ans <- ggplot_add(
+        .subset2(object, "object"),
+        plot, .subset2(object, "object_name")
+    )
     if ((cur <- length(layers <- .subset2(ans, "layers"))) == 1L) {
         return(ans)
     }
+    order <- .subset2(object, "order")
     layer <- .subset2(layers, cur)
-    order <- .subset2(params, "order")
     if (order >= length(layers)) return(ans) # styler: off
     if (order <= 0L) {
         layers <- append(vec_slice(layers, -cur), layer, 0L)
