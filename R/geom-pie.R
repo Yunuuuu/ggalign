@@ -96,13 +96,12 @@ GeomPie <- ggproto("GeomPie",
             function(x, y, radius, ang, ang0) {
                 if (clockwise) {
                     ang0 <- 90 - ang0
-                    radians <- seq(ang0, ang0 - ang, length.out = steps)[-1L] *
-                        pi / 180
+                    radians <- seq(ang0, ang0 - ang, length.out = steps)[-1L]
                 } else {
                     ang0 <- 90 + ang0
-                    radians <- seq(ang0, ang0 + ang, length.out = steps)[-1L] *
-                        pi / 180
+                    radians <- seq(ang0, ang0 + ang, length.out = steps)[-1L]
                 }
+                radians <- radians / 180 * pi
                 data_frame0(
                     x = c(x, cos(radians) * radius + x),
                     y = c(y, sin(radians) * radius + y)
