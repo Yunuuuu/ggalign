@@ -151,6 +151,7 @@ reference:
   contents:
   - geom_pie
   - geom_subrect
+  - geom_tile3d
   - theme_no_axes
   - layer_order
   - raster_magick
