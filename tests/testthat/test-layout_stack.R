@@ -367,6 +367,9 @@ testthat::test_that("add `with_quad()` works as expected", {
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    expect_snapshot_error(stack_alignv(small_mat) +
+        align_dendro() +
+        with_quad(geom_point()))
     expect_doppelganger(
         "subtract_with_quad_default",
         stack_alignv(small_mat) +

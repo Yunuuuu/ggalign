@@ -64,13 +64,13 @@ testthat::test_that("add `align` object works well", {
 
     # quad_free()
     # cannot add align objects in `quad_free()`
-    expect_error(quad_free(small_mat) +
+    expect_snapshot_error(quad_free(small_mat) +
         quad_anno("t") +
         align_dendro())
-    expect_error(quad_free(small_mat) +
+    expect_snapshot_error(quad_free(small_mat) +
         quad_anno("t") +
         ggalign())
-    expect_error({
+    expect_snapshot_error({
         set.seed(1L)
         quad_free(small_mat) +
             quad_anno("l") +
@@ -101,6 +101,38 @@ testthat::test_that("add `align` object works well", {
             geom_bar(aes(.x, value, fill = .panel), stat = "identity")
     )
 })
+
+testthat::test_that("add `align` object builds well", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    # quad_alignh()
+    expect_doppelganger(
+        "alignh-layout-annotation",
+        quad_alignh(small_mat) +
+            geom_boxplot(aes(value, .row_names)) +
+            quad_anno("l") +
+            align_dendro(k = 3L) +
+            ggalign(data = rowSums) +
+            geom_bar(aes(value, y = .y, fill = .panel),
+                stat = "identity", orientation = "y"
+            )
+    )
+
+    # quad_alignv()
+    expect_doppelganger(
+        "alignv-layout-annotation",
+        quad_alignv(small_mat) +
+            geom_boxplot(aes(.column_names, value)) +
+            quad_anno("t") +
+            align_dendro(k = 3L) +
+            ggalign(data = rowSums) +
+            geom_bar(aes(.x, value, fill = .panel), stat = "identity")
+    )
+})
+
 
 testthat::test_that("add `with_quad()` works as expected", {
     set.seed(1L)
@@ -162,72 +194,144 @@ testthat::test_that("add `with_quad()` works as expected", {
     )
 })
 
-testthat::test_that("add `stack_layout()` works as expected", {
+testthat::test_that("add `stack_layout()` builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
     # quad_free() ------------------------------------------
-    expect_error(quad_free(mpg) + stack_freev())
+    expect_snapshot_error(quad_free(mpg) + stack_freev())
     # annotaion has been initialized
-    expect_error(quad_free(mpg) + anno_top() + stack_freev())
+    expect_snapshot_error(quad_free(mpg) + anno_top() + stack_freev())
     # add nested layout
-    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
         (stack_freev() + quad_free(mpg) + quad_free(mpg)))
     # incompatible direction
-    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
         stack_freeh())
     # incompatible aligning type
-    expect_error(quad_free(mpg) + anno_top(initialize = FALSE) +
+    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
         stack_alignv())
 
     # quad_alignh() ---------------------------------------
-    expect_error(quad_alignh(small_mat) + stack_alignh())
-    expect_error(quad_alignh(small_mat) + stack_freev())
+    expect_snapshot_error(quad_alignh(small_mat) + stack_alignh())
+    expect_snapshot_error(quad_alignh(small_mat) + stack_freev())
 
     # annotaion has been initialized
-    expect_error(quad_alignh(small_mat) +
+    expect_snapshot_error(quad_alignh(small_mat) +
         anno_top(initialize = TRUE) +
         stack_freev())
-    expect_error(quad_alignh(mpsmall_matg) + anno_left() + stack_alignh())
+    expect_snapshot_error(
+        quad_alignh(mpsmall_matg) + anno_left() + stack_alignh()
+    )
 
     # add nested layout
-    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
-        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
-    expect_error(quad_alignh(small_mat) + anno_left(initialize = FALSE) +
-        (stack_alignh() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+    expect_snapshot_error(
+        quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+            (stack_freev() + quad_free(mpg) + quad_free(mpg))
+    )
+    expect_snapshot_error(
+        quad_alignh(small_mat) + anno_left(initialize = FALSE) +
+            (stack_alignh() + ggheatmap(small_mat) + ggheatmap(small_mat))
+    )
 
     # incompatible direction
-    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
-        stack_freeh())
+    expect_snapshot_error(
+        quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+            stack_freeh()
+    )
 
     # incompatible aligning type
-    expect_error(quad_alignh(small_mat) + anno_top(initialize = FALSE) +
-        stack_alignv())
+    expect_snapshot_error(
+        quad_alignh(small_mat) + anno_top(initialize = FALSE) +
+            stack_alignv()
+    )
+    # update coords correctly
+    quad <- quad_alignh(small_mat) +
+        anno_right() +
+        anno_left(size = 0.2, initialize = FALSE) +
+        (stack_alignh(small_mat) + align_dendro(k = 4))
+    expect_identical(quad@horizontal, quad@left@layout)
+    expect_identical(quad@horizontal, quad@right@layout)
+
+    quad <- quad_alignh(small_mat) +
+        anno_left() +
+        anno_right(size = 0.2, initialize = FALSE) +
+        (stack_alignh(small_mat) + align_dendro(k = 4))
+    expect_identical(quad@horizontal, quad@right@layout)
+    expect_identical(quad@horizontal, quad@left@layout)
 
     # quad_alignv() ---------------------------------------
-    expect_error(quad_alignv(small_mat) + stack_alignv())
-    expect_error(quad_alignv(small_mat) + stack_freeh())
+    expect_snapshot_error(quad_alignv(small_mat) + stack_alignv())
+    expect_snapshot_error(quad_alignv(small_mat) + stack_freeh())
 
     # annotaion has been initialized
-    expect_error(quad_alignv(small_mat) + anno_top() + stack_freeh())
-    expect_error(quad_alignv(small_mat) + anno_left(initialize = TRUE) +
-        stack_alignv())
+    expect_snapshot_error(quad_alignv(small_mat) + anno_top() + stack_freeh())
+    expect_snapshot_error(
+        quad_alignv(small_mat) + anno_left(initialize = TRUE) +
+            stack_alignv()
+    )
 
     # add nested layout
-    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
-        (stack_freeh() + quad_free(mpg) + quad_free(mpg)))
-    expect_error(quad_alignv(small_mat) + anno_left(initialize = FALSE) +
-        (stack_alignv() + ggheatmap(small_mat) + ggheatmap(small_mat)))
+    expect_snapshot_error(
+        quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+            (stack_freeh() + quad_free(mpg) + quad_free(mpg))
+    )
+    expect_snapshot_error(
+        quad_alignv(small_mat) + anno_left(initialize = FALSE) +
+            (stack_alignv() + ggheatmap(small_mat) + ggheatmap(small_mat))
+    )
 
     # incompatible direction
-    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
-        stack_freeh())
+    expect_snapshot_error(
+        quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+            stack_freeh()
+    )
 
     # incompatible aligning type
-    expect_error(quad_alignv(small_mat) + anno_top(initialize = FALSE) +
-        stack_alignh())
+    expect_snapshot_error(
+        quad_alignv(small_mat) + anno_top(initialize = FALSE) +
+            stack_alignh()
+    )
+
+    # update coords correctly
+    quad <- quad_alignv(small_mat) +
+        anno_bottom() +
+        anno_top(size = 0.2, initialize = FALSE) +
+        (stack_alignv(t(small_mat)) + align_dendro(k = 4))
+    expect_identical(quad@vertical, quad@top@layout)
+    expect_identical(quad@vertical, quad@bottom@layout)
+
+    quad <- quad_alignv(small_mat) +
+        anno_top() +
+        anno_bottom(size = 0.2, initialize = FALSE) +
+        (stack_alignv(t(small_mat)) + align_dendro(k = 4))
+    expect_identical(quad@vertical, quad@bottom@layout)
+    expect_identical(quad@vertical, quad@top@layout)
+})
+
+testthat::test_that("add `stack_layout()` builds well", {
+    set.seed(1L)
+    small_mat <- matrix(rnorm(72), nrow = 8)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    # quad_free() ------------------------------------------
+    expect_doppelganger(
+        "quad_alignh, add stack_alignh() in the top",
+        quad_alignh(small_mat) +
+            anno_left(size = 0.2, initialize = FALSE) +
+            (stack_alignh(small_mat) + align_dendro(k = 4))
+    )
+
+    # quad_alignv() ---------------------------------------
+    expect_doppelganger(
+        "quad_alignv, add stack_alignv() in the top",
+        quad_alignv(small_mat) +
+            anno_top(size = 0.2, initialize = FALSE) +
+            (stack_alignv(t(small_mat)) + align_dendro(k = 4))
+    )
 })
 
 testthat::test_that("`ggsave()` works well", {

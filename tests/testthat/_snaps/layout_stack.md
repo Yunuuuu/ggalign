@@ -80,3 +80,8 @@
     you must provide `data` argument in `quad_free()`
     i no data was found in `stack_align()`
 
+# add `with_quad()` works as expected
+
+    Cannot add `with_quad(geom_point())` to `stack_align()`
+    i Did you forget to add a `quad_layout()`?
+
