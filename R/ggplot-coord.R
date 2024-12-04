@@ -103,26 +103,22 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
             # set limits here, in this way, each plot will have the same limits
             cur_panel <- self$panel_counter + 1L
             if (!is.null(xlim_list)) {
-                xi <- recycle_whole(cur_panel, n_cycle)
+                xlim <- .subset2(xlim_list, recycle_whole(cur_panel, n_cycle))
                 if (scale_x$is_discrete()) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
-                    self$limits$x <- .subset2(xlim_list, xi) -
-                        (min(.subset2(xlim_list, xi)) - 0.5)
-                } else {
-                    self$limits$x <- .subset2(xlim_list, xi)
+                    xlim <- xlim - (min(xlim) - 0.5)
                 }
+                self$limits$x <- xlim
             }
             if (!is.null(ylim_list)) {
-                yi <- recycle_each(cur_panel, n_cycle)
+                ylim <- .subset2(ylim_list, recycle_each(cur_panel, n_cycle))
                 if (scale_y$is_discrete()) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
-                    self$limits$y <- .subset2(ylim_list, yi) -
-                        (min(.subset2(ylim_list, yi)) - 0.5)
-                } else {
-                    self$limits$y <- .subset2(ylim_list, yi)
+                    ylim <- ylim - (min(ylim) - 0.5)
                 }
+                self$limits$y <- ylim
             }
             self$panel_counter <- cur_panel
             ggproto_parent(ParentCoord, self)$setup_panel_params(
