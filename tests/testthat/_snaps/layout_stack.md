@@ -1,3 +1,45 @@
+# `stack_free` add object works well
+
+    Cannot add `align_dendro()` to `stack_free()`
+    i `stack_free()` cannot align observations
+
+---
+
+    Cannot add `align_dendro()` to `stack_free()`
+    i `stack_free()` cannot align observations
+
+---
+
+    Cannot add `quad_alignh()` to `stack_free()`
+    i `stack_free()` cannot align observations
+
+---
+
+    you must provide `data` argument in `quad_alignv()`
+    i no data was found in `stack_free()`
+
+---
+
+    Cannot add `quad_alignv()` to `stack_free()`
+    i `data` in `stack_free()` is a data frame, but `quad_alignv()` need a <matrix>.
+    i Try provide `data` in `quad_alignv()`
+
+---
+
+    Cannot add `quad_alignv()` to `stack_free()`
+    i `stack_free()` cannot align observations
+
+---
+
+    you must provide `data` argument in `quad_alignh()`
+    i no data was found in `stack_free()`
+
+---
+
+    Cannot add `quad_alignh()` to `stack_free()`
+    i `data` in `stack_free()` is a data frame, but `quad_alignh()` need a <matrix>.
+    i Try provide `data` in `quad_alignh()`
+
 # `stack_align` add `align-` object works well
 
     you must provide `data` in `align_dendro()`

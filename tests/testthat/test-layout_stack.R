@@ -34,6 +34,21 @@ testthat::test_that("`stack_free` works well", {
     expect_identical(x@layout, NULL)
 })
 
+testthat::test_that("`stack_free` add object works well", {
+    # add align_* objects
+    expect_snapshot_error(stack_freeh() + align_dendro())
+    expect_snapshot_error(stack_freev() + align_dendro())
+
+    # add quad_layout()
+    expect_snapshot_error(stack_freeh() + quad_alignh())
+    expect_snapshot_error(stack_freeh() + quad_alignv())
+    expect_snapshot_error(stack_freeh(mtcars) + quad_alignv())
+
+    expect_snapshot_error(stack_freev() + quad_alignv())
+    expect_snapshot_error(stack_freev() + quad_alignh())
+    expect_snapshot_error(stack_freev(mtcars) + quad_alignh())
+})
+
 testthat::test_that("`stack_align` add `align-` object works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
