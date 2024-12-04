@@ -6,9 +6,9 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_polygon
 #' @inheritParams ggplot2::geom_path
-#' @eval rd_gg_aesthetics("geom", "tile3d")
+#' @eval rd_gg_aesthetics("geom", "rect3d")
 #' @export
-geom_tile3d <- function(mapping = NULL, data = NULL, stat = "identity",
+geom_rect3d <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", ...,
                         lineend = "butt", linejoin = "round", linemitre = 10,
                         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
@@ -16,7 +16,7 @@ geom_tile3d <- function(mapping = NULL, data = NULL, stat = "identity",
         data = data,
         mapping = mapping,
         stat = stat,
-        geom = GeomTile3d,
+        geom = GeomRect3d,
         position = position,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
@@ -30,22 +30,23 @@ geom_tile3d <- function(mapping = NULL, data = NULL, stat = "identity",
 }
 
 #' @importFrom ggplot2 ggproto
-GeomTile3d <- ggproto(
-    "GeomTile3d",
-    ggplot2::GeomTile,
-    default_aes = ggplot2::GeomTile$default_aes,
-    required_aes = c(ggplot2::GeomTile$required_aes, "z"),
-    non_missing_aes = c(ggplot2::GeomTile$non_missing_aes, "z", "theta"),
+GeomRect3d <- ggproto(
+    "GeomRect3d",
+    ggplot2::GeomRect,
+    required_aes = c(ggplot2::GeomRect$required_aes, "z"),
+    non_missing_aes = c(ggplot2::GeomRect$non_missing_aes, "z", "theta"),
     setup_data = function(self, data, params) {
         if (any(data$z %||% .subset2(params, "z") < 0)) {
             cli_abort("value mapped to {.field z} aesthetic must >= 0")
         }
         theta <- data$theta %||% .subset2(params, "theta") %||% 60
         if (!is.null(theta) && any(theta <= 0 || theta >= 90)) {
-            cli_abort("value mapped to {.field theta} aesthetic must > 0 and < 90.")
+            cli_abort(
+                "value mapped to {.field theta} aesthetic must > 0 and < 90."
+            )
         }
         data$theta <- theta
-        data <- ggproto_parent(ggplot2::GeomTile, self)$setup_data(
+        data <- ggproto_parent(ggplot2::GeomRect, self)$setup_data(
             data, params
         )
         data <- vec_slice(data, order(
@@ -127,6 +128,50 @@ GeomTile3d <- ggproto(
                 linejoin = linejoin,
                 linemitre = linemitre
             )
+        )
+    }
+)
+
+#' @eval rd_gg_aesthetics("geom", "tile3d")
+#' @importFrom rlang list2
+#' @export
+#' @rdname geom_rect3d
+geom_tile3d <- function(mapping = NULL, data = NULL, stat = "identity",
+                        position = "identity", ...,
+                        lineend = "butt", linejoin = "round", linemitre = 10,
+                        na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+    ggplot2::layer(
+        data = data,
+        mapping = mapping,
+        stat = stat,
+        geom = GeomTile3d,
+        position = position,
+        show.legend = show.legend,
+        inherit.aes = inherit.aes,
+        params = list(
+            lineend = lineend,
+            linejoin = linejoin,
+            linemitre = linemitre,
+            na.rm = na.rm, ...
+        )
+    )
+}
+
+#' @importFrom ggplot2 ggproto ggproto_parent
+GeomTile3d <- ggproto(
+    "GeomTile3d",
+    ggplot2::GeomTile,
+    required_aes = c(ggplot2::GeomTile$required_aes, "z"),
+    non_missing_aes = c(ggplot2::GeomTile$non_missing_aes, "z", "theta"),
+    setup_data = function(self, data, params) {
+        data <- ggproto_parent(ggplot2::GeomTile, self)$setup_data(data, params)
+        ggproto_parent(GeomRect3d, self)$setup_data(data, params)
+    },
+    draw_panel = function(self, data, panel_params, coord, lineend = "butt",
+                          linejoin = "round", linemitre = 10) {
+        GeomRect3d$draw_panel(
+            data = data, panel_params = panel_params, coord = coord,
+            lineend = lineend, linejoin = linejoin, linemitre = linemitre
         )
     }
 )
