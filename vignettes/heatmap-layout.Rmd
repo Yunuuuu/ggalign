@@ -87,6 +87,25 @@ ggheatmap(small_mat, filling = NULL) +
     geom_tile(aes(fill = value), color = "black", width = 0.9, height = 0.9)
 ```
 
+A 3D heatmap can be easily created using the `geom_tile3d()` function. Note that
+`ggheatmap()` always sets limits to align plots with annotations, even when no
+annotations are present. Therefore, it is necessary to manually adjust the plot
+margins and the spacing between the legend and the panel area. Additionally,
+since guide legends are collected by the layout, the spacing should be specified
+in the theme argument of `ggheatmap()`.
+```{r}
+set.seed(123)
+ggheatmap(matrix(runif(100), 10),
+    filling = NULL,
+    theme = theme(legend.box.spacing = unit(5, "mm"))
+) +
+    geom_tile3d(aes(z = value, fill = value),
+        color = "black", width = 0.9, height = 0.9
+    ) +
+    coord_cartesian(clip = "off") +
+    theme(plot.margin = margin(t = 5, unit = "mm"))
+```
+
 A heatmap pie charts:
 ```{r}
 set.seed(123)
