@@ -121,7 +121,6 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                     align_method_params(workflow$initialize, character())
                 )
             ]))
-
             # initialize the plot object
             object$plot <- inject(workflow$ggplot(
                 !!!workflow$params[
@@ -158,7 +157,8 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
     update_layout_coords(
         stack,
         coords = new_coords,
-        object_name = object_name
+        object_name = object_name,
+        type = "tail"
     )
 }
 
@@ -195,20 +195,19 @@ quad_layout_add.ggalign_align_plot <- function(object, quad, object_name) {
     # add annotation -----------------------------
     stack <- stack_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
-    # skip the updating of layout coords if there are cross points in
-    # bottom or right annotation
-    if (any(position == c("top", "left")) ||
-        !is_cross_layout(stack) ||
-        is_empty(stack@cross_points)) {
-        opposite <- opposite_pos(position)
-        if (!is.null(opposite_stack <- slot(quad, opposite))) {
-            slot(quad, opposite) <- update_layout_coords(
-                opposite_stack,
-                coords = stack@layout,
-                object_name = object_name
-            )
-        }
-        slot(quad, direction) <- stack@layout
+    new_coords <- stack@layout
+
+    # if there are cross points in bottom or right annotation, the index
+    # should be the first index in the `index_list`
+    if (any(position == c("bottom", "right")) &&
+        is_cross_layout(stack) &&
+        !is_empty(stack@cross_points)) {
+        new_coords["index"] <- list(.subset2(stack@index_list, 1L))
     }
-    quad
+    update_layout_coords(
+        quad,
+        direction = direction,
+        coords = new_coords,
+        object_name = object_name
+    )
 }

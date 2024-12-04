@@ -40,23 +40,27 @@ update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
     if (is_horizontal(direction)) {
         if (!is.null(left <- layout@left)) {
             layout@left <- update_layout_coords(left,
-                coords = coords, object_name = object_name
+                coords = coords, object_name = object_name,
+                type = "tail"
             )
         }
         if (!is.null(right <- layout@right)) {
             layout@right <- update_layout_coords(right,
-                coords = coords, object_name = object_name
+                coords = coords, object_name = object_name,
+                type = "head"
             )
         }
     } else {
         if (!is.null(top <- layout@top)) {
             layout@top <- update_layout_coords(top,
-                coords = coords, object_name = object_name
+                coords = coords, object_name = object_name,
+                type = "tail"
             )
         }
         if (!is.null(bottom <- layout@bottom)) {
             layout@bottom <- update_layout_coords(bottom,
-                coords = coords, object_name = object_name
+                coords = coords, object_name = object_name,
+                type = "head"
             )
         }
     }
@@ -84,13 +88,20 @@ update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name) {
+update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
+                                             type = c("head", "tail")) {
     # for quad annotation stack, we may update coords even the annotation stack
     # won't align observations
     if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }
-    layout@layout <- coords
+    if (identical(type, "head") && !is_empty(layout@cross_points)) {
+        layout@layout["nobs"] <- list(.subset2(coords, "nobs"))
+        layout@layout["panel"] <- list(.subset2(coords, "panel"))
+        layout@index_list[1L] <- list(.subset2(coords, "index"))
+    } else {
+        layout@layout <- coords
+    }
     n_plots <- length(plot_list <- layout@plot_list)
     if (n_plots == 0L) {
         return(layout)
@@ -107,25 +118,33 @@ update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name) {
                 # we always prevent from reordering twice.
                 if (!is.null(old) && !all(old == new)) {
                     cli_abort(sprintf(
-                        "%s disrupt the previously established ordering index of %s (i)",
-                        object_name,
-                        object_name(layout)
-                    ), call = call)
+                        "%s disrupt the previously established ordering index of %s (%d)",
+                        object_name, object_name(layout), i
+                    ))
                 }
                 index_list[[i]] <- new
             }
             layout@index_list <- index_list
         }
-        # extract the last `cross_points`
-        # one for the `cross_link()` plot itself
-        index <- layout@cross_points[n_breaks] + 1L + 1L
-    } else {
-        index <- 1L
+        # extract the the first or the last `cross_points`
+        if (identical(type, "head")) { # update the head plots
+            index <- layout@cross_points[1L]
+            if (index == 0L) {
+                return(layout)
+            }
+            index <- seq_len(index)
+        } else { # update the tail plots
+            # one for the `cross_link()` plot itself
+            index <- layout@cross_points[n_breaks] + 1L + 1L
+            if (index > n_plots) {
+                return(layout)
+            }
+            index <- index:n_plots
+        }
+    } else { # if no breaks, update all plots
+        index <- seq_len(n_plots)
     }
-    if (index > n_plots) {
-        return(layout)
-    }
-    index <- index:n_plots
+
     layout@plot_list[index] <- lapply(plot_list[index], function(plot) {
         if (is_ggalign_plot(plot)) return(plot) # styler: off
         update_layout_coords(plot,

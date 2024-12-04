@@ -207,34 +207,31 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         layout_coords <- NULL
     } else if (!is.null(quad_coords)) {
         # both `quad_layout()` and `stack_layout()` need align observations
+        # if there are cross points in bottom or right annotation, the index
+        # should be the first index in the `index_list`
+        if (any(position == c("bottom", "right")) &&
+            is_cross_layout(object) &&
+            !is_empty(object@cross_points)) {
+            stack_coords["index"] <- .subset2(object@index_list, 1L)
+        }
         layout_coords <- check_layout_coords(
             quad_coords, stack_coords,
             old_name = object_name(quad),
             new_name = object_name
         )
-        # skip the updating of layout coords if there are cross points in
-        # bottom or right annotation
-        if (any(position == c("top", "left")) ||
-            !is_cross_layout(object) ||
-            is_empty(object@cross_points)) {
-            opposite <- opposite_pos(position)
-            if (!is.null(opposite_stack <- slot(quad, opposite))) {
-                slot(quad, opposite) <- update_layout_coords(
-                    opposite_stack,
-                    coords = layout_coords,
-                    object_name = object_name
-                )
-            }
-            slot(quad, direction) <- layout_coords
-        }
     } else {
         cli_abort(c(
             "Cannot add {.var {object_name}} to a {.fn {quad@name}}",
             i = "{.fn {quad@name}} cannot align observations in {.field {direction}} direction"
         ))
     }
+    # object@heatmap$position <- position
     slot(quad, position) <- object
-    quad
+    update_layout_coords(quad,
+        direction = direction,
+        coords = layout_coords,
+        object_name = object_name
+    )
 }
 
 #######################################################

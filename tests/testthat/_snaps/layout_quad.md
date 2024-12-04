@@ -122,3 +122,11 @@
     Cannot add `stack_alignh()` to `quad_alignv()`
     i only vertical stack is allowed in top annotation
 
+# add `cross_align()` builds well
+
+    align_dendro(k = 3, method = "ward.D2") disrupt the previously established ordering index of `cross_align()` (1)
+
+---
+
+    align_dendro(k = 4, method = "ward.D2") disrupt the previously established ordering index of `cross_align()` (1)
+
