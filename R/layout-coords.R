@@ -40,27 +40,25 @@ update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
     if (is_horizontal(direction)) {
         if (!is.null(left <- layout@left)) {
             layout@left <- update_layout_coords(left,
-                coords = coords, object_name = object_name,
-                type = "tail"
+                coords = coords, object_name = object_name
             )
         }
         if (!is.null(right <- layout@right)) {
             layout@right <- update_layout_coords(right,
                 coords = coords, object_name = object_name,
-                type = "head"
+                from_head = TRUE
             )
         }
     } else {
         if (!is.null(top <- layout@top)) {
             layout@top <- update_layout_coords(top,
-                coords = coords, object_name = object_name,
-                type = "tail"
+                coords = coords, object_name = object_name
             )
         }
         if (!is.null(bottom <- layout@bottom)) {
             layout@bottom <- update_layout_coords(bottom,
                 coords = coords, object_name = object_name,
-                type = "head"
+                from_head = TRUE
             )
         }
     }
@@ -89,13 +87,13 @@ update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
 #' @importFrom methods slot slot<-
 #' @export
 update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
-                                             type = c("head", "tail")) {
+                                             from_head = FALSE) {
     # for quad annotation stack, we may update coords even the annotation stack
     # won't align observations
     if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }
-    if (identical(type, "head") && !is_empty(layout@cross_points)) {
+    if (from_head && !is_empty(layout@cross_points)) {
         layout@layout["nobs"] <- list(.subset2(coords, "nobs"))
         layout@layout["panel"] <- list(.subset2(coords, "panel"))
         layout@index_list[1L] <- list(.subset2(coords, "index"))
@@ -127,7 +125,7 @@ update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
             layout@index_list <- index_list
         }
         # extract the the first or the last `cross_points`
-        if (identical(type, "head")) { # update the head plots
+        if (from_head) { # update the head plots
             index <- layout@cross_points[1L]
             if (index == 0L) {
                 return(layout)

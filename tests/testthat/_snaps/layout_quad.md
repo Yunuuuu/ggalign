@@ -124,9 +124,9 @@
 
 # add `cross_align()` builds well
 
-    align_dendro(k = 3, method = "ward.D2") disrupt the previously established ordering index of `cross_align()` (1)
+    align_dendro(k = 3, method = "ward.D2") disrupt the previously established ordering index of the right annotation `cross_align()` (1)
 
 ---
 
-    align_dendro(k = 4, method = "ward.D2") disrupt the previously established ordering index of `cross_align()` (1)
+    align_dendro(k = 4, method = "ward.D2") disrupt the previously established ordering index of the bottom annotation `cross_align()` (1)
 

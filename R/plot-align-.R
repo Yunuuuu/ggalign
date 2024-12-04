@@ -157,8 +157,7 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
     update_layout_coords(
         stack,
         coords = new_coords,
-        object_name = object_name,
-        type = "tail"
+        object_name = object_name
     )
 }
 

@@ -260,6 +260,8 @@ testthat::test_that("add `stack_layout()` builds well", {
         (stack_alignh(small_mat) + align_dendro(k = 4))
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
+    expect_identical(quad@left@heatmap$position, "left")
+    expect_identical(quad@right@heatmap$position, "right")
 
     quad <- quad_alignh(small_mat) +
         anno_left() +
@@ -267,6 +269,8 @@ testthat::test_that("add `stack_layout()` builds well", {
         (stack_alignh(small_mat) + align_dendro(k = 4))
     expect_identical(quad@horizontal, quad@right@layout)
     expect_identical(quad@horizontal, quad@left@layout)
+    expect_identical(quad@left@heatmap$position, "left")
+    expect_identical(quad@right@heatmap$position, "right")
 
     # quad_alignv() ---------------------------------------
     expect_snapshot_error(quad_alignv(small_mat) + stack_alignv())
@@ -308,6 +312,8 @@ testthat::test_that("add `stack_layout()` builds well", {
         (stack_alignv(t(small_mat)) + align_dendro(k = 4))
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
+    expect_identical(quad@bottom@heatmap$position, "bottom")
+    expect_identical(quad@top@heatmap$position, "top")
 
     quad <- quad_alignv(small_mat) +
         anno_top() +
@@ -315,6 +321,8 @@ testthat::test_that("add `stack_layout()` builds well", {
         (stack_alignv(t(small_mat)) + align_dendro(k = 4))
     expect_identical(quad@vertical, quad@bottom@layout)
     expect_identical(quad@vertical, quad@top@layout)
+    expect_identical(quad@bottom@heatmap$position, "bottom")
+    expect_identical(quad@top@heatmap$position, "top")
 })
 
 testthat::test_that("add `stack_layout()` builds well", {

@@ -225,7 +225,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
             i = "{.fn {quad@name}} cannot align observations in {.field {direction}} direction"
         ))
     }
-    # object@heatmap$position <- position
+    object@heatmap$position <- position
     slot(quad, position) <- object
     update_layout_coords(quad,
         direction = direction,
