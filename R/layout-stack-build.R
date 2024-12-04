@@ -94,41 +94,22 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
-    remove_spaces <- is_string(stack_spaces) && !is.null(position)
-    coords <- setup_layout_coords(stack@layout)
-
-    for (plot in plot_list) {
-        if (is_ggalign_plot(plot)) {
-            # always re-design `free_spaces` for single plot
-            plot_controls <- inherit_controls(
-                .subset2(plot, "controls"), controls
-            )
-            if (remove_spaces) {
-                align_spaces <- .subset2(
-                    .subset2(plot_controls, "plot_align"), "free_spaces"
-                )
-                if (is_string(align_spaces)) {
-                    align_spaces <- setdiff_position(align_spaces, stack_spaces)
-                    if (!nzchar(align_spaces)) align_spaces <- NULL
-                    plot_controls$plot_align["free_spaces"] <- list(
-                        align_spaces
-                    )
-                }
-            }
-        } else {
-            plot_controls <- inherit_controls(plot@controls, controls)
-        }
-        composer <- stack_composer_add(
-            plot = plot,
-            composer = composer,
-            controls = plot_controls,
-            coords = coords,
-            extra_coords = extra_coords,
-            direction = direction,
-            position = position
-        )
+    if (is_string(stack_spaces) && !is.null(position)) {
+        released_spaces <- stack_spaces
+    } else {
+        released_spaces <- NULL
     }
-    composer
+    coords <- setup_layout_coords(stack@layout)
+    stack_composer_add(
+        plot_list,
+        composer,
+        controls = controls,
+        coords = coords,
+        extra_coords = extra_coords,
+        direction = direction,
+        position = position,
+        released_spaces = released_spaces
+    )
 }
 
 make_order <- function(order) {

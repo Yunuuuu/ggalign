@@ -149,3 +149,38 @@ stack_composer_add.QuadLayout <- function(plot, composer, controls, ...) {
     }
     composer
 }
+
+#' @export
+stack_composer_add.list <- function(plot, composer, ..., controls,
+                                    released_spaces) {
+    for (p in plot) {
+        if (is_ggalign_plot(p)) {
+            # for `released_spaces`, release the free_spaces in a single plot
+            plot_controls <- inherit_controls(.subset2(p, "controls"), controls)
+            if (!is.null(released_spaces)) {
+                align_spaces <- .subset2(
+                    .subset2(plot_controls, "plot_align"), "free_spaces"
+                )
+                if (is_string(align_spaces)) {
+                    align_spaces <- setdiff_position(
+                        align_spaces,
+                        released_spaces
+                    )
+                    if (!nzchar(align_spaces)) align_spaces <- NULL
+                    plot_controls$plot_align["free_spaces"] <- list(
+                        align_spaces
+                    )
+                }
+            }
+        } else {
+            plot_controls <- inherit_controls(p@controls, controls)
+        }
+        composer <- stack_composer_add(
+            plot = p,
+            composer = composer,
+            controls = plot_controls,
+            ...
+        )
+    }
+    composer
+}

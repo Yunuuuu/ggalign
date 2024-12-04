@@ -91,7 +91,12 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
-    remove_spaces <- is_string(stack_spaces) && !is.null(position)
+    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
+    if (is_string(stack_spaces) && !is.null(position)) {
+        released_spaces <- stack_spaces
+    } else {
+        released_spaces <- NULL
+    }
     previous_coords <- NULL
     for (i in seq_along(plot_list)) {
         plots <- .subset2(plot_list, i)
@@ -131,39 +136,17 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
             }
         }, integer(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, make_order(plot_order))
-
-        for (plot in plots) {
-            if (is_ggalign_plot(plot)) {
-                # always re-design `free_spaces` for single plot
-                plot_controls <- inherit_controls(
-                    .subset2(plot, "controls"), controls
-                )
-                if (remove_spaces) {
-                    align_spaces <- .subset2(
-                        .subset2(plot_controls, "plot_align"), "free_spaces"
-                    )
-                    if (is_string(align_spaces)) {
-                        align_spaces <- setdiff_position(align_spaces, stack_spaces)
-                        if (!nzchar(align_spaces)) align_spaces <- NULL
-                        plot_controls$plot_align["free_spaces"] <- list(
-                            align_spaces
-                        )
-                    }
-                }
-            } else {
-                plot_controls <- inherit_controls(plot@controls, controls)
-            }
-            composer <- stack_composer_add(
-                plot = plot,
-                composer = composer,
-                controls = plot_controls,
-                coords = coords,
-                extra_coords = extra_coords,
-                previous_coords = previous_coords,
-                direction = direction,
-                position = position
-            )
-        }
+        composer <- stack_composer_add(
+            plots,
+            composer,
+            controls = controls,
+            coords = coords,
+            extra_coords = extra_coords,
+            direction = direction,
+            position = position,
+            released_spaces = released_spaces,
+            previous_coords = previous_coords
+        )
         previous_coords <- coords
     }
     composer
