@@ -80,6 +80,24 @@
     you must provide `data` argument in `quad_free()`
     i no data was found in `stack_align()`
 
+---
+
+    Cannot add `cross_alignh()` to `stack_align()` (direction: horizontal)
+
+---
+
+    Cannot add `(quad_alignh() + anno_left(initialize = FALSE) + cross_alignh())` to `stack_align()`
+    i left or right annotation contains `cross_layout()`
+
+---
+
+    Cannot add `cross_alignv()` to `stack_align()` (direction: vertical)
+
+---
+
+    Cannot add `(quad_alignv() + anno_top(initialize = FALSE) + cross_alignv())` to `stack_align()`
+    i top or bottom annotation contains `cross_layout()`
+
 # add `with_quad()` works as expected
 
     Cannot add `with_quad(geom_point())` to `stack_align()`
