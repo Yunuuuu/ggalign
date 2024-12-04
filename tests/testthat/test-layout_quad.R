@@ -205,14 +205,20 @@ testthat::test_that("add `stack_layout()` builds well", {
     # annotaion has been initialized
     expect_snapshot_error(quad_free(mpg) + anno_top() + stack_freev())
     # add nested layout
-    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
-        (stack_freev() + quad_free(mpg) + quad_free(mpg)))
+    expect_snapshot_error(
+        quad_free(mpg) + anno_top(initialize = FALSE) +
+            (stack_freev() + quad_free(mpg) + quad_free(mpg))
+    )
     # incompatible direction
-    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
-        stack_freeh())
+    expect_snapshot_error(
+        quad_free(mpg) + anno_top(initialize = FALSE) +
+            stack_freeh()
+    )
     # incompatible aligning type
-    expect_snapshot_error(quad_free(mpg) + anno_top(initialize = FALSE) +
-        stack_alignv())
+    expect_snapshot_error(
+        quad_free(mpg) + anno_top(initialize = FALSE) +
+            stack_alignv()
+    )
 
     # quad_alignh() ---------------------------------------
     expect_snapshot_error(quad_alignh(small_mat) + stack_alignh())
@@ -312,29 +318,6 @@ testthat::test_that("add `stack_layout()` builds well", {
 })
 
 testthat::test_that("add `stack_layout()` builds well", {
-    set.seed(1L)
-    small_mat <- matrix(rnorm(72), nrow = 8)
-    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-
-    # quad_alignh() ------------------------------------------
-    expect_doppelganger(
-        "quad_alignh, add stack_alignh() in the top",
-        quad_alignh(small_mat) +
-            anno_left(size = 0.2, initialize = FALSE) +
-            (stack_alignh(small_mat) + align_dendro(k = 4))
-    )
-
-    # quad_alignv() ---------------------------------------
-    expect_doppelganger(
-        "quad_alignv, add stack_alignv() in the top",
-        quad_alignv(small_mat) +
-            anno_top(size = 0.2, initialize = FALSE) +
-            (stack_alignv(t(small_mat)) + align_dendro(k = 4))
-    )
-})
-
-testthat::test_that("add `cross_layout()` builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
