@@ -2,6 +2,7 @@
 % Please edit documentation in R/align-dendrogram.R
 \name{align_dendro}
 \alias{align_dendro}
+\alias{align_hclust}
 \title{Reorder or Group observations based on hierarchical clustering}
 \usage{
 align_dendro(
@@ -33,6 +34,21 @@ align_dendro(
   set_context = deprecated(),
   order = deprecated(),
   name = deprecated()
+)
+
+align_hclust(
+  distance = "euclidean",
+  method = "complete",
+  use_missing = "pairwise.complete.obs",
+  reorder_dendrogram = FALSE,
+  merge_dendrogram = FALSE,
+  reorder_group = FALSE,
+  k = NULL,
+  h = NULL,
+  cutree = NULL,
+  root = NULL,
+  data = NULL,
+  active = NULL
 )
 }
 \arguments{
@@ -148,7 +164,8 @@ A \code{"AlignDendro"} object.
 
 This function aligns observations within the layout according to a
 hierarchical clustering tree, enabling reordering or grouping of elements
-based on clustering results.
+based on clustering results. \code{align_dendro} differs from \code{align_hclust} in
+that it will add a plot area.
 }
 \section{ggplot2 specification}{
 
@@ -202,9 +219,15 @@ along a single axis.
 }
 
 \examples{
+# align_dendro will always add a plot area
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top() +
     align_dendro()
+ggheatmap(matrix(rnorm(81), nrow = 9)) +
+    anno_top() +
+    align_dendro(k = 3L)
+
+# align_hclust won't add a dendrogram
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top() +
     align_dendro(k = 3L)

@@ -5,7 +5,8 @@
 #'
 #' This function aligns observations within the layout according to a
 #' hierarchical clustering tree, enabling reordering or grouping of elements
-#' based on clustering results.
+#' based on clustering results. `align_dendro` differs from `align_hclust` in
+#' that it will add a plot area.
 #'
 #' @param data A matrix-like object. By default, it inherits from the layout
 #'   `matrix`.
@@ -72,15 +73,17 @@
 #' @inheritSection align Axis Alignment for Observations
 #' @return A `"AlignDendro"` object.
 #' @examples
+#' # align_dendro will always add a plot area
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
 #'     align_dendro()
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
 #'     align_dendro(k = 3L)
+#'
 #' @seealso
-#' - [dendrogram_data()]
-#' - [hclust2()]
+#' - [`dendrogram_data()`]
+#' - [`hclust2()`]
 #' @importFrom ggplot2 aes
 #' @importFrom rlang list2
 #' @export
@@ -109,6 +112,10 @@ align_dendro <- function(mapping = aes(), ...,
             "{.arg reorder_dendrogram} must be a single boolean value or a function"
         )
     }
+
+    assert_number_whole(k, allow_null = TRUE)
+    assert_number_decimal(h, allow_null = TRUE)
+    assert_bool(plot_cut_height, allow_null = TRUE, arg = "plot_cut_height")
     assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
     cutree <- allow_lambda(cutree)
@@ -124,7 +131,7 @@ align_dendro <- function(mapping = aes(), ...,
     }
     assert_active(active)
     active <- update_active(active, new_active(
-        use = plot_dendrogram, order = NA_integer_, name = NA_character_
+        use = TRUE, order = NA_integer_, name = NA_character_
     ))
     active <- deprecate_active(active, "align_dendro",
         set_context = set_context, order = order, name = name
@@ -141,7 +148,8 @@ align_dendro <- function(mapping = aes(), ...,
             reorder_group = reorder_group,
             cutree = cutree,
             mapping = mapping,
-            plot_dendrogram = plot_dendrogram
+            plot_dendrogram = plot_dendrogram,
+            plot = TRUE
         ),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
@@ -153,22 +161,72 @@ align_dendro <- function(mapping = aes(), ...,
     )
 }
 
+#' @examples
+#' # align_hclust won't add a dendrogram
+#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
+#'     anno_top() +
+#'     align_dendro(k = 3L)
+#' @rdname align_dendro
+#' @export
+align_hclust <- function(distance = "euclidean",
+                         method = "complete",
+                         use_missing = "pairwise.complete.obs",
+                         reorder_dendrogram = FALSE,
+                         merge_dendrogram = FALSE,
+                         reorder_group = FALSE,
+                         k = NULL, h = NULL, cutree = NULL,
+                         root = NULL, data = NULL, active = NULL) {
+    reorder_dendrogram <- allow_lambda(reorder_dendrogram)
+    if (!rlang::is_bool(reorder_dendrogram) &&
+        !is.null(reorder_dendrogram) &&
+        !is.function(reorder_dendrogram)) {
+        cli_abort(
+            "{.arg reorder_dendrogram} must be a single boolean value or a function"
+        )
+    }
+    assert_number_whole(k, allow_null = TRUE)
+    assert_number_decimal(h, allow_null = TRUE)
+    assert_bool(merge_dendrogram)
+    assert_bool(reorder_group)
+    cutree <- allow_lambda(cutree)
+    assert_(cutree, is.function, "a function", allow_null = TRUE)
+    if (is.null(data)) {
+        if (inherits(method, "hclust") || inherits(method, "dendrogram")) {
+            data <- NULL # no need for data
+        } else {
+            data <- waiver()
+        }
+    }
+    assert_active(active)
+    active <- update_active(active, new_active(
+        use = FALSE, order = NA_integer_, name = NA_character_
+    ))
+    align(
+        align_class = AlignDendro,
+        params = list(
+            distance = distance, method = method, use_missing = use_missing,
+            k = k, h = h, plot_cut_height = FALSE,
+            segment_params = NULL, type = NULL,
+            center = FALSE, root = root,
+            reorder_dendrogram = reorder_dendrogram,
+            merge_dendro = FALSE,
+            reorder_group = reorder_group,
+            cutree = cutree,
+            mapping = NULL,
+            plot_dendrogram = FALSE,
+            plot = FALSE
+        ),
+        active = active,
+        controls = new_controls(),
+        data = data
+    )
+}
+
 #' @importFrom ggplot2 ggproto aes
 AlignDendro <- ggproto("AlignDendro", Align,
     #' @importFrom stats reorder
     setup_params = function(self, nobs, params) {
         call <- .subset2(self, "call")
-        assert_number_whole(.subset2(params, "k"),
-            allow_null = TRUE, arg = "k", call = call
-        )
-        assert_number_decimal(.subset2(params, "h"),
-            allow_null = TRUE, arg = "h", call = call
-        )
-        assert_bool(
-            .subset2(params, "plot_cut_height"),
-            allow_null = TRUE,
-            arg = "plot_cut_height", call = call
-        )
         # setup the default value for `plot_cut_height`
         params$plot_cut_height <- .subset2(params, "plot_cut_height") %||% (
             # we by default don't draw the height of the user-provided cutree
@@ -315,6 +373,8 @@ AlignDendro <- ggproto("AlignDendro", Align,
             if (nlevels(panel) == 1L) {
                 statistics <- .subset2(statistics, 1L)
             } else if (merge_dendro) {
+                # we have a function named merge_dendrogram(), so we use
+                # parameter `merge_dendro`
                 # `merge_dendrogram` will follow the order of the parent
                 statistics <- lapply(statistics, stats::as.dendrogram)
                 statistics <- merge_dendrogram(parent, statistics)
@@ -374,35 +434,24 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     #' @importFrom ggplot2 aes ggplot
     #' @importFrom rlang inject
-    ggplot = function(self, plot_dendrogram, mapping, segment_params) {
-        if (!plot_dendrogram) {
+    ggplot = function(self, plot, mapping) {
+        if (!plot) {
             return(NULL)
         }
-        direction <- .subset2(self, "direction")
         ggplot(
             mapping = add_default_mapping(
                 mapping, aes(x = .data$x, y = .data$y)
             )
         ) +
-            inject(
-                ggplot2::geom_segment(
-                    mapping = aes(
-                        x = .data$x, y = .data$y,
-                        xend = .data$xend, yend = .data$yend
-                    ),
-                    !!!segment_params,
-                    stat = "identity",
-                    data = function(data) ggalign_attr(data, "edge")
-                )
-            ) +
             switch_direction(
-                direction,
+                .subset2(self, "direction"),
                 ggplot2::labs(x = "height"),
                 ggplot2::labs(y = "height")
             )
     },
     draw = function(self, plot, panel, index, extra_panel, extra_index,
                     # other argumentds
+                    plot_dendrogram, segment_params,
                     plot_cut_height, center, type, root) {
         direction <- .subset2(self, "direction")
         statistics <- .subset2(self, "statistics")
@@ -472,6 +521,19 @@ AlignDendro <- ggproto("AlignDendro", Align,
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data
         plot$data <- ggalign_attr_set(node, list(edge = edge))
+        if (plot_dendrogram) {
+            plot <- plot + inject(
+                layer_order(ggplot2::geom_segment(
+                    mapping = aes(
+                        x = .data$x, y = .data$y,
+                        xend = .data$xend, yend = .data$yend
+                    ),
+                    !!!segment_params,
+                    stat = "identity",
+                    data = edge
+                ))
+            )
+        }
         position <- .subset2(self, "position")
         if (is.null(position) || !isTRUE(plot$coordinates$default)) {
             # if the dendrogram is in a normal stack layout
