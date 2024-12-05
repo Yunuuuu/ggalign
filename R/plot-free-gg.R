@@ -53,7 +53,7 @@ free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
     plot <- data
     # In ggplot2, `waiver()` was regard to no data
     data <- .subset2(plot, "data") %|w|% NULL
-    plot["data"] <- list(NULL)
+    plot["data"] <- list(waiver())
     new_free_gg(plot, data, size = size, active = active)
 }
 
