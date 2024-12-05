@@ -23,7 +23,6 @@
 #' transforming it as necessary for statistic calculations. By default, it will
 #' inherit from the layout matrix.
 #' @inheritParams align_order
-#' @return A `"AlignReorder"` object.
 #' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

@@ -73,7 +73,6 @@
 #'  - `.extra_panel`: the panel information for column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
-#' @return A `"AlignGG"` object.
 #' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

@@ -43,9 +43,6 @@ argument instead.}
 \item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
 instead.}
 }
-\value{
-A \code{"AlignReorder"} object.
-}
 \description{
 Reorders layout observations based on specific statistics.
 }

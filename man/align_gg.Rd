@@ -77,9 +77,6 @@ instead.}
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{\link[=plot_align]{plot_align()}} function instead.}
 }
-\value{
-A \code{"AlignGG"} object.
-}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

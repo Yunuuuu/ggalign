@@ -71,7 +71,6 @@
 #'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
 #' @inheritSection align Axis Alignment for Observations
-#' @return A `"AlignDendro"` object.
 #' @examples
 #' # align_dendro will always add a plot area
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

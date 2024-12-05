@@ -24,7 +24,6 @@
 #' will inherit from the layout matrix.
 #' @inheritParams align
 #' @inheritParams align_gg
-#' @return A `"AlignOrder"` object.
 #' @inheritSection align Axis Alignment for Observations
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
