@@ -47,7 +47,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
         set_context = set_context, name = name
     )
     align(
-        align_class = AlignReorder,
+        align = AlignReorder,
         params = list(
             stat = stat,
             stat_params = list2(...),

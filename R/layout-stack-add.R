@@ -4,7 +4,7 @@ stack_layout_add <- function(object, stack, object_name) {
 }
 
 stack_plot_add <- function(plot, object, object_name, force) {
-    if (inherits(plot, "ggalign_align_align")) {
+    if (is_align(plot)) {
         # if `align` has plot, we added the object
         if (force || !is.null(.subset2(plot, "plot"))) {
             plot <- align_add(object, plot, object_name)

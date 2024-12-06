@@ -70,12 +70,12 @@ testthat::test_that("`stack_align` add `align-` object works well", {
     stack <- stack_alignh(small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@layout$panel,
-        .subset2(stack@plot_list, 1L)$workflow$panel
+        .subset2(stack@plot_list, 1L)$align$panel
     )
     expect_identical(
         stack@layout$index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)$workflow$panel,
+            .subset2(stack@plot_list, 1L)$align$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )
@@ -95,12 +95,12 @@ testthat::test_that("`stack_align` add `align-` object works well", {
     stack <- stack_alignv(small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@layout$panel,
-        .subset2(stack@plot_list, 1L)$workflow$panel
+        .subset2(stack@plot_list, 1L)$align$panel
     )
     expect_identical(
         stack@layout$index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)$workflow$panel,
+            .subset2(stack@plot_list, 1L)$align$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )

@@ -1,15 +1,15 @@
 # Since `ggalign_align_plot` object need act with the layout, we Use R6 object
 # here
-new_align_plot <- function(..., no_axes = NULL, align_class = AlignProto,
+new_align_plot <- function(..., no_axes = NULL, align = AlignProto,
                            class = character(),
                            call = caller_call()) {
     assert_bool(no_axes, allow_null = TRUE, call = call)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     # used to provide error message
-    align_class$call <- call
+    align$call <- call
     new_ggalign_plot(
-        workflow = align_class, no_axes = no_axes,
+        align = align, no_axes = no_axes,
         ...,
         class = c(class, "ggalign_align_plot"),
         call = call
@@ -25,12 +25,11 @@ AlignProto <- ggproto("AlignProto",
         assign("isLock", value = FALSE, envir = self)
     },
     params = list(),
-    # All parameters in `$initialize()` method can be used in
-    # `$ggplot()`, and `$finish()` methods
-    initialize = function(self, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    # when added to the `Layout` object, will call `$align` method
+    align = function(self, direction, position, object_name,
+                     layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
-            "%s, has not implemented a {.fn initialize} method",
+            "%s, has not implemented a {.fn align} method",
             "{.fn {snake_class(self)}}"
         ))
     },
@@ -63,17 +62,17 @@ AlignProto <- ggproto("AlignProto",
 #' @export
 plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
     # let `Align` to determine how to build the plot
-    workflow <- .subset2(plot, "workflow") # `Align` object
+    align <- .subset2(plot, "align") # `AlignProto` object
 
     # we lock the Align object to prevent user from modifying this object
     # in `$build` method, we shouldn't do any calculations in `$build` method
-    workflow$lock()
-    on.exit(workflow$unlock())
+    align$lock()
+    on.exit(align$unlock())
     dots <- list(..., direction = direction, controls = controls)
-    ans <- inject(workflow$build(plot = .subset2(plot, "plot"), !!!dots[
+    ans <- inject(align$build(plot = .subset2(plot, "plot"), !!!dots[
         vec_set_intersect(
             names(dots),
-            align_method_params(workflow$build, character())
+            align_method_params(align$build, character())
         )
     ]))
 
@@ -104,7 +103,7 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                 i = sprintf("%s cannot align observations", object_name(stack))
             ))
         } else {
-            workflow <- .subset2(object, "workflow")
+            align <- .subset2(object, "align")
             dots <- list(
                 direction = stack@direction,
                 position = .subset2(stack@heatmap, "position"),
@@ -115,32 +114,32 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
             )
             # this step the object will act with the stack layout
             # group rows into panel or reorder rows
-            new_coords <- inject(workflow$initialize(!!!dots[
+            new_coords <- inject(align$align(!!!dots[
                 vec_set_intersect(
                     names(dots),
-                    align_method_params(workflow$initialize, character())
+                    align_method_params(align$align, character())
                 )
             ]))
             # initialize the plot object
-            object$plot <- inject(workflow$ggplot(
-                !!!workflow$params[
+            object$plot <- inject(align$ggplot(
+                !!!align$params[
                     vec_set_intersect(
-                        names(workflow$params),
-                        align_method_params(workflow$ggplot, character())
+                        names(align$params),
+                        align_method_params(align$ggplot, character())
                     )
                 ],
                 !!!dots[
                     vec_set_intersect(
                         names(dots),
-                        align_method_params(workflow$ggplot, character())
+                        align_method_params(align$ggplot, character())
                     )
                 ]
             ))
             # finally, we let the object do some changes in the layout
-            stack <- inject(workflow$finish(stack, !!!dots[
+            stack <- inject(align$finish(stack, !!!dots[
                 vec_set_intersect(
                     names(dots),
-                    align_method_params(workflow$finish, character())
+                    align_method_params(align$finish, character())
                 )
             ]))
             stack <- stack_add_plot(

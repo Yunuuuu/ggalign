@@ -7,7 +7,7 @@
 \title{Create a New \code{align} Object}
 \usage{
 align(
-  align_class,
+  align,
   params,
   data,
   size = NULL,
@@ -26,9 +26,9 @@ align(
 )
 }
 \arguments{
-\item{align_class}{A \code{Align} object.}
+\item{align}{An \code{Align} object.}
 
-\item{params}{A list of parameters for \code{align_class}.}
+\item{params}{A list of parameters for \code{align}.}
 
 \item{data}{Options for \code{data}:
 \itemize{
@@ -44,7 +44,7 @@ align(
 
 \item{controls}{Options for \code{controls}:
 \itemize{
-\item \code{NULL}: Used when \verb{align_*()} functions do not add a plot.
+\item \code{NULL}: Used when \code{align} do not add a plot.
 \item \code{\link[ggplot2:waiver]{waiver()}}: Try to infer \code{controls} based on \code{data}.
 }}
 
@@ -55,7 +55,7 @@ align(
 
 \item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
 removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
-default, will controled by the option-
+default, will use the option-
 \code{"ggalign.align_no_axes"}.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
@@ -88,8 +88,8 @@ A new \code{align} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-An \code{align} object interacts with the \code{layout} object to reorder or split
-observations and, in some cases, add plot components to the \code{layout}.
+An \code{Align} object interacts with the \code{Layout} object to reorder or split
+observations and, in some cases, add plot components to the \code{Layout}.
 }
 \details{
 Each of the \verb{Align*} objects is just a \code{\link[ggplot2:ggproto]{ggproto()}}

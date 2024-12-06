@@ -67,9 +67,8 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
     # we remove the plot without actual plot area
     keep <- vapply(plot_list, function(plot) {
         # we remove align objects without plot area
-        # Now, only `ggalign_align_align` will contain `NULL`
-        !inherits(plot, "ggalign_align_align") ||
-            !is.null(.subset2(plot, "plot"))
+        # Now, only `ggalign_align` will contain `NULL`
+        !is_align(plot) || !is.null(.subset2(plot, "plot"))
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
     if (is_empty(plot_list)) return(NULL) # styler: off

@@ -3,11 +3,11 @@
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' An `align` object interacts with the `layout` object to reorder or split
-#' observations and, in some cases, add plot components to the `layout`.
+#' An `Align` object interacts with the `Layout` object to reorder or split
+#' observations and, in some cases, add plot components to the `Layout`.
 #'
-#' @param align_class A `Align` object.
-#' @param params A list of parameters for `align_class`.
+#' @param align An `Align` object.
+#' @param params A list of parameters for `align`.
 #' @param data Options for `data`:
 #'  - A matrix, data frame, or atomic vector.
 #'  - [`waiver()`][ggplot2::waiver]: Uses the `layout matrix`.
@@ -18,7 +18,7 @@
 #' @param size The relative size of the plot, can be specified as a
 #' [`unit`][grid::unit].
 #' @param controls Options for `controls`:
-#'  - `NULL`: Used when `align_*()` functions do not add a plot.
+#'  - `NULL`: Used when `align` do not add a plot.
 #'  - [`waiver()`][ggplot2::waiver]: Try to infer `controls` based on `data`.
 #'
 #' @param limits Logical; if `TRUE`, sets layout limits for the plot.
@@ -26,7 +26,7 @@
 #'   `limits` will also be set to `FALSE`.
 #' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
-#'   default, will controled by the option-
+#'   default, will use the option-
 #'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
 #' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
@@ -68,7 +68,7 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-align <- function(align_class, params, data, size = NULL, controls = NULL,
+align <- function(align, params, data, size = NULL, controls = NULL,
                   limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
@@ -78,7 +78,7 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
         call <- current_call()
     }
     deprecate_action(
-        snake_class(align_class),
+        snake_class(align),
         plot_data = plot_data,
         theme = theme,
         free_guides = free_guides,
@@ -96,7 +96,7 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
     )
 
     # Warn about extra params or missing parameters ---------------
-    all <- align_class$parameters()
+    all <- align$parameters()
     if (isTRUE(check.param)) {
         if (length(extra_param <- vec_set_difference(names(params), all))) { # nolint
             cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
@@ -107,10 +107,9 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
     }
 
     new_align_plot(
-        # wrap all elements into this annotation ---------------------
-        align_class = ggproto(
+        align = ggproto(
             NULL,
-            align_class,
+            align,
             # Following fields will be initialzed when added into the layout
             # and will be saved and accessed across the plot rendering process
             direction = NULL,
@@ -134,10 +133,12 @@ align <- function(align_class, params, data, size = NULL, controls = NULL,
         active = active,
         size = size,
         controls = controls,
-        class = "ggalign_align_align",
+        class = "ggalign_align",
         call = call
     )
 }
+
+is_align <- function(x) inherits(x, "ggalign_align")
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
@@ -171,8 +172,8 @@ Align <- ggproto("Align", AlignProto,
             self$extra_params
         )
     },
-    initialize = function(self, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    align = function(self, direction, position, object_name,
+                     layout_data, layout_coords, layout_name) {
         self$direction <- direction
         self$position <- position
         input_data <- .subset2(self, "input_data")

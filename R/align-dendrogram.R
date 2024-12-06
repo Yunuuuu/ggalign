@@ -136,7 +136,7 @@ align_dendro <- function(mapping = aes(), ...,
         set_context = set_context, order = order, name = name
     )
     align(
-        align_class = AlignDendro,
+        align = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
@@ -201,7 +201,7 @@ align_hclust <- function(distance = "euclidean",
         use = FALSE, order = NA_integer_, name = NA_character_
     ))
     align(
-        align_class = AlignDendro,
+        align = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = FALSE,

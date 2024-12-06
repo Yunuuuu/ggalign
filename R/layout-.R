@@ -111,8 +111,8 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 }
 
 #' @export
-ggalign_stat.ggalign_align_align <- function(x, ...) {
-    .subset2(.subset2(x, "workflow"), "statistics")
+ggalign_stat.ggalign_align <- function(x, ...) {
+    .subset2(.subset2(x, "align"), "statistics")
 }
 
 #' @export

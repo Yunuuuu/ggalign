@@ -24,7 +24,7 @@ align_group <- function(group, active = NULL, set_context = deprecated(),
         set_context = set_context, name = name
     )
     align(
-        align_class = AlignGroup,
+        align = AlignGroup,
         params = list(group = group),
         data = NULL, active = active,
         check.param = TRUE

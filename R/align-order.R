@@ -70,7 +70,7 @@ align_order <- function(weights = rowMeans, ...,
         set_context = set_context, name = name
     )
     align(
-        align_class = AlignOrder,
+        align = AlignOrder,
         params = list(
             weights = weights,
             weights_params = list2(...),

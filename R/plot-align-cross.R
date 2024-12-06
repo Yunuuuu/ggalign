@@ -1,4 +1,5 @@
 #' Connect two layout crosswise
+#'
 #' @description
 #' `cross_link` resets the layout ordering index of a [`cross_align()`]. This
 #' allows you to add other `align_*` objects to define a new layout ordering
@@ -37,7 +38,7 @@ cross_link <- function(mapping = aes(), size = NULL,
         use = TRUE, order = NA_integer_, name = NA_character_
     ))
     new_align_plot(
-        align_class = ggproto(
+        align = ggproto(
             NULL,
             CrossLink,
             params = list(mapping = mapping)
@@ -51,8 +52,8 @@ is_cross_link <- function(x) inherits(x, "ggalign_cross_link")
 
 #' @importFrom ggplot2 ggproto ggplot
 CrossLink <- ggproto("CrossLink", AlignProto,
-    initialize = function(self, direction, position, layout_coords,
-                          object_name, layout_name) {
+    align = function(self, direction, position, layout_coords,
+                     object_name, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(
                 "layout observations for %s must be initialized before adding {.var {object_name}}",
@@ -90,7 +91,10 @@ CrossLink <- ggproto("CrossLink", AlignProto,
             hand = factor(
                 vec_rep_each(
                     c("left", "right"),
-                    c(.subset2(previous_coords, "nobs"), .subset2(coords, "nobs"))
+                    c(
+                        .subset2(previous_coords, "nobs"),
+                        .subset2(coords, "nobs")
+                    )
                 ),
                 c("left", "right")
             )

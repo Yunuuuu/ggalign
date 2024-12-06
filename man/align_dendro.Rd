@@ -126,7 +126,7 @@ middle of all direct child nodes.}
 
 \item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
 removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
-default, will controled by the option-
+default, will use the option-
 \code{"ggalign.align_no_axes"}.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when

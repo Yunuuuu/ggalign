@@ -27,7 +27,7 @@ align_kmeans <- function(centers, ..., data = NULL,
         set_context = set_context, name = name
     )
     align(
-        align_class = AlignKmeans,
+        align = AlignKmeans,
         params = list(centers = centers, params = list2(...)),
         active = active,
         data = data %||% waiver()
