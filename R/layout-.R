@@ -49,7 +49,8 @@ methods::setMethod("show", "Layout", function(object) {
 
 #' Subset a `Layout` object
 #'
-#' Used by [ggplot_build][ggplot2::ggplot_build] and [ggsave][ggplot2::ggsave]
+#' Used by [`ggplot_build`][ggplot2::ggplot_build] and
+#' [`ggsave`][ggplot2::ggsave]
 #'
 #' @param x A `Layout` object
 #' @param name A string of slot name in `Layout` object.

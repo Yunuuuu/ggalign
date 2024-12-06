@@ -15,6 +15,7 @@
 The slot value.
 }
 \description{
-Used by \link[ggplot2:ggplot_build]{ggplot_build} and \link[ggplot2:ggsave]{ggsave}
+Used by \code{\link[ggplot2:ggplot_build]{ggplot_build}} and
+\code{\link[ggplot2:ggsave]{ggsave}}
 }
 \keyword{internal}
