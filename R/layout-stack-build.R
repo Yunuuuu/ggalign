@@ -1,6 +1,12 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
-    stack_build(default_layout(x)) %||% align_plots()
+    x <- default_layout(x)
+    stack_build(x) %||% (
+        align_plots(theme = x@theme) + layout_title(
+            title = .subset2(x@titles, "title"),
+            subtitle = .subset2(x@titles, "subtitle"),
+            caption = .subset2(x@titles, "caption")
+        ))
 }
 
 #' @param extra_coords layout parameters of the axis vertically with the stack.
