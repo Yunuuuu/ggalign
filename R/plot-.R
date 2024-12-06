@@ -29,31 +29,3 @@ plot.ggalign_plot <- function(x, ...) {
 }
 
 plot_build <- function(plot, ...) UseMethod("plot_build")
-
-# add object to the plot ------------------------------------
-plot_add <- function(plot, object, object_name) UseMethod("plot_add")
-
-ggalign_plot_add <- function(object, plot, object_name) {
-    UseMethod("ggalign_plot_add")
-}
-
-#' @export
-plot_add.ggalign_plot <- function(plot, object, object_name) {
-    ggalign_plot_add(object, plot, object_name)
-}
-
-#' @importFrom ggplot2 ggplot_add
-#' @export
-ggalign_plot_add.default <- function(object, plot, object_name) {
-    plot$plot <- ggplot_add(object, .subset2(plot, "plot"), object_name)
-    plot
-}
-
-#' @export
-ggalign_plot_add.ggalign_option <- function(object, plot, object_name) {
-    name <- ggalign_option_name(object)
-    plot$controls[name] <- list(update_option(
-        object, .subset2(.subset2(plot, "controls"), name), object_name
-    ))
-    plot
-}
