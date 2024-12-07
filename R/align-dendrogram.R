@@ -439,9 +439,6 @@ AlignDendro <- ggproto("AlignDendro", Align,
     #' @importFrom ggplot2 aes ggplot
     #' @importFrom rlang inject
     setup_plot = function(self, plot, direction) {
-        if (is.null(plot)) {
-            return(NULL)
-        }
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
             direction,
             ggplot2::labs(x = "height"),
