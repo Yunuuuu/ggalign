@@ -75,8 +75,9 @@ observations and, in some cases, add plot components to the <code>Layout</code>.
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align</span><span class="op">(</span></span>
 <span>  <span class="va">align</span>,</span>
-<span>  <span class="va">params</span>,</span>
 <span>  <span class="va">data</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  controls <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -101,10 +102,6 @@ observations and, in some cases, add plot components to the <code>Layout</code>.
 <dd><p>An <code>Align</code> object.</p></dd>
 
 
-<dt id="arg-params">params<a class="anchor" aria-label="anchor" href="#arg-params"></a></dt>
-<dd><p>A list of parameters for <code>align</code>.</p></dd>
-
-
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>Options for <code>data</code>:</p><ul><li><p>A matrix, data frame, or atomic vector.</p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: Uses the <code>layout matrix</code>.</p></li>
@@ -112,6 +109,14 @@ observations and, in some cases, add plot components to the <code>Layout</code>.
 <li><p>A <code>function</code> (including purrr-like lambda syntax) applied to the layout
 <code>matrix</code>.</p></li>
 </ul></dd>
+
+
+<dt id="arg-params">params<a class="anchor" aria-label="anchor" href="#arg-params"></a></dt>
+<dd><p>A list of parameters for <code>align</code>.</p></dd>
+
+
+<dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
+<dd><p>A ggplot object.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
@@ -216,199 +221,15 @@ along a single axis.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="align_gg.html">align_gg</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $align</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignGG, Align, AlignProto, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     align: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     build: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     finish: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     position: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignGG, Align, AlignProto, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $no_axes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $inherit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"__ggalign.option_name__")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_data"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_data"      "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_theme</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Named list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr [1:4] "plot_theme" "theme" "gg" "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "complete")= logi FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "validate")= logi TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "__ggalign.option_name__")= chr "plot_theme"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_align</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $free_spaces</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $free_labs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $guides</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"__ggalign.option_name__")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"     "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $active</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $order</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $use</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_active"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align"      "ggalign_align_plot" "ggalign_plot"      </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `align_gg()` object:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">plot</span>: yes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">reorder</span>: no</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">split</span>: no</span>
 <span class="r-in"><span><span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $align</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class AlignDendro, Align, AlignProto, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     align: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     build: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     call: call</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     compute: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     direction: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     finish: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ggplot: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     input_data: waiver</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     input_params: list</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     labels: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nobs: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     parameters: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     params: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     position: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     statistics: NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     unlock: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class AlignDendro, Align, AlignProto, gg&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $no_axes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $inherit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"__ggalign.option_name__")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_data"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_data"      "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_theme</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Named list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr [1:4] "plot_theme" "theme" "gg" "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "complete")= logi FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "validate")= logi TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "__ggalign.option_name__")= chr "plot_theme"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $controls$plot_align</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $free_spaces</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $free_labs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $guides</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "waiver"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"__ggalign.option_name__")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_align"     "ggalign_option"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $active</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $order</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $use</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_active"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NAnull</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ggalign_align"      "ggalign_align_plot" "ggalign_plot"      </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `align_dendro()` object:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">plot</span>: yes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">reorder</span>: yes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #00BB00;">split</span>: no</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
