@@ -2,6 +2,14 @@ new_free_plot <- function(..., class = character()) {
     new_ggalign_plot(..., class = c(class, "ggalign_free_plot"))
 }
 
+#' @include plot-.R
+methods::setClass("ggalign_free_plot", contains = "ggalign_plot")
+
+#' @export
+print.ggalign_free_plot <- function(x, ...) {
+    sprintf("%s object", object_name(x))
+}
+
 #' Initialize the plot
 #'
 #' Used by `ggalign_free_plot`
@@ -16,8 +24,7 @@ stack_layout_add.ggalign_free_plot <- function(object, stack, object_name) {
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         object <- plot_initialize(object, stack)
         stack <- stack_add_plot(
-            stack, object, 
-            .subset2(object, "active"), object_name
+            stack, object, object@active, object_name
         )
     } else {
         plot <- quad_layout_add(object, plot, object_name)
@@ -57,5 +64,5 @@ quad_layout_add.ggplot <- quad_layout_add.ggalign_free_plot
 
 #' @export
 plot_build.ggalign_free_plot <- function(plot, ..., controls) {
-    plot_add_controls(.subset2(plot, "plot"), controls)
+    plot_add_controls(plot@plot, controls)
 }

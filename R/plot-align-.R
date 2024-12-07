@@ -1,20 +1,63 @@
 # Since `ggalign_align_plot` object need act with the layout, we Use R6 object
 # here
 new_align_plot <- function(..., no_axes = NULL, align = AlignProto,
-                           class = character(),
-                           call = caller_call()) {
+                           class = NULL, call = caller_call()) {
     assert_bool(no_axes, allow_null = TRUE, call = call)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     # used to provide error message
     align$call <- call
     new_ggalign_plot(
-        align = align, no_axes = no_axes,
+        align = align, 
+        no_axes = no_axes,
         ...,
-        class = c(class, "ggalign_align_plot"),
+        class = class %||% "ggalign_align_plot",
         call = call
     )
 }
+
+#' @include plot-.R
+methods::setClass(
+    "ggalign_align_plot",
+    contains = "ggalign_plot",
+    list(align = "ANY", no_axes = "ANY")
+)
+
+#' @export
+print.ggalign_align_plot <- function(x, ...) {
+    oo <- summary(x)
+    cli::cli_inform(c(
+        sprintf("%s object:", object_name(x)),
+        " " = sprintf(
+            "  {.field plot}: %s",
+            if (oo[1L]) "yes" else "no"
+        ),
+        " " = sprintf(
+            "  {.field reorder}: %s",
+            if (oo[2L]) "yes" else "no"
+        ),
+        " " = sprintf(
+            "  {.field split}: %s",
+            if (oo[3L]) "yes" else "no"
+        )
+    ))
+    invisible(x)
+}
+
+#' Summary the action of `ggalign_align_plot`
+#' @param object A `ggalign_align_plot` object
+#' @return A logical vector of length 3, indicating:
+#' - Whether the object adds a plot.
+#' - Whether the object reorders the observations.
+#' - Whether the object splits the observations into groups.
+#' @export
+#' @keywords internal
+summary.ggalign_align_plot <- function(object, ...) {
+    c(!is.null(object@plot), summary(object@align))
+}
+
+#' @export
+summary.AlignProto <- function(object, ...) c(FALSE, FALSE)
 
 #' @importFrom ggplot2 ggproto
 AlignProto <- ggproto("AlignProto",
@@ -26,6 +69,7 @@ AlignProto <- ggproto("AlignProto",
     },
     params = list(),
     # when added to the `Layout` object, will call `$align` method
+    # must have fixed parameters
     align = function(self, direction, position, object_name,
                      layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
@@ -33,24 +77,38 @@ AlignProto <- ggproto("AlignProto",
             "{.fn {snake_class(self)}}"
         ))
     },
-    ggplot = function(self) {
+    # flexible parameters
+    setup_plot = function(self, plot, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
-            "%s, has not implemented a {.fn ggplot} method",
+            "%s, has not implemented a {.fn setup_plot} method",
             "{.fn {snake_class(self)}}"
         ))
     },
-    finish = function(layout) layout,
-    build = function(plot, composer, controls, coords, extra_coords,
+    # flexible parameters
+    finish = function(self, layout, direction, position, object_name,
+                      layout_data, layout_coords, layout_name) {
+        layout
+    },
+    # must have fixed parameters
+    build = function(plot, controls, coords, extra_coords, previous_coords,
                      direction, position) {
         plot
     }
 )
 
+align_inject <- function(method, params) {
+    inject(method(
+        !!!params[intersect(align_method_params(method), names(params))]
+    ))
+}
+
 # Used to lock the `Align` object
 #' @export
 `$<-.AlignProto` <- function(x, name, value) {
     if (isTRUE(.subset2(x, "isLock"))) {
-        cli_abort("{.fn {snake_class(x)}} is locked",
+        cli_abort(
+            "{.fn {snake_class(x)}} is locked",
             call = .subset2(x, "call")
         )
     }
@@ -62,22 +120,28 @@ AlignProto <- ggproto("AlignProto",
 #' @export
 plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
     # let `Align` to determine how to build the plot
-    align <- .subset2(plot, "align") # `AlignProto` object
+    align <- plot@align # `AlignProto` object
 
     # we lock the Align object to prevent user from modifying this object
     # in `$build` method, we shouldn't do any calculations in `$build` method
     align$lock()
     on.exit(align$unlock())
-    dots <- list(..., direction = direction, controls = controls)
-    ans <- inject(align$build(plot = .subset2(plot, "plot"), !!!dots[
-        vec_set_intersect(
-            names(dots),
-            align_method_params(align$build, character())
-        )
-    ]))
+
+    # controls
+    # coords
+    # extra_coords
+    # previous_coords
+    # direction
+    # position
+    ans <- align$build(
+        plot = plot@plot,
+        ...,
+        direction = direction,
+        controls = controls
+    )
 
     # remove axis titles, text, ticks used for alignment
-    if (isTRUE(.subset2(plot, "no_axes"))) {
+    if (isTRUE(plot@no_axes)) {
         controls$plot_theme <- .subset2(controls, "plot_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
@@ -86,7 +150,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
 
 ggproto_formals <- function(x) formals(environment(x)$f)
 
-align_method_params <- function(f, remove = c("panel", "index")) {
+align_method_params <- function(f, remove = character()) {
     vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }
 
@@ -103,8 +167,8 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                 i = sprintf("%s cannot align observations", object_name(stack))
             ))
         } else {
-            align <- .subset2(object, "align")
-            dots <- list(
+            align <- object@align
+            params <- list(
                 direction = stack@direction,
                 position = .subset2(stack@heatmap, "position"),
                 object_name = object_name,
@@ -112,41 +176,22 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
                 layout_coords = old_coords,
                 layout_name = object_name(stack)
             )
-            # this step the object will act with the stack layout
+            # this step, the object will act with the stack layout
             # group rows into panel or reorder rows
-            new_coords <- inject(align$align(!!!dots[
-                vec_set_intersect(
-                    names(dots),
-                    align_method_params(align$align, character())
-                )
-            ]))
+            new_coords <- inject(align$align(!!!params))
+
             # initialize the plot object
-            object$plot <- inject(align$ggplot(
-                !!!align$params[
-                    vec_set_intersect(
-                        names(align$params),
-                        align_method_params(align$ggplot, character())
-                    )
-                ],
-                !!!dots[
-                    vec_set_intersect(
-                        names(dots),
-                        align_method_params(align$ggplot, character())
-                    )
-                ]
-            ))
-            # finally, we let the object do some changes in the layout
-            stack <- inject(align$finish(stack, !!!dots[
-                vec_set_intersect(
-                    names(dots),
-                    align_method_params(align$finish, character())
+            if (!is.null(object@plot)) {
+                object@plot <- align_inject(
+                    align$setup_plot,
+                    c(list(plot = object@plot), params, align$params)
                 )
-            ]))
-            stack <- stack_add_plot(
-                stack, object,
-                .subset2(object, "active"),
-                object_name
-            )
+            }
+
+            # finally, we let the object do some changes in the layout
+            stack <- align_inject(align$finish, c(list(layout = stack), params))
+
+            stack <- stack_add_plot(stack, object, object@active, object_name)
         }
     } else { # should be a QuadLayout object
         plot <- quad_layout_add(object, plot, object_name)

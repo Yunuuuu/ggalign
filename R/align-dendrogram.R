@@ -146,9 +146,7 @@ align_dendro <- function(mapping = aes(), ...,
             merge_dendro = merge_dendrogram,
             reorder_group = reorder_group,
             cutree = cutree,
-            mapping = mapping,
-            plot_dendrogram = plot_dendrogram,
-            plot = TRUE
+            plot_dendrogram = plot_dendrogram
         ),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
@@ -156,8 +154,15 @@ align_dendro <- function(mapping = aes(), ...,
         no_axes = no_axes, active = active,
         size = size,
         controls = new_controls(),
-        data = data
+        data = data,
+        plot = ggplot(mapping = mapping)
     )
+}
+
+#' @export
+summary.AlignDendro <- function(object, ...) {
+    params <- .subset2(object, "params")
+    c(TRUE, !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h")))
 }
 
 #' @examples
@@ -212,12 +217,12 @@ align_hclust <- function(distance = "euclidean",
             reorder_group = reorder_group,
             cutree = cutree,
             mapping = NULL,
-            plot_dendrogram = FALSE,
-            plot = FALSE
+            plot_dendrogram = FALSE
         ),
         active = active,
         controls = new_controls(),
-        data = data
+        data = data,
+        plot = NULL
     )
 }
 
@@ -433,26 +438,21 @@ AlignDendro <- ggproto("AlignDendro", Align,
     },
     #' @importFrom ggplot2 aes ggplot
     #' @importFrom rlang inject
-    ggplot = function(self, plot, mapping) {
-        if (!plot) {
+    setup_plot = function(self, plot, direction) {
+        if (is.null(plot)) {
             return(NULL)
         }
-        ggplot(
-            mapping = add_default_mapping(
-                mapping, aes(x = .data$x, y = .data$y)
-            )
-        ) +
-            switch_direction(
-                .subset2(self, "direction"),
-                ggplot2::labs(x = "height"),
-                ggplot2::labs(y = "height")
-            )
+        ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
+            direction,
+            ggplot2::labs(x = "height"),
+            ggplot2::labs(y = "height")
+        )
     },
     draw = function(self, plot, panel, index, extra_panel, extra_index,
+                    direction,
                     # other argumentds
                     plot_dendrogram, segment_params,
                     plot_cut_height, center, type, root) {
-        direction <- .subset2(self, "direction")
         statistics <- .subset2(self, "statistics")
         priority <- switch_direction(direction, "left", "right")
         dendrogram_panel <- self$panel[index]

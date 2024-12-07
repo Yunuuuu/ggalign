@@ -88,6 +88,7 @@
 #'     ggalign(data = NULL, size = 0.2) +
 #'     geom_tile(aes(y = 1L, fill = .panel))
 #'
+#' @importFrom ggplot2 ggplot
 #' @export
 align_gg <- function(mapping = aes(), size = NULL,
                      data = waiver(), limits = TRUE, facet = TRUE,
@@ -96,7 +97,6 @@ align_gg <- function(mapping = aes(), size = NULL,
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
-    assert_mapping(mapping)
     assert_active(active)
     active <- update_active(active, new_active(
         use = TRUE, order = NA_integer_, name = NA_character_
@@ -105,7 +105,7 @@ align_gg <- function(mapping = aes(), size = NULL,
         set_context = set_context, order = order, name = name
     )
     align(AlignGG,
-        params = list(mapping = mapping),
+        plot = ggplot(mapping = mapping),
         size = size, data = data,
         controls = waiver(),
         free_guides = free_guides,
@@ -140,32 +140,31 @@ AlignGG <- ggproto("AlignGG", Align,
         ans$.names <- NULL # always remove names, we'll add it in `draw()`
         ans
     },
-    ggplot = function(self, mapping) {
-        direction <- .subset2(self, "direction")
-        ans <- ggplot(
-            mapping = add_default_mapping(mapping, switch_direction(
+    setup_plot = function(self, plot, direction) {
+        ggadd_default(
+            plot,
+            mapping = switch_direction(
                 direction,
                 aes(y = .data$.y),
                 aes(x = .data$.x)
-            ))
-        )
-        if (is.null(.subset2(self, "input_data"))) {
-            # remove the title and text of axis vertically with the layout
-            ans <- ans + switch_direction(
-                direction,
-                theme(
-                    axis.title.x = element_blank(),
-                    axis.text.x = element_blank(),
-                    axis.ticks.x = element_blank()
-                ),
-                theme(
-                    axis.title.y = element_blank(),
-                    axis.text.y = element_blank(),
-                    axis.ticks.y = element_blank()
+            ),
+            theme = if (is.null(.subset2(self, "input_data"))) {
+                # remove the title and text of axis vertically with the layout
+                switch_direction(
+                    direction,
+                    theme(
+                        axis.title.x = element_blank(),
+                        axis.text.x = element_blank(),
+                        axis.ticks.x = element_blank()
+                    ),
+                    theme(
+                        axis.title.y = element_blank(),
+                        axis.text.y = element_blank(),
+                        axis.ticks.y = element_blank()
+                    )
                 )
-            )
-        }
-        ans
+            }
+        )
     },
 
     #' @importFrom stats reorder

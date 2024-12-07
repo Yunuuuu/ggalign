@@ -25,6 +25,16 @@ add_default_mapping <- function(mapping, default_mapping) {
     default_mapping
 }
 
+ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
+    if (!is.null(mapping)) {
+        plot$mapping <- add_default_mapping(.subset2(plot, "mapping"), mapping)
+    }
+    if (!is.null(theme)) {
+        plot$theme <- theme + .subset2(plot, "theme")
+    }
+    plot
+}
+
 identity_trans <- function(scale) {
     # for continuous scale, we don't allow the trans
     if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {

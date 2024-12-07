@@ -7,13 +7,14 @@
 #' observations and, in some cases, add plot components to the `Layout`.
 #'
 #' @param align An `Align` object.
-#' @param params A list of parameters for `align`.
 #' @param data Options for `data`:
 #'  - A matrix, data frame, or atomic vector.
 #'  - [`waiver()`][ggplot2::waiver]: Uses the `layout matrix`.
 #'  - `NULL`: No data is set.
 #'  - A `function` (including purrr-like lambda syntax) applied to the layout
 #'    `matrix`.
+#' @param params A list of parameters for `align`.
+#' @param plot A ggplot object.
 #'
 #' @param size The relative size of the plot, can be specified as a
 #' [`unit`][grid::unit].
@@ -68,7 +69,8 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-align <- function(align, params, data, size = NULL, controls = NULL,
+align <- function(align, data, params = list(), plot = NULL,
+                  size = NULL, controls = NULL,
                   limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
@@ -97,14 +99,16 @@ align <- function(align, params, data, size = NULL, controls = NULL,
 
     # Warn about extra params or missing parameters ---------------
     all <- align$parameters()
+    input <- names(params) %||% character()
     if (isTRUE(check.param)) {
-        if (length(extra_param <- vec_set_difference(names(params), all))) { # nolint
+        if (length(extra_param <- vec_set_difference(input, all))) { # nolint
             cli_warn("Ignoring unknown parameters: {.arg {extra_param}}")
         }
-        if (length(missing <- vec_set_difference(all, names(params)))) { # nolint
+        if (length(missing <- vec_set_difference(all, input))) { # nolint
             cli_abort("missing parameters: {missing}", call = call)
         }
     }
+    input_params <- params[vec_set_intersect(input, all)]
 
     new_align_plot(
         align = ggproto(
@@ -128,8 +132,9 @@ align <- function(align, params, data, size = NULL, controls = NULL,
             input_data = data,
 
             # collect parameters
-            input_params = params[vec_set_intersect(names(params), all)]
+            input_params = input_params
         ),
+        plot = plot,
         active = active,
         size = size,
         controls = controls,
@@ -138,7 +143,11 @@ align <- function(align, params, data, size = NULL, controls = NULL,
     )
 }
 
-is_align <- function(x) inherits(x, "ggalign_align")
+#' @include plot-align-.R
+methods::setClass("ggalign_align", contains = "ggalign_align_plot")
+
+#' @importFrom methods is
+is_align <- function(x) is(x, "ggalign_align")
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
@@ -162,12 +171,21 @@ is_align <- function(x) inherits(x, "ggalign_align")
 Align <- ggproto("Align", AlignProto,
     parameters = function(self) {
         c(
-            align_method_params(self$compute),
-            align_method_params(self$layout),
-            align_method_params(self$ggplot, character()),
+            align_method_params(
+                self$compute,
+                align_method_params(Align$compute)
+            ),
+            align_method_params(
+                self$layout,
+                align_method_params(Align$layout)
+            ),
+            align_method_params(
+                self$setup_plot,
+                align_method_params(AlignProto$setup_plot)
+            ),
             align_method_params(
                 self$draw,
-                c("plot", "panel", "index", "extra_panel", "extra_index")
+                align_method_params(Align$draw)
             ),
             self$extra_params
         )
@@ -236,17 +254,15 @@ Align <- ggproto("Align", AlignProto,
 
         # prepare the data -------------------------------
         # compute statistics ---------------------------------
-        self$statistics <- inject(
-            self$compute(layout_panel, layout_index, !!!params[
-                intersect(names(params), align_method_params(self$compute))
-            ])
+        self$statistics <- align_inject(
+            self$compute,
+            c(list(panel = layout_panel, index = layout_index), params)
         )
 
         # make the new layout -------------------------------
-        new_coords <- inject(
-            self$layout(layout_panel, layout_index, !!!params[
-                intersect(names(params), align_method_params(self$layout))
-            ])
+        new_coords <- align_inject(
+            self$layout,
+            c(list(panel = layout_panel, index = layout_index), params)
         )
 
         # we check the coords
@@ -261,17 +277,8 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, coords, extra_coords, direction, ...) {
-        params <- .subset2(self, "params")
-        draw_params <- params[
-            vec_set_intersect(
-                names(params),
-                align_method_params(
-                    self$draw,
-                    c("plot", "panel", "index", "extra_panel", "extra_index")
-                )
-            )
-        ]
+    build = function(self, plot, direction, position, controls,
+                     coords, extra_coords, previous_coords = NULL) {
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")
         if (is.null(extra_coords)) {
@@ -281,13 +288,18 @@ Align <- ggproto("Align", AlignProto,
             extra_panel <- .subset2(extra_coords, "panel")
             extra_index <- .subset2(extra_coords, "index")
         }
-        plot <- inject(self$draw(
-            plot,
-            panel,
-            index,
-            extra_panel,
-            extra_index,
-            !!!draw_params
+        params <- .subset2(self, "params")
+        plot <- align_inject(self$draw, c(
+            params,
+            list(
+                plot = plot,
+                panel = panel,
+                index = index,
+                extra_panel = extra_panel,
+                extra_index = extra_index,
+                direction = direction,
+                position = position
+            )
         ))
 
         coords$labels <- .subset(.subset2(self, "labels"), index)
@@ -382,16 +394,21 @@ Align <- ggproto("Align", AlignProto,
     #    index, this will be checked in `align_initialize_layout` function.
     layout = function(self, panel, index) list(panel, index),
 
-    # initialize the ggplot object, if `NULL`, no plot area will be added.  we
-    # must separate this method with draw method, since other ggplot elements
-    # will be added for this plot.
-    ggplot = function(self) NULL,
+    # initialize the plot, add the default mapping, theme, and et al.
+    # if `NULL`, no plot area will be added.
+    setup_plot = function(self, plot, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
+        plot
+    },
 
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
     # Note: panel input will be reordered by index
-    draw = function(self, plot, panel, index, extra_panel, extra_index) plot
+    draw = function(self, plot, panel, index, extra_panel, extra_index,
+                    direction, position) {
+        plot
+    }
 )
 
 #' @importFrom ggplot2 ggproto

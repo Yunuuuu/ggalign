@@ -46,6 +46,7 @@ VignetteBuilder: knitr
 Language: en-GB
 Collate: 
     'active.R'
+    'plot-.R'
     'plot-align-.R'
     'align-.R'
     'align-dendrogram.R'
@@ -105,11 +106,11 @@ Collate:
     'layout-stack-build.R'
     'layout-stack-composer.R'
     'layout-stack-switch.R'
+    'object-name.R'
     'option-.R'
     'option-align.R'
     'option-data.R'
     'option-theme.R'
-    'plot-.R'
     'plot-add.R'
     'plot-align-cross.R'
     'plot-free-.R'

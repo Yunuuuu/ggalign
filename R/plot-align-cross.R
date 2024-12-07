@@ -33,27 +33,27 @@
 #' @export
 cross_link <- function(mapping = aes(), size = NULL,
                        no_axes = NULL, active = NULL) {
-    assert_mapping(mapping)
     active <- update_active(active, new_active(
         use = TRUE, order = NA_integer_, name = NA_character_
     ))
     new_align_plot(
-        align = ggproto(
-            NULL,
-            CrossLink,
-            params = list(mapping = mapping)
-        ),
+        align = ggproto(NULL, CrossLink),
+        plot = ggplot(mapping = mapping),
         size = size, no_axes = no_axes, active = active,
         class = "ggalign_cross_link"
     )
 }
 
-is_cross_link <- function(x) inherits(x, "ggalign_cross_link")
+#' @include plot-align-.R
+methods::setClass("ggalign_cross_link", contains = "ggalign_align_plot")
+
+#' @importFrom methods is
+is_cross_link <- function(x) is(x, "ggalign_cross_link")
 
 #' @importFrom ggplot2 ggproto ggplot
 CrossLink <- ggproto("CrossLink", AlignProto,
-    align = function(self, direction, position, layout_coords,
-                     object_name, layout_name) {
+    align = function(self, direction, position, object_name,
+                     layout_data, layout_coords, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(
                 "layout observations for %s must be initialized before adding {.var {object_name}}",
@@ -63,10 +63,10 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         layout_coords["index"] <- list(NULL)
         layout_coords
     },
-    ggplot = function(self, mapping, direction) {
-        ggplot(mapping = add_default_mapping(mapping, switch_direction(
+    setup_plot = function(self, plot, mapping, direction) {
+        ggadd_default(plot, mapping = switch_direction(
             direction, aes(y = .data$y), aes(x = .data$x)
-        )))
+        ))
     },
     finish = function(layout, layout_coords) {
         # udpate cross_points
@@ -78,7 +78,8 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         )
         layout
     },
-    build = function(plot, coords, previous_coords, direction) {
+    build = function(plot, controls, coords, extra_coords, previous_coords,
+                     direction, position) {
         data <- data_frame0(
             panel = vec_c(
                 .subset2(previous_coords, "panel"),

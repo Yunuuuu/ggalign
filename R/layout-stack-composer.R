@@ -55,7 +55,7 @@ stack_composer_add <- function(plot, composer, ...) {
 
 #' @export
 stack_composer_add.ggalign_plot <- function(plot, composer, ...) {
-    size <- .subset2(plot, "size")
+    size <- plot@size
     plot <- plot_build(plot = plot, ...) + theme_recycle()
     stack_composer_align_plot(composer, plot, size)
 }
@@ -156,7 +156,7 @@ stack_composer_add.list <- function(plot, composer, ..., controls,
     for (p in plot) {
         if (is_ggalign_plot(p)) {
             # for `released_spaces`, release the free_spaces in a single plot
-            plot_controls <- inherit_controls(.subset2(p, "controls"), controls)
+            plot_controls <- inherit_controls(p@controls, controls)
             if (!is.null(released_spaces)) {
                 align_spaces <- .subset2(
                     .subset2(plot_controls, "plot_align"), "free_spaces"

@@ -114,7 +114,7 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
         keep <- vapply(plots, function(plot) {
             # we remove align objects without plot area
             # Now, only `ggalign_align` will contain `NULL`
-            !is_align(plot) || !is.null(.subset2(plot, "plot"))
+            !is_align(plot) || !is.null(plot@plot)
         }, logical(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, keep)
 
@@ -129,7 +129,7 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
             if (is_cross_link(plot)) {
                 1L
             } else if (is_ggalign_plot(plot)) {
-                .subset2(.subset2(plot, "active"), "order")
+                .subset2(plot@active, "order")
             } else {
                 .subset2(plot@plot_active, "order")
             }

@@ -1,5 +1,5 @@
 plot_add <- function(plot, object, object_name) {
-    if (is.null(.subset2(plot, "plot"))) {
+    if (is.null(plot@plot)) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(plot)),
             i = sprintf("no plot found for %s", object_name(plot))
@@ -25,7 +25,7 @@ align_add <- function(object, plot, object_name) UseMethod("align_add")
 #' @importFrom ggplot2 ggplot_add
 #' @export
 align_add.default <- function(object, plot, object_name) {
-    plot$plot <- ggplot_add(object, .subset2(plot, "plot"), object_name)
+    plot@plot <- ggplot_add(object, plot@plot, object_name)
     plot
 }
 
@@ -44,8 +44,8 @@ align_add.Coord <- function(object, plot, object_name) {
 #' @export
 align_add.ggalign_option <- function(object, plot, object_name) {
     name <- ggalign_option_name(object)
-    plot$controls[name] <- list(update_option(
-        object, .subset2(.subset2(plot, "controls"), name), object_name
+    plot@controls[name] <- list(update_option(
+        object, .subset2(plot@controls, name), object_name
     ))
     plot
 }
@@ -59,4 +59,3 @@ free_add.default <- align_add.default
 
 #' @export
 free_add.ggalign_option <- align_add.ggalign_option
-

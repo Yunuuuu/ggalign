@@ -31,6 +31,9 @@ align_group <- function(group, active = NULL, set_context = deprecated(),
     )
 }
 
+#' @export
+summary.AlignGroup <- function(object, ...) c(FALSE, TRUE)
+
 #' @importFrom ggplot2 ggproto
 AlignGroup <- ggproto("AlignGroup", Align,
     nobs = function(self, params) vec_size(.subset2(params, "group")),

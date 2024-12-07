@@ -34,6 +34,9 @@ align_kmeans <- function(centers, ..., data = NULL,
     )
 }
 
+#' @export
+summary.AlignKmeans <- function(object, ...) c(FALSE, TRUE)
+
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", Align,

@@ -74,7 +74,7 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
     keep <- vapply(plot_list, function(plot) {
         # we remove align objects without plot area
         # Now, only `ggalign_align` will contain `NULL`
-        !is_align(plot) || !is.null(.subset2(plot, "plot"))
+        !is_align(plot) || !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
     if (is_empty(plot_list)) return(NULL) # styler: off
@@ -84,7 +84,7 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
         if (is_layout(plot)) {
             .subset2(plot@plot_active, "order")
         } else {
-            .subset2(.subset2(plot, "active"), "order")
+            .subset2(plot@active, "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, make_order(plot_order))

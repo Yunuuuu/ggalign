@@ -8,8 +8,9 @@
 \usage{
 align(
   align,
-  params,
   data,
+  params = list(),
+  plot = NULL,
   size = NULL,
   controls = NULL,
   limits = TRUE,
@@ -28,8 +29,6 @@ align(
 \arguments{
 \item{align}{An \code{Align} object.}
 
-\item{params}{A list of parameters for \code{align}.}
-
 \item{data}{Options for \code{data}:
 \itemize{
 \item A matrix, data frame, or atomic vector.
@@ -38,6 +37,10 @@ align(
 \item A \code{function} (including purrr-like lambda syntax) applied to the layout
 \code{matrix}.
 }}
+
+\item{params}{A list of parameters for \code{align}.}
+
+\item{plot}{A ggplot object.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}

@@ -5,7 +5,7 @@ stack_layout_add <- function(object, stack, object_name) {
 
 stack_plot_add <- function(plot, object, object_name, force) {
     # if `align` has plot, we added the object
-    if (force || !is.null(.subset2(plot, "plot"))) {
+    if (force || !is.null(plot@plot)) {
         plot <- plot_add(plot, object, object_name)
     }
     plot

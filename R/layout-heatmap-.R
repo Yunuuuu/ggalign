@@ -140,9 +140,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     # 4. The captured expression in aes().
     ans@plot <- ans@plot + ggplot2::labs(x = NULL, y = NULL)
     # add default mapping
-    ans@plot$mapping <- add_default_mapping(
-        ans@plot$mapping, aes(.data$.x, .data$.y)
-    )
+    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y))
     ans@filling <- filling
     ans
 }

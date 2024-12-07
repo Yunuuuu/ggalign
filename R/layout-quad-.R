@@ -270,6 +270,7 @@ quad_alignb.uneval <- function(data, ...) {
 
 #####################################################
 #' @importFrom ggplot2 ggplot
+#' @importFrom methods new
 new_quad_layout <- function(name, data, horizontal, vertical,
                             mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA, class = "QuadLayout",
@@ -290,7 +291,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
     assert_active(active, call = call)
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
-    methods::new(
+    new(
         class,
         # used by the layout
         data = data, theme = theme,

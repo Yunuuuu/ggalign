@@ -60,6 +60,9 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     )
 }
 
+#' @export
+summary.AlignOrder <- function(object, ...) c(TRUE, FALSE)
+
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignReorder <- ggproto("AlignReorder", Align,

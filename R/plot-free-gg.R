@@ -73,9 +73,15 @@ new_free_gg <- function(plot, data, size, active,
     )
 }
 
+#' @include plot-free-.R
+methods::setClass("ggalign_free_gg",
+    contains = "ggalign_free_plot",
+    list(data = "ANY")
+)
+
 #' @export
 plot_initialize.ggalign_free_gg <- function(object, layout, object_name) {
-    input_data <- .subset2(object, "data")
+    input_data <- object@data
     layout_data <- layout@data
     if (is.waive(input_data)) { # inherit from the layout
         data <- layout_data
@@ -96,13 +102,13 @@ plot_initialize.ggalign_free_gg <- function(object, layout, object_name) {
     data <- fortify_data_frame(data)
 
     # convert the data into a data frame
-    object$plot <- free_gg_build_plot(.subset2(object, "plot"), data)
+    object@plot <- free_gg_build_plot(object@plot, data)
     object
 }
 
 #' @export
 print.ggalign_free_gg <- function(x, ...) {
-    p <- free_gg_build_plot(.subset2(x, "plot"), .subset2(x, "data"))
+    p <- free_gg_build_plot(x@plot, x@data)
     print(p)
     invisible(x)
 }
@@ -122,9 +128,6 @@ free_gg_build_plot <- function(plot, data) {
 #' @importFrom ggplot2 ggplot_add
 #' @export
 ggplot_add.ggalign_free_gg <- function(object, plot, object_name) {
-    object <- free_gg_build_plot(
-        .subset2(object, "plot"),
-        .subset2(object, "data")
-    )
+    object <- free_gg_build_plot(object@plot, object@data)
     ggplot_add(object, plot, object_name)
 }

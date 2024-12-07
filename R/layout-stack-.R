@@ -176,6 +176,7 @@ stack_free.function <- function(data = NULL, direction = NULL, ...) {
 #' @export
 stack_free.formula <- stack_free.function
 
+#' @importFrom methods new
 new_stack_layout <- function(data, direction, layout, controls = NULL,
                              theme = NULL, sizes = NA, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
@@ -195,7 +196,7 @@ new_stack_layout <- function(data, direction, layout, controls = NULL,
         )
         direction <- "horizontal"
     }
-    methods::new(
+    new(
         "StackLayout",
         name = name, data = data, direction = direction,
         theme = theme, controls = controls, # used by the layout
