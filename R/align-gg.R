@@ -15,7 +15,7 @@
 #' - [`waiver()`][ggplot2::waiver]: Uses the layout matrix.
 #' - A `function` (including purrr-like lambda syntax) that is applied to the
 #'   layout matrix, and must return a matrix. If you want to transform the final
-#'   plot data, please use [`plot_data()`].
+#'   plot data, please use [`scheme_data()`].
 #' - A `matrix`, `data frame`, or atomic vector.
 #' @inheritParams align
 #' @param set_context `r lifecycle::badge("deprecated")` Please use `active`
@@ -90,13 +90,19 @@
 #'
 #' @importFrom ggplot2 ggplot
 #' @export
-align_gg <- function(mapping = aes(), size = NULL,
-                     data = waiver(), limits = TRUE, facet = TRUE,
+align_gg <- function(data = waiver(), mapping = aes(), size = NULL,
+                     limits = TRUE, facet = TRUE,
                      no_axes = NULL, active = NULL, set_context = deprecated(),
                      order = deprecated(), name = deprecated(),
                      free_guides = deprecated(), free_spaces = deprecated(),
                      plot_data = deprecated(), theme = deprecated(),
                      free_labs = deprecated()) {
+    if (inherits(data, "uneval")) {
+        cli_abort(c(
+            "{.arg data} cannot be {.obj_type_friendly {data}}",
+            "i" = "Have you misspelled the {.arg data} argument in {.fn quad_free}"
+        ))
+    }
     assert_active(active)
     active <- update_active(active, new_active(
         use = TRUE, order = NA_integer_, name = NA_character_
@@ -107,7 +113,7 @@ align_gg <- function(mapping = aes(), size = NULL,
     align(AlignGG,
         plot = ggplot(mapping = mapping),
         size = size, data = data,
-        controls = waiver(),
+        schemes = waiver(),
         free_guides = free_guides,
         free_labs = free_labs, free_spaces = free_spaces,
         plot_data = plot_data, theme = theme,

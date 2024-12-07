@@ -38,7 +38,7 @@
 #'
 #' @inheritParams align_gg
 #' @param guides `r lifecycle::badge("deprecated")` Please use
-#' [`plot_align()`] function instead.
+#' [`scheme_align()`] function instead.
 #' @section ggplot2 specification:
 #' The data input in `ggheatmap` will be converted into the long formated data
 #' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
@@ -125,10 +125,10 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     )
     if (lifecycle::is_present(guides)) {
         lifecycle::deprecate_warn(
-            "0.0.5", "ggheatmap(guides)", "plot_align()"
+            "0.0.5", "ggheatmap(guides)", "scheme_align()"
         )
         assert_layout_position(guides)
-        ans@controls$plot_align["guides"] <- list(guides)
+        ans@schemes$scheme_align["guides"] <- list(guides)
     }
     # always remove default axis titles
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function

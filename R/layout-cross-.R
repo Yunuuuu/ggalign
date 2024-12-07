@@ -61,7 +61,7 @@ cross_align.default <- function(data = NULL, direction, ...) {
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
-stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
+stack_build_composer.CrossLayout <- function(stack, schemes, extra_coords) {
     # check if we should initialize the layout observations
     layout_coords <- stack@layout
     if (!is.null(layout_coords) &&
@@ -90,8 +90,8 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
     # layout.
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
-    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
+    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
+    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
@@ -138,7 +138,7 @@ stack_build_composer.CrossLayout <- function(stack, controls, extra_coords) {
         composer <- stack_composer_add(
             plots,
             composer,
-            controls = controls,
+            schemes = schemes,
             coords = coords,
             extra_coords = extra_coords,
             direction = direction,

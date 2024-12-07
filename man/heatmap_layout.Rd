@@ -73,7 +73,7 @@ instead.}
 instead.}
 
 \item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 }
 \value{
 A \code{HeatmapLayout} object.

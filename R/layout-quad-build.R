@@ -32,7 +32,7 @@ ggalign_build.QuadLayout <- function(x) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(.subset2(x@controls, "plot_align"), "guides"),
+        guides = .subset2(.subset2(x@schemes, "scheme_align"), "guides"),
         theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -41,14 +41,14 @@ ggalign_build.QuadLayout <- function(x) {
     )
 }
 
-quad_build <- function(quad, controls = quad@controls) UseMethod("quad_build")
+quad_build <- function(quad, schemes = quad@schemes) UseMethod("quad_build")
 
 #######################################################################
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 #' @export
-quad_build.QuadLayout <- function(quad, controls = quad@controls) {
+quad_build.QuadLayout <- function(quad, schemes = quad@schemes) {
     data <- quad@data
 
     row_coords <- setup_layout_coords(quad@horizontal)
@@ -66,7 +66,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- align <-
-        .subset2(controls, "plot_align")
+        .subset2(schemes, "scheme_align")
     if (!is.null(layout_labs <- .subset2(align, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
@@ -98,18 +98,18 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
         if (is_empty(stack <- slot(quad, position))) {
             return(list(plot = NULL, size = NULL))
         }
-        stack_controls <- controls
+        stack_schemes <- schemes
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
             extra_coords <- column_coords
-            stack_controls$plot_align <- horizontal_align
+            stack_schemes$scheme_align <- horizontal_align
         } else {
             extra_coords <- row_coords
-            stack_controls$plot_align <- vertical_align
+            stack_schemes$scheme_align <- vertical_align
         }
-        stack_controls <- inherit_controls(stack@controls, stack_controls)
+        stack_schemes <- inherit_schemes(stack@schemes, stack_schemes)
         plot <- stack_build(stack,
-            controls = stack_controls,
+            schemes = stack_schemes,
             extra_coords = extra_coords
         )
         if (!is.null(plot)) {
@@ -141,7 +141,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
             if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
             # we also apply the `free_spaces` for the whole annotation stack
             free_spaces <- .subset2(
-                .subset2(stack_controls, "plot_align"), "free_spaces"
+                .subset2(stack_schemes, "scheme_align"), "free_spaces"
             ) %|w|% NULL
             if (!is.null(free_spaces)) {
                 plot <- free_space(free_border(plot, free_spaces), free_spaces)
@@ -216,7 +216,7 @@ quad_build.QuadLayout <- function(quad, controls = quad@controls) {
     p <- p + theme_recycle()
 
     # add action ----------------------------------------
-    p <- plot_add_controls(p, inherit_controls(quad@body_controls, controls))
+    p <- plot_add_schemes(p, inherit_schemes(quad@body_schemes, schemes))
 
     # collect all plots and sizes ----------------------
     plots <- append(plots, list(main = p), 2L)

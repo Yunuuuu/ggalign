@@ -106,7 +106,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # from matrix
     data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-    controls <- new_controls()
+    schemes <- new_schemes()
     if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
@@ -116,7 +116,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     new_stack_layout(
         data = data, direction = direction,
         layout = new_layout_coords(nobs = nobs),
-        controls = controls, theme = theme, sizes = sizes
+        schemes = schemes, theme = theme, sizes = sizes
     )
 }
 
@@ -157,10 +157,10 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
                                theme = NULL, sizes = NA) {
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    controls <- new_controls()
+    schemes <- new_schemes()
     new_stack_layout(
         data = data, direction = direction, layout = NULL,
-        controls = controls, theme = theme, sizes = sizes
+        schemes = schemes, theme = theme, sizes = sizes
     )
 }
 
@@ -177,7 +177,7 @@ stack_free.function <- function(data = NULL, direction = NULL, ...) {
 stack_free.formula <- stack_free.function
 
 #' @importFrom methods new
-new_stack_layout <- function(data, direction, layout, controls = NULL,
+new_stack_layout <- function(data, direction, layout, schemes = NULL,
                              theme = NULL, sizes = NA, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
@@ -199,7 +199,7 @@ new_stack_layout <- function(data, direction, layout, controls = NULL,
     new(
         "StackLayout",
         name = name, data = data, direction = direction,
-        theme = theme, controls = controls, # used by the layout
+        theme = theme, schemes = schemes, # used by the layout
         sizes = sizes, layout = layout
     )
 }

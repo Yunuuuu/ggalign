@@ -78,7 +78,7 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         )
         layout
     },
-    build = function(plot, controls, coords, extra_coords, previous_coords,
+    build = function(plot, schemes, coords, extra_coords, previous_coords,
                      direction, position) {
         data <- data_frame0(
             panel = vec_c(

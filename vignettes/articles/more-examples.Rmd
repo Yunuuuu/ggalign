@@ -30,7 +30,7 @@ mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
 
 heat1 <- ggheatmap(mat_scaled) -
-    plot_align(free_spaces = "l") +
+    scheme_align(free_spaces = "l") +
     scale_y_continuous(breaks = NULL) +
     scale_fill_viridis_c(option = "magma") +
     # add dendrogram for this heatmap
@@ -67,7 +67,7 @@ heat3 <- ggheatmap(expr$type, width = unit(2, "cm")) +
     scale_x_continuous(breaks = NULL, name = "gene type") +
     # add barplot in the top annotation, and remove the spaces in the y-axis
     anno_top() -
-    plot_align(free_spaces = "lr") +
+    scheme_align(free_spaces = "lr") +
     ggalign(limits = FALSE) +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
@@ -75,7 +75,7 @@ heat3 <- ggheatmap(expr$type, width = unit(2, "cm")) +
     ) +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    plot_theme(plot.margin = margin())
+    scheme_theme(plot.margin = margin())
 
 stack_alignh(mat_scaled) +
     stack_active(sizes = c(0.2, 1, 1)) +
@@ -103,7 +103,7 @@ stack_alignh(mat_scaled) +
     # add another heatmap
     heat3 &
     theme(
-        plot.background = element_blank(), 
+        plot.background = element_blank(),
         panel.background = element_blank(),
         legend.background = element_blank()
     )

@@ -30,7 +30,7 @@ All function in `ggalign` requires specific data formats for its operations. If
 you need to transform or filter data for individual `geoms`, you can use the
 `data` argument within each `geom`. However, if you have multiple `geoms` and
 want a consistent transformation applied across all, you can utilize the
-`plot_data()` function which allows you to transform the default data for all
+`scheme_data()` function which allows you to transform the default data for all
 additive geoms.
 
 ## Why are there spaces after setting all `plot.margin` to zero?

@@ -129,9 +129,9 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 # the layout parameters should be the same with `quad_layout()`
                 layout = layout_coords,
                 # we'll inherit the action data function when
-                controls = new_controls(plot_data(
-                    if (is.null(data)) NULL else waiver()
-                ))
+                schemes = new_schemes(
+                    scheme_data(if (is.null(data)) NULL else waiver())
+                )
             )
             stack@heatmap$position <- position
         }
@@ -266,10 +266,10 @@ quad_body_add.layout_annotation <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.ggalign_option <- function(object, quad, object_name) {
-    name <- ggalign_option_name(object)
-    quad@body_controls[name] <- list(update_option(
-        object, .subset2(quad@body_controls, name), object_name
+quad_body_add.ggalign_scheme <- function(object, quad, object_name) {
+    name <- ggalign_scheme_name(object)
+    quad@body_schemes[name] <- list(update_scheme(
+        object, .subset2(quad@body_schemes, name), object_name
     ))
     quad
 }

@@ -38,7 +38,7 @@
 
 * `set_context`, `order`, and `name` arguments in `align_*()` and `ggheatmap()` are soft-deprecated, which is advised to use `active` argument.
 
-* `guides`, `free_guides`, `free_spaces`, `free_labs`, and `plot_data` arguments in `align_*()` and `ggheatmap()` are deprecated, which is advised to use `plot_align` function instead.
+* `guides`, `free_guides`, `free_spaces`, `free_labs`, and `plot_data` arguments in `align_*()` and `ggheatmap()` are deprecated, which is advised to use `scheme_align` function instead.
 
 * `theme` argument in `align_*()` and `ggheatmap()` is deprecated, which is advised to use `plot_theme` function. 
 
@@ -68,7 +68,7 @@
 
 * new `plot_data()` function to control the data transformation of the plot in layout.
 
-* new `plot_align()` function to control specifications of the plot in layout.
+* new `scheme_align()` function to control specifications of the plot in layout.
 
 * new `with_quad()` function to control the `-` operator context.
 

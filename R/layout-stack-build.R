@@ -11,11 +11,11 @@ ggalign_build.StackLayout <- function(x) {
 
 #' @param extra_coords layout parameters of the axis vertically with the stack.
 #' @noRd
-stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
+stack_build <- function(stack, schemes = stack@schemes, extra_coords = NULL) {
     if (is_empty(stack@plot_list)) {
         return(NULL)
     }
-    composer <- stack_build_composer(stack, controls, extra_coords)
+    composer <- stack_build_composer(stack, schemes, extra_coords)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
@@ -51,7 +51,7 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
             sizes,
             do.call(unit.c, .subset2(composer, "sizes"))
         ),
-        guides = .subset2(.subset2(controls, "plot_align"), "guides"),
+        guides = .subset2(.subset2(schemes, "scheme_align"), "guides"),
         theme = stack@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -60,12 +60,12 @@ stack_build <- function(stack, controls = stack@controls, extra_coords = NULL) {
     )
 }
 
-stack_build_composer <- function(stack, controls, extra_coords) {
+stack_build_composer <- function(stack, schemes, extra_coords) {
     UseMethod("stack_build_composer")
 }
 
 #' @export
-stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
+stack_build_composer.StackLayout <- function(stack, schemes, extra_coords) {
     plot_list <- stack@plot_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
@@ -98,7 +98,7 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
     # layout.
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(.subset2(controls, "plot_align"), "free_spaces")
+    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
@@ -108,7 +108,7 @@ stack_build_composer.StackLayout <- function(stack, controls, extra_coords) {
     stack_composer_add(
         plot_list,
         composer,
-        controls = controls,
+        schemes = schemes,
         coords = coords,
         extra_coords = extra_coords,
         direction = direction,

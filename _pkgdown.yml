@@ -105,9 +105,9 @@ reference:
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
   contents:
-  - plot_align
-  - plot_data
-  - plot_theme
+  - scheme_align
+  - scheme_data
+  - scheme_theme
 
 - title: Extending ggalign
   desc: >

@@ -21,11 +21,11 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 
 # for object can set at layout level
 #' @export
-quad_layout_subtract.ggalign_option <- function(object, quad, object_name) {
+quad_layout_subtract.ggalign_scheme <- function(object, quad, object_name) {
     if (is.null(context <- quad@active)) {
-        quad <- update_layout_option(object, quad, object_name)
+        quad <- update_layout_scheme(object, quad, object_name)
     } else {
-        slot(quad, context) <- update_layout_option(
+        slot(quad, context) <- update_layout_scheme(
             object, slot(quad, context), object_name
         )
     }

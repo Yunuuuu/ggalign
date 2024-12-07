@@ -12,7 +12,7 @@ align(
   params = list(),
   plot = NULL,
   size = NULL,
-  controls = NULL,
+  schemes = NULL,
   limits = TRUE,
   facet = TRUE,
   no_axes = NULL,
@@ -45,10 +45,10 @@ align(
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
 
-\item{controls}{Options for \code{controls}:
+\item{schemes}{Options for \code{schemes}:
 \itemize{
 \item \code{NULL}: Used when \code{align} do not add a plot.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Try to infer \code{controls} based on \code{data}.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Try to infer \code{schemes} based on \code{data}.
 }}
 
 \item{limits}{Logical; if \code{TRUE}, sets layout limits for the plot.}
@@ -65,19 +65,19 @@ default, will use the option-
 added to a layout.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_data]{plot_data()}} function instead.}
+\code{\link[=scheme_data]{scheme_data()}} function instead.}
 
 \item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_theme]{plot_theme()}} function instead.}
+\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{check.param}{Logical; if \code{TRUE}, checks parameters and provides
 warnings as necessary.}

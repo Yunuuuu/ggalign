@@ -8,7 +8,7 @@ new_align_plot <- function(..., no_axes = NULL, align = AlignProto,
     # used to provide error message
     align$call <- call
     new_ggalign_plot(
-        align = align, 
+        align = align,
         no_axes = no_axes,
         ...,
         class = class %||% "ggalign_align_plot",
@@ -91,7 +91,7 @@ AlignProto <- ggproto("AlignProto",
         layout
     },
     # must have fixed parameters
-    build = function(plot, controls, coords, extra_coords, previous_coords,
+    build = function(plot, schemes, coords, extra_coords, previous_coords,
                      direction, position) {
         plot
     }
@@ -118,7 +118,7 @@ align_inject <- function(method, params) {
 
 #' @importFrom rlang inject
 #' @export
-plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
+plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
     # let `Align` to determine how to build the plot
     align <- plot@align # `AlignProto` object
 
@@ -127,7 +127,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
     align$lock()
     on.exit(align$unlock())
 
-    # controls
+    # schemes
     # coords
     # extra_coords
     # previous_coords
@@ -137,15 +137,15 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, controls) {
         plot = plot@plot,
         ...,
         direction = direction,
-        controls = controls
+        schemes = schemes
     )
 
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(plot@no_axes)) {
-        controls$plot_theme <- .subset2(controls, "plot_theme") +
+        schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
-    plot_add_controls(ans, controls)
+    plot_add_schemes(ans, schemes)
 }
 
 ggproto_formals <- function(x) formals(environment(x)$f)

@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `plot_align()` function defines the align Specifications for plots.
+#' The `scheme_align()` function defines the align Specifications for plots.
 #'
 #' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
 #' which side of guide legends should be collected. Defaults to
@@ -25,62 +25,62 @@
 #' parent layout, no axis titles will be aligned. If `NULL`, all axis titles
 #' will be aligned.
 #'
-#' @return A `plot_align` object.
+#' @return A `scheme_align` object.
 #' @examples
 #' set.seed(123)
 #' mat <- matrix(rnorm(72), nrow = 8)
 #' # used in the layout, define the default action for all plots in the layout
 #' ggheatmap(mat) -
-#'     plot_align(guides = NULL) +
+#'     scheme_align(guides = NULL) +
 #'     anno_right() +
 #'     align_dendro(aes(color = branch), k = 3)
 #'
 #' # You can also add it for a single plot
 #' ggheatmap(mat) -
 #'     # for all plots in the layout, we default won't collect any guide legends
-#'     plot_align(guides = NULL) +
+#'     scheme_align(guides = NULL) +
 #'     # for the heatmap body, we collect guide legends in the right
 #'     # note, the guide legends will be collected to the right side of the
 #'     # layout which will overlap the legends in the right annotation
-#'     plot_align(guides = "r") +
+#'     scheme_align(guides = "r") +
 #'     anno_right() +
 #'     align_dendro(aes(color = branch), k = 3)
 #'
 #' # to avoid overlapping, we can also collect the guide legends in the
 #' # right annotation
 #' ggheatmap(mat) -
-#'     plot_align(guides = NULL) +
-#'     plot_align(guides = "r") +
+#'     scheme_align(guides = NULL) +
+#'     scheme_align(guides = "r") +
 #'     anno_right() +
 #'     align_dendro(aes(color = branch), k = 3) +
-#'     plot_align(guides = "r")
+#'     scheme_align(guides = "r")
 #' @export
-plot_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
+scheme_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
+    if (!identical(guides, NA)) assert_layout_position(guides)
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
-    if (!identical(guides, NA)) assert_layout_position(guides)
-    new_plot_align(
+    new_scheme_align(
         free_spaces = free_spaces, free_labs = free_labs,
         guides = guides
     )
 }
 
-new_plot_align <- function(guides = waiver(), free_spaces = waiver(),
-                           free_labs = waiver()) {
-    new_option(
-        name = "plot_align",
+new_scheme_align <- function(guides = waiver(), free_spaces = waiver(),
+                             free_labs = waiver()) {
+    new_scheme(
+        name = "scheme_align",
         list(free_spaces = free_spaces, free_labs = free_labs, guides = guides),
-        class = "plot_align"
+        class = "scheme_align"
     )
 }
 
 #' @export
-update_option.plot_align <- function(new, old, object_name) {
-    update_plot_align(old, new)
+update_scheme.scheme_align <- function(new, old, object_name) {
+    update_scheme_align(old, new)
 }
 
 #' @importFrom utils modifyList
-update_plot_align <- function(old, new) {
+update_scheme_align <- function(old, new) {
     modifyList(old,
         new[!vapply(new, identical, logical(1L), y = NA, USE.NAMES = FALSE)],
         keep.null = TRUE
@@ -88,28 +88,28 @@ update_plot_align <- function(old, new) {
 }
 
 #' @export
-inherit_option.plot_align <- function(option, poption) {
+inherit_scheme.scheme_align <- function(scheme, pscheme) {
     # `align_plots` control how to inherit `guides` from the layout
     # we don't need to inherit it here
-    option["free_spaces"] <- list(.subset2(option, "free_spaces") %|w|%
-        .subset2(poption, "free_spaces"))
-    option["free_labs"] <- list(.subset2(option, "free_labs") %|w|%
-        .subset2(poption, "free_labs"))
-    option
+    scheme["free_spaces"] <- list(.subset2(scheme, "free_spaces") %|w|%
+        .subset2(pscheme, "free_spaces"))
+    scheme["free_labs"] <- list(.subset2(scheme, "free_labs") %|w|%
+        .subset2(pscheme, "free_labs"))
+    scheme
 }
 
 #' @param theme Additional default theme elements to be added for the plot
 #' @noRd
-plot_add_option.plot_align <- function(option, plot) {
-    if (!is.waive(free_guides <- .subset2(option, "guides"))) {
+plot_add_scheme.scheme_align <- function(scheme, plot) {
+    if (!is.waive(free_guides <- .subset2(scheme, "guides"))) {
         plot <- free_guide(plot, free_guides)
     }
     # by default, we'll attach all labs to the axis
-    if (!is.null(free_labs <- .subset2(option, "free_labs") %|w|% "tlbr")) {
+    if (!is.null(free_labs <- .subset2(scheme, "free_labs") %|w|% "tlbr")) {
         plot <- free_lab(plot, free_labs)
     }
     # by default, we won't remove any spaces
-    if (!is.null(free_spaces <- .subset2(option, "free_spaces") %|w|% NULL)) {
+    if (!is.null(free_spaces <- .subset2(scheme, "free_spaces") %|w|% NULL)) {
         plot <- free_space(free_border(plot, free_spaces), free_spaces)
     }
     plot
@@ -126,7 +126,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_guides)", fun),
-            "plot_align()",
+            "scheme_align()",
             env = call
         )
     }
@@ -134,7 +134,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(guides)", fun),
-            "plot_align()",
+            "scheme_align()",
             env = call
         )
     }
@@ -142,7 +142,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_spaces)", fun),
-            "plot_align()",
+            "scheme_align()",
             env = call
         )
     }
@@ -150,7 +150,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(free_labs)", fun),
-            "plot_align()",
+            "scheme_align()",
             env = call
         )
     }
@@ -158,7 +158,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(plot_data)", fun),
-            "plot_data()",
+            "scheme_data()",
             env = call
         )
     }
@@ -166,7 +166,7 @@ deprecate_action <- function(fun, guides = deprecated(),
         lifecycle::deprecate_stop(
             "0.0.5",
             sprintf("%s(theme)", fun),
-            "plot_theme()",
+            "scheme_theme()",
             env = call
         )
     }

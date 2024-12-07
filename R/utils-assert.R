@@ -104,8 +104,8 @@ check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
     size
 }
 
-check_plot_data <- function(data, arg = caller_arg(data),
-                            call = caller_call()) {
+check_scheme_data <- function(data, arg = caller_arg(data),
+                              call = caller_call()) {
     data <- allow_lambda(data)
     if (!is.waive(data) && !is.null(data) && !is.function(data)) {
         cli_abort(paste(
@@ -172,8 +172,8 @@ assert_facet <- function(x, arg = caller_arg(x), call = caller_call()) {
 }
 
 assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!inherits(x, "plot_align")) {
-        cli_abort("{.arg {arg}} must be created by {.fn plot_align}",
+    if (!inherits(x, "scheme_align")) {
+        cli_abort("{.arg {arg}} must be created by {.fn scheme_align}",
             call = call
         )
     }
@@ -181,7 +181,9 @@ assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
 
 assert_active <- function(x, allow_null = TRUE,
                           arg = caller_arg(x), call = caller_call()) {
-    if (is.null(x) && allow_null) return(invisible(NULL))
+    if (is.null(x) && allow_null) {
+        return(invisible(NULL))
+    }
     if (!inherits(x, "ggalign_active")) {
         cli_abort("{.arg {arg}} must be created by {.fn active}",
             call = call

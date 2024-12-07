@@ -399,12 +399,12 @@ testthat::test_that("add `stack_active` object works well", {
     # change parameters for stack self
     p <- stack_alignh(small_mat)
     p2 <- p + stack_active(sizes = unit(1, "cm")) -
-        plot_align(guides = "tlbr", free_labs = "tlbr")
+        scheme_align(guides = "tlbr", free_labs = "tlbr")
     expect_identical(p2@sizes, unit(1, "cm"))
-    controls <- p2@controls
-    expect_identical(controls$plot_align$guides, "tlbr")
-    expect_identical(controls$plot_align$free_labs, "tlbr")
-    expect_identical(controls$plot_data, new_plot_data(NULL))
+    schemes <- p2@schemes
+    expect_identical(schemes$scheme_align$guides, "tlbr")
+    expect_identical(schemes$scheme_align$free_labs, "tlbr")
+    expect_identical(schemes$scheme_data, new_scheme_data(NULL))
 })
 
 testthat::test_that("add `with_quad()` works as expected", {

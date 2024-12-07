@@ -18,9 +18,9 @@
 #'
 #' @param size The relative size of the plot, can be specified as a
 #' [`unit`][grid::unit].
-#' @param controls Options for `controls`:
+#' @param schemes Options for `schemes`:
 #'  - `NULL`: Used when `align` do not add a plot.
-#'  - [`waiver()`][ggplot2::waiver]: Try to infer `controls` based on `data`.
+#'  - [`waiver()`][ggplot2::waiver]: Try to infer `schemes` based on `data`.
 #'
 #' @param limits Logical; if `TRUE`, sets layout limits for the plot.
 #' @param facet Logical; if `TRUE`, applies facets to the layout. If `FALSE`,
@@ -32,15 +32,15 @@
 #' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
 #' @param free_guides `r lifecycle::badge("superseded")` Please use
-#'   [`plot_align()`] function instead.
+#'   [`scheme_align()`] function instead.
 #' @param free_spaces `r lifecycle::badge("deprecated")` Please use
-#' [`plot_align()`] function instead.
+#' [`scheme_align()`] function instead.
 #' @param plot_data `r lifecycle::badge("deprecated")` Please use
-#' [`plot_data()`] function instead.
+#' [`scheme_data()`] function instead.
 #' @param theme `r lifecycle::badge("deprecated")` Please use
-#' [`plot_theme()`] function instead.
+#' [`scheme_theme()`] function instead.
 #' @param free_labs `r lifecycle::badge("deprecated")` Please use
-#' [`plot_align()`] function instead.
+#' [`scheme_align()`] function instead.
 #' @param check.param Logical; if `TRUE`, checks parameters and provides
 #'   warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting
@@ -70,7 +70,7 @@
 #' @export
 #' @keywords internal
 align <- function(align, data, params = list(), plot = NULL,
-                  size = NULL, controls = NULL,
+                  size = NULL, schemes = NULL,
                   limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
                   plot_data = deprecated(), theme = deprecated(),
@@ -93,8 +93,8 @@ align <- function(align, data, params = list(), plot = NULL,
     data <- allow_lambda(data)
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
-    controls <- controls %|w|% new_controls(
-        new_plot_data(if (is.waive(data)) waiver() else NULL)
+    schemes <- schemes %|w|% new_schemes(
+        new_scheme_data(if (is.waive(data)) waiver() else NULL)
     )
 
     # Warn about extra params or missing parameters ---------------
@@ -137,7 +137,7 @@ align <- function(align, data, params = list(), plot = NULL,
         plot = plot,
         active = active,
         size = size,
-        controls = controls,
+        schemes = schemes,
         class = "ggalign_align",
         call = call
     )
@@ -277,7 +277,7 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, direction, position, controls,
+    build = function(self, plot, direction, position, schemes,
                      coords, extra_coords, previous_coords = NULL) {
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")

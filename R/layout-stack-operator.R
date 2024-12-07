@@ -24,10 +24,10 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
 
 # for objects can inherit from layout
 #' @export
-stack_layout_subtract.ggalign_option <- function(object, stack, object_name) {
+stack_layout_subtract.ggalign_scheme <- function(object, stack, object_name) {
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
-        stack <- update_layout_option(object, stack, object_name)
+        stack <- update_layout_scheme(object, stack, object_name)
     } else {
         stack@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
@@ -45,8 +45,8 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
 
         # subtract set at layout level, if it is a plot option
         # we only apply to current active layout
-        if (inherits(inner, "ggalign_option")) {
-            stack <- update_layout_option(inner, stack, inner_name)
+        if (inherits(inner, "ggalign_scheme")) {
+            stack <- update_layout_scheme(inner, stack, inner_name)
             return(stack)
         }
 

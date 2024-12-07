@@ -13,7 +13,7 @@ namespace_link <- function() NULL
 methods::setClass("Layout",
     list(
         active = "ANY", # current active plot
-        controls = "list", # used to provide global parameters for all plots
+        schemes = "list", # used to provide global parameters for all plots
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
         annotation = "list", # To-DO add `pacth_titles` for layout
@@ -66,13 +66,13 @@ methods::setMethod("$", "Layout", function(x, name) {
 default_layout <- function(layout) {
     layout@theme <- default_theme() + layout@theme
     # we by default, collect all guides
-    layout@controls$plot_align["guides"] <- list(
-        .subset2(.subset2(layout@controls, "plot_align"), "guides") %|w|% "tlbr"
+    layout@schemes$scheme_align["guides"] <- list(
+        .subset2(.subset2(layout@schemes, "scheme_align"), "guides") %|w|% "tlbr"
     )
     # we by default, use `default_theme()`
-    layout@controls$plot_theme <- update_option(
-        .subset2(layout@controls, "plot_theme"),
-        new_plot_theme(default_theme())
+    layout@schemes$scheme_theme <- update_scheme(
+        .subset2(layout@schemes, "scheme_theme"),
+        new_scheme_theme(default_theme())
     )
     layout
 }

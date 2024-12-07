@@ -153,7 +153,7 @@ align_dendro <- function(mapping = aes(), ...,
         plot_data = plot_data, theme = theme,
         no_axes = no_axes, active = active,
         size = size,
-        controls = new_controls(),
+        schemes = new_schemes(),
         data = data,
         plot = ggplot(mapping = mapping)
     )
@@ -220,7 +220,7 @@ align_hclust <- function(distance = "euclidean",
             plot_dendrogram = FALSE
         ),
         active = active,
-        controls = new_controls(),
+        schemes = new_schemes(),
         data = data,
         plot = NULL
     )

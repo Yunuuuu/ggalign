@@ -65,8 +65,8 @@ new_free_gg <- function(plot, data, size, active,
     new_free_plot(
         plot = plot, data = data,
         size = size, active = active,
-        controls = new_controls(
-            new_plot_data(if (is.waive(data)) waiver() else NULL)
+        schemes = new_schemes(
+            new_scheme_data(if (is.waive(data)) waiver() else NULL)
         ),
         class = "ggalign_free_gg",
         call = call

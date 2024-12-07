@@ -75,10 +75,10 @@ ggoncoplot(mat,
 ```
 
 # Advanced Data Handling
-`ggoncoplot()` is built on `ggheatmap()` with a default `plot_data()` (see
+`ggoncoplot()` is built on `ggheatmap()` with a default `scheme_data()` (see
 `vignette("plot-options")` for details), which splits alterations into separate
 entries for visualization. (See `ggplot2 specification` section in `ggheatmap()`
-for the input data of `plot_data()`):
+for the input data of `scheme_data()`):
 ```{r eval=rlang::is_installed("tidyr")}
 pdata <- function(data) {
     tidyr::separate_longer_delim(data,
@@ -91,23 +91,23 @@ pdata <- function(data) {
 # `ggoncoplot()` will automatically convert any empty strings to `NA`
 # before pass it to `ggheatmap`.
 ggheatmap(mat) -
-    plot_data(pdata) +
+    scheme_data(pdata) +
     scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
 ```
 
-By default, the `plot_data()` is inherited from the parent layout if the data of
-the plot is inherited from the layout. You can apply the parent `plot_data()`
+By default, the `scheme_data()` is inherited from the parent layout if the data of
+the plot is inherited from the layout. You can apply the parent `scheme_data()`
 first and then apply another transformation by setting `inherit = TRUE`. This
 functionality is especially useful when working with `ggoncoplot()`.
 ```{r}
 ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
     anno_top(size = 0.2) +
     ggalign() +
-    # by setting `inherti = TRUE`, we apply the parent layout `plot_data()`
+    # by setting `inherti = TRUE`, we apply the parent layout `scheme_data()`
     # (from the `ggoncoplot()` layout) firstly, which will split the alteration
     # string and unnested the columns.
     # Here: We then remove `NA` value
-    plot_data(~ subset(.x, !is.na(value)), inherit = TRUE) +
+    scheme_data(~ subset(.x, !is.na(value)), inherit = TRUE) +
     geom_bar(aes(.x, after_stat(count), fill = value)) +
     # note: `ggoncoplot()` use `geom_tile()` to draw the oncoPrint,
     # the guide is different from `geom_bar()`, though both looks
@@ -181,9 +181,9 @@ We focus exclusively on cells with multiple alterations to highlight the
 differences, by filtering the data before applying `geom_subtile()`:
 ```{r eval=can_read_maf && rlang::is_installed("dplyr")}
 ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
-    plot_data(function(data) {
+    scheme_data(function(data) {
         dplyr::filter(data, dplyr::n() > 1L, .by = c(".x", ".y"))
-        # we apply the parent layout `plot_data()` first (`inherit = TRUE`),
+        # we apply the parent layout `scheme_data()` first (`inherit = TRUE`),
         # which will split the alteration string and unnested the columns.
     }, inherit = TRUE) +
     geom_subtile(aes(fill = value), direction = "vertical") +
@@ -335,7 +335,7 @@ ggoncoplot(laml, n_top = 20, collapse_vars = FALSE, filling = FALSE) +
     # add right annotation
     anno_right(size = 0.2) -
     # remove bottom spaces of the right annotation when aligning
-    plot_align(free_spaces = "b") +
+    scheme_align(free_spaces = "b") +
     # add the text percent for the alterated samples in the right annotation
     ggalign(data = function(data) {
         # Atomic vector will be put in the `value` column of the data frame.

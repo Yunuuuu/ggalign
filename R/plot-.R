@@ -6,7 +6,7 @@ methods::setClass(
         plot = "ANY",
         active = "ANY",
         size = "ANY",
-        controls = "ANY"
+        schemes = "ANY"
     )
 )
 
@@ -21,7 +21,7 @@ methods::setMethod("show", "ggalign_plot", function(object) {
 
 #' @importFrom methods new
 new_ggalign_plot <- function(..., plot = NULL, active = NULL, size = NULL,
-                             controls = NULL, class = "ggalign_plot",
+                             schemes = NULL, class = "ggalign_plot",
                              call = caller_call()) {
     if (!inherits(active, "ggalign_active")) {
         cli_abort("{.arg active} must be created by {.fn active}", call = call)
@@ -34,7 +34,7 @@ new_ggalign_plot <- function(..., plot = NULL, active = NULL, size = NULL,
     new(
         class,
         ...,
-        controls = controls %||% new_controls(),
+        schemes = schemes %||% new_schemes(),
         plot = plot,
         active = active,
         size = size
@@ -46,7 +46,7 @@ is_ggalign_plot <- function(x) is(x, "ggalign_plot")
 
 #' @export
 plot.ggalign_plot <- function(x, ...) {
-    cli_abort(sprintf("You cannot plot %s object directly", object_name(x)))
+    cli_abort(sprintf("Cannot plot %s object directly", object_name(x)))
 }
 
 #' @importFrom grid grid.draw

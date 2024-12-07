@@ -64,6 +64,6 @@ quad_layout_add.ggalign_free_plot <- function(object, quad, object_name) {
 quad_layout_add.ggplot <- quad_layout_add.ggalign_free_plot
 
 #' @export
-plot_build.ggalign_free_plot <- function(plot, ..., controls) {
-    plot_add_controls(plot@plot, controls)
+plot_build.ggalign_free_plot <- function(plot, ..., schemes) {
+    plot_add_schemes(plot@plot, schemes)
 }

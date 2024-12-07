@@ -42,10 +42,10 @@ align_add.Coord <- function(object, plot, object_name) {
 }
 
 #' @export
-align_add.ggalign_option <- function(object, plot, object_name) {
-    name <- ggalign_option_name(object)
-    plot@controls[name] <- list(update_option(
-        object, .subset2(plot@controls, name), object_name
+align_add.ggalign_scheme <- function(object, plot, object_name) {
+    name <- ggalign_scheme_name(object)
+    plot@schemes[name] <- list(update_scheme(
+        object, .subset2(plot@schemes, name), object_name
     ))
     plot
 }
@@ -58,4 +58,4 @@ free_add <- function(object, plot, object_name) UseMethod("free_add")
 free_add.default <- align_add.default
 
 #' @export
-free_add.ggalign_option <- align_add.ggalign_option
+free_add.ggalign_scheme <- align_add.ggalign_scheme

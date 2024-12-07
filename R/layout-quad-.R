@@ -281,8 +281,8 @@ new_quad_layout <- function(name, data, horizontal, vertical,
     # since `QuadLayout` must have data, and won't be waiver()
     # if inherit from the parent layout data, we'll inherit
     # the action data function
-    controls <- new_controls(
-        new_plot_data(if (is.null(data)) waiver() else NULL)
+    schemes <- new_schemes(
+        new_scheme_data(if (is.null(data)) waiver() else NULL)
     )
 
     # check arguments -----------------------------------
@@ -295,13 +295,13 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         class,
         # used by the layout
         data = data, theme = theme,
-        controls = controls,
+        schemes = schemes,
         plot_active = update_active(active, new_active(
             order = NA_integer_, use = TRUE, name = NA_character_
         )),
         name = name,
         # used by the main body
-        body_controls = new_controls(new_plot_data(waiver())),
+        body_schemes = new_schemes(new_scheme_data(waiver())),
         # following parameters can be controlled by `quad_switch`
         width = width, height = height,
         # following parameters are used internally
@@ -315,7 +315,7 @@ methods::setClass(
     "QuadLayout",
     contains = "Layout",
     list(
-        data = "ANY", plot = "ANY", body_controls = "list", name = "character",
+        data = "ANY", plot = "ANY", body_schemes = "list", name = "character",
         # parameters for main body
         width = "ANY", height = "ANY",
         # If we regard QuadLayout as a plot, and put it into the stack

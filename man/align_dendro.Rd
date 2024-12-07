@@ -133,19 +133,19 @@ default, will use the option-
 added to a layout.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_data]{plot_data()}} function instead.}
+\code{\link[=scheme_data]{scheme_data()}} function instead.}
 
 \item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_theme]{plot_theme()}} function instead.}
+\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
 argument instead.}

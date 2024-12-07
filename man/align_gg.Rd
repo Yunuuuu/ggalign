@@ -6,9 +6,9 @@
 \title{Create ggplot object}
 \usage{
 align_gg(
+  data = waiver(),
   mapping = aes(),
   size = NULL,
-  data = waiver(),
   limits = TRUE,
   facet = TRUE,
   no_axes = NULL,
@@ -24,21 +24,21 @@ align_gg(
 )
 }
 \arguments{
-\item{mapping}{Default list of aesthetic mappings to use for plot.
-If not specified, must be supplied in each layer added to the plot.}
-
-\item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
-
 \item{data}{A flexible input that specifies the data to be used
 \itemize{
 \item \code{NULL}: No data is set.
 \item \code{\link[ggplot2:waiver]{waiver()}}: Uses the layout matrix.
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
 layout matrix, and must return a matrix. If you want to transform the final
-plot data, please use \code{\link[=plot_data]{plot_data()}}.
+plot data, please use \code{\link[=scheme_data]{scheme_data()}}.
 \item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
+
+\item{mapping}{Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.}
+
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
 
 \item{limits}{Logical; if \code{TRUE}, sets layout limits for the plot.}
 
@@ -63,19 +63,19 @@ instead.}
 instead.}
 
 \item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 
 \item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_data]{plot_data()}} function instead.}
+\code{\link[=scheme_data]{scheme_data()}} function instead.}
 
 \item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_theme]{plot_theme()}} function instead.}
+\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
 
 \item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=plot_align]{plot_align()}} function instead.}
+\code{\link[=scheme_align]{scheme_align()}} function instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

@@ -115,18 +115,18 @@ Marginal plots can also be created with similar syntax:
 ``` r
 ggside(mpg, aes(displ, hwy, colour = class)) -
     # set default theme for all plots in the layout
-    plot_theme(theme_bw()) +
+    scheme_theme(theme_bw()) +
     geom_point(size = 2) +
     # add top annotation
     anno_top(size = 0.3) -
     # set default theme for the top annotation
-    plot_theme(theme_no_axes("tb")) +
+    scheme_theme(theme_no_axes("tb")) +
     # add a plot in the top annotation
     ggfree() +
     geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
     anno_right(size = 0.3) -
     # set default theme for the right annotation
-    plot_theme(theme_no_axes("lr")) +
+    scheme_theme(theme_no_axes("lr")) +
     # add a plot in the right annotation
     ggfree() +
     geom_density(aes(x = after_stat(density), hwy, colour = class),

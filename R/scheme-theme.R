@@ -3,10 +3,10 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' `plot_theme()` serves as the default theme and will always be overridden by
+#' `scheme_theme()` serves as the default theme and will always be overridden by
 #' any `theme()` settings applied directly to the plot. The default theme
-#' (`plot_theme()`) is applied first, followed by any specific `theme()`
-#' settings, even if `theme()` is added before `plot_theme()`.
+#' (`scheme_theme()`) is applied first, followed by any specific `theme()`
+#' settings, even if `theme()` is added before `scheme_theme()`.
 #'
 #' @inherit ggplot2::theme
 #' @param ... A [`theme()`][ggplot2::theme] object or additional element
@@ -17,18 +17,18 @@
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(56), nrow = 8)
 #' ggheatmap(small_mat) +
-#'     plot_theme(plot.background = element_rect(fill = "red"))
+#'     scheme_theme(plot.background = element_rect(fill = "red"))
 #'
-#' # `plot_theme()` serves as the default theme and will always be
+#' # `scheme_theme()` serves as the default theme and will always be
 #' # overridden by any `theme()` settings applied directly to the plot
 #' ggheatmap(small_mat) +
 #'     theme(plot.background = element_rect(fill = "blue")) +
-#'     plot_theme(plot.background = element_rect(fill = "red"))
+#'     scheme_theme(plot.background = element_rect(fill = "red"))
 #'
 #' @importFrom ggplot2 theme
 #' @importFrom rlang inject
 #' @export
-plot_theme <- rlang::new_function(
+scheme_theme <- rlang::new_function(
     # We utilize editor completion by listing all `theme()` arguments here.
     # By placing `...` at the beginning, we can check if the first
     # following argument is a `theme()` object rather than individual theme
@@ -49,47 +49,47 @@ plot_theme <- rlang::new_function(
                 th <- ggfun("add_theme")(th, t)
             }
         }
-        new_plot_theme(ggfun("add_theme")(th, ans))
+        new_scheme_theme(ggfun("add_theme")(th, ans))
     })
 )
 
 #' @importFrom ggplot2 theme
-new_plot_theme <- function(th = theme()) {
+new_scheme_theme <- function(th = theme()) {
     # I don't know why, if I omit the `object = th` argument, it won't work
-    UseMethod("new_plot_theme", th)
+    UseMethod("new_scheme_theme", th)
 }
 
 #' @importFrom rlang inject
 #' @export
-new_plot_theme.theme <- function(th = theme()) {
+new_scheme_theme.theme <- function(th = theme()) {
     attrs <- attributes(th)
     attrs <- vec_slice(
         attrs, vec_set_difference(names(attrs), c("names", "class"))
     )
-    inject(new_option(
-        name = "plot_theme", th, !!!attrs,
-        class = c("plot_theme", class(th))
+    inject(new_scheme(
+        name = "scheme_theme", th, !!!attrs,
+        class = c("scheme_theme", class(th))
     ))
 }
 
 #' @export
-new_plot_theme.plot_theme <- function(th = theme()) th
+new_scheme_theme.scheme_theme <- function(th = theme()) th
 
 #' @export
-update_option.plot_theme <- function(new, old, object_name) {
+update_scheme.scheme_theme <- function(new, old, object_name) {
     ggfun("add_theme")(old, new, object_name)
 }
 
 #' @export
-inherit_option.plot_theme <- function(option, poption) {
+inherit_scheme.scheme_theme <- function(scheme, pscheme) {
     # By default, we'll always complete the theme when building the layout
     # so parent always exist.
-    poption + option
+    pscheme + scheme
 }
 
 #' @export
-plot_add_option.plot_theme <- function(option, plot) {
+plot_add_scheme.scheme_theme <- function(scheme, plot) {
     # setup plot theme
-    plot$theme <- option + .subset2(plot, "theme")
+    plot$theme <- scheme + .subset2(plot, "theme")
     plot
 }

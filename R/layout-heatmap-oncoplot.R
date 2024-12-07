@@ -139,8 +139,8 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         width = width, height = height,
         theme = theme, active = active, filling = NULL
     ) -
-        # set the default `plot_data()`
-        plot_data(data = pdata)
+        # set the default `scheme_data()`
+        scheme_data(data = pdata)
     if (reorder_row) {
         ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
     }
@@ -158,7 +158,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     ans <- ans + quad_active()
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
-        ans <- ans + plot_data(data = pdata)
+        ans <- ans + scheme_data(data = pdata)
 
         # set mapping for width and height
         tile_mapping <- aes(

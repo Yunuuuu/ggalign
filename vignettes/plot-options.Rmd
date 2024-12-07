@@ -27,11 +27,11 @@ specific plots.
 
 The package currently provides three plot options, each prefixed with `plot_`:
 
-  - `plot_theme`: Sets the default theme for the plot.
-  - `plot_data`: Transforms the plot data. Many functions in this package
-  require a specific data format to align observations, `plot_data()` helps
+  - `scheme_theme`: Sets the default theme for the plot.
+  - `scheme_data`: Transforms the plot data. Many functions in this package
+  require a specific data format to align observations, `scheme_data()` helps
   reformat data frames as needed.
-  - `plot_align`: Defines alignment specifications for plots within the layout.
+  - `scheme_align`: Defines alignment specifications for plots within the layout.
 
 ```{r setup}
 library(ggalign)
@@ -44,37 +44,37 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
-# `plot_theme`
-The `plot_theme()` function extends `theme()` to set a default theme for plots,
+# `scheme_theme`
+The `scheme_theme()` function extends `theme()` to set a default theme for plots,
 allowing you to input `theme()` elements directly or modify the theme elements.
 
 To set a plot option for a single plot, simply use the `+` operator:
 ```{r}
 ggheatmap(small_mat) +
     # change the default theme of the heatmap body
-    plot_theme(plot.background = element_rect(fill = "red"))
+    scheme_theme(plot.background = element_rect(fill = "red"))
 ```
 
-You can use a `theme()` object directly in `plot_theme()`.
+You can use a `theme()` object directly in `scheme_theme()`.
 ```{r}
 ggheatmap(small_mat, filling = FALSE) +
     # we reduce the heatmap body cell width and height
     # in this way, we can see the background of `theme_bw()` in the panel.
     geom_tile(aes(fill = value), width = 0.9, height = 0.9) +
     # change the default theme of the heatmap body
-    plot_theme(theme_bw(), plot.background = element_rect(fill = "red"))
+    scheme_theme(theme_bw(), plot.background = element_rect(fill = "red"))
 ```
 
-Note that `plot_theme()` serves as the default theme and will always be
+Note that `scheme_theme()` serves as the default theme and will always be
 overridden by any `theme()` settings applied directly to the plot. The default
-theme (`plot_theme()`) is applied first, followed by any specific `theme()`
-settings, even if `theme()` is added before `plot_theme()`.
+theme (`scheme_theme()`) is applied first, followed by any specific `theme()`
+settings, even if `theme()` is added before `scheme_theme()`.
 ```{r}
 ggheatmap(small_mat) +
     # change the plot theme of the heatmap body
     theme(plot.background = element_rect(fill = "blue")) +
     # change the default theme of the heatmap body
-    plot_theme(plot.background = element_rect(fill = "red"))
+    scheme_theme(plot.background = element_rect(fill = "red"))
 ```
 
 By using the `-` operator with plot options, we apply the option directly to the
@@ -90,7 +90,7 @@ ggheatmap(small_mat) +
     geom_bar(stat = "identity") -
     # Change the default theme of the top annotation
     # All plots in the top annotation will inherit this default theme
-    plot_theme(plot.background = element_rect(fill = "red"))
+    scheme_theme(plot.background = element_rect(fill = "red"))
 ```
 
 Unlike individual ggplot2 elements, which will be added directly to each plot by
@@ -104,29 +104,29 @@ ggheatmap(small_mat) +
     anno_top() +
     # add a dendrogram to the top annotation
     align_dendro() +
-    # change the plot_theme for the dendrogram plot
-    plot_theme(plot.background = element_rect(fill = "blue")) +
+    # change the scheme_theme for the dendrogram plot
+    scheme_theme(plot.background = element_rect(fill = "blue")) +
     # add a bar plot to the top annotation
     ggalign(aes(.names, value, fill = factor(.names)), data = rowSums) +
     geom_bar(stat = "identity") -
     # Change the default theme of the top annotation
     # All plots in the top annotation will inherit this default theme
     # But the plot-specific options will override these
-    plot_theme(plot.background = element_rect(fill = "red"))
+    scheme_theme(plot.background = element_rect(fill = "red"))
 ```
 
-# `plot_data`
+# `scheme_data`
 `align_gg()`/`ggalign()` requires the specific data format for its operations.
 If you need to transform or filter data for individual `geoms`, you can use the
 `data` argument within each `geom`. However, if you have multiple `geoms` and
 want a consistent transformation applied across all, you can utilize the
-`plot_data()` function. This allows you to transform the default data for the
+`scheme_data()` function. This allows you to transform the default data for the
 entire plot.
 
-The `plot_data()` accepts a function that takes a data frame as input and
-returns a modified data frame. By default, `plot_data()` will attempt to inherit
+The `scheme_data()` accepts a function that takes a data frame as input and
+returns a modified data frame. By default, `scheme_data()` will attempt to inherit
 from the parent layout if the data is inherited from it. However, there is one
-exception: `align_dendro()` will not inherit `plot_data()` transformations by
+exception: `align_dendro()` will not inherit `scheme_data()` transformations by
 default.
 
 ```{r}
@@ -137,12 +137,12 @@ ggheatmap(small_mat) +
     # we add a bar plot
     ggalign() +
     # we subest the plot data
-    plot_data(~ subset(.x, .panel == 1L)) +
+    scheme_data(~ subset(.x, .panel == 1L)) +
     geom_bar(aes(y = value, fill = .row_names), stat = "identity")
 ```
 
-# `plot_align`
-The `plot_align()` function defines the align Specifications for plots.
+# `scheme_align`
+The `scheme_align()` function defines the align Specifications for plots.
 
 ## guides
 By default, `ggheatmap()` will collect all guide legends on the side from which
@@ -179,25 +179,25 @@ heatmap_collect_all_guides <- ggheatmap(small_mat, width = 2, height = 2L) +
 heatmap_collect_all_guides
 ```
 
-The guides argument controls which side of guide legends should be gathered. In
+The guides argument schemes which side of guide legends should be gathered. In
 the following example, we'll collect the guide legends only on the top (`t`)
 sides:
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides -
     # we set global `guides` argument for `the heatmap layout`
     # we only collect guides in the top side
-    with_quad(plot_align(guides = "t"), NULL)
+    with_quad(scheme_align(guides = "t"), NULL)
 ```
 
-You can also apply the `plot_align()` function directly to specific plots:
+You can also apply the `scheme_align()` function directly to specific plots:
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides -
     # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top side
-    with_quad(plot_align(guides = "t"), NULL) +
+    with_quad(scheme_align(guides = "t"), NULL) +
     # `+` apply it to the active plot
     # for the heatmap body, we collect guide in the left side
-    with_quad(plot_align(guides = "l"), NULL)
+    with_quad(scheme_align(guides = "l"), NULL)
 ```
 
 Note: The legend on the left side of the heatmap body is collected and
@@ -215,10 +215,10 @@ happens when we set the `guides` for the dendrogram in the top annotation?
 heatmap_collect_all_guides -
     # we set global `guides` argument for `the heatmap layout`
     # we only collect guides in the top side in the heatmap layout
-    with_quad(plot_align(guides = "t"), NULL) +
+    with_quad(scheme_align(guides = "t"), NULL) +
     # `+` apply it to the active plot
     # for the dendrogram in the top annotation, we collect guide in the left side
-    with_quad(plot_align(guides = "l"), "t")
+    with_quad(scheme_align(guides = "l"), "t")
 ```
 
 Nothing seems to have changed, right? This is because guide legends within
@@ -241,20 +241,20 @@ In this example:
 
 To override this, you can use the `free_guides` argument of the
 `quad_anno()`/`anno_*()` function. This differs from the `guides` argument in
-`plot_align()`, which controls the behavior for the plots in the layout. The
+`scheme_align()`, which schemes the behavior for the plots in the layout. The
 `free_guides` argument specifies which guide legends from at the annotation stack
 layout level should be collected by the heatmap layout. 
 ```{r fig.dim = c(12, 12)}
 heatmap_collect_all_guides -
     # we set global `guides` argument for `the heatmap layout`
     # we only collect guides in the top side in the heatmap layout
-    with_quad(plot_align(guides = "t"), NULL) +
+    with_quad(scheme_align(guides = "t"), NULL) +
     # we also collect guides in the left side for the top annotation stack
     # in the heatmap layout
     anno_top(free_guides = "l") +
     # `+` apply it to the active plot
     # for the dendrogram in the top annotation, we collect guide in the left side
-    plot_align(guides = "l")
+    scheme_align(guides = "l")
 ```
 
 >Note: The heatmap layout will only collect guide legends from the annotation
@@ -292,7 +292,7 @@ ggheatmap(small_mat) +
     # add top annotation
     anno_top(size = unit(30, "mm")) -
     # we remove the spaces of the left borders in the top annotation
-    plot_align(free_spaces = "l") +
+    scheme_align(free_spaces = "l") +
     # add a dendrogram to the top annotation
     align_dendro() +
     # here, we use long labels for visual example
@@ -315,18 +315,18 @@ heatmap_collect_all_guides +
     quad_active() -
     # we set global `guides` argument for the heatmap layout
     # we only collect guides in the top side
-    plot_align(guides = "t") +
+    scheme_align(guides = "t") +
     # `+` apply it to the current active plot
     # for the heatmap body, we collect guide in the left side
-    plot_align(guides = "l") -
-    with_quad(plot_align(free_spaces = "l"), "t")
+    scheme_align(guides = "l") -
+    with_quad(scheme_align(free_spaces = "l"), "t")
 ```
 
 Usually you want to apply `free_spaces` with the whole layout, instead of
 individual plots.
 
 In `ggheatmap()`/`quad_layout()`, the behavior of the `free_spaces` and
-`free_labs` arguments differs from `guides` arguments in `plot_align()` when
+`free_labs` arguments differs from `guides` arguments in `scheme_align()` when
 inheriting from the parent layout:
 
   - For `top` and `bottom` annotations, it inherits from the left ("l") and
@@ -350,7 +350,7 @@ which axis titles should be free from alignment.
 
 ```{r}
 ggheatmap(small_mat) -
-    plot_align(free_labs = NULL) +
+    scheme_align(free_labs = NULL) +
     ylab("Heatmap title") +
     anno_top(size = unit(30, "mm")) +
     align_dendro() +

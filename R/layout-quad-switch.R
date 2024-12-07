@@ -27,7 +27,7 @@ quad_active <- function(width = NULL, height = NULL) {
 #' @details
 #' By default, `quad_anno()` attempts to initialize the annotation stack layout
 #' using data from `r rd_quad()`. However, in situations where you want to use
-#' different data for the annotation stack, you can set `initialize = FALSE` 
+#' different data for the annotation stack, you can set `initialize = FALSE`
 #' and then provide a custom `stack_layout()`.
 #'
 #' @param position `r rd_quad_position("activated")`.
