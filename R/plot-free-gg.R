@@ -106,13 +106,6 @@ plot_initialize.ggalign_free_gg <- function(object, layout, object_name) {
     object
 }
 
-#' @export
-print.ggalign_free_gg <- function(x, ...) {
-    p <- free_gg_build_plot(x@plot, x@data)
-    print(p)
-    invisible(x)
-}
-
 free_gg_build_plot <- function(plot, data) {
     if (is.function(data)) {
         data <- waiver()
