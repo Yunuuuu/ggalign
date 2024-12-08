@@ -70,7 +70,7 @@ ggheatmap(small_mat) +
     align_dendro(aes(color = branch), k = 3) +
     geom_point(aes(color = branch, y = y)) +
     scale_color_brewer(palette = "Dark2") +
-    ggalign(aes(y = value)) +
+    ggalign(mapping = aes(y = value)) +
     geom_boxplot(aes(factor(.x), fill = .panel)) +
     scale_fill_brewer(palette = "Dark2")
 ```
@@ -79,12 +79,12 @@ ggheatmap(small_mat) +
 ggheatmap(small_mat) +
     anno_top(size = 0.5) +
     align_dendro(aes(color = branch), k = 3L) +
-    ggalign(aes(y = value), data = rowSums) +
+    ggalign(rowSums, aes(y = value)) +
     geom_bar(stat = "identity", aes(fill = factor(.panel))) +
     scale_fill_brewer(name = NULL, palette = "Dark2") +
     anno_left(size = 0.5) +
     align_dendro(aes(color = branch), size = 0.5, k = 4L) +
-    ggalign(aes(x = value), data = rowSums) +
+    ggalign(rowSums, aes(x = value)) +
     geom_bar(
         aes(y = .y, fill = factor(.y)),
         stat = "identity",

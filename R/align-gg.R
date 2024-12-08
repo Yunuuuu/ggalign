@@ -100,7 +100,7 @@ align_gg <- function(data = waiver(), mapping = aes(), size = NULL,
     if (inherits(data, "uneval")) {
         cli_abort(c(
             "{.arg data} cannot be {.obj_type_friendly {data}}",
-            "i" = "Have you misspelled the {.arg data} argument in {.fn quad_free}"
+            "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
         ))
     }
     assert_active(active)
