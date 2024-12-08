@@ -4,14 +4,11 @@
 \alias{free_gg}
 \alias{ggfree}
 \alias{free_gg.default}
-\alias{free_gg.ggplot}
 \title{Add ggplot to layout}
 \usage{
 free_gg(data = waiver(), ..., size = NULL, active = NULL)
 
 \method{free_gg}{default}(data = waiver(), mapping = aes(), ..., size = NULL, active = NULL)
-
-\method{free_gg}{ggplot}(data = waiver(), ..., size = NULL, active = NULL)
 }
 \arguments{
 \item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}

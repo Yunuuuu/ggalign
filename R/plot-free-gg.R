@@ -56,7 +56,6 @@ free_gg.uneval <- function(data = waiver(), ...) {
 }
 
 #' @export
-#' @rdname free_gg
 free_gg.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
     plot <- data
     # In ggplot2, `waiver()` was regard to no data
