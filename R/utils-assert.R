@@ -42,12 +42,10 @@ assert_sub_split <- function(align, panel) {
 
 assert_reorder <- function(align, panel, strict) {
     if (!is.null(panel) && strict) {
+        axis <- to_coord_axis(.subset2(align, "direction"))
         cli_abort(c(
             "{.fn {snake_class(align)}} cannot reordering {axis}-axis",
-            i = sprintf(
-                "Group of layout %s-axis already exists",
-                to_coord_axis(.subset2(align, "direction"))
-            ),
+            i = sprintf("Group of layout %s-axis already exists", axis),
             i = "try to set {.code strict = FALSE} to reorder within each group"
         ), call = .subset2(align, "call"))
     }
