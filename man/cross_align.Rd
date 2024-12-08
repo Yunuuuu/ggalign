@@ -6,7 +6,7 @@
 \alias{cross_layout}
 \alias{cross_alignv}
 \alias{cross_alignh}
-\title{Arrange Plots Horizontally or Vertically}
+\title{Arrange Plots Crosswise Horizontally or Vertically}
 \usage{
 cross_align(data = NULL, direction, ..., theme = NULL, sizes = NA)
 

@@ -1,4 +1,4 @@
-#' Arrange Plots Horizontally or Vertically
+#' Arrange Plots Crosswise Horizontally or Vertically
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
