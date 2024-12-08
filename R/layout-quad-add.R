@@ -212,7 +212,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         if (any(position == c("bottom", "right")) &&
             is_cross_layout(object) &&
             !is_empty(object@cross_points)) {
-            stack_coords["index"] <- .subset2(object@index_list, 1L)
+            stack_coords["index"] <- list(.subset2(object@index_list, 1L))
         }
         layout_coords <- check_layout_coords(
             quad_coords, stack_coords,
