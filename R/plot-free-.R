@@ -5,12 +5,6 @@ new_free_plot <- function(..., class = character()) {
 #' @include plot-.R
 methods::setClass("ggalign_free_plot", contains = "ggalign_plot")
 
-#' @export
-print.ggalign_free_plot <- function(x, ...) {
-    sprintf("%s object", object_name(x))
-    invisible(x)
-}
-
 #' Initialize the plot
 #'
 #' Used by `ggalign_free_plot`

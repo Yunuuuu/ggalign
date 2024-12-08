@@ -29,13 +29,13 @@ object_name.ggalign_align_plot <- function(object, format = "fn") {
 }
 
 #' @export
-object_name.ggalign_free_plot <- function(object, format = "fn") {
-    object_name(object@align, format)
+object_name.ggalign_free_plot <- function(object, format = "cls") {
+    format_object_name(.subset(class(object), 1L), format)
 }
 
 #' @export
-object_name.free_gg <- function(object, format = "fn") {
-    object_name("ggfree", format)
+object_name.ggalign_free_gg <- function(object, format = "fn") {
+    format_object_name("ggfree", format)
 }
 
 #' @export

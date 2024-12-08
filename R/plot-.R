@@ -18,6 +18,39 @@ methods::setMethod("show", "ggalign_plot", function(object) {
     print(object)
 })
 
+#' @export
+print.ggalign_plot <- function(x, ...) {
+    oo <- summary(x)
+    cli::cli_inform(c(
+        sprintf("%s object:", object_name(x)),
+        " " = sprintf(
+            "  {.field plot}: %s",
+            if (oo[1L]) "yes" else "no"
+        ),
+        " " = sprintf(
+            "  {.field reorder}: %s",
+            if (oo[2L]) "yes" else "no"
+        ),
+        " " = sprintf(
+            "  {.field split}: %s",
+            if (oo[3L]) "yes" else "no"
+        )
+    ))
+    invisible(x)
+}
+
+#' Summary the action of `ggalign_plot`
+#'
+#' @param object A `ggalign_plot` object
+#' @return A logical vector of length 3, indicating:
+#' - Whether the object adds a plot.
+#' - Whether the object reorders the observations.
+#' - Whether the object splits the observations into groups.
+#' @export
+#' @keywords internal
+summary.ggalign_plot <- function(object, ...) {
+    c(!is.null(object@plot), FALSE, FALSE)
+}
 
 #' @importFrom methods new
 new_ggalign_plot <- function(..., plot = NULL, active = NULL, size = NULL,

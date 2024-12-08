@@ -161,7 +161,7 @@ align_dendro <- function(mapping = aes(), ...,
 
 #' @export
 summary.AlignDendro <- function(object, ...) {
-    params <- .subset2(object, "params")
+    params <- .subset2(object, "input_params")
     c(TRUE, !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h")))
 }
 

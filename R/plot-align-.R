@@ -23,27 +23,6 @@ methods::setClass(
     list(align = "ANY", no_axes = "ANY")
 )
 
-#' @export
-print.ggalign_align_plot <- function(x, ...) {
-    oo <- summary(x)
-    cli::cli_inform(c(
-        sprintf("%s object:", object_name(x)),
-        " " = sprintf(
-            "  {.field plot}: %s",
-            if (oo[1L]) "yes" else "no"
-        ),
-        " " = sprintf(
-            "  {.field reorder}: %s",
-            if (oo[2L]) "yes" else "no"
-        ),
-        " " = sprintf(
-            "  {.field split}: %s",
-            if (oo[3L]) "yes" else "no"
-        )
-    ))
-    invisible(x)
-}
-
 #' Summary the action of `ggalign_align_plot`
 #' @param object A `ggalign_align_plot` object
 #' @return A logical vector of length 3, indicating:
