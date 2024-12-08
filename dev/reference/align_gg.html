@@ -83,9 +83,9 @@ it will apply with the layout matrix.  <code>ggalign</code> is an alias of <code
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_gg</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_axes <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -105,7 +105,17 @@ it will apply with the layout matrix.  <code>ggalign</code> is an alias of <code
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dd><p>A flexible input that specifies the data to be used</p><ul><li><p><code>NULL</code>: No data is set.</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: Uses the layout matrix.</p></li>
+<li><p>A <code>function</code> (including purrr-like lambda syntax) that is applied to the
+layout matrix, and must return a matrix. If you want to transform the final
+plot data, please use <code><a href="scheme_data.html">scheme_data()</a></code>.</p></li>
+<li><p>A <code>matrix</code>, <code>data frame</code>, or atomic vector.</p></li>
+</ul></dd>
+
+
+<dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
 <dd><p>Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.</p></dd>
 
@@ -113,16 +123,6 @@ If not specified, must be supplied in each layer added to the plot.</p></dd>
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
 <dd><p>The relative size of the plot, can be specified as a
 <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code>.</p></dd>
-
-
-<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A flexible input that specifies the data to be used</p><ul><li><p><code>NULL</code>: No data is set.</p></li>
-<li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>: Uses the layout matrix.</p></li>
-<li><p>A <code>function</code> (including purrr-like lambda syntax) that is applied to the
-layout matrix, and must return a matrix. If you want to transform the final
-plot data, please use <code><a href="plot_data.html">plot_data()</a></code>.</p></li>
-<li><p>A <code>matrix</code>, <code>data frame</code>, or atomic vector.</p></li>
-</ul></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
@@ -163,27 +163,27 @@ instead.</p></dd>
 
 <dt id="arg-free-guides">free_guides<a class="anchor" aria-label="anchor" href="#arg-free-guides"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#superseded" class="external-link"><img src="figures/lifecycle-superseded.svg" alt="[Superseded]"></a> Please use
-<code><a href="plot_align.html">plot_align()</a></code> function instead.</p></dd>
+<code><a href="scheme_align.html">scheme_align()</a></code> function instead.</p></dd>
 
 
 <dt id="arg-free-spaces">free_spaces<a class="anchor" aria-label="anchor" href="#arg-free-spaces"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
-<code><a href="plot_align.html">plot_align()</a></code> function instead.</p></dd>
+<code><a href="scheme_align.html">scheme_align()</a></code> function instead.</p></dd>
 
 
 <dt id="arg-plot-data">plot_data<a class="anchor" aria-label="anchor" href="#arg-plot-data"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
-<code><a href="plot_data.html">plot_data()</a></code> function instead.</p></dd>
+<code><a href="scheme_data.html">scheme_data()</a></code> function instead.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
-<code><a href="plot_theme.html">plot_theme()</a></code> function instead.</p></dd>
+<code><a href="scheme_theme.html">scheme_theme()</a></code> function instead.</p></dd>
 
 
 <dt id="arg-free-labs">free_labs<a class="anchor" aria-label="anchor" href="#arg-free-labs"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
-<code><a href="plot_align.html">plot_align()</a></code> function instead.</p></dd>
+<code><a href="scheme_align.html">scheme_align()</a></code> function instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

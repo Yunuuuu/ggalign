@@ -176,11 +176,11 @@ and <code>reorder_column = FALSE</code>.</p>
 <h2 id="advanced-data-handling">Advanced Data Handling<a class="anchor" aria-label="anchor" href="#advanced-data-handling"></a>
 </h2>
 <p><code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> is built on <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> with a
-default <code><a href="../reference/plot_data.html">plot_data()</a></code> (see
+default <code><a href="../reference/scheme_data.html">scheme_data()</a></code> (see
 <code><a href="../articles/plot-options.html">vignette("plot-options")</a></code> for details), which splits
 alterations into separate entries for visualization. (See
 <code>ggplot2 specification</code> section in <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>
-for the input data of <code><a href="../reference/plot_data.html">plot_data()</a></code>):</p>
+for the input data of <code><a href="../reference/scheme_data.html">scheme_data()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdata</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate_longer_delim.html" class="external-link">separate_longer_delim</a></span><span class="op">(</span><span class="va">data</span>,</span>
@@ -193,25 +193,25 @@ for the input data of <code><a href="../reference/plot_data.html">plot_data()</a
 <span><span class="co"># `ggoncoplot()` will automatically convert any empty strings to `NA`</span></span>
 <span><span class="co"># before pass it to `ggheatmap`.</span></span>
 <span><span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_data.html">plot_data</a></span><span class="op">(</span><span class="va">pdata</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_data.html">scheme_data</a></span><span class="op">(</span><span class="va">pdata</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; → heatmap built with `geom_tile()`</span></span></code></pre></div>
 <p><img src="oncoplot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>By default, the <code><a href="../reference/plot_data.html">plot_data()</a></code> is inherited from the parent
-layout if the data of the plot is inherited from the layout. You can
-apply the parent <code><a href="../reference/plot_data.html">plot_data()</a></code> first and then apply another
-transformation by setting <code>inherit = TRUE</code>. This
+<p>By default, the <code><a href="../reference/scheme_data.html">scheme_data()</a></code> is inherited from the
+parent layout if the data of the plot is inherited from the layout. You
+can apply the parent <code><a href="../reference/scheme_data.html">scheme_data()</a></code> first and then apply
+another transformation by setting <code>inherit = TRUE</code>. This
 functionality is especially useful when working with
 <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">mat</span>, map_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>snv <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, map_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>indel <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># by setting `inherti = TRUE`, we apply the parent layout `plot_data()`</span></span>
+<span>    <span class="co"># by setting `inherti = TRUE`, we apply the parent layout `scheme_data()`</span></span>
 <span>    <span class="co"># (from the `ggoncoplot()` layout) firstly, which will split the alteration</span></span>
 <span>    <span class="co"># string and unnested the columns.</span></span>
 <span>    <span class="co"># Here: We then remove `NA` value</span></span>
-<span>    <span class="fu"><a href="../reference/plot_data.html">plot_data</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">.x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_data.html">scheme_data</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">.x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">.x</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">count</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># note: `ggoncoplot()` use `geom_tile()` to draw the oncoPrint,</span></span>
 <span>    <span class="co"># the guide is different from `geom_bar()`, though both looks</span></span>
@@ -289,9 +289,9 @@ the differences, by filtering the data before applying
 <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggoncoplot.html">ggoncoplot</a></span><span class="op">(</span><span class="va">laml</span>, n_top <span class="op">=</span> <span class="fl">20</span>, collapse_vars <span class="op">=</span> <span class="cn">FALSE</span>, filling <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/plot_data.html">plot_data</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_data.html">scheme_data</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">".x"</span>, <span class="st">".y"</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="co"># we apply the parent layout `plot_data()` first (`inherit = TRUE`),</span></span>
+<span>        <span class="co"># we apply the parent layout `scheme_data()` first (`inherit = TRUE`),</span></span>
 <span>        <span class="co"># which will split the alteration string and unnested the columns.</span></span>
 <span>    <span class="op">}</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/geom_subrect.html">geom_subtile</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -463,7 +463,7 @@ vignette</a>.</p>
 <span>    <span class="co"># add right annotation</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">-</span></span>
 <span>    <span class="co"># remove bottom spaces of the right annotation when aligning</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_align.html">scheme_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># add the text percent for the alterated samples in the right annotation</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="co"># Atomic vector will be put in the `value` column of the data frame.</span></span>
@@ -595,13 +595,13 @@ informations. See <code>data@cnv.summary</code> for details.</li>
 <span><span class="co">#&gt;  [9] magrittr_2.0.3     evaluate_1.0.1     RColorBrewer_1.1-3 fastmap_1.2.0     </span></span>
 <span><span class="co">#&gt; [13] R.oo_1.27.0        Matrix_1.7-1       jsonlite_1.8.9     R.utils_2.12.3    </span></span>
 <span><span class="co">#&gt; [17] survival_3.7-0     purrr_1.0.2        fansi_1.0.6        scales_1.3.0      </span></span>
-<span><span class="co">#&gt; [21] textshaping_0.4.0  jquerylib_0.1.4    cli_3.6.3          rlang_1.1.4       </span></span>
+<span><span class="co">#&gt; [21] textshaping_0.4.1  jquerylib_0.1.4    cli_3.6.3          rlang_1.1.4       </span></span>
 <span><span class="co">#&gt; [25] R.methodsS3_1.8.2  munsell_0.5.1      splines_4.4.2      withr_3.0.2       </span></span>
 <span><span class="co">#&gt; [29] cachem_1.1.0       yaml_2.3.10        DNAcopy_1.80.0     tools_4.4.2       </span></span>
 <span><span class="co">#&gt; [33] dplyr_1.1.4        colorspace_2.1-1   vctrs_0.6.5        R6_2.5.1          </span></span>
 <span><span class="co">#&gt; [37] lifecycle_1.0.4    stringr_1.5.1      fs_1.6.5           ragg_1.3.3        </span></span>
 <span><span class="co">#&gt; [41] pkgconfig_2.0.3    desc_1.4.3         pkgdown_2.1.1      pillar_1.9.0      </span></span>
-<span><span class="co">#&gt; [45] bslib_0.8.0        gtable_0.3.6       glue_1.8.0         data.table_1.16.2 </span></span>
+<span><span class="co">#&gt; [45] bslib_0.8.0        gtable_0.3.6       glue_1.8.0         data.table_1.16.4 </span></span>
 <span><span class="co">#&gt; [49] systemfonts_1.1.0  xfun_0.49          tibble_3.2.1       tidyselect_1.2.1  </span></span>
 <span><span class="co">#&gt; [53] knitr_1.49         farver_2.1.2       htmltools_0.5.8.1  rmarkdown_2.29    </span></span>
 <span><span class="co">#&gt; [57] labeling_0.4.3     compiler_4.4.2</span></span></code></pre></div>

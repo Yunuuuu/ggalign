@@ -116,7 +116,7 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span><span class="va">type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"s\\d+_"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">heat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">mat_scaled</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_align.html">scheme_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># add dendrogram for this heatmap</span></span>
@@ -153,7 +153,7 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="st">"gene type"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># add barplot in the top annotation, and remove the spaces in the y-axis</span></span>
 <span>    <span class="fu"><a href="../reference/quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_align.html">plot_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"lr"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_align.html">scheme_align</a></span><span class="op">(</span>free_spaces <span class="op">=</span> <span class="st">"lr"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/align_gg.html">ggalign</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">.extra_panel</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -161,7 +161,7 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span>, name <span class="op">=</span> <span class="st">"gene type"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">-</span></span>
-<span>    <span class="fu"><a href="../reference/plot_theme.html">plot_theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/scheme_theme.html">scheme_theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/stack_align.html">stack_alignh</a></span><span class="op">(</span><span class="va">mat_scaled</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/stack_switch.html">stack_active</a></span><span class="op">(</span>sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -189,7 +189,7 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span>    <span class="co"># add another heatmap</span></span>
 <span>    <span class="va">heat3</span> <span class="op">&amp;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>        plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>        plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        legend.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
@@ -259,7 +259,7 @@ heatmap in <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/mor
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gtable_0.3.6       jsonlite_1.8.9     dplyr_1.1.4        compiler_4.4.2    </span></span>
 <span><span class="co">#&gt;  [5] tidyselect_1.2.1   jquerylib_0.1.4    systemfonts_1.1.0  scales_1.3.0      </span></span>
-<span><span class="co">#&gt;  [9] textshaping_0.4.0  yaml_2.3.10        fastmap_1.2.0      R6_2.5.1          </span></span>
+<span><span class="co">#&gt;  [9] textshaping_0.4.1  yaml_2.3.10        fastmap_1.2.0      R6_2.5.1          </span></span>
 <span><span class="co">#&gt; [13] labeling_0.4.3     generics_0.1.3     knitr_1.49         tibble_3.2.1      </span></span>
 <span><span class="co">#&gt; [17] desc_1.4.3         munsell_0.5.1      bslib_0.8.0        pillar_1.9.0      </span></span>
 <span><span class="co">#&gt; [21] RColorBrewer_1.1-3 rlang_1.1.4        utf8_1.2.4         cachem_1.1.0      </span></span>
