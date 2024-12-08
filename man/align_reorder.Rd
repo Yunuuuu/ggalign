@@ -65,14 +65,6 @@ It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
 axis used for alignment (x-axis for a vertical stack layout, y-axis for a
 horizontal stack layout).
-\itemize{
-\item \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}: For column annotation, the layout
-\code{matrix} will be transposed before use (if \code{data} is a function, it is
-applied to the transposed matrix), as column annotation uses columns as
-observations but alignment requires rows.
-\item \code{\link[=stack_layout]{stack_layout()}}: The layout matrix is used as is, aligning all plots
-along a single axis.
-}
 }
 
 \examples{

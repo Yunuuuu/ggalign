@@ -52,13 +52,6 @@
 #' axis used for alignment (x-axis for a vertical stack layout, y-axis for a
 #' horizontal stack layout).
 #'
-#'  - [`quad_layout()`]/[`ggheatmap()`]: For column annotation, the layout
-#'    `matrix` will be transposed before use (if `data` is a function, it is
-#'    applied to the transposed matrix), as column annotation uses columns as
-#'    observations but alignment requires rows.
-#'  - [`stack_layout()`]: The layout matrix is used as is, aligning all plots
-#'    along a single axis.
-#'
 #' @return A new `align` object.
 #'
 #' @examples
