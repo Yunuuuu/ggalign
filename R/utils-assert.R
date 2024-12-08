@@ -143,7 +143,7 @@ check_order <- function(order, arg = caller_arg(order), call = caller_call()) {
     } else if (!is_scalar(order) || (!is.numeric(order) && !is.na(order))) {
         cli_abort("{.arg {arg}} must be a single number", call = call)
     } else {
-        order <- NA_integer_
+        order <- vec_cast(order, integer(), x_arg = arg, call = call)
     }
     order
 }
