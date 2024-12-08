@@ -7,19 +7,19 @@
 \alias{free_gg.ggplot}
 \title{Add ggplot to layout}
 \usage{
-free_gg(..., data = waiver(), size = NULL, active = NULL)
+free_gg(data = waiver(), ..., size = NULL, active = NULL)
 
-\method{free_gg}{default}(mapping = aes(), ..., data = waiver(), size = NULL, active = NULL)
+\method{free_gg}{default}(data = waiver(), mapping = aes(), ..., size = NULL, active = NULL)
 
-\method{free_gg}{ggplot}(..., data = waiver(), size = NULL, active = NULL)
+\method{free_gg}{ggplot}(data = waiver(), ..., size = NULL, active = NULL)
 }
 \arguments{
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
-
 \item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}
 object. By default, it will inherit from the parent layout if applicable.
 Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
 provided directly.}
+
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
@@ -45,6 +45,6 @@ alignment. \code{ggfree()} is an alias for \code{free_gg}.
 ggheatmap(matrix(rnorm(56), nrow = 7)) +
     anno_top() +
     align_dendro() +
-    ggfree(aes(wt, mpg), data = mtcars) +
+    ggfree(mtcars, aes(wt, mpg)) +
     geom_point()
 }

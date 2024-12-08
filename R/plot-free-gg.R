@@ -19,10 +19,10 @@
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
 #'     align_dendro() +
-#'     ggfree(aes(wt, mpg), data = mtcars) +
+#'     ggfree(mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(..., data = waiver(), size = NULL, active = NULL) {
+free_gg <- function(data = waiver(), ..., size = NULL, active = NULL) {
     rlang::check_dots_used()
     UseMethod("free_gg", data)
 }
@@ -36,8 +36,8 @@ ggfree <- free_gg
 #' @importFrom ggplot2 ggplot
 #' @export
 #' @rdname free_gg
-free_gg.default <- function(mapping = aes(), ...,
-                            data = waiver(), size = NULL, active = NULL) {
+free_gg.default <- function(data = waiver(), mapping = aes(), ...,
+                            size = NULL, active = NULL) {
     data <- fortify_data_frame(data = data, ...)
     new_free_gg(
         plot = ggplot(data = NULL, mapping = mapping),
@@ -48,8 +48,16 @@ free_gg.default <- function(mapping = aes(), ...,
 }
 
 #' @export
+free_gg.uneval <- function(data = waiver(), ...) {
+    cli_abort(c(
+        "{.arg data} cannot be {.obj_type_friendly {data}}",
+        "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
+    ))
+}
+
+#' @export
 #' @rdname free_gg
-free_gg.ggplot <- function(..., data = waiver(), size = NULL, active = NULL) {
+free_gg.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
     plot <- data
     # In ggplot2, `waiver()` was regard to no data
     data <- .subset2(plot, "data") %|w|% NULL
