@@ -3,17 +3,17 @@ testthat::test_that("`align_group` works well", {
     p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
-    expect_error(p + align_group(column_group))
-    expect_error(p + anno_top() + align_group(1:4))
-    expect_error(p + anno_top() + align_group(row_group))
+    expect_snapshot_error(p + align_group(column_group))
+    expect_snapshot_error(p + anno_top() + align_group(1:4))
+    expect_snapshot_error(p + anno_top() + align_group(row_group))
 
     # adding plot gave error
-    expect_error(p + anno_top() +
-        align_group(1:4, context = active(active = TRUE)) +
+    expect_snapshot_error(p + anno_top() +
+        align_group(1:4, active = active(use = TRUE)) +
         geom_point())
 
     # cannot do sub-group
-    expect_error(p +
+    expect_snapshot_error(p +
         anno_top() +
         align_group(row_group) +
         align_group(row_group))
@@ -44,12 +44,12 @@ testthat::test_that("`align_order` works well", {
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
     # align_order cannot do sub-split
-    expect_error(p + anno_top() + align_group(column_group) +
+    expect_snapshot_error(p + anno_top() + align_group(column_group) +
         align_order())
 
     # adding plot gave error
-    expect_error(p + anno_top() +
-        align_order(context = active(active = TRUE)) +
+    expect_snapshot_error(p + anno_top() +
+        align_order(active = active(use = TRUE)) +
         geom_point())
 
     expect_doppelganger(
@@ -103,12 +103,12 @@ testthat::test_that("`align_reorder` works well", {
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
     # align_reorder cannot do sub-split
-    expect_error(p + anno_top() + align_group(column_group) +
-        align_reorder())
+    expect_snapshot_error(p + anno_top() + align_group(column_group) +
+        align_reorder(hclust2))
 
     # adding plot gave error
-    expect_error(p + anno_top() +
-        align_reorder(context = active(active = TRUE)) +
+    expect_snapshot_error(p + anno_top() +
+        align_reorder(hclust2, active = active(use = TRUE)) +
         geom_point())
 
     # reorder plot
@@ -140,16 +140,16 @@ testthat::test_that("`align_kmeans` works well", {
     p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
-
+    
     # reorder twice
-    expect_error(p + anno_top() + align_group(column_group) +
+    expect_snapshot_error(p + anno_top() + align_group(column_group) +
         align_kmeans(3L))
-    expect_error(p + anno_left() + align_group(row_group) +
+    expect_snapshot_error(p + anno_left() + align_group(row_group) +
         align_kmeans(3L))
 
     # adding plot gave error
-    expect_error(p + anno_top() +
-        align_kmeans(3L, context = active(active = TRUE)) +
+    expect_snapshot_error(p + anno_top() +
+        align_kmeans(3L, active = active(use = TRUE)) +
         geom_point())
 
     set.seed(1L)
@@ -179,7 +179,7 @@ testthat::test_that("`align_dendro` works well", {
     p <- ggheatmap(mat)
     row_group <- sample(letters[1:3], nrow(mat), replace = TRUE)
     column_group <- sample(letters[1:3], ncol(mat), replace = TRUE)
-    expect_error(p + anno_top() + align_group(column_group) +
+    expect_snapshot_error(p + anno_top() + align_group(column_group) +
         align_dendro(k = 2L))
 
     testthat::skip_on_ci() # I don't know why this will fail in github CI

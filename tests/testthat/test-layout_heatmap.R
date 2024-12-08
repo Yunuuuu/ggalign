@@ -124,7 +124,7 @@ testthat::test_that("`breaks` of `scale_*_()` works well", {
             anno_top() +
             align_dendro(k = 3L)
     )
-    expect_error(
+    expect_snapshot_error(
         ggplot2::ggsave(tempfile(fileext = ".png"),
             plot = ggheatmap(small_mat) + scale_x_continuous(breaks = c(3.5, 5))
         )

@@ -1,8 +1,8 @@
 test_that("`layer_order()` works well", {
-    expect_error(layer_order(scale_color_brewer()))
-    expect_error(layer_order(geom_blank(), order = "a"))
-    expect_error(layer_order(geom_blank(), order = NA))
-    expect_error(layer_order(geom_blank(), order = 1.5))
+    expect_snapshot_error(layer_order(scale_color_brewer()))
+    expect_snapshot_error(layer_order(geom_blank(), order = "a"))
+    expect_snapshot_error(layer_order(geom_blank(), order = NA))
+    expect_snapshot_error(layer_order(geom_blank(), order = 1.5))
     expect_doppelganger(
         "layer_order_add_in_the_beginning",
         ggplot(faithfuld, aes(waiting, eruptions)) +
@@ -93,7 +93,7 @@ test_that("geom_pie works well", {
 
 test_that("geom_draw() workds well", {
     library(grid)
-    expect_error(ggplot2::ggsave(
+    expect_snapshot_error(ggplot2::ggsave(
         tempfile(fileext = ".png"),
         plot = ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
             geom_draw(aes(x = 1, y = y, draw = value, fill = value))
