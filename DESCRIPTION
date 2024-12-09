@@ -49,6 +49,7 @@ Collate:
     'plot-.R'
     'plot-align-.R'
     'align-.R'
+    'align-hclust.R'
     'align-dendrogram.R'
     'align-gg.R'
     'align-group.R'
