@@ -41,7 +41,6 @@ align_hclust(
   method = "complete",
   use_missing = "pairwise.complete.obs",
   reorder_dendrogram = FALSE,
-  merge_dendrogram = FALSE,
   reorder_group = FALSE,
   k = NULL,
   h = NULL,

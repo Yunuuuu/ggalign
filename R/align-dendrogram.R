@@ -176,7 +176,6 @@ align_hclust <- function(distance = "euclidean",
                          method = "complete",
                          use_missing = "pairwise.complete.obs",
                          reorder_dendrogram = FALSE,
-                         merge_dendrogram = FALSE,
                          reorder_group = FALSE,
                          k = NULL, h = NULL, cutree = NULL,
                          root = NULL, data = NULL, active = NULL) {
@@ -190,7 +189,6 @@ align_hclust <- function(distance = "euclidean",
     }
     assert_number_whole(k, allow_null = TRUE)
     assert_number_decimal(h, allow_null = TRUE)
-    assert_bool(merge_dendrogram)
     assert_bool(reorder_group)
     cutree <- allow_lambda(cutree)
     assert_(cutree, is.function, "a function", allow_null = TRUE)
