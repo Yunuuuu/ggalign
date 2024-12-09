@@ -214,7 +214,6 @@ align_hclust <- function(distance = "euclidean",
             merge_dendro = FALSE,
             reorder_group = reorder_group,
             cutree = cutree,
-            mapping = NULL,
             plot_dendrogram = FALSE
         ),
         active = active,
