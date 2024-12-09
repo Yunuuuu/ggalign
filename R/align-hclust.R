@@ -43,7 +43,7 @@ align_hclust <- function(distance = "euclidean",
                          reorder_dendrogram = FALSE,
                          reorder_group = FALSE,
                          k = NULL, h = NULL, cutree = NULL,
-                         root = NULL, data = NULL, active = NULL) {
+                         data = NULL, active = NULL) {
     reorder_dendrogram <- allow_lambda(reorder_dendrogram)
     if (!rlang::is_bool(reorder_dendrogram) &&
         !is.null(reorder_dendrogram) &&

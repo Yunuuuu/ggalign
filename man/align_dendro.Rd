@@ -94,6 +94,14 @@ tree.}
 
 \item{plot_cut_height}{A boolean value indicates whether plot the cut height.}
 
+\item{root}{A length one string or numeric indicates the root branch.}
+
+\item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
+respect to the leaves in the branch. Otherwise (default), plot them in the
+middle of all direct child nodes.}
+
+\item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
+
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
 

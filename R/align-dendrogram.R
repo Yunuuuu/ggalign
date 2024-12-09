@@ -41,6 +41,7 @@
 #' merge multiple dendrograms, only used when previous groups have been
 #' established. Default: `FALSE`.
 #' @inheritParams align_hclust
+#' @inheritParams dendrogram_data
 #' @inheritParams align_gg
 #' @examples
 #' # align_dendro will always add a plot area

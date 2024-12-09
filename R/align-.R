@@ -127,6 +127,7 @@ align <- function(align, data, params = list(), plot = NULL,
             # collect parameters
             input_params = input_params
         ),
+        no_axes = no_axes,
         plot = plot,
         active = active,
         size = size,

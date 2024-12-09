@@ -13,7 +13,6 @@ align_hclust(
   k = NULL,
   h = NULL,
   cutree = NULL,
-  root = NULL,
   data = NULL,
   active = NULL
 )

@@ -54,7 +54,7 @@ navbar:
       href: articles/FAQ.html
 
 reference:
-- title: Layout Class
+- title: Layout initialize
   desc: A `Layout` object defines how to place the plots.
   contents:
   - heatmap_layout
@@ -65,7 +65,7 @@ reference:
   - stack_free
   - ggoncoplot
 
-- title: Plot Building
+- title: Layout Building
   desc: >
     All plots begin with a call to `ggheatmap()`/`quad_layout()` or `ggstack()`, supplying 
     default data. You then reorder the observations, or split the observations into groups, 
@@ -86,24 +86,26 @@ reference:
     Fine-tune the arrangement of plots by reordering or splitting axes into separate panels. 
     These functions allow for more detailed customization of plot layouts.
   contents:
-  - align_dendro
+  - align_hclust
   - align_group
   - align_kmeans
   - align_order
   - align_reorder
 
-- title: Layout Plots
+- title: Plot initialize
   desc: >
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
   contents:
   - ggalign
   - ggfree
+  - align_dendro
 
-- title: Plot options
+- title: Schemes
   desc: >
-    This section covers essential functions to add individual plots to the layout, 
-    ensuring they align and interact correctly within the defined structure.
+    Schemes control the actions of plots in the layout. Scheme can be applied
+    either globally to all plots in the layout or individually to specific
+    plots.
   contents:
   - scheme_align
   - scheme_data
