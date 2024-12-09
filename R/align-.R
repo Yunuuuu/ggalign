@@ -228,7 +228,7 @@ Align <- ggproto("Align", AlignProto,
                     object_name, NROW(data), layout_name, layout_nobs
                 ))
             }
-            self$labels <- vec_names(data)
+            self$labels <- vec_names(data) %||% vec_names(layout_data)
             params <- self$setup_params(layout_nobs, input_params)
             self$data <- ggalign_attr_restore(
                 self$setup_data(params, data),
