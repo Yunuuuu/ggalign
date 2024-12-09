@@ -1,3 +1,5 @@
+#' Plot dendrogram tree
+#'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`geom_segment()`][ggplot2::geom_segment].
 #' @param plot_dendrogram A boolean value indicates whether plot the dendrogram
@@ -38,7 +40,7 @@
 #' @param merge_dendrogram A single boolean value, indicates whether we should
 #' merge multiple dendrograms, only used when previous groups have been
 #' established. Default: `FALSE`.
-#' @inheritParams dendrogram_data
+#' @inheritParams align_hclust
 #' @inheritParams align_gg
 #' @examples
 #' # align_dendro will always add a plot area
@@ -51,7 +53,6 @@
 #'
 #' @importFrom ggplot2 aes
 #' @importFrom rlang list2
-#' @rdname align_hclust
 #' @export
 align_dendro <- function(mapping = aes(), ...,
                          distance = "euclidean",
