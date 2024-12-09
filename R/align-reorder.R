@@ -13,7 +13,7 @@
 #' `align_order()` by manually extracting the ordering information from
 #' the statistic.
 #'
-#' @param stat A summary function which accepts a data and returns the
+#' @param stat A statistical function which accepts a data and returns the
 #' statistic, which we'll call [`order2()`] to extract the ordering information.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' function provided in `stat` argument.
