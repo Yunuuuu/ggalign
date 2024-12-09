@@ -154,7 +154,7 @@ in \code{\link[=ggalign_attr]{ggalign}} attribute, in addition, a
 \code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data of the \code{edge}
 coordinates will be added.
 
-\code{node} and tree segments \code{edge} coordinates contains following columns:
+dendrogram \code{node} and \code{edge} contains following columns:
 \itemize{
 \item \code{index}: the original index in the tree for the current node
 \item \code{label}: node label text

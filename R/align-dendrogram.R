@@ -16,7 +16,7 @@
 #' [`geom_segment`][ggplot2::geom_segment] layer with a data of the `edge`
 #' coordinates will be added.
 #'
-#' `node` and tree segments `edge` coordinates contains following columns:
+#' dendrogram `node` and `edge` contains following columns:
 #'   - `index`: the original index in the tree for the current node
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
