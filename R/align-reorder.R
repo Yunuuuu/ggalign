@@ -3,10 +3,10 @@
 #' @details
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `align_reorder()` function differs from `align_order()` in that the `wts`
-#' argument in `align_order()` must return atomic weights for each observation.
-#' In contrast, the `stat` argument in `align_reorder()` can return more complex
-#' structures, such as [hclust][stats::hclust] or
+#' The `align_reorder()` function differs from `align_order()` in that the
+#' `weights` argument in `align_order()` must return atomic weights for each
+#' observation. In contrast, the `stat` argument in `align_reorder()` can
+#' return more complex structures, such as [hclust][stats::hclust] or
 #' [dendrogram][stats::as.dendrogram], among others.
 #'
 #' Typically, you can achieve the functionality of `align_reorder()` using
