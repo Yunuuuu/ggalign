@@ -12,40 +12,6 @@ navbar:
     left:  [intro, reference, vignettes, articles, news, benchmarks, faq]
     right: [search, github, lightswitch]
   components:
-    vignettes:
-      text: Vignettes
-      menu:
-        - text: Heatmap Layout
-          href: articles/heatmap-layout.html
-        - text: Layout Customization
-          href: articles/layout-customize.html
-        - text: Layout Plots
-          href: articles/layout-plot.html
-        - text: Quad-Layout
-          href: articles/quad-layout.html
-        - text: Stack Layout
-          href: articles/stack-layout.html
-        - text: Operators
-          href: articles/operator.html
-        - text: Plot Options
-          href: articles/plot-options.html
-        - text: Oncoplot
-          href: articles/oncoplot.html
-    articles:
-      text: Articles
-      menu:
-        - text: Plot Composer
-          href: articles/plot-composer.html
-        - text: Difference with ggplot2
-          href: articles/difference-with-ggplot2.html
-        - text: Complete examples
-          href: articles/complete-examples.html
-        - text: ——–
-        - text: "Examples from ComplexHeatmap"
-        - text: single heatmap
-          href: articles/single-heatmap.html
-        - text: more examples
-          href: articles/more-examples.html
     benchmarks:
       text: Benchmarks
       href: articles/benchmarks.html
@@ -104,8 +70,7 @@ reference:
 - title: Schemes
   desc: >
     Schemes control the actions of plots in the layout. Scheme can be applied
-    either globally to all plots in the layout or individually to specific
-    plots.
+    either globally to the layout or individually to specific plots.
   contents:
   - scheme_align
   - scheme_data

@@ -1,9 +1,7 @@
 ---
 output: github_document
 params: 
-  mode: !r if (endsWith(as.character(desc::desc_get_version()), '9000')) 'devel' else 'release'
-  release: "https://yunuuuu.github.io/ggalign"
-  devel: "https://yunuuuu.github.io/ggalign/dev"
+  book: https://yunuuuu.github.io/ggalign-book/
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -18,8 +16,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r echo=FALSE}
-mode <- params$mode
-url <- params[[mode]]
+url <- params[["book"]]
 ```
 
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
@@ -99,12 +96,3 @@ layouts.
 Fewer Built-In Annotations: May require additional coding for specific
 annotations or customization compared to the extensive built-in annotation
 function in [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
-
-## More Complex Examples
-Here are some more advanced visualizations using `ggalign`:
-
-`r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)", url)`
-
-`r sprintf("![](%s/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)", url)`
-
-`r sprintf("![](%s/articles/oncoplot_files/figure-html/unnamed-chunk-17-1.png)", url)`

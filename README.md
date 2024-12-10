@@ -57,147 +57,13 @@ or from [GitHub](https://github.com/Yunuuuu/ggalign) with:
 remotes::install_github("Yunuuuu/ggalign")
 ```
 
-## Getting Started
+## Learning ggalign
 
-The usage of `ggalign` is simple if you’re familiar with `ggplot2`
-syntax, the typical workflow includes:
+1.  The complete tutorial is available at:
+    <https://yunuuuu.github.io/ggalign-book/>
 
-- Initialize the layout using `quad_layout()`
-  (`ggside()`/`ggheatmap()`/`ggoncoplot()`), `stack_layout()`
-  (`ggstack()`/`cross_align()`).
-- Customize the layout with:
-  - `align_group()`: Group observations into panel with a group
-    variable.
-  - `align_kmeans()`: Group observations into panel by kmeans.
-  - `align_order()`: Reorder layout observations based on statistical
-    weights or by manually specifying the observation index.
-  - `align_dendro()`: Reorder or Group layout based on hierarchical
-    clustering.
-- Adding plots with `ggalign()` or `ggfree()`, and then layer additional
-  ggplot2 elements such as geoms, stats, or scales.
-
-For documents of the release version, please see
-<https://yunuuuu.github.io/ggalign/>, for documents of the development
-version, please see <https://yunuuuu.github.io/ggalign/dev/>.
-
-## Basic example
-
-Below, we’ll walk through a basic example of using `ggalign` to create a
-heatmap with a `dendrogram`.
-
-``` r
-library(ggalign)
-#> Loading required package: ggplot2
-set.seed(123)
-small_mat <- matrix(rnorm(72), nrow = 9)
-rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-
-# initialize the heatmap layout, we can regard it as a normal ggplot object
-ggheatmap(small_mat) +
-    # we can directly modify geoms, scales and other ggplot2 components
-    scale_fill_viridis_c() +
-    # add annotation in the top
-    anno_top() +
-    # in the top annotation, we add a dendrogram, and split observations into 3 groups
-    align_dendro(aes(color = branch), k = 3) +
-    # in the dendrogram we add a point geom
-    geom_point(aes(color = branch, y = y)) +
-    # change color mapping for the dendrogram
-    scale_color_brewer(palette = "Dark2")
-#> → heatmap built with `geom_tile()`
-```
-
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
-
-Marginal plots can also be created with similar syntax:
-
-``` r
-ggside(mpg, aes(displ, hwy, colour = class)) -
-    # set default theme for all plots in the layout
-    scheme_theme(theme_bw()) +
-    geom_point(size = 2) +
-    # add top annotation
-    anno_top(size = 0.3) -
-    # set default theme for the top annotation
-    scheme_theme(theme_no_axes("tb")) +
-    # add a plot in the top annotation
-    ggfree() +
-    geom_density(aes(displ, y = after_stat(density), colour = class), position = "stack") +
-    anno_right(size = 0.3) -
-    # set default theme for the right annotation
-    scheme_theme(theme_no_axes("lr")) +
-    # add a plot in the right annotation
-    ggfree() +
-    geom_density(aes(x = after_stat(density), hwy, colour = class),
-        position = "stack"
-    ) +
-    theme(axis.text.x = element_text(angle = 90, vjust = .5)) &
-    scale_color_brewer(palette = "Dark2")
-```
-
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
-
-tanglegram can be created with `cross_layout()`:
-
-``` r
-set.seed(1234)
-big_mat <- matrix(rnorm(200), nrow = 20)
-cross_alignh(big_mat) +
-    # group the observations based on kmeans clustering
-    align_kmeans(3L) +
-    # add a dendrogram
-    align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
-    # reverse the x-axis of the dendrogram
-    scale_x_reverse() +
-    # reset the ordering index by original dendrogram, and add a plot to
-    # indicate the transition from the old layout ordering index # to the new
-    # ordering index
-    cross_link() +
-    # add connection line
-    geom_line(aes(x = hand, group = index)) +
-    # remove x labels and title
-    scale_x_discrete(breaks = NULL, name = NULL) +
-    # add another dendrogram based different method
-    align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
-
-Reveal the relationships between two heatmap with different ordering
-index:
-
-``` r
-cross_alignh(big_mat) +
-    # group the observations based on kmeans clustering
-    align_kmeans(2L) +
-    # add a new heatmap
-    ggheatmap() +
-    # initialize the left annotation
-    anno_left() +
-    # add a dendrogram in the left annotation
-    align_dendro(aes(color = branch), merge_dendrogram = TRUE) +
-    # move to the cross layout 
-    stack_active() +
-    # reset the ordering index by original dendrogram, and add a plot to
-    # indicate the transition from the old layout ordering index # to the new
-    # ordering index
-    cross_link() +
-    # add connection line
-    geom_line(aes(x = hand, group = index)) +
-    # remove x labels and title
-    scale_x_discrete(breaks = NULL, name = NULL) +
-    # add another heatmap
-    ggheatmap() +
-    # initialize the right annotation
-    anno_right() +
-    # add a dendrogram in the right annotation
-    align_dendro(aes(color = branch), method = "ward.D2", merge_dendrogram = TRUE)
-#> → heatmap built with `geom_tile()`
-#> → heatmap built with `geom_tile()`
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+2.  For the full reference documentation, visit:
+    <https://yunuuuu.github.io/ggalign/>
 
 ## Compare with other ggplot2 heatmap extension
 
@@ -228,13 +94,3 @@ Fewer Built-In Annotations: May require additional coding for specific
 annotations or customization compared to the extensive built-in
 annotation function in
 [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
-
-## More Complex Examples
-
-Here are some more advanced visualizations using `ggalign`:
-
-![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-3-1.png)
-
-![](https://yunuuuu.github.io/ggalign/dev/articles/more-examples_files/figure-html/unnamed-chunk-2-1.png)
-
-![](https://yunuuuu.github.io/ggalign/dev/articles/oncoplot_files/figure-html/unnamed-chunk-17-1.png)
