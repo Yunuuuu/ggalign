@@ -37,33 +37,15 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plots</a></li>
-    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">Operators</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot Options</a></li>
-    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
-  </ul>
-</li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/plot-composer.html">Plot Composer</a></li>
-    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete examples</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>——–</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Examples from ComplexHeatmap</h6></li>
-    <li><a class="dropdown-item" href="../articles/single-heatmap.html">single heatmap</a></li>
-    <li><a class="dropdown-item" href="../articles/more-examples.html">more examples</a></li>
+<li><a class="dropdown-item" href="../articles/benchmarks.html">Benchmarks</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
-<li class="active nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/FAQ.html">FAQ</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -184,11 +166,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   147.05ms 150.46ms     6.49   139.11MB    3.25 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.23s    2.23s     0.449  224.23MB    0.898</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.35s    4.35s     0.230  792.59MB    2.99 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  650.54ms 650.54ms     1.54    124.1MB    3.07 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      2.37s    2.37s     0.422    2.51GB   11.8</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   147.51ms 154.97ms     6.37   139.11MB    3.19 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.25s    2.25s     0.444  224.23MB    0.887</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.42s    4.42s     0.226  792.59MB    2.94 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  654.76ms 654.76ms     1.53    124.1MB    3.05 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      2.47s    2.47s     0.404    2.51GB   11.3</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -233,11 +215,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.88s    2.88s     0.348  173.72MB     2.09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.74s    2.74s     0.365  223.41MB     2.55</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      5.71s    5.71s     0.175    1.51GB     1.75</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.21s    2.21s     0.452  177.53MB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      4.67s    4.67s     0.214    2.58GB     4.71</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.92s    2.92s     0.343  173.72MB     2.06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.73s    2.73s     0.366  223.41MB     2.56</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()       5.8s     5.8s     0.173    1.51GB     1.73</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.23s    2.23s     0.448  177.53MB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      4.76s    4.76s     0.210    2.58GB     4.62</span></span></code></pre></div>
 </div>
   </main>
 </div>

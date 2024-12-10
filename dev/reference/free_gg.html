@@ -25,25 +25,9 @@ alignment. ggfree() is an alias for free_gg."><meta property="og:image" content=
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plots</a></li>
-    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">Operators</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot Options</a></li>
-    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
-  </ul></li>
-<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-composer.html">Plot Composer</a></li>
-    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete examples</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>——–</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Examples from ComplexHeatmap</h6></li>
-    <li><a class="dropdown-item" href="../articles/single-heatmap.html">single heatmap</a></li>
-    <li><a class="dropdown-item" href="../articles/more-examples.html">more examples</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/benchmarks.html">Benchmarks</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
@@ -79,28 +63,25 @@ alignment. <code>ggfree()</code> is an alias for <code>free_gg</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">free_gg</span><span class="op">(</span><span class="va">...</span>, data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, size <span class="op">=</span> <span class="cn">NULL</span>, active <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">free_gg</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, size <span class="op">=</span> <span class="cn">NULL</span>, active <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
-<span><span class="fu">free_gg</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, size <span class="op">=</span> <span class="cn">NULL</span>, active <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'ggplot'</span></span>
-<span><span class="fu">free_gg</span><span class="op">(</span><span class="va">...</span>, data <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, size <span class="op">=</span> <span class="cn">NULL</span>, active <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">free_gg</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, size <span class="op">=</span> <span class="cn">NULL</span>, active <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>.</p></dd>
-
-
-<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A dataset used to initialize a <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code>
 object. By default, it will inherit from the parent layout if applicable.
 Alternatively, a pre-defined <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code> object can be
 provided directly.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed to <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
@@ -128,8 +109,8 @@ If not specified, must be supplied in each layer added to the plot.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">56</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="align_dendro.html">align_dendro</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">ggfree</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">ggfree</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="free_gg-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>

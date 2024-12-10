@@ -17,25 +17,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plots</a></li>
-    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">Operators</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot Options</a></li>
-    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
-  </ul></li>
-<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-composer.html">Plot Composer</a></li>
-    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete examples</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>——–</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Examples from ComplexHeatmap</h6></li>
-    <li><a class="dropdown-item" href="../articles/single-heatmap.html">single heatmap</a></li>
-    <li><a class="dropdown-item" href="../articles/more-examples.html">more examples</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/benchmarks.html">Benchmarks</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
@@ -84,7 +68,7 @@
 
 
 <dl><dt id="arg-stat">stat<a class="anchor" aria-label="anchor" href="#arg-stat"></a></dt>
-<dd><p>A summary function which accepts a data and returns the
+<dd><p>A statistical function which accepts a data and returns the
 statistic, which we'll call <code><a href="order2.html">order2()</a></code> to extract the ordering information.</p></dd>
 
 
@@ -129,10 +113,10 @@ instead.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
-<p>The <code>align_reorder()</code> function differs from <code><a href="align_order.html">align_order()</a></code> in that the <code>wts</code>
-argument in <code><a href="align_order.html">align_order()</a></code> must return atomic weights for each observation.
-In contrast, the <code>stat</code> argument in <code>align_reorder()</code> can return more complex
-structures, such as <a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a> or
+<p>The <code>align_reorder()</code> function differs from <code><a href="align_order.html">align_order()</a></code> in that the
+<code>weights</code> argument in <code><a href="align_order.html">align_order()</a></code> must return atomic weights for each
+observation. In contrast, the <code>stat</code> argument in <code>align_reorder()</code> can
+return more complex structures, such as <a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a> or
 <a href="https://rdrr.io/r/stats/dendrogram.html" class="external-link">dendrogram</a>, among others.</p>
 <p>Typically, you can achieve the functionality of <code>align_reorder()</code> using
 <code><a href="align_order.html">align_order()</a></code> by manually extracting the ordering information from
@@ -145,13 +129,8 @@ the statistic.</p>
 <p>It is important to note that we consider rows as observations, meaning
 <code>vec_size(data)</code>/<code>NROW(data)</code> must match the number of observations along the
 axis used for alignment (x-axis for a vertical stack layout, y-axis for a
-horizontal stack layout).</p><ul><li><p><code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code>: For column annotation, the layout
-<code>matrix</code> will be transposed before use (if <code>data</code> is a function, it is
-applied to the transposed matrix), as column annotation uses columns as
-observations but alignment requires rows.</p></li>
-<li><p><code><a href="stack_layout.html">stack_layout()</a></code>: The layout matrix is used as is, aligning all plots
-along a single axis.</p></li>
-</ul></div>
+horizontal stack layout).</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="order2.html">order2()</a></code></p></div>

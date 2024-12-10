@@ -25,25 +25,9 @@ settings, even if theme() is added before scheme_theme()."><meta property="og:im
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plots</a></li>
-    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">Operators</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot Options</a></li>
-    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
-  </ul></li>
-<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-composer.html">Plot Composer</a></li>
-    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete examples</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>——–</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Examples from ComplexHeatmap</h6></li>
-    <li><a class="dropdown-item" href="../articles/single-heatmap.html">single heatmap</a></li>
-    <li><a class="dropdown-item" href="../articles/more-examples.html">more examples</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/benchmarks.html">Benchmarks</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
@@ -72,9 +56,9 @@ settings, even if theme() is added before scheme_theme()."><meta property="og:im
     <div class="ref-description section level2">
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
 <p><code>scheme_theme()</code> serves as the default theme and will always be overridden by
-any <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> settings applied directly to the plot. The default theme
-(<code>scheme_theme()</code>) is applied first, followed by any specific <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>
-settings, even if <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> is added before <code>scheme_theme()</code>.</p>
+any <code>theme()</code> settings applied directly to the plot. The default theme
+(<code>scheme_theme()</code>) is applied first, followed by any specific <code>theme()</code>
+settings, even if <code>theme()</code> is added before <code>scheme_theme()</code>.</p>
     </div>
 
     <div class="section level2">
@@ -291,7 +275,7 @@ inherit from the corresponding major ticks <code>axis.ticks.*.*</code>.</p></dd>
 
 
 <dt id="arg-axis-minor-ticks-length-axis-minor-ticks-length-x-axis-minor-ticks-length-x-top-axis-minor-ticks-length-x-bottom-axis-minor-ticks-length-y-axis-minor-ticks-length-y-left-axis-minor-ticks-length-y-right-axis-minor-ticks-length-theta-axis-minor-ticks-length-r">axis.minor.ticks.length, axis.minor.ticks.length.x, axis.minor.ticks.length.x.top, axis.minor.ticks.length.x.bottom, axis.minor.ticks.length.y, axis.minor.ticks.length.y.left, axis.minor.ticks.length.y.right, axis.minor.ticks.length.theta, axis.minor.ticks.length.r<a class="anchor" aria-label="anchor" href="#arg-axis-minor-ticks-length-axis-minor-ticks-length-x-axis-minor-ticks-length-x-top-axis-minor-ticks-length-x-bottom-axis-minor-ticks-length-y-axis-minor-ticks-length-y-left-axis-minor-ticks-length-y-right-axis-minor-ticks-length-theta-axis-minor-ticks-length-r"></a></dt>
-<dd><p>length of minor tick marks (<code>unit</code>), or relative to <code>axis.ticks.length</code> when provided with <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">rel()</a></code>.</p></dd>
+<dd><p>length of minor tick marks (<code>unit</code>), or relative to <code>axis.ticks.length</code> when provided with <code>rel()</code>.</p></dd>
 
 
 <dt id="arg-axis-line-axis-line-x-axis-line-x-top-axis-line-x-bottom-axis-line-y-axis-line-y-left-axis-line-y-right-axis-line-theta-axis-line-r">axis.line, axis.line.x, axis.line.x.top, axis.line.x.bottom, axis.line.y, axis.line.y.left, axis.line.y.right, axis.line.theta, axis.line.r<a class="anchor" aria-label="anchor" href="#arg-axis-line-axis-line-x-axis-line-x-top-axis-line-x-bottom-axis-line-y-axis-line-y-left-axis-line-y-right-axis-line-theta-axis-line-r"></a></dt>
@@ -585,7 +569,7 @@ directly or indirectly from <code>text</code>; all lines inherit from
 <code>line</code>, and all rectangular objects inherit from <code>rect</code>.
 This means that you can modify the appearance of multiple elements by
 setting a single high-level component.</p>
-<p>Learn more about setting these aesthetics in <code><a href="https://ggplot2.tidyverse.org/articles/ggplot2-specs.html" class="external-link">vignette("ggplot2-specs")</a></code>.</p>
+<p>Learn more about setting these aesthetics in <code>vignette("ggplot2-specs")</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -601,15 +585,15 @@ details of the specific theme elements.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">small_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">56</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">scheme_theme</span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">scheme_theme</span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu">element_rect</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="scheme_theme-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `scheme_theme()` serves as the default theme and will always be</span></span></span>
 <span class="r-in"><span><span class="co"># overridden by any `theme()` settings applied directly to the plot</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu">scheme_theme</span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">theme</span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu">element_rect</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu">scheme_theme</span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu">element_rect</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → heatmap built with `geom_tile()`</span>
 <span class="r-plt img"><img src="scheme_theme-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

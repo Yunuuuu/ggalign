@@ -17,25 +17,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/heatmap-layout.html">Heatmap Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-customize.html">Layout Customization</a></li>
-    <li><a class="dropdown-item" href="../articles/layout-plot.html">Layout Plots</a></li>
-    <li><a class="dropdown-item" href="../articles/quad-layout.html">Quad-Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/stack-layout.html">Stack Layout</a></li>
-    <li><a class="dropdown-item" href="../articles/operator.html">Operators</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-options.html">Plot Options</a></li>
-    <li><a class="dropdown-item" href="../articles/oncoplot.html">Oncoplot</a></li>
-  </ul></li>
-<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-composer.html">Plot Composer</a></li>
-    <li><a class="dropdown-item" href="../articles/difference-with-ggplot2.html">Difference with ggplot2</a></li>
-    <li><a class="dropdown-item" href="../articles/complete-examples.html">Complete examples</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>——–</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Examples from ComplexHeatmap</h6></li>
-    <li><a class="dropdown-item" href="../articles/single-heatmap.html">single heatmap</a></li>
-    <li><a class="dropdown-item" href="../articles/more-examples.html">more examples</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/benchmarks.html">Benchmarks</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">FAQ</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/benchmarks.html">Benchmarks</a></li>
@@ -60,7 +44,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="layout-class">Layout Class<a class="anchor" aria-label="anchor" href="#layout-class"></a></h2>
+      <h2 id="layout-initialize">Layout initialize<a class="anchor" aria-label="anchor" href="#layout-initialize"></a></h2>
 
       <div class="section-desc"><p>A <code>Layout</code> object defines how to place the plots.</p></div>
 
@@ -93,7 +77,7 @@
           <code><a href="cross_align.html">cross_align()</a></code> <code><a href="cross_align.html">cross_alignv()</a></code> <code><a href="cross_align.html">cross_alignh()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
-        <dd>Arrange Plots Horizontally or Vertically</dd>
+        <dd>Arrange Plots Crosswise Horizontally or Vertically</dd>
       </dl><dl><dt>
 
           <code><a href="quad_free.html">quad_free()</a></code> <code><a href="quad_free.html">quad_alignh()</a></code> <code><a href="quad_free.html">quad_alignv()</a></code> <code><a href="quad_free.html">quad_alignb()</a></code>
@@ -113,9 +97,9 @@
         </dt>
         <dd>Create <code>OncoPrint</code> Visualizations from Genetic Alteration Data</dd>
       </dl></div><div class="section level2">
-      <h2 id="plot-building">Plot Building<a class="anchor" aria-label="anchor" href="#plot-building"></a></h2>
+      <h2 id="layout-building">Layout Building<a class="anchor" aria-label="anchor" href="#layout-building"></a></h2>
 
-      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>.</p></div>
+      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code>ggsave()</code>.</p></div>
 
 
     </div><div class="section level2">
@@ -184,7 +168,7 @@
 
       <dl><dt>
 
-          <code><a href="align_dendro.html">align_dendro()</a></code> <code><a href="align_dendro.html">align_hclust()</a></code>
+          <code><a href="align_hclust.html">align_hclust()</a></code>
           <span class="badge lifecycle lifecycle-stable">stable</span>
         </dt>
         <dd>Reorder or Group observations based on hierarchical clustering</dd>
@@ -213,7 +197,7 @@
         </dt>
         <dd>Reorders layout observations based on specific statistics.</dd>
       </dl></div><div class="section level2">
-      <h2 id="layout-plots">Layout Plots<a class="anchor" aria-label="anchor" href="#layout-plots"></a></h2>
+      <h2 id="plot-initialize">Plot initialize<a class="anchor" aria-label="anchor" href="#plot-initialize"></a></h2>
 
       <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
 
@@ -235,10 +219,16 @@
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Add ggplot to layout</dd>
-      </dl></div><div class="section level2">
-      <h2 id="plot-options">Plot options<a class="anchor" aria-label="anchor" href="#plot-options"></a></h2>
+      </dl><dl><dt>
 
-      <div class="section-desc"><p>This section covers essential functions to add individual plots to the layout, ensuring they align and interact correctly within the defined structure.</p></div>
+          <code><a href="align_dendro.html">align_dendro()</a></code>
+
+        </dt>
+        <dd>Plot dendrogram tree</dd>
+      </dl></div><div class="section level2">
+      <h2 id="schemes">Schemes<a class="anchor" aria-label="anchor" href="#schemes"></a></h2>
+
+      <div class="section-desc"><p>Schemes control the actions of plots in the layout. Scheme can be applied either globally to the layout or individually to specific plots.</p></div>
 
 
     </div><div class="section level2">
