@@ -157,15 +157,6 @@ add_wrapped_grob <- function(gt, grob, on_top, i) {
         gt$layout$z[layout$z >= z] <- layout$z[layout$z >= z] + 1L
     }
 
-    # if we set the viewport, the grob must be a gtable object
-    if (!is.null(vp <- attr(grob, "vp"))) {
-        if (is.gtable(grob)) {
-            grob$vp <- vp
-        } else {
-            container <- gtable(unit(1L, "null"), unit(1L, "null"), vp = vp)
-            grob <- gtable_add_grob(container, list(grob), 1L, 1L, clip = FALSE)
-        }
-    }
     # add the grob to the gtable
     if (align == "full") {
         gt <- gtable_add_grob(gt,

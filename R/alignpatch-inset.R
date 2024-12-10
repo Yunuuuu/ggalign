@@ -22,6 +22,7 @@ inset <- function(plot, ..., align = "panel", on_top = TRUE,
     add_class(grob, "patch_inset")
 }
 
+#' @importFrom grid editGrob
 #' @importFrom rlang arg_match0
 make_inset <- function(plot, ..., align, on_top, clip, vp,
                        call = caller_call()) {
@@ -34,8 +35,8 @@ make_inset <- function(plot, ..., align, on_top, clip, vp,
     }
     attr(grob, "align") <- align
     attr(grob, "clip") <- if (clip) "on" else "off"
-    attr(grob, "vp") <- vp
     attr(grob, "on_top") <- on_top
+    if (!is.null(vp)) grob <- editGrob(grob, vp = vp)
     grob
 }
 
