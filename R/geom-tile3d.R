@@ -39,13 +39,13 @@ GeomRect3d <- ggproto(
         if (any(data$z %||% .subset2(params, "z") < 0)) {
             cli_abort("value mapped to {.field z} aesthetic must >= 0")
         }
-        theta <- data$theta %||% .subset2(params, "theta") %||% 60
+        theta <- data$theta %||% .subset2(params, "theta")
         if (!is.null(theta) && any(theta <= 0 || theta >= 90)) {
             cli_abort(
                 "value mapped to {.field theta} aesthetic must > 0 and < 90."
             )
         }
-        data$theta <- theta
+        data$theta <- theta %||% 60
         data <- ggproto_parent(ggplot2::GeomRect, self)$setup_data(
             data, params
         )
