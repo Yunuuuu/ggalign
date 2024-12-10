@@ -17,17 +17,17 @@
 #'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
-#'  - `panel`: the panel for the aligned axis. It means `x-axis` for vertical
+#'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
 #'    stack layout (including top and bottom annotation), `y-axis` for
 #'    horizontal stack layout (including left and right annotation).
 #'
-#'  - `index`: an integer of the data index.
+#'  - `.index`: an integer of the data index.
 #'
-#'  - `hand`: a factor indicates the index groups.
+#'  - `.hand`: a factor indicates the index groups.
 #'
-#'  - `x` or `y`: the `x` or `y` coordinates.
+#'  - `.x` or `.y`: the `x` or `y` coordinates.
 #'
-#' It is recommended to use `x`/`y` as the `x`/`y` mapping.
+#' It is recommended to use `.x`/`.y` as the `x`/`y` mapping.
 #'
 #' @importFrom ggplot2 ggproto aes
 #' @export
@@ -60,12 +60,14 @@ CrossLink <- ggproto("CrossLink", AlignProto,
                 layout_name
             ))
         }
-        layout_coords["index"] <- list(NULL)
+        # we keep the names from the layout data for usage
+        self$labels <- vec_names(layout_data)
+        layout_coords["index"] <- list(NULL) # reset the index
         layout_coords
     },
     setup_plot = function(self, plot, mapping, direction) {
         ggadd_default(plot, mapping = switch_direction(
-            direction, aes(y = .data$y), aes(x = .data$x)
+            direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
     finish = function(layout, layout_coords) {
@@ -78,18 +80,20 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         )
         layout
     },
-    build = function(plot, schemes, coords, extra_coords, previous_coords,
+    build = function(self, plot, schemes, coords, extra_coords, previous_coords,
                      direction, position) {
+        index <- vec_c(
+            .subset2(previous_coords, "index"),
+            .subset2(coords, "index")
+        )
         data <- data_frame0(
-            panel = vec_c(
+            .panel = vec_c(
                 .subset2(previous_coords, "panel"),
                 .subset2(coords, "panel")
             ),
-            index = vec_c(
-                .subset2(previous_coords, "index"),
-                .subset2(coords, "index")
-            ),
-            hand = if (is_horizontal(direction)) {
+            .index = index,
+            .names = .subset(.subset2(self, "labels"), index),
+            .hand = if (is_horizontal(direction)) {
                 factor(
                     vec_rep_each(
                         c("left", "right"),
@@ -113,7 +117,11 @@ CrossLink <- ggproto("CrossLink", AlignProto,
                 )
             }
         )
-        data[[switch_direction(direction, "y", "x")]] <- vec_c(
+        coords$labels <- .subset(
+            .subset2(self, "labels"),
+            .subset2(coords, "index")
+        )
+        data[[switch_direction(direction, ".y", ".x")]] <- vec_c(
             seq_len(.subset2(previous_coords, "nobs")),
             seq_len(.subset2(coords, "nobs"))
         )
@@ -121,12 +129,12 @@ CrossLink <- ggproto("CrossLink", AlignProto,
             default_facet <- switch_direction(
                 direction,
                 ggplot2::facet_grid(
-                    rows = ggplot2::vars(fct_rev(.data$panel)),
+                    rows = ggplot2::vars(fct_rev(.data$.panel)),
                     scales = "free_y", space = "free",
                     drop = FALSE
                 ),
                 ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$panel),
+                    cols = ggplot2::vars(.data$.panel),
                     scales = "free_x", space = "free",
                     drop = FALSE
                 )

@@ -137,7 +137,7 @@ AlignGG <- ggproto("AlignGG", Align,
     },
     setup_data = function(self, params, data) {
         ans <- fortify_data_frame(data)
-        # we always add `.names` and `.index` to align the observations
+        # we always add `.index` to align the observations
         if (is.matrix(data)) {
             ans$.index <- vec_rep(seq_len(NROW(data)), NCOL(data))
         } else {
@@ -181,19 +181,18 @@ AlignGG <- ggproto("AlignGG", Align,
         coord_name <- paste0(".", axis)
         ans <- data_frame0(
             .panel = panel, .index = index,
+            # `data_frame0` will omit `NULL`
             .names = .subset(self$labels, index)
         )
         ans[[coord_name]] <- seq_along(index)
 
         # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
-            # if the data is inherit from the heatmap data
-            # Align object always regard row as the observations
-            ans <- cross_join(
-                ans, data_frame0(
-                    .extra_panel = extra_panel, .extra_index = extra_index
-                )
-            )
+            # if the data is inherit from the `quad_layout()`
+            # the data must be a matrix
+            ans <- cross_join(ans, data_frame0(
+                .extra_panel = extra_panel, .extra_index = extra_index
+            ))
             if (!is.null(data)) {
                 ans <- full_join(data, ans,
                     by.x = c(".column_index", ".index"),

@@ -39,14 +39,14 @@ vertical stack layout (including top and bottom annotation).
 
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
-\item \code{panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
+\item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
 stack layout (including top and bottom annotation), \code{y-axis} for
 horizontal stack layout (including left and right annotation).
-\item \code{index}: an integer of the data index.
-\item \code{hand}: a factor indicates the index groups.
-\item \code{x} or \code{y}: the \code{x} or \code{y} coordinates.
+\item \code{.index}: an integer of the data index.
+\item \code{.hand}: a factor indicates the index groups.
+\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates.
 }
 
-It is recommended to use \code{x}/\code{y} as the \code{x}/\code{y} mapping.
+It is recommended to use \code{.x}/\code{.y} as the \code{x}/\code{y} mapping.
 }
 
