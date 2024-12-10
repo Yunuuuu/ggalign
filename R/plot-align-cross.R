@@ -89,16 +89,29 @@ CrossLink <- ggproto("CrossLink", AlignProto,
                 .subset2(previous_coords, "index"),
                 .subset2(coords, "index")
             ),
-            hand = factor(
-                vec_rep_each(
-                    c("left", "right"),
-                    c(
-                        .subset2(previous_coords, "nobs"),
-                        .subset2(coords, "nobs")
-                    )
-                ),
-                c("left", "right")
-            )
+            hand = if (is_horizontal(direction)) {
+                factor(
+                    vec_rep_each(
+                        c("left", "right"),
+                        c(
+                            .subset2(previous_coords, "nobs"),
+                            .subset2(coords, "nobs")
+                        )
+                    ),
+                    c("left", "right")
+                )
+            } else {
+                factor(
+                    vec_rep_each(
+                        c("top", "bottom"),
+                        c(
+                            .subset2(previous_coords, "nobs"),
+                            .subset2(coords, "nobs")
+                        )
+                    ),
+                    c("bottom", "top")
+                )
+            }
         )
         data[[switch_direction(direction, "y", "x")]] <- vec_c(
             seq_len(.subset2(previous_coords, "nobs")),
