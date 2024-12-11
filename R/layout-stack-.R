@@ -212,7 +212,7 @@ new_stack_layout <- function(data, direction, layout, schemes = NULL,
 #' @include layout-.R
 methods::setClass(
     "StackLayout",
-    contains = "Layout",
+    contains = "LayoutProto",
     list(
         name = "character", data = "ANY", direction = "character",
         plot_list = "list", # save the list of plots

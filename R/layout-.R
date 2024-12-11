@@ -10,7 +10,8 @@ namespace_link <- function() NULL
 #' A `Layout` object defines how to place the plots.
 #'
 #' @keywords internal
-methods::setClass("Layout",
+# add suffix "Proto" to avoid conflict with ggplot2
+methods::setClass("LayoutProto",
     list(
         active = "ANY", # current active plot
         schemes = "list", # used to provide global parameters for all plots
@@ -21,20 +22,21 @@ methods::setClass("Layout",
         `_namespace` = "ANY"
     ),
     prototype = list(
-        active = NULL, titles = list(), annotation = list(), theme = NULL,
+        active = NULL, titles = list(),
+        annotation = list(), theme = NULL,
         `_namespace` = namespace_link
     )
 )
 
 #' @export
-print.Layout <- print.alignpatches
+print.LayoutProto <- print.alignpatches
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.Layout <- grid.draw.alignpatches
+grid.draw.LayoutProto <- grid.draw.alignpatches
 
 #' @export
-alignpatch.Layout <- function(x) alignpatch(ggalign_build(x))
+alignpatch.LayoutProto <- function(x) alignpatch(ggalign_build(x))
 
 #' Print Layout object
 #'
@@ -43,7 +45,7 @@ alignpatch.Layout <- function(x) alignpatch(ggalign_build(x))
 #' @importFrom methods show
 #' @export
 #' @keywords internal
-methods::setMethod("show", "Layout", function(object) {
+methods::setMethod("show", "LayoutProto", function(object) {
     print(object)
 })
 
@@ -58,7 +60,7 @@ methods::setMethod("show", "Layout", function(object) {
 #' @importFrom methods slot
 #' @export
 #' @keywords internal
-methods::setMethod("$", "Layout", function(x, name) {
+methods::setMethod("$", "LayoutProto", function(x, name) {
     slot(x, name)
 })
 
@@ -201,7 +203,7 @@ ggalign_attr_restore <- function(data, original) {
 #'
 #' @importFrom methods is
 #' @export
-is_layout <- function(x) is(x, "Layout")
+is_layout <- function(x) is(x, "LayoutProto")
 
 #' @examples
 #' # for quad_layout()

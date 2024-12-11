@@ -71,7 +71,7 @@ NULL
 
 utils::globalVariables(".Generic")
 
-methods::setMethod("Ops", c("Layout", "ANY"), function(e1, e2) {
+methods::setMethod("Ops", c("LayoutProto", "ANY"), function(e1, e2) {
     if (missing(e2)) {
         cli_abort(c(
             "Cannot use {.code {.Generic}} with a single argument.",

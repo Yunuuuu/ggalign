@@ -331,7 +331,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
 #' @include layout-.R
 methods::setClass(
     "QuadLayout",
-    contains = "Layout",
+    contains = "LayoutProto",
     list(
         data = "ANY", plot = "ANY", body_schemes = "list", name = "character",
         # parameters for main body
