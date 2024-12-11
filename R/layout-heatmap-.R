@@ -121,7 +121,8 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         data = data,
         horizontal = new_layout_coords(nobs = nrows),
         vertical = new_layout_coords(nobs = ncols),
-        mapping = mapping, theme = theme, active = active,
+        mapping = mapping,
+        theme = theme, active = active,
         width = width, height = height,
         class = "HeatmapLayout"
     )
@@ -132,17 +133,9 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         assert_layout_position(guides)
         ans@schemes$scheme_align["guides"] <- list(guides)
     }
-    # always remove default axis titles
-    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
-    # There are multiple ways to set labels in a plot, which take different
-    # priorities. Here are the priorities from highest to lowest.
-    # 1. The guide title.
-    # 2. The scale name.
-    # 3. The `labs()` function.
-    # 4. The captured expression in aes().
-    ans@plot <- ans@plot + ggplot2::labs(x = NULL, y = NULL)
     # add default mapping
-    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y))
+    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y)) +
+        ggplot2::labs(x = NULL, y = NULL)
     ans@filling <- filling
     ans
 }

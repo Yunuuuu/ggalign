@@ -277,7 +277,23 @@ new_quad_layout <- function(name, data, horizontal, vertical,
                             mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA, class = "QuadLayout",
                             call = caller_call()) {
-    plot <- ggplot(mapping = mapping)
+    # always remove default axis titles
+    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
+    # There are multiple ways to set labels in a plot, which take different
+    # priorities. Here are the priorities from highest to lowest.
+    # 1. The guide title.
+    # 2. The scale name.
+    # 3. The `labs()` function.
+    # 4. The captured expression in aes().
+    plot <- ggplot(mapping = mapping) +
+        switch(name,
+            quad_free = NULL,
+            quad_alignh = ggplot2::labs(y = NULL),
+            quad_alignv = ggplot2::labs(x = NULL),
+            quad_alignb = ggplot2::labs(x = NULL, y = NULL),
+            NULL
+        )
+
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     # for `QuadLayout`, we use `NULL` to inherit data from parent layout
     # since `QuadLayout` must have data, and won't be waiver()

@@ -162,17 +162,19 @@ AlignGG <- ggproto("AlignGG", Align,
                 switch_direction(
                     direction,
                     theme(
-                        axis.title.x = element_blank(),
                         axis.text.x = element_blank(),
                         axis.ticks.x = element_blank()
                     ),
                     theme(
-                        axis.title.y = element_blank(),
                         axis.text.y = element_blank(),
                         axis.ticks.y = element_blank()
                     )
                 )
             }
+        ) + switch_direction(
+            direction,
+            ggplot2::labs(y = NULL),
+            ggplot2::labs(x = NULL)
         )
     },
 
