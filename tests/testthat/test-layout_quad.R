@@ -81,7 +81,7 @@ testthat::test_that("add `align` object works well", {
     expect_doppelganger(
         "alignh-layout-annotation",
         quad_alignh(small_mat) +
-            geom_boxplot(aes(value, .row_names)) +
+            geom_boxplot(aes(value, .discrete_y)) +
             quad_anno("l") +
             align_dendro(k = 3L) +
             ggalign(data = rowSums) +
@@ -94,7 +94,7 @@ testthat::test_that("add `align` object works well", {
     expect_doppelganger(
         "alignv-layout-annotation",
         quad_alignv(small_mat) +
-            geom_boxplot(aes(.column_names, value)) +
+            geom_boxplot(aes(.discrete_x, value)) +
             quad_anno("t") +
             align_dendro(k = 3L) +
             ggalign(data = rowSums) +
@@ -112,7 +112,7 @@ testthat::test_that("add `align` object builds well", {
     expect_doppelganger(
         "alignh-layout-annotation",
         quad_alignh(small_mat) +
-            geom_boxplot(aes(value, .row_names)) +
+            geom_boxplot(aes(value, .discrete_y)) +
             quad_anno("l") +
             align_dendro(k = 3L) +
             ggalign(data = rowSums) +
@@ -125,14 +125,13 @@ testthat::test_that("add `align` object builds well", {
     expect_doppelganger(
         "alignv-layout-annotation",
         quad_alignv(small_mat) +
-            geom_boxplot(aes(.column_names, value)) +
+            geom_boxplot(aes(.discrete_x, value)) +
             quad_anno("t") +
             align_dendro(k = 3L) +
             ggalign(data = rowSums) +
             geom_bar(aes(.x, value, fill = .panel), stat = "identity")
     )
 })
-
 
 testthat::test_that("add `with_quad()` works as expected", {
     set.seed(1L)

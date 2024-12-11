@@ -129,7 +129,7 @@ testthat::test_that("`stack_align` add `align-` object builds well", {
         set.seed(1L)
         stack_alignh(small_mat) +
             ggalign() +
-            geom_boxplot(aes(value, .names, fill = .panel)) +
+            geom_boxplot(aes(value, .discrete_y, fill = .panel)) +
             align_kmeans(3L)
     })
 })

@@ -40,17 +40,19 @@
 #' @param guides `r lifecycle::badge("deprecated")` Please use
 #' [`scheme_align()`] function instead.
 #' @section ggplot2 specification:
-#' The data input in `ggheatmap` will be converted into the long formated data
-#' frame when drawing. The default mapping will use `aes(.data$.x, .data$.y)`,
-#' you can use `mapping` argument to control it. The data in the underlying
-#' `ggplot` object contains following columns:
+#' The default mapping will use `aes(.data$.x, .data$.y)`, you can use `mapping`
+#' argument to control it. The data in the underlying `ggplot` object contains
+#' following columns:
 #'
 #'  - `.xpanel` and `.ypanel`: the column and row panel
 #'
-#'  - `.x` and `.y`: the `x` and `y` coordinates
+#'  - `.x` and `.y`: an integer index of `x` and `y` coordinates
 #'
-#'  - `.row_names` and `.column_names`: A factor of the row and column names of
-#'    the original matrix (only applicable when names exist).
+#'  - `.discrete_x` and `.discrete_y`: a factor of the data labels (only
+#'    applicable when `.row_names`` and `.column_names` exists).
+#'
+#'  - `.row_names` and `.column_names`: A character of the row and column names
+#'    of the original matrix (only applicable when names exist).
 #'
 #'  - `.row_index` and `.column_index`: the row and column index of the original
 #'    matrix.

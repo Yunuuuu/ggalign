@@ -22,6 +22,8 @@
 #'    horizontal stack layout (including left and right annotation).
 #'
 #'  - `.index`: an integer of the data index.
+#' 
+#'  - `.names`: a character of data labels.
 #'
 #'  - `.hand`: a factor indicates the index groups.
 #'

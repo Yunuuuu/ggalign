@@ -296,16 +296,16 @@ quad_build_data <- function(data, row_coords, column_coords) {
     ans <- fortify_data_frame.matrix(data)
     ans <- full_join(ans, coords, by.x = by.x, by.y = by.y)
     if (!is.null(.subset2(ans, ".row_names")) &&
-        !is.null(.subset2(ans, ".y"))) {
-        ans$.row_names <- reorder(
+        !is.null(row_coords)) {
+        ans$.discrete_y <- reorder(
             .subset2(ans, ".row_names"),
             .subset2(ans, ".y"),
             order = FALSE
         )
     }
     if (!is.null(.subset2(ans, ".column_names")) &&
-        !is.null(.subset2(ans, ".x"))) {
-        ans$.column_names <- reorder(
+        !is.null(column_coords)) {
+        ans$.discrete_x <- reorder(
             .subset2(ans, ".column_names"),
             .subset2(ans, ".x"),
             order = FALSE

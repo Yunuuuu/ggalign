@@ -95,24 +95,18 @@ in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
 layout (including left and right annotation) and \code{aes(x = .data$.x)}
 for vertical stack layout (including top and bottom annotation).
 
-\code{matrix} input will be automatically melted into a long foramted data frame.
-
-Atomic vector will be put in the \code{value} column of the data frame.
-
-In the case where the input data is already a data frame, 4 additional
-columns (\code{.x}/\code{.y}, \code{.names}, \code{.index}, and \code{.panel}) are added to the data
-frame.
-
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
 \item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
 stack layout (including top and bottom annotation), \code{y-axis} for
 horizontal stack layout (including left and right annotation).
-\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates
+\item \code{.x}/\code{y} and \code{.discrete_x}/\code{.discrete_y}: an integer index of \code{x}/\code{y}
+coordinates and a factor of the data labels (only applicable when names
+exists).
 \item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
-(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): A factor of the names
-(only applicable when names exists) and an integer of index of the
-original data.
+(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): a character names (only
+applicable when names exists) and an integer of index of the original
+data.
 \item \code{.row_names} and \code{.row_index}: the row names and an integer of
 row index of the original matrix (only applicable if \code{data} is a
 \code{matrix}).
@@ -122,7 +116,16 @@ the original matrix (only applicable if \code{data} is a \code{matrix}).
 atomic vector).
 }
 
-It is recommended to use \code{.x}/\code{.y}, or \code{.names} as the \code{x}/\code{y} mapping.
+\code{matrix} input will be automatically melted into a long foramted data frame.
+
+Atomic vector will be put in the \code{value} column of the data frame.
+
+In the case where the input data is already a data frame, following columns
+(\code{.panel}, \code{.index}, \code{.names}, \code{.x}/\code{.y}, \code{.discrete_x}/\code{.discrete_y}) are
+added to the data frame.
+
+It is recommended to use \code{.x}/\code{.y}, or \code{.discrete_x}/\code{.discrete_y} as the
+\code{x}/\code{y} mapping.
 
 If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, an additional
 column will be added.
@@ -146,8 +149,8 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     ggalign() +
     geom_point(aes(y = value))
 
-# if data is `NULL`, a three column data frame will be created
-# (`.panel`, `.index`, `.x`/`.y`)
+# if data is `NULL`, a data frame with following column will be created
+# (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`)
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top(size = 0.5) +
     align_dendro(k = 3L) +

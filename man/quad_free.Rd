@@ -95,14 +95,15 @@ directions.
 }
 \section{ggplot2 specification}{
 
-For \code{quad_alignb}, \code{quad_alignh}, and \code{quad_alignv}, the data input will be
-converted into the long formated data frame when drawing. The data in the
+For \code{quad_alignb}, \code{quad_alignh}, and \code{quad_alignv}, the data in the
 underlying \code{ggplot} object contains following columns:
 \itemize{
 \item \code{.xpanel} and \code{.ypanel}: the column and row panel
-\item \code{.x} and \code{.y}: the \code{x} and \code{y} coordinates
-\item \code{.row_names} and \code{.column_names}: A factor of the row and column names of
-the original matrix (only applicable when names exist).
+\item \code{.x} and \code{.y}: an integer index of \code{x} and \code{y} coordinates
+\item \code{.discrete_x} and \code{.discrete_y}: a factor of the data labels (only
+applicable when \verb{.row_names`` and }.column_names` exists).
+\item \code{.row_names} and \code{.column_names}: A character of the row and column names
+of the original matrix (only applicable when names exist).
 \item \code{.row_index} and \code{.column_index}: the row and column index of the original
 matrix.
 \item \code{value}: the actual matrix value.

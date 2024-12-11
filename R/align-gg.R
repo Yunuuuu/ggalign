@@ -34,26 +34,20 @@
 #' layout (including left and right annotation) and `aes(x = .data$.x)`
 #' for vertical stack layout (including top and bottom annotation).
 #'
-#' `matrix` input will be automatically melted into a long foramted data frame.
-#'
-#' Atomic vector will be put in the `value` column of the data frame.
-#'
-#' In the case where the input data is already a data frame, 4 additional
-#' columns (`.x`/`.y`, `.names`, `.index`, and `.panel`) are added to the data
-#' frame.
-#'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
 #'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
 #'    stack layout (including top and bottom annotation), `y-axis` for
 #'    horizontal stack layout (including left and right annotation).
 #'
-#'  - `.x` or `.y`: the `x` or `y` coordinates
+#'  - `.x`/`y` and `.discrete_x`/`.discrete_y`: an integer index of `x`/`y`
+#'    coordinates and a factor of the data labels (only applicable when names
+#'    exists).
 #'
 #'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
-#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): A factor of the names
-#'    (only applicable when names exists) and an integer of index of the
-#'    original data.
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): a character names (only
+#'    applicable when names exists) and an integer of index of the original
+#'    data.
 #'
 #'  - `.row_names` and `.row_index`: the row names and an integer of
 #'    row index of the original matrix (only applicable if `data` is a
@@ -65,7 +59,16 @@
 #'  - `value`: the actual value (only applicable if `data` is a `matrix` or
 #'    atomic vector).
 #'
-#' It is recommended to use `.x`/`.y`, or `.names` as the `x`/`y` mapping.
+#' `matrix` input will be automatically melted into a long foramted data frame.
+#'
+#' Atomic vector will be put in the `value` column of the data frame.
+#'
+#' In the case where the input data is already a data frame, following columns
+#' (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`) are
+#' added to the data frame.
+#'
+#' It is recommended to use `.x`/`.y`, or `.discrete_x`/`.discrete_y` as the
+#' `x`/`y` mapping.
 #'
 #' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], an additional
 #' column will be added.
@@ -80,8 +83,8 @@
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
-#' # if data is `NULL`, a three column data frame will be created
-#' # (`.panel`, `.index`, `.x`/`.y`)
+#' # if data is `NULL`, a data frame with following column will be created
+#' # (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`)
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top(size = 0.5) +
 #'     align_dendro(k = 3L) +
@@ -180,11 +183,19 @@ AlignGG <- ggproto("AlignGG", Align,
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
         ans <- data_frame0(
-            .panel = panel, .index = index,
+            .panel = panel,
+            .index = index,
             # `data_frame0` will omit `NULL`
             .names = .subset(self$labels, index)
         )
         ans[[coord_name]] <- seq_along(index)
+        if (!is.null(.subset2(ans, ".names"))) {
+            ans[[paste0(".discrete_", axis)]] <- reorder(
+                .subset2(ans, ".names"),
+                .subset2(ans, coord_name),
+                order = FALSE
+            )
+        }
 
         # if inherit from the parent layout
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
@@ -201,13 +212,6 @@ AlignGG <- ggproto("AlignGG", Align,
             }
         } else if (!is.null(data)) {
             ans <- full_join(data, ans, by.x = ".index", by.y = ".index")
-        }
-        if (!is.null(.subset2(ans, ".names"))) {
-            ans$.names <- reorder(
-                .subset2(ans, ".names"),
-                .subset2(ans, coord_name),
-                order = FALSE
-            )
         }
         plot$data <- ggalign_attr_restore(ans, data)
         plot

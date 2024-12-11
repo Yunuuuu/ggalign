@@ -43,6 +43,7 @@ The data in the underlying \code{ggplot} object will contain following columns:
 stack layout (including top and bottom annotation), \code{y-axis} for
 horizontal stack layout (including left and right annotation).
 \item \code{.index}: an integer of the data index.
+\item \code{.names}: a character of data labels.
 \item \code{.hand}: a factor indicates the index groups.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates.
 }
