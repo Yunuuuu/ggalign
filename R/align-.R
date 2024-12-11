@@ -272,7 +272,7 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, direction, position, schemes,
+    build = function(self, plot, direction, position,
                      coords, extra_coords, previous_coords = NULL) {
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")
@@ -332,6 +332,8 @@ Align <- ggproto("Align", AlignProto,
             coord_ggalign(x = coords)
         )
     },
+
+    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes),
 
     # Most parameters for the `Align` are taken automatically from `compute()`,
     # `layout()` and `draw()`. However, some additional parameters may be

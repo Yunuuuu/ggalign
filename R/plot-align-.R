@@ -115,8 +115,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
     ans <- align$build(
         plot = plot@plot,
         ...,
-        direction = direction,
-        schemes = schemes
+        direction = direction
     )
 
     # remove axis titles, text, ticks used for alignment
@@ -124,7 +123,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
         schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
-    plot_add_schemes(ans, schemes)
+    align$add_schemes(ans, schemes)
 }
 
 ggproto_formals <- function(x) formals(environment(x)$f)
