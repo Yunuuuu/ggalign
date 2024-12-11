@@ -170,12 +170,13 @@ added to a layout.</p></dd>
     <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
 
 
-<p>For <code>quad_alignb</code>, <code>quad_alignh</code>, and <code>quad_alignv</code>, the data input will be
-converted into the long formated data frame when drawing. The data in the
+<p>For <code>quad_alignb</code>, <code>quad_alignh</code>, and <code>quad_alignv</code>, the data in the
 underlying <code>ggplot</code> object contains following columns:</p><ul><li><p><code>.xpanel</code> and <code>.ypanel</code>: the column and row panel</p></li>
-<li><p><code>.x</code> and <code>.y</code>: the <code>x</code> and <code>y</code> coordinates</p></li>
-<li><p><code>.row_names</code> and <code>.column_names</code>: A factor of the row and column names of
-the original matrix (only applicable when names exist).</p></li>
+<li><p><code>.x</code> and <code>.y</code>: an integer index of <code>x</code> and <code>y</code> coordinates</p></li>
+<li><p><code>.discrete_x</code> and <code>.discrete_y</code>: a factor of the data labels (only
+applicable when <code>.row_names`` and </code>.column_names` exists).</p></li>
+<li><p><code>.row_names</code> and <code>.column_names</code>: A character of the row and column names
+of the original matrix (only applicable when names exist).</p></li>
 <li><p><code>.row_index</code> and <code>.column_index</code>: the row and column index of the original
 matrix.</p></li>
 <li><p><code>value</code>: the actual matrix value.</p></li>
