@@ -131,7 +131,7 @@ ggalign <- align_gg
 
 #' @importFrom ggplot2 ggproto ggplot
 AlignGG <- ggproto("AlignGG", Align,
-    nobs = function(self) {
+    nobs = function(self) { # no input data
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli_abort(c(
             "You cannot add {.fn {snake_class(self)}}",
@@ -184,17 +184,17 @@ AlignGG <- ggproto("AlignGG", Align,
         direction <- .subset2(self, "direction")
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
-        ans <- data_frame0(
+        plot_data <- data_frame0(
             .panel = panel,
             .index = index,
             # `data_frame0` will omit `NULL`
             .names = .subset(self$labels, index)
         )
-        ans[[coord_name]] <- seq_along(index)
-        if (!is.null(.subset2(ans, ".names"))) {
-            ans[[paste0(".discrete_", axis)]] <- reorder(
-                .subset2(ans, ".names"),
-                .subset2(ans, coord_name),
+        plot_data[[coord_name]] <- seq_along(index)
+        if (!is.null(.subset2(plot_data, ".names"))) {
+            plot_data[[paste0(".discrete_", axis)]] <- reorder(
+                .subset2(plot_data, ".names"),
+                .subset2(plot_data, coord_name),
                 order = FALSE
             )
         }
@@ -203,19 +203,19 @@ AlignGG <- ggproto("AlignGG", Align,
         if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
             # if the data is inherit from the `quad_layout()`
             # the data must be a matrix
-            ans <- cross_join(ans, data_frame0(
+            plot_data <- cross_join(plot_data, data_frame0(
                 .extra_panel = extra_panel, .extra_index = extra_index
             ))
             if (!is.null(data)) {
-                ans <- full_join(data, ans,
+                plot_data <- full_join(data, plot_data,
                     by.x = c(".column_index", ".index"),
                     by.y = c(".extra_index", ".index")
                 )
             }
         } else if (!is.null(data)) {
-            ans <- full_join(data, ans, by.x = ".index", by.y = ".index")
+            plot_data <- full_join(data, plot_data, by = ".index")
         }
-        plot$data <- ggalign_attr_restore(ans, data)
+        plot$data <- ggalign_attr_restore(plot_data, data)
         plot
     }
 )
