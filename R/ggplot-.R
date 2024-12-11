@@ -19,10 +19,11 @@ is.waive <- function(x) inherits(x, "waiver")
 snake_class <- function(x) ggfun("snake_class")(x)
 
 ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
-    plot + mapping +
-        .subset2(plot, "mapping") +
-        theme +
-        .subset2(plot, "theme")
+    if (!is.null(mapping)) {
+        plot <- plot + mapping + .subset2(plot, "mapping")
+    }
+    if (!is.null(theme)) plot$theme <- theme + .subset2(plot, "theme")
+    plot
 }
 
 identity_trans <- function(scale) {
