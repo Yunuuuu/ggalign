@@ -19,7 +19,8 @@
 #' dendrogram `node` and `edge` contains following columns:
 #'   - `.panel`: Similar with `panel` column, but always give the correct branch
 #'              for usage of the ggplot facet.
-#'   - `.index`: the original index in the tree for the current node.
+#'  - `.names` and `.index`: a character names (only applicable when names
+#'    exists) and an integer of index of the original data.
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
 #'                  node of the current edge.
@@ -204,6 +205,10 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         edge <- .subset2(data, "edge")
         node <- rename(node, c(ggpanel = ".panel", index = ".index"))
         edge <- rename(edge, c(ggpanel = ".panel"))
+        # add names
+        if (!is.null(self$labels)) {
+            node$.names <- .subset(self$labels, .subset2(node, ".index"))
+        }
         if (is_horizontal(direction)) {
             edge <- rename(
                 edge,

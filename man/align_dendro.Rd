@@ -158,7 +158,8 @@ dendrogram \code{node} and \code{edge} contains following columns:
 \itemize{
 \item \code{.panel}: Similar with \code{panel} column, but always give the correct branch
 for usage of the ggplot facet.
-\item \code{.index}: the original index in the tree for the current node.
+\item \code{.names} and \code{.index}: a character names (only applicable when names
+exists) and an integer of index of the original data.
 \item \code{label}: node label text
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for current node or the start
 node of the current edge.
