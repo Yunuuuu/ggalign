@@ -156,7 +156,9 @@ coordinates will be added.
 
 dendrogram \code{node} and \code{edge} contains following columns:
 \itemize{
-\item \code{index}: the original index in the tree for the current node
+\item \code{.panel}: Similar with \code{panel} column, but always give the correct branch
+for usage of the ggplot facet.
+\item \code{.index}: the original index in the tree for the current node.
 \item \code{label}: node label text
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for current node or the start
 node of the current edge.
@@ -164,17 +166,15 @@ node of the current edge.
 for current edge.
 \item \code{branch}: which branch current node or edge is. You can use this column
 to color different groups.
+\item \code{leaf}: A logical value indicates whether current node is a leaf.
 \item \code{panel}: which panel current node is, if we split the plot into panel
 using \code{\link[ggplot2:facet_grid]{facet_grid}}, this column will show
 which panel current node or edge is from. Note: some nodes may
 fall outside panel (between two panel), so there are possible
 \code{NA} values in this column.
-\item \code{.panel}: Similar with \code{panel} column, but always give the correct branch
-for usage of the ggplot facet.
 \item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
 functionality as \code{panel}, but they are specifically for the \code{edge} data
 and correspond to both nodes of each edge.
-\item \code{leaf}: A logical value indicates whether current node is a leaf.
 }
 }
 

@@ -64,7 +64,7 @@ using \link[ggplot2:facet_grid]{facet_grid}, this column will show
 which panel current node or edge is from. Note: some nodes may
 fall outside panel (between two panels), so there are possible
 \code{NA} values in this column.
-\item \code{.panel}: Similar with \code{panel} column, but always give the correct
+\item \code{ggpanel}: Similar with \code{panel} column, but always give the correct
 branch for usage of the ggplot facet.
 \item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
 functionality as \code{panel}, but they are specifically for the \code{edge} data

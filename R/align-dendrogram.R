@@ -17,7 +17,9 @@
 #' coordinates will be added.
 #'
 #' dendrogram `node` and `edge` contains following columns:
-#'   - `index`: the original index in the tree for the current node
+#'   - `.panel`: Similar with `panel` column, but always give the correct branch
+#'              for usage of the ggplot facet.
+#'   - `.index`: the original index in the tree for the current node.
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
 #'                  node of the current edge.
@@ -25,17 +27,15 @@
 #'                        for current edge.
 #'   - `branch`: which branch current node or edge is. You can use this column
 #'               to color different groups.
+#'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'   - `panel`: which panel current node is, if we split the plot into panel
 #'              using [`facet_grid`][ggplot2::facet_grid], this column will show
 #'              which panel current node or edge is from. Note: some nodes may
 #'              fall outside panel (between two panel), so there are possible
 #'              `NA` values in this column.
-#'   - `.panel`: Similar with `panel` column, but always give the correct branch
-#'              for usage of the ggplot facet.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
 #'     and correspond to both nodes of each edge.
-#'   - `leaf`: A logical value indicates whether current node is a leaf.
 #'
 #' @param merge_dendrogram A single boolean value, indicates whether we should
 #' merge multiple dendrograms, only used when previous groups have been
@@ -178,7 +178,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             }
             data <- lapply(list_transpose(data), function(dat) {
                 ans <- vec_rbind(!!!dat, .names_to = "parent")
-                ans$.panel <- factor(.subset2(ans, ".panel"), branches)
+                ans$ggpanel <- factor(.subset2(ans, "ggpanel"), branches)
                 ans
             })
         } else {
@@ -202,6 +202,8 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         }
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
+        node <- rename(node, c(ggpanel = ".panel", index = ".index"))
+        edge <- rename(edge, c(ggpanel = ".panel"))
         if (is_horizontal(direction)) {
             edge <- rename(
                 edge,

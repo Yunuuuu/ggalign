@@ -146,7 +146,7 @@ make_dist <- function(matrix, distance, use_missing,
 #'              which panel current node or edge is from. Note: some nodes may
 #'              fall outside panel (between two panels), so there are possible
 #'              `NA` values in this column.
-#'   - `.panel`: Similar with `panel` column, but always give the correct
+#'   - `ggpanel`: Similar with `panel` column, but always give the correct
 #'              branch for usage of the ggplot facet.
 #'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
@@ -258,11 +258,12 @@ dendrogram_data <- function(tree,
                 index = index, label = label,
                 x = x, y = y, branch = branch,
                 leaf = TRUE, panel = branch,
-                .panel = branch
+                ggpanel = branch
             )
             list(
                 # current node
                 node = node, edge = NULL,
+                # current node information
                 x = x, y = y,
                 branch = branch,
                 panel = branch,
@@ -309,7 +310,7 @@ dendrogram_data <- function(tree,
             # all x coordinate for children nodes --------------------
             # used if center is `TRUE`, we'll calculate the center position
             # among all children nodes
-            leaves <- node[.subset2(node, "leaf"), ]
+            leaves <- node[.subset2(node, "leaf"), ] # all leaves
 
             # x coordinate for current branch: the midpoint
             if (center) {
@@ -317,13 +318,16 @@ dendrogram_data <- function(tree,
             } else {
                 x <- sum(direct_leaves_x) / 2L
             }
-            if (is.null(leaf_braches)) { # only one panel
+            if (is.null(leaf_braches)) { # no branches
                 ggpanel <- panel <- branch <- root
             } else {
+                # we assign the branch for current branch node
                 branch <- unique(direct_leaves_branch)
                 # if two children leaves are different, this branch should be
                 # `root`, this is often used to color the segments
                 if (length(branch) > 1L) branch <- root
+
+                # we assign the `panel` for current branch node
                 ranges <- split(
                     .subset2(leaves, "x"),
                     .subset2(leaves, "panel")
@@ -342,6 +346,8 @@ dendrogram_data <- function(tree,
                         break
                     }
                 }
+                # if the node is between two panels, no panel
+                # we choose the priority
                 if (is.na(ggpanel <- panel)) {
                     # it's not possible for an branch node live outside the
                     # all panels - the left or right most. So `i` won't be 1 or
@@ -358,7 +364,7 @@ dendrogram_data <- function(tree,
                 node <- vec_rbind(node, data_frame0(
                     index = NA, label = NA,
                     x = x, y = y, branch = branch, leaf = FALSE,
-                    panel = panel, .panel = ggpanel
+                    panel = panel, ggpanel = ggpanel
                 ))
             }
 
@@ -373,7 +379,7 @@ dendrogram_data <- function(tree,
                     branch = direct_leaves_branch,
                     panel1 = direct_leaves_panel,
                     panel2 = direct_leaves_panel,
-                    .panel = direct_leaves_ggpanel
+                    ggpanel = direct_leaves_ggpanel
                 )
                 # 2 horizontal lines
                 # we double the left line and the right line when a node is not
@@ -428,7 +434,7 @@ dendrogram_data <- function(tree,
                             panel,
                             .subset(direct_leaves_panel, i)
                         ),
-                        .panel = c(
+                        ggpanel = c(
                             .subset(direct_leaves_ggpanel, 3L - i),
                             ggpanel,
                             .subset(direct_leaves_ggpanel, i),
@@ -445,7 +451,7 @@ dendrogram_data <- function(tree,
                         branch = direct_leaves_branch,
                         panel1 = rep_len(panel, 2L),
                         panel2 = direct_leaves_panel,
-                        .panel = rep_len(ggpanel, 2L)
+                        ggpanel = rep_len(ggpanel, 2L)
                     )
                 }
                 added_edge <- vec_rbind(vertical_lines, horizontal_lines)
@@ -458,7 +464,7 @@ dendrogram_data <- function(tree,
                     branch = direct_leaves_branch,
                     panel1 = rep_len(panel, 2L),
                     panel2 = direct_leaves_panel,
-                    .panel = rep_len(ggpanel, 2L)
+                    ggpanel = rep_len(ggpanel, 2L)
                 )
             }
             if (is.null(edge)) {
@@ -484,12 +490,12 @@ dendrogram_data <- function(tree,
     branch_levels <- c(branch_levels, root)
     node$panel <- factor(.subset2(node, "panel"), panel_levels)
     node$branch <- factor(.subset2(node, "branch"), branch_levels)
-    node$.panel <- factor(.subset2(node, ".panel"), panel_levels)
+    node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_levels)
     if (!is.null(edge)) {
         edge$panel1 <- factor(.subset2(edge, "panel1"), panel_levels)
         edge$panel2 <- factor(.subset2(edge, "panel2"), panel_levels)
         edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
-        edge$.panel <- factor(.subset2(edge, ".panel"), panel_levels)
+        edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_levels)
     }
     list(node = node, edge = edge)
 }
