@@ -8,7 +8,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/authors.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/news/index.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/Layout-class.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/LayoutProto-class.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/active.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_dendro.html</loc></url>
@@ -22,7 +22,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/align_reorder.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/alignpatch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/area.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cash-Layout-method.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cash-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cross_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cross_link.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/dendrogram_data.html</loc></url>
@@ -89,7 +89,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_data.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_theme.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/show-Layout-method.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/show-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/show-ggalign_plot-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_layout.html</loc></url>
