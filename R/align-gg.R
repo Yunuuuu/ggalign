@@ -149,7 +149,8 @@ AlignGG <- ggproto("AlignGG", Align,
         ans$.names <- NULL # always remove names, we'll add it in `draw()`
         ans
     },
-    setup_plot = function(self, plot, direction) {
+    setup_plot = function(self, plot, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
         ggadd_default(
             plot,
             mapping = switch_direction(

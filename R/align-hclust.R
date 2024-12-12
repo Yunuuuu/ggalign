@@ -207,9 +207,9 @@ AlignHclust <- ggproto("AlignHclust", Align,
         hclust2(data, distance, method, use_missing)
     },
     #' @importFrom stats order.dendrogram
-    layout = function(self, panel, index, distance, method, use_missing,
-                      reorder_dendrogram, merge_dendro, reorder_group,
-                      k, h, cutree, plot_cut_height) {
+    align = function(self, panel, index, distance, method, use_missing,
+                     reorder_dendrogram, merge_dendro, reorder_group,
+                     k, h, cutree, plot_cut_height) {
         statistics <- .subset2(self, "statistics")
         if (!is.null(panel) && is.null(k) && is.null(h) && is.null(cutree)) {
             # reordering the dendrogram ------------------------

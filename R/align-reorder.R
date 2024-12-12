@@ -71,7 +71,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
         data <- .subset2(self, "data")
         inject(stat(data, !!!stat_params))
     },
-    layout = function(self, panel, index, reverse) {
+    align = function(self, panel, index, reverse) {
         index <- vec_cast(
             order2(.subset2(self, "statistics")), integer(),
             x_arg = "order2", call = .subset2(self, "call")

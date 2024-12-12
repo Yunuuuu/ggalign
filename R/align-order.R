@@ -121,7 +121,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
         }
         ans
     },
-    layout = function(self, panel, index, weights, reverse) {
+    align = function(self, panel, index, weights, reverse) {
         if (is.function(weights)) {
             index <- order(.subset2(self, "statistics"))
         } else {

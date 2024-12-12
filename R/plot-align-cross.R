@@ -22,7 +22,7 @@
 #'    horizontal stack layout (including left and right annotation).
 #'
 #'  - `.index`: an integer of the data index.
-#' 
+#'
 #'  - `.names`: a character of data labels.
 #'
 #'  - `.hand`: a factor indicates the index groups.
@@ -54,8 +54,8 @@ is_cross_link <- function(x) is(x, "ggalign_cross_link")
 
 #' @importFrom ggplot2 ggproto ggplot
 CrossLink <- ggproto("CrossLink", AlignProto,
-    align = function(self, direction, position, object_name,
-                     layout_data, layout_coords, layout_name) {
+    layout = function(self, direction, position, object_name,
+                      layout_data, layout_coords, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(
                 "layout observations for %s must be initialized before adding {.var {object_name}}",
@@ -67,12 +67,14 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         layout_coords["index"] <- list(NULL) # reset the index
         layout_coords
     },
-    setup_plot = function(self, plot, mapping, direction) {
+    setup_plot = function(self, plot, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
         ggadd_default(plot, mapping = switch_direction(
             direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
-    finish = function(layout, layout_coords) {
+    finish_layout = function(self, layout, direction, position, object_name,
+                             layout_data, layout_coords, layout_name) {
         # udpate cross_points
         layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
         # update index

@@ -52,7 +52,7 @@ AlignKmeans <- ggproto("AlignKmeans", Align,
         data <- .subset2(self, "data")
         inject(stats::kmeans(x = data, centers = centers, !!!params))
     },
-    layout = function(self, panel, index) {
+    align = function(self, panel, index) {
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
     }
 )

@@ -46,17 +46,17 @@ AlignProto <- ggproto("AlignProto",
     unlock = function(self) {
         assign("isLock", value = FALSE, envir = self)
     },
-    params = list(),
+
+    ############################################################
     # when added to the `Layout` object, will call `$align` method
     # must have fixed parameters
-    align = function(self, direction, position, object_name,
-                     layout_data, layout_coords, layout_name) {
+    layout = function(self, direction, position, object_name,
+                      layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
             "%s, has not implemented a {.fn align} method",
             "{.fn {snake_class(self)}}"
         ))
     },
-    # flexible parameters
     setup_plot = function(self, plot, direction, position, object_name,
                           layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
@@ -64,22 +64,30 @@ AlignProto <- ggproto("AlignProto",
             "{.fn {snake_class(self)}}"
         ))
     },
-    # flexible parameters
-    finish = function(self, layout, direction, position, object_name,
-                      layout_data, layout_coords, layout_name) {
+    finish_layout = function(self, layout, direction, position, object_name,
+                             layout_data, layout_coords, layout_name) {
         layout
     },
-    # must have fixed parameters
-    build = function(plot, schemes, coords, extra_coords, previous_coords,
-                     direction, position) {
+
+    ##############################################################
+    build = function(plot, schemes, direction, position,
+                     coords, extra_coords, previous_coords) {
         plot
-    }
+    },
+    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes)
 )
 
+#' @importFrom rlang inject
 align_inject <- function(method, params) {
     inject(method(
         !!!params[intersect(align_method_params(method), names(params))]
     ))
+}
+
+ggproto_formals <- function(x) formals(environment(x)$f)
+
+align_method_params <- function(f, remove = character()) {
+    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
 }
 
 # Used to lock the `Align` object
@@ -126,12 +134,6 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
     align$add_schemes(ans, schemes)
 }
 
-ggproto_formals <- function(x) formals(environment(x)$f)
-
-align_method_params <- function(f, remove = character()) {
-    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
-}
-
 #' @export
 stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
     if (is.null(active_index <- stack@active) ||
@@ -156,18 +158,17 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
             )
             # this step, the object will act with the stack layout
             # group rows into panel or reorder rows
-            new_coords <- inject(align$align(!!!params))
+            new_coords <- inject(align$layout(!!!params))
 
             # initialize the plot object
             if (!is.null(object@plot)) {
-                object@plot <- align_inject(
-                    align$setup_plot,
-                    c(list(plot = object@plot), params, align$params)
-                )
+                object@plot <- inject(align$setup_plot(
+                    !!!c(list(plot = object@plot), params)
+                ))
             }
 
             # finally, we let the object do some changes in the layout
-            stack <- align_inject(align$finish, c(list(layout = stack), params))
+            stack <- inject(align$finish_layout(!!!c(list(stack), params)))
 
             stack <- stack_add_plot(stack, object, object@active, object_name)
         }

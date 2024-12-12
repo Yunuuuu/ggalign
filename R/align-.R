@@ -170,12 +170,8 @@ Align <- ggproto("Align", AlignProto,
                 align_method_params(Align$compute)
             ),
             align_method_params(
-                self$layout,
-                align_method_params(Align$layout)
-            ),
-            align_method_params(
-                self$setup_plot,
-                align_method_params(AlignProto$setup_plot)
+                self$align,
+                align_method_params(Align$align)
             ),
             align_method_params(
                 self$draw,
@@ -184,8 +180,8 @@ Align <- ggproto("Align", AlignProto,
             self$extra_params
         )
     },
-    align = function(self, direction, position, object_name,
-                     layout_data, layout_coords, layout_name) {
+    layout = function(self, direction, position, object_name,
+                      layout_data, layout_coords, layout_name) {
         self$direction <- direction
         self$position <- position
         input_data <- .subset2(self, "input_data")
@@ -256,7 +252,7 @@ Align <- ggproto("Align", AlignProto,
 
         # make the new layout -------------------------------
         new_coords <- align_inject(
-            self$layout,
+            self$align,
             c(list(panel = layout_panel, index = layout_index), params)
         )
 
@@ -333,8 +329,6 @@ Align <- ggproto("Align", AlignProto,
         )
     },
 
-    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes),
-
     # Most parameters for the `Align` are taken automatically from `compute()`,
     # `layout()` and `draw()`. However, some additional parameters may be
     # removed in `setup_params`. You should put these paramters here, otherwise,
@@ -389,7 +383,7 @@ Align <- ggproto("Align", AlignProto,
     # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
     #    index, this will be checked in `align_initialize_layout` function.
-    layout = function(self, panel, index) list(panel, index),
+    align = function(self, panel, index) list(panel, index),
 
     # initialize the plot, add the default mapping, theme, and et al.
     # if `NULL`, no plot area will be added.

@@ -132,7 +132,8 @@ align_dendro <- function(mapping = aes(), ...,
 AlignDendro <- ggproto("AlignDendro", AlignHclust,
     #' @importFrom ggplot2 aes ggplot
     #' @importFrom rlang inject
-    setup_plot = function(self, plot, direction) {
+    setup_plot = function(self, plot, direction, position, object_name,
+                          layout_data, layout_coords, layout_name) {
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
             direction,
             ggplot2::labs(x = "height"),

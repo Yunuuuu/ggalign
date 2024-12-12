@@ -45,5 +45,5 @@ AlignGroup <- ggproto("AlignGroup", Align,
         )
         params
     },
-    layout = function(self, panel, index, group) list(group, index)
+    align = function(self, panel, index, group) list(group, index)
 )
