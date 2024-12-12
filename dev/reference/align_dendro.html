@@ -257,7 +257,9 @@ instead.</p></dd>
 in <code><a href="ggalign_attr.html">ggalign</a></code> attribute, in addition, a
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></code> layer with a data of the <code>edge</code>
 coordinates will be added.</p>
-<p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>index</code>: the original index in the tree for the current node</p></li>
+<p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct branch
+for usage of the ggplot facet.</p></li>
+<li><p><code>.index</code>: the original index in the tree for the current node.</p></li>
 <li><p><code>label</code>: node label text</p></li>
 <li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for current node or the start
 node of the current edge.</p></li>
@@ -265,17 +267,15 @@ node of the current edge.</p></li>
 for current edge.</p></li>
 <li><p><code>branch</code>: which branch current node or edge is. You can use this column
 to color different groups.</p></li>
+<li><p><code>leaf</code>: A logical value indicates whether current node is a leaf.</p></li>
 <li><p><code>panel</code>: which panel current node is, if we split the plot into panel
 using <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></code>, this column will show
 which panel current node or edge is from. Note: some nodes may
 fall outside panel (between two panel), so there are possible
 <code>NA</code> values in this column.</p></li>
-<li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct branch
-for usage of the ggplot facet.</p></li>
 <li><p><code>panel1</code> and <code>panel2</code>: The panel1 and panel2 variables have the same
 functionality as <code>panel</code>, but they are specifically for the <code>edge</code> data
 and correspond to both nodes of each edge.</p></li>
-<li><p><code>leaf</code>: A logical value indicates whether current node is a leaf.</p></li>
 </ul></div>
 
     <div class="section level2">
