@@ -65,7 +65,7 @@ reference:
   - ggfree
   - ggalign
   - align_dendro
-  - align_link
+  - align_line
   - ggcross
 
 - title: Schemes
