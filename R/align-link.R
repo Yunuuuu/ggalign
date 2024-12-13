@@ -66,7 +66,7 @@ align_line <- function(data = waiver(), mapping = aes(),
     active <- update_active(active, new_active(use = TRUE))
     align(
         new_align_link(
-            "AlignLink",
+            "AlignLine",
             arg = "links",
             class = "align_line_plot",
             element = "plot.ggalign_lines"
