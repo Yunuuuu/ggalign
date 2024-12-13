@@ -50,28 +50,25 @@ AlignProto <- ggproto("AlignProto",
     ############################################################
     # when added to the `Layout` object, will call `$align` method
     # must have fixed parameters
-    layout = function(self, direction, position, object_name,
-                      layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
-            "%s, has not implemented a {.fn align} method",
-            "{.fn {snake_class(self)}}"
+            "%s, has not implemented a {.fn layout} method",
+            object_name(self)
         ))
     },
-    setup_plot = function(self, plot, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
         cli_abort(sprintf(
             "%s, has not implemented a {.fn setup_plot} method",
-            "{.fn {snake_class(self)}}"
+            object_name(self)
         ))
     },
-    finish_layout = function(self, layout, direction, position, object_name,
-                             layout_data, layout_coords, layout_name) {
+    finish_layout = function(self, layout, layout_data,
+                             layout_coords, layout_name) {
         layout
     },
 
     ##############################################################
-    build = function(plot, schemes, direction, position,
-                     coords, extra_coords, previous_coords) {
+    build = function(plot, schemes, coords, extra_coords, previous_coords) {
         plot
     },
     add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes),
@@ -106,7 +103,8 @@ align_method_params <- function(f, remove = character()) {
 
 #' @importFrom rlang inject
 #' @export
-plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
+plot_build.ggalign_align_plot <- function(plot, ..., schemes,
+                                          direction, position) {
     # let `Align` to determine how to build the plot
     align <- plot@align # `AlignProto` object
 
@@ -119,13 +117,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
     # coords
     # extra_coords
     # previous_coords
-    # direction
-    # position
-    ans <- align$build(
-        plot = plot@plot,
-        ...,
-        direction = direction
-    )
+    ans <- align$build(plot = plot@plot, ...)
 
     # remove axis titles, text, ticks used for alignment
     if (isTRUE(plot@no_axes)) {
@@ -149,10 +141,13 @@ stack_layout_add.ggalign_align_plot <- function(object, stack, object_name) {
             ))
         } else {
             align <- object@align
+            # initialize the necessary parameters for `AlignProto` object
+            align$direction <- stack@direction
+            align$position <- .subset2(stack@heatmap, "position")
+            align$object_name <- object_name
+
+            # prepare layout parameters used to setup layout coords
             params <- list(
-                direction = stack@direction,
-                position = .subset2(stack@heatmap, "position"),
-                object_name = object_name,
                 layout_data = stack@data, # must be a matrix
                 layout_coords = old_coords,
                 layout_name = object_name(stack)

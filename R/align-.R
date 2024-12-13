@@ -180,12 +180,10 @@ Align <- ggproto("Align", AlignProto,
             self$extra_params
         )
     },
-    layout = function(self, direction, position, object_name,
-                      layout_data, layout_coords, layout_name) {
-        self$direction <- direction
-        self$position <- position
+    layout = function(self, layout_data, layout_coords, layout_name) {
         input_data <- .subset2(self, "input_data")
         input_params <- .subset2(self, "input_params")
+        object_name <- .subset2(self, "object_name")
         call <- .subset2(self, "call")
         layout_panel <- .subset2(layout_coords, "panel")
         layout_index <- .subset2(layout_coords, "index")
@@ -268,8 +266,9 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, direction, position,
+    build = function(self, plot, schemes,
                      coords, extra_coords, previous_coords = NULL) {
+        direction <- self$direction
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")
         if (is.null(extra_coords)) {
@@ -280,18 +279,13 @@ Align <- ggproto("Align", AlignProto,
             extra_index <- .subset2(extra_coords, "index")
         }
         params <- .subset2(self, "params")
-        plot <- align_inject(self$draw, c(
-            params,
-            list(
-                plot = plot,
-                panel = panel,
-                index = index,
-                extra_panel = extra_panel,
-                extra_index = extra_index,
-                direction = direction,
-                position = position
-            )
-        ))
+        plot <- align_inject(self$draw, c(params, list(
+            plot = plot,
+            panel = panel,
+            index = index,
+            extra_panel = extra_panel,
+            extra_index = extra_index
+        )))
 
         coords$labels <- .subset(.subset2(self, "labels"), index)
         # only when user use the internal facet, we'll setup the limits
@@ -387,8 +381,7 @@ Align <- ggproto("Align", AlignProto,
 
     # initialize the plot, add the default mapping, theme, and et al.
     # if `NULL`, no plot area will be added.
-    setup_plot = function(self, plot, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
         plot
     },
 
@@ -396,8 +389,7 @@ Align <- ggproto("Align", AlignProto,
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
     # Note: panel input will be reordered by index
-    draw = function(self, plot, panel, index, extra_panel, extra_index,
-                    direction, position) {
+    draw = function(self, plot, panel, index, extra_panel, extra_index) {
         plot
     }
 )

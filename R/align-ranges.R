@@ -45,8 +45,7 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
         params$margin <- .subset2(params, "margin") %||% margin()
         params
     },
-    setup_plot = function(self, plot, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
         ggadd_default(plot, theme = theme(
             panel.border = element_rect(fill = NA, colour = "grey20"),
             panel.background = element_rect(fill = "white", colour = NA)
@@ -54,10 +53,11 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
     },
 
     #' @importFrom stats reorder
-    build = function(self, plot, direction, position,
+    build = function(self, plot,
                      coords, extra_coords, previous_coords = NULL) {
         params <- .subset2(self, "params")
-
+        direction <- self$direction
+        position <- self$position
         # parse link
         support_link <- switch_direction(
             direction, c("left", "right"), c("top", "bottom")

@@ -133,20 +133,19 @@ align_dendro <- function(mapping = aes(), ...,
 AlignDendro <- ggproto("AlignDendro", AlignHclust,
     #' @importFrom ggplot2 aes ggplot
     #' @importFrom rlang inject
-    setup_plot = function(self, plot, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
-            direction,
+            self$direction,
             ggplot2::labs(x = "height"),
             ggplot2::labs(y = "height")
         )
     },
     draw = function(self, plot, panel, index, extra_panel, extra_index,
-                    direction,
                     # other argumentds
                     plot_dendrogram, segment_params,
                     plot_cut_height, center, type, root) {
         statistics <- .subset2(self, "statistics")
+        direction <- self$direction
         priority <- switch_direction(direction, "left", "right")
         dendrogram_panel <- self$panel[index]
         if (!is.null(dendrogram_panel) &&

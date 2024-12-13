@@ -54,12 +54,11 @@ is_cross_link <- function(x) is(x, "ggalign_cross_link")
 
 #' @importFrom ggplot2 ggproto ggplot
 CrossLink <- ggproto("CrossLink", AlignProto,
-    layout = function(self, direction, position, object_name,
-                      layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(
-                "layout observations for %s must be initialized before adding {.var {object_name}}",
-                layout_name
+                "layout observations for %s must be initialized before adding {.var {%s}}",
+                layout_name, .subset2(self, "object_name")
             ))
         }
         # we keep the names from the layout data for usage
@@ -67,14 +66,13 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         layout_coords["index"] <- list(NULL) # reset the index
         layout_coords
     },
-    setup_plot = function(self, plot, direction, position, object_name,
-                          layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
         ggadd_default(plot, mapping = switch_direction(
-            direction, aes(y = .data$.y), aes(x = .data$.x)
+            self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
-    finish_layout = function(self, layout, direction, position, object_name,
-                             layout_data, layout_coords, layout_name) {
+    finish_layout = function(self, layout, layout_data, layout_coords,
+                             layout_name) {
         # udpate cross_points
         layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
         # update index
@@ -84,8 +82,9 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         )
         layout
     },
-    build = function(self, plot, schemes, coords, extra_coords, previous_coords,
-                     direction, position) {
+    build = function(self, plot, schemes, coords,
+                     extra_coords, previous_coords) {
+        direction <- self$direction
         index <- vec_c(
             .subset2(previous_coords, "index"),
             .subset2(coords, "index")
