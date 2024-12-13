@@ -164,7 +164,7 @@ element_grob.element_polygon <- function(element, x, y,
     )
 }
 
-#' @importFrom ggplot2 register_theme_elements el_def
+#' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
     register_theme_elements(
         plot.ggalign_ranges = element_polygon(
@@ -172,6 +172,12 @@ theme_elements <- function() {
             color = "black",
             linewidth = 0.5,
             linetype = 1
+        ),
+        plot.ggalign_links = element_line(
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1,
+            lineend = "butt"
         ),
         element_tree = list(
             plot.patch_title = el_def("element_text", "text"),
@@ -184,7 +190,8 @@ theme_elements <- function() {
             plot.patch_title.position.left = el_def("character"),
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
-            plot.ggalign_ranges = el_def("element_polygon")
+            plot.ggalign_ranges = el_def("element_polygon"),
+            plot.ggalign_links = el_def("element_line")
         )
     )
 }
