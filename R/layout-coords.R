@@ -132,7 +132,7 @@ update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
             }
             index <- seq_len(index)
         } else { # update the tail plots
-            # one for the `cross_link()` plot itself
+            # one for the `ggcross()` plot itself
             index <- layout@cross_points[n_breaks] + 1L + 1L
             if (index > n_plots) {
                 return(layout)

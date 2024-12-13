@@ -1,6 +1,6 @@
 #' Add a plot to annotate selected observations
 #'
-#' - `align_link`: Annotate a list of spread observations. Observations will be
+#' - `align_line`: Annotate a list of spread observations. Observations will be
 #'   connected to the panel by a line.
 #' - `align_range`: Annotate a list of ranges of observations. Observation
 #'   ranges will be connected to the panel by a polygon.
@@ -17,7 +17,7 @@
 #'
 #' - Link ranges can be customized using the `plot.ggalign_ranges` theme element
 #'   with [`element_polygon()`].
-#' - Link lines can be customized using the `plot.ggalign_links` theme element
+#' - Link lines can be customized using the `plot.ggalign_lines` theme element
 #'   with [`element_line()`].
 #'
 #' @section ggplot2 specification:
@@ -52,7 +52,7 @@
 #' (`.panel`, `.index`, `.names`) are added to the data frame.
 #'
 #' @export
-align_link <- function(data = waiver(), mapping = aes(),
+align_line <- function(data = waiver(), mapping = aes(),
                        links = waiver(), position = waiver(),
                        size = NULL, active = NULL) {
     assert_layout_position(position)
@@ -68,8 +68,8 @@ align_link <- function(data = waiver(), mapping = aes(),
         new_align_link(
             "AlignLink",
             arg = "links",
-            class = "align_link_plot",
-            element = "plot.ggalign_links"
+            class = "align_line_plot",
+            element = "plot.ggalign_lines"
         ),
         plot = ggplot(mapping = mapping),
         size = size, data = data,
@@ -81,15 +81,15 @@ align_link <- function(data = waiver(), mapping = aes(),
 
 #' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.align_link_plot <- function(x) {
-    ggproto(NULL, PatchAlignLinkPlot, plot = x)
+alignpatch.align_line_plot <- function(x) {
+    ggproto(NULL, PatchAlignLinePlot, plot = x)
 }
 
 #' @export
-`[.alignLinkGtable` <- function(x, i, j) {
-    # subset will violate the `alignLinkGtable` `shape`
+`[.alignLineGtable` <- function(x, i, j) {
+    # subset will violate the `alignLineGtable` `shape`
     # we always use the next method
-    class(x) <- setdiff(class(x), "alignLinkGtable")
+    class(x) <- setdiff(class(x), "alignLineGtable")
     x$links_data <- NULL
     NextMethod()
 }
@@ -105,7 +105,7 @@ alignpatch.align_link_plot <- function(x) {
 #  - popgrobvp
 #' @importFrom grid makeContent unit convertHeight convertWidth viewport
 #' @export
-makeContent.alignLinkGtable <- function(x) {
+makeContent.alignLineGtable <- function(x) {
     # Grab viewport information
     width <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE)
     height <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE)
@@ -286,21 +286,21 @@ PatchAlignLinkProto <- ggproto(
     }
 )
 
-PatchAlignLinkPlot <- ggproto(
-    "PatchAlignLinkPlot", PatchAlignLinkProto,
+PatchAlignLinePlot <- ggproto(
+    "PatchAlignLinePlot", PatchAlignLinkProto,
     patch_gtable = function(self, plot = self$plot) {
         ans <- ggproto_parent(PatchAlignLinkProto, self)$patch_gtable(
             plot = plot
         )
         # re-define the draw method, we assign new class
-        ans <- add_class(ans, "alignLinkGtable")
+        ans <- add_class(ans, "alignLineGtable")
         ans$links_data <- .subset2(plot, "links_data")
         ans
     }
 )
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
-AlignLinkProto <- ggproto("AlignLinkProto", AlignGG,
+AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
     class = NULL, element = NULL,
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_schemes(plot, schemes)

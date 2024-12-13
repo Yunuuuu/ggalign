@@ -2,7 +2,6 @@
 % Please edit documentation in R/layout-stack-.R
 \name{stack_layout}
 \alias{stack_layout}
-\alias{ggstack}
 \title{Put plots horizontally or vertically}
 \usage{
 stack_layout(data = NULL, direction = NULL, type = NULL, ...)
@@ -32,16 +31,12 @@ A \code{StackLayout} object.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 This function integrates the functionalities of \code{stack_free()} and
-\code{stack_align()} into a single interface. \code{ggstack} is an alias for
-\code{stack_layout}.
+\code{stack_align()} into a single interface.
 }
 \examples{
 set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7L)
 stack_layout(small_mat, "h", "align") + align_dendro()
-
-# ggstack is an alias for `stack_layout`
-ggstack(small_mat, "h", "align") + align_dendro()
 
 # this is the same with:
 stack_align(small_mat, "h") + align_dendro()

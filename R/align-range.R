@@ -1,5 +1,5 @@
 #' @export
-#' @rdname align_link
+#' @rdname align_line
 align_range <- function(data = waiver(), mapping = aes(),
                         ranges = waiver(), position = waiver(),
                         size = NULL, active = NULL) {

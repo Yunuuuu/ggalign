@@ -173,7 +173,7 @@ theme_elements <- function() {
             linewidth = 0.5,
             linetype = 1
         ),
-        plot.ggalign_links = element_line(
+        plot.ggalign_lines = element_line(
             color = "black",
             linewidth = 0.5,
             linetype = 1,
@@ -191,7 +191,7 @@ theme_elements <- function() {
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
             plot.ggalign_ranges = el_def("element_polygon"),
-            plot.ggalign_links = el_def("element_line")
+            plot.ggalign_lines = el_def("element_line")
         )
     )
 }

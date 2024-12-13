@@ -2,7 +2,6 @@
 % Please edit documentation in R/layout-cross-.R
 \name{cross_align}
 \alias{cross_align}
-\alias{ggcross}
 \alias{cross_layout}
 \alias{cross_alignv}
 \alias{cross_alignh}
@@ -43,8 +42,8 @@ indicating the relative heights (for \code{direction = "horizontal"}) or widths
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 The \code{cross_align} function aligns observations, and allow different layout
-ordering index in a single layout. Both \code{ggcross} and \code{cross_layout} are
-alias for \code{cross_align}.
+ordering index in a single layout. \code{cross_layout} is an alias for
+\code{cross_align}.
 
 Two aliases are provided for convenience:
 \itemize{
@@ -53,5 +52,5 @@ Two aliases are provided for convenience:
 }
 }
 \seealso{
-\code{\link[=cross_link]{cross_link()}}
+\code{\link[=ggcross]{ggcross()}}
 }

@@ -39,7 +39,6 @@ reference:
     `stack_switch()` to switch the active context. To save a plot to disk, use `ggsave()`.
   contents:
   - layout-operator
-  - cross_link
   - quad_switch
   - quad_anno
   - with_quad
@@ -63,10 +62,11 @@ reference:
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
   contents:
-  - ggalign
   - ggfree
+  - ggalign
   - align_dendro
   - align_link
+  - ggcross
 
 - title: Schemes
   desc: >

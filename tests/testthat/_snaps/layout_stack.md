@@ -103,3 +103,8 @@
     Cannot add `with_quad(geom_point())` to `stack_align()`
     i Did you forget to add a `quad_layout()`?
 
+# add `ggcross()` works well
+
+    Cannot add `ggcross()` to `stack_align()`
+    i Did you want to use `cross_align()` instead?
+

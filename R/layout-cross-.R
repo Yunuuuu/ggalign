@@ -4,8 +4,8 @@
 #' `r lifecycle::badge('experimental')`
 #'
 #' The `cross_align` function aligns observations, and allow different layout
-#' ordering index in a single layout. Both `ggcross` and `cross_layout` are
-#' alias for `cross_align`.
+#' ordering index in a single layout. `cross_layout` is an alias for
+#' `cross_align`.
 #'
 #' Two aliases are provided for convenience:
 #' - `cross_alignv`: A special case of `cross_align` that sets `direction =
@@ -14,17 +14,12 @@
 #'   "horizontal"`.
 #'
 #' @inheritParams stack_align
-#' @seealso [`cross_link()`]
+#' @seealso [`ggcross()`]
 #' @export
 cross_align <- function(data = NULL, direction, ...,
                         theme = NULL, sizes = NA) {
     UseMethod("cross_align")
 }
-
-#' @usage NULL
-#' @export
-#' @rdname cross_align
-ggcross <- cross_align
 
 #' @usage NULL
 #' @export
@@ -67,10 +62,11 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
     layout_coords <- stack@layout
     if (!is.null(layout_coords) &&
         is.null(.subset2(layout_coords, "nobs")) &&
-        any(vapply(plot_list, is_cross_link, logical(1L), USE.NAMES = FALSE))) {
-        cli_abort(
-            "You must initialize the layout observations when used with a {.fn cross_link}"
-        )
+        any(vapply(plot_list, is_cross_plot, logical(1L), USE.NAMES = FALSE))) {
+        cli_abort(sprintf(
+            "You must initialize the layout observations to plot the %s",
+            object_name(stack)
+        ))
     }
     plot_list <- stack@plot_list
 
@@ -126,8 +122,8 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
 
         # we reorder the plots based on the `order` slot
         plot_order <- vapply(plots, function(plot) {
-            # always keep cross_link() in the start
-            if (is_cross_link(plot)) {
+            # always keep cross() in the start
+            if (is_cross_plot(plot)) {
                 1L
             } else if (is_ggalign_plot(plot)) {
                 .subset2(plot@active, "order")

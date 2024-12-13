@@ -42,3 +42,13 @@ object_name.ggalign_free_gg <- function(object, format = "fn") {
 object_name.AlignProto <- function(object, format = "fn") {
     format_object_name(snake_class(object), format)
 }
+
+#' @export
+object_name.AlignGg <- function(object, format = "fn") {
+    format_object_name("ggalign", format)
+}
+
+#' @export
+object_name.CrossGg <- function(object, format = "fn") {
+    format_object_name("ggcross", format)
+}

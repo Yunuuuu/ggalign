@@ -111,7 +111,7 @@ align_gg <- function(data = waiver(), mapping = aes(), size = NULL,
     active <- deprecate_active(active, "align_gg",
         set_context = set_context, order = order, name = name
     )
-    align(AlignGG,
+    align(AlignGg,
         plot = ggplot(mapping = mapping),
         size = size, data = data,
         schemes = waiver(),
@@ -128,7 +128,7 @@ align_gg <- function(data = waiver(), mapping = aes(), size = NULL,
 ggalign <- align_gg
 
 #' @importFrom ggplot2 ggproto ggplot
-AlignGG <- ggproto("AlignGG", Align,
+AlignGg <- ggproto("AlignGg", Align,
     nobs = function(self) { # no input data
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli_abort(c(

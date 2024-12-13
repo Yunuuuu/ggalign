@@ -4,8 +4,7 @@
 #' `r lifecycle::badge('stable')`
 #'
 #' This function integrates the functionalities of `stack_free()` and
-#' `stack_align()` into a single interface. `ggstack` is an alias for
-#' `stack_layout`.
+#' `stack_align()` into a single interface.
 #'
 #' @param data `r rd_layout_data()`:
 #'  - If `type` is `align`, [`fortify_data_frame()`] will be used to get a data
@@ -24,9 +23,6 @@
 #' small_mat <- matrix(rnorm(56), nrow = 7L)
 #' stack_layout(small_mat, "h", "align") + align_dendro()
 #'
-#' # ggstack is an alias for `stack_layout`
-#' ggstack(small_mat, "h", "align") + align_dendro()
-#'
 #' # this is the same with:
 #' stack_align(small_mat, "h") + align_dendro()
 #' @export
@@ -37,11 +33,6 @@ stack_layout <- function(data = NULL, direction = NULL, type = NULL, ...) {
         free = stack_free(data = data, direction = direction, ...)
     )
 }
-
-#' @usage NULL
-#' @export
-#' @rdname stack_layout
-ggstack <- stack_layout
 
 #################################################################
 #' Arrange Plots Horizontally or Vertically

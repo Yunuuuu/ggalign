@@ -472,8 +472,15 @@ testthat::test_that("add `with_quad()` works as expected", {
     )
 })
 
+testthat::test_that("add `ggcross()` works well", {
+    expect_snapshot_error(
+        stack_layout(matrix(seq_len(81), nrow = 9L), "h") +
+            ggcross()
+    )
+})
+
 testthat::test_that("`ggsave()` works well", {
-    p <- ggstack(matrix(seq_len(81), nrow = 9L), "h") +
+    p <- stack_layout(matrix(seq_len(81), nrow = 9L), "h") +
         ggheatmap() +
         anno_top(size = unit(6, "cm")) +
         align_dendro() +

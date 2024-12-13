@@ -1,19 +1,20 @@
 #' Connect two layout crosswise
 #'
 #' @description
-#' `cross_link` resets the layout ordering index of a [`cross_align()`]. This
+#' `cross_gg` resets the layout ordering index of a [`cross_align()`]. This
 #' allows you to add other `align_*` objects to define a new layout ordering
-#' index. Any objects added after `cross_link` will use this updated layout
+#' index. Any objects added after `cross_gg` will use this updated layout
 #' ordering index. This feature is particularly useful for creating `tanglegram`
-#' visualizations.
+#' visualizations. `ggcross()` is an alias of `cross_gg()`.
+#'
 #' @inheritParams ggalign
 #' @section ggplot2 specification:
-#' `cross_link` initializes a ggplot `data` and `mapping`.
+#' `ggcross()` initializes a ggplot `data` and `mapping`.
 #'
-#' `cross_link()` always applies a default mapping for the axis of the data
-#' index in the layout. This mapping is `aes(y = .data$y)` for horizontal stack
-#' layout (including left and right annotation) and `aes(x = .data$x)` for
-#' vertical stack layout (including top and bottom annotation).
+#' `ggcross()` always applies a default mapping for the axis of the data index
+#' in the layout. This mapping is `aes(y = .data$y)` for horizontal stack layout
+#' (including left and right annotation) and `aes(x = .data$x)` for vertical
+#' stack layout (including top and bottom annotation).
 #'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
@@ -33,25 +34,23 @@
 #'
 #' @importFrom ggplot2 ggproto aes
 #' @export
-cross_link <- function(mapping = aes(), size = NULL,
-                       no_axes = NULL, active = NULL) {
+cross_gg <- function(mapping = aes(), size = NULL,
+                     no_axes = NULL, active = NULL) {
     active <- update_active(active, new_active(use = TRUE))
-    new_align_plot(
-        align = ggproto(NULL, CrossLink),
+    cross(
+        cross = CrossGg,
         plot = ggplot(mapping = mapping),
-        size = size, no_axes = no_axes, active = active,
-        class = "ggalign_cross_link"
+        size = size, no_axes = no_axes, active = active
     )
 }
 
-#' @include plot-align-.R
-methods::setClass("ggalign_cross_link", contains = "ggalign_align_plot")
-
-#' @importFrom methods is
-is_cross_link <- function(x) is(x, "ggalign_cross_link")
+#' @usage NULL
+#' @export
+#' @rdname cross_gg
+ggcross <- cross_gg
 
 #' @importFrom ggplot2 ggproto ggplot
-CrossLink <- ggproto("CrossLink", AlignProto,
+CrossGg <- ggproto("CrossGg", AlignProto,
     layout = function(self, layout_data, layout_coords, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(

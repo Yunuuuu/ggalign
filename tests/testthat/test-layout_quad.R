@@ -385,7 +385,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@horizontal, cross@left@layout)
     expect_identical(cross@horizontal, cross@right@layout)
@@ -399,7 +399,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@horizontal, cross@left@layout)
     expect_identical(cross@horizontal, cross@right@layout)
@@ -414,7 +414,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@horizontal, cross@left@layout)
     expect_identical(cross@horizontal$panel, cross@right@layout$panel)
@@ -429,14 +429,14 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
     expect_snapshot_error(quad +
-        cross_link() +
+        ggcross() +
         align_dendro(k = 3, method = "ward.D2"))
 
     quad <- quad_alignh(small_mat) +
         anno_left() +
         anno_right(initialize = FALSE) +
         cross_alignh(small_mat) +
-        cross_link()
+        ggcross()
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
     cross <- quad + align_dendro(k = 3L, method = "ward.D2")
@@ -460,7 +460,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@vertical, cross@top@layout)
     expect_identical(cross@vertical, cross@bottom@layout)
@@ -474,7 +474,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@vertical, cross@top@layout)
     expect_identical(cross@vertical, cross@bottom@layout)
@@ -489,7 +489,7 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
     cross <- quad +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(cross@vertical, cross@top@layout)
     expect_identical(cross@vertical$panel, cross@bottom@layout$panel)
@@ -508,14 +508,14 @@ testthat::test_that("add `cross_align()` builds well", {
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
     expect_snapshot_error(quad +
-        cross_link() +
+        ggcross() +
         align_dendro(k = 4, method = "ward.D2"))
 
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
         cross_alignv(t(small_mat)) +
-        cross_link()
+        ggcross()
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
     cross <- quad + align_dendro(k = 3L, method = "ward.D2")

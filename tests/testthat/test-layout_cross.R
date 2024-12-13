@@ -8,7 +8,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
     # layout `index` is updated correctly
     stack <- cross_alignh(small_mat) +
         align_dendro() +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
         stack@layout$index,
@@ -23,7 +23,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
     # layout `index` is updated correctly
     stack <- cross_alignv(small_mat) +
         align_dendro() +
-        cross_link() +
+        ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
         stack@layout$index,

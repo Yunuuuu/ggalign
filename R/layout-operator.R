@@ -42,7 +42,7 @@
 #'     # Modify the the color scales of all plots in the left annotation
 #'     scale_color_brewer(palette = "Dark2")
 #'
-#' # If the active layout is the `ggstack()`/`stack_layout()` itself, `-`
+#' # If the active layout is the `stack_layout()` itself, `-`
 #' # applies the elements to all plots in the layout except the nested
 #' # `ggheatmap()`/`quad_layout()`.
 #' stack_alignv(small_mat) +
