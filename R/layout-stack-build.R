@@ -25,17 +25,22 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         return(NULL)
     }
     # arrange plots
-    sizes <- stack@sizes
-
-    # recycle the sizes when necessary
-    if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
-    sizes <- sizes[
-        c(
-            .subset2(composer, "left_or_top"),
-            TRUE,
-            .subset2(composer, "right_or_bottom")
-        )
-    ]
+    position <- .subset2(stack@heatmap, "position")
+    if (is.null(position)) { # for stack layout
+        # sizes should be of length 3
+        sizes <- stack@sizes
+        # recycle the sizes when necessary
+        if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
+        sizes <- sizes[
+            c(
+                .subset2(composer, "left_or_top"),
+                TRUE,
+                .subset2(composer, "right_or_bottom")
+            )
+        ]
+    } else { # for the heatmap annotation
+        sizes <- NA
+    }
     plot <- align_plots(
         !!!plots,
         design = area(
@@ -58,9 +63,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         theme = stack@theme
     )
 
-    # for annotation, we should always make them next to
-    # the main body
-    position <- .subset2(stack@heatmap, "position")
+    # for annotation, we should always make it next to the main body
     if (is.null(position)) {
         return(plot)
     }

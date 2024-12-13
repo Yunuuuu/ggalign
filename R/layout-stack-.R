@@ -71,10 +71,11 @@ ggstack <- stack_layout
 #' @param ... Additional arguments passed to [`fortify_data_frame()`] or
 #' [`fortify_matrix()`].
 #' @inheritParams quad_layout
-#' @param sizes A numeric or a [`unit`][grid::unit] object of length `3`
+#' @param sizes A numeric value or a [`unit`][grid::unit] object. If used for
+#' the [`quad_layout()`] annotation, it must have a length of `1`.  If used in
+#' the layout with a nested [`quad_layout()`], it should have a length of `3`,
 #' indicating the relative heights (for `direction = "horizontal"`) or widths
-#' (for `direction = "vertical"`). This is only used if you include a nested
-#' [`quad_layout()`] in the layout.
+#' (for `direction = "vertical"`) to be applied.
 #' @examples
 #' set.seed(123)
 #' stack_align(matrix(rnorm(56), nrow = 7L), "h") +
@@ -224,7 +225,6 @@ methods::setClass(
         plot_list = list(),
         heatmap = list( # used by heatmap annotation
             position = NULL, # annotation position
-            size = unit(NA, "null"), # total annotation size
             free_guides = waiver()
         )
     )

@@ -40,10 +40,11 @@ either \code{"horizontal"} or \code{"vertical"}.}
 \code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
 \code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
 
-\item{sizes}{A numeric or a \code{\link[grid:unit]{unit}} object of length \code{3}
+\item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. If used for
+the \code{\link[=quad_layout]{quad_layout()}} annotation, it must have a length of \code{1}.  If used in
+the layout with a nested \code{\link[=quad_layout]{quad_layout()}}, it should have a length of \code{3},
 indicating the relative heights (for \code{direction = "horizontal"}) or widths
-(for \code{direction = "vertical"}). This is only used if you include a nested
-\code{\link[=quad_layout]{quad_layout()}} in the layout.}
+(for \code{direction = "vertical"}) to be applied.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

@@ -114,15 +114,16 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
             extra_coords <- row_coords
             pschemes$scheme_align <- vertical_align
         }
-        plot <- stack_build(stack,
+        plot <- stack_build(
+            stack,
             schemes = pschemes,
             theme = theme,
             extra_coords = extra_coords
         )
-        if (!is.null(plot)) {
-            size <- .subset2(stack@heatmap, "size")
-        } else {
+        if (is.null(plot)) {
             size <- NULL
+        } else {
+            size <- stack@sizes
         }
         list(plot = plot, size = size)
     })

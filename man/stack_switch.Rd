@@ -19,10 +19,11 @@ stack_active(
 )
 }
 \arguments{
-\item{sizes}{A numeric or a \code{\link[grid:unit]{unit}} object of length \code{3}
+\item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. If used for
+the \code{\link[=quad_layout]{quad_layout()}} annotation, it must have a length of \code{1}.  If used in
+the layout with a nested \code{\link[=quad_layout]{quad_layout()}}, it should have a length of \code{3},
 indicating the relative heights (for \code{direction = "horizontal"}) or widths
-(for \code{direction = "vertical"}). This is only used if you include a nested
-\code{\link[=quad_layout]{quad_layout()}} in the layout.}
+(for \code{direction = "vertical"}) to be applied.}
 
 \item{what}{What should get activated for the stack layout?
 A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context, this is useful when the active context is a

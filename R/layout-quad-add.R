@@ -145,7 +145,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     if (!is.null(stack)) {
         # update parameters
         if (!is.null(size <- .subset2(object, "size"))) {
-            stack@heatmap$size <- size
+            stack@sizes <- size
         }
         if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
             stack@heatmap$free_guides <- free_guides
@@ -197,6 +197,12 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         cli_abort(c(
             "Cannot add {.var {object_name}} to {.fn {quad@name}}",
             i = "only {.field {direction}} stack is allowed in {position} annotation"
+        ))
+    }
+    if (length(object@sizes) > 1L) {
+        cli_abort(c(
+            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            i = "{.arg sizes} must be of length one to use the stack as an annotation"
         ))
     }
     quad_coords <- slot(quad, direction)
