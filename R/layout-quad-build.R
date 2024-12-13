@@ -146,22 +146,22 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(fct_rev(.data$.ypanel)),
+            rows = ggplot2::vars(.data$.ypanel),
             cols = ggplot2::vars(.data$.xpanel),
             scales = "free", space = "free",
-            drop = FALSE
+            drop = FALSE, as.table = FALSE
         )
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(fct_rev(.data$.ypanel)),
+            rows = ggplot2::vars(.data$.ypanel),
             scales = "free_y", space = "free",
-            drop = FALSE
+            drop = FALSE, as.table = FALSE
         )
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.xpanel),
             scales = "free_x", space = "free",
-            drop = FALSE
+            drop = FALSE, as.table = FALSE
         )
     } else {
         # we only support `FacetNull` if there have no panel
@@ -185,7 +185,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
     if (!is.null(row_coords) || !is.null(column_coords)) {
-        p <- p + quad_melt_facet(p$facet, default_facet) +
+        p <- p + align_melt_facet(default_facet, p$facet, strict = TRUE) +
             coord_ggalign(x = column_coords, y = row_coords)
     }
     p <- p + theme_recycle()
@@ -201,34 +201,6 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         3L
     )
     list(plots = plots, sizes = sizes)
-}
-
-#' @importFrom ggplot2 ggproto
-quad_melt_facet <- function(user_facet, default_facet) {
-    if (inherits(default_facet, "FacetNull")) { # no panel
-        # we only support `FacetNull` if there have no panel
-        if (inherits(user_facet, "FacetNull")) return(user_facet) # styler: off
-        return(default_facet)
-    }
-
-    if (!inherits(user_facet, "FacetGrid")) return(default_facet) # styler: off
-
-    # re-dispatch parameters
-    params <- user_facet$params
-
-    # we always fix the grid rows and cols
-    params$rows <- default_facet$params$rows
-    params$cols <- default_facet$params$cols
-    params$drop <- default_facet$params$drop
-
-    # if the default is free, it must be free
-    params$free$x <- params$free$x || default_facet$params$free$x
-    params$space_free$x <- params$space_free$x ||
-        default_facet$params$space_free$x
-    params$free$y <- params$free$y || default_facet$params$free$y
-    params$space_free$y <- params$space_free$x ||
-        default_facet$params$space_free$y
-    ggproto(NULL, user_facet, params = params)
 }
 
 #' @importFrom stats reorder

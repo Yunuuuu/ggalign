@@ -129,14 +129,14 @@ CrossLink <- ggproto("CrossLink", AlignProto,
             default_facet <- switch_direction(
                 direction,
                 ggplot2::facet_grid(
-                    rows = ggplot2::vars(fct_rev(.data$.panel)),
+                    rows = ggplot2::vars(.data$.panel),
                     scales = "free_y", space = "free",
-                    drop = FALSE
+                    drop = FALSE, as.table = FALSE
                 ),
                 ggplot2::facet_grid(
                     cols = ggplot2::vars(.data$.panel),
                     scales = "free_x", space = "free",
-                    drop = FALSE
+                    drop = FALSE, as.table = FALSE
                 )
             )
         } else {
@@ -151,7 +151,7 @@ CrossLink <- ggproto("CrossLink", AlignProto,
             default_expand <- default_expansion(y = expansion())
         }
         plot +
-            align_melt_facet(plot$facet, default_facet, direction) +
+            align_melt_facet(default_facet, plot$facet) +
             default_coord + default_expand
     }
 )

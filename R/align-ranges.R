@@ -171,7 +171,7 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        plot <- plot + align_melt_facet(plot$facet, default_facet, direction)
+        plot <- plot + align_melt_facet(default_facet, plot$facet)
         if (!is.null(link_position)) {
             plot$align_ranges_data <- list(
                 full_breaks = full_breaks,

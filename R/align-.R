@@ -294,21 +294,20 @@ Align <- ggproto("Align", AlignProto,
                 default_facet <- switch_direction(
                     direction,
                     ggplot2::facet_grid(
-                        rows = ggplot2::vars(fct_rev(.data$.panel)),
+                        rows = ggplot2::vars(.data$.panel),
                         scales = "free_y", space = "free",
-                        drop = FALSE
+                        drop = FALSE, as.table = FALSE
                     ),
                     ggplot2::facet_grid(
                         cols = ggplot2::vars(.data$.panel),
                         scales = "free_x", space = "free",
-                        drop = FALSE
+                        drop = FALSE, as.table = FALSE
                     )
                 )
             } else {
-                default_facet <- ggplot2::facet_null()
+                default_facet <- facet_stack(direction = direction)
             }
-            plot <- plot +
-                align_melt_facet(plot$facet, default_facet, direction)
+            plot <- plot + align_melt_facet(default_facet, plot$facet)
             coords$limits <- .subset2(self, "limits")
         } else {
             coords$limits <- FALSE
@@ -392,50 +391,6 @@ Align <- ggproto("Align", AlignProto,
         plot
     }
 )
-
-#' @importFrom ggplot2 ggproto
-align_melt_facet <- function(user_facet, default_facet, direction) {
-    if (inherits(user_facet, "FacetGrid")) {
-        # re-dispatch parameters
-        params <- user_facet$params
-
-        if (inherits(default_facet, "FacetGrid")) {
-            # we always fix the grid rows and cols
-            params$rows <- default_facet$params$rows %||% params$rows
-            params$cols <- default_facet$params$cols %||% params$cols
-            params$drop <- default_facet$params$drop
-
-            # if the default is free, it must be free
-            params$free$x <- params$free$x || default_facet$params$free$x
-            params$space_free$x <- params$space_free$x ||
-                default_facet$params$space_free$x
-            params$free$y <- params$free$y || default_facet$params$free$y
-            params$space_free$y <- params$space_free$x ||
-                default_facet$params$space_free$y
-        } else if (is_horizontal(direction)) {
-            # for horizontal stack, we cannot facet by rows
-            if (!is.null(params$rows)) {
-                cli_warn(
-                    "Canno facet by rows in {.field {direction}} stack"
-                )
-                params$rows <- NULL
-            }
-        } else if (!is.null(params$cols)) {
-            # for vertical stack, we cannot facet by cols
-            cli_warn("Canno facet by cols in {.field {direction}} stack")
-            params$cols <- NULL
-        }
-        ggproto(NULL, user_facet, params = params)
-    } else if (inherits(user_facet, "FacetNull")) {
-        if (inherits(default_facet, "FacetNull")) { # no facet
-            user_facet
-        } else { # we have facet
-            default_facet
-        }
-    } else {
-        default_facet
-    }
-}
 
 remove_scales <- function(plot, scale_aesthetics) {
     scales <- .subset2(plot, "scales")$clone()
