@@ -72,7 +72,7 @@
 <h2 class="pkg-version" data-toc-text="0.0.5" id="ggalign-005">ggalign 0.0.5<a class="anchor" aria-label="anchor" href="#ggalign-005"></a></h2><p class="text-muted">CRAN release: 2024-11-14</p>
 <div class="section level3">
 <h3 id="breaking-changes-0-0-5">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-5"></a></h3>
-<ul><li><p><code>direction</code> argument in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code> is soft-deprecated now, user must provide it manually.</p></li>
+<ul><li><p><code>direction</code> argument in <code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code>ggstack()</code> is soft-deprecated now, user must provide it manually.</p></li>
 <li><p><code>set_context</code>, <code>order</code>, and <code>name</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are soft-deprecated, which is advised to use <code>active</code> argument.</p></li>
 <li><p><code>guides</code>, <code>free_guides</code>, <code>free_spaces</code>, <code>free_labs</code>, and <code>plot_data</code> arguments in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> are deprecated, which is advised to use <code>scheme_align</code> function instead.</p></li>
 <li><p><code>theme</code> argument in <code>align_*()</code> and <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> is deprecated, which is advised to use <code>plot_theme</code> function.</p></li>
@@ -121,7 +121,7 @@
 <ul><li><p><code>layout_heatmap()</code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> arguments width/height have been renamed <code>.width</code>/<code>.height</code> to helps avoid conflicts with arguments from <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code>.</p></li>
 <li><p>the nestet alignpatches theme by default will inherit from the parent alignpatches</p></li>
 <li><p>new <code><a href="../reference/layout_title.html">layout_title()</a></code> function, now <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> only control the layout theme</p></li>
-<li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code><a href="../reference/stack_layout.html">ggstack()</a></code></p></li>
+<li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code>ggstack()</code></p></li>
 <li><p><code>set_context</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> now depends on <code>plot_dendrogram</code> by default</p></li>
 <li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain a new argument <code>reorder_dendrogram</code> to control whether to reorder the generated dendrogram based on the mean values.</p></li>
 <li><p><code><a href="../reference/align_reorder.html">align_reorder()</a></code> now splitted into two function <code><a href="../reference/align_order.html">align_order()</a></code> and <code><a href="../reference/align_reorder.html">align_reorder()</a></code></p></li>
@@ -174,7 +174,7 @@
 <h3 id="features-0-0-1">Features<a class="anchor" aria-label="anchor" href="#features-0-0-1"></a></h3>
 <p><code>ggalign</code> pacakge provides two layout to arrange ggplot objects:</p>
 <ul><li><p><code><a href="../reference/heatmap_layout.html">heatmap_layout()</a></code>/<code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>: Arrange ggplot into a Heatmap layout. See <code>vignette("heatmap-layout")</code> for details.</p></li>
-<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code><a href="../reference/stack_layout.html">ggstack()</a></code>: Arrange ggplot vertically or horizontally. See <code>vignette("stack-layout")</code> for details.</p></li>
+<li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>/<code>ggstack()</code>: Arrange ggplot vertically or horizontally. See <code>vignette("stack-layout")</code> for details.</p></li>
 </ul><p>To further customize these layouts, we offer following functions:</p>
 <ul><li>
 <code><a href="../reference/align_group.html">align_group()</a></code>: Group layout axis into panel with a group variable.</li>

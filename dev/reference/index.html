@@ -99,7 +99,7 @@
       </dl></div><div class="section level2">
       <h2 id="layout-building">Layout Building<a class="anchor" aria-label="anchor" href="#layout-building"></a></h2>
 
-      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code><a href="../reference/stack_layout.html">ggstack()</a></code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code>ggsave()</code>.</p></div>
+      <div class="section-desc"><p>All plots begin with a call to <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code>/<code><a href="../reference/quad_layout.html">quad_layout()</a></code> or <code>ggstack()</code>, supplying default data. You then reorder the observations, or split the observations into groups, and add plots, layers, scales, coords with <code>+</code>. Use <code><a href="../reference/quad_switch.html">quad_switch()</a></code>/<code><a href="../reference/quad_switch.html">hmanno()</a></code> or <code><a href="../reference/stack_switch.html">stack_switch()</a></code> to switch the active context. To save a plot to disk, use <code>ggsave()</code>.</p></div>
 
 
     </div><div class="section level2">
@@ -113,12 +113,6 @@
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Layout operator</dd>
-      </dl><dl><dt>
-
-          <code><a href="cross_link.html">cross_link()</a></code>
-
-        </dt>
-        <dd>Connect two layout crosswise</dd>
       </dl><dl><dt>
 
           <code><a href="quad_switch.html">quad_switch()</a></code> <code><a href="quad_switch.html">hmanno()</a></code>
@@ -209,16 +203,16 @@
 
       <dl><dt>
 
-          <code><a href="align_gg.html">align_gg()</a></code>
-          <span class="badge lifecycle lifecycle-stable">stable</span>
-        </dt>
-        <dd>Create ggplot object</dd>
-      </dl><dl><dt>
-
           <code><a href="free_gg.html">free_gg()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Add ggplot to layout</dd>
+      </dl><dl><dt>
+
+          <code><a href="align_gg.html">align_gg()</a></code>
+          <span class="badge lifecycle lifecycle-stable">stable</span>
+        </dt>
+        <dd>Create ggplot object</dd>
       </dl><dl><dt>
 
           <code><a href="align_dendro.html">align_dendro()</a></code>
@@ -227,10 +221,16 @@
         <dd>Plot dendrogram tree</dd>
       </dl><dl><dt>
 
-          <code><a href="align_link.html">align_link()</a></code> <code><a href="align_link.html">align_range()</a></code>
+          <code><a href="align_line.html">align_line()</a></code> <code><a href="align_line.html">align_range()</a></code>
 
         </dt>
         <dd>Add a plot to annotate selected observations</dd>
+      </dl><dl><dt>
+
+          <code><a href="cross_gg.html">cross_gg()</a></code>
+
+        </dt>
+        <dd>Connect two layout crosswise</dd>
       </dl></div><div class="section level2">
       <h2 id="schemes">Schemes<a class="anchor" aria-label="anchor" href="#schemes"></a></h2>
 
