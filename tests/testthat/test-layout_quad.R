@@ -193,7 +193,7 @@ testthat::test_that("add `with_quad()` works as expected", {
     )
 })
 
-testthat::test_that("add `stack_layout()` builds well", {
+testthat::test_that("add `stack_layout()` works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -344,6 +344,28 @@ testthat::test_that("add `stack_layout()` builds well", {
         quad_alignv(small_mat) +
             anno_top(size = 0.2, initialize = FALSE) +
             (stack_alignv(t(small_mat)) + align_dendro(k = 4))
+    )
+
+    # quad_alignb() ---------------------------------------
+    expect_doppelganger(
+        "quad_alignb, release spaces works well",
+        ggheatmap(small_mat) -
+            scheme_align(NULL) +
+            # add top annotation
+            anno_top(size = unit(30, "mm")) +
+            # add a dendrogram to the top annotation
+            align_dendro(aes(color = branch), k = 3L) +
+            # here, we use long labels for visual example
+            scale_y_continuous(
+                expand = expansion(),
+                labels = ~ paste("very very long labels", .x)
+            ) -
+            scheme_align("l", free_spaces = "l") + # remove spaces for the whole stack
+            # scheme_align() +
+            scale_color_brewer(palette = "Dark2") +
+            theme(legend.position = "left") +
+            quad_active() +
+            theme(plot.margin = margin(l = 5, unit = "cm"))
     )
 })
 

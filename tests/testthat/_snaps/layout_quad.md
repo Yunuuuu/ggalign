@@ -13,7 +13,7 @@
     Cannot add `align_kmeans(3L)` to `quad_free()`
     i `quad_free()` cannot align observations in horizontal direction
 
-# add `stack_layout()` builds well
+# add `stack_layout()` works well
 
     Cannot add `stack_freev()` to `quad_free()`
     i no active annotation stack

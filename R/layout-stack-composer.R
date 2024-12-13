@@ -69,7 +69,8 @@ stack_composer_add.ggalign_plot <- function(plot, composer, ...,
             plot_schemes$scheme_align["free_spaces"] <- list(plot_spaces)
         }
     }
-    plot <- plot_build(plot = plot, ..., schemes = schemes) + theme_recycle()
+    plot <- plot_build(plot = plot, ..., schemes = plot_schemes) +
+        theme_recycle()
     stack_composer_align_plot(composer, plot, size)
 }
 

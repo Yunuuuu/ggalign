@@ -140,12 +140,44 @@ stack_build_composer.StackLayout <- function(stack, schemes, theme,
     # layout.
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
+    #
+    # here is the example:
+    # p1 <- ggplot(mtcars) +
+    #     geom_point(aes(mpg, disp))
+    # p2 <- ggplot(mtcars) +
+    #     geom_boxplot(aes(gear, disp, group = gear, fill = gear))
+    # p3 <- ggplot(mtcars) +
+    #     geom_bar(aes(gear)) +
+    #     facet_wrap(~cyl)
+    # align_plots(
+    #     free_space(free_border(
+    #         align_plots(
+    #             # we shouldn't add free_space for the internal plot
+    #             free_space(
+    #                 free_border(
+    #                     p1 + scale_y_continuous(
+    #                         expand = expansion(),
+    #                         labels = ~ paste("very very long labels", .x)
+    #                     ),
+    #                     "l"
+    #                 ),
+    #                 "l"
+    #             ),
+    #             p2 + theme(legend.position = "left"),
+    #             guides = "l"
+    #         ),
+    #         "l"
+    #     ), "l"),
+    #     p3 + theme(plot.margin = margin(l = 5, unit = "cm")),
+    #     ncol = 1
+    # )
     stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
         released_spaces <- NULL
     }
+
     coords <- setup_layout_coords(stack@layout)
     stack_composer_add(
         plot_list,
