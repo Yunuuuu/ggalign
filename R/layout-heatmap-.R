@@ -110,9 +110,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         ncols <- NULL
     }
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = TRUE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = TRUE))
     active <- deprecate_active(active, "ggheatmap",
         set_context = set_context, order = order, name = name
     )

@@ -9,9 +9,7 @@ align_ranges <- function(data = waiver(), mapping = aes(),
         ))
     }
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = TRUE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = TRUE))
     align(AlignRanges,
         plot = ggplot(mapping = mapping),
         size = size, data = data,

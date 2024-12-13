@@ -99,9 +99,7 @@ align_dendro <- function(mapping = aes(), ...,
         }
     }
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = TRUE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = TRUE))
     active <- deprecate_active(active, "align_dendro",
         set_context = set_context, order = order, name = name
     )

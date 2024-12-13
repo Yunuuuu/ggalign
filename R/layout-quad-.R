@@ -314,9 +314,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         # used by the layout
         data = data, theme = theme,
         schemes = schemes,
-        plot_active = update_active(active, new_active(
-            order = NA_integer_, use = TRUE, name = NA_character_
-        )),
+        plot_active = update_active(active, new_active(use = TRUE)),
         name = name,
         # used by the main body
         body_schemes = new_schemes(new_scheme_data(waiver())),

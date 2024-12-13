@@ -66,9 +66,7 @@ free_gg.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
 
 new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
-    active <- update_active(active, new_active(
-        order = NA_integer_, use = TRUE, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = TRUE))
     new_free_plot(
         plot = plot, data = data,
         size = size, active = active,

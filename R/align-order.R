@@ -63,9 +63,7 @@ align_order <- function(weights = rowMeans, ...,
     assert_bool(strict)
     assert_bool(reverse)
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = FALSE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = FALSE))
     active <- deprecate_active(active, "align_order",
         set_context = set_context, name = name
     )

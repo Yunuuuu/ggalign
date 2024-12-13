@@ -33,10 +33,12 @@ active <- function(order = waiver(), use = waiver(), name = waiver()) {
             allow_null = FALSE
         )
     }
-    new_active(order, use, name)
+    new_active(order = order, use = use, name = name)
 }
 
-new_active <- function(order, use, name) {
+# for internal function, we only adjust to the `use` argument
+# here, we put it in the first
+new_active <- function(use, order = NA_integer_, name = NA_character_) {
     structure(
         list(order = order, use = use, name = name),
         class = "ggalign_active"

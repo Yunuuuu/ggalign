@@ -20,9 +20,7 @@ align_kmeans <- function(centers, ..., data = NULL,
                          active = NULL, set_context = deprecated(),
                          name = deprecated()) {
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = FALSE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = FALSE))
     active <- deprecate_active(active, "align_group",
         set_context = set_context, name = name
     )

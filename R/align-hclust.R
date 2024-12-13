@@ -65,9 +65,7 @@ align_hclust <- function(distance = "euclidean",
         }
     }
     assert_active(active)
-    active <- update_active(active, new_active(
-        use = FALSE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = FALSE))
     align(
         align = AlignHclust,
         params = list(

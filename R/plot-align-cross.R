@@ -35,9 +35,7 @@
 #' @export
 cross_link <- function(mapping = aes(), size = NULL,
                        no_axes = NULL, active = NULL) {
-    active <- update_active(active, new_active(
-        use = TRUE, order = NA_integer_, name = NA_character_
-    ))
+    active <- update_active(active, new_active(use = TRUE))
     new_align_plot(
         align = ggproto(NULL, CrossLink),
         plot = ggplot(mapping = mapping),
