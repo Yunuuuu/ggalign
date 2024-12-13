@@ -259,7 +259,8 @@ in <code><a href="ggalign_attr.html">ggalign</a></code> attribute, in addition, 
 coordinates will be added.</p>
 <p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct branch
 for usage of the ggplot facet.</p></li>
-<li><p><code>.index</code>: the original index in the tree for the current node.</p></li>
+<li><p><code>.names</code> and <code>.index</code>: a character names (only applicable when names
+exists) and an integer of index of the original data.</p></li>
 <li><p><code>label</code>: node label text</p></li>
 <li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for current node or the start
 node of the current edge.</p></li>

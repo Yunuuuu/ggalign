@@ -108,10 +108,11 @@ either <code>"horizontal"</code> or <code>"vertical"</code>.</p></dd>
 
 
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
-<dd><p>A numeric or a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object of length <code>3</code>
+<dd><p>A numeric value or a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object. If used for
+the <code><a href="quad_layout.html">quad_layout()</a></code> annotation, it must have a length of <code>1</code>.  If used in
+the layout with a nested <code><a href="quad_layout.html">quad_layout()</a></code>, it should have a length of <code>3</code>,
 indicating the relative heights (for <code>direction = "horizontal"</code>) or widths
-(for <code>direction = "vertical"</code>). This is only used if you include a nested
-<code><a href="quad_layout.html">quad_layout()</a></code> in the layout.</p></dd>
+(for <code>direction = "vertical"</code>) to be applied.</p></dd>
 
 </dl></div>
     <div class="section level2">
