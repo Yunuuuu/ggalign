@@ -1,7 +1,7 @@
 align_ranges <- function(data = waiver(), mapping = aes(),
-                         ranges = waiver(), link = waiver(),
+                         ranges = waiver(), position = waiver(),
                          size = NULL, active = NULL) {
-    assert_layout_position(link)
+    assert_layout_position(position)
     if (inherits(data, "uneval")) {
         cli_abort(c(
             "{.arg data} cannot be {.obj_type_friendly {data}}",
@@ -15,7 +15,7 @@ align_ranges <- function(data = waiver(), mapping = aes(),
     align(AlignRanges,
         plot = ggplot(mapping = mapping),
         size = size, data = data,
-        params = list(ranges = ranges, link = link),
+        params = list(ranges = ranges, position = position),
         schemes = new_schemes(),
         active = active
     )
@@ -23,7 +23,7 @@ align_ranges <- function(data = waiver(), mapping = aes(),
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
 AlignRanges <- ggproto("AlignRanges", AlignGG,
-    extra_params = c("ranges", "link"),
+    extra_params = c("ranges", "position"),
     setup_params = function(self, nobs, params) {
         if (!is.waive(.subset2(params, "ranges"))) {
             params$ranges <- lapply(
@@ -53,8 +53,7 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
     },
 
     #' @importFrom stats reorder
-    build = function(self, plot,
-                     coords, extra_coords, previous_coords = NULL) {
+    build = function(self, plot, coords, extra_coords, previous_coords = NULL) {
         params <- .subset2(self, "params")
         direction <- self$direction
         position <- self$position
@@ -62,20 +61,20 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
         support_link <- switch_direction(
             direction, c("left", "right"), c("top", "bottom")
         )
-        if (is.waive(link <- .subset2(params, "link"))) {
+        if (is.waive(link_position <- .subset2(params, "position"))) {
             if (is.null(position)) {
-                link <- support_link
+                link_position <- support_link
             } else {
-                link <- opposite_pos(position)
+                link_position <- opposite_pos(position)
             }
-        } else if (!is.null(link)) {
-            link <- complete_pos(split_position(link))
-            warn <- setdiff(link, support_link)
+        } else if (!is.null(link_position)) {
+            link_position <- complete_pos(split_position(link_position))
+            warn <- setdiff(link_position, support_link)
             if (length(warn)) {
-                cli_warn(sprintf("Cannot add links in {.field %s}", warn))
+                cli_warn(sprintf("Cannot add link ranges in {.field %s}", warn))
             }
-            link <- intersect(link, support_link)
-            if (length(link) == 0L) link <- NULL
+            link_position <- intersect(link_position, support_link)
+            if (length(link_position) == 0L) link_position <- NULL
         }
 
         # parse ranges
@@ -131,12 +130,36 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
             default_facet <- ggplot2::facet_null()
         }
         plot <- plot + align_melt_facet(plot$facet, default_facet, direction)
-        if (!is.null(link)) {
+        if (!is.null(link_position)) {
             plot$align_ranges_data <- list(
                 full_breaks = full_breaks,
-                breaks = breaks, direction = direction, link = link
+                breaks = breaks, direction = direction,
+                link_position = link_position
             )
             plot <- add_class(plot, "align_ranges_plot", "patch_ggplot")
+        }
+        plot
+    },
+    finish_plot = function(self, plot, schemes, theme) {
+        plot <- plot_add_schemes(plot, schemes)
+        if (inherits(plot, "align_ranges_plot")) {
+            theme <- complete_theme(theme)
+            element <- calc_element("plot.ggalign_ranges", theme)
+            if (inherits(element, "element_blank")) {
+                class(plot) <- setdiff(class(plot), "align_ranges_plot")
+                plot$align_ranges_data <- NULL
+            } else {
+                # save spacing for usage
+                plot$align_ranges_data$spacing <- calc_element(
+                    switch_direction(
+                        self$direction,
+                        "panel.spacing.y",
+                        "panel.spacing.x"
+                    ),
+                    theme
+                ) %||% unit(0, "mm")
+                plot$align_ranges_data$element <- element
+            }
         }
         plot
     }
@@ -150,7 +173,7 @@ alignpatch.align_ranges_plot <- function(x) {
 
 #' @export
 `[.alignRangesGtable` <- function(x, i, j) {
-    # subset will violate the RangesGtable `shape`
+    # subset will violate the `alignRangesGtable` `shape`
     # we always use the next method
     class(x) <- setdiff(class(x), "alignRangesGtable")
     x$align_ranges_data <- NULL
@@ -162,27 +185,9 @@ PatchAlignRangesPlot <- ggproto(
     "PatchAlignRangesPlot", PatchGgplot,
     patch_gtable = function(self, plot = self$plot) {
         ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(plot = plot)
-        theme <- complete_theme(plot$theme)
-        element <- calc_element("plot.ggalign_ranges", theme)
-        if (inherits(element, "element_blank")) {
-            return(ans)
-        }
-
         # re-define the draw method, we assign new class
-        align_ranges_data <- .subset2(plot, "align_ranges_data")
         ans <- add_class(ans, "alignRangesGtable")
-
-        # save spacing for usage
-        align_ranges_data$spacing <- calc_element(
-            switch_direction(
-                .subset2(align_ranges_data, "direction"),
-                "panel.spacing.y",
-                "panel.spacing.x"
-            ),
-            theme
-        ) %||% unit(0, "mm")
-        align_ranges_data$element <- element
-        ans$align_ranges_data <- align_ranges_data
+        ans$align_ranges_data <- .subset2(plot, "align_ranges_data")
         ans
     },
     add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {
@@ -191,7 +196,7 @@ PatchAlignRangesPlot <- ggproto(
             grobs = plot,
             # t = 8, l = 6, b = 14, r = 12
             # t = t + 7L, l = l + 5L, b = b - 6L, r = r - 5L,
-            t = t + 10L, l = l + 8,
+            t = t + TOP_BORDER, l = l + LEFT_BORDER,
             name = name, z = z
         )
     },
@@ -199,7 +204,7 @@ PatchAlignRangesPlot <- ggproto(
         gtable_add_grob(
             gt,
             grobs = bg,
-            t = t + 10L, l = l + 8,
+            t = t + TOP_BORDER, l = l + LEFT_BORDER,
             name = name, z = z
         )
     },
@@ -208,7 +213,7 @@ PatchAlignRangesPlot <- ggproto(
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt) {
-        gt
+        gt # free from alignment
     }
 )
 
@@ -239,7 +244,7 @@ makeContent.alignRangesGtable <- function(x) {
     panel_loc <- find_panel(x)
     range_data <- .subset2(x, "align_ranges_data")
     breaks <- .subset2(range_data, "breaks")
-    link <- .subset2(range_data, "link")
+    link_position <- .subset2(range_data, "link_position")
     full_breaks <- .subset2(range_data, "full_breaks")
     direction <- .subset2(range_data, "direction")
     spacing <- convertHeight(
@@ -260,8 +265,8 @@ makeContent.alignRangesGtable <- function(x) {
 
     # then, we define the link grobs
     coord_x <- coord_y <- numeric()
-    if (is_horizontal(direction)) { # left and right
-        # from bottom to the top
+    if (is_horizontal(direction)) { # the link should be in left or right
+        # from bottom to the top, following the ordering of the `breaks`
         panel_index <- seq(
             from = .subset2(panel_loc, "b"),
             to = .subset2(panel_loc, "t"),
@@ -273,7 +278,7 @@ makeContent.alignRangesGtable <- function(x) {
         # for a gtable, heights are from top to the bottom,
         # we reverse the heights
         plot_cum_heights <- cumsum(rev(plot_heights))
-        for (position in link) {
+        for (position in link_position) {
             for (i in seq_along(panel_index)) {
                 # we match the observations
                 pos <- match(.subset2(breaks, i), obs)
@@ -300,6 +305,8 @@ makeContent.alignRangesGtable <- function(x) {
                 }
             }
         }
+    } else {
+
     }
     layout <- .subset2(x, "layout")
     panels <- layout[grepl("^panel", .subset2(layout, "name")), , drop = FALSE]

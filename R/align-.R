@@ -266,8 +266,7 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, schemes,
-                     coords, extra_coords, previous_coords = NULL) {
+    build = function(self, plot, coords, extra_coords, previous_coords = NULL) {
         direction <- self$direction
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")

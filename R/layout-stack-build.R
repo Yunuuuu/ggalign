@@ -1,28 +1,31 @@
 #' @export
 ggalign_build.StackLayout <- function(x) {
     x <- default_layout(x)
-    stack_build(x) %||% (
-        align_plots(theme = x@theme) + layout_title(
+    (stack_build(x) %||% align_plots(theme = x@theme)) +
+        layout_title(
             title = .subset2(x@titles, "title"),
             subtitle = .subset2(x@titles, "subtitle"),
             caption = .subset2(x@titles, "caption")
-        ))
+        )
 }
 
+#' @param schemes,theme Parameters from parent layout
 #' @param extra_coords layout parameters of the axis vertically with the stack.
 #' @noRd
-stack_build <- function(stack, schemes = stack@schemes, extra_coords = NULL) {
+stack_build <- function(stack, schemes = NULL, theme = NULL,
+                        extra_coords = NULL) {
     if (is_empty(stack@plot_list)) {
         return(NULL)
     }
-    composer <- stack_build_composer(stack, schemes, extra_coords)
+    direction <- stack@direction
+    schemes <- inherit_parent_layout_schemes(stack, schemes)
+    theme <- inherit_parent_layout_theme(stack, theme, direction = direction)
+    composer <- stack_build_composer(stack, schemes, theme, extra_coords)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
     # arrange plots
-    titles <- stack@titles
     sizes <- stack@sizes
-    direction <- stack@direction
 
     # recycle the sizes when necessary
     if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
@@ -33,7 +36,7 @@ stack_build <- function(stack, schemes = stack@schemes, extra_coords = NULL) {
             .subset2(composer, "right_or_bottom")
         )
     ]
-    align_plots(
+    plot <- align_plots(
         !!!plots,
         design = area(
             .subset2(composer, "t"),
@@ -53,19 +56,58 @@ stack_build <- function(stack, schemes = stack@schemes, extra_coords = NULL) {
         ),
         guides = .subset2(.subset2(schemes, "scheme_align"), "guides"),
         theme = stack@theme
-    ) + layout_title(
-        title = .subset2(titles, "title"),
-        subtitle = .subset2(titles, "subtitle"),
-        caption = .subset2(titles, "caption")
     )
+
+    # for annotation, we should always make them next to
+    # the main body
+    position <- .subset2(stack@heatmap, "position")
+    if (is.null(position)) {
+        return(plot)
+    }
+    plot <- free_vp(
+        plot,
+        x = switch(position,
+            left = 1L,
+            right = 0L,
+            0.5
+        ),
+        y = switch(position,
+            top = 0L,
+            bottom = 1L,
+            0.5
+        ),
+        just = switch(position,
+            top = "bottom",
+            left = "right",
+            bottom = "top",
+            right = "left"
+        )
+    )
+
+    # whether we should override the `guides` collection for the whole
+    # annotation stack
+    free_guides <- .subset2(stack@heatmap, "free_guides")
+    if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
+    # we also apply the `free_spaces` for the whole annotation stack
+    free_spaces <- .subset2(
+        .subset2(schemes, "scheme_align"), "free_spaces"
+    ) %|w|% NULL
+    if (!is.null(free_spaces)) {
+        plot <- free_space(free_border(plot, free_spaces), free_spaces)
+    }
+    plot
 }
 
-stack_build_composer <- function(stack, schemes, extra_coords) {
+#' @param schemes,theme Parameters for current stack, which have inherited
+#' parameters from the parent.
+#' @noRd
+stack_build_composer <- function(stack, schemes, theme, extra_coords) {
     UseMethod("stack_build_composer")
 }
 
 #' @export
-stack_build_composer.StackLayout <- function(stack, schemes, extra_coords) {
+stack_build_composer.StackLayout <- function(stack, schemes, theme,
+                                             extra_coords) {
     plot_list <- stack@plot_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
@@ -90,7 +132,7 @@ stack_build_composer.StackLayout <- function(stack, schemes, extra_coords) {
     plot_list <- .subset(plot_list, make_order(plot_order))
 
     # build the stack
-    composer <- stack_composer(stack@direction)
+    composer <- stack_composer(direction)
 
     # for `free_spaces`, if we have applied it in the whole stack layout
     # we shouln't use it for a single plot. Otherwise, the guide legends
@@ -109,11 +151,13 @@ stack_build_composer.StackLayout <- function(stack, schemes, extra_coords) {
         plot_list,
         composer,
         schemes = schemes,
+        theme = theme,
         coords = coords,
         extra_coords = extra_coords,
         direction = direction,
         position = position,
-        released_spaces = released_spaces
+        released_spaces = released_spaces,
+        previous_coords = NULL
     )
 }
 

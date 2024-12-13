@@ -82,8 +82,7 @@ CrossLink <- ggproto("CrossLink", AlignProto,
         )
         layout
     },
-    build = function(self, plot, schemes, coords,
-                     extra_coords, previous_coords) {
+    build = function(self, plot, coords, extra_coords, previous_coords) {
         direction <- self$direction
         index <- vec_c(
             .subset2(previous_coords, "index"),

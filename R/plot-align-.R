@@ -68,11 +68,23 @@ AlignProto <- ggproto("AlignProto",
     },
 
     ##############################################################
-    build = function(plot, schemes, coords, extra_coords, previous_coords) {
+    build = function(plot, coords, extra_coords, previous_coords) {
         plot
     },
-    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes),
-    finish_plot = function(plot) plot
+    # let AlignProto to add schemes and theme acoordingly
+    finish_plot = function(self, plot, schemes, theme) {
+        plot <- plot_add_schemes(plot, schemes)
+        if (is_horizontal(self$direction)) {
+            theme <- theme(
+                panel.spacing.y = calc_element("panel.spacing.y", theme)
+            )
+        } else {
+            theme <- theme(
+                panel.spacing.x = calc_element("panel.spacing.x", theme)
+            )
+        }
+        plot + theme
+    }
 )
 
 #' @importFrom rlang inject
@@ -103,7 +115,8 @@ align_method_params <- function(f, remove = character()) {
 
 #' @importFrom rlang inject
 #' @export
-plot_build.ggalign_align_plot <- function(plot, ..., schemes,
+plot_build.ggalign_align_plot <- function(plot, ..., schemes, theme,
+                                          # we don't need direction and position
                                           direction, position) {
     # let `Align` to determine how to build the plot
     align <- plot@align # `AlignProto` object
@@ -113,7 +126,6 @@ plot_build.ggalign_align_plot <- function(plot, ..., schemes,
     align$lock()
     on.exit(align$unlock())
 
-    # schemes
     # coords
     # extra_coords
     # previous_coords
@@ -124,7 +136,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., schemes,
         schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
-    align$finish_plot(align$add_schemes(ans, schemes))
+    align$finish_plot(ans, schemes, theme)
 }
 
 #' @export

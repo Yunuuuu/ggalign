@@ -41,16 +41,23 @@ ggalign_build.QuadLayout <- function(x) {
     )
 }
 
-quad_build <- function(quad, schemes = quad@schemes) UseMethod("quad_build")
+quad_build <- function(quad, schemes = NULL, theme = NULL,
+                       direction = NULL) {
+    UseMethod("quad_build")
+}
 
 #######################################################################
+#' @param schemes,theme Parameters from parent layout
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
 #' @export
-quad_build.QuadLayout <- function(quad, schemes = quad@schemes) {
+#' @noRd
+quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
+                                  direction = NULL) {
     data <- quad@data
-
+    schemes <- inherit_parent_layout_schemes(quad, schemes)
+    theme <- inherit_parent_layout_theme(quad, theme, direction = direction)
     row_coords <- setup_layout_coords(quad@horizontal)
     column_coords <- setup_layout_coords(quad@vertical)
     if (!(is.null(row_coords) && is.null(column_coords)) &&
@@ -98,54 +105,21 @@ quad_build.QuadLayout <- function(quad, schemes = quad@schemes) {
         if (is_empty(stack <- slot(quad, position))) {
             return(list(plot = NULL, size = NULL))
         }
-        stack_schemes <- schemes
+        pschemes <- schemes
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
             extra_coords <- column_coords
-            stack_schemes$scheme_align <- horizontal_align
+            pschemes$scheme_align <- horizontal_align
         } else {
             extra_coords <- row_coords
-            stack_schemes$scheme_align <- vertical_align
+            pschemes$scheme_align <- vertical_align
         }
-        stack_schemes <- inherit_schemes(stack@schemes, stack_schemes)
         plot <- stack_build(stack,
-            schemes = stack_schemes,
+            schemes = pschemes,
+            theme = theme,
             extra_coords = extra_coords
         )
         if (!is.null(plot)) {
-            # for annotation, we should always make them next to
-            # the main body
-            plot <- free_vp(
-                plot,
-                x = switch(position,
-                    left = 1L,
-                    right = 0L,
-                    0.5
-                ),
-                y = switch(position,
-                    top = 0L,
-                    bottom = 1L,
-                    0.5
-                ),
-                just = switch(position,
-                    top = "bottom",
-                    left = "right",
-                    bottom = "top",
-                    right = "left"
-                )
-            )
-
-            # whether we should override the `guides` collection for the whole
-            # annotation stack
-            free_guides <- .subset2(stack@heatmap, "free_guides")
-            if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
-            # we also apply the `free_spaces` for the whole annotation stack
-            free_spaces <- .subset2(
-                .subset2(stack_schemes, "scheme_align"), "free_spaces"
-            ) %|w|% NULL
-            if (!is.null(free_spaces)) {
-                plot <- free_space(free_border(plot, free_spaces), free_spaces)
-            }
             size <- .subset2(stack@heatmap, "size")
         } else {
             size <- NULL

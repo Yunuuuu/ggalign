@@ -75,6 +75,7 @@ new_scheme_theme.theme <- function(th = theme()) {
 #' @export
 new_scheme_theme.scheme_theme <- function(th = theme()) th
 
+###############################################################
 #' @export
 update_scheme.scheme_theme <- function(new, old, object_name) {
     ggfun("add_theme")(old, new, object_name)

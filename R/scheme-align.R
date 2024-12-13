@@ -60,7 +60,8 @@ scheme_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
     new_scheme_align(
-        free_spaces = free_spaces, free_labs = free_labs,
+        free_spaces = free_spaces,
+        free_labs = free_labs,
         guides = guides
     )
 }
@@ -74,13 +75,9 @@ new_scheme_align <- function(guides = waiver(), free_spaces = waiver(),
     )
 }
 
+#' @importFrom utils modifyList
 #' @export
 update_scheme.scheme_align <- function(new, old, object_name) {
-    update_scheme_align(old, new)
-}
-
-#' @importFrom utils modifyList
-update_scheme_align <- function(old, new) {
     modifyList(old,
         new[!vapply(new, identical, logical(1L), y = NA, USE.NAMES = FALSE)],
         keep.null = TRUE

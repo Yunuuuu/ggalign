@@ -54,15 +54,29 @@ stack_composer_add <- function(plot, composer, ...) {
 }
 
 #' @export
-stack_composer_add.ggalign_plot <- function(plot, composer, ...) {
+stack_composer_add.ggalign_plot <- function(plot, composer, ...,
+                                            schemes, released_spaces) {
     size <- plot@size
-    plot <- plot_build(plot = plot, ...) + theme_recycle()
+    # for `released_spaces`, release the `free_spaces` in a single plot
+    plot_schemes <- inherit_schemes(plot@schemes, schemes)
+    if (!is.null(released_spaces)) {
+        plot_spaces <- .subset2(
+            .subset2(plot_schemes, "scheme_align"), "free_spaces"
+        )
+        if (is_string(plot_spaces)) {
+            plot_spaces <- setdiff_position(plot_spaces, released_spaces)
+            if (!nzchar(plot_spaces)) plot_spaces <- NULL
+            plot_schemes$scheme_align["free_spaces"] <- list(plot_spaces)
+        }
+    }
+    plot <- plot_build(plot = plot, ..., schemes = schemes) + theme_recycle()
     stack_composer_align_plot(composer, plot, size)
 }
 
 #' @importFrom grid unit.c unit
-stack_composer_add.QuadLayout <- function(plot, composer, schemes, ...) {
-    patches <- quad_build(plot, schemes)
+stack_composer_add.QuadLayout <- function(plot, composer, schemes, theme,
+                                          direction, ...) {
+    patches <- quad_build(plot, schemes, theme, direction)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
 
@@ -151,36 +165,9 @@ stack_composer_add.QuadLayout <- function(plot, composer, schemes, ...) {
 }
 
 #' @export
-stack_composer_add.list <- function(plot, composer, ..., schemes,
-                                    released_spaces) {
+stack_composer_add.list <- function(plot, composer, ...) {
     for (p in plot) {
-        if (is_ggalign_plot(p)) {
-            # for `released_spaces`, release the free_spaces in a single plot
-            plot_schemes <- inherit_schemes(p@schemes, schemes)
-            if (!is.null(released_spaces)) {
-                align_spaces <- .subset2(
-                    .subset2(plot_schemes, "scheme_align"), "free_spaces"
-                )
-                if (is_string(align_spaces)) {
-                    align_spaces <- setdiff_position(
-                        align_spaces,
-                        released_spaces
-                    )
-                    if (!nzchar(align_spaces)) align_spaces <- NULL
-                    plot_schemes$scheme_align["free_spaces"] <- list(
-                        align_spaces
-                    )
-                }
-            }
-        } else {
-            plot_schemes <- inherit_schemes(p@schemes, schemes)
-        }
-        composer <- stack_composer_add(
-            plot = p,
-            composer = composer,
-            schemes = plot_schemes,
-            ...
-        )
+        composer <- stack_composer_add(plot = p, composer = composer, ...)
     }
     composer
 }

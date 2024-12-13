@@ -61,7 +61,8 @@ cross_align.default <- function(data = NULL, direction, ...) {
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
-stack_build_composer.CrossLayout <- function(stack, schemes, extra_coords) {
+stack_build_composer.CrossLayout <- function(stack, schemes, theme,
+                                             extra_coords) {
     # check if we should initialize the layout observations
     layout_coords <- stack@layout
     if (!is.null(layout_coords) &&
@@ -139,6 +140,7 @@ stack_build_composer.CrossLayout <- function(stack, schemes, extra_coords) {
             plots,
             composer,
             schemes = schemes,
+            theme = theme,
             coords = coords,
             extra_coords = extra_coords,
             direction = direction,

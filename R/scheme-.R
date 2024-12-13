@@ -26,6 +26,7 @@ ggalign_scheme_name <- function(x) {
     attr(x, "__ggalign.scheme_name__", exact = TRUE)
 }
 
+###############################################################
 #' Used to update global data
 #' @noRd
 update_scheme <- function(new, old, object_name) UseMethod("update_scheme")
@@ -41,13 +42,14 @@ update_layout_scheme <- function(object, layout, object_name) {
     layout
 }
 
-# By default, we'll always initialize the default value when building the layout
-# so parent has the right class, we dispatch method based on the parent option
+###############################################################
 inherit_scheme <- function(scheme, pscheme) {
     UseMethod("inherit_scheme", pscheme)
 }
 
-plot_add_scheme <- function(scheme, plot) UseMethod("plot_add_scheme")
+# If no parent scheme, use child scheme directly
+#' @export
+inherit_scheme.NULL <- function(scheme, pscheme) scheme
 
 inherit_schemes <- function(schemes, pschemes) {
     nms <- vapply(pschemes,
@@ -61,9 +63,15 @@ inherit_schemes <- function(schemes, pschemes) {
     ans
 }
 
+###############################################################
+plot_add_scheme <- function(scheme, plot) UseMethod("plot_add_scheme", scheme)
+
+#' @export
+plot_add_scheme.NULL <- function(scheme, plot) plot
+
 plot_add_schemes <- function(plot, schemes) {
     for (i in seq_along(schemes)) {
-        plot <- plot_add_scheme(.subset2(schemes, i), plot = plot)
+        plot <- plot_add_scheme(scheme = .subset2(schemes, i), plot = plot)
     }
     plot
 }

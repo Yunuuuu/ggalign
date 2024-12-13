@@ -79,6 +79,31 @@ default_layout <- function(layout) {
     layout
 }
 
+###########################################################
+inherit_parent_layout_schemes <- function(layout, schemes) {
+    if (is.null(schemes)) {
+        return(layout@schemes)
+    }
+    inherit_schemes(layout@schemes, schemes)
+}
+
+inherit_parent_layout_theme <- function(layout, theme, direction) {
+    if (is.null(theme)) return(layout@theme) # styler: off
+    # parent theme, set the global panel spacing,
+    # so that every panel aligns well
+    if (is_horizontal(direction)) {
+        theme <- theme(
+            panel.spacing.y = calc_element("panel.spacing.y", theme)
+        )
+    } else {
+        theme <- theme(
+            panel.spacing.x = calc_element("panel.spacing.x", theme)
+        )
+    }
+    if (is.null(layout@theme)) return(layout@theme) # styler: off
+    layout@theme + theme
+}
+
 ############################################################
 #' Get the statistics from the layout
 #'
