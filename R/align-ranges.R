@@ -6,7 +6,9 @@
 #' @param position Which side the link should be added to? A string containing
 #' one or more of `r oxford_and(.tlbr)`. For a horizontal [`stack_layout()`],
 #' only `l` (left) and `r` (right) can be used. For a vertical
-#' [`stack_layout()`], only `b` (bottom) and `t` (top) are available.
+#' [`stack_layout()`], only `b` (bottom) and `t` (top) are available. Link
+#' ranges can be customized using the `plot.ggalign_ranges` theme element with
+#' [`element_polygon()`].
 #'
 #' @section ggplot2 specification:
 #' `align_ranges` initializes a ggplot.
@@ -157,15 +159,13 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
         if (length(breaks) > 1L) {
             default_facet <- switch_direction(
                 direction,
-                ggplot2::facet_grid(
-                    rows = ggplot2::vars(fct_rev(.data$.panel)),
-                    scales = "free", space = "free",
-                    drop = FALSE
+                ggplot2::facet_wrap(
+                    facets = ggplot2::vars(.data$.panel),
+                    ncol = 1L, as.table = FALSE
                 ),
-                ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$.panel),
-                    scales = "free", space = "free",
-                    drop = FALSE
+                ggplot2::facet_wrap(
+                    facets = ggplot2::vars(.data$.panel),
+                    nrow = 1L, as.table = FALSE
                 )
             )
         } else {
@@ -185,8 +185,10 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_schemes(plot, schemes)
         if (inherits(plot, "align_ranges_plot")) {
-            theme <- complete_theme(theme)
-            element <- calc_element("plot.ggalign_ranges", theme)
+            element <- calc_element(
+                "plot.ggalign_ranges",
+                complete_theme(plot$theme)
+            )
             if (inherits(element, "element_blank")) {
                 class(plot) <- setdiff(class(plot), "align_ranges_plot")
                 plot$align_ranges_data <- NULL
@@ -198,7 +200,7 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
                         "panel.spacing.y",
                         "panel.spacing.x"
                     ),
-                    theme
+                    complete_theme(theme)
                 ) %||% unit(0, "mm")
                 plot$align_ranges_data$element <- element
             }
@@ -312,7 +314,7 @@ makeContent.alignRangesGtable <- function(x) {
         panel_index <- seq(
             from = .subset2(panel_loc, "b"),
             to = .subset2(panel_loc, "t"),
-            by = -2L
+            length.out = length(breaks)
         )
         # we'll reverse the `plot_cum_heights`, so the ordering index should
         # also be reversed
@@ -356,7 +358,7 @@ makeContent.alignRangesGtable <- function(x) {
         panel_index <- seq(
             from = .subset2(panel_loc, "l"),
             to = .subset2(panel_loc, "r"),
-            by = 2L
+            length.out = length(breaks)
         )
         t_border <- plot_heights[seq_len(.subset2(panel_loc, "t") - 1L)]
         b_border <- plot_heights[-seq_len(.subset2(panel_loc, "b"))]

@@ -33,7 +33,9 @@ represented by a facet panal.}
 \item{position}{Which side the link should be added to? A string containing
 one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. For a horizontal \code{\link[=stack_layout]{stack_layout()}},
 only \code{l} (left) and \code{r} (right) can be used. For a vertical
-\code{\link[=stack_layout]{stack_layout()}}, only \code{b} (bottom) and \code{t} (top) are available.}
+\code{\link[=stack_layout]{stack_layout()}}, only \code{b} (bottom) and \code{t} (top) are available. Link
+ranges can be customized using the \code{plot.ggalign_ranges} theme element with
+\code{\link[=element_polygon]{element_polygon()}}.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit}}.}
