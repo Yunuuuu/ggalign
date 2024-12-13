@@ -112,20 +112,67 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
 #' @importFrom rlang try_fetch
 #' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
-    if (!is_theme_complete(theme <- theme %||% theme_get())) {
-        theme <- try_fetch(
-            ggfun("complete_theme")(theme),
-            error = function(cnd) theme_get() + theme
-        )
-    }
-    theme
+    try_fetch(
+        ggfun("complete_theme")(theme),
+        error = function(cnd) ggfun("plot_theme")(list(theme = theme))
+    )
 }
 
 is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 
+#' Theme Polygon elements
+#'
+#' Draw polygon.
+#'
+#' @inheritParams ggplot2::element_rect
+#' @seealso [`element_rect`][ggplot2::element_rect]
+#' @return A `element_polygon` object
+#' @export
+element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
+                            linetype = NULL, color = NULL,
+                            inherit.blank = FALSE) {
+    if (!is.null(color)) colour <- color
+    structure(
+        list(
+            fill = fill, colour = colour, linewidth = linewidth,
+            linetype = linetype, inherit.blank = inherit.blank
+        ),
+        class = c("element_polygon", "element")
+    )
+}
+
+#' @importFrom ggplot2 element_grob
+#' @export
+element_grob.element_polygon <- function(element, x, y,
+                                         width = 1, height = 1, fill = NULL,
+                                         colour = NULL, linewidth = NULL, linetype = NULL, ...) {
+    gp <- gpar(
+        lwd = ggfun("len0_null")(linewidth * .pt),
+        col = colour,
+        fill = fill,
+        lty = linetype
+    )
+    element_gp <- gpar(
+        lwd = ggfun("len0_null")(element$linewidth * .pt),
+        col = element$colour,
+        fill = element$fill,
+        lty = element$linetype
+    )
+    grid::polygonGrob(
+        x = x, y = y,
+        gp = ggfun("modify_list")(element_gp, gp), ...
+    )
+}
+
 #' @importFrom ggplot2 register_theme_elements el_def
 theme_elements <- function() {
     register_theme_elements(
+        plot.ggalign_ranges = element_polygon(
+            fill = NA,
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1
+        ),
         element_tree = list(
             plot.patch_title = el_def("element_text", "text"),
             plot.patch_title.top = el_def("element_text", "text"),
@@ -136,7 +183,8 @@ theme_elements <- function() {
             plot.patch_title.position.top = el_def("character"),
             plot.patch_title.position.left = el_def("character"),
             plot.patch_title.position.bottom = el_def("character"),
-            plot.patch_title.position.right = el_def("character")
+            plot.patch_title.position.right = el_def("character"),
+            plot.ggalign_ranges = el_def("element_polygon")
         )
     )
 }

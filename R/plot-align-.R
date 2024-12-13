@@ -74,7 +74,8 @@ AlignProto <- ggproto("AlignProto",
                      coords, extra_coords, previous_coords) {
         plot
     },
-    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes)
+    add_schemes = function(plot, schemes) plot_add_schemes(plot, schemes),
+    finish_plot = function(plot) plot
 )
 
 #' @importFrom rlang inject
@@ -131,7 +132,7 @@ plot_build.ggalign_align_plot <- function(plot, ..., direction, schemes) {
         schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
             theme_no_axes(switch_direction(direction, "y", "x"))
     }
-    align$add_schemes(ans, schemes)
+    align$finish_plot(align$add_schemes(ans, schemes))
 }
 
 #' @export

@@ -280,6 +280,22 @@ Patch <- ggproto(c("Patch", "ggalign"), NULL,
         }
         list(bg = bg, plot = plot)
     },
+    add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {
+        gtable_add_grob(
+            gt,
+            grobs = plot,
+            t = t, l = l, b = b, r = r,
+            name = name, z = z
+        )
+    },
+    add_background = function(self, gt, bg, t, l, b, r, name, z = 1L) {
+        gtable_add_grob(
+            gt,
+            grobs = bg,
+            t = t, l = l, b = b, r = r,
+            name = name, z = z
+        )
+    },
     free_border = function(self, borders, gt = self$gt) {
         abort_no_method(self$plot, "free_border")
     },

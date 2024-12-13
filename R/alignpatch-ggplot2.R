@@ -6,6 +6,7 @@ ggalign_build.ggplot <- function(x) x
 
 ##################################################
 #' @export
+#' @include alignpatch-build.R
 print.patch_ggplot <- print.alignpatches
 
 #' @importFrom grid grid.draw
@@ -27,6 +28,7 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #    caption
 #    guide: can be collected or kept
 #' @importFrom ggplot2 ggplotGrob update_labels
+#' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_guides = function(guides) guides,
     set_theme = function(theme) NULL,

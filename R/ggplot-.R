@@ -8,6 +8,9 @@ ggfun <- local({
     }
 })
 
+#' @importFrom ggplot2 .pt
+NULL
+
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x
 }

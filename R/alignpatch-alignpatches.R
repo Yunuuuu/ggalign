@@ -363,17 +363,17 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             ))
 
             # then we add the plot ---------------------------------
-            gt <- gtable_add_grob(gt,
-                list(.subset2(grobs, "plot")), t, l, b, r,
-                name = paste("plot", i, sep = "-"), z = 2L
+            gt <- patch$add_plot(
+                gt, .subset2(grobs, "plot"), t, l, b, r,
+                name = paste("plot", i, sep = "-")
             )
 
             # add background grob ----------------------------------
             if (!is.null(bg <- .subset2(grobs, "bg"))) {
                 # we always add background in the beginning --------
-                gt <- gtable_add_grob(gt, bg, t, l, b, r,
-                    name = paste("plot", i, "background", sep = "-"),
-                    z = 1L
+                gt <- patch$add_background(
+                    gt, bg, t, l, b, r,
+                    name = paste("plot", i, "background", sep = "-")
                 )
             }
 
