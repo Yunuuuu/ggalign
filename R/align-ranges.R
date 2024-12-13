@@ -1,3 +1,45 @@
+#' Add a plot to annotate a series of ranges of observations
+#'
+#' @inheritParams align_gg
+#' @param ranges A list of ranges to be annotated. Each range will be
+#' represented by a facet panal.
+#' @param position Which side the link should be added to? A string containing
+#' one or more of `r oxford_and(.tlbr)`. For a horizontal [`stack_layout()`],
+#' only `l` (left) and `r` (right) can be used. For a vertical
+#' [`stack_layout()`], only `b` (bottom) and `t` (top) are available.
+#'
+#' @section ggplot2 specification:
+#' `align_ranges` initializes a ggplot.
+#'
+#' The data in the underlying `ggplot` object will contain following columns:
+#'
+#'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
+#'    stack layout (including top and bottom annotation), `y-axis` for
+#'    horizontal stack layout (including left and right annotation).
+#'
+#'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): a character names (only
+#'    applicable when names exists) and an integer of index of the original
+#'    data.
+#'
+#'  - `.row_names` and `.row_index`: the row names and an integer of
+#'    row index of the original matrix (only applicable if `data` is a
+#'    `matrix`).
+#'
+#'  - `.column_names` and `.column_index`: the column names and column index of
+#'    the original matrix (only applicable if `data` is a `matrix`).
+#'
+#'  - `value`: the actual value (only applicable if `data` is a `matrix` or
+#'    atomic vector).
+#'
+#' `matrix` input will be automatically melted into a long foramted data frame.
+#'
+#' Atomic vector will be put in the `value` column of the data frame.
+#'
+#' In the case where the input data is already a data frame, following columns
+#' (`.panel`, `.index`, `.names`) are added to the data frame.
+#'
+#' @export
 align_ranges <- function(data = waiver(), mapping = aes(),
                          ranges = waiver(), position = waiver(),
                          size = NULL, active = NULL) {
@@ -23,7 +65,8 @@ align_ranges <- function(data = waiver(), mapping = aes(),
 AlignRanges <- ggproto("AlignRanges", AlignGG,
     extra_params = c("ranges", "position"),
     setup_params = function(self, nobs, params) {
-        if (!is.waive(.subset2(params, "ranges"))) {
+        if (!is.waive(ranges <- .subset2(params, "ranges"))) {
+            if (!is.list(ranges)) ranges <- list(ranges)
             params$ranges <- lapply(
                 .subset2(params, "ranges"),
                 function(range) {
@@ -55,6 +98,7 @@ AlignRanges <- ggproto("AlignRanges", AlignGG,
         params <- .subset2(self, "params")
         direction <- self$direction
         position <- self$position
+        axis <- to_coord_axis(direction)
         # parse link
         support_link <- switch_direction(
             direction, c("left", "right"), c("top", "bottom")
@@ -257,19 +301,21 @@ makeContent.alignRangesGtable <- function(x) {
     sizes <- numeric(length(obs))
     sizes[is.na(obs)] <- spacing
     n_spacing <- length(full_breaks) - 1L
-    sizes[!is.na(obs)] <- (height - spacing * n_spacing) /
-        sum(lengths(full_breaks)) # nobs
-    cum_sizes <- cumsum(sizes)
 
     # then, we define the link grobs
     coord_x <- coord_y <- numeric()
     if (is_horizontal(direction)) { # the link should be in left or right
+        sizes[!is.na(obs)] <- (height - spacing * n_spacing) /
+            sum(lengths(full_breaks)) # nobs
+        cum_sizes <- cumsum(sizes)
         # from bottom to the top, following the ordering of the `breaks`
         panel_index <- seq(
             from = .subset2(panel_loc, "b"),
             to = .subset2(panel_loc, "t"),
             by = -2L
         )
+        # we'll reverse the `plot_cum_heights`, so the ordering index should
+        # also be reversed
         panel_index <- nrow(x) - panel_index + 1L
         l_border <- plot_widths[seq_len(.subset2(panel_loc, "l") - 1L)]
         r_border <- plot_widths[-seq_len(.subset2(panel_loc, "r"))]
@@ -304,8 +350,46 @@ makeContent.alignRangesGtable <- function(x) {
             }
         }
     } else {
-
+        sizes[!is.na(obs)] <- (width - spacing * n_spacing) /
+            sum(lengths(full_breaks)) # nobs
+        cum_sizes <- cumsum(sizes)
+        panel_index <- seq(
+            from = .subset2(panel_loc, "l"),
+            to = .subset2(panel_loc, "r"),
+            by = 2L
+        )
+        t_border <- plot_heights[seq_len(.subset2(panel_loc, "t") - 1L)]
+        b_border <- plot_heights[-seq_len(.subset2(panel_loc, "b"))]
+        plot_cum_widths <- cumsum(plot_widths)
+        for (position in link_position) {
+            for (i in seq_along(panel_index)) {
+                # we match the observations
+                pos <- match(.subset2(breaks, i), obs)
+                coord_x <- c(
+                    coord_x,
+                    # for width next to the plot panel
+                    plot_cum_widths[panel_index[i] + (-1:0)],
+                    # for width in the border
+                    c(
+                        cum_sizes[max(pos)],
+                        cum_sizes[min(pos)] - sizes[min(pos)]
+                    )
+                )
+                if (position == "bottom") {
+                    coord_y <- c(
+                        coord_y,
+                        vec_rep_each(c(sum(b_border), 0), 2L)
+                    )
+                } else {
+                    coord_y <- c(
+                        coord_y,
+                        vec_rep_each(c(height - sum(t_border), height), 2L)
+                    )
+                }
+            }
+        }
     }
+
     layout <- .subset2(x, "layout")
     panels <- layout[grepl("^panel", .subset2(layout, "name")), , drop = FALSE]
     x <- gtable_add_grob(

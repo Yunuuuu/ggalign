@@ -66,6 +66,7 @@ reference:
   - ggalign
   - ggfree
   - align_dendro
+  - align_ranges
 
 - title: Schemes
   desc: >
@@ -126,6 +127,7 @@ reference:
   - scale_draw_manual
   - draw_key_draw
   - theme_ggalign
+  - element_polygon
 
 - title: helpers
   desc: A collection of utility functions to enhance usability and functionality.
