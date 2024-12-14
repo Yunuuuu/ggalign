@@ -68,27 +68,36 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Compare with other similar tools
 
-|                                     | `ggalign`                                     | `ComplexHeatmap`                                     | `marsilea`               | `ggheatmap`                                          |
-|-------------------------------------|-----------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------|
-| **Language**                        | R                                             | R                                                    | Python                   | R                                                    |
-| **User Interface**                  | Declarative                                   | Functional                                           | Declarative              | Functional                                           |
-| **Plot System**                     | ggplot2                                       | grid                                                 | seaborn                  | ggplot2                                              |
-| **Focus**                           | Composable Visualization                      | Heatmap                                              | Composable Visualization | Heatmap                                              |
-| **Heatmap Layout**                  | Yes                                           | Yes                                                  | Yes                      | Yes                                                  |
-| **Marginal Layout**                 | Yes                                           | No                                                   | Yes                      | No                                                   |
-| **Stack Layout**                    | Yes                                           | Yes                                                  | Yes                      | No                                                   |
-| **Cross Layout**                    | Yes                                           | No                                                   | No                       | No                                                   |
-| **Group or Reorder Heatmap**        | Yes                                           | Yes                                                  | Yes                      | Yes                                                  |
-| **Group or Reorder Stack Only**     | Yes                                           | No                                                   | Yes                      | No                                                   |
-| **Separate Group into Slices**      | Yes                                           | Yes                                                  | Yes                      | No                                                   |
-| **Plot Type**                       | Many, provided by ggplot2                     | Many, but limited                                    | Many, but limited        | Limited                                              |
-| **Legends Creation**                | Automatic                                     | Limited automatic, requires manual add               | Manual                   | Automatic                                            |
-| **Legends Position**                | Anywhere, can be controlled for a single plot | Four sides, can only be placed on one side at a time | ?                        | Four sides, can only be placed on one side at a time |
-| **Dendrogram Position**             | Anywhere                                      | Heatmap only                                         | Anywhere                 | Heatmap only                                         |
-| **3D Heatmap**                      | Yes                                           | Yes                                                  | No                       | No                                                   |
-| **Oncoplot**                        | Yes                                           | Yes                                                  | Yes                      | No                                                   |
-| **Interactive**                     | No                                            | Yes                                                  | No                       | No                                                   |
-| **Fully Compatible with ggplot2\*** | Yes                                           | No                                                   | No                       | No                                                   |
+|                                     | `ggalign`                                           | `ComplexHeatmap`                                     | `marsilea`               | `ggheatmap`                                          |
+|-------------------------------------|-----------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------|
+| **Language**                        | R                                                   | R                                                    | Python                   | R                                                    |
+| **User Interface**                  | Declarative                                         | Functional                                           | Declarative              | Functional                                           |
+| **Plot System**                     | ggplot2 (Advanced plot system built on grid system) | grid                                                 | seaborn                  | ggplot2                                              |
+| **Focus**                           | Composable Visualization                            | Heatmap                                              | Composable Visualization | Heatmap                                              |
+| **Heatmap Layout**                  | Yes                                                 | Yes                                                  | Yes                      | Yes                                                  |
+| **Marginal Layout**                 | Yes                                                 | No                                                   | Yes                      | No                                                   |
+| **Stack Layout**                    | Yes                                                 | Yes                                                  | Yes                      | No                                                   |
+| **Cross Layout**                    | Yes                                                 | No                                                   | No                       | No                                                   |
+| **Group or Reorder Heatmap**        | Yes                                                 | Yes                                                  | Yes                      | Yes                                                  |
+| **Group or Reorder Stack Only**     | Yes                                                 | No                                                   | Yes                      | No                                                   |
+| **Separate Group into Slices**      | Yes                                                 | Yes                                                  | Yes                      | No                                                   |
+| **Data input**                      | Various, and can be easily extended                 | fixed                                                | fixed                    | fixed                                                |
+| **Visualization Type**              | Wide variety, provided by ggplot2                   | Many, but limited                                    | Many, but limited        | Limited                                              |
+| **Customization**                   | Extensive                                           | Limited                                              | Moderate                 | Limited                                              |
+| **Legends Creation**                | Automatic                                           | Limited automatic, requires manual add               | Manual                   | Automatic                                            |
+| **Legends Position**                | Anywhere, can be controlled for a single plot       | Four sides, can only be placed on one side at a time | ?                        | Four sides, can only be placed on one side at a time |
+| **Advanced Statistical Plots**      | Yes, with ggplot2 extension                         | No                                                   | No                       | No                                                   |
+| **Scientific Color Palettes**       | Many                                                | Limited                                              | Limited                  | Many                                                 |
+| **Tanglegram**                      | Yes                                                 | No                                                   | Yes                      | No                                                   |
+| **Dendrogram Position**             | Anywhere                                            | Heatmap only                                         | Anywhere                 | Heatmap only                                         |
+| **3D Heatmap**                      | Yes                                                 | Yes                                                  | No                       | No                                                   |
+| **Oncoplot**                        | Yes                                                 | Yes                                                  | Yes                      | No                                                   |
+| **Fully Compatible with ggplot2\*** | Yes                                                 | No                                                   | No                       | No                                                   |
+| **Interoperability with Python**    | Limited                                             | Limited                                              | Excellent                | Limited                                              |
+| **Ease of Use**                     | Easy for ggplot2 users                              | Easy for for grid user\*                             | Easy for python user     | Easy                                                 |
+| **Interactive**                     | No                                                  | Yes                                                  | No                       | No                                                   |
 
-- It can be considered a benefit, as the ggplot2 ecosystem is highly
-  enriched.
+- Fully Compatible with ggplot2: It can be considered a benefit, as the
+  ggplot2 ecosystem is highly enriched.
+- Easy for for grid user: the direct population using grid should be
+  smaller than ggplot2
