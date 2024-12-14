@@ -111,35 +111,162 @@
 </ol>
 </div>
 <div class="section level2">
-<h2 id="compare-with-other-ggplot2-heatmap-extension">Compare with other ggplot2 heatmap extension<a class="anchor" aria-label="anchor" href="#compare-with-other-ggplot2-heatmap-extension"></a>
+<h2 id="compare-with-other-similar-tools">Compare with other similar tools<a class="anchor" aria-label="anchor" href="#compare-with-other-similar-tools"></a>
 </h2>
-<p><code>ggalign</code> offers advantages over extensions like <a href="https://github.com/XiaoLuo-boy/ggheatmap" class="external-link">ggheatmap</a> by providing full compatibility with <code>ggplot2</code>. With <code>ggalign</code>, you can:</p>
+<table class="table">
+<colgroup>
+<col width="16%">
+<col width="21%">
+<col width="24%">
+<col width="11%">
+<col width="24%">
+</colgroup>
+<thead><tr class="header">
+<th></th>
+<th><code>ggalign</code></th>
+<th><code>ComplexHeatmap</code></th>
+<th><code>marsilea</code></th>
+<th><code>ggheatmap</code></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Language</strong></td>
+<td>R</td>
+<td>R</td>
+<td>Python</td>
+<td>R</td>
+</tr>
+<tr class="even">
+<td><strong>User Interface</strong></td>
+<td>Declarative</td>
+<td>Functional</td>
+<td>Declarative</td>
+<td>Functional</td>
+</tr>
+<tr class="odd">
+<td><strong>Plot System</strong></td>
+<td>ggplot2</td>
+<td>grid</td>
+<td>seaborn</td>
+<td>ggplot2</td>
+</tr>
+<tr class="even">
+<td><strong>Focus</strong></td>
+<td>Composable Visualization</td>
+<td>Heatmap</td>
+<td>Composable Visualization</td>
+<td>Heatmap</td>
+</tr>
+<tr class="odd">
+<td><strong>Heatmap Layout</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><strong>Marginal Layout</strong></td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Stack Layout</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Cross Layout</strong></td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Group or Reorder Heatmap</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><strong>Group or Reorder Stack Only</strong></td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Separate Group into Slices</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Plot Type</strong></td>
+<td>Many, provided by ggplot2</td>
+<td>Many, but limited</td>
+<td>Many, but limited</td>
+<td>Limited</td>
+</tr>
+<tr class="odd">
+<td><strong>Legends Creation</strong></td>
+<td>Automatic</td>
+<td>Limited automatic, requires manual add</td>
+<td>Manual</td>
+<td>Automatic</td>
+</tr>
+<tr class="even">
+<td><strong>Legends Position</strong></td>
+<td>Anywhere, can be controlled for a single plot</td>
+<td>Four sides, can only be placed on one side at a time</td>
+<td>?</td>
+<td>Four sides, can only be placed on one side at a time</td>
+</tr>
+<tr class="odd">
+<td><strong>Dendrogram Position</strong></td>
+<td>Anywhere</td>
+<td>Heatmap only</td>
+<td>Anywhere</td>
+<td>Heatmap only</td>
+</tr>
+<tr class="even">
+<td><strong>3D Heatmap</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Oncoplot</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Interactive</strong></td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Fully Compatible with ggplot2*</strong></td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>Seamlessly integrate ggplot2 <code>geoms</code>, <code>stats</code>, <code>scales</code> et al. into your layouts.</li>
-<li>Align dendrograms even in facetted plots.</li>
-<li>Easily create complex layouts, including multiple heatmaps arranged vertically or horizontally.</li>
+<li>It can be considered a benefit, as the ggplot2 ecosystem is highly enriched.</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="compare-with-complexheatmap">Compare with ComplexHeatmap<a class="anchor" aria-label="anchor" href="#compare-with-complexheatmap"></a>
-</h2>
-<div class="section level3">
-<h3 id="pros">Pros<a class="anchor" aria-label="anchor" href="#pros"></a>
-</h3>
-<ul>
-<li>Full integration with the <code>ggplot2</code> ecosystem.</li>
-<li>Heatmap annotation axes and legends are automatically generated.</li>
-<li>Dendrogram can be easily customized and colored.</li>
-<li>Flexible control over plot size and spacing.</li>
-<li>Can easily align with other <code>ggplot2</code> plots by panel area.</li>
-<li>Can easily extend for other clustering algorithm, or annotation plot.</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="cons">Cons<a class="anchor" aria-label="anchor" href="#cons"></a>
-</h3>
-<p>Fewer Built-In Annotations: May require additional coding for specific annotations or customization compared to the extensive built-in annotation function in <a href="https://github.com/jokergoo/ComplexHeatmap" class="external-link">ComplexHeatmap</a>.</p>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
