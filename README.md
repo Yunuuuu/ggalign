@@ -97,7 +97,7 @@ remotes::install_github("Yunuuuu/ggalign")
 | **Ease of Use**                     | Easy for ggplot2 users                              | Easy for for grid user\*                             | Easy for python user     | Easy                                                 |
 | **Interactive**                     | No                                                  | Yes                                                  | No                       | No                                                   |
 
-- Fully Compatible with ggplot2\*: It can be considered a benefit, as
+- `Fully Compatible with ggplot2*`: It can be considered a benefit, as
   the ggplot2 ecosystem is highly enriched.
-- Easy for for grid user\*: the direct population using grid should be
+- `Easy for for grid user*`: the direct population using grid should be
   smaller than ggplot2
