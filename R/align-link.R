@@ -328,15 +328,25 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
         if (!is.waive(x <- .subset2(params, self$arg))) {
             if (!is.list(x)) x <- list(x)
             params[[self$arg]] <- lapply(x, function(link) {
-                ans <- vec_as_location(
-                    unclass(link),
-                    n = nobs,
-                    names = self$labels,
-                    missing = "error",
-                    arg = self$arg,
-                    call = self$call
-                )
-                if (inherits(link, "AsIs")) ans <- I(ans)
+                if (inherits(link, "AsIs")) { # cannot use character
+                    ans <- vec_as_location(
+                        link,
+                        n = nobs,
+                        missing = "error",
+                        arg = self$arg,
+                        call = self$call
+                    )
+                    ans <- I(ans)
+                } else {
+                    ans <- vec_as_location(
+                        unclass(link),
+                        n = nobs,
+                        names = self$labels,
+                        missing = "error",
+                        arg = self$arg,
+                        call = self$call
+                    )
+                }
                 ans
             })
         }
