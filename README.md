@@ -66,32 +66,29 @@ remotes::install_github("Yunuuuu/ggalign")
 2.  For the full reference documentation, visit:
     <https://yunuuuu.github.io/ggalign/>
 
-## Compare with other ggplot2 heatmap extension
+## Compare with other similar tools
 
-`ggalign` offers advantages over extensions like
-[ggheatmap](https://github.com/XiaoLuo-boy/ggheatmap) by providing full
-compatibility with `ggplot2`. With `ggalign`, you can:
+|                                     | `ggalign`                                     | `ComplexHeatmap`                                     | `marsilea`               | `ggheatmap`                                          |
+|-------------------------------------|-----------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------|
+| **Language**                        | R                                             | R                                                    | Python                   | R                                                    |
+| **User Interface**                  | Declarative                                   | Functional                                           | Declarative              | Functional                                           |
+| **Plot System**                     | ggplot2                                       | grid                                                 | seaborn                  | ggplot2                                              |
+| **Focus**                           | Composable Visualization                      | Heatmap                                              | Composable Visualization | Heatmap                                              |
+| **Heatmap Layout**                  | Yes                                           | Yes                                                  | Yes                      | Yes                                                  |
+| **Marginal Layout**                 | Yes                                           | No                                                   | Yes                      | No                                                   |
+| **Stack Layout**                    | Yes                                           | Yes                                                  | Yes                      | No                                                   |
+| **Cross Layout**                    | Yes                                           | No                                                   | No                       | No                                                   |
+| **Group or Reorder Heatmap**        | Yes                                           | Yes                                                  | Yes                      | Yes                                                  |
+| **Group or Reorder Stack Only**     | Yes                                           | No                                                   | Yes                      | No                                                   |
+| **Separate Group into Slices**      | Yes                                           | Yes                                                  | Yes                      | No                                                   |
+| **Plot Type**                       | Many, provided by ggplot2                     | Many, but limited                                    | Many, but limited        | Limited                                              |
+| **Legends Creation**                | Automatic                                     | Limited automatic, requires manual add               | Manual                   | Automatic                                            |
+| **Legends Position**                | Anywhere, can be controlled for a single plot | Four sides, can only be placed on one side at a time | ?                        | Four sides, can only be placed on one side at a time |
+| **Dendrogram Position**             | Anywhere                                      | Heatmap only                                         | Anywhere                 | Heatmap only                                         |
+| **3D Heatmap**                      | Yes                                           | Yes                                                  | No                       | No                                                   |
+| **Oncoplot**                        | Yes                                           | Yes                                                  | Yes                      | No                                                   |
+| **Interactive**                     | No                                            | Yes                                                  | No                       | No                                                   |
+| **Fully Compatible with ggplot2\*** | Yes                                           | No                                                   | No                       | No                                                   |
 
-- Seamlessly integrate ggplot2 `geoms`, `stats`, `scales` et al. into
-  your layouts.
-- Align dendrograms even in facetted plots.
-- Easily create complex layouts, including multiple heatmaps arranged
-  vertically or horizontally.
-
-## Compare with ComplexHeatmap
-
-### Pros
-
-- Full integration with the `ggplot2` ecosystem.
-- Heatmap annotation axes and legends are automatically generated.
-- Dendrogram can be easily customized and colored.
-- Flexible control over plot size and spacing.
-- Can easily align with other `ggplot2` plots by panel area.
-- Can easily extend for other clustering algorithm, or annotation plot.
-
-### Cons
-
-Fewer Built-In Annotations: May require additional coding for specific
-annotations or customization compared to the extensive built-in
-annotation function in
-[ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap).
+- It can be considered a benefit, as the ggplot2 ecosystem is highly
+  enriched.
