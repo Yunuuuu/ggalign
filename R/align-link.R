@@ -330,7 +330,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
             params[[self$arg]] <- lapply(x, function(link) {
                 if (inherits(link, "AsIs")) { # cannot use character
                     ans <- vec_as_location(
-                        link,
+                        unclass(link),
                         n = nobs,
                         missing = "error",
                         arg = self$arg,
@@ -339,7 +339,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
                     ans <- I(ans)
                 } else {
                     ans <- vec_as_location(
-                        unclass(link),
+                        link,
                         n = nobs,
                         names = self$labels,
                         missing = "error",
