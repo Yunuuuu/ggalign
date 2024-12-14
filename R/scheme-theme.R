@@ -83,13 +83,11 @@ update_scheme.scheme_theme <- function(new, old, object_name) {
 
 #' @export
 inherit_scheme.scheme_theme <- function(scheme, pscheme) {
-    # By default, we'll always complete the theme when building the layout
-    # so parent always exist.
     pscheme + scheme
 }
 
 #' @export
-plot_add_scheme.scheme_theme <- function(scheme, plot) {
+plot_add_scheme.scheme_theme <- function(plot, scheme) {
     # setup plot theme
     plot$theme <- scheme + .subset2(plot, "theme")
     plot

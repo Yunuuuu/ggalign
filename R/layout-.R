@@ -65,16 +65,18 @@ methods::setMethod("$", "LayoutProto", function(x, name) {
 })
 
 ###########################################################
-default_layout <- function(layout) {
-    layout@theme <- default_theme() + layout@theme
+default_layout <- function(layout) { # setup default value for the layout
+    layout@theme <- complete_theme(default_theme() + layout@theme)
+
     # we by default, collect all guides
     layout@schemes$scheme_align["guides"] <- list(
         .subset2(.subset2(layout@schemes, "scheme_align"), "guides") %|w|% "tlbr"
     )
+
     # we by default, use `default_theme()`
     layout@schemes$scheme_theme <- update_scheme(
         .subset2(layout@schemes, "scheme_theme"),
-        new_scheme_theme(default_theme())
+        new_scheme_theme(complete_theme(default_theme()))
     )
     layout
 }
@@ -91,17 +93,16 @@ inherit_parent_layout_theme <- function(layout, theme, direction) {
     if (is.null(theme)) return(layout@theme) # styler: off
     # parent theme, set the global panel spacing,
     # so that every panel aligns well
+    if (is.null(layout@theme)) return(theme) # styler: off
     if (is_horizontal(direction)) {
-        theme <- theme(
+        theme + layout@theme + theme(
             panel.spacing.y = calc_element("panel.spacing.y", theme)
         )
     } else {
-        theme <- theme(
+        theme + layout@theme + theme(
             panel.spacing.x = calc_element("panel.spacing.x", theme)
         )
     }
-    if (is.null(layout@theme)) return(theme) # styler: off
-    layout@theme + theme
 }
 
 ############################################################

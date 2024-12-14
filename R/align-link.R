@@ -305,7 +305,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_schemes(plot, schemes)
         if (inherits(plot, self$class)) {
-            element <- calc_element(self$element, complete_theme(plot$theme))
+            element <- calc_element(self$element, plot$theme)
             if (inherits(element, "element_blank")) {
                 class(plot) <- setdiff(class(plot), self$class)
                 plot$links_data <- NULL
@@ -317,7 +317,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
                         "panel.spacing.y",
                         "panel.spacing.x"
                     ),
-                    complete_theme(theme)
+                    theme
                 ) %||% unit(0, "mm")
                 plot$links_data$element <- element
             }

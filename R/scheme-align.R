@@ -97,7 +97,7 @@ inherit_scheme.scheme_align <- function(scheme, pscheme) {
 
 #' @param theme Additional default theme elements to be added for the plot
 #' @noRd
-plot_add_scheme.scheme_align <- function(scheme, plot) {
+plot_add_scheme.scheme_align <- function(plot, scheme) {
     if (!is.waive(free_guides <- .subset2(scheme, "guides"))) {
         plot <- free_guide(plot, free_guides)
     }

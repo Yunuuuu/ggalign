@@ -66,7 +66,7 @@ inherit_scheme.scheme_data <- function(scheme, pscheme) {
 }
 
 #' @export
-plot_add_scheme.scheme_data <- function(scheme, plot) {
+plot_add_scheme.scheme_data <- function(plot, scheme) {
     # by default, we won't change the data
     if (!is.null(scheme_data <- .subset2(scheme, "data") %|w|% NULL) &&
         !is.null(raw_data <- .subset2(plot, "data"))) {

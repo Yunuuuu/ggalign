@@ -29,7 +29,9 @@ ggalign_scheme_name <- function(x) {
 ###############################################################
 #' Used to update global data
 #' @noRd
-update_scheme <- function(new, old, object_name) UseMethod("update_scheme")
+update_scheme <- function(new, old, object_name) {
+    UseMethod("update_scheme", old)
+}
 
 #' @export
 update_scheme.default <- function(new, old, object_name) new
@@ -64,14 +66,14 @@ inherit_schemes <- function(schemes, pschemes) {
 }
 
 ###############################################################
-plot_add_scheme <- function(scheme, plot) UseMethod("plot_add_scheme", scheme)
+plot_add_scheme <- function(plot, scheme) UseMethod("plot_add_scheme", scheme)
 
 #' @export
-plot_add_scheme.NULL <- function(scheme, plot) plot
+plot_add_scheme.NULL <- function(plot, scheme) plot
 
 plot_add_schemes <- function(plot, schemes) {
     for (i in seq_along(schemes)) {
-        plot <- plot_add_scheme(scheme = .subset2(schemes, i), plot = plot)
+        plot <- plot_add_scheme(plot, scheme = .subset2(schemes, i))
     }
     plot
 }
