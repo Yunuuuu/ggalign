@@ -1,0 +1,15 @@
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions: read-all
+
+- uses: convictional/trigger-workflow-and-wait@v1.6.1
+  with:
+    owner: Yunuuuu
+    repo: ggalign-book
+    github_token: ${{ secrets.GGALIGN_BOOK }}
+    workflow_file_name: publish.yml
