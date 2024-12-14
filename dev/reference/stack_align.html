@@ -108,9 +108,11 @@ either <code>"horizontal"</code> or <code>"vertical"</code>.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> used to render the <code>guides</code>,
-<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and
-<code>background</code>. If <code>NULL</code> (default), will inherit from the parent <code>layout</code>.</p></dd>
+<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> object used to customize various
+elements of the plot, including <code>guides</code>, <code>title</code>, <code>subtitle</code>, <code>caption</code>,
+<code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and <code>background</code>. By default, the
+theme will inherit from the parent <code>layout</code>. When aligning observations, it
+also controls the panel spacing for all plots in the layout.</p></dd>
 
 
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
