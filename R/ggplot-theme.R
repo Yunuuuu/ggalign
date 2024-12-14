@@ -1,56 +1,42 @@
-#' Theme for Layout Plots
-#'
-#' Default theme for `r rd_layout()`.
-#'
-#' @details
-#' You can change the default theme using the option
-#' `r code_quote(sprintf("%s.default_theme", pkg_nm()))`. This option should be
-#' set to a function that returns a [`theme()`][ggplot2::theme] object.
-#'
-#' @inheritDotParams ggplot2::theme_classic
-#' @return A [`theme()`][ggplot2::theme] object.
-#' @examples
-#' # Setting a new default theme
-#' old <- options(ggalign.default_theme = function() theme_bw())
-#'
-#' # Creating a heatmap with the new theme
-#' ggheatmap(matrix(rnorm(81), nrow = 9)) +
-#'     anno_top() +
-#'     align_dendro(k = 3L)
-#'
-#' # Restoring the old default theme
-#' options(old)
 #' @importFrom ggplot2 theme_classic
-#' @export
-theme_ggalign <- function(...) {
-    theme_classic(...) +
-        theme(
-            axis.line = element_blank(),
-            strip.text = element_blank(),
-            strip.background = element_blank(),
-            plot.background = element_blank()
-        )
+default_theme <- function() theme_classic()
+
+#' @importFrom ggplot2 rel element_line element_rect element_text
+theme_add_panel <- function(base_size = 11) {
+    half_line <- base_size / 2
+    theme(
+        panel.border = element_rect(fill = NA, colour = "grey20"),
+        panel.grid = element_line(colour = "grey92"),
+        panel.grid.minor = element_line(linewidth = rel(0.5)),
+        panel.background = element_rect(fill = "white", colour = NA),
+        strip.background = element_rect(
+            fill = "white", colour = "black", linewidth = rel(2)
+        ),
+        strip.clip = "inherit",
+        strip.text = element_text(
+            colour = "grey10", size = rel(0.8),
+            margin = margin(
+                0.8 * half_line, 0.8 * half_line,
+                0.8 * half_line, 0.8 * half_line
+            )
+        ),
+        strip.text.x = NULL,
+        strip.text.y = element_text(angle = -90),
+        strip.text.y.left = element_text(angle = 90)
+    )
 }
 
-default_theme <- function() {
-    opt <- sprintf("%s.default_theme", pkg_nm())
-    if (is.null(ans <- getOption(opt, default = NULL))) {
-        return(theme_ggalign())
-    }
-    if (is.function(ans <- allow_lambda(ans))) {
-        if (!inherits(ans <- rlang::exec(ans), "theme")) {
-            cli_abort(c(
-                "{.arg {opt}} must return a {.fn theme} object",
-                i = "You have provided {.obj_type_friendly {ans}}"
-            ))
-        }
-    } else {
-        cli_abort(c(
-            "{.arg {opt}} must be a {.cls function}",
-            i = "You have provided {.obj_type_friendly {ans}}"
-        ))
-    }
-    ans
+#' @importFrom ggplot2 element_blank
+theme_no_panel <- function(...) {
+    theme(
+        panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        strip.text = element_blank(),
+        strip.background = element_blank(),
+        plot.background = element_blank()
+    )
 }
 
 #' Remove axis elements

@@ -98,7 +98,7 @@ stack_align.default <- function(data = NULL, direction = NULL, ...,
     # from matrix
     data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-    schemes <- new_schemes()
+    schemes <- default_schemes()
     if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
@@ -149,7 +149,7 @@ stack_free.default <- function(data = NULL, direction = NULL, ...,
                                theme = NULL, sizes = NA) {
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    schemes <- new_schemes()
+    schemes <- default_schemes()
     new_stack_layout(
         data = data, direction = direction, layout = NULL,
         schemes = schemes, theme = theme, sizes = sizes

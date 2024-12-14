@@ -299,8 +299,9 @@ new_quad_layout <- function(name, data, horizontal, vertical,
     # since `QuadLayout` must have data, and won't be waiver()
     # if inherit from the parent layout data, we'll inherit
     # the action data function
-    schemes <- new_schemes(
-        new_scheme_data(if (is.null(data)) waiver() else NULL)
+    schemes <- default_schemes(
+        if (is.null(data)) waiver() else NULL,
+        th = theme_no_panel()
     )
 
     # check arguments -----------------------------------
@@ -317,7 +318,7 @@ new_quad_layout <- function(name, data, horizontal, vertical,
         plot_active = update_active(active, new_active(use = TRUE)),
         name = name,
         # used by the main body
-        body_schemes = new_schemes(new_scheme_data(waiver())),
+        body_schemes = default_schemes(waiver()),
         # following parameters can be controlled by `quad_switch`
         width = width, height = height,
         # following parameters are used internally

@@ -123,7 +123,7 @@ align_dendro <- function(mapping = aes(), ...,
         plot_data = plot_data, theme = theme,
         no_axes = no_axes, active = active,
         size = size,
-        schemes = new_schemes(),
+        schemes = default_schemes(th = theme_no_panel()),
         data = data,
         plot = ggplot(mapping = mapping)
     )

@@ -79,7 +79,7 @@ align_hclust <- function(distance = "euclidean",
             merge_dendro = FALSE
         ),
         active = active,
-        schemes = new_schemes(),
+        schemes = default_schemes(),
         data = data,
         plot = NULL
     )

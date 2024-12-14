@@ -86,9 +86,7 @@ align <- function(align, data, params = list(), plot = NULL,
     data <- allow_lambda(data)
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
-    schemes <- schemes %|w|% new_schemes(
-        new_scheme_data(if (is.waive(data)) waiver() else NULL)
-    )
+    schemes <- schemes %|w|% default_schemes(data)
 
     # Warn about extra params or missing parameters ---------------
     all <- align$parameters()

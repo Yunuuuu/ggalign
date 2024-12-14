@@ -74,7 +74,7 @@ align_line <- function(data = waiver(), mapping = aes(),
         plot = ggplot(mapping = mapping),
         size = size, data = data,
         params = list(lines = lines, position = position),
-        schemes = new_schemes(),
+        schemes = default_schemes(th = theme_add_panel()),
         active = active
     )
 }
@@ -343,10 +343,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
         params
     },
     setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
-        ggadd_default(plot, theme = theme(
-            panel.border = element_rect(fill = NA, colour = "grey20"),
-            panel.background = element_rect(fill = "white", colour = NA)
-        ))
+        plot
     },
 
     #' @importFrom stats reorder

@@ -67,7 +67,7 @@ new_ggalign_plot <- function(..., plot = NULL, active = NULL, size = NULL,
     new(
         class,
         ...,
-        schemes = schemes %||% new_schemes(),
+        schemes = schemes %||% default_schemes(),
         plot = plot,
         active = active,
         size = size

@@ -22,7 +22,7 @@ align_range <- function(data = waiver(), mapping = aes(),
         plot = ggplot(mapping = mapping),
         size = size, data = data,
         params = list(ranges = ranges, position = position),
-        schemes = new_schemes(),
+        schemes = default_schemes(th = theme_add_panel()),
         active = active
     )
 }

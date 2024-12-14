@@ -26,6 +26,15 @@ ggalign_scheme_name <- function(x) {
     attr(x, "__ggalign.scheme_name__", exact = TRUE)
 }
 
+#' @importFrom ggplot2 theme
+default_schemes <- function(data = NULL, th = theme()) {
+    if (!is.waive(data)) data <- NULL
+    new_schemes(
+        new_scheme_data(data),
+        new_scheme_theme(th)
+    )
+}
+
 ###############################################################
 #' Used to update global data
 #' @noRd

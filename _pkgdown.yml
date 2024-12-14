@@ -127,7 +127,6 @@ reference:
   - geom_draw
   - scale_draw_manual
   - draw_key_draw
-  - theme_ggalign
   - element_polygon
 
 - title: helpers
