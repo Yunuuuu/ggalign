@@ -72,7 +72,7 @@ ranges will be connected to the panel by a polygon.</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_line</span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  links <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  lines <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  position <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  active <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -107,8 +107,8 @@ plot data, please use <code><a href="scheme_data.html">scheme_data()</a></code>.
 If not specified, must be supplied in each layer added to the plot.</p></dd>
 
 
-<dt id="arg-links">links<a class="anchor" aria-label="anchor" href="#arg-links"></a></dt>
-<dd><p>A list of observations. Each group of observations will be
+<dt id="arg-lines">lines<a class="anchor" aria-label="anchor" href="#arg-lines"></a></dt>
+<dd><p>A list of observations. Each element of the list will be
 represented by a facet panel.</p></dd>
 
 
@@ -116,10 +116,10 @@ represented by a facet panel.</p></dd>
 <dd><p>Which side the link should be added to? A string containing
 one or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</code>. For a horizontal <code><a href="stack_layout.html">stack_layout()</a></code>,
 only <code>l</code> (left) and <code>r</code> (right) can be used. For a vertical
-<code><a href="stack_layout.html">stack_layout()</a></code>, only <code>b</code> (bottom) and <code>t</code> (top) are available.</p><ul><li><p>Link ranges can be customized using the <code>plot.ggalign_ranges</code> theme element
-with <code><a href="element_polygon.html">element_polygon()</a></code>.</p></li>
-<li><p>Link lines can be customized using the <code>plot.ggalign_lines</code> theme element
+<code><a href="stack_layout.html">stack_layout()</a></code>, only <code>b</code> (bottom) and <code>t</code> (top) are available.</p><ul><li><p>Link lines can be customized using the <code>plot.ggalign_lines</code> theme element
 with <code>element_line()</code>.</p></li>
+<li><p>Link ranges can be customized using the <code>plot.ggalign_ranges</code> theme element
+with <code><a href="element_polygon.html">element_polygon()</a></code>.</p></li>
 </ul></dd>
 
 

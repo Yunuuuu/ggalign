@@ -257,10 +257,11 @@ instead.</p></dd>
 in <code><a href="ggalign_attr.html">ggalign</a></code> attribute, in addition, a
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></code> layer with a data of the <code>edge</code>
 coordinates will be added.</p>
-<p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct branch
-for usage of the ggplot facet.</p></li>
+<p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>.panel</code>: Tree branch groups, used to create ggplot2 facet. Similar with
+<code>panel</code> column, but always give the correct branch for usage of
+the ggplot facet.</p></li>
 <li><p><code>.names</code> and <code>.index</code>: a character names (only applicable when names
-exists) and an integer of index of the original data.</p></li>
+exists) and an integer index of the original data.</p></li>
 <li><p><code>label</code>: node label text</p></li>
 <li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for current node or the start
 node of the current edge.</p></li>
