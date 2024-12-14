@@ -56,9 +56,11 @@ default heatmap body filling color scale. See
 \code{\link[ggplot2:scale_colour_discrete]{scale_fill_discrete()}} for details on
 option settings.}
 
-\item{theme}{A \code{\link[ggplot2:theme]{theme()}} used to render the \code{guides},
-\code{title}, \code{subtitle}, \code{caption}, \code{margins}, \code{patch.title}, \code{panel.border}, and
-\code{background}. If \code{NULL} (default), will inherit from the parent \code{layout}.}
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
+elements of the plot, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
+\code{margins}, \code{patch.title}, \code{panel.border}, and \code{background}. By default, the
+theme will inherit from the parent \code{layout}. When aligning observations, it
+also controls the panel spacing for all plots in the layout.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}

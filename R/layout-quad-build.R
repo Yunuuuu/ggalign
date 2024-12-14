@@ -192,6 +192,12 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     # add action ----------------------------------------
     p <- plot_add_schemes(p, inherit_schemes(quad@body_schemes, schemes))
+    if (!is.null(row_coords)) {
+        p <- p + theme(panel.spacing.y = calc_element("panel.spacing.y", theme))
+    }
+    if (!is.null(column_coords)) {
+        p <- p + theme(panel.spacing.x = calc_element("panel.spacing.x", theme))
+    }
 
     # collect all plots and sizes ----------------------
     plots <- append(plots, list(main = p), 2L)

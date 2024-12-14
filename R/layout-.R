@@ -100,7 +100,7 @@ inherit_parent_layout_theme <- function(layout, theme, direction) {
             panel.spacing.x = calc_element("panel.spacing.x", theme)
         )
     }
-    if (is.null(layout@theme)) return(layout@theme) # styler: off
+    if (is.null(layout@theme)) return(theme) # styler: off
     layout@theme + theme
 }
 
