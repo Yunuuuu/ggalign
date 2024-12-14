@@ -8,7 +8,7 @@
 align_line(
   data = waiver(),
   mapping = aes(),
-  links = waiver(),
+  lines = waiver(),
   position = waiver(),
   size = NULL,
   active = NULL
@@ -37,7 +37,7 @@ plot data, please use \code{\link[=scheme_data]{scheme_data()}}.
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
-\item{links}{A list of observations. Each group of observations will be
+\item{lines}{A list of observations. Each element of the list will be
 represented by a facet panel.}
 
 \item{position}{Which side the link should be added to? A string containing
@@ -45,10 +45,10 @@ one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}. For a horizon
 only \code{l} (left) and \code{r} (right) can be used. For a vertical
 \code{\link[=stack_layout]{stack_layout()}}, only \code{b} (bottom) and \code{t} (top) are available.
 \itemize{
-\item Link ranges can be customized using the \code{plot.ggalign_ranges} theme element
-with \code{\link[=element_polygon]{element_polygon()}}.
 \item Link lines can be customized using the \code{plot.ggalign_lines} theme element
 with \code{\link[=element_line]{element_line()}}.
+\item Link ranges can be customized using the \code{plot.ggalign_ranges} theme element
+with \code{\link[=element_polygon]{element_polygon()}}.
 }}
 
 \item{size}{The relative size of the plot, can be specified as a

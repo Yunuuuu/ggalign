@@ -8,17 +8,17 @@
 #' @inheritParams align_gg
 #' @param ranges A list of observation ranges. Each range will be represented
 #' by a facet panel.
-#' @param links A list of observations. Each group of observations will be
+#' @param lines A list of observations. Each element of the list will be
 #' represented by a facet panel.
 #' @param position Which side the link should be added to? A string containing
 #' one or more of `r oxford_and(.tlbr)`. For a horizontal [`stack_layout()`],
 #' only `l` (left) and `r` (right) can be used. For a vertical
 #' [`stack_layout()`], only `b` (bottom) and `t` (top) are available.
 #'
-#' - Link ranges can be customized using the `plot.ggalign_ranges` theme element
-#'   with [`element_polygon()`].
 #' - Link lines can be customized using the `plot.ggalign_lines` theme element
 #'   with [`element_line()`].
+#' - Link ranges can be customized using the `plot.ggalign_ranges` theme element
+#'   with [`element_polygon()`].
 #'
 #' @section ggplot2 specification:
 #' `align_ranges` initializes a ggplot.
@@ -53,7 +53,7 @@
 #'
 #' @export
 align_line <- function(data = waiver(), mapping = aes(),
-                       links = waiver(), position = waiver(),
+                       lines = waiver(), position = waiver(),
                        size = NULL, active = NULL) {
     assert_layout_position(position)
     if (inherits(data, "uneval")) {
@@ -67,13 +67,13 @@ align_line <- function(data = waiver(), mapping = aes(),
     align(
         new_align_link(
             "AlignLine",
-            arg = "links",
+            arg = "lines",
             class = "align_line_plot",
             element = "plot.ggalign_lines"
         ),
         plot = ggplot(mapping = mapping),
         size = size, data = data,
-        params = list(links = links, position = position),
+        params = list(lines = lines, position = position),
         schemes = new_schemes(),
         active = active
     )

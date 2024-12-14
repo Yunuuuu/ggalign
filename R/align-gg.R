@@ -46,8 +46,7 @@
 #'
 #'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
 #'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): a character names (only
-#'    applicable when names exists) and an integer of index of the original
-#'    data.
+#'    applicable when names exists) and an integer index of the original data.
 #'
 #'  - `.row_names` and `.row_index`: the row names and an integer of
 #'    row index of the original matrix (only applicable if `data` is a

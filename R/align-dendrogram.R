@@ -17,10 +17,12 @@
 #' coordinates will be added.
 #'
 #' dendrogram `node` and `edge` contains following columns:
-#'   - `.panel`: Similar with `panel` column, but always give the correct branch
-#'              for usage of the ggplot facet.
+#'
+#'   - `.panel`: Tree branch groups, used to create ggplot2 facet. Similar with
+#'              `panel` column, but always give the correct branch for usage of
+#'              the ggplot facet.
 #'  - `.names` and `.index`: a character names (only applicable when names
-#'    exists) and an integer of index of the original data.
+#'    exists) and an integer index of the original data.
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
 #'                  node of the current edge.

@@ -43,8 +43,8 @@ The data in the underlying \code{ggplot} object will contain following columns:
 \item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
 stack layout (including top and bottom annotation), \code{y-axis} for
 horizontal stack layout (including left and right annotation).
-\item \code{.index}: an integer of the data index.
-\item \code{.names}: a character of data labels.
+\item \code{.index}: an integer index of the data.
+\item \code{.names}: a character of data labels (only applicable when names exists).
 \item \code{.hand}: a factor indicates the index groups.
 \item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates.
 }

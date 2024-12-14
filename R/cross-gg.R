@@ -22,9 +22,9 @@
 #'    stack layout (including top and bottom annotation), `y-axis` for
 #'    horizontal stack layout (including left and right annotation).
 #'
-#'  - `.index`: an integer of the data index.
+#'  - `.index`: an integer index of the data.
 #'
-#'  - `.names`: a character of data labels.
+#'  - `.names`: a character of data labels (only applicable when names exists).
 #'
 #'  - `.hand`: a factor indicates the index groups.
 #'

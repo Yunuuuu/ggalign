@@ -105,8 +105,7 @@ coordinates and a factor of the data labels (only applicable when names
 exists).
 \item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
 (\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): a character names (only
-applicable when names exists) and an integer of index of the original
-data.
+applicable when names exists) and an integer index of the original data.
 \item \code{.row_names} and \code{.row_index}: the row names and an integer of
 row index of the original matrix (only applicable if \code{data} is a
 \code{matrix}).

@@ -113,7 +113,9 @@ align_melt_facet.FacetWrap <- function(default, facet, ...) {
     if (inherits(facet, "FacetWrap")) {
         # re-dispatch parameters
         params <- facet$params
+
         # we always fix the grid rows and cols
+        params$facets <- default$params$facets
         params$nrow <- default$params$nrow
         params$ncol <- default$params$ncol
         params$drop <- default$params$drop
