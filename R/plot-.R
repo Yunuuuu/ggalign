@@ -98,7 +98,7 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
     # can be displayed in error messages
     e2name <- deparse(substitute(e2))
     switch(.Generic, # nolint
-        `+` = plot_add(e1, e2, e2name),
+        `+` = plot_add(e2, e1, e2name),
         stop_incompatible_op(.Generic, e1, e2)
     )
 })
