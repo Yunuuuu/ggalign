@@ -120,7 +120,7 @@ summary.AlignProto <- function(object, ...) c(FALSE, FALSE)
 AlignProto <- ggproto("AlignProto",
     locked = TRUE,
     # A boolean value indicates whether this plot is free
-    # if `FALSE`, we'll check whether the layout can add this object
+    # if `FALSE`, we'll check whether the layout need align observations
     free_align = FALSE,
     lock = function(self) {
         assign("locked", value = TRUE, envir = self)
@@ -230,12 +230,11 @@ stack_layout_add.ggalign_plot <- function(object, stack, object_name) {
         stack@plot_list[[active_index]] <- plot
         new_coords <- slot(plot, stack@direction)
     }
-    stack <- update_layout_coords(
+    update_layout_coords(
         stack,
         coords = new_coords,
         object_name = object_name
     )
-    stack
 }
 
 #' @importFrom methods slot slot<-
@@ -282,11 +281,10 @@ quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
         !is_empty(stack@cross_points)) {
         new_coords["index"] <- list(.subset2(stack@index_list, 1L))
     }
-    quad <- update_layout_coords(
+    update_layout_coords(
         quad,
         direction = direction,
         coords = new_coords,
         object_name = object_name
     )
-    quad
 }

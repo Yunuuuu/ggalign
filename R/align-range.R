@@ -10,28 +10,19 @@ align_range <- function(data = waiver(), mapping = aes(),
             "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
         ))
     }
-    assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
-    align(
-        new_align_link(
-            "AlignRange",
-            arg = "ranges",
-            class = "align_range_plot",
-            element = "plot.ggalign_ranges"
-        ),
-        plot = ggplot(mapping = mapping),
+    new_align_link(
+        class = "align_range_plot",
+        element = "plot.ggalign_ranges",
+        position = position,
+        arg = "ranges", value = ranges,
         size = size, data = data,
-        params = list(ranges = ranges, position = position),
-        schemes = default_schemes(th = theme_add_panel()),
-        active = active
+        active = active, 
+        plot = ggplot(mapping = mapping)
     )
 }
 
-#' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.align_range_plot <- function(x) {
-    ggproto(NULL, PatchAlignRangePlot, plot = x)
-}
+link_gtable_class.align_range_plot <- function(x) "alignRangeGtable"
 
 #' @export
 `[.alignRangeGtable` <- function(x, i, j) {
@@ -41,20 +32,6 @@ alignpatch.align_range_plot <- function(x) {
     x$links_data <- NULL
     NextMethod()
 }
-
-#' @include align-link.R
-PatchAlignRangePlot <- ggproto(
-    "PatchAlignRangePlot", PatchAlignLinkProto,
-    patch_gtable = function(self, plot = self$plot) {
-        ans <- ggproto_parent(PatchAlignLinkProto, self)$patch_gtable(
-            plot = plot
-        )
-        # re-define the draw method, we assign new class
-        ans <- add_class(ans, "alignRangeGtable")
-        ans$links_data <- .subset2(plot, "links_data")
-        ans
-    }
-)
 
 # preDraw:
 #  - makeContext

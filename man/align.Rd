@@ -9,6 +9,7 @@
 align(
   align,
   data,
+  ...,
   params = list(),
   plot = NULL,
   size = NULL,

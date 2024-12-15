@@ -62,7 +62,8 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-align <- function(align, data, params = list(), plot = NULL,
+align <- function(align, data, ...,
+                  params = list(), plot = NULL,
                   size = NULL, schemes = NULL,
                   limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
                   free_guides = deprecated(), free_spaces = deprecated(),
@@ -107,6 +108,7 @@ align <- function(align, data, params = list(), plot = NULL,
 
         # additional field for `align` object
         no_axes = no_axes,
+        ...,
 
         # Following fields will be initialzed when added into the layout
         # and will be saved and accessed across the plot rendering process

@@ -68,8 +68,6 @@ update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
 #' @importFrom methods slot slot<-
 #' @export
 update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
-    # for quad annotation stack, we may update coords even the annotation stack
-    # won't align observations
     if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }
@@ -88,8 +86,6 @@ update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
 #' @export
 update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
                                              from_head = FALSE) {
-    # for quad annotation stack, we may update coords even the annotation stack
-    # won't align observations
     if (is.null(coords) || is.null(slot(layout, "layout"))) {
         return(layout)
     }

@@ -62,28 +62,18 @@ align_line <- function(data = waiver(), mapping = aes(),
             "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
         ))
     }
-    assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
-    align(
-        new_align_link(
-            "AlignLine",
-            arg = "lines",
-            class = "align_line_plot",
-            element = "plot.ggalign_lines"
-        ),
-        plot = ggplot(mapping = mapping),
+    new_align_link(
+        class = "align_line_plot",
+        element = "plot.ggalign_lines",
+        position = position,
+        arg = "lines", value = lines,
         size = size, data = data,
-        params = list(lines = lines, position = position),
-        schemes = default_schemes(th = theme_add_panel()),
-        active = active
+        active = active, plot = ggplot(mapping = mapping)
     )
 }
 
-#' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.align_line_plot <- function(x) {
-    ggproto(NULL, PatchAlignLinePlot, plot = x)
-}
+link_gtable_class.align_line_plot <- function(x) "alignLineGtable"
 
 #' @export
 `[.alignLineGtable` <- function(x, i, j) {
@@ -247,18 +237,50 @@ makeContent.alignLineGtable <- function(x) {
 }
 
 ####################################################################
+#' @param arg A string indicates the argument name for the link observations.
+#' @param value The actual value for the `arg`.
+#' @param class The plot class.
+#' @param element A string of the element to control the link
 #' @importFrom ggplot2 ggproto
-new_align_link <- function(`_class` = NULL, arg, class, element, ...) {
-    ggproto(`_class`, AlignLinkProto,
-        extra_params = c(arg, "position"),
-        arg = arg, class = class, element = element, ...
+#' @noRd
+new_align_link <- function(class, element, position, arg, value, ...,
+                           active, call = caller_call()) {
+    assert_active(active, call = call)
+    active <- update_active(active, new_active(use = TRUE))
+    params <- list(value, position)
+    names(params) <- c(arg, "position")
+    align(
+        ggproto(NULL, AlignLink,
+            class = class, # `class` is an argument of `new_ggalign_plot`
+            extra_params = c(arg, "position")
+        ),
+        arg = arg, element = element,
+        params = params,
+        schemes = default_schemes(th = theme_add_panel()),
+        ..., active = active,
+        call = call
     )
+}
+
+link_gtable_class <- function(x) UseMethod("link_gtable_class")
+
+#' @importFrom ggplot2 ggproto
+#' @export
+alignpatch.align_link_plot <- function(x) {
+    ggproto(NULL, PatchAlignLink, plot = x)
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @include alignpatch-ggplot2.R
-PatchAlignLinkProto <- ggproto(
-    "PatchAlignLinkProto", PatchGgplot,
+PatchAlignLink <- ggproto(
+    "PatchAlignLink", PatchGgplot,
+    patch_gtable = function(self, plot = self$plot) {
+        ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(plot = plot)
+        # re-define the draw method, we assign new class
+        ans <- add_class(ans, link_gtable_class(plot))
+        ans$links_data <- .subset2(plot, "links_data")
+        ans
+    },
     add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {
         gtable_add_grob(
             gt,
@@ -286,21 +308,8 @@ PatchAlignLinkProto <- ggproto(
     }
 )
 
-PatchAlignLinePlot <- ggproto(
-    "PatchAlignLinePlot", PatchAlignLinkProto,
-    patch_gtable = function(self, plot = self$plot) {
-        ans <- ggproto_parent(PatchAlignLinkProto, self)$patch_gtable(
-            plot = plot
-        )
-        # re-define the draw method, we assign new class
-        ans <- add_class(ans, "alignLineGtable")
-        ans$links_data <- .subset2(plot, "links_data")
-        ans
-    }
-)
-
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
-AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
+AlignLink <- ggproto("AlignLink", AlignGg,
     class = NULL, element = NULL,
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_schemes(plot, schemes)
@@ -437,7 +446,10 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
                 breaks = breaks, direction = direction,
                 link_position = link_position
             )
-            plot <- add_class(plot, self$class, "patch_ggplot")
+            plot <- add_class(
+                plot, self$class,
+                "align_link_plot", "patch_ggplot"
+            )
         }
         plot
     }
