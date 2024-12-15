@@ -126,12 +126,15 @@ align_gg <- function(data = waiver(), mapping = aes(), size = NULL,
 #' @rdname align_gg
 ggalign <- align_gg
 
+#' @export
+summary.AlignGg <- function(object, ...) c(FALSE, FALSE)
+
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", Align,
     nobs = function(self) { # no input data
         axis <- to_coord_axis(.subset2(self, "direction"))
         cli_abort(c(
-            "You cannot add {.fn {snake_class(self)}}",
+            sprintf("You cannot add %s", object_name(self)),
             i = "layout {axis}-axis is not initialized or you must provide {.arg data}"
         ), call = .subset2(self, "call"))
     },
@@ -146,7 +149,7 @@ AlignGg <- ggproto("AlignGg", Align,
         ans$.names <- NULL # always remove names, we'll add it in `draw()`
         ans
     },
-    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
+    setup_plot = function(self, plot) {
         direction <- self$direction
         ggadd_default(
             plot,

@@ -140,9 +140,12 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 }
 
 #' @export
-ggalign_stat.ggalign_align <- function(x, ...) {
-    .subset2(x@align, "statistics")
+ggalign_stat.ggalign_plot <- function(x, ...) {
+    ggalign_stat(x@align, ...)
 }
+
+#' @export
+ggalign_stat.Align <- function(x, ...) .subset2(x, "statistics")
 
 #' @export
 ggalign_stat.default <- function(x, ...) {

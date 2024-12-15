@@ -53,13 +53,12 @@ align_reorder <- function(stat, ..., reverse = FALSE,
             strict = strict
         ),
         active = active,
-        check.param = TRUE,
         data = data %||% waiver()
     )
 }
 
 #' @export
-summary.AlignOrder <- function(object, ...) c(TRUE, FALSE)
+summary.AlignReorder <- function(object, ...) c(TRUE, FALSE)
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject

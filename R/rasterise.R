@@ -13,15 +13,10 @@ rasterise.StackLayout <- function(input, ...) {
     input
 }
 
-rasterise.ggalign_align <- function(input, ...) {
-    if (!is.null(plot <- .subset2(input, "plot"))) {
-        input$plot <- ggrastr::rasterise(input = plot, ...)
-    }
-    input
-}
-
 rasterise.ggalign_plot <- function(input, ...) {
-    input$plot <- .raster_magick(input = .subset2(input, "plot"), ...)
+    if (!is.null(plot <- input@plot)) {
+        input@plot <- ggrastr::rasterise(input = plot, ...)
+    }
     input
 }
 
@@ -46,14 +41,8 @@ rasterise.ggalign_plot <- function(input, ...) {
 
 #' @export
 .raster_magick.ggalign_plot <- function(x, magick = NULL, ...) {
-    x$plot <- .raster_magick(x = .subset2(x, "plot"), magick = magick, ...)
-    x
-}
-
-#' @export
-.raster_magick.ggalign_align <- function(x, magick = NULL, ...) {
-    if (!is.null(plot <- .subset2(x, "plot"))) {
-        x$plot <- .raster_magick(x = plot, magick = magick, ...)
+    if (!is.null(plot <- input@plot)) {
+        input@plot <- .raster_magick(input = plot, ...)
     }
-    x
+    input
 }

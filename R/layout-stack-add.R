@@ -6,7 +6,7 @@ stack_layout_add <- function(object, stack, object_name) {
 stack_plot_add <- function(plot, object, object_name, force) {
     # if `align` has plot, we added the object
     if (force || !is.null(plot@plot)) {
-        plot <- plot_add(plot, object, object_name)
+        plot <- plot_add(object, plot, object_name)
     }
     plot
 }
@@ -55,7 +55,7 @@ stack_layout_add.StackLayout <- stack_layout_add.quad_active
 
 #' @export
 stack_layout_add.CrossLayout <- function(object, stack, object_name) {
-    # preventing from adding cross_layout with the same direction
+    # preventing from adding `cross_layout` with the same direction
     # in this way, `ggcross()` cannot be added to the heatmap annotation
     # parallelly with the `stack_layout()`
     if (identical(object@direction, direction <- stack@direction)) {
@@ -65,21 +65,6 @@ stack_layout_add.CrossLayout <- function(object, stack, object_name) {
         ))
     }
     NextMethod()
-}
-
-#' @export
-stack_layout_add.ggalign_cross <- function(object, stack, object_name) {
-    if (is_cross_layout(stack)) {
-        NextMethod() # call `ggalign_align_plot` method
-    } else {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(stack)
-            ),
-            i = "Did you want to use {.fn cross_align} instead?"
-        ))
-    }
 }
 
 ###################################################################

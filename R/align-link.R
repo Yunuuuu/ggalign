@@ -322,7 +322,7 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
                 plot$links_data$element <- element
             }
         }
-        plot
+        plot + theme_recycle()
     },
     setup_params = function(self, nobs, params) {
         if (!is.waive(x <- .subset2(params, self$arg))) {
@@ -351,9 +351,6 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
             })
         }
         params
-    },
-    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
-        plot
     },
 
     #' @importFrom stats reorder

@@ -51,36 +51,13 @@ cross_gg <- function(mapping = aes(), size = NULL,
 ggcross <- cross_gg
 
 #' @importFrom ggplot2 ggproto ggplot
-CrossGg <- ggproto("CrossGg", AlignProto,
-    layout = function(self, layout_data, layout_coords, layout_name) {
-        if (is.null(.subset2(layout_coords, "nobs"))) {
-            cli_abort(sprintf(
-                "layout observations for %s must be initialized before adding {.var {%s}}",
-                layout_name, .subset2(self, "object_name")
-            ))
-        }
-        # we keep the names from the layout data for usage
-        self$labels <- vec_names(layout_data)
-        layout_coords["index"] <- list(NULL) # reset the index
-        layout_coords
-    },
-    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
+CrossGg <- ggproto("CrossGg", Cross,
+    setup_plot = function(self, plot) {
         ggadd_default(plot, mapping = switch_direction(
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
-    finish_layout = function(self, layout, layout_data, layout_coords,
-                             layout_name) {
-        # udpate cross_points
-        layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
-        # update index
-        layout@index_list <- c(
-            layout@index_list,
-            list(.subset2(layout_coords, "index"))
-        )
-        layout
-    },
-    build = function(self, plot, coords, extra_coords, previous_coords) {
+    build_plot = function(self, plot, coords, extra_coords, previous_coords) {
         direction <- self$direction
         index <- vec_c(
             .subset2(previous_coords, "index"),

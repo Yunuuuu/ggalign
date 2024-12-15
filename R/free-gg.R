@@ -66,64 +66,54 @@ free_gg.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
 
 new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
+    assert_active(active, allow_null = TRUE, call = call)
     active <- update_active(active, new_active(use = TRUE))
-    new_free_plot(
-        plot = plot, data = data,
-        size = size, active = active,
+    free(
+        FreeGg,
+        # new field for FreeGg
+        input_data = data,
+        # slots for the plot
+        plot = plot,
+        size = size,
+        active = active,
         schemes = default_schemes(data),
-        class = "ggalign_free_gg",
         call = call
     )
 }
 
-#' @include plot-free-.R
-methods::setClass("ggalign_free_gg",
-    contains = "ggalign_free_plot",
-    list(data = "ANY")
+#' @importFrom ggplot2 ggproto
+FreeGg <- ggproto("FreeGg", Free,
+    layout = function(self, layout_data, layout_coords, layout_name) {
+        if (is.waive(input_data <- self$input_data)) { # inherit from the layout
+            data <- layout_data
+        } else if (is.function(input_data)) {
+            if (is.null(layout_data)) {
+                object_name <- .subset2(self, "object_name")
+                cli_abort(c(
+                    "{.arg data} in {.var {object_name}} cannot be a function",
+                    i = sprintf("no data was found in %s", object_name(layout))
+                ))
+            }
+            data <- input_data(layout_data)
+        } else {
+            data <- input_data
+        }
+        self$data <- ggalign_attr_restore(fortify_data_frame(data), layout_data)
+        layout_coords
+    },
+    build_plot = function(self, plot, coords, extra_coords, previous_coords) {
+        if (is.function(data <- self$data)) {
+            data <- waiver()
+        } else if (is.null(data)) {
+            # `ggplot2::fortify()` will convert `NULL` to `waiver()`
+            data <- waiver()
+        }
+        plot$data <- data
+        plot
+    }
 )
 
 #' @export
-plot_initialize.ggalign_free_gg <- function(object, layout, object_name) {
-    input_data <- object@data
-    layout_data <- layout@data
-    if (is.waive(input_data)) { # inherit from the layout
-        data <- layout_data
-    } else if (is.function(input_data)) {
-        if (is.null(layout_data)) {
-            cli_abort(c(
-                "{.arg data} in {.var {object_name}} cannot be a function",
-                i = sprintf(
-                    "no data was found in %s",
-                    object_name(layout)
-                )
-            ))
-        }
-        data <- input_data(layout_data)
-    } else {
-        data <- input_data
-    }
-    data <- fortify_data_frame(data)
-
-    # convert the data into a data frame
-    object@plot <- free_gg_build_plot(object@plot, data)
-    object
-}
-
-free_gg_build_plot <- function(plot, data) {
-    if (is.function(data)) {
-        data <- waiver()
-    } else if (is.null(data)) {
-        # `ggplot2::fortify()` will convert `NULL` to `waiver()`
-        data <- waiver()
-    }
-    plot$data <- data
-    plot
-}
-
-# For patchwork
-#' @importFrom ggplot2 ggplot_add
-#' @export
-ggplot_add.ggalign_free_gg <- function(object, plot, object_name) {
-    object <- free_gg_build_plot(object@plot, object@data)
-    ggplot_add(object, plot, object_name)
+stack_layout_add.ggplot <- function(object, stack, object_name) {
+    stack_layout_add(free_gg(data = object), stack, object_name)
 }

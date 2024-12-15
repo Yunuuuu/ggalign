@@ -60,6 +60,24 @@ setup_limits <- function(axis, params) {
     })
 }
 
+is_coord_okay <- function(x, axes) UseMethod("is_coord_okay")
+
+#' @export
+is_coord_okay.CoordCartesian <- function(x, axes) TRUE
+
+#' @export
+is_coord_okay.CoordTrans <- function(x, axes) {
+    # we only allow identity trans in the axis used to align observations
+    all(vapply(
+        x$trans[axes],
+        function(trans) identical(trans$name, "identity"), logical(1L),
+        USE.NAMES = FALSE
+    ))
+}
+
+#' @export
+is_coord_okay.default <- function(x, axes) FALSE
+
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.coord_ggalign <- function(object, plot, object_name) {
@@ -73,6 +91,7 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
     } else {
         n_cycle <- xlim_list <- NULL
     }
+
     # we will set limits by default
     if (!is.null(y_params) && (.subset2(y_params, "limits") %||% TRUE)) {
         ylim_list <- setup_limits("y", y_params)
@@ -80,6 +99,21 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
         ylim_list <- NULL
     }
     ParentCoord <- .subset2(plot, "coordinates")
+
+    # styler: off
+    if (!is_coord_okay(ParentCoord,
+                      c("x", "y")[c(!is.null(x_params), !is.null(y_params))])) {
+        # styler: on
+        cli_warn(c(
+            sprintf(
+                "Currently, {.fn %s} is not supported",
+                snake_class(ParentCoord)
+            ),
+            i = "Will use {.fn coord_cartesian} instead"
+        ))
+        ParentCoord <- ggplot2::coord_cartesian()
+    }
+
     plot$coordinates <- ggproto(
         NULL, ParentCoord,
         num_of_panels = NULL,

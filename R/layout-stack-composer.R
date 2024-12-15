@@ -55,8 +55,11 @@ stack_composer_add <- function(plot, composer, ...) {
 
 #' @export
 stack_composer_add.ggalign_plot <- function(plot, composer, ...,
-                                            schemes, released_spaces) {
+                                            schemes, theme,
+                                            released_spaces,
+                                            direction, position) {
     size <- plot@size
+
     # for `released_spaces`, release the `free_spaces` in a single plot
     plot_schemes <- inherit_schemes(plot@schemes, schemes)
     if (!is.null(released_spaces)) {
@@ -69,8 +72,11 @@ stack_composer_add.ggalign_plot <- function(plot, composer, ...,
             plot_schemes$scheme_align["free_spaces"] <- list(plot_spaces)
         }
     }
-    plot <- plot_build(plot = plot, ..., schemes = plot_schemes) +
-        theme_recycle()
+
+    # let `Align` to determine how to build the plot
+    align <- plot@align # `AlignProto` object
+    plot <- align$build_plot(plot@plot, ...)
+    plot <- align$finish_plot(plot, plot_schemes, theme)
     stack_composer_align_plot(composer, plot, size)
 }
 

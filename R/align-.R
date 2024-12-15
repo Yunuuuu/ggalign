@@ -86,6 +86,8 @@ align <- function(align, data, params = list(), plot = NULL,
     data <- allow_lambda(data)
     assert_bool(facet, call = call)
     assert_bool(limits, call = call)
+    no_axes <- no_axes %||%
+        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     schemes <- schemes %|w|% default_schemes(data)
 
     # Warn about extra params or missing parameters ---------------
@@ -100,46 +102,57 @@ align <- function(align, data, params = list(), plot = NULL,
         }
     }
     input_params <- params[vec_set_intersect(input, all)]
+    new_ggalign_plot(
+        align = align,
 
-    new_align_plot(
-        align = ggproto(
-            NULL,
-            align,
-            # Following fields will be initialzed when added into the layout
-            # and will be saved and accessed across the plot rendering process
-            direction = NULL,
-            position = NULL,
-            params = NULL, # `$setup_params` method
-            data = NULL, # $setup_data method
-            statistics = NULL, # `$compute` method
-            labels = NULL, # the original `vec_names()` of the `input_data`
-
-            # new fields
-            facet = facet,
-            limits = limits,
-
-            # use `NULL` if this align don't require any data
-            # use `waiver()` to inherit from the layout data
-            input_data = data,
-
-            # collect parameters
-            input_params = input_params
-        ),
+        # additional field for `align` object
         no_axes = no_axes,
+
+        # Following fields will be initialzed when added into the layout
+        # and will be saved and accessed across the plot rendering process
+        direction = NULL,
+        position = NULL,
+        params = NULL, # `$setup_params` method
+        data = NULL, # $setup_data method
+        statistics = NULL, # `$compute` method
+        labels = NULL, # the original `vec_names()` of the `input_data`
+
+        # new fields
+        facet = facet,
+        limits = limits,
+
+        # use `NULL` if this align don't require any data
+        # use `waiver()` to inherit from the layout data
+        input_data = data,
+
+        # collect parameters
+        input_params = input_params,
+
+        # object slots
         plot = plot,
         active = active,
         size = size,
         schemes = schemes,
-        class = "ggalign_align",
+
+        # call
         call = call
     )
 }
 
-#' @include plot-align-.R
-methods::setClass("ggalign_align", contains = "ggalign_align_plot")
+is_align_plot <- function(x) is_ggalign_plot(x) && is_align(x@align)
 
-#' @importFrom methods is
-is_align <- function(x) is(x, "ggalign_align")
+is_align <- function(x) inherits(x, "Align")
+
+#' @export
+summary.Align <- function(object, ...) {
+    # we always push user define summary method
+    # since `Align` object should reorder observations or split observations
+    # into groups
+    cli_abort(sprintf(
+        "You must define {.fn summary} method for {.cls %s}",
+        .subset(class(object), 1L)
+    ))
+}
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
@@ -159,8 +172,9 @@ is_align <- function(x) is(x, "ggalign_align")
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-#' @include plot-align-.R
+#' @include plot-.R
 Align <- ggproto("Align", AlignProto,
+    free_align = FALSE,
     parameters = function(self) {
         c(
             align_method_params(
@@ -264,7 +278,8 @@ Align <- ggproto("Align", AlignProto,
             object_name
         )
     },
-    build = function(self, plot, coords, extra_coords, previous_coords = NULL) {
+    build_plot = function(self, plot, coords, extra_coords,
+                          previous_coords = NULL) {
         direction <- self$direction
         panel <- .subset2(coords, "panel")
         index <- .subset2(coords, "index")
@@ -375,39 +390,32 @@ Align <- ggproto("Align", AlignProto,
     #    index, this will be checked in `align_initialize_layout` function.
     align = function(self, panel, index) list(panel, index),
 
-    # initialize the plot, add the default mapping, theme, and et al.
-    # if `NULL`, no plot area will be added.
-    setup_plot = function(self, plot, layout_data, layout_coords, layout_name) {
-        plot
-    },
-
     # Following methods will be executed when building plot with the final
     # heatmap layout you shouldn't modify the `Align` object when drawing,
     # since all of above process will only run once.
     # Note: panel input will be reordered by index
     draw = function(self, plot, panel, index, extra_panel, extra_index) {
         plot
+    },
+
+    # let AlignProto to add schemes and theme acoordingly
+    finish_plot = function(self, plot, schemes, theme) {
+        direction <- self$direction
+        # remove axis titles, text, ticks used for alignment
+        if (isTRUE(self$no_axes)) {
+            schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
+                theme_no_axes(switch_direction(direction, "y", "x"))
+        }
+        plot <- plot_add_schemes(plot, schemes)
+        if (is_horizontal(direction)) {
+            theme <- theme(
+                panel.spacing.y = calc_element("panel.spacing.y", theme)
+            )
+        } else {
+            theme <- theme(
+                panel.spacing.x = calc_element("panel.spacing.x", theme)
+            )
+        }
+        plot + theme + theme_recycle()
     }
 )
-
-remove_scales <- function(plot, scale_aesthetics) {
-    scales <- .subset2(plot, "scales")$clone()
-    if (any(prev_aes <- scales$find(scale_aesthetics))) {
-        scales$scales <- scales$scales[!prev_aes]
-    }
-    plot$scales <- scales
-    plot
-}
-
-#' @importFrom rlang is_empty
-extract_scales <- function(plot, axis, n_panel, facet_scales) {
-    # if no facets, or if no facet scales, we replicate the single scale
-    # object to match the panel numbers
-    if (n_panel > 1L &&
-        !is.null(facet_scales) &&
-        !is_empty(ans <- .subset2(facet_scales, axis))) {
-    } else {
-        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
-    }
-    ans
-}

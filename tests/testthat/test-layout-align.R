@@ -140,7 +140,7 @@ testthat::test_that("`align_kmeans` works well", {
     p <- ggheatmap(matrix(stats::rnorm(72L), nrow = 9L))
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
-    
+
     # reorder twice
     expect_snapshot_error(p + anno_top() + align_group(column_group) +
         align_kmeans(3L))
@@ -269,11 +269,15 @@ testthat::test_that("`ggalign()` works well", {
     set.seed(1L)
     small_mat <- matrix(stats::rnorm(81), nrow = 9)
     # adding non-cartesian coord
-    expect_warning(ggheatmap(small_mat) +
-        anno_top() +
-        ggalign(data = rowSums, size = unit(1, "cm")) +
-        geom_point(aes(y = value)) +
-        coord_polar())
+    expect_snapshot_warning({
+        pdf(NULL)
+        print(ggheatmap(small_mat) +
+            anno_top() +
+            ggalign(data = rowSums, size = unit(1, "cm")) +
+            geom_point(aes(y = value)) +
+            coord_polar())
+        dev.off()
+    })
 
     expect_doppelganger(
         "ggalign",

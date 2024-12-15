@@ -109,9 +109,9 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
 
         # we remove the plot without actual plot area
         keep <- vapply(plots, function(plot) {
-            # we remove align objects without plot area
-            # Now, only `ggalign_align` will contain `NULL`
-            !is_align(plot) || !is.null(plot@plot)
+            # we remove objects without plot area
+            # Now, only `ggalign_plot` will contain `NULL`
+            !is_ggalign_plot(plot) || !is.null(plot@plot)
         }, logical(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, keep)
 

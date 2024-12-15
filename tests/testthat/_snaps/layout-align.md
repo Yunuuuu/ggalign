@@ -59,3 +59,8 @@
 
     align_dendro(k = 2L) disrupt the previously established panel groups of the top annotation `stack_align()`
 
+# `ggalign()` works well
+
+    Currently, `coord_polar()` is not supported
+    i Will use `coord_cartesian()` instead
+
