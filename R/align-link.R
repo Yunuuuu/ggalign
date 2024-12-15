@@ -354,7 +354,8 @@ AlignLinkProto <- ggproto("AlignLinkProto", AlignGg,
     },
 
     #' @importFrom stats reorder
-    build = function(self, plot, coords, extra_coords, previous_coords = NULL) {
+    build_plot = function(self, plot, coords, extra_coords,
+                          previous_coords = NULL) {
         params <- .subset2(self, "params")
         direction <- self$direction
         position <- self$position
