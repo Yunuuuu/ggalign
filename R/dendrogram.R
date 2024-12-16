@@ -312,6 +312,16 @@ dendrogram_data <- function(tree,
             # among all children nodes
             leaves <- vec_slice(node, .subset2(node, "leaf")) # all leaves
 
+            # we assign the `panel` for current branch node
+            ranges <- split(
+                .subset2(leaves, "x"),
+                .subset2(leaves, "panel")
+            )
+            ranges <- ranges[
+                order(vapply(ranges, min, numeric(1L), USE.NAMES = FALSE))
+            ]
+            full_panel <- names(ranges)
+
             # x coordinate for current branch: the midpoint
             if (center) {
                 x <- sum(range(.subset2(leaves, "x"))) / 2L
@@ -328,14 +338,6 @@ dendrogram_data <- function(tree,
                 if (length(branch) > 1L) branch <- root
 
                 # we assign the `panel` for current branch node
-                ranges <- split(
-                    .subset2(leaves, "x"),
-                    .subset2(leaves, "panel")
-                )
-                ranges <- ranges[
-                    order(vapply(ranges, min, numeric(1L), USE.NAMES = FALSE))
-                ]
-                full_panel <- names(ranges)
                 panel <- NA
                 for (i in seq_along(ranges)) {
                     if (x < min(.subset2(ranges, i))) {
@@ -382,79 +384,31 @@ dendrogram_data <- function(tree,
                     ggpanel = direct_leaves_ggpanel
                 )
                 # 2 horizontal lines
-                # we double the left line and the right line when a node is not
-                # in a panel, or the edge spaned across different panels.
-                if (anyNA(direct_leaves_panel) ||
-                    .subset(direct_leaves_panel, 1L) !=
-                        .subset(direct_leaves_panel, 2L)
-                ) {
-                    # we draw from right to left, the left will override
-                    # the right, so we take the left as priority
-                    # we draw from left to right, the right will override
-                    # the left, so we take the right as priority
-                    i <- switch(priority, left = 1L, right = 2L) # styler: off
-                    horizontal_lines <- data_frame0(
-                        # here is the 4 horizontal lines
-                        # i = 1
-                        # from the right - midpoint
-                        # from the midpoint - right
-                        # from left - midpoint
-                        # from midpoint - left
-                        #
-                        # i = 2
-                        # from the left - midpoint
-                        # from the midpoint - left
-                        # from right - midpoint
-                        # from midpoint - right
-                        x = c(
-                            .subset(direct_leaves_x, 3L - i),
-                            x,
-                            .subset(direct_leaves_x, i),
-                            x
-                        ),
-                        xend = c(
-                            x, .subset(direct_leaves_x, 3L - i),
-                            x, .subset(direct_leaves_x, i)
-                        ),
-                        y = rep_len(y, 4L),
-                        yend = rep_len(y, 4L),
-                        branch = c(
-                            rep_len(.subset(direct_leaves_branch, 3L - i), 2L),
-                            rep_len(.subset(direct_leaves_branch, i), 2L)
-                        ),
-                        panel1 = c(
-                            .subset(direct_leaves_panel, 3L - i),
-                            panel,
-                            .subset(direct_leaves_panel, i),
-                            panel
-                        ),
-                        panel2 = c(
-                            panel,
-                            .subset(direct_leaves_panel, 3L - i),
-                            panel,
-                            .subset(direct_leaves_panel, i)
-                        ),
-                        ggpanel = c(
-                            .subset(direct_leaves_ggpanel, 3L - i),
-                            ggpanel,
-                            .subset(direct_leaves_ggpanel, i),
-                            ggpanel
-                        )
+                # if the horizontal lines spanned multiple panels
+                # we double the left line and the right line 
+                added_edge <- vec_rbind(
+                    vertical_lines,
+                    # left horizontal line
+                    make_horizontal(
+                        c(direct_leaves_x[1L], x),
+                        panels = c(direct_leaves_panel[1L], panel),
+                        ggpanels = c(direct_leaves_ggpanel[1L], ggpanel),
+                        y = y,
+                        branch = direct_leaves_branch[1L],
+                        ranges = ranges,
+                        full_panel = full_panel
+                    ),
+                    # right horizontal line
+                    make_horizontal(
+                        c(x, direct_leaves_x[2L]),
+                        panels = c(panel, direct_leaves_panel[2L]),
+                        ggpanels = c(ggpanel, direct_leaves_ggpanel[2L]),
+                        y = y,
+                        branch = direct_leaves_branch[2L],
+                        ranges = ranges,
+                        full_panel = full_panel
                     )
-                } else {
-                    horizontal_lines <- data_frame0(
-                        # 2 horizontal lines
-                        x = rep_len(x, 2L),
-                        xend = direct_leaves_x,
-                        y = rep_len(y, 2L),
-                        yend = rep_len(y, 2L),
-                        branch = direct_leaves_branch,
-                        panel1 = rep_len(panel, 2L),
-                        panel2 = direct_leaves_panel,
-                        ggpanel = rep_len(ggpanel, 2L)
-                    )
-                }
-                added_edge <- vec_rbind(vertical_lines, horizontal_lines)
+                )
             } else {
                 added_edge <- data_frame0(
                     x = rep_len(x, 2L),
@@ -498,6 +452,57 @@ dendrogram_data <- function(tree,
         edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_levels)
     }
     list(node = node, edge = edge)
+}
+
+#' @param ggpanels Won't be `NA`
+#' @noRd
+make_horizontal <- function(x, panels, ggpanels, y, branch,
+                            ranges, full_panel = names(ranges)) {
+    if (identical(ggpanels[1L], ggpanels[2L])) { # in the same panel
+        data_frame0(
+            x = x[1L],
+            xend = x[2L],
+            y = y,
+            yend = y,
+            branch = branch,
+            panel1 = panels[1L],
+            panel2 = panels[2L],
+            ggpanel = ggpanels[1L]
+        )
+    } else {
+        index <- match(ggpanels, full_panel)
+        ending <- index[2L] # right index
+        panel0 <- panels[1L]
+        ggpanel0 <- ggpanels[1L]
+        point0 <- x[1L] # the left point coordinate x
+        out <- vector("list", diff(index))
+        right_index <- (index[1L] + 1L):ending
+        for (i in seq_along(right_index)) {
+            i1 <- .subset(right_index, i) # right index
+            if (i1 == ending) {
+                point1 <- x[2L]
+                panel1 <- panels[2L]
+                ggpanel1 <- ggpanels[2L]
+            } else {
+                point1 <- mean(range(.subset2(ranges, i1)))
+                ggpanel1 <- panel1 <- .subset(full_panel, i1)
+            }
+            out[[i]] <- data_frame0(
+                x = c(point0, point1),
+                xend = c(point1, point0),
+                y = y,
+                yend = y,
+                branch = branch,
+                panel1 = c(panel0, panel1),
+                panel2 = c(panel1, panel0),
+                ggpanel = c(ggpanel0, ggpanel1)
+            )
+            point0 <- point1
+            panel0 <- panel1
+            ggpanel0 <- ggpanel1
+        }
+        vec_rbind(!!!out)
+    }
 }
 
 # this function won't set the right `midpoint`, but `dendrogram_data` function

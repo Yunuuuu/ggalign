@@ -194,11 +194,11 @@
 <rect x='393.93' y='10.96' width='315.11' height='528.67' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='408.26' y1='275.30' x2='551.49' y2='275.30' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='408.26' y1='99.07' x2='551.49' y2='99.07' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='551.49' y1='187.18' x2='551.49' y2='275.30' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='551.49' y1='275.30' x2='551.49' y2='187.18' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='551.49' y1='187.18' x2='551.49' y2='99.07' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='408.26' y1='451.52' x2='694.72' y2='451.52' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='551.49' y1='187.18' x2='694.72' y2='187.18' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='694.72' y1='319.35' x2='694.72' y2='451.52' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='694.72' y1='451.52' x2='694.72' y2='319.35' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='694.72' y1='319.35' x2='694.72' y2='187.18' style='stroke-width: 1.07; stroke-linecap: butt;' />
 </g>
 <g clip-path='url(#cpMzg4LjQ2fDcxNC41Mnw1LjQ4fDU3MC41Mg==)'>
