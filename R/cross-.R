@@ -17,7 +17,6 @@ summary.Cross <- function(object, ...) c(TRUE, FALSE)
 #' @importFrom ggplot2 ggproto ggplot
 #' @include plot-.R
 Cross <- ggproto("Cross", AlignProto,
-    free_align = FALSE,
     layout = function(self, layout_data, layout_coords, layout_name) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(

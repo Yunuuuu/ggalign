@@ -106,6 +106,17 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
 #' @importFrom methods is
 is_ggalign_plot <- function(x) is(x, "ggalign_plot")
 
+is_align_free <- function(x) UseMethod("is_align_free")
+
+#' @export
+is_align_free.Align <- function(x) FALSE
+
+#' @export
+is_align_free.Cross <- function(x) FALSE
+
+#' @export
+is_align_free.Free <- function(x) TRUE
+
 #' Summary the action of `AlignProto`
 #'
 #' @param object A `AlignProto` object
@@ -119,9 +130,8 @@ summary.AlignProto <- function(object, ...) c(FALSE, FALSE)
 #' @importFrom ggplot2 ggproto
 AlignProto <- ggproto("AlignProto",
     locked = TRUE,
-    # A boolean value indicates whether this plot is free
-    # if `FALSE`, we'll check whether the layout need align observations
-    free_align = FALSE,
+    # we always prevent user from modifying the object in `$build_plot()` and
+    # `$finish_plot()` methods
     lock = function(self) {
         assign("locked", value = TRUE, envir = self)
     },
@@ -176,6 +186,7 @@ align_method_params <- function(f, remove = character()) {
 #' @export
 stack_layout_add.ggalign_plot <- function(object, stack, object_name) {
     align <- object@align
+    # To-Do: Use S7 and double dispatch
     if (is_cross(align) && !is_cross_layout(stack)) {
         # we prevent from adding `cross_*` to normal `stack_layout()`
         cli_abort(c(
@@ -188,7 +199,7 @@ stack_layout_add.ggalign_plot <- function(object, stack, object_name) {
     }
     if (is.null(active_index <- stack@active) ||
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
-        if (is.null(old_coords <- stack@layout) && !align$free_align) {
+        if (is.null(old_coords <- stack@layout) && !is_align_free(align)) {
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {object_name}} to %s",
@@ -258,7 +269,7 @@ quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
     # check if we can align in this direction
     direction <- to_direction(position)
     align <- object@align
-    if (!align$free_align && is.null(slot(quad, direction))) {
+    if (!is_align_free(align) && is.null(slot(quad, direction))) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s", object_name(quad)

@@ -176,7 +176,6 @@ summary.Align <- function(object, ...) {
 #' @rdname align
 #' @include plot-.R
 Align <- ggproto("Align", AlignProto,
-    free_align = FALSE,
     parameters = function(self) {
         c(
             align_method_params(

@@ -17,7 +17,7 @@ methods::setClass("LayoutProto",
         schemes = "list", # used to provide global parameters for all plots
         # control the layout, `theme` will also be used by `ggsave`
         titles = "list",
-        annotation = "list", # To-DO add `pacth_titles` for layout
+        annotation = "list", # To-Do add `pacth_titles` for layout
         theme = "ANY",
         `_namespace` = "ANY"
     ),
