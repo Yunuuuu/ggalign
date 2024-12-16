@@ -23,6 +23,11 @@ stack_layout_add.list <- function(object, stack, object_name) {
     stack
 }
 
+#' @export
+stack_layout_add.NULL <- function(object, stack, object_name) {
+    stack
+}
+
 ##############################################################
 # add elements for nested `quad_layout()`.
 #' @export
