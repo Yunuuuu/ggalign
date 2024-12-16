@@ -46,6 +46,11 @@ quad_layout_add.list <- function(object, quad, object_name) {
 }
 
 #' @export
+quad_layout_add.NULL <- function(object, quad, object_name) {
+    quad
+}
+
+#' @export
 quad_layout_add.ggalign_with_quad <- function(object, quad, object_name) {
     old <- quad@active
     contexts <- quad_operated_context(object, old, "+") %||%
