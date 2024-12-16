@@ -14,7 +14,6 @@
 #' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
 #' provided directly.
 #' @inheritParams align
-#' @return A `ggalign_free_gg` object.
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
