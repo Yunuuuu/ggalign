@@ -310,7 +310,7 @@ dendrogram_data <- function(tree,
             # all x coordinate for children nodes --------------------
             # used if center is `TRUE`, we'll calculate the center position
             # among all children nodes
-            leaves <- node[.subset2(node, "leaf"), ] # all leaves
+            leaves <- vec_slice(node, .subset2(node, "leaf")) # all leaves
 
             # x coordinate for current branch: the midpoint
             if (center) {
