@@ -152,6 +152,9 @@ ggalign_stat.default <- function(x, ...) {
     cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
 
+#' @export
+ggalign_stat.AlignGg <- ggalign_stat.default
+
 ####################################################
 #' Get Data from the Attached Attribute in the Rendering Process
 #'
