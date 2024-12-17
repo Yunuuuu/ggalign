@@ -9,6 +9,10 @@ element_polygon(
   colour = NULL,
   linewidth = NULL,
   linetype = NULL,
+  alpha = NULL,
+  lineend = NULL,
+  linejoin = NULL,
+  linemitre = NULL,
   color = NULL,
   inherit.blank = FALSE
 )
@@ -24,6 +28,15 @@ element_polygon(
 dashed, dotted, dotdash, longdash, twodash), or a string with
 an even number (up to eight) of hexadecimal digits which give the
 lengths in consecutive positions in the string.}
+
+\item{alpha}{A transparency value between 0 (transparent) and 1 (opaque),
+parallel to \code{fill}.}
+
+\item{lineend}{Line end Line end style (round, butt, square)}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linemitre}{Line mitre limit (number greater than 1).}
 
 \item{inherit.blank}{Should this element inherit the existence of an
 \code{element_blank} among its parents? If \code{TRUE} the existence of

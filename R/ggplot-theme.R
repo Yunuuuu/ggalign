@@ -111,22 +111,28 @@ is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 #' Draw polygon.
 #'
 #' @inheritParams ggplot2::element_rect
+#' @inheritParams geom_rect3d
+#' @inheritParams ggplot2::fill_alpha
 #' @seealso [`element_rect`][ggplot2::element_rect]
 #' @return A `element_polygon` object
 #' @export
 element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
-                            linetype = NULL, color = NULL,
+                            linetype = NULL, alpha = NULL, lineend = NULL,
+                            linejoin = NULL, linemitre = NULL, color = NULL,
                             inherit.blank = FALSE) {
     if (!is.null(color)) colour <- color
     structure(
         list(
-            fill = fill, colour = colour, linewidth = linewidth,
-            linetype = linetype, inherit.blank = inherit.blank
+            fill = fill, colour = colour, alpha = alpha,
+            linewidth = linewidth, linetype = linetype,
+            lineend = lineend, linejoin = linejoin, linemitre = linemitre,
+            inherit.blank = inherit.blank
         ),
         class = c("element_polygon", "element")
     )
 }
 
+#' @importFrom grid gpar
 #' @importFrom ggplot2 element_grob
 #' @export
 element_grob.element_polygon <- function(element, x, y,
@@ -141,8 +147,11 @@ element_grob.element_polygon <- function(element, x, y,
     element_gp <- gpar(
         lwd = ggfun("len0_null")(element$linewidth * .pt),
         col = element$colour,
-        fill = element$fill,
-        lty = element$linetype
+        fill = fill_alpha(element$fill, element$alpha),
+        lty = element$linetype,
+        lineend = element$lineend,
+        linejoin = element$linejoin,
+        linemitre = element$linemitre
     )
     grid::polygonGrob(
         x = x, y = y,
@@ -157,7 +166,11 @@ theme_elements <- function() {
             fill = NA,
             color = "black",
             linewidth = 0.5,
-            linetype = 1
+            linetype = 1,
+            alpha = NA,
+            lineend = "butt",
+            linejoin = "round",
+            linemitre = 10
         ),
         plot.ggalign_lines = element_line(
             color = "black",

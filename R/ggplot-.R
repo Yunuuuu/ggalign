@@ -15,6 +15,18 @@ allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x
 }
 
+#' @importFrom rlang try_fetch
+fill_alpha <- function(colour, alpha = NA) {
+    try_fetch(
+        # for version >= 3.5.0
+        ggplot2::fill_alpha(colour, alpha),
+        error = function(cnd) {
+            # for version < 3.5.0
+            ggplot2::alpha(colour, alpha)
+        }
+    )
+}
+
 is.waive <- function(x) inherits(x, "waiver")
 
 `%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
