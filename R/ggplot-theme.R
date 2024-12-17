@@ -96,7 +96,6 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
 }
 
 #' @importFrom rlang try_fetch
-#' @importFrom ggplot2 theme_get
 complete_theme <- function(theme) {
     try_fetch(
         ggfun("complete_theme")(theme),
