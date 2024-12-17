@@ -121,14 +121,16 @@ CrossGg <- ggproto("CrossGg", Cross,
         }
         plot$data <- data
         if (is_horizontal(direction)) {
-            default_coord <- discrete_ggalign(y = coords)
+            default_coord <- cartesian_coord("y")
+            default_align <- discrete_ggalign(y = coords)
             default_expand <- default_expansion(x = expansion())
         } else {
-            default_coord <- discrete_ggalign(x = coords)
+            default_coord <- cartesian_coord("x")
             default_expand <- default_expansion(y = expansion())
+            default_align <- discrete_ggalign(x = coords)
         }
         plot +
             align_melt_facet(default_facet, plot$facet) +
-            default_coord + default_expand
+            default_coord + default_expand + default_align
     }
 )

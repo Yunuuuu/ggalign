@@ -41,18 +41,7 @@ ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
     plot
 }
 
-identity_trans <- function(scale) {
-    # for continuous scale, we don't allow the trans
-    if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
-        cli_warn(sprintf(
-            "{.arg trans} must be {.field identity} in {.code %s}",
-            deparse(scale$call)
-        ))
-        scale$trans <- scales::as.transform("identity")
-    }
-    scale
-}
-
+######################################################
 default_expansion <- function(x = NULL, y = NULL) {
     structure(list(x = x, y = y), class = c("ggalign_default_expansion"))
 }
@@ -84,6 +73,67 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
     )
     plot
 }
+
+######################################################
+#' @param axes A character indicates which axes should be restricted.
+#' @noRd
+cartesian_coord <- function(axes, layout_name) {
+    structure(list(axes = axes, layout_name = layout_name),
+        class = "ggalign_cartesian_coord"
+    )
+}
+
+#' @export
+ggplot_add.ggalign_cartesian_coord <- function(object, plot, object_name) {
+    plot$coordinates <- use_cartesian_coord(
+        .subset2(plot, "coordinates"),
+        .subset2(object, "axes"),
+        .subset2(object, "layout_name")
+    )
+    plot
+}
+
+use_cartesian_coord <- function(coord, axes, layout_name) {
+    UseMethod("use_cartesian_coord")
+}
+
+#' @export
+use_cartesian_coord.CoordCartesian <- function(coord, axes, layout_name) coord
+
+#' @export
+use_cartesian_coord.CoordTrans <- function(coord, axes, layout_name) {
+    # we only allow identity trans in the axis used to align observations
+    identity_trans <- vapply(
+        coord$trans[axes],
+        function(trans) identical(trans$name, "identity"), logical(1L),
+        USE.NAMES = FALSE
+    )
+    if (all(identity_trans)) {
+        coord
+    } else {
+        cli_warn(c(
+            sprintf(
+                "Transformations in {.field {axes}} is not supported in %s",
+                snake_class(coord), layout_name
+            ),
+            i = "Will use {.fn coord_cartesian} instead"
+        ))
+        ggplot2::coord_cartesian()
+    }
+}
+
+#' @export
+use_cartesian_coord.default <- function(coord, axes, layout_name) {
+    cli_warn(c(
+        sprintf(
+            "{.fn %s} is not supported in %s",
+            snake_class(coord), layout_name
+        ),
+        i = "Will use {.fn coord_cartesian} instead"
+    ))
+    ggplot2::coord_cartesian()
+}
+
 
 ######################################################
 align_melt_facet <- function(default, facet, ...) UseMethod("align_melt_facet")

@@ -184,8 +184,13 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
-    if (!is.null(row_coords) || !is.null(column_coords)) {
-        p <- p + align_melt_facet(default_facet, p$facet, strict = TRUE) +
+    aligned_axes <- c("x", "y")[
+        c(!is.null(column_coords), !is.null(row_coords))
+    ]
+    if (length(aligned_axes)) {
+        p <- p +
+            align_melt_facet(default_facet, p$facet, strict = TRUE) +
+            cartesian_coord(aligned_axes) +
             discrete_ggalign(x = column_coords, y = row_coords)
     }
     p <- p + theme_recycle()
