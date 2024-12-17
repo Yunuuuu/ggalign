@@ -141,7 +141,7 @@ AlignProto <- ggproto("AlignProto",
 
     ############################################################
     # when added to the `Layout` object, will call following methods
-    layout = function(self, layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords) {
         layout_coords
     },
     setup_plot = function(self, plot) plot,
@@ -215,13 +215,13 @@ stack_layout_add.ggalign_plot <- function(object, stack, object_name) {
             align$direction <- stack@direction
             align$position <- .subset2(stack@heatmap, "position")
             align$object_name <- object_name
+            align$layout_name <- object_name(stack)
 
             # this step, the object will act with the stack layout
             # group rows into panel or reorder rows
             new_coords <- align$layout(
                 layout_data = stack@data, # must be a matrix
-                layout_coords = old_coords,
-                layout_name = object_name(stack)
+                layout_coords = old_coords
             )
 
             # initialize the plot object

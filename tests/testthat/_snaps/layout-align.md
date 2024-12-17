@@ -61,6 +61,6 @@
 
 # `ggalign()` works well
 
-    Currently, `coord_polar()` is not supported
+    `coord_polar()` is not supported in the top annotation `stack_align()`
     i Will use `coord_cartesian()` instead
 

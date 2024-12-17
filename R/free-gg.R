@@ -82,7 +82,7 @@ new_free_gg <- function(plot, data, size, active,
 
 #' @importFrom ggplot2 ggproto
 FreeGg <- ggproto("FreeGg", Free,
-    layout = function(self, layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords) {
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
         } else if (is.function(input_data)) {

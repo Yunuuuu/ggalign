@@ -121,11 +121,11 @@ CrossGg <- ggproto("CrossGg", Cross,
         }
         plot$data <- data
         if (is_horizontal(direction)) {
-            default_coord <- cartesian_coord("y")
+            default_coord <- cartesian_coord("y", self$layout_name)
             default_align <- discrete_ggalign(y = coords)
             default_expand <- default_expansion(x = expansion())
         } else {
-            default_coord <- cartesian_coord("x")
+            default_coord <- cartesian_coord("x", self$layout_name)
             default_expand <- default_expansion(y = expansion())
             default_align <- discrete_ggalign(x = coords)
         }

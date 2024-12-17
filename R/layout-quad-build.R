@@ -190,7 +190,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     if (length(aligned_axes)) {
         p <- p +
             align_melt_facet(default_facet, p$facet, strict = TRUE) +
-            cartesian_coord(aligned_axes) +
+            cartesian_coord(aligned_axes, object_name(quad)) +
             discrete_ggalign(x = column_coords, y = row_coords)
     }
     p <- p + theme_recycle()

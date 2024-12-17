@@ -17,11 +17,11 @@ summary.Cross <- function(object, ...) c(TRUE, FALSE)
 #' @importFrom ggplot2 ggproto ggplot
 #' @include plot-.R
 Cross <- ggproto("Cross", AlignProto,
-    layout = function(self, layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords) {
         if (is.null(.subset2(layout_coords, "nobs"))) {
             cli_abort(sprintf(
                 "layout observations for %s must be initialized before adding {.var {%s}}",
-                layout_name, .subset2(self, "object_name")
+                .subset2(self, "layout_name"), .subset2(self, "object_name")
             ))
         }
         # we keep the names from the layout data for usage

@@ -193,10 +193,11 @@ Align <- ggproto("Align", AlignProto,
             self$extra_params
         )
     },
-    layout = function(self, layout_data, layout_coords, layout_name) {
+    layout = function(self, layout_data, layout_coords) {
         input_data <- .subset2(self, "input_data")
         input_params <- .subset2(self, "input_params")
         object_name <- .subset2(self, "object_name")
+        layout_name <- .subset2(self, "layout_name")
         call <- .subset2(self, "call")
         layout_panel <- .subset2(layout_coords, "panel")
         layout_index <- .subset2(layout_coords, "index")
@@ -331,11 +332,11 @@ Align <- ggproto("Align", AlignProto,
         plot + switch_direction(
             direction,
             list(
-                cartesian_coord("y"),
+                cartesian_coord("y", self$layout_name),
                 discrete_ggalign(y = coords)
             ),
             list(
-                cartesian_coord("x"),
+                cartesian_coord("x", self$layout_name),
                 discrete_ggalign(x = coords)
             )
         )
