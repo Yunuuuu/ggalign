@@ -85,7 +85,7 @@ Collate:
     'geom-tile3d.R'
     'ggalign-package.R'
     'ggplot-.R'
-    'ggplot-coord.R'
+    'ggplot-discrete.R'
     'ggplot-theme.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'

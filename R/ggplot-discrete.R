@@ -44,8 +44,8 @@
 #'  - limits: A boolean value indicates whether should set limits.
 #' @keywords internal
 #' @noRd
-coord_ggalign <- function(x = NULL, y = NULL) {
-    structure(list(x = x, y = y), class = "coord_ggalign")
+discrete_ggalign <- function(x = NULL, y = NULL) {
+    structure(list(x = x, y = y), class = "discrete_ggalign")
 }
 
 setup_limits <- function(axis, params) {
@@ -80,7 +80,7 @@ is_coord_okay.default <- function(x, axes) FALSE
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
-ggplot_add.coord_ggalign <- function(object, plot, object_name) {
+ggplot_add.discrete_ggalign <- function(object, plot, object_name) {
     x_params <- .subset2(object, "x")
     y_params <- .subset2(object, "y")
 
@@ -128,8 +128,12 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
             # for each scale, we set the `breaks` and `labels`
-            if (!is.null(x_params)) align_scales("x", x_params, scales_x)
-            if (!is.null(y_params)) align_scales("y", y_params, scales_y)
+            if (!is.null(x_params)) {
+                align_discrete_scales("x", x_params, scales_x)
+            }
+            if (!is.null(y_params)) {
+                align_discrete_scales("y", y_params, scales_y)
+            }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
         },
         setup_panel_params = function(self, scale_x, scale_y, params = list()) {
@@ -163,7 +167,7 @@ ggplot_add.coord_ggalign <- function(object, plot, object_name) {
     plot
 }
 
-align_scales <- function(axis, params, scales) {
+align_discrete_scales <- function(axis, params, scales) {
     panel <- .subset2(params, "panel")
     index <- .subset2(params, "index")
     labels <- .subset2(params, "labels")
@@ -195,18 +199,27 @@ align_scales <- function(axis, params, scales) {
             dindex <- .subset2(data_index, i)
             pindex <- .subset2(plot_index, i)
             labels <- .subset2(data_labels, i)
-            scale$breaks <- get_breaks(scale, pindex, dindex, labels)
-            scale$labels <- get_labels(
+            scale$breaks <- get_discrete_breaks(scale, pindex, dindex, labels)
+            scale$labels <- get_discrete_labels(
                 scale, scale$breaks, pindex, dindex, labels
             )
         }
         # by default we elways remove any expansion
         scale$expand <- scale$expand %|w|% default_expand
+
+        # for continuous scale, we don't allow the trans
+        if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
+            cli::cli_warn(sprintf(
+                "{.arg trans} must be {.field identity} in {.code %s}",
+                deparse(scale$call)
+            ))
+            scale$trans <- scales::as.transform("identity")
+        }
     }
 }
 
 #' @importFrom rlang is_empty
-get_breaks <- function(scale, pindex, dindex, labels) {
+get_discrete_breaks <- function(scale, pindex, dindex, labels) {
     if (scale$is_empty()) return(numeric()) # styler: off
     breaks <- scale$breaks
     if (identical(breaks, NA)) {
@@ -277,7 +290,7 @@ get_breaks <- function(scale, pindex, dindex, labels) {
 }
 
 #' @importFrom rlang is_empty
-get_labels <- function(scale, breaks, pindex, dindex, labels) {
+get_discrete_labels <- function(scale, breaks, pindex, dindex, labels) {
     scale_labels <- scale$labels
     if (is_empty(breaks) || is.null(scale_labels)) { # if no breaks, no labels
         return(NULL)

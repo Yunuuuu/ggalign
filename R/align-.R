@@ -330,8 +330,8 @@ Align <- ggproto("Align", AlignProto,
         # set limits and default scales
         plot + switch_direction(
             direction,
-            coord_ggalign(y = coords),
-            coord_ggalign(x = coords)
+            discrete_ggalign(y = coords),
+            discrete_ggalign(x = coords)
         )
     },
 
