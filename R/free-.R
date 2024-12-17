@@ -9,7 +9,7 @@ free <- function(free, ..., call = caller_call()) {
 
 is_free_plot <- function(x) is_ggalign_plot(x) && is_free(x@align)
 
-is_free <- function(x) inherits(x, "FALSE")
+is_free <- function(x) inherits(x, "Free")
 
 #' @export
 summary.Free <- function(object, ...) c(FALSE, FALSE)
