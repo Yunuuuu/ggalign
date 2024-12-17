@@ -126,14 +126,7 @@ GeomPie <- ggproto("GeomPie",
             default.units = "native",
             gp = gpar(
                 col = data$colour,
-                fill = try_fetch(
-                    # for version >= 3.5.0
-                    ggplot2::fill_alpha(data$fill, data$alpha),
-                    error = function(cnd) {
-                        # for version < 3.5.0
-                        ggplot2::alpha(data$fill, data$alpha)
-                    }
-                ),
+                fill = fill_alpha(data$fill, data$alpha),
                 lwd = data$linewidth,
                 lty = data$linetype,
                 lineend = lineend,
