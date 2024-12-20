@@ -17,7 +17,7 @@
 layout_expand <- function(..., x = waiver(), y = waiver()) {
     if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
         cli_abort(
-            "Cannot mix the usage of {.arg ...} and {.arg x}/{.arg y} argument"
+            "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
         )
     }
     if (...length() > 0L) {
@@ -41,14 +41,13 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
 #'
 #' @param ... A list of two numeric values, specifying the left/lower limit and
 #' the right/upper limit of the scale.
-#' @param x,y A list of two numeric values, specifying the left/lower limit and
-#' the right/upper limit of the scale.
+#' @inheritParams layout_expand
 #' @importFrom rlang list2
 #' @export
 continuous_limits <- function(..., x = waiver(), y = waiver()) {
     if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
         cli_abort(
-            "Cannot mix the usage of {.arg ...} and {.arg x}/{.arg y} argument"
+            "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
         )
     }
     if (...length() > 0L) {

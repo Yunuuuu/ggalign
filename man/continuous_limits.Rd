@@ -10,8 +10,7 @@ continuous_limits(..., x = waiver(), y = waiver())
 \item{...}{A list of two numeric values, specifying the left/lower limit and
 the right/upper limit of the scale.}
 
-\item{x, y}{A list of two numeric values, specifying the left/lower limit and
-the right/upper limit of the scale.}
+\item{x, y}{Same as \code{...}, but specifically for \code{quad_layout()}.}
 }
 \description{
 To align continuous axes, it is important to keep the limits consistent
