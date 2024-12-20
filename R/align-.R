@@ -265,9 +265,9 @@ Align <- ggproto("Align", AlignProto,
         )
 
         # we check the coords
-        check_layout_coords(
+        check_discrete_design(
             layout_coords,
-            new_layout_coords(
+            discrete_design(
                 .subset2(new_coords, 1L),
                 .subset2(new_coords, 2L),
                 layout_nobs

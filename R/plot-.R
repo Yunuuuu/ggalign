@@ -231,18 +231,18 @@ quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
     stack <- chain_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
 
-    new_coords <- stack@layout
+    new_design <- stack@design
     # if there are cross points in bottom or right annotation, the index
     # should be the first index in the `index_list`
     if (any(position == c("bottom", "right")) &&
         is_cross_layout(stack) &&
         !is_empty(stack@cross_points)) {
-        new_coords["index"] <- list(.subset2(stack@index_list, 1L))
+        new_design["index"] <- list(.subset2(stack@index_list, 1L))
     }
-    update_layout_coords(
+    update_design(
         quad,
         direction = direction,
-        coords = new_coords,
+        design = new_design,
         object_name = object_name
     )
 }

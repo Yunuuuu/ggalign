@@ -11,7 +11,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
         ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
-        stack@layout$index,
+        stack@design$index,
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(
@@ -26,7 +26,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
         ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
-        stack@layout$index,
+        stack@design$index,
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(

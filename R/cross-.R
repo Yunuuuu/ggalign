@@ -31,7 +31,7 @@ Cross <- ggproto("Cross", AlignProto,
         # update index
         layout@index_list <- c(
             layout@index_list,
-            list(.subset2(layout@layout, "index"))
+            list(.subset2(layout@design, "index"))
         )
         layout
     }

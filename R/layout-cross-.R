@@ -53,7 +53,7 @@ cross_discrete.default <- function(direction, data = NULL, ...) {
 stack_build_composer.CrossLayout <- function(stack, schemes, theme,
                                              extra_coords) {
     # check if we should initialize the layout observations
-    layout_coords <- stack@layout
+    layout_coords <- stack@design
     if (!is.null(layout_coords) &&
         is.null(.subset2(layout_coords, "nobs")) &&
         any(vapply(plot_list, is_cross_plot, logical(1L), USE.NAMES = FALSE))) {
@@ -94,7 +94,7 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
         # prepare coords for current group
         coords <- layout_coords
         coords["index"] <- list(.subset2(index_list, i))
-        coords <- setup_layout_coords(coords)
+        coords <- setup_discrete_design(coords)
 
         if (is_empty(plots)) {
             previous_coords <- coords

@@ -58,8 +58,8 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     data <- quad@data
     schemes <- inherit_parent_layout_schemes(quad, schemes)
     theme <- inherit_parent_layout_theme(quad, theme, direction = direction)
-    row_coords <- setup_layout_coords(quad@horizontal)
-    column_coords <- setup_layout_coords(quad@vertical)
+    row_coords <- setup_discrete_design(quad@horizontal)
+    column_coords <- setup_discrete_design(quad@vertical)
     if (!(is.null(row_coords) && is.null(column_coords)) &&
         (is.function(data) || is.null(data))) {
         cli_abort(c(

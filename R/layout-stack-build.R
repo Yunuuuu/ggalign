@@ -181,7 +181,7 @@ stack_build_composer.StackLayout <- function(stack, schemes, theme,
         released_spaces <- NULL
     }
 
-    coords <- setup_layout_coords(stack@layout)
+    coords <- setup_discrete_design(stack@design)
     stack_composer_add(
         plot_list,
         composer,

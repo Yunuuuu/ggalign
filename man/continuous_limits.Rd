@@ -16,7 +16,7 @@ the right/upper limit of the scale.}
 To align continuous axes, it is important to keep the limits consistent
 across all plots in the layout. You can set the limits by passing a function
 directly to the \code{limits} or \code{xlim}/\code{ylim} argument, using \code{...} only.
-Alternatively, you can add a \code{continuous_limits} object to the layout. For
+Alternatively, you can add a \code{continuous_limits()} object to the layout. For
 the \code{quad_layout()} function, you must specify \code{x}/\code{y} arguments. For other
 layouts, you should pass the limits using \code{...} directly.
 }

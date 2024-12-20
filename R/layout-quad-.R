@@ -252,8 +252,8 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
             ncols <- NULL
         }
     }
-    horizontal <- ylim %|w|% new_layout_coords(nobs = nrows)
-    vertical <- xlim %|w|% new_layout_coords(nobs = ncols)
+    horizontal <- ylim %|w|% discrete_design(nobs = nrows)
+    vertical <- xlim %|w|% discrete_design(nobs = ncols)
 
     # always remove default axis titles
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function

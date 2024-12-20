@@ -132,7 +132,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 data = data,
                 direction = direction,
                 # the layout parameters should be the same with `quad_layout()`
-                layout = layout_coords,
+                design = layout_coords,
                 # we'll inherit the action data function when
                 schemes = default_schemes(if (is.null(data)) NULL else waiver())
             )
@@ -208,23 +208,23 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
             i = "{.arg sizes} must be of length one to use the stack as an annotation"
         ))
     }
-    quad_coords <- slot(quad, direction)
-    stack_coords <- object@layout
+    quad_design <- slot(quad, direction)
+    stack_design <- object@design
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
-    if (is.null(stack_coords)) {
-        layout_coords <- NULL
-    } else if (!is.null(quad_coords)) {
+    if (is.null(stack_design)) {
+        layout_design <- NULL
+    } else if (!is.null(quad_design)) {
         # both `quad_layout()` and `stack_layout()` need align observations
         # if there are cross points in bottom or right annotation, the index
         # should be the first index in the `index_list`
         if (any(position == c("bottom", "right")) &&
             is_cross_layout(object) &&
             !is_empty(object@cross_points)) {
-            stack_coords["index"] <- list(.subset2(object@index_list, 1L))
+            stack_design["index"] <- list(.subset2(object@index_list, 1L))
         }
-        layout_coords <- check_layout_coords(
-            quad_coords, stack_coords,
+        layout_design <- check_discrete_design(
+            quad_design, stack_design,
             old_name = object_name(quad),
             new_name = object_name
         )
@@ -236,9 +236,9 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     }
     object@heatmap$position <- position
     slot(quad, position) <- object
-    update_layout_coords(quad,
+    update_design(quad,
         direction = direction,
-        coords = layout_coords,
+        design = layout_design,
         object_name = object_name
     )
 }

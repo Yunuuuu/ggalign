@@ -26,7 +26,7 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
     } else {
         ans <- list(x = x, y = y)
     }
-    structure(ans, class = c("layout_expand", "layout_design"))
+    structure(ans, class = "ggalign_layout_expand")
 }
 
 #' Set continuous limits for the layout
@@ -35,7 +35,7 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
 #' To align continuous axes, it is important to keep the limits consistent
 #' across all plots in the layout. You can set the limits by passing a function
 #' directly to the `limits` or `xlim`/`ylim` argument, using `...` only.
-#' Alternatively, you can add a `continuous_limits` object to the layout. For
+#' Alternatively, you can add a `continuous_limits()` object to the layout. For
 #' the `quad_layout()` function, you must specify `x`/`y` arguments. For other
 #' layouts, you should pass the limits using `...` directly.
 #'
@@ -76,7 +76,7 @@ is_layout_continuous <- function(x, ...) UseMethod("is_layout_continuous")
 
 ################################################################
 # layout params are used to align the observations
-new_layout_coords <- function(panel = NULL, index = NULL, nobs = NULL) {
+discrete_design <- function(panel = NULL, index = NULL, nobs = NULL) {
     structure(
         list(panel = panel, index = index, nobs = nobs),
         class = c("discrete_design", "layout_design")
@@ -85,17 +85,17 @@ new_layout_coords <- function(panel = NULL, index = NULL, nobs = NULL) {
 
 # Initialize the index and panel
 # Reorder the panel based the ordering index and
-setup_layout_coords <- function(coords) {
-    if (is.null(coords)) return(NULL) # styler: off
+setup_discrete_design <- function(design) {
+    if (is.null(design)) return(NULL) # styler: off
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`
     # this is for `stack_layout` which may have no data
-    if (is.null(nobs <- .subset2(coords, "nobs"))) {
-        return(coords)
+    if (is.null(nobs <- .subset2(design, "nobs"))) {
+        return(design)
     }
-    panel <- .subset2(coords, "panel") %||% factor(rep_len(1L, nobs))
-    index <- .subset2(coords, "index") %||% reorder_index(panel)
-    new_layout_coords(panel[index], index, nobs)
+    panel <- .subset2(design, "panel") %||% factor(rep_len(1L, nobs))
+    index <- .subset2(design, "index") %||% reorder_index(panel)
+    discrete_design(panel[index], index, nobs)
 }
 
 reorder_index <- function(panel, index = NULL) {
@@ -105,39 +105,36 @@ reorder_index <- function(panel, index = NULL) {
 
 ############################################################
 #' @keywords internal
-update_layout_coords <- function(layout, ..., coords, object_name) {
-    UseMethod("update_layout_coords")
+update_design <- function(layout, ..., design, object_name) {
+    UseMethod("update_design")
 }
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
-                                            object_name) {
-    if (is.null(coords) || is.null(slot(layout, direction))) {
-        return(layout)
-    }
-    slot(layout, direction) <- coords
+update_design.QuadLayout <- function(layout, ..., direction, design,
+                                     object_name) {
+    slot(layout, direction) <- design
     if (is_horizontal(direction)) {
         if (!is.null(left <- layout@left)) {
-            layout@left <- update_layout_coords(left,
-                coords = coords, object_name = object_name
+            layout@left <- update_design(left,
+                design = design, object_name = object_name
             )
         }
         if (!is.null(right <- layout@right)) {
-            layout@right <- update_layout_coords(right,
-                coords = coords, object_name = object_name,
+            layout@right <- update_design(right,
+                design = design, object_name = object_name,
                 from_head = TRUE
             )
         }
     } else {
         if (!is.null(top <- layout@top)) {
-            layout@top <- update_layout_coords(top,
-                coords = coords, object_name = object_name
+            layout@top <- update_design(top,
+                design = design, object_name = object_name
             )
         }
         if (!is.null(bottom <- layout@bottom)) {
-            layout@bottom <- update_layout_coords(bottom,
-                coords = coords, object_name = object_name,
+            layout@bottom <- update_design(bottom,
+                design = design, object_name = object_name,
                 from_head = TRUE
             )
         }
@@ -147,16 +144,13 @@ update_layout_coords.QuadLayout <- function(layout, ..., direction, coords,
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
-    if (is.null(coords) || is.null(slot(layout, "layout"))) {
-        return(layout)
-    }
-    slot(layout, "layout") <- coords
+update_design.StackLayout <- function(layout, ..., design, object_name) {
+    layout@design <- design
     layout@plot_list <- lapply(layout@plot_list, function(plot) {
         if (is_ggalign_plot(plot)) return(plot) # styler: off
-        update_layout_coords(plot,
+        update_design(plot,
             direction = layout@direction,
-            coords = coords
+            design = design
         )
     })
     layout
@@ -164,17 +158,14 @@ update_layout_coords.StackLayout <- function(layout, ..., coords, object_name) {
 
 #' @importFrom methods slot slot<-
 #' @export
-update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
-                                             from_head = FALSE) {
-    if (is.null(coords) || is.null(slot(layout, "layout"))) {
-        return(layout)
-    }
+update_design.CrossLayout <- function(layout, ..., design, object_name,
+                                      from_head = FALSE) {
     if (from_head && !is_empty(layout@cross_points)) {
-        layout@layout["nobs"] <- list(.subset2(coords, "nobs"))
-        layout@layout["panel"] <- list(.subset2(coords, "panel"))
-        layout@index_list[1L] <- list(.subset2(coords, "index"))
+        layout@design["nobs"] <- list(.subset2(design, "nobs"))
+        layout@design["panel"] <- list(.subset2(design, "panel"))
+        layout@index_list[1L] <- list(.subset2(design, "index"))
     } else {
-        layout@layout <- coords
+        layout@design <- design
     }
     n_plots <- length(plot_list <- layout@plot_list)
     if (n_plots == 0L) {
@@ -182,7 +173,7 @@ update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
     }
     if (n_breaks <- length(layout@cross_points)) {
         # we also check the panel doesn't break the original index
-        if (!is.null(panel <- .subset2(coords, "panel"))) {
+        if (!is.null(panel <- .subset2(design, "panel"))) {
             index_list <- layout@index_list
             for (i in seq_along(index_list)) {
                 if (is.null(old <- .subset2(index_list, i))) {
@@ -221,17 +212,17 @@ update_layout_coords.CrossLayout <- function(layout, ..., coords, object_name,
 
     layout@plot_list[index] <- lapply(plot_list[index], function(plot) {
         if (is_ggalign_plot(plot)) return(plot) # styler: off
-        update_layout_coords(plot,
+        update_design(plot,
             direction = layout@direction,
-            coords = coords
+            design = design
         )
     })
     layout
 }
 
 ############################################################
-check_layout_coords <- function(old, new, old_name, new_name,
-                                call = caller_call()) {
+check_discrete_design <- function(old, new, old_name, new_name,
+                                  call = caller_call()) {
     old_nobs <- .subset2(old, "nobs")
     new_nobs <- .subset2(new, "nobs")
     if (is.null(new_nobs)) { # no `nobs` provided
@@ -316,5 +307,5 @@ check_layout_coords <- function(old, new, old_name, new_name,
             new_name, old_name
         ), call = call)
     }
-    new_layout_coords(panel, index, nobs)
+    discrete_design(panel, index, nobs)
 }

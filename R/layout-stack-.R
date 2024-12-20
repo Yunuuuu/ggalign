@@ -82,7 +82,7 @@ stack_discrete.default <- function(direction, data = NULL, ...,
     }
     new_stack_layout(
         data = data, direction = direction,
-        layout = new_layout_coords(nobs = nobs),
+        design = discrete_design(nobs = nobs),
         schemes = schemes, theme = theme, sizes = sizes
     )
 }
@@ -162,8 +162,9 @@ stack_continuous.default <- function(direction, data = NULL,
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_stack_layout(
-        data = data, direction = direction,
-        layout = limits,
+        data = data, 
+        direction = direction,
+        design = limits,
         schemes = schemes, theme = theme, sizes = sizes
     )
 }
@@ -181,11 +182,11 @@ stack_continuous.function <- function(direction, data = NULL, ...) {
 stack_continuous.formula <- stack_continuous.function
 
 #' @importFrom methods new
-new_stack_layout <- function(data, direction, layout, schemes = NULL,
+new_stack_layout <- function(data, direction, design, schemes = NULL,
                              theme = NULL, sizes = NA, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    if (is_continuous_design(layout)) {
+    if (is_continuous_design(design)) {
         name <- "stack_continuous"
     } else {
         name <- "stack_discrete"
@@ -195,7 +196,7 @@ new_stack_layout <- function(data, direction, layout, schemes = NULL,
         name = name, data = data,
         direction = direction,
         theme = theme, schemes = schemes, # used by the layout
-        sizes = sizes, layout = layout
+        sizes = sizes, design = design
     )
 }
 
@@ -272,7 +273,8 @@ methods::setClass(
         data = "ANY",
         direction = "character",
         heatmap = "list", # used by heatmap annotation
-        sizes = "ANY" # used by stack layout
+        sizes = "ANY", # used by stack layout
+        design = "ANY" # used to align axis
     ),
     prototype = list(heatmap = list(position = NULL, free_guides = waiver()))
 )

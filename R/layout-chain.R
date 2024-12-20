@@ -4,20 +4,17 @@
 methods::setClass(
     "ChainLayout",
     contains = "LayoutProto",
-    list(
-        plot_list = "list", # save the list of plots
-        layout = "ANY" # used to align axis
-    )
+    list(plot_list = "list") # save the list of plots
 )
 
 #' @export
 is_layout_discrete.ChainLayout <- function(x, ...) {
-    is_discrete_design(x@layout)
+    is_discrete_design(x@design)
 }
 
 #' @export
 is_layout_continuous.ChainLayout <- function(x, ...) {
-    is_continuous_design(x@layout)
+    is_continuous_design(x@design)
 }
 
 #############################################################
@@ -61,7 +58,7 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
     if (is.null(active_index <- layout@active) ||
         is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
         # check plot is compatible with the layout
-        if (is_continuous_design(stack_design <- layout@layout) &&
+        if (is_continuous_design(stack_design <- layout@design) &&
             # `Align` object is special for discrete variables
             is_align(align)) {
             cli_abort(c(
@@ -109,9 +106,9 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
         layout@plot_list[[active_index]] <- plot
         new_design <- slot(plot, layout@direction)
     }
-    update_layout_coords(
+    update_design(
         layout,
-        coords = new_design,
+        design = new_design,
         object_name = object_name
     )
 }
@@ -323,7 +320,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
 
     # check quad layout is compatible with stack layout
     quad_data <- object@data
-    stack_design <- layout@layout
+    stack_design <- layout@design
     quad_design <- slot(object, direction)
     if (is_continuous_design(quad_design)) {
         # `quad_layout()` will align continuous variables
@@ -460,7 +457,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
             # restore the ggalign attribute
             object@data <- ggalign_attr_restore(data, stack_data)
         }
-        layout_coords <- check_layout_coords(
+        layout_coords <- check_discrete_design(
             stack_design, quad_design,
             old_name = object_name(layout),
             new_name = object_name
@@ -478,9 +475,9 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         ))
     }
     stack <- chain_add_plot(layout, object, object@plot_active, object_name)
-    update_layout_coords(
+    update_design(
         stack,
-        coords = layout_coords,
+        design = layout_coords,
         object_name = object_name
     )
 }
