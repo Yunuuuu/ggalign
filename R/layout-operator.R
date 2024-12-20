@@ -103,8 +103,8 @@ layout_add.QuadLayout <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_add.StackLayout <- function(layout, object, object_name) {
-    stack_layout_add(object, layout, object_name)
+layout_add.ChainLayout <- function(layout, object, object_name) {
+    chain_layout_add(object, layout, object_name)
 }
 
 #################################################################

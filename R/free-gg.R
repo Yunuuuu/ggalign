@@ -113,6 +113,6 @@ FreeGg <- ggproto("FreeGg", Free,
 )
 
 #' @export
-stack_layout_add.ggplot <- function(object, stack, object_name) {
-    stack_layout_add(free_gg(data = object), stack, object_name)
+chain_layout_add.ggplot <- function(object, layout, object_name) {
+    chain_layout_add(free_gg(data = object), layout, object_name)
 }

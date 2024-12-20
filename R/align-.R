@@ -141,10 +141,6 @@ align <- function(align, data, ...,
     )
 }
 
-is_align_plot <- function(x) is_ggalign_plot(x) && is_align(x@align)
-
-is_align <- function(x) inherits(x, "Align")
-
 #' @export
 summary.Align <- function(object, ...) {
     # we always push user define summary method

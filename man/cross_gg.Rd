@@ -23,7 +23,7 @@ default, will use the option-
 added to a layout.}
 }
 \description{
-\code{cross_gg} resets the layout ordering index of a \code{\link[=cross_align]{cross_align()}}. This
+\code{cross_gg} resets the layout ordering index of a \code{\link[=cross_discrete]{cross_discrete()}}. This
 allows you to add other \verb{align_*} objects to define a new layout ordering
 index. Any objects added after \code{cross_gg} will use this updated layout
 ordering index. This feature is particularly useful for creating \code{tanglegram}

@@ -3,39 +3,33 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `cross_align` function aligns observations, and allow different layout
-#' ordering index in a single layout. `cross_layout` is an alias for
-#' `cross_align`.
+#' The `cross_discrete` function is derived from `stack_discrete` and allows for
+#' different layout ordering indices within a single layout.
 #'
 #' Two aliases are provided for convenience:
-#' - `cross_alignv`: A special case of `cross_align` that sets `direction =
-#'   "vertical"`.
-#' - `cross_alignh`: A special case of `cross_align` that sets `direction =
-#'   "horizontal"`.
+#' - `cross_discretev`: A special case of `cross_discrete` that sets
+#'   `direction = "v"` for vertical alignment.
+#' - `cross_discreteh`: A special case of `cross_discrete` that sets
+#'   `direction = "h"` for horizontal alignment.
 #'
-#' @inheritParams stack_align
+#' @inheritParams stack_discrete
 #' @seealso [`ggcross()`]
 #' @export
-cross_align <- function(data = NULL, direction, ...,
-                        theme = NULL, sizes = NA) {
-    UseMethod("cross_align")
-}
-
-#' @usage NULL
-#' @export
-#' @rdname cross_align
-cross_layout <- cross_align
-
-#' @export
-#' @rdname cross_align
-cross_alignv <- function(data = NULL, ...) {
-    cross_align(data = data, direction = "vertical", ...)
+cross_discrete <- function(direction, data = NULL, ...,
+                           theme = NULL, sizes = NA) {
+    UseMethod("cross_discrete", data)
 }
 
 #' @export
-#' @rdname cross_align
-cross_alignh <- function(data = NULL, ...) {
-    cross_align(data = data, direction = "horizontal", ...)
+#' @rdname cross_discrete
+cross_discretev <- function(data = NULL, ...) {
+    cross_discrete(data = data, direction = "v", ...)
+}
+
+#' @export
+#' @rdname cross_discrete
+cross_discreteh <- function(data = NULL, ...) {
+    cross_discrete(data = data, direction = "h", ...)
 }
 
 #' @include layout-stack-.R
@@ -47,10 +41,10 @@ methods::setClass(
 )
 
 #' @export
-cross_align.default <- function(data = NULL, direction, ...) {
-    ans <- stack_align(data = data, direction = direction, ...)
+cross_discrete.default <- function(direction, data = NULL, ...) {
+    ans <- stack_discrete(data = data, direction = direction, ...)
     ans <- methods::as(ans, "CrossLayout")
-    ans@name <- "cross_align"
+    ans@name <- "cross_discrete"
     ans
 }
 

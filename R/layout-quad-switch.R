@@ -183,27 +183,4 @@ quad_switch <- function(position = NULL, size = NULL,
 #' @inheritParams heatmap_layout
 #' @export
 #' @rdname quad_switch
-hmanno <- function(position = NULL, size = NULL,
-                   width = NULL, height = NULL, free_guides = waiver(),
-                   what = waiver(), ...,
-                   # following parameters have replaced with `action`
-                   # argument
-                   guides = deprecated(),
-                   free_spaces = deprecated(), plot_data = deprecated(),
-                   theme = deprecated(), free_labs = deprecated()) {
-    rlang::check_dots_empty()
-    deprecate_action(
-        "hmanno",
-        guides = guides,
-        free_spaces = free_spaces,
-        plot_data = plot_data,
-        theme = theme,
-        free_labs = free_labs
-    )
-    ans <- quad_switch(
-        position = position, size = size,
-        width = width, height = height, free_guides = free_guides,
-        what = what
-    )
-    ans
-}
+hmanno <- quad_switch

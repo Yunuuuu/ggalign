@@ -250,8 +250,8 @@ is_quad_layout <- function(x) is(x, "QuadLayout")
 
 #' @examples
 #' # for stack_layout()
-#' is_stack_layout(stack_align(1:10))
-#' is_stack_layout(stack_free(1:10))
+#' is_stack_layout(stack_discrete("h", 1:10))
+#' is_stack_layout(stack_continuous("h", 1:10))
 #'
 #' @export
 #' @rdname is_layout

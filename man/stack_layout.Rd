@@ -2,27 +2,35 @@
 % Please edit documentation in R/layout-stack-.R
 \name{stack_layout}
 \alias{stack_layout}
-\title{Put plots horizontally or vertically}
+\alias{stack_horizontal}
+\alias{stack_vertical}
+\title{Arrange plots horizontally or vertically}
 \usage{
-stack_layout(data = NULL, direction = NULL, type = NULL, ...)
+stack_layout(direction, data = NULL, limits = waiver(), ...)
+
+stack_horizontal(data = NULL, limits = waiver(), ...)
+
+stack_vertical(data = NULL, limits = waiver(), ...)
 }
 \arguments{
+\item{direction}{A string indicating the direction of the stack layout,
+either \code{"h"}(\code{horizontal}) or \code{"v"}(\code{vertical}).}
+
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout:
 \itemize{
-\item If \code{type} is \code{align}, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to get a data
-frame.
-\item If \code{type} is \code{free}, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to get a matrix.
+\item If \code{limits} is not provided, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to get a
+matrix.
+\item If \code{limits} is specified, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to get a
+data frame. Note that if the data is a \code{matrix}, it will be automatically
+converted to a long-formatted data frame, which differs from \code{ggplot2}'s
+behavior.
 }}
 
-\item{direction}{A string indicating the direction of the stack layout,
-either \code{"horizontal"} or \code{"vertical"}.}
+\item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
+limit and the right/upper limit of the scale. Used to align the continuous
+axis.}
 
-\item{type}{A string indicating the stack layout type: \code{"align"} for
-aligned plots (\code{\link[=stack_align]{stack_align()}}) or \code{"free"} for free stacking
-(\code{\link[=stack_free]{stack_free()}}).}
-
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
-\code{\link[=fortify_matrix]{fortify_matrix()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 }
 \value{
 A \code{StackLayout} object.
@@ -30,20 +38,25 @@ A \code{StackLayout} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This function integrates the functionalities of \code{stack_free()} and
-\code{stack_align()} into a single interface.
+This function integrates the functionalities of \code{stack_discrete()} and
+\code{stack_continuous()} into a single interface.
 }
 \examples{
 set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7L)
-stack_layout(small_mat, "h", "align") + align_dendro()
+
+stack_horizontal(small_mat) + align_dendro()
 
 # this is the same with:
-stack_align(small_mat, "h") + align_dendro()
+stack_discreteh(small_mat) + align_dendro()
+
+# For vertical layout:
+stack_vertical(small_mat) + align_dendro()
+
 }
 \seealso{
 \itemize{
-\item \code{\link[=stack_align]{stack_align()}}
-\item \code{\link[=stack_free]{stack_free()}}
+\item \code{\link[=stack_discrete]{stack_discrete()}}
+\item \code{\link[=stack_continuous]{stack_continuous()}}
 }
 }

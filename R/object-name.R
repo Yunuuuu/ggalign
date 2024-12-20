@@ -14,6 +14,7 @@ object_name.StackLayout <- function(object, format = "fn") {
     if (!is.null(position <- .subset2(object@heatmap, "position"))) {
         ans <- sprintf("the %s annotation %s", position, ans)
     } else {
+        ans <- sprintf("the %s %s", object@direction, ans)
     }
     ans
 }

@@ -5,18 +5,9 @@
 \alias{stack_active}
 \title{Determine the active context of stack layout}
 \usage{
-stack_switch(sizes = NULL, what = waiver())
+stack_switch(sizes = NULL, what = waiver(), ...)
 
-stack_active(
-  sizes = NULL,
-  what = NULL,
-  ...,
-  guides = deprecated(),
-  free_spaces = deprecated(),
-  plot_data = deprecated(),
-  theme = deprecated(),
-  free_labs = deprecated()
-)
+stack_active(sizes = NULL, ...)
 }
 \arguments{
 \item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. If used for
@@ -31,22 +22,7 @@ A single number or string of the plot elements in the stack layout. If \code{NUL
 \code{\link[=quad_layout]{quad_layout()}}. By removing the active context, we can add \verb{align_*()}
 into the \code{\link[=stack_layout]{stack_layout()}}.}
 
-\item{...}{These dots are for future extensions and must be empty.}
-
-\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_data]{scheme_data()}} function instead.}
-
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
-
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 }
 \value{
 A \code{stack_switch} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.
@@ -55,10 +31,10 @@ A \code{stack_switch} object which can be added to \code{\link[=stack_layout]{st
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 \code{stack_active} is an alias for \code{stack_switch()}, which sets \code{what = NULL} by
-default, with additional arguments for backward compatibility.
+default.
 }
 \examples{
-stack_align(matrix(1:9, nrow = 3L), "h") +
+stack_discrete("h", matrix(1:9, nrow = 3L)) +
     ggheatmap() +
     # ggheamtap will set the active context, directing following addition
     # into the heatmap plot area. To remove the heatmap active context,

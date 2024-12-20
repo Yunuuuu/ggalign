@@ -380,7 +380,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignh(small_mat) +
         anno_right() +
         anno_left(initialize = FALSE) +
-        cross_alignh(small_mat) +
+        cross_discreteh(small_mat) +
         align_dendro()
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
@@ -394,7 +394,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignh(small_mat) +
         anno_right() +
         anno_left(initialize = FALSE) +
-        cross_alignh(small_mat) +
+        cross_discreteh(small_mat) +
         align_dendro(k = 3L)
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
@@ -409,7 +409,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignh(small_mat) +
         anno_left() +
         anno_right(initialize = FALSE) +
-        cross_alignh(small_mat) +
+        cross_discreteh(small_mat) +
         align_dendro()
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
@@ -424,7 +424,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignh(small_mat) +
         anno_left() +
         anno_right(initialize = FALSE) +
-        cross_alignh(small_mat) +
+        cross_discreteh(small_mat) +
         align_dendro()
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
@@ -435,7 +435,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignh(small_mat) +
         anno_left() +
         anno_right(initialize = FALSE) +
-        cross_alignh(small_mat) +
+        cross_discreteh(small_mat) +
         ggcross()
     expect_identical(quad@horizontal, quad@left@layout)
     expect_identical(quad@horizontal, quad@right@layout)
@@ -455,7 +455,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignv(small_mat) +
         anno_bottom() +
         anno_top(initialize = FALSE) +
-        cross_alignv(t(small_mat)) +
+        cross_discrete("v", t(small_mat)) +
         align_dendro()
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
@@ -469,7 +469,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignv(small_mat) +
         anno_bottom() +
         anno_top(initialize = FALSE) +
-        cross_alignv(t(small_mat)) +
+        cross_discrete("v", t(small_mat)) +
         align_dendro(k = 3L)
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
@@ -484,7 +484,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
-        cross_alignv(t(small_mat)) +
+        cross_discrete("v", t(small_mat)) +
         align_dendro()
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
@@ -503,7 +503,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
-        cross_alignv(t(small_mat)) +
+        cross_discrete("v", t(small_mat)) +
         align_dendro()
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)
@@ -514,7 +514,7 @@ testthat::test_that("add `cross_align()` builds well", {
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
-        cross_alignv(t(small_mat)) +
+        cross_discrete("v", t(small_mat)) +
         ggcross()
     expect_identical(quad@vertical, quad@top@layout)
     expect_identical(quad@vertical, quad@bottom@layout)

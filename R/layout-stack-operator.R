@@ -9,7 +9,7 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
         is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
         stack@plot_list <- lapply(stack@plot_list, function(plot) {
             if (is_ggalign_plot(plot)) {
-                stack_plot_add(plot, object, object_name, force = FALSE)
+                chain_plot_add(plot, object, object_name, force = FALSE)
             } else {
                 plot
             }
@@ -54,7 +54,7 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
         direction <- stack@direction
         stack@plot_list <- lapply(stack@plot_list, function(plot) {
             if (is_ggalign_plot(plot)) {
-                plot <- stack_plot_add(plot, inner, inner_name, force = FALSE)
+                plot <- chain_plot_add(plot, inner, inner_name, force = FALSE)
             } else if (is.waive(.subset2(object, "position"))) {
                 # default behaviour for object wrap with `with_quad()`
                 # we add the object along the stack layout
@@ -99,7 +99,7 @@ stack_layout_and_add <- function(object, stack, object_name) {
 stack_layout_and_add.default <- function(object, stack, object_name) {
     stack@plot_list <- lapply(stack@plot_list, function(plot) {
         if (is_ggalign_plot(plot)) {
-            plot <- stack_plot_add(plot, object, object_name, force = FALSE)
+            plot <- chain_plot_add(plot, object, object_name, force = FALSE)
         } else {
             plot <- quad_layout_and_add(object, plot, object_name)
         }

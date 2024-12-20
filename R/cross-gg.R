@@ -1,7 +1,7 @@
 #' Connect two layout crosswise
 #'
 #' @description
-#' `cross_gg` resets the layout ordering index of a [`cross_align()`]. This
+#' `cross_gg` resets the layout ordering index of a [`cross_discrete()`]. This
 #' allows you to add other `align_*` objects to define a new layout ordering
 #' index. Any objects added after `cross_gg` will use this updated layout
 #' ordering index. This feature is particularly useful for creating `tanglegram`

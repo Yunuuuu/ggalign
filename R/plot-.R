@@ -106,6 +106,19 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
 #' @importFrom methods is
 is_ggalign_plot <- function(x) is(x, "ggalign_plot")
 
+is_align_plot <- function(x) is_ggalign_plot(x) && is_align(x@align)
+
+is_align <- function(x) inherits(x, "Align")
+
+is_cross_plot <- function(x) is_ggalign_plot(x) && is_cross(x@align)
+
+is_cross <- function(x) inherits(x, "Cross")
+
+is_free_plot <- function(x) is_ggalign_plot(x) && is_free(x@align)
+
+is_free <- function(x) inherits(x, "Free")
+
+#######################################################3
 is_align_free <- function(x) UseMethod("is_align_free")
 
 #' @export
@@ -182,72 +195,6 @@ align_method_params <- function(f, remove = character()) {
     x
 }
 
-###########################################################
-#' @export
-stack_layout_add.ggalign_plot <- function(object, stack, object_name) {
-    align <- object@align
-    # To-Do: Use S7 and double dispatch
-    if (is_cross(align) && !is_cross_layout(stack)) {
-        # we prevent from adding `cross_*` to normal `stack_layout()`
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(stack)
-            ),
-            i = "Did you want to use {.fn cross_align} instead?"
-        ))
-    }
-    if (is.null(active_index <- stack@active) ||
-        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
-        if (is.null(old_coords <- stack@layout) && !is_align_free(align)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add {.var {object_name}} to %s",
-                    object_name(stack)
-                ),
-                i = sprintf("%s cannot align observations", object_name(stack))
-            ))
-        } else {
-            # unlock the object
-            align$unlock()
-
-            # initialize the necessary parameters for `AlignProto` object
-            align$direction <- stack@direction
-            align$position <- .subset2(stack@heatmap, "position")
-            align$object_name <- object_name
-            align$layout_name <- object_name(stack)
-
-            # this step, the object will act with the stack layout
-            # group rows into panel or reorder rows
-            new_coords <- align$layout(
-                layout_data = stack@data, # must be a matrix
-                layout_coords = old_coords
-            )
-
-            # initialize the plot object
-            object@plot <- align$setup_plot(object@plot)
-
-            # finally, we let the object do some changes in the layout
-            stack <- align$finish_layout(stack)
-
-            # we lock the Align object to prevent user from modifying this
-            # object in `$build` method, we shouldn't do any calculations in
-            # `$build` method
-            align$lock()
-            stack <- stack_add_plot(stack, object, object@active, object_name)
-        }
-    } else { # should be a QuadLayout object
-        plot <- quad_layout_add(object, plot, object_name)
-        stack@plot_list[[active_index]] <- plot
-        new_coords <- slot(plot, stack@direction)
-    }
-    update_layout_coords(
-        stack,
-        coords = new_coords,
-        object_name = object_name
-    )
-}
-
 #' @importFrom methods slot slot<-
 #' @export
 quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
@@ -275,13 +222,13 @@ quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
                 "Cannot add {.var {object_name}} to %s", object_name(quad)
             ),
             i = sprintf(
-                "%s cannot align observations in {.field {direction}} direction", object_name(quad)
+                "%s cannot align discrete variable in {.field {direction}} direction", object_name(quad)
             )
         ))
     }
 
     # add annotation -----------------------------
-    stack <- stack_layout_add(object, stack, object_name)
+    stack <- chain_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
 
     new_coords <- stack@layout

@@ -7,10 +7,6 @@ cross <- function(cross, ..., call = caller_call()) {
     new_ggalign_plot(align = cross, ..., call = call)
 }
 
-is_cross_plot <- function(x) is_ggalign_plot(x) && is_cross(x@align)
-
-is_cross <- function(x) inherits(x, "Cross")
-
 #' @export
 summary.Cross <- function(object, ...) c(TRUE, FALSE)
 

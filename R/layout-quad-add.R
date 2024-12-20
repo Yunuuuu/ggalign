@@ -34,7 +34,7 @@ quad_layout_add.default <- function(object, quad, object_name) {
             i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
         ))
     } else {
-        slot(quad, position) <- stack_layout_add(object, stack, object_name)
+        slot(quad, position) <- chain_layout_add(object, stack, object_name)
     }
     quad
 }
@@ -153,7 +153,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
             stack@heatmap$free_guides <- free_guides
         }
-        stack <- update_stack_active(
+        stack <- switch_chain_plot(
             stack, .subset2(object, "what"), quote(quad_anno())
         )
         slot(quad, position) <- stack
@@ -231,7 +231,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     } else {
         cli_abort(c(
             "Cannot add {.var {object_name}} to a {.fn {quad@name}}",
-            i = "{.fn {quad@name}} cannot align observations in {.field {direction}} direction"
+            i = "{.fn {quad@name}} cannot align discrete variable in {.field {direction}} direction"
         ))
     }
     object@heatmap$position <- position

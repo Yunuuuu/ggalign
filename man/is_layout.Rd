@@ -40,8 +40,8 @@ is_quad_layout(quad_alignv(1:10))
 is_quad_layout(quad_free(mtcars))
 
 # for stack_layout()
-is_stack_layout(stack_align(1:10))
-is_stack_layout(stack_free(1:10))
+is_stack_layout(stack_discrete("h", 1:10))
+is_stack_layout(stack_continuous("h", 1:10))
 
 # for heatmap_layout()
 is_heatmap_layout(ggheatmap(1:10))

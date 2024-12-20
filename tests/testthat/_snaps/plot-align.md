@@ -44,11 +44,11 @@
 
 # `align_kmeans` works well
 
-    align_kmeans(3L) disrupt the previously established panel groups of the top annotation `stack_align()`
+    align_kmeans(3L) disrupt the previously established panel groups of the top annotation `stack_discrete()`
 
 ---
 
-    align_kmeans(3L) disrupt the previously established panel groups of the left annotation `stack_align()`
+    align_kmeans(3L) disrupt the previously established panel groups of the left annotation `stack_discrete()`
 
 ---
 
@@ -57,10 +57,10 @@
 
 # `align_dendro` works well
 
-    align_dendro(k = 2L) disrupt the previously established panel groups of the top annotation `stack_align()`
+    align_dendro(k = 2L) disrupt the previously established panel groups of the top annotation `stack_discrete()`
 
 # `ggalign()` works well
 
-    `coord_polar()` is not supported in the top annotation `stack_align()`
+    `coord_polar()` is not supported in the top annotation `stack_discrete()`
     i Will use `coord_cartesian()` instead
 

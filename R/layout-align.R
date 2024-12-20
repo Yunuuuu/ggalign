@@ -1,6 +1,87 @@
+#' Set Expansion for the Layout
+#'
+#' @description
+#' To align axes, it is important to keep the expansion consistent across all
+#' plots in the layout. You can add a `layout_expand` object to the layout. For
+#' the `quad_layout()` function, you must specify `x` and `y` arguments. For
+#' other layouts, you can pass the expansion values using `...` directly.
+#'
+#' @param ... A list of range expansion constants, used to add padding around
+#' the data to ensure they are placed some distance away from the axes. Use the
+#' convenience function [`expansion()`][ggplot2::expansion()] to generate the
+#' values.
+#' @param x,y Same as `...`, but specifically for `quad_layout()`.
+#'
+#' @importFrom rlang list2
+#' @export
+layout_expand <- function(..., x = waiver(), y = waiver()) {
+    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
+        cli_abort(
+            "Cannot mix the usage of {.arg ...} and {.arg x}/{.arg y} argument"
+        )
+    }
+    if (...length() > 0L) {
+        ans <- list2(...)
+        names(ans) <- NULL
+    } else {
+        ans <- list(x = x, y = y)
+    }
+    structure(ans, class = c("layout_expand", "layout_design"))
+}
+
+#' Set continuous limits for the layout
+#'
+#' @description
+#' To align continuous axes, it is important to keep the limits consistent
+#' across all plots in the layout. You can set the limits by passing a function
+#' directly to the `limits` or `xlim`/`ylim` argument, using `...` only.
+#' Alternatively, you can add a `continuous_limits` object to the layout. For
+#' the `quad_layout()` function, you must specify `x`/`y` arguments. For other
+#' layouts, you should pass the limits using `...` directly.
+#'
+#' @param ... A list of two numeric values, specifying the left/lower limit and
+#' the right/upper limit of the scale.
+#' @param x,y A list of two numeric values, specifying the left/lower limit and
+#' the right/upper limit of the scale.
+#' @importFrom rlang list2
+#' @export
+continuous_limits <- function(..., x = waiver(), y = waiver()) {
+    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
+        cli_abort(
+            "Cannot mix the usage of {.arg ...} and {.arg x}/{.arg y} argument"
+        )
+    }
+    if (...length() > 0L) {
+        ans <- list2(...)
+        names(ans) <- NULL
+    } else {
+        ans <- list(x = x, y = y)
+    }
+    structure(ans, class = c("continuous_limits", "layout_design"))
+}
+
+################################################################
+is_continuous_design <- function(x) {
+    is.null(x) || inherits(x, "continuous_limits")
+}
+
+is_discrete_design <- function(x) inherits(x, "discrete_design")
+
+#' Layout can align ordinal variable or continuous variable
+#'
+#' @param x A `LayoutProto` object.
+#' @noRd
+is_layout_discrete <- function(x, ...) UseMethod("is_layout_discrete")
+
+is_layout_continuous <- function(x, ...) UseMethod("is_layout_continuous")
+
+################################################################
 # layout params are used to align the observations
 new_layout_coords <- function(panel = NULL, index = NULL, nobs = NULL) {
-    list(panel = panel, index = index, nobs = nobs)
+    structure(
+        list(panel = panel, index = index, nobs = nobs),
+        class = c("discrete_design", "layout_design")
+    )
 }
 
 # Initialize the index and panel

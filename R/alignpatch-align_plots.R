@@ -252,15 +252,14 @@ update_layout_title <- function(old, new) update_non_waive(old, new)
 #'
 #' @param theme A [`theme()`][ggplot2::theme] object used to customize various
 #' elements of the plot, including `guides`, `title`, `subtitle`, `caption`,
-#' `margins`, `patch.title`, `panel.border`, and `background`. By default, the
-#' theme will inherit from the parent `layout`. When aligning observations, it
-#' also controls the panel spacing for all plots in the layout.
+#' `margins`, `panel.border`, and `background`. By default, the
+#' theme will inherit from the parent `layout`.
 #'
 #' @inheritParams rlang::args_dots_empty
 #'
 #' @details
-#' - `guides`, `patch.title`, `panel.border`, and `background` will always be
-#' added even for the nested `alignpatches` object.
+#' - `guides`, `panel.border`, and `background` will always be used even for the
+#' nested `alignpatches` object.
 #'
 #' - `title`, `subtitle`, `caption`, and `margins` will be added for the
 #' top-level `alignpatches` object only.
