@@ -368,16 +368,19 @@ ggalign_design <- function(x = NULL, y = NULL,
     )
 }
 
-setup_discrete_limits <- function(axis, design) {
+setup_discrete_limits <- function(axis, design, n_panels) {
     panel <- .subset2(design, "panel")
     index <- .subset2(design, "index")
-
-    # For y-axis, ggplot arrange panel from top to bottom,
-    # we always choose to reverse the panel order
-    if (axis == "y") panel <- fct_rev(panel)
-    lapply(split(seq_along(index), panel), function(plot_index) {
-        range(plot_index) + c(-0.5, 0.5)
-    })
+    if (n_panels == 1L) {
+        list(range(index) + c(-0.5, 0.5))
+    } else {
+        # For y-axis, ggplot arrange panel from top to bottom,
+        # we always choose to reverse the panel order
+        if (axis == "y") panel <- fct_rev(panel)
+        lapply(split(seq_along(index), panel), function(plot_index) {
+            range(plot_index) + c(-0.5, 0.5)
+        })
+    }
 }
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
@@ -388,27 +391,9 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
     if (is.null(x_design) && is.null(y_design)) {
         return(plot)
     }
-    if (.subset2(object, "xlim") && !is.null(x_design)) {
-        if (is_discrete_design(x_design)) {
-            xlim_list <- setup_discrete_limits("x", x_design)
-        } else {
-            xlim_list <- x_design
-        }
-    } else {
-        xlim_list <- NULL
-    }
-
-    if (.subset2(object, "ylim") && !is.null(y_design)) {
-        if (is_discrete_design(y_design)) {
-            ylim_list <- setup_discrete_limits("y", y_design)
-        } else {
-            ylim_list <- y_design
-        }
-    } else {
-        ylim_list <- NULL
-    }
-
     ParentCoord <- .subset2(plot, "coordinates")
+    xlim_list <- NULL
+    ylim_list <- NULL
     plot$coordinates <- ggproto(
         NULL, ParentCoord,
         num_of_panels = NULL,
@@ -419,6 +404,25 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             self$num_of_panels <- vec_unique_count(.subset2(layout, "PANEL"))
             self$panel_counter <- 0L
             self$n_cycle <- vec_unique_count(.subset2(layout, "COL"))
+            if (.subset2(object, "xlim") && !is.null(x_design)) {
+                if (is_discrete_design(x_design)) {
+                    xlim_list <<- setup_discrete_limits(
+                        "x", x_design, self$n_cycle
+                    )
+                } else {
+                    xlim_list <<- x_design
+                }
+            }
+            if (.subset2(object, "ylim") && !is.null(y_design)) {
+                if (is_discrete_design(y_design)) {
+                    ylim_list <<- setup_discrete_limits(
+                        "y", y_design, 
+                        vec_unique_count(.subset2(layout, "ROW"))
+                    )
+                } else {
+                    ylim_list <<- y_design
+                }
+            }
             # call the parent method
             ggproto_parent(ParentCoord, self)$setup_layout(layout, params)
         },

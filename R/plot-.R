@@ -133,6 +133,7 @@ AlignProto <- ggproto("AlignProto",
     # A single boolean value indicates whether we should set facet and coord
     free_facet = FALSE,
     free_coord = FALSE,
+    labels = NULL,
 
     # we always prevent user from modifying the object in `$build_plot()` and
     # `$finish_plot()` methods
