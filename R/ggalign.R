@@ -9,16 +9,24 @@
 #' simple vectors. By default, it will inherit from the layout. If a function,
 #' it will apply with the layout matrix.
 #'
-#' @inheritParams ggplot2::ggplot
 #' @param data A flexible input that specifies the data to be used
-#' - `NULL`: No data is set.
-#' - [`waiver()`][ggplot2::waiver]: Uses the layout matrix.
-#' - A `function` (including purrr-like lambda syntax) that is applied to the
-#'   layout matrix, and must return a matrix. If you want to transform the final
-#'   plot data, please use [`scheme_data()`].
-#' - A `matrix`, `data frame`, or atomic vector.
-#' @importFrom ggplot2 aes
-#'
+#'   - `NULL`: No data is set.
+#'   - [`waiver()`][ggplot2::waiver]: Try to use the layout matrix.
+#'   - A `function` (including purrr-like lambda syntax) that is applied to the
+#'     layout matrix. If you want to transform the final plot data, please use
+#'     [`scheme_data()`].
+#'   - A `matrix`, `data frame`, or atomic vector.
+#' @inheritParams ggplot2::ggplot
+#' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
+#' [`fortify_data_frame()`].
+#' @param size The relative size of the plot, can be specified as a
+#' [`unit`][grid::unit].
+#' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
+#'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
+#'   default, will use the option-
+#'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
+#' @param active A [`active()`] object that defines the context settings when
+#'   added to a layout.
 #' @section ggplot2 specification:
 #' `ggalign` initializes a ggplot `data` and `mapping`.
 #'
@@ -68,7 +76,7 @@
 #'  - `.extra_panel`: the panel information for column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
-#' @inheritSection align_discrete Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
@@ -83,9 +91,10 @@
 #'     ggalign(data = NULL, size = 0.2) +
 #'     geom_tile(aes(y = 1L, fill = .panel))
 #'
-#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 ggplot aes
+#' @importFrom rlang list2
 #' @export
-ggalign <- function(data = waiver(), mapping = aes(), size = NULL,
+ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
                     no_axes = NULL, active = NULL) {
     if (inherits(data, "uneval")) {
         cli_abort(c(
@@ -99,7 +108,7 @@ ggalign <- function(data = waiver(), mapping = aes(), size = NULL,
     active <- update_active(active, new_active(use = TRUE))
     new_ggalign_plot(
         AlignGg,
-        input_data = data,
+        input_data = data, params = list2(...),
         plot = ggplot(mapping = mapping),
         size = size,
         schemes = default_schemes(data, th = theme_no_panel()),
@@ -112,7 +121,7 @@ summary.AlignGg <- function(object, ...) c(FALSE, FALSE)
 
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", AlignProto,
-    setup_design = function(self, layout_data, layout_design) {
+    setup_design = function(self, layout_data, design) {
         object_name <- self$object_name
         layout_name <- self$layout_name
         input_data <- self$input_data
@@ -133,9 +142,9 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         ans <- fortify_data_frame(data)
 
         # for discrete design, # we need ensure the nobs is the same
-        if (is_discrete_design(layout_design)) {
+        if (is_discrete_design(design)) {
             if (!is.null(data)) {
-                if (is.null(layout_nobs <- layout_design$nobs)) {
+                if (is.null(layout_nobs <- design$nobs)) {
                     layout_nobs <- NROW(data)
                 } else if (NROW(data) != layout_nobs) {
                     cli_abort(sprintf(
@@ -144,7 +153,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                     ))
                 }
                 self$labels <- vec_names(data) %||% vec_names(layout_data)
-                layout_design["nobs"] <- list(layout_nobs)
+                design["nobs"] <- list(layout_nobs)
                 # we always add `.index` to align the observations
                 if (is.matrix(input_data)) {
                     ans$.index <- vec_rep(
@@ -160,7 +169,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             ans$.names <- NULL
         }
         self$data <- ggalign_attr_restore(ans, layout_data)
-        layout_design
+        design
     },
     setup_plot = function(self, plot) {
         direction <- self$direction

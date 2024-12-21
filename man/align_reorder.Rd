@@ -51,7 +51,7 @@ Typically, you can achieve the functionality of \code{align_reorder()} using
 \code{align_order()} by manually extracting the ordering information from
 the statistic.
 }
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

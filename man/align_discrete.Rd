@@ -23,18 +23,19 @@ align_discrete(
 \arguments{
 \item{align}{An \code{AlignDiscrete} object.}
 
-\item{data}{Options for \code{data}:
+\item{data}{A flexible input that specifies the data to be used
 \itemize{
-\item A matrix, data frame, or atomic vector.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the \verb{layout matrix}.
 \item \code{NULL}: No data is set.
-\item A \code{function} (including purrr-like lambda syntax) applied to the layout
-\code{matrix}.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Try to use the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax) that is applied to the
+layout matrix. If you want to transform the final plot data, please use
+\code{\link[=scheme_data]{scheme_data()}}.
+\item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
-\item{...}{Additional fields passed to the \code{AlignDiscrete} object.}
+\item{...}{Additional fields passed to the \code{align} object.}
 
-\item{params}{A list of parameters for \code{AlignDiscrete}.}
+\item{params}{A list of parameters for \code{align}.}
 
 \item{plot}{A ggplot object.}
 
@@ -86,7 +87,7 @@ observations.
 \item \code{draw}: A method used to draw the plot. Must return a \code{ggplot} object.
 }
 }
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

@@ -9,7 +9,7 @@
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
 #' @inheritParams align_discrete
-#' @inheritSection align_discrete Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +

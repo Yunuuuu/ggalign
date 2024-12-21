@@ -27,10 +27,10 @@ align_range(
 \item{data}{A flexible input that specifies the data to be used
 \itemize{
 \item \code{NULL}: No data is set.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the layout matrix.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Try to use the layout matrix.
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
-layout matrix, and must return a matrix. If you want to transform the final
-plot data, please use \code{\link[=scheme_data]{scheme_data()}}.
+layout matrix. If you want to transform the final plot data, please use
+\code{\link[=scheme_data]{scheme_data()}}.
 \item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
@@ -50,6 +50,12 @@ with \code{\link[=element_line]{element_line()}}.
 \item Link ranges can be customized using the \code{plot.ggalign_ranges} theme element
 with \code{\link[=element_polygon]{element_polygon()}}.
 }}
+
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
+
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 
 \item{ranges}{A list of observation ranges. Each range will be represented
 by a facet panel.}

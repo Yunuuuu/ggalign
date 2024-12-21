@@ -15,7 +15,14 @@ object. By default, it will inherit from the parent layout if applicable.
 Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
 provided directly.}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
+
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}

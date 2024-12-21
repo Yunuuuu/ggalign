@@ -23,7 +23,7 @@
 #' transforming it as necessary for statistic calculations. By default, it will
 #' inherit from the layout matrix.
 #' @inheritParams align_order
-#' @inheritSection align_discrete Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +

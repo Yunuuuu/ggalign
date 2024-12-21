@@ -46,7 +46,7 @@
 #' @inheritParams align_hclust
 #' @inheritParams dendrogram_data
 #' @inheritParams ggalign
-#' @inheritSection align_discrete Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' # align_dendro will always add a plot area
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

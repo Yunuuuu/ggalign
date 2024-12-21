@@ -7,6 +7,7 @@
 ggalign(
   data = waiver(),
   mapping = aes(),
+  ...,
   size = NULL,
   no_axes = NULL,
   active = NULL
@@ -16,15 +17,29 @@ ggalign(
 \item{data}{A flexible input that specifies the data to be used
 \itemize{
 \item \code{NULL}: No data is set.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the layout matrix.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Try to use the layout matrix.
 \item A \code{function} (including purrr-like lambda syntax) that is applied to the
-layout matrix, and must return a matrix. If you want to transform the final
-plot data, please use \code{\link[=scheme_data]{scheme_data()}}.
+layout matrix. If you want to transform the final plot data, please use
+\code{\link[=scheme_data]{scheme_data()}}.
 \item A \code{matrix}, \verb{data frame}, or atomic vector.
 }}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
+
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
+
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will use the option-
+\code{"ggalign.align_no_axes"}.}
+
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -83,7 +98,7 @@ annotation) or row (top or bottom annotation).
 }
 }
 
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

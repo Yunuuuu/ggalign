@@ -8,11 +8,11 @@
 #' `free_gg()` focuses on layout integration without enforcing strict axis
 #' alignment. `ggfree()` is an alias for `free_gg`.
 #'
-#' @param ... Additional arguments passed to [`fortify_data_frame()`].
 #' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]
 #' object. By default, it will inherit from the parent layout if applicable.
 #' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
 #' provided directly.
+#' @inheritParams ggalign
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +

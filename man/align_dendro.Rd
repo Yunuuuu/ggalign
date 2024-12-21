@@ -94,8 +94,16 @@ middle of all direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
+
 \item{data}{A matrix-like object. By default, it inherits from the layout
 \code{matrix}.}
+
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will use the option-
+\code{"ggalign.align_no_axes"}.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
@@ -140,7 +148,7 @@ and correspond to both nodes of each edge.
 }
 }
 
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

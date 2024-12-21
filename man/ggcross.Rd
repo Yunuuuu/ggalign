@@ -9,6 +9,17 @@ ggcross(mapping = aes(), size = NULL, no_axes = NULL, active = NULL)
 \arguments{
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
+
+\item{size}{The relative size of the plot, can be specified as a
+\code{\link[grid:unit]{unit}}.}
+
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
+removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
+default, will use the option-
+\code{"ggalign.align_no_axes"}.}
+
+\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
+added to a layout.}
 }
 \description{
 \code{ggcross} resets the layout ordering index of a \code{\link[=cross_discrete]{cross_discrete()}}. This

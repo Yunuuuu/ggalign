@@ -7,32 +7,19 @@
 #' split observations and, in some cases, add plot components to the `Layout`.
 #'
 #' @param align An `AlignDiscrete` object.
-#' @param data Options for `data`:
-#'  - A matrix, data frame, or atomic vector.
-#'  - [`waiver()`][ggplot2::waiver]: Uses the `layout matrix`.
-#'  - `NULL`: No data is set.
-#'  - A `function` (including purrr-like lambda syntax) applied to the layout
-#'    `matrix`.
-#' @param ... Additional fields passed to the `AlignDiscrete` object.
-#' @param params A list of parameters for `AlignDiscrete`.
+#' @param ... Additional fields passed to the `align` object.
+#' @param params A list of parameters for `align`.
 #' @param plot A ggplot object.
-#' @param size The relative size of the plot, can be specified as a
-#' [`unit`][grid::unit].
+#' @inheritParams ggalign
 #' @param schemes Options for `schemes`:
 #'  - `NULL`: Used when `align` do not add a plot.
 #'  - [`waiver()`][ggplot2::waiver]: Try to infer `schemes` based on `data`.
-#' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
-#'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
-#'   default, will use the option-
-#'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
-#' @param active A [`active()`] object that defines the context settings when
-#'   added to a layout.
 #' @param check.param Logical; if `TRUE`, checks parameters and provides
 #'   warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting
 #'   messages.
 #'
-#' @section Axis Alignment for Observations:
+#' @section Discrete Axis Alignment:
 #' It is important to note that we consider rows as observations, meaning
 #' `vec_size(data)`/`NROW(data)` must match the number of observations along the
 #' axis used for alignment (x-axis for a vertical stack layout, y-axis for a

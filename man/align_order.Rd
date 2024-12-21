@@ -44,7 +44,7 @@ added to a layout.}
 Ordering observations based on summary weights or a specified ordering
 character or integer index.
 }
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

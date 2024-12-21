@@ -27,7 +27,7 @@
 #' performing hierarchical clustering), `k` (the number of clusters), and `h`
 #' (the height at which to cut the tree). By default,
 #' [`cutree()`][stats::cutree()] is used.
-#' @inheritSection align_discrete Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @seealso
 #' - [`dendrogram_data()`]
 #' - [`hclust2()`]
