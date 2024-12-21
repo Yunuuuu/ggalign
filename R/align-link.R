@@ -455,7 +455,7 @@ AlignLink <- ggproto("AlignLink", AlignDiscrete,
         if (!is.null(data <- .subset2(self, "data"))) {
             plot_data <- inner_join(plot_data, data, by = ".index")
         }
-        plot$data <- ggalign_attr_restore(plot_data, data)
+        plot <- gguse_data(plot, ggalign_attr_restore(plot_data, data))
 
         # set up facets
         if (length(breaks) > 1L) {
