@@ -19,7 +19,14 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
     }
     direction <- stack@direction
     schemes <- inherit_parent_layout_schemes(stack, schemes)
-    theme <- inherit_parent_layout_theme(stack, theme, direction = direction)
+    if (is.null(direction)) {
+        spacing <- NULL
+    } else if (is_horizontal(direction)) {
+        spacing <- "y"
+    } else {
+        spacing <- "x"
+    }
+    theme <- inherit_parent_layout_theme(stack, theme, spacing = spacing)
     composer <- stack_build_composer(stack, schemes, theme, extra_design)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)

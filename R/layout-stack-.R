@@ -81,6 +81,7 @@ stack_discrete.default <- function(direction, data = NULL, ...,
         nobs <- NULL
     }
     new_stack_layout(
+        name = "stack_discrete",
         data = data, direction = direction,
         design = discrete_design(nobs = nobs),
         schemes = schemes, theme = theme, sizes = sizes
@@ -123,7 +124,7 @@ stack_discrete.formula <- stack_discrete.function
 #' @inheritParams stack_discrete
 #' @param ... Additional arguments passed to [`fortify_data_frame()`].
 #' @export
-stack_continuous <- function(direction, data = NULL, limits = NULL, ...,
+stack_continuous <- function(direction, data = NULL, ..., limits = NULL,
                              theme = NULL, sizes = NA) {
     UseMethod("stack_continuous", data)
 }
@@ -153,18 +154,16 @@ stack_continuoush <- function(data = NULL, ...) {
 stack_freeh <- stack_continuoush
 
 #' @export
-stack_continuous.default <- function(direction, data = NULL,
-                                     limits = NULL, ...,
-                                     theme = NULL, sizes = NA) {
+stack_continuous.default <- function(direction, data = NULL, ...,
+                                     limits = NULL, theme = NULL, sizes = NA) {
     assert_limits(limits)
     direction <- check_direction(direction)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_stack_layout(
-        data = data, 
-        direction = direction,
-        design = limits,
+        name = "stack_continuous",
+        data = data, direction = direction, design = limits,
         schemes = schemes, theme = theme, sizes = sizes
     )
 }
@@ -182,14 +181,17 @@ stack_continuous.function <- function(direction, data = NULL, ...) {
 stack_continuous.formula <- stack_continuous.function
 
 #' @importFrom methods new
-new_stack_layout <- function(data, direction, design, schemes = NULL,
-                             theme = NULL, sizes = NA, call = caller_call()) {
+new_stack_layout <- function(data, direction, design,
+                             schemes = NULL, theme = NULL, sizes = NA,
+                             name = NULL, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    if (is_continuous_design(design)) {
-        name <- "stack_continuous"
-    } else {
-        name <- "stack_discrete"
+    if (is.null(name)) {
+        if (is_continuous_design(design)) {
+            name <- "stack_continuous"
+        } else {
+            name <- "stack_discrete"
+        }
     }
     new(
         "StackLayout",
@@ -235,8 +237,8 @@ new_stack_layout <- function(data, direction, design, schemes = NULL,
 #' stack_vertical(small_mat) + align_dendro()
 #'
 #' @export
-stack_layout <- function(direction, data = NULL,
-                         limits = waiver(), ...) {
+stack_layout <- function(direction, data = NULL, ...,
+                         limits = waiver()) {
     if (is.waive(limits)) {
         stack_discrete(data = data, direction = direction, ...)
     } else {
@@ -249,13 +251,13 @@ stack_layout <- function(direction, data = NULL,
 
 #' @export
 #' @rdname stack_layout
-stack_horizontal <- function(data = NULL, limits = waiver(), ...) {
+stack_horizontal <- function(data = NULL, ..., limits = waiver()) {
     stack_layout(data = data, direction = "h", limits = limits, ...)
 }
 
 #' @export
 #' @rdname stack_layout
-stack_vertical <- function(data = NULL, limits = waiver(), ...) {
+stack_vertical <- function(data = NULL, ..., limits = waiver()) {
     stack_layout(data = data, direction = "v", limits = limits, ...)
 }
 
@@ -269,12 +271,9 @@ methods::setClass(
     "StackLayout",
     contains = "ChainLayout",
     list(
-        name = "character", # used to provide message
-        data = "ANY",
         direction = "character",
         heatmap = "list", # used by heatmap annotation
-        sizes = "ANY", # used by stack layout
-        design = "ANY" # used to align axis
+        sizes = "ANY" # used by stack layout
     ),
     prototype = list(heatmap = list(position = NULL, free_guides = waiver()))
 )

@@ -86,7 +86,7 @@ gguse_data <- function(plot, data) {
 # so always run firstly
 gguse_linear_coord <- function(plot, layout_name) {
     coord <- plot$coordinates
-    if (inherits(coord, "CoordTrans") || !coord$is_linear()) {
+    if (!inherits(coord, "CoordTrans") && !coord$is_linear()) {
         cli_warn(c(
             sprintf(
                 "{.fn %s} is not supported in %s",
@@ -95,6 +95,120 @@ gguse_linear_coord <- function(plot, layout_name) {
             i = "Will use {.fn coord_cartesian} instead"
         ))
         plot$coordinates <- ggplot2::coord_cartesian()
+    }
+    plot
+}
+
+view_scales_polar <- function(scale, theta, coord_limits, expand = TRUE) {
+    aesthetic <- scale$aesthetics[1]
+    is_theta <- theta == aesthetic
+    name <- if (is_theta) "theta" else "r"
+    default_expansion <- function(scale, discrete = expansion(add = 0.6),
+                                 continuous = expansion(mult = 0.05), 
+                                 expand = TRUE) {
+        out <- expansion()
+        if (!any(expand)) {
+            return(out)
+        }
+        scale_expand <- scale$expand %|w|%
+            if (scale$is_discrete()) discrete else continuous
+
+        # for backward compatibility, we ensure expansions have expected length
+        expand <- rep_len(expand, 2L)
+        scale_expand <- rep_len(scale_expand, 4)
+
+        if (expand[1]) {
+            out[1:2] <- scale_expand[1:2]
+        }
+        if (expand[2]) {
+            out[3:4] <- scale_expand[3:4]
+        }
+        out
+    }
+    expansion <- default_expansion(scale, expand = expand)
+    limits <- scale$get_limits()
+    continuous_range <- ggfun("expand_limits_scale")(
+        scale, expansion, limits, coord_limits = coord_limits
+    )
+
+    primary <- ggfun("view_scale_primary")(scale, limits, continuous_range)
+    view_scales <- list(
+        primary,
+        sec = ggfun("view_scale_secondary")(scale, limits, continuous_range),
+        major = primary$map(primary$get_breaks()),
+        minor = primary$map(primary$get_breaks_minor()),
+        range = continuous_range
+    )
+
+    names(view_scales) <- c(name, paste0(name, ".", names(view_scales)[-1]))
+    view_scales
+}
+
+gguse_radial_coord <- function(plot, coord, ..., layout_name) {
+    setup_panel_params <- function(self, scale_x, scale_y, params = list()) {
+        params <- c(
+            view_scales_polar(
+                scale_x, self$theta,
+                self$limits$x,
+                expand = params$expand[c(4, 2)]
+            ),
+            view_scales_polar(
+                scale_y, self$theta,
+                self$limits$y,
+                expand = params$expand[c(3, 1)]
+            ),
+            list(
+                bbox = ggfun("polar_bbox")(
+                    self$arc, inner_radius = self$inner_radius),
+                arc = self$arc, inner_radius = self$inner_radius
+            )
+        )
+        axis_rotation <- self$r_axis_inside
+        if (is.numeric(axis_rotation)) {
+            theta_scale <- switch(self$theta,
+                x = scale_x,
+                y = scale_y
+            )
+            axis_rotation <- theta_scale$transform(axis_rotation)
+            axis_rotation <- ggfun("oob_squish")(
+                axis_rotation, params$theta.range
+            )
+            axis_rotation <- ggfun("theta_rescale")(
+                axis_rotation, params$theta.range,
+                params$arc, 1
+            )
+            params$axis_rotation <- rep_len(axis_rotation, length.out = 2)
+        } else {
+            params$axis_rotation <- params$arc
+        }
+
+        params
+    }
+    if (inherits(plot_coord <- plot$coordinates, "CoordRadial")) {
+        plot$coordinates <- ggproto(
+            NULL, plot_coord,
+            theta = coord$theta,
+            r = coord$r,
+            arc = coord$arc,
+            direction = coord$direction,
+            r_axis_inside = coord$r_axis_inside,
+            expand = coord$expand,
+            ...,
+            setup_panel_params = setup_panel_params
+        )
+    } else {
+        if (!isTRUE(plot$coordinates$default)) {
+            cli_warn(c(
+                sprintf(
+                    "{.fn %s} is not supported in %s",
+                    snake_class(plot_coord), layout_name
+                ),
+                i = sprintf("Will use {.fn %s} instead", snake_class(coord))
+            ))
+        }
+        plot$coordinates <- ggproto(NULL, coord, ...,
+            setup_panel_params = setup_panel_params
+        )
     }
     plot
 }

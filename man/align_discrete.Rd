@@ -23,14 +23,14 @@ align_discrete(
 \arguments{
 \item{align}{An \code{AlignDiscrete} object.}
 
-\item{data}{A flexible input that specifies the data to be used
+\item{data}{The following options can be used:
 \itemize{
 \item \code{NULL}: No data is set.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Try to use the layout matrix.
-\item A \code{function} (including purrr-like lambda syntax) that is applied to the
-layout matrix. If you want to transform the final plot data, please use
-\code{\link[=scheme_data]{scheme_data()}}.
-\item A \code{matrix}, \verb{data frame}, or atomic vector.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits the data from the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax): Applied to the layout
+matrix to transform the data before use. To transform the final plot
+data, please use \code{\link[=scheme_data]{scheme_data()}}.
+\item A \code{matrix}, \code{data.frame}, or atomic vector.
 }}
 
 \item{...}{Additional fields passed to the \code{align} object.}

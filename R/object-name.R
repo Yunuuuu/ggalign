@@ -20,6 +20,11 @@ object_name.StackLayout <- function(object, format = "fn") {
 }
 
 #' @export
+object_name.CircleLayout <- function(object, format = "fn") {
+    format_object_name(object@name, format)
+}
+
+#' @export
 object_name.QuadLayout <- function(object, format = "fn") {
     format_object_name(object@name, format)
 }

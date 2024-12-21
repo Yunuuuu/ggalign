@@ -156,6 +156,9 @@ update_design.StackLayout <- function(layout, ..., design, object_name) {
     layout
 }
 
+#' @export
+update_design.CircleLayout <- update_design.StackLayout
+
 #' @importFrom methods slot slot<-
 #' @export
 update_design.CrossLayout <- function(layout, ..., design, object_name,
@@ -422,17 +425,19 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
             # for each scale, we set the `breaks` and `labels`
-            if (is_discrete_design(x_design)) {
-                align_discrete_scales(
-                    "x", scales_x, x_design,
-                    .subset2(object, "xlabels")
-                )
-            }
-            if (is_discrete_design(y_design)) {
-                align_discrete_scales(
-                    "y", scales_y, y_design,
-                    .subset2(object, "ylabels")
-                )
+            if (self$is_linear()) {
+                if (is_discrete_design(x_design)) {
+                    align_discrete_scales(
+                        "x", scales_x, x_design,
+                        .subset2(object, "xlabels")
+                    )
+                }
+                if (is_discrete_design(y_design)) {
+                    align_discrete_scales(
+                        "y", scales_y, y_design,
+                        .subset2(object, "ylabels")
+                    )
+                }
             }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
         },

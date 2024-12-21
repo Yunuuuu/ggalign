@@ -4,7 +4,12 @@
 methods::setClass(
     "ChainLayout",
     contains = "LayoutProto",
-    list(plot_list = "list") # save the list of plots
+    list(
+        data = "ANY",
+        name = "character", # used to provide message
+        plot_list = "list", # save the list of plots
+        design = "ANY" # used to align axis
+    )
 )
 
 #' @export
@@ -56,10 +61,17 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
         on.exit(align$lock())
 
         # initialize the necessary parameters for `AlignProto` object
-        align$direction <- layout@direction
-        align$position <- .subset2(layout@heatmap, "position")
+        if (is_stack_layout(layout)) {
+            align$direction <- layout@direction
+            align$position <- .subset2(layout@heatmap, "position")
+        } else if (is_circle_layout(layout)) {
+            align$direction <- "vertical"
+        }
+        align$in_linear <- is_linear(layout)
         align$object_name <- object_name
         align$layout_name <- object_name(layout)
+
+
         data <- layout@data
         design <- layout@design
 

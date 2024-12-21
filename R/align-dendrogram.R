@@ -8,13 +8,13 @@
 #' @section ggplot2 specification:
 #' `align_dendro` initializes a ggplot `data` and `mapping`.
 #'
-#' The internal will always use a default mapping of `aes(x = .data$x, y =
-#' .data$y)`.
+#' The internal `ggplot` object will always use a default mapping of
+#' `aes(x = .data$x, y = .data$y)`.
 #'
 #' The default ggplot data is the `node` coordinates with `edge` data attached
 #' in [`ggalign`][ggalign_attr()] attribute, in addition, a
-#' [`geom_segment`][ggplot2::geom_segment] layer with a data of the `edge`
-#' coordinates will be added.
+#' [`geom_segment`][ggplot2::geom_segment] layer with a data frame of the `edge`
+#' coordinates will be added when `plot_dendrogram = TRUE`.
 #'
 #' dendrogram `node` and `edge` contains following columns:
 #'
@@ -99,24 +99,34 @@ align_dendro <- function(mapping = aes(), ...,
     }
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
+    plot <- ggplot(mapping = mapping)
+    if (plot_dendrogram) {
+        plot <- plot + ggplot2::geom_segment(
+            mapping = aes(
+                x = .data$x, y = .data$y,
+                xend = .data$xend, yend = .data$yend
+            ),
+            ...,
+            stat = "identity",
+            data = function(data) ggalign_attr(data, "edge")
+        )
+    }
     align_discrete(
         align = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
             k = k, h = h, plot_cut_height = plot_cut_height,
-            segment_params = list2(...),
             center = center, type = type, root = root,
             reorder_dendrogram = reorder_dendrogram,
             merge_dendro = merge_dendrogram,
             reorder_group = reorder_group,
-            cutree = cutree,
-            plot_dendrogram = plot_dendrogram
+            cutree = cutree
         ),
         no_axes = no_axes, active = active,
         size = size,
         schemes = default_schemes(th = theme_no_panel()),
         data = data,
-        plot = ggplot(mapping = mapping)
+        plot = plot
     )
 }
 
@@ -131,10 +141,25 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             ggplot2::labs(y = "height")
         )
     },
-    draw = function(self, plot, panel, index, extra_panel, extra_index,
-                    # other argumentds
-                    plot_dendrogram, segment_params,
-                    plot_cut_height, center, type, root) {
+    build_plot = function(self, plot, design, extra_design = NULL,
+                          previous_design = NULL, facet = NULL,
+                          # other argumentds
+                          plot_cut_height, center, type, root) {
+        params <- self$params
+        plot_cut_height <- .subset2(params, "plot_cut_height")
+        center <- .subset2(params, "center")
+        type <- .subset2(params, "type")
+        root <- .subset2(params, "root")
+        panel <- .subset2(design, "panel")
+        index <- .subset2(design, "index")
+        if (is_continuous_design(extra_design)) {
+            extra_panel <- NULL
+            extra_index <- NULL
+        } else {
+            extra_panel <- .subset2(extra_design, "panel")
+            extra_index <- .subset2(extra_design, "index")
+        }
+
         statistics <- .subset2(self, "statistics")
         direction <- self$direction
         priority <- switch_direction(direction, "left", "right")
@@ -163,7 +188,8 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                     leaf_pos = seq(start + 1L, end),
                     leaf_braches = rep_len(.subset(branches, i), n),
                     reorder_branches = FALSE,
-                    root = root
+                    root = root,
+                    double = self$in_linear
                 )
                 start <- end
             }
@@ -188,13 +214,15 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 leaf_braches = as.character(panel),
                 # panel has been reordered by the dendrogram index
                 reorder_branches = FALSE,
-                root = root
+                root = root,
+                double = self$in_linear
             )
         }
         node <- .subset2(data, "node")
         edge <- .subset2(data, "edge")
         node <- rename(node, c(ggpanel = ".panel", index = ".index"))
         edge <- rename(edge, c(ggpanel = ".panel"))
+
         # add names
         if (!is.null(self$labels)) {
             node$.names <- .subset(self$labels, .subset2(node, ".index"))
@@ -208,19 +236,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         }
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data
-        if (plot_dendrogram) {
-            plot <- plot + inject(
-                layer_order(ggplot2::geom_segment(
-                    mapping = aes(
-                        x = .data$x, y = .data$y,
-                        xend = .data$xend, yend = .data$yend
-                    ),
-                    !!!segment_params,
-                    stat = "identity",
-                    data = edge
-                ))
-            )
-        }
+        plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))
 
         if (plot_cut_height && !is.null(height <- .subset2(self, "height"))) {
             plot <- plot +
@@ -234,11 +250,21 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                     )
                 )
         }
-
-        plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))
-        plot <- gguse_linear_coord(plot, self$layout_name)
         position <- .subset2(self, "position")
-        if (is.null(position) || !isTRUE(plot$coordinates$default)) {
+        if (!self$in_linear) { # for circular layout
+            if (plot$scales$has_scale("y")) {
+                y_scale <- plot$scales$get_scales("y")
+                if (!y_scale$is_discrete()) {
+                    if (identical(y_scale$trans$name, "identity")) {
+                        y_scale$trans <- scales::as.transform("reverse")
+                    } else {
+                        y_scale$trans <- scales::as.transform("identity")
+                    }
+                }
+            } else {
+                plot <- plot + ggplot2::scale_y_reverse()
+            }
+        } else if (is.null(position) || !isTRUE(plot$coordinates$default)) {
             # if the dendrogram is in a normal stack layout
             # or if user has set the coordinate, we won't reverse
             # the dendrogram height axis
@@ -246,6 +272,19 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             plot <- plot + ggplot2::coord_trans(y = "reverse", clip = "off")
         } else if (position == "left") { # in the left, reverse x-axis
             plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
+        }
+
+        # set limits and default scales
+        if (is_horizontal(direction)) {
+            plot <- plot + ggalign_design(
+                y = design,
+                ylabels = .subset(self$labels, index)
+            )
+        } else {
+            plot <- plot + ggalign_design(
+                x = design,
+                xlabels = .subset(self$labels, index)
+            )
         }
 
         # always turn off clip, this is what dendrogram dependends on

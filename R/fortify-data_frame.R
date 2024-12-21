@@ -70,7 +70,17 @@ fortify_data_frame.NULL <- function(data, ...) data
 #' @description
 #' When `data` is a matrix, it will automatically be transformed into a
 #' long-form data frame, where each row represents a unique combination of
-#' matrix indices and their corresponding values.
+#' matrix indices and their corresponding values. The resulting data frame will
+#' contain the following columns:
+#'
+#' - `.row_names` and `.row_index`: the row names and an integer representing
+#'    the row index of the original matrix.
+#'
+#' - `.column_names` and `.column_index`: the column names and column index of
+#'    the original matrix.
+#'
+#' - `value`: the actual value.
+#'
 #' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.matrix <- function(data, ...) {

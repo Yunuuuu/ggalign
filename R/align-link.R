@@ -311,8 +311,24 @@ PatchAlignLink <- ggproto(
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
 AlignLink <- ggproto("AlignLink", AlignDiscrete,
     class = NULL, element = NULL,
+    free_facet = TRUE,
+    setup_layout = function(self, layout) {
+        if (!self$in_linear) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(self), self$layout_name
+                ),
+                i = sprintf(
+                    "%s can only be used in {.fn stack_layout}",
+                    object_name(self)
+                )
+            ))
+        }
+        ggproto_parent(AlignDiscrete, self)$setup_layout(layout)
+    },
     nobs = function(self) { # no input data
-        axis <- to_coord_axis(.subset2(self, "direction"))
+        axis <- to_coord_axis(self$direction)
         cli_abort(c(
             sprintf("You cannot add %s", object_name(self)),
             i = "layout {axis}-axis is not initialized or you must provide {.arg data}"
@@ -381,7 +397,7 @@ AlignLink <- ggproto("AlignLink", AlignDiscrete,
     },
 
     #' @importFrom stats reorder
-    build_plot = function(self, plot, design, extra_design,
+    build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         params <- .subset2(self, "params")
         direction <- self$direction
@@ -457,7 +473,7 @@ AlignLink <- ggproto("AlignLink", AlignDiscrete,
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        plot <- plot + align_melt_facet(default_facet, plot$facet)
+        plot <- gguse_facet(plot, default_facet)
         if (!is.null(link_position)) {
             plot$links_data <- list(
                 full_breaks = full_breaks,

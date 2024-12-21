@@ -14,14 +14,14 @@ ggalign(
 )
 }
 \arguments{
-\item{data}{A flexible input that specifies the data to be used
+\item{data}{The following options can be used:
 \itemize{
 \item \code{NULL}: No data is set.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Try to use the layout matrix.
-\item A \code{function} (including purrr-like lambda syntax) that is applied to the
-layout matrix. If you want to transform the final plot data, please use
-\code{\link[=scheme_data]{scheme_data()}}.
-\item A \code{matrix}, \verb{data frame}, or atomic vector.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits the data from the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax): Applied to the layout
+matrix to transform the data before use. To transform the final plot
+data, please use \code{\link[=scheme_data]{scheme_data()}}.
+\item A \code{matrix}, \code{data.frame}, or atomic vector.
 }}
 
 \item{mapping}{Default list of aesthetic mappings to use for plot.
@@ -52,48 +52,39 @@ it will apply with the layout matrix.
 }
 \section{ggplot2 specification}{
 
-\code{ggalign} initializes a ggplot \code{data} and \code{mapping}.
+\code{ggalign} initializes a ggplot object. The underlying data is created using
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}. Please refer to this method for more details.
 
-\code{ggalign()} always applies a default mapping for the axis of the data index
-in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
-layout (including left and right annotation) and \code{aes(x = .data$.x)}
-for vertical stack layout (including top and bottom annotation).
-
-The data in the underlying \code{ggplot} object will contain following columns:
+When aligning discrete variables, \code{ggalign()} always applies a default
+mapping for the axis of the data index in the layout. Specifically:
 \itemize{
-\item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
-stack layout (including top and bottom annotation), \code{y-axis} for
-horizontal stack layout (including left and right annotation).
-\item \code{.x}/\code{y} and \code{.discrete_x}/\code{.discrete_y}: an integer index of \code{x}/\code{y}
-coordinates and a factor of the data labels (only applicable when names
-exists).
-\item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
-(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): a character names (only
-applicable when names exists) and an integer index of the original data.
-\item \code{.row_names} and \code{.row_index}: the row names and an integer of
-row index of the original matrix (only applicable if \code{data} is a
-\code{matrix}).
-\item \code{.column_names} and \code{.column_index}: the column names and column index of
-the original matrix (only applicable if \code{data} is a \code{matrix}).
-\item \code{value}: the actual value (only applicable if \code{data} is a \code{matrix} or
-atomic vector).
+\item \code{aes(y = .data$.y)} is used for the horizontal \code{stack_layout()} (including
+left and right annotations).
+\item \code{aes(x = .data$.x)} is used for the vertical \code{stack_layout()} (including
+top and bottom annotations) and \code{circle_layout()}.
 }
 
-\code{matrix} input will be automatically melted into a long foramted data frame.
-
-Atomic vector will be put in the \code{value} column of the data frame.
-
-In the case where the input data is already a data frame, following columns
-(\code{.panel}, \code{.index}, \code{.names}, \code{.x}/\code{.y}, \code{.discrete_x}/\code{.discrete_y}) are
-added to the data frame.
-
-It is recommended to use \code{.x}/\code{.y}, or \code{.discrete_x}/\code{.discrete_y} as the
-\code{x}/\code{y} mapping.
-
-If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, an additional
-column will be added.
+The following columns will be added to the data frame to align discrete
+variables:
 \itemize{
-\item \code{.extra_panel}: the panel information for column (left or right
+\item \code{.panel}: The panel for the aligned axis. Refers to the \code{x-axis} for
+vertical \code{stack_layout()} (including top and bottom annotations), and the
+\code{y-axis} for horizontal \code{stack_layout()} (including left and right
+annotations).
+\item \code{.x}/\code{.y} and \code{.discrete_x}/\code{.discrete_y}: Integer indices for \code{x}/\code{y}
+coordinates, and a factor of the data labels (only applicable when names
+exist).
+\item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
+(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): Character names (if
+available) and the integer index of the original data.
+}
+
+If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, additional
+columns will be added:
+\itemize{
+\item \code{.extra_panel}: Provides the panel information for the column (left or
+right annotation) or row (top or bottom annotation).
+\item \code{.extra_index}: The index information for the column (left or right
 annotation) or row (top or bottom annotation).
 }
 }

@@ -52,7 +52,8 @@ CrossGg <- ggproto("CrossGg", Cross,
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
-    build_plot = function(self, plot, design, extra_design, previous_design) {
+    build_plot = function(self, plot, design, extra_design = NULL,
+                          previous_design = NULL) {
         direction <- self$direction
         index <- vec_c(
             .subset2(previous_design, "index"),
@@ -93,26 +94,8 @@ CrossGg <- ggproto("CrossGg", Cross,
             seq_len(.subset2(previous_design, "nobs")),
             seq_len(.subset2(design, "nobs"))
         )
-        if (nlevels(.subset2(design, "panel")) > 1L) {
-            default_facet <- switch_direction(
-                direction,
-                ggplot2::facet_grid(
-                    rows = ggplot2::vars(.data$.panel),
-                    scales = "free_y", space = "free",
-                    drop = FALSE, as.table = FALSE
-                ),
-                ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$.panel),
-                    scales = "free_x", space = "free",
-                    drop = FALSE, as.table = FALSE
-                )
-            )
-        } else {
-            default_facet <- ggplot2::facet_null()
-        }
         plot <- gguse_data(plot, data)
-        plot <- gguse_facet(plot, default_facet)
-        plot <- gguse_linear_coord(plot, self$layout_name)
+        # use linear coordinate
         if (is_horizontal(direction)) {
             default_design <- ggalign_design(
                 y = design,

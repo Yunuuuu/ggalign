@@ -135,8 +135,8 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
                 align_method_params(AlignDiscrete$align)
             ),
             align_method_params(
-                self$draw,
-                align_method_params(AlignDiscrete$draw)
+                self$build_plot,
+                align_method_params(AlignDiscrete$build_plot)
             ),
             self$extra_params
         )
@@ -237,64 +237,9 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
             object_name
         )
     },
-    build_plot = function(self, plot, design, extra_design,
-                          previous_design = NULL) {
-        direction <- self$direction
-        panel <- .subset2(design, "panel")
-        index <- .subset2(design, "index")
-        if (is.null(extra_design)) {
-            extra_panel <- NULL
-            extra_index <- NULL
-        } else {
-            extra_panel <- .subset2(extra_design, "panel")
-            extra_index <- .subset2(extra_design, "index")
-        }
-        params <- .subset2(self, "params")
-        plot <- align_inject(self$draw, c(params, list(
-            plot = plot,
-            panel = panel,
-            index = index,
-            extra_panel = extra_panel,
-            extra_index = extra_index
-        )))
-
-        # only when user use the internal facet, we'll setup the limits
-        # set up facets
-        if (nlevels(panel) > 1L) {
-            default_facet <- switch_direction(
-                direction,
-                ggplot2::facet_grid(
-                    rows = ggplot2::vars(.data$.panel),
-                    scales = "free_y", space = "free",
-                    drop = FALSE, as.table = FALSE
-                ),
-                ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$.panel),
-                    scales = "free_x", space = "free",
-                    drop = FALSE, as.table = FALSE
-                )
-            )
-        } else {
-            default_facet <- facet_stack(direction = direction)
-        }
-        plot <- gguse_facet(plot, default_facet)
-
-        # set limits and default scales
-        if (is_horizontal(direction)) {
-            plot + ggalign_design(
-                y = design,
-                ylabels = .subset(.subset2(self, "labels"), index)
-            )
-        } else {
-            plot + ggalign_design(
-                x = design,
-                xlabels = .subset(.subset2(self, "labels"), index)
-            )
-        }
-    },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,
-    # `layout()` and `draw()`. However, some additional parameters may be
+    # `align()` and `build_plot()`. However, some additional parameters may be
     # removed in `setup_params`. You should put these paramters here, otherwise,
     # they won't be collected.
     extra_params = character(),
@@ -349,32 +294,8 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
     #    index, this will be checked in `align_initialize_layout` function.
     align = function(self, panel, index) list(panel, index),
 
-    # Following methods will be executed when building plot with the final
-    # heatmap layout you shouldn't modify the `Align` object when drawing,
-    # since all of above process will only run once.
-    # Note: panel input will be reordered by index
-    draw = function(self, plot, panel, index, extra_panel, extra_index) {
-        plot
-    },
-
     # let AlignProto to add schemes and theme acoordingly
     finish_plot = function(self, plot, schemes, theme) {
-        direction <- self$direction
-        # remove axis titles, text, ticks used for alignment
-        if (isTRUE(self$no_axes)) {
-            schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
-                theme_no_axes(switch_direction(direction, "y", "x"))
-        }
-        plot <- plot_add_schemes(plot, schemes)
-        if (is_horizontal(direction)) {
-            theme <- theme(
-                panel.spacing.y = calc_element("panel.spacing.y", theme)
-            )
-        } else {
-            theme <- theme(
-                panel.spacing.x = calc_element("panel.spacing.x", theme)
-            )
-        }
-        plot + theme + theme_recycle()
+        ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     }
 )

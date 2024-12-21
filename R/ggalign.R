@@ -9,13 +9,13 @@
 #' simple vectors. By default, it will inherit from the layout. If a function,
 #' it will apply with the layout matrix.
 #'
-#' @param data A flexible input that specifies the data to be used
+#' @param data The following options can be used:
 #'   - `NULL`: No data is set.
-#'   - [`waiver()`][ggplot2::waiver]: Try to use the layout matrix.
-#'   - A `function` (including purrr-like lambda syntax) that is applied to the
-#'     layout matrix. If you want to transform the final plot data, please use
-#'     [`scheme_data()`].
-#'   - A `matrix`, `data frame`, or atomic vector.
+#'   - [`waiver()`][ggplot2::waiver]: Inherits the data from the layout matrix.
+#'   - A `function` (including purrr-like lambda syntax): Applied to the layout
+#'     matrix to transform the data before use. To transform the final plot
+#'     data, please use [`scheme_data()`].
+#'   - A `matrix`, `data.frame`, or atomic vector.
 #' @inheritParams ggplot2::ggplot
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`fortify_data_frame()`].
@@ -28,52 +28,39 @@
 #' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
 #' @section ggplot2 specification:
-#' `ggalign` initializes a ggplot `data` and `mapping`.
+#' `ggalign` initializes a ggplot object. The underlying data is created using
+#' [`fortify_data_frame()`]. Please refer to this method for more details.
 #'
-#' `ggalign()` always applies a default mapping for the axis of the data index
-#' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack
-#' layout (including left and right annotation) and `aes(x = .data$.x)`
-#' for vertical stack layout (including top and bottom annotation).
+#' When aligning discrete variables, `ggalign()` always applies a default
+#' mapping for the axis of the data index in the layout. Specifically:
 #'
-#' The data in the underlying `ggplot` object will contain following columns:
+#'  - `aes(y = .data$.y)` is used for the horizontal `stack_layout()` (including
+#'    left and right annotations).
+#'  - `aes(x = .data$.x)` is used for the vertical `stack_layout()` (including
+#'    top and bottom annotations) and `circle_layout()`.
 #'
-#'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
-#'    stack layout (including top and bottom annotation), `y-axis` for
-#'    horizontal stack layout (including left and right annotation).
+#' The following columns will be added to the data frame to align discrete
+#' variables:
 #'
-#'  - `.x`/`y` and `.discrete_x`/`.discrete_y`: an integer index of `x`/`y`
-#'    coordinates and a factor of the data labels (only applicable when names
-#'    exists).
+#'  - `.panel`: The panel for the aligned axis. Refers to the `x-axis` for
+#'    vertical `stack_layout()` (including top and bottom annotations), and the
+#'    `y-axis` for horizontal `stack_layout()` (including left and right
+#'    annotations).
+#'
+#'  - `.x`/`.y` and `.discrete_x`/`.discrete_y`: Integer indices for `x`/`y`
+#'    coordinates, and a factor of the data labels (only applicable when names
+#'    exist).
 #'
 #'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
-#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): a character names (only
-#'    applicable when names exists) and an integer index of the original data.
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): Character names (if
+#'    available) and the integer index of the original data.
 #'
-#'  - `.row_names` and `.row_index`: the row names and an integer of
-#'    row index of the original matrix (only applicable if `data` is a
-#'    `matrix`).
+#' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], additional
+#' columns will be added:
 #'
-#'  - `.column_names` and `.column_index`: the column names and column index of
-#'    the original matrix (only applicable if `data` is a `matrix`).
-#'
-#'  - `value`: the actual value (only applicable if `data` is a `matrix` or
-#'    atomic vector).
-#'
-#' `matrix` input will be automatically melted into a long foramted data frame.
-#'
-#' Atomic vector will be put in the `value` column of the data frame.
-#'
-#' In the case where the input data is already a data frame, following columns
-#' (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`) are
-#' added to the data frame.
-#'
-#' It is recommended to use `.x`/`.y`, or `.discrete_x`/`.discrete_y` as the
-#' `x`/`y` mapping.
-#'
-#' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], an additional
-#' column will be added.
-#'
-#'  - `.extra_panel`: the panel information for column (left or right
+#'  - `.extra_panel`: Provides the panel information for the column (left or
+#'    right annotation) or row (top or bottom annotation).
+#'  - `.extra_index`: The index information for the column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
 #' @inheritSection align_discrete Discrete Axis Alignment
@@ -119,6 +106,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
 #' @export
 summary.AlignGg <- function(object, ...) c(FALSE, FALSE)
 
+#' @importFrom rlang inject
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", AlignProto,
     setup_design = function(self, layout_data, design) {
@@ -135,11 +123,11 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             }
             data <- input_data(layout_data)
         } else if (is.waive(input_data)) {
-            data <- layout_data
+            data <- layout_data %|w|% NULL
         } else {
             data <- input_data
         }
-        ans <- fortify_data_frame(data)
+        ans <- inject(fortify_data_frame(data, !!!self$params))
 
         # for discrete design, # we need ensure the nobs is the same
         if (is_discrete_design(design)) {
@@ -152,7 +140,6 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                         object_name, NROW(data), layout_name, layout_nobs
                     ))
                 }
-                self$labels <- vec_names(data) %||% vec_names(layout_data)
                 design["nobs"] <- list(layout_nobs)
                 # we always add `.index` to align the observations
                 if (is.matrix(input_data)) {
@@ -164,6 +151,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                     ans$.index <- seq_len(NROW(data))
                 }
             }
+            self$labels <- vec_names(data) %||% vec_names(layout_data)
             self$add_mapping <- TRUE
             # always remove names, we'll add it in `build_plot()`
             ans$.names <- NULL
@@ -204,14 +192,12 @@ AlignGg <- ggproto("AlignGg", AlignProto,
     },
 
     #' @importFrom stats reorder
-    build_plot = function(self, plot, design, extra_design, previous_design) {
-        direction <- .subset2(self, "direction")
+    build_plot = function(self, plot, design, extra_design = NULL,
+                          previous_design = NULL) {
+        direction <- self$direction
         axis <- to_coord_axis(direction)
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
-
-        # use linear coordinate
-        plot <- gguse_linear_coord(plot, self$layout_name)
 
         # set limits and default scales
         if (is_horizontal(direction)) {
@@ -230,7 +216,6 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         if (is_continuous_design(design)) {
             return(gguse_data(plot, data))
         }
-
         if (is_continuous_design(extra_design)) {
             extra_panel <- NULL
             extra_index <- NULL
@@ -270,32 +255,28 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         } else if (!is.null(data)) {
             plot_data <- full_join(data, plot_data, by = ".index")
         }
-
-        # we'll setup the facets for the discrete design
-        if (nlevels(panel) > 1L) {
-            default_facet <- switch_direction(
-                direction,
-                ggplot2::facet_grid(
-                    rows = ggplot2::vars(.data$.panel),
-                    scales = "free_y", space = "free",
-                    drop = FALSE, as.table = FALSE
-                ),
-                ggplot2::facet_grid(
-                    cols = ggplot2::vars(.data$.panel),
-                    scales = "free_x", space = "free",
-                    drop = FALSE, as.table = FALSE
-                )
-            )
-        } else {
-            default_facet <- facet_stack(direction = direction)
-        }
-        plot <- gguse_data(plot, ggalign_attr_restore(plot_data, data))
-        gguse_facet(plot, default_facet)
+        gguse_data(plot, ggalign_attr_restore(plot_data, data))
     },
 
     # let AlignProto to add schemes and theme acoordingly
     finish_plot = function(self, plot, schemes, theme) {
-        ggproto_parent(AlignDiscrete, self)$finish_plot(plot, schemes, theme)
+        direction <- self$direction
+        # remove axis titles, text, ticks used for alignment
+        if (isTRUE(self$no_axes)) {
+            schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
+                theme_no_axes(switch_direction(direction, "y", "x"))
+        }
+        plot <- plot_add_schemes(plot, schemes)
+        if (is_horizontal(direction)) {
+            theme <- theme(
+                panel.spacing.y = calc_element("panel.spacing.y", theme)
+            )
+        } else {
+            theme <- theme(
+                panel.spacing.x = calc_element("panel.spacing.x", theme)
+            )
+        }
+        plot + theme + theme_recycle()
     }
 )
 

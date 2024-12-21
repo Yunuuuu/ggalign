@@ -81,6 +81,14 @@ default_layout <- function(layout) { # setup default value for the layout
     layout
 }
 
+is_linear <- function(layout) UseMethod("is_linear")
+
+#' @export
+is_linear.StackLayout <- function(layout) TRUE
+
+#' @export
+is_linear.CircleLayout <- function(layout) FALSE
+
 ###########################################################
 inherit_parent_layout_schemes <- function(layout, schemes) {
     if (is.null(schemes)) {
@@ -89,20 +97,21 @@ inherit_parent_layout_schemes <- function(layout, schemes) {
     inherit_schemes(layout@schemes, schemes)
 }
 
-inherit_parent_layout_theme <- function(layout, theme, direction) {
+inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
     if (is.null(theme)) return(layout@theme) # styler: off
     # parent theme, set the global panel spacing,
     # so that every panel aligns well
     if (is.null(layout@theme)) return(theme) # styler: off
-    if (is_horizontal(direction)) {
-        theme + layout@theme + theme(
+    theme <- theme + layout@theme
+    if (is.null(spacing)) return(theme) # styler: off
+    switch(spacing,
+        x = theme + theme(
+            panel.spacing.x = calc_element("panel.spacing.x", theme)
+        ),
+        y = theme + theme(
             panel.spacing.y = calc_element("panel.spacing.y", theme)
         )
-    } else {
-        theme + layout@theme + theme(
-            panel.spacing.x = calc_element("panel.spacing.x", theme)
-        )
-    }
+    )
 }
 
 ############################################################
@@ -260,6 +269,10 @@ is_stack_layout <- function(x) is(x, "StackLayout")
 #' @export
 #' @rdname is_layout
 is_cross_layout <- function(x) is(x, "CrossLayout")
+
+#' @export
+#' @rdname is_layout
+is_circle_layout <- function(x) is(x, "CircleLayout")
 
 #' @examples
 #' # for heatmap_layout()

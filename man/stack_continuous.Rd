@@ -12,8 +12,8 @@
 stack_continuous(
   direction,
   data = NULL,
-  limits = NULL,
   ...,
+  limits = NULL,
   theme = NULL,
   sizes = NA
 )
@@ -21,8 +21,8 @@ stack_continuous(
 stack_free(
   direction,
   data = NULL,
-  limits = NULL,
   ...,
+  limits = NULL,
   theme = NULL,
   sizes = NA
 )
@@ -44,11 +44,11 @@ convert data to a data frame. Note that if the data is a \code{matrix}, it will
 be automatically converted to a long-formatted data frame, which differs
 from \code{ggplot2}'s behavior.}
 
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+
 \item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous
 axis.}
-
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
 elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},

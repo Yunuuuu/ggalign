@@ -123,9 +123,20 @@ summary.AlignProto <- function(object, ...) c(FALSE, FALSE)
 
 #' @importFrom ggplot2 ggproto
 AlignProto <- ggproto("AlignProto",
-    locked = TRUE,
+    # following fields will be added when added to the layout
+    in_linear = NULL,
+    object_name = NULL,
+    layout_name = NULL,
+    direction = NULL,
+    position = NULL, # for stack_layout() in quad_layout()
+
+    # A single boolean value indicates whether we should set facet and coord
+    free_facet = FALSE,
+    free_coord = FALSE,
+
     # we always prevent user from modifying the object in `$build_plot()` and
     # `$finish_plot()` methods
+    locked = TRUE,
     lock = function(self) {
         assign("locked", value = TRUE, envir = self)
     },
@@ -140,7 +151,8 @@ AlignProto <- ggproto("AlignProto",
     setup_plot = function(self, plot) plot,
 
     ##############################################################
-    build_plot = function(self, plot, design, extra_design, previous_design) {
+    build_plot = function(self, plot, design, extra_design = NULL,
+                          previous_design = NULL, facet = NULL) {
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {

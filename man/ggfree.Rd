@@ -10,10 +10,15 @@ ggfree(data = waiver(), ..., size = NULL, active = NULL)
 \method{ggfree}{default}(data = waiver(), mapping = aes(), ..., size = NULL, active = NULL)
 }
 \arguments{
-\item{data}{A dataset used to initialize a \code{\link[ggplot2:ggplot]{ggplot}}
-object. By default, it will inherit from the parent layout if applicable.
-Alternatively, a pre-defined \code{\link[ggplot2:ggplot]{ggplot}} object can be
-provided directly.}
+\item{data}{The following options can be used:
+\itemize{
+\item \code{NULL}: No data is set.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits the data from the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax): Applied to the layout
+matrix to transform the data before use. To transform the final plot
+data, please use \code{\link[=scheme_data]{scheme_data()}}.
+\item A \code{matrix}, \code{data.frame}, or atomic vector.
+}}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
@@ -35,6 +40,12 @@ layout. Unlike \code{align_gg()}, which aligns every axis value precisely,
 \code{free_gg()} focuses on layout integration without enforcing strict axis
 alignment. \code{ggfree()} is an alias for \code{free_gg}.
 }
+\section{ggplot2 specification}{
+
+\code{ggalign} initializes a ggplot object. The underlying data is created using
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}. Please refer to this method for more details.
+}
+
 \examples{
 ggheatmap(matrix(rnorm(56), nrow = 7)) +
     anno_top() +

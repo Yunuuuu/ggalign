@@ -69,7 +69,14 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         ))
     }
     schemes <- inherit_parent_layout_schemes(quad, schemes)
-    theme <- inherit_parent_layout_theme(quad, theme, direction = direction)
+    if (is.null(direction)) {
+        spacing <- NULL
+    } else if (is_horizontal(direction)) {
+        spacing <- "y"
+    } else {
+        spacing <- "x"
+    }
+    theme <- inherit_parent_layout_theme(quad, theme, spacing = spacing)
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- the_align <-

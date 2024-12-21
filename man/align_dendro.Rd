@@ -115,12 +115,13 @@ Plot dendrogram tree
 
 \code{align_dendro} initializes a ggplot \code{data} and \code{mapping}.
 
-The internal will always use a default mapping of \code{aes(x = .data$x, y = .data$y)}.
+The internal \code{ggplot} object will always use a default mapping of
+\code{aes(x = .data$x, y = .data$y)}.
 
 The default ggplot data is the \code{node} coordinates with \code{edge} data attached
 in \code{\link[=ggalign_attr]{ggalign}} attribute, in addition, a
-\code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data of the \code{edge}
-coordinates will be added.
+\code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data frame of the \code{edge}
+coordinates will be added when \code{plot_dendrogram = TRUE}.
 
 dendrogram \code{node} and \code{edge} contains following columns:
 \itemize{

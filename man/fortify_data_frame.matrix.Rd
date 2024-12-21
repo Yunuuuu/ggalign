@@ -17,7 +17,15 @@ A data frame.
 \description{
 When \code{data} is a matrix, it will automatically be transformed into a
 long-form data frame, where each row represents a unique combination of
-matrix indices and their corresponding values.
+matrix indices and their corresponding values. The resulting data frame will
+contain the following columns:
+\itemize{
+\item \code{.row_names} and \code{.row_index}: the row names and an integer representing
+the row index of the original matrix.
+\item \code{.column_names} and \code{.column_index}: the column names and column index of
+the original matrix.
+\item \code{value}: the actual value.
+}
 }
 \seealso{
 Other fortify_data_frame methods: 

@@ -8,11 +8,12 @@
 #' `free_gg()` focuses on layout integration without enforcing strict axis
 #' alignment. `ggfree()` is an alias for `free_gg`.
 #'
-#' @param data A dataset used to initialize a [`ggplot`][ggplot2::ggplot]
-#' object. By default, it will inherit from the parent layout if applicable.
-#' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
-#' provided directly.
 #' @inheritParams ggalign
+#'
+#' @section ggplot2 specification:
+#' `ggalign` initializes a ggplot object. The underlying data is created using
+#' [`fortify_data_frame()`]. Please refer to this method for more details.
+#'
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
@@ -76,6 +77,7 @@ new_free_gg <- function(plot, data, size, active,
 
 #' @importFrom ggplot2 ggproto
 FreeGg <- ggproto("FreeGg", AlignProto,
+    free_facet = TRUE,
     setup_design = function(self, layout_data, layout_design) {
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
@@ -94,14 +96,14 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         self$data <- ggalign_attr_restore(fortify_data_frame(data), layout_data)
         layout_design
     },
-    build_plot = function(self, plot, design, extra_design, previous_design) {
+    build_plot = function(self, plot, design, extra_design = NULL,
+                          previous_design = NULL) {
         if (is.function(data <- self$data)) {
             data <- waiver()
         } else if (is.null(data)) {
             # `ggplot2::fortify()` will convert `NULL` to `waiver()`
             data <- waiver()
         }
-        plot$data <- data
-        plot
+        gguse_data(plot, data)
     }
 )

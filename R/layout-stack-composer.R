@@ -54,7 +54,7 @@ stack_composer_add <- function(plot, composer, ...) {
 }
 
 #' @export
-stack_composer_add.ggalign_plot <- function(plot, composer, ...,
+stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
                                             schemes, theme,
                                             released_spaces,
                                             direction, position) {
@@ -75,7 +75,31 @@ stack_composer_add.ggalign_plot <- function(plot, composer, ...,
 
     # let `Align` to determine how to build the plot
     align <- plot@align # `AlignProto` object
-    plot <- align$build_plot(plot@plot, ...)
+    plot <- plot@plot
+    if (!align$free_facet) {
+        if (nlevels(.subset2(design, "panel")) > 1L) {
+            facet <- switch_direction(
+                direction,
+                ggplot2::facet_grid(
+                    rows = ggplot2::vars(.data$.panel),
+                    scales = "free_y", space = "free",
+                    drop = FALSE, as.table = FALSE
+                ),
+                ggplot2::facet_grid(
+                    cols = ggplot2::vars(.data$.panel),
+                    scales = "free_x", space = "free",
+                    drop = FALSE, as.table = FALSE
+                )
+            )
+        } else {
+            facet <- facet_stack(direction = direction)
+        }
+        plot <- gguse_facet(plot, facet)
+    }
+    if (!align$free_coord) {
+        plot <- gguse_linear_coord(plot, layout_name = align$layout_name)
+    }
+    plot <- align$build_plot(plot, design = design, ...)
     plot <- align$finish_plot(plot, plot_schemes, theme)
     stack_composer_align_plot(composer, plot, size)
 }
