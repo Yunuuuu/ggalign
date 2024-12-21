@@ -4,14 +4,7 @@
 \alias{align_kmeans}
 \title{Split observations by k-means clustering groups.}
 \usage{
-align_kmeans(
-  centers,
-  ...,
-  data = NULL,
-  active = NULL,
-  set_context = deprecated(),
-  name = deprecated()
-)
+align_kmeans(centers, ..., data = NULL, active = NULL)
 }
 \arguments{
 \item{centers}{either the number of clusters, say \eqn{k}, or a set of
@@ -33,17 +26,17 @@ align_kmeans(
     produced.  Higher values may produce more tracing information.}
   }}
 
-\item{data}{A matrix-like object. By default, it inherits from the layout
-\code{matrix}.}
+\item{data}{Options for \code{data}:
+\itemize{
+\item A matrix, data frame, or atomic vector.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Uses the \verb{layout matrix}.
+\item \code{NULL}: No data is set.
+\item A \code{function} (including purrr-like lambda syntax) applied to the layout
+\code{matrix}.
+}}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

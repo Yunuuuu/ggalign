@@ -13,19 +13,20 @@ summary.Cross <- function(object, ...) c(TRUE, FALSE)
 #' @importFrom ggplot2 ggproto ggplot
 #' @include plot-.R
 Cross <- ggproto("Cross", AlignProto,
-    layout = function(self, layout_data, layout_coords) {
-        if (is.null(.subset2(layout_coords, "nobs"))) {
-            cli_abort(sprintf(
-                "layout observations for %s must be initialized before adding {.var {%s}}",
-                .subset2(self, "layout_name"), .subset2(self, "object_name")
+    setup_layout = function(self, layout) {
+        if (!is_cross_layout(layout)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(self), self$layout_name
+                ),
+                i = sprintf(
+                    "%s can only be used in {.fn cross_discrete}",
+                    object_name(self)
+                )
             ))
         }
-        # we keep the names from the layout data for usage
-        self$labels <- vec_names(layout_data)
-        layout_coords["index"] <- list(NULL) # reset the index
-        layout_coords
-    },
-    finish_layout = function(self, layout) {
+
         # udpate cross_points
         layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
         # update index
@@ -34,5 +35,19 @@ Cross <- ggproto("Cross", AlignProto,
             list(.subset2(layout@design, "index"))
         )
         layout
+    },
+    setup_design = function(self, layout_data, design) {
+        object_name <- .subset2(self, "object_name")
+        layout_name <- .subset2(self, "layout_name")
+        if (is.null(.subset2(design, "nobs"))) {
+            cli_abort(sprintf(
+                "layout observations for %s must be initialized before adding {.var {%s}}",
+                layout_name, object_name
+            ))
+        }
+        # we keep the names from the layout data for usage
+        self$labels <- vec_names(layout_data)
+        design["index"] <- list(NULL) # reset the index
+        design
     }
 )

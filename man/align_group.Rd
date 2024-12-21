@@ -4,24 +4,13 @@
 \alias{align_group}
 \title{Group and align observations based on a group vector}
 \usage{
-align_group(
-  group,
-  active = NULL,
-  set_context = deprecated(),
-  name = deprecated()
-)
+align_group(group, active = NULL)
 }
 \arguments{
 \item{group}{A character define the groups of the observations.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

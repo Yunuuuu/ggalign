@@ -24,15 +24,7 @@ align_dendro(
   size = NULL,
   data = NULL,
   no_axes = NULL,
-  active = NULL,
-  free_guides = deprecated(),
-  free_spaces = deprecated(),
-  plot_data = deprecated(),
-  theme = deprecated(),
-  free_labs = deprecated(),
-  set_context = deprecated(),
-  order = deprecated(),
-  name = deprecated()
+  active = NULL
 )
 }
 \arguments{
@@ -102,43 +94,11 @@ middle of all direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
-\item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
-
 \item{data}{A matrix-like object. By default, it inherits from the layout
 \code{matrix}.}
 
-\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
-removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
-default, will use the option-
-\code{"ggalign.align_no_axes"}.}
-
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_data]{scheme_data()}} function instead.}
-
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
-
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 Plot dendrogram tree
@@ -178,6 +138,14 @@ fall outside panel (between two panel), so there are possible
 functionality as \code{panel}, but they are specifically for the \code{edge} data
 and correspond to both nodes of each edge.
 }
+}
+
+\section{Axis Alignment for Observations}{
+
+It is important to note that we consider rows as observations, meaning
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 }
 
 \examples{

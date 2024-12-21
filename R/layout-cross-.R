@@ -51,11 +51,11 @@ cross_discrete.default <- function(direction, data = NULL, ...) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 stack_build_composer.CrossLayout <- function(stack, schemes, theme,
-                                             extra_coords) {
+                                             extra_design) {
     # check if we should initialize the layout observations
-    layout_coords <- stack@design
-    if (!is.null(layout_coords) &&
-        is.null(.subset2(layout_coords, "nobs")) &&
+    layout_design <- stack@design
+    if (is_discrete_design(layout_design) &&
+        is.null(.subset2(layout_design, "nobs")) &&
         any(vapply(plot_list, is_cross_plot, logical(1L), USE.NAMES = FALSE))) {
         cli_abort(sprintf(
             "You must initialize the layout observations to plot the %s",
@@ -70,7 +70,7 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
         plot_list,
         sizes = diff(c(0L, stack@cross_points, length(plot_list)))
     )
-    index_list <- c(stack@index_list, list(.subset2(layout_coords, "index")))
+    index_list <- c(stack@index_list, list(.subset2(layout_design, "index")))
 
     # build the stack
     composer <- stack_composer(direction)
@@ -88,16 +88,16 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
     } else {
         released_spaces <- NULL
     }
-    previous_coords <- NULL
+    previous_design <- NULL
     for (i in seq_along(plot_list)) {
         plots <- .subset2(plot_list, i)
-        # prepare coords for current group
-        coords <- layout_coords
-        coords["index"] <- list(.subset2(index_list, i))
-        coords <- setup_discrete_design(coords)
+        # prepare design for current group
+        design <- layout_design
+        design["index"] <- list(.subset2(index_list, i))
+        design <- setup_design(design)
 
         if (is_empty(plots)) {
-            previous_coords <- coords
+            previous_design <- design
             next
         }
 
@@ -110,7 +110,7 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
         plots <- .subset(plots, keep)
 
         if (is_empty(plots)) {
-            previous_coords <- coords
+            previous_design <- design
             next
         }
 
@@ -131,14 +131,14 @@ stack_build_composer.CrossLayout <- function(stack, schemes, theme,
             composer,
             schemes = schemes,
             theme = theme,
-            coords = coords,
-            extra_coords = extra_coords,
+            design = design,
+            extra_design = extra_design,
             direction = direction,
             position = position,
             released_spaces = released_spaces,
-            previous_coords = previous_coords
+            previous_design = previous_design
         )
-        previous_coords <- coords
+        previous_design <- design
     }
     composer
 }

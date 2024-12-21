@@ -179,7 +179,6 @@ quad_switch <- function(position = NULL, size = NULL,
     }
 }
 
-#' @inheritParams align_gg
 #' @inheritParams heatmap_layout
 #' @export
 #' @rdname quad_switch

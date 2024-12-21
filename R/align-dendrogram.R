@@ -45,7 +45,8 @@
 #' established. Default: `FALSE`.
 #' @inheritParams align_hclust
 #' @inheritParams dendrogram_data
-#' @inheritParams align_gg
+#' @inheritParams ggalign
+#' @inheritSection align_discrete Axis Alignment for Observations
 #' @examples
 #' # align_dendro will always add a plot area
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
@@ -70,11 +71,7 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
                          size = NULL, data = NULL,
-                         no_axes = NULL, active = NULL,
-                         free_guides = deprecated(), free_spaces = deprecated(),
-                         plot_data = deprecated(), theme = deprecated(),
-                         free_labs = deprecated(), set_context = deprecated(),
-                         order = deprecated(), name = deprecated()) {
+                         no_axes = NULL, active = NULL) {
     reorder_dendrogram <- allow_lambda(reorder_dendrogram)
     if (!rlang::is_bool(reorder_dendrogram) &&
         !is.null(reorder_dendrogram) &&
@@ -102,10 +99,7 @@ align_dendro <- function(mapping = aes(), ...,
     }
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
-    active <- deprecate_active(active, "align_dendro",
-        set_context = set_context, order = order, name = name
-    )
-    align(
+    align_discrete(
         align = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
@@ -118,9 +112,6 @@ align_dendro <- function(mapping = aes(), ...,
             cutree = cutree,
             plot_dendrogram = plot_dendrogram
         ),
-        free_guides = free_guides,
-        free_labs = free_labs, free_spaces = free_spaces,
-        plot_data = plot_data, theme = theme,
         no_axes = no_axes, active = active,
         size = size,
         schemes = default_schemes(th = theme_no_panel()),
@@ -217,7 +208,6 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         }
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data
-        plot$data <- ggalign_attr_set(node, list(edge = edge))
         if (plot_dendrogram) {
             plot <- plot + inject(
                 layer_order(ggplot2::geom_segment(
@@ -230,16 +220,6 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                     data = edge
                 ))
             )
-        }
-        position <- .subset2(self, "position")
-        if (is.null(position) || !isTRUE(plot$coordinates$default)) {
-            # if the dendrogram is in a normal stack layout
-            # or if user has set the coordinate, we won't reverse
-            # the dendrogram height axis
-        } else if (position == "bottom") { # in the bottom, reverse y-axis
-            plot <- plot + ggplot2::coord_trans(y = "reverse", clip = "off")
-        } else if (position == "left") { # in the left, reverse x-axis
-            plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
         }
 
         if (plot_cut_height && !is.null(height <- .subset2(self, "height"))) {
@@ -254,6 +234,20 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                     )
                 )
         }
+
+        plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))
+        plot <- gguse_linear_coord(plot, self$layout_name)
+        position <- .subset2(self, "position")
+        if (is.null(position) || !isTRUE(plot$coordinates$default)) {
+            # if the dendrogram is in a normal stack layout
+            # or if user has set the coordinate, we won't reverse
+            # the dendrogram height axis
+        } else if (position == "bottom") { # in the bottom, reverse y-axis
+            plot <- plot + ggplot2::coord_trans(y = "reverse", clip = "off")
+        } else if (position == "left") { # in the left, reverse x-axis
+            plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
+        }
+
         # always turn off clip, this is what dendrogram dependends on
         old_coord <- plot$coordinates
         if (!identical(old_coord$clip, "off")) {

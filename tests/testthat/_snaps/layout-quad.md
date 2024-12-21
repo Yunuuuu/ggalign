@@ -1,17 +1,12 @@
 # add `align` object works well
 
-    Cannot add `align_dendro()` to `quad_continuous()`
-    i `quad_continuous()` cannot align discrete variable in vertical direction
+    Cannot add `align_dendro()` to the top annotation `stack_continuous()`
+    i the top annotation `stack_continuous()` cannot align discrete variables
 
 ---
 
-    Cannot add `ggalign()` to `quad_continuous()`
-    i `quad_continuous()` cannot align discrete variable in vertical direction
-
----
-
-    Cannot add `align_kmeans(3L)` to `quad_continuous()`
-    i `quad_continuous()` cannot align discrete variable in horizontal direction
+    Cannot add `align_kmeans(3L)` to the left annotation `stack_continuous()`
+    i the left annotation `stack_continuous()` cannot align discrete variables
 
 # add `stack_layout()` works well
 
@@ -36,7 +31,7 @@
 
 ---
 
-    Cannot add `stack_alignv()` to a `quad_continuous()`
+    Cannot add `stack_alignv()` to `quad_continuous()`
     i `quad_continuous()` cannot align discrete variable in vertical direction
 
 ---
@@ -77,7 +72,7 @@
 
 ---
 
-    Cannot add `stack_alignv()` to a `quad_layout()`
+    Cannot add `stack_alignv()` to `quad_layout()`
     i `quad_layout()` cannot align discrete variable in vertical direction
 
 ---

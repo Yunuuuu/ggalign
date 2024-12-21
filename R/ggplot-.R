@@ -75,6 +75,30 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
 }
 
 ######################################################
+gguse_data <- function(plot, data) {
+    # ggplot use waiver() to indicate no data
+    plot["data"] <- list(data %||% waiver())
+    plot
+}
+
+######################################################
+# this will remove the old coordinate,
+# so always run firstly
+gguse_linear_coord <- function(plot, layout_name) {
+    coord <- plot$coordinates
+    if (inherits(coord, "CoordTrans") || !coord$is_linear()) {
+        cli_warn(c(
+            sprintf(
+                "{.fn %s} is not supported in %s",
+                snake_class(coord), layout_name
+            ),
+            i = "Will use {.fn coord_cartesian} instead"
+        ))
+        plot$coordinates <- ggplot2::coord_cartesian()
+    }
+    plot
+}
+
 #' @param axes A character indicates which axes should be restricted.
 #' @noRd
 cartesian_coord <- function(axes, layout_name) {
@@ -85,7 +109,7 @@ cartesian_coord <- function(axes, layout_name) {
 
 #' @export
 ggplot_add.ggalign_cartesian_coord <- function(object, plot, object_name) {
-    plot$coordinates <- use_cartesian_coord(
+    plot$coordinates <- gguse_cartesian_coord(
         .subset2(plot, "coordinates"),
         .subset2(object, "axes"),
         .subset2(object, "layout_name")
@@ -93,15 +117,15 @@ ggplot_add.ggalign_cartesian_coord <- function(object, plot, object_name) {
     plot
 }
 
-use_cartesian_coord <- function(coord, axes, layout_name) {
-    UseMethod("use_cartesian_coord")
+gguse_cartesian_coord <- function(coord, axes, layout_name) {
+    UseMethod("gguse_cartesian_coord")
 }
 
 #' @export
-use_cartesian_coord.CoordCartesian <- function(coord, axes, layout_name) coord
+gguse_cartesian_coord.CoordCartesian <- function(coord, axes, layout_name) coord
 
 #' @export
-use_cartesian_coord.CoordTrans <- function(coord, axes, layout_name) {
+gguse_cartesian_coord.CoordTrans <- function(coord, axes, layout_name) {
     # we only allow identity trans in the axis used to align observations
     identity_trans <- vapply(
         coord$trans[axes],
@@ -123,7 +147,7 @@ use_cartesian_coord.CoordTrans <- function(coord, axes, layout_name) {
 }
 
 #' @export
-use_cartesian_coord.default <- function(coord, axes, layout_name) {
+gguse_cartesian_coord.default <- function(coord, axes, layout_name) {
     cli_warn(c(
         sprintf(
             "{.fn %s} is not supported in %s",
@@ -134,8 +158,12 @@ use_cartesian_coord.default <- function(coord, axes, layout_name) {
     ggplot2::coord_cartesian()
 }
 
-
 ######################################################
+gguse_facet <- function(plot, facet, ...) {
+    plot$facet <- align_melt_facet(facet, plot$facet, ...)
+    plot
+}
+
 align_melt_facet <- function(default, facet, ...) UseMethod("align_melt_facet")
 
 #' @importFrom ggplot2 ggproto

@@ -5,7 +5,7 @@
 #' - `align_range`: Annotate a list of ranges of observations. Observation
 #'   ranges will be connected to the panel by a polygon.
 #'
-#' @inheritParams align_gg
+#' @inheritParams ggalign
 #' @param ranges A list of observation ranges. Each range will be represented
 #' by a facet panel.
 #' @param lines A list of observations. Each element of the list will be
@@ -249,7 +249,7 @@ new_align_link <- function(class, element, position, arg, value, ...,
     active <- update_active(active, new_active(use = TRUE))
     params <- list(value, position)
     names(params) <- c(arg, "position")
-    align(
+    align_discrete(
         ggproto(NULL, AlignLink,
             class = class, # `class` is an argument of `new_ggalign_plot`
             extra_params = c(arg, "position")
@@ -309,8 +309,26 @@ PatchAlignLink <- ggproto(
 )
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
-AlignLink <- ggproto("AlignLink", AlignGg,
+AlignLink <- ggproto("AlignLink", AlignDiscrete,
     class = NULL, element = NULL,
+    nobs = function(self) { # no input data
+        axis <- to_coord_axis(.subset2(self, "direction"))
+        cli_abort(c(
+            sprintf("You cannot add %s", object_name(self)),
+            i = "layout {axis}-axis is not initialized or you must provide {.arg data}"
+        ), call = .subset2(self, "call"))
+    },
+    setup_data = function(self, params, data) {
+        ans <- fortify_data_frame(data)
+        # we always add `.index` to align the observations
+        if (is.matrix(data)) {
+            ans$.index <- vec_rep(seq_len(NROW(data)), NCOL(data))
+        } else {
+            ans$.index <- seq_len(NROW(data))
+        }
+        ans$.names <- NULL # always remove names, we'll add it in `draw()`
+        ans
+    },
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_schemes(plot, schemes)
         if (inherits(plot, self$class)) {
@@ -363,8 +381,8 @@ AlignLink <- ggproto("AlignLink", AlignGg,
     },
 
     #' @importFrom stats reorder
-    build_plot = function(self, plot, coords, extra_coords,
-                          previous_coords = NULL) {
+    build_plot = function(self, plot, design, extra_design,
+                          previous_design = NULL) {
         params <- .subset2(self, "params")
         direction <- self$direction
         position <- self$position
@@ -390,8 +408,8 @@ AlignLink <- ggproto("AlignLink", AlignGg,
         }
 
         # parse ranges
-        panel <- .subset2(coords, "panel")
-        index <- .subset2(coords, "index")
+        panel <- .subset2(design, "panel")
+        index <- .subset2(design, "index")
         subset <- seq_along(index) # used to match the original data
         full_breaks <- split(subset, panel)
         if (is.waive(data <- .subset2(params, self$arg))) {

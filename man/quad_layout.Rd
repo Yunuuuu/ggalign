@@ -7,7 +7,7 @@
 \title{Arrange Plots in the Quad-Side of a main plot}
 \usage{
 quad_layout(
-  data = NULL,
+  data = waiver(),
   mapping = aes(),
   xlim = waiver(),
   ylim = waiver(),

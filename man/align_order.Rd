@@ -10,9 +10,7 @@ align_order(
   reverse = FALSE,
   strict = TRUE,
   data = NULL,
-  active = NULL,
-  set_context = deprecated(),
-  name = deprecated()
+  active = NULL
 )
 }
 \arguments{
@@ -39,12 +37,6 @@ will inherit from the layout matrix.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

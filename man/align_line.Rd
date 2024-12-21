@@ -51,12 +51,6 @@ with \code{\link[=element_line]{element_line()}}.
 with \code{\link[=element_polygon]{element_polygon()}}.
 }}
 
-\item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
-
-\item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
-added to a layout.}
-
 \item{ranges}{A list of observation ranges. Each range will be represented
 by a facet panel.}
 }

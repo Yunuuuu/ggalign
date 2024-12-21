@@ -6,7 +6,7 @@
 \title{Arrange Plots in the Quad-Side of a main plot by aligning discrete axis}
 \usage{
 quad_discrete(
-  data = NULL,
+  data = waiver(),
   mapping = aes(),
   ...,
   theme = NULL,
@@ -16,7 +16,7 @@ quad_discrete(
 )
 
 quad_alignb(
-  data = NULL,
+  data = waiver(),
   mapping = aes(),
   ...,
   theme = NULL,

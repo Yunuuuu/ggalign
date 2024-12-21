@@ -25,13 +25,18 @@
 
 ---
 
-    you must provide `data` argument in `quad_layout()`
-    i no data was found in the horizontal `stack_discrete()`
+    Cannot add `quad_layout()` to the horizontal `stack_discrete()`
+    i the horizontal `stack_discrete()` cannot align continuous variable
 
 ---
 
-    you must provide `data` argument in `quad_continuous()`
-    i no data was found in the horizontal `stack_discrete()`
+    Cannot add `quad_continuous()` to the horizontal `stack_discrete()`
+    i the horizontal `stack_discrete()` cannot align continuous variable
+
+---
+
+    Cannot add `quad_layout()` to the horizontal `stack_discrete()`
+    i the horizontal `stack_discrete()` cannot align continuous variable
 
 ---
 
@@ -45,8 +50,13 @@
 
 ---
 
-    you must provide `data` argument in `quad_continuous()`
-    i no data was found in the vertical `stack_discrete()`
+    Cannot add `quad_continuous()` to the vertical `stack_discrete()`
+    i the vertical `stack_discrete()` cannot align continuous variable
+
+---
+
+    Cannot add `quad_layout()` to the vertical `stack_discrete()`
+    i the vertical `stack_discrete()` cannot align continuous variable
 
 ---
 
@@ -83,6 +93,7 @@
 ---
 
     Cannot add `cross_discreteh()` to the horizontal `stack_discrete()`
+    i Cannot add `cross_discrete()` with the same direction as `stack_discrete()`.
 
 ---
 
@@ -92,6 +103,7 @@
 ---
 
     Cannot add `cross_discretev()` to the vertical `stack_discrete()`
+    i Cannot add `cross_discrete()` with the same direction as `stack_discrete()`.
 
 ---
 

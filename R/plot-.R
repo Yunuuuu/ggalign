@@ -106,30 +106,11 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
 #' @importFrom methods is
 is_ggalign_plot <- function(x) is(x, "ggalign_plot")
 
-is_align_plot <- function(x) is_ggalign_plot(x) && is_align(x@align)
-
-is_align <- function(x) inherits(x, "Align")
-
 is_cross_plot <- function(x) is_ggalign_plot(x) && is_cross(x@align)
 
 is_cross <- function(x) inherits(x, "Cross")
 
-is_free_plot <- function(x) is_ggalign_plot(x) && is_free(x@align)
-
-is_free <- function(x) inherits(x, "Free")
-
-#######################################################3
-is_align_free <- function(x) UseMethod("is_align_free")
-
-#' @export
-is_align_free.Align <- function(x) FALSE
-
-#' @export
-is_align_free.Cross <- function(x) FALSE
-
-#' @export
-is_align_free.Free <- function(x) TRUE
-
+#######################################################
 #' Summary the action of `AlignProto`
 #'
 #' @param object A `AlignProto` object
@@ -154,14 +135,12 @@ AlignProto <- ggproto("AlignProto",
 
     ############################################################
     # when added to the `Layout` object, will call following methods
-    layout = function(self, layout_data, layout_coords) {
-        layout_coords
-    },
+    setup_layout = function(self, layout) layout,
+    setup_design = function(self, data, design) design,
     setup_plot = function(self, plot) plot,
-    finish_layout = function(self, layout) layout,
 
     ##############################################################
-    build_plot = function(self, plot, coords, extra_coords, previous_coords) {
+    build_plot = function(self, plot, design, extra_design, previous_design) {
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {
@@ -192,57 +171,37 @@ align_method_params <- function(f, remove = character()) {
         ), call = x$call)
     }
     NextMethod()
-    x
 }
 
-#' @importFrom methods slot slot<-
+#################################################################
+plot_add <- function(object, plot, object_name) {
+    if (is.null(plot@plot)) {
+        cli_abort(c(
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(plot)),
+            i = sprintf("no plot found for %s", object_name(plot))
+        ))
+    }
+    UseMethod("plot_add")
+}
+
+#' @importFrom ggplot2 ggplot_add
 #' @export
-quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "no active annotation stack",
-            i = "try to activate an annotation stack with {.fn anno_*}"
-        ))
-    }
-    if (is.null(stack <- slot(quad, position))) {
-        cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
-            i = "the {.field {position}} annotation stack is not initialized",
-            i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
-        ))
-    }
+plot_add.default <- function(object, plot, object_name) {
+    plot@plot <- ggplot_add(object, plot@plot, object_name)
+    plot
+}
 
-    # check if we can align in this direction
-    direction <- to_direction(position)
-    align <- object@align
-    if (!is_align_free(align) && is.null(slot(quad, direction))) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s", object_name(quad)
-            ),
-            i = sprintf(
-                "%s cannot align discrete variable in {.field {direction}} direction", object_name(quad)
-            )
-        ))
-    }
+#' @export
+plot_add.ggalign_scheme <- function(object, plot, object_name) {
+    name <- ggalign_scheme_name(object)
+    plot@schemes[name] <- list(update_scheme(
+        object, .subset2(plot@schemes, name), object_name
+    ))
+    plot
+}
 
-    # add annotation -----------------------------
-    stack <- chain_layout_add(object, stack, object_name)
-    slot(quad, position) <- stack
-
-    new_design <- stack@design
-    # if there are cross points in bottom or right annotation, the index
-    # should be the first index in the `index_list`
-    if (any(position == c("bottom", "right")) &&
-        is_cross_layout(stack) &&
-        !is_empty(stack@cross_points)) {
-        new_design["index"] <- list(.subset2(stack@index_list, 1L))
-    }
-    update_design(
-        quad,
-        direction = direction,
-        design = new_design,
-        object_name = object_name
-    )
+######################################################################
+plot_build <- function(align, ..., schemes, theme) {
+    plot <- align$build_plot(plot@plot, ...)
+    align$finish_plot(plot, schemes, theme)
 }

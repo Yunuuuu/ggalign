@@ -13,7 +13,6 @@
 #' object. By default, it will inherit from the parent layout if applicable.
 #' Alternatively, a pre-defined [`ggplot`][ggplot2::ggplot] object can be
 #' provided directly.
-#' @inheritParams align
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
@@ -21,22 +20,17 @@
 #'     ggfree(mtcars, aes(wt, mpg)) +
 #'     geom_point()
 #' @export
-free_gg <- function(data = waiver(), ..., size = NULL, active = NULL) {
+ggfree <- function(data = waiver(), ..., size = NULL, active = NULL) {
     rlang::check_dots_used()
-    UseMethod("free_gg", data)
+    UseMethod("ggfree", data)
 }
-
-#' @usage NULL
-#' @export
-#' @rdname free_gg
-ggfree <- free_gg
 
 #' @inheritParams ggplot2::ggplot
 #' @importFrom ggplot2 ggplot
 #' @export
-#' @rdname free_gg
-free_gg.default <- function(data = waiver(), mapping = aes(), ...,
-                            size = NULL, active = NULL) {
+#' @rdname ggfree
+ggfree.default <- function(data = waiver(), mapping = aes(), ...,
+                           size = NULL, active = NULL) {
     data <- fortify_data_frame(data = data, ...)
     new_free_gg(
         plot = ggplot(data = NULL, mapping = mapping),
@@ -47,7 +41,7 @@ free_gg.default <- function(data = waiver(), mapping = aes(), ...,
 }
 
 #' @export
-free_gg.uneval <- function(data = waiver(), ...) {
+ggfree.uneval <- function(data = waiver(), ...) {
     cli_abort(c(
         "{.arg data} cannot be {.obj_type_friendly {data}}",
         "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
@@ -55,7 +49,7 @@ free_gg.uneval <- function(data = waiver(), ...) {
 }
 
 #' @export
-free_gg.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
+ggfree.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
     plot <- data
     # In ggplot2, `waiver()` was regard to no data
     data <- .subset2(plot, "data") %|w|% NULL
@@ -67,7 +61,7 @@ new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
     assert_active(active, allow_null = TRUE, call = call)
     active <- update_active(active, new_active(use = TRUE))
-    free(
+    new_ggalign_plot(
         FreeGg,
         # new field for FreeGg
         input_data = data,
@@ -81,8 +75,8 @@ new_free_gg <- function(plot, data, size, active,
 }
 
 #' @importFrom ggplot2 ggproto
-FreeGg <- ggproto("FreeGg", Free,
-    layout = function(self, layout_data, layout_coords) {
+FreeGg <- ggproto("FreeGg", AlignProto,
+    setup_design = function(self, layout_data, layout_design) {
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
         } else if (is.function(input_data)) {
@@ -98,9 +92,9 @@ FreeGg <- ggproto("FreeGg", Free,
             data <- input_data
         }
         self$data <- ggalign_attr_restore(fortify_data_frame(data), layout_data)
-        layout_coords
+        layout_design
     },
-    build_plot = function(self, plot, coords, extra_coords, previous_coords) {
+    build_plot = function(self, plot, design, extra_design, previous_design) {
         if (is.function(data <- self$data)) {
             data <- waiver()
         } else if (is.null(data)) {
@@ -111,8 +105,3 @@ FreeGg <- ggproto("FreeGg", Free,
         plot
     }
 )
-
-#' @export
-chain_layout_add.ggplot <- function(object, layout, object_name) {
-    chain_layout_add(free_gg(data = object), layout, object_name)
-}

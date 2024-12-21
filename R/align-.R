@@ -3,44 +3,30 @@
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' An `Align` object interacts with the `Layout` object to reorder or split
-#' observations and, in some cases, add plot components to the `Layout`.
+#' An `AlignDiscrete` object interacts with the `Layout` object to reorder or
+#' split observations and, in some cases, add plot components to the `Layout`.
 #'
-#' @param align An `Align` object.
+#' @param align An `AlignDiscrete` object.
 #' @param data Options for `data`:
 #'  - A matrix, data frame, or atomic vector.
 #'  - [`waiver()`][ggplot2::waiver]: Uses the `layout matrix`.
 #'  - `NULL`: No data is set.
 #'  - A `function` (including purrr-like lambda syntax) applied to the layout
 #'    `matrix`.
-#' @param params A list of parameters for `align`.
+#' @param ... Additional fields passed to the `AlignDiscrete` object.
+#' @param params A list of parameters for `AlignDiscrete`.
 #' @param plot A ggplot object.
-#'
 #' @param size The relative size of the plot, can be specified as a
 #' [`unit`][grid::unit].
 #' @param schemes Options for `schemes`:
 #'  - `NULL`: Used when `align` do not add a plot.
 #'  - [`waiver()`][ggplot2::waiver]: Try to infer `schemes` based on `data`.
-#'
-#' @param limits Logical; if `TRUE`, sets layout limits for the plot.
-#' @param facet Logical; if `TRUE`, applies facets to the layout. If `FALSE`,
-#'   `limits` will also be set to `FALSE`.
 #' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
 #'   default, will use the option-
 #'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
 #' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
-#' @param free_guides `r lifecycle::badge("superseded")` Please use
-#'   [`scheme_align()`] function instead.
-#' @param free_spaces `r lifecycle::badge("deprecated")` Please use
-#' [`scheme_align()`] function instead.
-#' @param plot_data `r lifecycle::badge("deprecated")` Please use
-#' [`scheme_data()`] function instead.
-#' @param theme `r lifecycle::badge("deprecated")` Please use
-#' [`scheme_theme()`] function instead.
-#' @param free_labs `r lifecycle::badge("deprecated")` Please use
-#' [`scheme_align()`] function instead.
 #' @param check.param Logical; if `TRUE`, checks parameters and provides
 #'   warnings as necessary.
 #' @param call The `call` used to construct the `Align` object, for reporting
@@ -52,41 +38,24 @@
 #' axis used for alignment (x-axis for a vertical stack layout, y-axis for a
 #' horizontal stack layout).
 #'
-#' @return A new `align` object.
-#'
+#' @return A new `ggalign_plot` object.
 #' @examples
-#' align_gg()
 #' align_dendro()
-#'
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-align <- function(align, data, ...,
-                  params = list(), plot = NULL,
-                  size = NULL, schemes = NULL,
-                  limits = TRUE, facet = TRUE, no_axes = NULL, active = NULL,
-                  free_guides = deprecated(), free_spaces = deprecated(),
-                  plot_data = deprecated(), theme = deprecated(),
-                  free_labs = deprecated(),
-                  check.param = TRUE, call = caller_call()) {
+align_discrete <- function(align, data, ...,
+                           params = list(), plot = NULL,
+                           size = NULL, schemes = NULL, no_axes = NULL,
+                           active = NULL, check.param = TRUE,
+                           call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
-    deprecate_action(
-        snake_class(align),
-        plot_data = plot_data,
-        theme = theme,
-        free_guides = free_guides,
-        free_spaces = free_spaces,
-        free_labs = free_labs,
-        call = call
-    )
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
-    assert_bool(facet, call = call)
-    assert_bool(limits, call = call)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     schemes <- schemes %|w|% default_schemes(data)
@@ -119,10 +88,6 @@ align <- function(align, data, ...,
         statistics = NULL, # `$compute` method
         labels = NULL, # the original `vec_names()` of the `input_data`
 
-        # new fields
-        facet = facet,
-        limits = limits,
-
         # use `NULL` if this align don't require any data
         # use `waiver()` to inherit from the layout data
         input_data = data,
@@ -142,7 +107,7 @@ align <- function(align, data, ...,
 }
 
 #' @export
-summary.Align <- function(object, ...) {
+summary.AlignDiscrete <- function(object, ...) {
     # we always push user define summary method
     # since `Align` object should reorder observations or split observations
     # into groups
@@ -154,50 +119,59 @@ summary.Align <- function(object, ...) {
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
-#' object, descended from the top-level `Align`, and each implements various
-#' methods and fields.
+#' object, descended from the top-level `AlignDiscrete`, and each implements
+#' various methods and fields.
 #'
 #' To create a new type of `Align*` object, you typically will want to
 #' override one or more of the following:
 #'  - `setup_params`: Prepare parameter or check parameters used by this plot.
 #'  - `setup_data`: Prepare data used by this plot.
 #'  - `compute`: A method used to compute statistics.
-#'  - `layout`: A method used to group observations into panel or reorder
+#'  - `align`: A method used to group observations into panel or reorder
 #'    observations.
 #'  - `draw`: A method used to draw the plot. Must return a `ggplot` object.
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @format NULL
 #' @usage NULL
-#' @rdname align
+#' @rdname align_discrete
 #' @include plot-.R
-Align <- ggproto("Align", AlignProto,
+AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
     parameters = function(self) {
         c(
             align_method_params(
                 self$compute,
-                align_method_params(Align$compute)
+                align_method_params(AlignDiscrete$compute)
             ),
             align_method_params(
                 self$align,
-                align_method_params(Align$align)
+                align_method_params(AlignDiscrete$align)
             ),
             align_method_params(
                 self$draw,
-                align_method_params(Align$draw)
+                align_method_params(AlignDiscrete$draw)
             ),
             self$extra_params
         )
     },
-    layout = function(self, layout_data, layout_coords) {
-        input_data <- .subset2(self, "input_data")
-        input_params <- .subset2(self, "input_params")
+    setup_design = function(self, layout_data, design) {
         object_name <- .subset2(self, "object_name")
         layout_name <- .subset2(self, "layout_name")
+        # check plot is compatible with the layout
+        if (is_continuous_design(design)) {
+            # `AlignDiscrete` object is special for discrete variables
+            cli_abort(c(
+                sprintf("Cannot add {.var {object_name}} to %s", layout_name),
+                i = sprintf("%s cannot align discrete variables", layout_name)
+            ))
+        }
+
         call <- .subset2(self, "call")
-        layout_panel <- .subset2(layout_coords, "panel")
-        layout_index <- .subset2(layout_coords, "index")
-        layout_nobs <- .subset2(layout_coords, "nobs")
+        input_data <- .subset2(self, "input_data")
+        input_params <- .subset2(self, "input_params")
+        layout_panel <- .subset2(design, "panel")
+        layout_index <- .subset2(design, "index")
+        layout_nobs <- .subset2(design, "nobs")
 
         # we must have the same observations across all plots
         # 1. if `Align` require data, the `nobs` should be nrow(data)
@@ -259,34 +233,34 @@ Align <- ggproto("Align", AlignProto,
         )
 
         # make the new layout -------------------------------
-        new_coords <- align_inject(
+        new_design <- align_inject(
             self$align,
             c(list(panel = layout_panel, index = layout_index), params)
         )
 
-        # we check the coords
+        # we check the the design
         check_discrete_design(
-            layout_coords,
+            design,
             discrete_design(
-                .subset2(new_coords, 1L),
-                .subset2(new_coords, 2L),
+                .subset2(new_design, 1L),
+                .subset2(new_design, 2L),
                 layout_nobs
             ),
             layout_name,
             object_name
         )
     },
-    build_plot = function(self, plot, coords, extra_coords,
-                          previous_coords = NULL) {
+    build_plot = function(self, plot, design, extra_design,
+                          previous_design = NULL) {
         direction <- self$direction
-        panel <- .subset2(coords, "panel")
-        index <- .subset2(coords, "index")
-        if (is.null(extra_coords)) {
+        panel <- .subset2(design, "panel")
+        index <- .subset2(design, "index")
+        if (is.null(extra_design)) {
             extra_panel <- NULL
             extra_index <- NULL
         } else {
-            extra_panel <- .subset2(extra_coords, "panel")
-            extra_index <- .subset2(extra_coords, "index")
+            extra_panel <- .subset2(extra_design, "panel")
+            extra_index <- .subset2(extra_design, "index")
         }
         params <- .subset2(self, "params")
         plot <- align_inject(self$draw, c(params, list(
@@ -297,45 +271,39 @@ Align <- ggproto("Align", AlignProto,
             extra_index = extra_index
         )))
 
-        coords$labels <- .subset(.subset2(self, "labels"), index)
         # only when user use the internal facet, we'll setup the limits
-        if (.subset2(self, "facet")) {
-            # set up facets
-            if (nlevels(panel) > 1L) {
-                default_facet <- switch_direction(
-                    direction,
-                    ggplot2::facet_grid(
-                        rows = ggplot2::vars(.data$.panel),
-                        scales = "free_y", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    ),
-                    ggplot2::facet_grid(
-                        cols = ggplot2::vars(.data$.panel),
-                        scales = "free_x", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    )
+        # set up facets
+        if (nlevels(panel) > 1L) {
+            default_facet <- switch_direction(
+                direction,
+                ggplot2::facet_grid(
+                    rows = ggplot2::vars(.data$.panel),
+                    scales = "free_y", space = "free",
+                    drop = FALSE, as.table = FALSE
+                ),
+                ggplot2::facet_grid(
+                    cols = ggplot2::vars(.data$.panel),
+                    scales = "free_x", space = "free",
+                    drop = FALSE, as.table = FALSE
                 )
-            } else {
-                default_facet <- facet_stack(direction = direction)
-            }
-            plot <- plot + align_melt_facet(default_facet, plot$facet)
-            coords$limits <- .subset2(self, "limits")
+            )
         } else {
-            coords$limits <- FALSE
+            default_facet <- facet_stack(direction = direction)
         }
+        plot <- gguse_facet(plot, default_facet)
 
         # set limits and default scales
-        plot + switch_direction(
-            direction,
-            list(
-                cartesian_coord("y", self$layout_name),
-                discrete_ggalign(y = coords)
-            ),
-            list(
-                cartesian_coord("x", self$layout_name),
-                discrete_ggalign(x = coords)
+        if (is_horizontal(direction)) {
+            plot + ggalign_design(
+                y = design,
+                ylabels = .subset(.subset2(self, "labels"), index)
             )
-        )
+        } else {
+            plot + ggalign_design(
+                x = design,
+                xlabels = .subset(.subset2(self, "labels"), index)
+            )
+        }
     },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,

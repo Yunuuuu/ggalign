@@ -7,12 +7,8 @@ recycle_whole <- function(x, len) {
 }
 
 # `vec_rep_each`
-recycle_each <- function(x, len = NULL) {
-    if (is.null(len)) {
-        x
-    } else {
-        (x - 1L) %/% len + 1L
-    }
+recycle_each <- function(x, len) {
+    (x - 1L) %/% len + 1L
 }
 
 #' @importFrom utils modifyList

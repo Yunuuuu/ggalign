@@ -99,10 +99,14 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
     expect_snapshot_error(stack_discrete("h") + quad_discrete())
     expect_snapshot_error(stack_discrete("h") + quad_alignv())
     expect_snapshot_error(stack_discrete("h") + quad_continuous())
+    # incompatible design
+    expect_snapshot_error(stack_discrete("h", small_mat) + quad_alignv())
 
     expect_snapshot_error(stack_discrete("v") + quad_discrete())
     expect_snapshot_error(stack_discrete("v") + quad_alignv())
     expect_snapshot_error(stack_discrete("v") + quad_continuous())
+    # incompatible design
+    expect_snapshot_error(stack_discrete("v", small_mat) + quad_alignh())
 
     # stack_continuous()
     expect_snapshot_error(stack_continuous("h") + quad_alignh())
@@ -116,11 +120,6 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
         quad_alignh())
 
     # `stack_discrete()` update layout design correctly
-    stack <- stack_discrete("h", small_mat) + quad_alignv()
-    expect_identical(
-        .subset2(stack@plot_list, 1L)@vertical,
-        discrete_design(nobs = ncol(small_mat))
-    )
     stack <- stack_discrete("h", small_mat) + quad_alignh()
     expect_identical(
         stack@design,
@@ -187,11 +186,6 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
             cross_discreteh()))
 
     # `stack_alignv()` update layout coords correctly
-    stack <- stack_alignv(small_mat) + quad_alignh()
-    expect_identical(
-        .subset2(stack@plot_list, 1L)@horizontal,
-        discrete_design(nobs = ncol(small_mat))
-    )
     stack <- stack_alignv(small_mat) + quad_alignv()
     expect_identical(
         stack@design,
@@ -270,14 +264,6 @@ test_that("`chain_layout_add()` function with stack_switch", {
     expect_identical(schemes$scheme_data, new_scheme_data(NULL))
 })
 
-test_that("`chain_layout_add()` function with default", {
-
-})
-
-test_that("`chain_layout_add()` function with layout_annotation", {
-
-})
-
 test_that("`chain_layout_add()` function with ggalign_with_quad", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
@@ -289,4 +275,12 @@ test_that("`chain_layout_add()` function with ggalign_with_quad", {
 })
 
 test_that("`chain_layout_add()` function with CrossLayout", {
+})
+
+test_that("`chain_layout_add()` function with layout_annotation", {
+
+})
+
+test_that("`chain_layout_add()` function with default", {
+
 })

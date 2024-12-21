@@ -1,11 +1,11 @@
 #' Connect two layout crosswise
 #'
 #' @description
-#' `cross_gg` resets the layout ordering index of a [`cross_discrete()`]. This
+#' `ggcross` resets the layout ordering index of a [`cross_discrete()`]. This
 #' allows you to add other `align_*` objects to define a new layout ordering
-#' index. Any objects added after `cross_gg` will use this updated layout
+#' index. Any objects added after `ggcross` will use this updated layout
 #' ordering index. This feature is particularly useful for creating `tanglegram`
-#' visualizations. `ggcross()` is an alias of `cross_gg()`.
+#' visualizations. `ggcross()` is an alias of `ggcross()`.
 #'
 #' @inheritParams ggalign
 #' @section ggplot2 specification:
@@ -34,8 +34,8 @@
 #'
 #' @importFrom ggplot2 ggproto aes
 #' @export
-cross_gg <- function(mapping = aes(), size = NULL,
-                     no_axes = NULL, active = NULL) {
+ggcross <- function(mapping = aes(), size = NULL,
+                    no_axes = NULL, active = NULL) {
     active <- update_active(active, new_active(use = TRUE))
     cross(
         cross = CrossGg,
@@ -45,11 +45,6 @@ cross_gg <- function(mapping = aes(), size = NULL,
     )
 }
 
-#' @usage NULL
-#' @export
-#' @rdname cross_gg
-ggcross <- cross_gg
-
 #' @importFrom ggplot2 ggproto ggplot
 CrossGg <- ggproto("CrossGg", Cross,
     setup_plot = function(self, plot) {
@@ -57,16 +52,16 @@ CrossGg <- ggproto("CrossGg", Cross,
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
-    build_plot = function(self, plot, coords, extra_coords, previous_coords) {
+    build_plot = function(self, plot, design, extra_design, previous_design) {
         direction <- self$direction
         index <- vec_c(
-            .subset2(previous_coords, "index"),
-            .subset2(coords, "index")
+            .subset2(previous_design, "index"),
+            .subset2(design, "index")
         )
         data <- data_frame0(
             .panel = vec_c(
-                .subset2(previous_coords, "panel"),
-                .subset2(coords, "panel")
+                .subset2(previous_design, "panel"),
+                .subset2(design, "panel")
             ),
             .index = index,
             .names = .subset(.subset2(self, "labels"), index),
@@ -75,8 +70,8 @@ CrossGg <- ggproto("CrossGg", Cross,
                     vec_rep_each(
                         c("left", "right"),
                         c(
-                            .subset2(previous_coords, "nobs"),
-                            .subset2(coords, "nobs")
+                            .subset2(previous_design, "nobs"),
+                            .subset2(design, "nobs")
                         )
                     ),
                     c("left", "right")
@@ -86,23 +81,19 @@ CrossGg <- ggproto("CrossGg", Cross,
                     vec_rep_each(
                         c("top", "bottom"),
                         c(
-                            .subset2(previous_coords, "nobs"),
-                            .subset2(coords, "nobs")
+                            .subset2(previous_design, "nobs"),
+                            .subset2(design, "nobs")
                         )
                     ),
                     c("bottom", "top")
                 )
             }
         )
-        coords$labels <- .subset(
-            .subset2(self, "labels"),
-            .subset2(coords, "index")
-        )
         data[[switch_direction(direction, ".y", ".x")]] <- vec_c(
-            seq_len(.subset2(previous_coords, "nobs")),
-            seq_len(.subset2(coords, "nobs"))
+            seq_len(.subset2(previous_design, "nobs")),
+            seq_len(.subset2(design, "nobs"))
         )
-        if (nlevels(.subset2(coords, "panel")) > 1L) {
+        if (nlevels(.subset2(design, "panel")) > 1L) {
             default_facet <- switch_direction(
                 direction,
                 ggplot2::facet_grid(
@@ -119,18 +110,28 @@ CrossGg <- ggproto("CrossGg", Cross,
         } else {
             default_facet <- ggplot2::facet_null()
         }
-        plot$data <- data
+        plot <- gguse_data(plot, data)
+        plot <- gguse_facet(plot, default_facet)
+        plot <- gguse_linear_coord(plot, self$layout_name)
         if (is_horizontal(direction)) {
-            default_coord <- cartesian_coord("y", self$layout_name)
-            default_align <- discrete_ggalign(y = coords)
+            default_design <- ggalign_design(
+                y = design,
+                ylabels = .subset(
+                    .subset2(self, "labels"),
+                    .subset2(design, "index")
+                )
+            )
             default_expand <- default_expansion(x = expansion())
         } else {
-            default_coord <- cartesian_coord("x", self$layout_name)
+            default_design <- ggalign_design(
+                x = design,
+                xlabels = .subset(
+                    .subset2(self, "labels"),
+                    .subset2(design, "index")
+                )
+            )
             default_expand <- default_expansion(y = expansion())
-            default_align <- discrete_ggalign(x = coords)
         }
-        plot +
-            align_melt_facet(default_facet, plot$facet) +
-            default_coord + default_expand + default_align
+        plot + default_expand + default_design
     }
 )

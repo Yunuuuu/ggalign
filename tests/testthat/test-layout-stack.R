@@ -75,11 +75,6 @@ testthat::test_that("`stack_align` add `quad_layout()` object builds well", {
             quad_alignh() +
             geom_boxplot(aes(value, factor(.y)))
     })
-    expect_doppelganger("stack_alignh, add quad_alignv", {
-        stack_alignh(small_mat) +
-            quad_alignv() +
-            geom_boxplot(aes(factor(.x), value))
-    })
     expect_doppelganger("stack_alignh, add quad_alignb", {
         stack_alignh(small_mat) +
             quad_alignb(NULL, aes(.x, .y)) +
@@ -95,11 +90,6 @@ testthat::test_that("`stack_align` add `quad_layout()` object builds well", {
     })
 
     # stack_alignv -------------------------------------
-    expect_doppelganger("stack_alignv, add quad_alignh", {
-        stack_alignv(small_mat) +
-            quad_alignh() +
-            geom_boxplot(aes(value, factor(.y)))
-    })
     expect_doppelganger("stack_alignv, add quad_alignv", {
         stack_alignv(small_mat) +
             quad_alignv() +

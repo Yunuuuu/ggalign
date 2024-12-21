@@ -10,17 +10,17 @@ ggalign_build.StackLayout <- function(x) {
 }
 
 #' @param schemes,theme Parameters from parent layout
-#' @param extra_coords layout parameters of the axis vertically with the stack.
+#' @param extra_design layout parameters of the axis vertically with the stack.
 #' @noRd
 stack_build <- function(stack, schemes = NULL, theme = NULL,
-                        extra_coords = NULL) {
+                        extra_design = NULL) {
     if (is_empty(stack@plot_list)) {
         return(NULL)
     }
     direction <- stack@direction
     schemes <- inherit_parent_layout_schemes(stack, schemes)
     theme <- inherit_parent_layout_theme(stack, theme, direction = direction)
-    composer <- stack_build_composer(stack, schemes, theme, extra_coords)
+    composer <- stack_build_composer(stack, schemes, theme, extra_design)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
@@ -104,13 +104,13 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
 #' @param schemes,theme Parameters for current stack, which have inherited
 #' parameters from the parent.
 #' @noRd
-stack_build_composer <- function(stack, schemes, theme, extra_coords) {
+stack_build_composer <- function(stack, schemes, theme, extra_design) {
     UseMethod("stack_build_composer")
 }
 
 #' @export
 stack_build_composer.StackLayout <- function(stack, schemes, theme,
-                                             extra_coords) {
+                                             extra_design) {
     plot_list <- stack@plot_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
@@ -181,18 +181,18 @@ stack_build_composer.StackLayout <- function(stack, schemes, theme,
         released_spaces <- NULL
     }
 
-    coords <- setup_discrete_design(stack@design)
+    design <- setup_design(stack@design)
     stack_composer_add(
         plot_list,
         composer,
         schemes = schemes,
         theme = theme,
-        coords = coords,
-        extra_coords = extra_coords,
+        design = design,
+        extra_design = extra_design,
         direction = direction,
         position = position,
         released_spaces = released_spaces,
-        previous_coords = NULL
+        previous_design = NULL
     )
 }
 

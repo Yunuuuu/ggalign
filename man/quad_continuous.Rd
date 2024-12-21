@@ -7,7 +7,7 @@
 \title{Arrange Plots in the Quad-Side of a main plot by aligning continuous axis}
 \usage{
 quad_continuous(
-  data = NULL,
+  data = waiver(),
   mapping = aes(),
   xlim = NULL,
   ylim = NULL,

@@ -17,7 +17,7 @@
 #' @param width,height The relative width/height of the main plot, can be a
 #' [`unit`][grid::unit] object.
 #' @inheritParams stack_discrete
-#' @inheritParams align
+#' @inheritParams align_discrete
 #' @section ggplot2 specification:
 #' The data in the underlying main plot contains following columns:
 #'
@@ -38,7 +38,7 @@
 #'
 #' @return A `QuadLayout` object.
 #' @export
-quad_discrete <- function(data = NULL, mapping = aes(),
+quad_discrete <- function(data = waiver(), mapping = aes(),
                           ...,
                           theme = NULL, active = NULL,
                           width = NA, height = NA) {
@@ -50,11 +50,10 @@ quad_discrete <- function(data = NULL, mapping = aes(),
 quad_alignb <- quad_discrete
 
 #' @export
-quad_discrete.default <- function(data = NULL, mapping = aes(),
+quad_discrete.default <- function(data = waiver(), mapping = aes(),
                                   ...,
                                   theme = NULL, active = NULL,
                                   width = NA, height = NA) {
-    data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
     new_quad_layout(
         name = "quad_discrete", data = data, xlim = waiver(), ylim = waiver(),
@@ -91,7 +90,7 @@ quad_discrete.uneval <- function(data, ...) {
 #' @inheritParams quad_discrete
 #' @inherit quad_discrete return
 #' @export
-quad_continuous <- function(data = NULL, mapping = aes(),
+quad_continuous <- function(data = waiver(), mapping = aes(),
                             xlim = NULL, ylim = NULL,
                             ...,
                             theme = NULL, active = NULL,
@@ -110,16 +109,13 @@ ggside <- quad_continuous
 quad_free <- quad_continuous
 
 #' @export
-quad_continuous.default <- function(data = NULL, mapping = aes(),
+quad_continuous.default <- function(data = waiver(), mapping = aes(),
                                     xlim = NULL, ylim = NULL,
                                     ...,
                                     theme = NULL, active = NULL,
                                     width = NA, height = NA) {
-    data <- data %|w|% NULL
     xlim <- xlim %|w|% NULL
     ylim <- ylim %|w|% NULL
-    assert_limits(xlim)
-    assert_limits(ylim)
     data <- fortify_data_frame(data = data, ...)
     new_quad_layout(
         name = "quad_continuous",
@@ -190,7 +186,7 @@ quad_continuous.uneval <- function(data, ...) {
 #'  - `value`: the actual matrix value.
 #'
 #' @export
-quad_layout <- function(data = NULL, mapping = aes(),
+quad_layout <- function(data = waiver(), mapping = aes(),
                         xlim = waiver(), ylim = waiver(),
                         ...,
                         theme = NULL, active = NULL,
@@ -202,17 +198,12 @@ quad_layout <- function(data = NULL, mapping = aes(),
             width = width, height = height
         )
     } else if (!is.waive(xlim) && !is.waive(ylim)) {
-        assert_limits(xlim)
-        assert_limits(ylim)
         quad_continuous(
             data = data, mapping = mapping, xlim = xlim, ylim = ylim,
             ..., active = active, theme = theme,
             width = width, height = height
         )
     } else {
-        if (!is.waive(xlim)) assert_limits(xlim)
-        if (!is.waive(ylim)) assert_limits(ylim)
-        data <- data %|w|% NULL
         data <- fortify_matrix(data = data, ...)
         new_quad_layout(
             name = "quad_layout",
@@ -243,8 +234,14 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
                             width = NA, height = NA,
                             class = "QuadLayout",
                             call = caller_call()) {
+    if (!is.waive(xlim)) assert_limits(xlim, call = call)
+    if (!is.waive(ylim)) assert_limits(ylim, call = call)
     if (is.waive(xlim) || is.waive(ylim)) {
-        if (!is.null(data) && !is.function(data)) {
+        # If we need align discrete variables, data cannot be `NULL` and 
+        # must be provided, here, we convert it to waiver() to indicate 
+        # inherit from the parent layout
+        data <- data %||% waiver()
+        if (!is.waive(data) && !is.function(data)) {
             nrows <- NROW(data)
             ncols <- ncol(data)
         } else {

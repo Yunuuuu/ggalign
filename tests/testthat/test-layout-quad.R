@@ -67,9 +67,6 @@ testthat::test_that("add `align` object works well", {
     expect_snapshot_error(quad_free(small_mat) +
         quad_anno("t") +
         align_dendro())
-    expect_snapshot_error(quad_free(small_mat) +
-        quad_anno("t") +
-        ggalign())
     expect_snapshot_error({
         set.seed(1L)
         quad_free(small_mat) +
