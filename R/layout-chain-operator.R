@@ -1,13 +1,13 @@
 #' @keywords internal
-stack_layout_subtract <- function(object, stack, object_name) {
-    UseMethod("stack_layout_subtract")
+chain_layout_subtract <- function(object, layout, object_name) {
+    UseMethod("chain_layout_subtract")
 }
 
 #' @export
-stack_layout_subtract.default <- function(object, stack, object_name) {
-    if (is.null(active_index <- stack@active) ||
-        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
-        stack@plot_list <- lapply(stack@plot_list, function(plot) {
+chain_layout_subtract.default <- function(object, layout, object_name) {
+    if (is.null(active_index <- layout@active) ||
+        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
+        layout@plot_list <- lapply(layout@plot_list, function(plot) {
             if (is_ggalign_plot(plot)) {
                 chain_plot_add(plot, object, object_name, force = FALSE)
             } else {
@@ -15,44 +15,51 @@ stack_layout_subtract.default <- function(object, stack, object_name) {
             }
         })
     } else {
-        stack@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
-    stack
+    layout
 }
 
 # for objects can inherit from layout
 #' @export
-stack_layout_subtract.ggalign_scheme <- function(object, stack, object_name) {
-    if (is.null(active_index <- stack@active) ||
-        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
-        stack <- update_layout_scheme(object, stack, object_name)
+chain_layout_subtract.ggalign_scheme <- function(object, layout, object_name) {
+    if (is.null(active_index <- layout@active) ||
+        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
+        layout <- update_layout_scheme(object, layout, object_name)
     } else {
-        stack@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
-    stack
+    layout
 }
 
 #' @export
-stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) {
-    if (is.null(active_index <- stack@active) ||
-        is_ggalign_plot(plot <- .subset2(stack@plot_list, active_index))) {
+chain_layout_subtract.ggalign_with_quad <- function(object, layout,
+                                                    object_name) {
+    if (!is_stack_layout(layout)) {
+        cli_abort(sprintf(
+            "Cannot add {.var {object_name}} to %s",
+            object_name(layout)
+        ))
+    }
+    if (is.null(active_index <- layout@active) ||
+        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
         inner <- .subset2(object, "object")
         inner_name <- .subset2(object, "object_name")
 
         # subtract set at layout level, if it is a plot option
         # we only apply to current active layout
         if (inherits(inner, "ggalign_scheme")) {
-            stack <- update_layout_scheme(inner, stack, inner_name)
-            return(stack)
+            layout <- update_layout_scheme(inner, layout, inner_name)
+            return(layout)
         }
 
         # otherwise, we apply the object to all plots in the stack layout
-        direction <- stack@direction
-        stack@plot_list <- lapply(stack@plot_list, function(plot) {
+        direction <- layout@direction
+        layout@plot_list <- lapply(layout@plot_list, function(plot) {
             if (is_ggalign_plot(plot)) {
                 plot <- chain_plot_add(plot, inner, inner_name, force = FALSE)
             } else if (is.waive(.subset2(object, "position"))) {
@@ -67,7 +74,7 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
                 )
                 for (position in positions) {
                     if (!is.null(slot(plot, position))) {
-                        slot(plot, position) <- stack_layout_subtract(
+                        slot(plot, position) <- chain_layout_subtract(
                             inner, slot(plot, position), inner_name
                         )
                     }
@@ -82,22 +89,22 @@ stack_layout_subtract.ggalign_with_quad <- function(object, stack, object_name) 
             plot
         })
     } else {
-        stack@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
-    stack
+    layout
 }
 
 ##################################################################
 #' @keywords internal
-stack_layout_and_add <- function(object, stack, object_name) {
-    UseMethod("stack_layout_and_add")
+chain_layout_and_add <- function(object, layout, object_name) {
+    UseMethod("chain_layout_and_add")
 }
 
 #' @export
-stack_layout_and_add.default <- function(object, stack, object_name) {
-    stack@plot_list <- lapply(stack@plot_list, function(plot) {
+chain_layout_and_add.default <- function(object, layout, object_name) {
+    layout@plot_list <- lapply(layout@plot_list, function(plot) {
         if (is_ggalign_plot(plot)) {
             plot <- chain_plot_add(plot, object, object_name, force = FALSE)
         } else {
@@ -105,18 +112,18 @@ stack_layout_and_add.default <- function(object, stack, object_name) {
         }
         plot
     })
-    stack
+    layout
 }
 
 #' @export
-stack_layout_and_add.ggalign_with_quad <- function(object, stack, object_name) {
+chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     NextMethod()
 }
 
 #' @export
-stack_layout_and_add.theme <- function(object, stack, object_name) {
+chain_layout_and_add.theme <- function(object, layout, object_name) {
     ans <- NextMethod()
     # to align with `patchwork`, we also modify the layout theme
     # when using `&` to add the theme object.

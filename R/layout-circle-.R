@@ -156,7 +156,7 @@ circle_layout <- function(data = NULL, ..., limits = waiver()) {
 #' @importFrom grid unit
 #' @importFrom ggplot2 waiver
 #' @keywords internal
-#' @include layout-chain.R
+#' @include layout-chain-.R
 methods::setClass("CircleLayout",
     contains = "ChainLayout",
     list(radial = "ANY")

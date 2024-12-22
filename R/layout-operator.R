@@ -65,7 +65,8 @@
 #' @aliases +.ggheatmap &.ggheatmap -.ggheatmap
 #' @aliases +.ggside &.ggside -.ggside
 #' @aliases +.StackLayout &.StackLayout -.StackLayout
-#' @aliases +.StackCross
+#' @aliases +.StackCross &.StackCross -.StackCross
+#' @aliases +.CircleLayout &.CircleLayout -.CircleLayout
 #' @name layout-operator
 NULL
 
@@ -118,8 +119,8 @@ layout_subtract.QuadLayout <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_subtract.StackLayout <- function(layout, object, object_name) {
-    stack_layout_subtract(object, layout, object_name)
+layout_subtract.ChainLayout <- function(layout, object, object_name) {
+    chain_layout_subtract(object, layout, object_name)
 }
 
 #################################################################
@@ -134,17 +135,17 @@ layout_and_add.QuadLayout <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_and_add.StackLayout <- function(layout, object, object_name) {
-    stack_layout_and_add(object, layout, object_name)
+layout_and_add.ChainLayout <- function(layout, object, object_name) {
+    chain_layout_and_add(object, layout, object_name)
 }
 
 # For objects cannot be used with `-` or `&`
 #' @include layout-quad-operator.R
-#' @include layout-stack-operator.R
+#' @include layout-chain-operator.R
 lapply(
     c(
-        "quad_layout_subtract", "stack_layout_subtract",
-        "quad_layout_and_add", "stack_layout_and_add"
+        "quad_layout_subtract", "chain_layout_subtract",
+        "quad_layout_and_add", "chain_layout_and_add"
     ),
     function(genname) {
         params <- .subset2(strsplit(genname, "_"), 1L)
@@ -158,7 +159,7 @@ lapply(
         )
         # styler: off
         for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_annotation", "ggalign_plot", "StackLayout",
+                        "layout_annotation", "ggalign_plot", "ChainLayout",
                         "QuadLayout")) {
             # styler: on
             registerS3method(
@@ -176,7 +177,7 @@ lapply(
                     list(
                         name = switch(class,
                             ggalign_plot = ,
-                            StackLayout = ,
+                            ChainLayout = ,
                             QuadLayout = quote(object_name(object)),
                             # for all others
                             "{.var {object_name}}"

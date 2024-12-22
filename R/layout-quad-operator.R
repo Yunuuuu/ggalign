@@ -11,7 +11,7 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
         if (is.null(active)) {
             quad <- quad_body_add(object, quad, object_name)
         } else if (!is.null(slot(quad, active))) {
-            slot(quad, active) <- stack_layout_subtract(
+            slot(quad, active) <- chain_layout_subtract(
                 object, slot(quad, active), object_name
             )
         }
@@ -47,7 +47,7 @@ quad_layout_subtract.ggalign_with_quad <- function(object, quad, object_name) {
             if (is.null(active)) {
                 quad <- quad_body_add(object, quad, object_name)
             } else if (!is.null(slot(quad, active))) {
-                slot(quad, active) <- stack_layout_subtract(
+                slot(quad, active) <- chain_layout_subtract(
                     object, slot(quad, active), object_name
                 )
             }
@@ -69,7 +69,7 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
     for (position in .TLBR) {
         stack <- slot(quad, position)
         if (is.null(stack)) next
-        slot(quad, position) <- stack_layout_and_add(
+        slot(quad, position) <- chain_layout_and_add(
             object, stack, object_name
         )
     }
