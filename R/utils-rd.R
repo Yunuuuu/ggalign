@@ -4,7 +4,7 @@ rd_layout <- function() {
 
 rd_quad <- function() "[`quad_layout()`]/[`ggheatmap()`]"
 
-rd_stack_what <- function() {
+rd_chain_what <- function() {
     paste(
         "A single number or string of the plot elements in the layout.",
         "If `NULL`, will remove any active context"

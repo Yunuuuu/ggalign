@@ -11,7 +11,7 @@
 #' @inheritParams quad_switch
 #' @inheritParams stack_discrete
 #' @param what What should get activated for the stack layout?
-#' `r rd_stack_what()`, this is useful when the active context is a
+#' `r rd_chain_what()`, this is useful when the active context is a
 #' [`quad_layout()`] object, where any `align_*()` will be added to the
 #' [`quad_layout()`]. By removing the active context, we can add `align_*()`
 #' into the [`stack_layout()`].

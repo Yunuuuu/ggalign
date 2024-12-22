@@ -45,7 +45,7 @@ quad_active <- function(width = NULL, height = NULL) {
 #' the data in `r rd_quad()` is incompatible with the annotation stack, no
 #' data will be used in the stack.
 #' @param what What should get activated in the annotation stack?
-#' `r rd_stack_what()`.
+#' `r rd_chain_what()`.
 #' @seealso [`quad_switch()`]
 #' @export
 #' @rdname quad_active

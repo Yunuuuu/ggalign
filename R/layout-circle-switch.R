@@ -7,7 +7,7 @@
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams circle_discrete
 #' @param what What should get activated for the [`circle_layout()`]?
-#' `r rd_stack_what()`.
+#' `r rd_chain_what()`.
 #' @return A `circle_switch` object which can be added to [`circle_layout()`].
 #' @examples
 #' circle_discrete(matrix(rnorm(56), nrow = 7L)) +
