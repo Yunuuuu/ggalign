@@ -93,17 +93,6 @@ align_discrete <- function(align, data, ...,
     )
 }
 
-#' @export
-summary.AlignDiscrete <- function(object, ...) {
-    # we always push user define summary method
-    # since `Align` object should reorder observations or split observations
-    # into groups
-    cli_abort(sprintf(
-        "You must define {.fn summary} method for {.cls %s}",
-        .subset(class(object), 1L)
-    ))
-}
-
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
 #' object, descended from the top-level `AlignDiscrete`, and each implements
@@ -293,5 +282,27 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
     # let AlignProto to add schemes and theme acoordingly
     finish_plot = function(self, plot, schemes, theme) {
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
-    }
+    },
+    summary = function(self, plot) {
+        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        oo <- self$summary_align()
+        nms <- c("plot", "reorder", "split")
+        content <- c(
+            if (is.null(plot)) "no" else "yes",
+            if (isTRUE(oo[1L])) "yes" else "no",
+            if (isTRUE(oo[2L])) "yes" else "no"
+        )
+        nms <- format(nms, justify = "right")
+        content <- format(content, justify = "left")
+        content <- paste0("  ", nms, ": ", content)
+        c(header, content)
+    },
+
+    # Summary the action of `AlignDiscrete`
+    #
+    # @return A logical vector of length 2, indicating:
+    # - Whether the object reorders the observations.
+    # - Whether the object splits the observations into groups.
+    # @keywords internal
+    summary_align = function(self) c(FALSE, FALSE)
 )

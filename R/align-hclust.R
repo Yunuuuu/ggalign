@@ -85,14 +85,9 @@ align_hclust <- function(distance = "euclidean",
     )
 }
 
-#' @export
-summary.AlignHclust <- function(object, ...) {
-    params <- .subset2(object, "input_params")
-    c(TRUE, !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h")))
-}
-
 #' @importFrom ggplot2 ggproto aes
 AlignHclust <- ggproto("AlignHclust", AlignDiscrete,
+
     #' @importFrom stats reorder
     setup_params = function(self, nobs, params) {
         # setup the default value for `plot_cut_height`
@@ -300,5 +295,12 @@ AlignHclust <- ggproto("AlignHclust", AlignDiscrete,
             self$panel <- panel
         }
         list(panel, index)
+    },
+    summary_align = function(self, ...) {
+        params <- self$input_params
+        c(
+            TRUE,
+            !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h"))
+        )
     }
 )

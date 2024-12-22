@@ -53,9 +53,6 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     )
 }
 
-#' @export
-summary.AlignReorder <- function(object, ...) c(TRUE, FALSE)
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignReorder <- ggproto("AlignReorder", AlignDiscrete,
@@ -76,7 +73,8 @@ AlignReorder <- ggproto("AlignReorder", AlignDiscrete,
         )
         if (reverse) index <- rev(index)
         list(panel, index)
-    }
+    },
+    summary_align = function(self) c(TRUE, FALSE)
 )
 
 #' Ordering Permutation

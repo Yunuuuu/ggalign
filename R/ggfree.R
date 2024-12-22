@@ -106,5 +106,9 @@ FreeGg <- ggproto("FreeGg", AlignProto,
             data <- waiver()
         }
         gguse_data(plot, data)
+    },
+    summary = function(self, plot) {
+        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        c(header, "  Add plot without alignment")
     }
 )

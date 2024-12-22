@@ -76,9 +76,6 @@ align_order <- function(weights = rowMeans, ...,
     )
 }
 
-#' @export
-summary.AlignOrder <- function(object, ...) c(TRUE, FALSE)
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
 AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
@@ -133,5 +130,6 @@ AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
         }
         if (reverse) index <- rev(index)
         list(panel, index)
-    }
+    },
+    summary_align = function(self) c(TRUE, FALSE)
 )

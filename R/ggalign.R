@@ -105,9 +105,6 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     )
 }
 
-#' @export
-summary.AlignGg <- function(object, ...) c(FALSE, FALSE)
-
 #' @importFrom rlang inject
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", AlignProto,
@@ -266,6 +263,10 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             )
         }
         plot + theme + theme_recycle()
+    },
+    summary = function(self, plot) {
+        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        c(header, "  Add plot by Aligning discrete or continuous variable")
     }
 )
 

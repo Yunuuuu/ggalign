@@ -19,40 +19,6 @@ methods::setMethod("show", "ggalign_plot", function(object) {
     print(object)
 })
 
-#' @export
-print.ggalign_plot <- function(x, ...) {
-    oo <- summary(x)
-    cli::cli_inform(c(
-        sprintf("%s object:", object_name(x)),
-        " " = sprintf(
-            "  {.field plot}: %s",
-            if (oo[1L]) "yes" else "no"
-        ),
-        " " = sprintf(
-            "  {.field reorder}: %s",
-            if (oo[2L]) "yes" else "no"
-        ),
-        " " = sprintf(
-            "  {.field split}: %s",
-            if (oo[3L]) "yes" else "no"
-        )
-    ))
-    invisible(x)
-}
-
-#' Summary the action of `ggalign_plot`
-#'
-#' @param object A `ggalign_plot` object
-#' @return A logical vector of length 3, indicating:
-#' - Whether the object adds a plot.
-#' - Whether the object reorders the observations.
-#' - Whether the object splits the observations into groups.
-#' @export
-#' @keywords internal
-summary.ggalign_plot <- function(object, ...) {
-    c(!is.null(object@plot), summary(object@align))
-}
-
 #' @importFrom methods new
 new_ggalign_plot <- function(align = NULL, ...,
                              plot = NULL, active = NULL, size = NULL,
@@ -111,16 +77,6 @@ is_cross_plot <- function(x) is_ggalign_plot(x) && is_cross(x@align)
 is_cross <- function(x) inherits(x, "Cross")
 
 #######################################################
-#' Summary the action of `AlignProto`
-#'
-#' @param object A `AlignProto` object
-#' @return A logical vector of length 2, indicating:
-#' - Whether the object reorders the observations.
-#' - Whether the object splits the observations into groups.
-#' @export
-#' @keywords internal
-summary.AlignProto <- function(object, ...) c(FALSE, FALSE)
-
 #' @importFrom ggplot2 ggproto
 AlignProto <- ggproto("AlignProto",
     # following fields will be added when added to the layout
@@ -160,8 +116,21 @@ AlignProto <- ggproto("AlignProto",
     },
     finish_plot = function(self, plot, schemes, theme) {
         plot_add_schemes(plot, schemes) + theme_recycle()
+    },
+
+    # print method for the object
+    summary = function(self, plot) {
+        cls <- class(self)
+        cls <- cls[seq_len(which(cls == "AlignProto"))]
+        sprintf("<Object: %s>", paste(cls, collapse = " "))
     }
 )
+
+#' @export
+print.ggalign_plot <- function(x, ...) {
+    cat(x@align$summary(x@plot), sep = "\n")
+    invisible(x)
+}
 
 #' @importFrom rlang inject
 align_inject <- function(method, params) {

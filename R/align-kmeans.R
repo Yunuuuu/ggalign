@@ -27,9 +27,6 @@ align_kmeans <- function(centers, ..., data = NULL, active = NULL) {
     )
 }
 
-#' @export
-summary.AlignKmeans <- function(object, ...) c(FALSE, TRUE)
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", AlignDiscrete,
@@ -47,5 +44,6 @@ AlignKmeans <- ggproto("AlignKmeans", AlignDiscrete,
     },
     align = function(self, panel, index) {
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
-    }
+    },
+    summary_align = function(self) c(FALSE, TRUE)
 )

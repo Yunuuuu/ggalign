@@ -269,6 +269,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         plot
     }
 )
+
 tree_one_node <- function(index, label) {
     structure(
         index,

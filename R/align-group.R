@@ -25,9 +25,6 @@ align_group <- function(group, active = NULL) {
     )
 }
 
-#' @export
-summary.AlignGroup <- function(object, ...) c(FALSE, TRUE)
-
 #' @importFrom ggplot2 ggproto
 AlignGroup <- ggproto("AlignGroup", AlignDiscrete,
     nobs = function(self, params) vec_size(.subset2(params, "group")),
@@ -39,5 +36,6 @@ AlignGroup <- ggproto("AlignGroup", AlignDiscrete,
         )
         params
     },
-    align = function(self, panel, index, group) list(group, index)
+    align = function(self, panel, index, group) list(group, index),
+    summary_align = function(self) c(FALSE, TRUE)
 )
