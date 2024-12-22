@@ -4,7 +4,7 @@ ggalign_build.CircleLayout <- function(x) {
     circle_build(x)
 }
 
-#' @importFrom ggplot2 find_panel calc_element ggproto ggplot_gtable
+#' @importFrom ggplot2 find_panel calc_element ggproto ggplot_gtable theme
 #' @importFrom gtable gtable_add_grob gtable_add_padding
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty
@@ -86,7 +86,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # let `align` add other components
         plot <- align$build_plot(plot, design = design)
         plot <- align$finish_plot(plot, schemes = plot_schemes, theme = theme)
-        plot <- plot + ggplot2::labs(x = NULL, y = NULL)
+        plot <- plot + ggplot2::labs(x = NULL, y = NULL) +
+            theme(panel.border = element_blank())
 
         # copied from `ggplot2:::ggplot_gtable`
         data <- ggplot2::ggplot_build(plot)
