@@ -35,7 +35,21 @@ This function integrates the functionalities of \code{circle_discrete()} and
 \examples{
 set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7L)
+# circle_discrete
+circle_layout(matrix(rnorm(56), nrow = 7L)) +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c() +
+    align_dendro(aes(color = branch), k = 3) +
+    circle_switch(coord_radial(inner.radius = 0.5))
 
+# circle_continuous
+circle_layout(matrix(rnorm(56), nrow = 7L), limits = NULL) +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c() +
+    align_dendro(aes(color = branch), k = 3) +
+    circle_switch(coord_radial(inner.radius = 0.5))
 }
 \seealso{
 \itemize{
