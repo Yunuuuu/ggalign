@@ -96,6 +96,23 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
 }
 
 #' @export
+chain_layout_add.continuous_limits <- function(object, layout, object_name) {
+    if (is_discrete_design(layout@design)) {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {object_name}} to %s",
+                object_name(layout)
+            ),
+            i = sprintf(
+                "%s cannot align continuous variables",
+                object_name(layout)
+            )
+        ))
+    }
+    update_design(layout, design = object, object_name = object_name)
+}
+
+#' @export
 chain_layout_add.ggplot <- function(object, layout, object_name) {
     chain_layout_add(ggfree(data = object), layout, object_name)
 }

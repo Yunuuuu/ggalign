@@ -160,7 +160,7 @@ lapply(
         # styler: off
         for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
                         "layout_annotation", "ggalign_plot", "ChainLayout",
-                        "QuadLayout")) {
+                        "QuadLayout", "continuous_limits")) {
             # styler: on
             registerS3method(
                 genname, class,
