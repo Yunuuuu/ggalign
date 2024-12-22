@@ -15,8 +15,11 @@
 #' `"x"` and `TRUE`, respectively, for all plots.
 #' @examples
 #' set.seed(123)
-#' circle_discrete(matrix(rnorm(56), nrow = 7L)) +
-#'     align_dendro()
+#' stack_discrete("v", matrix(rnorm(56), nrow = 7L)) +
+#'     align_dendro() +
+#'     ggalign() +
+#'     geom_tile(aes(y = .column_index, fill = value)) +
+#'     scale_fill_viridis_c()
 #' @export
 circle_discrete <- function(data = NULL, ..., radial = NULL, theme = NULL) {
     UseMethod("circle_discrete", data)
@@ -68,6 +71,14 @@ circle_discrete.formula <- circle_discrete.function
 #'
 #' @inheritParams circle_discrete
 #' @inheritParams stack_continuous
+#' @examples
+#' circle_continuous(mpg, limits = continuous_limits(c(3, 5))) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) &
+#'     scale_color_brewer(palette = "Dark2") &
+#'     theme_bw()
 #' @export
 circle_continuous <- function(data = NULL, ..., radial = NULL,
                               limits = NULL, theme = NULL) {
@@ -141,7 +152,21 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(56), nrow = 7L)
+#' # circle_discrete
+#' circle_layout(matrix(rnorm(56), nrow = 7L)) +
+#'     ggalign() +
+#'     geom_tile(aes(y = .column_index, fill = value)) +
+#'     scale_fill_viridis_c() +
+#'     align_dendro(aes(color = branch), k = 3) +
+#'     circle_switch(coord_radial(inner.radius = 0.5))
 #'
+#' # circle_continuous
+#' circle_layout(matrix(rnorm(56), nrow = 7L), limits = NULL) +
+#'     ggalign() +
+#'     geom_tile(aes(y = .column_index, fill = value)) +
+#'     scale_fill_viridis_c() +
+#'     align_dendro(aes(color = branch), k = 3) +
+#'     circle_switch(coord_radial(inner.radius = 0.5))
 #' @export
 circle_layout <- function(data = NULL, ..., limits = waiver()) {
     if (is.waive(limits)) {

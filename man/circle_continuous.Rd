@@ -35,3 +35,12 @@ plots in the layout.}
 The \code{circle_continuous} function arranges plots by aligning continuous
 variables in a circular layout.
 }
+\examples{
+circle_continuous(mpg, limits = continuous_limits(c(3, 5))) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) &
+    scale_color_brewer(palette = "Dark2") &
+    theme_bw()
+}

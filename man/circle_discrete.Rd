@@ -33,6 +33,9 @@ in a circular layout.
 }
 \examples{
 set.seed(123)
-circle_discrete(matrix(rnorm(56), nrow = 7L)) +
-    align_dendro()
+stack_discrete("v", matrix(rnorm(56), nrow = 7L)) +
+    align_dendro() +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c()
 }
