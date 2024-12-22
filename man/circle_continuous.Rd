@@ -12,7 +12,12 @@ convert data to a matrix.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
-\item{radial}{A \code{\link[ggplot2:coord_polar]{coord_radial()}} object.}
+\item{radial}{A \code{\link[ggplot2:coord_polar]{coord_radial()}} object that defines
+the global parameters for \code{coord_radial} across all plots in the layout.
+The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} will be inherited
+and applied uniformly to all plots within the layout. The parameters
+\code{theta} and \code{r.axis.inside} will always be ignored and will be set to
+\code{"x"} and \code{TRUE}, respectively, for all plots.}
 
 \item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous

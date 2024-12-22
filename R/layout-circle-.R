@@ -7,7 +7,12 @@
 #' in a circular layout.
 #'
 #' @inheritParams stack_discrete
-#' @param radial A [`coord_radial()`][ggplot2::coord_radial] object.
+#' @param radial A [`coord_radial()`][ggplot2::coord_radial] object that defines
+#' the global parameters for `coord_radial` across all plots in the layout.
+#' The parameters `start`, `end`, `direction`, and `expand` will be inherited
+#' and applied uniformly to all plots within the layout. The parameters
+#' `theta` and `r.axis.inside` will always be ignored and will be set to
+#' `"x"` and `TRUE`, respectively, for all plots.
 #' @examples
 #' set.seed(123)
 #' circle_discrete(matrix(rnorm(56), nrow = 7L)) +
