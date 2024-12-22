@@ -83,14 +83,14 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot <- data$plot
         plot_layout <- data$layout
         data <- data$data
-        theme <- complete_theme(plot$theme)
+        plot_theme <- complete_theme(plot$theme)
 
         geom_grobs <- ggfun("by_layer")(
             function(l, d) l$draw_geom(d, plot_layout),
             plot$layers, data,
             "converting geom to grob"
         )
-        gt <- plot_layout$render(geom_grobs, data, theme, plot$labels)
+        gt <- plot_layout$render(geom_grobs, data, plot_theme, plot$labels)
 
         # for each inner gtable, we insert it to the panel area of the
         # outter gtable
@@ -114,7 +114,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             rescale_factor <- last_plot_size / plot_size
 
             # just using panel spacing as the spacer between two plots
-            spacing <- calc_element("panel.spacing.y", theme)
+            spacing <- calc_element("panel.spacing.r", plot_theme)
 
             plot_table <- editGrob(plot_table, vp = viewport(
                 width = unit(rescale_factor, "npc") - spacing,
