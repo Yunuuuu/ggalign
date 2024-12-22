@@ -103,6 +103,19 @@ chain_layout_and_add <- function(object, layout, object_name) {
 }
 
 #' @export
+chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) {
+    if (!is_stack_layout(layout)) {
+        cli_abort(sprintf(
+            "Cannot add {.var {object_name}} to %s",
+            object_name(layout)
+        ))
+    }
+    object <- .subset2(object, "object")
+    object_name <- .subset2(object, "object_name")
+    NextMethod()
+}
+
+#' @export
 chain_layout_and_add.default <- function(object, layout, object_name) {
     layout@plot_list <- lapply(layout@plot_list, function(plot) {
         if (is_ggalign_plot(plot)) {
@@ -113,13 +126,6 @@ chain_layout_and_add.default <- function(object, layout, object_name) {
         plot
     })
     layout
-}
-
-#' @export
-chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) {
-    object <- .subset2(object, "object")
-    object_name <- .subset2(object, "object_name")
-    NextMethod()
 }
 
 #' @export
