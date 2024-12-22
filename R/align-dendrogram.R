@@ -257,7 +257,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 if (!y_scale$is_discrete()) {
                     if (identical(y_scale$trans$name, "identity")) {
                         y_scale$trans <- scales::as.transform("reverse")
-                    } else {
+                    } else if (identical(y_scale$trans$name, "reverse")) {
                         y_scale$trans <- scales::as.transform("identity")
                     }
                 }

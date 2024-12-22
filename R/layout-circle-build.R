@@ -1,35 +1,34 @@
 #' @export
 ggalign_build.CircleLayout <- function(x) {
     x <- default_layout(x)
-    if (is.null(out <- circle_build(x))) {
-        out <- ggplot() +
-            x@theme +
-            ggplot2::labs(
-                title = .subset2(x@titles, "title"),
-                subtitle = .subset2(x@titles, "subtitle"),
-                caption = .subset2(x@titles, "caption")
-            )
-    }
-    out
+    circle_build(x)
 }
 
-#' @importFrom ggplot2 find_panel calc_element ggproto
-#' @importFrom gtable gtable_add_grob
+#' @importFrom ggplot2 find_panel calc_element ggproto ggplot_gtable
+#' @importFrom gtable gtable_add_grob gtable_add_padding
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty
 circle_build <- function(circle, schemes = NULL, theme = NULL) {
-    if (is_empty(plot_list <- circle@plot_list)) {
-        return(NULL)
-    }
     schemes <- inherit_parent_layout_schemes(circle, schemes)
     theme <- inherit_parent_layout_theme(circle, theme)
+    # for empty plot
+    base <- ggplot() +
+        theme +
+        ggplot2::labs(
+            title = .subset2(circle@titles, "title"),
+            subtitle = .subset2(circle@titles, "subtitle"),
+            caption = .subset2(circle@titles, "caption")
+        )
+    if (is_empty(plot_list <- circle@plot_list)) {
+        return(ggplot_gtable(base))
+    }
 
     # we remove the plot without actual plot area
     keep <- vapply(plot_list, function(plot) {
         !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
-    if (is_empty(plot_list)) return(NULL) # styler: off
+    if (is_empty(plot_list)) return(ggplot_gtable(base)) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plot_list, function(plot) {
@@ -55,6 +54,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     plot_track <- sizes / sum(sizes) * (1 - radial$inner_radius[1L] / 0.4)
     plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
     plot_inner <- plot_sizes - plot_track
+    guides <- vector("list", length(plot_list))
     plot_table <- origin <- NULL
     design <- setup_design(circle@design)
     for (i in rev(seq_along(plot_list))) { # from inner-most to the out-most
@@ -136,10 +136,163 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 name = "inner-track"
             )
         }
+
+        # build legends
+        default_position <- plot_theme$legend.position %||% "right"
+        if (length(default_position) == 2) {
+            default_position <- "inside"
+        }
+        if (default_position == "none") {
+        } else {
+            plot_theme$legend.key.width <- calc_element(
+                "legend.key.width",
+                plot_theme
+            )
+            plot_theme$legend.key.height <- calc_element(
+                "legend.key.height",
+                plot_theme
+            )
+            guides[[i]] <- plot$guides$draw(
+                plot_theme,
+                default_position,
+                plot_theme$legend.direction
+            )
+        }
         origin <- just
         last_plot_size <- plot_size # the last plot panel size
     }
-    plot_table
+    # attach the guide legends
+    guides <- lapply(c(.TLBR, "inside"), function(guide_pos) {
+        unlist(lapply(guides, .subset2, guide_pos), FALSE, FALSE)
+    })
+    names(guides) <- c(.TLBR, "inside")
+
+    theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
+    theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
+    theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)
+    theme$legend.box.spacing <- calc_element(
+        "legend.box.spacing", theme
+    ) %||% unit(0.2, "cm")
+    legend_box <- .mapply(
+        function(guides, guide_pos) {
+            # remove duplicated guides
+            guides <- collapse_guides(guides)
+            if (is_empty(guides)) {
+                return(zeroGrob())
+            }
+            assemble_guides(guides, guide_pos, theme)
+        },
+        list(guides = guides, guide_pos = names(guides)),
+        NULL
+    )
+    names(legend_box) <- names(guides)
+    plot_table <- ggfun("table_add_legends")(plot_table, legend_box, theme)
+
+    # Title
+    title <- element_render(
+        theme, "plot.title", .subset2(circle@titles, "title"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    title_height <- grobHeight(title)
+
+    # Subtitle
+    subtitle <- element_render(
+        theme, "plot.subtitle", .subset2(circle@titles, "subtitle"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    subtitle_height <- grobHeight(subtitle)
+
+    # whole plot annotation
+    caption <- element_render(
+        theme, "plot.caption", .subset2(circle@titles, "caption"),
+        margin_y = TRUE, margin_x = TRUE
+    )
+    caption_height <- grobHeight(caption)
+
+    # positioning of title and subtitle is governed by plot.title.position
+    # positioning of caption is governed by plot.caption.position
+    #   "panel" means align to the panel(s)
+    #   "plot" means align to the entire plot (except margins and tag)
+    title_pos <- arg_match0(
+        theme$plot.title.position %||% "panel",
+        c("panel", "plot"),
+        arg_nm = "plot.title.position",
+        error_call = quote(theme())
+    )
+
+    caption_pos <- arg_match0(
+        theme$plot.caption.position %||% "panel",
+        values = c("panel", "plot"),
+        arg_nm = "plot.caption.position",
+        error_call = quote(theme())
+    )
+
+    pans <- plot_table$layout[
+        grepl("^panel", plot_table$layout$name), ,
+        drop = FALSE
+    ]
+    if (title_pos == "panel") {
+        title_l <- min(pans$l)
+        title_r <- max(pans$r)
+    } else {
+        title_l <- 1
+        title_r <- ncol(plot_table)
+    }
+    if (caption_pos == "panel") {
+        caption_l <- min(pans$l)
+        caption_r <- max(pans$r)
+    } else {
+        caption_l <- 1
+        caption_r <- ncol(plot_table)
+    }
+
+    plot_table <- gtable_add_rows(plot_table, subtitle_height, pos = 0)
+    plot_table <- gtable_add_grob(plot_table, subtitle,
+        name = "subtitle",
+        t = 1, b = 1, l = title_l, r = title_r, clip = "off"
+    )
+
+    plot_table <- gtable_add_rows(plot_table, title_height, pos = 0)
+    plot_table <- gtable_add_grob(plot_table, title,
+        name = "title",
+        t = 1, b = 1, l = title_l, r = title_r, clip = "off"
+    )
+
+    plot_table <- gtable_add_rows(plot_table, caption_height, pos = -1)
+    plot_table <- gtable_add_grob(plot_table, caption,
+        name = "caption",
+        t = -1, b = -1, l = caption_l, r = caption_r, clip = "off"
+    )
+    plot_table <- ggfun("table_add_tag")(plot_table, NULL, theme)
+
+    # Margins
+    plot_margin <- calc_element("plot.margin", theme) %||% margin()
+    plot_table <- gtable_add_padding(plot_table, plot_margin)
+
+    if (inherits(theme$plot.background, "element")) {
+        plot_table <- gtable_add_grob(plot_table,
+            element_render(theme, "plot.background"),
+            t = 1, l = 1, b = -1, r = -1, name = "background", z = -Inf
+        )
+        plot_table$layout <- plot_table$layout[
+            c(nrow(plot_table$layout), 1:(nrow(plot_table$layout) - 1)),
+        ]
+        plot_table$grobs <- plot_table$grobs[
+            c(nrow(plot_table$layout), 1:(nrow(plot_table$layout) - 1))
+        ]
+    }
+
+    # add alt-text as attribute
+    # attr(plot_table, "alt-label") <- plot$labels$alt
+    strip_pos <- find_strip_pos(plot_table)
+
+    # always add strips columns and/or rows
+    plot_table <- add_strips(plot_table, strip_pos)
+    # add guides columns and/or rows for ggplot2 < 3.5.0
+    plot_table <- add_guides(plot_table)
+    setup_patch_titles(plot_table, patch_titles = list(
+        top = NULL, left = NULL, bottom = NULL, right = NULL
+    ), theme = theme)
 }
 
 remove_scales <- function(plot, scale_aesthetics) {

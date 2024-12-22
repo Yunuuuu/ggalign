@@ -392,8 +392,6 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
         return(plot)
     }
     ParentCoord <- .subset2(plot, "coordinates")
-    xlim_list <- NULL
-    ylim_list <- NULL
     plot$coordinates <- ggproto(
         NULL, ParentCoord,
         num_of_panels = NULL,
@@ -406,21 +404,21 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             self$n_cycle <- vec_unique_count(.subset2(layout, "COL"))
             if (.subset2(object, "xlim") && !is.null(x_design)) {
                 if (is_discrete_design(x_design)) {
-                    xlim_list <<- setup_discrete_limits(
+                    self$xlim_list <- setup_discrete_limits(
                         "x", x_design, self$n_cycle
                     )
                 } else {
-                    xlim_list <<- x_design
+                    self$xlim_list <- x_design
                 }
             }
             if (.subset2(object, "ylim") && !is.null(y_design)) {
                 if (is_discrete_design(y_design)) {
-                    ylim_list <<- setup_discrete_limits(
-                        "y", y_design, 
+                    self$ylim_list <- setup_discrete_limits(
+                        "y", y_design,
                         vec_unique_count(.subset2(layout, "ROW"))
                     )
                 } else {
-                    ylim_list <<- y_design
+                    self$ylim_list <- y_design
                 }
             }
             # call the parent method
@@ -449,9 +447,9 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             # `setup_panel_params()` will utilize the `limits`
             # set limits here, in this way, each plot will have the same limits
             cur_panel <- self$panel_counter + 1L
-            if (!is.null(xlim_list)) {
+            if (!is.null(self$xlim_list)) {
                 xlim <- .subset2(
-                    xlim_list,
+                    self$xlim_list,
                     recycle_whole(cur_panel, self$n_cycle)
                 )
                 if (is_discrete_design(x_design) && scale_x$is_discrete()) {
@@ -461,9 +459,9 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                 }
                 self$limits$x <- xlim
             }
-            if (!is.null(ylim_list)) {
+            if (!is.null(self$ylim_list)) {
                 ylim <- .subset2(
-                    ylim_list,
+                    self$ylim_list,
                     recycle_each(cur_panel, self$n_cycle)
                 )
                 if (is_discrete_design(y_design) && scale_y$is_discrete()) {
@@ -711,7 +709,6 @@ view_scales_polar <- function(scale, theta, coord_limits, expand = TRUE) {
     continuous_range <- ggfun("expand_limits_scale")(
         scale, expansion, limits, coord_limits = coord_limits
     )
-
     primary <- ggfun("view_scale_primary")(scale, limits, continuous_range)
     view_scales <- list(
         primary,
@@ -720,7 +717,6 @@ view_scales_polar <- function(scale, theta, coord_limits, expand = TRUE) {
         minor = primary$map(primary$get_breaks_minor()),
         range = continuous_range
     )
-
     names(view_scales) <- c(name, paste0(name, ".", names(view_scales)[-1]))
     view_scales
 }
@@ -762,7 +758,55 @@ gguse_radial_coord <- function(plot, coord, ..., layout_name) {
         } else {
             params$axis_rotation <- params$arc
         }
+        params
+    }
+    parse_coord_expand <- function(expand) {
+        if (is.numeric(expand) && all(expand %in% c(0, 1))) {
+            expand <- as.logical(expand)
+        }
+        ggfun("check_logical")(expand)
+        if (anyNA(expand)) {
+            cli::cli_abort("{.arg expand} cannot contain missing values.")
+        }
 
+        if (!rlang::is_named(expand)) {
+            return(rep_len(expand, 4))
+        }
+
+        # Match by top/right/bottom/left
+        out <- rep(TRUE, 4)
+        i <- match(names(expand), ggfun(".trbl"))
+        if (sum(!is.na(i)) > 0) {
+            out[i] <- unname(expand)[!is.na(i)]
+        }
+        out
+    }
+    setup_params <- function(self, data) {
+        params <- list(
+            guide_default = ggfun("guide_axis")(),
+            guide_missing = ggfun("guide_none")(),
+            expand = parse_coord_expand(self$expand %||% TRUE)
+        )
+        if (!isFALSE(self$r_axis_inside)) {
+            return(params)
+        }
+        place <- ggfun("in_arc")(c(0, 0.5, 1, 1.5) * pi, self$arc)
+        if (!any(place)) {
+            cli::cli_warn(c(
+                "No appropriate placement found for {.arg r_axis_inside}.",
+                i = "Axis will be placed at panel edge."
+            ))
+            params$r_axis_inside <- TRUE
+            return(params)
+        }
+
+        params$r_axis <- if (any(place[c(1, 3)])) "left" else "bottom"
+        params$fake_arc <- switch(which(place[c(1, 3, 2, 4)])[1],
+            c(0, 2),
+            c(1, 3),
+            c(0.5, 2.5),
+            c(1.5, 3.5)
+        ) * pi
         params
     }
     if (inherits(plot_coord <- plot$coordinates, "CoordRadial")) {
@@ -775,6 +819,7 @@ gguse_radial_coord <- function(plot, coord, ..., layout_name) {
             r_axis_inside = coord$r_axis_inside,
             expand = coord$expand,
             ...,
+            setup_params = setup_params,
             setup_panel_params = setup_panel_params
         )
     } else {
@@ -788,6 +833,7 @@ gguse_radial_coord <- function(plot, coord, ..., layout_name) {
             ))
         }
         plot$coordinates <- ggproto(NULL, coord, ...,
+            setup_params = setup_params,
             setup_panel_params = setup_panel_params
         )
     }
