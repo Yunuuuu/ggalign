@@ -7,6 +7,7 @@
 #' `stack_active` is an alias for `stack_switch()`, which sets `what = NULL` by
 #' default.
 #'
+#' @inheritParams rlang::args_dots_empty
 #' @inheritParams quad_switch
 #' @inheritParams stack_discrete
 #' @param what What should get activated for the stack layout?

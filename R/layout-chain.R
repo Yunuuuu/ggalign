@@ -468,3 +468,25 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         object_name = object_name
     )
 }
+
+##################################################
+#' @export
+chain_layout_add.circle_switch <- function(object, layout, object_name) {
+    if (!is_circle_layout(layout)) {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {object_name}} to %s",
+                object_name(layout)
+            ),
+            i = "Did you want to add a {.fn stack_switch}?"
+        ))
+    }
+    layout <- switch_chain_plot(
+        layout, .subset2(object, "what"),
+        quote(circle_switch())
+    )
+    if (!is.waive(radial <- .subset2(object, "radial"))) {
+        layout@radial <- radial
+    }
+    layout
+}

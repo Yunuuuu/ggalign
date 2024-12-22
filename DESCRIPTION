@@ -95,6 +95,7 @@ Collate:
     'layout-chain.R'
     'layout-circle-.R'
     'layout-circle-build.R'
+    'layout-circle-switch.R'
     'layout-stack-.R'
     'layout-cross-.R'
     'layout-quad-.R'

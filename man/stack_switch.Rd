@@ -17,12 +17,12 @@ indicating the relative heights (for \code{direction = "horizontal"}) or widths
 (for \code{direction = "vertical"}) to be applied.}
 
 \item{what}{What should get activated for the stack layout?
-A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context, this is useful when the active context is a
+A single number or string of the plot elements in the layout. If \code{NULL}, will remove any active context, this is useful when the active context is a
 \code{\link[=quad_layout]{quad_layout()}} object, where any \verb{align_*()} will be added to the
 \code{\link[=quad_layout]{quad_layout()}}. By removing the active context, we can add \verb{align_*()}
 into the \code{\link[=stack_layout]{stack_layout()}}.}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 A \code{stack_switch} object which can be added to \code{\link[=stack_layout]{stack_layout()}}.
