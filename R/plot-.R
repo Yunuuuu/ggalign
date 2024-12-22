@@ -118,11 +118,11 @@ AlignProto <- ggproto("AlignProto",
         plot_add_schemes(plot, schemes) + theme_recycle()
     },
 
-    # print method for the object
+    # utils method to print the object, should return a character vector
     summary = function(self, plot) {
         cls <- class(self)
         cls <- cls[seq_len(which(cls == "AlignProto"))]
-        sprintf("<Object: %s>", paste(cls, collapse = " "))
+        sprintf("<Class: %s>", paste(cls, collapse = " "))
     }
 )
 

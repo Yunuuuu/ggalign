@@ -139,7 +139,7 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
 
 #' @inherit circle_discrete title
 #' @description
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
 #' This function integrates the functionalities of `circle_discrete()` and
 #' `circle_continuous()` into a single interface.
@@ -152,6 +152,7 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(56), nrow = 7L)
+#'
 #' # circle_discrete
 #' circle_layout(matrix(rnorm(56), nrow = 7L)) +
 #'     ggalign() +
@@ -161,12 +162,13 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
 #'     circle_switch(coord_radial(inner.radius = 0.5))
 #'
 #' # circle_continuous
-#' circle_layout(matrix(rnorm(56), nrow = 7L), limits = NULL) +
-#'     ggalign() +
-#'     geom_tile(aes(y = .column_index, fill = value)) +
-#'     scale_fill_viridis_c() +
-#'     align_dendro(aes(color = branch), k = 3) +
-#'     circle_switch(coord_radial(inner.radius = 0.5))
+#' circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) &
+#'     scale_color_brewer(palette = "Dark2") &
+#'     theme_bw()
 #' @export
 circle_layout <- function(data = NULL, ..., limits = waiver()) {
     if (is.waive(limits)) {

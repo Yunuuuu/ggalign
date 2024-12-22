@@ -27,7 +27,7 @@ axis.}
 A \code{CircleLayout} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 This function integrates the functionalities of \code{circle_discrete()} and
 \code{circle_continuous()} into a single interface.
@@ -35,6 +35,7 @@ This function integrates the functionalities of \code{circle_discrete()} and
 \examples{
 set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7L)
+
 # circle_discrete
 circle_layout(matrix(rnorm(56), nrow = 7L)) +
     ggalign() +
@@ -44,12 +45,13 @@ circle_layout(matrix(rnorm(56), nrow = 7L)) +
     circle_switch(coord_radial(inner.radius = 0.5))
 
 # circle_continuous
-circle_layout(matrix(rnorm(56), nrow = 7L), limits = NULL) +
-    ggalign() +
-    geom_tile(aes(y = .column_index, fill = value)) +
-    scale_fill_viridis_c() +
-    align_dendro(aes(color = branch), k = 3) +
-    circle_switch(coord_radial(inner.radius = 0.5))
+circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) &
+    scale_color_brewer(palette = "Dark2") &
+    theme_bw()
 }
 \seealso{
 \itemize{
