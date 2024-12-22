@@ -161,7 +161,7 @@ update_design.CircleLayout <- update_design.StackLayout
 
 #' @importFrom methods slot slot<-
 #' @export
-update_design.CrossLayout <- function(layout, ..., design, object_name,
+update_design.StackCross <- function(layout, ..., design, object_name,
                                       from_head = FALSE) {
     if (from_head && !is_empty(layout@cross_points)) {
         layout@design["nobs"] <- list(.subset2(design, "nobs"))

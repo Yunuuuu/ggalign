@@ -24,7 +24,7 @@ default, will use the option-
 added to a layout.}
 }
 \description{
-\code{ggcross} resets the layout ordering index of a \code{\link[=cross_discrete]{cross_discrete()}}. This
+\code{ggcross} resets the layout ordering index of a \code{\link[=stack_cross]{stack_cross()}}. This
 allows you to add other \verb{align_*} objects to define a new layout ordering
 index. Any objects added after \code{ggcross} will use this updated layout
 ordering index. This feature is particularly useful for creating \code{tanglegram}

@@ -4,9 +4,9 @@ testthat::test_that("`cross_align` add `align-` object works well", {
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 
-    # cross_discreteh() ----------------------------------------
+    # stack_crossh() ----------------------------------------
     # layout `index` is updated correctly
-    stack <- cross_discreteh(small_mat) +
+    stack <- stack_crossh(small_mat) +
         align_dendro() +
         ggcross() +
         align_dendro(method = "ward.D2")
@@ -21,7 +21,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
 
     # cross_alignv() ----------------------------------------
     # layout `index` is updated correctly
-    stack <- cross_discrete("v", small_mat) +
+    stack <- stack_cross("v", small_mat) +
         align_dendro() +
         ggcross() +
         align_dendro(method = "ward.D2")

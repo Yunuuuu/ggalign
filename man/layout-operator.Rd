@@ -17,7 +17,7 @@
 \alias{+.StackLayout}
 \alias{&.StackLayout}
 \alias{-.StackLayout}
-\alias{+.CrossLayout}
+\alias{+.StackCross}
 \title{Layout operator}
 \arguments{
 \item{e1}{A \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}

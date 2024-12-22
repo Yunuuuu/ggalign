@@ -268,7 +268,7 @@ is_stack_layout <- function(x) is(x, "StackLayout")
 
 #' @export
 #' @rdname is_layout
-is_cross_layout <- function(x) is(x, "CrossLayout")
+is_cross_layout <- function(x) is(x, "StackCross")
 
 #' @export
 #' @rdname is_layout

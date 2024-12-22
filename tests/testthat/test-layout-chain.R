@@ -179,11 +179,11 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
     expect_snapshot_error(stack_discrete("h", small_mat) +
         quad_alignh() +
         anno_left(initialize = FALSE) +
-        cross_discreteh())
+        stack_crossh())
     expect_snapshot_error(stack_discrete("h", small_mat) +
         (quad_alignh() +
             anno_left(initialize = FALSE) +
-            cross_discreteh()))
+            stack_crossh()))
 
     # `stack_alignv()` update layout coords correctly
     stack <- stack_alignv(small_mat) + quad_alignv()
@@ -243,11 +243,11 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
     expect_snapshot_error(stack_alignv(small_mat) +
         quad_alignv() +
         anno_top(initialize = FALSE) +
-        cross_discretev())
+        stack_crossv())
     expect_snapshot_error(stack_alignv(small_mat) +
         (quad_alignv() +
             anno_top(initialize = FALSE) +
-            cross_discretev()))
+            stack_crossv()))
 })
 
 test_that("`chain_layout_add()` function with stack_switch", {

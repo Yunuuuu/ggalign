@@ -92,23 +92,23 @@
 
 ---
 
-    Cannot add `cross_discreteh()` to the horizontal `stack_discrete()`
-    i Cannot add `cross_discrete()` with the same direction as `stack_discrete()`.
+    Cannot add `stack_crossh()` to the horizontal `stack_discrete()`
+    i Cannot add `stack_cross()` with the same direction as `stack_discrete()`.
 
 ---
 
-    Cannot add `(quad_alignh() + anno_left(initialize = FALSE) + cross_discreteh())` to the horizontal `stack_discrete()`
-    i left or right annotation contains `cross_layout()`
+    Cannot add `(quad_alignh() + anno_left(initialize = FALSE) + stack_crossh())` to the horizontal `stack_discrete()`
+    i left or right annotation contains `stack_cross()`
 
 ---
 
-    Cannot add `cross_discretev()` to the vertical `stack_discrete()`
-    i Cannot add `cross_discrete()` with the same direction as `stack_discrete()`.
+    Cannot add `stack_crossv()` to the vertical `stack_discrete()`
+    i Cannot add `stack_cross()` with the same direction as `stack_discrete()`.
 
 ---
 
-    Cannot add `(quad_alignv() + anno_top(initialize = FALSE) + cross_discretev())` to the vertical `stack_discrete()`
-    i top or bottom annotation contains `cross_layout()`
+    Cannot add `(quad_alignv() + anno_top(initialize = FALSE) + stack_crossv())` to the vertical `stack_discrete()`
+    i top or bottom annotation contains `stack_cross()`
 
 # `chain_layout_add()` function with ggalign_with_quad
 

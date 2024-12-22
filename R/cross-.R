@@ -21,7 +21,7 @@ Cross <- ggproto("Cross", AlignProto,
                     object_name(self), self$layout_name
                 ),
                 i = sprintf(
-                    "%s can only be used in {.fn cross_discrete}",
+                    "%s can only be used in {.fn stack_cross}",
                     object_name(self)
                 )
             ))

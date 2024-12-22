@@ -3,54 +3,54 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `cross_discrete` function is derived from `stack_discrete` and allows for
+#' The `stack_cross` function is derived from `stack_discrete` and allows for
 #' different layout ordering indices within a single layout.
 #'
 #' Two aliases are provided for convenience:
-#' - `cross_discretev`: A special case of `cross_discrete` that sets
+#' - `stack_crossv`: A special case of `stack_cross` that sets
 #'   `direction = "v"` for vertical alignment.
-#' - `cross_discreteh`: A special case of `cross_discrete` that sets
+#' - `stack_crossh`: A special case of `stack_cross` that sets
 #'   `direction = "h"` for horizontal alignment.
 #'
 #' @inheritParams stack_discrete
 #' @seealso [`ggcross()`]
 #' @export
-cross_discrete <- function(direction, data = NULL, ...,
-                           theme = NULL, sizes = NA) {
-    UseMethod("cross_discrete", data)
+stack_cross <- function(direction, data = NULL, ...,
+                        theme = NULL, sizes = NA) {
+    UseMethod("stack_cross", data)
 }
 
 #' @export
-#' @rdname cross_discrete
-cross_discretev <- function(data = NULL, ...) {
-    cross_discrete(data = data, direction = "v", ...)
+#' @rdname stack_cross
+stack_crossv <- function(data = NULL, ...) {
+    stack_cross(data = data, direction = "v", ...)
 }
 
 #' @export
-#' @rdname cross_discrete
-cross_discreteh <- function(data = NULL, ...) {
-    cross_discrete(data = data, direction = "h", ...)
+#' @rdname stack_cross
+stack_crossh <- function(data = NULL, ...) {
+    stack_cross(data = data, direction = "h", ...)
 }
 
 #' @include layout-stack-.R
 methods::setClass(
-    "CrossLayout",
+    "StackCross",
     contains = "StackLayout",
     list(index_list = "list", cross_points = "integer"),
     prototype = list(index_list = list(), cross_points = integer())
 )
 
 #' @export
-cross_discrete.default <- function(direction, data = NULL, ...) {
+stack_cross.default <- function(direction, data = NULL, ...) {
     ans <- stack_discrete(data = data, direction = direction, ...)
-    ans <- methods::as(ans, "CrossLayout")
-    ans@name <- "cross_discrete"
+    ans <- methods::as(ans, "StackCross")
+    ans@name <- "stack_cross"
     ans
 }
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
-stack_build_composer.CrossLayout <- function(stack, schemes, theme,
+stack_build_composer.StackCross <- function(stack, schemes, theme,
                                              extra_design) {
     # check if we should initialize the layout observations
     layout_design <- stack@design

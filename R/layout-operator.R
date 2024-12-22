@@ -65,7 +65,7 @@
 #' @aliases +.ggheatmap &.ggheatmap -.ggheatmap
 #' @aliases +.ggside &.ggside -.ggside
 #' @aliases +.StackLayout &.StackLayout -.StackLayout
-#' @aliases +.CrossLayout
+#' @aliases +.StackCross
 #' @name layout-operator
 NULL
 

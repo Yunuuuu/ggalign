@@ -226,15 +226,16 @@ chain_layout_add.quad_anno <- chain_layout_add.quad_active
 chain_layout_add.StackLayout <- chain_layout_add.quad_active
 
 #' @export
-chain_layout_add.CrossLayout <- function(object, layout, object_name) {
+chain_layout_add.StackCross <- function(object, layout, object_name) {
     if (!is_stack_layout(layout)) {
         cli_abort(sprintf(
             "Cannot add {.var {object_name}} to %s",
             object_name(layout)
         ))
     }
-    # preventing from adding `cross_layout` with the same direction in this way,
-    # `cross_layout()` cannot be added to the heatmap annotation parallelly with
+
+    # preventing from adding `stack_cross` with the same direction in this way,
+    # `stack_cross()` cannot be added to the heatmap annotation parallelly with
     # the `stack_layout()`
     if (identical(object@direction, layout@direction)) {
         cli_abort(c(
@@ -242,7 +243,7 @@ chain_layout_add.CrossLayout <- function(object, layout, object_name) {
                 "Cannot add {.var {object_name}} to %s",
                 object_name(layout)
             ),
-            i = "Cannot add {.fn cross_discrete} with the same direction as {.fn stack_discrete}."
+            i = "Cannot add {.fn stack_cross} with the same direction as {.fn stack_discrete}."
         ))
     }
     NextMethod() # call StackLayout method
@@ -279,9 +280,9 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         ))
     }
 
-    # preventing from adding `cross_layout` with the same direction
+    # preventing from adding `stack_cross` with the same direction
     # `cross_link()` cannot be added to the heatmap annotation
-    # parallelly with the `cross_layout()`
+    # parallelly with the `stack_cross()`
     if (is_horizontal(direction <- layout@direction)) {
         if (is_cross_layout(object@left) || is_cross_layout(object@right)) {
             cli_abort(c(
@@ -291,7 +292,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                 ),
                 i = sprintf(
                     "{.field left} or {.field right} annotation contains %s",
-                    "{.fn cross_layout}"
+                    "{.fn stack_cross}"
                 )
             ))
         }
@@ -303,7 +304,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
             ),
             i = sprintf(
                 "{.field top} or {.field bottom} annotation contains %s",
-                "{.fn cross_layout}"
+                "{.fn stack_cross}"
             )
         ))
     }
