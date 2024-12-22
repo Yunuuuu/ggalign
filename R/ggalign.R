@@ -20,7 +20,9 @@
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`fortify_data_frame()`].
 #' @param size The relative size of the plot, can be specified as a
-#' [`unit`][grid::unit].
+#' [`unit`][grid::unit]. Note that for [`circle_layout()`], all size values will
+#' be interpreted as relative sizes, as this layout type adjusts based on the
+#' available space in the circular arrangement.
 #' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
 #'   default, will use the option-
@@ -29,7 +31,7 @@
 #'   added to a layout.
 #' @section ggplot2 specification:
 #' `ggalign` initializes a ggplot object. The underlying data is created using
-#' [`fortify_data_frame()`]. Please refer to this method for more details.
+#' [`fortify_data_frame()`]. Please refer to it for more details.
 #'
 #' When aligning discrete variables, `ggalign()` always applies a default
 #' mapping for the axis of the data index in the layout. Specifically:

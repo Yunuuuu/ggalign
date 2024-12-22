@@ -11,7 +11,9 @@ ggcross(mapping = aes(), size = NULL, no_axes = NULL, active = NULL)
 If not specified, must be supplied in each layer added to the plot.}
 
 \item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
+\code{\link[grid:unit]{unit}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values will
+be interpreted as relative sizes, as this layout type adjusts based on the
+available space in the circular arrangement.}
 
 \item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
 removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By

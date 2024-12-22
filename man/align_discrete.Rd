@@ -40,7 +40,9 @@ data, please use \code{\link[=scheme_data]{scheme_data()}}.
 \item{plot}{A ggplot object.}
 
 \item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
+\code{\link[grid:unit]{unit}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values will
+be interpreted as relative sizes, as this layout type adjusts based on the
+available space in the circular arrangement.}
 
 \item{schemes}{Options for \code{schemes}:
 \itemize{
