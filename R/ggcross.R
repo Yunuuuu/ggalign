@@ -95,26 +95,10 @@ CrossGg <- ggproto("CrossGg", Cross,
             seq_len(.subset2(design, "nobs"))
         )
         plot <- gguse_data(plot, data)
-        # use linear coordinate
-        if (is_horizontal(direction)) {
-            default_design <- ggalign_design(
-                y = design,
-                ylabels = .subset(
-                    .subset2(self, "labels"),
-                    .subset2(design, "index")
-                )
-            )
-            default_expand <- default_expansion(x = expansion())
-        } else {
-            default_design <- ggalign_design(
-                x = design,
-                xlabels = .subset(
-                    .subset2(self, "labels"),
-                    .subset2(design, "index")
-                )
-            )
-            default_expand <- default_expansion(y = expansion())
-        }
-        plot + default_expand + default_design
+        plot + switch_direction(
+            direction,
+            default_expansion(x = expansion()),
+            default_expansion(y = expansion())
+        )
     }
 )

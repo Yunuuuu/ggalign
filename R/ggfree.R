@@ -78,6 +78,7 @@ new_free_gg <- function(plot, data, size, active,
 #' @importFrom ggplot2 ggproto
 FreeGg <- ggproto("FreeGg", AlignProto,
     free_facet = TRUE,
+    free_limits = TRUE,
     setup_design = function(self, layout_data, layout_design) {
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data

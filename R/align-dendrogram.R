@@ -141,10 +141,10 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             ggplot2::labs(y = "height")
         )
     },
+    # other arguments
+    extra_params = c("plot_cut_height", "center", "type", "root"),
     build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL, facet = NULL,
-                          # other argumentds
-                          plot_cut_height, center, type, root) {
+                          previous_design = NULL) {
         params <- self$params
         plot_cut_height <- .subset2(params, "plot_cut_height")
         center <- .subset2(params, "center")
@@ -251,40 +251,13 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 )
         }
         position <- .subset2(self, "position")
-        if (!self$in_linear) { # for circular layout
-            if (plot$scales$has_scale("y")) {
-                y_scale <- plot$scales$get_scales("y")
-                if (!y_scale$is_discrete()) {
-                    if (identical(y_scale$trans$name, "identity")) {
-                        y_scale$trans <- scales::as.transform("reverse")
-                    } else if (identical(y_scale$trans$name, "reverse")) {
-                        y_scale$trans <- scales::as.transform("identity")
-                    }
-                }
-            } else {
-                plot <- plot + ggplot2::scale_y_reverse()
-            }
-        } else if (is.null(position) || !isTRUE(plot$coordinates$default)) {
-            # if the dendrogram is in a normal stack layout
-            # or if user has set the coordinate, we won't reverse
-            # the dendrogram height axis
-        } else if (position == "bottom") { # in the bottom, reverse y-axis
-            plot <- plot + ggplot2::coord_trans(y = "reverse", clip = "off")
-        } else if (position == "left") { # in the left, reverse x-axis
-            plot <- plot + ggplot2::coord_trans(x = "reverse", clip = "off")
-        }
-
-        # set limits and default scales
-        if (is_horizontal(direction)) {
-            plot <- plot + ggalign_design(
-                y = design,
-                ylabels = .subset(self$labels, index)
-            )
-        } else {
-            plot <- plot + ggalign_design(
-                x = design,
-                xlabels = .subset(self$labels, index)
-            )
+        if (!self$in_linear || # for circular layout
+            # for bottom annotation, reverse y-axis
+            (!is.null(position) && position == "bottom")) {
+            plot <- reverse_continuous_scale(plot, "y")
+        } else if (!is.null(position) && position == "left") {
+            # for left annotation, reverse x-axis
+            plot <- reverse_continuous_scale(plot, "x")
         }
 
         # always turn off clip, this is what dendrogram dependends on

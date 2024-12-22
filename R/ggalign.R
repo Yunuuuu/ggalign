@@ -201,19 +201,6 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
 
-        # set limits and default scales
-        if (is_horizontal(direction)) {
-            plot <- plot + ggalign_design(
-                y = design,
-                ylabels = .subset(self$labels, index)
-            )
-        } else {
-            plot <- plot + ggalign_design(
-                x = design,
-                xlabels = .subset(self$labels, index)
-            )
-        }
-
         data <- self$data
         if (is_continuous_design(design)) {
             return(gguse_data(plot, data))

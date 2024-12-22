@@ -129,11 +129,12 @@ AlignProto <- ggproto("AlignProto",
     layout_name = NULL,
     direction = NULL,
     position = NULL, # for stack_layout() in quad_layout()
+    labels = NULL,
 
     # A single boolean value indicates whether we should set facet and coord
     free_facet = FALSE,
     free_coord = FALSE,
-    labels = NULL,
+    free_limits = FALSE,
 
     # we always prevent user from modifying the object in `$build_plot()` and
     # `$finish_plot()` methods
@@ -152,8 +153,9 @@ AlignProto <- ggproto("AlignProto",
     setup_plot = function(self, plot) plot,
 
     ##############################################################
+    # Don't change the facet and coord in following methods
     build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL, facet = NULL) {
+                          previous_design = NULL) {
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {

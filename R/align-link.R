@@ -312,6 +312,7 @@ PatchAlignLink <- ggproto(
 AlignLink <- ggproto("AlignLink", AlignDiscrete,
     class = NULL, element = NULL,
     free_facet = TRUE,
+    free_limits = TRUE,
     setup_layout = function(self, layout) {
         if (!self$in_linear) {
             cli_abort(c(

@@ -74,6 +74,16 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             inner_radius = c(plot_inner[[i]] / plot_size, 1) * 0.4,
             layout_name = align$layout_name
         )
+
+        # set limits and default scales
+        if (!align$free_limits) {
+            plot <- plot + ggalign_design(
+                x = design,
+                xlabels = .subset(align$labels, .subset2(design, "index"))
+            )
+        }
+
+        # let `align` add other components
         plot <- align$build_plot(plot, design = design)
         plot <- align$finish_plot(plot, schemes = plot_schemes, theme = theme)
         plot <- plot + ggplot2::labs(x = NULL, y = NULL)
@@ -293,26 +303,4 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     setup_patch_titles(plot_table, patch_titles = list(
         top = NULL, left = NULL, bottom = NULL, right = NULL
     ), theme = theme)
-}
-
-remove_scales <- function(plot, scale_aesthetics) {
-    scales <- .subset2(plot, "scales")$clone()
-    if (any(prev_aes <- scales$find(scale_aesthetics))) {
-        scales$scales <- scales$scales[!prev_aes]
-    }
-    plot$scales <- scales
-    plot
-}
-
-#' @importFrom rlang is_empty
-extract_scales <- function(plot, axis, n_panel, facet_scales) {
-    # if no facets, or if no facet scales, we replicate the single scale
-    # object to match the panel numbers
-    if (n_panel > 1L &&
-        !is.null(facet_scales) &&
-        !is_empty(ans <- .subset2(facet_scales, axis))) {
-    } else {
-        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
-    }
-    ans
 }

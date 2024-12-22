@@ -80,3 +80,45 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
     )
     plot
 }
+
+######################################################
+reverse_continuous_scale <- function(plot, axis) {
+    if (plot$scales$has_scale(axis)) { # modify scale in place
+        scale <- plot$scales$get_scales(axis)
+        if (!scale$is_discrete()) {
+            if (identical(scale$trans$name, "identity")) {
+                scale$trans <- scales::as.transform("reverse")
+            } else if (identical(scale$trans$name, "reverse")) {
+                scale$trans <- scales::as.transform("identity")
+            }
+        }
+    } else {
+        plot <- plot + switch(axis,
+            x = ggplot2::scale_x_reverse(),
+            y = ggplot2::scale_y_reverse()
+        )
+    }
+    plot
+}
+
+remove_scales <- function(plot, scale_aesthetics) {
+    scales <- .subset2(plot, "scales")$clone()
+    if (any(prev_aes <- scales$find(scale_aesthetics))) {
+        scales$scales <- scales$scales[!prev_aes]
+    }
+    plot$scales <- scales
+    plot
+}
+
+#' @importFrom rlang is_empty
+extract_scales <- function(plot, axis, n_panel, facet_scales) {
+    # if no facets, or if no facet scales, we replicate the single scale
+    # object to match the panel numbers
+    if (n_panel > 1L &&
+        !is.null(facet_scales) &&
+        !is_empty(ans <- .subset2(facet_scales, axis))) {
+    } else {
+        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
+    }
+    ans
+}

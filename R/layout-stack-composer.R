@@ -99,6 +99,23 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
     if (!align$free_coord) {
         plot <- gguse_linear_coord(plot, layout_name = align$layout_name)
     }
+
+    # set limits and default scales
+    if (!align$free_limits) {
+        if (is_horizontal(direction)) {
+            plot <- plot + ggalign_design(
+                y = design,
+                ylabels = .subset(align$labels, .subset2(design, "index"))
+            )
+        } else {
+            plot <- plot + ggalign_design(
+                x = design,
+                xlabels = .subset(align$labels, .subset2(design, "index"))
+            )
+        }
+    }
+
+    # let `align` add other components
     plot <- align$build_plot(plot, design = design, ...)
     plot <- align$finish_plot(plot, plot_schemes, theme)
     stack_composer_align_plot(composer, plot, size)

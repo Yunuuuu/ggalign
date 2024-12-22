@@ -134,10 +134,6 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
                 self$align,
                 align_method_params(AlignDiscrete$align)
             ),
-            align_method_params(
-                self$build_plot,
-                align_method_params(AlignDiscrete$build_plot)
-            ),
             self$extra_params
         )
     },
