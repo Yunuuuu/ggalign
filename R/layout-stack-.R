@@ -23,11 +23,11 @@
 #' inherit from the parent `layout`. It also controls the panel spacing for all
 #' plots in the layout.
 #'
-#' @param sizes A numeric value or a [`unit`][grid::unit] object. If used for
-#' the [`quad_layout()`] annotation, it must have a length of `1`.  If used in
-#' the layout with a nested [`quad_layout()`], it should have a length of `3`,
-#' indicating the relative heights (for `direction = "horizontal"`) or widths
-#' (for `direction = "vertical"`) to be applied.
+#' @param sizes A numeric value or a [`unit`][grid::unit] object. When used for
+#' the [`quad_layout()`] annotation, it must be of length `1`. When used in
+#' the [`stack_layout()`] with a nested [`quad_layout()`], it should be of
+#' length `3`, specifying the relative heights (for `direction = "horizontal"`) 
+#' or widths (for `direction = "vertical"`) to be applied to the layout.
 #'
 #' @examples
 #' set.seed(123)

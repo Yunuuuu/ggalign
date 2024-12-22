@@ -10,11 +10,11 @@ stack_switch(sizes = NULL, what = waiver(), ...)
 stack_active(sizes = NULL, ...)
 }
 \arguments{
-\item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. If used for
-the \code{\link[=quad_layout]{quad_layout()}} annotation, it must have a length of \code{1}.  If used in
-the layout with a nested \code{\link[=quad_layout]{quad_layout()}}, it should have a length of \code{3},
-indicating the relative heights (for \code{direction = "horizontal"}) or widths
-(for \code{direction = "vertical"}) to be applied.}
+\item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. When used for
+the \code{\link[=quad_layout]{quad_layout()}} annotation, it must be of length \code{1}. When used in
+the \code{\link[=stack_layout]{stack_layout()}} with a nested \code{\link[=quad_layout]{quad_layout()}}, it should be of
+length \code{3}, specifying the relative heights (for \code{direction = "horizontal"})
+or widths (for \code{direction = "vertical"}) to be applied to the layout.}
 
 \item{what}{What should get activated for the stack layout?
 A single number or string of the plot elements in the layout. If \code{NULL}, will remove any active context, this is useful when the active context is a
