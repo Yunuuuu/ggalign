@@ -193,15 +193,23 @@ AlignGg <- ggproto("AlignGg", AlignProto,
     #' @importFrom stats reorder
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
+        data <- self$data
+        if (is_continuous_design(design)) {
+            return(gguse_data(plot, data))
+        } else if (is.null(.subset2(design, "nobs"))) {
+            cli_abort(
+                c(
+                    "you must provide {.arg data} to initialize the layout",
+                    i = sprintf("no data was found in %s", self$layout_name),
+                    i = "Or you should use {.fn ggfree}"
+                ),
+                call = self$call
+            )
+        }
         direction <- self$direction
         axis <- to_coord_axis(direction)
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
-
-        data <- self$data
-        if (is_continuous_design(design)) {
-            return(gguse_data(plot, data))
-        }
         if (is_continuous_design(extra_design)) {
             extra_panel <- NULL
             extra_index <- NULL
