@@ -4,18 +4,18 @@ The stack_discrete function arranges plots by aligning discrete variables.
 stack_align is an alias for stack_discrete for historical reasons.
 Several aliases are provided for convenience:
 stack_discretev and stack_alignv: A special case of stack_discrete
-that sets direction = "vertical".
+that sets direction = "v".
 stack_discreteh and stack_alignh: A special case of stack_discrete
-that sets direction = "horizontal".
+that sets direction = "h".
 
 '><meta property="og:description" content='
 The stack_discrete function arranges plots by aligning discrete variables.
 stack_align is an alias for stack_discrete for historical reasons.
 Several aliases are provided for convenience:
 stack_discretev and stack_alignv: A special case of stack_discrete
-that sets direction = "vertical".
+that sets direction = "v".
 stack_discreteh and stack_alignh: A special case of stack_discrete
-that sets direction = "horizontal".
+that sets direction = "h".
 
 '><meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -68,9 +68,9 @@ that sets direction = "horizontal".
 <p>The <code>stack_discrete</code> function arranges plots by aligning discrete variables.
 <code>stack_align</code> is an alias for <code>stack_discrete</code> for historical reasons.</p>
 <p>Several aliases are provided for convenience:</p><ul><li><p><code>stack_discretev</code> and <code>stack_alignv</code>: A special case of <code>stack_discrete</code>
-that sets <code>direction = "vertical"</code>.</p></li>
+that sets <code>direction = "v"</code>.</p></li>
 <li><p><code>stack_discreteh</code> and <code>stack_alignh</code>: A special case of <code>stack_discrete</code>
-that sets <code>direction = "horizontal"</code>.</p></li>
+that sets <code>direction = "h"</code>.</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -116,10 +116,10 @@ plots in the layout.</p></dd>
 
 <dt id="arg-sizes">sizes<a class="anchor" aria-label="anchor" href="#arg-sizes"></a></dt>
 <dd><p>A numeric value or a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></code> object. When used for
-the <code><a href="quad_layout.html">quad_layout()</a></code> annotation, it must be of length <code>1</code>. When used in
-the <code><a href="stack_layout.html">stack_layout()</a></code> with a nested <code><a href="quad_layout.html">quad_layout()</a></code>, it should be of
-length <code>3</code>, specifying the relative heights (for <code>direction = "horizontal"</code>)
-or widths (for <code>direction = "vertical"</code>) to be applied to the layout.</p></dd>
+the <code><a href="quad_layout.html">quad_layout()</a></code> annotation, it must be of length <code>1</code>. When used in the
+<code><a href="stack_layout.html">stack_layout()</a></code> with a nested <code><a href="quad_layout.html">quad_layout()</a></code>, it should be of length
+<code>3</code>, specifying the relative heights (for <code>direction = "h"</code>) or widths (for
+<code>direction = "v"</code>) to be applied to the layout.</p></dd>
 
 </dl></div>
 
