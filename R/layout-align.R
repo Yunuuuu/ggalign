@@ -162,7 +162,7 @@ update_design.CircleLayout <- update_design.StackLayout
 #' @importFrom methods slot slot<-
 #' @export
 update_design.StackCross <- function(layout, ..., design, object_name,
-                                      from_head = FALSE) {
+                                     from_head = FALSE) {
     if (from_head && !is_empty(layout@cross_points)) {
         layout@design["nobs"] <- list(.subset2(design, "nobs"))
         layout@design["panel"] <- list(.subset2(design, "panel"))
@@ -850,19 +850,29 @@ gguse_facet <- function(plot, facet, ...) {
 
 align_melt_facet <- function(default, facet, ...) UseMethod("align_melt_facet")
 
+#' @export
+align_melt_facet.NULL <- function(default, facet, ...) {
+    facet
+}
+
 #' @importFrom ggplot2 ggproto
 #' @export
-align_melt_facet.FacetGrid <- function(default, facet, ..., strict = FALSE) {
+align_melt_facet.FacetGrid <- function(default, facet, ...,
+                                       free_row = FALSE,
+                                       free_column = FALSE) {
     if (inherits(facet, "FacetGrid")) {
         # re-dispatch parameters
         params <- facet$params
         # we always fix the grid rows and cols
-        if (strict) { # Don't allow user change the rows and cols
-            params$rows <- default$params$rows
-            params$cols <- default$params$cols
-        } else {
+        if (free_row) {
             params$rows <- default$params$rows %||% params$rows
+        } else { # Don't allow user change the rows
+            params$rows <- default$params$rows
+        }
+        if (free_column) {
             params$cols <- default$params$cols %||% params$cols
+        } else { # Don't allow user change the cols
+            params$cols <- default$params$cols
         }
 
         params$drop <- default$params$drop
@@ -916,12 +926,18 @@ align_melt_facet.FacetStack <- function(default, facet, ...) {
         if (is_horizontal(.subset2(default, "direction"))) {
             # for horizontal stack, we cannot facet by rows
             if (!is.null(params$rows)) {
-                cli_warn("Cannot facet by rows in {.field {direction}} stack")
+                cli_warn(sprintf(
+                    "Cannot facet by rows in %s",
+                    .subset2(default, "object_name")
+                ))
                 params$rows <- NULL
             }
         } else if (!is.null(params$cols)) {
             # for vertical stack, we cannot facet by cols
-            cli_warn("Cannot facet by cols in {.field {direction}} stack")
+            cli_warn(sprintf(
+                "Cannot facet by cols in %s",
+                .subset2(default, "object_name")
+            ))
             params$cols <- NULL
         }
         ggproto(NULL, facet, params = params)
@@ -932,6 +948,46 @@ align_melt_facet.FacetStack <- function(default, facet, ...) {
     }
 }
 
-facet_stack <- function(direction) {
-    structure(list(direction = direction), class = "FacetStack")
+facet_stack <- function(direction, object_name) {
+    structure(
+        list(direction = direction, object_name = object_name),
+        class = "FacetStack"
+    )
+}
+
+#' @export
+align_melt_facet.FacetQuad <- function(default, facet, ...,
+                                       free_row = FALSE,
+                                       free_column = FALSE) {
+    if (inherits(facet, "FacetGrid")) {
+        if (free_row || free_column) {
+            params <- facet$params
+            if (!free_row && !is.null(params$rows)) {
+                cli_warn(sprintf(
+                    "Cannot facet by rows in %s",
+                    .subset2(default, "layout_name")
+                ))
+                params$rows <- NULL
+                # for horizontal stack, we cannot facet by rows
+            }
+            if (!free_column && !is.null(params$cols)) {
+                cli_warn(sprintf(
+                    "Cannot facet by cols in %s",
+                    .subset2(default, "layout_name")
+                ))
+                params$cols <- NULL
+            }
+            ggproto(NULL, facet, params = params)
+        } else {
+            ggplot2::facet_null()
+        }
+    } else if (inherits(facet, "FacetNull")) {
+        facet
+    } else {
+        ggplot2::facet_null()
+    }
+}
+
+facet_quad <- function(layout_name) {
+    structure(list(layout_name = layout_name), class = "FacetQuad")
 }

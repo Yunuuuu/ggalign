@@ -92,7 +92,7 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
                 )
             )
         } else {
-            facet <- facet_stack(direction = direction)
+            facet <- facet_stack(direction, align$layout_name)
         }
         plot <- gguse_facet(plot, facet)
     }

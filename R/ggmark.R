@@ -234,9 +234,11 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 )
             }
         } else {
-            facet <- facet_stack(direction = direction)
+            facet <- facet_stack(direction, object_name(self))
         }
-        plot <- gguse_facet(plot, facet)
+        # free_row and free_column have nothing with `facet_stack`
+        # it's safe to use it directly
+        plot <- gguse_facet(plot, facet, free_row = TRUE, free_column = TRUE)
         plot$ggalign_link_data <- list(
             full_data1 = full_data1,
             full_data2 = full_data2,

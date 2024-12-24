@@ -155,21 +155,28 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
             scales = "free", space = "free",
             drop = FALSE, as.table = FALSE
         )
+        free_row <- FALSE
+        free_column <- FALSE
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
             rows = ggplot2::vars(.data$.ypanel),
             scales = "free_y", space = "free",
             drop = FALSE, as.table = FALSE
         )
+        free_row <- FALSE
+        free_column <- is_continuous_design(column_design)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.xpanel),
             scales = "free_x", space = "free",
             drop = FALSE, as.table = FALSE
         )
+        free_row <- is_continuous_design(row_design)
+        free_column <- FALSE
     } else {
-        # we only support `FacetNull` if there have no panel
-        default_facet <- ggplot2::facet_null()
+        default_facet <- facet_quad(object_name(quad))
+        free_row <- is_continuous_design(row_design)
+        free_column <- is_continuous_design(column_design)
     }
 
     # set the facets and coord ---------------------------
@@ -177,7 +184,9 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     # add default data ----------------------------------
     p <- gguse_data(p, quad_build_data(data, row_design, column_design))
     p <- gguse_linear_coord(p, object_name(quad))
-    p <- gguse_facet(p, default_facet, strict = TRUE)
+    p <- gguse_facet(p, default_facet,
+        free_row = free_row, free_column = free_column
+    )
     p <- p +
         ggalign_design(
             x = column_design, y = row_design,
