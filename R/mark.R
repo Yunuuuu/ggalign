@@ -68,7 +68,7 @@ mark_pdraw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function", call = call)
     }
-    links <- rlang::dots_list(..., .ignore_empty = "all")
+    links <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     valid <- vapply(
         links, inherits, logical(1L), "ggalign_link",
         USE.NAMES = FALSE

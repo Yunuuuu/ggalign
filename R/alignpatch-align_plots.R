@@ -56,7 +56,7 @@
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, design = NULL,
                         guides = waiver(), theme = NULL) {
-    plots <- rlang::dots_list(..., .ignore_empty = "all")
+    plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     nms <- names(plots)
     if (!is.null(nms) && is.character(design)) {
         area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
