@@ -171,7 +171,7 @@ plot_add <- function(object, plot, object_name) {
 #' @importFrom ggplot2 ggplot_add
 #' @export
 plot_add.default <- function(object, plot, object_name) {
-    plot@plot <- ggplot_add(object, plot@plot, object_name)
+    plot@plot <- ggplot_add(object, ggfun("plot_clone")(plot@plot), object_name)
     plot
 }
 

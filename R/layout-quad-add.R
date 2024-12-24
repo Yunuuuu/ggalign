@@ -306,7 +306,7 @@ quad_body_add <- function(object, quad, object_name) {
 #' @importFrom ggplot2 ggplot_add
 #' @export
 quad_body_add.default <- function(object, quad, object_name) {
-    quad@plot <- ggplot_add(object, quad@plot, object_name)
+    quad@plot <- ggplot_add(object, ggfun("plot_clone")(quad@plot), object_name)
     quad
 }
 
