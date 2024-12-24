@@ -73,13 +73,16 @@ variables:
 vertical \code{stack_layout()} (including top and bottom annotations), and the
 \code{y-axis} for horizontal \code{stack_layout()} (including left and right
 annotations).
-\item \code{.x}/\code{.y} and \code{.discrete_x}/\code{.discrete_y}: Integer indices for \code{x}/\code{y}
-coordinates, and a factor of the data labels (only applicable when names
-exist).
 \item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
 (\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): Character names (if
 available) and the integer index of the original data.
+\item \code{.x}/\code{.y} and \code{.discrete_x}/\code{.discrete_y}: Integer indices for \code{x}/\code{y}
+coordinates, and a factor of the data labels (only applicable when names
+exist).
 }
+
+It is recommended to use \code{.x}/\code{.y}, or \code{.discrete_x}/\code{.discrete_y} as the
+\code{x}/\code{y} mapping.
 
 If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, additional
 columns will be added:
@@ -105,8 +108,6 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     ggalign() +
     geom_point(aes(y = value))
 
-# if data is `NULL`, a data frame with following column will be created
-# (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`)
 ggheatmap(matrix(rnorm(81), nrow = 9)) +
     anno_top(size = 0.5) +
     align_dendro(k = 3L) +

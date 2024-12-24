@@ -73,13 +73,13 @@ fortify_data_frame.NULL <- function(data, ...) data
 #' matrix indices and their corresponding values. The resulting data frame will
 #' contain the following columns:
 #'
-#' - `.row_names` and `.row_index`: the row names and an integer representing
-#'    the row index of the original matrix.
+#'  - `.row_names` and `.row_index`: the row names (only applicable when names
+#'  exist) and an integer representing the row index of the original matrix.
 #'
-#' - `.column_names` and `.column_index`: the column names and column index of
-#'    the original matrix.
+#'  - `.column_names` and `.column_index`: the column names (only applicable
+#'  when names exist) and column index of the original matrix.
 #'
-#' - `value`: the actual value.
+#'  - `value`: the actual value.
 #'
 #' @family fortify_data_frame methods
 #' @export

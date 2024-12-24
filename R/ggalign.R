@@ -49,13 +49,16 @@
 #'    `y-axis` for horizontal `stack_layout()` (including left and right
 #'    annotations).
 #'
+#'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): Character names (if
+#'    available) and the integer index of the original data.
+#'
 #'  - `.x`/`.y` and `.discrete_x`/`.discrete_y`: Integer indices for `x`/`y`
 #'    coordinates, and a factor of the data labels (only applicable when names
 #'    exist).
 #'
-#'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
-#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): Character names (if
-#'    available) and the integer index of the original data.
+#' It is recommended to use `.x`/`.y`, or `.discrete_x`/`.discrete_y` as the
+#' `x`/`y` mapping.
 #'
 #' If the data inherits from [`quad_layout()`]/[`ggheatmap()`], additional
 #' columns will be added:
@@ -72,8 +75,6 @@
 #'     ggalign() +
 #'     geom_point(aes(y = value))
 #'
-#' # if data is `NULL`, a data frame with following column will be created
-#' # (`.panel`, `.index`, `.names`, `.x`/`.y`, `.discrete_x`/`.discrete_y`)
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top(size = 0.5) +
 #'     align_dendro(k = 3L) +

@@ -46,6 +46,15 @@ strict axis alignment.
 
 \code{ggalign} initializes a ggplot object. The underlying data is created using
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}. Please refer to this method for more details.
+
+If the data inherits from \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}, additional
+columns will be added:
+\itemize{
+\item \code{.extra_panel}: Provides the panel information for the column (left or
+right annotation) or row (top or bottom annotation).
+\item \code{.extra_index}: The index information for the column (left or right
+annotation) or row (top or bottom annotation).
+}
 }
 
 \examples{

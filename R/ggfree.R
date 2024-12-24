@@ -14,6 +14,14 @@
 #' `ggalign` initializes a ggplot object. The underlying data is created using
 #' [`fortify_data_frame()`]. Please refer to this method for more details.
 #'
+#'  If the data inherits from [`quad_layout()`]/[`ggheatmap()`], additional
+#' columns will be added:
+#'
+#'  - `.extra_panel`: Provides the panel information for the column (left or
+#'    right annotation) or row (top or bottom annotation).
+#'  - `.extra_index`: The index information for the column (left or right
+#'    annotation) or row (top or bottom annotation).
+#'
 #' @examples
 #' ggheatmap(matrix(rnorm(56), nrow = 7)) +
 #'     anno_top() +
@@ -100,10 +108,17 @@ FreeGg <- ggproto("FreeGg", AlignProto,
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         if (is.function(data <- self$data)) {
-            data <- waiver()
-        } else if (is.null(data)) {
-            # `ggplot2::fortify()` will convert `NULL` to `waiver()`
-            data <- waiver()
+            data <- NULL
+        }
+        # if inherit from the parent layout
+        if (!is.null(data) &&
+            is.waive(self$input_data) &&
+            is_discrete_design(extra_design) &&
+            !is.null(extra_panel <- .subset2(extra_design, "panel"))) {
+            extra_index <- .subset2(extra_design, "index")
+            data <- cross_join(data, data_frame0(
+                .extra_panel = extra_panel, .extra_index = extra_index
+            ))
         }
         gguse_data(plot, data)
     },
