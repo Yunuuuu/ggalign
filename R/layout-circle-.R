@@ -15,11 +15,15 @@
 #' `"x"` and `TRUE`, respectively, for all plots.
 #' @examples
 #' set.seed(123)
-#' stack_discrete("v", matrix(rnorm(56), nrow = 7L)) +
-#'     align_dendro() +
+#' circle_discrete(matrix(rnorm(56), nrow = 7L),
+#'     radial = coord_radial(inner.radius = 0.1)
+#' ) +
 #'     ggalign() +
 #'     geom_tile(aes(y = .column_index, fill = value)) +
-#'     scale_fill_viridis_c()
+#'     scale_fill_viridis_c() +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     scale_color_brewer(palette = "Dark2")
+#' 
 #' @export
 circle_discrete <- function(data = NULL, ..., radial = NULL, theme = NULL) {
     UseMethod("circle_discrete", data)
