@@ -103,6 +103,6 @@ CrossGg <- ggproto("CrossGg", Cross,
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)
-        c(header, "  Add plot and Reset the ordering index")
+        c(header, "  Reset the ordering index and Add plot")
     }
 )

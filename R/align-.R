@@ -127,8 +127,8 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
         )
     },
     setup_design = function(self, layout_data, design) {
-        object_name <- .subset2(self, "object_name")
-        layout_name <- .subset2(self, "layout_name")
+        layout_name <- self$layout_name
+        object_name <- self$object_name
         # check plot is compatible with the layout
         if (is_continuous_design(design)) {
             # `AlignDiscrete` object is special for discrete variables

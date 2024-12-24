@@ -517,7 +517,9 @@ align_discrete_scales <- function(axis, scales, design, labels = NULL) {
             )
         }
         # by default we elways remove any expansion
-        scale$expand <- scale$expand %|w|% default_expand
+        # we don't allow the set of expansion for discrete variables
+        # otherwise, ggmark and `cross_mark` won't work properly
+        scale$expand <- default_expand
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
@@ -914,12 +916,12 @@ align_melt_facet.FacetStack <- function(default, facet, ...) {
         if (is_horizontal(.subset2(default, "direction"))) {
             # for horizontal stack, we cannot facet by rows
             if (!is.null(params$rows)) {
-                cli_warn("Canno facet by rows in {.field {direction}} stack")
+                cli_warn("Cannot facet by rows in {.field {direction}} stack")
                 params$rows <- NULL
             }
         } else if (!is.null(params$cols)) {
             # for vertical stack, we cannot facet by cols
-            cli_warn("Canno facet by cols in {.field {direction}} stack")
+            cli_warn("Cannot facet by cols in {.field {direction}} stack")
             params$cols <- NULL
         }
         ggproto(NULL, facet, params = params)

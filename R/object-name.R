@@ -53,3 +53,8 @@ object_name.CrossGg <- function(object, format = "fn") {
 object_name.FreeGg <- function(object, format = "fn") {
     format_object_name("ggfree", format)
 }
+
+#' @export
+object_name.MarkGg <- function(object, format = "fn") {
+    format_object_name("ggmark", format)
+}
