@@ -60,7 +60,8 @@
 <span>  leaf_braches <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reorder_branches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  branch_gap <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  root <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  double <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,6 +114,13 @@ branches.</p></dd>
 
 <dt id="arg-root">root<a class="anchor" aria-label="anchor" href="#arg-root"></a></dt>
 <dd><p>A length one string or numeric indicates the root branch.</p></dd>
+
+
+<dt id="arg-double">double<a class="anchor" aria-label="anchor" href="#arg-double"></a></dt>
+<dd><p>A single logical value indicating whether horizontal lines
+should be doubled when segments span multiple branches. If <code>TRUE</code>, the
+horizontal lines will be repeated for each branch that the segment spans. If
+<code>FALSE</code>, only one horizontal line will be drawn.</p></dd>
 
 </dl></div>
     <div class="section level2">

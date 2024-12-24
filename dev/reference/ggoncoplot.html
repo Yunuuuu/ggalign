@@ -136,10 +136,10 @@ alterations.</p></dd>
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
 <dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> object used to customize various
-elements of the plot, including <code>guides</code>, <code>title</code>, <code>subtitle</code>, <code>caption</code>,
-<code>margins</code>, <code>patch.title</code>, <code>panel.border</code>, and <code>background</code>. By default, the
-theme will inherit from the parent <code>layout</code>. When aligning observations, it
-also controls the panel spacing for all plots in the layout.</p></dd>
+elements of the layout, including <code>guides</code>, <code>title</code>, <code>subtitle</code>, <code>caption</code>,
+<code>margins</code>, <code>panel.border</code>, and <code>background</code>. By default, the theme will
+inherit from the parent <code>layout</code>. It also controls the panel spacing for all
+plots in the layout.</p></dd>
 
 
 <dt id="arg-active">active<a class="anchor" aria-label="anchor" href="#arg-active"></a></dt>
@@ -180,12 +180,12 @@ the organization of the alterations.</p>
 <span class="r-in"><span>    <span class="co"># `geom_tile`.</span></span></span>
 <span class="r-in"><span>    <span class="fu">guides</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_top</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="align_gg.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ggalign.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">geom_bar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_right</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="align_gg.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ggalign.html">ggalign</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">geom_bar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, orientation <span class="op">=</span> <span class="st">"y"</span>, data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span> <span class="op">&amp;</span></span></span>

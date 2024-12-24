@@ -85,8 +85,8 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
-<span><span class="co">#&gt; Warning: S3 method 'ggplot_add.continuous_ggalign' was declared in NAMESPACE</span></span>
-<span><span class="co">#&gt; but not found</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">small_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">81</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
@@ -203,14 +203,14 @@ and prevent conflicts in the ordering of the heatmap.</p>
 <span><span class="co">#&gt;  [1] vctrs_0.6.5       cli_3.6.3         knitr_1.49        rlang_1.1.4      </span></span>
 <span><span class="co">#&gt;  [5] xfun_0.49         generics_0.1.3    textshaping_0.4.1 jsonlite_1.8.9   </span></span>
 <span><span class="co">#&gt;  [9] labeling_0.4.3    glue_1.8.0        colorspace_2.1-1  htmltools_0.5.8.1</span></span>
-<span><span class="co">#&gt; [13] ragg_1.3.3        sass_0.4.9        fansi_1.0.6       scales_1.3.0     </span></span>
-<span><span class="co">#&gt; [17] rmarkdown_2.29    grid_4.4.2        tibble_3.2.1      evaluate_1.0.1   </span></span>
-<span><span class="co">#&gt; [21] munsell_0.5.1     jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.10      </span></span>
-<span><span class="co">#&gt; [25] lifecycle_1.0.4   compiler_4.4.2    dplyr_1.1.4       fs_1.6.5         </span></span>
-<span><span class="co">#&gt; [29] pkgconfig_2.0.3   farver_2.1.2      systemfonts_1.1.0 digest_0.6.37    </span></span>
-<span><span class="co">#&gt; [33] R6_2.5.1          tidyselect_1.2.1  utf8_1.2.4        pillar_1.9.0     </span></span>
-<span><span class="co">#&gt; [37] magrittr_2.0.3    bslib_0.8.0       withr_3.0.2       tools_4.4.2      </span></span>
-<span><span class="co">#&gt; [41] gtable_0.3.6      pkgdown_2.1.1     cachem_1.1.0      desc_1.4.3</span></span></code></pre></div>
+<span><span class="co">#&gt; [13] ragg_1.3.3        sass_0.4.9        scales_1.3.0      rmarkdown_2.29   </span></span>
+<span><span class="co">#&gt; [17] grid_4.4.2        tibble_3.2.1      evaluate_1.0.1    munsell_0.5.1    </span></span>
+<span><span class="co">#&gt; [21] jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.10       lifecycle_1.0.4  </span></span>
+<span><span class="co">#&gt; [25] compiler_4.4.2    dplyr_1.1.4       fs_1.6.5          pkgconfig_2.0.3  </span></span>
+<span><span class="co">#&gt; [29] farver_2.1.2      systemfonts_1.1.0 digest_0.6.37     R6_2.5.1         </span></span>
+<span><span class="co">#&gt; [33] tidyselect_1.2.1  pillar_1.10.0     magrittr_2.0.3    bslib_0.8.0      </span></span>
+<span><span class="co">#&gt; [37] withr_3.0.2       tools_4.4.2       gtable_0.3.6      pkgdown_2.1.1    </span></span>
+<span><span class="co">#&gt; [41] cachem_1.1.0      desc_1.4.3</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

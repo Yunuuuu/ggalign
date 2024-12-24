@@ -82,10 +82,10 @@
 <div class="section level3">
 <h3 id="new-features-0-0-5">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-5"></a></h3>
 <ul><li><p>new <code><a href="../reference/quad_layout.html">quad_layout()</a></code> to create layout allowing free from alignment.</p></li>
-<li><p>new <code><a href="../reference/quad_free.html">quad_alignv()</a></code>, <code><a href="../reference/quad_free.html">quad_alignh()</a></code>, <code><a href="../reference/quad_free.html">quad_free()</a></code>/<code><a href="../reference/quad_free.html">ggside()</a></code>, <code><a href="../reference/quad_free.html">quad_alignb()</a></code> alias for <code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p></li>
+<li><p>new <code><a href="../reference/quad_layout.html">quad_alignv()</a></code>, <code><a href="../reference/quad_layout.html">quad_alignh()</a></code>, <code><a href="../reference/quad_continuous.html">quad_free()</a></code>/<code><a href="../reference/quad_continuous.html">ggside()</a></code>, <code><a href="../reference/quad_discrete.html">quad_alignb()</a></code> alias for <code><a href="../reference/quad_layout.html">quad_layout()</a></code>.</p></li>
 <li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code> now gains a <code>type</code> argument to control whether the layout should align observations.</p></li>
 <li><p>new <code><a href="../reference/ggoncoplot.html">ggoncoplot()</a></code> function to draw oncoprint.</p></li>
-<li><p>new <code><a href="../reference/free_gg.html">ggfree()</a></code> function to add ggplot to the layout.</p></li>
+<li><p>new <code><a href="../reference/ggfree.html">ggfree()</a></code> function to add ggplot to the layout.</p></li>
 <li><p>new <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> function to convert any objects to a matrix, and add <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> method for <code>MAF</code> object.</p></li>
 <li><p>new <code><a href="../reference/fortify_data_frame.html">fortify_data_frame()</a></code> function to convert any objects to a data frame.</p></li>
 <li><p>now, a special attribute <code>ggalign</code> can be used to pass additional informations across the building process, and a new function <code><a href="../reference/ggalign_attr.html">ggalign_attr()</a></code> can be used to extract the data from the attribute.</p></li>
@@ -187,7 +187,7 @@
 </ul><p>For more detailed instructions on customizing layouts, see the vignette: <code>vignette("layout-customize")</code>.</p>
 <p>Additionally, plots can be added in the layout with following functions:</p>
 <ul><li>
-<code><a href="../reference/align_gg.html">align_gg()</a></code>/<code><a href="../reference/align_gg.html">ggalign()</a></code>: Create ggplot object with a customized data.</li>
+<code>align_gg()</code>/<code><a href="../reference/ggalign.html">ggalign()</a></code>: Create ggplot object with a customized data.</li>
 <li>
 <code><a href="../reference/align_panel.html">align_panel()</a></code>/<code><a href="../reference/align_panel.html">ggpanel()</a></code>: Create ggplot object with the layout panel data.</li>
 </ul><p>For more information on adding plots, refer to the vignette: <code>vignette("layout-plot")</code>.</p>
