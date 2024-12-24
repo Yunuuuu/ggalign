@@ -76,8 +76,8 @@ mark_pdraw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
     if (!all(valid)) {
         cli_abort("{.arg ...} must be created with {.fn link}", call = call)
     }
-    link1 <- check_link_list(.link1)
-    link2 <- check_link_list(.link2)
+    link1 <- check_link_list(.link1, call = call)
+    link2 <- check_link_list(.link2, call = call)
 
     # Ensure that if both links have the same length
     if (length(link1) != length(link2)) {
