@@ -130,6 +130,10 @@ make_dist <- function(matrix, distance, use_missing,
 #' @param branch_gap A single numeric value indicates the gap between different
 #' branches.
 #' @param root A length one string or numeric indicates the root branch.
+#' @param double A single logical value indicating whether horizontal lines
+#' should be doubled when segments span multiple branches. If `TRUE`, the
+#' horizontal lines will be repeated for each branch that the segment spans. If
+#' `FALSE`, only one horizontal line will be drawn.
 #' @return A list of 2 data.frame. One for node coordinates, another for edge
 #' coordinates.
 #' `node` and tree segments `edge` coordinates contains following columns:
@@ -165,7 +169,8 @@ dendrogram_data <- function(tree,
                             leaf_braches = NULL,
                             reorder_branches = TRUE,
                             branch_gap = NULL,
-                            root = NULL) {
+                            root = NULL,
+                            double = TRUE) {
     dend <- check_dendrogram(tree)
     assert_bool(center)
     assert_bool(reorder_branches)
@@ -385,7 +390,7 @@ dendrogram_data <- function(tree,
                 )
                 # 2 horizontal lines
                 # if the horizontal lines spanned multiple panels
-                # we double the left line and the right line 
+                # we double the left line and the right line
                 added_edge <- vec_rbind(
                     vertical_lines,
                     # left horizontal line
@@ -396,7 +401,8 @@ dendrogram_data <- function(tree,
                         y = y,
                         branch = direct_leaves_branch[1L],
                         ranges = ranges,
-                        full_panel = full_panel
+                        full_panel = full_panel,
+                        double = double
                     ),
                     # right horizontal line
                     make_horizontal(
@@ -406,7 +412,8 @@ dendrogram_data <- function(tree,
                         y = y,
                         branch = direct_leaves_branch[2L],
                         ranges = ranges,
-                        full_panel = full_panel
+                        full_panel = full_panel,
+                        double = double
                     )
                 )
             } else {
@@ -457,8 +464,10 @@ dendrogram_data <- function(tree,
 #' @param ggpanels Won't be `NA`
 #' @noRd
 make_horizontal <- function(x, panels, ggpanels, y, branch,
-                            ranges, full_panel = names(ranges)) {
-    if (identical(ggpanels[1L], ggpanels[2L])) { # in the same panel
+                            ranges, full_panel = names(ranges),
+                            double = TRUE) {
+    if (!isTRUE(double) || identical(ggpanels[1L], ggpanels[2L])) {
+        # in the same panel
         data_frame0(
             x = x[1L],
             xend = x[2L],

@@ -15,7 +15,7 @@ navbar:
     benchmarks:
       text: Benchmarks
       href: articles/benchmarks.html
-    faq: 
+    faq:
       text: FAQ
       href: articles/FAQ.html
 
@@ -23,12 +23,17 @@ reference:
 - title: Layout initialize
   desc: A `Layout` object defines how to place the plots.
   contents:
-  - heatmap_layout
+  - stack_discrete
+  - stack_continuous
   - stack_layout
+  - quad_continuous
+  - quad_discrete
   - quad_layout
-  - cross_align
-  - quad_free
-  - stack_free
+  - circle_discrete
+  - circle_continuous
+  - circle_layout
+  - stack_cross
+  - ggheatmap
   - ggoncoplot
 
 - title: Layout Building
@@ -44,8 +49,11 @@ reference:
   - quad_anno
   - with_quad
   - stack_switch
+  - circle_switch
   - active
   - ggalign_attr
+  - continuous_limits
+  - layout_expand
 
 - title: Layout Customization
   desc: >
@@ -63,11 +71,14 @@ reference:
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
   contents:
-  - ggfree
-  - ggalign
   - align_dendro
-  - align_line
+  - ggalign
+  - ggmark
   - ggcross
+  - ggfree
+  - mark_line
+  - mark_tetragon
+  - mark_draw
 
 - title: Schemes
   desc: >
@@ -82,7 +93,8 @@ reference:
   desc: >
     Functions to enhance and customize the capabilities of ggalign.
   contents:
-  - align
+  - mark_pdraw
+  - align_discrete
   - fortify_data_frame
   - fortify_matrix
   - ggalign_attr_set

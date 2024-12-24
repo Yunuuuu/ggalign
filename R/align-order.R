@@ -22,9 +22,8 @@
 #' (including purrr-like lambda syntax) that will be applied to the layout
 #' matrix, transforming it as necessary for weight calculations. By default, it
 #' will inherit from the layout matrix.
-#' @inheritParams align
-#' @inheritParams align_gg
-#' @inheritSection align Axis Alignment for Observations
+#' @inheritParams align_discrete
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
@@ -34,8 +33,7 @@
 #' @export
 align_order <- function(weights = rowMeans, ...,
                         reverse = FALSE, strict = TRUE, data = NULL,
-                        active = NULL, set_context = deprecated(),
-                        name = deprecated()) {
+                        active = NULL) {
     if (is.numeric(weights) ||
         (is.character(weights) && !inherits(weights, "AsIs"))) {
         # vec_duplicate_any is slight faster than `anyDuplicated`
@@ -64,10 +62,7 @@ align_order <- function(weights = rowMeans, ...,
     assert_bool(reverse)
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    active <- deprecate_active(active, "align_order",
-        set_context = set_context, name = name
-    )
-    align(
+    align_discrete(
         align = AlignOrder,
         params = list(
             weights = weights,
@@ -81,12 +76,9 @@ align_order <- function(weights = rowMeans, ...,
     )
 }
 
-#' @export
-summary.AlignOrder <- function(object, ...) c(TRUE, FALSE)
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
-AlignOrder <- ggproto("AlignOrder", Align,
+AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
     nobs = function(params) length(.subset2(params, "weights")),
     setup_params = function(self, nobs, params) {
         if (!is.function(weights <- .subset2(params, "weights"))) {
@@ -138,5 +130,6 @@ AlignOrder <- ggproto("AlignOrder", Align,
         }
         if (reverse) index <- rev(index)
         list(panel, index)
-    }
+    },
+    summary_align = function(self) c(TRUE, FALSE)
 )

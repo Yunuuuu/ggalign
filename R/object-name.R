@@ -14,8 +14,14 @@ object_name.StackLayout <- function(object, format = "fn") {
     if (!is.null(position <- .subset2(object@heatmap, "position"))) {
         ans <- sprintf("the %s annotation %s", position, ans)
     } else {
+        ans <- sprintf("the %s %s", object@direction, ans)
     }
     ans
+}
+
+#' @export
+object_name.CircleLayout <- function(object, format = "fn") {
+    format_object_name(object@name, format)
 }
 
 #' @export
@@ -46,4 +52,9 @@ object_name.CrossGg <- function(object, format = "fn") {
 #' @export
 object_name.FreeGg <- function(object, format = "fn") {
     format_object_name("ggfree", format)
+}
+
+#' @export
+object_name.MarkGg <- function(object, format = "fn") {
+    format_object_name("ggmark", format)
 }

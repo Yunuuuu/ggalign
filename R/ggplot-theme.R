@@ -189,7 +189,8 @@ theme_elements <- function() {
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
             plot.ggalign_ranges = el_def("element_polygon"),
-            plot.ggalign_lines = el_def("element_line")
+            plot.ggalign_lines = el_def("element_line"),
+            panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing")
         )
     )
 }

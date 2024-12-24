@@ -10,9 +10,7 @@ align_reorder(
   reverse = FALSE,
   strict = TRUE,
   data = NULL,
-  active = NULL,
-  set_context = deprecated(),
-  name = deprecated()
+  active = NULL
 )
 }
 \arguments{
@@ -36,12 +34,6 @@ inherit from the layout matrix.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 Reorders layout observations based on specific statistics.
@@ -59,7 +51,7 @@ Typically, you can achieve the functionality of \code{align_reorder()} using
 \code{align_order()} by manually extracting the ordering information from
 the statistic.
 }
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

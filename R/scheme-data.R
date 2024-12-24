@@ -71,10 +71,12 @@ plot_add_scheme.scheme_data <- function(plot, scheme) {
     if (!is.null(scheme_data <- .subset2(scheme, "data") %|w|% NULL) &&
         !is.null(raw_data <- .subset2(plot, "data"))) {
         # To be compatible with ggplot2, it must be a data frame
-        if (!is.data.frame(data <- scheme_data(raw_data))) {
+        if (!is.null(data <- scheme_data(raw_data)) &&
+            !is.waive(data) &&
+            !is.data.frame(data)) {
             cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
         }
-        plot$data <- data
+        plot <- gguse_data(plot, data)
     }
     plot
 }

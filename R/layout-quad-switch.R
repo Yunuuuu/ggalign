@@ -45,7 +45,7 @@ quad_active <- function(width = NULL, height = NULL) {
 #' the data in `r rd_quad()` is incompatible with the annotation stack, no
 #' data will be used in the stack.
 #' @param what What should get activated in the annotation stack?
-#' `r rd_stack_what()`.
+#' `r rd_chain_what()`.
 #' @seealso [`quad_switch()`]
 #' @export
 #' @rdname quad_active
@@ -179,31 +179,7 @@ quad_switch <- function(position = NULL, size = NULL,
     }
 }
 
-#' @inheritParams align_gg
 #' @inheritParams heatmap_layout
 #' @export
 #' @rdname quad_switch
-hmanno <- function(position = NULL, size = NULL,
-                   width = NULL, height = NULL, free_guides = waiver(),
-                   what = waiver(), ...,
-                   # following parameters have replaced with `action`
-                   # argument
-                   guides = deprecated(),
-                   free_spaces = deprecated(), plot_data = deprecated(),
-                   theme = deprecated(), free_labs = deprecated()) {
-    rlang::check_dots_empty()
-    deprecate_action(
-        "hmanno",
-        guides = guides,
-        free_spaces = free_spaces,
-        plot_data = plot_data,
-        theme = theme,
-        free_labs = free_labs
-    )
-    ans <- quad_switch(
-        position = position, size = size,
-        width = width, height = height, free_guides = free_guides,
-        what = what
-    )
-    ans
-}
+hmanno <- quad_switch

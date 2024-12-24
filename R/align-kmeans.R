@@ -8,23 +8,18 @@
 #'
 #' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
-#' @inheritParams align_dendro
-#' @inheritSection align Axis Alignment for Observations
+#' @inheritParams align_discrete
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +
 #'     align_kmeans(3L)
 #' @importFrom rlang list2
 #' @export
-align_kmeans <- function(centers, ..., data = NULL,
-                         active = NULL, set_context = deprecated(),
-                         name = deprecated()) {
+align_kmeans <- function(centers, ..., data = NULL, active = NULL) {
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    active <- deprecate_active(active, "align_group",
-        set_context = set_context, name = name
-    )
-    align(
+    align_discrete(
         align = AlignKmeans,
         params = list(centers = centers, params = list2(...)),
         active = active,
@@ -32,12 +27,9 @@ align_kmeans <- function(centers, ..., data = NULL,
     )
 }
 
-#' @export
-summary.AlignKmeans <- function(object, ...) c(FALSE, TRUE)
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
-AlignKmeans <- ggproto("AlignKmeans", Align,
+AlignKmeans <- ggproto("AlignKmeans", AlignDiscrete,
     setup_data = function(self, params, data) {
         ans <- fortify_matrix(data)
         assert_(
@@ -52,5 +44,6 @@ AlignKmeans <- ggproto("AlignKmeans", Align,
     },
     align = function(self, panel, index) {
         list(.subset2(.subset2(self, "statistics"), "cluster"), index)
-    }
+    },
+    summary_align = function(self) c(FALSE, TRUE)
 )

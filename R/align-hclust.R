@@ -9,7 +9,7 @@
 #'
 #' @param data A matrix-like object. By default, it inherits from the layout
 #'   `matrix`.
-#' @inheritParams align
+#' @inheritParams align_discrete
 #' @inheritParams hclust2
 #' @param reorder_dendrogram A single boolean value indicating whether to
 #' reorder the dendrogram based on the means. Alternatively, you can provide a
@@ -27,7 +27,7 @@
 #' performing hierarchical clustering), `k` (the number of clusters), and `h`
 #' (the height at which to cut the tree). By default,
 #' [`cutree()`][stats::cutree()] is used.
-#' @inheritSection align Axis Alignment for Observations
+#' @inheritSection align_discrete Discrete Axis Alignment
 #' @seealso
 #' - [`dendrogram_data()`]
 #' - [`hclust2()`]
@@ -66,7 +66,7 @@ align_hclust <- function(distance = "euclidean",
     }
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    align(
+    align_discrete(
         align = AlignHclust,
         params = list(
             distance = distance, method = method, use_missing = use_missing,
@@ -85,14 +85,9 @@ align_hclust <- function(distance = "euclidean",
     )
 }
 
-#' @export
-summary.AlignHclust <- function(object, ...) {
-    params <- .subset2(object, "input_params")
-    c(TRUE, !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h")))
-}
-
 #' @importFrom ggplot2 ggproto aes
-AlignHclust <- ggproto("AlignHclust", Align,
+AlignHclust <- ggproto("AlignHclust", AlignDiscrete,
+
     #' @importFrom stats reorder
     setup_params = function(self, nobs, params) {
         # setup the default value for `plot_cut_height`
@@ -300,5 +295,12 @@ AlignHclust <- ggproto("AlignHclust", Align,
             self$panel <- panel
         }
         list(panel, index)
+    },
+    summary_align = function(self, ...) {
+        params <- self$input_params
+        c(
+            TRUE,
+            !is.null(.subset2(params, "k")) || !is.null(.subset2(params, "h"))
+        )
     }
 )

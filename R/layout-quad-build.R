@@ -56,25 +56,32 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
 quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
                                   direction = NULL) {
     data <- quad@data
-    schemes <- inherit_parent_layout_schemes(quad, schemes)
-    theme <- inherit_parent_layout_theme(quad, theme, direction = direction)
-    row_coords <- setup_layout_coords(quad@horizontal)
-    column_coords <- setup_layout_coords(quad@vertical)
-    if (!(is.null(row_coords) && is.null(column_coords)) &&
-        (is.function(data) || is.null(data))) {
+    row_design <- setup_design(quad@horizontal)
+    column_design <- setup_design(quad@vertical)
+    if ((is_discrete_design(row_design) || is_discrete_design(column_design)) &&
+        (is.function(data) || is.waive(data))) {
         cli_abort(c(
             sprintf(
-                "You must provide {.arg data} argument to plot %s",
+                "You must provide the {.arg data} argument to plot %s.",
                 object_name(quad)
             ),
-            i = "Do you want to put this in a parent stack layout?"
+            i = "To align discrete variables, data is required to initialize the layout."
         ))
     }
+    schemes <- inherit_parent_layout_schemes(quad, schemes)
+    if (is.null(direction)) {
+        spacing <- NULL
+    } else if (is_horizontal(direction)) {
+        spacing <- "y"
+    } else {
+        spacing <- "x"
+    }
+    theme <- inherit_parent_layout_theme(quad, theme, spacing = spacing)
 
     # prepare action for vertical and horizontal stack layout
-    vertical_align <- horizontal_align <- align <-
+    vertical_align <- horizontal_align <- the_align <-
         .subset2(schemes, "scheme_align")
-    if (!is.null(layout_labs <- .subset2(align, "free_labs")) &&
+    if (!is.null(layout_labs <- .subset2(the_align, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
         horizontal_align$free_labs <- gsub("[lr]", "", layout_labs)
@@ -88,7 +95,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     }
 
     # inherit from the parent stack layout
-    if (!is.null(layout_spaces <- .subset2(align, "free_spaces")) &&
+    if (!is.null(layout_spaces <- .subset2(the_align, "free_spaces")) &&
         !is.waive(layout_spaces)) {
         horizontal_align$free_spaces <- gsub("[lr]", "", layout_spaces)
         vertical_align$free_spaces <- gsub("[tb]", "", layout_spaces)
@@ -108,17 +115,17 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         pschemes <- schemes
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
-            extra_coords <- column_coords
+            extra_design <- column_design
             pschemes$scheme_align <- horizontal_align
         } else {
-            extra_coords <- row_coords
+            extra_design <- row_design
             pschemes$scheme_align <- vertical_align
         }
         plot <- stack_build(
             stack,
             schemes = pschemes,
             theme = theme,
-            extra_coords = extra_coords
+            extra_design = extra_design
         )
         if (is.null(plot)) {
             size <- NULL
@@ -135,14 +142,11 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     # read the plot ---------------------------------------
     p <- quad@plot
 
-    # add default data ----------------------------------
-    p$data <- quad_build_data(data, row_coords, column_coords)
-
     # setup the facet -----------------------------------
-    do_row_facet <- !is.null(row_coords) &&
-        nlevels(.subset2(row_coords, "panel")) > 1L
-    do_column_facet <- !is.null(column_coords) &&
-        nlevels(.subset2(column_coords, "panel")) > 1L
+    do_row_facet <- is_discrete_design(row_design) &&
+        nlevels(.subset2(row_design, "panel")) > 1L
+    do_column_facet <- is_discrete_design(column_design) &&
+        nlevels(.subset2(column_design, "panel")) > 1L
 
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
@@ -168,39 +172,32 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         default_facet <- ggplot2::facet_null()
     }
 
-    # set limits ----------------------------------------
-    if (!is.null(column_coords)) {
-        column_coords$labels <- .subset(
-            colnames(data),
-            .subset2(column_coords, "index")
-        )
-    }
-    if (!is.null(row_coords)) {
-        row_coords$labels <- .subset(
-            vec_names(data),
-            .subset2(row_coords, "index")
-        )
-    }
-
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
-    aligned_axes <- c("x", "y")[
-        c(!is.null(column_coords), !is.null(row_coords))
-    ]
-    if (length(aligned_axes)) {
-        p <- p +
-            align_melt_facet(default_facet, p$facet, strict = TRUE) +
-            cartesian_coord(aligned_axes, object_name(quad)) +
-            discrete_ggalign(x = column_coords, y = row_coords)
-    }
-    p <- p + theme_recycle()
+    # add default data ----------------------------------
+    p <- gguse_data(p, quad_build_data(data, row_design, column_design))
+    p <- gguse_linear_coord(p, object_name(quad))
+    p <- gguse_facet(p, default_facet, strict = TRUE)
+    p <- p +
+        ggalign_design(
+            x = column_design, y = row_design,
+            xlabels = .subset(
+                colnames(data),
+                .subset2(column_design, "index")
+            ),
+            ylabels = .subset(
+                vec_names(data),
+                .subset2(row_design, "index")
+            )
+        ) +
+        theme_recycle()
 
     # add action ----------------------------------------
     p <- plot_add_schemes(p, inherit_schemes(quad@body_schemes, schemes))
-    if (!is.null(row_coords)) {
+    if (do_row_facet) {
         p <- p + theme(panel.spacing.y = calc_element("panel.spacing.y", theme))
     }
-    if (!is.null(column_coords)) {
+    if (do_column_facet) {
         p <- p + theme(panel.spacing.x = calc_element("panel.spacing.x", theme))
     }
 
@@ -215,46 +212,48 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 }
 
 #' @importFrom stats reorder
-quad_build_data <- function(data, row_coords, column_coords) {
-    if (is.null(data) || (is.null(row_coords) && is.null(column_coords))) {
+quad_build_data <- function(data, row_design, column_design) {
+    if (is.null(data) ||
+        (is_continuous_design(row_design) &&
+            is_continuous_design(column_design))) {
         # ggplot use waiver() to indicates the NULL data
         return(data %||% waiver())
     }
-    if (!is.null(row_coords)) {
-        row_panel <- .subset2(row_coords, "panel")
-        row_index <- .subset2(row_coords, "index")
-        row_coords <- data_frame0(
+    if (is_discrete_design(row_design)) {
+        row_panel <- .subset2(row_design, "panel")
+        row_index <- .subset2(row_design, "index")
+        row_data <- data_frame0(
             .ypanel = row_panel,
             .yindex = row_index,
             .y = seq_along(row_index)
         )
     }
-    if (!is.null(column_coords)) {
-        column_panel <- .subset2(column_coords, "panel")
-        column_index <- .subset2(column_coords, "index")
-        column_coords <- data_frame0(
+    if (is_discrete_design(column_design)) {
+        column_panel <- .subset2(column_design, "panel")
+        column_index <- .subset2(column_design, "index")
+        column_data <- data_frame0(
             .xpanel = column_panel,
             .xindex = column_index,
             .x = seq_along(column_index)
         )
     }
-    if (!is.null(row_coords) && !is.null(column_coords)) {
-        coords <- cross_join(row_coords, column_coords)
+    if (is_discrete_design(row_design) && is_discrete_design(column_design)) {
+        panel_data <- cross_join(row_data, column_data)
         by.x <- c(".column_index", ".row_index")
         by.y <- c(".xindex", ".yindex")
-    } else if (is.null(row_coords)) {
-        coords <- column_coords
+    } else if (is_discrete_design(column_design)) {
+        panel_data <- column_data
         by.x <- ".column_index"
         by.y <- ".xindex"
     } else {
-        coords <- row_coords
+        panel_data <- row_data
         by.x <- ".row_index"
         by.y <- ".yindex"
     }
     ans <- fortify_data_frame.matrix(data)
-    ans <- full_join(ans, coords, by.x = by.x, by.y = by.y)
+    ans <- full_join(ans, panel_data, by.x = by.x, by.y = by.y)
     if (!is.null(.subset2(ans, ".row_names")) &&
-        !is.null(row_coords)) {
+        is_discrete_design(row_design)) {
         ans$.discrete_y <- reorder(
             .subset2(ans, ".row_names"),
             .subset2(ans, ".y"),
@@ -262,7 +261,7 @@ quad_build_data <- function(data, row_coords, column_coords) {
         )
     }
     if (!is.null(.subset2(ans, ".column_names")) &&
-        !is.null(column_coords)) {
+        is_discrete_design(column_design)) {
         ans$.discrete_x <- reorder(
             .subset2(ans, ".column_names"),
             .subset2(ans, ".x"),

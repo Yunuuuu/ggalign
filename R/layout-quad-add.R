@@ -14,7 +14,7 @@ quad_layout_add.layout_title <- function(object, quad, object_name) {
 # Preventing from adding following elements
 #' @export
 quad_layout_add.matrix <- function(object, quad, object_name) {
-    cli_abort("Can't change data of {.fn {quad@name}}")
+    cli_abort(sprintf("Can't change data of %s", object_name(quad)))
 }
 
 #' @export
@@ -29,12 +29,12 @@ quad_layout_add.default <- function(object, quad, object_name) {
         quad <- quad_body_add(object, quad, object_name)
     } else if (is.null(stack <- slot(quad, position))) {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "the {.field {position}} annotation stack is not initialized",
             i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
         ))
     } else {
-        slot(quad, position) <- stack_layout_add(object, stack, object_name)
+        slot(quad, position) <- chain_layout_add(object, stack, object_name)
     }
     quad
 }
@@ -87,12 +87,12 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     if (is.null(stack) && !isFALSE(initialize)) {
         # try to initialize the annotation stack with the layout data
         direction <- to_direction(position)
-        layout_coords <- slot(quad, direction)
+        layout_design <- slot(quad, direction)
         # for the annotation stack, we try to take the data from the
         # quad layout
         quad_data <- quad@data
         data <- waiver()
-        if (is.null(layout_coords)) { # the stack need a data frame
+        if (is_continuous_design(layout_design)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
                     cli_warn(paste(
@@ -132,7 +132,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 data = data,
                 direction = direction,
                 # the layout parameters should be the same with `quad_layout()`
-                layout = layout_coords,
+                design = layout_design,
                 # we'll inherit the action data function when
                 schemes = default_schemes(if (is.null(data)) NULL else waiver())
             )
@@ -151,9 +151,9 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
             stack@sizes <- size
         }
         if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
-            stack@heatmap$free_guides <- free_guides
+            stack@heatmap["free_guides"] <- list(free_guides)
         }
-        stack <- update_stack_active(
+        stack <- switch_chain_plot(
             stack, .subset2(object, "what"), quote(quad_anno())
         )
         slot(quad, position) <- stack
@@ -165,7 +165,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
 #' @export
 quad_layout_add.QuadLayout <- function(object, quad, object_name) {
     cli_abort(c(
-        "Cannot add {.var {object_name}} to {.fn {quad@name}}.",
+        sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
         i = "Did you mean to place multiple {.fn quad_layout} elements inside a {.fn stack_layout}?"
     ))
 }
@@ -175,7 +175,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     # we check if there is an active annotation
     if (is.null(position <- quad@active)) {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "no active annotation stack",
             i = "try to activate an annotation stack with {.fn anno_*}"
         ))
@@ -183,7 +183,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     # check the annotation stack is not initialized
     if (!is.null(slot(quad, position))) {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "{position} annotation stack already exists"
         ))
     }
@@ -191,54 +191,107 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     if (!all(vapply(object@plot_list, is_ggalign_plot, logical(1L),
                     USE.NAMES = FALSE))) { # styler: off
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "annotation stack cannot contain nested layout"
         ))
     }
     # check quad layout is compatible with stack layout
     if (!identical(direction <- to_direction(position), object@direction)) {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "only {.field {direction}} stack is allowed in {position} annotation"
         ))
     }
     if (length(object@sizes) > 1L) {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to {.fn {quad@name}}",
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "{.arg sizes} must be of length one to use the stack as an annotation"
         ))
     }
-    quad_coords <- slot(quad, direction)
-    stack_coords <- object@layout
+    quad_design <- slot(quad, direction)
+    stack_design <- object@design
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
-    if (is.null(stack_coords)) {
-        layout_coords <- NULL
-    } else if (!is.null(quad_coords)) {
+    if (is_continuous_design(stack_design)) {
+        if (!is_continuous_design(quad_design)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {object_name}} to %s",
+                    object_name(quad)
+                ),
+                i = sprintf(
+                    "%s cannot align continuous variable in {.field {direction}} direction",
+                    object_name(quad)
+                )
+            ))
+        }
+        layout_design <- stack_design
+    } else if (is_discrete_design(quad_design)) {
         # both `quad_layout()` and `stack_layout()` need align observations
         # if there are cross points in bottom or right annotation, the index
         # should be the first index in the `index_list`
         if (any(position == c("bottom", "right")) &&
             is_cross_layout(object) &&
             !is_empty(object@cross_points)) {
-            stack_coords["index"] <- list(.subset2(object@index_list, 1L))
+            stack_design["index"] <- list(.subset2(object@index_list, 1L))
         }
-        layout_coords <- check_layout_coords(
-            quad_coords, stack_coords,
+        layout_design <- check_discrete_design(
+            quad_design, stack_design,
             old_name = object_name(quad),
             new_name = object_name
         )
     } else {
         cli_abort(c(
-            "Cannot add {.var {object_name}} to a {.fn {quad@name}}",
-            i = "{.fn {quad@name}} cannot align observations in {.field {direction}} direction"
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
+            i = sprintf(
+                "%s cannot align discrete variable in {.field {direction}} direction",
+                object_name(quad)
+            )
         ))
     }
     object@heatmap$position <- position
     slot(quad, position) <- object
-    update_layout_coords(quad,
+    update_design(quad,
         direction = direction,
-        coords = layout_coords,
+        design = layout_design,
+        object_name = object_name
+    )
+}
+
+#' @importFrom methods slot slot<-
+#' @export
+quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
+    if (is.null(position <- quad@active)) {
+        cli_abort(c(
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
+            i = "no active annotation stack",
+            i = "try to activate an annotation stack with {.fn anno_*}"
+        ))
+    }
+    if (is.null(stack <- slot(quad, position))) {
+        cli_abort(c(
+            sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
+            i = "the {.field {position}} annotation stack is not initialized",
+            i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
+        ))
+    }
+
+    # add annotation -----------------------------
+    stack <- chain_layout_add(object, stack, object_name)
+    slot(quad, position) <- stack
+
+    new_design <- stack@design
+    # if there are cross points in bottom or right annotation, the index
+    # should be the first index in the `index_list`
+    if (any(position == c("bottom", "right")) &&
+        is_cross_layout(stack) &&
+        !is_empty(stack@cross_points)) {
+        new_design["index"] <- list(.subset2(stack@index_list, 1L))
+    }
+    update_design(
+        quad,
+        direction = to_direction(position),
+        design = new_design,
         object_name = object_name
     )
 }

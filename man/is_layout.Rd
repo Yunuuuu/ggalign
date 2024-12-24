@@ -5,6 +5,7 @@
 \alias{is_quad_layout}
 \alias{is_stack_layout}
 \alias{is_cross_layout}
+\alias{is_circle_layout}
 \alias{is_heatmap_layout}
 \alias{is_ggheatmap}
 \title{Reports whether \code{x} is layout object}
@@ -16,6 +17,8 @@ is_quad_layout(x)
 is_stack_layout(x)
 
 is_cross_layout(x)
+
+is_circle_layout(x)
 
 is_heatmap_layout(x)
 
@@ -40,8 +43,8 @@ is_quad_layout(quad_alignv(1:10))
 is_quad_layout(quad_free(mtcars))
 
 # for stack_layout()
-is_stack_layout(stack_align(1:10))
-is_stack_layout(stack_free(1:10))
+is_stack_layout(stack_discrete("h", 1:10))
+is_stack_layout(stack_continuous("h", 1:10))
 
 # for heatmap_layout()
 is_heatmap_layout(ggheatmap(1:10))

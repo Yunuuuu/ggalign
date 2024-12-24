@@ -72,7 +72,7 @@ the data in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{gg
 data will be used in the stack.}
 
 \item{what}{What should get activated in the annotation stack?
-A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context.}
+A single number or string of the plot elements in the layout. If \code{NULL}, will remove any active context.}
 }
 \value{
 An object that can be added to \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}.

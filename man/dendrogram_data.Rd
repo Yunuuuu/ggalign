@@ -13,7 +13,8 @@ dendrogram_data(
   leaf_braches = NULL,
   reorder_branches = TRUE,
   branch_gap = NULL,
-  root = NULL
+  root = NULL,
+  double = TRUE
 )
 }
 \arguments{
@@ -45,6 +46,11 @@ provided \code{leaf_braches} based on the actual index.}
 branches.}
 
 \item{root}{A length one string or numeric indicates the root branch.}
+
+\item{double}{A single logical value indicating whether horizontal lines
+should be doubled when segments span multiple branches. If \code{TRUE}, the
+horizontal lines will be repeated for each branch that the segment spans. If
+\code{FALSE}, only one horizontal line will be drawn.}
 }
 \value{
 A list of 2 data.frame. One for node coordinates, another for edge

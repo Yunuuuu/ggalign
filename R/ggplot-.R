@@ -42,6 +42,13 @@ ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
 }
 
 ######################################################
+gguse_data <- function(plot, data) {
+    # ggplot use waiver() to indicate no data
+    plot["data"] <- list(data %||% waiver())
+    plot
+}
+
+######################################################
 default_expansion <- function(x = NULL, y = NULL) {
     structure(list(x = x, y = y), class = c("ggalign_default_expansion"))
 }
@@ -75,151 +82,43 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
 }
 
 ######################################################
-#' @param axes A character indicates which axes should be restricted.
-#' @noRd
-cartesian_coord <- function(axes, layout_name) {
-    structure(list(axes = axes, layout_name = layout_name),
-        class = "ggalign_cartesian_coord"
-    )
-}
-
-#' @export
-ggplot_add.ggalign_cartesian_coord <- function(object, plot, object_name) {
-    plot$coordinates <- use_cartesian_coord(
-        .subset2(plot, "coordinates"),
-        .subset2(object, "axes"),
-        .subset2(object, "layout_name")
-    )
+reverse_continuous_scale <- function(plot, axis) {
+    if (plot$scales$has_scale(axis)) { # modify scale in place
+        scale <- plot$scales$get_scales(axis)
+        if (!scale$is_discrete()) {
+            if (identical(scale$trans$name, "identity")) {
+                scale$trans <- scales::as.transform("reverse")
+            } else if (identical(scale$trans$name, "reverse")) {
+                scale$trans <- scales::as.transform("identity")
+            }
+        }
+    } else {
+        plot <- plot + switch(axis,
+            x = ggplot2::scale_x_reverse(),
+            y = ggplot2::scale_y_reverse()
+        )
+    }
     plot
 }
 
-use_cartesian_coord <- function(coord, axes, layout_name) {
-    UseMethod("use_cartesian_coord")
-}
-
-#' @export
-use_cartesian_coord.CoordCartesian <- function(coord, axes, layout_name) coord
-
-#' @export
-use_cartesian_coord.CoordTrans <- function(coord, axes, layout_name) {
-    # we only allow identity trans in the axis used to align observations
-    identity_trans <- vapply(
-        coord$trans[axes],
-        function(trans) identical(trans$name, "identity"), logical(1L),
-        USE.NAMES = FALSE
-    )
-    if (all(identity_trans)) {
-        coord
-    } else {
-        cli_warn(c(
-            sprintf(
-                "Transformations in {.field {axes}} is not supported in %s",
-                snake_class(coord), layout_name
-            ),
-            i = "Will use {.fn coord_cartesian} instead"
-        ))
-        ggplot2::coord_cartesian()
+remove_scales <- function(plot, scale_aesthetics) {
+    scales <- .subset2(plot, "scales")$clone()
+    if (any(prev_aes <- scales$find(scale_aesthetics))) {
+        scales$scales <- scales$scales[!prev_aes]
     }
+    plot$scales <- scales
+    plot
 }
 
-#' @export
-use_cartesian_coord.default <- function(coord, axes, layout_name) {
-    cli_warn(c(
-        sprintf(
-            "{.fn %s} is not supported in %s",
-            snake_class(coord), layout_name
-        ),
-        i = "Will use {.fn coord_cartesian} instead"
-    ))
-    ggplot2::coord_cartesian()
-}
-
-
-######################################################
-align_melt_facet <- function(default, facet, ...) UseMethod("align_melt_facet")
-
-#' @importFrom ggplot2 ggproto
-#' @export
-align_melt_facet.FacetGrid <- function(default, facet, ..., strict = FALSE) {
-    if (inherits(facet, "FacetGrid")) {
-        # re-dispatch parameters
-        params <- facet$params
-        # we always fix the grid rows and cols
-        if (strict) { # Don't allow user change the rows and cols
-            params$rows <- default$params$rows
-            params$cols <- default$params$cols
-        } else {
-            params$rows <- default$params$rows %||% params$rows
-            params$cols <- default$params$cols %||% params$cols
-        }
-
-        params$drop <- default$params$drop
-        params$as.table <- default$params$as.table
-
-        # if the default is free, it must be free
-        params$free$x <- params$free$x || default$params$free$x
-        params$space_free$x <- params$space_free$x ||
-            default$params$space_free$x
-        params$free$y <- params$free$y || default$params$free$y
-        params$space_free$y <- params$space_free$x ||
-            default$params$space_free$y
-        ggproto(NULL, facet, params = params)
+#' @importFrom rlang is_empty
+extract_scales <- function(plot, axis, n_panel, facet_scales) {
+    # if no facets, or if no facet scales, we replicate the single scale
+    # object to match the panel numbers
+    if (n_panel > 1L &&
+        !is.null(facet_scales) &&
+        !is_empty(ans <- .subset2(facet_scales, axis))) {
     } else {
-        default
+        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
     }
-}
-
-#' @importFrom ggplot2 ggproto
-#' @export
-align_melt_facet.FacetWrap <- function(default, facet, ...) {
-    if (inherits(facet, "FacetWrap")) {
-        # re-dispatch parameters
-        params <- facet$params
-
-        # we always fix the grid rows and cols
-        params$facets <- default$params$facets
-        params$nrow <- default$params$nrow
-        params$ncol <- default$params$ncol
-        params$drop <- default$params$drop
-        params$as.table <- default$params$as.table
-        ggproto(NULL, facet, params = params)
-    } else {
-        default
-    }
-}
-
-#' @export
-align_melt_facet.FacetNull <- function(default, facet, ...) {
-    if (inherits(facet, "FacetNull")) {
-        facet
-    } else {
-        default
-    }
-}
-
-#' @export
-align_melt_facet.FacetStack <- function(default, facet, ...) {
-    if (inherits(facet, "FacetGrid")) {
-        params <- facet$params
-        if (is_horizontal(.subset2(default, "direction"))) {
-            # for horizontal stack, we cannot facet by rows
-            if (!is.null(params$rows)) {
-                cli_warn("Canno facet by rows in {.field {direction}} stack")
-                params$rows <- NULL
-            }
-        } else if (!is.null(params$cols)) {
-            # for vertical stack, we cannot facet by cols
-            cli_warn("Canno facet by cols in {.field {direction}} stack")
-            params$cols <- NULL
-        }
-        ggproto(NULL, facet, params = params)
-    } else if (inherits(facet, "FacetNull")) {
-        facet
-    } else {
-        ggplot2::facet_null()
-    }
-}
-
-facet_stack <- function(direction) {
-    structure(list(direction = direction), class = "FacetStack")
+    ans
 }

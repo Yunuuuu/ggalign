@@ -115,6 +115,9 @@ ggalign_build <- function(x) UseMethod("ggalign_build")
 
 ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 
+#' @export
+ggalign_gtable.gtable <- function(x) x
+
 #' Prepare plots to be aligned with `align_plots`
 #'
 #' @param x A plot object to be prepared for alignment.

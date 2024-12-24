@@ -17,7 +17,12 @@
 \alias{+.StackLayout}
 \alias{&.StackLayout}
 \alias{-.StackLayout}
-\alias{+.CrossLayout}
+\alias{+.StackCross}
+\alias{&.StackCross}
+\alias{-.StackCross}
+\alias{+.CircleLayout}
+\alias{&.CircleLayout}
+\alias{-.CircleLayout}
 \title{Layout operator}
 \arguments{
 \item{e1}{A \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}

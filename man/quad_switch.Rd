@@ -21,13 +21,8 @@ hmanno(
   width = NULL,
   height = NULL,
   free_guides = waiver(),
-  what = waiver(),
-  ...,
-  guides = deprecated(),
-  free_spaces = deprecated(),
-  plot_data = deprecated(),
-  theme = deprecated(),
-  free_labs = deprecated()
+  initialize = NULL,
+  what = waiver()
 )
 }
 \arguments{
@@ -56,24 +51,7 @@ the data in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{gg
 data will be used in the stack.}
 
 \item{what}{What should get activated in the annotation stack?
-A single number or string of the plot elements in the stack layout. If \code{NULL}, will remove any active context.}
-
-\item{...}{These dots are for future extensions and must be empty.}
-
-\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_data]{scheme_data()}} function instead.}
-
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
-
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
+A single number or string of the plot elements in the layout. If \code{NULL}, will remove any active context.}
 }
 \value{
 An object that can be added to \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}}.

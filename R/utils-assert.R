@@ -89,6 +89,34 @@ check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
     sizes
 }
 
+check_direction <- function(direction, arg = caller_arg(direction),
+                            call = caller_call()) {
+    direction <- arg_match0(direction, c("h", "v"), error_call = call)
+    switch(direction,
+        h = "horizontal",
+        v = "vertical"
+    )
+}
+
+assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
+                          call = caller_call()) {
+    if (is.null(limits) && allow_null) {
+        return(invisible(NULL))
+    }
+    if (!inherits(limits, "continuous_limits")) {
+        cli_abort(
+            "{.arg {arg}} must be specified with {.fn continuous_limits}",
+            call = call
+        )
+    }
+    if (rlang::is_named(limits)) {
+        cli_abort(
+            "{.arg {arg}} shouldn't be created with {.arg x}/{.arg y} argument in {.fn continuous_limits}",
+            call = call
+        )
+    }
+}
+
 #' @importFrom grid is.unit
 check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
     vec_check_size(size, size = 1L, arg = arg, call = call)

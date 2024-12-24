@@ -4,14 +4,7 @@
 \alias{align_kmeans}
 \title{Split observations by k-means clustering groups.}
 \usage{
-align_kmeans(
-  centers,
-  ...,
-  data = NULL,
-  active = NULL,
-  set_context = deprecated(),
-  name = deprecated()
-)
+align_kmeans(centers, ..., data = NULL, active = NULL)
 }
 \arguments{
 \item{centers}{either the number of clusters, say \eqn{k}, or a set of
@@ -33,17 +26,18 @@ align_kmeans(
     produced.  Higher values may produce more tracing information.}
   }}
 
-\item{data}{A matrix-like object. By default, it inherits from the layout
-\code{matrix}.}
+\item{data}{The following options can be used:
+\itemize{
+\item \code{NULL}: No data is set.
+\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits the data from the layout matrix.
+\item A \code{function} (including purrr-like lambda syntax): Applied to the layout
+matrix to transform the data before use. To transform the final plot
+data, please use \code{\link[=scheme_data]{scheme_data()}}.
+\item A \code{matrix}, \code{data.frame}, or atomic vector.
+}}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -51,7 +45,7 @@ instead.}
 Aligns and groups observations based on k-means clustering, enabling
 observation splits by cluster groups.
 }
-\section{Axis Alignment for Observations}{
+\section{Discrete Axis Alignment}{
 
 It is important to note that we consider rows as observations, meaning
 \code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the

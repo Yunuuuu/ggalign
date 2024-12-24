@@ -24,15 +24,7 @@ align_dendro(
   size = NULL,
   data = NULL,
   no_axes = NULL,
-  active = NULL,
-  free_guides = deprecated(),
-  free_spaces = deprecated(),
-  plot_data = deprecated(),
-  theme = deprecated(),
-  free_labs = deprecated(),
-  set_context = deprecated(),
-  order = deprecated(),
-  name = deprecated()
+  active = NULL
 )
 }
 \arguments{
@@ -103,7 +95,9 @@ middle of all direct child nodes.}
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
 \item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}.}
+\code{\link[grid:unit]{unit}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values will
+be interpreted as relative sizes, as this layout type adjusts based on the
+available space in the circular arrangement.}
 
 \item{data}{A matrix-like object. By default, it inherits from the layout
 \code{matrix}.}
@@ -115,30 +109,6 @@ default, will use the option-
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{free_guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{free_spaces}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{plot_data}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_data]{scheme_data()}} function instead.}
-
-\item{theme}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_theme]{scheme_theme()}} function instead.}
-
-\item{free_labs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
 }
 \description{
 Plot dendrogram tree
@@ -147,12 +117,13 @@ Plot dendrogram tree
 
 \code{align_dendro} initializes a ggplot \code{data} and \code{mapping}.
 
-The internal will always use a default mapping of \code{aes(x = .data$x, y = .data$y)}.
+The internal \code{ggplot} object will always use a default mapping of
+\code{aes(x = .data$x, y = .data$y)}.
 
 The default ggplot data is the \code{node} coordinates with \code{edge} data attached
 in \code{\link[=ggalign_attr]{ggalign}} attribute, in addition, a
-\code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data of the \code{edge}
-coordinates will be added.
+\code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data frame of the \code{edge}
+coordinates will be added when \code{plot_dendrogram = TRUE}.
 
 dendrogram \code{node} and \code{edge} contains following columns:
 \itemize{
@@ -178,6 +149,14 @@ fall outside panel (between two panel), so there are possible
 functionality as \code{panel}, but they are specifically for the \code{edge} data
 and correspond to both nodes of each edge.
 }
+}
+
+\section{Discrete Axis Alignment}{
+
+It is important to note that we consider rows as observations, meaning
+\code{vec_size(data)}/\code{NROW(data)} must match the number of observations along the
+axis used for alignment (x-axis for a vertical stack layout, y-axis for a
+horizontal stack layout).
 }
 
 \examples{

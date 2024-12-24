@@ -13,17 +13,13 @@ heatmap_layout(
   height = NA,
   filling = waiver(),
   theme = NULL,
-  active = NULL,
-  set_context = deprecated(),
-  order = deprecated(),
-  name = deprecated(),
-  guides = deprecated()
+  active = NULL
 )
 }
 \arguments{
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, it will try to inherit from
-parent layout. If not already a matrix, will be converted to one by
-\code{\link[=fortify_matrix]{fortify_matrix()}}.}
+parent layout. \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to convert data to a
+matrix.}
 
 \item{mapping}{Default list of aesthetic mappings to use for main plot in the
 layout. If not specified, must be supplied in each layer added to the main
@@ -57,25 +53,13 @@ default heatmap body filling color scale. See
 option settings.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
-elements of the plot, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
-\code{margins}, \code{patch.title}, \code{panel.border}, and \code{background}. By default, the
-theme will inherit from the parent \code{layout}. When aligning observations, it
-also controls the panel spacing for all plots in the layout.}
+elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
+\code{margins}, \code{panel.border}, and \code{background}. By default, the theme will
+inherit from the parent \code{layout}. It also controls the panel spacing for all
+plots in the layout.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{set_context}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active}
-argument instead.}
-
-\item{order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
-
-\item{name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{active} argument
-instead.}
-
-\item{guides}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{\link[=scheme_align]{scheme_align()}} function instead.}
 }
 \value{
 A \code{HeatmapLayout} object.
@@ -83,7 +67,7 @@ A \code{HeatmapLayout} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-\code{heatmap_layout} is a specialized version of \code{\link[=quad_alignb]{quad_alignb()}}, which
+\code{heatmap_layout} is a specialized version of \code{\link[=quad_discrete]{quad_discrete()}}, which
 simplifies the creation of heatmap plots by integrating essential elements
 for a standard heatmap layout, ensuring that the appropriate data mapping and
 visualization layers are automatically applied. \code{ggheatmap} is an alias for
@@ -91,14 +75,12 @@ visualization layers are automatically applied. \code{ggheatmap} is an alias for
 }
 \section{ggplot2 specification}{
 
-The default mapping will use \code{aes(.data$.x, .data$.y)}, you can use \code{mapping}
-argument to control it. The data in the underlying \code{ggplot} object contains
-following columns:
+The data in the underlying main plot contains following columns:
 \itemize{
 \item \code{.xpanel} and \code{.ypanel}: the column and row panel
 \item \code{.x} and \code{.y}: an integer index of \code{x} and \code{y} coordinates
 \item \code{.discrete_x} and \code{.discrete_y}: a factor of the data labels (only
-applicable when \verb{.row_names`` and }.column_names` exists).
+applicable when \code{.row_names} and \code{.column_names} exists).
 \item \code{.row_names} and \code{.column_names}: A character of the row and column names
 of the original matrix (only applicable when names exist).
 \item \code{.row_index} and \code{.column_index}: the row and column index of the original
