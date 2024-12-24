@@ -199,7 +199,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 ans
             })
         } else {
-            if (nlevels(panel) > 1L && type == "triangle") {
+            if (nlevels(panel) > 1L && type == "triangle" && self$in_linear) {
                 cli_warn(c(paste(
                     "{.arg type} of {.arg triangle}",
                     "is not well support for facet dendrogram"
