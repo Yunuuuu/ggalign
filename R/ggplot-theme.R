@@ -161,22 +161,6 @@ element_grob.element_polygon <- function(element, x, y,
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
     register_theme_elements(
-        plot.ggalign_ranges = element_polygon(
-            fill = NA,
-            color = "black",
-            linewidth = 0.5,
-            linetype = 1,
-            alpha = NA,
-            lineend = "butt",
-            linejoin = "round",
-            linemitre = 10
-        ),
-        plot.ggalign_lines = element_line(
-            color = "black",
-            linewidth = 0.5,
-            linetype = 1,
-            lineend = "butt"
-        ),
         element_tree = list(
             plot.patch_title = el_def("element_text", "text"),
             plot.patch_title.top = el_def("element_text", "text"),
