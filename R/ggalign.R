@@ -1,13 +1,13 @@
-#' Create ggplot object
+#' Add ggplot by Aligning discrete or continuous variable
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' `ggalign()` is similar to `ggplot` in that it initializes a `ggplot` data
-#' and `mapping`. Same with other `align_*` functions. `ggalign()` allowing you
-#' to provide data in various formats, including matrices, data frames, or
-#' simple vectors. By default, it will inherit from the layout. If a function,
-#' it will apply with the layout matrix.
+#' `ggalign()` is similar to `ggplot` in that it initializes a `ggplot` data and
+#' `mapping`. `ggalign()` allowing you to provide data in various formats,
+#' including matrices, data frames, or simple vectors. By default, it will
+#' inherit from the layout. If a function, it will apply with the layout matrix.
+#' `ggalign()` focuses on integrating plots into a layout by aligning the axes.
 #'
 #' @param data The following options can be used:
 #'   - `NULL`: No data is set.

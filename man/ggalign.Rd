@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggalign.R
 \name{ggalign}
 \alias{ggalign}
-\title{Create ggplot object}
+\title{Add ggplot by Aligning discrete or continuous variable}
 \usage{
 ggalign(
   data = waiver(),
@@ -46,11 +46,11 @@ added to a layout.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-\code{ggalign()} is similar to \code{ggplot} in that it initializes a \code{ggplot} data
-and \code{mapping}. Same with other \verb{align_*} functions. \code{ggalign()} allowing you
-to provide data in various formats, including matrices, data frames, or
-simple vectors. By default, it will inherit from the layout. If a function,
-it will apply with the layout matrix.
+\code{ggalign()} is similar to \code{ggplot} in that it initializes a \code{ggplot} data and
+\code{mapping}. \code{ggalign()} allowing you to provide data in various formats,
+including matrices, data frames, or simple vectors. By default, it will
+inherit from the layout. If a function, it will apply with the layout matrix.
+\code{ggalign()} focuses on integrating plots into a layout by aligning the axes.
 }
 \section{ggplot2 specification}{
 

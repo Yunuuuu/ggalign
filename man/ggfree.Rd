@@ -3,7 +3,7 @@
 \name{ggfree}
 \alias{ggfree}
 \alias{ggfree.default}
-\title{Add ggplot to layout}
+\title{Add ggplot to layout without alignment}
 \usage{
 ggfree(data = waiver(), ..., size = NULL, active = NULL)
 
@@ -37,10 +37,10 @@ If not specified, must be supplied in each layer added to the plot.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-The \code{free_gg()} function allows you to incorporate a ggplot object into your
-layout. Unlike \code{align_gg()}, which aligns every axis value precisely,
-\code{free_gg()} focuses on layout integration without enforcing strict axis
-alignment. \code{ggfree()} is an alias for \code{free_gg}.
+The \code{ggfree()} function allows you to incorporate a ggplot object into your
+layout. Unlike \code{ggalign()}, which aligns every axis value precisely,
+\code{ggfree()} focuses on integrating plots into the layout without enforcing
+strict axis alignment.
 }
 \section{ggplot2 specification}{
 
