@@ -79,7 +79,8 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         class = "HeatmapLayout"
     )
     # add default mapping
-    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y))
+    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y)) +
+        ggplot2::labs(x = NULL, y = NULL)
     ans@filling <- filling
     ans
 }
