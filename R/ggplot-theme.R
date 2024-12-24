@@ -146,7 +146,7 @@ element_grob.element_polygon <- function(element, x, y,
     element_gp <- gpar(
         lwd = ggfun("len0_null")(element$linewidth * .pt),
         col = element$colour,
-        fill = fill_alpha(element$fill, element$alpha),
+        fill = fill_alpha(element$fill, element$alpha %||% NA),
         lty = element$linetype,
         lineend = element$lineend,
         linejoin = element$linejoin,
