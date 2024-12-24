@@ -111,7 +111,12 @@ If not specified, must be supplied in each layer added to the plot.</p></dd>
 
 <p><code>ggalign</code> initializes a ggplot object. The underlying data is created using
 <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>. Please refer to this method for more details.</p>
-    </div>
+<p>If the data inherits from <code><a href="quad_layout.html">quad_layout()</a></code>/<code><a href="heatmap_layout.html">ggheatmap()</a></code>, additional
+columns will be added:</p><ul><li><p><code>.extra_panel</code>: Provides the panel information for the column (left or
+right annotation) or row (top or bottom annotation).</p></li>
+<li><p><code>.extra_index</code>: The index information for the column (left or right
+annotation) or row (top or bottom annotation).</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
