@@ -57,10 +57,10 @@ inherit from the parent \code{layout}. It also controls the panel spacing for al
 plots in the layout.}
 
 \item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. When used for
-the \code{\link[=quad_layout]{quad_layout()}} annotation, it must be of length \code{1}. When used in
-the \code{\link[=stack_layout]{stack_layout()}} with a nested \code{\link[=quad_layout]{quad_layout()}}, it should be of
-length \code{3}, specifying the relative heights (for \code{direction = "horizontal"})
-or widths (for \code{direction = "vertical"}) to be applied to the layout.}
+the \code{\link[=quad_layout]{quad_layout()}} annotation, it must be of length \code{1}. When used in the
+\code{\link[=stack_layout]{stack_layout()}} with a nested \code{\link[=quad_layout]{quad_layout()}}, it should be of length
+\code{3}, specifying the relative heights (for \code{direction = "h"}) or widths (for
+\code{direction = "v"}) to be applied to the layout.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -69,8 +69,8 @@ The \code{stack_continuous} function arranges plots by aligning continuous
 variables. The alias \code{stack_free} is retained for historical reasons.
 \itemize{
 \item \code{stack_continuousv()}/\code{stack_freev}: A special case of \code{stack_free} that
-sets \code{direction = "vertical"}.
+sets \code{direction = "v"}.
 \item \code{stack_continuoush()}/\code{stack_freeh}: A special case of \code{stack_free} that
-sets \code{direction = "horizontal"}.
+sets \code{direction = "h"}.
 }
 }

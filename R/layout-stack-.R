@@ -8,9 +8,9 @@
 #'
 #' Several aliases are provided for convenience:
 #' - `stack_discretev` and `stack_alignv`: A special case of `stack_discrete`
-#'   that sets `direction = "vertical"`.
+#'   that sets `direction = "v"`.
 #' - `stack_discreteh` and `stack_alignh`: A special case of `stack_discrete`
-#'   that sets `direction = "horizontal"`.
+#'   that sets `direction = "h"`.
 #'
 #' @param direction A string indicating the direction of the stack layout,
 #' either `"h"`(`horizontal`) or `"v"`(`vertical`).
@@ -24,10 +24,10 @@
 #' plots in the layout.
 #'
 #' @param sizes A numeric value or a [`unit`][grid::unit] object. When used for
-#' the [`quad_layout()`] annotation, it must be of length `1`. When used in
-#' the [`stack_layout()`] with a nested [`quad_layout()`], it should be of
-#' length `3`, specifying the relative heights (for `direction = "horizontal"`) 
-#' or widths (for `direction = "vertical"`) to be applied to the layout.
+#' the [`quad_layout()`] annotation, it must be of length `1`. When used in the
+#' [`stack_layout()`] with a nested [`quad_layout()`], it should be of length
+#' `3`, specifying the relative heights (for `direction = "h"`) or widths (for
+#' `direction = "v"`) to be applied to the layout.
 #'
 #' @examples
 #' set.seed(123)
@@ -110,9 +110,9 @@ stack_discrete.formula <- stack_discrete.function
 #' variables. The alias `stack_free` is retained for historical reasons.
 #'
 #' - `stack_continuousv()`/`stack_freev`: A special case of `stack_free` that
-#'   sets `direction = "vertical"`.
+#'   sets `direction = "v"`.
 #' - `stack_continuoush()`/`stack_freeh`: A special case of `stack_free` that
-#'   sets `direction = "horizontal"`.
+#'   sets `direction = "h"`.
 #'
 #' @param data `r rd_layout_data()`, [`fortify_data_frame()`] will be used to
 #'    convert data to a data frame. Note that if the data is a `matrix`, it will
