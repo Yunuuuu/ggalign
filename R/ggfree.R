@@ -14,7 +14,8 @@
 #' `ggalign` initializes a ggplot object. The underlying data is created using
 #' [`fortify_data_frame()`]. Please refer to this method for more details.
 #'
-#'  If the data inherits from [`quad_layout()`]/[`ggheatmap()`], additional
+#' When used in `quad_layout()`/`ggheatmap()`, if the data is inherited from the
+#' `quad_layout()` and the other direction aligns discrete variables, following
 #' columns will be added:
 #'
 #'  - `.extra_panel`: Provides the panel information for the column (left or
