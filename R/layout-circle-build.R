@@ -4,7 +4,7 @@ ggalign_build.CircleLayout <- function(x) {
     circle_build(x)
 }
 
-#' @importFrom ggplot2 find_panel calc_element ggproto ggplot_gtable theme
+#' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob theme
 #' @importFrom gtable gtable_add_grob gtable_add_padding
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty
@@ -20,7 +20,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             caption = .subset2(circle@titles, "caption")
         )
     if (is_empty(plot_list <- circle@plot_list)) {
-        return(ggplot_gtable(base))
+        return(ggplotGrob(base))
     }
 
     # we remove the plot without actual plot area
@@ -28,7 +28,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
-    if (is_empty(plot_list)) return(ggplot_gtable(base)) # styler: off
+    if (is_empty(plot_list)) return(ggplotGrob(base)) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plot_list, function(plot) {
