@@ -98,7 +98,8 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     active <- update_active(active, new_active(use = TRUE))
     new_ggalign_plot(
         AlignGg,
-        input_data = data, params = list2(...),
+        input_data = allow_lambda(data), 
+        params = list2(...),
         plot = ggplot(mapping = mapping),
         size = size,
         schemes = default_schemes(data, th = theme_no_panel()),
