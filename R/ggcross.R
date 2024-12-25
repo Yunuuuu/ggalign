@@ -12,23 +12,26 @@
 #' `ggcross()` initializes a ggplot `data` and `mapping`.
 #'
 #' `ggcross()` always applies a default mapping for the axis of the data index
-#' in the layout. This mapping is `aes(y = .data$y)` for horizontal stack layout
-#' (including left and right annotation) and `aes(x = .data$x)` for vertical
-#' stack layout (including top and bottom annotation).
+#' in the layout. This mapping is `aes(y = .data$.y)` for horizontal stack
+#' layout (including left and right annotation) and `aes(x = .data$.x)` for
+#' vertical stack layout (including top and bottom annotation).
 #'
 #' The data in the underlying `ggplot` object will contain following columns:
 #'
-#'  - `.panel`: the panel for the aligned axis. It means `x-axis` for vertical
-#'    stack layout (including top and bottom annotation), `y-axis` for
-#'    horizontal stack layout (including left and right annotation).
+#'  - `.panel`: The panel for the aligned axis. Refers to the `x-axis` for
+#'    vertical `stack_layout()` (including top and bottom annotations), and the
+#'    `y-axis` for horizontal `stack_layout()` (including left and right
+#'    annotations).
 #'
-#'  - `.index`: an integer index of the data.
-#'
-#'  - `.names`: a character of data labels (only applicable when names exists).
+#'  - `.names` ([`vec_names()`][vctrs::vec_names]) and `.index`
+#'    ([`vec_size()`][vctrs::vec_size()]/[`NROW()`]): Character names (if
+#'    available) and the integer index of the original data.
 #'
 #'  - `.hand`: a factor indicates the index groups.
 #'
-#'  - `.x` or `.y`: the `x` or `y` coordinates.
+#'  - `.x`/`.y` and `.discrete_x`/`.discrete_y`: Integer indices for `x`/`y`
+#'    coordinates, and a factor of the data labels (only applicable when names
+#'    exist).
 #'
 #' It is recommended to use `.x`/`.y` as the `x`/`y` mapping.
 #'
@@ -65,6 +68,7 @@ CrossGg <- ggproto("CrossGg", Cross,
                 .subset2(design, "panel")
             ),
             .index = index,
+            # ggcross() only reset ordering index, labels should be the same
             .names = .subset(.subset2(self, "labels"), index),
             .hand = if (is_horizontal(direction)) {
                 factor(
@@ -90,10 +94,19 @@ CrossGg <- ggproto("CrossGg", Cross,
                 )
             }
         )
-        data[[switch_direction(direction, ".y", ".x")]] <- vec_c(
+        axis <- to_coord_axis(direction)
+        coord_name <- paste0(".", axis)
+        data[[coord_name]] <- vec_c(
             seq_len(.subset2(previous_design, "nobs")),
             seq_len(.subset2(design, "nobs"))
         )
+        if (!is.null(.subset2(data, ".names"))) {
+            data[[paste0(".discrete_", axis)]] <- reorder(
+                .subset2(data, ".names"),
+                .subset2(data, coord_name),
+                order = FALSE
+            )
+        }
         plot <- gguse_data(plot, data)
         plot + switch_direction(
             direction,

@@ -35,19 +35,23 @@ visualizations. \code{ggcross()} is an alias of \code{ggcross()}.
 \code{ggcross()} initializes a ggplot \code{data} and \code{mapping}.
 
 \code{ggcross()} always applies a default mapping for the axis of the data index
-in the layout. This mapping is \code{aes(y = .data$y)} for horizontal stack layout
-(including left and right annotation) and \code{aes(x = .data$x)} for vertical
-stack layout (including top and bottom annotation).
+in the layout. This mapping is \code{aes(y = .data$.y)} for horizontal stack
+layout (including left and right annotation) and \code{aes(x = .data$.x)} for
+vertical stack layout (including top and bottom annotation).
 
 The data in the underlying \code{ggplot} object will contain following columns:
 \itemize{
-\item \code{.panel}: the panel for the aligned axis. It means \code{x-axis} for vertical
-stack layout (including top and bottom annotation), \code{y-axis} for
-horizontal stack layout (including left and right annotation).
-\item \code{.index}: an integer index of the data.
-\item \code{.names}: a character of data labels (only applicable when names exists).
+\item \code{.panel}: The panel for the aligned axis. Refers to the \code{x-axis} for
+vertical \code{stack_layout()} (including top and bottom annotations), and the
+\code{y-axis} for horizontal \code{stack_layout()} (including left and right
+annotations).
+\item \code{.names} (\code{\link[vctrs:vec_names]{vec_names()}}) and \code{.index}
+(\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): Character names (if
+available) and the integer index of the original data.
 \item \code{.hand}: a factor indicates the index groups.
-\item \code{.x} or \code{.y}: the \code{x} or \code{y} coordinates.
+\item \code{.x}/\code{.y} and \code{.discrete_x}/\code{.discrete_y}: Integer indices for \code{x}/\code{y}
+coordinates, and a factor of the data labels (only applicable when names
+exist).
 }
 
 It is recommended to use \code{.x}/\code{.y} as the \code{x}/\code{y} mapping.
