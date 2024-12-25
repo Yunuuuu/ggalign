@@ -54,6 +54,7 @@ coordinates, and a factor of the data labels (only applicable when names
 exist).
 }
 
-It is recommended to use \code{.x}/\code{.y} as the \code{x}/\code{y} mapping.
+It is recommended to use \code{.x}/\code{.y}, or \code{.discrete_x}/\code{.discrete_y} as the
+\code{x}/\code{y} mapping.
 }
 

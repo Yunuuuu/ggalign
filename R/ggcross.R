@@ -33,7 +33,8 @@
 #'    coordinates, and a factor of the data labels (only applicable when names
 #'    exist).
 #'
-#' It is recommended to use `.x`/`.y` as the `x`/`y` mapping.
+#' It is recommended to use `.x`/`.y`, or `.discrete_x`/`.discrete_y` as the
+#' `x`/`y` mapping.
 #'
 #' @importFrom ggplot2 ggproto aes
 #' @export
