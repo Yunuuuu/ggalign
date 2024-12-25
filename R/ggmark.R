@@ -63,7 +63,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
     new_ggalign_plot(
         MarkGg,
         # fields added to `MarkGg`
-        input_data = data, # used by AlignGg
+        input_data = allow_lambda(data), # used by AlignGg
         params = list2(...), # used by AlignGg
         mark = mark, # used by MarkGg
 
