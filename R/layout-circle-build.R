@@ -7,7 +7,7 @@ ggalign_build.CircleLayout <- function(x) {
 #' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob theme
 #' @importFrom gtable gtable_add_grob gtable_add_padding
 #' @importFrom grid unit viewport editGrob
-#' @importFrom rlang is_empty
+#' @importFrom rlang is_empty arg_match0
 circle_build <- function(circle, schemes = NULL, theme = NULL) {
     schemes <- inherit_parent_layout_schemes(circle, schemes)
     theme <- inherit_parent_layout_theme(circle, theme)

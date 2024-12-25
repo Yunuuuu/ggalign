@@ -68,11 +68,12 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
     ans
 }
 
+#' @importFrom rlang arg_match0
 make_dist <- function(matrix, distance, use_missing,
                       arg = caller_arg(distance), call = caller_call()) {
     distance <- allow_lambda(distance)
     if (is_string(distance)) {
-        distance <- rlang::arg_match0(distance, c(
+        distance <- arg_match0(distance, c(
             "euclidean", "maximum", "manhattan", "canberra",
             "binary", "minkowski", "pearson", "spearman", "kendall"
         ), arg_nm = arg, error_call = call)

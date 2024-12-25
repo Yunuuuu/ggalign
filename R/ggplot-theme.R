@@ -54,7 +54,7 @@ theme_no_panel <- function(...) {
 #' p + theme_no_axes()
 #' p + theme_no_axes("b")
 #' p + theme_no_axes("l")
-#' @importFrom rlang arg_match0 inject
+#' @importFrom rlang inject
 #' @importFrom ggplot2 theme element_blank
 #' @export
 theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,

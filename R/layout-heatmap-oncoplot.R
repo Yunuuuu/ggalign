@@ -78,6 +78,7 @@ ggoncoplot.functon <- ggoncoplot.NULL
 ggoncoplot.formula <- ggoncoplot.functon
 
 #' @importFrom ggplot2 aes
+#' @importFrom rlang arg_match0
 #' @export
 #' @rdname ggoncoplot
 ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,

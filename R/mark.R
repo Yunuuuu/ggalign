@@ -330,6 +330,7 @@ mark_tetragon <- function(..., element = NULL) {
     }, ...)
 }
 
+#' @importFrom rlang arg_match0
 mark_triangle <- function(..., orientation = "plot", element = NULL) {
     assert_s3_class(element, "element_polygon", allow_null = TRUE)
     element <- element %||% element_polygon(
@@ -342,7 +343,7 @@ mark_triangle <- function(..., orientation = "plot", element = NULL) {
         linejoin = "round",
         linemitre = 10
     )
-    orientation <- rlang::arg_match0(orientation, c("plot", "mark"))
+    orientation <- arg_match0(orientation, c("plot", "mark"))
     mark_pdraw(.draw = function(data) {
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
