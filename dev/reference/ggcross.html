@@ -100,16 +100,20 @@ added to a layout.</p></dd>
 
 <p><code>ggcross()</code> initializes a ggplot <code>data</code> and <code>mapping</code>.</p>
 <p><code>ggcross()</code> always applies a default mapping for the axis of the data index
-in the layout. This mapping is <code>aes(y = .data$y)</code> for horizontal stack layout
-(including left and right annotation) and <code>aes(x = .data$x)</code> for vertical
-stack layout (including top and bottom annotation).</p>
-<p>The data in the underlying <code>ggplot</code> object will contain following columns:</p><ul><li><p><code>.panel</code>: the panel for the aligned axis. It means <code>x-axis</code> for vertical
-stack layout (including top and bottom annotation), <code>y-axis</code> for
-horizontal stack layout (including left and right annotation).</p></li>
-<li><p><code>.index</code>: an integer index of the data.</p></li>
-<li><p><code>.names</code>: a character of data labels (only applicable when names exists).</p></li>
+in the layout. This mapping is <code>aes(y = .data$.y)</code> for horizontal stack
+layout (including left and right annotation) and <code>aes(x = .data$.x)</code> for
+vertical stack layout (including top and bottom annotation).</p>
+<p>The data in the underlying <code>ggplot</code> object will contain following columns:</p><ul><li><p><code>.panel</code>: The panel for the aligned axis. Refers to the <code>x-axis</code> for
+vertical <code><a href="stack_layout.html">stack_layout()</a></code> (including top and bottom annotations), and the
+<code>y-axis</code> for horizontal <code><a href="stack_layout.html">stack_layout()</a></code> (including left and right
+annotations).</p></li>
+<li><p><code>.names</code> (<code><a href="https://vctrs.r-lib.org/reference/vec_names.html" class="external-link">vec_names()</a></code>) and <code>.index</code>
+(<code><a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vec_size()</a></code>/<code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code>): Character names (if
+available) and the integer index of the original data.</p></li>
 <li><p><code>.hand</code>: a factor indicates the index groups.</p></li>
-<li><p><code>.x</code> or <code>.y</code>: the <code>x</code> or <code>y</code> coordinates.</p></li>
+<li><p><code>.x</code>/<code>.y</code> and <code>.discrete_x</code>/<code>.discrete_y</code>: Integer indices for <code>x</code>/<code>y</code>
+coordinates, and a factor of the data labels (only applicable when names
+exist).</p></li>
 </ul><p>It is recommended to use <code>.x</code>/<code>.y</code> as the <code>x</code>/<code>y</code> mapping.</p>
     </div>
 
