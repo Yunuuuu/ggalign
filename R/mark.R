@@ -29,6 +29,7 @@
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]
 #'  - [`mark_pdraw()`]
+#' @importFrom rlang is_empty
 #' @export
 mark_draw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
     if (!is.function(draw <- allow_lambda(.draw))) {
@@ -39,7 +40,7 @@ mark_draw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
             draw(.subset2(dd, "panel"), .subset2(dd, "link"))
         })
         ans <- ans[!vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
-        if (length(ans) == 0L) return(NULL) # styler: off
+        if (is_empty(ans)) return(NULL) # styler: off
         grid::gTree(children = inject(grid::gList(!!!ans)))
     }
     mark_pdraw(new_draw, ..., .link1 = .link1, .link2 = .link2)
