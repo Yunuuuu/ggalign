@@ -143,24 +143,24 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
         NULL, ParentFacet,
         init_scales = function(self, layout, x_scale = NULL,
                                y_scale = NULL, params) {
-            if (!is.null(x_scale) && any(borders == c("top", "bottom"))) {
+            if (!is.null(x_scale) && any(borders == c("left", "right"))) {
                 expansion <- x_scale$expand %|w|%
                     ggfun("default_expansion")(x_scale, expand = TRUE)
-                if (any(borders == "bottom")) {
-                    expansion[1:2] <- 0
-                }
-                if (any(borders == "top")) {
-                    expansion[3:4] <- 0
-                }
-                x_scale$expand <- expansion
-            }
-            if (!is.null(y_scale) && any(borders == c("left", "right"))) {
-                expansion <- y_scale$expand %|w|%
-                    ggfun("default_expansion")(y_scale, expand = TRUE)
                 if (any(borders == "left")) {
                     expansion[1:2] <- 0
                 }
                 if (any(borders == "right")) {
+                    expansion[3:4] <- 0
+                }
+                x_scale$expand <- expansion
+            }
+            if (!is.null(y_scale) && any(borders == c("bottom", "top"))) {
+                expansion <- y_scale$expand %|w|%
+                    ggfun("default_expansion")(y_scale, expand = TRUE)
+                if (any(borders == "bottom")) {
+                    expansion[1:2] <- 0
+                }
+                if (any(borders == "top")) {
                     expansion[3:4] <- 0
                 }
                 y_scale$expand <- expansion
