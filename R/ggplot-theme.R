@@ -39,62 +39,6 @@ theme_no_panel <- function(...) {
     )
 }
 
-#' Remove axis elements
-#'
-#' @param axes Which axes elements should be removed? A string containing
-#' one or more of `r oxford_and(c(.tlbr, "x", "y"))`.
-#' @param text If `TRUE`, will remove the axis labels.
-#' @param ticks If `TRUE`, will remove the axis ticks.
-#' @param title If `TRUE`, will remove the axis title.
-#' @param line If `TRUE`, will remove the axis line.
-#' @return A [`theme()`][ggplot2::theme] object.
-#' @examples
-#' p <- ggplot() +
-#'     geom_point(aes(x = wt, y = qsec), data = mtcars)
-#' p + theme_no_axes()
-#' p + theme_no_axes("b")
-#' p + theme_no_axes("l")
-#' @importFrom rlang inject
-#' @importFrom ggplot2 theme element_blank
-#' @export
-theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
-                          title = TRUE, line = FALSE) {
-    assert_string(axes, empty_ok = FALSE)
-    if (grepl("[^tlbrxy]", axes)) {
-        cli_abort(sprintf(
-            "{.arg axes} can only contain the %s characters",
-            oxford_and(c(.tlbr, "x", "y"))
-        ))
-    }
-    axes <- split_position(axes)
-    el <- list(text = text, ticks = ticks, title = title, line = line)
-    el <- names(el)[vapply(el, isTRUE, logical(1L), USE.NAMES = FALSE)]
-    el_axis <- el_pos <- NULL
-    if (length(positions <- vec_set_intersect(axes, .tlbr))) {
-        positions <- .subset(
-            c(t = "top", l = "left", b = "bottom", r = "right"),
-            positions
-        )
-        el_pos <- vec_expand_grid(pos = positions, el = el)
-        el_pos <- paste("axis",
-            .subset2(el_pos, "el"),
-            if_else(.subset2(el_pos, "pos") %in% c("top", "bottom"), "x", "y"),
-            .subset2(el_pos, "pos"),
-            sep = "."
-        )
-    }
-    if (length(axes <- vec_set_intersect(axes, c("x", "y")))) {
-        el_axis <- vec_expand_grid(axes = axes, el = el)
-        el_axis <- paste("axis",
-            .subset2(el_axis, "el"), .subset2(el_axis, "axes"),
-            sep = "."
-        )
-    }
-    el <- c(el_axis, el_pos)
-    el <- vec_set_names(vec_rep(list(element_blank()), length(el)), el)
-    inject(theme(!!!el, validate = FALSE))
-}
-
 #' @importFrom rlang try_fetch
 complete_theme <- function(theme) {
     try_fetch(
@@ -104,59 +48,6 @@ complete_theme <- function(theme) {
 }
 
 is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
-
-#' Theme Polygon elements
-#'
-#' Draw polygon.
-#'
-#' @inheritParams ggplot2::element_rect
-#' @inheritParams geom_rect3d
-#' @inheritParams ggplot2::fill_alpha
-#' @seealso [`element_rect`][ggplot2::element_rect]
-#' @return A `element_polygon` object
-#' @export
-element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
-                            linetype = NULL, alpha = NULL, lineend = NULL,
-                            linejoin = NULL, linemitre = NULL, color = NULL,
-                            inherit.blank = FALSE) {
-    if (!is.null(color)) colour <- color
-    structure(
-        list(
-            fill = fill, colour = colour, alpha = alpha,
-            linewidth = linewidth, linetype = linetype,
-            lineend = lineend, linejoin = linejoin, linemitre = linemitre,
-            inherit.blank = inherit.blank
-        ),
-        class = c("element_polygon", "element")
-    )
-}
-
-#' @importFrom grid gpar
-#' @importFrom ggplot2 element_grob
-#' @export
-element_grob.element_polygon <- function(element, x, y,
-                                         width = 1, height = 1, fill = NULL,
-                                         colour = NULL, linewidth = NULL, linetype = NULL, ...) {
-    gp <- gpar(
-        lwd = ggfun("len0_null")(linewidth * .pt),
-        col = colour,
-        fill = fill,
-        lty = linetype
-    )
-    element_gp <- gpar(
-        lwd = ggfun("len0_null")(element$linewidth * .pt),
-        col = element$colour,
-        fill = fill_alpha(element$fill, element$alpha %||% NA),
-        lty = element$linetype,
-        lineend = element$lineend,
-        linejoin = element$linejoin,
-        linemitre = element$linemitre
-    )
-    grid::polygonGrob(
-        x = x, y = y,
-        gp = ggfun("modify_list")(element_gp, gp), ...
-    )
-}
 
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {

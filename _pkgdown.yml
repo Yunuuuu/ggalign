@@ -134,6 +134,7 @@ reference:
   - geom_subrect
   - geom_tile3d
   - theme_no_axes
+  - no_expansion
   - layer_order
   - raster_magick
   - geom_draw

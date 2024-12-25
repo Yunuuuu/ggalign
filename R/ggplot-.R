@@ -1,3 +1,4 @@
+#' @importFrom ggplot2 .pt
 ggfun <- local({
     ggplot2_namespace <- NULL
     function(x, mode = "any") {
@@ -7,9 +8,6 @@ ggfun <- local({
         get(x, envir = ggplot2_namespace, inherits = FALSE, mode = mode)
     }
 })
-
-#' @importFrom ggplot2 .pt
-NULL
 
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x

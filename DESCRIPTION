@@ -83,6 +83,7 @@ Collate:
     'ggfree.R'
     'ggmark.R'
     'ggplot-.R'
+    'ggplot-helper.R'
     'ggplot-theme.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'
