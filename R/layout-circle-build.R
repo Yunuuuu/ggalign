@@ -124,16 +124,17 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             # define the panel size of the inner track
             rescale_factor <- last_plot_size / plot_size
 
-            # just using panel spacing as the spacer between two plots
+            # the spacer between two plots
             spacing <- calc_element("panel.spacing.r", plot_theme)
+            if (inherits(spacing, "element_blank") || is.null(spacing)) {
+                spacing <- unit(0, "mm")
+            }
 
             plot_table <- editGrob(plot_table, vp = viewport(
                 width = unit(rescale_factor, "npc") - spacing,
                 height = unit(rescale_factor, "npc") - spacing,
-                x = origin[1L], y = origin[2L],
-                just = just,
-                default.units = "native",
-                clip = "off"
+                x = origin[1L], y = origin[2L], just = just,
+                default.units = "native", clip = "off"
             ))
 
             # add the inner track to the panel area of the outter track
