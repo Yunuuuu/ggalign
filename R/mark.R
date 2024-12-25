@@ -16,8 +16,9 @@
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of `link()` objects used to
 #'   define the linked observations for a panel. Each element of the list will
 #'   define a plot panel.
-#' @param .link1,.link2 Same as `link1` and `link2`. But you can provide a
-#'   list of them directly.
+#' @param .link1,.link2 A single boolean value indicating whether to use the
+#'   panel group information from the layout as the links. By default, will
+#'   guess from the layout.
 #' @param link1,link2 An integer or character index, or a `link_range()` object
 #'   to define the linked observations. For integer indices, you can wrap them
 #'   with [`I()`] to indicate the order based on the layout. You can also use
@@ -69,6 +70,8 @@ mark_pdraw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function", call = call)
     }
+    assert_bool(.link1, allow_null = TRUE, call = call)
+    assert_bool(.link2, allow_null = TRUE, call = call)
     links <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     valid <- vapply(
         links, inherits, logical(1L), "ggalign_link",
@@ -77,25 +80,15 @@ mark_pdraw <- function(.draw, ..., .link1 = NULL, .link2 = NULL) {
     if (!all(valid)) {
         cli_abort("{.arg ...} must be created with {.fn link}", call = call)
     }
-    link1 <- check_link_list(.link1, call = call)
-    link2 <- check_link_list(.link2, call = call)
-
-    # Ensure that if both links have the same length
-    if (length(link1) != length(link2)) {
-        cli_abort(
-            "{.arg .link1} and {.arg .link2} must have the same length.",
-            call = call
-        )
-    }
-    links <- c(links, mapply(function(l1, l2) {
-        new_link(l1, l2)
-    }, l1 = link1, l2 = link2, SIMPLIFY = FALSE))
 
     # remove links with both are `NULL`
     links <- links[!vapply(links, function(link) {
         all(vapply(link, is.null, logical(1L), USE.NAMES = FALSE))
     }, logical(1L), USE.NAMES = FALSE)]
-    structure(list(draw = draw, links = links), class = "ggalign_mark_draw")
+    structure(
+        list(draw = draw, links = links, link1 = .link1, link2 = .link2),
+        class = "ggalign_mark_draw"
+    )
 }
 
 #' @export
@@ -460,10 +453,6 @@ makeContent.ggalignMarkGtable <- function(x) {
     )
     plot_heights <- scales::rescale(plot_heights, c(0, 1), from = c(0, height))
 
-    # for a gtable, heights are from top to the bottom,
-    # we reverse the heights
-    plot_heights <- rev(plot_heights)
-
     panel_loc <- find_panel(x)
     data <- .subset2(x, "ggalign_link_data")
     full_data1 <- .subset2(data, "full_data1")
@@ -537,10 +526,12 @@ makeContent.ggalignMarkGtable <- function(x) {
             l_border <- plot_widths[seq_len(.subset2(panel_loc, "l") - 1L)]
             r_border <- plot_widths[-seq_len(.subset2(panel_loc, "r"))]
 
+            # for a gtable, heights are from top to the bottom,
+            # we reverse the heights
             # we have reversed the `plot_cum_heights`, so the ordering index
             # should also be reversed
             panel_index <- nrow(x) - panel_index + 1L
-            panel_yend <- cumsum(plot_heights)
+            panel_yend <- cumsum(rev(plot_heights))
             panel_x <- switch(link,
                 link1 = sum(l_border),
                 link2 = 1 - sum(r_border)
@@ -548,10 +539,10 @@ makeContent.ggalignMarkGtable <- function(x) {
             panel_coord <- data_frame0(
                 x = panel_x,
                 xend = panel_x,
-                y = (panel_yend - plot_heights)[panel_index],
+                y = (panel_yend - rev(plot_heights))[panel_index],
                 yend = panel_yend[panel_index]
             )
-        } else {
+        } else { # the link should be in top or bottom
             cell_width <- (1 - spacing * n_spacing) / sum(!is.na(points))
             sizes[!is.na(points)] <- cell_width
             xend <- cumsum(sizes)

@@ -18,8 +18,9 @@ coordinates (\code{"panel"}) and one for the marked observations coordinates
 define the linked observations for a panel. Each element of the list will
 define a plot panel.}
 
-\item{.link1, .link2}{Same as \code{link1} and \code{link2}. But you can provide a
-list of them directly.}
+\item{.link1, .link2}{A single boolean value indicating whether to use the
+panel group information from the layout as the links. By default, will
+guess from the layout.}
 }
 \description{
 A base version of \code{\link{mark_draw}}, designed for performance optimization.  This

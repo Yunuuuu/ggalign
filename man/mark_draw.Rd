@@ -23,8 +23,9 @@ for the marked observation coordinates.}
 define the linked observations for a panel. Each element of the list will
 define a plot panel.}
 
-\item{.link1, .link2}{Same as \code{link1} and \code{link2}. But you can provide a
-list of them directly.}
+\item{.link1, .link2}{A single boolean value indicating whether to use the
+panel group information from the layout as the links. By default, will
+guess from the layout.}
 
 \item{link1, link2}{An integer or character index, or a \code{link_range()} object
 to define the linked observations. For integer indices, you can wrap them

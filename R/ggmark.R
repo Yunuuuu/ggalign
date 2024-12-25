@@ -135,9 +135,30 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             .subset2(design2, "panel")
         )
         links <- .subset2(mark, "links")
-        if (is_empty(links)) {
-            links <- lapply(full_data1, function(l) new_link(I(l)))
+        link1 <- .subset2(mark, "link1")
+        link2 <- .subset2(mark, "link2")
+        if (is_empty(links) && is.null(link1) && is.null(link2)) {
+            # guess link1 and link2 from position
+            if (is.null(position)) { # a normal stack layout
+                link1 <- TRUE
+            } else if (any(position == c("top", "left"))) {
+                link2 <- TRUE
+            } else {
+                link1 <- TRUE
+            }
         }
+        if (isTRUE(link1) && isTRUE(link2)) {
+            extra_links <- mapply(function(l1, l2) {
+                new_link(I(l1), I(l2))
+            }, full_data1, full_data2, SIMPLIFY = FALSE)
+        } else if (isTRUE(link1)) {
+            extra_links <- lapply(full_data1, function(l) new_link(I(l)))
+        } else if (isTRUE(link2)) {
+            extra_links <- lapply(full_data2, function(l) new_link(NULL, I(l)))
+        } else {
+            extra_links <- NULL
+        }
+        links <- c(links, extra_links)
         link_index <- lapply(links, function(l) {
             l1 <- .subset2(l, "link1")
             l2 <- .subset2(l, "link2")
