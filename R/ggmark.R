@@ -24,8 +24,8 @@
 #'    applicable when names exists) and an integer of index of the original
 #'    data.
 #'
-#'  - `.hand`: A factor with levels `c("left", "right")` for vertical stack
-#'    layouts, or `c("top", "bottom")` for horizontal stack layouts, indicating
+#'  - `.hand`: A factor with levels `c("left", "right")` for horizontal stack
+#'    layouts, or `c("top", "bottom")` for vertical stack layouts, indicating
 #'    the position of the linked observations.
 #'
 #' @examples

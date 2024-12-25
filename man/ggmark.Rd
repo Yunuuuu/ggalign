@@ -56,8 +56,8 @@ horizontal stack layout (including left and right annotation).
 (\code{\link[vctrs:vec_size]{vec_size()}}/\code{\link[=NROW]{NROW()}}): a character names (only
 applicable when names exists) and an integer of index of the original
 data.
-\item \code{.hand}: A factor with levels \code{c("left", "right")} for vertical stack
-layouts, or \code{c("top", "bottom")} for horizontal stack layouts, indicating
+\item \code{.hand}: A factor with levels \code{c("left", "right")} for horizontal stack
+layouts, or \code{c("top", "bottom")} for vertical stack layouts, indicating
 the position of the linked observations.
 }
 }
