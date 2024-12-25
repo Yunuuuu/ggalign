@@ -172,17 +172,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             },
             theme = if (is.null(self$data)) {
                 # remove the title and text of axis vertically with the layout
-                switch_direction(
-                    direction,
-                    theme(
-                        axis.text.x = element_blank(),
-                        axis.ticks.x = element_blank()
-                    ),
-                    theme(
-                        axis.text.y = element_blank(),
-                        axis.ticks.y = element_blank()
-                    )
-                )
+                theme_no_axes(switch_direction(direction, "x", "y"))
             }
         ) + switch_direction(
             direction,
