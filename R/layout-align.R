@@ -684,9 +684,9 @@ view_scales_polar <- function(scale, theta, coord_limits, expand = TRUE) {
     aesthetic <- scale$aesthetics[1]
     is_theta <- theta == aesthetic
     name <- if (is_theta) "theta" else "r"
-    default_expansion <- function(scale, discrete = expansion(add = 0.6),
-                                  continuous = expansion(mult = 0.05),
-                                  expand = TRUE) {
+    ggdefault_expansion <- function(scale, discrete = expansion(add = 0.6),
+                                    continuous = expansion(mult = 0.05),
+                                    expand = TRUE) {
         out <- expansion()
         if (!any(expand)) {
             return(out)
@@ -706,7 +706,7 @@ view_scales_polar <- function(scale, theta, coord_limits, expand = TRUE) {
         }
         out
     }
-    expansion <- default_expansion(scale, expand = expand)
+    expansion <- ggdefault_expansion(scale, expand = expand)
     limits <- scale$get_limits()
     continuous_range <- ggfun("expand_limits_scale")(
         scale, expansion, limits, coord_limits = coord_limits
@@ -738,7 +738,8 @@ gguse_radial_coord <- function(plot, coord, ..., layout_name) {
             ),
             list(
                 bbox = ggfun("polar_bbox")(
-                    self$arc, inner_radius = self$inner_radius),
+                    self$arc, inner_radius = self$inner_radius
+                ),
                 arc = self$arc, inner_radius = self$inner_radius
             )
         )
@@ -749,7 +750,7 @@ gguse_radial_coord <- function(plot, coord, ..., layout_name) {
                 y = scale_y
             )
             axis_rotation <- theta_scale$transform(axis_rotation)
-            axis_rotation <- ggfun("oob_squish")(
+            axis_rotation <- scales::oob_squish(
                 axis_rotation, params$theta.range
             )
             axis_rotation <- ggfun("theta_rescale")(
