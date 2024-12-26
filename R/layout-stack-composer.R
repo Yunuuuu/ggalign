@@ -76,7 +76,7 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
     # let `Align` to determine how to build the plot
     align <- plot@align # `AlignProto` object
     plot <- plot@plot
-    if (!align$free_facet) {
+    if (!align$free_facet && is_discrete_design(design)) {
         if (nlevels(.subset2(design, "panel")) > 1L) {
             facet <- switch_direction(
                 direction,
