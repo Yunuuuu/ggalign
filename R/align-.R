@@ -128,12 +128,12 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
     },
     setup_design = function(self, layout_data, design) {
         layout_name <- self$layout_name
-        object_name <- self$object_name
+        object_name <- object_name(self)
         # check plot is compatible with the layout
         if (is_continuous_design(design)) {
             # `AlignDiscrete` object is special for discrete variables
             cli_abort(c(
-                sprintf("Cannot add {.var {object_name}} to %s", layout_name),
+                sprintf("Cannot add %s to %s", object_name, layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)
             ))
         }
@@ -152,7 +152,10 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
             if (is.waive(input_data)) { # inherit from the layout
                 if (is.null(data <- layout_data)) {
                     cli_abort(c(
-                        "you must provide {.arg data} in {.var {object_name}}",
+                        sprintf(
+                            "you must provide {.arg data} in %s",
+                            object_name
+                        ),
                         i = sprintf("no data was found in %s", layout_name)
                     ))
                 }
@@ -160,7 +163,10 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
                 if (is.function(input_data)) {
                     if (is.null(layout_data)) {
                         cli_abort(c(
-                            "{.arg data} in {.var {object_name}} cannot be a function",
+                            sprintf(
+                                "{.arg data} in %s cannot be a function",
+                                object_name
+                            ),
                             i = sprintf("no data was found in %s", layout_name)
                         ))
                     }
@@ -174,7 +180,7 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
                 layout_nobs <- NROW(data)
             } else if (NROW(data) != layout_nobs) {
                 cli_abort(sprintf(
-                    "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
+                    "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
                     object_name, NROW(data), layout_name, layout_nobs
                 ))
             }
@@ -206,21 +212,21 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
         )
 
         # make the new layout -------------------------------
-        new_design <- align_inject(
+        panel_and_index <- align_inject(
             self$align,
             c(list(panel = layout_panel, index = layout_index), params)
         )
+        new_design <- discrete_design(
+            .subset2(panel_and_index, 1L),
+            .subset2(panel_and_index, 2L),
+            layout_nobs
+        )
 
-        # we check the the design
         check_discrete_design(
             design,
-            discrete_design(
-                .subset2(new_design, 1L),
-                .subset2(new_design, 2L),
-                layout_nobs
-            ),
-            layout_name,
-            object_name
+            new_design,
+            old_name = layout_name,
+            new_name = object_name
         )
     },
 

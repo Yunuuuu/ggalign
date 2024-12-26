@@ -225,7 +225,7 @@ patch.trellis <- function(x, ..., device = NULL) {
 patch.Heatmap <- function(x, ..., device = NULL) {
     rlang::check_installed(
         "ComplexHeatmap",
-        sprintf("to make grob from {%s} plot", obj_type_friendly(x))
+        sprintf("to make grob from %s plot", obj_type_friendly(x))
     )
     draw <- getFromNamespace("draw", "ComplexHeatmap")
     grid::grid.grabExpr(

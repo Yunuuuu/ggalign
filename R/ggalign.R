@@ -98,7 +98,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     active <- update_active(active, new_active(use = TRUE))
     new_ggalign_plot(
         AlignGg,
-        input_data = allow_lambda(data), 
+        input_data = allow_lambda(data),
         params = list2(...),
         plot = ggplot(mapping = mapping),
         size = size,
@@ -111,14 +111,17 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", AlignProto,
     setup_design = function(self, layout_data, design) {
-        object_name <- self$object_name
         layout_name <- self$layout_name
         input_data <- self$input_data
+        object_name <- object_name(self)
         # inherit data from the layout
         if (is.function(input_data)) {
             if (is.null(layout_data)) {
                 cli_abort(c(
-                    "{.arg data} in {.var {object_name}} cannot be a function",
+                    sprintf(
+                        "{.arg data} in %s cannot be a function",
+                        object_name
+                    ),
                     i = sprintf("no data was found in %s", layout_name)
                 ))
             }
@@ -137,7 +140,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                     layout_nobs <- NROW(data)
                 } else if (NROW(data) != layout_nobs) {
                     cli_abort(sprintf(
-                        "{.var %s} (nobs: %d) is not compatible with the %s (nobs: %d)",
+                        "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
                         object_name, NROW(data), layout_name, layout_nobs
                     ))
                 }

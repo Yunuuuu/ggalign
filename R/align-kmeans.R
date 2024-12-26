@@ -34,16 +34,15 @@ AlignKmeans <- ggproto("AlignKmeans", AlignDiscrete,
         ans <- fortify_matrix(data)
         assert_(
             ans, is.numeric, "a numeric matrix",
-            arg = "data", call = .subset2(self, "call")
+            arg = "data", call = self$call
         )
         ans
     },
     compute = function(self, panel, index, centers, params) {
-        data <- .subset2(self, "data")
-        inject(stats::kmeans(x = data, centers = centers, !!!params))
+        inject(stats::kmeans(x = self$data, centers = centers, !!!params))
     },
     align = function(self, panel, index) {
-        list(.subset2(.subset2(self, "statistics"), "cluster"), index)
+        list(.subset2(self$statistics, "cluster"), index)
     },
     summary_align = function(self) c(FALSE, TRUE)
 )

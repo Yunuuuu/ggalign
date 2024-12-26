@@ -15,8 +15,8 @@ testthat::test_that("`cross_align` add `align-` object works well", {
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(
-        stack@index_list,
-        list(order2(ggalign_stat(stack, 1L)))
+        .subset2(.subset2(stack@odesign, 1L), "index"),
+        order2(ggalign_stat(stack, 1L))
     )
 
     # cross_alignv() ----------------------------------------
@@ -30,7 +30,7 @@ testthat::test_that("`cross_align` add `align-` object works well", {
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(
-        stack@index_list,
-        list(order2(ggalign_stat(stack, 1L)))
+        .subset2(.subset2(stack@odesign, 1L), "index"),
+        order2(ggalign_stat(stack, 1L))
     )
 })

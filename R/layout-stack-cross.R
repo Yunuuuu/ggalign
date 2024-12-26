@@ -36,8 +36,13 @@ stack_crossh <- function(data = NULL, ...) {
 methods::setClass(
     "StackCross",
     contains = "StackLayout",
-    list(index_list = "list", cross_points = "integer"),
-    prototype = list(index_list = list(), cross_points = integer())
+    # A list of old design
+    list(odesign = "list", cross_points = "integer", break_points = "integer"),
+    prototype = list(
+        odesign = list(),
+        cross_points = integer(),
+        break_points = integer()
+    )
 )
 
 #' @export
@@ -51,7 +56,7 @@ stack_cross.default <- function(direction, data = NULL, ...) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 stack_build_composer.StackCross <- function(stack, schemes, theme,
-                                             extra_design) {
+                                            extra_design) {
     # check if we should initialize the layout observations
     layout_design <- stack@design
     if (is_discrete_design(layout_design) &&
@@ -70,15 +75,14 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
         plot_list,
         sizes = diff(c(0L, stack@cross_points, length(plot_list)))
     )
-    index_list <- c(stack@index_list, list(.subset2(layout_design, "index")))
+    design_list <- c(stack@odesign, list(layout_design))
 
     # build the stack
     composer <- stack_composer(direction)
 
-    # for `free_spaces`, if we have applied it in the whole stack layout
-    # we shouln't use it for a single plot. Otherwise, the guide legends
-    # collected by the layout will overlap with the axis of the plot in the
-    # layout.
+    # for `free_spaces`, if we have applied it in the whole stack layout we
+    # shouln't use it for a single plot. Otherwise, the guide legends collected
+    # by the layout will overlap with the axis of the plot in the layout.
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
@@ -91,9 +95,9 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
     previous_design <- NULL
     for (i in seq_along(plot_list)) {
         plots <- .subset2(plot_list, i)
+
         # prepare design for current group
-        design <- layout_design
-        design["index"] <- list(.subset2(index_list, i))
+        design <- .subset2(design_list, i)
         design <- setup_design(design)
 
         if (is_empty(plots)) {

@@ -55,9 +55,9 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
         # unlock the object
         align$unlock()
 
-        # we lock the Align object to prevent user from modifying this
-        # object in `$build` method, we shouldn't do any calculations in
-        # `$build` method
+        # we lock the Align object to prevent user from modifying this object in
+        # `$build_plot` method, we shouldn't do any calculations in
+        # `$build_plot` method
         on.exit(align$lock())
 
         # initialize the necessary parameters for `AlignProto` object
@@ -65,17 +65,16 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
             align$direction <- layout@direction
             align$position <- .subset2(layout@heatmap, "position")
         } else if (is_circle_layout(layout)) {
+            # we treat circle layout as a vertical stack layout
             align$direction <- "vertical"
         }
         align$in_linear <- is_linear(layout)
-        align$object_name <- object_name
         align$layout_name <- object_name(layout)
-
 
         data <- layout@data
         design <- layout@design
 
-        # finally, we let the object do some changes in the layout
+        # firstly, we let the object do some changes in the layout
         layout <- align$setup_layout(layout)
 
         # this step, the object will act with the stack layout
@@ -462,7 +461,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
             # restore the ggalign attribute
             object@data <- ggalign_attr_restore(data, stack_data)
         }
-        layout_design <- check_discrete_design(
+        layout_design <- melt_discrete_design(
             stack_design, quad_design,
             old_name = object_name(layout),
             new_name = object_name

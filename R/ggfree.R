@@ -93,10 +93,12 @@ FreeGg <- ggproto("FreeGg", AlignProto,
             data <- layout_data
         } else if (is.function(input_data)) {
             if (is.null(layout_data)) {
-                object_name <- .subset2(self, "object_name")
                 cli_abort(c(
-                    "{.arg data} in {.var {object_name}} cannot be a function",
-                    i = sprintf("no data was found in %s", object_name(layout))
+                    sprintf(
+                        "{.arg data} in %s cannot be a function",
+                        object_name(self)
+                    ),
+                    i = sprintf("no data was found in %s", self$layout_name)
                 ))
             }
             data <- input_data(layout_data)

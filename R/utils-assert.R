@@ -16,38 +16,36 @@ assert_mapping <- function(mapping, arg = caller_arg(mapping),
     }
 }
 
-assert_mismatch_nobs <- function(align, n, nobs, msg, arg) {
+assert_mismatch_nobs <- function(align, n, nobs, action, arg) {
     if (n != nobs) {
-        cli_abort(paste(
-            "{.arg {arg}} of {.fn {snake_class(align)}}", msg,
-            sprintf(
-                "the same length of layout %s-axis (%d)",
-                to_coord_axis(.subset2(align, "direction")), n
-            )
-        ), call = .subset2(align, "call"))
+        cli_abort(sprintf(
+            "{.arg %s} of %s %s the same length of layout %s-axis (%d)",
+            arg, object_name(align), action,
+            to_coord_axis(align$direction), n
+        ), call = align$call)
     }
 }
 
 assert_sub_split <- function(align, panel) {
     if (!is.null(panel)) {
         cli_abort(c(
-            "{.fn {snake_class(align)}} cannot do sub-split",
+            sprintf("%s cannot do sub-split", object_name(align)),
             i = sprintf(
                 "Group of layout %s-axis already exists",
-                to_coord_axis(.subset2(align, "direction"))
+                to_coord_axis(align$direction)
             )
-        ), call = .subset2(align, "call"))
+        ), call = align$call)
     }
 }
 
 assert_reorder <- function(align, panel, strict) {
     if (!is.null(panel) && strict) {
-        axis <- to_coord_axis(.subset2(align, "direction"))
+        axis <- to_coord_axis(align$direction)
         cli_abort(c(
-            "{.fn {snake_class(align)}} cannot reordering {axis}-axis",
+            sprintf("%s cannot reordering %s-axis", object_name(align), axis),
             i = sprintf("Group of layout %s-axis already exists", axis),
             i = "try to set {.code strict = FALSE} to reorder within each group"
-        ), call = .subset2(align, "call"))
+        ), call = align$call)
     }
 }
 

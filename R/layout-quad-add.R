@@ -209,7 +209,15 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     quad_design <- slot(quad, direction)
-    stack_design <- object@design
+    if (is_cross_layout(object) &&
+        any(position == c("bottom", "right")) &&
+        !is_empty(object@cross_points)) {
+        # if there are cross points in bottom or right annotation, 
+        # use the first design
+        stack_design <- .subset2(object@odesign, 1L)
+    } else {
+        stack_design <- object@design
+    }
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
     if (is_continuous_design(stack_design)) {
@@ -227,15 +235,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         }
         layout_design <- stack_design
     } else if (is_discrete_design(quad_design)) {
-        # both `quad_layout()` and `stack_layout()` need align observations
-        # if there are cross points in bottom or right annotation, the index
-        # should be the first index in the `index_list`
-        if (any(position == c("bottom", "right")) &&
-            is_cross_layout(object) &&
-            !is_empty(object@cross_points)) {
-            stack_design["index"] <- list(.subset2(object@index_list, 1L))
-        }
-        layout_design <- check_discrete_design(
+        layout_design <- melt_discrete_design(
             quad_design, stack_design,
             old_name = object_name(quad),
             new_name = object_name
@@ -280,14 +280,16 @@ quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
     stack <- chain_layout_add(object, stack, object_name)
     slot(quad, position) <- stack
 
-    new_design <- stack@design
-    # if there are cross points in bottom or right annotation, the index
-    # should be the first index in the `index_list`
-    if (any(position == c("bottom", "right")) &&
-        is_cross_layout(stack) &&
+    # if there are cross points in bottom or right annotation, we use
+    # the first design
+    if (is_cross_layout(stack) &&
+        any(position == c("bottom", "right")) &&
         !is_empty(stack@cross_points)) {
-        new_design["index"] <- list(.subset2(stack@index_list, 1L))
+        new_design <- .subset2(stack@odesign, 1L)
+    } else {
+        new_design <- stack@design
     }
+
     update_design(
         quad,
         direction = to_direction(position),

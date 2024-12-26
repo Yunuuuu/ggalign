@@ -84,7 +84,7 @@ AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
         if (!is.function(weights <- .subset2(params, "weights"))) {
             assert_mismatch_nobs(
                 self, nobs, length(weights),
-                msg = "must be an ordering integer or character index of",
+                action = "must be an ordering integer or character index of",
                 arg = "weights"
             )
         }
@@ -103,7 +103,7 @@ AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
             }
             assert_mismatch_nobs(
                 self, nrow(data), length(ans),
-                msg = "must return weights with",
+                action = "must return weights with",
                 arg = "weights"
             )
         } else {

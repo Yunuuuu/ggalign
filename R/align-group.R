@@ -31,7 +31,7 @@ AlignGroup <- ggproto("AlignGroup", AlignDiscrete,
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(
             self, nobs, self$nobs(params),
-            msg = "must be an atomic vector",
+            action = "must be an atomic vector",
             arg = "group"
         )
         params

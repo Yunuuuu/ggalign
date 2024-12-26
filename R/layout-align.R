@@ -86,6 +86,7 @@ discrete_design <- function(panel = NULL, index = NULL, nobs = NULL) {
 # Initialize the index and panel
 # Reorder the panel based the ordering index and
 setup_design <- function(design) {
+    # for continuous axis, do noting special
     if (is_continuous_design(design)) return(design) # styler: off
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`
@@ -163,69 +164,83 @@ update_design.CircleLayout <- update_design.StackLayout
 #' @export
 update_design.StackCross <- function(layout, ..., design, object_name,
                                      from_head = FALSE) {
-    if (from_head && !is_empty(layout@cross_points)) {
-        layout@design["nobs"] <- list(.subset2(design, "nobs"))
-        layout@design["panel"] <- list(.subset2(design, "panel"))
-        layout@index_list[1L] <- list(.subset2(design, "index"))
-    } else {
-        layout@design <- design
-    }
-    n_plots <- length(plot_list <- layout@plot_list)
-    if (n_plots == 0L) {
-        return(layout)
-    }
-    if (n_breaks <- length(layout@cross_points)) {
-        # we also check the panel doesn't break the original index
-        if (!is.null(panel <- .subset2(design, "panel"))) {
-            index_list <- layout@index_list
-            for (i in seq_along(index_list)) {
-                if (is.null(old <- .subset2(index_list, i))) {
-                    next
+    # `design` must be a discrete_design()
+    design_list <- c(layout@odesign, list(layout@design))
+
+    # for cross_points, the updating will span it, but only update the panel
+    # information
+    cross_points <- layout@cross_points
+
+    # the break_points set breaks, updating won't span the break points
+    break_points <- layout@break_points
+
+    plot_list <- layout@plot_list
+    n <- length(plot_list)
+    points <- c(cross_points, n)
+    point_index <- seq_along(points)
+    if (!from_head) point_index <- rev(point_index)
+    for (i in point_index) {
+        cross_point <- .subset(points, i)
+        # we first update the design in the updated tail
+        # it means the first design when from_head is `TRUE`
+        # the last design when from_head is `FALSE`
+        if ((from_head && i == 1L) || (!from_head && cross_point == n)) {
+            new_design <- design
+        } else {
+            # for design not in updated tail, we'll only update panel
+            # we check the new panel doesn't break the original index
+            if (is.null(new_panel <- .subset2(design, "panel"))) {
+                if (any(cross_point == break_points)) {
+                    break
+                } else {
+                    next # no need to update design
                 }
-                new <- reorder_index(panel, old)
+            }
+            new_design <- .subset2(design_list, i)
+
+            # we check the new panel don't disrupt the ordering index
+            if (!is.null(old_index <- .subset2(new_design, "index"))) {
                 # we always prevent from reordering twice.
-                if (!is.null(old) && !all(old == new)) {
+                new_index <- reorder_index(new_panel, old_index)
+                if (!all(old_index == new_index)) {
                     cli_abort(sprintf(
                         "%s disrupt the previously established ordering index of %s (%d)",
                         object_name, object_name(layout), i
                     ))
                 }
-                index_list[[i]] <- new
+                new_design["index"] <- list(new_index)
             }
-            layout@index_list <- index_list
+            new_design["panel"] <- list(new_panel)
         }
-        # extract the the first or the last `cross_points`
-        if (from_head) { # update the head plots
-            index <- layout@cross_points[1L]
-            if (index == 0L) {
-                return(layout)
-            }
-            index <- seq_len(index)
-        } else { # update the tail plots
-            # one for the `ggcross()` plot itself
-            index <- layout@cross_points[n_breaks] + 1L + 1L
-            if (index > n_plots) {
-                return(layout)
-            }
-            index <- index:n_plots
+        design_list[i] <- list(design)
+        if (i == 1L) {
+            subset <- seq_len(cross_point)
+        } else {
+            subset <- (.subset(points, i - 1L) + 1L):cross_point
         }
-    } else { # if no breaks, update all plots
-        index <- seq_len(n_plots)
-    }
 
-    layout@plot_list[index] <- lapply(plot_list[index], function(plot) {
-        if (is_ggalign_plot(plot)) return(plot) # styler: off
-        update_design(plot,
-            direction = layout@direction,
-            design = design
+        # we then update the design for each plot
+        layout@plot_list[subset] <- lapply(
+            plot_list[subset], function(plot) {
+                if (is_ggalign_plot(plot)) {
+                    return(plot)
+                }
+                update_design(plot,
+                    direction = layout@direction,
+                    design = new_design
+                )
+            }
         )
-    })
+        if (any(cross_point == break_points)) break
+    }
+    layout@odesign <- design_list[seq_len(length(design_list) - 1L)]
+    layout@design <- design_list[[length(design_list)]]
     layout
 }
 
 ############################################################
-check_discrete_design <- function(old, new, old_name, new_name,
-                                  call = caller_call()) {
+melt_discrete_design <- function(old, new, old_name, new_name,
+                                 call = caller_call()) {
     old_nobs <- .subset2(old, "nobs")
     new_nobs <- .subset2(new, "nobs")
     if (is.null(new_nobs)) { # no `nobs` provided
@@ -247,22 +262,6 @@ check_discrete_design <- function(old, new, old_name, new_name,
 
     if (is.null(new_panel)) { # no panel provided
         panel <- old_panel
-    } else if (anyNA(new_panel)) {
-        cli_abort(sprintf(
-            "layout panels defined by %s contain `NA`",
-            new_name
-        ), call = call)
-    } else if (!is.atomic(new_panel)) {
-        cli_abort(c(
-            sprintf("invalid layout panels defined by %s", new_name),
-            i = "layout panels must be an atomic vector"
-        ), call = call)
-    } else if (is.null(nobs) || length(new_panel) != nobs) {
-        # we have defined panel, but don't define the `nobs`
-        cli_abort(sprintf(
-            "layout panels defined by %s (nobs: %d) is not compatible with the nobs: %d",
-            new_name, length(new_panel), nobs %||% 0L
-        ), call = call)
     } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
         cli_abort(sprintf(
             "%s disrupt the previously established panel groups of %s",
@@ -270,7 +269,6 @@ check_discrete_design <- function(old, new, old_name, new_name,
         ), call = call)
     } else {
         panel <- new_panel
-        if (!is.factor(panel)) panel <- factor(panel)
     }
 
     # check index
@@ -278,25 +276,137 @@ check_discrete_design <- function(old, new, old_name, new_name,
     new_index <- .subset2(new, "index")
     if (is.null(new_index)) {
         index <- old_index
-    } else if (anyNA(new_index)) {
-        cli_abort(sprintf(
-            "layout ordering index defined by %s contain `NA`",
-            new_name
-        ), call = call)
-    } else if (!is.integer(new_index)) {
-        cli_abort(c(
-            sprintf("invalid layout ordering index defined by %s", new_name),
-            i = "layout ordering index must be integer"
-        ), call = call)
-    } else if (is.null(nobs) || length(new_index) != nobs) {
-        # we have defined index, but don't define the `nobs`
-        cli_abort(sprintf(
-            "layout ordering index defined by %s (nobs: %d) is not compatible with the nobs: %d",
-            new_name, length(new_index), nobs %||% 0L
-        ), call = call)
     } else {
         index <- new_index
     }
+
+    # we always make the index following the panel
+    if (!is.null(panel) && !is.null(index)) {
+        index <- reorder_index(panel, index)
+    }
+
+    # we always prevent from reordering twice.
+    if (!is.null(old_index) && !all(old_index == index)) {
+        cli_abort(sprintf(
+            "%s disrupt the previously established ordering index of %s",
+            new_name, old_name
+        ), call = call)
+    }
+    discrete_design(panel, index, nobs)
+}
+
+check_discrete_design <- function(old, new, old_name, new_name,
+                                  call = caller_call()) {
+    old_nobs <- .subset2(old, "nobs")
+    new_nobs <- .subset2(new, "nobs")
+    if (!is.null(new_nobs) &&
+        !(is_scalar(new_nobs) && is.integer(new_nobs))) {
+        cli_abort(c(
+            sprintf(
+                "invalid {.field nobs} defined by %s", new_name
+            ),
+            i = "{.field nobs} must be a single integer"
+        ), call = call)
+    }
+    if (!is.null(old_nobs)) {
+        if (is.null(new_nobs)) {
+            # push developer to reset the nobs in the layout
+            cli_abort(c(
+                sprintf("invalid %s", new_name),
+                i = sprintf(
+                    "%s reset the {.field nobs}, but don't change the {.field nobs} of the layout", new_name
+                )
+            ), call = call)
+        } else if (!identical(new_nobs, old_nobs)) {
+            cli_abort(sprintf(
+                "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
+                new_name, new_nobs, old_name, old_nobs
+            ), call = call)
+        }
+    }
+    nobs <- new_nobs
+
+    # check panel
+    old_panel <- .subset2(old, "panel")
+    new_panel <- .subset2(new, "panel")
+    if (!is.null(new_panel)) {
+        if (!is.atomic(new_panel)) {
+            cli_abort(c(
+                sprintf("invalid layout panels defined by %s", new_name),
+                i = "layout panels must be an atomic vector"
+            ), call = call)
+        } else if (anyNA(new_panel)) {
+            cli_abort(sprintf(
+                "layout panels defined by %s contain `NA`",
+                new_name
+            ), call = call)
+        } else if (is.null(nobs)) {
+            # we have defined panel, but don't define the `nobs`
+            cli_abort(sprintf(
+                "%s defined the panels but not define {.field nobs}", new_name
+            ), call = call)
+        } else if (length(new_panel) != nobs) {
+            # we have defined panel, but don't define the `nobs`
+            cli_abort(sprintf(
+                "layout panels defined by %s (nobs: %d) is not compatible with the nobs: %d",
+                new_name, length(new_panel), nobs
+            ), call = call)
+        } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
+            cli_abort(sprintf(
+                "%s disrupt the previously established panel groups of %s",
+                new_name, old_name
+            ), call = call)
+        }
+    } else if (!is.null(old_panel)) {
+        # push developer to reset the panel in the layout
+        cli_abort(c(
+            sprintf("invalid %s", new_name),
+            i = sprintf(
+                "%s reset the {.field panel}, but don't change the {.field panel} of the layout", new_name
+            )
+        ), call = call)
+    }
+    panel <- new_panel
+    if (!is.null(panel) && !is.factor(panel)) panel <- factor(panel)
+
+    # check index
+    old_index <- .subset2(old, "index")
+    new_index <- .subset2(new, "index")
+    if (!is.null(new_index)) {
+        if (!is.integer(new_index)) {
+            cli_abort(c(
+                sprintf(
+                    "invalid layout ordering index defined by %s", new_name
+                ),
+                i = "layout ordering index must be an integer"
+            ), call = call)
+        } else if (anyNA(new_index)) {
+            cli_abort(sprintf(
+                "layout ordering index defined by %s contain `NA`",
+                new_name
+            ), call = call)
+        } else if (is.null(nobs)) {
+            # we have defined panel, but don't define the `nobs`
+            cli_abort(sprintf(
+                "%s defined the ordering index but not define nobs", new_name
+            ), call = call)
+        } else if (length(new_index) != nobs) {
+            # we have defined index, but don't define the `nobs`
+            cli_abort(sprintf(
+                "layout ordering index defined by %s (nobs: %d) is not compatible with the nobs (%d)",
+                new_name, length(new_index), nobs
+            ), call = call)
+        }
+    } else if (!is.null(old_index)) {
+        # push developer to reset the `index` in the layout
+        cli_abort(c(
+            sprintf("invalid %s", new_name),
+            i = sprintf(
+                "%s reset the {.field index}, but don't change the {.field index} of the layout", new_name
+            )
+        ), call = call)
+    }
+    index <- new_index
 
     # we always make the index following the panel
     if (!is.null(panel) && !is.null(index)) {

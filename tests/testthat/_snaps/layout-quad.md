@@ -5,7 +5,7 @@
 
 ---
 
-    Cannot add `align_kmeans(3L)` to the left annotation `stack_continuous()`
+    Cannot add `align_kmeans()` to the left annotation `stack_continuous()`
     i the left annotation `stack_continuous()` cannot align discrete variables
 
 # add `stack_layout()` works well
@@ -117,11 +117,7 @@
     Cannot add `stack_alignh()` to `quad_layout()`
     i only vertical stack is allowed in top annotation
 
-# add `cross_align()` builds well
+# add `stack_cross()` builds well
 
     align_dendro(k = 3, method = "ward.D2") disrupt the previously established ordering index of the right annotation `stack_cross()` (1)
-
----
-
-    align_dendro(k = 4, method = "ward.D2") disrupt the previously established ordering index of the bottom annotation `stack_cross()` (1)
 

@@ -68,7 +68,7 @@ AlignReorder <- ggproto("AlignReorder", AlignDiscrete,
         )
         assert_mismatch_nobs(
             self, nrow(.subset2(self, "data")), length(index),
-            msg = "must return a statistic with",
+            action = "must return a statistic with",
             arg = "stat"
         )
         if (reverse) index <- rev(index)
