@@ -187,19 +187,22 @@ update_design.StackCross <- function(layout, ..., design, object_name,
         if ((from_head && i == 1L) || (!from_head && cross_point == n)) {
             new_design <- design
         } else {
-            # for design not in updated tail, we'll only update panel
-            # we check the new panel doesn't break the original index
-            if (is.null(new_panel <- .subset2(design, "panel"))) {
+            # for design not in updated tail, we'll only update `panel` and
+            # `nobs`, we check the new panel doesn't break the original index
+            new_nobs <- .subset2(design, "nobs")
+            new_panel <- .subset2(design, "panel")
+            if (is.null(new_nobs) && is.null(new_panel)) {
                 if (any(cross_point == break_points)) {
                     break
                 } else {
                     next # no need to update design
                 }
             }
-            new_design <- .subset2(design_list, i)
 
+            new_design <- .subset2(design_list, i)
             # we check the new panel don't disrupt the ordering index
-            if (!is.null(old_index <- .subset2(new_design, "index"))) {
+            if (!is.null(new_panel) &&
+                !is.null(old_index <- .subset2(new_design, "index"))) {
                 # we always prevent from reordering twice.
                 new_index <- reorder_index(new_panel, old_index)
                 if (!all(old_index == new_index)) {
@@ -210,9 +213,10 @@ update_design.StackCross <- function(layout, ..., design, object_name,
                 }
                 new_design["index"] <- list(new_index)
             }
+            new_design["nobs"] <- list(new_nobs)
             new_design["panel"] <- list(new_panel)
         }
-        design_list[i] <- list(design)
+        design_list[i] <- list(new_design)
         if (i == 1L) {
             subset <- seq_len(cross_point)
         } else {
