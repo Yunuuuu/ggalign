@@ -2,15 +2,9 @@
 % Please edit documentation in R/mark.R
 \name{mark_draw}
 \alias{mark_draw}
-\alias{link}
-\alias{link_range}
 \title{Define the links to connect the marked observations}
 \usage{
-mark_draw(.draw, ..., .link1 = NULL, .link2 = NULL)
-
-link(link1 = NULL, link2 = NULL)
-
-link_range(point1, point2)
+mark_draw(.draw, ..., .group1 = NULL, .group2 = NULL)
 }
 \arguments{
 \item{.draw}{A function used to draw the links. The function must return a
@@ -19,36 +13,23 @@ link_range(point1, point2)
 two arguments: a data frame for the panel side coordinates and a data frame
 for the marked observation coordinates.}
 
-\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of \code{link()} objects used to
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of \code{\link[=link]{link()}} objects used to
 define the linked observations for a panel. Each element of the list will
 define a plot panel.}
 
-\item{.link1, .link2}{A single boolean value indicating whether to use the
+\item{.group1, .group2}{A single boolean value indicating whether to use the
 panel group information from the layout as the links. By default, will
 guess from the layout.}
-
-\item{link1, link2}{An integer or character index, or a \code{link_range()} object
-to define the linked observations. For integer indices, you can wrap them
-with \code{\link[=I]{I()}} to indicate the order based on the layout. You can also use
-\code{waiver()} to inherit the values from the opposite link argument.}
-
-\item{point1, point2}{A single integer or character index, defining the lower
-and higher bounds of the range. For integer indices, wrap them with \code{\link[=I]{I()}}
-to indicate the ordered index by the layout.}
 }
 \description{
 This function allows users to define links between marked observations (e.g.,
 for creating visual connections for related data), which could help explain
-the observations. Following function can be used to create the links.
-\itemize{
-\item \code{link}: Helper function to create a pair of links.
-\item \code{link_range}: Helper function to target a range of observations.
-}
+the observations.
 }
 \seealso{
 \itemize{
 \item \code{\link[=mark_line]{mark_line()}}
 \item \code{\link[=mark_tetragon]{mark_tetragon()}}
-\item \code{\link[=mark_pdraw]{mark_pdraw()}}
+\item \code{\link[=.mark_draw]{.mark_draw()}}
 }
 }
