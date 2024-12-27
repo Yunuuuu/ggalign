@@ -23,9 +23,10 @@ pair_links <- function(...) {
                 env = rlang::f_env(pair)
             )
             if (!is_valid_link(link1) || !is_valid_link(link2)) {
-                cli_abort(
-                    "Input must be either an integer or a character index, or a {.fn link_range} object."
-                )
+                cli_abort(c(
+                    "Input must be either an integer or a character index, or a {.fn link_range} object.",
+                    i = "Location: {i}"
+                ))
             }
             links[[i]] <- new_pair_link(link1, link2, arg1 = "", arg2 = "")
         } else {
