@@ -2,19 +2,20 @@
 % Please edit documentation in R/link.R
 \name{pair_links}
 \alias{pair_links}
-\alias{link_range}
+\alias{range_link}
 \title{Helper function to create a pair of links}
 \usage{
 pair_links(...)
 
-link_range(point1, point2)
+range_link(point1, point2)
 }
 \arguments{
 \item{...}{A list of formula, each side of the formula should be an integer
-or character index, or a \code{link_range()} object to define the linked
-observations. For integer indices, you can wrap them with \code{\link[=I]{I()}} to
-indicate the order based on the layout. You can also use \code{waiver()} to
-inherit the values from the opposite link argument.}
+or character index, or a \code{range_link()} object to define the linked
+observations. You can use \code{NULL} to indicate none. For integer indices, you
+can wrap them with \code{\link[=I]{I()}} to indicate the order based on the layout. You
+can also use \code{waiver()} to inherit the values from the opposite link
+argument.}
 
 \item{point1, point2}{A single integer or character index, defining the lower
 and higher bounds of the range. For integer indices, wrap them with \code{\link[=I]{I()}}
@@ -23,6 +24,6 @@ to indicate the ordered index by the layout.}
 \description{
 \itemize{
 \item \code{pair_link}: Helper function to create a pair of links.
-\item \code{link_range}: Helper function to create a range of observations.
+\item \code{range_link}: Helper function to create a range of observations.
 }
 }

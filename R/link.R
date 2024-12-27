@@ -1,13 +1,14 @@
 #' Helper function to create a pair of links
 #'
 #' - `pair_link`: Helper function to create a pair of links.
-#' - `link_range`: Helper function to create a range of observations.
+#' - `range_link`: Helper function to create a range of observations.
 #'
 #' @param ... A list of formula, each side of the formula should be an integer
-#'   or character index, or a `link_range()` object to define the linked
-#'   observations. For integer indices, you can wrap them with [`I()`] to
-#'   indicate the order based on the layout. You can also use `waiver()` to
-#'   inherit the values from the opposite link argument.
+#'   or character index, or a `range_link()` object to define the linked
+#'   observations. You can use `NULL` to indicate none. For integer indices, you
+#'   can wrap them with [`I()`] to indicate the order based on the layout. You
+#'   can also use `waiver()` to inherit the values from the opposite link
+#'   argument.
 #' @export
 pair_links <- function(...) {
     pairs <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
@@ -24,7 +25,7 @@ pair_links <- function(...) {
             )
             if (!is_valid_link(link1) || !is_valid_link(link2)) {
                 cli_abort(c(
-                    "Input must be either an integer or a character index, or a {.fn link_range} object.",
+                    "Input must be either an integer or a character index, or a {.fn range_link} object.",
                     i = "Location: {i}"
                 ))
             }
@@ -105,7 +106,7 @@ is_valid_link <- function(x) {
         is.null(x) ||
         is.numeric(x) ||
         is.character(x) ||
-        inherits(x, "link_range")
+        is_range_link(x)
 }
 
 #' @export
@@ -161,9 +162,9 @@ deparse_link.AsIs <- function(x, ...) {
 }
 
 #' @export
-deparse_link.link_range <- function(x, ...) {
+deparse_link.ggalign_range_link <- function(x, ...) {
     sprintf(
-        "link_range(%s, %s)",
+        "range_link(%s, %s)",
         deparse_link(.subset2(x, "point1"), ...),
         deparse_link(.subset2(x, "point2"), ...)
     )
@@ -177,7 +178,7 @@ deparse_link.waiver <- function(x, ...) "waiver()"
 #'   to indicate the ordered index by the layout.
 #' @export
 #' @rdname pair_links
-link_range <- function(point1, point2) {
+range_link <- function(point1, point2) {
     if (!is_scalar(point1) ||
         (!is.character(point1) && !is.numeric(point1))) {
         cli_abort("{.arg ...} must be a single numeric or character index")
@@ -188,8 +189,12 @@ link_range <- function(point1, point2) {
     }
     point1 <- new_link(point1)
     point2 <- new_link(point2)
-    structure(list(point1 = point1, point2 = point2), class = "link_range")
+    structure(list(point1 = point1, point2 = point2),
+        class = "ggalign_range_link"
+    )
 }
+
+is_range_link <- function(x) inherits(x, "ggalign_range_link")
 
 make_link_data <- function(link, design, labels = NULL,
                            arg = caller_arg(link)) {
@@ -200,7 +205,7 @@ make_link_data <- function(link, design, labels = NULL,
     n <- .subset2(design, "nobs")
     if (!inherits(link, "AsIs") || is.character(link)) {
         # match the original data index
-        if (inherits(link, "link_range")) {
+        if (is_range_link(link)) {
             point1 <- .subset2(link, "point1")
             if (!inherits(point1, "AsIs") || is.character(point1)) {
                 point1 <- vec_as_location(
@@ -208,7 +213,7 @@ make_link_data <- function(link, design, labels = NULL,
                     n = n,
                     names = labels,
                     arg = "point1",
-                    call = quote(link_range())
+                    call = quote(range_link())
                 )
             }
             point2 <- .subset2(link, "point2")
@@ -218,7 +223,7 @@ make_link_data <- function(link, design, labels = NULL,
                     n = n,
                     names = labels,
                     arg = "point2",
-                    call = quote(link_range())
+                    call = quote(range_link())
                 )
             }
             link <- match(c(point1, point2), .subset2(design, "index"))
@@ -233,7 +238,7 @@ make_link_data <- function(link, design, labels = NULL,
             )
             link <- match(link, .subset2(design, "index"))
         }
-    } else if (inherits(link, "link_range")) {
+    } else if (is_range_link(link)) {
         point1 <- .subset2(link, "point1")
         # for character, we always match the original data
         if (is.character(point1)) {
@@ -242,7 +247,7 @@ make_link_data <- function(link, design, labels = NULL,
                 n = n,
                 names = labels,
                 arg = "point1",
-                call = quote(link_range())
+                call = quote(range_link())
             )
             point1 <- match(point1, .subset2(design, "index"))
         }
@@ -253,7 +258,7 @@ make_link_data <- function(link, design, labels = NULL,
                 n = n,
                 names = labels,
                 arg = "point2",
-                call = quote(link_range())
+                call = quote(range_link())
             )
             point2 <- match(point2, .subset2(design, "index"))
         }

@@ -14,10 +14,11 @@ two arguments: a data frame for the panel side coordinates and a data frame
 for the marked observation coordinates.}
 
 \item{...}{A list of formula, each side of the formula should be an integer
-or character index, or a \code{link_range()} object to define the linked
-observations. For integer indices, you can wrap them with \code{\link[=I]{I()}} to
-indicate the order based on the layout. You can also use \code{waiver()} to
-inherit the values from the opposite link argument.}
+or character index, or a \code{range_link()} object to define the linked
+observations. You can use \code{NULL} to indicate none. For integer indices, you
+can wrap them with \code{\link[=I]{I()}} to indicate the order based on the layout. You
+can also use \code{waiver()} to inherit the values from the opposite link
+argument.}
 
 \item{.group1, .group2}{A single boolean value indicating whether to use the
 panel group information from the layout as the links. By default, will

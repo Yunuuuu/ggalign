@@ -176,6 +176,7 @@ mark_tetragon <- function(..., element = NULL) {
     }, ...)
 }
 
+# Not implemented completely
 #' @importFrom rlang arg_match0
 mark_triangle <- function(..., orientation = "plot", element = NULL) {
     assert_s3_class(element, "element_polygon", allow_null = TRUE)
@@ -431,12 +432,18 @@ makeContent.ggalignMarkGtable <- function(x) {
                 y = panel_y, yend = panel_y
             )
         }
+        hand <- switch(
+            link, 
+            link1 = switch_direction(direction, "left", "top"),
+            link2 = switch_direction(direction, "right", "bottom")
+        )
         coords[[link]] <- lapply(seq_along(link_index), function(panel_index) {
             l_index <- .subset2(link_index, panel_index)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, panel_index)
             link <- vec_slice(link_coord, l_index)
             link$link_index <- l_index
+            link$.hand <- hand
             link$.index <- d_index
             panel <- vec_slice(panel_coord, panel_index)
             list(panel = panel, link = link)
