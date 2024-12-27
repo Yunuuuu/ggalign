@@ -73,7 +73,7 @@ ggheatmap(small_mat) +
     theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
     anno_right() +
     align_kmeans(3L) +
-    ggmark(mark_line(link((I(1:3))))) +
+    ggmark(mark_line(I(1:3) ~ NULL)) +
     geom_boxplot(aes(.names, value)) +
     theme(plot.margin = margin(l = 0.1, t = 0.1, unit = "npc"))
 
@@ -82,7 +82,7 @@ ggheatmap(small_mat) +
     theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
     anno_right() +
     align_kmeans(3L) +
-    ggmark(mark_tetragon(link((I(1:3))))) +
+    ggmark(mark_tetragon(I(1:3) ~ NULL)) +
     geom_boxplot(aes(.names, value)) +
     theme(plot.margin = margin(l = 0.1, t = 0.1, unit = "npc"))
 }

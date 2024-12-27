@@ -129,7 +129,7 @@ new_alignpatches <- function(plots, layout = NULL,
 
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
+    e2name <- paste(deparse(substitute(e2)), collapse = " ")
     alignpatches_add(e2, e1, e2name)
 }
 

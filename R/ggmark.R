@@ -39,7 +39,7 @@
 #'     theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
 #'     anno_right() +
 #'     align_kmeans(3L) +
-#'     ggmark(mark_line(link((I(1:3))))) +
+#'     ggmark(mark_line(I(1:3) ~ NULL)) +
 #'     geom_boxplot(aes(.names, value)) +
 #'     theme(plot.margin = margin(l = 0.1, t = 0.1, unit = "npc"))
 #'
@@ -48,7 +48,7 @@
 #'     theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
 #'     anno_right() +
 #'     align_kmeans(3L) +
-#'     ggmark(mark_tetragon(link((I(1:3))))) +
+#'     ggmark(mark_tetragon(I(1:3) ~ NULL)) +
 #'     geom_boxplot(aes(.names, value)) +
 #'     theme(plot.margin = margin(l = 0.1, t = 0.1, unit = "npc"))
 #' @importFrom rlang list2
@@ -148,15 +148,15 @@ MarkGg <- ggproto("MarkGg", AlignProto,
         }
         if (isTRUE(group1) && isTRUE(group2)) {
             extra_links <- mapply(function(l1, l2) {
-                new_link(I(l1), I(l2))
+                new_pair_link(I(l1), I(l2))
             }, full_data1, full_data2, SIMPLIFY = FALSE)
         } else if (isTRUE(group1)) {
             extra_links <- lapply(full_data1, function(l) {
-                new_link(link1 = I(l))
+                new_pair_link(link1 = I(l))
             })
         } else if (isTRUE(group2)) {
             extra_links <- lapply(full_data2, function(l) {
-                new_link(link2 = I(l))
+                new_pair_link(link2 = I(l))
             })
         } else {
             extra_links <- NULL

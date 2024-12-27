@@ -99,7 +99,7 @@ with_quad.default <- function(x, position = waiver(), main = NULL) {
     structure(
         list(
             object = x,
-            object_name = deparse(substitute(x)),
+            object_name = paste(deparse(substitute(x)), collapse = " "),
             position = position, main = main
         ),
         class = "ggalign_with_quad"

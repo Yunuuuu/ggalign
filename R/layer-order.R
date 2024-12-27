@@ -35,7 +35,7 @@ layer_order.Layer <- function(layer, order = 0) {
             object = layer,
             order = order,
             # used for `ggplot_add`
-            object_name = deparse(substitute(layer))
+            object_name = paste(deparse(substitute(layer)), collapse = " ")
         ),
         class = "ggalign_layer_order"
     )

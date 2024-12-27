@@ -10,9 +10,7 @@
 #'   `grob`, nothing will be drawn. The input data for the function must contain
 #'   two arguments: a data frame for the panel side coordinates and a data frame
 #'   for the marked observation coordinates.
-#' @param ... <[dyn-dots][rlang::dyn-dots]> A list of [`link()`] objects used to
-#'   define the linked observations for a panel. Each element of the list will
-#'   define a plot panel.
+#' @inheritParams pair_links
 #' @param .group1,.group2 A single boolean value indicating whether to use the
 #'   panel group information from the layout as the links. By default, will
 #'   guess from the layout.
@@ -62,23 +60,19 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
     }
     assert_bool(.group1, allow_null = TRUE, call = call)
     assert_bool(.group2, allow_null = TRUE, call = call)
-    links <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
-    valid <- vapply(
-        links, inherits, logical(1L), "ggalign_link",
-        USE.NAMES = FALSE
-    )
-    if (!all(valid)) {
-        cli_abort("{.arg ...} must be created with {.fn link}", call = call)
-    }
-
-    # remove links with both are `NULL`
-    links <- links[!vapply(links, function(link) {
-        all(vapply(link, is.null, logical(1L), USE.NAMES = FALSE))
-    }, logical(1L), USE.NAMES = FALSE)]
+    links <- pair_links(...)
     structure(
         list(draw = draw, links = links, group1 = .group1, group2 = .group2),
         class = "ggalign_mark_draw"
     )
+}
+
+#' @export
+print.ggalign_mark_draw <- function(x, ...) {
+    header <- sprintf("<%s> Mark observations", fclass(x))
+    cat(header, sep = "\n")
+    print(.subset2(x, "links"), header = FALSE)
+    invisible(x)
 }
 
 #' Link the observations and the panel with a line

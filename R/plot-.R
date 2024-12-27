@@ -62,7 +62,7 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
 
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
+    e2name <- paste(deparse(substitute(e2)), collapse = " ")
     switch(.Generic, # nolint
         `+` = plot_add(e2, e1, e2name),
         stop_incompatible_op(.Generic, e1, e2)
