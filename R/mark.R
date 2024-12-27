@@ -112,7 +112,7 @@ link <- function(link1 = NULL, link2 = NULL) {
     new_link(link1, link2)
 }
 
-new_link <- function(link1, link2 = NULL) {
+new_link <- function(link1 = NULL, link2 = NULL) {
     structure(list(link1 = link1, link2 = link2), class = "ggalign_link")
 }
 

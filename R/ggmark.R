@@ -151,9 +151,13 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 new_link(I(l1), I(l2))
             }, full_data1, full_data2, SIMPLIFY = FALSE)
         } else if (isTRUE(link1)) {
-            extra_links <- lapply(full_data1, function(l) new_link(I(l)))
+            extra_links <- lapply(full_data1, function(l) {
+                new_link(link1 = I(l))
+            })
         } else if (isTRUE(link2)) {
-            extra_links <- lapply(full_data2, function(l) new_link(NULL, I(l)))
+            extra_links <- lapply(full_data2, function(l) {
+                new_link(link2 = I(l))
+            })
         } else {
             extra_links <- NULL
         }
