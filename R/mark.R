@@ -20,7 +20,7 @@
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]
 #'  - [`.mark_draw()`]
-#' @importFrom rlang is_empty
+#' @importFrom rlang is_empty inject
 #' @export
 mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
     if (!is.function(draw <- allow_lambda(.draw))) {
