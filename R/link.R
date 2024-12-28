@@ -1,6 +1,6 @@
 #' Helper function to create a pair of links
 #'
-#' - `pair_link`: Helper function to create a pair of links.
+#' - `pair_links`: Helper function to create pair of links.
 #' - `range_link`: Helper function to create a range of observations.
 #'
 #' @param ... A list of formulas, where each side of the formula should be an

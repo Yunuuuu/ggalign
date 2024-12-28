@@ -24,7 +24,7 @@ to indicate the ordered index by the layout.}
 }
 \description{
 \itemize{
-\item \code{pair_link}: Helper function to create a pair of links.
+\item \code{pair_links}: Helper function to create pair of links.
 \item \code{range_link}: Helper function to create a range of observations.
 }
 }
