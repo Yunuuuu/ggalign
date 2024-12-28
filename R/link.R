@@ -8,7 +8,7 @@
 #'   linked observations, use `NULL` to indicate no link in this side. If only
 #'   the left-hand side of the formula exists, you can input it directly. For
 #'   integer indices, wrap them with [`I()`] to indicate their order according
-#'   to the layout.  You can also use `waiver()` to inherit values from the
+#'   to the layout. You can also use `waiver()` to inherit values from the
 #'   opposite link argument.
 #' @examples
 #' x <- pair_links(

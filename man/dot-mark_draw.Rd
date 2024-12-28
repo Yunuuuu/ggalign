@@ -19,7 +19,7 @@ coordinates (\code{"panel"}) and one for the marked observations coordinates
 linked observations, use \code{NULL} to indicate no link in this side. If only
 the left-hand side of the formula exists, you can input it directly. For
 integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
-to the layout.  You can also use \code{waiver()} to inherit values from the
+to the layout. You can also use \code{waiver()} to inherit values from the
 opposite link argument.}
 
 \item{.group1, .group2}{A single boolean value indicating whether to use the

@@ -15,7 +15,7 @@ range_link(point1, point2)
 linked observations, use \code{NULL} to indicate no link in this side. If only
 the left-hand side of the formula exists, you can input it directly. For
 integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
-to the layout.  You can also use \code{waiver()} to inherit values from the
+to the layout. You can also use \code{waiver()} to inherit values from the
 opposite link argument.}
 
 \item{point1, point2}{A single integer or character index, defining the lower
