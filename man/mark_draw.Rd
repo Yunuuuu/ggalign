@@ -13,12 +13,13 @@ mark_draw(.draw, ..., .group1 = NULL, .group2 = NULL)
 two arguments: a data frame for the panel side coordinates and a data frame
 for the marked observation coordinates.}
 
-\item{...}{A list of formula, each side of the formula should be an integer
-or character index, or a \code{range_link()} object to define the linked
-observations. You can use \code{NULL} to indicate none. For integer indices, you
-can wrap them with \code{\link[=I]{I()}} to indicate the order based on the layout. You
-can also use \code{waiver()} to inherit the values from the opposite link
-argument.}
+\item{...}{A list of formulas, where each side of the formula should be an
+\code{integer} or \code{character} index, or a \code{range_link()} object defining the
+linked observations, use \code{NULL} to indicate no link in this side. If only
+the left-hand side of the formula exists, you can input it directly. For
+integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
+to the layout.  You can also use \code{waiver()} to inherit values from the
+opposite link argument.}
 
 \item{.group1, .group2}{A single boolean value indicating whether to use the
 panel group information from the layout as the links. By default, will

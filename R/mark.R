@@ -69,9 +69,9 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
 
 #' @export
 print.ggalign_mark_draw <- function(x, ...) {
-    header <- sprintf("<%s> Mark observations", fclass(x))
+    header <- sprintf("<%s>", fclass(x))
     cat(header, sep = "\n")
-    print(.subset2(x, "links"), header = FALSE)
+    obj_print_data(.subset2(x, "links"))
     invisible(x)
 }
 

@@ -10,12 +10,13 @@ pair_links(...)
 range_link(point1, point2)
 }
 \arguments{
-\item{...}{A list of formula, each side of the formula should be an integer
-or character index, or a \code{range_link()} object to define the linked
-observations. You can use \code{NULL} to indicate none. For integer indices, you
-can wrap them with \code{\link[=I]{I()}} to indicate the order based on the layout. You
-can also use \code{waiver()} to inherit the values from the opposite link
-argument.}
+\item{...}{A list of formulas, where each side of the formula should be an
+\code{integer} or \code{character} index, or a \code{range_link()} object defining the
+linked observations, use \code{NULL} to indicate no link in this side. If only
+the left-hand side of the formula exists, you can input it directly. For
+integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
+to the layout.  You can also use \code{waiver()} to inherit values from the
+opposite link argument.}
 
 \item{point1, point2}{A single integer or character index, defining the lower
 and higher bounds of the range. For integer indices, wrap them with \code{\link[=I]{I()}}
@@ -26,4 +27,24 @@ to indicate the ordered index by the layout.}
 \item \code{pair_link}: Helper function to create a pair of links.
 \item \code{range_link}: Helper function to create a range of observations.
 }
+}
+\examples{
+x <- pair_links(
+    1:2,
+    c("a", "b"),
+    range_link(1, 6) ~ c("a", "b"),
+    ~ 1:2,
+    ~letters,
+    ~NULL # a blank link
+)
+x
+
+# we can modify it as usual list
+x[[1]] <- NULL # remove the first link
+x$a <- ~LETTERS
+x
+
+# modify with a list of links
+x[1:2] <- list(~ c("a", "b"), ~ range_link("a", "b"))
+x
 }
