@@ -71,16 +71,13 @@ chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
         align$in_linear <- is_linear(layout)
         align$layout_name <- object_name(layout)
 
-        data <- layout@data
-        design <- layout@design
-
         # firstly, we let the object do some changes in the layout
-        layout <- align$setup_layout(layout)
+        layout <- align$interact_layout(layout)
 
         # this step, the object will act with the stack layout
         # group rows into panel or reorder rows, we can also
         # initialize object data
-        new_design <- align$setup_design(data, design)
+        new_design <- align$setup_design(layout@design)
 
         # initialize the plot object
         object@plot <- align$setup_plot(object@plot)

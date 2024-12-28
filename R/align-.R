@@ -126,25 +126,22 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
             self$extra_params
         )
     },
-    setup_design = function(self, layout_data, design) {
+    interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         object_name <- object_name(self)
         # check plot is compatible with the layout
-        if (is_continuous_design(design)) {
+        if (is_layout_continuous(layout)) {
             # `AlignDiscrete` object is special for discrete variables
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name, layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)
             ))
         }
-
-        call <- .subset2(self, "call")
-        input_data <- .subset2(self, "input_data")
-        input_params <- .subset2(self, "input_params")
-        layout_panel <- .subset2(design, "panel")
-        layout_index <- .subset2(design, "index")
+        input_data <- self$input_data
+        input_params <- self$input_params
+        layout_data <- layout@data
+        design <- layout@design
         layout_nobs <- .subset2(design, "nobs")
-
         # we must have the same observations across all plots
         # 1. if `Align` require data, the `nobs` should be nrow(data)
         # 2. if not, we run `nobs()` method to initialize the layout nobs
@@ -197,37 +194,142 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
             self$labels <- vec_names(layout_data)
             # If `nobs` is `NULL`, it means we don't initialize the layout
             # observations, we initialize `nobs` with the `Align` obect
-            if (is.null(layout_nobs)) layout_nobs <- self$nobs(input_params)
+            if (is.null(layout_nobs)) {
+                layout_nobs <- self$nobs(input_params)
+                if (!(is_scalar(layout_nobs) && is.integer(layout_nobs))) {
+                    cli_abort(c(
+                        sprintf(
+                            "invalid {.field nobs} defined by %s",
+                            object_name(self)
+                        ),
+                        i = "{.field nobs} must be a single integer"
+                    ))
+                }
+            }
             params <- self$setup_params(layout_nobs, input_params)
         }
+        design["nobs"] <- list(layout_nobs)
+        layout@design <- design
 
         # save the parameters into the object ------------
         self$params <- params
-
+        layout
+    },
+    setup_design = function(self, design) {
+        old_panel <- .subset2(design, "panel")
+        old_index <- .subset2(design, "index")
         # prepare the data -------------------------------
         # compute statistics ---------------------------------
         self$statistics <- align_inject(
             self$compute,
-            c(list(panel = layout_panel, index = layout_index), params)
+            c(list(panel = old_panel, index = old_index), self$params)
         )
 
         # make the new layout -------------------------------
         panel_and_index <- align_inject(
             self$align,
-            c(list(panel = layout_panel, index = layout_index), params)
-        )
-        new_design <- discrete_design(
-            .subset2(panel_and_index, 1L),
-            .subset2(panel_and_index, 2L),
-            layout_nobs
+            c(list(panel = old_panel, index = old_index), self$params)
         )
 
-        check_discrete_design(
-            design,
-            new_design,
-            old_name = layout_name,
-            new_name = object_name
-        )
+        # check panel
+        layout_name <- self$layout_name
+        nobs <- .subset2(design, "nobs")
+        new_panel <- .subset2(panel_and_index, 1L)
+        if (!is.null(new_panel)) {
+            if (!is.atomic(new_panel)) {
+                cli_abort(c(
+                    sprintf(
+                        "invalid layout panels defined by %s",
+                        object_name(self)
+                    ),
+                    i = "layout panels must be an atomic vector"
+                ))
+            } else if (anyNA(new_panel)) {
+                cli_abort(sprintf(
+                    "layout panels defined by %s contain `NA`",
+                    object_name(self)
+                ))
+            } else if (is.null(nobs)) {
+                # we have defined panel, but don't define the `nobs`
+                cli_abort(sprintf(
+                    "%s defined the panels but not define {.field nobs}", object_name(self)
+                ))
+            } else if (length(new_panel) != nobs) {
+                # we have defined panel, but don't define the `nobs`
+                cli_abort(sprintf(
+                    "layout panels defined by %s (nobs: %d) is not compatible with the nobs: %d",
+                    object_name(self), length(new_panel), nobs
+                ))
+            } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
+                cli_abort(sprintf(
+                    "%s disrupt the previously established panel groups of %s",
+                    object_name(self), layout_name
+                ))
+            }
+        } else if (!is.null(old_panel)) {
+            # push developer to reset the panel in the layout
+            cli_abort(c(
+                sprintf("invalid %s", object_name(self)),
+                i = sprintf(
+                    "%s reset the {.field panel}, but don't change the {.field panel} of the layout", object_name(self)
+                )
+            ))
+        }
+        panel <- new_panel
+        if (!is.null(panel) && !is.factor(panel)) panel <- factor(panel)
+
+        # check index
+        new_index <- .subset2(panel_and_index, 2L)
+        if (!is.null(new_index)) {
+            if (!is.integer(new_index)) {
+                cli_abort(c(
+                    sprintf(
+                        "invalid layout ordering index defined by %s", object_name(self)
+                    ),
+                    i = "layout ordering index must be an integer"
+                ))
+            } else if (anyNA(new_index)) {
+                cli_abort(sprintf(
+                    "layout ordering index defined by %s contain `NA`",
+                    object_name(self)
+                ))
+            } else if (is.null(nobs)) {
+                # we have defined panel, but don't define the `nobs`
+                cli_abort(sprintf(
+                    "%s defined the ordering index but not define nobs", object_name(self)
+                ))
+            } else if (length(new_index) != nobs) {
+                # we have defined index, but don't define the `nobs`
+                cli_abort(sprintf(
+                    "layout ordering index defined by %s (nobs: %d) is not compatible with the nobs (%d)",
+                    object_name(self), length(new_index), nobs
+                ))
+            }
+        } else if (!is.null(old_index)) {
+            # push developer to reset the `index` in the layout
+            cli_abort(c(
+                sprintf("invalid %s", object_name(self)),
+                i = sprintf(
+                    "%s reset the {.field index}, but don't change the {.field index} of the layout",
+                    object_name(self)
+                )
+            ))
+        }
+        index <- new_index
+
+        # we always make the index following the panel
+        if (!is.null(panel) && !is.null(index)) {
+            index <- reorder_index(panel, index)
+        }
+
+        # we always prevent from reordering twice.
+        if (!is.null(old_index) && !all(old_index == index)) {
+            cli_abort(sprintf(
+                "%s disrupt the previously established ordering index of %s",
+                object_name(self), layout_name
+            ))
+        }
+        discrete_design(panel, index, nobs)
     },
 
     # Most parameters for the `Align` are taken automatically from `compute()`,

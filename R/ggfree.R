@@ -88,7 +88,8 @@ new_free_gg <- function(plot, data, size, active,
 FreeGg <- ggproto("FreeGg", AlignProto,
     free_facet = TRUE,
     free_limits = TRUE,
-    setup_design = function(self, layout_data, layout_design) {
+    interact_layout = function(self, layout) {
+        layout_data <- layout@data
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
         } else if (is.function(input_data)) {
@@ -106,7 +107,7 @@ FreeGg <- ggproto("FreeGg", AlignProto,
             data <- input_data
         }
         self$data <- ggalign_attr_restore(fortify_data_frame(data), layout_data)
-        layout_design
+        layout
     },
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {

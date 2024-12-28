@@ -110,10 +110,11 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
 #' @importFrom rlang inject
 #' @importFrom ggplot2 ggproto ggplot
 AlignGg <- ggproto("AlignGg", AlignProto,
-    setup_design = function(self, layout_data, design) {
+    interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         input_data <- self$input_data
         object_name <- object_name(self)
+        layout_data <- layout@data
         # inherit data from the layout
         if (is.function(input_data)) {
             if (is.null(layout_data)) {
@@ -131,10 +132,10 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         } else {
             data <- input_data
         }
-        ans <- inject(fortify_data_frame(data, !!!self$params))
+        plot_data <- inject(fortify_data_frame(data, !!!self$params))
 
         # for discrete design, # we need ensure the nobs is the same
-        if (is_discrete_design(design)) {
+        if (is_discrete_design(design <- layout@design)) {
             if (!is.null(data)) {
                 if (is.null(layout_nobs <- design$nobs)) {
                     layout_nobs <- NROW(data)
@@ -147,21 +148,22 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                 design["nobs"] <- list(layout_nobs)
                 # we always add `.index` to align the observations
                 if (is.matrix(input_data)) {
-                    ans$.index <- vec_rep(
+                    plot_data$.index <- vec_rep(
                         seq_len(NROW(input_data)),
                         NCOL(input_data)
                     )
                 } else {
-                    ans$.index <- seq_len(NROW(data))
+                    plot_data$.index <- seq_len(NROW(data))
                 }
+                layout@design <- design
             }
             self$labels <- vec_names(data) %||% vec_names(layout_data)
             self$add_mapping <- TRUE
             # always remove names, we'll add it in `build_plot()`
-            ans$.names <- NULL
+            plot_data$.names <- NULL
         }
-        self$data <- ggalign_attr_restore(ans, layout_data)
-        design
+        self$data <- ggalign_attr_restore(plot_data, layout_data)
+        layout
     },
     setup_plot = function(self, plot) {
         direction <- self$direction

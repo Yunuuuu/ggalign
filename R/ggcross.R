@@ -36,11 +36,13 @@
 #' It is recommended to use `.x`/`.y`, or `.discrete_x`/`.discrete_y` as the
 #' `x`/`y` mapping.
 #'
-#' @importFrom ggplot2 ggproto aes
+#' @importFrom ggplot2 ggplot aes
 #' @export
 ggcross <- function(mapping = aes(), size = NULL,
                     no_axes = NULL, active = NULL) {
     active <- update_active(active, new_active(use = TRUE))
+    no_axes <- no_axes %||%
+        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     cross(
         cross = CrossGg,
         plot = ggplot(mapping = mapping),
@@ -49,8 +51,35 @@ ggcross <- function(mapping = aes(), size = NULL,
     )
 }
 
-#' @importFrom ggplot2 ggproto ggplot
-CrossGg <- ggproto("CrossGg", Cross,
+#' @importFrom ggplot2 ggproto
+CrossGg <- ggproto("CrossGg", AlignProto,
+    interact_layout = function(self, layout) {
+        if (!is_cross_layout(layout)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(self), self$layout_name
+                ),
+                i = sprintf(
+                    "%s can only be used in {.fn stack_cross}",
+                    object_name(self)
+                )
+            ))
+        }
+
+        # udpate cross_points
+        layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
+
+        # update old design list
+        layout@odesign <- c(layout@odesign, list(layout@design))
+        # we keep the names from the layout data for usage
+        self$labels <- vec_names(layout@data)
+        layout
+    },
+    setup_design = function(self, design) {
+        design["index"] <- list(NULL) # always reset the index
+        design
+    },
     setup_plot = function(self, plot) {
         ggadd_default(plot, mapping = switch_direction(
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
@@ -114,6 +143,15 @@ CrossGg <- ggproto("CrossGg", Cross,
             default_expansion(x = expansion()),
             default_expansion(y = expansion())
         )
+    },
+    finish_plot = function(self, plot, schemes, theme) {
+        # remove axis titles, text, ticks used for alignment
+        if (isTRUE(self$no_axes)) {
+            schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
+                theme_no_axes(switch_direction(direction, "y", "x"))
+        }
+        plot <- plot_add_schemes(plot, schemes)
+        plot + theme_recycle()
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)

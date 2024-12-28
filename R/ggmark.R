@@ -79,12 +79,13 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
 MarkGg <- ggproto("MarkGg", AlignProto,
     free_facet = TRUE,
     free_limits = TRUE,
-    setup_layout = function(self, layout) {
+    interact_layout = function(self, layout) {
+        layout_name <- self$layout_name
         if (!self$in_linear) { # only used for linear coordinate
             cli_abort(c(
                 sprintf(
                     "Cannot add %s to %s",
-                    object_name(self), self$layout_name
+                    object_name(self), layout_name
                 ),
                 i = sprintf(
                     "%s can only be used in {.fn stack_layout}",
@@ -92,18 +93,14 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 )
             ))
         }
-        layout
-    },
-    setup_design = function(self, data, design) {
-        if (is_continuous_design(design)) { # only used for discrete variable
-            layout_name <- self$layout_name
+        if (is_layout_continuous(layout)) { # only used for discrete variable
             # `AlignDiscrete` object is special for discrete variables
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name(self), layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)
             ))
         }
-        ggproto_parent(AlignGg, self)$setup_design(data, design)
+        ggproto_parent(AlignGg, self)$interact_layout(layout)
     },
 
     #' @importFrom stats reorder

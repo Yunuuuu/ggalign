@@ -81,7 +81,6 @@ is_cross <- function(x) inherits(x, "Cross")
 AlignProto <- ggproto("AlignProto",
     # following fields will be added when added to the layout
     in_linear = NULL,
-    object_name = NULL,
     layout_name = NULL,
     direction = NULL,
     position = NULL, # for stack_layout() in quad_layout()
@@ -104,8 +103,8 @@ AlignProto <- ggproto("AlignProto",
 
     ############################################################
     # when added to the `Layout` object, will call following methods
-    setup_layout = function(self, layout) layout,
-    setup_design = function(self, data, design) design,
+    interact_layout = function(self, layout) layout,
+    setup_design = function(self, design) design,
     setup_plot = function(self, plot) plot,
 
     ##############################################################
