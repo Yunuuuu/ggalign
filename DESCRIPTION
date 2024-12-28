@@ -115,6 +115,7 @@ Collate:
     'link.R'
     'mark.R'
     'object-name.R'
+    'pair-links.R'
     'raster-magick.R'
     'rasterise.R'
     'scheme-.R'
