@@ -16,10 +16,11 @@ coordinates (\code{"panel"}) and one for the marked observations coordinates
 
 \item{...}{A list of formulas, where each side of the formula should be an
 \code{integer} or \code{character} index, or a \code{range_link()} object defining the
-linked observations, use \code{NULL} to indicate no link in this side. If only
-the left-hand side of the formula exists, you can input it directly. For
-integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
-to the layout. You can also use \code{waiver()} to inherit values from the
+linked observations. Use \code{NULL} to indicate no link on that side. You can
+also combine these by wrapping them into a single \code{list()}. If only the
+left-hand side of the formula exists, you can input it directly. For
+integer indices, wrap them with \code{\link[=I]{I()}} to preserve their order according
+to the layout. You can also use \code{\link[=waiver]{waiver()}} to inherit values from the
 opposite link argument.}
 
 \item{.group1, .group2}{A single boolean value indicating whether to use the

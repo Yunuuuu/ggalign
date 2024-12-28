@@ -12,10 +12,11 @@ range_link(point1, point2)
 \arguments{
 \item{...}{A list of formulas, where each side of the formula should be an
 \code{integer} or \code{character} index, or a \code{range_link()} object defining the
-linked observations, use \code{NULL} to indicate no link in this side. If only
-the left-hand side of the formula exists, you can input it directly. For
-integer indices, wrap them with \code{\link[=I]{I()}} to indicate their order according
-to the layout. You can also use \code{waiver()} to inherit values from the
+linked observations. Use \code{NULL} to indicate no link on that side. You can
+also combine these by wrapping them into a single \code{list()}. If only the
+left-hand side of the formula exists, you can input it directly. For
+integer indices, wrap them with \code{\link[=I]{I()}} to preserve their order according
+to the layout. You can also use \code{\link[=waiver]{waiver()}} to inherit values from the
 opposite link argument.}
 
 \item{point1, point2}{A single integer or character index, defining the lower
@@ -35,7 +36,9 @@ x <- pair_links(
     range_link(1, 6) ~ c("a", "b"),
     ~ 1:2,
     ~letters,
-    ~NULL # a blank link
+    # waiver() indicates the right hand is the same of the left hand
+    range_link(1, 6) ~ waiver(),
+    ~NULL # an empty link
 )
 x
 

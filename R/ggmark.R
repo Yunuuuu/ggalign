@@ -162,28 +162,10 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             extra_links <- NULL
         }
         links <- c(links, extra_links)
-        link_index <- lapply(links, function(l) {
-            l1 <- .subset2(l, "link1")
-            l2 <- .subset2(l, "link2")
-            if (.subset2(design1, "nobs") == .subset2(design2, "nobs")) {
-                if (is.waive(l1) && is.waive(l2)) {
-                    l1 <- l2 <- NULL
-                } else if (is.waive(l1) && !is.waive(l2)) {
-                    l1 <- l2
-                } else if (!is.waive(l1) && is.waive(l2)) {
-                    l2 <- l1
-                }
-            } else {
-                l1 <- l1 %|w|% NULL
-                l2 <- l2 %|w|% NULL
-            }
-            link1 <- make_link_data(l1, design1, labels = self$labels)
-            link2 <- make_link_data(l2, design2, labels = self$labels)
-            if (is.null(link1) && is.null(link2)) {
-                return(NULL)
-            }
-            list(link1 = link1, link2 = link2)
-        })
+        link_index <- lapply(links, make_pair_link_data,
+            design1 = design1, design2 = design2,
+            labels1 = self$labels, labels2 = self$labels
+        )
         link_index <- link_index[
             !vapply(link_index, is.null, logical(1L), USE.NAMES = FALSE)
         ]
@@ -210,7 +192,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 .index = vec_c(link1, link2)
             )
         })
-        plot_panel <- names(link_index) %||% seq_along(link_index)
+        plot_panel <- names.ggalign_pair_links(link_index)
         plot_data <- vec_rbind(!!!plot_data, .names_to = ".panel")
         plot_data$.panel <- factor(plot_data$.panel, unique(plot_panel))
         plot_data$.hand <- factor(plot_data$.hand, switch_direction(
