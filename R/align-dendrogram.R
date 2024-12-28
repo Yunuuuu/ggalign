@@ -46,7 +46,7 @@
 #' @inheritParams align_hclust
 #' @inheritParams dendrogram_data
 #' @inheritParams ggalign
-#' @inheritSection align_discrete Discrete Axis Alignment
+#' @inheritSection align Discrete Axis Alignment
 #' @examples
 #' # align_dendro will always add a plot area
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
@@ -111,7 +111,7 @@ align_dendro <- function(mapping = aes(), ...,
             data = function(data) ggalign_attr(data, "edge")
         )
     }
-    align_discrete(
+    align(
         align = AlignDendro,
         params = list(
             distance = distance, method = method, use_missing = use_missing,

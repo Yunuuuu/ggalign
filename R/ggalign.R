@@ -68,7 +68,7 @@
 #'  - `.extra_index`: The index information for the column (left or right
 #'    annotation) or row (top or bottom annotation).
 #'
-#' @inheritSection align_discrete Discrete Axis Alignment
+#' @inheritSection align Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_top() +

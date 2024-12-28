@@ -17,7 +17,7 @@
 #' @param width,height The relative width/height of the main plot, can be a
 #' [`unit`][grid::unit] object.
 #' @inheritParams stack_discrete
-#' @inheritParams align_discrete
+#' @inheritParams align
 #' @section ggplot2 specification:
 #' The data in the underlying main plot contains following columns:
 #'

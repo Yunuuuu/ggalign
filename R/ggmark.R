@@ -94,7 +94,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             ))
         }
         if (is_layout_continuous(layout)) { # only used for discrete variable
-            # `AlignDiscrete` object is special for discrete variables
+            # ggmark special for discrete variables
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name(self), layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)

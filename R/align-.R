@@ -3,10 +3,10 @@
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' An `AlignDiscrete` object interacts with the `Layout` object to reorder or
+#' An `Align` object interacts with the `Layout` object to reorder or
 #' split observations and, in some cases, add plot components to the `Layout`.
 #'
-#' @param align An `AlignDiscrete` object.
+#' @param align An `Align` object.
 #' @param ... Additional fields passed to the `align` object.
 #' @param params A list of parameters for `align`.
 #' @param plot A ggplot object.
@@ -32,11 +32,11 @@
 #' @importFrom ggplot2 ggproto
 #' @export
 #' @keywords internal
-align_discrete <- function(align, data, ...,
-                           params = list(), plot = NULL,
-                           size = NULL, schemes = NULL, no_axes = NULL,
-                           active = NULL, check.param = TRUE,
-                           call = caller_call()) {
+align <- function(align, data, ...,
+                  params = list(), plot = NULL,
+                  size = NULL, schemes = NULL, no_axes = NULL,
+                  active = NULL, check.param = TRUE,
+                  call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
@@ -95,7 +95,7 @@ align_discrete <- function(align, data, ...,
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
-#' object, descended from the top-level `AlignDiscrete`, and each implements
+#' object, descended from the top-level `Align`, and each implements
 #' various methods and fields.
 #'
 #' To create a new type of `Align*` object, you typically will want to
@@ -110,18 +110,18 @@ align_discrete <- function(align, data, ...,
 #' @export
 #' @format NULL
 #' @usage NULL
-#' @rdname align_discrete
+#' @rdname align
 #' @include plot-.R
-AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
+Align <- ggproto("Align", AlignProto,
     parameters = function(self) {
         c(
             align_method_params(
                 self$compute,
-                align_method_params(AlignDiscrete$compute)
+                align_method_params(Align$compute)
             ),
             align_method_params(
                 self$align,
-                align_method_params(AlignDiscrete$align)
+                align_method_params(Align$align)
             ),
             self$extra_params
         )
@@ -131,7 +131,7 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
         object_name <- object_name(self)
         # check plot is compatible with the layout
         if (is_layout_continuous(layout)) {
-            # `AlignDiscrete` object is special for discrete variables
+            # `Align` object is special for discrete variables
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name, layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)
@@ -407,7 +407,7 @@ AlignDiscrete <- ggproto("AlignDiscrete", AlignProto,
         c(header, content)
     },
 
-    # Summary the action of `AlignDiscrete`
+    # Summary the action of `Align`
     #
     # @return A logical vector of length 2, indicating:
     # - Whether the object reorders the observations.

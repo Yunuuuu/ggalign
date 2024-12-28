@@ -6,7 +6,7 @@
 #' Splits observations into groups, with slice ordering based on group levels.
 #'
 #' @param group A character define the groups of the observations.
-#' @inheritParams align_discrete
+#' @inheritParams align
 #' @examples
 #' set.seed(1L)
 #' small_mat <- matrix(rnorm(81), nrow = 9)
@@ -17,7 +17,7 @@
 align_group <- function(group, active = NULL) {
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    align_discrete(
+    align(
         align = AlignGroup,
         params = list(group = group),
         data = NULL, active = active,
@@ -26,7 +26,7 @@ align_group <- function(group, active = NULL) {
 }
 
 #' @importFrom ggplot2 ggproto
-AlignGroup <- ggproto("AlignGroup", AlignDiscrete,
+AlignGroup <- ggproto("AlignGroup", Align,
     nobs = function(self, params) vec_size(.subset2(params, "group")),
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(

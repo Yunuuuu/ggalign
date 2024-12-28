@@ -23,7 +23,7 @@
 #' transforming it as necessary for statistic calculations. By default, it will
 #' inherit from the layout matrix.
 #' @inheritParams align_order
-#' @inheritSection align_discrete Discrete Axis Alignment
+#' @inheritSection align Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
@@ -40,7 +40,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     assert_bool(reverse)
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    align_discrete(
+    align(
         align = AlignReorder,
         params = list(
             stat = stat,
@@ -55,7 +55,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
-AlignReorder <- ggproto("AlignReorder", AlignDiscrete,
+AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, stat, stat_params, strict) {
         assert_reorder(self, panel, strict)
         data <- .subset2(self, "data")

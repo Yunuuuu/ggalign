@@ -154,7 +154,7 @@ ggalign_stat.ggalign_plot <- function(x, ...) {
 }
 
 #' @export
-ggalign_stat.AlignDiscrete <- function(x, ...) .subset2(x, "statistics")
+ggalign_stat.Align <- function(x, ...) .subset2(x, "statistics")
 
 #' @export
 ggalign_stat.default <- function(x, ...) {

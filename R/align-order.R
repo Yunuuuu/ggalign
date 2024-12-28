@@ -22,8 +22,8 @@
 #' (including purrr-like lambda syntax) that will be applied to the layout
 #' matrix, transforming it as necessary for weight calculations. By default, it
 #' will inherit from the layout matrix.
-#' @inheritParams align_discrete
-#' @inheritSection align_discrete Discrete Axis Alignment
+#' @inheritParams align
+#' @inheritSection align Discrete Axis Alignment
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
@@ -62,7 +62,7 @@ align_order <- function(weights = rowMeans, ...,
     assert_bool(reverse)
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
-    align_discrete(
+    align(
         align = AlignOrder,
         params = list(
             weights = weights,
@@ -78,7 +78,7 @@ align_order <- function(weights = rowMeans, ...,
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
-AlignOrder <- ggproto("AlignOrder", AlignDiscrete,
+AlignOrder <- ggproto("AlignOrder", Align,
     nobs = function(params) length(.subset2(params, "weights")),
     setup_params = function(self, nobs, params) {
         if (!is.function(weights <- .subset2(params, "weights"))) {

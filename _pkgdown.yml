@@ -94,7 +94,7 @@ reference:
     Functions to enhance and customize the capabilities of ggalign.
   contents:
   - mark_pdraw
-  - align_discrete
+  - align
   - fortify_data_frame
   - fortify_matrix
   - ggalign_attr_set
