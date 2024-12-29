@@ -19,6 +19,8 @@ update_non_waive <- function(old, new, keep_null = TRUE) {
     )
 }
 
+is_s3 <- function(x) is.object(x) && !isS4(x) && !inherits(x, "R6")
+
 #################################################################
 #' Read Example Data
 #'

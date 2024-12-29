@@ -50,6 +50,7 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
 #'   (`"link"`).
 #'
 #' @inheritParams mark_draw
+#' @seealso [`mark_draw()`]
 #' @export
 .mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
     if (override_call(call <- caller_call())) {
@@ -69,7 +70,7 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
 
 #' @export
 print.ggalign_mark_draw <- function(x, ...) {
-    header <- sprintf("<%s>", fclass(x))
+    header <- sprintf("<%s>", vec_ptype_full(x))
     cat(header, sep = "\n")
     obj_print_data(.subset2(x, "links"))
     invisible(x)
@@ -95,10 +96,13 @@ mark_line <- function(..., element = NULL) {
         element <- ggplot2::merge_element(element, default)
     }
     .mark_draw(.draw = function(data) {
+        element <- element_rep_len(element, length.out = length(data))
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
             link <- .subset2(d, "link")
             data_frame0(
+                # there is only one row for panel, it's safe to use
+                # vec_interleave directly
                 x = vec_interleave(
                     (panel$x + panel$xend) / 2L,
                     (link$x + link$xend) / 2L
@@ -109,11 +113,12 @@ mark_line <- function(..., element = NULL) {
                 )
             )
         })
+        element <- element_vec_rep_each(element, times = list_sizes(data) / 2L)
         data <- vec_rbind(!!!data)
         element_grob(
             element,
             x = data$x, y = data$y,
-            id.lengths = vec_rep(2L, nrow(data) / 2L),
+            id.lengths = vec_rep(2L, vec_size(data) / 2L),
             default.units = "native"
         )
     }, ...)
@@ -142,12 +147,13 @@ mark_tetragon <- function(..., element = NULL) {
         element <- ggplot2::merge_element(element, default)
     }
     .mark_draw(.draw = function(data) {
+        element <- element_rep_len(element, length.out = length(data))
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
             link <- .subset2(d, "link")
 
             # find the consecutive groups
-            index <- .subset2(link, "link_index")
+            index <- .subset2(link, "ordering")
             oindex <- order(index)
             group <- cumsum(c(0L, diff(index[oindex])) != 1L)
 
@@ -158,14 +164,14 @@ mark_tetragon <- function(..., element = NULL) {
             link <- vec_split(link, group)
 
             # for each group, we draw a quadrilateral
-            tetragon_list <- lapply(.subset2(link, "val"), function(dd) {
+            vec_rbind(!!!lapply(.subset2(link, "val"), function(dd) {
                 data_frame0(
                     x = vec_c(panel$x, panel$xend, max(dd$xend), min(dd$x)),
                     y = vec_c(panel$y, panel$yend, max(dd$yend), min(dd$y))
                 )
-            })
-            vec_rbind(!!!tetragon_list)
+            }))
         })
+        element <- element_vec_rep_each(element, times = list_sizes(data) / 4L)
         data <- vec_rbind(!!!data)
         element_grob(
             element,
@@ -334,22 +340,11 @@ makeContent.ggalignMarkGtable <- function(x) {
             link1 = full_data1,
             link2 = full_data2
         )
-        spacing <- convertHeight(
-            .subset2(
-                data,
-                switch(link,
-                    link1 = "spacing1",
-                    link2 = "spacing2"
-                )
-            ),
-            "mm",
-            valueOnly = TRUE
-        )
-        spacing <- switch_direction(
-            direction,
-            scales::rescale(spacing, c(0, 1), from = c(0, height)),
-            scales::rescale(spacing, c(0, 1), from = c(0, width))
-        )
+
+        spacing <- .subset2(data, switch(link,
+            link1 = "spacing1",
+            link2 = "spacing2"
+        ))
 
         # each value represent an `observation`, for panel space, we use `NA`
         # obs arranged from left to top, and from bottom to top
@@ -357,11 +352,13 @@ makeContent.ggalignMarkGtable <- function(x) {
         # remove the last panel space, shouldn't exist
         points <- points[-length(points)]
         sizes <- numeric(length(points))
-        sizes[is.na(points)] <- spacing
         n_spacing <- length(full_breaks) - 1L
 
         # then, we define the link grobs
         if (is_horizontal(direction)) { # the link should be in left or right
+            spacing <- convertHeight(spacing, "mm", valueOnly = TRUE)
+            spacing <- scales::rescale(spacing, c(0, 1), from = c(0, height))
+            sizes[is.na(points)] <- spacing
             cell_height <- (1 - spacing * n_spacing) / sum(!is.na(points))
             sizes[!is.na(points)] <- cell_height # nobs
             yend <- cumsum(sizes)
@@ -401,6 +398,9 @@ makeContent.ggalignMarkGtable <- function(x) {
                 yend = panel_yend[panel_index]
             )
         } else { # the link should be in top or bottom
+            spacing <- convertWidth(spacing, "mm", valueOnly = TRUE)
+            spacing <- scales::rescale(spacing, c(0, 1), from = c(0, width))
+            sizes[is.na(points)] <- spacing
             cell_width <- (1 - spacing * n_spacing) / sum(!is.na(points))
             sizes[!is.na(points)] <- cell_width
             xend <- cumsum(sizes)
@@ -432,25 +432,28 @@ makeContent.ggalignMarkGtable <- function(x) {
                 y = panel_y, yend = panel_y
             )
         }
-        hand <- switch(
-            link, 
+        hand <- switch(link,
             link1 = switch_direction(direction, "left", "top"),
             link2 = switch_direction(direction, "right", "bottom")
         )
-        coords[[link]] <- lapply(seq_along(link_index), function(panel_index) {
-            l_index <- .subset2(link_index, panel_index)
+        coords[[link]] <- lapply(seq_along(link_index), function(i) {
+            l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
-            d_index <- .subset2(data_index, panel_index)
+            d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
-            link$link_index <- l_index
+            link$link_id <- names(link_index)[i]
+            link$ordering <- l_index
             link$.hand <- hand
             link$.index <- d_index
-            panel <- vec_slice(panel_coord, panel_index)
+            panel <- vec_slice(panel_coord, i)
             list(panel = panel, link = link)
         })
     }
-    coords <- list_transpose(coords)
-    coords <- list_drop_empty(unlist(coords, FALSE, FALSE))
+    coords <- vec_interleave(
+        .subset2(coords, "link1"),
+        .subset2(coords, "link2")
+    )
+    coords <- list_drop_empty(coords)
     draw <- .subset2(data, "draw")
     if (!is.grob(grob <- draw(coords))) {
         return(NextMethod())

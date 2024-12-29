@@ -1,10 +1,5 @@
 #' Add a plot to annotate selected observations
 #'
-#' - `align_line`: Annotate a list of spread observations. Observations will be
-#'   connected to the panel by a line.
-#' - `align_range`: Annotate a list of ranges of observations. Observation
-#'   ranges will be connected to the panel by a polygon.
-#'
 #' @param mark A [`mark_draw()`] object to define how to draw the links. Like
 #' [`mark_line()`], [`mark_tetragon()`].
 #' @inheritParams ggalign
@@ -163,10 +158,12 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             design1 = design1, design2 = design2,
             labels1 = self$labels, labels2 = self$labels
         )
-        link_index <- link_index[
-            !vapply(link_index, is.null, logical(1L), USE.NAMES = FALSE)
-        ]
+        names(link_index) <- names(links)
+
         data_index <- lapply(link_index, function(link) {
+            if (is.null(link)) {
+                return(NULL)
+            }
             link1 <- .subset2(link, "link1")
             link2 <- .subset2(link, "link2")
             list(
@@ -177,6 +174,9 @@ MarkGg <- ggproto("MarkGg", AlignProto,
 
         # prepare data for the plot
         plot_data <- lapply(data_index, function(index) {
+            if (is.null(index)) {
+                return(NULL)
+            }
             link1 <- .subset2(index, "link1")
             link2 <- .subset2(index, "link2")
             hand <- switch_direction(
@@ -189,9 +189,8 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 .index = vec_c(link1, link2)
             )
         })
-        plot_panel <- names.ggalign_pair_links(link_index)
         plot_data <- vec_rbind(!!!plot_data, .names_to = ".panel")
-        plot_data$.panel <- factor(plot_data$.panel, unique(plot_panel))
+        plot_data$.panel <- factor(plot_data$.panel, names(data_index))
         plot_data$.hand <- factor(plot_data$.hand, switch_direction(
             direction, c("left", "right"), c("bottom", "top")
         ))

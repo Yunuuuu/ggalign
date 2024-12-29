@@ -35,12 +35,7 @@ available space in the circular arrangement.}
 added to a layout.}
 }
 \description{
-\itemize{
-\item \code{align_line}: Annotate a list of spread observations. Observations will be
-connected to the panel by a line.
-\item \code{align_range}: Annotate a list of ranges of observations. Observation
-ranges will be connected to the panel by a polygon.
-}
+Add a plot to annotate selected observations
 }
 \section{ggplot2 specification}{
 

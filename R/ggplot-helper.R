@@ -57,6 +57,7 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
     inject(theme(!!!el, validate = FALSE))
 }
 
+##########################################################################
 #' Theme Polygon elements
 #'
 #' Draw polygon.
@@ -79,16 +80,19 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
             lineend = lineend, linejoin = linejoin, linemitre = linemitre,
             inherit.blank = inherit.blank
         ),
-        class = c("element_polygon", "element")
+        class = c("ggalign_element_polygon", "element")
     )
 }
 
 #' @importFrom grid gpar
 #' @importFrom ggplot2 element_grob
 #' @export
-element_grob.element_polygon <- function(element, x, y,
-                                         width = 1, height = 1, fill = NULL,
-                                         colour = NULL, linewidth = NULL, linetype = NULL, ...) {
+element_grob.ggalign_element_polygon <- function(element, x, y,
+                                                 width = 1, height = 1,
+                                                 fill = NULL,
+                                                 colour = NULL,
+                                                 linewidth = NULL,
+                                                 linetype = NULL, ...) {
     gp <- gpar(
         lwd = ggfun("len0_null")(linewidth * .pt),
         col = colour,
@@ -107,6 +111,118 @@ element_grob.element_polygon <- function(element, x, y,
     grid::polygonGrob(
         x = x, y = y,
         gp = ggfun("modify_list")(element_gp, gp), ...
+    )
+}
+
+##########################################################################
+#' Apply a function to the fields of an element object
+#'
+#' @description
+#' For an [`element`][ggplot2::element_blank] object, some fields are
+#' vectorized, while others are not. This function allows you to apply a
+#' function to the vectorized fields.
+#'
+#' The following helper functions are available:
+#'
+#'  - `element_rep`: Applies [`rep()`].
+#'  - `element_rep_len`: Applies [`rep_len()`].
+#'  - `element_vec_recycle`: Applies [`vec_recycle()`][vctrs::vec_recycle].
+#'  - `element_vec_rep`: Applies [`vec_rep()`][vctrs::vec_rep].
+#'  - `element_vec_rep_each`: Applies [`vec_rep_each()`][vctrs::vec_rep_each].
+#'  - `element_vec_slice`: Applies [`vec_slice()`][vctrs::vec_slice].
+#'
+#' @param .el An [`element`][ggplot2::element_blank] object.
+#' @param .fn The function to be applied to the vectorized fields of the element
+#' object.
+#' @param ... Additional arguments passed on to `fn`.
+#' @export
+element_vec <- function(.el, .fn, ...) {
+    fields <- element_vec_fields(.el)
+    if (is.null(fields)) {
+        return(.el)
+    }
+    .el[fields] <- lapply(.el[fields], .fn, ...)
+    .el
+}
+
+#' @export
+#' @rdname element_vec
+element_rep <- function(.el, ...) element_vec(.el, rep, ...)
+
+#' @param length.out Non-negative integer. The desired length of the output
+#' vector. Other inputs will be coerced to a double vector and the first element
+#' taken. Ignored if `NA` or invalid.
+#' @export
+#' @rdname element_vec
+element_rep_len <- function(.el, length.out, ...) {
+    element_vec(.el, rep_len, ..., length.out = length.out)
+}
+
+#' @inheritParams vctrs::vec_recycle
+#' @export
+#' @rdname element_vec
+element_vec_recycle <- function(.el, size, ...) {
+    element_vec(.el, vec_recycle, size = size, ...)
+}
+
+#' @inheritParams vctrs::vec_rep
+#' @export
+#' @rdname element_vec
+element_vec_rep <- function(.el, times, ...) {
+    element_vec(.el, vec_rep, times = times, ...)
+}
+
+#' @export
+#' @rdname element_vec
+element_vec_rep_each <- function(.el, times, ...) {
+    element_vec(.el, vec_rep_each, times = times, ...)
+}
+
+#' @inheritParams vctrs::vec_slice
+#' @export
+#' @rdname element_vec
+element_vec_slice <- function(.el, i, ...) {
+    element_vec(.el, vec_slice, i = i, ...)
+}
+
+element_vec_fields <- function(el) UseMethod("element_vec_fields")
+
+#' @export
+element_vec_fields.ggalign_element_polygon <- function(el) {
+    c(
+        "fill", "colour", "linewidth", "linetype",
+        "lineend", "linejoin", "linemitre", "alpha"
+    )
+}
+
+#' @export
+element_vec_fields.element_blank <- function(el) NULL
+
+#' @export
+element_vec_fields.element_polygon <- function(el) {
+    c("fill", "colour", "linewidth", "linetype")
+}
+
+#' @export
+element_vec_fields.element_point <- function(el) {
+    c("colour", "shape", "size", "fill", "stroke")
+}
+
+#' @export
+element_vec_fields.element_rect <- function(el) {
+    c("fill", "colour", "linewidth", "linetype")
+}
+
+#' @export
+element_vec_fields.element_line <- function(el) {
+    c("colour", "linewidth", "linetype", "lineend")
+}
+
+#' @export
+element_vec_fields.element_text <- function(el) {
+    c(
+        "family", "face", "colour", "size", "hjust", "vjust",
+        "angle", "lineheight"
     )
 }
 

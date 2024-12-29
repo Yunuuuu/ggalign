@@ -181,24 +181,19 @@ update_design.StackCross <- function(layout, ..., design, object_name,
     if (!from_head) point_index <- rev(point_index)
     for (i in point_index) {
         cross_point <- .subset(points, i)
+
         # we first update the design in the updated tail
-        # it means the first design when from_head is `TRUE`
-        # the last design when from_head is `FALSE`
+        # it means the first design when `from_head` is `TRUE`
+        # the last design when `from_head` is `FALSE`
         if ((from_head && i == 1L) || (!from_head && cross_point == n)) {
             new_design <- design
+        } else if (!from_head && any(cross_point == break_points)) {
+            break
         } else {
             # for design not in updated tail, we'll only update `panel` and
             # `nobs`, we check the new panel doesn't break the original index
             new_nobs <- .subset2(design, "nobs")
             new_panel <- .subset2(design, "panel")
-            if (is.null(new_nobs) && is.null(new_panel)) {
-                if (any(cross_point == break_points)) {
-                    break
-                } else {
-                    next # no need to update design
-                }
-            }
-
             new_design <- .subset2(design_list, i)
             # we check the new panel don't disrupt the ordering index
             if (!is.null(new_panel) &&
@@ -217,13 +212,14 @@ update_design.StackCross <- function(layout, ..., design, object_name,
             new_design["panel"] <- list(new_panel)
         }
         design_list[i] <- list(new_design)
+
+        # we then update the design for each plot
         if (i == 1L) {
             subset <- seq_len(cross_point)
         } else {
             subset <- (.subset(points, i - 1L) + 1L):cross_point
         }
 
-        # we then update the design for each plot
         layout@plot_list[subset] <- lapply(
             plot_list[subset], function(plot) {
                 if (is_ggalign_plot(plot)) {
@@ -235,9 +231,9 @@ update_design.StackCross <- function(layout, ..., design, object_name,
                 )
             }
         )
-        if (any(cross_point == break_points)) break
+        if (from_head && any(cross_point == break_points)) break
     }
-    layout@odesign <- design_list[seq_len(length(design_list) - 1L)]
+    layout@odesign <- vec_slice(design_list, seq_len(length(design_list) - 1L))
     layout@design <- design_list[[length(design_list)]]
     layout
 }

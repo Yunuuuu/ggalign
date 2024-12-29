@@ -72,8 +72,9 @@ CrossGg <- ggproto("CrossGg", AlignProto,
 
         # update old design list
         layout@odesign <- c(layout@odesign, list(layout@design))
+
         # we keep the names from the layout data for usage
-        self$labels <- vec_names(layout@data)
+        self$labels0 <- vec_names(layout@data)
         layout
     },
     setup_design = function(self, design) {
@@ -99,7 +100,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
             ),
             .index = index,
             # ggcross() only reset ordering index, labels should be the same
-            .names = .subset(.subset2(self, "labels"), index),
+            .names = .subset(self$labels0, index),
             .hand = if (is_horizontal(direction)) {
                 factor(
                     vec_rep_each(
@@ -151,7 +152,16 @@ CrossGg <- ggproto("CrossGg", AlignProto,
                 theme_no_axes(switch_direction(direction, "y", "x"))
         }
         plot <- plot_add_schemes(plot, schemes)
-        plot + theme_recycle()
+        if (is_horizontal(direction)) {
+            theme <- theme(
+                panel.spacing.y = calc_element("panel.spacing.y", theme)
+            )
+        } else {
+            theme <- theme(
+                panel.spacing.x = calc_element("panel.spacing.x", theme)
+            )
+        }
+        plot + theme + theme_recycle()
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)

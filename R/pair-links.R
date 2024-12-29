@@ -3,14 +3,14 @@
 #' - `pair_links`: Helper function to create pair of links.
 #' - `range_link`: Helper function to create a range of observations.
 #'
-#' @param ... A list of formulas, where each side of the formula should be an
-#'   `integer` or `character` index, or a `range_link()` object defining the
-#'   linked observations. Use `NULL` to indicate no link on that side. You can
-#'   also combine these by wrapping them into a single `list()`. If only the
-#'   left-hand side of the formula exists, you can input it directly. For
-#'   integer indices, wrap them with [`I()`] to preserve their order according
-#'   to the layout. You can also use [`waiver()`] to inherit values from the
-#'   opposite link argument.
+#' @param ... <[dyn-dots][rlang::dyn-dots]> A list of formulas, where each side
+#'   of the formula should be an `integer` or `character` index, or a
+#'   `range_link()` object defining the linked observations. Use `NULL` to
+#'   indicate no link on that side. You can also combine these by wrapping them
+#'   into a single `list()`. If only the left-hand side of the formula exists,
+#'   you can input it directly. For integer indices, wrap them with [`I()`] to
+#'   preserve their order according to the layout. You can also use [`waiver()`]
+#'   to inherit values from the opposite link argument.
 #' @examples
 #' x <- pair_links(
 #'     1:2,
@@ -39,8 +39,11 @@ pair_links <- function(...) {
 }
 
 new_pair_links <- function(x = list(), ..., class = character()) {
-    # use list_of()?
-    new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
+    ans <- new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
+    if (anyDuplicated(names(ans))) {
+        cli_abort("Found duplicated names for pair of links")
+    }
+    ans
 }
 
 #' @export
@@ -68,8 +71,16 @@ obj_print_data.ggalign_pair_links <- function(x, ...) {
         link1 <- format(c("link1", link1), justify = "right")
         link2 <- format(c("link2", link2), justify = "left")
         content <- paste0("  ", nms, link1, " ~ ", link2, empty)
-        cat(content, sep = "\n")
+        cat("", content, "", sep = "\n")
     }
+    invisible(x)
+}
+
+#' @export
+obj_print_footer.ggalign_pair_links <- function(x, ...) {
+    NextMethod()
+    n <- sum(lengths(x, use.names = FALSE))
+    cat(sprintf("A total of %d link%s", n, if (n > 1L) "s" else ""), sep = "\n")
     invisible(x)
 }
 
@@ -138,13 +149,8 @@ is_range_link <- function(x) inherits(x, "ggalign_range_link")
 ########################################################
 new_pair_link <- function(link1 = NULL, link2 = NULL,
                           ..., class = character()) {
-    if (is.null(link1) && is.null(link2)) {
-        .data <- list() # `list_of()` require length 0
-    } else {
-        .data <- list(link1 = link1, link2 = link2)
-    }
     structure(
-        .Data = .data,
+        .Data = list(link1 = link1, link2 = link2),
         ...,
         class = c(class, "ggalign_pair_link")
     )
@@ -166,16 +172,20 @@ obj_print_header.ggalign_pair_link <- function(x, ...) {
 obj_print_data.ggalign_pair_link <- function(x, ...) {
     if (length(x) > 0L) {
         content <- c(
-            paste("  link1:", deparse_link(.subset2(x, "link1"), ...)),
-            paste("  link2:", deparse_link(.subset2(x, "link2"), ...))
+            sprintf("  link1: %s", deparse_link(.subset2(x, "link1"), ...)),
+            sprintf("  link2: %s", deparse_link(.subset2(x, "link2"), ...))
         )
         cat(content, sep = "\n")
     }
     invisible(x)
 }
 
+#' @param x A `ggalign_pair_link` object.
+#' @noRd
 #' @export
-length.ggalign_pair_link <- function(x) as.integer(length(unclass(x)) > 0L)
+length.ggalign_pair_link <- function(x) {
+    sum(!vapply(x, is.null, logical(1L), USE.NAMES = FALSE))
+}
 
 ##################################################
 #' @export

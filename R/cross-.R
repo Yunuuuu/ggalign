@@ -7,50 +7,34 @@ cross <- function(cross, ..., call = caller_call()) {
     new_ggalign_plot(align = cross, ..., call = call)
 }
 
-#' @importFrom ggplot2 ggproto ggplot
+#' @importFrom ggplot2 ggproto ggproto_parent
 #' @include plot-.R
 Cross <- ggproto("Cross", AlignProto,
     reset_panel = FALSE,
     reset_nobs = FALSE,
-    setup_layout = function(self, layout) {
-        if (!is_cross_layout(layout)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add %s to %s",
-                    object_name(self), self$layout_name
-                ),
-                i = sprintf(
-                    "%s can only be used in {.fn stack_cross}",
-                    object_name(self)
-                )
+    free_facet = TRUE,
+    free_limits = TRUE,
+    interact_layout = function(self, layout) {
+        if (length(layout@break_points) && is.null(.subset2(design, "nobs"))) {
+            cli_abort(sprintf(
+                "layout {.field nobs} for %s must be initialized before adding %s",
+                self$layout_name, object_name(self)
             ))
         }
+        layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
-        # udpate cross_points
-        layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
-
-        # update old design list
-        layout@odesign <- c(layout@odesign, list(layout@design))
+        # udpate break_points
+        layout@break_points <- c(layout@break_points, length(layout@plot_list))
         layout
     },
-    setup_design = function(self, data, design) {
-        if (self$reset_nobs && is.null(.subset2(design, "nobs"))) {
-            layout_name <- .subset2(self, "layout_name")
-            cli_abort(sprintf(
-                "layout observations for %s must be initialized before adding %s",
-                layout_name, object_name(self)
-            ))
-        }
-
-        # we keep the names from the layout data for usage
-        self$labels <- vec_names(data)
-        design["index"] <- list(NULL) # always reset the index
-        if (self$reset_nobs || self$reset_panel) {
-            design["panel"] <- list(NULL)
-        }
+    setup_design = function(self, design) {
         if (self$reset_nobs) {
             design["nobs"] <- list(NULL)
         }
+        if (self$reset_nobs || self$reset_panel) {
+            design["panel"] <- list(NULL)
+        }
+        design["index"] <- list(NULL) # always reset the index
         design
     }
 )
