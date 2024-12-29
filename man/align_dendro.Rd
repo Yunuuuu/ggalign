@@ -95,9 +95,9 @@ middle of all direct child nodes.}
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
 \item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values will
-be interpreted as relative sizes, as this layout type adjusts based on the
-available space in the circular arrangement.}
+\code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values
+will be interpreted as relative sizes, as this layout type adjusts based on
+the available space in the circular arrangement.}
 
 \item{data}{A matrix-like object. By default, it inherits from the layout
 \code{matrix}.}

@@ -27,9 +27,9 @@ If not specified, must be supplied in each layer added to the plot.}
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
 \item{size}{The relative size of the plot, can be specified as a
-\code{\link[grid:unit]{unit}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values will
-be interpreted as relative sizes, as this layout type adjusts based on the
-available space in the circular arrangement.}
+\code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values
+will be interpreted as relative sizes, as this layout type adjusts based on
+the available space in the circular arrangement.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}

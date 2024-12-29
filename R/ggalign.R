@@ -20,9 +20,9 @@
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`fortify_data_frame()`].
 #' @param size The relative size of the plot, can be specified as a
-#' [`unit`][grid::unit]. Note that for [`circle_layout()`], all size values will
-#' be interpreted as relative sizes, as this layout type adjusts based on the
-#' available space in the circular arrangement.
+#' [`unit()`][grid::unit]. Note that for [`circle_layout()`], all size values
+#' will be interpreted as relative sizes, as this layout type adjusts based on
+#' the available space in the circular arrangement.
 #' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
 #'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
 #'   default, will use the option-
