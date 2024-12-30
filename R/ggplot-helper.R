@@ -88,7 +88,6 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
 #' @importFrom ggplot2 element_grob
 #' @export
 element_grob.ggalign_element_polygon <- function(element, x, y,
-                                                 width = 1, height = 1,
                                                  fill = NULL,
                                                  colour = NULL,
                                                  linewidth = NULL,
@@ -112,6 +111,98 @@ element_grob.ggalign_element_polygon <- function(element, x, y,
         x = x, y = y,
         gp = ggfun("modify_list")(element_gp, gp), ...
     )
+}
+
+#' Theme curve elements
+#'
+#' Draw curve.
+#'
+#' @inheritParams element_polygon
+#' @inheritParams grid::curveGrob
+#' @param arrow.fill Fill colour for arrows.
+#' @return A `element_curve` object
+#' @export
+element_curve <- function(colour = NULL, linewidth = NULL, linetype = NULL,
+                          lineend = NULL, color = NULL, curvature = NULL,
+                          angle = NULL, ncp = NULL, shape = NULL,
+                          square = NULL, squareShape = NULL, open = NULL,
+                          arrow = NULL, arrow.fill = NULL,
+                          inherit.blank = FALSE) {
+    colour <- color %||% colour
+    arrow.fill <- arrow.fill %||% colour
+    arrow <- arrow %||% FALSE
+
+    structure(
+        list(
+            colour = colour, linewidth = linewidth, linetype = linetype,
+            lineend = lineend, curvature = curvature, angle = angle,
+            ncp = ncp, shape = shape, square = square,
+            squareShape = squareShape, open = open,
+            arrow = arrow, arrow.fill = arrow.fill,
+            inherit.blank = inherit.blank
+        ),
+        class = c("ggalign_element_curve", "element")
+    )
+}
+
+#' @importFrom grid gpar
+#' @importFrom ggplot2 element_grob
+#' @export
+element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
+                                               colour = NULL, linewidth = NULL, linetype = NULL, lineend = NULL,
+                                               arrow.fill = NULL,
+                                               default.units = "npc",
+                                               id = NULL,
+                                               id.lengths = NULL, ...) {
+    arrow <- if (is.logical(element$arrow) && !element$arrow) {
+        NULL
+    } else {
+        element$arrow
+    }
+    if (is.null(arrow)) {
+        arrow.fill <- colour
+        element$arrow.fill <- element$colour
+    }
+    # The gp settings can override element_gp
+    gp <- gpar(
+        col = colour,
+        fill = arrow.fill %||% colour,
+        lwd = ggfun("len0_null")(linewidth * .pt),
+        lty = linetype,
+        lineend = lineend
+    )
+    element_gp <- gpar(
+        col = element$colour,
+        fill = element$arrow.fill %||% element$colour,
+        lwd = ggfun("len0_null")(element$linewidth * .pt),
+        lty = element$linetype,
+        lineend = element$lineend
+    )
+    if (is.null(id)) {
+        if (is.null(id.lengths)) {
+            id <- vec_rep(1L, length(x))
+        } else {
+            id <- vec_rep_each(seq_along(id.lengths), id.lengths)
+        }
+    }
+    data <- vec_split(data_frame0(x = x, y), id)
+    ans <- lapply(.subset2(data, "val"), function(d) {
+        grid::curveGrob(
+            .subset2(d, "x"), .subset2(d, "y"),
+            default.units = default.units,
+            gp = ggfun("modify_list")(element_gp, gp),
+            curvature = element$curvature,
+            angle = element$angle,
+            ncp = element$ncp,
+            shape = element$shape,
+            square = element$square,
+            squareShape = element$squareShape,
+            open = element$open,
+            arrow = arrow,
+            ...
+        )
+    })
+    grid::gTree(children = inject(grid::gList(!!!ans)))
 }
 
 ##########################################################################
