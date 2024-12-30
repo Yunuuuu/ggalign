@@ -171,7 +171,12 @@ save_png <- function(code, width = 400L, height = 400L) {
 }
 
 add_class <- function(x, ...) {
-    class(x) <- vec_unique(c(..., class(x)))
+    oldClass(x) <- vec_unique(c(..., oldClass(x)))
+    x
+}
+
+remove_class <- function(x, ...) {
+    oldClass(x) <- vec_set_difference(oldClass(x), c(...))
     x
 }
 

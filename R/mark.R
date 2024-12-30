@@ -242,7 +242,7 @@ mark_triangle <- function(..., orientation = "plot", element = NULL) {
 `[.ggalignMarkGtable` <- function(x, i, j) {
     # subset will violate the `ggalignMarkGtable` `shape`
     # we always use the next method
-    class(x) <- setdiff(class(x), "ggalignMarkGtable")
+    x <- remove_class(x, "ggalignMarkGtable")
     x$ggalign_link_data <- NULL
     NextMethod()
 }

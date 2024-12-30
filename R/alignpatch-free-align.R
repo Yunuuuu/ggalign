@@ -103,7 +103,7 @@ free_align.free_lab <- function(plot, axes = "tlbr") {
     free_labs <- setdiff_position(attr(plot, "free_labs"), axes)
     if (is_empty(free_labs)) {
         attr(plot, "free_labs") <- NULL
-        class(plot) <- vec_set_difference(class(plot), "free_lab")
+        plot <- remove_class(plot, "free_lab")
     } else {
         attr(plot, "free_labs") <- free_labs
     }
@@ -117,7 +117,7 @@ free_align.free_space <- function(plot, axes = "tlbr") {
     free_spaces <- setdiff_position(attr(plot, "free_spaces"), axes)
     if (is_empty(free_spaces)) {
         attr(plot, "free_spaces") <- NULL
-        class(plot) <- vec_set_difference(class(plot), "free_space")
+        plot <- remove_class(plot, "free_space")
     } else {
         attr(plot, "free_spaces") <- free_spaces
     }
@@ -131,7 +131,7 @@ free_align.free_border <- function(plot, axes = "tlbr") {
     free_borders <- setdiff_position(attr(plot, "free_borders"), axes)
     if (is_empty(free_borders)) {
         attr(plot, "free_borders") <- NULL
-        class(plot) <- vec_set_difference(class(plot), "free_border")
+        plot <- remove_class(plot, "free_border")
     } else {
         attr(plot, "free_borders") <- free_borders
     }

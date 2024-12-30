@@ -152,8 +152,8 @@ makeContext.ggalign_raster_magick <- function(x) {
     grid::pushViewport(viewport())
 
     # Clean up the grob for rendering
+    x <- remove_class(x, "ggalign_raster_magick")
     x$ggalign_raster_magick <- NULL
-    class(x) <- setdiff(class(x), "ggalign_raster_magick")
     grid::grid.draw(x) # should respect the viewport of `x`
     grid::popViewport()
     grDevices::dev.off()

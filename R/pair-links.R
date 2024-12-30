@@ -284,16 +284,12 @@ vec_ptype2.ggalign_range_link.ggalign_pair_link <- function(x, y, ...) {
 
 #' @export
 vec_ptype2.ggalign_pair_link.AsIs <- function(x, y, ...) {
-    cl <- oldClass(y)
-    oldClass(y) <- cl[cl != "AsIs"]
-    vec_ptype2(x, y)
+    vec_ptype2(x, remove_class(y, "AsIs"))
 }
 
 #' @export
 vec_ptype2.AsIs.ggalign_pair_link <- function(x, y, ...) {
-    cl <- oldClass(x)
-    oldClass(x) <- cl[cl != "AsIs"]
-    vec_ptype2(x, y)
+    vec_ptype2(remove_class(x, "AsIs"), y)
 }
 
 #' @export
@@ -341,9 +337,7 @@ vec_cast.ggalign_pair_link.AsIs <- function(x, to, ...,
                                             x_arg = caller_arg(x),
                                             to_arg = "",
                                             call = caller_env()) {
-    cl <- oldClass(x)
-    oldClass(x) <- cl[cl != "AsIs"]
-    I(vec_cast(x, to, x_arg = x_arg, call = call))
+    I(vec_cast(remove_class(x, "AsIs"), to, x_arg = x_arg, call = call))
 }
 
 #' @export
@@ -376,9 +370,7 @@ as_obs_link.NULL <- function(x, ...) x
 
 #' @export
 as_obs_link.AsIs <- function(x, ...) {
-    cl <- oldClass(x)
-    oldClass(x) <- cl[cl != "AsIs"]
-    I(as_obs_link(x))
+    I(as_obs_link(remove_class(x, "AsIs")))
 }
 
 #' @export
@@ -466,9 +458,7 @@ deparse_link.NULL <- function(x, ...) ""
 
 #' @export
 deparse_link.AsIs <- function(x, ...) {
-    cl <- oldClass(x)
-    oldClass(x) <- cl[cl != "AsIs"]
-    sprintf("I(%s)", deparse_link(x, ...))
+    sprintf("I(%s)", deparse_link(remove_class(x, "AsIs"), ...))
 }
 
 #' @export
@@ -568,10 +558,8 @@ link_to_location <- function(x, ...) UseMethod("link_to_location")
 link_to_location.AsIs <- function(x, n, names = NULL, index = NULL, ...,
                                   arg = caller_arg(x),
                                   call = caller_call()) {
-    cl <- oldClass(x)
-    oldClass(x) <- cl[cl != "AsIs"]
     link_to_location(
-        x,
+        remove_class(x, "AsIs"),
         n = n,
         names = names,
         index = index,

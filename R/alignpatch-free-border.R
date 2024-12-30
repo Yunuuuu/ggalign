@@ -36,7 +36,7 @@ free_border.free_lab <- function(plot, borders = "tlbr") {
         attr(plot, "free_labs") <- free_labs
     } else {
         attr(plot, "free_labs") <- NULL
-        class(plot) <- setdiff(class(plot), "free_lab")
+        plot <- remove_class(plot, "free_lab")
     }
     NextMethod()
 }
