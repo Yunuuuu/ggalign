@@ -196,6 +196,6 @@ CrossMark <- ggproto("CrossMark", CrossLink,
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)
-        c(header, "  Add plot to annotate discrete variable")
+        c(header, "  Add plot to annotate observations")
     }
 )
