@@ -14,13 +14,13 @@ include a data frame with the coordinates of the pair of observations to
 be linked.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of formulas, where each side
-of the formula should be an \code{integer} or \code{character} index, or a
-\code{range_link()} object defining the linked observations. Use \code{NULL} to
-indicate no link on that side. You can also combine these by wrapping them
-into a single \code{list()}. If only the left-hand side of the formula exists,
-you can input it directly. For integer indices, wrap them with \code{\link[=I]{I()}} to
-preserve their order according to the layout. You can also use \code{\link[=waiver]{waiver()}}
-to inherit values from the opposite link argument.}
+of the formula should be an \code{integer} or \code{character} index of the original
+data, or a \code{range_link()} object defining the linked observations. Use
+\code{NULL} to indicate no link on that side. You can also combine these by
+wrapping them into a single \code{list()}. If only the left-hand side of the
+formula exists, you can input it directly. For integer indices, wrap them
+with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
+\code{\link[=waiver]{waiver()}} to inherit values from the opposite link argument.}
 }
 \description{
 This function allows users to define links between a pair of observations,

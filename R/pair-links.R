@@ -10,13 +10,13 @@
 #' - `range_link`: Helper function to create a range of observations.
 #'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of formulas, where each side
-#'   of the formula should be an `integer` or `character` index, or a
-#'   `range_link()` object defining the linked observations. Use `NULL` to
-#'   indicate no link on that side. You can also combine these by wrapping them
-#'   into a single `list()`. If only the left-hand side of the formula exists,
-#'   you can input it directly. For integer indices, wrap them with [`I()`] to
-#'   preserve their order according to the layout. You can also use [`waiver()`]
-#'   to inherit values from the opposite link argument.
+#'   of the formula should be an `integer` or `character` index of the original
+#'   data, or a `range_link()` object defining the linked observations. Use
+#'   `NULL` to indicate no link on that side. You can also combine these by
+#'   wrapping them into a single `list()`. If only the left-hand side of the
+#'   formula exists, you can input it directly. For integer indices, wrap them
+#'   with [`I()`] to use the ordering from the layout. You can also use
+#'   [`waiver()`] to inherit values from the opposite link argument.
 #' @examples
 #' x <- pair_links(
 #'     # group on the left hand only
