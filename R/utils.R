@@ -23,9 +23,9 @@ is_s3 <- function(x) is.object(x) && !isS4(x) && !inherits(x, "R6")
 
 #' @importFrom rlang names2
 names_or_index <- function(x) {
-    nms <- names2(vec_data(x))
-    no <- nms == ""
-    nms[no] <- seq_along(x)[no]
+    nms <- names2(x)
+    empty <- nms == ""
+    nms[empty] <- seq_along(x)[empty]
     nms
 }
 
