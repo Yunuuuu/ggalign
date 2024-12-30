@@ -11,15 +11,13 @@
 #'   two arguments: a data frame for the panel side coordinates and a data frame
 #'   for the marked observation coordinates.
 #' @inheritParams pair_links
-#' @param .group1,.group2 A single boolean value indicating whether to use the
-#'   panel group information from the layout as the paired groups.
 #' @seealso
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]
 #'  - [`.mark_draw()`]
 #' @importFrom rlang is_empty inject
 #' @export
-mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
+mark_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function")
     }
@@ -31,7 +29,7 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
         if (is_empty(ans)) return(NULL) # styler: off
         grid::gTree(children = inject(grid::gList(!!!ans)))
     }
-    .mark_draw(new_draw, ..., .group1 = .group1, .group2 = .group2)
+    .mark_draw(new_draw, ...)
 }
 
 #' @inherit mark_draw title
@@ -51,20 +49,15 @@ mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
 #' @inheritParams mark_draw
 #' @seealso [`mark_draw()`]
 #' @export
-.mark_draw <- function(.draw, ..., .group1 = NULL, .group2 = NULL) {
+.mark_draw <- function(.draw, ...) {
     if (override_call(call <- caller_call())) {
         call <- current_call()
     }
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function", call = call)
     }
-    assert_bool(.group1, allow_null = TRUE, call = call)
-    assert_bool(.group2, allow_null = TRUE, call = call)
     links <- pair_links(...)
-    structure(
-        list(draw = draw, links = links, group1 = .group1, group2 = .group2),
-        class = "ggalign_mark_draw"
-    )
+    structure(list(draw = draw, links = links), class = "ggalign_mark_draw")
 }
 
 #' @export
@@ -465,12 +458,13 @@ makeContent.ggalignMarkGtable <- function(x) {
             hand1 = switch_direction(direction, "left", "top"),
             hand2 = switch_direction(direction, "right", "bottom")
         )
+        nms <- names(link_index)
         coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
-            link$link_id <- names(link_index)[i]
+            link$link_id <- nms[i]
             link$ordering <- l_index
             link$.hand <- hand
             link$.index <- d_index

@@ -1,10 +1,15 @@
 # Since `ggalign_align_plot` object need act with the layout, we Use R6 object
 # here
-cross <- function(cross, ..., call = caller_call()) {
+cross <- function(cross, data = waiver(), ..., call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
-    new_ggalign_plot(align = cross, ..., call = call)
+    new_ggalign_plot(
+        align = cross,
+        input_data = allow_lambda(data),
+        ...,
+        call = call
+    )
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
@@ -23,6 +28,10 @@ Cross <- ggproto("Cross", AlignProto,
         }
         layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
+        # will define labels0
+        self$labels0 <- self$labels
+        self$labels <- NULL
+
         # udpate break_points
         layout@break_points <- c(layout@break_points, length(layout@plot_list))
         layout
@@ -36,5 +45,9 @@ Cross <- ggproto("Cross", AlignProto,
         }
         design["index"] <- list(NULL) # always reset the index
         design
+    },
+    summary = function(self, plot) {
+        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        c(header, "  Add plot to connect selected observations")
     }
 )

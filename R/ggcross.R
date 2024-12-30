@@ -74,7 +74,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
         layout@odesign <- c(layout@odesign, list(layout@design))
 
         # we keep the names from the layout data for usage
-        self$labels0 <- vec_names(layout@data)
+        self$labels <- vec_names(layout@data)
         layout
     },
     setup_design = function(self, design) {
@@ -100,7 +100,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
             ),
             .index = index,
             # ggcross() only reset ordering index, labels should be the same
-            .names = .subset(self$labels0, index),
+            .names = .subset(self$labels, index),
             .hand = if (is_horizontal(direction)) {
                 factor(
                     vec_rep_each(

@@ -1,9 +1,14 @@
 #' Add a plot to annotate selected observations
 #'
 #' @param mark A [`mark_draw()`] object to define how to draw the links. Like
-#' [`mark_line()`], [`mark_tetragon()`].
+#' [`mark_line()`], [`mark_tetragon()`]. Note the names of the pair links will
+#' be used to define the panel names so must be unique.
 #' @inheritParams ggalign
-#'
+#' @param group1,group2 A single boolean value indicating whether to use the
+#'   panel group information from the layout as the paired groups. By default,
+#'   if no specific observations are selected in `mark`, `ggmark()` will
+#'   automatically connect all observations and group them according to the
+#'   layout's defined groups.
 #' @section ggplot2 specification:
 #' `ggmark` initializes a ggplot object. The underlying data is created using
 #' [`fortify_data_frame()`]. Please refer to it for more details.
@@ -49,18 +54,22 @@
 #' @importFrom rlang list2
 #' @export
 ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
+                   group1 = NULL, group2 = NULL,
                    size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
     }
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
+    assert_bool(group1, allow_null = TRUE)
+    assert_bool(group2, allow_null = TRUE)
     new_ggalign_plot(
         MarkGg,
         # fields added to `MarkGg`
         input_data = allow_lambda(data), # used by AlignGg
         params = list2(...), # used by AlignGg
         mark = mark, # used by MarkGg
+        group1 = group1, group2 = group2,
 
         # slot
         plot = ggplot(mapping = mapping),
@@ -83,7 +92,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                     object_name(self), layout_name
                 ),
                 i = sprintf(
-                    "%s can only be used in {.fn stack_layout}",
+                    "%s can only be used in linear layout",
                     object_name(self)
                 )
             ))
@@ -95,7 +104,9 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 i = sprintf("%s cannot align discrete variables", layout_name)
             ))
         }
-        ggproto_parent(AlignGg, self)$interact_layout(layout)
+        ans <- ggproto_parent(AlignGg, self)$interact_layout(layout)
+        self$labels0 <- self$labels
+        ans
     },
 
     #' @importFrom stats reorder
@@ -110,24 +121,12 @@ MarkGg <- ggproto("MarkGg", AlignProto,
                 call = self$call
             )
         }
-        direction <- self$direction
-        position <- self$position
+        mark <- self$mark
 
         # parse links --------------------------------------------
-        mark <- self$mark
-        design1 <- previous_design %||% design
-        design2 <- design
-        full_data1 <- split(
-            seq_len(.subset2(design1, "nobs")),
-            .subset2(design1, "panel")
-        )
-        full_data2 <- split(
-            seq_len(.subset2(design2, "nobs")),
-            .subset2(design2, "panel")
-        )
         links <- .subset2(mark, "links")
-        group1 <- .subset2(mark, "group1")
-        group2 <- .subset2(mark, "group2")
+        group1 <- self$group1
+        group2 <- self$group2
         if (is_empty(links) && is.null(group1) && is.null(group2)) {
             # guess group1 and group2 from position
             if (is.null(position)) { # a normal stack layout
@@ -153,117 +152,28 @@ MarkGg <- ggproto("MarkGg", AlignProto,
         } else {
             extra_links <- NULL
         }
-        links <- c(links, extra_links)
-        link_index <- lapply(links, make_pair_link_data,
-            design1 = design1, design2 = design2,
-            labels1 = self$labels, labels2 = self$labels
+        self$unlock()
+        self$mark$links <- c(extra_links, links)
+        on.exit(self$mark <- mark) # restore the original `mark`
+        on.exit(self$lock(), add = TRUE)
+
+        # setup the plot
+        plot <- ggproto_parent(CrossMark, self)$build_plot(
+            plot,
+            design,
+            extra_design,
+            previous_design %||% design
         )
-        names(link_index) <- names(links)
-
-        data_index <- lapply(link_index, function(link) {
-            if (is.null(link)) {
-                return(NULL)
-            }
-            hand1 <- .subset2(link, "hand1")
-            hand2 <- .subset2(link, "hand2")
-            list(
-                hand1 = .subset2(design1, "index")[hand1],
-                hand2 = .subset2(design2, "index")[hand2]
-            )
-        })
-
-        # prepare data for the plot
-        plot_data <- lapply(data_index, function(index) {
-            if (is.null(index)) {
-                return(NULL)
-            }
-            hand1 <- .subset2(index, "hand1")
-            hand2 <- .subset2(index, "hand2")
-            hand <- switch_direction(
-                direction,
-                c("left", "right"),
-                c("top", "bottom")
-            )
-            data_frame0(
-                .hand = vec_rep_each(hand, c(length(hand1), length(hand2))),
-                .index = vec_c(hand1, hand2)
-            )
-        })
-        plot_data <- vec_rbind(!!!plot_data, .names_to = ".panel")
-        plot_data$.panel <- factor(plot_data$.panel, names(data_index))
-        plot_data$.hand <- factor(plot_data$.hand, switch_direction(
-            direction, c("left", "right"), c("bottom", "top")
-        ))
+        plot_data <- plot$data
 
         # prepare data for the plot ------------------------------
-        if (!is.null(self$labels)) {
-            plot_data[[".names"]] <- .subset(
-                self$labels, .subset2(plot_data, ".index")
-            )
-        }
         if (!is.null(data <- self$data)) {
             plot_data <- inner_join(plot_data, data, by = ".index")
         }
-        plot <- gguse_data(plot, ggalign_attr_restore(plot_data, data))
-
-        # set up facets
-        if (nlevels(plot_data$.panel) > 1L) {
-            if (inherits(plot$facet, "FacetGrid")) {
-                facet <- switch_direction(
-                    direction,
-                    ggplot2::facet_grid(
-                        rows = ggplot2::vars(.data$.panel),
-                        scales = "free_y", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    ),
-                    ggplot2::facet_grid(
-                        cols = ggplot2::vars(.data$.panel),
-                        scales = "free_x", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    )
-                )
-            } else {
-                facet <- switch_direction(
-                    direction,
-                    ggplot2::facet_wrap(
-                        facets = ggplot2::vars(.data$.panel),
-                        ncol = 1L, as.table = FALSE
-                    ),
-                    ggplot2::facet_wrap(
-                        facets = ggplot2::vars(.data$.panel),
-                        nrow = 1L, as.table = FALSE
-                    )
-                )
-            }
-        } else {
-            facet <- facet_stack(direction, object_name(self))
-        }
-        # free_row and free_column have nothing with `facet_stack`
-        # it's safe to use it directly
-        plot <- gguse_facet(plot, facet, free_row = TRUE, free_column = TRUE)
-        plot$ggalign_link_data <- list(
-            full_data1 = full_data1,
-            full_data2 = full_data2,
-            link_index = link_index,
-            data_index = data_index,
-            direction = direction,
-            draw = .subset2(mark, "draw")
-        )
-        add_class(plot, "ggalign_mark_plot", "patch_ggplot")
+        gguse_data(plot, ggalign_attr_restore(plot_data, data))
     },
     finish_plot = function(self, plot, schemes, theme) {
-        plot <- plot_add_schemes(plot, schemes)
-        # save spacing for usage
-        plot$ggalign_link_data$spacing1 <-
-            plot$ggalign_link_data$spacing2 <- calc_element(
-                switch_direction(
-                    self$direction,
-                    "panel.spacing.y",
-                    "panel.spacing.x"
-                ),
-                theme
-            ) %||% unit(0, "mm")
-        plot + theme_recycle()
+        ggproto_parent(CrossMark, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)

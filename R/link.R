@@ -219,12 +219,13 @@ makeContent.ggalignLinkGrob <- function(x) {
             hand1 = switch_direction(direction, "left", "top"),
             hand2 = switch_direction(direction, "right", "bottom")
         )
-        coords[[link]] <- lapply(names(link_index), function(i) {
+        nms <- names(link_index)
+        coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
-            link$link_id <- i
+            link$link_id <- nms[i]
             link$ordering <- l_index
             link$.hand <- hand
             link$.index <- d_index

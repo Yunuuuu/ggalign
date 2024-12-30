@@ -4,7 +4,7 @@
 \alias{mark_draw}
 \title{Define the links to connect the marked observations}
 \usage{
-mark_draw(.draw, ..., .group1 = NULL, .group2 = NULL)
+mark_draw(.draw, ...)
 }
 \arguments{
 \item{.draw}{A function used to draw the links. The function must return a
@@ -21,9 +21,6 @@ wrapping them into a single \code{list()}. If only the left-hand side of the
 formula exists, you can input it directly. For integer indices, wrap them
 with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \code{\link[=waiver]{waiver()}} to inherit values from the other group.}
-
-\item{.group1, .group2}{A single boolean value indicating whether to use the
-panel group information from the layout as the paired groups.}
 }
 \description{
 This function allows users to define links between marked observations and

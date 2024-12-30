@@ -53,14 +53,7 @@ pair_links <- function(...) {
 }
 
 new_pair_links <- function(x = list(), ..., class = character()) {
-    ans <- new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
-    if (vec_duplicate_any(nms <- names(ans))) { # nolint
-        cli_abort(c(
-            "names must be unique",
-            i = "duplicated names: {.val {nms[vec_duplicate_detect(nms)]}}"
-        ))
-    }
-    ans
+    new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
 }
 
 #' @importFrom rlang names2

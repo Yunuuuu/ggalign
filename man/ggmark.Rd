@@ -4,11 +4,21 @@
 \alias{ggmark}
 \title{Add a plot to annotate selected observations}
 \usage{
-ggmark(mark, data = waiver(), mapping = aes(), ..., size = NULL, active = NULL)
+ggmark(
+  mark,
+  data = waiver(),
+  mapping = aes(),
+  ...,
+  group1 = NULL,
+  group2 = NULL,
+  size = NULL,
+  active = NULL
+)
 }
 \arguments{
 \item{mark}{A \code{\link[=mark_draw]{mark_draw()}} object to define how to draw the links. Like
-\code{\link[=mark_line]{mark_line()}}, \code{\link[=mark_tetragon]{mark_tetragon()}}.}
+\code{\link[=mark_line]{mark_line()}}, \code{\link[=mark_tetragon]{mark_tetragon()}}. Note the names of the pair links will
+be used to define the panel names so must be unique.}
 
 \item{data}{The following options can be used:
 \itemize{
@@ -25,6 +35,12 @@ If not specified, must be supplied in each layer added to the plot.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+
+\item{group1, group2}{A single boolean value indicating whether to use the
+panel group information from the layout as the paired groups. By default,
+if no specific observations are selected in \code{mark}, \code{ggmark()} will
+automatically connect all observations and group them according to the
+layout's defined groups.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values

@@ -46,7 +46,7 @@ Add a plot to connect selected observations
 \section{ggplot2 Specification}{
 
 The \code{cross_link} function initializes a \code{ggplot} object but does not
-initialize any data. Use \code{\link[=scheme_data]{scheme_data()}} to change the internal data if
+initialize any data. Using \code{\link[=scheme_data]{scheme_data()}} to change the internal data if
 needed.
 }
 

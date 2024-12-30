@@ -16,7 +16,7 @@
 #'
 #' @section ggplot2 Specification:
 #' The `cross_link` function initializes a `ggplot` object but does not
-#' initialize any data. Use [`scheme_data()`] to change the internal data if
+#' initialize any data. Using [`scheme_data()`] to change the internal data if
 #' needed.
 #'
 #' @export
@@ -29,12 +29,10 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossLink,
-        link = link,
-        plot = ggplot(), size = size,
+        data = data, link = link, plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_no_panel()),
         active = active,
         on_top = on_top,
-        input_data = allow_lambda(data),
         inherit_panel = inherit_panel,
         inherit_nobs = inherit_nobs
     )
@@ -44,6 +42,19 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
 #' @include cross-.R
 CrossLink <- ggproto("CrossLink", Cross,
     interact_layout = function(self, layout) {
+        if (!self$in_linear) { # only used for linear coordinate
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(self), layout_name
+                ),
+                i = sprintf(
+                    "%s can only be used in linear layout",
+                    object_name(self)
+                )
+            ))
+        }
+        # will define labels0 using CrossGg
         layout <- ggproto_parent(Cross, self)$interact_layout(layout)
 
         # setup data
@@ -190,5 +201,9 @@ CrossLink <- ggproto("CrossLink", Cross,
 
         # insert the grob
         plot + inset(grob, on_top = self$on_top) + theme_recycle()
+    },
+    summary = function(self, plot) {
+        header <- ggproto_parent(Cross, self)$summary(plot)
+        c(header, "  Add plot to connect selected observations")
     }
 )
