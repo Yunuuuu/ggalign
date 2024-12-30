@@ -147,6 +147,7 @@ reference:
   - scale_draw_manual
   - draw_key_draw
   - element_polygon
+  - element_curve
   - element_vec
 
 - title: helpers
