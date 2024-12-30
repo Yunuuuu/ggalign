@@ -13,13 +13,21 @@
 #'   to inherit values from the opposite link argument.
 #' @examples
 #' x <- pair_links(
+#'     # links in the left hand only
 #'     1:2,
 #'     c("a", "b"),
-#'     range_link(1, 6) ~ c("a", "b"),
+#'     range_link(1, 6),
+#'     range_link("a", "b"),
+#'     # links in the right hand only
 #'     ~ 1:2,
-#'     ~letters,
+#'     ~ c("a", "b"),
+#'     ~ range_link(1, 6),
+#'     # links in the both side
+#'     range_link(1, 6) ~ c("a", "b"),
 #'     # waiver() indicates the right hand is the same of the left hand
 #'     range_link(1, 6) ~ waiver(),
+#'     # the same for the left hand
+#'     waiver() ~ 1:2,
 #'     ~NULL # an empty link
 #' )
 #' x
@@ -46,9 +54,10 @@ new_pair_links <- function(x = list(), ..., class = character()) {
     ans
 }
 
+#' @importFrom rlang names2
 #' @export
 names.ggalign_pair_links <- function(x) {
-    nms <- rlang::names2(vec_data(x))
+    nms <- names2(vec_data(x))
     no <- nms == ""
     nms[no] <- seq_along(x)[no]
     nms
