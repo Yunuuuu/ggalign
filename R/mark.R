@@ -1,9 +1,9 @@
 #' Define the links to connect the marked observations
 #'
 #' @description
-#' This function allows users to define links between marked observations (e.g.,
-#' for creating visual connections for related data), which could help explain
-#' the observations.
+#' This function allows users to define links between marked observations and
+#' plot panel (e.g., for creating visual connections for related data), which
+#' could help explain the observations.
 #'
 #' @param .draw A function used to draw the links. The function must return a
 #'   [`grob()`][grid::grob] object. If the function does not return a valid
@@ -12,8 +12,7 @@
 #'   for the marked observation coordinates.
 #' @inheritParams pair_links
 #' @param .group1,.group2 A single boolean value indicating whether to use the
-#'   panel group information from the layout as the links. By default, will
-#'   guess from the layout.
+#'   panel group information from the layout as the paired groups.
 #' @seealso
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]

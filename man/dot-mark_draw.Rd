@@ -24,8 +24,7 @@ with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \code{\link[=waiver]{waiver()}} to inherit values from the other group.}
 
 \item{.group1, .group2}{A single boolean value indicating whether to use the
-panel group information from the layout as the links. By default, will
-guess from the layout.}
+panel group information from the layout as the paired groups.}
 }
 \description{
 A base version of \code{\link{mark_draw}}, designed for performance optimization. This
