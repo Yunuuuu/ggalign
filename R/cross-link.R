@@ -151,6 +151,15 @@ CrossLink <- ggproto("CrossLink", Cross,
             .subset2(design2, "panel")
         )
         links <- .subset2(link, "links")
+        # set default links for link_line()
+        if (is_empty(links) &&
+            inherits(link, "ggalign_link_line") &&
+            identical(.subset2(design1, "nobs"), .subset2(design2, "nobs"))) {
+            links <- lapply(seq_len(.subset2(design1, "nobs")), function(i) {
+                rlang::new_formula(i, i)
+            })
+            links <- pair_links(!!!links)
+        }
         link_index <- lapply(links, make_pair_link_data,
             design1 = design1, design2 = design2,
             labels1 = self$labels0, labels2 = self$labels

@@ -126,7 +126,7 @@ link_line <- function(..., element = NULL) {
             )
         }
     }, ...)
-    ans
+    add_class(ans, "ggalign_link_line")
 }
 
 # preDraw:
