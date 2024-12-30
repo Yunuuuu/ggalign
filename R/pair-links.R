@@ -98,7 +98,10 @@ obj_print_data.ggalign_pair_links <- function(x, ...) {
 obj_print_footer.ggalign_pair_links <- function(x, ...) {
     NextMethod()
     n <- sum(lengths(x, use.names = FALSE))
-    cat(sprintf("A total of %d link%s", n, if (n > 1L) "s" else ""), sep = "\n")
+    cat(sprintf(
+        "A total of %d group%s", n,
+        if (n > 1L) "s" else ""
+    ), sep = "\n")
     invisible(x)
 }
 
