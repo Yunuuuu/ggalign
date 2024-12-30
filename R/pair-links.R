@@ -48,7 +48,7 @@ pair_links <- function(...) {
 
 new_pair_links <- function(x = list(), ..., class = character()) {
     ans <- new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
-    if (anyDuplicated(names(ans))) {
+    if (vec_duplicate_any(names(ans))) {
         cli_abort("Found duplicated names for pair of links")
     }
     ans
