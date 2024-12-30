@@ -257,6 +257,12 @@
         <dd>Plot dendrogram tree</dd>
       </dl><dl><dt>
 
+          <code><a href="ggfree.html">ggfree()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Add ggplot to layout without alignment</dd>
+      </dl><dl><dt>
+
           <code><a href="ggalign.html">ggalign()</a></code>
           <span class="badge lifecycle lifecycle-stable">stable</span>
         </dt>
@@ -275,10 +281,16 @@
         <dd>Connect two layout crosswise</dd>
       </dl><dl><dt>
 
-          <code><a href="ggfree.html">ggfree()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+          <code><a href="cross_mark.html">cross_mark()</a></code>
+
         </dt>
-        <dd>Add ggplot to layout without alignment</dd>
+        <dd>Add a plot to connect selected observations</dd>
+      </dl><dl><dt>
+
+          <code><a href="cross_link.html">cross_link()</a></code>
+
+        </dt>
+        <dd>Add a plot to connect selected observations</dd>
       </dl><dl><dt>
 
           <code><a href="mark_line.html">mark_line()</a></code>
@@ -293,10 +305,28 @@
         <dd>Link the observations and the panel with a quadrilateral</dd>
       </dl><dl><dt>
 
-          <code><a href="mark_draw.html">mark_draw()</a></code> <code><a href="mark_draw.html">link()</a></code> <code><a href="mark_draw.html">link_range()</a></code>
+          <code><a href="mark_draw.html">mark_draw()</a></code>
 
         </dt>
         <dd>Define the links to connect the marked observations</dd>
+      </dl><dl><dt>
+
+          <code><a href="link_line.html">link_line()</a></code>
+
+        </dt>
+        <dd>Link the observations with a line</dd>
+      </dl><dl><dt>
+
+          <code><a href="link_draw.html">link_draw()</a></code>
+
+        </dt>
+        <dd>Define the links to connect a pair of observations</dd>
+      </dl><dl><dt>
+
+          <code><a href="pair_links.html">pair_links()</a></code> <code><a href="pair_links.html">range_link()</a></code>
+
+        </dt>
+        <dd>Helper function to create pairs of observation groups</dd>
       </dl></div><div class="section level2">
       <h2 id="schemes">Schemes<a class="anchor" aria-label="anchor" href="#schemes"></a></h2>
 
@@ -339,13 +369,19 @@
 
       <dl><dt>
 
-          <code><a href="mark_pdraw.html">mark_pdraw()</a></code>
+          <code><a href="dot-mark_draw.html">.mark_draw()</a></code>
 
         </dt>
         <dd>Define the links to connect the marked observations</dd>
       </dl><dl><dt>
 
-          <code><a href="align_discrete.html">align_discrete()</a></code>
+          <code><a href="dot-link_draw.html">.link_draw()</a></code>
+
+        </dt>
+        <dd>Define the links to connect a pair of observations</dd>
+      </dl><dl><dt>
+
+          <code><a href="align.html">align()</a></code>
           <span class="badge lifecycle lifecycle-stable">stable</span>
         </dt>
         <dd>Create a New <code>align</code> Object</dd>
@@ -532,6 +568,12 @@
 
         </dt>
         <dd>Theme Polygon elements</dd>
+      </dl><dl><dt>
+
+          <code><a href="element_vec.html">element_vec()</a></code> <code><a href="element_vec.html">element_rep()</a></code> <code><a href="element_vec.html">element_rep_len()</a></code> <code><a href="element_vec.html">element_vec_recycle()</a></code> <code><a href="element_vec.html">element_vec_rep()</a></code> <code><a href="element_vec.html">element_vec_rep_each()</a></code> <code><a href="element_vec.html">element_vec_slice()</a></code>
+
+        </dt>
+        <dd>Apply a function to the fields of an element object</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
 
