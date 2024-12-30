@@ -147,7 +147,10 @@ element_vec <- function(.el, .fn, ...) {
     if (is.null(fields)) {
         return(.el)
     }
-    .el[fields] <- lapply(.el[fields], .fn, ...)
+    .el[fields] <- lapply(.el[fields], function(value) {
+        if (!is.null(value)) value <- .fn(value, ...)
+        value
+    })
     .el
 }
 
