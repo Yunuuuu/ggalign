@@ -16,7 +16,7 @@
 #'   wrapping them into a single `list()`. If only the left-hand side of the
 #'   formula exists, you can input it directly. For integer indices, wrap them
 #'   with [`I()`] to use the ordering from the layout. You can also use
-#'   [`waiver()`] to inherit values from the opposite link argument.
+#'   [`waiver()`] to inherit values from the other group.
 #' @examples
 #' x <- pair_links(
 #'     # group on the left hand only
