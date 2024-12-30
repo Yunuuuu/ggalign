@@ -9,7 +9,13 @@ mark_tetragon(..., element = NULL)
 \arguments{
 \item{...}{Additional arguments passed on to \code{\link[=mark_draw]{mark_draw()}}.}
 
-\item{element}{A \code{\link[=element_polygon]{element_polygon()}} object.}
+\item{element}{A \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
+recycled to match the total number of groups, or you can wrap the element
+with \code{\link[=I]{I()}} to recycle to match the drawing groups. The drawing groups
+are usually the same as the defined groups, but they will differ when the
+defined group of observations is separated and cannot be linked with a
+single quadrilateral. In such cases, the number of drawing groups will be
+larger than the number of defined groups.}
 }
 \description{
 Link the observations and the panel with a quadrilateral

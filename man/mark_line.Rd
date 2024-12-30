@@ -9,7 +9,11 @@ mark_line(..., element = NULL)
 \arguments{
 \item{...}{Additional arguments passed on to \code{\link[=mark_draw]{mark_draw()}}.}
 
-\item{element}{A \code{\link[ggplot2:element]{element_line()}} object.}
+\item{element}{A \code{\link[ggplot2:element]{element_line()}} object. Vectorized
+fields will be recycled to match the total number of groups, or you can
+wrap the element with \code{\link[=I]{I()}} to recycle to match the drawing groups. The
+drawing groups typically correspond to the number of observations, as each
+observation will be linked with the plot panel.}
 }
 \description{
 Link the observations and the panel with a line

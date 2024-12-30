@@ -67,7 +67,12 @@ print.ggalign_link_draw <- function(x, ...) {
 #' Link the observations with a line
 #'
 #' @inheritParams link_draw
-#' @inheritParams mark_line
+#' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
+#'   fields will be recycled to match the total number of groups, or you can
+#'   wrap the element with [`I()`] to recycle to match the drawing groups. The
+#'   drawing groups typically correspond to the product of the number of
+#'   observations from both sides, as each pair of observations will be linked
+#'   with a single line.
 #' @importFrom ggplot2 element_line
 #' @export
 link_line <- function(..., element = NULL) {
@@ -101,7 +106,16 @@ link_line <- function(..., element = NULL) {
                 )
             )
         })
-        element <- element_vec_rep_each(element, times = list_sizes(data) / 2L)
+        if (inherits(element, "AsIs")) {
+            element <- element_rep_len(element,
+                length.out = sum(list_sizes(data)) / 2L
+            )
+        } else {
+            element <- element_rep_len(element, length.out = length(data))
+            element <- element_vec_rep_each(element,
+                times = list_sizes(data) / 2L
+            )
+        }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
@@ -112,9 +126,6 @@ link_line <- function(..., element = NULL) {
             )
         }
     }, ...)
-    element <- element_rep_len(element,
-        length.out = length(.subset2(ans, "links"))
-    )
     ans
 }
 

@@ -115,6 +115,12 @@ element_grob.ggalign_element_polygon <- function(element, x, y,
 }
 
 ##########################################################################
+element_lengths <- function(.el, .fn, ...) {
+    fields <- element_vec_fields(.el)
+    if (is.null(fields)) 0L
+    lengths(.el[fields])
+}
+
 #' Apply a function to the fields of an element object
 #'
 #' @description

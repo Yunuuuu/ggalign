@@ -79,7 +79,11 @@ print.ggalign_mark_draw <- function(x, ...) {
 #' Link the observations and the panel with a line
 #'
 #' @param ... Additional arguments passed on to [`mark_draw()`].
-#' @param element A [`element_line()`][ggplot2::element_line] object.
+#' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
+#'   fields will be recycled to match the total number of groups, or you can
+#'   wrap the element with [`I()`] to recycle to match the drawing groups. The
+#'   drawing groups typically correspond to the number of observations, as each
+#'   observation will be linked with the plot panel.
 #' @importFrom ggplot2 element_line
 #' @export
 mark_line <- function(..., element = NULL) {
@@ -96,7 +100,6 @@ mark_line <- function(..., element = NULL) {
         element <- ggplot2::merge_element(element, default)
     }
     .mark_draw(.draw = function(data) {
-        element <- element_rep_len(element, length.out = length(data))
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
             link <- .subset2(d, "link")
@@ -113,7 +116,16 @@ mark_line <- function(..., element = NULL) {
                 )
             )
         })
-        element <- element_vec_rep_each(element, times = list_sizes(data) / 2L)
+        if (inherits(element, "AsIs")) {
+            element <- element_rep_len(element,
+                length.out = sum(list_sizes(data)) / 2L
+            )
+        } else {
+            element <- element_rep_len(element, length.out = length(data))
+            element <- element_vec_rep_each(element,
+                times = list_sizes(data) / 2L
+            )
+        }
         data <- vec_rbind(!!!data)
         element_grob(
             element,
@@ -127,7 +139,13 @@ mark_line <- function(..., element = NULL) {
 #' Link the observations and the panel with a quadrilateral
 #'
 #' @param ... Additional arguments passed on to [`mark_draw()`].
-#' @param element A [`element_polygon()`] object.
+#' @param element A [`element_polygon()`] object. Vectorized fields will be
+#'   recycled to match the total number of groups, or you can wrap the element
+#'   with [`I()`] to recycle to match the drawing groups. The drawing groups
+#'   are usually the same as the defined groups, but they will differ when the
+#'   defined group of observations is separated and cannot be linked with a
+#'   single quadrilateral. In such cases, the number of drawing groups will be
+#'   larger than the number of defined groups.
 #' @export
 mark_tetragon <- function(..., element = NULL) {
     assert_s3_class(element, c(
@@ -149,7 +167,6 @@ mark_tetragon <- function(..., element = NULL) {
         element <- ggplot2::merge_element(element, default)
     }
     .mark_draw(.draw = function(data) {
-        element <- element_rep_len(element, length.out = length(data))
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
             link <- .subset2(d, "link")
@@ -173,7 +190,16 @@ mark_tetragon <- function(..., element = NULL) {
                 )
             }))
         })
-        element <- element_vec_rep_each(element, times = list_sizes(data) / 4L)
+        if (inherits(element, "AsIs")) {
+            element <- element_rep_len(element,
+                length.out = sum(list_sizes(data)) / 4L
+            )
+        } else {
+            element <- element_rep_len(element, length.out = length(data))
+            element <- element_vec_rep_each(element,
+                times = list_sizes(data) / 4L
+            )
+        }
         data <- vec_rbind(!!!data)
         element_grob(
             element,

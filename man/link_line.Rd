@@ -16,7 +16,12 @@ formula exists, you can input it directly. For integer indices, wrap them
 with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \code{\link[=waiver]{waiver()}} to inherit values from the other group.}
 
-\item{element}{A \code{\link[ggplot2:element]{element_line()}} object.}
+\item{element}{A \code{\link[ggplot2:element]{element_line()}} object. Vectorized
+fields will be recycled to match the total number of groups, or you can
+wrap the element with \code{\link[=I]{I()}} to recycle to match the drawing groups. The
+drawing groups typically correspond to the product of the number of
+observations from both sides, as each pair of observations will be linked
+with a single line.}
 }
 \description{
 Link the observations with a line
