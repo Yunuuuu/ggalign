@@ -144,11 +144,11 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             }, full_data1, full_data2, SIMPLIFY = FALSE)
         } else if (isTRUE(group1)) {
             extra_links <- lapply(full_data1, function(l) {
-                new_pair_link(link1 = I(l))
+                new_pair_link(hand1 = I(l))
             })
         } else if (isTRUE(group2)) {
             extra_links <- lapply(full_data2, function(l) {
-                new_pair_link(link2 = I(l))
+                new_pair_link(hand2 = I(l))
             })
         } else {
             extra_links <- NULL
@@ -164,11 +164,11 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             if (is.null(link)) {
                 return(NULL)
             }
-            link1 <- .subset2(link, "link1")
-            link2 <- .subset2(link, "link2")
+            hand1 <- .subset2(link, "hand1")
+            hand2 <- .subset2(link, "hand2")
             list(
-                link1 = .subset2(design1, "index")[link1],
-                link2 = .subset2(design2, "index")[link2]
+                hand1 = .subset2(design1, "index")[hand1],
+                hand2 = .subset2(design2, "index")[hand2]
             )
         })
 
@@ -177,16 +177,16 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             if (is.null(index)) {
                 return(NULL)
             }
-            link1 <- .subset2(index, "link1")
-            link2 <- .subset2(index, "link2")
+            hand1 <- .subset2(index, "hand1")
+            hand2 <- .subset2(index, "hand2")
             hand <- switch_direction(
                 direction,
                 c("left", "right"),
                 c("top", "bottom")
             )
             data_frame0(
-                .hand = vec_rep_each(hand, c(length(link1), length(link2))),
-                .index = vec_c(link1, link2)
+                .hand = vec_rep_each(hand, c(length(hand1), length(hand2))),
+                .index = vec_c(hand1, hand2)
             )
         })
         plot_data <- vec_rbind(!!!plot_data, .names_to = ".panel")

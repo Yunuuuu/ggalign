@@ -149,11 +149,11 @@ CrossLink <- ggproto("CrossLink", Cross,
             if (is.null(index)) {
                 return(NULL)
             }
-            link1 <- .subset2(index, "link1")
-            link2 <- .subset2(index, "link2")
+            hand1 <- .subset2(index, "hand1")
+            hand2 <- .subset2(index, "hand2")
             list(
-                link1 = .subset2(design1, "index")[link1],
-                link2 = .subset2(design2, "index")[link2]
+                hand1 = .subset2(design1, "index")[hand1],
+                hand2 = .subset2(design2, "index")[hand2]
             )
         })
         plot$ggalign_link_data <- list(

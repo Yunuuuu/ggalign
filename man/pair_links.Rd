@@ -3,7 +3,7 @@
 \name{pair_links}
 \alias{pair_links}
 \alias{range_link}
-\title{Helper function to create pairs of links}
+\title{Helper function to create pairs of observation groups}
 \usage{
 pair_links(...)
 
@@ -24,25 +24,27 @@ and higher bounds of the range. For integer indices, wrap them with \code{\link[
 to indicate the ordered index by the layout.}
 }
 \description{
-\code{\link[=ggmark]{ggmark()}} and \code{\link[=cross_link]{cross_link()}} allow users to add links to observations.
-These functions help specify the linked observations.
+\code{\link[=ggmark]{ggmark()}} and \code{\link[=cross_link]{cross_link()}} allow users to add links between
+observations.  These functions help define the linked observations. The
+selected pairs will either be linked together, or each group in the pair will
+be linked separately to the same plot area.
 \itemize{
-\item \code{pair_links}: Helper function to create pair of links.
+\item \code{pair_links}: Helper function to create pairs of observation groups.
 \item \code{range_link}: Helper function to create a range of observations.
 }
 }
 \examples{
 x <- pair_links(
-    # links in the left hand only
+    # group on the left hand only
     1:2,
     c("a", "b"),
     range_link(1, 6),
     range_link("a", "b"),
-    # links in the right hand only
+    # group on the right hand only
     ~ 1:2,
     ~ c("a", "b"),
     ~ range_link(1, 6),
-    # links in the both side
+    # group on the both side
     range_link(1, 6) ~ c("a", "b"),
     # waiver() indicates the right hand is the same of the left hand
     range_link(1, 6) ~ waiver(),
@@ -57,7 +59,7 @@ x[[1]] <- NULL # remove the first link
 x$a <- ~LETTERS
 x
 
-# modify with a list of links
+# modify with a list
 x[1:2] <- list(~ c("a", "b"), ~ range_link("a", "b"))
 x
 }

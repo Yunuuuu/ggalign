@@ -143,7 +143,7 @@ makeContent.ggalignLinkGrob <- function(x) {
 
     # prepare output for current for loop
     coords <- vector("list", 2L)
-    names(coords) <- c("link1", "link2")
+    names(coords) <- c("hand1", "hand2")
     for (link in names(coords)) {
         link_index <- lapply(link_index_list, .subset2, link)
         data_index <- lapply(data_index_list, .subset2, link)
@@ -153,13 +153,13 @@ makeContent.ggalignLinkGrob <- function(x) {
             next
         }
         full_breaks <- switch(link,
-            link1 = full_data1,
-            link2 = full_data2
+            hand1 = full_data1,
+            hand2 = full_data2
         )
 
         spacing <- .subset2(x, switch(link,
-            link1 = "spacing1",
-            link2 = "spacing2"
+            hand1 = "spacing1",
+            hand2 = "spacing2"
         ))
 
         # each value represent an `observation`, for panel space, we use `NA`
@@ -179,8 +179,8 @@ makeContent.ggalignLinkGrob <- function(x) {
             sizes[!is.na(points)] <- cell_height # nobs
             yend <- cumsum(sizes)
             link_x <- switch(link,
-                link1 = 0,
-                link2 = 1
+                hand1 = 0,
+                hand2 = 1
             )
             link_coord <- data_frame0(
                 x = link_x, xend = link_x,
@@ -195,8 +195,8 @@ makeContent.ggalignLinkGrob <- function(x) {
             sizes[!is.na(points)] <- cell_width
             xend <- cumsum(sizes)
             link_y <- switch(link,
-                link1 = 1,
-                link2 = 0
+                hand1 = 1,
+                hand2 = 0
             )
             link_coord <- data_frame0(
                 x = xend - sizes, xend = xend,
@@ -205,8 +205,8 @@ makeContent.ggalignLinkGrob <- function(x) {
             link_coord <- vec_slice(link_coord, !is.na(points))
         }
         hand <- switch(link,
-            link1 = switch_direction(direction, "left", "top"),
-            link2 = switch_direction(direction, "right", "bottom")
+            hand1 = switch_direction(direction, "left", "top"),
+            hand2 = switch_direction(direction, "right", "bottom")
         )
         coords[[link]] <- lapply(names(link_index), function(i) {
             l_index <- .subset2(link_index, i)

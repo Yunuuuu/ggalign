@@ -1,10 +1,12 @@
-#' Helper function to create pairs of links
+#' Helper function to create pairs of observation groups
 #'
 #' @description
-#' [`ggmark()`] and [`cross_link()`] allow users to add links to observations.
-#' These functions help specify the linked observations.
+#' [`ggmark()`] and [`cross_link()`] allow users to add links between
+#' observations. These functions help define the linked observations. The
+#' selected pairs will either be linked together, or each group in the pair will
+#' be linked separately to the same plot area.
 #'
-#' - `pair_links`: Helper function to create pair of links.
+#' - `pair_links`: Helper function to create pairs of observation groups.
 #' - `range_link`: Helper function to create a range of observations.
 #'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of formulas, where each side
@@ -17,16 +19,16 @@
 #'   to inherit values from the opposite link argument.
 #' @examples
 #' x <- pair_links(
-#'     # links in the left hand only
+#'     # group on the left hand only
 #'     1:2,
 #'     c("a", "b"),
 #'     range_link(1, 6),
 #'     range_link("a", "b"),
-#'     # links in the right hand only
+#'     # group on the right hand only
 #'     ~ 1:2,
 #'     ~ c("a", "b"),
 #'     ~ range_link(1, 6),
-#'     # links in the both side
+#'     # group on the both side
 #'     range_link(1, 6) ~ c("a", "b"),
 #'     # waiver() indicates the right hand is the same of the left hand
 #'     range_link(1, 6) ~ waiver(),
@@ -41,7 +43,7 @@
 #' x$a <- ~LETTERS
 #' x
 #'
-#' # modify with a list of links
+#' # modify with a list
 #' x[1:2] <- list(~ c("a", "b"), ~ range_link("a", "b"))
 #' x
 #' @export
@@ -52,8 +54,11 @@ pair_links <- function(...) {
 
 new_pair_links <- function(x = list(), ..., class = character()) {
     ans <- new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
-    if (vec_duplicate_any(names(ans))) {
-        cli_abort("Found duplicated names for pair of links")
+    if (vec_duplicate_any(nms <- names(ans))) { # nolint
+        cli_abort(c(
+            "names must be unique",
+            i = "duplicated names: {.val {nms[vec_duplicate_detect(nms)]}}"
+        ))
     }
     ans
 }
@@ -70,20 +75,20 @@ names.ggalign_pair_links <- function(x) {
 #' @export
 obj_print_data.ggalign_pair_links <- function(x, ...) {
     if (length(x) > 0L) {
-        link1 <- vapply(x, function(link) {
-            deparse_link(.subset2(link, "link1"), ...)
+        hand1 <- vapply(x, function(link) {
+            deparse_link(.subset2(link, "hand1"), ...)
         }, character(1L), USE.NAMES = FALSE)
-        link2 <- vapply(x, function(link) {
-            deparse_link(.subset2(link, "link2"), ...)
+        hand2 <- vapply(x, function(link) {
+            deparse_link(.subset2(link, "hand2"), ...)
         }, character(1L), USE.NAMES = FALSE)
         nms <- c("", paste0(names(x), ":  "))
         nms <- format(nms, justify = "right")
-        empty <- character(length(link2))
-        empty[link1 == "" & link2 == ""] <- "  <empty>"
+        empty <- character(length(hand2))
+        empty[hand1 == "" & hand2 == ""] <- "  <empty>"
         empty <- format(c("", empty), justify = "left")
-        link1 <- format(c("link1", link1), justify = "right")
-        link2 <- format(c("link2", link2), justify = "left")
-        content <- paste0("  ", nms, link1, " ~ ", link2, empty)
+        hand1 <- format(c("hand1", hand1), justify = "right")
+        hand2 <- format(c("hand2", hand2), justify = "left")
+        content <- paste0("  ", nms, hand1, " ~ ", hand2, empty)
         cat("", content, "", sep = "\n")
     }
     invisible(x)
@@ -160,10 +165,10 @@ range_link <- function(point1, point2) {
 is_range_link <- function(x) inherits(x, "ggalign_range_link")
 
 ########################################################
-new_pair_link <- function(link1 = NULL, link2 = NULL,
+new_pair_link <- function(hand1 = NULL, hand2 = NULL,
                           ..., class = character()) {
     structure(
-        .Data = list(link1 = link1, link2 = link2),
+        .Data = list(hand1 = hand1, hand2 = hand2),
         ...,
         class = c(class, "ggalign_pair_link")
     )
@@ -185,8 +190,8 @@ obj_print_header.ggalign_pair_link <- function(x, ...) {
 obj_print_data.ggalign_pair_link <- function(x, ...) {
     if (length(x) > 0L) {
         content <- c(
-            sprintf("  link1: %s", deparse_link(.subset2(x, "link1"), ...)),
-            sprintf("  link2: %s", deparse_link(.subset2(x, "link2"), ...))
+            sprintf("  hand1: %s", deparse_link(.subset2(x, "hand1"), ...)),
+            sprintf("  hand2: %s", deparse_link(.subset2(x, "hand2"), ...))
         )
         cat(content, sep = "\n")
     }
@@ -349,11 +354,11 @@ vec_cast.ggalign_pair_link.formula <- function(x, to, ...,
                                                x_arg = caller_arg(x),
                                                to_arg = "",
                                                call = caller_env()) {
-    link1 <- rlang::eval_tidy(rlang::f_lhs(x), env = rlang::f_env(x))
-    link1 <- as_obs_link(link1, arg = x_arg, call = call)
-    link2 <- rlang::eval_tidy(rlang::f_rhs(x), env = rlang::f_env(x))
-    link2 <- as_obs_link(link2, arg = x_arg, call = call)
-    new_pair_link(link1, link2)
+    hand1 <- rlang::eval_tidy(rlang::f_lhs(x), env = rlang::f_env(x))
+    hand1 <- as_obs_link(hand1, arg = x_arg, call = call)
+    hand2 <- rlang::eval_tidy(rlang::f_rhs(x), env = rlang::f_env(x))
+    hand2 <- as_obs_link(hand2, arg = x_arg, call = call)
+    new_pair_link(hand1, hand2)
 }
 
 as_pair_link <- function(x, ...) {
@@ -515,25 +520,25 @@ make_pair_link_data <- function(pair_link, design1, design2,
     if (is.waive(input1) ||
         (is.list(input1) &&
             any(vapply(input1, is.waive, logical(1L), USE.NAMES = FALSE)))) {
-        link1 <- c(input1, if (is.list(input2)) input2 else list(input2))
+        hand1 <- c(input1, if (is.list(input2)) input2 else list(input2))
     } else {
-        link1 <- input1
+        hand1 <- input1
     }
     if (is.waive(input2) ||
         (is.list(input2) &&
             any(vapply(input2, is.waive, logical(1L), USE.NAMES = FALSE)))) {
-        link2 <- c(input2, if (is.list(input1)) input1 else list(input1))
+        hand2 <- c(input2, if (is.list(input1)) input1 else list(input1))
     } else {
-        link2 <- input2
+        hand2 <- input2
     }
 
     # make the data
-    link1 <- make_link_data(link1, design = design1, labels = labels1)
-    link2 <- make_link_data(link2, design = design2, labels = labels2)
-    if (is.null(link1) && is.null(link2)) {
+    hand1 <- make_link_data(hand1, design = design1, labels = labels1)
+    hand2 <- make_link_data(hand2, design = design2, labels = labels2)
+    if (is.null(hand1) && is.null(hand2)) {
         return(NULL)
     }
-    list(link1 = link1, link2 = link2)
+    list(hand1 = hand1, hand2 = hand2)
 }
 
 make_link_data <- function(link, design, labels = NULL,
