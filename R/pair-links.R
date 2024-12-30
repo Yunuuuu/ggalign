@@ -1,4 +1,8 @@
-#' Helper function to create a pair of links
+#' Helper function to create pairs of links
+#'
+#' @description
+#' [`ggmark()`] and [`cross_link()`] allow users to add links to observations.
+#' These functions help specify the linked observations.
 #'
 #' - `pair_links`: Helper function to create pair of links.
 #' - `range_link`: Helper function to create a range of observations.
@@ -580,7 +584,7 @@ link_to_location.character <- function(x, n, names = NULL, index = NULL, ...,
         arg = arg,
         call = call
     )
-    match(ans, index)
+    match(ans, index) # character always match the original data
 }
 
 #' @export
@@ -594,6 +598,7 @@ link_to_location.integer <- function(x, n, names = NULL, index = NULL, ...,
         arg = arg,
         call = call
     )
+    # integer index by default match the original data
     if (isTRUE(data_index)) ans else match(ans, index)
 }
 

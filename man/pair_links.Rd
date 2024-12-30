@@ -3,7 +3,7 @@
 \name{pair_links}
 \alias{pair_links}
 \alias{range_link}
-\title{Helper function to create a pair of links}
+\title{Helper function to create pairs of links}
 \usage{
 pair_links(...)
 
@@ -24,6 +24,8 @@ and higher bounds of the range. For integer indices, wrap them with \code{\link[
 to indicate the ordered index by the layout.}
 }
 \description{
+\code{\link[=ggmark]{ggmark()}} and \code{\link[=cross_link]{cross_link()}} allow users to add links to observations.
+These functions help specify the linked observations.
 \itemize{
 \item \code{pair_links}: Helper function to create pair of links.
 \item \code{range_link}: Helper function to create a range of observations.
