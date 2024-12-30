@@ -75,11 +75,11 @@ names.ggalign_pair_links <- function(x) {
 #' @export
 obj_print_data.ggalign_pair_links <- function(x, ...) {
     if (length(x) > 0L) {
-        hand1 <- vapply(x, function(link) {
-            deparse_link(.subset2(link, "hand1"), ...)
+        hand1 <- vapply(x, function(hand) {
+            deparse_link(hand, ..., hand = "hand1")
         }, character(1L), USE.NAMES = FALSE)
-        hand2 <- vapply(x, function(link) {
-            deparse_link(.subset2(link, "hand2"), ...)
+        hand2 <- vapply(x, function(hand) {
+            deparse_link(hand, ..., hand = "hand2")
         }, character(1L), USE.NAMES = FALSE)
         nms <- c("", paste0(names(x), ":  "))
         nms <- format(nms, justify = "right")
@@ -436,19 +436,33 @@ print.ggalign_range_link <- function(x, ...) {
 deparse_link <- function(x, ...) UseMethod("deparse_link")
 
 #' @export
+deparse_link.ggalign_pair_link <- function(x, ..., hand) {
+    deparse_link(.subset2(x, hand), ...)
+}
+
+#' @export
+deparse_link.AsIs <- function(x, ...) {
+    ans <- deparse_link(remove_class(x, "AsIs"), ...)
+    if (!identical(ans, "")) { # for `NULL`
+        ans <- sprintf("I(%s)", ans)
+    }
+    ans
+}
+
+#' @export
 deparse_link.integer <- function(x, trunc = 3L, head = trunc - 1L,
                                  tail = 1L, ...) {
     l <- length(x)
-    out <- paste(
+    ans <- paste(
         deparse(x, control = c("keepNA", "niceNames", "showAttributes")),
         collapse = " "
     )
-    if (l > trunc && startsWith(out, "c")) {
-        out <- sprintf("c(%s)", paste(c(
+    if (l > trunc && startsWith(ans, "c")) {
+        ans <- sprintf("c(%s)", paste(c(
             x[seq_len(head)], "...", x[seq.int(l - tail + 1L, l)]
         ), collapse = ", "))
     }
-    out
+    ans
 }
 
 #' @export
@@ -456,22 +470,17 @@ deparse_link.character <- function(x, trunc = 3L, head = trunc - 1L,
                                    tail = 1L, ...) {
     l <- length(x)
     if (l <= trunc) {
-        out <- paste(deparse(x), collapse = " ")
+        ans <- paste(deparse(x), collapse = " ")
     } else {
-        out <- sprintf("c(%s)", paste(c(
+        ans <- sprintf("c(%s)", paste(c(
             x[seq_len(head)], "...", x[seq.int(l - tail + 1L, l)]
         ), collapse = ", "))
     }
-    out
+    ans
 }
 
 #' @export
 deparse_link.NULL <- function(x, ...) ""
-
-#' @export
-deparse_link.AsIs <- function(x, ...) {
-    sprintf("I(%s)", deparse_link(remove_class(x, "AsIs"), ...))
-}
 
 #' @export
 deparse_link.ggalign_range_link <- function(x, ...) {
@@ -490,12 +499,12 @@ deparse_link.list <- function(x, trunc = 3L, head = trunc - 1L,
                               tail = 1L, ...) {
     l <- length(x)
     if (l <= trunc) {
-        out <- vapply(x, deparse_link, character(1L), ...,
+        ans <- vapply(x, deparse_link, character(1L), ...,
             trunc = trunc, head = head, tail = tail,
             USE.NAMES = FALSE
         )
     } else {
-        out <- c(
+        ans <- c(
             vapply(x[seq_len(head)],
                 deparse_link, character(1L), ...,
                 trunc = trunc, head = head, tail = tail,
@@ -509,7 +518,7 @@ deparse_link.list <- function(x, trunc = 3L, head = trunc - 1L,
             )
         )
     }
-    sprintf("list(%s)", paste(out, collapse = ", "))
+    sprintf("list(%s)", paste(ans, collapse = ", "))
 }
 
 ###################################################
