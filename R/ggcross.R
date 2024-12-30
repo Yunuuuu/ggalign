@@ -146,6 +146,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
         )
     },
     finish_plot = function(self, plot, schemes, theme) {
+        direction <- self$direction
         # remove axis titles, text, ticks used for alignment
         if (isTRUE(self$no_axes)) {
             schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
