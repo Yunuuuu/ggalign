@@ -324,7 +324,7 @@ assert_logical <- function(x,
 assert_s3_class <- function(x, is_class, what, ...,
                             arg = caller_arg(x),
                             call = caller_env()) {
-    if (is_string(is_class)) {
+    if (is.character(is_class)) {
         class <- is_class
         is_class <- function(x) inherits(x, what = class)
         if (is_missing(what)) what <- sprintf("a <%s>", class)
