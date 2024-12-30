@@ -158,7 +158,10 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             extra_links <- NULL
         }
         self$unlock()
-        self$mark$links <- c(extra_links, links)
+
+        # Do not use `vec_c()`, as it automatically extract `names` and assign
+        # it to the combined object, which may result in duplicated names.
+        self$mark$links <- new_pair_links(c(extra_links, links))
         on.exit(self$mark <- mark) # restore the original `mark`
         on.exit(self$lock(), add = TRUE)
 
