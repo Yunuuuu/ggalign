@@ -72,13 +72,18 @@ reference:
     ensuring they align and interact correctly within the defined structure.
   contents:
   - align_dendro
+  - ggfree
   - ggalign
   - ggmark
   - ggcross
-  - ggfree
+  - cross_mark
+  - cross_link
   - mark_line
   - mark_tetragon
   - mark_draw
+  - link_line
+  - link_draw
+  - pair_links
 
 - title: Schemes
   desc: >
@@ -93,7 +98,8 @@ reference:
   desc: >
     Functions to enhance and customize the capabilities of ggalign.
   contents:
-  - mark_pdraw
+  - .mark_draw
+  - .link_draw
   - align
   - fortify_data_frame
   - fortify_matrix
@@ -141,6 +147,7 @@ reference:
   - scale_draw_manual
   - draw_key_draw
   - element_polygon
+  - element_vec
 
 - title: helpers
   desc: A collection of utility functions to enhance usability and functionality.
