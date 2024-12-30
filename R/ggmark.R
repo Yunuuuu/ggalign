@@ -74,7 +74,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
         # slot
         plot = ggplot(mapping = mapping),
         size = size,
-        schemes = default_schemes(th = theme_add_panel()),
+        schemes = default_schemes(data, th = theme_add_panel()),
         active = active
     )
 }
