@@ -56,15 +56,6 @@ new_pair_links <- function(x = list(), ..., class = character()) {
     new_vctr(x, ..., class = c(class, "ggalign_pair_links"))
 }
 
-#' @importFrom rlang names2
-#' @export
-names.ggalign_pair_links <- function(x) {
-    nms <- names2(vec_data(x))
-    no <- nms == ""
-    nms[no] <- seq_along(x)[no]
-    nms
-}
-
 #' @export
 obj_print_data.ggalign_pair_links <- function(x, ...) {
     if (length(x) > 0L) {

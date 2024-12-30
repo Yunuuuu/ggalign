@@ -78,11 +78,14 @@ CrossMark <- ggproto("CrossMark", CrossLink,
             .subset2(design2, "panel")
         )
         links <- .subset2(mark, "links")
-        if (vec_duplicate_any(nms <- names(links))) { # nolint
-            cli_abort(c(
-                "panel names must be unique",
-                i = "duplicated names: {.val {nms[vec_duplicate_detect(nms)]}}"
-            ))
+        if (vec_duplicate_any(nms <- names_or_index(links))) { # nolint
+            cli_abort(
+                c(
+                    "panel names must be unique in {.arg mark}",
+                    i = "duplicated names: {.val {nms[vec_duplicate_detect(nms)]}}"
+                ),
+                call = self$call
+            )
         }
         link_index <- lapply(links, make_pair_link_data,
             design1 = design1, design2 = design2,

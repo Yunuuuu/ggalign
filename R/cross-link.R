@@ -164,7 +164,7 @@ CrossLink <- ggproto("CrossLink", Cross,
             design1 = design1, design2 = design2,
             labels1 = self$labels0, labels2 = self$labels
         )
-        names(link_index) <- names(links)
+        names(link_index) <- names_or_index(links)
         data_index <- lapply(link_index, function(index) {
             if (is.null(index)) {
                 return(NULL)
