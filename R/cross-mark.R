@@ -64,7 +64,6 @@ CrossMark <- ggproto("CrossMark", CrossLink,
             )
         }
         direction <- self$direction
-        position <- self$position
 
         # parse links --------------------------------------------
         mark <- self$mark
