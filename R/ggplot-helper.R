@@ -80,7 +80,7 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
             lineend = lineend, linejoin = linejoin, linemitre = linemitre,
             inherit.blank = inherit.blank
         ),
-        class = c("ggalign_element_polygon", "element")
+        class = c("ggalign_element_polygon", "element_polygon", "element")
     )
 }
 
@@ -141,7 +141,7 @@ element_curve <- function(colour = NULL, linewidth = NULL, linetype = NULL,
             arrow = arrow, arrow.fill = arrow.fill,
             inherit.blank = inherit.blank
         ),
-        class = c("ggalign_element_curve", "element")
+        class = c("ggalign_element_curve", "element_curve", "element")
     )
 }
 

@@ -52,6 +52,22 @@ is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
     register_theme_elements(
+        ggalign.line = element_line(
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1,
+            lineend = "butt"
+        ),
+        ggalign.polygon = element_polygon(
+            fill = NA,
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1,
+            alpha = NA,
+            lineend = "butt",
+            linejoin = "round",
+            linemitre = 10
+        ),
         element_tree = list(
             plot.patch_title = el_def("element_text", "text"),
             plot.patch_title.top = el_def("element_text", "text"),
@@ -63,9 +79,10 @@ theme_elements <- function() {
             plot.patch_title.position.left = el_def("character"),
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
-            plot.ggalign_ranges = el_def("element_polygon"),
-            plot.ggalign_lines = el_def("element_line"),
-            panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing")
+            panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing"),
+            ggalign.line = el_def("element_line"),
+            ggalign.curve = el_def("element_curve"),
+            ggalign.polygon = el_def("element_polygon")
         )
     )
 }

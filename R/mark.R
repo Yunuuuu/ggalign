@@ -80,12 +80,7 @@ print.ggalign_mark_draw <- function(x, ...) {
 #' @export
 mark_line <- function(..., element = NULL) {
     assert_s3_class(element, "element_line", allow_null = TRUE)
-    default <- element_line(
-        color = "black",
-        linewidth = 0.5,
-        linetype = 1,
-        lineend = "butt"
-    )
+    default <- calc_element("ggalign.line", complete_theme(theme_get()))
     if (is.null(element)) {
         element <- default
     } else {
@@ -140,19 +135,8 @@ mark_line <- function(..., element = NULL) {
 #'   larger than the number of defined groups.
 #' @export
 mark_tetragon <- function(..., element = NULL) {
-    assert_s3_class(element, c(
-        "element_polygon", "ggalign_element_polygon"
-    ), "element_polygon", allow_null = TRUE)
-    default <- element_polygon(
-        fill = NA,
-        color = "black",
-        linewidth = 0.5,
-        linetype = 1,
-        alpha = NA,
-        lineend = "butt",
-        linejoin = "round",
-        linemitre = 10
-    )
+    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+    default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
     if (is.null(element)) {
         element <- default
     } else {
@@ -205,19 +189,8 @@ mark_tetragon <- function(..., element = NULL) {
 # Not implemented completely
 #' @importFrom rlang arg_match0
 mark_triangle <- function(..., orientation = "plot", element = NULL) {
-    assert_s3_class(element, c(
-        "element_polygon", "ggalign_element_polygon"
-    ), "element_polygon", allow_null = TRUE)
-    default <- element_polygon(
-        fill = NA,
-        color = "black",
-        linewidth = 0.5,
-        linetype = 1,
-        alpha = NA,
-        lineend = "butt",
-        linejoin = "round",
-        linemitre = 10
-    )
+    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+    default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
     if (is.null(element)) {
         element <- default
     } else {

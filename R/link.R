@@ -77,12 +77,7 @@ print.ggalign_link_draw <- function(x, ...) {
 #' @export
 link_line <- function(..., element = NULL) {
     assert_s3_class(element, "element_line", allow_null = TRUE)
-    default <- element_line(
-        color = "black",
-        linewidth = 0.5,
-        linetype = 1,
-        lineend = "butt"
-    )
+    default <- calc_element("ggalign.line", complete_theme(theme_get()))
     if (is.null(element)) {
         element <- default
     } else {
