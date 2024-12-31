@@ -268,7 +268,7 @@ is_stack_layout <- function(x) is(x, "StackLayout")
 
 #' @export
 #' @rdname is_layout
-is_cross_layout <- function(x) is(x, "StackCross")
+is_stack_cross <- function(x) is(x, "StackCross")
 
 #' @export
 #' @rdname is_layout
@@ -286,3 +286,5 @@ is_heatmap_layout <- function(x) is(x, "HeatmapLayout")
 #' @export
 #' @rdname is_layout
 is_ggheatmap <- is_heatmap_layout
+
+is_cross_layout <- function(x) is_stack_cross(x)

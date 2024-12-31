@@ -4,7 +4,7 @@
 \alias{is_layout}
 \alias{is_quad_layout}
 \alias{is_stack_layout}
-\alias{is_cross_layout}
+\alias{is_stack_cross}
 \alias{is_circle_layout}
 \alias{is_heatmap_layout}
 \alias{is_ggheatmap}
@@ -16,7 +16,7 @@ is_quad_layout(x)
 
 is_stack_layout(x)
 
-is_cross_layout(x)
+is_stack_cross(x)
 
 is_circle_layout(x)
 
