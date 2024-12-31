@@ -4,7 +4,7 @@
 \alias{no_expansion}
 \title{Remove scale expansion}
 \usage{
-no_expansion(borders)
+no_expansion(borders = "tlbr")
 }
 \arguments{
 \item{borders}{Which border should be removed? A string containing

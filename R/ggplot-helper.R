@@ -333,7 +333,7 @@ element_vec_fields.element_text <- function(el) {
 #' one or more of `r oxford_and(c(.tlbr, "x", "y"))`.
 #' @return An object which can be added to ggplot.
 #' @export
-no_expansion <- function(borders) {
+no_expansion <- function(borders = "tlbr") {
     assert_string(borders, empty_ok = FALSE)
     if (grepl("[^tlbrxy]", borders)) {
         cli_abort(sprintf(
