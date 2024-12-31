@@ -32,6 +32,7 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
+#' @importFrom grid grob
 #' @include cross-none.R
 CrossLink <- ggproto("CrossLink", CrossNone,
     build_plot = function(self, plot, design, extra_design = NULL,
@@ -118,7 +119,7 @@ CrossLink <- ggproto("CrossLink", CrossNone,
         ) %||% unit(0, "mm")
 
         # setup the grob
-        grob <- inject(grid::grob(
+        grob <- inject(grob(
             !!!.subset2(plot, "ggalign_link_data"),
             spacing1 = spacing,
             spacing2 = spacing,
