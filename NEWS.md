@@ -23,6 +23,8 @@
 * new `link_draw()`, `link_line()`, `link_tetragon()` to define the links to
   connect a pair of observations
 
+* new `ggmark()` to add a plot to annotate selected observations
+
 * new layout `circle_layout()` to arrange plot in a circular.
 
 * new `raster_magick()` function to post-processing the image raster with `magick` package was added.
