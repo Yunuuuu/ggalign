@@ -70,6 +70,7 @@ Collate:
     'alignpatch-title.R'
     'alignpatch-wrap.R'
     'cross-.R'
+    'cross-none.R'
     'cross-link.R'
     'cross-mark.R'
     'dendrogram.R'

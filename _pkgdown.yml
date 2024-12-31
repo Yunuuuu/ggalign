@@ -65,6 +65,7 @@ reference:
   - align_kmeans
   - align_order
   - align_reorder
+  - cross_none
 
 - title: Plot initialize
   desc: >

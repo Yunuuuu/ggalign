@@ -1,6 +1,6 @@
 #' Add a plot to connect selected observations
 #'
-#' @inheritParams cross_link
+#' @inheritParams cross_none
 #' @inheritParams ggmark
 #'
 #' @section ggplot2 Specification:
@@ -43,8 +43,8 @@ cross_mark <- function(mark, data = waiver(),
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include cross-link.R
-CrossMark <- ggproto("CrossMark", CrossLink,
+#' @include cross-none.R
+CrossMark <- ggproto("CrossMark", CrossNone,
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         if (is.null(.subset2(previous_design, "nobs"))) {
@@ -197,7 +197,7 @@ CrossMark <- ggproto("CrossMark", CrossLink,
         plot + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Cross, self)$summary(plot)
+        header <- ggproto_parent(CrossNone, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )
