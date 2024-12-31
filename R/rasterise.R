@@ -42,7 +42,7 @@ rasterise.ggalign_plot <- function(input, ...) {
 #' @export
 .raster_magick.ggalign_plot <- function(x, magick = NULL, ...) {
     if (!is.null(plot <- input@plot)) {
-        input@plot <- .raster_magick(input = plot, ...)
+        input@plot <- .raster_magick(x = plot, ...)
     }
     input
 }
