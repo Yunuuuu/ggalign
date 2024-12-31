@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross-none.R
 \name{cross_none}
 \alias{cross_none}
-\title{Add a plot to connect selected observations}
+\title{Reset layout ordering and panel group}
 \usage{
 cross_none(data = waiver(), inherit_panel = NULL, inherit_nobs = NULL)
 }
@@ -19,5 +19,5 @@ panel group information.}
 number of observations.}
 }
 \description{
-Add a plot to connect selected observations
+Reset layout ordering and panel group
 }

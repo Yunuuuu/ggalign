@@ -1,4 +1,4 @@
-#' Add a plot to connect selected observations
+#' Reset layout ordering and panel group
 #'
 #' @param data The dataset to use for the layout. By default,
 #'   [`fortify_matrix()`] will convert the data to a matrix. This argument
