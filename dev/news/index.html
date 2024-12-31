@@ -47,14 +47,23 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
 <div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>Now, all <code>*_free()</code> layouts have been removed, all layout has been splitted into two type: align discrete or continous vairables.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li><p>new <code><a href="../reference/raster_magick.html">raster_magick()</a></code> function to post-processing the image raster with <code>magick</code> package was added.</p></li>
+<ul><li><p>new <code><a href="../reference/geom_subrect.html">geom_subrect()</a></code> and <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> to subdivide rectangles with shared borders into a grid.</p></li>
+<li><p>new <code>cross_link</code> function to reset the layout ordering index or layout panel group, and add plot to connect selected observations.</p></li>
+<li><p>new <code>cross_mark</code> function to reset the layout ordering index or layout panel group, and add plot to annotate observations.</p></li>
+<li><p>new <code><a href="../reference/pair_links.html">pair_links()</a></code> function to create pairs of observation groups.</p></li>
+<li><p>new <code><a href="../reference/mark_draw.html">mark_draw()</a></code>, <code><a href="../reference/mark_line.html">mark_line()</a></code>, <code><a href="../reference/mark_tetragon.html">mark_tetragon()</a></code> to define the links to connect the marked observations.</p></li>
+<li><p>new <code><a href="../reference/link_draw.html">link_draw()</a></code>, <code><a href="../reference/link_line.html">link_line()</a></code>, <code>link_tetragon()</code> to define the links to connect a pair of observations</p></li>
+<li><p>new layout <code><a href="../reference/circle_layout.html">circle_layout()</a></code> to arrange plot in a circular.</p></li>
+<li><p>new <code><a href="../reference/raster_magick.html">raster_magick()</a></code> function to post-processing the image raster with <code>magick</code> package was added.</p></li>
 <li><p>new <code><a href="../reference/fortify_matrix.GISTIC.html">fortify_matrix.GISTIC()</a></code> method for <code>GISTIC</code> object from <code>maftools</code> package (<a href="https://github.com/Yunuuuu/ggalign/issues/24" class="external-link">#24</a>).</p></li>
 <li><p><code>+</code> operator now will respect <code><a href="../reference/with_quad.html">with_quad()</a></code>.</p></li>
 <li><p>new <code><a href="../reference/ggalign_attr_set.html">ggalign_attr_set()</a></code> and <code><a href="../reference/ggalign_attr_set.html">ggalign_attr_get()</a></code> for basic operations of attached attribute.</p></li>
 <li><p>new <code><a href="../reference/geom_draw.html">geom_draw()</a></code> function to draw ggplot2 layer with customized draw function.</p></li>
-<li><p>new <code><a href="../reference/geom_subrect.html">geom_subrect()</a></code> and <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> to subdivide rectangles with shared borders into a grid.</p></li>
-<li><p>new <code>cross_link</code> function used to reset the layout ordering index, this is useful to create <code>tanglegram</code> visualizations.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
