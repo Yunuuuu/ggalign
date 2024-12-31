@@ -1,6 +1,29 @@
 # ggalign (development version)
 
+## Breaking changes
+
+* Now, all `*_free()` layouts have been removed, all layout has been splitted into two type: align 
+  discrete or continous vairables.
+
 ## New features
+
+* new `geom_subrect()` and `geom_subtile()` to subdivide rectangles with shared borders into a grid.
+
+* new `cross_link` function to reset the layout ordering index or layout panel group, and
+  add plot to connect selected observations.
+
+* new `cross_mark` function to reset the layout ordering index or layout panel group, and
+  add plot to annotate observations.
+
+* new `pair_links()` function to create pairs of observation groups.
+
+* new `mark_draw()`, `mark_line()`, `mark_tetragon()` to define the links to
+  connect the marked observations.
+
+* new `link_draw()`, `link_line()`, `link_tetragon()` to define the links to
+  connect a pair of observations
+
+* new layout `circle_layout()` to arrange plot in a circular.
 
 * new `raster_magick()` function to post-processing the image raster with `magick` package was added.
 
@@ -11,10 +34,6 @@
 * new `ggalign_attr_set()` and `ggalign_attr_get()` for basic operations of attached attribute.
 
 * new `geom_draw()` function to draw ggplot2 layer with customized draw function.
-
-* new `geom_subrect()` and `geom_subtile()` to subdivide rectangles with shared borders into a grid.
-
-* new `cross_link` function used to reset the layout ordering index, this is useful to create `tanglegram` visualizations.
 
 ## Bug fixes
 
