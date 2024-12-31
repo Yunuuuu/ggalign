@@ -23,7 +23,12 @@
 * new `link_draw()`, `link_line()`, `link_tetragon()` to define the links to
   connect a pair of observations
 
-* new `ggmark()` to add a plot to annotate selected observations
+* new `ggmark()` to add a plot to annotate selected observations.
+
+* new `element_vec()` functions to apply function to the vectorized fields of
+  the theme element object.
+
+* new `no_expansion()` function to remove scale expansion.
 
 * new layout `circle_layout()` to arrange plot in a circular.
 
