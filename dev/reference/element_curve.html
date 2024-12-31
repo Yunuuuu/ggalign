@@ -61,9 +61,6 @@
 <span>  angle <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ncp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shape <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  square <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  squareShape <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  open <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  arrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  arrow.fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit.blank <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -116,25 +113,6 @@ lengths in consecutive positions in the string.</p></dd>
 <dd><p>A numeric vector of values between -1 and 1, which
     control the shape of the curve relative to its control points.
     See <code>grid.xspline</code> for more details.</p></dd>
-
-
-<dt id="arg-square">square<a class="anchor" aria-label="anchor" href="#arg-square"></a></dt>
-<dd><p>A logical value that controls whether control
-    points for the curve are created city-block fashion or
-    obliquely.  When <code>ncp</code> is 1 and <code>angle</code> is 90,
-    this is typically <code>TRUE</code>, otherwise this should probably
-    be set to <code>FALSE</code> (see Examples below).</p></dd>
-
-
-<dt id="arg-squareshape">squareShape<a class="anchor" aria-label="anchor" href="#arg-squareshape"></a></dt>
-<dd><p>A <code>shape</code> value to control the behaviour
-    of the curve relative to any additional control point that
-    is inserted if <code>square</code> is <code>TRUE</code>.</p></dd>
-
-
-<dt id="arg-open">open<a class="anchor" aria-label="anchor" href="#arg-open"></a></dt>
-<dd><p>A logical value indicating whether to close the curve
-    (connect the start and end points).</p></dd>
 
 
 <dt id="arg-arrow">arrow<a class="anchor" aria-label="anchor" href="#arg-arrow"></a></dt>
