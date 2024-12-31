@@ -94,18 +94,31 @@ raster_magick <- function(x, magick = NULL, ...,
     x
 }
 
+#' @importFrom grid grob
 #' @export
 .raster_magick.grob <- function(x, magick = NULL, ...,
                                 res = NULL, interpolate = FALSE) {
-    if (inherits(x, "zeroGrob")) {
-        return(x)
-    }
-    x$ggalign_raster_magick <- list(
-        magick = magick, res = res,
-        interpolate = interpolate
+    grob(
+        grob = x,
+        magick = magick,
+        res = res,
+        interpolate = interpolate,
+        cl = "ggalignRasterMagick"
     )
-    add_class(x, "ggalign_raster_magick")
 }
+
+#' @export
+.raster_magick.ggalignRasterMagick <- function(x, magick = NULL, ...,
+                                               res = NULL,
+                                               interpolate = FALSE) {
+    x["magick"] <- list(magick)
+    x["res"] <- list(res)
+    x["interpolate"] <- list(interpolate)
+    x
+}
+
+#' @export
+.raster_magick.zeroGrob <- function(x, magick = NULL, ...) x
 
 #' @export
 .raster_magick.default <- function(x, magick = NULL, ...) x
@@ -119,20 +132,19 @@ raster_magick <- function(x, magick = NULL, ...,
 # postDraw:
 #  - postDrawDetails: by default, do noting
 #  - popgrobvp
-#' @importFrom grid makeContext unit convertHeight convertWidth viewport
+#' @importFrom grid makeContent unit convertHeight convertWidth viewport
 #' @export
-makeContext.ggalign_raster_magick <- function(x) {
+makeContent.ggalignRasterMagick <- function(x) {
     # Grab viewport information
     width <- convertWidth(unit(1, "npc"), "pt", valueOnly = TRUE)
     height <- convertHeight(unit(1, "npc"), "pt", valueOnly = TRUE)
 
     # Grab grob metadata
-    params <- .subset2(x, "ggalign_raster_magick")
     plot_res <- convertWidth(unit(1, "inch"), "pt", valueOnly = TRUE)
-    res <- .subset2(params, "res") %||% plot_res
+    res <- .subset2(x, "res") %||% plot_res
 
-    magick <- .subset2(params, "magick")
-    interpolate <- .subset2(params, "interpolate")
+    magick <- .subset2(x, "magick")
+    interpolate <- .subset2(x, "interpolate")
 
     # Track current device
     old_dev <- grDevices::dev.cur()
@@ -152,9 +164,7 @@ makeContext.ggalign_raster_magick <- function(x) {
     grid::pushViewport(viewport())
 
     # Clean up the grob for rendering
-    x <- remove_class(x, "ggalign_raster_magick")
-    x$ggalign_raster_magick <- NULL
-    grid::grid.draw(x) # should respect the viewport of `x`
+    grid::grid.draw(.subset2(x, "grob")) # should respect the viewport of `x`
     grid::popViewport()
     grDevices::dev.off()
     on.exit(magick::image_destroy(image), add = TRUE)
