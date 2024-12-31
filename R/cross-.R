@@ -45,9 +45,5 @@ Cross <- ggproto("Cross", AlignProto,
         }
         design["index"] <- list(NULL) # always reset the index
         design
-    },
-    summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
-        c(header, "  Add plot to connect selected observations")
     }
 )

@@ -197,7 +197,7 @@ CrossMark <- ggproto("CrossMark", CrossLink,
         plot + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        header <- ggproto_parent(Cross, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )
