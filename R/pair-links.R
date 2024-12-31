@@ -417,25 +417,16 @@ print.ggalign_range_link <- function(x, ...) {
 ###########################################################
 #' @return A single string
 #' @noRd
-deparse_link <- function(x, ...) UseMethod("deparse_link")
+deparse_link <- function(x, ...) deparse_link2(x, ...) %||% ""
 
-#' @export
-deparse_link.ggalign_pair_link <- function(x, ..., hand) {
-    deparse_link(.subset2(x, hand), ...)
-}
+#' @return A single string or `NULL`
+#' @noRd
+deparse_link2 <- function(x, ...) UseMethod("deparse_link2")
 
+# Basic object
 #' @export
-deparse_link.AsIs <- function(x, ...) {
-    ans <- NextMethod()
-    if (!identical(ans, "")) { # wrapped in `ggalign_pair_link` for `NULL`
-        ans <- sprintf("I(%s)", ans)
-    }
-    ans
-}
-
-#' @export
-deparse_link.integer <- function(x, trunc = 3L, head = trunc - 1L,
-                                 tail = 1L, ...) {
+deparse_link2.integer <- function(x, trunc = 3L, head = trunc - 1L,
+                                  tail = 1L, ...) {
     l <- length(x)
     ans <- paste(
         deparse(x, control = c("keepNA", "niceNames", "showAttributes")),
@@ -450,8 +441,8 @@ deparse_link.integer <- function(x, trunc = 3L, head = trunc - 1L,
 }
 
 #' @export
-deparse_link.character <- function(x, trunc = 3L, head = trunc - 1L,
-                                   tail = 1L, ...) {
+deparse_link2.character <- function(x, trunc = 3L, head = trunc - 1L,
+                                    tail = 1L, ...) {
     l <- length(x)
     if (l <= trunc) {
         ans <- paste(deparse(x), collapse = " ")
@@ -464,10 +455,28 @@ deparse_link.character <- function(x, trunc = 3L, head = trunc - 1L,
 }
 
 #' @export
-deparse_link.NULL <- function(x, ...) ""
+deparse_link2.waiver <- function(x, ...) "waiver()"
 
 #' @export
-deparse_link.ggalign_range_link <- function(x, ...) {
+deparse_link2.NULL <- function(x, ...) NULL
+
+# To allow `I()` to be used to the whole formula, we must define the method for
+# this, though `ggalign_pair_link` shouldn't be considered as an observation
+#' @export
+deparse_link2.ggalign_pair_link <- function(x, ..., hand) {
+    deparse_link2(.subset2(x, hand), ...)
+}
+
+#' @export
+deparse_link2.AsIs <- function(x, ...) {
+    ans <- NextMethod()
+    if (!is.null(ans)) ans <- sprintf("I(%s)", ans)
+    ans
+}
+
+# Recurse version
+#' @export
+deparse_link2.ggalign_range_link <- function(x, ...) {
     sprintf(
         "range_link(%s, %s)",
         deparse_link(.subset2(x, "point1"), ...),
@@ -476,11 +485,8 @@ deparse_link.ggalign_range_link <- function(x, ...) {
 }
 
 #' @export
-deparse_link.waiver <- function(x, ...) "waiver()"
-
-#' @export
-deparse_link.list <- function(x, trunc = 3L, head = trunc - 1L,
-                              tail = 1L, ...) {
+deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
+                               tail = 1L, ...) {
     l <- length(x)
     if (l <= trunc) {
         ans <- vapply(x, deparse_link, character(1L), ...,
