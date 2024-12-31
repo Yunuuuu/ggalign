@@ -426,8 +426,8 @@ deparse_link.ggalign_pair_link <- function(x, ..., hand) {
 
 #' @export
 deparse_link.AsIs <- function(x, ...) {
-    ans <- deparse_link(remove_class(x, "AsIs"), ...)
-    if (!identical(ans, "")) { # for `NULL`
+    ans <- NextMethod()
+    if (!identical(ans, "")) { # wrapped in `ggalign_pair_link` for `NULL`
         ans <- sprintf("I(%s)", ans)
     }
     ans
