@@ -125,20 +125,16 @@ element_grob.ggalign_element_polygon <- function(element, x, y,
 element_curve <- function(colour = NULL, linewidth = NULL, linetype = NULL,
                           lineend = NULL, color = NULL, curvature = NULL,
                           angle = NULL, ncp = NULL, shape = NULL,
-                          square = NULL, squareShape = NULL, open = NULL,
                           arrow = NULL, arrow.fill = NULL,
                           inherit.blank = FALSE) {
     colour <- color %||% colour
     arrow.fill <- arrow.fill %||% colour
     arrow <- arrow %||% FALSE
-
     structure(
         list(
             colour = colour, linewidth = linewidth, linetype = linetype,
             lineend = lineend, curvature = curvature, angle = angle,
-            ncp = ncp, shape = shape, square = square,
-            squareShape = squareShape, open = open,
-            arrow = arrow, arrow.fill = arrow.fill,
+            ncp = ncp, shape = shape, arrow = arrow, arrow.fill = arrow.fill,
             inherit.blank = inherit.blank
         ),
         class = c("ggalign_element_curve", "element_curve", "element")
@@ -178,6 +174,7 @@ element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
         lty = element$linetype,
         lineend = element$lineend
     )
+    gp <- ggfun("modify_list")(element_gp, gp)
     if (is.null(id)) {
         if (is.null(id.lengths)) {
             id <- vec_rep(1L, length(x))
@@ -185,20 +182,20 @@ element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
             id <- vec_rep_each(seq_along(id.lengths), id.lengths)
         }
     }
-    data <- vec_split(data_frame0(x = x, y), id)
-    ans <- lapply(.subset2(data, "val"), function(d) {
+    index_list <- .subset2(vec_split(seq_along(x), id), "val")
+    ans <- lapply(index_list, function(index) {
         grid::curveGrob(
-            .subset2(d, "x"), .subset2(d, "y"),
+            vec_slice(x, index),
+            vec_slice(y, index),
             default.units = default.units,
-            gp = ggfun("modify_list")(element_gp, gp),
+            gp = gp[index],
             curvature = element$curvature,
             angle = element$angle,
             ncp = element$ncp,
             shape = element$shape,
-            square = element$square,
-            squareShape = element$squareShape,
-            open = element$open,
             arrow = arrow,
+            square = FALSE, squareShape = 1,
+            inflect = FALSE, open = TRUE,
             ...
         )
     })

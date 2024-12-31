@@ -14,9 +14,6 @@ element_curve(
   angle = NULL,
   ncp = NULL,
   shape = NULL,
-  square = NULL,
-  squareShape = NULL,
-  open = NULL,
   arrow = NULL,
   arrow.fill = NULL,
   inherit.blank = FALSE
@@ -50,19 +47,6 @@ lengths in consecutive positions in the string.}
 \item{shape}{A numeric vector of values between -1 and 1, which
     control the shape of the curve relative to its control points.
     See \code{grid.xspline} for more details.}
-
-\item{square}{A logical value that controls whether control
-    points for the curve are created city-block fashion or
-    obliquely.  When \code{ncp} is 1 and \code{angle} is 90,
-    this is typically \code{TRUE}, otherwise this should probably
-    be set to \code{FALSE} (see Examples below).}
-
-\item{squareShape}{A \code{shape} value to control the behaviour
-    of the curve relative to any additional control point that
-    is inserted if \code{square} is \code{TRUE}.}
-
-\item{open}{A logical value indicating whether to close the curve
-    (connect the start and end points).}
 
 \item{arrow}{A list describing arrow heads to place at either end
     of the curve, as produced by the \code{arrow} function.}
