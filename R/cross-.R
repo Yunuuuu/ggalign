@@ -1,6 +1,8 @@
 # Since `ggalign_align_plot` object need act with the layout, we Use R6 object
 # here
-cross <- function(cross, data = waiver(), ..., call = caller_call()) {
+cross <- function(cross, data = waiver(), ...,
+                  plot = NULL, active = NULL, size = NULL,
+                  schemes = NULL, call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
@@ -8,6 +10,7 @@ cross <- function(cross, data = waiver(), ..., call = caller_call()) {
         align = cross,
         input_data = allow_lambda(data),
         ...,
+        plot = plot, active = active, size = size, schemes = schemes,
         call = call
     )
 }

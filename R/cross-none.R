@@ -12,9 +12,10 @@
 cross_none <- function(data = waiver(), inherit_panel = NULL,
                        inherit_nobs = NULL) {
     cross(CrossNone,
-        data = data, plot = NULL,
-        schemes = default_schemes(),
+        data = data,
+        plot = NULL,
         active = new_active(use = FALSE),
+        schemes = default_schemes(),
         inherit_panel = inherit_panel,
         inherit_nobs = inherit_nobs
     )
