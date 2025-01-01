@@ -25,9 +25,10 @@ mark_draw <- function(.draw, ...) {
         ans <- lapply(data, function(dd) {
             draw(.subset2(dd, "panel"), .subset2(dd, "link"))
         })
-        ans <- ans[!vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
-        if (is_empty(ans)) return(NULL) # styler: off
-        grid::gTree(children = inject(grid::gList(!!!ans)))
+        ans <- ans[vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
+        if (!is_empty(ans)) {
+            grid::gTree(children = inject(grid::gList(!!!ans)))
+        }
     }
     .mark_draw(new_draw, ...)
 }
@@ -148,7 +149,7 @@ mark_tetragon <- function(..., element = NULL) {
             link <- .subset2(d, "link")
 
             # find the consecutive groups
-            index <- .subset2(link, "ordering")
+            index <- .subset2(link, "link_index")
             oindex <- order(index)
             group <- cumsum(c(0L, diff(index[oindex])) != 1L)
 
@@ -296,6 +297,7 @@ PatchAlignMark <- ggproto(
 #  - postDrawDetails: by default, do noting
 #  - popgrobvp
 #' @importFrom grid makeContent unit convertHeight convertWidth viewport
+#' @importFrom stats reorder
 #' @export
 makeContent.ggalignMarkGtable <- function(x) {
     # Grab viewport information
@@ -432,19 +434,22 @@ makeContent.ggalignMarkGtable <- function(x) {
             hand2 = switch_direction(direction, "right", "bottom")
         )
         nms <- names(link_index)
+        link_panels <- vec_rep_each(names(full_breaks), list_sizes(full_breaks))
         coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
             link$link_id <- nms[i]
-            link$ordering <- l_index
+            link$link_panel <- reorder(
+                vec_slice(link_panels, l_index), l_index,
+                order = FALSE
+            )
+            link$link_index <- l_index
             link$.hand <- hand
             link$.index <- d_index
             panel <- vec_slice(panel_coord, i)
-            list(panel = panel, link = ggalign_attr_set(
-                link, list(spacing = spacing, groups = full_breaks)
-            ))
+            list(panel = panel, link = link)
         })
     }
     coords <- vec_interleave(

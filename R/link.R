@@ -21,7 +21,7 @@ link_draw <- function(.draw, ...) {
     }
     new_draw <- function(data) {
         ans <- lapply(data, draw)
-        ans <- ans[!vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
+        ans <- ans[vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
         if (!is_empty(ans)) {
             grid::gTree(children = inject(grid::gList(!!!ans)))
         }
@@ -215,18 +215,21 @@ makeContent.ggalignLinkGrob <- function(x) {
             hand2 = switch_direction(direction, "right", "bottom")
         )
         nms <- names(link_index)
+        link_panels <- vec_rep_each(names(full_breaks), list_sizes(full_breaks))
         coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
             link$link_id <- nms[i]
-            link$ordering <- l_index
+            link$link_panel <- reorder(
+                vec_slice(link_panels, l_index), l_index,
+                order = FALSE
+            )
+            link$link_index <- l_index
             link$.hand <- hand
             link$.index <- d_index
-            ggalign_attr_set(
-                link, list(spacing = spacing, groups = full_breaks)
-            )
+            link
         })
     }
     data <- .mapply(vec_rbind, coords, NULL)
