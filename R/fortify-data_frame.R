@@ -95,3 +95,13 @@ fortify_data_frame.matrix <- function(data, ...) {
     if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
     data
 }
+
+#' @export
+fortify_data_frame.DelayedMatrix <- function(data, ...) {
+    fortify_data_frame(as.matrix(data))
+}
+
+#' @export
+fortify_data_frame.Matrix <- function(data, ...) {
+    fortify_data_frame(as.matrix(data))
+}
