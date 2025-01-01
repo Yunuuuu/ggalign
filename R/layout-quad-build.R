@@ -198,8 +198,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
                 vec_names(data),
                 .subset2(row_design, "index")
             )
-        ) +
-        theme_recycle()
+        )
 
     # add action ----------------------------------------
     p <- plot_add_schemes(p, inherit_schemes(quad@body_schemes, schemes))
@@ -209,6 +208,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     if (do_column_facet) {
         p <- p + theme(panel.spacing.x = calc_element("panel.spacing.x", theme))
     }
+    p <- p + theme_recycle()
 
     # collect all plots and sizes ----------------------
     plots <- append(plots, list(main = p), 2L)
