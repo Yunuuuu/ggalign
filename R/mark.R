@@ -442,7 +442,9 @@ makeContent.ggalignMarkGtable <- function(x) {
             link$.hand <- hand
             link$.index <- d_index
             panel <- vec_slice(panel_coord, i)
-            list(panel = panel, link = link)
+            list(panel = panel, link = ggalign_attr_set(
+                link, list(spacing = spacing, groups = full_breaks)
+            ))
         })
     }
     coords <- vec_interleave(

@@ -224,7 +224,9 @@ makeContent.ggalignLinkGrob <- function(x) {
             link$ordering <- l_index
             link$.hand <- hand
             link$.index <- d_index
-            link
+            ggalign_attr_set(
+                link, list(spacing = spacing, groups = full_breaks)
+            )
         })
     }
     data <- .mapply(vec_rbind, coords, NULL)
