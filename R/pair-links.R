@@ -534,7 +534,7 @@ make_pair_link_data <- function(pair_link, design1, design2,
 }
 
 make_link_data <- function(link, design, labels, other, data_index,
-                           arg = caller_arg(link)) {
+                           arg = caller_arg(link), call = caller_call()) {
     if (is_empty(link)) {
         return(NULL)
     }
@@ -544,7 +544,7 @@ make_link_data <- function(link, design, labels, other, data_index,
         labels = labels,
         index = .subset2(design, "index"),
         other = other, data_index = data_index,
-        arg = arg
+        arg = arg, call = call
     )
     if (is_empty(link)) {
         return(NULL)
