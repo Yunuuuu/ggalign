@@ -148,11 +148,12 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                 design["nobs"] <- list(layout_nobs)
 
                 # we always add `.index` to align the observations
-                if (!is.data.frame(input_data) &&
-                    vec_is(dim(input_data), integer(), size = 2L)) {
+                # For matrix-like object
+                if (!is.data.frame(data) &&
+                    vec_is(dim(data), integer(), size = 2L)) {
                     plot_data$.index <- vec_rep(
-                        seq_len(NROW(input_data)),
-                        NCOL(input_data)
+                        seq_len(NROW(data)),
+                        NCOL(data)
                     )
                 } else {
                     plot_data$.index <- seq_len(NROW(data))
@@ -233,7 +234,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         }
 
         # if inherit from the parent layout
-        if (is.waive(.subset2(self, "input_data")) && !is.null(extra_panel)) {
+        if (is.waive(self$input_data) && !is.null(extra_panel)) {
             # if the data is inherit from the `quad_layout()`
             # the data must be a matrix
             plot_data <- cross_join(plot_data, data_frame0(
