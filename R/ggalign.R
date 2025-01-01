@@ -146,8 +146,10 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                     ))
                 }
                 design["nobs"] <- list(layout_nobs)
+
                 # we always add `.index` to align the observations
-                if (identical(length(dim(input_data)), 2L)) {
+                if (!is.data.frame(input_data) &&
+                    vec_is(dim(input_data), integer(), size = 2L)) {
                     plot_data$.index <- vec_rep(
                         seq_len(NROW(input_data)),
                         NCOL(input_data)
