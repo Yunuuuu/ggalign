@@ -115,6 +115,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         input_data <- self$input_data
         object_name <- object_name(self)
         layout_data <- layout@data
+
         # inherit data from the layout
         if (is.function(input_data)) {
             if (is.null(layout_data)) {
@@ -136,6 +137,11 @@ AlignGg <- ggproto("AlignGg", AlignProto,
 
         # for discrete design, # we need ensure the nobs is the same
         if (is_discrete_design(design <- layout@design)) {
+            # for data inherit from the layout, and the layout data is from
+            # the quad-layout, we use the `extra_design`
+            self$use_extra_design <- is.waive(input_data) &&
+                isTRUE(layout@heatmap$quad_matrix)
+
             if (!is.null(data)) {
                 if (is.null(layout_nobs <- design$nobs)) {
                     layout_nobs <- NROW(data)
@@ -151,10 +157,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                 # For matrix-like object
                 if (!is.data.frame(data) &&
                     vec_is(dim(data), integer(), size = 2L)) {
-                    plot_data$.index <- vec_rep(
-                        seq_len(NROW(data)),
-                        NCOL(data)
-                    )
+                    plot_data$.index <- vec_rep(seq_len(NROW(data)), NCOL(data))
                 } else {
                     plot_data$.index <- seq_len(NROW(data))
                 }
@@ -234,7 +237,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         }
 
         # if inherit from the parent layout
-        if (is.waive(self$input_data) && !is.null(extra_panel)) {
+        if (isTRUE(self$use_extra_design) && !is.null(extra_panel)) {
             # if the data is inherit from the `quad_layout()`
             # the data must be a matrix
             plot_data <- cross_join(plot_data, data_frame0(

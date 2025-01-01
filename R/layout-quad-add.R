@@ -91,7 +91,8 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         # for the annotation stack, we try to take the data from the
         # quad layout
         quad_data <- quad@data
-        data <- waiver()
+        data <- waiver() # use waiver() to indicate data is not initialized
+        quad_matrix <- FALSE # the default value for `quad_matrix` in the stack
         if (is_continuous_design(layout_design)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
@@ -114,6 +115,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
             } else {
                 data <- ggalign_attr_restore(t(quad_data), quad_data)
             }
+            quad_matrix <- TRUE
         } else {
             if (is.null(initialize)) {
                 cli_warn(paste(
@@ -137,6 +139,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 schemes = default_schemes(if (is.null(data)) NULL else waiver())
             )
             stack@heatmap$position <- position
+            stack@heatmap$quad_matrix <- quad_matrix
         }
     } else if (!is.null(stack) && isTRUE(initialize)) {
         cli_abort(c(
@@ -212,7 +215,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     if (is_cross_layout(object) &&
         any(position == c("bottom", "right")) &&
         !is_empty(object@cross_points)) {
-        # if there are cross points in bottom or right annotation, 
+        # if there are cross points in bottom or right annotation,
         # use the first design
         stack_design <- .subset2(object@odesign, 1L)
     } else {

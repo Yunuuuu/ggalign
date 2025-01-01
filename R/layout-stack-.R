@@ -275,5 +275,12 @@ methods::setClass(
         heatmap = "list", # used by heatmap annotation
         sizes = "ANY" # used by stack layout
     ),
-    prototype = list(heatmap = list(position = NULL, free_guides = waiver()))
+    prototype = list(
+        heatmap = list(
+            position = NULL,
+            free_guides = waiver(),
+            # indicate whether or not the data is from the quad-layout matrix
+            quad_matrix = FALSE
+        )
+    )
 )
