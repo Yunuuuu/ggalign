@@ -65,7 +65,7 @@ obj_print_data.ggalign_pair_links <- function(x, ...) {
         hand2 <- vapply(x, function(hand) {
             deparse_link(hand, ..., hand = "hand2")
         }, character(1L), USE.NAMES = FALSE)
-        nms <- c("", paste0(names(x), ":  "))
+        nms <- c("", paste0(names_or_index(x), ":  "))
         nms <- format(nms, justify = "right")
         empty <- character(length(hand2))
         empty[hand1 == "" & hand2 == ""] <- "  <empty>"
@@ -515,35 +515,25 @@ deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
 make_pair_link_data <- function(pair_link, design1, design2,
                                 labels1, labels2,
                                 call = caller_call()) {
-    input1 <- .subset2(pair_link, 1L)
-    input2 <- .subset2(pair_link, 2L)
-
-    # melt waiver, let waiver() inherit from the another link
-    if (is.waive(input1) ||
-        (is.list(input1) &&
-            any(vapply(input1, is.waive, logical(1L), USE.NAMES = FALSE)))) {
-        hand1 <- c(input1, if (is.list(input2)) input2 else list(input2))
-    } else {
-        hand1 <- input1
-    }
-    if (is.waive(input2) ||
-        (is.list(input2) &&
-            any(vapply(input2, is.waive, logical(1L), USE.NAMES = FALSE)))) {
-        hand2 <- c(input2, if (is.list(input1)) input1 else list(input1))
-    } else {
-        hand2 <- input2
-    }
+    hand1 <- .subset2(pair_link, 1L)
+    hand2 <- .subset2(pair_link, 2L)
 
     # make the data
-    hand1 <- make_link_data(hand1, design = design1, labels = labels1)
-    hand2 <- make_link_data(hand2, design = design2, labels = labels2)
+    hand1 <- make_link_data(hand1,
+        design = design1, labels = labels1,
+        other = hand2, data_index = !inherits(pair_link, "AsIs")
+    )
+    hand2 <- make_link_data(hand2,
+        design = design2, labels = labels2,
+        other = hand1, data_index = !inherits(pair_link, "AsIs")
+    )
     if (is.null(hand1) && is.null(hand2)) {
         return(NULL)
     }
     list(hand1 = hand1, hand2 = hand2)
 }
 
-make_link_data <- function(link, design, labels = NULL,
+make_link_data <- function(link, design, labels, other, data_index,
                            arg = caller_arg(link)) {
     if (is_empty(link)) {
         return(NULL)
@@ -551,8 +541,9 @@ make_link_data <- function(link, design, labels = NULL,
     link <- link_to_location(
         link,
         n = .subset2(design, "nobs"),
-        names = labels,
+        labels = labels,
         index = .subset2(design, "index"),
+        other = other, data_index = data_index,
         arg = arg
     )
     if (is_empty(link)) {
@@ -560,34 +551,25 @@ make_link_data <- function(link, design, labels = NULL,
     }
     # always use integer, otherwise, will cause error when drawing
     # due to loss of precision, I don't know why, it should be integer already?
-    vec_cast(link, integer())
+    vec_unique(vec_cast(link, integer()))
 }
 
 link_to_location <- function(x, ...) UseMethod("link_to_location")
 
 #' @export
-link_to_location.AsIs <- function(x, n, names = NULL, index = NULL, ...,
-                                  arg = caller_arg(x),
+link_to_location.AsIs <- function(x, ..., data_index, arg = caller_arg(x),
                                   call = caller_call()) {
-    link_to_location(
-        remove_class(x, "AsIs"),
-        n = n,
-        names = names,
-        index = index,
-        data_index = TRUE,
-        arg = arg,
-        call = call
-    )
+    link_to_location(remove_class(x, "AsIs"), ..., data_index = FALSE)
 }
 
 #' @export
-link_to_location.character <- function(x, n, names = NULL, index = NULL, ...,
+link_to_location.character <- function(x, ..., n, labels, index,
                                        arg = caller_arg(x),
                                        call = caller_call()) {
     ans <- vec_as_location(
         x,
         n = n,
-        names = names,
+        names = labels,
         arg = arg,
         call = call
     )
@@ -595,41 +577,32 @@ link_to_location.character <- function(x, n, names = NULL, index = NULL, ...,
 }
 
 #' @export
-link_to_location.integer <- function(x, n, names = NULL, index = NULL, ...,
-                                     data_index = FALSE, arg = caller_arg(x),
+link_to_location.integer <- function(x, ..., n, labels, index, data_index,
+                                     arg = caller_arg(x),
                                      call = caller_call()) {
     ans <- vec_as_location(
         x,
         n = n,
-        names = names,
+        names = labels,
         arg = arg,
         call = call
     )
     # integer index by default match the original data
-    if (isTRUE(data_index)) ans else match(ans, index)
+    if (isTRUE(data_index)) match(ans, index) else ans
 }
 
 #' @export
-link_to_location.ggalign_range_link <- function(x, n, names = NULL,
-                                                index = NULL, ...,
-                                                data_index = FALSE,
-                                                arg = caller_arg(x),
+link_to_location.ggalign_range_link <- function(x, ..., arg = caller_arg(x),
                                                 call = caller_call()) {
     point1 <- link_to_location(
         .subset2(x, "point1"),
-        n = n,
-        names = names,
-        index = index,
-        data_index = data_index,
+        ...,
         arg = "point1",
         call = quote(range_link())
     )
     point2 <- link_to_location(
         .subset2(x, "point2"),
-        n = n,
-        names = names,
-        index = index,
-        data_index = data_index,
+        ...,
         arg = "point2",
         call = quote(range_link())
     )
@@ -637,24 +610,11 @@ link_to_location.ggalign_range_link <- function(x, n, names = NULL,
 }
 
 #' @export
-link_to_location.list <- function(x, n, names = NULL,
-                                  index = NULL, ...,
-                                  data_index = FALSE,
-                                  arg = caller_arg(x),
-                                  call = caller_call()) {
-    ans <- lapply(
-        x, link_to_location,
-        n = n,
-        names = names,
-        index = index,
-        data_index = data_index,
-        arg = arg, call = call
-    )
-    unlist(ans, FALSE, FALSE)
+link_to_location.list <- function(x, ...) {
+    unlist(lapply(x, link_to_location, ...), FALSE, FALSE)
 }
 
 #' @export
-link_to_location.waiver <- function(x, n, names = NULL,
-                                    index = NULL, ...) {
-    integer()
+link_to_location.waiver <- function(x, ..., other) {
+    link_to_location(other, ...)
 }
