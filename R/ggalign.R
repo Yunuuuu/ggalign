@@ -140,6 +140,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             # for data inherit from the layout, and the layout data is from
             # the quad-layout, we use the `extra_design`
             self$use_extra_design <- is.waive(input_data) &&
+                is_stack_layout(layout) &&
                 isTRUE(layout@heatmap$quad_matrix)
 
             if (!is.null(data)) {
