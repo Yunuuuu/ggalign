@@ -557,8 +557,7 @@ make_link_data <- function(link, design, labels, other, data_index,
 link_to_location <- function(x, ...) UseMethod("link_to_location")
 
 #' @export
-link_to_location.AsIs <- function(x, ..., data_index, arg = caller_arg(x),
-                                  call = caller_call()) {
+link_to_location.AsIs <- function(x, ..., data_index) {
     link_to_location(remove_class(x, "AsIs"), ..., data_index = FALSE)
 }
 
