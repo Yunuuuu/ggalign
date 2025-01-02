@@ -515,17 +515,17 @@ deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
 make_pair_link_data <- function(pair_link, design1, design2,
                                 labels1, labels2,
                                 call = caller_call()) {
-    hand1 <- .subset2(pair_link, 1L)
-    hand2 <- .subset2(pair_link, 2L)
+    input1 <- .subset2(pair_link, 1L)
+    input2 <- .subset2(pair_link, 2L)
 
     # make the data
-    hand1 <- make_link_data(hand1,
+    hand1 <- make_link_data(input1,
         design = design1, labels = labels1,
-        other = hand2, data_index = !inherits(pair_link, "AsIs")
+        other = input2, data_index = !inherits(pair_link, "AsIs")
     )
-    hand2 <- make_link_data(hand2,
+    hand2 <- make_link_data(input2,
         design = design2, labels = labels2,
-        other = hand1, data_index = !inherits(pair_link, "AsIs")
+        other = input1, data_index = !inherits(pair_link, "AsIs")
     )
     if (is.null(hand1) && is.null(hand2)) {
         return(NULL)
