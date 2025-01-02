@@ -278,10 +278,13 @@ element_vec_rep_each <- function(.el, times, ...) {
 }
 
 #' @inheritParams vctrs::vec_slice
+#' @importFrom grid is.unit
 #' @export
 #' @rdname element_vec
 element_vec_slice <- function(.el, i, ...) {
-    element_vec(.el, vec_slice, i = i, ...)
+    element_vec(.el, function(x) {
+        if (is.unit(x)) x[i, ...] else vec_slice(x, i, ...)
+    })
 }
 
 element_vec_fields <- function(el) UseMethod("element_vec_fields")
