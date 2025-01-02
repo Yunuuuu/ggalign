@@ -535,15 +535,13 @@ make_pair_link_data <- function(pair_link, design1, design2,
 
 make_link_data <- function(link, design, labels, other, data_index,
                            arg = caller_arg(link), call = caller_call()) {
-    if (is_empty(link)) {
-        return(NULL)
-    }
     link <- link_to_location(
         link,
         n = .subset2(design, "nobs"),
         labels = labels,
         index = .subset2(design, "index"),
-        other = other, data_index = data_index,
+        other = other,
+        data_index = data_index,
         arg = arg, call = call
     )
     if (is_empty(link)) {
@@ -615,5 +613,8 @@ link_to_location.list <- function(x, ...) {
 
 #' @export
 link_to_location.waiver <- function(x, ..., other) {
-    link_to_location(other, ...)
+    link_to_location(other %|w|% NULL, ...)
 }
+
+#' @export
+link_to_location.NULL <- function(x, ...) NULL
