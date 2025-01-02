@@ -35,6 +35,21 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
 #' @importFrom grid grob
 #' @include cross-none.R
 CrossLink <- ggproto("CrossLink", CrossNone,
+    interact_layout = function(self, layout) {
+        if (!self$in_linear) { # only used for linear coordinate
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(self), layout_name
+                ),
+                i = sprintf(
+                    "%s can only be used in linear layout",
+                    object_name(self)
+                )
+            ))
+        }
+        ggproto_parent(CrossNone, self)$interact_layout(layout)
+    },
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         if (is.null(.subset2(previous_design, "nobs"))) {

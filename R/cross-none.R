@@ -25,18 +25,6 @@ cross_none <- function(data = waiver(), inherit_panel = NULL,
 #' @include cross-.R
 CrossNone <- ggproto("CrossNone", Cross,
     interact_layout = function(self, layout) {
-        if (!self$in_linear) { # only used for linear coordinate
-            cli_abort(c(
-                sprintf(
-                    "Cannot add %s to %s",
-                    object_name(self), layout_name
-                ),
-                i = sprintf(
-                    "%s can only be used in linear layout",
-                    object_name(self)
-                )
-            ))
-        }
         # will define labels0 using CrossGg
         layout <- ggproto_parent(Cross, self)$interact_layout(layout)
 
