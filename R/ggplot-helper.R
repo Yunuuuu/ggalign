@@ -323,6 +323,9 @@ element_vec_fields.element_text <- function(el) {
     )
 }
 
+#' @export
+element_vec_fields.default <- function(el) stop_input_type(el, "an element")
+
 ######################################################
 #' Remove scale expansion
 #'
