@@ -59,7 +59,14 @@
 
 
 <dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed on to <code><a href="mark_draw.html">mark_draw()</a></code>.</p></dd>
+<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; A list of formulas, where each side
+of the formula should be an <code>integer</code> or <code>character</code> index of the original
+data, or a <code><a href="pair_links.html">range_link()</a></code> object defining the linked observations. Use
+<code>NULL</code> to indicate no link on that side. You can also combine these by
+wrapping them into a single <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>. If only the left-hand side of the
+formula exists, you can input it directly. For integer indices, wrap them
+with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code> to use the ordering from the layout. You can also use
+<code>waiver()</code> to inherit values from the other group.</p></dd>
 
 
 <dt id="arg-element">element<a class="anchor" aria-label="anchor" href="#arg-element"></a></dt>
