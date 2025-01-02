@@ -7,7 +7,14 @@
 mark_line(..., element = NULL)
 }
 \arguments{
-\item{...}{Additional arguments passed on to \code{\link[=mark_draw]{mark_draw()}}.}
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of formulas, where each side
+of the formula should be an \code{integer} or \code{character} index of the original
+data, or a \code{range_link()} object defining the linked observations. Use
+\code{NULL} to indicate no link on that side. You can also combine these by
+wrapping them into a single \code{list()}. If only the left-hand side of the
+formula exists, you can input it directly. For integer indices, wrap them
+with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
+\code{\link[=waiver]{waiver()}} to inherit values from the other group.}
 
 \item{element}{A \code{\link[ggplot2:element]{element_line()}} object. Vectorized
 fields will be recycled to match the total number of groups, or you can

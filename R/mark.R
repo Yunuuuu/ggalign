@@ -10,7 +10,7 @@
 #'   `grob`, nothing will be drawn. The input data for the function must contain
 #'   two arguments: a data frame for the panel side coordinates and a data frame
 #'   for the marked observation coordinates.
-#' @inheritParams pair_links
+#' @inheritParams .mark_draw
 #' @seealso
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]
@@ -47,7 +47,7 @@ mark_draw <- function(.draw, ...) {
 #'   coordinates (`"panel"`) and one for the marked observations coordinates
 #'   (`"link"`).
 #'
-#' @inheritParams mark_draw
+#' @inheritParams pair_links
 #' @seealso [`mark_draw()`]
 #' @export
 .mark_draw <- function(.draw, ...) {
@@ -71,7 +71,7 @@ print.ggalign_mark_draw <- function(x, ...) {
 
 #' Link the observations and the panel with a line
 #'
-#' @param ... Additional arguments passed on to [`mark_draw()`].
+#' @inheritParams .mark_draw
 #' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
 #'   fields will be recycled to match the total number of groups, or you can
 #'   wrap the element with [`I()`] to recycle to match the drawing groups. The
@@ -126,7 +126,7 @@ mark_line <- function(..., element = NULL) {
 
 #' Link the observations and the panel with a quadrilateral
 #'
-#' @param ... Additional arguments passed on to [`mark_draw()`].
+#' @inheritParams .mark_draw
 #' @param element A [`element_polygon()`] object. Vectorized fields will be
 #'   recycled to match the total number of groups, or you can wrap the element
 #'   with [`I()`] to recycle to match the drawing groups. The drawing groups
