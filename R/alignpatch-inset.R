@@ -15,11 +15,10 @@
 #' @export
 inset <- function(plot, ..., align = "panel", on_top = TRUE,
                   clip = TRUE, vp = NULL) {
-    grob <- make_inset(
+    make_inset(
         plot = plot, ..., align = align, on_top = on_top,
         clip = clip, vp = vp
     )
-    add_class(grob, "patch_inset")
 }
 
 #' @importFrom grid editGrob
@@ -33,11 +32,16 @@ make_inset <- function(plot, ..., align, on_top, clip, vp,
     if (!is.grob(grob <- patch(x = plot, ...))) {
         cli_abort("{.fn patch} must return a {.cls grob}", call = call)
     }
-    attr(grob, "align") <- align
-    attr(grob, "clip") <- if (clip) "on" else "off"
-    attr(grob, "on_top") <- on_top
     if (!is.null(vp)) grob <- editGrob(grob, vp = vp)
-    grob
+    structure(
+        list(
+            grob = grob,
+            align = align,
+            clip = if (clip) "on" else "off",
+            on_top = on_top
+        ),
+        class = "patch_inset"
+    )
 }
 
 #' @importFrom ggplot2 ggplot_add
