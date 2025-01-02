@@ -23,13 +23,17 @@ Cross <- ggproto("Cross", AlignProto,
     free_facet = TRUE,
     free_limits = TRUE,
     interact_layout = function(self, layout) {
-        if (length(layout@break_points) && is.null(.subset2(design, "nobs"))) {
+        #  1. check layout is `*_cross()`
+        #  2. add `cross_points`
+        #  3. add `odesign`
+        layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
+        if (length(layout@break_points) &&
+            is.null(.subset2(layout@design, "nobs"))) {
             cli_abort(sprintf(
                 "layout {.field nobs} for %s must be initialized before adding %s",
                 self$layout_name, object_name(self)
             ))
         }
-        layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
         # will define labels0
         self$labels0 <- self$labels
