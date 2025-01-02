@@ -168,8 +168,8 @@ subset_theme_axis <- function(axis, theme, tick0, text0, tick1, text1) {
     text_index <- (text0 + 1L):text1
     align_theme_axis(
         axis, theme,
-        tick_fn = function(value) value[tick_index],
-        text_fn = function(value) value[text_index]
+        tick_fn = function(value) vec_slice(value, tick_index),
+        text_fn = function(value) vec_slice(value, text_index)
     )
 }
 
@@ -183,46 +183,13 @@ align_theme_axis <- function(axis, theme, text_fn, tick_fn) {
     .text_fn <- function(v) if (length(v) > 1L) text_fn(v) else v
     .tick_fn <- function(v) if (length(v) > 1L) tick_fn(v) else v
     for (element in paste("axis.text", axis, positions, sep = ".")) {
-        theme <- theme_element_lapply(
-            .theme = theme, .element = element, .class = "element_text",
-            .params = c(
-                "family", "face", "colour", "size", "hjust", "vjust",
-                "angle", "lineheight", "color"
-            ),
-            .fn = .text_fn
-        )
+        theme[[element]] <- element_vec(calc_element(element, theme), .text_fn)
     }
     for (element in paste("axis.ticks", axis, positions, sep = ".")) {
-        theme <- theme_element_lapply(
-            .theme = theme, .element = element, .class = "element_line",
-            .params = c("colour", "linewidth", "linetype", "lineend", "color"),
-            .fn = .tick_fn
-        )
+        theme[[element]] <- element_vec(calc_element(element, theme), .tick_fn)
     }
     for (element in paste("axis.ticks.length", axis, positions, sep = ".")) {
-        theme <- theme_element_lapply(
-            .theme = theme, .element = element, .fn = .tick_fn
-        )
+        theme[[element]] <- .tick_fn(calc_element(element, theme))
     }
     theme
-}
-
-##########################################################################
-#' Apply a function to each parameters of the element object in the theme
-#'
-#' @importFrom ggplot2 calc_element
-#' @noRd
-theme_element_lapply <- function(.theme, .element, .fn, ...,
-                                 .class = NULL, .params = NULL) {
-    el <- calc_element(.element, .theme)
-    if (is.null(.class)) { # the element should be the value
-        .theme[[.element]] <- .fn(el, ...)
-    } else if (inherits(el, .class)) {
-        # recusively to the value of the element
-        for (e in (.params %||% names(el))) {
-            el[[e]] <- .fn(.subset2(el, e), ...)
-        }
-        .theme[[.element]] <- el
-    }
-    .theme
 }
