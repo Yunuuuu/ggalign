@@ -98,7 +98,7 @@ patch.grob <- function(x, ...) {
 #' @rdname patch.grob
 patch.gList <- function(x, ...) {
     # gLists need to be wrapped in a grob tree
-    grid::grobTree(plot)
+    grid::grobTree(x)
 }
 
 #' @importFrom ggplot2 ggplotGrob
