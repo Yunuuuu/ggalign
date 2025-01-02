@@ -83,6 +83,7 @@ reference:
   - mark_tetragon
   - mark_draw
   - link_line
+  - link_tetragon
   - link_draw
   - pair_links
 

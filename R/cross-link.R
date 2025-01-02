@@ -32,7 +32,7 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @importFrom grid grob
+#' @importFrom grid gTree
 #' @include cross-none.R
 CrossLink <- ggproto("CrossLink", CrossNone,
     interact_layout = function(self, layout) {
@@ -134,11 +134,11 @@ CrossLink <- ggproto("CrossLink", CrossNone,
         ) %||% unit(0, "mm")
 
         # setup the grob
-        grob <- inject(grob(
+        grob <- inject(gTree(
             !!!.subset2(plot, "ggalign_link_data"),
             spacing1 = spacing,
             spacing2 = spacing,
-            cl = "ggalignLinkGrob"
+            cl = "ggalignLinkTree"
         ))
         plot$ggalign_link_data <- NULL
 

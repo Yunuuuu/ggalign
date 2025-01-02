@@ -9,11 +9,12 @@
 #'   `grob`, no drawing will occur. The input data for the function should
 #'   include a data frame with the coordinates of the pair of observations to
 #'   be linked.
-#' @inheritParams pair_links
+#' @inheritParams .link_draw
 #' @seealso
 #'  - [`link_line()`]
 #'  - [`.link_draw()`]
 #' @importFrom rlang is_empty inject
+#' @importFrom grid gTree gList
 #' @export
 link_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
@@ -22,9 +23,7 @@ link_draw <- function(.draw, ...) {
     new_draw <- function(data) {
         ans <- lapply(data, draw)
         ans <- ans[vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
-        if (!is_empty(ans)) {
-            grid::gTree(children = inject(grid::gList(!!!ans)))
-        }
+        if (!is_empty(ans)) inject(gList(!!!ans))
     }
     .link_draw(new_draw, ...)
 }
@@ -42,7 +41,7 @@ link_draw <- function(.draw, ...) {
 #'   a list, where each item is a data frame containing the coordinates of
 #'   the pair of observations.
 #'
-#' @inheritParams link_draw
+#' @inheritParams pair_links
 #' @seealso [`link_draw()`]
 #' @export
 .link_draw <- function(.draw, ...) {
@@ -64,9 +63,9 @@ print.ggalign_link_draw <- function(x, ...) {
     invisible(x)
 }
 
-#' Link the observations with a line
+#' Link the paired observations with a line
 #'
-#' @inheritParams link_draw
+#' @inheritParams .link_draw
 #' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
 #'   fields will be recycled to match the total number of groups, or you can
 #'   wrap the element with [`I()`] to recycle to match the drawing groups. The
@@ -85,17 +84,18 @@ link_line <- function(..., element = NULL) {
     }
     ans <- .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
+            # if the link is only in one side, we do nothing
             if (vec_unique_count(.subset2(d, ".hand")) < 2L) {
                 return(NULL)
             }
             both <- .subset2(vec_split(d, .subset2(d, ".hand")), "val")
             data <- cross_join(.subset2(both, 1L), .subset2(both, 2L))
             data_frame0(
-                x = vec_c(
+                x = vec_interleave(
                     (data$x.x + data$xend.x) / 2L,
                     (data$x.y + data$xend.y) / 2L
                 ),
-                y = vec_c(
+                y = vec_interleave(
                     (data$y.x + data$yend.x) / 2L,
                     (data$y.y + data$yend.y) / 2L
                 )
@@ -124,6 +124,78 @@ link_line <- function(..., element = NULL) {
     add_class(ans, "ggalign_link_line")
 }
 
+#' Link the paired observations with a quadrilateral
+#'
+#' @inheritParams .link_draw
+#' @inheritParams mark_tetragon
+#' @export
+link_tetragon <- function(..., element = NULL) {
+    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+    default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
+    if (is.null(element)) {
+        element <- default
+    } else {
+        element <- ggplot2::merge_element(element, default)
+    }
+    .link_draw(.draw = function(data) {
+        data <- lapply(data, function(d) {
+            # if the link is only in one side, we do nothing
+            if (vec_unique_count(.subset2(d, ".hand")) < 2L) {
+                return(NULL)
+            }
+            both <- .subset2(vec_split(d, .subset2(d, ".hand")), "val")
+            both <- lapply(both, function(link) {
+                # find the consecutive groups
+                index <- .subset2(link, "link_index")
+                oindex <- order(index)
+                group <- cumsum(c(0L, diff(index[oindex])) != 1L)
+
+                # restore the order
+                group <- group[order(oindex)]
+
+                # split link into groups
+                .subset2(vec_split(link, group), "val")
+            })
+            both <- vec_expand_grid(
+                hand1 = .subset2(both, 1L),
+                hand2 = .subset2(both, 2L)
+            )
+            ans <- .mapply(function(hand1, hand2) {
+                data_frame0(
+                    x = vec_c(
+                        min(hand1$x), max(hand1$xend),
+                        max(hand2$xend), min(hand2$x)
+                    ),
+                    y = vec_c(
+                        min(hand1$y), max(hand1$yend),
+                        max(hand2$yend), min(hand2$y)
+                    )
+                )
+            }, both, NULL)
+            vec_rbind(!!!ans)
+        })
+        if (inherits(element, "AsIs")) {
+            element <- element_rep_len(element,
+                length.out = sum(list_sizes(data)) / 4L
+            )
+        } else {
+            element <- element_rep_len(element, length.out = length(data))
+            element <- element_vec_rep_each(element,
+                times = list_sizes(data) / 4L
+            )
+        }
+        data <- vec_rbind(!!!data)
+        if (vec_size(data)) {
+            element_grob(
+                element,
+                x = data$x, y = data$y,
+                id.lengths = vec_rep(4L, vec_size(data) / 4L),
+                default.units = "native"
+            )
+        }
+    }, ...)
+}
+
 # preDraw:
 #  - makeContext
 #  - pushvpgp
@@ -133,9 +205,9 @@ link_line <- function(..., element = NULL) {
 # postDraw:
 #  - postDrawDetails: by default, do noting
 #  - popgrobvp
-#' @importFrom grid makeContent unit convertHeight convertWidth viewport
+#' @importFrom grid makeContent convertHeight convertWidth gList setChildren
 #' @export
-makeContent.ggalignLinkGrob <- function(x) {
+makeContent.ggalignLinkTree <- function(x) {
     # Grab viewport information
     width <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE)
     height <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE)
@@ -232,11 +304,16 @@ makeContent.ggalignLinkGrob <- function(x) {
             link
         })
     }
+
+    # hand1 - hand2
     data <- .mapply(vec_rbind, coords, NULL)
     draw <- .subset2(x, "draw")
-    if (is.grob(grob <- draw(data))) {
-        makeContent(grob)
+    if (is.grob(grob <- draw(data))) { # wrap single grob to a gList
+        grob <- gList(grob)
+    }
+    if (inherits(grob, "gList")) {
+        setChildren(x, grob)
     } else {
-        grid::nullGrob()
+        x
     }
 }

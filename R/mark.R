@@ -16,6 +16,7 @@
 #'  - [`mark_tetragon()`]
 #'  - [`.mark_draw()`]
 #' @importFrom rlang is_empty inject
+#' @importFrom grid gTree gList
 #' @export
 mark_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
@@ -27,7 +28,7 @@ mark_draw <- function(.draw, ...) {
         })
         ans <- ans[vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
         if (!is_empty(ans)) {
-            grid::gTree(children = inject(grid::gList(!!!ans)))
+            gTree(children = inject(gList(!!!ans)))
         }
     }
     .mark_draw(new_draw, ...)
@@ -178,12 +179,14 @@ mark_tetragon <- function(..., element = NULL) {
             )
         }
         data <- vec_rbind(!!!data)
-        element_grob(
-            element,
-            x = data$x, y = data$y,
-            id.lengths = vec_rep(4L, nrow(data) / 4L),
-            default.units = "native"
-        )
+        if (vec_size(data)) {
+            element_grob(
+                element,
+                x = data$x, y = data$y,
+                id.lengths = vec_rep(4L, nrow(data) / 4L),
+                default.units = "native"
+            )
+        }
     }, ...)
 }
 
@@ -224,12 +227,14 @@ mark_triangle <- function(..., orientation = "plot", element = NULL) {
             vec_rbind(!!!tetragon_list)
         })
         data <- vec_rbind(!!!data)
-        element_grob(
-            element,
-            x = data$x, y = data$y,
-            id.lengths = vec_rep(3L, nrow(data) / 3L),
-            default.units = "native"
-        )
+        if (vec_size(data)) {
+            element_grob(
+                element,
+                x = data$x, y = data$y,
+                id.lengths = vec_rep(3L, nrow(data) / 3L),
+                default.units = "native"
+            )
+        }
     }, ...)
 }
 
@@ -458,17 +463,22 @@ makeContent.ggalignMarkGtable <- function(x) {
     )
     coords <- list_drop_empty(coords)
     draw <- .subset2(data, "draw")
-    if (!is.grob(grob <- draw(coords))) {
-        return(NextMethod())
+    if (inherits(grob <- draw(coords), "gList")) {
+        grob <- gTree(children = grob)
     }
-    layout <- .subset2(x, "layout")
-    panels <- layout[grepl("^panel", .subset2(layout, "name")), , drop = FALSE]
-    x <- gtable_add_grob(
-        x,
-        grobs = grob,
-        t = 1L, l = 1L, b = -1L, r = -1L,
-        # always draw with panel area
-        z = min(panels$z)
-    )
+    if (is.grob(grob)) {
+        layout <- .subset2(x, "layout")
+        panels <- layout[
+            grepl("^panel", .subset2(layout, "name")), ,
+            drop = FALSE
+        ]
+        x <- gtable_add_grob(
+            x,
+            grobs = grob,
+            t = 1L, l = 1L, b = -1L, r = -1L,
+            # always draw with panel area
+            z = min(panels$z)
+        )
+    }
     NextMethod()
 }

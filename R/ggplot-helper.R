@@ -87,7 +87,9 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
 #' @importFrom grid gpar
 #' @importFrom ggplot2 element_grob
 #' @export
-element_grob.ggalign_element_polygon <- function(element, x, y,
+element_grob.ggalign_element_polygon <- function(element,
+                                                 x = c(0, 0.5, 1, 0.5),
+                                                 y = c(0.5, 1, 0.5, 0),
                                                  fill = NULL,
                                                  colour = NULL,
                                                  linewidth = NULL,
@@ -141,7 +143,7 @@ element_curve <- function(colour = NULL, linewidth = NULL, linetype = NULL,
     )
 }
 
-#' @importFrom grid gpar
+#' @importFrom grid gpar gTree gList
 #' @importFrom ggplot2 element_grob
 #' @export
 element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
@@ -199,7 +201,7 @@ element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
             ...
         )
     })
-    grid::gTree(children = inject(grid::gList(!!!ans)))
+    gTree(children = inject(gList(!!!ans)))
 }
 
 ##########################################################################
