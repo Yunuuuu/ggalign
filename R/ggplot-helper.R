@@ -358,39 +358,35 @@ no_expansion <- function(borders = "tlbr") {
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
-    ParentFacet <- .subset2(plot, "facet")
+    ParentCoord <- .subset2(plot, "coordinates")
     borders <- .subset2(object, "borders")
-    plot$facet <- ggproto(
-        NULL, ParentFacet,
-        init_scales = function(self, layout, x_scale = NULL,
-                               y_scale = NULL, params) {
-            if (!is.null(x_scale) && any(borders == c("left", "right"))) {
-                expansion <- x_scale$expand %|w|%
-                    ggfun("default_expansion")(x_scale, expand = TRUE)
+    plot$coordinates <- ggproto(
+        NULL, ParentCoord,
+        setup_panel_params = function(self, scale_x, scale_y, params = list()) {
+            if (!is.null(scale_x) && any(borders == c("left", "right"))) {
+                expansion <- scale_x$expand %|w|%
+                    ggfun("default_expansion")(scale_x, expand = TRUE)
                 if (any(borders == "left")) {
                     expansion[1:2] <- 0
                 }
                 if (any(borders == "right")) {
                     expansion[3:4] <- 0
                 }
-                x_scale$expand <- expansion
+                scale_x$expand <- expansion
             }
-            if (!is.null(y_scale) && any(borders == c("bottom", "top"))) {
-                expansion <- y_scale$expand %|w|%
-                    ggfun("default_expansion")(y_scale, expand = TRUE)
+            if (!is.null(scale_y) && any(borders == c("bottom", "top"))) {
+                expansion <- scale_y$expand %|w|%
+                    ggfun("default_expansion")(scale_y, expand = TRUE)
                 if (any(borders == "bottom")) {
                     expansion[1:2] <- 0
                 }
                 if (any(borders == "top")) {
                     expansion[3:4] <- 0
                 }
-                y_scale$expand <- expansion
+                scale_y$expand <- expansion
             }
-            ggproto_parent(ParentFacet, self)$init_scales(
-                layout = layout,
-                x_scale = x_scale,
-                y_scale = y_scale,
-                params = params
+            ggproto_parent(ParentCoord, self)$setup_panel_params(
+                scale_x = scale_x, scale_y = scale_y, params = params
             )
         }
     )
