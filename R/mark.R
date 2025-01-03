@@ -14,6 +14,7 @@
 #' @seealso
 #'  - [`mark_line()`]
 #'  - [`mark_tetragon()`]
+#'  - [`mark_triangle()`]
 #'  - [`.mark_draw()`]
 #' @importFrom rlang is_empty inject
 #' @importFrom grid gTree gList
@@ -190,8 +191,23 @@ mark_tetragon <- function(..., element = NULL) {
     }, ...)
 }
 
-# Not implemented completely
+#' Link the observations and the panel with a triangle
+#'
+#' @inheritParams .mark_draw
+#' @param orientation A single string, either `"plot"` or `"observation"`,
+#'   indicating the base of the triangle.
+#' @param element An [`element_polygon()`] object. Vectorized fields will be
+#'   recycled to match the total number of groups, or you can wrap the element
+#'   with [`I()`] to recycle to match the drawing groups.
+#'   - When `orientation` is `"plot"`, the drawing groups typically correspond
+#'     to the number of observations.
+#'   - When `orientation` is `"observation"`, the drawing groups usually match
+#'     the defined groups, but will differ if the defined group of observations
+#'     is separated and cannot be linked with a single triangle. In this case,
+#'     the number of drawing groups will be larger than the number of defined
+#'     groups.
 #' @importFrom rlang arg_match0
+#' @export
 mark_triangle <- function(..., orientation = "plot", element = NULL) {
     assert_s3_class(element, "element_polygon", allow_null = TRUE)
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
@@ -200,32 +216,58 @@ mark_triangle <- function(..., orientation = "plot", element = NULL) {
     } else {
         element <- ggplot2::merge_element(element, default)
     }
-    orientation <- arg_match0(orientation, c("plot", "mark"))
+    orientation <- arg_match0(orientation, c("plot", "observation"))
     .mark_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
             panel <- .subset2(d, "panel")
             link <- .subset2(d, "link")
+            if (identical(orientation, "plot")) {
+                # for each link, we draw a triangle
+                triangle_list <- lapply(vec_seq_along(link), function(i) {
+                    dd <- vec_slice(link, i)
+                    data_frame0(
+                        x = vec_c(panel$x, panel$xend, (dd$x + dd$xend) / 2L),
+                        y = vec_c(panel$y, panel$yend, (dd$y + dd$yend) / 2L),
+                    )
+                })
+            } else {
+                # find the consecutive groups
+                index <- .subset2(link, "link_index")
+                oindex <- order(index)
+                group <- cumsum(c(0L, diff(index[oindex])) != 1L)
 
-            # find the consecutive groups
-            index <- .subset2(link, "link_index")
-            oindex <- order(index)
-            group <- cumsum(c(0L, diff(index[oindex])) != 1L)
+                # restore the order
+                group <- group[order(oindex)]
 
-            # restore the order
-            group <- group[order(oindex)]
+                # split link into groups
+                link <- vec_split(link, group)
 
-            # split link into groups
-            link <- vec_split(link, group)
-
-            # for each group, we draw a quadrilateral
-            tetragon_list <- lapply(.subset2(link, "val"), function(dd) {
-                data_frame0(
-                    x = vec_c(panel$x, panel$xend, max(dd$xend), min(dd$x)),
-                    y = vec_c(panel$y, panel$yend, max(dd$yend), min(dd$y))
-                )
-            })
-            vec_rbind(!!!tetragon_list)
+                # for each group, we draw a triangle
+                triangle_list <- lapply(.subset2(link, "val"), function(dd) {
+                    data_frame0(
+                        x = vec_c(
+                            (panel$x + panel$xend) / 2L,
+                            max(dd$xend), min(dd$x)
+                        ),
+                        y = vec_c(
+                            (panel$y + panel$yend) / 2L,
+                            max(dd$yend), min(dd$y)
+                        )
+                    )
+                })
+            }
+            vec_rbind(!!!triangle_list)
         })
+        if (inherits(element, "AsIs")) {
+            element <- element_rep_len(element,
+                length.out = sum(list_sizes(data)) / 3L
+            )
+        } else {
+            element <- element_rep_len(element, length.out = length(data))
+            element <- element_vec_rep_each(element,
+                times = list_sizes(data) / 3L
+            )
+        }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
@@ -463,9 +505,10 @@ makeContent.ggalignMarkGtable <- function(x) {
     )
     coords <- list_drop_empty(coords)
     draw <- .subset2(data, "draw")
-    if (inherits(grob <- draw(coords), "gList")) {
+    if (is.gList(grob <- draw(coords))) {
         grob <- gTree(children = grob)
     }
+
     if (is.grob(grob)) {
         layout <- .subset2(x, "layout")
         panels <- layout[

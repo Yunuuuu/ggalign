@@ -31,6 +31,7 @@ could help explain the observations.
 \itemize{
 \item \code{\link[=mark_line]{mark_line()}}
 \item \code{\link[=mark_tetragon]{mark_tetragon()}}
+\item \code{\link[=mark_triangle]{mark_triangle()}}
 \item \code{\link[=.mark_draw]{.mark_draw()}}
 }
 }

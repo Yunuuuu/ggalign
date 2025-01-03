@@ -81,6 +81,7 @@ reference:
   - cross_link
   - mark_line
   - mark_tetragon
+  - mark_triangle
   - mark_draw
   - link_line
   - link_tetragon
