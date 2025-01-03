@@ -6,6 +6,8 @@ grid::gpar
 #' @export
 grid::unit
 
+is.gList <- function(x) inherits(x, "gList")
+
 #' @importFrom grid unitType absolute.size
 is_absolute_unit <- function(x) {
     unitType(absolute.size(x)) != "null"
@@ -111,6 +113,8 @@ compute_null_unit <- function(x, type = c("width", "height"), unitTo = "mm",
         coef <- as.numeric(x[null])
         ans[null] <- (null_size / sum(coef)) * coef
     }
-    if (isTRUE(valueOnly)) return(ans)
+    if (isTRUE(valueOnly)) {
+        return(ans)
+    }
     unit(ans, unitTo)
 }

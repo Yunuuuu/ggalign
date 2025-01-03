@@ -120,11 +120,12 @@ draw_key_draw <- function(data, params, size) {
     } else {
         ans <- inject(draw(!!!.subset(data, args)))
     }
-    if (!inherits(ans, c("grob", "gList", "gTree"))) {
-        return(zeroGrob())
+    if (is.gList(ans)) ans <- gTree(children = ans)
+    if (is.grob(ans)) {
+        ans
+    } else {
+        zeroGrob()
     }
-    if (inherits(ans, "gList")) ans <- gTree(children = ans)
-    ans
 }
 
 combine_aes <- function(...) {
@@ -184,13 +185,18 @@ GeomDraw <- ggproto(
                     )
                 ))
             }
-            if (inherits(ans, c("grob", "gList", "gTree"))) {
-                ans
+            if (is.gList(ans)) {
+                gTree(children = ans)
             } else {
-                NULL
+                ans
             }
         }, list(draw = .subset2(indices, "key"), data = coords), NULL)
-        inject(gList(!!!grobs[lengths(grobs) > 0L]))
+        grobs <- grobs[vapply(grobs, is.grob, logical(1L), USE.NAMES = FALSE)]
+        if (is_empty(grobs)) {
+            zeroGrob()
+        } else {
+            gTree(children = inject(gList(!!!grobs)))
+        }
     },
     draw_key = draw_key_draw
 )

@@ -311,7 +311,7 @@ makeContent.ggalignLinkTree <- function(x) {
     if (is.grob(grob <- draw(data))) { # wrap single grob to a gList
         grob <- gList(grob)
     }
-    if (inherits(grob, "gList")) {
+    if (is.gList(grob)) {
         setChildren(x, grob)
     } else {
         x
