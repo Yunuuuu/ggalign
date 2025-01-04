@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross-mark.R
 \name{cross_mark}
 \alias{cross_mark}
-\title{Add a plot to connect selected observations}
+\title{Add a plot to annotate observations}
 \usage{
 cross_mark(
   mark,
@@ -52,7 +52,7 @@ the available space in the circular arrangement.}
 added to a layout.}
 }
 \description{
-Add a plot to connect selected observations
+Add a plot to annotate observations
 }
 \section{ggplot2 Specification}{
 

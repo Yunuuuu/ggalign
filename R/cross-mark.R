@@ -1,4 +1,4 @@
-#' Add a plot to connect selected observations
+#' Add a plot to annotate observations
 #'
 #' @inheritParams cross_none
 #' @inheritParams ggmark
