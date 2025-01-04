@@ -23,20 +23,20 @@
 #' You can use [`scheme_data()`] to modify the internal data if needed.
 #'
 #' @export
-cross_mark <- function(mark, data = waiver(),
+cross_mark <- function(mark, data = waiver(), reorder = NULL,
                        inherit_panel = NULL, inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
     }
+    reorder <- check_reorder(reorder)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossMark,
-        mark = mark,
+        data = data, mark = mark, reorder = reorder,
         plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_add_panel()),
         active = active,
-        input_data = data,
         inherit_panel = inherit_panel,
         inherit_nobs = inherit_nobs
     )
@@ -92,8 +92,13 @@ CrossMark <- ggproto("CrossMark", CrossNone,
             seq_len(.subset2(design2, "nobs")),
             .subset2(design2, "panel")
         )
-        links <- .subset2(mark, "links")
-        if (vec_duplicate_any(nms <- names_or_index(links))) { # nolint
+        link_index <- make_links_data(
+            .subset2(mark, "links"),
+            reorder = self$reorder,
+            design1 = design1, design2 = design2,
+            labels1 = self$labels0, labels2 = self$labels
+        )
+        if (vec_duplicate_any(nms <- names(link_index))) { # nolint
             cli_abort(
                 c(
                     "panel names must be unique in {.arg mark}",
@@ -102,12 +107,6 @@ CrossMark <- ggproto("CrossMark", CrossNone,
                 call = self$call
             )
         }
-        link_index <- lapply(links, make_pair_link_data,
-            design1 = design1, design2 = design2,
-            labels1 = self$labels0, labels2 = self$labels
-        )
-        names(link_index) <- nms
-
         data_index <- lapply(link_index, function(link) {
             if (is.null(link)) {
                 return(NULL)

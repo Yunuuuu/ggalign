@@ -74,20 +74,20 @@ print.ggalign_mark_draw <- function(x, ...) {
 #' Link the observations and the panel with a line
 #'
 #' @inheritParams .mark_draw
-#' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
-#'   fields will be recycled to match the total number of groups, or you can
-#'   wrap the element with [`I()`] to recycle to match the drawing groups. The
-#'   drawing groups typically correspond to the number of observations, as each
-#'   observation will be linked with the plot panel.
+#' @param .element A [`element_line()`][ggplot2::element_line] object.
+#'   Vectorized fields will be recycled to match the total number of groups, or
+#'   you can wrap the element with [`I()`] to recycle to match the drawing
+#'   groups. The drawing groups typically correspond to the number of
+#'   observations, as each observation will be linked with the plot panel.
 #' @importFrom ggplot2 element_line
 #' @export
-mark_line <- function(..., element = NULL) {
-    assert_s3_class(element, "element_line", allow_null = TRUE)
+mark_line <- function(..., .element = NULL) {
+    assert_s3_class(.element, "element_line", allow_null = TRUE)
     default <- calc_element("ggalign.line", complete_theme(theme_get()))
-    if (is.null(element)) {
-        element <- default
+    if (is.null(.element)) {
+        .element <- default
     } else {
-        element <- ggplot2::merge_element(element, default)
+        .element <- ggplot2::merge_element(.element, default)
     }
     .mark_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
@@ -106,19 +106,19 @@ mark_line <- function(..., element = NULL) {
                 )
             )
         })
-        if (inherits(element, "AsIs")) {
-            element <- element_rep_len(element,
+        if (inherits(.element, "AsIs")) {
+            .element <- element_rep_len(.element,
                 length.out = sum(list_sizes(data)) / 2L
             )
         } else {
-            element <- element_rep_len(element, length.out = length(data))
-            element <- element_vec_rep_each(element,
+            .element <- element_rep_len(.element, length.out = length(data))
+            .element <- element_vec_rep_each(.element,
                 times = list_sizes(data) / 2L
             )
         }
         data <- vec_rbind(!!!data)
         element_grob(
-            element,
+            .element,
             x = data$x, y = data$y,
             id.lengths = vec_rep(2L, vec_size(data) / 2L),
             default.units = "native"
@@ -129,7 +129,7 @@ mark_line <- function(..., element = NULL) {
 #' Link the observations and the panel with a quadrilateral
 #'
 #' @inheritParams .mark_draw
-#' @param element A [`element_polygon()`] object. Vectorized fields will be
+#' @param .element A [`element_polygon()`] object. Vectorized fields will be
 #'   recycled to match the total number of groups, or you can wrap the element
 #'   with [`I()`] to recycle to match the drawing groups. The drawing groups
 #'   are usually the same as the defined groups, but they will differ when the
@@ -137,13 +137,13 @@ mark_line <- function(..., element = NULL) {
 #'   single quadrilateral. In such cases, the number of drawing groups will be
 #'   larger than the number of defined groups.
 #' @export
-mark_tetragon <- function(..., element = NULL) {
-    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+mark_tetragon <- function(..., .element = NULL) {
+    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
-    if (is.null(element)) {
-        element <- default
+    if (is.null(.element)) {
+        .element <- default
     } else {
-        element <- ggplot2::merge_element(element, default)
+        .element <- ggplot2::merge_element(.element, default)
     }
     .mark_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
@@ -169,20 +169,20 @@ mark_tetragon <- function(..., element = NULL) {
                 )
             }))
         })
-        if (inherits(element, "AsIs")) {
-            element <- element_rep_len(element,
+        if (inherits(.element, "AsIs")) {
+            .element <- element_rep_len(.element,
                 length.out = sum(list_sizes(data)) / 4L
             )
         } else {
-            element <- element_rep_len(element, length.out = length(data))
-            element <- element_vec_rep_each(element,
+            .element <- element_rep_len(.element, length.out = length(data))
+            .element <- element_vec_rep_each(.element,
                 times = list_sizes(data) / 4L
             )
         }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
-                element,
+                .element,
                 x = data$x, y = data$y,
                 id.lengths = vec_rep(4L, nrow(data) / 4L),
                 default.units = "native"
@@ -196,7 +196,7 @@ mark_tetragon <- function(..., element = NULL) {
 #' @inheritParams .mark_draw
 #' @param orientation A single string, either `"plot"` or `"observation"`,
 #'   indicating the base of the triangle.
-#' @param element An [`element_polygon()`] object. Vectorized fields will be
+#' @param .element An [`element_polygon()`] object. Vectorized fields will be
 #'   recycled to match the total number of groups, or you can wrap the element
 #'   with [`I()`] to recycle to match the drawing groups.
 #'   - When `orientation` is `"plot"`, the drawing groups typically correspond
@@ -208,13 +208,13 @@ mark_tetragon <- function(..., element = NULL) {
 #'     groups.
 #' @importFrom rlang arg_match0
 #' @export
-mark_triangle <- function(..., orientation = "plot", element = NULL) {
-    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+mark_triangle <- function(..., orientation = "plot", .element = NULL) {
+    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
-    if (is.null(element)) {
-        element <- default
+    if (is.null(.element)) {
+        .element <- default
     } else {
-        element <- ggplot2::merge_element(element, default)
+        .element <- ggplot2::merge_element(.element, default)
     }
     orientation <- arg_match0(orientation, c("plot", "observation"))
     .mark_draw(.draw = function(data) {
@@ -258,20 +258,20 @@ mark_triangle <- function(..., orientation = "plot", element = NULL) {
             }
             vec_rbind(!!!triangle_list)
         })
-        if (inherits(element, "AsIs")) {
-            element <- element_rep_len(element,
+        if (inherits(.element, "AsIs")) {
+            .element <- element_rep_len(.element,
                 length.out = sum(list_sizes(data)) / 3L
             )
         } else {
-            element <- element_rep_len(element, length.out = length(data))
-            element <- element_vec_rep_each(element,
+            .element <- element_rep_len(.element, length.out = length(data))
+            .element <- element_vec_rep_each(.element,
                 times = list_sizes(data) / 3L
             )
         }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
-                element,
+                .element,
                 x = data$x, y = data$y,
                 id.lengths = vec_rep(3L, nrow(data) / 3L),
                 default.units = "native"

@@ -40,7 +40,6 @@ link_draw <- function(.draw, ...) {
 #'   `grob`, no drawing will occur. The input data for the function should be
 #'   a list, where each item is a data frame containing the coordinates of
 #'   the pair of observations.
-#'
 #' @inheritParams pair_links
 #' @seealso [`link_draw()`]
 #' @export
@@ -66,21 +65,21 @@ print.ggalign_link_draw <- function(x, ...) {
 #' Link the paired observations with a line
 #'
 #' @inheritParams .link_draw
-#' @param element A [`element_line()`][ggplot2::element_line] object. Vectorized
-#'   fields will be recycled to match the total number of groups, or you can
-#'   wrap the element with [`I()`] to recycle to match the drawing groups. The
-#'   drawing groups typically correspond to the product of the number of
-#'   observations from both sides, as each pair of observations will be linked
-#'   with a single line.
+#' @param .element A [`element_line()`][ggplot2::element_line] object.
+#'   Vectorized fields will be recycled to match the total number of groups, or
+#'   you can wrap the element with [`I()`] to recycle to match the drawing
+#'   groups. The drawing groups typically correspond to the product of the
+#'   number of observations from both sides, as each pair of observations will
+#'   be linked with a single line.
 #' @importFrom ggplot2 element_line
 #' @export
-link_line <- function(..., element = NULL) {
-    assert_s3_class(element, "element_line", allow_null = TRUE)
+link_line <- function(..., .element = NULL) {
+    assert_s3_class(.element, "element_line", allow_null = TRUE)
     default <- calc_element("ggalign.line", complete_theme(theme_get()))
-    if (is.null(element)) {
-        element <- default
+    if (is.null(.element)) {
+        .element <- default
     } else {
-        element <- ggplot2::merge_element(element, default)
+        .element <- ggplot2::merge_element(.element, default)
     }
     ans <- .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
@@ -101,20 +100,20 @@ link_line <- function(..., element = NULL) {
                 )
             )
         })
-        if (inherits(element, "AsIs")) {
-            element <- element_rep_len(element,
+        if (inherits(.element, "AsIs")) {
+            .element <- element_rep_len(.element,
                 length.out = sum(list_sizes(data)) / 2L
             )
         } else {
-            element <- element_rep_len(element, length.out = length(data))
-            element <- element_vec_rep_each(element,
+            .element <- element_rep_len(.element, length.out = length(data))
+            .element <- element_vec_rep_each(.element,
                 times = list_sizes(data) / 2L
             )
         }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
-                element,
+                .element,
                 x = data$x, y = data$y,
                 id.lengths = vec_rep(2L, vec_size(data) / 2L),
                 default.units = "native"
@@ -129,13 +128,13 @@ link_line <- function(..., element = NULL) {
 #' @inheritParams .link_draw
 #' @inheritParams mark_tetragon
 #' @export
-link_tetragon <- function(..., element = NULL) {
-    assert_s3_class(element, "element_polygon", allow_null = TRUE)
+link_tetragon <- function(..., .element = NULL) {
+    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
-    if (is.null(element)) {
-        element <- default
+    if (is.null(.element)) {
+        .element <- default
     } else {
-        element <- ggplot2::merge_element(element, default)
+        .element <- ggplot2::merge_element(.element, default)
     }
     .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
@@ -174,20 +173,20 @@ link_tetragon <- function(..., element = NULL) {
             }, both, NULL)
             vec_rbind(!!!ans)
         })
-        if (inherits(element, "AsIs")) {
-            element <- element_rep_len(element,
+        if (inherits(.element, "AsIs")) {
+            .element <- element_rep_len(.element,
                 length.out = sum(list_sizes(data)) / 4L
             )
         } else {
-            element <- element_rep_len(element, length.out = length(data))
-            element <- element_vec_rep_each(element,
+            .element <- element_rep_len(.element, length.out = length(data))
+            .element <- element_vec_rep_each(.element,
                 times = list_sizes(data) / 4L
             )
         }
         data <- vec_rbind(!!!data)
         if (vec_size(data)) {
             element_grob(
-                element,
+                .element,
                 x = data$x, y = data$y,
                 id.lengths = vec_rep(4L, vec_size(data) / 4L),
                 default.units = "native"

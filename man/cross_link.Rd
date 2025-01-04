@@ -8,6 +8,7 @@ cross_link(
   link,
   data = waiver(),
   on_top = TRUE,
+  reorder = NULL,
   inherit_panel = NULL,
   inherit_nobs = NULL,
   size = NULL,
@@ -25,6 +26,9 @@ will be used.}
 
 \item{on_top}{A boolean value indicating whether to draw the link on top of
 the plot panel (\code{TRUE}) or below (\code{FALSE}).}
+
+\item{reorder}{A string from \code{"hand1"} or \code{"hand2"} indicating
+whether to reorder the input links to follow the specified layout ordering.}
 
 \item{inherit_panel}{A boolean value indicating whether to inherit the
 panel group information.}

@@ -5,7 +5,7 @@
 #' @param on_top A boolean value indicating whether to draw the link on top of
 #'   the plot panel (`TRUE`) or below (`FALSE`).
 #' @inheritParams cross_none
-#' @inheritParams ggalign
+#' @inheritParams ggmark
 #'
 #' @section ggplot2 Specification:
 #' The `cross_link` function initializes a `ggplot` object but does not
@@ -13,16 +13,18 @@
 #' needed.
 #'
 #' @export
-cross_link <- function(link, data = waiver(), on_top = TRUE,
+cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
                        inherit_panel = NULL, inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(link, "ggalign_link_draw")) {
         cli_abort("{.arg link} must be a {.fn link_draw} object")
     }
+    reorder <- check_reorder(reorder)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossLink,
-        data = data, link = link, plot = ggplot(), size = size,
+        data = data, link = link, reorder = reorder,
+        plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_no_panel()),
         active = active,
         on_top = on_top,
@@ -94,11 +96,12 @@ CrossLink <- ggproto("CrossLink", CrossNone,
             })
             links <- pair_links(!!!links)
         }
-        link_index <- lapply(links, make_pair_link_data,
+        link_index <- make_links_data(
+            links,
+            reorder = self$reorder,
             design1 = design1, design2 = design2,
             labels1 = self$labels0, labels2 = self$labels
         )
-        names(link_index) <- names_or_index(links)
         data_index <- lapply(link_index, function(index) {
             if (is.null(index)) {
                 return(NULL)

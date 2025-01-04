@@ -32,7 +32,7 @@ CrossNone <- ggproto("CrossNone", Cross,
         layout_data <- layout@data
         inherit_nobs <- self$inherit_nobs
         design <- layout@design
-        if (is.waive(input_data <- self$input_data)) { # inherit from the layout
+        if (is.waive(input_data <- self$data)) { # inherit from the layout
             data <- layout_data
             # 1. data is NULL, `reset_nobs` can be `TRUE` or `FALSE`
             # 2. data is not `NULL`, `reset_nobs` must be `FALSE`

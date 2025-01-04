@@ -4,7 +4,7 @@
 \alias{mark_triangle}
 \title{Link the observations and the panel with a triangle}
 \usage{
-mark_triangle(..., orientation = "plot", element = NULL)
+mark_triangle(..., orientation = "plot", .element = NULL)
 }
 \arguments{
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of formulas, where each side
@@ -19,7 +19,7 @@ with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \item{orientation}{A single string, either \code{"plot"} or \code{"observation"},
 indicating the base of the triangle.}
 
-\item{element}{An \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
+\item{.element}{An \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
 recycled to match the total number of groups, or you can wrap the element
 with \code{\link[=I]{I()}} to recycle to match the drawing groups.
 \itemize{

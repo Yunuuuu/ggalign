@@ -512,18 +512,39 @@ deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
 }
 
 ###################################################
-make_pair_link_data <- function(pair_link, design1, design2,
-                                labels1, labels2,
-                                call = caller_call()) {
+make_links_data <- function(links, reorder, design1, design2,
+                            labels1, labels2) {
+    link_index_list <- lapply(
+        links, make_pair_link_index,
+        design1 = design1, design2 = design2,
+        labels1 = labels1, labels2 = labels2
+    )
+    names(link_index_list) <- names_or_index(links)
+    if (!is.null(reorder)) {
+        index <- vapply(link_index_list, function(link_index) {
+            if (is.null(link_index) ||
+                is.null(index <- .subset2(link_index, reorder))) {
+                NA_integer_
+            } else {
+                vec_slice(index, 1L)
+            }
+        }, integer(1L), USE.NAMES = FALSE)
+        link_index_list <- link_index_list[order(index)]
+    }
+    link_index_list
+}
+
+make_pair_link_index <- function(pair_link, design1, design2,
+                                 labels1, labels2) {
     input1 <- .subset2(pair_link, 1L)
     input2 <- .subset2(pair_link, 2L)
 
     # make the data
-    hand1 <- make_link_data(input1,
+    hand1 <- make_link_index(input1,
         design = design1, labels = labels1,
         other = input2, data_index = !inherits(pair_link, "AsIs")
     )
-    hand2 <- make_link_data(input2,
+    hand2 <- make_link_index(input2,
         design = design2, labels = labels2,
         other = input1, data_index = !inherits(pair_link, "AsIs")
     )
@@ -533,8 +554,8 @@ make_pair_link_data <- function(pair_link, design1, design2,
     list(hand1 = hand1, hand2 = hand2)
 }
 
-make_link_data <- function(link, design, labels, other, data_index,
-                           arg = caller_arg(link), call = caller_call()) {
+make_link_index <- function(link, design, labels, other, data_index,
+                            arg = caller_arg(link), call = caller_call()) {
     link <- link_to_location(
         link,
         n = .subset2(design, "nobs"),

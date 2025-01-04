@@ -7,6 +7,7 @@
 cross_mark(
   mark,
   data = waiver(),
+  reorder = NULL,
   inherit_panel = NULL,
   inherit_nobs = NULL,
   size = NULL,
@@ -22,6 +23,9 @@ be used to define the panel names so must be unique.}
 \code{\link[=fortify_matrix]{fortify_matrix()}} will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.}
+
+\item{reorder}{A string from \code{"hand1"} or \code{"hand2"} indicating
+whether to reorder the input links to follow the specified layout ordering.}
 
 \item{inherit_panel}{A boolean value indicating whether to inherit the
 panel group information.}

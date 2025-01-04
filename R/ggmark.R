@@ -9,6 +9,8 @@
 #'   if no specific observations are selected in `mark`, `ggmark()` will
 #'   automatically connect all observations and group them according to the
 #'   layout's defined groups.
+#' @param reorder A string from `r oxford_or(c("hand1", "hand2"))` indicating
+#'   whether to reorder the input links to follow the specified layout ordering.
 #' @section ggplot2 specification:
 #' `ggmark` initializes a ggplot object. The underlying data is created using
 #' [`fortify_data_frame()`]. Please refer to it for more details.
@@ -54,11 +56,12 @@
 #' @importFrom rlang list2
 #' @export
 ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
-                   group1 = NULL, group2 = NULL,
+                   group1 = NULL, group2 = NULL, reorder = NULL,
                    size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
     }
+    reorder <- check_reorder(reorder)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     assert_bool(group1, allow_null = TRUE)
@@ -70,6 +73,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
         params = list2(...), # used by AlignGg
         mark = mark, # used by MarkGg
         group1 = group1, group2 = group2,
+        reorder = reorder,
 
         # slot
         plot = ggplot(mapping = mapping),
@@ -105,11 +109,9 @@ MarkGg <- ggproto("MarkGg", AlignProto,
             ))
         }
         ans <- ggproto_parent(AlignGg, self)$interact_layout(layout)
-        self$labels0 <- self$labels
+        self$labels0 <- self$labels # CrossMark uses `labels0`
         ans
     },
-
-    #' @importFrom stats reorder
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         if (is.null(.subset2(design, "nobs"))) {

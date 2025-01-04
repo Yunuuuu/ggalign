@@ -4,7 +4,7 @@
 \alias{mark_tetragon}
 \title{Link the observations and the panel with a quadrilateral}
 \usage{
-mark_tetragon(..., element = NULL)
+mark_tetragon(..., .element = NULL)
 }
 \arguments{
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of formulas, where each side
@@ -16,7 +16,7 @@ formula exists, you can input it directly. For integer indices, wrap them
 with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \code{\link[=waiver]{waiver()}} to inherit values from the other group.}
 
-\item{element}{A \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
+\item{.element}{A \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
 recycled to match the total number of groups, or you can wrap the element
 with \code{\link[=I]{I()}} to recycle to match the drawing groups. The drawing groups
 are usually the same as the defined groups, but they will differ when the
