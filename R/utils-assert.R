@@ -223,3 +223,21 @@ assert_active <- function(x, allow_null = TRUE,
         )
     }
 }
+
+assert_obs_size <- function(obs_size, arg = caller_arg(obs_size),
+                            call = caller_call()) {
+    if (.standalone_types_check_assert_call(
+        ffi_standalone_check_number_1.0.7,
+        obs_size,
+        allow_decimal = TRUE,
+        .Machine$double.eps,
+        1,
+        FALSE,
+        FALSE,
+        FALSE
+    ) != 0L) {
+        cli_abort("{.arg {arg}} must be a single number in `(0, 1]`",
+            call = call
+        )
+    }
+}

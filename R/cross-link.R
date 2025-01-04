@@ -13,7 +13,8 @@
 #' needed.
 #'
 #' @export
-cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
+cross_link <- function(link, data = waiver(), on_top = TRUE,
+                       reorder = NULL, obs_size = 1,
                        inherit_index = NULL, inherit_panel = NULL,
                        inherit_nobs = NULL,
                        size = NULL, active = NULL) {
@@ -21,10 +22,11 @@ cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
         cli_abort("{.arg link} must be a {.fn link_draw} object")
     }
     reorder <- check_reorder(reorder)
+    assert_obs_size(obs_size)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossLink,
-        data = data, link = link, reorder = reorder,
+        data = data, link = link, reorder = reorder, obs_size = obs_size,
         plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_no_panel()),
         active = active,
@@ -121,7 +123,8 @@ CrossLink <- ggproto("CrossLink", Cross,
             link_index = link_index,
             data_index = data_index,
             direction = direction,
-            draw = .subset2(link, "draw")
+            draw = .subset2(link, "draw"),
+            obs_size = self$obs_size
         )
         plot
     },

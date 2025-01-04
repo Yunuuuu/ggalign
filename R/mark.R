@@ -368,6 +368,7 @@ makeContent.ggalignMarkGtable <- function(x) {
     direction <- .subset2(data, "direction")
     link_index_list <- .subset2(data, "link_index")
     data_index_list <- .subset2(data, "data_index")
+    obs_size <- .subset2(data, "obs_size")
 
     # prepare output for current for loop
     coords <- vector("list", 2L)
@@ -403,16 +404,20 @@ makeContent.ggalignMarkGtable <- function(x) {
             spacing <- convertHeight(spacing, "mm", valueOnly = TRUE)
             spacing <- scales::rescale(spacing, c(0, 1), from = c(0, height))
             sizes[is.na(points)] <- spacing
-            cell_height <- (1 - spacing * n_spacing) / sum(!is.na(points))
-            sizes[!is.na(points)] <- cell_height # nobs
+            obs_height <- (1 - spacing * n_spacing) / sum(!is.na(points))
+            sizes[!is.na(points)] <- obs_height # nobs
             yend <- cumsum(sizes)
             link_x <- switch(link,
                 hand1 = 0,
                 hand2 = 1
             )
+            # by default, the height for each observation is `1`,
+            # if we define obs size, we just re-scale it
+            removed <- (1 - obs_size) * obs_height
             link_coord <- data_frame0(
                 x = link_x, xend = link_x,
-                y = yend - sizes, yend = yend
+                y = yend - sizes + removed / 2L,
+                yend = yend - removed / 2L
             )
             link_coord <- vec_slice(link_coord, !is.na(points))
 
@@ -445,15 +450,19 @@ makeContent.ggalignMarkGtable <- function(x) {
             spacing <- convertWidth(spacing, "mm", valueOnly = TRUE)
             spacing <- scales::rescale(spacing, c(0, 1), from = c(0, width))
             sizes[is.na(points)] <- spacing
-            cell_width <- (1 - spacing * n_spacing) / sum(!is.na(points))
-            sizes[!is.na(points)] <- cell_width
+            obs_width <- (1 - spacing * n_spacing) / sum(!is.na(points))
+            sizes[!is.na(points)] <- obs_width
             xend <- cumsum(sizes)
             link_y <- switch(link,
                 hand1 = 1,
                 hand2 = 0
             )
+            # by default, the width for each observation is `1`,
+            # if we define obs size, we just re-scale it
+            removed <- (1 - obs_size) * obs_width
             link_coord <- data_frame0(
-                x = xend - sizes, xend = xend,
+                x = xend - sizes + removed / 2L,
+                xend = xend - removed / 2L,
                 y = link_y, yend = link_y
             )
             link_coord <- vec_slice(link_coord, !is.na(points))

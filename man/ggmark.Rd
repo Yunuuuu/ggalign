@@ -12,6 +12,7 @@ ggmark(
   group1 = NULL,
   group2 = NULL,
   reorder = NULL,
+  obs_size = 1,
   size = NULL,
   active = NULL
 )
@@ -45,6 +46,9 @@ layout's defined groups.}
 
 \item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
 whether to reorder the input links to follow the specified layout ordering.}
+
+\item{obs_size}{A single numeric value that indicates the size of a single
+observation, ranging from \verb{(0, 1]}.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values
