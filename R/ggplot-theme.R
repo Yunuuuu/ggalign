@@ -20,7 +20,6 @@ theme_add_panel <- function(base_size = 11) {
                 0.8 * half_line, 0.8 * half_line
             )
         ),
-        strip.text.x = NULL,
         strip.text.y = element_text(angle = -90),
         strip.text.y.left = element_text(angle = 90)
     )
@@ -100,21 +99,27 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
     if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
         return(plot)
     }
-    # recycle axis theme elements
-    plot$facet <- ggproto(
-        NULL, ParentFacet,
-        draw_panels = function(self, panels, layout,
-                               x_scales = NULL, y_scales = NULL,
-                               ranges, coord, data = NULL, theme, params) {
+
+    # recyle panel background
+    ParentLayout <- .subset2(plot, "layout")
+    plot$layout <- ggproto(NULL, ParentLayout,
+
+        # Assemble the facet fg & bg, the coord fg & bg, and the layers
+        # Returns a gtable
+        render = function(self, panels, data, theme, labels) {
+            # for axis
             # we recycle the theme elements of the guide axis
-            theme <- recycle_theme_axis("x", theme, x_scales)
-            theme <- recycle_theme_axis("y", theme, y_scales)
-            ParentCoord <- coord
+            theme <- recycle_theme_axis("x", theme, self$panel_scales_x)
+            theme <- recycle_theme_axis("y", theme, self$panel_scales_y)
             h_tick0 <- h_text0 <- 0L
             v_tick0 <- v_text0 <- 0L
-            # subset theme for each panel
-            coord <- ggproto(NULL, ParentCoord,
-                # `align_scales` will attach the `.__plot_index__`
+            # for panel
+            draw_panel_index <- 0L
+            theme <- recycle_theme_panel(theme, length(.subset2(panels, 1L)))
+
+            ParentCoord <- self$coord
+            self$coord <- ggproto(NULL, ParentCoord,
+                # subset theme axis for each panel
                 render_axis_h = function(self, panel_params, theme) {
                     scale <- .subset2(panel_params, "x")$scale
                     h_tick1 <- h_tick0 + length(scale$get_breaks())
@@ -140,13 +145,20 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
                     ggproto_parent(ParentCoord, self)$render_axis_v(
                         panel_params, theme
                     )
+                },
+                # Used by next ggplot2 release
+                draw_panel = function(self, panel, params, theme) {
+                    draw_panel_index <<- draw_panel_index + 1L
+                    # render_fg: panel.border
+                    # render_bg: panel.background
+                    theme <- subset_theme_panel(theme, draw_panel_index)
+                    ggproto_parent(ParentCoord, self)$draw_panel(
+                        panel, params, theme
+                    )
                 }
             )
-            ggproto_parent(ParentFacet, self)$draw_panels(
-                panels = panels, layout = layout,
-                x_scales = x_scales, y_scales = y_scales,
-                ranges = ranges, coord = coord, data = data,
-                theme = theme, params = params
+            ggproto_parent(ParentLayout, self)$render(
+                panels, data, theme, labels
             )
         }
     )
@@ -154,6 +166,28 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
 }
 
 #################################################################
+recycle_theme_panel <- function(theme, n) {
+    theme[["panel.border"]] <- element_rep_len(
+        calc_element("panel.border", theme), n
+    )
+    theme[["panel.background"]] <- element_rep_len(
+        calc_element("panel.background", theme), n
+    )
+    theme[["panel.ontop"]] <- rep_len(calc_element("panel.ontop", theme), n)
+    theme
+}
+
+subset_theme_panel <- function(theme, i) {
+    theme[["panel.border"]] <- element_vec_slice(
+        calc_element("panel.border", theme), i
+    )
+    theme[["panel.background"]] <- element_vec_slice(
+        calc_element("panel.background", theme), i
+    )
+    theme[["panel.ontop"]] <- vec_slice(calc_element("panel.ontop", theme), i)
+    theme
+}
+
 recycle_theme_axis <- function(axis, theme, scales) {
     breaks <- unlist(lapply(scales, function(s) s$get_breaks()), FALSE, FALSE)
     labels <- unlist(lapply(scales, function(x) x$get_labels()), FALSE, FALSE)
