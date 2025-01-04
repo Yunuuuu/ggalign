@@ -8,7 +8,7 @@ cross <- function(cross, data = waiver(), ...,
     }
     new_ggalign_plot(
         align = cross,
-        input_data = allow_lambda(data),
+        data = allow_lambda(data),
         ...,
         plot = plot, active = active, size = size, schemes = schemes,
         call = call
