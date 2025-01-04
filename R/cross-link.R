@@ -37,8 +37,8 @@ cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
 
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid gTree
-#' @include cross-none.R
-CrossLink <- ggproto("CrossLink", CrossNone,
+#' @include cross-.R
+CrossLink <- ggproto("CrossLink", Cross,
     interact_layout = function(self, layout) {
         if (!self$in_linear) { # only used for linear coordinate
             cli_abort(c(
@@ -52,7 +52,7 @@ CrossLink <- ggproto("CrossLink", CrossNone,
                 )
             ))
         }
-        ggproto_parent(CrossNone, self)$interact_layout(layout)
+        ggproto_parent(Cross, self)$interact_layout(layout)
     },
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
@@ -151,7 +151,7 @@ CrossLink <- ggproto("CrossLink", CrossNone,
         plot + inset(grob, on_top = self$on_top) + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(CrossNone, self)$summary(plot)
+        header <- ggproto_parent(Cross, self)$summary(plot)
         c(header, "  Add plot to connect selected observations")
     }
 )
