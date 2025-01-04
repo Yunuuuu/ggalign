@@ -21,7 +21,7 @@
 #' @section ggplot2 specification:
 #' The data in the underlying main plot contains following columns:
 #'
-#'  - `.xpanel` and `.ypanel`: the column and row panel
+#'  - `.panel_x` and `.panel_y`: the column and row panel groups.
 #'
 #'  - `.x` and `.y`: an integer index of `x` and `y` coordinates
 #'

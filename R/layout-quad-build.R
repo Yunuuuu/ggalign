@@ -150,8 +150,8 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.ypanel),
-            cols = ggplot2::vars(.data$.xpanel),
+            rows = ggplot2::vars(.data$.panel_y),
+            cols = ggplot2::vars(.data$.panel_x),
             scales = "free", space = "free",
             drop = FALSE, as.table = FALSE
         )
@@ -159,7 +159,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         free_column <- FALSE
     } else if (do_row_facet) {
         default_facet <- ggplot2::facet_grid(
-            rows = ggplot2::vars(.data$.ypanel),
+            rows = ggplot2::vars(.data$.panel_y),
             scales = "free_y", space = "free",
             drop = FALSE, as.table = FALSE
         )
@@ -167,7 +167,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         free_column <- is_continuous_design(column_design)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
-            cols = ggplot2::vars(.data$.xpanel),
+            cols = ggplot2::vars(.data$.panel_x),
             scales = "free_x", space = "free",
             drop = FALSE, as.table = FALSE
         )
@@ -232,8 +232,8 @@ quad_build_data <- function(data, row_design, column_design) {
         row_panel <- .subset2(row_design, "panel")
         row_index <- .subset2(row_design, "index")
         row_data <- data_frame0(
-            .ypanel = row_panel,
-            .yindex = row_index,
+            .panel_y = row_panel,
+            .index_y = row_index,
             .y = seq_along(row_index)
         )
     }
@@ -241,23 +241,23 @@ quad_build_data <- function(data, row_design, column_design) {
         column_panel <- .subset2(column_design, "panel")
         column_index <- .subset2(column_design, "index")
         column_data <- data_frame0(
-            .xpanel = column_panel,
-            .xindex = column_index,
+            .panel_x = column_panel,
+            .index_x = column_index,
             .x = seq_along(column_index)
         )
     }
     if (is_discrete_design(row_design) && is_discrete_design(column_design)) {
         panel_data <- cross_join(row_data, column_data)
         by.x <- c(".column_index", ".row_index")
-        by.y <- c(".xindex", ".yindex")
+        by.y <- c(".index_x", ".index_y")
     } else if (is_discrete_design(column_design)) {
         panel_data <- column_data
         by.x <- ".column_index"
-        by.y <- ".xindex"
+        by.y <- ".index_x"
     } else {
         panel_data <- row_data
         by.x <- ".row_index"
-        by.y <- ".yindex"
+        by.y <- ".index_y"
     }
     ans <- fortify_data_frame.matrix(data)
     ans <- full_join(ans, panel_data, by.x = by.x, by.y = by.y)
