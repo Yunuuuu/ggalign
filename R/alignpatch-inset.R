@@ -44,6 +44,13 @@ make_inset <- function(plot, ..., align, on_top, clip, vp,
     )
 }
 
+#' @importFrom grid grid.draw
+#' @export
+grid.draw.patch_inset <- function(x, recording = TRUE) {
+    x <- .subset2(x, "grob")
+    NextMethod()
+}
+
 #' @importFrom ggplot2 ggplot_add
 #' @export
 ggplot_add.patch_inset <- function(object, plot, object_name) {
