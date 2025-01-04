@@ -123,8 +123,10 @@ Cross <- ggproto("Cross", AlignProto,
                     i = "Some labels in the current data are not found in the previous layout data"
                 ))
             }
-            if (!is.null(panel <- design, "panel")) {
-                design["panel"] <- list(panel[match(self$labels, self$labels0)])
+            if (!is.null(panel <- .subset2(design, "panel"))) {
+                design["panel"] <- list(
+                    droplevels(panel[match(self$labels, self$labels0)])
+                )
             }
         } else {
             design["panel"] <- list(NULL)
@@ -139,20 +141,32 @@ Cross <- ggproto("Cross", AlignProto,
                     i = "No labels found in the previous layout data"
                 ))
             }
+
             if (is.null(self$labels)) {
                 cli_abort(c(
                     "Cannot inherit ordering index from the layout",
                     i = "No labels found in the current {.arg data}"
                 ))
             }
+
             if (!all(self$labels %in% self$labels0)) {
                 cli_abort(c(
                     "Cannot inherit ordering index from the layout",
                     i = "Some labels in the current data are not found in the previous layout data"
                 ))
             }
-            if (!is.null(index <- design, "index")) {
-                design["index"] <- list(index[match(self$labels, self$labels0)])
+
+            if (!is.null(index <- .subset2(design, "index"))) {
+                new_index < order(match(
+                    self$labels,
+                    vec_slice(self$labels0, index)
+                ))
+
+                # we always make the index following the panel
+                if (!is.null(panel <- .subset2(design, "panel"))) {
+                    new_index <- reorder_index(panel, new_index)
+                }
+                design["index"] <- list(new_index)
             }
         } else {
             design["index"] <- list(NULL)
