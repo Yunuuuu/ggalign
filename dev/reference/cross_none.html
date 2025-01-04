@@ -51,7 +51,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_none</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, inherit_panel <span class="op">=</span> <span class="cn">NULL</span>, inherit_nobs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_none</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  inherit_index <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  inherit_panel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  inherit_nobs <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,14 +70,21 @@ allows you to change the layout data. If not specified, the original data
 will be used.</p></dd>
 
 
+<dt id="arg-inherit-index">inherit_index<a class="anchor" aria-label="anchor" href="#arg-inherit-index"></a></dt>
+<dd><p>A boolean value indicating whether to inherit the
+ordering index. If <code>TRUE</code>, will match the layout ordering index with the
+data names.</p></dd>
+
+
 <dt id="arg-inherit-panel">inherit_panel<a class="anchor" aria-label="anchor" href="#arg-inherit-panel"></a></dt>
 <dd><p>A boolean value indicating whether to inherit the
-panel group information.</p></dd>
+panel group. If <code>TRUE</code>, will match the layout panel with the data names.</p></dd>
 
 
 <dt id="arg-inherit-nobs">inherit_nobs<a class="anchor" aria-label="anchor" href="#arg-inherit-nobs"></a></dt>
 <dd><p>A boolean value indicating whether to inherit the
-number of observations.</p></dd>
+number of observations (nobs). If <code>TRUE</code>, the <code>data</code> input must be
+compatible with the layout data.</p></dd>
 
 </dl></div>
 

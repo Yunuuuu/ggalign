@@ -56,6 +56,7 @@
 <span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  on_top <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  reorder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  inherit_index <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_panel <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_nobs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -85,18 +86,25 @@ the plot panel (<code>TRUE</code>) or below (<code>FALSE</code>).</p></dd>
 
 
 <dt id="arg-reorder">reorder<a class="anchor" aria-label="anchor" href="#arg-reorder"></a></dt>
-<dd><p>A string from <code>"hand1"</code> or <code>"hand2"</code> indicating
+<dd><p>A string of <code>"hand1"</code> or <code>"hand2"</code> indicating
 whether to reorder the input links to follow the specified layout ordering.</p></dd>
+
+
+<dt id="arg-inherit-index">inherit_index<a class="anchor" aria-label="anchor" href="#arg-inherit-index"></a></dt>
+<dd><p>A boolean value indicating whether to inherit the
+ordering index. If <code>TRUE</code>, will match the layout ordering index with the
+data names.</p></dd>
 
 
 <dt id="arg-inherit-panel">inherit_panel<a class="anchor" aria-label="anchor" href="#arg-inherit-panel"></a></dt>
 <dd><p>A boolean value indicating whether to inherit the
-panel group information.</p></dd>
+panel group. If <code>TRUE</code>, will match the layout panel with the data names.</p></dd>
 
 
 <dt id="arg-inherit-nobs">inherit_nobs<a class="anchor" aria-label="anchor" href="#arg-inherit-nobs"></a></dt>
 <dd><p>A boolean value indicating whether to inherit the
-number of observations.</p></dd>
+number of observations (nobs). If <code>TRUE</code>, the <code>data</code> input must be
+compatible with the layout data.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
