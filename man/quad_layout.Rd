@@ -83,7 +83,7 @@ If either \code{xlim} or \code{ylim} is not provided, the data will be converted
 matrix using \code{\link[=fortify_matrix]{fortify_matrix()}}, and the data in the underlying main plot
 will contain the following columns:
 \itemize{
-\item \code{.xpanel} and \code{.ypanel}: the column and row panel
+\item \code{.panel_x} and \code{.panel_y}: the column and row panel groups.
 \item \code{.x} and \code{.y}: an integer index of \code{x} and \code{y} coordinates
 \item \code{.discrete_x} and \code{.discrete_y}: a factor of the data labels (only
 applicable when \code{.row_names} and \code{.column_names} exists).
