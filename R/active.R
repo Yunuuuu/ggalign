@@ -53,37 +53,3 @@ update_active <- function(active, default) {
         keep.null = TRUE
     )
 }
-
-deprecate_active <- function(active, fun,
-                             set_context = deprecated(),
-                             order = deprecated(), name = deprecated(),
-                             call = caller_call()) {
-    if (lifecycle::is_present(set_context)) {
-        lifecycle::deprecate_warn(
-            "0.0.5",
-            sprintf("%s(set_context)", fun),
-            sprintf("%s(active)", fun)
-        )
-        assert_bool(set_context, call = call)
-        active["use"] <- list(set_context)
-    }
-    if (lifecycle::is_present(order)) {
-        lifecycle::deprecate_warn(
-            "0.0.5",
-            sprintf("%s(order)", fun),
-            sprintf("%s(active)", fun)
-        )
-        order <- check_order(order, call = call)
-        active["order"] <- list(order)
-    }
-    if (lifecycle::is_present(name)) {
-        lifecycle::deprecate_warn(
-            "0.0.5",
-            sprintf("%s(name)", fun),
-            sprintf("%s(active)", fun)
-        )
-        assert_string(name, empty_ok = FALSE, allow_na = TRUE, call = call)
-        active["name"] <- list(name)
-    }
-    active
-}
