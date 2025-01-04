@@ -157,7 +157,7 @@ Cross <- ggproto("Cross", AlignProto,
             }
 
             if (!is.null(index <- .subset2(design, "index"))) {
-                new_index < order(match(
+                new_index <- order(match(
                     self$labels,
                     vec_slice(self$labels0, index)
                 ))
