@@ -54,6 +54,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_mark</span><span class="op">(</span></span>
 <span>  <span class="va">mark</span>,</span>
 <span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  reorder <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_panel <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_nobs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -76,6 +77,11 @@ be used to define the panel names so must be unique.</p></dd>
 <code><a href="fortify_matrix.html">fortify_matrix()</a></code> will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.</p></dd>
+
+
+<dt id="arg-reorder">reorder<a class="anchor" aria-label="anchor" href="#arg-reorder"></a></dt>
+<dd><p>A string from <code>"hand1"</code> or <code>"hand2"</code> indicating
+whether to reorder the input links to follow the specified layout ordering.</p></dd>
 
 
 <dt id="arg-inherit-panel">inherit_panel<a class="anchor" aria-label="anchor" href="#arg-inherit-panel"></a></dt>

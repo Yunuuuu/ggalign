@@ -51,7 +51,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">link_line</span><span class="op">(</span><span class="va">...</span>, element <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">link_line</span><span class="op">(</span><span class="va">...</span>, .element <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,13 +69,13 @@ with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()<
 <code>waiver()</code> to inherit values from the other group.</p></dd>
 
 
-<dt id="arg-element">element<a class="anchor" aria-label="anchor" href="#arg-element"></a></dt>
-<dd><p>A <code>element_line()</code> object. Vectorized
-fields will be recycled to match the total number of groups, or you can
-wrap the element with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code> to recycle to match the drawing groups. The
-drawing groups typically correspond to the product of the number of
-observations from both sides, as each pair of observations will be linked
-with a single line.</p></dd>
+<dt id="arg--element">.element<a class="anchor" aria-label="anchor" href="#arg--element"></a></dt>
+<dd><p>A <code>element_line()</code> object.
+Vectorized fields will be recycled to match the total number of groups, or
+you can wrap the element with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code> to recycle to match the drawing
+groups. The drawing groups typically correspond to the product of the
+number of observations from both sides, as each pair of observations will
+be linked with a single line.</p></dd>
 
 </dl></div>
 
