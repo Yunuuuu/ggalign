@@ -92,6 +92,14 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         layout_data <- layout@data
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
+            # for data inherit from the layout, and the design is for discrete
+            # variable, we'll integrate the design into the plot data
+            self$use_design <- is_stack_layout(layout)
+
+            # if the layout data is from the quad-layout, we use the discrete
+            # `design`
+            self$use_extra_design <- is_stack_layout(layout) &&
+                isTRUE(layout@heatmap$quad_matrix)
         } else if (is.function(input_data)) {
             if (is.null(layout_data)) {
                 cli_abort(c(
@@ -114,15 +122,39 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         if (is.function(data <- self$data)) {
             data <- NULL
         }
+        if (is.null(data)) {
+            return(gguse_data(plot, data))
+        }
+        if (isTRUE(self$use_extra_design) && is_discrete_design(extra_design)) {
+            extra_plot_data <- data_frame0(
+                .extra_panel = .subset2(extra_design, "panel"),
+                .extra_index = .subset2(extra_design, "index")
+            )
+        } else {
+            extra_plot_data <- NULL
+        }
+
         # if inherit from the parent layout
-        if (!is.null(data) &&
-            is.waive(self$input_data) &&
-            is_discrete_design(extra_design) &&
-            !is.null(extra_panel <- .subset2(extra_design, "panel"))) {
-            extra_index <- .subset2(extra_design, "index")
-            data <- cross_join(data, data_frame0(
-                .extra_panel = extra_panel, .extra_index = extra_index
-            ))
+        if (isTRUE(self$use_design) && is_discrete_design(design)) {
+            plot_data <- data_frame0(
+                .panel = .subset2(design, "panel"),
+                .index = .subset2(design, "index")
+            )
+            if (!is.null(extra_plot_data)) {
+                plot_data <- cross_join(plot_data, extra_plot_data)
+                data <- full_join(data, plot_data,
+                    by.x = c(".column_index", ".row_index"),
+                    by.y = c(".extra_index", ".index")
+                )
+            } else {
+                data <- full_join(data, plot_data,
+                    by.x = ".row_index", by.y = ".index"
+                )
+            }
+        } else if (!is.null(extra_plot_data)) {
+            data <- full_join(data, extra_plot_data,
+                by.x = ".column_index", by.y = ".extra_index"
+            )
         }
         gguse_data(plot, data)
     },

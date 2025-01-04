@@ -130,19 +130,18 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             data <- input_data(layout_data)
         } else if (is.waive(input_data)) {
             data <- layout_data %|w|% NULL
+            # for data inherit from the layout, and the layout data is from
+            # the quad-layout, we'll integrate the `extra_design`
+            self$use_extra_design <- is_stack_layout(layout) &&
+                isTRUE(layout@heatmap$quad_matrix)
         } else {
             data <- input_data
         }
         plot_data <- inject(fortify_data_frame(data, !!!self$params))
 
+
         # for discrete design, # we need ensure the nobs is the same
         if (is_discrete_design(design <- layout@design)) {
-            # for data inherit from the layout, and the layout data is from
-            # the quad-layout, we use the `extra_design`
-            self$use_extra_design <- is.waive(input_data) &&
-                is_stack_layout(layout) &&
-                isTRUE(layout@heatmap$quad_matrix)
-
             if (!is.null(data)) {
                 if (is.null(layout_nobs <- design$nobs)) {
                     layout_nobs <- NROW(data)
@@ -198,7 +197,25 @@ AlignGg <- ggproto("AlignGg", AlignProto,
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         data <- self$data
+
+        # if inherit from the parent layout
+        if (isTRUE(self$use_extra_design) && is_discrete_design(extra_design)) {
+            # if the data is inherit from the `quad_layout()`
+            # the data must be a matrix
+            extra_plot_data <- data_frame0(
+                .extra_panel = .subset2(extra_design, "panel"),
+                .extra_index = .subset2(extra_design, "index")
+            )
+        } else {
+            extra_plot_data <- NULL
+        }
+
         if (is_continuous_design(design)) {
+            if (!is.null(data) && !is.null(extra_plot_data)) {
+                data <- full_join(data, extra_plot_data,
+                    by.x = ".column_index", by.y = ".extra_index"
+                )
+            }
             return(gguse_data(plot, data))
         } else if (is.null(.subset2(design, "nobs"))) {
             cli_abort(
@@ -214,13 +231,6 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         axis <- to_coord_axis(direction)
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
-        if (is_continuous_design(extra_design)) {
-            extra_panel <- NULL
-            extra_index <- NULL
-        } else {
-            extra_panel <- .subset2(extra_design, "panel")
-            extra_index <- .subset2(extra_design, "index")
-        }
         coord_name <- paste0(".", axis)
         plot_data <- data_frame0(
             .panel = panel,
@@ -237,13 +247,8 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             )
         }
 
-        # if inherit from the parent layout
-        if (isTRUE(self$use_extra_design) && !is.null(extra_panel)) {
-            # if the data is inherit from the `quad_layout()`
-            # the data must be a matrix
-            plot_data <- cross_join(plot_data, data_frame0(
-                .extra_panel = extra_panel, .extra_index = extra_index
-            ))
+        if (!is.null(extra_plot_data)) {
+            plot_data <- cross_join(plot_data, extra_plot_data)
             if (!is.null(data)) {
                 plot_data <- full_join(data, plot_data,
                     by.x = c(".column_index", ".index"),
