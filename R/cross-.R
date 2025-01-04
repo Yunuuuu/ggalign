@@ -24,6 +24,8 @@ cross <- function(cross, data = waiver(), ...,
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @include cross-.R
 Cross <- ggproto("Cross", AlignProto,
+    free_facet = TRUE,
+    free_limits = TRUE,
     inherit_nobs = NULL,
     inherit_panel = NULL,
     inherit_index = NULL,
