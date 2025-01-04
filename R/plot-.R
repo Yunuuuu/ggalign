@@ -103,7 +103,12 @@ AlignProto <- ggproto("AlignProto",
 
     ############################################################
     # when added to the `Layout` object, will call following methods
+
+    # we usually, define the `nobs` in `interact_layout`, since we can
+    # act with the layout data in `interact_layout` method
     interact_layout = function(self, layout) layout,
+
+    # we define the `panel` and `index` method in `setup_design` method
     setup_design = function(self, design) design,
     setup_plot = function(self, plot) plot,
 

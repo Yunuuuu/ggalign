@@ -86,6 +86,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))
     },
+    #' @importFrom stats reorder
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         direction <- self$direction

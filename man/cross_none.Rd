@@ -4,7 +4,12 @@
 \alias{cross_none}
 \title{Reset layout ordering and panel group}
 \usage{
-cross_none(data = waiver(), inherit_panel = NULL, inherit_nobs = NULL)
+cross_none(
+  data = waiver(),
+  inherit_index = NULL,
+  inherit_panel = NULL,
+  inherit_nobs = NULL
+)
 }
 \arguments{
 \item{data}{The dataset to use for the layout. By default,
@@ -12,11 +17,16 @@ cross_none(data = waiver(), inherit_panel = NULL, inherit_nobs = NULL)
 allows you to change the layout data. If not specified, the original data
 will be used.}
 
+\item{inherit_index}{A boolean value indicating whether to inherit the
+ordering index. If \code{TRUE}, will match the layout ordering index with the
+data names.}
+
 \item{inherit_panel}{A boolean value indicating whether to inherit the
-panel group information.}
+panel group. If \code{TRUE}, will match the layout panel with the data names.}
 
 \item{inherit_nobs}{A boolean value indicating whether to inherit the
-number of observations.}
+number of observations (nobs). If \code{TRUE}, the \code{data} input must be
+compatible with the layout data.}
 }
 \description{
 Reset layout ordering and panel group

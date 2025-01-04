@@ -14,7 +14,8 @@
 #'
 #' @export
 cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
-                       inherit_panel = NULL, inherit_nobs = NULL,
+                       inherit_index = NULL, inherit_panel = NULL,
+                       inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(link, "ggalign_link_draw")) {
         cli_abort("{.arg link} must be a {.fn link_draw} object")
@@ -28,8 +29,9 @@ cross_link <- function(link, data = waiver(), on_top = TRUE, reorder = NULL,
         schemes = default_schemes(th = theme_no_panel()),
         active = active,
         on_top = on_top,
+        inherit_nobs = inherit_nobs,
         inherit_panel = inherit_panel,
-        inherit_nobs = inherit_nobs
+        inherit_index = inherit_index
     )
 }
 

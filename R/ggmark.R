@@ -9,7 +9,7 @@
 #'   if no specific observations are selected in `mark`, `ggmark()` will
 #'   automatically connect all observations and group them according to the
 #'   layout's defined groups.
-#' @param reorder A string from `r oxford_or(c("hand1", "hand2"))` indicating
+#' @param reorder A string of `r oxford_or(c("hand1", "hand2"))` indicating
 #'   whether to reorder the input links to follow the specified layout ordering.
 #' @section ggplot2 specification:
 #' `ggmark` initializes a ggplot object. The underlying data is created using

@@ -43,7 +43,7 @@ if no specific observations are selected in \code{mark}, \code{ggmark()} will
 automatically connect all observations and group them according to the
 layout's defined groups.}
 
-\item{reorder}{A string from \code{"hand1"} or \code{"hand2"} indicating
+\item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
 whether to reorder the input links to follow the specified layout ordering.}
 
 \item{size}{The relative size of the plot, can be specified as a

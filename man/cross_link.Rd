@@ -9,6 +9,7 @@ cross_link(
   data = waiver(),
   on_top = TRUE,
   reorder = NULL,
+  inherit_index = NULL,
   inherit_panel = NULL,
   inherit_nobs = NULL,
   size = NULL,
@@ -27,14 +28,19 @@ will be used.}
 \item{on_top}{A boolean value indicating whether to draw the link on top of
 the plot panel (\code{TRUE}) or below (\code{FALSE}).}
 
-\item{reorder}{A string from \code{"hand1"} or \code{"hand2"} indicating
+\item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
 whether to reorder the input links to follow the specified layout ordering.}
 
+\item{inherit_index}{A boolean value indicating whether to inherit the
+ordering index. If \code{TRUE}, will match the layout ordering index with the
+data names.}
+
 \item{inherit_panel}{A boolean value indicating whether to inherit the
-panel group information.}
+panel group. If \code{TRUE}, will match the layout panel with the data names.}
 
 \item{inherit_nobs}{A boolean value indicating whether to inherit the
-number of observations.}
+number of observations (nobs). If \code{TRUE}, the \code{data} input must be
+compatible with the layout data.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values

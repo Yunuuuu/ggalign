@@ -24,7 +24,8 @@
 #'
 #' @export
 cross_mark <- function(mark, data = waiver(), reorder = NULL,
-                       inherit_panel = NULL, inherit_nobs = NULL,
+                       inherit_index = NULL, inherit_panel = NULL,
+                       inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
@@ -37,8 +38,9 @@ cross_mark <- function(mark, data = waiver(), reorder = NULL,
         plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_add_panel()),
         active = active,
+        inherit_nobs = inherit_nobs,
         inherit_panel = inherit_panel,
-        inherit_nobs = inherit_nobs
+        inherit_index = inherit_index
     )
 }
 
