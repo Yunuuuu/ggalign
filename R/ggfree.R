@@ -92,6 +92,8 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         layout_data <- layout@data
         if (is.waive(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
+            self$labels <- vec_names(layout_data)
+
             # for data inherit from the layout, and the design is for discrete
             # variable, we'll integrate the design into the plot data
             self$use_design <- is_stack_layout(layout)
@@ -138,7 +140,8 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         if (isTRUE(self$use_design) && is_discrete_design(design)) {
             plot_data <- data_frame0(
                 .panel = .subset2(design, "panel"),
-                .index = .subset2(design, "index")
+                .index = .subset2(design, "index"),
+                .names = .subset(self$labels, .subset2(design, "index"))
             )
             if (!is.null(extra_plot_data)) {
                 plot_data <- cross_join(plot_data, extra_plot_data)
