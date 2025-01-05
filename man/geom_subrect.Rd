@@ -115,8 +115,8 @@ divided rectangles in the row-major order.}
 
 \item{direction}{A string specifying the arrangement direction:
 \itemize{
-\item \code{"horizontal"}: Creates a single row (one-row layout).
-\item \code{"vertical"}: Creates a single column (one-column layout).
+\item \code{"h"}(\code{horizontal}): Creates a single row (one-row layout).
+\item \code{"v"}(\code{vertical}): Creates a single column (one-column layout).
 \item \code{NULL}: Automatically determines the layout dimensions using logic similar
 to \code{\link[ggplot2:facet_wrap]{facet_wrap()}}.
 }}

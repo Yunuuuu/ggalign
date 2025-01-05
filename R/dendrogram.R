@@ -161,6 +161,7 @@ make_dist <- function(matrix, distance, use_missing,
 #' dendrogram_data(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
 #' @importFrom stats order.dendrogram
+#' @importFrom rlang arg_match0
 #' @export
 dendrogram_data <- function(tree,
                             priority = "right",
@@ -175,8 +176,8 @@ dendrogram_data <- function(tree,
     dend <- check_dendrogram(tree)
     assert_bool(center)
     assert_bool(reorder_branches)
-    type <- match.arg(type, c("rectangle", "triangle"))
-    priority <- match.arg(priority, c("left", "right"))
+    type <- arg_match0(type, c("rectangle", "triangle"))
+    priority <- arg_match0(priority, c("left", "right"))
     N <- stats::nobs(dend)
     rectangle <- type == "rectangle"
     if (is.null(leaf_pos)) {

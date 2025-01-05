@@ -9,8 +9,8 @@
 #'   dimensions (`width`, `height`).
 #'
 #' @param direction A string specifying the arrangement direction:
-#' - `"horizontal"`: Creates a single row (one-row layout).
-#' - `"vertical"`: Creates a single column (one-column layout).
+#' - `"h"`(`horizontal`): Creates a single row (one-row layout).
+#' - `"v"`(`vertical`): Creates a single column (one-column layout).
 #' - `NULL`: Automatically determines the layout dimensions using logic similar
 #'   to [`facet_wrap()`][ggplot2::facet_wrap].
 #' @param byrow A single boolean value indicates whether we should arrange the
@@ -45,7 +45,7 @@ geom_subrect <- function(mapping = NULL, data = NULL,
                          na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
     assert_bool(byrow)
     if (!is.null(direction)) {
-        direction <- match.arg(direction, c("horizontal", "vertical"))
+        direction <- check_direction(direction)
     }
     ggplot2::layer(
         data = data,
@@ -161,7 +161,7 @@ geom_subtile <- function(mapping = NULL, data = NULL,
                          na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
     assert_bool(byrow)
     if (!is.null(direction)) {
-        direction <- match.arg(direction, c("horizontal", "vertical"))
+        direction <- check_direction(direction)
     }
     ggplot2::layer(
         data = data,
