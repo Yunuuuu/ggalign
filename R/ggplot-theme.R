@@ -154,12 +154,12 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
 }
 
 #################################################################
-# Apply a function to the vectorized field of an theme
+# Apply a function to the vectorized field of the theme object
 theme_vec <- function(.th, .el, .fn, ...) {
     element <- calc_element(.el, .th)
     if (inherits(element, "element")) {
         .th[[.el]] <- element_vec(element, .fn, ...)
-    } else {
+    } else if (!is.null(element)) {
         .th[[.el]] <- .fn(element, ...)
     }
     .th
