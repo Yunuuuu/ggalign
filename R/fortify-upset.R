@@ -83,19 +83,16 @@ fortify_upset.list <- function(data, mode = "distinct", ...) {
     intersection_and_size <- lapply(
         seq_len(vec_size(intersection)),
         function(n) {
-            apply(
-                # generate all possible intersections
-                utils::combn(vec_size(intersection), n), 2L,
-                function(index) {
-                    intersection[index] <- TRUE
-                    list(
-                        intersection = intersection,
-                        # for each intersection, we define the size
-                        size = vec_size(action(data, intersection))
-                    )
-                },
-                simplify = FALSE
-            )
+            # generate all possible intersections
+            index <- utils::combn(vec_size(intersection), n)
+            lapply(seq_len(ncol(index)), function(i) {
+                intersection[index[, i, drop = TRUE]] <- TRUE
+                list(
+                    intersection = intersection,
+                    # for each intersection, we define the size
+                    size = vec_size(action(data, intersection))
+                )
+            })
         }
     )
 
@@ -130,10 +127,9 @@ fortify_upset.matrix <- function(data, mode = "distinct", ...) {
     data <- !is.na(data)
     elements <- vec_seq_along(data)
     fortify_upset.list(
-        apply(data, 2L,
-            function(index) .subset(elements, index),
-            simplify = FALSE
-        ),
+        lapply(seq_len(ncol(data)), function(i) {
+            .subset(elements, data[, i, drop = TRUE])
+        }),
         mode = mode,
         ...
     )
