@@ -84,15 +84,14 @@ fortify_upset.list <- function(data, mode = "distinct", ...) {
         seq_len(vec_size(intersection)),
         function(n) {
             # generate all possible intersections
-            index <- utils::combn(vec_size(intersection), n)
-            lapply(seq_len(ncol(index)), function(i) {
-                intersection[index[, i, drop = TRUE]] <- TRUE
+            utils::combn(vec_size(intersection), n, function(index) {
+                intersection[index] <- TRUE
                 list(
                     intersection = intersection,
                     # for each intersection, we define the size
                     size = vec_size(action(data, intersection))
                 )
-            })
+            }, simplify = FALSE)
         }
     )
 
