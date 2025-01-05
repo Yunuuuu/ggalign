@@ -48,9 +48,17 @@ plot.}
 \item{map_width, map_height}{A named numeric value defines the width/height of
 each alterations.}
 
-\item{reorder_row, reorder_column}{A boolean value indicating whether to
-reorder the rows/columns based on the frequency or characteristics of the
-alterations.}
+\item{reorder_row}{A boolean value indicating whether to reorder the rows
+based on the frequency of alterations. You can set this to \code{FALSE}, then add
+\code{align_order(~rowSums(!is.na(.x)), reverse = TRUE)} to achieve the same
+result. You may also need to set \code{strit = FALSE} in \code{\link[=align_order]{align_order()}} if
+there are already groups.}
+
+\item{reorder_column}{A boolean value indicating whether to reorder the
+columns based on the characteristics of the alterations. You can set this to
+\code{FALSE}, then add \code{align_reorder(memo_order)} to achieve the same result. You
+may also need to set \code{strit = FALSE} in \code{\link[=align_reorder]{align_reorder()}} if there are
+already groups.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
 \code{\link[grid:unit]{unit}} object.}
@@ -83,10 +91,6 @@ simplify the creation of \code{OncoPrint}-style visualizations. The function
 automatically processes the input character matrix by splitting the encoded
 alterations (delimited by \code{";"}, \code{":"}, \code{","}, or \code{"|"}) into
 individual genomic events and unnesting the columns for visualization.
-
-Additionally, a predefined reordering function, adapted from
-\url{https://gist.github.com/armish/564a65ab874a770e2c26}, is included to enhance
-the organization of the alterations.
 }
 \examples{
 # A simple example from `ComplexHeatmap`

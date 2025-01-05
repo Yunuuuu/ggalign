@@ -15,18 +15,24 @@
 #' alterations (delimited by `r oxford_or(c(";", ":", ",", "|"))`) into
 #' individual genomic events and unnesting the columns for visualization.
 #'
-#' Additionally, a predefined reordering function, adapted from
-#' <https://gist.github.com/armish/564a65ab874a770e2c26>, is included to enhance
-#' the organization of the alterations.
-#'
 #' @param data A character matrix which encodes the alterations, you can use
 #' `r oxford_or(c(";", ":", ",", "|"))` to separate multiple alterations.
 #' @inheritParams heatmap_layout
 #' @param map_width,map_height A named numeric value defines the width/height of
 #' each alterations.
-#' @param reorder_row,reorder_column A boolean value indicating whether to
-#' reorder the rows/columns based on the frequency or characteristics of the
-#' alterations.
+#'
+#' @param reorder_row A boolean value indicating whether to reorder the rows
+#' based on the frequency of alterations. You can set this to `FALSE`, then add
+#' `align_order(~rowSums(!is.na(.x)), reverse = TRUE)` to achieve the same
+#' result. You may also need to set `strit = FALSE` in [`align_order()`] if
+#' there are already groups.
+#'
+#' @param reorder_column A boolean value indicating whether to reorder the
+#' columns based on the characteristics of the alterations. You can set this to
+#' `FALSE`, then add `align_reorder(memo_order)` to achieve the same result. You
+#' may also need to set `strit = FALSE` in [`align_reorder()`] if there are
+#' already groups.
+#'
 #' @param filling Same as [`ggheatmap()`], but only `"tile"` can be used.
 #' @examples
 #' # A simple example from `ComplexHeatmap`
@@ -100,14 +106,6 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     data <- trimws(data, whitespace = "[\\h\\v]")
     data[data == ""] <- NA_character_
 
-    # prepare counts matrix to reorder the column or rows
-    if (reorder_column || reorder_row) {
-        counts <- !is.na(data)
-        storage.mode(counts) <- "integer"
-        weights <- rowSums(counts)
-        row_index <- order(weights, decreasing = TRUE)
-    }
-
     # check filling
     if (isTRUE(filling) || is.waive(filling)) {
         filling <- "tile"
@@ -142,19 +140,25 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     ) -
         # set the default `scheme_data()`
         scheme_data(data = pdata)
+
+    # prepare counts matrix to reorder the column or rows
+    if (reorder_column || reorder_row) {
+        counts <- !is.na(data)
+        storage.mode(counts) <- "integer"
+        weights <- rowSums(counts)
+        row_index <- order(weights, decreasing = TRUE)
+    }
+
     if (reorder_row) {
         ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
     }
     if (reorder_column) {
-        column_scores <- apply(vec_slice(counts, row_index), 2L, function(x) {
-            score <- 2^(length(x) - seq_along(x))
-            score[x == 0L] <- 0
-            sum(score)
-        })
+        column_scores <- .memo_order(vec_slice(counts, row_index))
         ans <- ans +
             anno_top() +
             align_order(order(column_scores, decreasing = TRUE))
     }
+
     # reset the active context
     ans <- ans + quad_active()
     if (!is.null(filling)) {
@@ -190,3 +194,43 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     }
     ans
 }
+
+#' Sort matrix for better visualization
+#'
+#' Helper function used to order the Oncoplot samples. Typically, you would use
+#' this in combination with [`align_reorder()`], e.g.,
+#' `align_reorder(memo_order)`.
+#'
+#' @param x A matrix, where `NA` values will be treated as empty.
+#' @return A vector of ordering weights.
+#' @export
+memo_order <- function(x) {
+    # For `align_reorder()`, rows are considered as the samples
+    # `.memo_order` will regard the columns as the samples
+    .memo_order(t(x), counts = FALSE, reorder_rows = TRUE)
+}
+
+# Following code is modified from
+# <https://gist.github.com/armish/564a65ab874a770e2c26>
+.memo_order <- function(x, counts = TRUE, reorder_rows = FALSE) {
+    if (!isTRUE(counts)) {
+        x <- !is.na(x)
+        storage.mode(x) <- "integer"
+    }
+    if (isTRUE(reorder_rows)) {
+        row_index <- order(rowSums(x), decreasing = TRUE)
+        x <- vec_slice(x, row_index)
+    }
+    structure(
+        apply(x, 2L, function(x) {
+            score <- 2^(length(x) - seq_along(x))
+            score[x == 0L] <- 0
+            sum(score)
+        }),
+        class = "memo_weights"
+    )
+}
+
+#' @export
+#' @rdname order2
+order2.memo_weights <- function(x) order(x, decreasing = TRUE)

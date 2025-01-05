@@ -107,6 +107,7 @@ reference:
   - fortify_data_frame
   - fortify_matrix
   - ggalign_attr_set
+  - order2
 
 - title: Plot composer
   desc: >
@@ -160,7 +161,7 @@ reference:
   - ggalign_stat
   - is_layout
   - hclust2
-  - order2
+  - memo_order
   - dendrogram_data
   - read_example
 

@@ -58,16 +58,16 @@ align_reorder <- function(stat, ..., reverse = FALSE,
 AlignReorder <- ggproto("AlignReorder", Align,
     compute = function(self, panel, index, stat, stat_params, strict) {
         assert_reorder(self, panel, strict)
-        data <- .subset2(self, "data")
-        inject(stat(data, !!!stat_params))
+        inject(stat(self$data, !!!stat_params))
     },
     align = function(self, panel, index, reverse) {
         index <- vec_cast(
             order2(.subset2(self, "statistics")), integer(),
-            x_arg = "order2", call = .subset2(self, "call")
+            x_arg = "stat",
+            call = self$call
         )
         assert_mismatch_nobs(
-            self, nrow(.subset2(self, "data")), length(index),
+            self, NROW(self$data), length(index),
             action = "must return a statistic with",
             arg = "stat"
         )

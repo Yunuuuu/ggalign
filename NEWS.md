@@ -7,6 +7,8 @@
 
 ## New features
 
+* new helper function `memo_order()` to reorder the oncoplot samples.
+
 * new `geom_subrect()` and `geom_subtile()` to subdivide rectangles with shared borders into a grid.
 
 * new `cross_link` function to reset the layout ordering index or layout panel group, and
