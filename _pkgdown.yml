@@ -35,6 +35,7 @@ reference:
   - stack_cross
   - ggheatmap
   - ggoncoplot
+  - ggupset
 
 - title: Layout Building
   desc: >
@@ -106,6 +107,7 @@ reference:
   - align
   - fortify_data_frame
   - fortify_matrix
+  - fortify_upset
   - ggalign_attr_set
   - order2
 
@@ -170,3 +172,4 @@ reference:
   - starts_with("patch.")
   - starts_with("fortify_matrix.")
   - starts_with("fortify_data_frame.")
+  - starts_with("fortify_upset.")
