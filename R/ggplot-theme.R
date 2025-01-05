@@ -154,6 +154,17 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
 }
 
 #################################################################
+# Apply a function to the vectorized field of an theme
+theme_vec <- function(.th, .el, .fn, ...) {
+    element <- calc_element(.el, .th)
+    if (inherits(element, "element")) {
+        .th[[.el]] <- element_vec(element, .fn, ...)
+    } else {
+        .th[[.el]] <- .fn(element, ...)
+    }
+    .th
+}
+
 recycle_theme_axis <- function(axis, theme, scales) {
     breaks <- unlist(lapply(scales, function(s) s$get_breaks()), FALSE, FALSE)
     labels <- unlist(lapply(scales, function(x) x$get_labels()), FALSE, FALSE)
@@ -183,13 +194,13 @@ align_theme_axis <- function(axis, theme, text_fn, tick_fn) {
     .text_fn <- function(v) if (length(v) > 1L) text_fn(v) else v
     .tick_fn <- function(v) if (length(v) > 1L) tick_fn(v) else v
     for (element in paste("axis.text", axis, positions, sep = ".")) {
-        theme[[element]] <- element_vec(calc_element(element, theme), .text_fn)
+        theme <- theme_vec(theme, element, .text_fn)
     }
     for (element in paste("axis.ticks", axis, positions, sep = ".")) {
-        theme[[element]] <- element_vec(calc_element(element, theme), .tick_fn)
+        theme <- theme_vec(theme, element, .tick_fn)
     }
     for (element in paste("axis.ticks.length", axis, positions, sep = ".")) {
-        theme[[element]] <- .tick_fn(calc_element(element, theme))
+        theme <- theme_vec(theme, element, .tick_fn)
     }
     theme
 }
