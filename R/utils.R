@@ -29,6 +29,17 @@ names_or_index <- function(x) {
     nms
 }
 
+which.median <- function(x) {
+    ordering <- order(x)
+    if ((len <- length(x)) == 0L) {
+        integer()
+    } else if (len %% 2L == 0) {
+        ordering[len / 2L + 0:1]
+    } else {
+        ordering[(len + 1L) / 2L]
+    }
+}
+
 #################################################################
 #' Read Example Data
 #'
@@ -243,6 +254,13 @@ quickdf <- function(x) {
 fct_rev <- function(x) {
     ans <- as.factor(x)
     factor(ans, levels = rev(levels(ans)))
+}
+
+fct_reorder <- function(.f, .x, .fun = stats::median, ...,
+                        .default = Inf, .desc = FALSE) {
+    .f <- as.factor(.f)
+    summary <- tapply(.x, .f, function(x) .fun(x, ...), default = .default)
+    factor(.f, levels(.f)[order(summary, decreasing = .desc)])
 }
 
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
