@@ -455,6 +455,19 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                         object_name(object)
                     ))
                 }
+            } else {
+                if (NROW(data) == 0L || ncol(data) == 0L) {
+                    cli_abort(c(
+                        sprintf(
+                            "Cannot use data from %s in %s",
+                            object_name(layout), object_name(object)
+                        ),
+                        i = sprintf(
+                            "{.arg data} in %s return is an empty matrix",
+                            object_name(layout)
+                        )
+                    ))
+                }
             }
             # set the `nobs` for `quad_layout()`
             if (is_horizontal(direction)) {
