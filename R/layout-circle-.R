@@ -160,7 +160,7 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
 #' small_mat <- matrix(rnorm(56), nrow = 7)
 #' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 #' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-#' circle_discrete(small_mat) +
+#' circle_layout(small_mat) +
 #'     ggalign() +
 #'     geom_tile(aes(y = .column_index, fill = value)) +
 #'     scale_fill_viridis_c() +
