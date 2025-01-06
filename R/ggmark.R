@@ -118,13 +118,10 @@ MarkGg <- ggproto("MarkGg", AlignProto,
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
         if (is.null(.subset2(design, "nobs"))) {
-            cli_abort(
-                c(
-                    "you must provide {.arg data} to initialize the layout",
-                    i = sprintf("no data was found in %s", self$layout_name)
-                ),
-                call = self$call
-            )
+            cli_abort(sprintf(
+                "you must initialize %s before drawing %s",
+                self$layout_name, object_name(self)
+            ), call = self$call)
         }
         mark <- self$mark
 

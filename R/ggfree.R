@@ -127,7 +127,9 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         if (is.null(data)) {
             return(gguse_data(plot, data))
         }
-        if (isTRUE(self$use_extra_design) && is_discrete_design(extra_design)) {
+        if (isTRUE(self$use_extra_design) &&
+            is_discrete_design(extra_design) &&
+            !is.null(.subset2(extra_design, "nobs"))) {
             extra_plot_data <- data_frame0(
                 .extra_panel = .subset2(extra_design, "panel"),
                 .extra_index = .subset2(extra_design, "index")
@@ -137,7 +139,9 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         }
 
         # if inherit from the parent layout
-        if (isTRUE(self$use_design) && is_discrete_design(design)) {
+        if (isTRUE(self$use_design) &&
+            is_discrete_design(design) &&
+            !is.null(.subset2(design, "nobs"))) {
             plot_data <- data_frame0(
                 .panel = .subset2(design, "panel"),
                 .index = .subset2(design, "index"),

@@ -139,12 +139,16 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         }
         plot_data <- inject(fortify_data_frame(data, !!!self$params))
 
-
         # for discrete design, # we need ensure the nobs is the same
         if (is_discrete_design(design <- layout@design)) {
             if (!is.null(data)) {
                 if (is.null(layout_nobs <- design$nobs)) {
                     layout_nobs <- NROW(data)
+                    if (layout_nobs == 0L) {
+                        cli_abort("{.arg data} cannot be empty",
+                            call = self$call
+                        )
+                    }
                 } else if (NROW(data) != layout_nobs) {
                     cli_abort(sprintf(
                         "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
@@ -199,7 +203,9 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         data <- self$data
 
         # if inherit from the parent layout
-        if (isTRUE(self$use_extra_design) && is_discrete_design(extra_design)) {
+        if (isTRUE(self$use_extra_design) &&
+            is_discrete_design(extra_design) &&
+            !is.null(.subset2(extra_design, "nobs"))) {
             # if the data is inherit from the `quad_layout()`
             # the data must be a matrix
             extra_plot_data <- data_frame0(
@@ -218,14 +224,13 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             }
             return(gguse_data(plot, data))
         } else if (is.null(.subset2(design, "nobs"))) {
-            cli_abort(
-                c(
-                    "you must provide {.arg data} to initialize the layout",
-                    i = sprintf("no data was found in %s", self$layout_name),
-                    i = "Or you should use {.fn ggfree}"
+            cli_abort(c(
+                sprintf(
+                    "you must initialize %s before drawing %s",
+                    self$layout_name, object_name(self)
                 ),
-                call = self$call
-            )
+                i = "Or you should use {.fn ggfree}"
+            ), call = self$call)
         }
         direction <- self$direction
         axis <- to_coord_axis(direction)

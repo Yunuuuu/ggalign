@@ -398,6 +398,13 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                             "{.arg data} in %s must return a {.cls matrix}",
                             object_name(object)
                         ))
+                    } else {
+                        if (NROW(data) == 0L || ncol(data) == 0L) {
+                            cli_abort(sprintf(
+                                "{.arg data} in %s return an empty matrix",
+                                object_name(object)
+                            ))
+                        }
                     }
                 }
                 # we initialize the `nobs` of the extra_design for the
@@ -439,6 +446,12 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                 if (!is.matrix(data)) {
                     cli_abort(sprintf(
                         "{.arg data} in %s must return a matrix",
+                        object_name(object)
+                    ))
+                }
+                if (NROW(data) == 0L || ncol(data) == 0L) {
+                    cli_abort(sprintf(
+                        "{.arg data} in %s return an empty matrix",
                         object_name(object)
                     ))
                 }

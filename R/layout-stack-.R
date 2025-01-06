@@ -77,6 +77,12 @@ stack_discrete.default <- function(direction, data = NULL, ...,
     if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
+
+        # for data has dimention but one dimention is 0
+        # as.matrix(data.frame(row.names = letters))
+        if (nobs == 0L) {
+            cli_abort("empty data is no allowed")
+        }
     } else {
         nobs <- NULL
     }

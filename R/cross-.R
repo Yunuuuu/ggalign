@@ -96,6 +96,11 @@ Cross <- ggproto("Cross", AlignProto,
                 if (is.null(data)) {
                     design["nobs"] <- list(NULL)
                 } else {
+                    if (NROW(data) == 0L) {
+                        cli_abort("{.arg data} cannot be empty",
+                            call = self$call
+                        )
+                    }
                     design["nobs"] <- list(NROW(data))
                 }
             }

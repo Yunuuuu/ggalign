@@ -175,6 +175,9 @@ Align <- ggproto("Align", AlignProto,
             # we always regard rows as the observations
             if (is.null(layout_nobs)) {
                 layout_nobs <- NROW(data)
+                if (layout_nobs == 0L) {
+                    cli_abort("{.arg data} cannot be empty", call = self$call)
+                }
             } else if (NROW(data) != layout_nobs) {
                 cli_abort(sprintf(
                     "%s (nobs: %d) is not compatible with the %s (nobs: %d)",

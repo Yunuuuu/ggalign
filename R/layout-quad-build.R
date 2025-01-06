@@ -58,14 +58,27 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     data <- quad@data
     row_design <- setup_design(quad@horizontal)
     column_design <- setup_design(quad@vertical)
-    if ((is_discrete_design(row_design) || is_discrete_design(column_design)) &&
-        (is.function(data) || is.waive(data))) {
+    if (is.function(data)) {
         cli_abort(c(
-            sprintf(
-                "You must provide the {.arg data} argument to plot %s.",
+            "{.arg data} cannot be a {.cls function}",
+            i = sprintf(
+                "Did you want to add %s to a {.fn stack_layout}?",
                 object_name(quad)
-            ),
-            i = "To align discrete variables, data is required to initialize the layout."
+            )
+        ))
+    }
+    if (is_discrete_design(row_design) &&
+        is.null(.subset2(row_design, "nobs"))) {
+        cli_abort(sprintf(
+            "you must initialize %s before drawing the main plot",
+            object_name(quad),
+        ))
+    }
+    if (is_discrete_design(column_design) &&
+        is.null(.subset2(column_design, "nobs"))) {
+        cli_abort(sprintf(
+            "you must initialize %s before drawing the main plot",
+            object_name(quad),
         ))
     }
     schemes <- inherit_parent_layout_schemes(quad, schemes)
@@ -225,8 +238,7 @@ quad_build_data <- function(data, row_design, column_design) {
     if (is.null(data) ||
         (is_continuous_design(row_design) &&
             is_continuous_design(column_design))) {
-        # ggplot use waiver() to indicates the NULL data
-        return(data %||% waiver())
+        return(data)
     }
     if (is_discrete_design(row_design)) {
         row_panel <- .subset2(row_design, "panel")

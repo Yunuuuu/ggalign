@@ -79,7 +79,13 @@ align_order <- function(weights = rowMeans, ...,
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
 AlignOrder <- ggproto("AlignOrder", Align,
-    nobs = function(params) length(.subset2(params, "weights")),
+    nobs = function(self, params) {
+        nobs <- length(.subset2(params, "weights"))
+        if (nobs == 0L) {
+            cli_abort("{.arg weights} cannot be empty", call = self$call)
+        }
+        nobs
+    },
     setup_params = function(self, nobs, params) {
         if (!is.function(weights <- .subset2(params, "weights"))) {
             assert_mismatch_nobs(

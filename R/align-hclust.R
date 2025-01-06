@@ -139,11 +139,17 @@ AlignHclust <- ggproto("AlignHclust", Align,
     nobs = function(self, params) {
         if (inherits(tree <- .subset2(params, "method"), "hclust")) {
             self$labels <- .subset2(tree, "labels")
-            length(.subset2(tree, "order"))
+            nobs <- length(.subset2(tree, "order"))
         } else { # a dendrogram
             self$labels <- labels(tree)
-            stats::nobs(tree)
+            nobs <- stats::nobs(tree)
         }
+        if (nobs == 0L) {
+            cli_abort("tree defined in {.arg method} cannot be empty",
+                call = self$call
+            )
+        }
+        nobs
     },
     compute = function(self, panel, index, distance, method, use_missing,
                        reorder_dendrogram, k = NULL, h = NULL, cutree = NULL) {

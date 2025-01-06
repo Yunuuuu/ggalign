@@ -27,7 +27,13 @@ align_group <- function(group, active = NULL) {
 
 #' @importFrom ggplot2 ggproto
 AlignGroup <- ggproto("AlignGroup", Align,
-    nobs = function(self, params) vec_size(.subset2(params, "group")),
+    nobs = function(self, params) {
+        nobs <- vec_size(.subset2(params, "group"))
+        if (nobs == 0L) {
+            cli_abort("{.arg group} cannot be empty", call = self$call)
+        }
+        nobs
+    },
     setup_params = function(self, nobs, params) {
         assert_mismatch_nobs(
             self, nobs, self$nobs(params),

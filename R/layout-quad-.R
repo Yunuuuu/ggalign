@@ -244,6 +244,12 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
         if (!is.waive(data) && !is.function(data)) {
             nrows <- NROW(data)
             ncols <- ncol(data)
+
+            # for data has dimention but one dimention is 0
+            # as.matrix(data.frame(row.names = letters))
+            if (nrows == 0L || ncols == 0L) {
+                cli_abort("empty data is no allowed")
+            }
         } else {
             nrows <- NULL
             ncols <- NULL
