@@ -408,20 +408,18 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
         },
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
-            if (self$is_linear() || inherits(self, "CoordTrans")) {
-                # for each scale, we set the `breaks` and `labels`
-                if (is_discrete_design(x_design)) {
-                    align_discrete_scales(
-                        "x", scales_x, x_design,
-                        .subset2(object, "xlabels")
-                    )
-                }
-                if (is_discrete_design(y_design)) {
-                    align_discrete_scales(
-                        "y", scales_y, y_design,
-                        .subset2(object, "ylabels")
-                    )
-                }
+            # for each scale, we set the `breaks` and `labels`
+            if (is_discrete_design(x_design)) {
+                align_discrete_scales(
+                    "x", scales_x, x_design,
+                    .subset2(object, "xlabels")
+                )
+            }
+            if (is_discrete_design(y_design)) {
+                align_discrete_scales(
+                    "y", scales_y, y_design,
+                    .subset2(object, "ylabels")
+                )
             }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
         },
@@ -434,7 +432,8 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                     self$xlim_list,
                     recycle_whole(cur_panel, self$n_cycle)
                 )
-                if (is_discrete_design(x_design) && scale_x$is_discrete()) {
+                if (is_discrete_design(x_design) && scale_x$is_discrete() &&
+                    !is.null(scale_x$range$range)) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
                     xlim <- xlim - (min(xlim) - 0.5)
@@ -446,7 +445,8 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                     self$ylim_list,
                     recycle_each(cur_panel, self$n_cycle)
                 )
-                if (is_discrete_design(y_design) && scale_y$is_discrete()) {
+                if (is_discrete_design(y_design) && scale_y$is_discrete() &&
+                    !is.null(scale_x$range$range)) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
                     ylim <- ylim - (min(ylim) - 0.5)
