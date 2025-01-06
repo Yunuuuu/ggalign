@@ -358,36 +358,46 @@ no_expansion <- function(borders = "tlbr") {
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
-    ParentCoord <- .subset2(plot, "coordinates")
     borders <- .subset2(object, "borders")
-    plot$coordinates <- ggproto(
-        NULL, ParentCoord,
-        setup_panel_params = function(self, scale_x, scale_y, params = list()) {
-            if (!is.null(scale_x) && any(borders == c("left", "right"))) {
-                expansion <- scale_x$expand %|w|%
-                    ggfun("default_expansion")(scale_x, expand = TRUE)
-                if (any(borders == "left")) {
-                    expansion[1:2] <- 0
+    ParentLayout <- .subset2(plot, "layout")
+
+    # tricks to ensure remove `coord` won't remove `no_expansion()`
+    plot$layout <- ggproto(NULL, ParentLayout,
+        setup_panel_params = function(self) {
+            ParentCoord <- self$coord
+            self$coord <- ggproto(NULL, ParentCoord,
+                setup_panel_params = function(self, scale_x, scale_y,
+                                              params = list()) {
+                    if (!is.null(scale_x) &&
+                        any(borders == c("left", "right"))) {
+                        expansion <- scale_x$expand %|w|%
+                            ggfun("default_expansion")(scale_x, expand = TRUE)
+                        if (any(borders == "left")) {
+                            expansion[1:2] <- 0
+                        }
+                        if (any(borders == "right")) {
+                            expansion[3:4] <- 0
+                        }
+                        scale_x$expand <- expansion
+                    }
+                    if (!is.null(scale_y) &&
+                        any(borders == c("bottom", "top"))) {
+                        expansion <- scale_y$expand %|w|%
+                            ggfun("default_expansion")(scale_y, expand = TRUE)
+                        if (any(borders == "bottom")) {
+                            expansion[1:2] <- 0
+                        }
+                        if (any(borders == "top")) {
+                            expansion[3:4] <- 0
+                        }
+                        scale_y$expand <- expansion
+                    }
+                    ggproto_parent(ParentCoord, self)$setup_panel_params(
+                        scale_x = scale_x, scale_y = scale_y, params = params
+                    )
                 }
-                if (any(borders == "right")) {
-                    expansion[3:4] <- 0
-                }
-                scale_x$expand <- expansion
-            }
-            if (!is.null(scale_y) && any(borders == c("bottom", "top"))) {
-                expansion <- scale_y$expand %|w|%
-                    ggfun("default_expansion")(scale_y, expand = TRUE)
-                if (any(borders == "bottom")) {
-                    expansion[1:2] <- 0
-                }
-                if (any(borders == "top")) {
-                    expansion[3:4] <- 0
-                }
-                scale_y$expand <- expansion
-            }
-            ggproto_parent(ParentCoord, self)$setup_panel_params(
-                scale_x = scale_x, scale_y = scale_y, params = params
             )
+            ggproto_parent(ParentLayout, self)$setup_panel_params()
         }
     )
     plot
