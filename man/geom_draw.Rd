@@ -2,22 +2,31 @@
 % Please edit documentation in R/geom-draw.R
 \name{geom_draw}
 \alias{geom_draw}
-\title{Layer with customized draw function}
+\title{Layer with Grid or Function}
 \usage{
 geom_draw(
+  draw,
   mapping = NULL,
   data = NULL,
+  type = "group",
   stat = "identity",
   position = "identity",
   ...,
-  lineend = "butt",
-  linejoin = "mitre",
   na.rm = FALSE,
-  show.legend = NA,
+  show.legend = FALSE,
   inherit.aes = TRUE
 )
 }
 \arguments{
+\item{draw}{Either a \link[grid:grid.grob]{grob} object or a function (can be
+purrr-style) that accepts at least three arguments (\code{data}, \code{panel_params}
+and \code{coord}) and returns a \link[grid:grid.grob]{grob}.
+
+When \code{draw} is a function, it is used as the \code{draw_group}/\code{draw_panel}
+function in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object. You should always
+call \code{coord$transform(data, panel_params)} inside the function \code{draw} to
+obtain transformed data in the plot scales.}
+
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
 at the top level of the plot. You must supply \code{mapping} if there is no plot
@@ -37,6 +46,12 @@ A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{type}{A single string of \code{"group"} or \code{"panel"}, \code{"group"}
+draws geoms with \code{draw_group}, which displays multiple observations as one
+geometric object, and \code{"panel"} draws geoms with \code{draw_panel}, displaying
+individual graphical objects for each observation (row). Default:
+\code{"group"}.}
 
 \item{stat}{The statistical transformation to use on the data for this layer.
 When using a \verb{geom_*()} function to construct a layer, the \code{stat}
@@ -92,10 +107,6 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
-\item{lineend}{Line end style (round, butt, square).}
-
-\item{linejoin}{Line join style (round, mitre, bevel).}
-
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
 
@@ -111,81 +122,27 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-Layer with customized draw function
+Draw a ggplot2 layer using a grob or a function.
 }
 \details{
-\code{geom_draw} depends on the new aesthetics \code{draw}, which should always be
-provided with \code{\link[=scale_draw_manual]{scale_draw_manual()}}, in which, we can provide a list of
-functions that define how each cell's grob (graphical object) should be
-drawn. This aesthetic allows you to replace the default rendering of cells
-with custom behavior, making it possible to tailor the plot to specific
-requirements.
+If you want to combine the functionality of multiple geoms, it can
+typically be achieved by preparing the data for each geom inside the
+\verb{draw_*()} call and sending it off to the different geoms, collecting the
+output in a \code{\link[grid:grid.grob]{grid::gList}} (a list of grobs) for \code{draw_group()} or a
+\code{\link[grid:grid.grob]{grid::gTree}} (a grob containing multiple child grobs) for
+\code{draw_panel()}.
 }
-\section{Aesthetics}{
-
-\code{geom_draw()} understands the following aesthetics (required aesthetics are in bold):
-\itemize{
-\item \strong{\code{\link[ggplot2:aes_position]{x}}}
-\item \strong{\code{\link[ggplot2:aes_position]{y}}}
-\item \strong{\code{draw}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
-\item \code{\link[ggplot2:aes_group_order]{group}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
-\item \code{stroke}
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
-}
-
 \examples{
-library(grid)
-ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
-    geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
-    scale_draw_manual(values = list(
-        a = function(x, y, width, height, fill) {
-            rectGrob(x, y,
-                width = width, height = height,
-                gp = gpar(fill = fill),
-                default.units = "native"
-            )
-        },
-        b = function(x, y, width, height, fill) {
-            rectGrob(x, y,
-                width = width, height = height,
-                gp = gpar(fill = fill),
-                default.units = "native"
-            )
-        },
-        c = function(x, y, width, height, fill) {
-            rectGrob(x, y,
-                width = width, height = height,
-                gp = gpar(fill = fill),
-                default.units = "native"
-            )
-        },
-        d = function(x, y, width, height, shape) {
-            gList(
-                pointsGrob(x, y, pch = shape),
-                # To ensure the rectangle color is shown in the legends, you
-                # must explicitly provide a color argument and include it in
-                # the `gpar()` of the graphical object
-                rectGrob(x, y, width, height,
-                    gp = gpar(col = "black", fill = NA)
-                )
-            )
-        },
-        e = function(xmin, xmax, ymin, ymax) {
-            segmentsGrob(
-                xmin, ymin,
-                xmax, ymax,
-                gp = gpar(lwd = 2)
-            )
-        }
-    )) +
-    scale_fill_brewer(palette = "Dark2") +
-    theme_void()
+text <- grid::textGrob(
+    "ggdraw",
+    x = c(0, 0, 0.5, 1, 1),
+    y = c(0, 1, 0.5, 0, 1),
+    hjust = c(0, 0, 0.5, 1, 1),
+    vjust = c(0, 1, 0.5, 0, 1)
+)
+ggplot(data.frame(x = 1, y = 2)) +
+    geom_draw(text)
+}
+\seealso{
+\url{https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html}
 }

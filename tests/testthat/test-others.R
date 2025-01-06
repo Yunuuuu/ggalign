@@ -91,12 +91,12 @@ test_that("geom_pie works well", {
     )
 })
 
-test_that("geom_draw() workds well", {
+test_that("geom_draw2() workds well", {
     library(grid)
     expect_snapshot_error(ggplot2::ggsave(
         tempfile(fileext = ".png"),
         plot = ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
-            geom_draw(aes(x = 1, y = y, draw = value, fill = value))
+            geom_draw2(aes(x = 1, y = y, draw = value, fill = value))
     ))
     draw_mapping <- list(
         function(x, y, width, height, fill) {
@@ -140,21 +140,21 @@ test_that("geom_draw() workds well", {
         }
     )
     expect_doppelganger(
-        "geom_draw",
+        "geom_draw2",
         ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
-            geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
+            geom_draw2(aes(x = 1, y = y, draw = value, fill = value)) +
             scale_draw_manual(values = draw_mapping) +
             scale_fill_brewer(palette = "Dark2")
     )
     set.seed(1L)
     value <- sample(letters, 5L)
     expect_doppelganger(
-        "geom_draw_order",
+        "geom_draw2_order",
         ggplot(data.frame(
             value = c(value, value[5L]),
             y = c(1, 2, 3, 1, 2, 3)
         )) +
-            geom_draw(aes(x = 1, y = y, draw = value, fill = value)) +
+            geom_draw2(aes(x = 1, y = y, draw = value, fill = value)) +
             scale_draw_manual(values = draw_mapping) +
             scale_fill_brewer(palette = "Dark2")
     )

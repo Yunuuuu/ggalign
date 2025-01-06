@@ -78,6 +78,7 @@ Collate:
     'fortify-matrix.R'
     'fortify-upset.R'
     'geom-draw.R'
+    'geom-draw2.R'
     'geom-pie.R'
     'geom-subrect.R'
     'geom-tile3d.R'
