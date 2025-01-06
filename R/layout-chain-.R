@@ -463,7 +463,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                             object_name(layout), object_name(object)
                         ),
                         i = sprintf(
-                            "{.arg data} in %s return is an empty matrix",
+                            "{.arg data} in %s is an empty matrix",
                             object_name(layout)
                         )
                     ))
