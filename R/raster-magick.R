@@ -107,6 +107,10 @@ raster_magick <- function(x, magick = NULL, ...,
     )
 }
 
+#' @importFrom grid grob
+#' @export
+.raster_magick.gList <- .raster_magick.grob
+
 #' @export
 .raster_magick.ggalignRasterMagick <- function(x, magick = NULL, ...,
                                                res = NULL,
