@@ -25,7 +25,7 @@
 #' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 #' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 #' ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
-#'     raster_magick(geom_tile(aes(fill = value)), dpi = 20)
+#'     raster_magick(geom_tile(aes(fill = value)), res = 20)
 #'
 #' ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
 #'     # Use `magick::filter_types()` to check available `filter` arguments
@@ -46,6 +46,7 @@ raster_magick <- function(x, magick = NULL, ...,
     }
     assert_number_whole(res, min = 1, allow_null = TRUE)
     assert_bool(interpolate)
+    rlang::check_dots_used()
     .raster_magick(
         x = x, ..., magick = magick,
         res = res, interpolate = interpolate
