@@ -1,41 +1,30 @@
-#' @importFrom ggplot2 theme_classic
-default_theme <- function() theme_classic()
-
-#' @importFrom ggplot2 rel element_line element_rect element_text
-theme_add_panel <- function(base_size = 11) {
-    half_line <- base_size / 2
-    theme(
-        panel.border = element_rect(fill = NA, colour = "grey20"),
-        panel.grid = element_line(colour = "grey92"),
-        panel.grid.minor = element_line(linewidth = rel(0.5)),
-        panel.background = element_rect(fill = "white", colour = NA),
-        strip.background = element_rect(
-            fill = "white", colour = "black", linewidth = rel(2)
-        ),
-        strip.clip = "inherit",
-        strip.text = element_text(
-            colour = "grey10", size = rel(0.8),
-            margin = margin(
-                0.8 * half_line, 0.8 * half_line,
-                0.8 * half_line, 0.8 * half_line
-            )
-        ),
-        strip.text.x = NULL,
-        strip.text.y = element_text(angle = -90),
-        strip.text.y.left = element_text(angle = 90)
-    )
+#' @importFrom ggplot2 theme_bw element_blank
+default_theme <- function() {
+    if (is_theme_unset()) {
+        theme_bw() + theme(
+            panel.border = element_blank(),
+            panel.grid = element_blank()
+        )
+    } else {
+        theme_get()
+    }
 }
 
-#' @importFrom ggplot2 element_blank
-theme_no_panel <- function(...) {
+# Check if user has set the theme
+is_theme_unset <- function() {
+    isTRUE(all.equal(
+        .subset2(ggfun("ggplot_global"), "theme_default"),
+        complete_theme(theme_get())
+    ))
+}
+
+is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
+
+#' @importFrom ggplot2 rel element_blank
+theme_no_strip <- function() {
     theme(
-        panel.border = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.line = element_blank(),
         strip.text = element_blank(),
-        strip.background = element_blank(),
-        plot.background = element_blank()
+        strip.background = element_blank()
     )
 }
 
@@ -46,8 +35,6 @@ complete_theme <- function(theme) {
         error = function(cnd) ggfun("plot_theme")(list(theme = theme))
     )
 }
-
-is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {

@@ -237,8 +237,8 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
     if (!is.waive(xlim)) assert_limits(xlim, call = call)
     if (!is.waive(ylim)) assert_limits(ylim, call = call)
     if (is.waive(xlim) || is.waive(ylim)) {
-        # If we need align discrete variables, data cannot be `NULL` and 
-        # must be provided, here, we convert it to waiver() to indicate 
+        # If we need align discrete variables, data cannot be `NULL` and
+        # must be provided, here, we convert it to waiver() to indicate
         # inherit from the parent layout
         data <- data %||% waiver()
         if (!is.waive(data) && !is.function(data)) {
@@ -270,7 +270,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
     # the action data function
     schemes <- default_schemes(
         if (is.null(data)) waiver() else NULL,
-        th = theme_no_panel()
+        th = theme_no_strip()
     )
 
     # check arguments -----------------------------------

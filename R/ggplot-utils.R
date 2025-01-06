@@ -39,6 +39,12 @@ ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
     plot
 }
 
+is_palette_unset <- function(type, aes) {
+    type <- match.arg(type, c("discrete", "continuous", "binned"))
+    aes <- match.arg(aes, c("fill", "colour"))
+    is.null(getOption(sprintf("ggplot2.%s.%s", type, aes)))
+}
+
 ######################################################
 gguse_data <- function(plot, data) {
     # ggplot use waiver() to indicate no data

@@ -46,7 +46,7 @@ ggcross <- function(mapping = aes(), size = NULL,
     cross(
         cross = CrossGg,
         plot = ggplot(mapping = mapping),
-        schemes = default_schemes(th = theme_no_panel()),
+        schemes = default_schemes(th = theme_no_strip()),
         size = size, no_axes = no_axes, active = active
     )
 }

@@ -124,7 +124,7 @@ align_dendro <- function(mapping = aes(), ...,
         ),
         no_axes = no_axes, active = active,
         size = size,
-        schemes = default_schemes(th = theme_no_panel()),
+        schemes = default_schemes(th = theme_no_strip()),
         data = data,
         plot = plot
     )
