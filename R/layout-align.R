@@ -446,7 +446,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                     recycle_each(cur_panel, self$n_cycle)
                 )
                 if (is_discrete_design(y_design) && scale_y$is_discrete() &&
-                    !is.null(scale_x$range$range)) {
+                    !is.null(scale_y$range$range)) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
                     ylim <- ylim - (min(ylim) - 0.5)
