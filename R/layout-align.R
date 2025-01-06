@@ -378,16 +378,18 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
         NULL, ParentCoord,
         num_of_panels = NULL,
         panel_counter = NULL,
-        n_cycle = NULL, # should be the number of panels in x
+        n_row_panels = NULL, # should be the number of panels in y
+        n_column_panels = NULL, # should be the number of panels in x
         setup_layout = function(self, layout, params) {
             # we always initialize the number of panels and a panel counter
             self$num_of_panels <- vec_unique_count(.subset2(layout, "PANEL"))
             self$panel_counter <- 0L
-            self$n_cycle <- vec_unique_count(.subset2(layout, "COL"))
+            self$n_column_panels <- vec_unique_count(.subset2(layout, "COL"))
+            self$n_row_panels <- vec_unique_count(.subset2(layout, "ROW"))
             if (.subset2(object, "xlim") && !is.null(x_design)) {
                 if (is_discrete_design(x_design)) {
                     self$xlim_list <- setup_discrete_limits(
-                        "x", x_design, self$n_cycle
+                        "x", x_design, self$n_column_panels
                     )
                 } else {
                     self$xlim_list <- x_design
@@ -396,8 +398,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             if (.subset2(object, "ylim") && !is.null(y_design)) {
                 if (is_discrete_design(y_design)) {
                     self$ylim_list <- setup_discrete_limits(
-                        "y", y_design,
-                        vec_unique_count(.subset2(layout, "ROW"))
+                        "y", y_design, self$n_row_panels
                     )
                 } else {
                     self$ylim_list <- y_design
@@ -412,13 +413,15 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             if (is_discrete_design(x_design)) {
                 align_discrete_scales(
                     "x", scales_x, x_design,
-                    .subset2(object, "xlabels")
+                    labels = .subset2(object, "xlabels"),
+                    n_panels = self$n_column_panels
                 )
             }
             if (is_discrete_design(y_design)) {
                 align_discrete_scales(
                     "y", scales_y, y_design,
-                    .subset2(object, "ylabels")
+                    labels = .subset2(object, "ylabels"),
+                    n_panels = self$n_row_panels
                 )
             }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
@@ -430,7 +433,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             if (!is.null(self$xlim_list)) {
                 xlim <- .subset2(
                     self$xlim_list,
-                    recycle_whole(cur_panel, self$n_cycle)
+                    recycle_whole(cur_panel, self$n_column_panels)
                 )
                 if (is_discrete_design(x_design) && scale_x$is_discrete() &&
                     !is.null(scale_x$range$range)) {
@@ -443,7 +446,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
             if (!is.null(self$ylim_list)) {
                 ylim <- .subset2(
                     self$ylim_list,
-                    recycle_each(cur_panel, self$n_cycle)
+                    recycle_each(cur_panel, self$n_column_panels)
                 )
                 if (is_discrete_design(y_design) && scale_y$is_discrete() &&
                     !is.null(scale_y$range$range)) {
@@ -462,13 +465,17 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
     plot
 }
 
-align_discrete_scales <- function(axis, scales, design, labels = NULL) {
+align_discrete_scales <- function(axis, scales, design, labels, n_panels) {
     panel <- .subset2(design, "panel")
     index <- .subset2(design, "index")
 
-    # For y-axis, ggplot arrange panel from top to bottom,
-    # we always choose to reverse the panel order
-    if (axis == "y") panel <- fct_rev(panel)
+    if (n_panels == 1L) {
+        panel <- factor(vec_rep(1L, length(index)))
+    } else {
+        # For y-axis, ggplot arrange panel from top to bottom,
+        # we always choose to reverse the panel order
+        if (axis == "y") panel <- fct_rev(panel)
+    }
     if (is.null(labels)) {
         data_labels <- NULL
     } else {
