@@ -26,10 +26,14 @@ A \code{circle_switch} object which can be added to \code{\link[=circle_layout]{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
-circle_discrete(matrix(rnorm(56), nrow = 7L)) +
+set.seed(123)
+small_mat <- matrix(rnorm(56), nrow = 7)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+circle_discrete(small_mat) +
     ggalign() +
     geom_tile(aes(y = .column_index, fill = value)) +
     scale_fill_viridis_c() +
-    align_dendro(aes(color = branch), k = 3) +
-    circle_switch(coord_radial(inner.radius = 0.5, expand = FALSE))
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2")
 }

@@ -33,13 +33,13 @@ in a circular layout.
 }
 \examples{
 set.seed(123)
-circle_discrete(matrix(rnorm(56), nrow = 7L),
-    radial = coord_radial(inner.radius = 0.1)
-) +
+small_mat <- matrix(rnorm(56), nrow = 7)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+circle_discrete(small_mat) +
     ggalign() +
     geom_tile(aes(y = .column_index, fill = value)) +
     scale_fill_viridis_c() +
     align_dendro(aes(color = branch), k = 3L) +
     scale_color_brewer(palette = "Dark2")
-
 }

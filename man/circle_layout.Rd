@@ -34,15 +34,17 @@ This function integrates the functionalities of \code{circle_discrete()} and
 }
 \examples{
 set.seed(123)
-small_mat <- matrix(rnorm(56), nrow = 7L)
 
 # circle_discrete
-circle_layout(matrix(rnorm(56), nrow = 7L)) +
+small_mat <- matrix(rnorm(56), nrow = 7)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+circle_discrete(small_mat) +
     ggalign() +
     geom_tile(aes(y = .column_index, fill = value)) +
     scale_fill_viridis_c() +
-    align_dendro(aes(color = branch), k = 3) +
-    circle_switch(coord_radial(inner.radius = 0.5))
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2")
 
 # circle_continuous
 circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
