@@ -106,6 +106,7 @@ fortify_data_frame(hclust(dist(USArrests), "ave"))
 Other fortify_data_frame methods: 
 \code{\link{fortify_data_frame.character}()},
 \code{\link{fortify_data_frame.default}()},
-\code{\link{fortify_data_frame.matrix}()}
+\code{\link{fortify_data_frame.matrix}()},
+\code{\link{fortify_data_frame.phylo}()}
 }
 \concept{fortify_data_frame methods}

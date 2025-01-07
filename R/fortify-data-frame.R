@@ -13,6 +13,7 @@
 #' - [`fortify_data_frame.character()`]/[`fortify_data_frame.numeric()`]
 #' - [`fortify_data_frame.matrix()`]
 #' - [`fortify_data_frame.dendrogram()`]
+#' - [`fortify_data_frame.phylo()`]
 #' @export
 fortify_data_frame <- function(data, ...) {
     UseMethod("fortify_data_frame")

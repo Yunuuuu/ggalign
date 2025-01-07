@@ -56,3 +56,11 @@ for edge.
 }
 }
 
+\seealso{
+Other fortify_data_frame methods: 
+\code{\link{fortify_data_frame.character}()},
+\code{\link{fortify_data_frame.default}()},
+\code{\link{fortify_data_frame.dendrogram}()},
+\code{\link{fortify_data_frame.matrix}()}
+}
+\concept{fortify_data_frame methods}

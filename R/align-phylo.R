@@ -193,6 +193,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 #'  - `x` and `y`: x-axis and y-axis coordinates for the start node of the edge.
 #'  - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
 #'                       for edge.
+#' @family fortify_data_frame methods
 #' @export
 fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                                      center = FALSE,

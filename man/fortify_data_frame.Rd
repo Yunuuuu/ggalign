@@ -25,5 +25,6 @@ This function converts various objects to a data frame.
 \item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}/\code{\link[=fortify_data_frame.numeric]{fortify_data_frame.numeric()}}
 \item \code{\link[=fortify_data_frame.matrix]{fortify_data_frame.matrix()}}
 \item \code{\link[=fortify_data_frame.dendrogram]{fortify_data_frame.dendrogram()}}
+\item \code{\link[=fortify_data_frame.phylo]{fortify_data_frame.phylo()}}
 }
 }
