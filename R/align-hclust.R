@@ -252,7 +252,7 @@ AlignHclust <- ggproto("AlignHclust", Align,
             # merge children tree ------------------------------
             if (nlevels(panel) == 1L) {
                 statistics <- .subset2(statistics, 1L)
-            } else if (self$merge_dendro) {
+            } else if (isTRUE(self$merge_dendro)) {
                 # we have a function named merge_dendrogram(), so we use
                 # `merge_dendro` as the argument name
                 # `merge_dendrogram` will follow the order of the parent
