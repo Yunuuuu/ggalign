@@ -169,8 +169,8 @@ tree.</p></dd>
 
 <dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
 <dd><p>A boolean value. if <code>TRUE</code>, nodes are plotted centered with
-respect to the leaves in the branch. Otherwise (default), plot them in the
-middle of all direct child nodes.</p></dd>
+respect to all leaves/tips in the branch. Otherwise (default), plot them in
+the middle of the direct child nodes.</p></dd>
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
@@ -212,28 +212,8 @@ added to a layout.</p></dd>
 in <code><a href="ggalign_attr.html">ggalign</a></code> attribute, in addition, a
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></code> layer with a data frame of the <code>edge</code>
 coordinates will be added when <code>plot_dendrogram = TRUE</code>.</p>
-<p>dendrogram <code>node</code> and <code>edge</code> contains following columns:</p><ul><li><p><code>.panel</code>: Tree branch groups, used to create ggplot2 facet. Similar with
-<code>panel</code> column, but always give the correct branch for usage of
-the ggplot facet.</p></li>
-<li><p><code>.names</code> and <code>.index</code>: a character names (only applicable when names
-exists) and an integer index of the original data.</p></li>
-<li><p><code>label</code>: node label text</p></li>
-<li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for current node or the start
-node of the current edge.</p></li>
-<li><p><code>xend</code> and <code>yend</code>: the x-axis and y-axis coordinates of the terminal node
-for current edge.</p></li>
-<li><p><code>branch</code>: which branch current node or edge is. You can use this column
-to color different groups.</p></li>
-<li><p><code>leaf</code>: A logical value indicates whether current node is a leaf.</p></li>
-<li><p><code>panel</code>: which panel current node is, if we split the plot into panel
-using <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></code>, this column will show
-which panel current node or edge is from. Note: some nodes may
-fall outside panel (between two panel), so there are possible
-<code>NA</code> values in this column.</p></li>
-<li><p><code>panel1</code> and <code>panel2</code>: The panel1 and panel2 variables have the same
-functionality as <code>panel</code>, but they are specifically for the <code>edge</code> data
-and correspond to both nodes of each edge.</p></li>
-</ul></div>
+<p>See <code><a href="fortify_data_frame.dendrogram.html">fortify_data_frame.dendrogram()</a></code> for details.</p>
+    </div>
     <div class="section level2">
     <h2 id="discrete-axis-alignment">Discrete Axis Alignment<a class="anchor" aria-label="anchor" href="#discrete-axis-alignment"></a></h2>
 

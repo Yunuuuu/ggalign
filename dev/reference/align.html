@@ -59,15 +59,13 @@ split observations and, in some cases, add plot components to the <code>Layout</
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align</span><span class="op">(</span></span>
 <span>  <span class="va">align</span>,</span>
-<span>  <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  schemes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  no_axes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  active <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  check.param <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  call <span class="op">=</span> <span class="fu">caller_call</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -92,10 +90,6 @@ data, please use <code><a href="scheme_data.html">scheme_data()</a></code>.</p><
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional fields passed to the <code>align</code> object.</p></dd>
-
-
-<dt id="arg-params">params<a class="anchor" aria-label="anchor" href="#arg-params"></a></dt>
-<dd><p>A list of parameters for <code>align</code>.</p></dd>
 
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
@@ -125,11 +119,6 @@ default, will use the option-
 <dt id="arg-active">active<a class="anchor" aria-label="anchor" href="#arg-active"></a></dt>
 <dd><p>A <code><a href="active.html">active()</a></code> object that defines the context settings when
 added to a layout.</p></dd>
-
-
-<dt id="arg-check-param">check.param<a class="anchor" aria-label="anchor" href="#arg-check-param"></a></dt>
-<dd><p>Logical; if <code>TRUE</code>, checks parameters and provides
-warnings as necessary.</p></dd>
 
 
 <dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
