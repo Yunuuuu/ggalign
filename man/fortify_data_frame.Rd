@@ -22,8 +22,8 @@ This function converts various objects to a data frame.
 \seealso{
 \itemize{
 \item \code{\link[=fortify_data_frame.default]{fortify_data_frame.default()}}
-\item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}
-\item \code{\link[=fortify_data_frame.numeric]{fortify_data_frame.numeric()}}
+\item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}/\code{\link[=fortify_data_frame.numeric]{fortify_data_frame.numeric()}}
 \item \code{\link[=fortify_data_frame.matrix]{fortify_data_frame.matrix()}}
+\item \code{\link[=fortify_data_frame.dendrogram]{fortify_data_frame.dendrogram()}}
 }
 }

@@ -13,19 +13,11 @@
 \method{fortify_data_frame}{Matrix}(data, ...)
 }
 \arguments{
-\item{data}{An object to be converted to a data frame.}
+\item{data}{A matrix-like object.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
-A data frame.
-}
-\description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
-This function converts various objects to a data frame.
-}
-\details{
 Matrix will be transformed into a long-form data frame, where each row
 represents a unique combination of matrix indices and their corresponding
 values. The resulting data frame will contain the following columns:
@@ -37,12 +29,15 @@ when names exist) and column index of the original matrix.
 \item \code{value}: the actual value.
 }
 }
+\description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function converts various objects to a data frame.
+}
 \seealso{
 Other fortify_data_frame methods: 
 \code{\link{fortify_data_frame.character}()},
-\code{\link{fortify_data_frame.complex}()},
 \code{\link{fortify_data_frame.default}()},
-\code{\link{fortify_data_frame.logical}()},
-\code{\link{fortify_data_frame.numeric}()}
+\code{\link{fortify_data_frame.dendrogram}()}
 }
 \concept{fortify_data_frame methods}

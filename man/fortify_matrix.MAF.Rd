@@ -15,9 +15,9 @@
 )
 }
 \arguments{
-\item{data}{An object to be converted to a matrix.}
+\item{data}{A \code{\link[maftools:read.maf]{MAF}} object.}
 
-\item{...}{Not used currently.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{genes}{An atomic character defines the genes to draw.}
 

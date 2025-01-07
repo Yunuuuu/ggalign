@@ -6,7 +6,7 @@
 #' This function converts various objects into a matrix format.
 #'
 #' @param data An object to be converted to a matrix.
-#' @inheritParams rlang::args_dots_used
+#' @param ... Arguments passed to methods.
 #' @return A matrix.
 #' @seealso
 #' - [`fortify_matrix.default()`]
@@ -14,17 +14,19 @@
 #' - [`fortify_matrix.GISTIC()`]
 #' @export
 fortify_matrix <- function(data, ...) {
-    rlang::check_dots_used()
     UseMethod("fortify_matrix")
 }
 
-#' @inherit fortify_matrix
-#' @description
+#' @inherit fortify_matrix title description return
+#' @inheritParams rlang::args_dots_empty
+#' @inheritParams fortify_matrix
+#' @details
 #' By default, it calls [`as.matrix()`] to build a matrix.
 #' @family fortify_matrix methods
 #' @importFrom rlang try_fetch
 #' @export
 fortify_matrix.default <- function(data, ...) {
+    rlang::check_dots_empty()
     try_fetch(
         as.matrix(data),
         error = function(cnd) {
@@ -38,23 +40,29 @@ fortify_matrix.default <- function(data, ...) {
 }
 
 #' @export
-fortify_matrix.matrix <- function(data, ...) data
+fortify_matrix.matrix <- function(data, ...) {
+    rlang::check_dots_empty()
+    data
+}
 
 #' @export
-fortify_matrix.waiver <- function(data, ...) data
+fortify_matrix.waiver <- fortify_matrix.matrix
 
 #' @export
-fortify_matrix.NULL <- function(data, ...) NULL
+fortify_matrix.NULL <- fortify_matrix.matrix
 
 #' @export
-fortify_matrix.function <- function(data, ...) data
+fortify_matrix.function <- fortify_matrix.matrix
 
 #' @export
-fortify_matrix.formula <- function(data, ...) rlang::as_function(data)
+fortify_matrix.formula <- function(data, ...) {
+    rlang::check_dots_empty()
+    rlang::as_function(data)
+}
 
-#' @inherit fortify_matrix
-#' @inheritParams fortify_matrix.default
-#' @param ... Not used currently.
+#' @inherit fortify_matrix title description return
+#' @param data A [`MAF`][maftools::read.maf] object.
+#' @inheritParams rlang::args_dots_empty
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
 #' @param remove_empty_samples A single boolean value indicating whether to drop
@@ -84,6 +92,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
                                collapse_vars = TRUE,
                                use_syn = TRUE) {
+    rlang::check_dots_empty()
     rlang::check_installed(
         "maftools", "to make alterations matrix from `MAF` object"
     )
@@ -240,9 +249,9 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ))
 }
 
-#' @inherit fortify_matrix
-#' @inheritParams fortify_matrix.default
-#' @param ... Not used currently.
+#' @inherit fortify_matrix title description return
+#' @inheritParams rlang::args_dots_empty
+#' @param data A [`GISTIC`][maftools::readGistic] object.
 #' @param n_top A single number indicates how many top bands to be drawn.
 #' @param bands An atomic character defines the bands to draw.
 #' @param ignored_bands An atomic character defines the bands to be ignored.
@@ -264,6 +273,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                                   ignored_bands = NULL, sample_anno = NULL,
                                   remove_empty_samples = TRUE) {
+    rlang::check_dots_empty()
     rlang::check_installed(
         "maftools",
         "to make CNV matrix from `GISTIC` object"

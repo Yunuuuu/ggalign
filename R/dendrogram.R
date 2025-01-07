@@ -109,10 +109,10 @@ make_dist <- function(matrix, distance, use_missing,
     d
 }
 
-#' Dengrogram x and y coordinates
+#' @inherit fortify_data_frame.default title description
 #'
-#' @param tree A [hclust][stats::hclust] or a [dendrogram][stats::as.dendrogram]
-#' object.
+#' @param data A [`hclust`][stats::hclust] or a
+#' [`dendrogram`][stats::as.dendrogram] object.
 #' @param priority A string of "left" or "right". if we draw from right to left,
 #' the left will override the right, so we take the `"left"` as the priority. If
 #' we draw from `left` to `right`, the right will override the left, so we take
@@ -135,50 +135,55 @@ make_dist <- function(matrix, distance, use_missing,
 #' should be doubled when segments span multiple branches. If `TRUE`, the
 #' horizontal lines will be repeated for each branch that the segment spans. If
 #' `FALSE`, only one horizontal line will be drawn.
-#' @return A list of 2 data.frame. One for node coordinates, another for edge
-#' coordinates.
-#' `node` and tree segments `edge` coordinates contains following columns:
-#'   - `index`: the original index in the tree for the current node
+#' @return A `data frame` with the node coordinates:
+#'   - `.panel`: Similar with `panel` column, but always give the correct
+#'              branch for usage of the ggplot facet.
+#'   - `.index`: the original index in the tree for the the node
 #'   - `label`: node label text
-#'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
-#'                  node of the current edge.
-#'   - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
-#'                        for current edge.
-#'   - `branch`: which branch current node or edge is. You can use this column
-#'               to color different groups.
-#'   - `panel`: which panel current node is, if we split the plot into panel
+#'   - `x` and `y`: x-axis and y-axis coordinates for the node
+#'   - `branch`: which branch the node is. You can use this column to color
+#'               different groups.
+#'   - `panel`: which panel the node is, if we split the plot into panel
 #'              using [facet_grid][ggplot2::facet_grid], this column will show
-#'              which panel current node or edge is from. Note: some nodes may
+#'              which panel the node is from. Note: some nodes may
 #'              fall outside panel (between two panels), so there are possible
 #'              `NA` values in this column.
-#'   - `ggpanel`: Similar with `panel` column, but always give the correct
+#'   - `leaf`: A logical value indicates whether the node is a leaf.
+#' @section ggalign attributes:
+#'  `edge`: A `data frame` for edge coordinates:
+#'  - `.panel`: Similar with `panel` column, but always give the correct
 #'              branch for usage of the ggplot facet.
-#'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
+#'  - `x` and `y`: x-axis and y-axis coordinates for the start node of the edge.
+#'  - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
+#'                       for edge.
+#'  - `branch`: which branch the edge is. You can use this column to color
+#'              different groups.
+#'  - `panel1` and `panel2`: The panel1 and panel2 columns have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
 #'     and correspond to both nodes of each edge.
-#'   - `leaf`: A logical value indicates whether current node is a leaf.
 #' @examples
-#' dendrogram_data(hclust(dist(USArrests), "ave"))
+#' fortify_data_frame(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
 #' @importFrom stats order.dendrogram
 #' @importFrom rlang arg_match0
+#' @family fortify_data_frame methods
 #' @export
-dendrogram_data <- function(tree,
-                            priority = "right",
-                            center = FALSE,
-                            type = "rectangle",
-                            leaf_pos = NULL,
-                            leaf_braches = NULL,
-                            reorder_branches = TRUE,
-                            branch_gap = NULL,
-                            root = NULL,
-                            double = TRUE) {
-    dend <- check_dendrogram(tree)
+fortify_data_frame.dendrogram <- function(data, ...,
+                                          priority = "right",
+                                          center = FALSE,
+                                          type = "rectangle",
+                                          leaf_pos = NULL,
+                                          leaf_braches = NULL,
+                                          reorder_branches = TRUE,
+                                          branch_gap = NULL,
+                                          root = NULL,
+                                          double = TRUE) {
+    rlang::check_dots_empty()
     assert_bool(center)
     assert_bool(reorder_branches)
     type <- arg_match0(type, c("rectangle", "triangle"))
     priority <- arg_match0(priority, c("left", "right"))
-    N <- stats::nobs(dend)
+    N <- stats::nobs(data)
     rectangle <- type == "rectangle"
     if (is.null(leaf_pos)) {
         leaf_pos <- seq_len(N)
@@ -209,7 +214,7 @@ dendrogram_data <- function(tree,
     }
 
     if (!is.null(leaf_braches) && reorder_branches) {
-        leaf_braches <- .subset(leaf_braches, order.dendrogram(dend))
+        leaf_braches <- .subset(leaf_braches, order.dendrogram(data))
     }
 
     # check `branch_gap`
@@ -239,7 +244,7 @@ dendrogram_data <- function(tree,
     branch_levels <- NULL
     last_branch <- root
     total_gap <- 0
-    .dendrogram_data <- function(dend, from_root = TRUE) {
+    dendrogram_data <- function(dend, from_root = TRUE) {
         if (stats::is.leaf(dend)) { # base version
             index <- as.integer(dend) # the column index of the original data
             y <- attr(dend, "height") %||% 0
@@ -282,7 +287,7 @@ dendrogram_data <- function(tree,
 
             # for the children nodes ---------------------------------
             data <- list_transpose(
-                lapply(dend, .dendrogram_data, from_root = FALSE)
+                lapply(dend, dendrogram_data, from_root = FALSE)
             )
 
             # node should be the direct children
@@ -444,7 +449,7 @@ dendrogram_data <- function(tree,
             cli_abort("{.arg dend} must be a {.cls dendrogram} object")
         }
     }
-    ans <- .dendrogram_data(dend)
+    ans <- dendrogram_data(data)
     node <- .subset2(ans, "node")
     edge <- .subset2(ans, "edge")
 
@@ -460,7 +465,16 @@ dendrogram_data <- function(tree,
         edge$branch <- factor(.subset2(edge, "branch"), branch_levels)
         edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_levels)
     }
-    list(node = node, edge = edge)
+    node <- rename(node, c(ggpanel = ".panel", index = ".index"))
+    edge <- rename(edge, c(ggpanel = ".panel"))
+    ggalign_attr_set(node, list(edge = edge))
+}
+
+#' @param ... Additional arguments passed to `dendrogram` method.
+#' @export
+#' @rdname fortify_data_frame.dendrogram
+fortify_data_frame.hclust <- function(data, ...) {
+    fortify_data_frame.dendrogram(stats::as.dendrogram(data), ...)
 }
 
 #' @param ggpanels Won't be `NA`
@@ -582,20 +596,5 @@ tree_branch_heights <- function(dend) {
             attr(dend, "height"),
             unlist(lapply(dend, tree_branch_heights), FALSE, FALSE)
         )
-    }
-}
-
-#' @importFrom rlang caller_arg caller_env
-check_dendrogram <- function(tree, arg = caller_arg(tree),
-                             call = caller_call()) {
-    if (inherits(tree, "hclust")) {
-        stats::as.dendrogram(tree)
-    } else if (inherits(tree, "dendrogram")) {
-        tree
-    } else {
-        cli_abort(paste(
-            "{.arg {arg}} must be a {.cls hclust}",
-            "or a {.cls dendrogram} object."
-        ), call = call)
     }
 }

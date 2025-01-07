@@ -15,9 +15,9 @@
 )
 }
 \arguments{
-\item{data}{An object to be converted to a matrix.}
+\item{data}{A \code{\link[maftools:readGistic]{GISTIC}} object.}
 
-\item{...}{Not used currently.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{n_top}{A single number indicates how many top bands to be drawn.}
 

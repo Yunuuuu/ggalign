@@ -125,30 +125,7 @@ in \code{\link[=ggalign_attr]{ggalign}} attribute, in addition, a
 \code{\link[ggplot2:geom_segment]{geom_segment}} layer with a data frame of the \code{edge}
 coordinates will be added when \code{plot_dendrogram = TRUE}.
 
-dendrogram \code{node} and \code{edge} contains following columns:
-\itemize{
-\item \code{.panel}: Tree branch groups, used to create ggplot2 facet. Similar with
-\code{panel} column, but always give the correct branch for usage of
-the ggplot facet.
-\item \code{.names} and \code{.index}: a character names (only applicable when names
-exists) and an integer index of the original data.
-\item \code{label}: node label text
-\item \code{x} and \code{y}: x-axis and y-axis coordinates for current node or the start
-node of the current edge.
-\item \code{xend} and \code{yend}: the x-axis and y-axis coordinates of the terminal node
-for current edge.
-\item \code{branch}: which branch current node or edge is. You can use this column
-to color different groups.
-\item \code{leaf}: A logical value indicates whether current node is a leaf.
-\item \code{panel}: which panel current node is, if we split the plot into panel
-using \code{\link[ggplot2:facet_grid]{facet_grid}}, this column will show
-which panel current node or edge is from. Note: some nodes may
-fall outside panel (between two panel), so there are possible
-\code{NA} values in this column.
-\item \code{panel1} and \code{panel2}: The panel1 and panel2 variables have the same
-functionality as \code{panel}, but they are specifically for the \code{edge} data
-and correspond to both nodes of each edge.
-}
+See \code{\link[=fortify_data_frame.dendrogram]{fortify_data_frame.dendrogram()}} for details.
 }
 
 \section{Discrete Axis Alignment}{

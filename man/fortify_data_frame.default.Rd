@@ -9,7 +9,7 @@
 \arguments{
 \item{data}{An object to be converted to a data frame.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{Additional arguments passed to \code{\link[ggplot2:fortify]{fortify()}}.}
 }
 \value{
 A data frame.
@@ -26,9 +26,7 @@ data frame.
 \seealso{
 Other fortify_data_frame methods: 
 \code{\link{fortify_data_frame.character}()},
-\code{\link{fortify_data_frame.complex}()},
-\code{\link{fortify_data_frame.logical}()},
-\code{\link{fortify_data_frame.matrix}()},
-\code{\link{fortify_data_frame.numeric}()}
+\code{\link{fortify_data_frame.dendrogram}()},
+\code{\link{fortify_data_frame.matrix}()}
 }
 \concept{fortify_data_frame methods}

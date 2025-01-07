@@ -14,9 +14,10 @@
 )
 }
 \arguments{
-\item{data}{An object to be converted to a data frame.}
+\item{data}{A \code{\link[stats:hclust]{hclust}} or a
+\code{\link[stats:dendrogram]{dendrogram}} object.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
@@ -32,14 +33,6 @@ Usually, you don't need to modify this.}
 of the number of tips in \code{tree}.}
 }
 \value{
-A data frame.
-}
-\description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
-This function converts various objects to a data frame.
-}
-\details{
 A \verb{data frame} with the node coordinates:
 \itemize{
 \item \code{.index}: the original index in the tree for the the tip/node.
@@ -47,6 +40,11 @@ A \verb{data frame} with the node coordinates:
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for the tip/node.
 \item \code{tip}: A logical value indicates whether current node is a tip.
 }
+}
+\description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function converts various objects to a data frame.
 }
 \section{ggalign attributes}{
 
@@ -58,11 +56,3 @@ for edge.
 }
 }
 
-\seealso{
-Other fortify_data_frame methods: 
-\code{\link{fortify_data_frame.character}()},
-\code{\link{fortify_data_frame.complex}()},
-\code{\link{fortify_data_frame.logical}()},
-\code{\link{fortify_data_frame.matrix}()},
-\code{\link{fortify_data_frame.numeric}()}
-}

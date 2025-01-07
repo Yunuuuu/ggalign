@@ -2,37 +2,40 @@
 % Please edit documentation in R/fortify-data-frame.R
 \name{fortify_data_frame.character}
 \alias{fortify_data_frame.character}
+\alias{fortify_data_frame.numeric}
+\alias{fortify_data_frame.logical}
+\alias{fortify_data_frame.complex}
 \title{Build a data frame}
 \usage{
 \method{fortify_data_frame}{character}(data, ...)
+
+\method{fortify_data_frame}{numeric}(data, ...)
+
+\method{fortify_data_frame}{logical}(data, ...)
+
+\method{fortify_data_frame}{complex}(data, ...)
 }
 \arguments{
 \item{data}{An object to be converted to a data frame.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
-A data frame.
+A data frame with following columns:
+\itemize{
+\item \code{.names}: the names for the vector (only applicable if names exist).
+\item \code{value}: the actual value of the vector.
+}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 This function converts various objects to a data frame.
 }
-\details{
-When \code{data} is an atomic vector, it'll be converted to a data frame with
-following columns:
-\itemize{
-\item \code{.names}: the names for the vector (only applicable if names exist).
-\item \code{value}: the actual value of the vector.
-}
-}
 \seealso{
 Other fortify_data_frame methods: 
-\code{\link{fortify_data_frame.complex}()},
 \code{\link{fortify_data_frame.default}()},
-\code{\link{fortify_data_frame.logical}()},
-\code{\link{fortify_data_frame.matrix}()},
-\code{\link{fortify_data_frame.numeric}()}
+\code{\link{fortify_data_frame.dendrogram}()},
+\code{\link{fortify_data_frame.matrix}()}
 }
 \concept{fortify_data_frame methods}

@@ -28,9 +28,7 @@
 #' (the height at which to cut the tree). By default,
 #' [`cutree()`][stats::cutree()] is used.
 #' @inheritSection align Discrete Axis Alignment
-#' @seealso
-#' - [`dendrogram_data()`]
-#' - [`hclust2()`]
+#' @seealso [`hclust2()`]
 #' @examples
 #' # align_hclust won't add a dendrogram
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +

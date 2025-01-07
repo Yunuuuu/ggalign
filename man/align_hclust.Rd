@@ -89,8 +89,5 @@ ggheatmap(matrix(rnorm(81), nrow = 9)) +
     align_hclust(k = 3L)
 }
 \seealso{
-\itemize{
-\item \code{\link[=dendrogram_data]{dendrogram_data()}}
-\item \code{\link[=hclust2]{hclust2()}}
-}
+\code{\link[=hclust2]{hclust2()}}
 }

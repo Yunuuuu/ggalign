@@ -16,35 +16,12 @@
 #' [`geom_segment`][ggplot2::geom_segment] layer with a data frame of the `edge`
 #' coordinates will be added when `plot_dendrogram = TRUE`.
 #'
-#' dendrogram `node` and `edge` contains following columns:
-#'
-#'   - `.panel`: Tree branch groups, used to create ggplot2 facet. Similar with
-#'              `panel` column, but always give the correct branch for usage of
-#'              the ggplot facet.
-#'  - `.names` and `.index`: a character names (only applicable when names
-#'    exists) and an integer index of the original data.
-#'   - `label`: node label text
-#'   - `x` and `y`: x-axis and y-axis coordinates for current node or the start
-#'                  node of the current edge.
-#'   - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
-#'                        for current edge.
-#'   - `branch`: which branch current node or edge is. You can use this column
-#'               to color different groups.
-#'   - `leaf`: A logical value indicates whether current node is a leaf.
-#'   - `panel`: which panel current node is, if we split the plot into panel
-#'              using [`facet_grid`][ggplot2::facet_grid], this column will show
-#'              which panel current node or edge is from. Note: some nodes may
-#'              fall outside panel (between two panel), so there are possible
-#'              `NA` values in this column.
-#'   - `panel1` and `panel2`: The panel1 and panel2 variables have the same
-#'     functionality as `panel`, but they are specifically for the `edge` data
-#'     and correspond to both nodes of each edge.
-#'
+#' See [`fortify_data_frame.dendrogram()`] for details.
 #' @param merge_dendrogram A single boolean value, indicates whether we should
 #' merge multiple dendrograms, only used when previous groups have been
 #' established. Default: `FALSE`.
 #' @inheritParams align_hclust
-#' @inheritParams dendrogram_data
+#' @inheritParams fortify_data_frame.dendrogram
 #' @inheritParams ggalign
 #' @inheritSection align Discrete Axis Alignment
 #' @examples
@@ -173,7 +150,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 tree <- .subset2(statistics, i)
                 n <- stats::nobs(tree)
                 end <- start + n
-                data[[i]] <- dendrogram_data(
+                data[[i]] <- fortify_data_frame(
                     tree,
                     priority = priority,
                     center = center,
@@ -186,11 +163,19 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 )
                 start <- end
             }
-            data <- lapply(list_transpose(data), function(dat) {
-                ans <- vec_rbind(!!!dat, .names_to = "parent")
-                ans$ggpanel <- factor(.subset2(ans, "ggpanel"), branches)
-                ans
-            })
+            data <- lapply(
+                list(
+                    node = data,
+                    edge = lapply(data, ggalign_attr, "edge")
+                ),
+                function(dat) {
+                    ans <- vec_rbind(!!!dat, .names_to = "parent")
+                    ans$.panel <- factor(.subset2(ans, ".panel"), branches)
+                    ans
+                }
+            )
+            edge <- .subset2(data, "edge")
+            node <- .subset2(data, "node")
         } else {
             if (nlevels(panel) > 1L && type == "triangle" && self$in_linear) {
                 cli_warn(c(paste(
@@ -199,7 +184,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 ), i = "will use {.filed rectangle} dendrogram instead"))
                 type <- "rectangle"
             }
-            data <- dendrogram_data(
+            data <- fortify_data_frame(
                 statistics,
                 priority = priority,
                 center = center,
@@ -210,11 +195,9 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 root = root,
                 double = self$in_linear
             )
+            edge <- ggalign_attr(data, "edge")
+            node <- data
         }
-        node <- .subset2(data, "node")
-        edge <- .subset2(data, "edge")
-        node <- rename(node, c(ggpanel = ".panel", index = ".index"))
-        edge <- rename(edge, c(ggpanel = ".panel"))
 
         # add names
         if (!is.null(self$labels)) {

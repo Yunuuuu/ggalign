@@ -182,15 +182,15 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
     summary_align = function(self) c(TRUE, FALSE)
 )
 
-#' @inherit fortify_data_frame.default
-#' @inheritParams dendrogram_data
+#' @inherit fortify_data_frame.default title description
+#' @inheritParams rlang::args_dots_empty
+#' @inheritParams fortify_data_frame.dendrogram
 #' @param tree_type A single string, one of
 #' `r oxford_or(c("phylogram", "cladogram"))`, indicating the type of tree.
 #' Usually, you don't need to modify this.
 #' @param tip_pos The x-coordinates of the tip. Must be the same length
 #' of the number of tips in `tree`.
-#' @details
-#' A `data frame` with the node coordinates:
+#' @return A `data frame` with the node coordinates:
 #'   - `.index`: the original index in the tree for the the tip/node.
 #'   - `label`: the tip/node label text.
 #'   - `x` and `y`: x-axis and y-axis coordinates for the tip/node.
@@ -205,6 +205,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                                      center = FALSE,
                                      tree_type = NULL, tip_pos = NULL) {
+    rlang::check_dots_empty()
     type <- arg_match0(type, c("rectangle", "triangle"))
     rectangle <- type == "rectangle"
     edge <- data$edge
