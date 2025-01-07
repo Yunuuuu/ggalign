@@ -42,7 +42,7 @@ This function converts various objects to a data frame.
 \details{
 A \verb{data frame} with the node coordinates:
 \itemize{
-\item \code{index}: the original index in the tree for the the tip/node.
+\item \code{.index}: the original index in the tree for the the tip/node.
 \item \code{label}: the tip/node label text.
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for the tip/node.
 \item \code{tip}: A logical value indicates whether current node is a tip.

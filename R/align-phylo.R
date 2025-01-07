@@ -191,7 +191,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 #' of the number of tips in `tree`.
 #' @details
 #' A `data frame` with the node coordinates:
-#'   - `index`: the original index in the tree for the the tip/node.
+#'   - `.index`: the original index in the tree for the the tip/node.
 #'   - `label`: the tip/node label text.
 #'   - `x` and `y`: x-axis and y-axis coordinates for the tip/node.
 #'   - `tip`: A logical value indicates whether current node is a tip.
