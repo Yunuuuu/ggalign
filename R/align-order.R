@@ -94,7 +94,6 @@ AlignOrder <- ggproto("AlignOrder", Align,
         layout
     },
     compute = function(self, panel, index) {
-        assert_reorder(self, panel, self$strict)
         if (is.function(self$weights)) {
             ans <- inject(self$weights(self$data, !!!self$params))
             if (!is_atomic(ans)) {
@@ -107,10 +106,8 @@ AlignOrder <- ggproto("AlignOrder", Align,
                 self, vec_size(ans), vec_size(ans),
                 arg = "weights"
             )
-        } else {
-            ans <- NULL
+            ans
         }
-        ans
     },
     align = function(self, panel, index) {
         if (is.function(self$weights)) {
@@ -125,6 +122,7 @@ AlignOrder <- ggproto("AlignOrder", Align,
             )
         }
         if (self$reverse) index <- rev(index)
+        assert_reorder(self, panel, index, self$strict)
         list(panel, index)
     },
     summary_align = function(self) c(TRUE, FALSE)

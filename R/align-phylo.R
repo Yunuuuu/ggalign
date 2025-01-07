@@ -58,58 +58,58 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
                 call = self$call
             )
         }
-        design <- layout@design
 
-        # If `nobs` is `NULL`, it means we don't initialize the layout
-        # observations, we initialize `nobs` with the `Align` obect
-        if (is.null(layout_nobs <- .subset2(design, "nobs"))) {
-            layout@design["nobs"] <- list(vec_size(tip_labels))
-            layout_labels <- NULL
-        } else {
-            assert_mismatch_nobs(
-                self, layout_nobs, vec_size(self$group),
-                arg = "phylo"
-            )
-            if (is.null(layout_labels <- vec_names(layout_data))) {
-                cli_abort(c(
-                    sprintf("Cannot add %s to %s", object_name, layout_name),
-                    i = sprintf(
-                        "%s has no labels to match {.arg phylo}",
-                        layout_name
-                    )
-                ))
-            } else if (vec_duplicate_any(layout_labels)) {
-                cli_abort(c(
-                    sprintf("Cannot add %s to %s", object_name, layout_name),
-                    i = sprintf("%s has duplicated labels", layout_name)
-                ))
-            }
+        # we ensure the layout data has names to match the phylo tree
+        if (is.null(layout_labels <- vec_names(layout@data))) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s", object_name(self),
+                    self$layout_name
+                ),
+                i = sprintf(
+                    "%s has no labels (rownames) to match {.arg phylo}",
+                    self$layout_name
+                )
+            ))
+        } else if (vec_duplicate_any(layout_labels)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s", object_name(self),
+                    self$layout_name
+                ),
+                i = sprintf("%s has duplicated labels", self$layout_name)
+            ))
         }
+        assert_mismatch_nobs(
+            self, .subset2(layout@design, "nobs"), vec_size(tip_labels),
+            arg = "phylo"
+        )
 
         # we keep the names from the layout data for usage
         self$labels <- layout_labels
         layout
     },
     compute = function(self, panel, index) {
-        if (!is.null(panel) && nlevels(panel) > 1L) {
+        phylo <- self$phylo
+        # why R CMD check doesn't give error even I don't add ape to dependency
+        if (isTRUE(self$ladderize)) phylo <- ape::ladderize(phylo)
+        inject(fortify_data_frame.phylo(data = phylo, !!!self$params))
+    },
+    align = function(self, panel, index) {
+        data <- self$statistics
+        tip <- vec_slice(data, .subset2(data, "tip"))
+        ordered <- .subset2(tip, "label")[order(.subset2(tip, "x"))]
+        index <- match(ordered, self$labels)
+        if (!is.null(panel) && nlevels(panel) > 1L &&
+            !all(index == reorder_index(panel, index))) {
             layout_name <- self$layout_name
             object_name <- object_name(self)
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name, layout_name),
-                i = sprintf("%s cannot span multiple panels", object_name)
-            ))
-        }
-        phylo <- self$phylo
-        # why R CMD check doesn't give error even I don't add ape to dependency
-        if (isTRUE(self$ladderize)) phylo <- ape::ladderize(phylo)
-        phylo
-    },
-    align = function(self, panel, index) {
-        ordering <- order2(self$phylo)
-        if (is.null(self$labels)) {
-            index <- ordering
-        } else {
-            index <- match(self$phylo$tip.label[ordering], self$labels)
+                i = sprintf(
+                    "Group of %s will disrupt the ordering index of %s", layout_name, object_name
+                )
+            ), call = self$call)
         }
         list(panel, index)
     },
@@ -132,9 +132,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
             ))
         }
 
-        data <- inject(fortify_data_frame.phylo(
-            data = self$phylo, !!!self$params
-        ))
+        data <- self$statistics
         edge <- ggalign_attr(data, "edge")
         node <- data
         node$.panel <- unique(panel)
@@ -219,6 +217,7 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
     parent <- edge[, 1L, drop = TRUE]
     child <- edge[, 2L, drop = TRUE]
     tip_labels <- data$tip.label
+    node_labels <- data$node.label
     N <- length(tip_labels)
     if (is.null(tip_pos)) {
         tip_pos <- seq_len(N)
@@ -268,7 +267,8 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
 
             # there is no node data for the root
             node <- vec_rbind(data_frame0(
-                .index = index, label = NA,
+                .index = index,
+                label = node_labels[index - N],
                 x = x, y = y, tip = FALSE
             ), node)
 

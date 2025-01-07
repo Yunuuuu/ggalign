@@ -22,8 +22,8 @@
 
 # `align_order` works well
 
-    `align_order()` cannot reordering x-axis
-    i Group of layout x-axis already exists
+    Cannot add `align_order()` to the top annotation `stack_discrete()`
+    i Group of the top annotation `stack_discrete()` will disrupt the ordering index of `align_order()`
     i try to set `strict = FALSE` to reorder within each group
 
 ---
@@ -33,8 +33,8 @@
 
 # `align_reorder` works well
 
-    `align_reorder()` cannot reordering x-axis
-    i Group of layout x-axis already exists
+    Cannot add `align_reorder()` to the top annotation `stack_discrete()`
+    i Group of the top annotation `stack_discrete()` will disrupt the ordering index of `align_reorder()`
     i try to set `strict = FALSE` to reorder within each group
 
 ---

@@ -107,7 +107,6 @@ AlignReorder <- ggproto("AlignReorder", Align,
         layout
     },
     compute = function(self, panel, index) {
-        assert_reorder(self, panel, self$strict)
         inject(self$stat(self$data, !!!self$params))
     },
     align = function(self, panel, index) {
@@ -120,6 +119,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
             arg = "stat"
         )
         if (self$reverse) index <- rev(index)
+        assert_reorder(self, panel, index, self$strict)
         list(panel, index)
     },
     summary_align = function(self) c(TRUE, FALSE)

@@ -37,12 +37,16 @@ assert_sub_split <- function(align, panel) {
     }
 }
 
-assert_reorder <- function(align, panel, strict) {
-    if (!is.null(panel) && strict) {
-        axis <- to_coord_axis(align$direction)
+assert_reorder <- function(align, panel, index, strict) {
+    if (!is.null(panel) && nlevels(panel) > 1L && strict &&
+        !all(index == reorder_index(panel, index))) {
+        layout_name <- align$layout_name
+        object_name <- object_name(align)
         cli_abort(c(
-            sprintf("%s cannot reordering %s-axis", object_name(align), axis),
-            i = sprintf("Group of layout %s-axis already exists", axis),
+            sprintf("Cannot add %s to %s", object_name, layout_name),
+            i = sprintf(
+                "Group of %s will disrupt the ordering index of %s", layout_name, object_name
+            ),
             i = "try to set {.code strict = FALSE} to reorder within each group"
         ), call = align$call)
     }
