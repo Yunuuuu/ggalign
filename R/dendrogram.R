@@ -119,8 +119,8 @@ make_dist <- function(matrix, distance, use_missing,
 #' the `"right"` as priority. This is used by [align_dendro()] to provide
 #' support of facet operation in ggplot2.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
-#' respect to the leaves in the branch. Otherwise (default), plot them in the
-#' middle of all direct child nodes.
+#' respect to all leaves/tips in the branch. Otherwise (default), plot them in
+#' the middle of the direct child nodes.
 #' @param type A string indicates the plot type, `"rectangle"` or `"triangle"`.
 #' @param leaf_pos The x-coordinates of the leaf node. Must be the same length
 #' of the number of observations in `tree`.

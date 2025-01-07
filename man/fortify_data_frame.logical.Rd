@@ -15,6 +15,11 @@
 A data frame.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function converts various objects to a data frame.
+}
+\details{
 When \code{data} is an atomic vector, it'll be converted to a data frame with
 following columns:
 \itemize{

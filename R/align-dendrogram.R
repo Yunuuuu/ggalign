@@ -152,13 +152,6 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         root <- .subset2(params, "root")
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
-        if (is_continuous_design(extra_design)) {
-            extra_panel <- NULL
-            extra_index <- NULL
-        } else {
-            extra_panel <- .subset2(extra_design, "panel")
-            extra_index <- .subset2(extra_design, "index")
-        }
 
         statistics <- .subset2(self, "statistics")
         direction <- self$direction

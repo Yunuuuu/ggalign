@@ -51,6 +51,7 @@ Collate:
     'align-group.R'
     'align-kmeans.R'
     'align-order.R'
+    'align-phylo.R'
     'align-reorder.R'
     'alignpatch-.R'
     'alignpatch-align_plots.R'

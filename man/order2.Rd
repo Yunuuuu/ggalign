@@ -6,6 +6,7 @@
 \alias{order2.dendrogram}
 \alias{order2.ser_permutation_vector}
 \alias{order2.ser_permutation}
+\alias{order2.phylo}
 \alias{order2.memo_weights}
 \title{Ordering Permutation}
 \usage{
@@ -18,6 +19,8 @@ order2(x)
 \method{order2}{ser_permutation_vector}(x)
 
 \method{order2}{ser_permutation}(x)
+
+\method{order2}{phylo}(x)
 
 \method{order2}{memo_weights}(x)
 }

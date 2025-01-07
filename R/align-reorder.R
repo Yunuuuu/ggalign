@@ -117,3 +117,10 @@ order2.ser_permutation <- function(x) {
     )
     getFromNamespace("get_order", "seriation")(x)
 }
+
+#' @export
+#' @rdname order2
+order2.phylo <- function(x) {
+    second <- x$edge[, 2L, drop = TRUE]
+    second[second <= length(x$tip.label)]
+}

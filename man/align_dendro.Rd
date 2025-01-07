@@ -89,8 +89,8 @@ tree.}
 \item{root}{A length one string or numeric indicates the root branch.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
-respect to the leaves in the branch. Otherwise (default), plot them in the
-middle of all direct child nodes.}
+respect to all leaves/tips in the branch. Otherwise (default), plot them in
+the middle of the direct child nodes.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 

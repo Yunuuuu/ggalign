@@ -2,9 +2,15 @@
 % Please edit documentation in R/fortify-data-frame.R
 \name{fortify_data_frame.matrix}
 \alias{fortify_data_frame.matrix}
+\alias{fortify_data_frame.DelayedMatrix}
+\alias{fortify_data_frame.Matrix}
 \title{Build a data frame}
 \usage{
 \method{fortify_data_frame}{matrix}(data, ...)
+
+\method{fortify_data_frame}{DelayedMatrix}(data, ...)
+
+\method{fortify_data_frame}{Matrix}(data, ...)
 }
 \arguments{
 \item{data}{An object to be converted to a data frame.}
@@ -15,10 +21,14 @@
 A data frame.
 }
 \description{
-When \code{data} is a matrix, it will automatically be transformed into a
-long-form data frame, where each row represents a unique combination of
-matrix indices and their corresponding values. The resulting data frame will
-contain the following columns:
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function converts various objects to a data frame.
+}
+\details{
+Matrix will be transformed into a long-form data frame, where each row
+represents a unique combination of matrix indices and their corresponding
+values. The resulting data frame will contain the following columns:
 \itemize{
 \item \code{.row_names} and \code{.row_index}: the row names (only applicable when names
 exist) and an integer representing the row index of the original matrix.

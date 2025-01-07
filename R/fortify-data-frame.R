@@ -20,7 +20,7 @@ fortify_data_frame <- function(data, ...) {
 }
 
 #' @inherit fortify_data_frame
-#' @description
+#' @details
 #' By default, it calls [`fortify()`][ggplot2::fortify] to build the
 #' data frame.
 #' @family fortify_data_frame methods
@@ -30,7 +30,7 @@ fortify_data_frame.default <- function(data, ...) {
 }
 
 #' @inherit fortify_data_frame.default
-#' @description
+#' @details
 #' When `data` is an atomic vector, it'll be converted to a data frame with
 #' following columns:
 #'
@@ -67,11 +67,10 @@ fortify_data_frame.waiver <- function(data, ...) data
 fortify_data_frame.NULL <- function(data, ...) data
 
 #' @inherit fortify_data_frame.default
-#' @description
-#' When `data` is a matrix, it will automatically be transformed into a
-#' long-form data frame, where each row represents a unique combination of
-#' matrix indices and their corresponding values. The resulting data frame will
-#' contain the following columns:
+#' @details
+#' Matrix will be transformed into a long-form data frame, where each row
+#' represents a unique combination of matrix indices and their corresponding
+#' values. The resulting data frame will contain the following columns:
 #'
 #'  - `.row_names` and `.row_index`: the row names (only applicable when names
 #'  exist) and an integer representing the row index of the original matrix.
@@ -97,11 +96,13 @@ fortify_data_frame.matrix <- function(data, ...) {
 }
 
 #' @export
+#' @rdname fortify_data_frame.matrix
 fortify_data_frame.DelayedMatrix <- function(data, ...) {
     fortify_data_frame(as.matrix(data))
 }
 
 #' @export
+#' @rdname fortify_data_frame.matrix
 fortify_data_frame.Matrix <- function(data, ...) {
     fortify_data_frame(as.matrix(data))
 }
