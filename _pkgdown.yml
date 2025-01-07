@@ -74,6 +74,7 @@ reference:
     ensuring they align and interact correctly within the defined structure.
   contents:
   - align_dendro
+  - align_phylo
   - ggfree
   - ggalign
   - ggmark
@@ -166,7 +167,6 @@ reference:
   - is_layout
   - hclust2
   - memo_order
-  - dendrogram_data
   - read_example
 
 - title: internal

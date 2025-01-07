@@ -5,17 +5,22 @@
 #' [`geom_segment()`][ggplot2::geom_segment].
 #' @param ladderize A boolean value indicates whether to ladderize the tree. See
 #' [`ladderize()`][ape::ladderize()].
+#' @inheritParams fortify_data_frame.phylo
 #' @inheritParams ggalign
 #' @export
-align_phylo <- function(phylo, ..., ladderize = TRUE,
+align_phylo <- function(phylo, ..., ladderize = TRUE, type = "rectangle",
+                        center = FALSE, tree_type = NULL,
                         no_axes = NULL, active = NULL,
                         size = NULL) {
+    if (isTRUE(ladderize)) {
+        rlang::check_installed("ape", "to ladderize phylogenetics tree")
+    }
     assert_s3_class(phylo, "phylo")
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
-    new_ggalign_plot(
+    align(
         align = AlignPhylo,
         phylo = phylo,
         ladderize = ladderize,
@@ -30,7 +35,7 @@ align_phylo <- function(phylo, ..., ladderize = TRUE,
                 stat = "identity",
                 data = function(data) ggalign_attr(data, "edge")
             ),
-        params = list(),
+        params = list(type = type, center = center, tree_type = tree_type),
         active = active,
         size = size
     )
@@ -38,16 +43,7 @@ align_phylo <- function(phylo, ..., ladderize = TRUE,
 
 AlignPhylo <- ggproto("AlignPhylo", Align,
     interact_layout = function(self, layout) {
-        layout_name <- self$layout_name
-        object_name <- object_name(self)
-        # check plot is compatible with the layout
-        if (is_layout_continuous(layout)) {
-            # `Align` object is special for discrete variables
-            cli_abort(c(
-                sprintf("Cannot add %s to %s", object_name, layout_name),
-                i = sprintf("%s cannot align discrete variables", layout_name)
-            ))
-        }
+        layout <- ggproto_parent(Align, self)$interact_layout(layout)
 
         # we keep the names from the layout data for usage
         tip_labels <- self$phylo$tip.label
@@ -63,37 +59,35 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
             )
         }
         design <- layout@design
-        layout_nobs <- .subset2(design, "nobs")
 
         # If `nobs` is `NULL`, it means we don't initialize the layout
         # observations, we initialize `nobs` with the `Align` obect
-        if (is.null(layout_nobs)) {
-            layout_nobs <- length(tip_labels)
+        if (is.null(layout_nobs <- .subset2(design, "nobs"))) {
+            layout@design["nobs"] <- list(vec_size(tip_labels))
             layout_labels <- NULL
-        } else if (length(tip_labels) != layout_nobs) {
-            cli_abort(sprintf(
-                "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
-                object_name, length(tip_labels), layout_name, layout_nobs
-            ))
-        } else if (is.null(layout_labels <- vec_names(layout_data))) {
-            cli_abort(c(
-                sprintf("Cannot add %s to %s", object_name, layout_name),
-                i = sprintf(
-                    "%s has no labels to match {.arg phylo}",
-                    layout_name
-                )
-            ))
-        } else if (vec_duplicate_any(layout_labels)) {
-            cli_abort(c(
-                sprintf("Cannot add %s to %s", object_name, layout_name),
-                i = sprintf("%s has duplicated labels", layout_name)
-            ))
+        } else {
+            assert_mismatch_nobs(
+                self, layout_nobs, vec_size(self$group),
+                arg = "phylo"
+            )
+            if (is.null(layout_labels <- vec_names(layout_data))) {
+                cli_abort(c(
+                    sprintf("Cannot add %s to %s", object_name, layout_name),
+                    i = sprintf(
+                        "%s has no labels to match {.arg phylo}",
+                        layout_name
+                    )
+                ))
+            } else if (vec_duplicate_any(layout_labels)) {
+                cli_abort(c(
+                    sprintf("Cannot add %s to %s", object_name, layout_name),
+                    i = sprintf("%s has duplicated labels", layout_name)
+                ))
+            }
         }
 
         # we keep the names from the layout data for usage
         self$labels <- layout_labels
-        design["nobs"] <- list(layout_nobs)
-        layout@design <- design
         layout
     },
     compute = function(self, panel, index) {
@@ -215,7 +209,7 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
         if (tree_type == "phylogram" && is.null(edge_lengths)) {
             cli_warn(c(
                 "Cannot use {.code tree_type = 'phylogram'}",
-                "No branch length found in {.arg x}"
+                "No branch length found in {.arg data}"
             ))
         }
     }
@@ -230,7 +224,7 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
         tip_pos <- seq_len(N)
     } else if (length(tip_pos) != N) {
         cli_abort(
-            "{.arg tip_pos} must have the same length as the number of tips in {.arg x}"
+            "{.arg tip_pos} must have the same length as the number of tips in {.arg data}"
         )
     }
     i <- 0L # tip index

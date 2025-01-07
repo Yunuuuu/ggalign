@@ -8,6 +8,9 @@ align_phylo(
   phylo,
   ...,
   ladderize = TRUE,
+  type = "rectangle",
+  center = FALSE,
+  tree_type = NULL,
   no_axes = NULL,
   active = NULL,
   size = NULL
@@ -21,6 +24,16 @@ align_phylo(
 
 \item{ladderize}{A boolean value indicates whether to ladderize the tree. See
 \code{\link[ape:ladderize]{ladderize()}}.}
+
+\item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
+
+\item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
+respect to all leaves/tips in the branch. Otherwise (default), plot them in
+the middle of the direct child nodes.}
+
+\item{tree_type}{A single string, one of
+\code{"phylogram"} or \code{"cladogram"}, indicating the type of tree.
+Usually, you don't need to modify this.}
 
 \item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
 removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
