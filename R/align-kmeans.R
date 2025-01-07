@@ -6,8 +6,9 @@
 #' Aligns and groups observations based on k-means clustering, enabling
 #' observation splits by cluster groups.
 #'
-#' @inheritParams stats::kmeans
 #' @inheritDotParams stats::kmeans -x -centers
+#' @param data A numeric matrix to be used by k-means. By default, it will
+#' inherit from the layout matrix.
 #' @inheritParams align
 #' @inheritSection align Discrete Axis Alignment
 #' @examples
@@ -16,30 +17,25 @@
 #'     align_kmeans(3L)
 #' @importFrom rlang list2
 #' @export
-align_kmeans <- function(centers, ..., data = NULL, active = NULL) {
+align_kmeans <- function(..., data = NULL, active = NULL) {
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
     align(
         align = AlignKmeans,
-        params = list(centers = centers, params = list2(...)),
+        params = list2(...),
         active = active,
-        data = data %||% waiver()
+        data = data
     )
 }
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", Align,
-    setup_data = function(self, params, data) {
-        ans <- fortify_matrix(data)
-        assert_(
-            ans, is.numeric, "a numeric matrix",
-            arg = "data", call = self$call
-        )
-        ans
+    interact_layout = function(self, layout) {
+        ggproto_parent(AlignReorder, self)$interact_layout(layout)
     },
-    compute = function(self, panel, index, centers, params) {
-        inject(stats::kmeans(x = self$data, centers = centers, !!!params))
+    compute = function(self, panel, index) {
+        inject(stats::kmeans(x = self$data, !!!self$params))
     },
     align = function(self, panel, index) {
         list(.subset2(self$statistics, "cluster"), index)

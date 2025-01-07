@@ -27,11 +27,11 @@
 
 \item{...}{Additional arguments passed to \code{dendrogram} method.}
 
-\item{priority}{A string of "left" or "right". if we draw from right to left,
-the left will override the right, so we take the \code{"left"} as the priority. If
-we draw from \code{left} to \code{right}, the right will override the left, so we take
-the \code{"right"} as priority. This is used by \code{\link[=align_dendro]{align_dendro()}} to provide
-support of facet operation in ggplot2.}
+\item{priority}{A string of "left" or "right". if we draw from \code{right} to
+\code{left}, the left will override the right, so we take the \code{"left"} as the
+priority. If we draw from \code{left} to \code{right}, the right will override the
+left, so we take the \code{"right"} as priority. This is used by
+\code{\link[=align_dendro]{align_dendro()}} to provide support of facet operation in ggplot2.}
 
 \item{center}{A boolean value. if \code{TRUE}, nodes are plotted centered with
 respect to all leaves/tips in the branch. Otherwise (default), plot them in
@@ -56,7 +56,8 @@ branches.}
 \item{double}{A single logical value indicating whether horizontal lines
 should be doubled when segments span multiple branches. If \code{TRUE}, the
 horizontal lines will be repeated for each branch that the segment spans. If
-\code{FALSE}, only one horizontal line will be drawn.}
+\code{FALSE}, only one horizontal line will be drawn. This is used by
+\code{\link[=align_dendro]{align_dendro()}} to provide support of facet operation in ggplot2.}
 }
 \value{
 A \verb{data frame} with the node coordinates:

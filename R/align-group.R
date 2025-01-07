@@ -16,32 +16,32 @@
 #' @export
 align_group <- function(group, active = NULL) {
     assert_active(active)
+    if (vec_size(group) == 0L) {
+        cli_abort("{.arg group} cannot be empty")
+    }
     active <- update_active(active, new_active(use = FALSE))
     align(
         align = AlignGroup,
-        params = list(group = group),
-        data = NULL, active = active,
+        group = group,
+        active = active,
         check.param = TRUE
     )
 }
 
 #' @importFrom ggplot2 ggproto
 AlignGroup <- ggproto("AlignGroup", Align,
-    nobs = function(self, params) {
-        nobs <- vec_size(.subset2(params, "group"))
-        if (nobs == 0L) {
-            cli_abort("{.arg group} cannot be empty", call = self$call)
+    interact_layout = function(self, layout) {
+        layout <- ggproto_parent(Align, self)$interact_layout(layout)
+        if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
+            layout@design["nobs"] <- list(vec_size(self$group))
+        } else {
+            assert_mismatch_nobs(
+                self, layout_nobs, vec_size(self$group),
+                arg = "group"
+            )
         }
-        nobs
+        layout
     },
-    setup_params = function(self, nobs, params) {
-        assert_mismatch_nobs(
-            self, nobs, self$nobs(params),
-            action = "must be an atomic vector",
-            arg = "group"
-        )
-        params
-    },
-    align = function(self, panel, index, group) list(group, index),
+    align = function(self, panel, index) list(self$group, index),
     summary_align = function(self) c(FALSE, TRUE)
 )

@@ -113,11 +113,6 @@ make_dist <- function(matrix, distance, use_missing,
 #'
 #' @param data A [`hclust`][stats::hclust] or a
 #' [`dendrogram`][stats::as.dendrogram] object.
-#' @param priority A string of "left" or "right". if we draw from right to left,
-#' the left will override the right, so we take the `"left"` as the priority. If
-#' we draw from `left` to `right`, the right will override the left, so we take
-#' the `"right"` as priority. This is used by [align_dendro()] to provide
-#' support of facet operation in ggplot2.
 #' @param center A boolean value. if `TRUE`, nodes are plotted centered with
 #' respect to all leaves/tips in the branch. Otherwise (default), plot them in
 #' the middle of the direct child nodes.
@@ -131,10 +126,16 @@ make_dist <- function(matrix, distance, use_missing,
 #' @param branch_gap A single numeric value indicates the gap between different
 #' branches.
 #' @param root A length one string or numeric indicates the root branch.
+#' @param priority A string of "left" or "right". if we draw from `right` to
+#' `left`, the left will override the right, so we take the `"left"` as the
+#' priority. If we draw from `left` to `right`, the right will override the
+#' left, so we take the `"right"` as priority. This is used by
+#' [`align_dendro()`] to provide support of facet operation in ggplot2.
 #' @param double A single logical value indicating whether horizontal lines
 #' should be doubled when segments span multiple branches. If `TRUE`, the
 #' horizontal lines will be repeated for each branch that the segment spans. If
-#' `FALSE`, only one horizontal line will be drawn.
+#' `FALSE`, only one horizontal line will be drawn. This is used by
+#' [`align_dendro()`] to provide support of facet operation in ggplot2.
 #' @return A `data frame` with the node coordinates:
 #'   - `.panel`: Similar with `panel` column, but always give the correct
 #'              branch for usage of the ggplot facet.

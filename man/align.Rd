@@ -8,15 +8,13 @@
 \usage{
 align(
   align,
-  data,
+  data = NULL,
   ...,
-  params = list(),
   plot = NULL,
   size = NULL,
   schemes = NULL,
   no_axes = NULL,
   active = NULL,
-  check.param = TRUE,
   call = caller_call()
 )
 }
@@ -34,8 +32,6 @@ data, please use \code{\link[=scheme_data]{scheme_data()}}.
 }}
 
 \item{...}{Additional fields passed to the \code{align} object.}
-
-\item{params}{A list of parameters for \code{align}.}
 
 \item{plot}{A ggplot object.}
 
@@ -57,9 +53,6 @@ default, will use the option-
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
-
-\item{check.param}{Logical; if \code{TRUE}, checks parameters and provides
-warnings as necessary.}
 
 \item{call}{The \code{call} used to construct the \code{Align} object, for reporting
 messages.}

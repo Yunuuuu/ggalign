@@ -49,33 +49,15 @@ align_dendro <- function(mapping = aes(), ...,
                          center = FALSE, type = "rectangle",
                          size = NULL, data = NULL,
                          no_axes = NULL, active = NULL) {
-    reorder_dendrogram <- allow_lambda(reorder_dendrogram)
-    if (!rlang::is_bool(reorder_dendrogram) &&
-        !is.null(reorder_dendrogram) &&
-        !is.function(reorder_dendrogram)) {
-        cli_abort(
-            "{.arg reorder_dendrogram} must be a single boolean value or a function"
-        )
-    }
-
-    assert_number_whole(k, allow_null = TRUE)
-    assert_number_decimal(h, allow_null = TRUE)
-    assert_bool(plot_cut_height, allow_null = TRUE, arg = "plot_cut_height")
+    assert_bool(plot_cut_height, allow_null = TRUE)
     assert_bool(merge_dendrogram)
-    assert_bool(reorder_group)
-    cutree <- allow_lambda(cutree)
-    assert_(cutree, is.function, "a function", allow_null = TRUE)
-    assert_bool(plot_dendrogram)
-    assert_mapping(mapping)
-    if (is.null(data)) {
-        if (inherits(method, "hclust") || inherits(method, "dendrogram")) {
-            data <- NULL # no need for data
-        } else {
-            data <- waiver()
-        }
-    }
-    assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
+
+    # setup the default value for `plot_cut_height`
+    plot_cut_height <- plot_cut_height %||% (
+        # we by default don't draw the height of the user-provided cutree
+        # since function like `dynamicTreeCut` will merge tree
+        (!is.null(k) || !is.null(h)) && is.null(cutree)
+    )
     plot <- ggplot(mapping = mapping)
     if (plot_dendrogram) {
         plot <- plot + ggplot2::geom_segment(
@@ -88,29 +70,28 @@ align_dendro <- function(mapping = aes(), ...,
             data = function(data) ggalign_attr(data, "edge")
         )
     }
-    align(
+    assert_active(active)
+    active <- update_active(active, new_active(use = TRUE))
+    .align_hclust(
         align = AlignDendro,
-        params = list(
-            distance = distance, method = method, use_missing = use_missing,
-            k = k, h = h, plot_cut_height = plot_cut_height,
-            center = center, type = type, root = root,
-            reorder_dendrogram = reorder_dendrogram,
-            merge_dendro = merge_dendrogram,
-            reorder_group = reorder_group,
-            cutree = cutree
-        ),
-        no_axes = no_axes, active = active,
-        size = size,
+        distance = distance,
+        method = method,
+        use_missing = use_missing,
+        merge_dendro = merge_dendrogram,
+        plot_cut_height = plot_cut_height,
+        type = type, root = root, center = center,
+        reorder_dendrogram = reorder_dendrogram,
+        reorder_group = reorder_group,
         schemes = default_schemes(th = theme_no_strip()),
-        data = data,
-        plot = plot
+        k = k, h = h, cutree = cutree, data = data, active = active,
+        size = size, no_axes = no_axes, plot = plot
     )
 }
 
+#' @importFrom ggplot2 aes ggplot
+#' @importFrom rlang inject
 #' @include align-hclust.R
 AlignDendro <- ggproto("AlignDendro", AlignHclust,
-    #' @importFrom ggplot2 aes ggplot
-    #' @importFrom rlang inject
     setup_plot = function(self, plot) {
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
             self$direction,
@@ -118,15 +99,12 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             ggplot2::labs(y = "height")
         )
     },
-    # other arguments
-    extra_params = c("plot_cut_height", "center", "type", "root"),
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
-        params <- self$params
-        plot_cut_height <- .subset2(params, "plot_cut_height")
-        center <- .subset2(params, "center")
-        type <- .subset2(params, "type")
-        root <- .subset2(params, "root")
+        plot_cut_height <- self$plot_cut_height
+        center <- self$center
+        type <- self$type
+        root <- self$root
         panel <- .subset2(design, "panel")
         index <- .subset2(design, "index")
 
@@ -210,6 +188,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             )
             node <- rename(node, c(x = "y", y = "x"))
         }
+
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data
         plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))

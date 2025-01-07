@@ -6,19 +6,19 @@
 
 ---
 
-    `group` of `align_group()` must be an atomic vector the same length of layout x-axis (8)
+    `group` (nobs: 4) of `align_group()` is not compatible with the the top annotation `stack_discrete()` (nobs: 8)
 
 ---
 
-    `group` of `align_group()` must be an atomic vector the same length of layout x-axis (8)
+    `group` (nobs: 9) of `align_group()` is not compatible with the the top annotation `stack_discrete()` (nobs: 8)
 
 ---
 
-    `group` of `align_group()` must be an atomic vector the same length of layout x-axis (8)
+    `group` (nobs: 4) of `align_group()` is not compatible with the the top annotation `stack_discrete()` (nobs: 8)
 
 ---
 
-    `group` of `align_group()` must be an atomic vector the same length of layout x-axis (8)
+    `group` (nobs: 9) of `align_group()` is not compatible with the the top annotation `stack_discrete()` (nobs: 8)
 
 # `align_order` works well
 

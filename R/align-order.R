@@ -39,21 +39,21 @@ align_order <- function(weights = rowMeans, ...,
         # vec_duplicate_any is slight faster than `anyDuplicated`
         if (vec_any_missing(weights) || vec_duplicate_any(weights)) {
             cli_abort(paste(
-                "{.arg order} must be an ordering numeric or character",
+                "{.arg weights} must be an ordering numeric or character",
                 "without missing value or ties"
             ))
         } else if (is.numeric(weights)) {
             weights <- vec_cast(weights, integer())
         }
-        if (!is.null(data) && !is.waive(data)) {
+        if (vec_size(weights) == 0L) {
+            cli_abort("{.arg weights} cannot be empty")
+        }
+        if (!is.null(data)) {
             cli_warn(c(
                 "{.arg data} won't be used",
-                i = "{.arg order} is not a {.cls function}"
+                i = "{.arg weights} is not a {.cls function}"
             ))
         }
-        # we always inherit from parent layout
-        # in this way, we obtain the names of the layout data
-        data <- NULL
     } else {
         weights <- rlang::as_function(weights)
         data <- data %||% waiver()
@@ -64,14 +64,11 @@ align_order <- function(weights = rowMeans, ...,
     active <- update_active(active, new_active(use = FALSE))
     align(
         align = AlignOrder,
-        params = list(
-            weights = weights,
-            weights_params = list2(...),
-            reverse = reverse,
-            strict = strict
-        ),
+        weights = weights,
+        params = list2(...),
+        reverse = reverse,
+        strict = strict,
         active = active,
-        check.param = TRUE,
         data = data
     )
 }
@@ -79,37 +76,35 @@ align_order <- function(weights = rowMeans, ...,
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
 AlignOrder <- ggproto("AlignOrder", Align,
-    nobs = function(self, params) {
-        nobs <- length(.subset2(params, "weights"))
-        if (nobs == 0L) {
-            cli_abort("{.arg weights} cannot be empty", call = self$call)
+    interact_layout = function(self, layout) {
+        if (is.function(self$weights)) {
+            layout <- ggproto_parent(AlignReorder, self)$interact_layout(layout)
+        } else {
+            layout <- ggproto_parent(Align, self)$interact_layout(layout)
+            if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
+                layout@design["nobs"] <- list(vec_size(self$weights))
+            } else {
+                assert_mismatch_nobs(
+                    self, layout_nobs, vec_size(self$weights),
+                    arg = "weights"
+                )
+            }
+            self$labels <- vec_names(layout@data)
         }
-        nobs
+        layout
     },
-    setup_params = function(self, nobs, params) {
-        if (!is.function(weights <- .subset2(params, "weights"))) {
-            assert_mismatch_nobs(
-                self, nobs, length(weights),
-                action = "must be an ordering integer or character index of",
-                arg = "weights"
-            )
-        }
-        params
-    },
-    compute = function(self, panel, index, weights, weights_params, strict) {
-        assert_reorder(self, panel, strict)
-        if (is.function(weights)) {
-            data <- .subset2(self, "data")
-            ans <- inject(weights(data, !!!weights_params))
+    compute = function(self, panel, index) {
+        assert_reorder(self, panel, self$strict)
+        if (is.function(self$weights)) {
+            ans <- inject(self$weights(self$data, !!!self$params))
             if (!is_atomic(ans)) {
                 cli_abort(
                     "{.arg weights} must return an atomic weights",
-                    call = .subset2(self, "call")
+                    call = self$call
                 )
             }
             assert_mismatch_nobs(
-                self, nrow(data), length(ans),
-                action = "must return weights with",
+                self, vec_size(ans), vec_size(ans),
                 arg = "weights"
             )
         } else {
@@ -117,24 +112,19 @@ AlignOrder <- ggproto("AlignOrder", Align,
         }
         ans
     },
-    align = function(self, panel, index, weights, reverse) {
-        if (is.function(weights)) {
-            index <- order(.subset2(self, "statistics"))
+    align = function(self, panel, index) {
+        if (is.function(self$weights)) {
+            index <- order(self$statistics)
         } else {
-            index <- vec_as_location(weights,
-                n = length(weights),
-                names = .subset2(self, "labels"),
+            index <- vec_as_location(
+                self$weights,
+                n = vec_size(self$weights),
+                names = self$labels,
                 missing = "error",
-                call = .subset2(self, "call")
+                call = self$call
             )
-            if (vec_duplicate_any(index)) {
-                cli_abort(
-                    "find ties in the ordering index {.arg weights}",
-                    call = .subset2(self, "call")
-                )
-            }
         }
-        if (reverse) index <- rev(index)
+        if (self$reverse) index <- rev(index)
         list(panel, index)
     },
     summary_align = function(self) c(TRUE, FALSE)

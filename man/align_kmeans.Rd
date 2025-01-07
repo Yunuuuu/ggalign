@@ -4,13 +4,9 @@
 \alias{align_kmeans}
 \title{Split observations by k-means clustering groups.}
 \usage{
-align_kmeans(centers, ..., data = NULL, active = NULL)
+align_kmeans(..., data = NULL, active = NULL)
 }
 \arguments{
-\item{centers}{either the number of clusters, say \eqn{k}, or a set of
-    initial (distinct) cluster centres.  If a number, a random set of
-    (distinct) rows in \code{x} is chosen as the initial centres.}
-
 \item{...}{
   Arguments passed on to \code{\link[stats:kmeans]{stats::kmeans}}
   \describe{
@@ -26,15 +22,8 @@ align_kmeans(centers, ..., data = NULL, active = NULL)
     produced.  Higher values may produce more tracing information.}
   }}
 
-\item{data}{The following options can be used:
-\itemize{
-\item \code{NULL}: No data is set.
-\item \code{\link[ggplot2:waiver]{waiver()}}: Inherits the data from the layout matrix.
-\item A \code{function} (including purrr-like lambda syntax): Applied to the layout
-matrix to transform the data before use. To transform the final plot
-data, please use \code{\link[=scheme_data]{scheme_data()}}.
-\item A \code{matrix}, \code{data.frame}, or atomic vector.
-}}
+\item{data}{A numeric matrix to be used by k-means. By default, it will
+inherit from the layout matrix.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}

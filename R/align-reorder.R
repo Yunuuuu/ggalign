@@ -42,36 +42,84 @@ align_reorder <- function(stat, ..., reverse = FALSE,
     active <- update_active(active, new_active(use = FALSE))
     align(
         align = AlignReorder,
-        params = list(
-            stat = stat,
-            stat_params = list2(...),
-            reverse = reverse,
-            strict = strict
-        ),
+        stat = stat,
+        params = list2(...),
+        reverse = reverse,
+        strict = strict,
         active = active,
-        data = data %||% waiver()
+        data = data
     )
 }
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 AlignReorder <- ggproto("AlignReorder", Align,
-    compute = function(self, panel, index, stat, stat_params, strict) {
-        assert_reorder(self, panel, strict)
-        inject(stat(self$data, !!!stat_params))
+    interact_layout = function(self, layout) {
+        layout <- ggproto_parent(Align, self)$interact_layout(layout)
+        layout_data <- layout@data
+        if (is.null(input_data <- self$input_data) ||
+            is.waive(input_data)) { # inherit from the layout
+            if (is.null(data <- layout_data)) {
+                cli_abort(c(
+                    sprintf(
+                        "you must provide {.arg data} in %s",
+                        object_name(self)
+                    ),
+                    i = sprintf("no data was found in %s", self$layout_name)
+                ))
+            }
+        } else if (is.function(input_data)) {
+            if (is.null(layout_data)) {
+                cli_abort(c(
+                    sprintf(
+                        "{.arg data} in %s cannot be a function",
+                        object_name(self)
+                    ),
+                    i = sprintf("no data was found in %s", self$layout_name)
+                ))
+            }
+            data <- input_data(layout_data)
+        } else {
+            data <- input_data
+        }
+
+        design <- layout@design
+        layout_nobs <- .subset2(design, "nobs")
+
+        # we always regard rows as the observations
+        if (is.null(layout_nobs)) {
+            layout_nobs <- vec_size(data)
+            if (layout_nobs == 0L) {
+                cli_abort("{.arg data} cannot be empty", call = self$call)
+            }
+            design["nobs"] <- list(layout_nobs)
+            layout@design <- design
+        } else if (vec_size(data) != layout_nobs) {
+            cli_abort(sprintf(
+                "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
+                object_name, vec_size(data), layout_name, layout_nobs
+            ))
+        }
+
+        # save the labels
+        self$labels <- vec_names(data) %||% vec_names(layout_data)
+        self$data <- ggalign_attr_restore(data, layout_data)
+        layout
     },
-    align = function(self, panel, index, reverse) {
+    compute = function(self, panel, index) {
+        assert_reorder(self, panel, self$strict)
+        inject(self$stat(self$data, !!!self$params))
+    },
+    align = function(self, panel, index) {
         index <- vec_cast(
-            order2(.subset2(self, "statistics")), integer(),
-            x_arg = "stat",
-            call = self$call
+            order2(self$statistics), integer(),
+            x_arg = "stat", call = self$call
         )
         assert_mismatch_nobs(
-            self, NROW(self$data), length(index),
-            action = "must return a statistic with",
+            self, vec_size(self$data), vec_size(index),
             arg = "stat"
         )
-        if (reverse) index <- rev(index)
+        if (self$reverse) index <- rev(index)
         list(panel, index)
     },
     summary_align = function(self) c(TRUE, FALSE)

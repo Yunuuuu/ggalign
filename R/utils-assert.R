@@ -16,13 +16,12 @@ assert_mapping <- function(mapping, arg = caller_arg(mapping),
     }
 }
 
-assert_mismatch_nobs <- function(align, n, nobs, action, arg) {
+assert_mismatch_nobs <- function(align, n, nobs, arg) {
     if (n != nobs) {
         cli_abort(sprintf(
-            "{.arg %s} of %s %s the same length of layout %s-axis (%d)",
-            arg, object_name(align), action,
-            to_coord_axis(align$direction), n
-        ), call = align$call)
+            "{.arg %s} (nobs: %d) of %s is not compatible with the %s (nobs: %d)",
+            arg, nobs, object_name(align), align$layout_name, n
+        ))
     }
 }
 
