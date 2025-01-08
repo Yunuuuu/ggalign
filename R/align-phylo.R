@@ -97,7 +97,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
         # why R CMD check doesn't give error even I don't add ape to dependency
         if (!is.null(self$ladderize)) {
             phylo <- ape::ladderize(phylo,
-                right = identical(ladderize, "right")
+                right = identical(self$ladderize, "right")
             )
         }
         inject(fortify_data_frame.phylo(data = phylo, !!!self$params))
