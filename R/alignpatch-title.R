@@ -4,9 +4,6 @@
 #' titles to each border of the plot: top, left, bottom, and right.
 #'
 #' @details
-#' You can also use [labs()][ggplot2::labs] to specify the titles (use arguments
-#' `r oxford_and(.TLBR)`) for the top, left, bottom, and right borders of the
-#' plot.
 #'
 #' The appearance and alignment of these patch titles can be customized using
 #' [theme()][ggplot2::theme]:
@@ -23,7 +20,7 @@
 #'
 #' @param top,left,bottom,right A string specifying the title to be added to the
 #' top, left, bottom, and right border of the plot.
-#' @return A [labels][ggplot2::labs] object to be added to ggplot.
+#' @return A [`labels`][ggplot2::labs] object to be added to ggplot.
 #' @examples
 #' ggplot(mtcars) +
 #'     geom_point(aes(mpg, disp)) +
@@ -37,9 +34,10 @@
 #' @importFrom ggplot2 waiver
 patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
                          right = waiver()) {
-    add_class(ggplot2::labs(
-        top = top, left = left, bottom = bottom, right = right
-    ), "patch_labels")
+    structure(
+        list(top = top, left = left, bottom = bottom, right = right),
+        class = "ggalign_patch_labels"
+    )
 }
 
 #' @importFrom ggplot2 find_panel calc_element zeroGrob element_grob merge_element
@@ -173,8 +171,11 @@ setup_patch_titles <- function(table, patch_titles, theme) {
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.patch_labels <- function(object, plot, object_name) {
-    plot <- NextMethod()
+ggplot_add.ggalign_patch_labels <- function(object, plot, object_name) {
+    plot$ggalign_patch_labels <- update_non_waive(
+        .subset2(plot, "ggalign_patch_labels") %||% list(),
+        object
+    )
     if (!inherits(plot, "patch_ggplot")) {
         plot <- add_class(plot, "patch_ggplot")
     }

@@ -34,15 +34,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_theme = function(theme) NULL,
     patch_gtable = function(self, plot = self$plot) {
         # extract patch titles --------------------------------
-        patch_titles <- .subset(
-            .subset2(plot, "labels"),
-            c("top", "left", "bottom", "right")
-        )
-
-        # we remove patch titles to avoid warning message for unknown labels
-        plot <- update_labels(plot, list(
-            top = NULL, left = NULL, bottom = NULL, right = NULL
-        ))
+        patch_titles <- .subset2(plot, "ggalign_patch_labels")
 
         # complete_theme() will ensure elements exist --------
         theme <- complete_theme(.subset2(plot, "theme"))
