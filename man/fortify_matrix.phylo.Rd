@@ -6,6 +6,11 @@
 \usage{
 \method{fortify_matrix}{phylo}(data, ...)
 }
+\arguments{
+\item{data}{A \code{\link[ape:as.phylo]{phylo}} object.}
+
+\item{...}{These dots are for future extensions and must be empty.}
+}
 \value{
 A one-column matrix where the tip labels are the values, and the row
 names will also be the tip labels.

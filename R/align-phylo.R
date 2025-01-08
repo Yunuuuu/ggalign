@@ -186,6 +186,8 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 #' directly input into `stack_discrete()` or `circle_discrete()`. This makes it
 #' possible to add [`align_phylo()`] to the stack independently, as
 #' [`align_phylo()`] requires the layout to have labels.
+#' @param data A [`phylo`][ape::as.phylo] object.
+#' @inheritParams rlang::args_dots_empty
 #' @return A one-column matrix where the tip labels are the values, and the row
 #' names will also be the tip labels.
 #' @family fortify_matrix methods
