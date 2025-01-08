@@ -51,7 +51,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">circle_switch</span><span class="op">(</span>radial <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, what <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">circle_switch</span><span class="op">(</span>radial <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, direction <span class="op">=</span> <span class="cn">NULL</span>, what <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,6 +65,13 @@ The parameters <code>start</code>, <code>end</code>, <code>direction</code>, and
 and applied uniformly to all plots within the layout. The parameters
 <code>theta</code> and <code>r.axis.inside</code> will always be ignored and will be set to
 <code>"x"</code> and <code>TRUE</code>, respectively, for all plots.</p></dd>
+
+
+<dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
+<dd><p>A single string of <code>"inward"</code> or <code>"outward"</code>,
+indicating the direction in which the plot is added.</p><ul><li><p><code>outward</code>: The plot is added from the inner to the outer.</p></li>
+<li><p><code>inward</code>: The plot is added from the outer to the inner.</p></li>
+</ul></dd>
 
 
 <dt id="arg-what">what<a class="anchor" aria-label="anchor" href="#arg-what"></a></dt>
