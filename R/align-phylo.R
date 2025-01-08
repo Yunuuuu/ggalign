@@ -181,6 +181,25 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
     summary_align = function(self) c(TRUE, FALSE)
 )
 
+#' @inherit fortify_matrix title
+#' @description This method allows a [`phylo`][ape::as.phylo] object to be
+#' directly input into `stack_discrete()` or `circle_discrete()`. This makes it
+#' possible to add [`align_phylo()`] to the stack independently, as
+#' [`align_phylo()`] requires the layout to have labels.
+#' @return A one-column matrix where the tip labels are the values, and the row
+#' names will also be the tip labels.
+#' @family fortify_matrix methods
+#' @export
+fortify_matrix.phylo <- function(data, ...) {
+    rlang::check_dots_empty()
+    if (is.null(labels <- data$tip_labels)) {
+        cli_abort(
+            "{.arg data} {.cls phylo} object must have tip labels to match the layout data"
+        )
+    }
+    as.matrix(vec_set_names(labels, labels))
+}
+
 #' @inherit fortify_data_frame.default title description
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams fortify_data_frame.dendrogram

@@ -12,6 +12,7 @@
 #' - [`fortify_matrix.default()`]
 #' - [`fortify_matrix.MAF()`]
 #' - [`fortify_matrix.GISTIC()`]
+#' - [`fortify_matrix.phylo()`]
 #' @export
 fortify_matrix <- function(data, ...) {
     UseMethod("fortify_matrix")

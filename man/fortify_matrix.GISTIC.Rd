@@ -56,6 +56,7 @@ details.
 \seealso{
 Other fortify_matrix methods: 
 \code{\link{fortify_matrix.MAF}()},
-\code{\link{fortify_matrix.default}()}
+\code{\link{fortify_matrix.default}()},
+\code{\link{fortify_matrix.phylo}()}
 }
 \concept{fortify_matrix methods}

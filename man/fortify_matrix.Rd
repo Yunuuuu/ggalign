@@ -24,5 +24,6 @@ This function converts various objects into a matrix format.
 \item \code{\link[=fortify_matrix.default]{fortify_matrix.default()}}
 \item \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}
 \item \code{\link[=fortify_matrix.GISTIC]{fortify_matrix.GISTIC()}}
+\item \code{\link[=fortify_matrix.phylo]{fortify_matrix.phylo()}}
 }
 }
