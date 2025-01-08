@@ -8,7 +8,8 @@ with_quad(x, position = waiver(), main = NULL)
 }
 \arguments{
 \item{x}{An object which can be added to the ggplot, including
-\strong{plot options} (see \code{vignette("plot-options")} for details).}
+\strong{schemes}. See \code{\link[=scheme_align]{scheme_align()}}, \code{\link[=scheme_data]{scheme_data()}}, and
+\code{\link[=scheme_theme]{scheme_theme()}}}
 
 \item{position}{A string specifying one or more positions-
 \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}- to indicate the annotation stack context for \code{x}. If

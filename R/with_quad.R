@@ -9,7 +9,8 @@
 #' plot without altering the currently active layout or plot.
 #'
 #' @param x An object which can be added to the ggplot, including
-#' **plot options** (see `vignette("plot-options")` for details).
+#' **schemes**. See [`scheme_align()`], [`scheme_data()`], and
+#' [`scheme_theme()`]
 #' @param position A string specifying one or more positions-
 #' `r oxford_and(.tlbr)`- to indicate the annotation stack context for `x`. If
 #' `NULL`, will change the operated context to the `quad_layout()` itself. For

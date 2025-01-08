@@ -45,7 +45,7 @@ The \code{+} operator is straightforward and should be used as needed.
 
 In order to reduce code repetition \code{ggalign} provides two operators for
 adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}. See \code{vignette("operator")} for details.
+\code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object: \code{-} and \code{&}.
 }
 \examples{
 set.seed(123)

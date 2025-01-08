@@ -12,7 +12,7 @@
 #'
 #' In order to reduce code repetition `ggalign` provides two operators for
 #' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
-#' `r rd_layout()`: `-` and `&`. See `vignette("operator")` for details.
+#' `r rd_layout()`: `-` and `&`.
 #'
 #' @param e1 A `r rd_layout()`.
 #' @param e2 An object to be added to the plot.
