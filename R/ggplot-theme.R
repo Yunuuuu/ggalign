@@ -28,12 +28,14 @@ theme_no_strip <- function() {
     )
 }
 
+#' @importFrom utils packageVersion
 #' @importFrom rlang try_fetch
 complete_theme <- function(theme) {
-    try_fetch(
-        ggfun("complete_theme")(theme),
-        error = function(cnd) ggfun("plot_theme")(list(theme = theme))
-    )
+    if (packageVersion("ggplot2") > "3.5.1") {
+        ggfun("complete_theme")(theme)
+    } else {
+        ggfun("plot_theme")(list(theme = theme))
+    }
 }
 
 #' @importFrom ggplot2 register_theme_elements el_def element_line

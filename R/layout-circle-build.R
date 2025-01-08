@@ -4,6 +4,7 @@ ggalign_build.CircleLayout <- function(x) {
     circle_build(x)
 }
 
+#' @importFrom utils packageVersion
 #' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob theme
 #' @importFrom gtable gtable_add_grob gtable_add_padding
 #' @importFrom grid unit viewport editGrob
@@ -170,29 +171,35 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         }
 
         # build legends
-        default_position <- plot_theme$legend.position %||% "right"
-        if (length(default_position) == 2) {
-            default_position <- "inside"
-        }
-        if (!identical(default_position, "none")) {
-            plot_theme$legend.key.width <- calc_element(
-                "legend.key.width",
-                plot_theme
-            )
-            plot_theme$legend.key.height <- calc_element(
-                "legend.key.height",
-                plot_theme
-            )
-            guides[[i]] <- plot$guides$draw(
-                plot_theme,
-                default_position,
-                plot_theme$legend.direction
-            )
+        if (packageVersion("ggplot2") > "3.5.1") {
+            # ggplot2 development version > 3.5.1
+            guides[[i]] <- plot$guides$assemble(plot_theme)
+        } else {
+            default_position <- plot_theme$legend.position %||% "right"
+            if (length(default_position) == 2) {
+                default_position <- "inside"
+            }
+            if (!identical(default_position, "none")) {
+                plot_theme$legend.key.width <- calc_element(
+                    "legend.key.width",
+                    plot_theme
+                )
+                plot_theme$legend.key.height <- calc_element(
+                    "legend.key.height",
+                    plot_theme
+                )
+                guides[[i]] <- plot$guides$draw(
+                    plot_theme,
+                    default_position,
+                    plot_theme$legend.direction
+                )
+            }
         }
         origin <- just
         last_plot_size <- plot_size # the last plot panel size
         last_spacing <- spacing
     }
+
     # attach the guide legends
     guides <- lapply(c(.TLBR, "inside"), function(guide_pos) {
         unlist(lapply(guides, .subset2, guide_pos), FALSE, FALSE)

@@ -84,6 +84,7 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
     )
 }
 
+#' @importFrom utils packageVersion
 #' @importFrom grid gpar
 #' @importFrom ggplot2 element_grob
 #' @export
@@ -94,21 +95,27 @@ element_grob.ggalign_element_polygon <- function(element,
                                                  colour = NULL,
                                                  linewidth = NULL,
                                                  linetype = NULL, ...) {
-    gp <- try_fetch(
-        gpar(
+    if (packageVersion("ggplot2") > "3.5.1") {
+        gp <- ggfun("gg_par")(
+            lwd = linewidth, col = colour, fill = fill, lty = linetype
+        )
+        element_gp <- ggfun("gg_par")(
+            lwd = element$linewidth,
+            col = element$colour,
+            fill = fill_alpha(element$fill, element$alpha %||% NA),
+            lty = element$linetype,
+            lineend = element$lineend,
+            linejoin = element$linejoin,
+            linemitre = element$linemitre
+        )
+    } else {
+        gp <- gpar(
             lwd = ggfun("len0_null")(linewidth * .pt),
             col = colour,
             fill = fill,
             lty = linetype
-        ),
-        error = function(cnd) {
-            ggplot2::gg_par(
-                lwd = linewidth, col = colour, fill = fill, lty = linetype
-            )
-        }
-    )
-    element_gp <- try_fetch(
-        gpar(
+        )
+        element_gp <- gpar(
             lwd = ggfun("len0_null")(element$linewidth * .pt),
             col = element$colour,
             fill = fill_alpha(element$fill, element$alpha %||% NA),
@@ -116,19 +123,8 @@ element_grob.ggalign_element_polygon <- function(element,
             lineend = element$lineend,
             linejoin = element$linejoin,
             linemitre = element$linemitre
-        ),
-        error = function(cnd) {
-            ggplot2::gg_par(
-                lwd = element$linewidth,
-                col = element$colour,
-                fill = fill_alpha(element$fill, element$alpha %||% NA),
-                lty = element$linetype,
-                lineend = element$lineend,
-                linejoin = element$linejoin,
-                linemitre = element$linemitre
-            )
-        }
-    )
+        )
+    }
     grid::polygonGrob(
         x = x, y = y,
         gp = ggfun("modify_list")(element_gp, gp), ...
