@@ -7,7 +7,7 @@
 align_phylo(
   phylo,
   ...,
-  ladderize = TRUE,
+  ladderize = NULL,
   type = "rectangle",
   center = FALSE,
   tree_type = NULL,
@@ -22,8 +22,10 @@ align_phylo(
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \code{\link[ggplot2:geom_segment]{geom_segment()}}.}
 
-\item{ladderize}{A boolean value indicates whether to ladderize the tree. See
-\code{\link[ape:ladderize]{ladderize()}}.}
+\item{ladderize}{A single string of \code{"left"} or \code{"right"},
+indicating whether to ladderize the tree. Ladderizing arranges the tree so
+that the smallest clade is positioned on the \code{"right"} or the \code{"left"}. By
+default, \code{NULL} means the tree will not be ladderized.}
 
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 

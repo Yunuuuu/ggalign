@@ -3,16 +3,19 @@
 #' @param phylo A [`phylo`][ape::as.phylo] object.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`geom_segment()`][ggplot2::geom_segment].
-#' @param ladderize A boolean value indicates whether to ladderize the tree. See
-#' [`ladderize()`][ape::ladderize()].
+#' @param ladderize A single string of `r oxford_or(c("left", "right"))`,
+#' indicating whether to ladderize the tree. Ladderizing arranges the tree so
+#' that the smallest clade is positioned on the `"right"` or the `"left"`. By
+#' default, `NULL` means the tree will not be ladderized.
 #' @inheritParams fortify_data_frame.phylo
 #' @inheritParams ggalign
 #' @export
-align_phylo <- function(phylo, ..., ladderize = TRUE, type = "rectangle",
+align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
                         center = FALSE, tree_type = NULL,
                         no_axes = NULL, active = NULL,
                         size = NULL) {
-    if (isTRUE(ladderize)) {
+    if (!is.null(ladderize)) {
+        ladderize <- arg_match0(ladderize, c("left", "right"))
         rlang::check_installed("ape", "to ladderize phylogenetics tree")
     }
     assert_s3_class(phylo, "phylo")
@@ -92,7 +95,11 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
     compute = function(self, panel, index) {
         phylo <- self$phylo
         # why R CMD check doesn't give error even I don't add ape to dependency
-        if (isTRUE(self$ladderize)) phylo <- ape::ladderize(phylo)
+        if (!is.null(self$ladderize)) {
+            phylo <- ape::ladderize(phylo,
+                right = identical(ladderize, "right")
+            )
+        }
         inject(fortify_data_frame.phylo(data = phylo, !!!self$params))
     },
     align = function(self, panel, index) {
