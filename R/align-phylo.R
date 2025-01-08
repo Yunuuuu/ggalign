@@ -357,8 +357,9 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
             if (is.null(edge_lengths)) {
                 y <- 1L
             } else {
-                y <- edge_lengths[select] + timing
+                y <- timing
             }
+
             list(
                 node = data_frame0(
                     .index = index,
