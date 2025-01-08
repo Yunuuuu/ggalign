@@ -414,14 +414,16 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                 align_discrete_scales(
                     "x", scales_x, x_design,
                     labels = .subset2(object, "xlabels"),
-                    n_panels = self$n_column_panels
+                    n_panels = self$n_column_panels,
+                    circle_layout = inherits(ParentCoord, "CoordRadial")
                 )
             }
             if (is_discrete_design(y_design)) {
                 align_discrete_scales(
                     "y", scales_y, y_design,
                     labels = .subset2(object, "ylabels"),
-                    n_panels = self$n_row_panels
+                    n_panels = self$n_row_panels,
+                    circle_layout = inherits(ParentCoord, "CoordRadial")
                 )
             }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
@@ -465,7 +467,8 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
     plot
 }
 
-align_discrete_scales <- function(axis, scales, design, labels, n_panels) {
+align_discrete_scales <- function(axis, scales, design, labels, n_panels,
+                                  circle_layout) {
     panel <- .subset2(design, "panel")
     index <- .subset2(design, "index")
 
@@ -505,10 +508,11 @@ align_discrete_scales <- function(axis, scales, design, labels, n_panels) {
                 scale, scale$breaks, pindex, dindex, labels
             )
         }
+
         # by default we elways remove any expansion
         # we don't allow the set of expansion for discrete variables
         # otherwise, ggmark and `cross_mark` won't work properly
-        scale$expand <- default_expand
+        if (!circle_layout) scale$expand <- default_expand
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
