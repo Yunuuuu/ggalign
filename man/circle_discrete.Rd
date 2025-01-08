@@ -49,7 +49,17 @@ set.seed(123)
 small_mat <- matrix(rnorm(56), nrow = 7)
 rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+# direction outward
 circle_discrete(small_mat) +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2") +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c()
+
+# direction inward
+circle_discrete(small_mat, direction = "inward") +
     ggalign() +
     geom_tile(aes(y = .column_index, fill = value)) +
     scale_fill_viridis_c() +
