@@ -179,7 +179,13 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 #' @inheritParams fortify_data_frame.dendrogram
 #' @param tree_type A single string, one of
 #' `r oxford_or(c("phylogram", "cladogram"))`, indicating the type of tree.
+#' - `phylogram`: Represents a phylogenetic tree where branch lengths indicate
+#'   evolutionary distance or time.
+#' - `cladogram`: Represents a tree where branch lengths are not used, or the
+#'   branches do not reflect evolutionary time.
+#'
 #' Usually, you don't need to modify this.
+#'
 #' @param tip_pos The x-coordinates of the tip. Must be the same length
 #' of the number of tips in `tree`.
 #' @return A `data frame` with the node coordinates:
@@ -212,8 +218,8 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
             ))
         }
     }
-    if (is.null(edge_lengths) || identical(tree_type, "cladogram")) {
-        edge_lengths <- seq_len(nrow(edge))
+    if (identical(tree_type, "cladogram")) {
+        edge_lengths <- NULL
     }
     parent <- edge[, 1L, drop = TRUE]
     child <- edge[, 2L, drop = TRUE]
@@ -228,18 +234,22 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
         )
     }
     i <- 0L # tip index
-    phylo_data <- function(index, timing, from_root = TRUE) {
+    phylo_data <- function(index, level, timing) {
         if (any(select <- parent == index)) {
-            y <- timing
+            # recursively for each child
+            data <- list(index = child[select])
+            # if we have edge length, timing should be available
+            if (!is.null(edge_lengths)) {
+                data <- c(data, list(timing = timing + edge_lengths[select]))
+            }
             data <- list_transpose(.mapply(
-                function(index, timing) {
-                    phylo_data(index, timing, from_root = FALSE)
+                function(index, timing = NULL) {
+                    phylo_data(index, level = level + 1L, timing = timing)
                 },
-                list(
-                    index = child[select],
-                    timing = timing + edge_lengths[select]
-                ), NULL
+                data, NULL
             ))
+
+            # integrate the data for each child
             node <- vec_rbind(!!!.subset2(data, "node"))
             edge <- vec_rbind(!!!.subset2(data, "edge"))
 
@@ -264,6 +274,13 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                 x <- sum(range(.subset2(leaves, "x"))) / 2L
             } else {
                 x <- sum(range(direct_leaves_x)) / 2L
+            }
+
+            # y coordinate for current node
+            if (is.null(edge_lengths) && is.null(timing)) {
+                y <- min(direct_leaves_y) * level / (level + 1L)
+            } else {
+                y <- timing
             }
 
             # there is no node data for the root
@@ -309,7 +326,11 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
         } else if (any(select <- child == index)) { # for the tip
             i <<- i + 1L
             x <- tip_pos[i]
-            y <- edge_lengths[select] + timing
+            if (is.null(edge_lengths)) {
+                y <- 1L
+            } else {
+                y <- edge_lengths[select] + timing
+            }
             list(
                 node = data_frame0(
                     .index = index,
@@ -327,6 +348,6 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
     }
 
     # from ape::is.rooted, this should be the most ancester
-    ans <- phylo_data(N + 1L, 0L)
+    ans <- phylo_data(N + 1L, 0L, timing = 0)
     ggalign_attr_set(.subset2(ans, "node"), list(edge = .subset2(ans, "edge")))
 }

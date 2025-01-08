@@ -33,6 +33,13 @@ the middle of the direct child nodes.}
 
 \item{tree_type}{A single string, one of
 \code{"phylogram"} or \code{"cladogram"}, indicating the type of tree.
+\itemize{
+\item \code{phylogram}: Represents a phylogenetic tree where branch lengths indicate
+evolutionary distance or time.
+\item \code{cladogram}: Represents a tree where branch lengths are not used, or the
+branches do not reflect evolutionary time.
+}
+
 Usually, you don't need to modify this.}
 
 \item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
