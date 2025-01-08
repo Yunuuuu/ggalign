@@ -62,7 +62,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot_sizes <- radial$inner_radius[1L] / 0.4 + cumsum(plot_track)
     } else {
         plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
-        # The plots are always build inward, so the order is reversed.
+        # The plots are always build outward, so the order is reversed.
         index <- rev(index)
     }
 
