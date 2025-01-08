@@ -4,7 +4,7 @@
 \alias{circle_switch}
 \title{Determine the active context of circle layout}
 \usage{
-circle_switch(radial = waiver(), what = waiver(), ...)
+circle_switch(radial = waiver(), direction = NULL, what = waiver(), ...)
 }
 \arguments{
 \item{radial}{A \code{\link[ggplot2:coord_polar]{coord_radial()}} object that defines
@@ -13,6 +13,13 @@ The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} wil
 and applied uniformly to all plots within the layout. The parameters
 \code{theta} and \code{r.axis.inside} will always be ignored and will be set to
 \code{"x"} and \code{TRUE}, respectively, for all plots.}
+
+\item{direction}{A single string of \code{"inward"} or \code{"outward"},
+indicating the direction in which the plot is added.
+\itemize{
+\item \code{outward}: The plot is added from the inner to the outer.
+\item \code{inward}: The plot is added from the outer to the inner.
+}}
 
 \item{what}{What should get activated for the \code{\link[=circle_layout]{circle_layout()}}?
 A single number or string of the plot elements in the layout. If \code{NULL}, will remove any active context.}

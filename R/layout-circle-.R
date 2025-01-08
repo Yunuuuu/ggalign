@@ -13,6 +13,10 @@
 #' and applied uniformly to all plots within the layout. The parameters
 #' `theta` and `r.axis.inside` will always be ignored and will be set to
 #' `"x"` and `TRUE`, respectively, for all plots.
+#' @param direction A single string of `r oxford_or(c("inward", "outward"))`,
+#' indicating the direction in which the plot is added.
+#' - `outward`: The plot is added from the inner to the outer.
+#' - `inward`: The plot is added from the outer to the inner.
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(56), nrow = 7)
@@ -25,13 +29,14 @@
 #'     align_dendro(aes(color = branch), k = 3L) +
 #'     scale_color_brewer(palette = "Dark2")
 #' @export
-circle_discrete <- function(data = NULL, ..., radial = NULL, theme = NULL) {
+circle_discrete <- function(data = NULL, ..., radial = NULL,
+                            direction = "outward", theme = NULL) {
     UseMethod("circle_discrete", data)
 }
 
 #' @export
 circle_discrete.default <- function(data = NULL, ..., radial = NULL,
-                                    theme = NULL) {
+                                    direction = "outward", theme = NULL) {
     # the observations are rows, we use matrix to easily
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
@@ -48,7 +53,7 @@ circle_discrete.default <- function(data = NULL, ..., radial = NULL,
     new_circle_layout(
         data = data,
         design = discrete_design(nobs = nobs),
-        radial = radial,
+        radial = radial, direction = direction,
         schemes = schemes, theme = theme
     )
 }
@@ -85,19 +90,22 @@ circle_discrete.formula <- circle_discrete.function
 #'     theme_bw()
 #' @export
 circle_continuous <- function(data = NULL, ..., radial = NULL,
-                              limits = NULL, theme = NULL) {
+                              direction = "outward", limits = NULL,
+                              theme = NULL) {
     UseMethod("circle_continuous", data)
 }
 
 #' @export
 circle_continuous.default <- function(data = NULL, ..., radial = NULL,
-                                      limits = NULL, theme = NULL) {
+                                      direction = "outward", limits = NULL,
+                                      theme = NULL) {
     assert_limits(limits)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_circle_layout(
-        data = data, design = limits, radial = radial,
+        data = data, design = limits,
+        radial = radial, direction = direction,
         schemes = schemes, theme = theme
     )
 }
@@ -115,7 +123,7 @@ circle_continuous.function <- function(data = NULL, ...) {
 circle_continuous.formula <- circle_continuous.function
 
 #' @importFrom methods new
-new_circle_layout <- function(data, design, radial, schemes = NULL,
+new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
                               theme = NULL, name = NULL, call = caller_call()) {
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     assert_s3_class(radial, "CoordRadial", allow_null = TRUE)
@@ -125,6 +133,7 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
             call = call
         )
     }
+    direction <- arg_match0(direction, c("inward", "outward"))
     if (is.null(name)) {
         if (is_continuous_design(design)) {
             name <- "circle_continuous"
@@ -137,7 +146,7 @@ new_circle_layout <- function(data, design, radial, schemes = NULL,
         name = name, data = data,
         schemes = schemes, # used by the layout
         design = design, theme = theme,
-        radial = radial
+        radial = radial, direction = direction
     )
 }
 
@@ -192,5 +201,5 @@ circle_layout <- function(data = NULL, ..., limits = waiver()) {
 #' @include layout-chain-.R
 methods::setClass("CircleLayout",
     contains = "ChainLayout",
-    list(radial = "ANY")
+    list(radial = "ANY", direction = "character")
 )

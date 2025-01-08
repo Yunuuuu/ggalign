@@ -43,7 +43,6 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         radial <- ggproto(NULL, input_radial, theta = "x", r_axis_inside = TRUE)
     }
 
-    # for every plot track, all relative to the total radius `1`
     sizes <- vapply(plot_list, function(plot) {
         # for circular layout, we only support relative size
         if (is.na(size <- as.numeric(plot@size))) {
@@ -51,13 +50,29 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         }
         size
     }, numeric(1L), USE.NAMES = FALSE)
+
+    # For each plot track, relative to the total radius:
+    # `0.4` is coord_radial used for scale size, I don't know what it means
     plot_track <- sizes / sum(sizes) * (1 - radial$inner_radius[1L] / 0.4)
-    plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
+
+    # For each plot, the plot size is calculated by adding the space for the
+    # inner radius of each track.
+    index <- seq_along(plot_list)
+    if (identical(circle@direction, "outward")) {
+        plot_sizes <- radial$inner_radius[1L] / 0.4 + cumsum(plot_track)
+    } else {
+        plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
+        # The plots are always build inward, so the order is reversed.
+        index <- rev(index)
+    }
+
+    # For each plot, the inner radius is calculated as the difference between
+    # the plot size and its track size.
     plot_inner <- plot_sizes - plot_track
     guides <- vector("list", length(plot_list))
     plot_table <- origin <- NULL
     design <- setup_design(circle@design)
-    for (i in rev(seq_along(plot_list))) { # from inner-most to the out-most
+    for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
         align <- plot@align # `AlignProto` object
@@ -154,8 +169,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         if (length(default_position) == 2) {
             default_position <- "inside"
         }
-        if (default_position == "none") {
-        } else {
+        if (!identical(default_position, "none")) {
             plot_theme$legend.key.width <- calc_element(
                 "legend.key.width",
                 plot_theme

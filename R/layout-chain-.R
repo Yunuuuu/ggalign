@@ -521,12 +521,15 @@ chain_layout_add.circle_switch <- function(object, layout, object_name) {
             i = "Did you want to add a {.fn stack_switch}?"
         ))
     }
+    if (!is.waive(radial <- .subset2(object, "radial"))) {
+        layout@radial <- radial
+    }
+    if (!is.null(direction <- .subset2(object, "direction"))) {
+        layout@direction <- direction
+    }
     layout <- switch_chain_plot(
         layout, .subset2(object, "what"),
         quote(circle_switch())
     )
-    if (!is.waive(radial <- .subset2(object, "radial"))) {
-        layout@radial <- radial
-    }
     layout
 }

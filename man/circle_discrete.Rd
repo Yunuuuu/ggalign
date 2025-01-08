@@ -4,7 +4,13 @@
 \alias{circle_discrete}
 \title{Arrange Plots in a Circular Layout}
 \usage{
-circle_discrete(data = NULL, ..., radial = NULL, theme = NULL)
+circle_discrete(
+  data = NULL,
+  ...,
+  radial = NULL,
+  direction = "outward",
+  theme = NULL
+)
 }
 \arguments{
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to
@@ -18,6 +24,13 @@ The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} wil
 and applied uniformly to all plots within the layout. The parameters
 \code{theta} and \code{r.axis.inside} will always be ignored and will be set to
 \code{"x"} and \code{TRUE}, respectively, for all plots.}
+
+\item{direction}{A single string of \code{"inward"} or \code{"outward"},
+indicating the direction in which the plot is added.
+\itemize{
+\item \code{outward}: The plot is added from the inner to the outer.
+\item \code{inward}: The plot is added from the outer to the inner.
+}}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
 elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},

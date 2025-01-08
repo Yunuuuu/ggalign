@@ -21,7 +21,8 @@
 #'     align_dendro(aes(color = branch), k = 3L) +
 #'     scale_color_brewer(palette = "Dark2")
 #' @export
-circle_switch <- function(radial = waiver(), what = waiver(), ...) {
+circle_switch <- function(radial = waiver(), direction = NULL,
+                          what = waiver(), ...) {
     rlang::check_dots_empty()
     if (!is.waive(radial)) {
         assert_s3_class(radial, "CoordRadial", allow_null = TRUE)
@@ -31,6 +32,11 @@ circle_switch <- function(radial = waiver(), what = waiver(), ...) {
         abs(diff(radial$arc)) < pi / 2L) {
         cli_abort("Cannot use circle of acute angle < 90 in {.arg radial}")
     }
+    if (!is.null(direction)) {
+        direction <- arg_match0(direction, c("inward", "outward"))
+    }
     if (!is.waive(what)) what <- check_stack_context(what)
-    structure(list(what = what, radial = radial), class = "circle_switch")
+    structure(list(what = what, radial = radial, direction = direction),
+        class = "circle_switch"
+    )
 }
