@@ -54,7 +54,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_phylo</span><span class="op">(</span></span>
 <span>  <span class="va">phylo</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  ladderize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ladderize <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"rectangle"</span>,</span>
 <span>  center <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tree_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -78,8 +78,10 @@
 
 
 <dt id="arg-ladderize">ladderize<a class="anchor" aria-label="anchor" href="#arg-ladderize"></a></dt>
-<dd><p>A boolean value indicates whether to ladderize the tree. See
-<code>ladderize()</code>.</p></dd>
+<dd><p>A single string of <code>"left"</code> or <code>"right"</code>,
+indicating whether to ladderize the tree. Ladderizing arranges the tree so
+that the smallest clade is positioned on the <code>"right"</code> or the <code>"left"</code>. By
+default, <code>NULL</code> means the tree will not be ladderized.</p></dd>
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
