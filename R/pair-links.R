@@ -20,8 +20,13 @@
 #' @examples
 #' x <- pair_links(
 #'     # group on the left hand only
-#'     1:2,
 #'     c("a", "b"),
+#'     # normally, integer index will be interpreted as the index of the
+#'     # origianl data
+#'     1:2,
+#'     # wrapped with `I()` indicate` the integer index is ordering of the
+#'     # layout
+#'     I(1:2),
 #'     range_link(1, 6),
 #'     range_link("a", "b"),
 #'     # group on the right hand only
@@ -49,7 +54,9 @@
 #' @export
 pair_links <- function(...) {
     pairs <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
-    new_pair_links(lapply(pairs, as_pair_link, x_arg = "..."))
+    new_pair_links(
+        lapply(pairs, as_pair_link, x_arg = "...", call = current_call())
+    )
 }
 
 new_pair_links <- function(x = list(), ..., class = character()) {
@@ -57,8 +64,22 @@ new_pair_links <- function(x = list(), ..., class = character()) {
 }
 
 #' @export
+obj_print_header.ggalign_pair_links <- function(x, ...) {
+    cat("<", vec_ptype_full(x), ">", "\n", sep = "")
+    cat(
+        sprintf(
+            "A total of %d pair%s of link groups",
+            vec_size(x), if (vec_size(x) > 1L) "s" else ""
+        ),
+        "\n",
+        sep = ""
+    )
+    invisible(x)
+}
+
+#' @export
 obj_print_data.ggalign_pair_links <- function(x, ...) {
-    if (length(x) > 0L) {
+    if (vec_size(x) > 0L) {
         hand1 <- vapply(x, function(hand) {
             deparse_link(hand, ..., hand = "hand1")
         }, character(1L), USE.NAMES = FALSE)
@@ -67,13 +88,14 @@ obj_print_data.ggalign_pair_links <- function(x, ...) {
         }, character(1L), USE.NAMES = FALSE)
         nms <- c("", paste0(names_or_index(x), ":  "))
         nms <- format(nms, justify = "right")
-        empty <- character(length(hand2))
+        empty <- character(vec_size(hand2))
         empty[hand1 == "" & hand2 == ""] <- "  <empty>"
         empty <- format(c("", empty), justify = "left")
         hand1 <- format(c("hand1", hand1), justify = "right")
         hand2 <- format(c("hand2", hand2), justify = "left")
-        content <- paste0("  ", nms, hand1, " ~ ", hand2, empty)
-        cat("", content, "", sep = "\n")
+        cat("\n")
+        cat(paste0("  ", nms, hand1, " ~ ", hand2, empty), sep = "\n")
+        cat("\n")
     }
     invisible(x)
 }
@@ -81,11 +103,16 @@ obj_print_data.ggalign_pair_links <- function(x, ...) {
 #' @export
 obj_print_footer.ggalign_pair_links <- function(x, ...) {
     NextMethod()
+    # `lengths`: will call `length.ggalign_pair_link()` method
     n <- sum(lengths(x, use.names = FALSE))
-    cat(sprintf(
-        "A total of %d group%s", n,
-        if (n > 1L) "s" else ""
-    ), sep = "\n")
+    cat(
+        sprintf(
+            "A total of %d link group%s", n,
+            if (n > 1L) "s" else ""
+        ),
+        "\n",
+        sep = ""
+    )
     invisible(x)
 }
 
@@ -169,18 +196,17 @@ print.ggalign_pair_link <- function(x, ...) obj_print(x, ...)
 
 #' @export
 obj_print_header.ggalign_pair_link <- function(x, ...) {
-    cat(sprintf("<%s>", vec_ptype_full(x)), sep = "\n")
+    cat(sprintf("<%s>", vec_ptype_full(x)), "\n", sep = "")
     invisible(x)
 }
 
 #' @export
 obj_print_data.ggalign_pair_link <- function(x, ...) {
     if (length(x) > 0L) {
-        content <- c(
+        cat(c(
             sprintf("  hand1: %s", deparse_link(.subset2(x, "hand1"), ...)),
             sprintf("  hand2: %s", deparse_link(.subset2(x, "hand2"), ...))
-        )
-        cat(content, sep = "\n")
+        ), sep = "\n")
     }
     invisible(x)
 }
@@ -280,12 +306,12 @@ vec_ptype2.ggalign_range_link.ggalign_pair_link <- function(x, y, ...) {
 
 #' @export
 vec_ptype2.ggalign_pair_link.AsIs <- function(x, y, ...) {
-    vec_ptype2(x, remove_class(y, "AsIs"))
+    vec_ptype2(x, remove_class(y, "AsIs"), ...)
 }
 
 #' @export
 vec_ptype2.AsIs.ggalign_pair_link <- function(x, y, ...) {
-    vec_ptype2(remove_class(x, "AsIs"), y)
+    vec_ptype2(remove_class(x, "AsIs"), y, ...)
 }
 
 #' @export
@@ -311,15 +337,10 @@ vec_cast.ggalign_pair_link.numeric <- function(x, to, ...,
 vec_cast.ggalign_pair_link.double <- vec_cast.ggalign_pair_link.numeric
 
 #' @export
-vec_cast.ggalign_pair_link.integer <- function(x, to, ...,
-                                               x_arg = caller_arg(x),
-                                               to_arg = "",
-                                               call = caller_env()) {
-    new_pair_link(x)
-}
+vec_cast.ggalign_pair_link.integer <- vec_cast.ggalign_pair_link.numeric
 
 #' @export
-vec_cast.ggalign_pair_link.character <- vec_cast.ggalign_pair_link.integer
+vec_cast.ggalign_pair_link.character <- vec_cast.ggalign_pair_link.numeric
 
 #' @export
 vec_cast.ggalign_pair_link.ggalign_range_link <-
@@ -333,7 +354,11 @@ vec_cast.ggalign_pair_link.AsIs <- function(x, to, ...,
                                             x_arg = caller_arg(x),
                                             to_arg = "",
                                             call = caller_env()) {
-    I(vec_cast(remove_class(x, "AsIs"), to, x_arg = x_arg, call = call))
+    I(vec_cast(
+        remove_class(x, "AsIs"),
+        to = to, ...,
+        x_arg = x_arg, call = call
+    ))
 }
 
 #' @export
@@ -366,7 +391,7 @@ as_obs_link.NULL <- function(x, ...) x
 
 #' @export
 as_obs_link.AsIs <- function(x, ...) {
-    I(as_obs_link(remove_class(x, "AsIs")))
+    I(as_obs_link(remove_class(x, "AsIs"), ...))
 }
 
 #' @export
@@ -382,7 +407,13 @@ as_obs_link.integer <- as_obs_link.NULL
 as_obs_link.double <- as_obs_link.numeric
 
 #' @export
-as_obs_link.character <- as_obs_link.NULL
+as_obs_link.character <- function(x, ..., arg = caller_arg(x),
+                                  call = caller_env()) {
+    if (any(x == "")) {
+        cli_abort("empty string is not allowed", call = call)
+    }
+    x
+}
 
 #' @export
 as_obs_link.waiver <- as_obs_link.NULL
@@ -469,7 +500,7 @@ deparse_link2.ggalign_pair_link <- function(x, ..., hand) {
 
 #' @export
 deparse_link2.AsIs <- function(x, ...) {
-    ans <- NextMethod()
+    ans <- deparse_link2(remove_class(x, "AsIs"), ...)
     if (!is.null(ans)) ans <- sprintf("I(%s)", ans)
     ans
 }

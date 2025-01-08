@@ -36,8 +36,13 @@ be linked separately to the same plot area.
 \examples{
 x <- pair_links(
     # group on the left hand only
-    1:2,
     c("a", "b"),
+    # normally, integer index will be interpreted as the index of the
+    # origianl data
+    1:2,
+    # wrapped with `I()` indicate` the integer index is ordering of the
+    # layout
+    I(1:2),
     range_link(1, 6),
     range_link("a", "b"),
     # group on the right hand only
