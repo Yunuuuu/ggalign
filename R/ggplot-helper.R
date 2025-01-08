@@ -94,20 +94,40 @@ element_grob.ggalign_element_polygon <- function(element,
                                                  colour = NULL,
                                                  linewidth = NULL,
                                                  linetype = NULL, ...) {
-    gp <- gpar(
-        lwd = ggfun("len0_null")(linewidth * .pt),
-        col = colour,
-        fill = fill,
-        lty = linetype
+    gp <- try_fetch(
+        gpar(
+            lwd = ggfun("len0_null")(linewidth * .pt),
+            col = colour,
+            fill = fill,
+            lty = linetype
+        ),
+        error = function(cnd) {
+            ggplot2::gg_par(
+                lwd = linewidth, col = colour, fill = fill, lty = linetype
+            )
+        }
     )
-    element_gp <- gpar(
-        lwd = ggfun("len0_null")(element$linewidth * .pt),
-        col = element$colour,
-        fill = fill_alpha(element$fill, element$alpha %||% NA),
-        lty = element$linetype,
-        lineend = element$lineend,
-        linejoin = element$linejoin,
-        linemitre = element$linemitre
+    element_gp <- try_fetch(
+        gpar(
+            lwd = ggfun("len0_null")(element$linewidth * .pt),
+            col = element$colour,
+            fill = fill_alpha(element$fill, element$alpha %||% NA),
+            lty = element$linetype,
+            lineend = element$lineend,
+            linejoin = element$linejoin,
+            linemitre = element$linemitre
+        ),
+        error = function(cnd) {
+            ggplot2::gg_par(
+                lwd = element$linewidth,
+                col = element$colour,
+                fill = fill_alpha(element$fill, element$alpha %||% NA),
+                lty = element$linetype,
+                lineend = element$lineend,
+                linejoin = element$linejoin,
+                linemitre = element$linemitre
+            )
+        }
     )
     grid::polygonGrob(
         x = x, y = y,
