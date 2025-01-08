@@ -173,10 +173,23 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # build legends
         if (packageVersion("ggplot2") > "3.5.1") {
             # ggplot2 development version > 3.5.1
-            guides[[i]] <- plot$guides$assemble(plot_theme)
+            guide_list <- plot$guides$assemble(plot_theme)
+            if (!inherits(guide_list, "zeroGrob")) {
+                guides[[i]] <- lapply(guide_list, function(guide_box) {
+                    if (!inherits(guide_box, "zeroGrob")) {
+                        .subset(
+                            .subset2(guide_box, "grobs"),
+                            grepl(
+                                "guides",
+                                .subset2(.subset2(guide_box, "layout"), "name")
+                            )
+                        )
+                    }
+                })
+            }
         } else {
             default_position <- plot_theme$legend.position %||% "right"
-            if (length(default_position) == 2) {
+            if (length(default_position) == 2L) {
                 default_position <- "inside"
             }
             if (!identical(default_position, "none")) {
@@ -188,6 +201,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                     "legend.key.height",
                     plot_theme
                 )
+                # A list of list
                 guides[[i]] <- plot$guides$draw(
                     plot_theme,
                     default_position,
