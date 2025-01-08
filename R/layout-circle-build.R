@@ -58,7 +58,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # For each plot, the plot size is calculated by adding the space for the
     # inner radius of each track.
     index <- seq_along(plot_list)
-    if (identical(circle@direction, "outward")) {
+    direction <- circle@direction
+    if (identical(direction, "outward")) {
         plot_sizes <- radial$inner_radius[1L] / 0.4 + cumsum(plot_track)
     } else {
         plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
@@ -132,6 +133,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             scales::rescale(0.5, from = bbox$x),
             scales::rescale(0.5, from = bbox$y)
         )
+        spacing <- calc_element("panel.spacing.r", plot_theme)
 
         if (is.null(plot_table)) {
             plot_table <- gt
@@ -140,14 +142,17 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             rescale_factor <- last_plot_size / plot_size
 
             # the spacer between two plots
-            spacing <- calc_element("panel.spacing.r", plot_theme)
-            if (inherits(spacing, "element_blank") || is.null(spacing)) {
-                spacing <- unit(0, "mm")
+            if (identical(direction, "outward")) {
+                spacer <- last_spacing
+            } else {
+                spacer <- spacing
             }
-
+            if (inherits(spacer, "element_blank") || is.null(spacer)) {
+                spacer <- unit(0, "mm")
+            }
             plot_table <- editGrob(plot_table, vp = viewport(
-                width = unit(rescale_factor, "npc") - spacing,
-                height = unit(rescale_factor, "npc") - spacing,
+                width = unit(rescale_factor, "npc") - spacer,
+                height = unit(rescale_factor, "npc") - spacer,
                 x = origin[1L], y = origin[2L], just = just,
                 default.units = "native", clip = "off"
             ))
@@ -186,6 +191,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         }
         origin <- just
         last_plot_size <- plot_size # the last plot panel size
+        last_spacing <- spacing
     }
     # attach the guide legends
     guides <- lapply(c(.TLBR, "inside"), function(guide_pos) {
