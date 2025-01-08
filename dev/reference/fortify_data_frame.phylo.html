@@ -90,8 +90,11 @@ the middle of the direct child nodes.</p></dd>
 
 <dt id="arg-tree-type">tree_type<a class="anchor" aria-label="anchor" href="#arg-tree-type"></a></dt>
 <dd><p>A single string, one of
-<code>"phylogram"</code> or <code>"cladogram"</code>, indicating the type of tree.
-Usually, you don't need to modify this.</p></dd>
+<code>"phylogram"</code> or <code>"cladogram"</code>, indicating the type of tree.</p><ul><li><p><code>phylogram</code>: Represents a phylogenetic tree where branch lengths indicate
+evolutionary distance or time.</p></li>
+<li><p><code>cladogram</code>: Represents a tree where branch lengths are not used, or the
+branches do not reflect evolutionary time.</p></li>
+</ul><p>Usually, you don't need to modify this.</p></dd>
 
 
 <dt id="arg-tip-pos">tip_pos<a class="anchor" aria-label="anchor" href="#arg-tip-pos"></a></dt>
