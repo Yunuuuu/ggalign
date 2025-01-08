@@ -194,7 +194,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
 #' @export
 fortify_matrix.phylo <- function(data, ...) {
     rlang::check_dots_empty()
-    if (is.null(labels <- data$tip_labels)) {
+    if (is.null(labels <- data$tip.label)) {
         cli_abort(
             "{.arg data} {.cls phylo} object must have tip labels to match the layout data"
         )
