@@ -124,7 +124,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         value_list <- strsplit(data$value,
             split = "\\s*[;:,|]\\s*", perl = TRUE
         )
-        lvls <- ggalign_attr(data, ".__ggalign_oncoplot_breaks__")
+        lvls <- .subset2(ggalign_attr_get(data), ".__ggalign_oncoplot_breaks__")
         data <- vec_rep_each(data, list_sizes(value_list))
         value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
         if (!is.null(lvls)) value <- factor(value, levels = lvls)
