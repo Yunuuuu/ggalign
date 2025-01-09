@@ -111,6 +111,6 @@ combining and aligning plots, which was modified to suit the needs of
 this package. Without the contributions of these open-source projects,
 this package would not have been possible.
 
-Additionally, I would like to extend my heartfelt thanks to @teunbrand,
-who has fulfilled my numerous feature requests, and assisted with the
-integration of new functions into ggplot2.
+Additionally, I would like to extend my heartfelt thanks to
+`@teunbrand`, who has fulfilled my numerous feature requests, and
+assisted with the integration of new functions into ggplot2.
