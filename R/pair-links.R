@@ -118,7 +118,7 @@ obj_print_footer.ggalign_pair_links <- function(x, ...) {
 
 #' @export
 `[<-.ggalign_pair_links` <- function(x, i, value) {
-    value <- lapply(value, as_pair_link, x_arg = "value")
+    value <- lapply(value, as_pair_link, x_arg = "value", call = current_call())
     NextMethod()
 }
 
