@@ -26,11 +26,10 @@ mat <- as.matrix(expr[, grep("cell", colnames(expr))])
 base_mean <- rowMeans(mat)
 mat_scaled <- t(apply(mat, 1, scale))
 type <- gsub("s\\d+_", "", colnames(mat))
-
 heat1 <- ggheatmap(mat_scaled) -
     scheme_align(free_spaces = "l") +
     scale_y_continuous(breaks = NULL) +
-    scale_fill_viridis_c(option = "magma") +
+    scale_fill_viridis_c(name = "Gene expression", option = "magma") +
     # add dendrogram for this heatmap
     anno_top() +
     align_dendro() +
@@ -42,7 +41,10 @@ heat1 <- ggheatmap(mat_scaled) -
 heat2 <- ggheatmap(base_mean, width = unit(2, "cm")) +
     scale_y_continuous(breaks = NULL) +
     scale_x_continuous(name = "base mean", breaks = FALSE) +
-    scale_fill_gradientn(colours = c("#2600D1FF", "white", "#EE3F3FFF")) +
+    scale_fill_gradientn(
+        name = "base mean",
+        colours = c("#2600D1FF", "white", "#EE3F3FFF")
+    ) +
     # set the active context of the heatmap to the top
     # and set the size of the top stack
     anno_top(size = unit(4, "cm")) +
@@ -59,19 +61,21 @@ heat3 <- ggheatmap(expr$type, width = unit(2, "cm")) +
     # add barplot in the top annotation, and remove the spaces in the y-axis
     anno_top() -
     scheme_align(free_spaces = "lr") +
-    ggalign(limits = FALSE) +
+    ggfree() +
     geom_bar(
         aes(.extra_panel, fill = factor(value)),
         position = position_fill()
     ) +
-    scale_x_discrete() +
+    theme_no_axes("x") +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    plot_theme(plot.margin = margin()) &
+    scheme_theme(plot.margin = margin()) &
     theme(
         plot.background = element_blank(), panel.background = element_blank(),
         legend.background = element_blank()
     )
+
+set.seed(1234L)
 logo <- stack_alignh(data = mat_scaled) +
     stack_active(sizes = c(0.2, 1, 1)) +
     # group stack rows into 5 groups
@@ -97,11 +101,16 @@ logo <- stack_alignh(data = mat_scaled) +
     ) +
     # add another heatmap and set the heatmap body width
     heat3
+
 logo_tmp <- tempfile(fileext = ".png")
-ggplot2::ggsave(logo_tmp, plot = logo, device = "png", dpi = 1000L)
+ggplot2::ggsave(logo_tmp,
+    plot = logo,
+    device = "png", dpi = 1000L,
+    width = 12, height = 9
+)
 hexSticker::sticker(
     logo_tmp,
-    package = "ggalign", s_x = 1.02, s_y = 0.86,
+    package = "ggalign", s_x = 1.045, s_y = 0.87,
     s_width = 0.72, s_height = 0.8,
     p_size = 80, p_y = 1.6, p_color = "#741140",
     h_fill = "white", h_color = "#db5d37", h_size = 0.8,
