@@ -20,3 +20,4 @@ plots in the layout. You can add a \code{layout_expand} object to the layout. Fo
 the \code{quad_layout()} function, you must specify \code{x} and \code{y} arguments. For
 other layouts, you can pass the expansion values using \code{...} directly.
 }
+\keyword{internal}

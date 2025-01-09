@@ -13,6 +13,7 @@
 #' @param x,y Same as `...`, but specifically for `quad_layout()`.
 #'
 #' @importFrom rlang list2
+#' @keywords internal
 layout_expand <- function(..., x = waiver(), y = waiver()) {
     if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
         cli_abort(
