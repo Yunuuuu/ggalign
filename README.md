@@ -68,6 +68,8 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Compare with other similar tools
 
+Basic Layout support:
+
 | Layout Options                    | `ggalign`                                           | `ComplexHeatmap`                  | `marsilea`               | `ggheatmap`                                         | `ggtree`                                            |
 |-----------------------------------|-----------------------------------------------------|-----------------------------------|--------------------------|-----------------------------------------------------|-----------------------------------------------------|
 | **Language**                      | R                                                   | R                                 | Python                   | R                                                   | R                                                   |
@@ -80,6 +82,10 @@ remotes::install_github("Yunuuuu/ggalign")
 | **Cross Layout**                  | ✅                                                  | ❌                                | ❌                       | ❌                                                  | ❌                                                  |
 | **Ease of Use**                   | Easy for ggplot2 users                              | Easy for for grid user            | Easy for python user     | Easy                                                | Easy for ggplot2 users                              |
 | **Fully Compatible with ggplot2** | ✅                                                  | ❌                                | ❌                       | ❌                                                  | Limited Geometric layers support                    |
+
+------------------------------------------------------------------------
+
+Specific Function:
 
 | Functions                                    | `ggalign`                                             | `ComplexHeatmap`                                                          | `marsilea`        | `ggheatmap`                                          | `ggtree`                            |
 |----------------------------------------------|-------------------------------------------------------|---------------------------------------------------------------------------|-------------------|------------------------------------------------------|-------------------------------------|
