@@ -68,8 +68,6 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Compare with other similar tools
 
-Basic Layout support:
-
 | Layout Options                    | `ggalign`                                           | `ComplexHeatmap`                  | `marsilea`               | `ggtree`                                            |
 |-----------------------------------|-----------------------------------------------------|-----------------------------------|--------------------------|-----------------------------------------------------|
 | **Language**                      | R                                                   | R                                 | Python                   | R                                                   |
@@ -85,8 +83,6 @@ Basic Layout support:
 
 ------------------------------------------------------------------------
 
-Specific Function:
-
 | Functions                                    | `ggalign`                                             | `ComplexHeatmap`                                                          | `marsilea`        | `ggtree`                            |
 |----------------------------------------------|-------------------------------------------------------|---------------------------------------------------------------------------|-------------------|-------------------------------------|
 | **Data input**                               | Various, and can be easily extended                   | fixed                                                                     | fixed             | Various, and can be easily extended |
@@ -97,7 +93,7 @@ Specific Function:
 | **Legends Creation**                         | Automatic                                             | Limited automatic, requires manual add                                    | Manual            | Automatic                           |
 | **Legends Position**                         | Anywhere, can be controlled for a single plot         | Four sides, can only be placed on one side at a time                      | ?                 | Anywhere                            |
 | **Scientific Color Palettes**                | Many                                                  | Limited                                                                   | Limited           | Many                                |
-| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | hclust only (Cannot be used in Stack Layout)                              | hclust only       | Tree from Both `hclust` or `ape`    |
+| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only (Cannot be used in Stack Layout)                            | `hclust` only     | Tree from Both `hclust` or `ape`    |
 | **Tanglegram**                               | ✅                                                    | ❌                                                                        | ❌                | ❌                                  |
 | **3D Heatmap**                               | ✅                                                    | ✅                                                                        | ❌                | ❌                                  |
 | **Oncoplot**                                 | ✅                                                    | ✅                                                                        | ✅                | ❌                                  |
