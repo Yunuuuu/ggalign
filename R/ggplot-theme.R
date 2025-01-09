@@ -28,6 +28,8 @@ theme_no_strip <- function() {
     )
 }
 
+theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
+
 #' @importFrom utils packageVersion
 #' @importFrom rlang try_fetch
 complete_theme <- function(theme) {
