@@ -4,7 +4,7 @@
 \alias{ggalign_attr}
 \title{Get Data from the Attached Attribute in the Rendering Process}
 \usage{
-ggalign_attr(x, field = NULL)
+ggalign_attr(x, field = NULL, check = TRUE)
 }
 \arguments{
 \item{x}{Data used, typically inherited from the layout \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
@@ -12,6 +12,9 @@ ggalign_attr(x, field = NULL)
 \item{field}{A string specifying the particular data to retrieve from the
 attached attribute. If \code{NULL}, the entire attached attribute list will be
 returned.}
+
+\item{check}{A boolean indicating whether to check if the \code{field} exists. If
+\code{TRUE}, an error will be raised if the specified \code{field} does not exist.}
 }
 \value{
 The specified data from the attached attribute or \code{NULL} if it is

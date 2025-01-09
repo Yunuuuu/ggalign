@@ -188,14 +188,19 @@ ggalign_stat.AlignGg <- ggalign_stat.default
 #' @param field A string specifying the particular data to retrieve from the
 #' attached attribute. If `NULL`, the entire attached attribute list will be
 #' returned.
-#'
+#' @param check A boolean indicating whether to check if the `field` exists. If
+#' `TRUE`, an error will be raised if the specified `field` does not exist.
 #' @return The specified data from the attached attribute or `NULL` if it is
 #' unavailable.
 #'
 #' @export
-ggalign_attr <- function(x, field = NULL) {
+ggalign_attr <- function(x, field = NULL, check = TRUE) {
+    assert_string(field, allow_null = TRUE)
     if (is.null(x <- ggalign_attr_get(x)) || is.null(field)) {
         return(x)
+    }
+    if (isTRUE(check) && !rlang::has_name(x, field)) {
+        cli_abort("Cannot find {field} in {.arg x}")
     }
     .subset2(x, field)
 }
