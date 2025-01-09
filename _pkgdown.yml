@@ -54,7 +54,6 @@ reference:
   - active
   - ggalign_attr
   - continuous_limits
-  - layout_expand
 
 - title: Layout Customization
   desc: >
