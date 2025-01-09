@@ -100,8 +100,13 @@ to indicate the ordered index by the layout.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">pair_links</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="co"># group on the left hand only</span></span></span>
-<span class="r-in"><span>    <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="co"># normally, integer index will be interpreted as the index of the</span></span></span>
+<span class="r-in"><span>    <span class="co"># origianl data</span></span></span>
+<span class="r-in"><span>    <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>    <span class="co"># wrapped with `I()` indicate` the integer index is ordering of the</span></span></span>
+<span class="r-in"><span>    <span class="co"># layout</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu">range_link</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu">range_link</span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="co"># group on the right hand only</span></span></span>
@@ -117,11 +122,35 @@ to indicate the ordered index by the layout.</p></dd>
 <span class="r-in"><span>    <span class="op">~</span><span class="cn">NULL</span> <span class="co"># an empty link</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links[11]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:           c("a", "b") ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                   1:2 ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                I(1:2) ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:      range_link(1, 6) ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:  range_link("a", "b") ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ 1:2                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    7:                       ~ c("a", "b")              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    8:                       ~ range_link(1, 6)         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ c("a", "b")              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   10:      range_link(1, 6) ~ waiver()                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   11:              waiver() ~ 1:2                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   12:                       ~                   &lt;empty&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># we can modify it as usual list</span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span> <span class="co"># remove the first link</span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">LETTERS</span></span></span>
+<span class="r-in"><span><span class="va">x</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:                   1:2 ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:           c("a", "b") ~                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                I(1:2) ~                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    3:      range_link(1, 6) ~                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4:  range_link("a", "b") ~                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ 1:2                      </span>
@@ -131,49 +160,31 @@ to indicate the ordered index by the layout.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ waiver()                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   10:              waiver() ~ 1:2                      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   11:                       ~                   &lt;empty&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 13 groups</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># we can modify it as usual list</span></span></span>
-<span class="r-in"><span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span> <span class="co"># remove the first link</span></span></span>
-<span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">LETTERS</span></span></span>
-<span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links[11]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:           c("a", "b") ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:      range_link(1, 6) ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  range_link("a", "b") ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                       ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ range_link(1, 6)         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    7:      range_link(1, 6) ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    8:      range_link(1, 6) ~ waiver()                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    9:              waiver() ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   10:                       ~                   &lt;empty&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    a:                       ~ c(A, B, ..., Z)          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 13 groups</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># modify with a list</span></span></span>
 <span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">range_link</span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links[11]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:                       ~ c("a", "b")                  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:                       ~ range_link("a", "b")         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  range_link("a", "b") ~                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                       ~ 1:2                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ c("a", "b")                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ range_link(1, 6)             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    7:      range_link(1, 6) ~ c("a", "b")                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    8:      range_link(1, 6) ~ waiver()                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    9:              waiver() ~ 1:2                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   10:                       ~                       &lt;empty&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:      range_link(1, 6) ~                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  range_link("a", "b") ~                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ 1:2                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ c("a", "b")                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    7:                       ~ range_link(1, 6)             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    8:      range_link(1, 6) ~ c("a", "b")                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ waiver()                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   10:              waiver() ~ 1:2                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   11:                       ~                       &lt;empty&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    a:                       ~ c(A, B, ..., Z)              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 13 groups</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
