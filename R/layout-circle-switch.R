@@ -24,13 +24,11 @@
 circle_switch <- function(radial = waiver(), direction = NULL,
                           what = waiver(), ...) {
     rlang::check_dots_empty()
-    if (!is.waive(radial)) {
-        assert_s3_class(radial, "CoordRadial", allow_null = TRUE)
-    }
-    if (!is.waive(radial) &&
-        !is.null(radial) &&
-        abs(diff(radial$arc)) < pi / 2L) {
-        cli_abort("Cannot use circle of acute angle < 90 in {.arg radial}")
+    if (!is.waive(radial) && !is.null(radial)) {
+        assert_s3_class(radial, "CoordRadial")
+        if (abs(diff(radial$arc)) < pi / 2L) {
+            cli_abort("Cannot use circle of acute angle < 90 in {.arg radial}")
+        }
     }
     if (!is.null(direction)) {
         direction <- arg_match0(direction, c("inward", "outward"))
