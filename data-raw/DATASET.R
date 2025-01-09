@@ -69,11 +69,7 @@ heat3 <- ggheatmap(expr$type, width = unit(2, "cm")) +
     theme_no_axes("x") +
     scale_y_continuous(expand = expansion()) +
     scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    scheme_theme(plot.margin = margin()) &
-    theme(
-        plot.background = element_blank(), panel.background = element_blank(),
-        legend.background = element_blank()
-    )
+    scheme_theme(plot.margin = margin())
 
 set.seed(1234L)
 logo <- stack_alignh(data = mat_scaled) +
@@ -100,7 +96,12 @@ logo <- stack_alignh(data = mat_scaled) +
         axis.text.x = element_text(angle = -60, hjust = 0)
     ) +
     # add another heatmap and set the heatmap body width
-    heat3
+    heat3 &
+    theme(
+        plot.background = element_blank(), 
+        panel.background = element_blank(),
+        legend.background = element_blank()
+    )
 
 logo_tmp <- tempfile(fileext = ".png")
 ggplot2::ggsave(logo_tmp,
@@ -110,10 +111,11 @@ ggplot2::ggsave(logo_tmp,
 )
 hexSticker::sticker(
     logo_tmp,
-    package = "ggalign", s_x = 1.045, s_y = 0.87,
-    s_width = 0.72, s_height = 0.8,
+    s_x = 1.045, s_y = 0.87, s_width = 0.72, s_height = 0.8,
+    package = "ggalign",
     p_size = 80, p_y = 1.6, p_color = "#741140",
     h_fill = "white", h_color = "#db5d37", h_size = 0.8,
+    # spotlight  = TRUE,
     filename = file.path(logo_dir, "logo.png"),
     dpi = 1200L
 )
