@@ -20,7 +20,6 @@
 #' @export
 fortify_upset <- function(data, mode = "distinct", ...) {
     mode <- arg_match0(mode, c("distinct", "intersect", "union"))
-    rlang::check_dots_used()
     UseMethod("fortify_upset")
 }
 
@@ -34,6 +33,7 @@ fortify_upset <- function(data, mode = "distinct", ...) {
 #' @family fortify_upset methods
 #' @export
 fortify_upset.list <- function(data, mode = "distinct", ...) {
+    rlang::check_dots_empty()
     data <- lapply(data, function(x) {
         vec_unique(vec_slice(x, !vec_detect_missing(x)))
     })

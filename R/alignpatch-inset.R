@@ -82,7 +82,6 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 #' @export
 #' @keywords internal
 patch <- function(x, ...) {
-    rlang::check_dots_used()
     UseMethod("patch")
 }
 
@@ -98,12 +97,14 @@ patch.default <- function(x, ...) {
 #' @family patch methods
 #' @export
 patch.grob <- function(x, ...) {
+    rlang::check_dots_empty()
     x
 }
 
 #' @export
 #' @rdname patch.grob
 patch.gList <- function(x, ...) {
+    rlang::check_dots_empty()
     # gLists need to be wrapped in a grob tree
     grid::grobTree(x)
 }
@@ -114,7 +115,7 @@ patch.gList <- function(x, ...) {
 #' @family patch methods
 #' @export
 patch.ggplot <- function(x, ...) {
-    ggplotGrob(x)
+    ggplotGrob(x, ...)
 }
 
 #' @inherit patch.grob
@@ -125,7 +126,7 @@ patch.ggplot <- function(x, ...) {
 #' @family patch methods
 #' @export
 patch.patch_ggplot <- function(x, ...) {
-    ggalignGrob(x)
+    ggalignGrob(x, ...)
 }
 
 #' @inherit patch.grob
@@ -133,7 +134,7 @@ patch.patch_ggplot <- function(x, ...) {
 #' @family patch methods
 #' @export
 patch.alignpatches <- function(x, ...) {
-    ggalignGrob(x)
+    ggalignGrob(x, ...)
 }
 
 #' @inherit patch.grob
@@ -142,7 +143,7 @@ patch.alignpatches <- function(x, ...) {
 #' @export
 patch.patchwork <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patchwork")
-    patchwork::patchworkGrob(x)
+    patchwork::patchworkGrob(x, ...)
 }
 
 #' @inherit patch.grob
@@ -151,7 +152,7 @@ patch.patchwork <- function(x, ...) {
 #' @export
 patch.patch <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patch")
-    patchwork::patchGrob(x)
+    patchwork::patchGrob(x, ...)
 }
 
 #' @inherit patch.grob
@@ -201,6 +202,7 @@ patch.function <- function(x, ..., device = NULL, name = NULL) {
 #' @export
 patch.recordedplot <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from recordedplot")
+    rlang::check_dots_empty()
     gridGraphics::echoGrob(x, device = device %||% offscreen)
 }
 
@@ -257,4 +259,7 @@ patch.HeatmapAnnotation <- patch.HeatmapList
 #' @seealso [`pheatmap()`][pheatmap::pheatmap]
 #' @family patch methods
 #' @export
-patch.pheatmap <- function(x, ...) .subset2(x, "gtable")
+patch.pheatmap <- function(x, ...) {
+    rlang::check_dots_empty()
+    .subset2(x, "gtable")
+}

@@ -122,7 +122,6 @@ inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
 #' @return The statistics
 #' @export
 ggalign_stat <- function(x, ...) {
-    rlang::check_dots_used()
     UseMethod("ggalign_stat")
 }
 
@@ -154,7 +153,10 @@ ggalign_stat.ggalign_plot <- function(x, ...) {
 }
 
 #' @export
-ggalign_stat.Align <- function(x, ...) .subset2(x, "statistics")
+ggalign_stat.Align <- function(x, ...) {
+    rlang::check_dots_empty()
+    .subset2(x, "statistics")
+}
 
 #' @export
 ggalign_stat.default <- function(x, ...) {

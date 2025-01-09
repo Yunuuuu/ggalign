@@ -46,7 +46,6 @@ raster_magick <- function(x, magick = NULL, ...,
     }
     assert_number_whole(res, min = 1, allow_null = TRUE)
     assert_bool(interpolate)
-    rlang::check_dots_used()
     .raster_magick(
         x = x, ..., magick = magick,
         res = res, interpolate = interpolate
@@ -61,16 +60,20 @@ raster_magick <- function(x, magick = NULL, ...,
 #' `raster_magick()`. It assumes the input arguments are valid and does not
 #' perform any additional checks.
 #' @inheritParams raster_magick
+#' @name raster_magick_interal
 #' @keywords internal
-.raster_magick <- function(x, magick = NULL, ...) {
+.raster_magick <- function(x, ...) {
     UseMethod(".raster_magick")
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
+#' @importFrom rlang list2
 #' @export
-.raster_magick.Layer <- function(x, magick = NULL, ...) {
+#' @rdname raster_magick_interal
+.raster_magick.Layer <- function(x, ...) {
     ggproto(
         NULL, x,
+        .ggalign_raster_magick = list2(...),
         draw_geom = function(self, data, layout) {
             grobs <- ggproto_parent(x, self)$draw_geom(data, layout)
             if (!inherits(layout$coord, "CoordCartesian")) {
@@ -79,26 +82,30 @@ raster_magick <- function(x, magick = NULL, ...,
                 )
                 return(grobs)
             }
-            lapply(grobs, .raster_magick, ..., magick = magick)
+            inject(.raster_magick(grobs, !!!self$.ggalign_raster_magick))
         }
     )
 }
 
 #' @export
-.raster_magick.list <- function(x, magick = NULL, ...) {
-    lapply(x, .raster_magick, ..., magick = magick)
+#' @rdname raster_magick_interal
+.raster_magick.list <- function(x, ...) {
+    lapply(x, .raster_magick, ...)
 }
 
 #' @export
-.raster_magick.ggplot <- function(x, magick = NULL, ...) {
-    x$layers <- lapply(x$layers, .raster_magick, ..., magick = magick)
+#' @rdname raster_magick_interal
+.raster_magick.ggplot <- function(x, ...) {
+    x$layers <- lapply(x$layers, .raster_magick, ...)
     x
 }
 
 #' @importFrom grid grob
 #' @export
+#' @rdname raster_magick_interal
 .raster_magick.grob <- function(x, magick = NULL, ...,
                                 res = NULL, interpolate = FALSE) {
+    rlang::check_dots_empty()
     grob(
         grob = x,
         magick = magick,
@@ -110,23 +117,28 @@ raster_magick <- function(x, magick = NULL, ...,
 
 #' @importFrom grid grob
 #' @export
+#' @rdname raster_magick_interal
 .raster_magick.gList <- .raster_magick.grob
 
+#' @importFrom grid editGrob
 #' @export
+#' @rdname raster_magick_interal
 .raster_magick.ggalignRasterMagick <- function(x, magick = NULL, ...,
                                                res = NULL,
                                                interpolate = FALSE) {
-    x["magick"] <- list(magick)
-    x["res"] <- list(res)
-    x["interpolate"] <- list(interpolate)
-    x
+    rlang::check_dots_empty()
+    editGrob(x, magick = magick, res = res, interpolate = interpolate)
 }
 
+# there methods won't check arguments, all arguments passed will be just ignored
+# directly
 #' @export
-.raster_magick.zeroGrob <- function(x, magick = NULL, ...) x
+#' @rdname raster_magick_interal
+.raster_magick.zeroGrob <- function(x, ...) x
 
 #' @export
-.raster_magick.default <- function(x, magick = NULL, ...) x
+#' @rdname raster_magick_interal
+.raster_magick.default <- function(x, ...) x
 
 # preDraw:
 #  - makeContext
