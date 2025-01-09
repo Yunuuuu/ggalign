@@ -113,22 +113,19 @@
 <div class="section level2">
 <h2 id="compare-with-other-similar-tools">Compare with other similar tools<a class="anchor" aria-label="anchor" href="#compare-with-other-similar-tools"></a>
 </h2>
-<p>Basic Layout support:</p>
 <table class="table">
 <colgroup>
-<col width="13%">
-<col width="20%">
-<col width="13%">
-<col width="10%">
-<col width="20%">
-<col width="20%">
+<col width="17%">
+<col width="26%">
+<col width="17%">
+<col width="12%">
+<col width="26%">
 </colgroup>
 <thead><tr class="header">
 <th>Layout Options</th>
 <th><code>ggalign</code></th>
 <th><code>ComplexHeatmap</code></th>
 <th><code>marsilea</code></th>
-<th><code>ggheatmap</code></th>
 <th><code>ggtree</code></th>
 </tr></thead>
 <tbody>
@@ -138,14 +135,12 @@
 <td>R</td>
 <td>Python</td>
 <td>R</td>
-<td>R</td>
 </tr>
 <tr class="even">
 <td><strong>User Interface</strong></td>
 <td>Declarative</td>
 <td>Functional</td>
 <td>Declarative</td>
-<td>Functional</td>
 <td>Declarative</td>
 </tr>
 <tr class="odd">
@@ -154,14 +149,12 @@
 <td>grid</td>
 <td>Matplotlib</td>
 <td>ggplot2 (Advanced plot system built on grid system)</td>
-<td>ggplot2 (Advanced plot system built on grid system)</td>
 </tr>
 <tr class="even">
 <td><strong>Focus</strong></td>
 <td>Composable Visualization</td>
 <td>Heatmap</td>
 <td>Composable Visualization</td>
-<td>Heatmap</td>
 <td>tree Data</td>
 </tr>
 <tr class="odd">
@@ -169,7 +162,6 @@
 <td>✅</td>
 <td>Heatmap Only (discrete variables)</td>
 <td>✅</td>
-<td>Heatmap Only (discrete variables)</td>
 <td>❌</td>
 </tr>
 <tr class="even">
@@ -178,12 +170,10 @@
 <td>✅</td>
 <td>✅</td>
 <td>❌</td>
-<td>❌</td>
 </tr>
 <tr class="odd">
 <td><strong>Circle Layout</strong></td>
 <td>✅</td>
-<td>❌</td>
 <td>❌</td>
 <td>❌</td>
 <td>✅</td>
@@ -194,14 +184,12 @@
 <td>❌</td>
 <td>❌</td>
 <td>❌</td>
-<td>❌</td>
 </tr>
 <tr class="odd">
 <td><strong>Ease of Use</strong></td>
 <td>Easy for ggplot2 users</td>
 <td>Easy for for grid user</td>
 <td>Easy for python user</td>
-<td>Easy</td>
 <td>Easy for ggplot2 users</td>
 </tr>
 <tr class="even">
@@ -209,35 +197,30 @@
 <td>✅</td>
 <td>❌</td>
 <td>❌</td>
-<td>❌</td>
 <td>Limited Geometric layers support</td>
 </tr>
 </tbody>
 </table>
 <hr>
-<p>Specific Function:</p>
 <table class="table">
 <colgroup>
-<col width="16%">
 <col width="19%">
-<col width="26%">
-<col width="6%">
-<col width="18%">
-<col width="12%">
+<col width="23%">
+<col width="32%">
+<col width="8%">
+<col width="15%">
 </colgroup>
 <thead><tr class="header">
 <th>Functions</th>
 <th><code>ggalign</code></th>
 <th><code>ComplexHeatmap</code></th>
 <th><code>marsilea</code></th>
-<th><code>ggheatmap</code></th>
 <th><code>ggtree</code></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><strong>Data input</strong></td>
 <td>Various, and can be easily extended</td>
-<td>fixed</td>
 <td>fixed</td>
 <td>fixed</td>
 <td>Various, and can be easily extended</td>
@@ -247,23 +230,20 @@
 <td>Wide variety, provided by ggplot2</td>
 <td>Many, but limited</td>
 <td>Many, but limited</td>
-<td>Limited</td>
 <td>Limited Geometric layers support</td>
 </tr>
 <tr class="odd">
 <td><strong>Reorder observations</strong></td>
 <td>✅</td>
-<td>Heatmap Only (Cannot used in Stack Layout)</td>
+<td>Heatmap Only (Cannot be used in Stack Layout)</td>
 <td>✅</td>
-<td>❌</td>
 <td>✅</td>
 </tr>
 <tr class="even">
 <td><strong>Group observations into different panels</strong></td>
 <td>✅</td>
-<td>Heatmap Only (Cannot used in Stack Layout)</td>
+<td>Heatmap Only (Cannot be used in Stack Layout)</td>
 <td>✅</td>
-<td>❌</td>
 <td>❌</td>
 </tr>
 <tr class="odd">
@@ -271,7 +251,6 @@
 <td>Kmeans,Hierarchical Clustering and arbitary algorithm</td>
 <td>Kmeans,Hierarchical Clustering, but can provide clustering group directly</td>
 <td>❌</td>
-<td>Hierarchical Clustering only</td>
 <td>❌</td>
 </tr>
 <tr class="even">
@@ -280,14 +259,12 @@
 <td>Limited automatic, requires manual add</td>
 <td>Manual</td>
 <td>Automatic</td>
-<td>Automatic</td>
 </tr>
 <tr class="odd">
 <td><strong>Legends Position</strong></td>
 <td>Anywhere, can be controlled for a single plot</td>
 <td>Four sides, can only be placed on one side at a time</td>
 <td>?</td>
-<td>Four sides, can only be placed on one side at a time</td>
 <td>Anywhere</td>
 </tr>
 <tr class="even">
@@ -296,21 +273,22 @@
 <td>Limited</td>
 <td>Limited</td>
 <td>Many</td>
-<td>Many</td>
 </tr>
 <tr class="odd">
 <td><strong>Dendrogram</strong></td>
-<td>✅</td>
-<td>Heatmap Only (Cannot used in Stack Layout)</td>
-<td>✅</td>
-<td>Heatmap Only</td>
-<td>✅</td>
+<td>Tree from Both <code>hclust</code> or <code>ape</code>
+</td>
+<td>
+<code>hclust</code> only (Cannot be used in Stack Layout)</td>
+<td>
+<code>hclust</code> only</td>
+<td>Tree from Both <code>hclust</code> or <code>ape</code>
+</td>
 </tr>
 <tr class="even">
 <td><strong>Tanglegram</strong></td>
 <td>✅</td>
 <td>❌</td>
-<td>✅</td>
 <td>❌</td>
 <td>❌</td>
 </tr>
@@ -320,7 +298,6 @@
 <td>✅</td>
 <td>❌</td>
 <td>❌</td>
-<td>❌</td>
 </tr>
 <tr class="even">
 <td><strong>Oncoplot</strong></td>
@@ -328,14 +305,12 @@
 <td>✅</td>
 <td>✅</td>
 <td>❌</td>
-<td>❌</td>
 </tr>
 <tr class="odd">
 <td><strong>UpSet plot</strong></td>
 <td>✅</td>
 <td>✅</td>
 <td>✅</td>
-<td>❌</td>
 <td>❌</td>
 </tr>
 </tbody>
