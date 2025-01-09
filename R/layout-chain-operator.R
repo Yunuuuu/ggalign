@@ -133,6 +133,6 @@ chain_layout_and_add.theme <- function(object, layout, object_name) {
     ans <- NextMethod()
     # to align with `patchwork`, we also modify the layout theme
     # when using `&` to add the theme object.
-    ans@theme <- ans@theme + object
+    ans@theme <- ggfun("add_theme")(ans@theme, object)
     ans
 }
