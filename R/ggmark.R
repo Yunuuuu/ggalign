@@ -179,7 +179,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
         if (!is.null(data <- self$data)) {
             plot_data <- inner_join(plot_data, data, by = ".index")
         }
-        gguse_data(plot, ggalign_attr_restore(plot_data, data))
+        gguse_data(plot, ggalign_data_restore(plot_data, data))
     },
     finish_plot = function(self, plot, schemes, theme) {
         ggproto_parent(CrossMark, self)$finish_plot(plot, schemes, theme)

@@ -172,7 +172,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
             # always remove names, we'll add it in `build_plot()`
             plot_data$.names <- NULL
         }
-        self$data <- ggalign_attr_restore(plot_data, layout_data)
+        self$data <- ggalign_data_restore(plot_data, layout_data)
         layout
     },
     setup_plot = function(self, plot) {
@@ -263,7 +263,7 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         } else if (!is.null(data)) {
             plot_data <- full_join(data, plot_data, by = ".index")
         }
-        gguse_data(plot, ggalign_attr_restore(plot_data, data))
+        gguse_data(plot, ggalign_data_restore(plot_data, data))
     },
 
     # let AlignProto to add schemes and theme acoordingly

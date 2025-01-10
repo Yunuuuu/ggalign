@@ -159,7 +159,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
             )
             node <- rename(node, c(x = "y", y = "x"))
         }
-        plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))
+        plot <- gguse_data(plot, ggalign_data_set(node, edge = edge))
         position <- self$position
         if (!self$in_linear || # for circular layout
             # for bottom annotation, reverse y-axis
@@ -378,5 +378,5 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
 
     # from ape::is.rooted, this should be the most ancester
     ans <- phylo_data(N + 1L, 0L, timing = 0)
-    ggalign_attr_set(.subset2(ans, "node"), list(edge = .subset2(ans, "edge")))
+    ggalign_data_set(.subset2(ans, "node"), edge = .subset2(ans, "edge"))
 }

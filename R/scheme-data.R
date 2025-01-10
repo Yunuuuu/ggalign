@@ -58,7 +58,7 @@ inherit_scheme.scheme_data <- function(scheme, pscheme) {
         user_scheme_data <- o # current action data function
         scheme$data <- function(data) {
             # we always restore the attached attribute
-            ans <- ggalign_attr_restore(p_function(data), data)
+            ans <- ggalign_data_restore(p_function(data), data)
             user_scheme_data(ans)
         }
     }

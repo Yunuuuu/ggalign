@@ -113,7 +113,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
             if (is_horizontal(direction)) {
                 data <- quad_data
             } else {
-                data <- ggalign_attr_restore(t(quad_data), quad_data)
+                data <- ggalign_data_restore(t(quad_data), quad_data)
             }
             quad_matrix <- TRUE
         } else {

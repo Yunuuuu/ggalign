@@ -74,7 +74,7 @@ ggupset.default <- function(data = NULL, mapping = aes(),
     direction <- check_direction(direction)
     # we need a matrix to melted into long formated data frame
     data <- fortify_upset(data = data, ...)
-    if (is_vertical(direction)) data <- ggalign_attr_restore(t(data), data)
+    if (is_vertical(direction)) data <- ggalign_data_restore(t(data), data)
     ans <- new_quad_layout(
         name = "ggupset",
         data = data,

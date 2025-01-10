@@ -468,7 +468,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
     }
     node <- rename(node, c(ggpanel = ".panel", index = ".index"))
     edge <- rename(edge, c(ggpanel = ".panel"))
-    ggalign_attr_set(node, list(edge = edge))
+    ggalign_data_set(node, edge = edge)
 }
 
 #' @param ... Additional arguments passed to `dendrogram` method.

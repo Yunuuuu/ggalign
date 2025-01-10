@@ -116,7 +116,7 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         } else {
             data <- input_data
         }
-        self$data <- ggalign_attr_restore(fortify_data_frame(data), layout_data)
+        self$data <- ggalign_data_restore(fortify_data_frame(data), layout_data)
         layout
     },
     build_plot = function(self, plot, design, extra_design = NULL,

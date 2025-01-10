@@ -108,11 +108,11 @@ fortify_upset.list <- function(data, mode = "distinct", ...) {
     keep <- intersection_sizes > 0L # remove intersection without items
     intersections <- intersections[, keep, drop = FALSE]
     intersection_sizes <- intersection_sizes[keep]
-    ggalign_attr_set(intersections, list(
+    ggalign_data_set(intersections,
         intersection_sizes = intersection_sizes,
         set_sizes = list_sizes(data),
         upset_mode = mode
-    ))
+    )
 }
 
 #' @inherit fortify_upset.list

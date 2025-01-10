@@ -2,9 +2,12 @@
 % Please edit documentation in R/layout-.R
 \name{ggalign_attr}
 \alias{ggalign_attr}
+\alias{ggalign_lvls}
 \title{Get Data from the Attached Attribute in the Rendering Process}
 \usage{
 ggalign_attr(x, field = NULL, check = TRUE)
+
+ggalign_lvls(x)
 }
 \arguments{
 \item{x}{Data used, typically inherited from the layout \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
@@ -27,11 +30,15 @@ attributes, commonly attached during data transformation by functions like
 \code{\link[=fortify_matrix]{fortify_matrix()}} or \code{\link[=fortify_data_frame]{fortify_data_frame()}}, can include essential
 details such as filtered or supplementary data that inform downstream
 operations.
+
+An additional attribute, which stores the factor levels, can be accessed with
+\code{ggalign_lvls}.
 }
 \details{
-Attributes attached to the data are particularly useful when input data is
-transformed in ways that restrict access to the complete dataset. For
-instance, \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}} might filter mutation data while adding
-attributes that retain essential context, such as the total number of
-observations, for detailed or aggregated analyses.
+Attributes attached to the data are especially useful when the input data is
+transformed in ways that limit access to the complete dataset. For example,
+\code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}} might filter mutation data while adding attributes
+that retain important context, such as the total number of observations, for
+detailed or aggregated analyses. Additionally, it stores the levels of
+\code{Variant_Classification} for further usage.
 }

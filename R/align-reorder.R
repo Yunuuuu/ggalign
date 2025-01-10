@@ -103,7 +103,7 @@ AlignReorder <- ggproto("AlignReorder", Align,
 
         # save the labels
         self$labels <- vec_names(data) %||% vec_names(layout_data)
-        self$data <- ggalign_attr_restore(data, layout_data)
+        self$data <- ggalign_data_restore(data, layout_data)
         layout
     },
     compute = function(self, panel, index) {

@@ -23,11 +23,12 @@ the transformation process.
 }
 }
 \details{
-Attributes attached to the data are particularly useful when input data is
-transformed in ways that restrict access to the complete dataset. For
-instance, \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}} might filter mutation data while adding
-attributes that retain essential context, such as the total number of
-observations, for detailed or aggregated analyses.
+Attributes attached to the data are especially useful when the input data is
+transformed in ways that limit access to the complete dataset. For example,
+\code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}} might filter mutation data while adding attributes
+that retain important context, such as the total number of observations, for
+detailed or aggregated analyses. Additionally, it stores the levels of
+\code{Variant_Classification} for further usage.
 }
 \seealso{
 \code{\link[=ggalign_attr]{ggalign_attr()}}

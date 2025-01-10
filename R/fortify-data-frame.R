@@ -90,10 +90,13 @@ fortify_data_frame.matrix <- function(data, ...) {
     rlang::check_dots_empty()
     row_nms <- vec_names(data)
     col_nms <- colnames(data)
+    lvls <- ggalign_lvls_get(data)
+    value <- c(data)
+    if (!is.null(lvls)) value <- factor(value, levels = lvls)
     data <- new_data_frame(list(
         .row_index = vec_rep(seq_len(nrow(data)), ncol(data)),
         .column_index = vec_rep_each(seq_len(ncol(data)), nrow(data)),
-        value = c(data)
+        value = value
     ))
     if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
     if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]

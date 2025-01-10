@@ -420,7 +420,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                 }
             }
             # restore the ggalign attribute
-            object@data <- ggalign_attr_restore(data, stack_data)
+            object@data <- ggalign_data_restore(data, stack_data)
         }
         layout_design <- quad_design
     } else if (is_discrete_design(stack_design)) {
@@ -482,7 +482,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                 }
             }
             # restore the ggalign attribute
-            object@data <- ggalign_attr_restore(data, stack_data)
+            object@data <- ggalign_data_restore(data, stack_data)
         }
         layout_design <- melt_discrete_design(
             stack_design, quad_design,

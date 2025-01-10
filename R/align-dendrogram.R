@@ -191,7 +191,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
 
         # we do some tricks, since ggplot2 won't remove the attributes
         # we attach the `edge` data
-        plot <- gguse_data(plot, ggalign_attr_set(node, list(edge = edge)))
+        plot <- gguse_data(plot, ggalign_data_set(node, edge = edge))
 
         if (plot_cut_height && !is.null(height <- .subset2(self, "height"))) {
             plot <- plot +
