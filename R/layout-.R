@@ -194,8 +194,10 @@ ggalign_stat.AlignGg <- ggalign_stat.default
 #' returned.
 #' @param check A boolean indicating whether to check if the `field` exists. If
 #' `TRUE`, an error will be raised if the specified `field` does not exist.
-#' @return The specified data from the attached attribute or `NULL` if it is
-#' unavailable.
+#' @return 
+#' - `ggalign_attr`: The specified data from the attached attribute or `NULL` if
+#' it is unavailable.
+#' - `ggalign_lvls`: The attached levels.
 #'
 #' @export
 ggalign_attr <- function(x, field = NULL, check = TRUE) {
@@ -237,11 +239,26 @@ ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)
 #' @rdname ggalign_attr
 ggalign_lvls <- function(x) ggalign_lvls_get(x)
 
+#' Set or Get the Attached Levels
+#'
+#' @description
+#' - `ggalign_lvls_set`: Attaches levels to the input, enabling the restoration
+#'   of the `value` column when transformed from a matrix to a data frame.
+#' - `ggalign_lvls_get`: Extracts previously attached levels during the
+#'   transformation process.
+#'
+#' @param x Input data for the layout.
+#' @param lvls A character vector representing the attached levels.
+#' @inherit ggalign_lvls details
+#' @seealso [`ggalign_lvls()`]
+#' @export
 ggalign_lvls_set <- function(x, lvls) {
     attr(x, ".__ggalign_levels__") <- lvls
     x
 }
 
+#' @export
+#' @rdname ggalign_lvls_set
 ggalign_lvls_get <- function(x) attr(x, ".__ggalign_levels__", exact = TRUE)
 
 ggalign_lvls_remove <- function(x) ggalign_lvls_set(x, NULL)

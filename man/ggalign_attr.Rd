@@ -20,8 +20,11 @@ returned.}
 \code{TRUE}, an error will be raised if the specified \code{field} does not exist.}
 }
 \value{
-The specified data from the attached attribute or \code{NULL} if it is
-unavailable.
+\itemize{
+\item \code{ggalign_attr}: The specified data from the attached attribute or \code{NULL} if
+it is unavailable.
+\item \code{ggalign_lvls}: The attached levels.
+}
 }
 \description{
 \code{ggalign_attr} provides access to supplementary information stored as

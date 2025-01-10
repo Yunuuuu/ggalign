@@ -109,6 +109,7 @@ reference:
   - fortify_matrix
   - fortify_upset
   - ggalign_attr_set
+  - ggalign_lvls_set
   - order2
 
 - title: Plot composer
