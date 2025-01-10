@@ -94,7 +94,7 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
     },
     compute = function(self, panel, index) {
         phylo <- self$phylo
-        # why R CMD check doesn't give error even I don't add ape to dependency
+        # R CMD check won't give error even we don't add `ape` to the dependency
         if (!is.null(self$ladderize)) {
             phylo <- ape::ladderize(phylo,
                 right = identical(self$ladderize, "right")
