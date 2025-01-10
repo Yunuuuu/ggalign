@@ -53,6 +53,7 @@ stack_composer_add <- function(plot, composer, ...) {
     UseMethod("stack_composer_add")
 }
 
+#' @importFrom utils packageVersion
 #' @export
 stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
                                             schemes, theme,
@@ -118,6 +119,13 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
     # let `align` add other components
     plot <- align$build_plot(plot, design = design, ...)
     plot <- align$finish_plot(plot, plot_schemes, theme)
+    if (packageVersion("ggplot2") > "3.5.1") {
+        plot <- plot + switch_direction(
+            direction,
+            theme(plot.margin = margin(t = 0, r = NA, b = 0, l = NA)),
+            theme(plot.margin = margin(t = NA, r = 0, b = NA, l = 0))
+        )
+    }
     stack_composer_align_plot(composer, plot, size)
 }
 
