@@ -86,7 +86,6 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
     stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
-    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
