@@ -4,12 +4,16 @@ attributes during the layout rendering process in quad_layout()/ggheatmap() or s
 attributes, commonly attached during data transformation by functions like
 fortify_matrix() or fortify_data_frame(), can include essential
 details such as filtered or supplementary data that inform downstream
-operations."><meta property="og:description" content="ggalign_attr provides access to supplementary information stored as
+operations.
+An additional attribute, which stores the factor levels, can be accessed with
+ggalign_lvls."><meta property="og:description" content="ggalign_attr provides access to supplementary information stored as
 attributes during the layout rendering process in quad_layout()/ggheatmap() or stack_layout() object. These
 attributes, commonly attached during data transformation by functions like
 fortify_matrix() or fortify_data_frame(), can include essential
 details such as filtered or supplementary data that inform downstream
-operations."><meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png"><meta name="robots" content="noindex"></head><body>
+operations.
+An additional attribute, which stores the factor levels, can be accessed with
+ggalign_lvls."><meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -62,11 +66,15 @@ attributes, commonly attached during data transformation by functions like
 <code><a href="fortify_matrix.html">fortify_matrix()</a></code> or <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code>, can include essential
 details such as filtered or supplementary data that inform downstream
 operations.</p>
+<p>An additional attribute, which stores the factor levels, can be accessed with
+<code>ggalign_lvls</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalign_attr</span><span class="op">(</span><span class="va">x</span>, field <span class="op">=</span> <span class="cn">NULL</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalign_attr</span><span class="op">(</span><span class="va">x</span>, field <span class="op">=</span> <span class="cn">NULL</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggalign_lvls</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -95,11 +103,12 @@ unavailable.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Attributes attached to the data are particularly useful when input data is
-transformed in ways that restrict access to the complete dataset. For
-instance, <code><a href="fortify_matrix.MAF.html">fortify_matrix.MAF()</a></code> might filter mutation data while adding
-attributes that retain essential context, such as the total number of
-observations, for detailed or aggregated analyses.</p>
+    <p>Attributes attached to the data are especially useful when the input data is
+transformed in ways that limit access to the complete dataset. For example,
+<code><a href="fortify_matrix.MAF.html">fortify_matrix.MAF()</a></code> might filter mutation data while adding attributes
+that retain important context, such as the total number of observations, for
+detailed or aggregated analyses. Additionally, it stores the levels of
+<code>Variant_Classification</code> for further usage.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
