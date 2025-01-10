@@ -384,10 +384,14 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
             self$coord <- ggproto(NULL, ParentCoord,
                 setup_panel_params = function(self, scale_x, scale_y,
                                               params = list()) {
-                    if (!is.null(scale_x) &&
-                        any(borders == c("left", "right"))) {
+                    if (!is.null(scale_x)) {
                         expansion <- scale_x$expand %|w|%
-                            ggfun("default_expansion")(scale_x, expand = TRUE)
+                            ggfun("default_expansion")(
+                                scale_x,
+                                # for ggplot2 > 3.5.1, expand was passed by
+                                # params
+                                expand = self$expand %||% params$expand[c(4, 2)]
+                            )
                         if (any(borders == "left")) {
                             expansion[1:2] <- 0
                         }
@@ -396,10 +400,14 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
                         }
                         scale_x$expand <- expansion
                     }
-                    if (!is.null(scale_y) &&
-                        any(borders == c("bottom", "top"))) {
+                    if (!is.null(scale_y)) {
                         expansion <- scale_y$expand %|w|%
-                            ggfun("default_expansion")(scale_y, expand = TRUE)
+                            ggfun("default_expansion")(
+                                scale_y,
+                                # for ggplot2 > 3.5.1, expand was passed by
+                                # params
+                                expand = self$expand %||% params$expand[c(3, 1)]
+                            )
                         if (any(borders == "bottom")) {
                             expansion[1:2] <- 0
                         }
