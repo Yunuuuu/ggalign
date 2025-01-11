@@ -6,7 +6,7 @@
 \alias{fortify_data_frame.Matrix}
 \title{Build a data frame}
 \usage{
-\method{fortify_data_frame}{matrix}(data, ...)
+\method{fortify_data_frame}{matrix}(data, ..., data_arg = caller_arg(data), call = NULL)
 
 \method{fortify_data_frame}{DelayedMatrix}(data, ...)
 
@@ -16,6 +16,13 @@
 \item{data}{A matrix-like object.}
 
 \item{...}{These dots are for future extensions and must be empty.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 Matrix will be transformed into a long-form data frame, where each row

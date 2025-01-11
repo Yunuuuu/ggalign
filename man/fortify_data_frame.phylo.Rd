@@ -10,7 +10,9 @@
   type = "rectangle",
   center = FALSE,
   tree_type = NULL,
-  tip_pos = NULL
+  tip_pos = NULL,
+  data_arg = caller_arg(data),
+  call = NULL
 )
 }
 \arguments{
@@ -38,6 +40,13 @@ Usually, you don't need to modify this.}
 
 \item{tip_pos}{The x-coordinates of the tip. Must be the same length
 of the number of tips in \code{tree}.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A \verb{data frame} with the node coordinates:

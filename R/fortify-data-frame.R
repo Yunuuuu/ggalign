@@ -7,6 +7,7 @@
 #'
 #' @param data An object to be converted to a data frame.
 #' @param ... Arguments passed to methods.
+#' @inheritParams fortify_matrix
 #' @return A data frame.
 #' @seealso
 #' - [`fortify_data_frame.default()`]
@@ -15,24 +16,28 @@
 #' - [`fortify_data_frame.dendrogram()`]
 #' - [`fortify_data_frame.phylo()`]
 #' @export
-fortify_data_frame <- function(data, ...) {
+fortify_data_frame <- function(data, ..., data_arg = caller_arg(data),
+                               call = NULL) {
     UseMethod("fortify_data_frame")
 }
 
 #' @inherit fortify_data_frame
 #' @param ... Additional arguments passed to [`fortify()`][ggplot2::fortify].
+#' @inheritParams fortify_data_frame
 #' @details
 #' By default, it calls [`fortify()`][ggplot2::fortify] to build the
 #' data frame.
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.default <- function(data, ...) {
+fortify_data_frame.default <- function(data, ..., data_arg = caller_arg(data),
+                                       call = NULL) {
     ggplot2::fortify(model = data, ...)
 }
 
 #' @inherit fortify_data_frame.default title description
 #' @param data An object to be converted to a data frame.
 #' @inheritParams rlang::args_dots_empty
+#' @inheritParams fortify_data_frame
 #' @return A data frame with following columns:
 #'
 #'  - `.names`: the names for the vector (only applicable if names exist).
@@ -40,8 +45,10 @@ fortify_data_frame.default <- function(data, ...) {
 #'
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.character <- function(data, ...) {
-    rlang::check_dots_empty()
+fortify_data_frame.character <- function(data, ..., data_arg = caller_arg(data),
+                                         call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     ans <- list(.names = vec_names(data), value = data)
     if (is.null(.subset2(ans, ".names"))) ans$.names <- NULL
     new_data_frame(ans)
@@ -60,8 +67,10 @@ fortify_data_frame.logical <- fortify_data_frame.character
 fortify_data_frame.complex <- fortify_data_frame.character
 
 #' @export
-fortify_data_frame.waiver <- function(data, ...) {
-    rlang::check_dots_empty()
+fortify_data_frame.waiver <- function(data, ..., data_arg = caller_arg(data),
+                                      call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     data
 }
 
@@ -71,6 +80,7 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 #' @inherit fortify_data_frame.default title description
 #' @param data A matrix-like object.
 #' @inheritParams rlang::args_dots_empty
+#' @inheritParams fortify_data_frame
 #' @return
 #' Matrix will be transformed into a long-form data frame, where each row
 #' represents a unique combination of matrix indices and their corresponding
@@ -86,8 +96,10 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 #'
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.matrix <- function(data, ...) {
-    rlang::check_dots_empty()
+fortify_data_frame.matrix <- function(data, ..., data_arg = caller_arg(data),
+                                      call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     row_nms <- vec_names(data)
     col_nms <- colnames(data)
     data <- new_data_frame(list(

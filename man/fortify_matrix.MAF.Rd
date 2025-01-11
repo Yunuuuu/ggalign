@@ -11,7 +11,9 @@
   n_top = NULL,
   remove_empty_samples = TRUE,
   collapse_vars = TRUE,
-  use_syn = TRUE
+  use_syn = TRUE,
+  data_arg = caller_arg(data),
+  call = NULL
 )
 }
 \arguments{
@@ -33,6 +35,13 @@ collapsed values.}
 
 \item{use_syn}{A single boolean value indicates whether to include synonymous
 variants when Classifies SNPs into transitions and transversions.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A matrix.

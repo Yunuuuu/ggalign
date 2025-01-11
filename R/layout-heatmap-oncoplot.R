@@ -235,9 +235,9 @@ memo_order <- function(x) {
 #' @rdname order2
 order2.memo_weights <- function(x) order(x, decreasing = TRUE)
 
+#' @inheritParams rlang::args_dots_empty
 #' @inherit fortify_matrix title description return
 #' @param data A [`MAF`][maftools::read.maf] object.
-#' @inheritParams rlang::args_dots_empty
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
 #' @param remove_empty_samples A single boolean value indicating whether to drop
@@ -248,6 +248,7 @@ order2.memo_weights <- function(x) order(x, decreasing = TRUE)
 #' collapsed values.
 #' @param use_syn A single boolean value indicates whether to include synonymous
 #' variants when Classifies SNPs into transitions and transversions.
+#' @inheritParams fortify_matrix
 #' @section ggalign attributes:
 #'  - `gene_summary`: gene summary informations. See
 #'    `maftools::getGeneSummary()` for details.
@@ -266,8 +267,11 @@ order2.memo_weights <- function(x) order(x, decreasing = TRUE)
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
                                collapse_vars = TRUE,
-                               use_syn = TRUE) {
-    rlang::check_dots_empty()
+                               use_syn = TRUE,
+                               data_arg = caller_arg(data),
+                               call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     rlang::check_installed(
         "maftools", "to make alterations matrix from `MAF` object"
     )
@@ -277,13 +281,18 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         collapse_vars <- NULL
     } else if (is_string(collapse_vars)) {
         if (collapse_vars == "") {
-            cli_abort("{.arg collapse_vars} cannot be an empty string")
+            cli_abort("{.arg collapse_vars} cannot be an empty string",
+                call = call
+            )
         }
     } else {
-        cli_abort(paste(
-            "{.arg collapse_vars} must be a single boolean value or a string,",
-            "but you provide {.obj_type_friendly {collapse_vars}}"
-        ))
+        cli_abort(
+            paste(
+                "{.arg collapse_vars} must be a single boolean value or a string,",
+                "but you provide {.obj_type_friendly {collapse_vars}}"
+            ),
+            call = call
+        )
     }
 
     getSampleSummary <- getFromNamespace("getSampleSummary", "maftools")
@@ -307,13 +316,24 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     # filter by genes
     if (!is.null(genes)) {
         # reorder the gene annotation based on the provided genes
+        genes <- vec_cast(genes, character())
+        if (vec_any_missing(genes)) {
+            cli_abort("{.arg genes} cannot contain missing values",
+                call = call
+            )
+        }
+        if (vec_duplicate_any(genes)) {
+            cli_abort("{.arg genes} cannot contain duplicated values",
+                call = call
+            )
+        }
         gene_summary <- vec_slice(
             gene_summary,
             vec_as_location(
-                vec_unique(vec_cast(genes, character())),
+                genes,
                 n = vec_size(gene_summary),
                 names = .subset2(gene_summary, "Hugo_Symbol"),
-                missing = "remove"
+                missing = "error"
             )
         )
     }
@@ -417,15 +437,14 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ggalign_data_set(ans,
         sample_summary = sample_summary,
         gene_summary = gene_summary,
-        # gene_summary = gene_summary,
         sample_anno = sample_anno,
         n_samples = n_samples, n_genes = n_genes, titv = titv,
         .lvls = lvls
     )
 }
 
-#' @inherit fortify_matrix title description return
 #' @inheritParams rlang::args_dots_empty
+#' @inherit fortify_matrix title description return
 #' @param data A [`GISTIC`][maftools::readGistic] object.
 #' @param n_top A single number indicates how many top bands to be drawn.
 #' @param bands An atomic character defines the bands to draw.
@@ -433,6 +452,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 #' @param sample_anno A data frame of sample clinical features to be added.
 #' @param remove_empty_samples A single boolean value indicating whether to drop
 #' samples without any genomic alterations.
+#' @inheritParams fortify_matrix
 #' @section ggalign attributes:
 #'  - `sample_anno`: sample clinical informations provided in `sample_anno`.
 #'  - `sample_summary`: sample copy number summary informations. See
@@ -447,17 +467,34 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 #' @export
 fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                                   ignored_bands = NULL, sample_anno = NULL,
-                                  remove_empty_samples = TRUE) {
-    rlang::check_dots_empty()
+                                  remove_empty_samples = TRUE,
+                                  data_arg = caller_arg(data),
+                                  call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     rlang::check_installed(
         "maftools",
         "to make CNV matrix from `GISTIC` object"
     )
-    assert_number_whole(n_top, allow_null = TRUE)
-    assert_character(bands, allow_null = TRUE)
-    assert_character(ignored_bands, allow_null = TRUE)
-    assert_s3_class(sample_anno, "data.frame", allow_null = TRUE)
-    assert_bool(remove_empty_samples)
+    assert_number_whole(n_top,
+        allow_null = TRUE,
+        call = call
+    )
+    assert_character(bands,
+        allow_null = TRUE,
+        call = call
+    )
+    assert_character(ignored_bands,
+        allow_null = TRUE,
+        call = call
+    )
+    assert_s3_class(sample_anno, "data.frame",
+        allow_null = TRUE,
+        call = call
+    )
+    assert_bool(remove_empty_samples,
+        call = call
+    )
     cn_mat <- data@cnMatrix
     if (is.null(bands)) {
         bands <- rownames(cn_mat)
@@ -484,7 +521,8 @@ fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                 .subset2(sample_anno, 1L),
             relationship = "one-to-one",
             needles_arg = "data",
-            haystack_arg = "sample_anno"
+            haystack_arg = "sample_anno",
+            error_call = call
         )
         sample_anno <- vec_slice(sample_anno, .subset2(loc, "haystack"))
     }

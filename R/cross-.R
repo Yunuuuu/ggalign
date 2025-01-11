@@ -1,24 +1,23 @@
-# Since `ggalign_align_plot` object need act with the layout, we Use R6 object
-# here
-cross <- function(cross, data = waiver(),
+cross <- function(cross = NULL, data = waiver(),
                   data_params = list(), ...,
                   inherit_index = NULL,
                   inherit_panel = NULL,
                   inherit_nobs = NULL,
-                  plot = NULL, active = NULL, size = NULL,
-                  schemes = NULL, call = caller_call()) {
+                  plot = NULL, active = NULL, size = NULL, schemes = NULL,
+                  data_arg = caller_arg(data),
+                  call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
     new_ggalign_plot(
-        align = cross,
+        align = cross %||% NULL,
         data = allow_lambda(data), data_params = data_params,
         ...,
         inherit_nobs = inherit_nobs,
         inherit_panel = inherit_panel,
         inherit_index = inherit_index,
         plot = plot, active = active, size = size, schemes = schemes,
-        call = call
+        data_arg = data_arg, call = call
     )
 }
 
@@ -80,7 +79,13 @@ Cross <- ggproto("Cross", AlignProto,
             } else {
                 data <- input_data
             }
-            data <- inject(fortify_matrix(data, !!!self$data_params)) %|w|% NULL
+            data <- inject(
+                fortify_matrix(
+                    data, !!!self$data_params,
+                    error_arg = self$data_arg,
+                    error_call = self$call
+                )
+            ) %|w|% NULL
             if (isTRUE(self$inherit_nobs)) { # we require inherit nobs
                 # we check if the data match original data dimention
                 if (!is.null(data) &&

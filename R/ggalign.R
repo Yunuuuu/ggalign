@@ -99,7 +99,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     new_ggalign_plot(
         AlignGg,
         input_data = allow_lambda(data),
-        params = list2(...),
+        data_params = list2(...),
         plot = ggplot(mapping = mapping),
         size = size,
         schemes = default_schemes(data, th = theme_no_strip()),
@@ -137,7 +137,9 @@ AlignGg <- ggproto("AlignGg", AlignProto,
         } else {
             data <- input_data
         }
-        plot_data <- inject(fortify_data_frame(data, !!!self$params))
+        plot_data <- inject(
+            fortify_data_frame(data, !!!self$data_params, call = self$call)
+        )
 
         # for discrete design, # we need ensure the nobs is the same
         if (is_discrete_design(design <- layout@design)) {

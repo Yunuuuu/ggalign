@@ -11,7 +11,9 @@
   bands = NULL,
   ignored_bands = NULL,
   sample_anno = NULL,
-  remove_empty_samples = TRUE
+  remove_empty_samples = TRUE,
+  data_arg = caller_arg(data),
+  call = NULL
 )
 }
 \arguments{
@@ -29,6 +31,13 @@
 
 \item{remove_empty_samples}{A single boolean value indicating whether to drop
 samples without any genomic alterations.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A matrix.

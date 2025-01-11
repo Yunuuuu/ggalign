@@ -4,12 +4,19 @@
 \alias{fortify_matrix.phylo}
 \title{Build a Matrix}
 \usage{
-\method{fortify_matrix}{phylo}(data, ...)
+\method{fortify_matrix}{phylo}(data, ..., data_arg = caller_arg(data), call = NULL)
 }
 \arguments{
 \item{data}{A \code{\link[ape:as.phylo]{phylo}} object.}
 
 \item{...}{These dots are for future extensions and must be empty.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A one-column matrix where the tip labels are the values, and the row

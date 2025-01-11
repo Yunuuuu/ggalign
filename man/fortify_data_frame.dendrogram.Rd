@@ -16,7 +16,9 @@
   reorder_branches = TRUE,
   branch_gap = NULL,
   root = NULL,
-  double = TRUE
+  double = TRUE,
+  data_arg = caller_arg(data),
+  call = NULL
 )
 
 \method{fortify_data_frame}{hclust}(data, ...)
@@ -58,6 +60,13 @@ should be doubled when segments span multiple branches. If \code{TRUE}, the
 horizontal lines will be repeated for each branch that the segment spans. If
 \code{FALSE}, only one horizontal line will be drawn. This is used by
 \code{\link[=align_dendro]{align_dendro()}} to provide support of facet operation in ggplot2.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A \verb{data frame} with the node coordinates:

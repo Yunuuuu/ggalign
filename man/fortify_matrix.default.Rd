@@ -4,12 +4,19 @@
 \alias{fortify_matrix.default}
 \title{Build a Matrix}
 \usage{
-\method{fortify_matrix}{default}(data, ...)
+\method{fortify_matrix}{default}(data, ..., data_arg = caller_arg(data), call = NULL)
 }
 \arguments{
-\item{data}{An object to be converted to a matrix.}
+\item{data}{An object to be converted into a matrix.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{These dots are for future extensions and must be empty.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A matrix.

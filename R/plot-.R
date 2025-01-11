@@ -79,6 +79,8 @@ is_cross <- function(x) inherits(x, "Cross")
 #######################################################
 #' @importFrom ggplot2 ggproto
 AlignProto <- ggproto("AlignProto",
+    call = NULL,
+
     # following fields will be added when added to the layout
     in_linear = NULL,
     layout_name = NULL,

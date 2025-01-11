@@ -4,12 +4,19 @@
 \alias{fortify_data_frame.default}
 \title{Build a data frame}
 \usage{
-\method{fortify_data_frame}{default}(data, ...)
+\method{fortify_data_frame}{default}(data, ..., data_arg = caller_arg(data), call = NULL)
 }
 \arguments{
 \item{data}{An object to be converted to a data frame.}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:fortify]{fortify()}}.}
+
+\item{data_arg}{The argument name for \code{data}. Developers can use it to
+improve messages. Not used by the user.}
+
+\item{call}{The execution environment where \code{data} and other arguments for
+the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
+Developers can use it to improve messages. Not used by the user.}
 }
 \value{
 A data frame.

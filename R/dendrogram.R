@@ -136,6 +136,7 @@ make_dist <- function(matrix, distance, use_missing,
 #' horizontal lines will be repeated for each branch that the segment spans. If
 #' `FALSE`, only one horizontal line will be drawn. This is used by
 #' [`align_dendro()`] to provide support of facet operation in ggplot2.
+#' @inheritParams fortify_data_frame
 #' @return A `data frame` with the node coordinates:
 #'   - `.panel`: Similar with `panel` column, but always give the correct
 #'              branch for usage of the ggplot facet.
@@ -178,19 +179,23 @@ fortify_data_frame.dendrogram <- function(data, ...,
                                           reorder_branches = TRUE,
                                           branch_gap = NULL,
                                           root = NULL,
-                                          double = TRUE) {
-    rlang::check_dots_empty()
-    assert_bool(center)
-    assert_bool(reorder_branches)
-    type <- arg_match0(type, c("rectangle", "triangle"))
-    priority <- arg_match0(priority, c("left", "right"))
+                                          double = TRUE,
+                                          data_arg = caller_arg(data),
+                                          call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
+    assert_bool(center, call = call)
+    assert_bool(reorder_branches, call = call)
+    type <- arg_match0(type, c("rectangle", "triangle"), error_call = call)
+    priority <- arg_match0(priority, c("left", "right"), error_call = call)
     N <- stats::nobs(data)
     rectangle <- type == "rectangle"
     if (is.null(leaf_pos)) {
         leaf_pos <- seq_len(N)
     } else if (length(leaf_pos) != N) {
         cli_abort(
-            "{.arg leaf_pos} must be of the same length of {.arg tree}"
+            "{.arg leaf_pos} must be of the same length of {.arg tree}",
+            call = call
         )
     }
 
@@ -198,10 +203,13 @@ fortify_data_frame.dendrogram <- function(data, ...,
     if (is.null(leaf_braches)) {
         root <- root %||% "root"
     } else if (anyNA(leaf_braches)) {
-        cli_abort("`NA` is not allowed in {.arg leaf_braches}")
+        cli_abort("`NA` is not allowed in {.arg leaf_braches}",
+            call = call
+        )
     } else if (length(leaf_braches) != N) {
         cli_abort(
-            "{.arg leaf_braches} must be of the same length of {.arg tree}"
+            "{.arg leaf_braches} must be of the same length of {.arg tree}",
+            call = call
         )
     } else if (is.character(leaf_braches)) {
         root <- root %||% "root"
@@ -211,7 +219,9 @@ fortify_data_frame.dendrogram <- function(data, ...,
     } else if (is.numeric(leaf_braches)) {
         root <- root %||% (min(leaf_braches) - 1L)
     } else {
-        cli_abort("{.arg leaf_braches} must be a character or numeric")
+        cli_abort("{.arg leaf_braches} must be a character or numeric",
+            call = call
+        )
     }
 
     if (!is.null(leaf_braches) && reorder_branches) {
@@ -221,22 +231,27 @@ fortify_data_frame.dendrogram <- function(data, ...,
     # check `branch_gap`
     if (is.numeric(branch_gap)) {
         if (!is_scalar(branch_gap)) {
-            cli_abort("{.arg branch_gap} must be of length 1")
+            cli_abort("{.arg branch_gap} must be of length 1",
+                call = call
+            )
         }
     } else if (is.null(branch_gap)) {
         branch_gap <- 0
     } else {
-        cli_abort("{.arg branch_gap} must be numeric value.")
+        cli_abort("{.arg branch_gap} must be numeric value.",
+            call = call
+        )
     }
 
     # the root value shouldn't be the same of leaf branches.
     if (!is_scalar(root)) {
-        cli_abort("{.arg root} must be of length 1")
+        cli_abort("{.arg root} must be of length 1", call = call)
     } else if (anyNA(root)) {
-        cli_abort("{.arg root} cannot be `NA`")
+        cli_abort("{.arg root} cannot be `NA`", call = call)
     } else if (any(root == leaf_braches)) {
         cli_abort(
-            "{.arg root} cannot contain value in {.arg leaf_braches}"
+            "{.arg root} cannot contain value in {.arg leaf_braches}",
+            call = call
         )
     }
 
@@ -447,7 +462,9 @@ fortify_data_frame.dendrogram <- function(data, ...,
                 panel = panel, ggpanel = ggpanel
             )
         } else {
-            cli_abort("{.arg dend} must be a {.cls dendrogram} object")
+            cli_abort("Invalid {.cls dendrogram} provided in {.arg {data_arg}}",
+                call = call
+            )
         }
     }
     ans <- dendrogram_data(data)

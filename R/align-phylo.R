@@ -21,8 +21,6 @@ align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
     assert_s3_class(phylo, "phylo")
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
-    no_axes <- no_axes %||%
-        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     align(
         align = AlignPhylo,
         phylo = phylo,
@@ -38,7 +36,7 @@ align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
                 stat = "identity",
                 data = function(data) ggalign_attr(data, "edge")
             ),
-        params = list(type = type, center = center, tree_type = tree_type),
+        data_params = list(type = type, center = center, tree_type = tree_type),
         active = active,
         size = size
     )
@@ -100,7 +98,10 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
                 right = identical(self$ladderize, "right")
             )
         }
-        inject(fortify_data_frame.phylo(data = phylo, !!!self$params))
+        inject(fortify_data_frame.phylo(
+            data = phylo, !!!self$data_params,
+            data_arg = "phylo", call = self$call
+        ))
     },
     align = function(self, panel, index) {
         data <- self$statistics
@@ -181,22 +182,26 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
     summary_align = function(self) c(TRUE, FALSE)
 )
 
+#' @inheritParams rlang::args_dots_empty
 #' @inherit fortify_matrix title
 #' @description This method allows a [`phylo`][ape::as.phylo] object to be
 #' directly input into `stack_discrete()` or `circle_discrete()`. This makes it
 #' possible to add [`align_phylo()`] to the stack independently, as
 #' [`align_phylo()`] requires the layout to have labels.
 #' @param data A [`phylo`][ape::as.phylo] object.
-#' @inheritParams rlang::args_dots_empty
+#' @inheritParams fortify_matrix
 #' @return A one-column matrix where the tip labels are the values, and the row
 #' names will also be the tip labels.
 #' @family fortify_matrix methods
 #' @export
-fortify_matrix.phylo <- function(data, ...) {
-    rlang::check_dots_empty()
+fortify_matrix.phylo <- function(data, ..., data_arg = caller_arg(data),
+                                 call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     if (is.null(labels <- data$tip.label)) {
         cli_abort(
-            "{.arg data} {.cls phylo} object must have tip labels to match the layout data"
+            "{.arg {data_arg}} must have tip labels to match the layout data",
+            call = call
         )
     }
     as.matrix(vec_set_names(labels, labels))
@@ -231,18 +236,24 @@ fortify_matrix.phylo <- function(data, ...) {
 #' @export
 fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                                      center = FALSE,
-                                     tree_type = NULL, tip_pos = NULL) {
-    rlang::check_dots_empty()
+                                     tree_type = NULL, tip_pos = NULL,
+                                     data_arg = caller_arg(data),
+                                     call = NULL) {
+    call <- call %||% current_call()
+    rlang::check_dots_empty(call = call)
     type <- arg_match0(type, c("rectangle", "triangle"))
     rectangle <- type == "rectangle"
     edge <- data$edge
     edge_lengths <- data$edge.length
     if (!is.null(tree_type)) {
-        tree_type <- arg_match0(tree_type, c("phylogram", "cladogram"))
+        tree_type <- arg_match0(tree_type,
+            c("phylogram", "cladogram"),
+            error_call = call
+        )
         if (tree_type == "phylogram" && is.null(edge_lengths)) {
             cli_warn(c(
                 "Cannot use {.code tree_type = 'phylogram'}",
-                "No branch length found in {.arg data}"
+                "No branch length found in {.arg {data_arg}}"
             ))
         }
     }
@@ -258,7 +269,8 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
         tip_pos <- seq_len(N)
     } else if (length(tip_pos) != N) {
         cli_abort(
-            "{.arg tip_pos} must have the same length as the number of tips in {.arg data}"
+            "{.arg tip_pos} must have the same length as the number of tips in {.arg {data_arg}}",
+            call = call
         )
     }
     i <- 0L # tip index
@@ -372,7 +384,9 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                 x = x, y = y
             )
         } else {
-            cli_abort("Invalid {.cls phylo} object")
+            cli_abort("Invalid {.cls phylo} provided in {.arg {data_arg}}",
+                call = call
+            )
         }
     }
 
