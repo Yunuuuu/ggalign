@@ -63,6 +63,7 @@ This function converts various objects into a matrix format."><meta property="og
 <span>  remove_empty_samples <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  collapse_vars <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  use_syn <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  missing_genes <span class="op">=</span> <span class="st">"error"</span>,</span>
 <span>  data_arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
 <span>  call <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -103,6 +104,11 @@ collapsed values.</p></dd>
 <dt id="arg-use-syn">use_syn<a class="anchor" aria-label="anchor" href="#arg-use-syn"></a></dt>
 <dd><p>A single boolean value indicates whether to include synonymous
 variants when Classifies SNPs into transitions and transversions.</p></dd>
+
+
+<dt id="arg-missing-genes">missing_genes<a class="anchor" aria-label="anchor" href="#arg-missing-genes"></a></dt>
+<dd><p>A string, either <code>"error"</code> or <code>"remove"</code>, specifying the
+action for handling missing genes.</p></dd>
 
 
 <dt id="arg-data-arg">data_arg<a class="anchor" aria-label="anchor" href="#arg-data-arg"></a></dt>
