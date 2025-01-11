@@ -171,11 +171,10 @@ ggalign_stat.AlignGg <- ggalign_stat.default
 #'
 #' @description
 #' `ggalign_attr` provides access to supplementary information stored as
-#' attributes during the layout rendering process in `r rd_layout()`. These
-#' attributes, commonly attached during data transformation by functions like
-#' [`fortify_matrix()`] or [`fortify_data_frame()`], can include essential
-#' details such as filtered or supplementary data that inform downstream
-#' operations.
+#' attributes during the layout rendering process. These attributes, commonly
+#' attached during data transformation by functions like [`fortify_matrix()`] or
+#' [`fortify_data_frame()`], can include essential details such as filtered or
+#' supplementary data that inform downstream operations.
 #'
 #' An additional attribute, which stores the factor levels, can be accessed with
 #' `ggalign_lvls`.
@@ -218,6 +217,10 @@ ggalign_attr <- function(x, field = NULL, check = TRUE) {
 #'   downstream use.
 #' - `ggalign_attr_get`: Extracts previously attached supplementary data during
 #'   the transformation process.
+#' - `ggalign_lvls_set`: Attaches levels to the input, enabling the restoration
+#'   of the `value` column when transformed from a matrix to a data frame.
+#' - `ggalign_lvls_get`: Extracts previously attached levels during the
+#'   transformation process.
 #'
 #' @param x Input data for the layout.
 #' @param values A list to be attached.
@@ -239,26 +242,18 @@ ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)
 #' @rdname ggalign_attr
 ggalign_lvls <- function(x) ggalign_lvls_get(x)
 
-#' Set or Get the Attached Levels
-#'
-#' @description
-#' - `ggalign_lvls_set`: Attaches levels to the input, enabling the restoration
-#'   of the `value` column when transformed from a matrix to a data frame.
-#' - `ggalign_lvls_get`: Extracts previously attached levels during the
-#'   transformation process.
-#'
-#' @param x Input data for the layout.
 #' @param lvls A character vector representing the attached levels.
 #' @inherit ggalign_lvls details
 #' @seealso [`ggalign_lvls()`]
 #' @export
+#' @rdname ggalign_attr_set
 ggalign_lvls_set <- function(x, lvls) {
     attr(x, ".__ggalign_levels__") <- lvls
     x
 }
 
 #' @export
-#' @rdname ggalign_lvls_set
+#' @rdname ggalign_attr_set
 ggalign_lvls_get <- function(x) attr(x, ".__ggalign_levels__", exact = TRUE)
 
 ggalign_lvls_remove <- function(x) ggalign_lvls_set(x, NULL)

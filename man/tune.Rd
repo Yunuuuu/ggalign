@@ -9,8 +9,8 @@ tune(data, shape = NULL)
 \arguments{
 \item{data}{An R object.}
 
-\item{shape}{Usually a string, specifying the new shape for the object. Refer
-to the detailed method for allowed values.}
+\item{shape}{Usually \code{NULL} or a string, specifying the new shape for the
+object. Refer to the detailed method for allowed values.}
 }
 \description{
 Change the shape of the input object

@@ -28,11 +28,10 @@ it is unavailable.
 }
 \description{
 \code{ggalign_attr} provides access to supplementary information stored as
-attributes during the layout rendering process in \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object. These
-attributes, commonly attached during data transformation by functions like
-\code{\link[=fortify_matrix]{fortify_matrix()}} or \code{\link[=fortify_data_frame]{fortify_data_frame()}}, can include essential
-details such as filtered or supplementary data that inform downstream
-operations.
+attributes during the layout rendering process. These attributes, commonly
+attached during data transformation by functions like \code{\link[=fortify_matrix]{fortify_matrix()}} or
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}, can include essential details such as filtered or
+supplementary data that inform downstream operations.
 
 An additional attribute, which stores the factor levels, can be accessed with
 \code{ggalign_lvls}.

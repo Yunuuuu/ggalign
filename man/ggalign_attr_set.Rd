@@ -3,16 +3,24 @@
 \name{ggalign_attr_set}
 \alias{ggalign_attr_set}
 \alias{ggalign_attr_get}
+\alias{ggalign_lvls_set}
+\alias{ggalign_lvls_get}
 \title{Set or get the Attached Attribute across the Rendering Process}
 \usage{
 ggalign_attr_set(x, values)
 
 ggalign_attr_get(x)
+
+ggalign_lvls_set(x, lvls)
+
+ggalign_lvls_get(x)
 }
 \arguments{
 \item{x}{Input data for the layout.}
 
 \item{values}{A list to be attached.}
+
+\item{lvls}{A character vector representing the attached levels.}
 }
 \description{
 \itemize{
@@ -20,6 +28,10 @@ ggalign_attr_get(x)
 downstream use.
 \item \code{ggalign_attr_get}: Extracts previously attached supplementary data during
 the transformation process.
+\item \code{ggalign_lvls_set}: Attaches levels to the input, enabling the restoration
+of the \code{value} column when transformed from a matrix to a data frame.
+\item \code{ggalign_lvls_get}: Extracts previously attached levels during the
+transformation process.
 }
 }
 \details{
@@ -32,4 +44,6 @@ detailed or aggregated analyses. Additionally, it stores the levels of
 }
 \seealso{
 \code{\link[=ggalign_attr]{ggalign_attr()}}
+
+\code{\link[=ggalign_lvls]{ggalign_lvls()}}
 }

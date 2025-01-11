@@ -1,15 +1,14 @@
 #' Change the shape of the input object
 #'
 #' @param data An R object.
-#' @param shape Usually a string, specifying the new shape for the object. Refer
-#' to the detailed method for allowed values.
+#' @param shape Usually `NULL` or a string, specifying the new shape for the
+#' object. Refer to the detailed method for allowed values.
 #' @details
 #' In most cases, [`fortify_matrix()`] or [`fortify_data_frame()`] provide full
 #' support for transforming objects. However, some objects may require two
 #' completely different approaches to be fortified. The `tune` function acts as
 #' a helper to create a new class tailored for these objects.
-#'
-#' @seealso
+#' @seealso 
 #' - [`tune.MAF()`]
 #' @export
 tune <- function(data, shape = NULL) UseMethod("tune")
