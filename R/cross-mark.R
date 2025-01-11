@@ -23,7 +23,8 @@
 #' You can use [`scheme_data()`] to modify the internal data if needed.
 #'
 #' @export
-cross_mark <- function(mark, data = waiver(), reorder = NULL, obs_size = 1,
+cross_mark <- function(mark, data = waiver(), ...,
+                       reorder = NULL, obs_size = 1,
                        inherit_index = NULL, inherit_panel = NULL,
                        inherit_nobs = NULL,
                        size = NULL, active = NULL) {
@@ -35,7 +36,8 @@ cross_mark <- function(mark, data = waiver(), reorder = NULL, obs_size = 1,
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossMark,
-        data = data, mark = mark, reorder = reorder, obs_size = obs_size,
+        data = data, data_params = list2(...),
+        mark = mark, reorder = reorder, obs_size = obs_size,
         plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_panel_border()),
         active = active,

@@ -7,6 +7,7 @@
 cross_link(
   link,
   data = waiver(),
+  ...,
   on_top = TRUE,
   reorder = NULL,
   obs_size = 1,
@@ -25,6 +26,9 @@ such as \code{\link[=link_line]{link_line()}}.}
 \code{\link[=fortify_matrix]{fortify_matrix()}} will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.}
+
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{on_top}{A boolean value indicating whether to draw the link on top of
 the plot panel (\code{TRUE}) or below (\code{FALSE}).}

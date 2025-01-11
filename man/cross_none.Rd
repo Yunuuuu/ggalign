@@ -6,6 +6,7 @@
 \usage{
 cross_none(
   data = waiver(),
+  ...,
   inherit_index = NULL,
   inherit_panel = NULL,
   inherit_nobs = NULL
@@ -16,6 +17,9 @@ cross_none(
 \code{\link[=fortify_matrix]{fortify_matrix()}} will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.}
+
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{inherit_index}{A boolean value indicating whether to inherit the
 ordering index. If \code{TRUE}, will match the layout ordering index with the

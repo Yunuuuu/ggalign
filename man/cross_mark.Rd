@@ -7,6 +7,7 @@
 cross_mark(
   mark,
   data = waiver(),
+  ...,
   reorder = NULL,
   obs_size = 1,
   inherit_index = NULL,
@@ -25,6 +26,9 @@ be used to define the panel names so must be unique.}
 \code{\link[=fortify_matrix]{fortify_matrix()}} will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.}
+
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
 whether to reorder the input links to follow the specified layout ordering.}

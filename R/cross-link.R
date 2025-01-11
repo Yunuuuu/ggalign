@@ -13,8 +13,8 @@
 #' needed.
 #'
 #' @export
-cross_link <- function(link, data = waiver(), on_top = TRUE,
-                       reorder = NULL, obs_size = 1,
+cross_link <- function(link, data = waiver(), ...,
+                       on_top = TRUE, reorder = NULL, obs_size = 1,
                        inherit_index = NULL, inherit_panel = NULL,
                        inherit_nobs = NULL,
                        size = NULL, active = NULL) {
@@ -26,7 +26,8 @@ cross_link <- function(link, data = waiver(), on_top = TRUE,
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossLink,
-        data = data, link = link, reorder = reorder, obs_size = obs_size,
+        data = data, data_params = list2(...),
+        link = link, reorder = reorder, obs_size = obs_size,
         plot = ggplot(), size = size,
         schemes = default_schemes(),
         active = active,
