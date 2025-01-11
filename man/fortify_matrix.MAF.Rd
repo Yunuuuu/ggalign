@@ -44,7 +44,7 @@
 \item{remove_empty_genes}{A single boolean value indicats whether to drop
 genes without any genomic alterations.}
 
-\item{remove_empty_samples}{A single boolean value indicating whether to drop
+\item{remove_empty_samples}{A single boolean value indicats whether to drop
 samples without any genomic alterations.}
 
 \item{collapse_vars}{A single boolean value indicating whether to collapse

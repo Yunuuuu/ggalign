@@ -11,7 +11,7 @@
 #' @param n_top A single number indicates how many top genes to be drawn.
 #' @param remove_empty_genes A single boolean value indicats whether to drop
 #' genes without any genomic alterations.
-#' @param remove_empty_samples A single boolean value indicating whether to drop
+#' @param remove_empty_samples A single boolean value indicats whether to drop
 #' samples without any genomic alterations.
 #' @param collapse_vars A single boolean value indicating whether to collapse
 #' multiple alterations in the same sample and gene into a single value
@@ -51,6 +51,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     rlang::check_installed(
         "maftools", "to make alterations matrix from `MAF` object"
     )
+    # prepare arguments
     missing_genes <- arg_match0(
         missing_genes, c("error", "remove"),
         error_call = call
@@ -93,7 +94,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     n_genes <- vec_unique_count(.subset2(data, "Hugo_Symbol"))
     n_samples <- vec_unique_count(.subset2(data, "Tumor_Sample_Barcode"))
 
-    # filter by genes
+    # filter by genes --------------------------------------
     if (!is.null(genes)) {
         # reorder the gene annotation based on the provided genes
         genes <- vec_cast(genes, character())
