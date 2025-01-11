@@ -167,7 +167,7 @@ ggalign_stat.default <- function(x, ...) {
 ggalign_stat.AlignGg <- ggalign_stat.default
 
 ####################################################
-#' Get Data from the Attached Attribute in the Rendering Process
+#' Get Data from the Attribute Attached by ggalign
 #'
 #' @description
 #' `ggalign_attr` provides access to supplementary information stored as
@@ -194,9 +194,10 @@ ggalign_stat.AlignGg <- ggalign_stat.default
 #' @param check A boolean indicating whether to check if the `field` exists. If
 #' `TRUE`, an error will be raised if the specified `field` does not exist.
 #' @return
-#' - `ggalign_attr`: The specified data from the attached attribute or `NULL` if
-#' it is unavailable.
-#' - `ggalign_lvls`: The attached levels.
+#' - `ggalign_attr`: The specified data from the attached supplementary data or
+#' `NULL` if it is unavailable.
+#' - `ggalign_lvls`: The attached supplementary levels or `NULL` if it is
+#'   unavailable.
 #'
 #' @export
 ggalign_attr <- function(x, field = NULL, check = TRUE) {
@@ -210,76 +211,19 @@ ggalign_attr <- function(x, field = NULL, check = TRUE) {
     .subset2(x, field)
 }
 
-#' Set or get the Attached Attribute across the Rendering Process
-#'
-#' @description
-#' - `ggalign_attr_set`: Attaches supplementary data to the input, facilitating
-#'   downstream use.
-#' - `ggalign_attr_get`: Extracts previously attached supplementary data during
-#'   the transformation process.
-#' - `ggalign_lvls_set`: Attaches levels to the input, enabling the restoration
-#'   of the `value` column when transformed from a matrix to a data frame.
-#' - `ggalign_lvls_get`: Extracts previously attached levels during the
-#'   transformation process.
-#'
-#' @param x Input data for the layout.
-#' @param values A list to be attached.
-#' @inherit ggalign_attr details
-#' @seealso [`ggalign_attr()`]
-#' @export
-ggalign_attr_set <- function(x, values) {
-    attr(x, ".__ggalign_attr__") <- values
-    x
-}
-
-#' @export
-#' @rdname ggalign_attr_set
-ggalign_attr_get <- function(x) attr(x, ".__ggalign_attr__", exact = TRUE)
-
-ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)
-
 #' @export
 #' @rdname ggalign_attr
 ggalign_lvls <- function(x) ggalign_lvls_get(x)
 
-#' @param lvls A character vector representing the attached levels.
-#' @inherit ggalign_lvls details
-#' @seealso [`ggalign_lvls()`]
+#' Attach supplementary data and levels for ggalign
+#'
+#' @param .data Input data for the layout.
+#' @param ... A list of data to be attached.
+#' @param .lvls A character vector representing the attached levels.
+#' @note Used by developers in [`fortify_matrix()`], [`fortify_data_frame()`],
+#'   and other related methods.
+#' @seealso [`ggalign_attr()`]/[`ggalign_lvls()`]
 #' @export
-#' @rdname ggalign_attr_set
-ggalign_lvls_set <- function(x, lvls) {
-    attr(x, ".__ggalign_levels__") <- lvls
-    x
-}
-
-#' @export
-#' @rdname ggalign_attr_set
-ggalign_lvls_get <- function(x) attr(x, ".__ggalign_levels__", exact = TRUE)
-
-ggalign_lvls_remove <- function(x) ggalign_lvls_set(x, NULL)
-
-# we keep a special attribute across all data
-# this is used to pass additional annotation informations
-ggalign_data_restore <- function(data, original) {
-    if (is.null(ggalign_attr_get(data)) && # no attached attribute
-        # the original has attached attribute
-        !is.null(value <- ggalign_attr_get(original))) {
-        data <- ggalign_attr_set(data, value)
-    }
-
-    if (is.null(ggalign_lvls_get(data)) && # no attached levels
-        # the original has attached levels
-        !is.null(value <- ggalign_lvls_get(original))) {
-        data <- ggalign_lvls_set(data, value)
-    }
-    # to prevent the print of attributes
-    if (!is.null(ggalign_attr_get(data)) ||
-        !is.null(ggalign_lvls_get(data))) {
-        data <- add_class(data, "ggalign_data")
-    }
-    data
-}
-
 ggalign_data_set <- function(.data, ..., .lvls = NULL) {
     if (...length() > 0L) {
         .data <- ggalign_attr_set(.data, list(...))
@@ -304,6 +248,46 @@ print.ggalign_data <- function(x, ...) {
         )
     )
     invisible(x)
+}
+
+ggalign_attr_set <- function(x, values) {
+    attr(x, ".__ggalign_attr__") <- values
+    x
+}
+
+ggalign_attr_get <- function(x) attr(x, ".__ggalign_attr__", exact = TRUE)
+
+ggalign_attr_remove <- function(x) ggalign_attr_set(x, NULL)
+
+ggalign_lvls_set <- function(x, lvls) {
+    attr(x, ".__ggalign_levels__") <- lvls
+    x
+}
+
+ggalign_lvls_get <- function(x) attr(x, ".__ggalign_levels__", exact = TRUE)
+
+ggalign_lvls_remove <- function(x) ggalign_lvls_set(x, NULL)
+
+# we keep a special attribute across all data
+# this is used to pass additional annotation informations
+ggalign_data_restore <- function(data, original) {
+    if (is.null(ggalign_attr_get(data)) && # no attached attribute
+        # the original has attached attribute
+        !is.null(value <- ggalign_attr_get(original))) {
+        data <- ggalign_attr_set(data, value)
+    }
+
+    if (is.null(ggalign_lvls_get(data)) && # no attached levels
+        # the original has attached levels
+        !is.null(value <- ggalign_lvls_get(original))) {
+        data <- ggalign_lvls_set(data, value)
+    }
+    # to prevent the print of attributes
+    if (!is.null(ggalign_attr_get(data)) ||
+        !is.null(ggalign_lvls_get(data))) {
+        data <- add_class(data, "ggalign_data")
+    }
+    data
 }
 
 #############################################################

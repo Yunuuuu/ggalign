@@ -110,8 +110,7 @@ reference:
   - fortify_data_frame
   - fortify_matrix
   - fortify_upset
-  - ggalign_attr_set
-  - ggalign_lvls_set
+  - ggalign_data_set
   - order2
   - new_tune
 

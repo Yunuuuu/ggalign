@@ -3,7 +3,7 @@
 \name{ggalign_attr}
 \alias{ggalign_attr}
 \alias{ggalign_lvls}
-\title{Get Data from the Attached Attribute in the Rendering Process}
+\title{Get Data from the Attribute Attached by ggalign}
 \usage{
 ggalign_attr(x, field = NULL, check = TRUE)
 
@@ -21,9 +21,10 @@ returned.}
 }
 \value{
 \itemize{
-\item \code{ggalign_attr}: The specified data from the attached attribute or \code{NULL} if
-it is unavailable.
-\item \code{ggalign_lvls}: The attached levels.
+\item \code{ggalign_attr}: The specified data from the attached supplementary data or
+\code{NULL} if it is unavailable.
+\item \code{ggalign_lvls}: The attached supplementary levels or \code{NULL} if it is
+unavailable.
 }
 }
 \description{

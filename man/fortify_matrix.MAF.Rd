@@ -120,3 +120,4 @@ Other fortify_matrix methods:
 \code{\link{fortify_matrix.phylo}()}
 }
 \concept{fortify_matrix methods}
+\concept{tune methods}

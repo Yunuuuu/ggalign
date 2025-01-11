@@ -252,6 +252,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 }
 
 #' @param shape Not used currently.
+#' @family tune methods
 #' @export
 #' @rdname fortify_matrix.MAF
 tune.MAF <- function(data, shape = NULL) {
