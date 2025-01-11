@@ -5,6 +5,10 @@ ggalign_attr_set: Attaches supplementary data to the input, facilitating
 downstream use.
 ggalign_attr_get: Extracts previously attached supplementary data during
 the transformation process.
+ggalign_lvls_set: Attaches levels to the input, enabling the restoration
+of the value column when transformed from a matrix to a data frame.
+ggalign_lvls_get: Extracts previously attached levels during the
+transformation process.
 
 "><meta property="og:description" content="
 
@@ -12,6 +16,10 @@ ggalign_attr_set: Attaches supplementary data to the input, facilitating
 downstream use.
 ggalign_attr_get: Extracts previously attached supplementary data during
 the transformation process.
+ggalign_lvls_set: Attaches levels to the input, enabling the restoration
+of the value column when transformed from a matrix to a data frame.
+ggalign_lvls_get: Extracts previously attached levels during the
+transformation process.
 
 "><meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -65,13 +73,21 @@ the transformation process.
 downstream use.</p></li>
 <li><p><code>ggalign_attr_get</code>: Extracts previously attached supplementary data during
 the transformation process.</p></li>
+<li><p><code>ggalign_lvls_set</code>: Attaches levels to the input, enabling the restoration
+of the <code>value</code> column when transformed from a matrix to a data frame.</p></li>
+<li><p><code>ggalign_lvls_get</code>: Extracts previously attached levels during the
+transformation process.</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggalign_attr_set</span><span class="op">(</span><span class="va">x</span>, <span class="va">values</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ggalign_attr_get</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggalign_attr_get</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggalign_lvls_set</span><span class="op">(</span><span class="va">x</span>, <span class="va">lvls</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggalign_lvls_get</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,6 +101,10 @@ the transformation process.</p></li>
 <dt id="arg-values">values<a class="anchor" aria-label="anchor" href="#arg-values"></a></dt>
 <dd><p>A list to be attached.</p></dd>
 
+
+<dt id="arg-lvls">lvls<a class="anchor" aria-label="anchor" href="#arg-lvls"></a></dt>
+<dd><p>A character vector representing the attached levels.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -97,7 +117,8 @@ detailed or aggregated analyses. Additionally, it stores the levels of
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="ggalign_attr.html">ggalign_attr()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="ggalign_attr.html">ggalign_attr()</a></code></p>
+<p><code><a href="ggalign_attr.html">ggalign_lvls()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
