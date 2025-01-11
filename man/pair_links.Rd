@@ -5,7 +5,7 @@
 \alias{range_link}
 \title{Helper function to create pairs of observation groups}
 \usage{
-pair_links(...)
+pair_links(..., .handle_missing = "error", .reorder = NULL)
 
 range_link(point1, point2)
 }
@@ -18,6 +18,12 @@ wrapping them into a single \code{list()}. If only the left-hand side of the
 formula exists, you can input it directly. For integer indices, wrap them
 with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \code{\link[=waiver]{waiver()}} to inherit values from the other group.}
+
+\item{.handle_missing}{A string of \code{"error"} or \code{"remove"}
+indicates the action for handling missing observations.}
+
+\item{.reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
+whether to reorder the input links to follow the specified layout ordering.}
 
 \item{point1, point2}{A single integer or character index, defining the lower
 and higher bounds of the range. For integer indices, wrap them with \code{\link[=I]{I()}}

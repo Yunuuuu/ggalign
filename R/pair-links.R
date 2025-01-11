@@ -17,6 +17,10 @@
 #'   formula exists, you can input it directly. For integer indices, wrap them
 #'   with [`I()`] to use the ordering from the layout. You can also use
 #'   [`waiver()`] to inherit values from the other group.
+#' @param .handle_missing A string of `r oxford_or(c("error", "remove"))`
+#' indicates the action for handling missing observations.
+#' @param .reorder A string of `r oxford_or(c("hand1", "hand2"))` indicating
+#'   whether to reorder the input links to follow the specified layout ordering.
 #' @examples
 #' x <- pair_links(
 #'     # group on the left hand only
@@ -52,10 +56,13 @@
 #' x[1:2] <- list(~ c("a", "b"), ~ range_link("a", "b"))
 #' x
 #' @export
-pair_links <- function(...) {
+pair_links <- function(..., .handle_missing = "error", .reorder = NULL) {
+    handle_missing <- arg_match0(.handle_missing, c("error", "remove"))
+    reorder <- check_reorder(.reorder)
     pairs <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     new_pair_links(
-        lapply(pairs, as_pair_link, x_arg = "...", call = current_call())
+        lapply(pairs, as_pair_link, x_arg = "...", call = current_call()),
+        handle_missing = handle_missing, reorder = reorder
     )
 }
 
@@ -543,15 +550,16 @@ deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
 }
 
 ###################################################
-make_links_data <- function(links, reorder, design1, design2,
+make_links_data <- function(links, design1, design2,
                             labels1, labels2) {
     link_index_list <- lapply(
         links, make_pair_link_index,
         design1 = design1, design2 = design2,
-        labels1 = labels1, labels2 = labels2
+        labels1 = labels1, labels2 = labels2,
+        handle_missing = attr(links, "handle_missing")
     )
     names(link_index_list) <- names_or_index(links)
-    if (!is.null(reorder)) {
+    if (!is.null(reorder <- attr(links, "reorder"))) {
         index <- vapply(link_index_list, function(link_index) {
             if (is.null(link_index) ||
                 is.null(index <- .subset2(link_index, reorder))) {
@@ -566,18 +574,20 @@ make_links_data <- function(links, reorder, design1, design2,
 }
 
 make_pair_link_index <- function(pair_link, design1, design2,
-                                 labels1, labels2) {
+                                 labels1, labels2, handle_missing) {
     input1 <- .subset2(pair_link, 1L)
     input2 <- .subset2(pair_link, 2L)
 
     # make the data
     hand1 <- make_link_index(input1,
         design = design1, labels = labels1,
-        other = input2, data_index = !inherits(pair_link, "AsIs")
+        other = input2, data_index = !inherits(pair_link, "AsIs"),
+        handle_missing = handle_missing
     )
     hand2 <- make_link_index(input2,
         design = design2, labels = labels2,
-        other = input1, data_index = !inherits(pair_link, "AsIs")
+        other = input1, data_index = !inherits(pair_link, "AsIs"),
+        handle_missing = handle_missing
     )
     if (is.null(hand1) && is.null(hand2)) {
         return(NULL)
@@ -586,7 +596,8 @@ make_pair_link_index <- function(pair_link, design1, design2,
 }
 
 make_link_index <- function(link, design, labels, other, data_index,
-                            arg = caller_arg(link), call = caller_call()) {
+                            handle_missing, arg = caller_arg(link),
+                            call = caller_call()) {
     link <- link_to_location(
         link,
         n = .subset2(design, "nobs"),
@@ -594,6 +605,7 @@ make_link_index <- function(link, design, labels, other, data_index,
         index = .subset2(design, "index"),
         other = other,
         data_index = data_index,
+        handle_missing = handle_missing,
         arg = arg, call = call
     )
     if (is_empty(link)) {
@@ -612,29 +624,26 @@ link_to_location.AsIs <- function(x, ..., data_index) {
 }
 
 #' @export
-link_to_location.character <- function(x, ..., n, labels, index,
+link_to_location.character <- function(x, ..., n, labels, index, handle_missing,
                                        arg = caller_arg(x),
                                        call = caller_call()) {
-    ans <- vec_as_location(
-        x,
-        n = n,
-        names = labels,
-        arg = arg,
-        call = call
-    )
+    if (identical(handle_missing, "remove") && !is.null(labels)) {
+        x <- x[x %in% labels]
+    }
+    ans <- vec_as_location(x, n = n, names = labels, arg = arg, call = call)
     match(ans, index) # character always match the original data
 }
 
 #' @export
-link_to_location.integer <- function(x, ..., n, labels, index, data_index,
-                                     arg = caller_arg(x),
+link_to_location.integer <- function(x, ..., n, index, data_index,
+                                     handle_missing, arg = caller_arg(x),
                                      call = caller_call()) {
-    ans <- vec_as_location(
-        x,
+    ans <- num_as_location(x,
         n = n,
-        names = labels,
-        arg = arg,
-        call = call
+        arg = arg, call = call,
+        negative = "error",
+        zero = "error",
+        oob = handle_missing
     )
     # integer index by default match the original data
     if (isTRUE(data_index)) match(ans, index) else ans

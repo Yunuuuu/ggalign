@@ -24,20 +24,18 @@
 #'
 #' @export
 cross_mark <- function(mark, data = waiver(), ...,
-                       reorder = NULL, obs_size = 1,
-                       inherit_index = NULL, inherit_panel = NULL,
+                       obs_size = 1, inherit_index = NULL, inherit_panel = NULL,
                        inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
     }
-    reorder <- check_reorder(reorder)
     assert_obs_size(obs_size)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossMark,
         data = data, data_params = list2(...),
-        mark = mark, reorder = reorder, obs_size = obs_size,
+        mark = mark, obs_size = obs_size,
         plot = ggplot(), size = size,
         schemes = default_schemes(th = theme_panel_border()),
         active = active,
@@ -99,7 +97,6 @@ CrossMark <- ggproto("CrossMark", Cross,
         )
         link_index <- make_links_data(
             .subset2(mark, "links"),
-            reorder = self$reorder,
             design1 = design1, design2 = design2,
             labels1 = self$labels0, labels2 = self$labels
         )

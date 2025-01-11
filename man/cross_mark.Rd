@@ -8,7 +8,6 @@ cross_mark(
   mark,
   data = waiver(),
   ...,
-  reorder = NULL,
   obs_size = 1,
   inherit_index = NULL,
   inherit_panel = NULL,
@@ -29,9 +28,6 @@ will be used.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \code{\link[=fortify_matrix]{fortify_matrix()}}.}
-
-\item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
-whether to reorder the input links to follow the specified layout ordering.}
 
 \item{obs_size}{A single numeric value that indicates the size of a single
 observation, ranging from \verb{(0, 1]}.}

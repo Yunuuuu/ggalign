@@ -14,20 +14,19 @@
 #'
 #' @export
 cross_link <- function(link, data = waiver(), ...,
-                       on_top = TRUE, reorder = NULL, obs_size = 1,
+                       on_top = TRUE, obs_size = 1,
                        inherit_index = NULL, inherit_panel = NULL,
                        inherit_nobs = NULL,
                        size = NULL, active = NULL) {
     if (!inherits(link, "ggalign_link_draw")) {
         cli_abort("{.arg link} must be a {.fn link_draw} object")
     }
-    reorder <- check_reorder(reorder)
     assert_obs_size(obs_size)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
     cross(CrossLink,
         data = data, data_params = list2(...),
-        link = link, reorder = reorder, obs_size = obs_size,
+        link = link, obs_size = obs_size,
         plot = ggplot(), size = size,
         schemes = default_schemes(),
         active = active,
@@ -103,7 +102,6 @@ CrossLink <- ggproto("CrossLink", Cross,
         }
         link_index <- make_links_data(
             links,
-            reorder = self$reorder,
             design1 = design1, design2 = design2,
             labels1 = self$labels0, labels2 = self$labels
         )

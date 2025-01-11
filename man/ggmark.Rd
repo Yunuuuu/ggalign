@@ -11,7 +11,6 @@ ggmark(
   ...,
   group1 = NULL,
   group2 = NULL,
-  reorder = NULL,
   obs_size = 1,
   size = NULL,
   active = NULL
@@ -43,9 +42,6 @@ panel group information from the layout as the paired groups. By default,
 if no specific observations are selected in \code{mark}, \code{ggmark()} will
 automatically connect all observations and group them according to the
 layout's defined groups.}
-
-\item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
-whether to reorder the input links to follow the specified layout ordering.}
 
 \item{obs_size}{A single numeric value that indicates the size of a single
 observation, ranging from \verb{(0, 1]}.}

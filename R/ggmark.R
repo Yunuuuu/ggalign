@@ -9,8 +9,6 @@
 #'   if no specific observations are selected in `mark`, `ggmark()` will
 #'   automatically connect all observations and group them according to the
 #'   layout's defined groups.
-#' @param reorder A string of `r oxford_or(c("hand1", "hand2"))` indicating
-#'   whether to reorder the input links to follow the specified layout ordering.
 #' @param obs_size A single numeric value that indicates the size of a single
 #'   observation, ranging from `(0, 1]`.
 #' @section ggplot2 specification:
@@ -58,12 +56,11 @@
 #' @importFrom rlang list2
 #' @export
 ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
-                   group1 = NULL, group2 = NULL, reorder = NULL,
+                   group1 = NULL, group2 = NULL,
                    obs_size = 1, size = NULL, active = NULL) {
     if (!inherits(mark, "ggalign_mark_draw")) {
         cli_abort("{.arg mark} must be a {.fn mark_draw} object")
     }
-    reorder <- check_reorder(reorder)
     assert_obs_size(obs_size)
     assert_active(active)
     active <- update_active(active, new_active(use = TRUE))
@@ -76,7 +73,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
         params = list2(...), # used by AlignGg
         mark = mark, # used by MarkGg
         group1 = group1, group2 = group2,
-        reorder = reorder, obs_size = obs_size,
+        obs_size = obs_size,
 
         # slot
         plot = ggplot(mapping = mapping),

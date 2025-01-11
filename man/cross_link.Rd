@@ -9,7 +9,6 @@ cross_link(
   data = waiver(),
   ...,
   on_top = TRUE,
-  reorder = NULL,
   obs_size = 1,
   inherit_index = NULL,
   inherit_panel = NULL,
@@ -32,9 +31,6 @@ will be used.}
 
 \item{on_top}{A boolean value indicating whether to draw the link on top of
 the plot panel (\code{TRUE}) or below (\code{FALSE}).}
-
-\item{reorder}{A string of \code{"hand1"} or \code{"hand2"} indicating
-whether to reorder the input links to follow the specified layout ordering.}
 
 \item{obs_size}{A single numeric value that indicates the size of a single
 observation, ranging from \verb{(0, 1]}.}
