@@ -82,8 +82,8 @@ Cross <- ggproto("Cross", AlignProto,
             data <- inject(
                 fortify_matrix(
                     data, !!!self$data_params,
-                    error_arg = self$data_arg,
-                    error_call = self$call
+                    data_arg = self$data_arg,
+                    call = self$call
                 )
             ) %|w|% NULL
             if (isTRUE(self$inherit_nobs)) { # we require inherit nobs
