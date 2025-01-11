@@ -66,7 +66,9 @@ This function converts various objects to a data frame."><meta property="og:imag
 <span>  reorder_branches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  branch_gap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  double <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  double <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data_arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>  call <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'hclust'</span></span>
@@ -134,6 +136,17 @@ should be doubled when segments span multiple branches. If <code>TRUE</code>, th
 horizontal lines will be repeated for each branch that the segment spans. If
 <code>FALSE</code>, only one horizontal line will be drawn. This is used by
 <code><a href="align_dendro.html">align_dendro()</a></code> to provide support of facet operation in ggplot2.</p></dd>
+
+
+<dt id="arg-data-arg">data_arg<a class="anchor" aria-label="anchor" href="#arg-data-arg"></a></dt>
+<dd><p>The argument name for <code>data</code>. Developers can use it to
+improve messages. Not used by the user.</p></dd>
+
+
+<dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
+<dd><p>The execution environment where <code>data</code> and other arguments for
+the method are collected, e.g., <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env()</a></code>.
+Developers can use it to improve messages. Not used by the user.</p></dd>
 
 </dl></div>
     <div class="section level2">

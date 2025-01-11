@@ -54,7 +54,7 @@ This function converts various objects into a matrix format."><meta property="og
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fortify_matrix</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fortify_matrix</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, data_arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, call <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,11 +62,22 @@ This function converts various objects into a matrix format."><meta property="og
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An object to be converted to a matrix.</p></dd>
+<dd><p>An object to be converted into a matrix.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Arguments passed to methods.</p></dd>
+<dd><p>Additional arguments passed to methods.</p></dd>
+
+
+<dt id="arg-data-arg">data_arg<a class="anchor" aria-label="anchor" href="#arg-data-arg"></a></dt>
+<dd><p>The argument name for <code>data</code>. Developers can use it to
+improve messages. Not used by the user.</p></dd>
+
+
+<dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
+<dd><p>The execution environment where <code>data</code> and other arguments for
+the method are collected, e.g., <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env()</a></code>.
+Developers can use it to improve messages. Not used by the user.</p></dd>
 
 </dl></div>
     <div class="section level2">
