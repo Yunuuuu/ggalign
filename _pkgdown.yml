@@ -36,7 +36,6 @@ reference:
   - ggheatmap
   - ggoncoplot
   - ggupset
-  - tune
 
 - title: Layout Building
   desc: >
@@ -110,9 +109,10 @@ reference:
   - fortify_data_frame
   - fortify_matrix
   - fortify_upset
+  - tune
+  - new_tune
   - ggalign_data_set
   - order2
-  - new_tune
 
 - title: Plot composer
   desc: >
