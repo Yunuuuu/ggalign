@@ -3,7 +3,7 @@
 \name{quad_discrete}
 \alias{quad_discrete}
 \alias{quad_alignb}
-\title{Arrange Plots in the Quad-Side of a main plot by aligning discrete axis}
+\title{Arrange plots in the quad-side of a main plot by aligning discrete axis}
 \usage{
 quad_discrete(
   data = waiver(),

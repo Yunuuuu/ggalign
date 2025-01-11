@@ -4,7 +4,7 @@
 \alias{quad_continuous}
 \alias{ggside}
 \alias{quad_free}
-\title{Arrange Plots in the Quad-Side of a main plot by aligning continuous axis}
+\title{Arrange plots in the quad-side of a main plot by aligning continuous axis}
 \usage{
 quad_continuous(
   data = waiver(),

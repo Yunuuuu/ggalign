@@ -1,4 +1,4 @@
-#' Draw UpSet plot
+#' Create an UpSet plot
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`

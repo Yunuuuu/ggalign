@@ -4,7 +4,7 @@
 \alias{quad_layout}
 \alias{quad_alignh}
 \alias{quad_alignv}
-\title{Arrange Plots in the Quad-Side of a main plot}
+\title{Arrange plots in the quad-side of a main plot}
 \usage{
 quad_layout(
   data = waiver(),

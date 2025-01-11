@@ -4,7 +4,7 @@
 \alias{stack_cross}
 \alias{stack_crossv}
 \alias{stack_crossh}
-\title{Arrange Plots Crosswise Horizontally or Vertically}
+\title{Arrange plots crosswise horizontally or vertically}
 \usage{
 stack_cross(direction, data = NULL, ..., theme = NULL, sizes = NA)
 

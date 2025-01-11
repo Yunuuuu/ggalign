@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-circle-.R
 \name{circle_discrete}
 \alias{circle_discrete}
-\title{Arrange Plots in a Circular Layout}
+\title{Arrange plots in a circular layout by aligning discrete axis}
 \usage{
 circle_discrete(
   data = NULL,

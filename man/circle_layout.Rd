@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-circle-.R
 \name{circle_layout}
 \alias{circle_layout}
-\title{Arrange Plots in a Circular Layout}
+\title{Arrange plots in a circular layout}
 \usage{
 circle_layout(data = NULL, ..., limits = waiver())
 }

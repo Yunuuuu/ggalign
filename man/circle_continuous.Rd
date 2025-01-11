@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-circle-.R
 \name{circle_continuous}
 \alias{circle_continuous}
-\title{Arrange Plots in a Circular Layout}
+\title{Arrange plots in a circular layout by aligning continuous axis}
 \usage{
 circle_continuous(
   data = NULL,

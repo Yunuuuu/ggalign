@@ -1,4 +1,4 @@
-#' Arrange Plots in the Quad-Side of a main plot by aligning discrete axis
+#' Arrange plots in the quad-side of a main plot by aligning discrete axis
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
@@ -71,7 +71,7 @@ quad_discrete.uneval <- function(data, ...) {
 }
 
 #############################################################
-#' Arrange Plots in the Quad-Side of a main plot by aligning continuous axis
+#' Arrange plots in the quad-side of a main plot by aligning continuous axis
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
@@ -134,7 +134,7 @@ quad_continuous.uneval <- function(data, ...) {
 }
 
 ##########################################################
-#' Arrange Plots in the Quad-Side of a main plot
+#' Arrange plots in the quad-side of a main plot
 #'
 #' @description
 #' `r lifecycle::badge('stable')`

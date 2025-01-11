@@ -1,4 +1,4 @@
-#' Arrange Plots in a Circular Layout
+#' Arrange plots in a circular layout by aligning discrete axis
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
@@ -81,7 +81,8 @@ circle_discrete.function <- function(data = NULL, ...) {
 circle_discrete.formula <- circle_discrete.function
 
 ################################################################
-#' @inherit circle_discrete title
+#' Arrange plots in a circular layout by aligning continuous axis
+#'
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
@@ -160,7 +161,8 @@ new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
     )
 }
 
-#' @inherit circle_discrete title
+#' Arrange plots in a circular layout
+#'
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'

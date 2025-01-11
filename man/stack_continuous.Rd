@@ -7,7 +7,7 @@
 \alias{stack_freev}
 \alias{stack_continuoush}
 \alias{stack_freeh}
-\title{Arrange Plots Horizontally or Vertically by aligning continuous axis}
+\title{Arrange plots horizontally or vertically by aligning continuous axis}
 \usage{
 stack_continuous(
   direction,

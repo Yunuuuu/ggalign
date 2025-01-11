@@ -1,4 +1,4 @@
-#' Arrange Plots in a Heatmap
+#' Create a heatmap
 #'
 #' @description
 #' `r lifecycle::badge('stable')`

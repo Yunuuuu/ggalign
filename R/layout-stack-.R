@@ -1,4 +1,4 @@
-#' Arrange Plots Horizontally or Vertically by aligning discrete axis
+#' Arrange plots horizontally or vertically by aligning discrete axis
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
@@ -107,7 +107,7 @@ stack_discrete.function <- function(direction, data = NULL, ...) {
 stack_discrete.formula <- stack_discrete.function
 
 ################################################################
-#' Arrange Plots Horizontally or Vertically by aligning continuous axis
+#' Arrange plots horizontally or vertically by aligning continuous axis
 #'
 #' @description
 #' `r lifecycle::badge('stable')`

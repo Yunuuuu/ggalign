@@ -7,7 +7,7 @@
 \alias{stack_alignv}
 \alias{stack_discreteh}
 \alias{stack_alignh}
-\title{Arrange Plots Horizontally or Vertically by aligning discrete axis}
+\title{Arrange plots horizontally or vertically by aligning discrete axis}
 \usage{
 stack_discrete(direction, data = NULL, ..., theme = NULL, sizes = NA)
 
