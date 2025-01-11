@@ -23,9 +23,10 @@ fortify_upset <- function(data, mode = "distinct", ...) {
     UseMethod("fortify_upset")
 }
 
+#' @inheritParams rlang::args_dots_empty
 #' @inherit fortify_upset
 #' @param data A list of sets.
-#' @param ... Not used.
+#' @inheritParams fortify_upset
 #' @section ggalign attributes:
 #'  - `intersection_sizes`: An integer vector indicating the size of each
 #'    intersection.
@@ -115,6 +116,7 @@ fortify_upset.list <- function(data, mode = "distinct", ...) {
     )
 }
 
+#' @inheritParams rlang::args_error_context
 #' @inherit fortify_upset.list
 #' @param data A matrix where each row represents an element, and each column
 #' defines a set. The values in the matrix indicate whether the element is

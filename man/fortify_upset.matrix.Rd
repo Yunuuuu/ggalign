@@ -17,7 +17,7 @@ indicates the mode to define the set intersections. Check
 \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/upset-plot.html#upset-mode}
 for details.}
 
-\item{...}{Not used.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 A matrix.
