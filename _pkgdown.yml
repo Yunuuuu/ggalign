@@ -36,6 +36,7 @@ reference:
   - ggheatmap
   - ggoncoplot
   - ggupset
+  - tune
 
 - title: Layout Building
   desc: >
@@ -66,6 +67,7 @@ reference:
   - align_order
   - align_reorder
   - cross_none
+  - memo_order
 
 - title: Plot initialize
   desc: >
@@ -111,6 +113,7 @@ reference:
   - ggalign_attr_set
   - ggalign_lvls_set
   - order2
+  - new_tune
 
 - title: Plot composer
   desc: >
@@ -166,7 +169,6 @@ reference:
   - ggalign_stat
   - is_layout
   - hclust2
-  - memo_order
   - read_example
 
 - title: internal

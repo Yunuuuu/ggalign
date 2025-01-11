@@ -194,7 +194,7 @@ ggalign_stat.AlignGg <- ggalign_stat.default
 #' returned.
 #' @param check A boolean indicating whether to check if the `field` exists. If
 #' `TRUE`, an error will be raised if the specified `field` does not exist.
-#' @return 
+#' @return
 #' - `ggalign_attr`: The specified data from the attached attribute or `NULL` if
 #' it is unavailable.
 #' - `ggalign_lvls`: The attached levels.
@@ -277,13 +277,38 @@ ggalign_data_restore <- function(data, original) {
         !is.null(value <- ggalign_lvls_get(original))) {
         data <- ggalign_lvls_set(data, value)
     }
+    # to prevent the print of attributes
+    if (!is.null(ggalign_attr_get(data)) ||
+        !is.null(ggalign_lvls_get(data))) {
+        data <- add_class(data, "ggalign_data")
+    }
     data
 }
 
 ggalign_data_set <- function(.data, ..., .lvls = NULL) {
-    if (...length() > 0L) .data <- ggalign_attr_set(.data, list(...))
-    if (!is.null(.lvls)) .data <- ggalign_lvls_set(.data, .lvls)
+    if (...length() > 0L) {
+        .data <- ggalign_attr_set(.data, list(...))
+    }
+    if (!is.null(.lvls)) {
+        .data <- ggalign_lvls_set(.data, .lvls)
+    }
+    # to prevent the print of attributes
+    if (!is.null(ggalign_attr_get(.data)) ||
+        !is.null(ggalign_lvls_get(.data))) {
+        .data <- add_class(.data, "ggalign_data")
+    }
     .data
+}
+
+#' @export
+print.ggalign_data <- function(x, ...) {
+    print(
+        remove_class(
+            ggalign_lvls_remove(ggalign_attr_remove(x)),
+            "ggalign_data"
+        )
+    )
+    invisible(x)
 }
 
 #############################################################

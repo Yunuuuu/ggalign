@@ -179,7 +179,8 @@ save_png <- function(code, width = 400L, height = 400L) {
 }
 
 add_class <- function(x, ...) {
-    oldClass(x) <- vec_unique(c(..., oldClass(x)))
+    if (is.null(x)) return(x) # styler: off
+    class(x) <- vec_unique(c(..., class(x)))
     x
 }
 
