@@ -54,6 +54,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_mark</span><span class="op">(</span></span>
 <span>  <span class="va">mark</span>,</span>
 <span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  reorder <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  obs_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  inherit_index <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -79,6 +80,11 @@ be used to define the panel names so must be unique.</p></dd>
 <code><a href="fortify_matrix.html">fortify_matrix()</a></code> will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; Additional arguments passed to
+<code><a href="fortify_matrix.html">fortify_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-reorder">reorder<a class="anchor" aria-label="anchor" href="#arg-reorder"></a></dt>

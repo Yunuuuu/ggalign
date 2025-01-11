@@ -53,6 +53,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_none</span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  inherit_index <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_panel <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit_nobs <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -68,6 +69,11 @@
 <code><a href="fortify_matrix.html">fortify_matrix()</a></code> will convert the data to a matrix. This argument
 allows you to change the layout data. If not specified, the original data
 will be used.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; Additional arguments passed to
+<code><a href="fortify_matrix.html">fortify_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-inherit-index">inherit_index<a class="anchor" aria-label="anchor" href="#arg-inherit-index"></a></dt>
