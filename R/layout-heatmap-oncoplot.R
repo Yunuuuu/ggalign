@@ -205,8 +205,8 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
 #' @return A vector of ordering weights.
 #' @export
 memo_order <- function(x) {
-    # For `align_reorder()`, rows are considered as the samples
-    # `.memo_order` will regard the columns as the samples
+    # For `align_reorder()`, rows are considered as the observations
+    # `.memo_order` will regard the columns as the observations
     .memo_order(t(x), counts = FALSE, reorder_rows = TRUE)
 }
 
@@ -248,6 +248,8 @@ order2.memo_weights <- function(x) order(x, decreasing = TRUE)
 #' collapsed values.
 #' @param use_syn A single boolean value indicates whether to include synonymous
 #' variants when Classifies SNPs into transitions and transversions.
+#' @param missing_genes A string, either `"error"` or `"remove"`, specifying the
+#' action for handling missing genes.
 #' @inheritParams fortify_matrix
 #' @section ggalign attributes:
 #'  - `gene_summary`: gene summary informations. See
@@ -267,13 +269,17 @@ order2.memo_weights <- function(x) order(x, decreasing = TRUE)
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
                                collapse_vars = TRUE,
-                               use_syn = TRUE,
+                               use_syn = TRUE, missing_genes = "error",
                                data_arg = caller_arg(data),
                                call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
     rlang::check_installed(
         "maftools", "to make alterations matrix from `MAF` object"
+    )
+    missing_genes <- arg_match0(
+        missing_genes, c("error", "remove"),
+        error_call = call
     )
     if (isTRUE(collapse_vars)) {
         collapse_vars <- "Multi_Hit"
@@ -326,6 +332,9 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
             cli_abort("{.arg genes} cannot contain duplicated values",
                 call = call
             )
+        }
+        if (identical(missing_genes, "remove")) {
+            genes <- genes[genes %in% .subset2(gene_summary, "Hugo_Symbol")]
         }
         gene_summary <- vec_slice(
             gene_summary,

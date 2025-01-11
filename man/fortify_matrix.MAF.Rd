@@ -12,6 +12,7 @@
   remove_empty_samples = TRUE,
   collapse_vars = TRUE,
   use_syn = TRUE,
+  missing_genes = "error",
   data_arg = caller_arg(data),
   call = NULL
 )
@@ -35,6 +36,9 @@ collapsed values.}
 
 \item{use_syn}{A single boolean value indicates whether to include synonymous
 variants when Classifies SNPs into transitions and transversions.}
+
+\item{missing_genes}{A string, either \code{"error"} or \code{"remove"}, specifying the
+action for handling missing genes.}
 
 \item{data_arg}{The argument name for \code{data}. Developers can use it to
 improve messages. Not used by the user.}
