@@ -3,7 +3,7 @@
 \name{ggoncoplot}
 \alias{ggoncoplot}
 \alias{ggoncoplot.default}
-\title{Create \code{OncoPrint} Visualizations from Genetic Alteration Data}
+\title{Create an OncoPrint}
 \usage{
 ggoncoplot(
   data = NULL,

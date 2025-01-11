@@ -1,4 +1,4 @@
-#' Create `OncoPrint` Visualizations from Genetic Alteration Data
+#' Create an OncoPrint
 #'
 #' @description
 #' `r lifecycle::badge('stable')`

@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout-quad-upset.R
 \name{ggupset}
 \alias{ggupset}
-\title{Draw UpSet plot}
+\title{Create an UpSet plot}
 \usage{
 ggupset(
   data = NULL,
