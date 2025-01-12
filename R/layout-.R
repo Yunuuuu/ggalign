@@ -271,6 +271,7 @@ ggalign_lvls_remove <- function(x) ggalign_lvls_set(x, NULL)
 # we keep a special attribute across all data
 # this is used to pass additional annotation informations
 ggalign_data_restore <- function(data, original) {
+    if (is.null(data) || is.waive(data)) return(data) # styler: off
     if (is.null(ggalign_attr_get(data)) && # no attached attribute
         # the original has attached attribute
         !is.null(value <- ggalign_attr_get(original))) {

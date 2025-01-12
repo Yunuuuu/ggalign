@@ -168,11 +168,13 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                     plot_data$.index <- seq_len(NROW(data))
                 }
                 layout@design <- design
+                self$labels <- vec_names(data) %||% vec_names(layout_data)
+                # always remove names, we'll add it in `build_plot()`
+                plot_data$.names <- NULL
+            } else {
+                self$labels <- vec_names(layout_data)
             }
-            self$labels <- vec_names(data) %||% vec_names(layout_data)
             self$add_mapping <- TRUE
-            # always remove names, we'll add it in `build_plot()`
-            plot_data$.names <- NULL
         }
         self$data <- ggalign_data_restore(plot_data, layout_data)
         layout
