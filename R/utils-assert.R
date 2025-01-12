@@ -165,14 +165,6 @@ check_stack_context <- function(what, arg = caller_arg(what),
     what
 }
 
-check_reorder <- function(reorder, arg = caller_arg(reorder),
-                          call = caller_call()) {
-    if (!is.null(reorder)) {
-        reorder <- arg_match0(reorder, c("hand1", "hand2"))
-    }
-    reorder
-}
-
 check_order <- function(order, arg = caller_arg(order), call = caller_call()) {
     if (is.null(order)) {
         order <- NA_integer_

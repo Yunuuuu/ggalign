@@ -58,7 +58,9 @@
 #' @export
 pair_links <- function(..., .handle_missing = "error", .reorder = NULL) {
     handle_missing <- arg_match0(.handle_missing, c("error", "remove"))
-    reorder <- check_reorder(.reorder)
+    if (!is.null(reorder)) {
+        reorder <- arg_match0(reorder, c("hand1", "hand2"))
+    }
     pairs <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     new_pair_links(
         lapply(pairs, as_pair_link, x_arg = "...", call = current_call()),
