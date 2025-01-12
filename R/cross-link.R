@@ -151,7 +151,7 @@ CrossLink <- ggproto("CrossLink", Cross,
 
         # insert the grob
         plot <- plot + inset(grob, on_top = self$on_top)
-        ggremove_margin(plot, direction) + theme_recycle()
+        ggremove_margin(plot, self$direction) + theme_recycle()
     },
     summary = function(self, plot) {
         header <- ggproto_parent(Cross, self)$summary(plot)
