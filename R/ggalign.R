@@ -288,7 +288,8 @@ AlignGg <- ggproto("AlignGg", AlignProto,
                 panel.spacing.x = calc_element("panel.spacing.x", theme)
             )
         }
-        plot + theme + theme_recycle()
+        plot <- plot + theme
+        ggremove_margin(plot, direction) + theme_recycle()
     },
     summary = function(self, plot) {
         header <- ggproto_parent(AlignProto, self)$summary(plot)

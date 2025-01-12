@@ -121,7 +121,8 @@ AlignProto <- ggproto("AlignProto",
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {
-        plot_add_schemes(plot, schemes) + theme_recycle()
+        plot <- plot_add_schemes(plot, schemes)
+        ggremove_margin(plot, self$direction) + theme_recycle()
     },
 
     # utils method to print the object, should return a character vector

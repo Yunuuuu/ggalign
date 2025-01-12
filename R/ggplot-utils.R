@@ -50,6 +50,17 @@ gguse_data <- function(plot, data) {
     plot
 }
 
+ggremove_margin <- function(plot, direction) {
+    if (!is.null(direction) && packageVersion("ggplot2") > "3.5.1") {
+        plot <- plot + switch_direction(
+            direction,
+            theme(plot.margin = margin(t = 0, r = NA, b = 0, l = NA)),
+            theme(plot.margin = margin(t = NA, r = 0, b = NA, l = 0))
+        )
+    }
+    plot
+}
+
 ######################################################
 default_expansion <- function(x = NULL, y = NULL) {
     structure(list(x = x, y = y), class = c("ggalign_default_expansion"))
