@@ -77,8 +77,10 @@ the creation of Upset plot.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Data used to create Upset plot. <code><a href="fortify_upset.html">fortify_upset()</a></code> will be used
-to convert data to a matrix.</p></dd>
+<dd><p>Data used to create the UpSet plot. <code><a href="fortify_matrix.html">fortify_matrix()</a></code> will be
+used to convert the data to a matrix. Currently, only
+<code><a href="fortify_matrix.list_upset.html">fortify_matrix.list_upset</a></code> and <code><a href="fortify_matrix.matrix_upset.html">fortify_matrix.matrix_upset</a></code> are
+suitable for creating an UpSet plot.</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
@@ -88,7 +90,7 @@ plot.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <code><a href="fortify_upset.html">fortify_upset()</a></code>.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="fortify_matrix.html">fortify_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
@@ -156,7 +158,7 @@ matrix.</p></li>
 <span class="r-in"><span>    b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">10</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">15</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">ggupset</span><span class="op">(</span><span class="va">lt</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu">ggupset</span><span class="op">(</span><span class="fu"><a href="tune.html">tune</a></span><span class="op">(</span><span class="va">lt</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#F0F0F0"</span>, <span class="st">"white"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey"</span>, <span class="st">"black"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="quad_active.html">anno_top</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>

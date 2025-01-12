@@ -48,10 +48,10 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.MAF.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.default.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.list_upset.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.matrix.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.matrix_upset.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.phylo.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_upset.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_upset.list.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_upset.matrix.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/free.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_draw.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_draw2.html</loc></url>
@@ -129,7 +129,10 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_switch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/theme_no_axes.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/tune.MAF.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/tune.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/tune.list.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/tune.matrix.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/with_quad.html</loc></url>
 </urlset>
 
