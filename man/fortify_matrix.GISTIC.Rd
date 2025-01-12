@@ -2,7 +2,7 @@
 % Please edit documentation in R/maftools.R
 \name{fortify_matrix.GISTIC}
 \alias{fortify_matrix.GISTIC}
-\title{Build a Matrix}
+\title{Build a matrix from a maftools object}
 \usage{
 \method{fortify_matrix}{GISTIC}(
   data,
@@ -39,13 +39,8 @@ improve messages. Not used by the user.}
 the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
 Developers can use it to improve messages. Not used by the user.}
 }
-\value{
-A matrix.
-}
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
-This function converts various objects into a matrix format.
+Build a matrix from a maftools object
 }
 \section{ggalign attributes}{
 
@@ -66,6 +61,9 @@ details.
 Other fortify_matrix methods: 
 \code{\link{fortify_matrix.MAF}()},
 \code{\link{fortify_matrix.default}()},
+\code{\link{fortify_matrix.list_upset}()},
+\code{\link{fortify_matrix.matrix}()},
+\code{\link{fortify_matrix.matrix_upset}()},
 \code{\link{fortify_matrix.phylo}()}
 }
 \concept{fortify_matrix methods}

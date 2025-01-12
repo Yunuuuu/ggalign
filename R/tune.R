@@ -10,6 +10,8 @@
 #' a helper to create a new class tailored for these objects.
 #' @seealso
 #' - [`tune.MAF()`]
+#' - [`tune.list()`]
+#' - [`tune.matrix()`]
 #' @export
 tune <- function(data, shape = NULL) UseMethod("tune")
 

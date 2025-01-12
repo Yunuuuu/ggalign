@@ -2,9 +2,8 @@
 % Please edit documentation in R/maftools.R
 \name{fortify_matrix.MAF}
 \alias{fortify_matrix.MAF}
-\alias{tune.MAF}
 \alias{fortify_matrix.MAF_pathways}
-\title{Build a Matrix}
+\title{Build a matrix from a maftools object}
 \usage{
 \method{fortify_matrix}{MAF}(
   data,
@@ -19,8 +18,6 @@
   data_arg = caller_arg(data),
   call = NULL
 )
-
-\method{tune}{MAF}(data, shape = NULL)
 
 \method{fortify_matrix}{MAF_pathways}(
   data,
@@ -65,23 +62,18 @@ improve messages. Not used by the user.}
 the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
 Developers can use it to improve messages. Not used by the user.}
 
-\item{shape}{Not used currently.}
-
 \item{pathdb}{A string of \code{"smgbp"} or \code{"sigpw"}, or a named list
 of genes to define the pathways.}
 
 \item{remove_empty_pathways}{A single boolean value indicats whether to drop
 pathways without any genomic alterations.}
 }
-\value{
-A matrix.
-}
 \description{
-Convert \code{maftools} object to a matrix:
+Convert \code{MAF} object to a matrix:
 \itemize{
 \item \code{fortify_matrix.MAF}: Extract genomic alterations for genes.
-\item \code{tune.MAF}: Convert \code{MAF} object to a \code{MAF_pathways} object.
 \item \code{fortify_matrix.MAF_pathways}: Extract genomic alterations for pathways.
+\code{\link[=tune.MAF]{tune.MAF()}} helps convert \code{MAF} object to a \code{MAF_pathways} object.
 }
 }
 \section{ggalign attributes}{
@@ -117,7 +109,9 @@ For \code{fortify_matrix.MAF_pathways}:
 Other fortify_matrix methods: 
 \code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.default}()},
+\code{\link{fortify_matrix.list_upset}()},
+\code{\link{fortify_matrix.matrix}()},
+\code{\link{fortify_matrix.matrix_upset}()},
 \code{\link{fortify_matrix.phylo}()}
 }
 \concept{fortify_matrix methods}
-\concept{tune methods}

@@ -77,7 +77,6 @@ Collate:
     'dendrogram.R'
     'fortify-data-frame.R'
     'fortify-matrix.R'
-    'fortify-upset.R'
     'geom-draw.R'
     'geom-draw2.R'
     'geom-pie.R'

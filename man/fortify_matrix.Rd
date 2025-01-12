@@ -24,13 +24,15 @@ A matrix.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This function converts various objects into a matrix format.
+This function converts various objects into a matrix format. By default, it
+calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 }
 \seealso{
 \itemize{
 \item \code{\link[=fortify_matrix.default]{fortify_matrix.default()}}
 \item \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}
 \item \code{\link[=fortify_matrix.GISTIC]{fortify_matrix.GISTIC()}}
-\item \code{\link[=fortify_matrix.phylo]{fortify_matrix.phylo()}}
+\item \code{\link[=fortify_matrix.list_upset]{fortify_matrix.list_upset()}}
+\item \code{\link[=fortify_matrix.matrix_upset]{fortify_matrix.matrix_upset()}}
 }
 }

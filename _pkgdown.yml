@@ -108,7 +108,6 @@ reference:
   - align
   - fortify_data_frame
   - fortify_matrix
-  - fortify_upset
   - tune
   - new_tune
   - ggalign_data_set
@@ -175,4 +174,4 @@ reference:
   - starts_with("patch.")
   - starts_with("fortify_matrix.")
   - starts_with("fortify_data_frame.")
-  - starts_with("fortify_upset.")
+  - starts_with("tune.")

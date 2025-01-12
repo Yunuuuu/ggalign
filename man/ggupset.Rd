@@ -19,14 +19,16 @@ ggupset(
 )
 }
 \arguments{
-\item{data}{Data used to create Upset plot. \code{\link[=fortify_upset]{fortify_upset()}} will be used
-to convert data to a matrix.}
+\item{data}{Data used to create the UpSet plot. \code{\link[=fortify_matrix]{fortify_matrix()}} will be
+used to convert the data to a matrix. Currently, only
+\code{\link{fortify_matrix.list_upset}} and \code{\link{fortify_matrix.matrix_upset}} are
+suitable for creating an UpSet plot.}
 
 \item{mapping}{Default list of aesthetic mappings to use for main plot in the
 layout. If not specified, must be supplied in each layer added to the main
 plot.}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_upset]{fortify_upset()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
 \item{direction}{A string indicating the direction of the UpSet plot,
 \code{"h"}(\code{horizontal}) or \code{"v"}(\code{vertical}). In a vertical UpSet plot, the
@@ -85,7 +87,7 @@ lt <- list(
     b = sample(letters, 10),
     c = sample(letters, 15)
 )
-ggupset(lt) +
+ggupset(tune(lt)) +
     scale_fill_manual(values = c("#F0F0F0", "white"), guide = "none") +
     scale_color_manual(values = c("grey", "black"), guide = "none") +
     anno_top() +

@@ -2,7 +2,7 @@
 % Please edit documentation in R/align-phylo.R
 \name{fortify_matrix.phylo}
 \alias{fortify_matrix.phylo}
-\title{Build a Matrix}
+\title{Build a matrix from \code{phylo} object}
 \usage{
 \method{fortify_matrix}{phylo}(data, ..., data_arg = caller_arg(data), call = NULL)
 }
@@ -32,6 +32,9 @@ possible to add \code{\link[=align_phylo]{align_phylo()}} to the stack independe
 Other fortify_matrix methods: 
 \code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.MAF}()},
-\code{\link{fortify_matrix.default}()}
+\code{\link{fortify_matrix.default}()},
+\code{\link{fortify_matrix.list_upset}()},
+\code{\link{fortify_matrix.matrix}()},
+\code{\link{fortify_matrix.matrix_upset}()}
 }
 \concept{fortify_matrix methods}

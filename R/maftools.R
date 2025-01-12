@@ -1,11 +1,12 @@
-#' @inheritParams rlang::args_dots_empty
-#' @inherit fortify_matrix title return
-#' @description
-#' Convert `maftools` object to a matrix:
-#'  - `fortify_matrix.MAF`: Extract genomic alterations for genes.
-#'  - `tune.MAF`: Convert `MAF` object to a `MAF_pathways` object.
-#'  - `fortify_matrix.MAF_pathways`: Extract genomic alterations for pathways.
+#' Build a matrix from a maftools object
 #'
+#' @description
+#' Convert `MAF` object to a matrix:
+#'  - `fortify_matrix.MAF`: Extract genomic alterations for genes.
+#'  - `fortify_matrix.MAF_pathways`: Extract genomic alterations for pathways.
+#'    [`tune.MAF()`] helps convert `MAF` object to a `MAF_pathways` object.
+#'
+#' @inheritParams rlang::args_dots_empty
 #' @param data A [`MAF`][maftools::read.maf] object.
 #' @param genes An atomic character defines the genes to draw.
 #' @param n_top A single number indicates how many top genes to be drawn.
@@ -252,10 +253,13 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     )
 }
 
+#' Convert the shape of a MAF for fortify method
+#'
+#' @param data A [`MAF`][maftools::read.maf] object.
 #' @param shape Not used currently.
+#' @seealso [`fortify_matrix.MAF_pathways()`]
 #' @family tune methods
 #' @export
-#' @rdname fortify_matrix.MAF
 tune.MAF <- function(data, shape = NULL) {
     if (!is.null(shape)) {
         cli_abort("{.arg shape} cannot be used currently for {.cls MAF} object")
@@ -408,8 +412,9 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
     )
 }
 
+#' Build a matrix from a maftools object
+#'
 #' @inheritParams rlang::args_dots_empty
-#' @inherit fortify_matrix title description return
 #' @param data A [`GISTIC`][maftools::readGistic] object.
 #' @param n_top A single number indicates how many top bands to be drawn.
 #' @param bands An atomic character defines the bands to draw.

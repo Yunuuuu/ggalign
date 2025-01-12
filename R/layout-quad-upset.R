@@ -6,9 +6,11 @@
 #' `ggupset` is a specialized version of [`quad_discrete()`], which simplifies
 #' the creation of Upset plot.
 #'
-#' @param data Data used to create Upset plot. [`fortify_upset()`] will be used
-#' to convert data to a matrix.
-#' @param ... Additional arguments passed to [`fortify_upset()`].
+#' @param data Data used to create the UpSet plot. [`fortify_matrix()`] will be
+#' used to convert the data to a matrix. Currently, only
+#' [`fortify_matrix.list_upset`] and [`fortify_matrix.matrix_upset`] are
+#' suitable for creating an UpSet plot.
+#' @param ... Additional arguments passed to [`fortify_matrix()`].
 #' @inheritParams quad_discrete
 #' @param direction A string indicating the direction of the UpSet plot,
 #' `"h"`(`horizontal`) or `"v"`(`vertical`). In a vertical UpSet plot, the
@@ -30,7 +32,7 @@
 #'     b = sample(letters, 10),
 #'     c = sample(letters, 15)
 #' )
-#' ggupset(lt) +
+#' ggupset(tune(lt)) +
 #'     scale_fill_manual(values = c("#F0F0F0", "white"), guide = "none") +
 #'     scale_color_manual(values = c("grey", "black"), guide = "none") +
 #'     anno_top() +
@@ -73,7 +75,7 @@ ggupset.default <- function(data = NULL, mapping = aes(),
                             theme = NULL, active = NULL) {
     direction <- check_direction(direction)
     # we need a matrix to melted into long formated data frame
-    data <- fortify_upset(data = data, ...)
+    data <- fortify_matrix(data = data, ...)
     if (is_vertical(direction)) data <- ggalign_data_restore(t(data), data)
     ans <- new_quad_layout(
         name = "ggupset",
