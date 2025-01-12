@@ -90,7 +90,16 @@ remotes::install_github("Yunuuuu/ggalign")
 
 -------------------------------------------------------------------------------
 
-| Functions                                    | `ggalign`                                             | `ComplexHeatmap`                                                          | `marsilea`        | `ggtree`                            |
+| Alignment       | `ggalign` | `ComplexHeatmap` | `marsilea` | `ggtree` |
+| --------------- | --------- | ---------------- | ---------- | -------- |
+| **One-to-One**  | ✅        | ✅               | ✅         | ✅       |
+| **One-to-Many** | ✅        | ❌               | ❌         | ❌       |
+| **Many-to-One** | ✅        | ❌               | ❌         | ❌       |
+| **Cross**       | ✅        | ❌               | ❌         | ❌       |
+
+-------------------------------------------------------------------------------
+
+| Specification                                | `ggalign`                                             | `ComplexHeatmap`                                                          | `marsilea`        | `ggtree`                            |
 | -------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------- | ----------------- | ----------------------------------- |
 | **Data input**                               | Various, and can be easily extended                   | fixed                                                                     | fixed             | Various, and can be easily extended |
 | **Plot Type**                                | Wide variety, provided by ggplot2                     | Many, but limited                                                         | Many, but limited | Limited Geometric layers support    |
