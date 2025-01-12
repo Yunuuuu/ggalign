@@ -18,21 +18,33 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         return(NULL)
     }
     direction <- stack@direction
+    position <- .subset2(stack@heatmap, "position")
     schemes <- inherit_parent_layout_schemes(stack, schemes)
-    if (is.null(direction)) {
-        spacing <- NULL
-    } else if (is_horizontal(direction)) {
+
+    if (is_horizontal(direction)) {
         spacing <- "y"
+        # for horizontal stack, we by default remove top and bottom spaces
+        # if (!is.null(position)) {
+        #     schemes$scheme_align["free_spaces"] <- list(
+        #         .subset2(schemes$scheme_align, "free_spaces") %|w|% "tb"
+        #     )
+        # }
     } else {
         spacing <- "x"
+        # for vertical stack, we by default remove left and right spaces
+        # if (!is.null(position)) {
+        #     schemes$scheme_align["free_spaces"] <- list(
+        #         .subset2(schemes$scheme_align, "free_spaces") %|w|% "lr"
+        #     )
+        # }
     }
     theme <- inherit_parent_layout_theme(stack, theme, spacing = spacing)
     composer <- stack_build_composer(stack, schemes, theme, extra_design)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
+
     # arrange plots
-    position <- .subset2(stack@heatmap, "position")
     if (is.null(position)) { # for stack layout
         # sizes should be of length 3
         sizes <- stack@sizes
