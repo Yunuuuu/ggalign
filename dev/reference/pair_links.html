@@ -131,70 +131,23 @@ to indicate the ordered index by the layout.</p></dd>
 <span class="r-in"><span>    <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span></span>
 <span class="r-in"><span>    <span class="op">~</span><span class="cn">NULL</span> <span class="co"># an empty link</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in pair_links(c("a", "b"), 1:2, I(1:2), range_link(1, 6), range_link("a",     "b"), ~1:2, ~c("a", "b"), ~range_link(1, 6), range_link(1,     6) ~ c("a", "b"), range_link(1, 6) ~ waiver(), waiver() ~     1:2, ~NULL):</span> `reorder` must be a string or character vector.</span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:           c("a", "b") ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                   1:2 ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                I(1:2) ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:      range_link(1, 6) ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:  range_link("a", "b") ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    7:                       ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    8:                       ~ range_link(1, 6)         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   10:      range_link(1, 6) ~ waiver()                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   11:              waiver() ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   12:                       ~                   &lt;empty&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can modify it as usual list</span></span></span>
 <span class="r-in"><span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span> <span class="co"># remove the first link</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">LETTERS</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                   1:2 ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                I(1:2) ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:      range_link(1, 6) ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  range_link("a", "b") ~                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    7:                       ~ range_link(1, 6)         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    8:      range_link(1, 6) ~ c("a", "b")              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ waiver()                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   10:              waiver() ~ 1:2                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   11:                       ~                   &lt;empty&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    a:                       ~ c(A, B, ..., Z)          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># modify with a list</span></span></span>
 <span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">range_link</span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggalign_pair_links&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 12 pairs of link groups</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       hand1 ~ hand2                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                       ~ c("a", "b")                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                       ~ range_link("a", "b")         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:      range_link(1, 6) ~                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  range_link("a", "b") ~                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                       ~ 1:2                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6:                       ~ c("a", "b")                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    7:                       ~ range_link(1, 6)             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    8:      range_link(1, 6) ~ c("a", "b")                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    9:      range_link(1, 6) ~ waiver()                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   10:              waiver() ~ 1:2                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   11:                       ~                       &lt;empty&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    a:                       ~ c(A, B, ..., Z)              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A total of 14 link groups</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
