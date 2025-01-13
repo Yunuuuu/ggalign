@@ -187,21 +187,21 @@ remotes::install_github("Yunuuuu/ggalign")
 
 -------------------------------------------------------------------------------
 
-| Specification                                | `ggalign`                                             | `ComplexHeatmap`                                                          | `marsilea`        | `ggtree`                            |
-| -------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------- | ----------------- | ----------------------------------- |
-| **Data input**                               | Various, and can be easily extended                   | fixed                                                                     | fixed             | Various, and can be easily extended |
-| **Plot Type**                                | Wide variety, provided by ggplot2                     | Many, but limited                                                         | Many, but limited | Limited Geometric layers support    |
-| **Reorder observations**                     | ✅                                                    | Heatmap Only (Cannot be used in Stack Layout)                             | ✅                | ✅                                  |
-| **Group observations into different panels** | ✅                                                    | Heatmap Only (Cannot be used in Stack Layout)                             | ✅                | ❌                                  |
-| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | Kmeans,Hierarchical Clustering, but can provide clustering group directly | ❌                | ❌                                  |
-| **Legends Creation**                         | Automatic                                             | Limited automatic, requires manual add                                    | Manual            | Automatic                           |
-| **Legends Position**                         | Anywhere, can be controlled for a single plot         | Four sides, can only be placed on one side at a time                      | ?                 | Anywhere                            |
-| **Scientific Color Palettes**                | Many                                                  | Limited                                                                   | Limited           | Many                                |
-| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only (Cannot be used in Stack Layout)                            | `hclust` only     | Tree from Both `hclust` or `ape`    |
-| **Tanglegram**                               | ✅                                                    | ❌                                                                        | ❌                | ❌                                  |
-| **3D Heatmap**                               | ✅                                                    | ✅                                                                        | ❌                | ❌                                  |
-| **Oncoplot**                                 | ✅                                                    | ✅                                                                        | ✅                | ❌                                  |
-| **UpSet plot**                               | ✅                                                    | ✅                                                                        | ✅                | ❌                                  |
+| Specification                                | `ggalign`                                             | `marsilea`        | `ComplexHeatmap`                                                          | `ggtree`                            |
+| -------------------------------------------- | ----------------------------------------------------- | ----------------- | ------------------------------------------------------------------------- | ----------------------------------- |
+| **Data input**                               | Various, and can be easily extended                   | fixed             | fixed                                                                     | Various, and can be easily extended |
+| **Plot Type**                                | Wide variety, provided by ggplot2                     | Many, but limited | Many, but limited                                                         | Limited Geometric layers support    |
+| **Reorder observations**                     | ✅                                                    | ✅                | Heatmap Only (Cannot be used in Stack Layout)                             | ✅                                  |
+| **Group observations into different panels** | ✅                                                    | ✅                | Heatmap Only (Cannot be used in Stack Layout)                             | ❌                                  |
+| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌                | Kmeans,Hierarchical Clustering, but can provide clustering group directly | ❌                                  |
+| **Legends Creation**                         | Automatic                                             | Manual            | Limited automatic, requires manual add                                    | Automatic                           |
+| **Legends Position**                         | Anywhere, can be controlled for a single plot         | ?                 | Four sides, can only be placed on one side at a time                      | Anywhere                            |
+| **Scientific Color Palettes**                | Many                                                  | Limited           | Limited                                                                   | Many                                |
+| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only     | `hclust` only (Cannot be used in Stack Layout)                            | Tree from Both `hclust` or `ape`    |
+| **Tanglegram**                               | ✅                                                    | ❌                | ❌                                                                        | ❌                                  |
+| **3D Heatmap**                               | ✅                                                    | ❌                | ✅                                                                        | ❌                                  |
+| **Oncoplot**                                 | ✅                                                    | ✅                | ✅                                                                        | ❌                                  |
+| **UpSet plot**                               | ✅                                                    | ✅                | ✅                                                                        | ❌                                  |
 
 ## Acknowledgements
 I would like to express my sincere gratitude to the contributors of the
