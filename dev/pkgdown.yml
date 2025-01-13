@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   articles/benchmarks: benchmarks.html
   articles/FAQ: FAQ.html
-last_built: 2025-01-13T05:57Z
+last_built: 2025-01-13T06:02Z
 urls:
   reference: https://yunuuuu.github.io/ggalign/reference
   article: https://yunuuuu.github.io/ggalign/articles
