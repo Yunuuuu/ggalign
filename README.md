@@ -68,27 +68,269 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Compare with other similar tools
 
-| Layout Options                    | `ggalign`                                           | `ComplexHeatmap`                  | `marsilea`               | `ggtree`                                            |
-|-----------------------------------|-----------------------------------------------------|-----------------------------------|--------------------------|-----------------------------------------------------|
-| **Language**                      | R                                                   | R                                 | Python                   | R                                                   |
-| **User Interface**                | Declarative                                         | Functional                        | Declarative              | Declarative                                         |
-| **Plot System**                   | ggplot2 (Advanced plot system built on grid system) | grid                              | Matplotlib               | ggplot2 (Advanced plot system built on grid system) |
-| **Focus**                         | Composable Visualization                            | Heatmap                           | Composable Visualization | tree Data                                           |
-| **Quad Layout**                   | ✅                                                  | Heatmap Only (discrete variables) | ✅                       | ❌                                                  |
-| **Stack Layout**                  | ✅                                                  | ✅                                | ✅                       | ❌                                                  |
-| **Circle Layout**                 | ✅                                                  | ❌                                | ❌                       | ✅                                                  |
-| **Cross Layout**                  | ✅                                                  | ❌                                | ❌                       | ❌                                                  |
-| **Ease of Use**                   | Easy for ggplot2 users                              | Easy for for grid user            | Easy for python user     | Easy for ggplot2 users                              |
-| **Fully Compatible with ggplot2** | ✅                                                  | ❌                                | ❌                       | Limited Geometric layers support                    |
-
-------------------------------------------------------------------------
-
-| Alignment       | `ggalign` | `ComplexHeatmap` | `marsilea` | `ggtree` |
-|-----------------|-----------|------------------|------------|----------|
-| **One-to-One**  | ✅        | ✅               | ✅         | ✅       |
-| **One-to-Many** | ✅        | ❌               | ❌         | ❌       |
-| **Many-to-One** | ✅        | ❌               | ❌         | ❌       |
-| **Cross**       | ✅        | ❌               | ❌         | ❌       |
+<table class="table">
+<thead>
+<tr>
+<th colspan="2">
+</th>
+<th>
+`ggalign`
+</th>
+<th>
+`marsilea`
+</th>
+<th>
+`ComplexHeatmap`
+</th>
+<th>
+`ggtree`
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2">
+**Language**
+</td>
+<td>
+R
+</td>
+<td>
+Python
+</td>
+<td>
+R
+</td>
+<td>
+R
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**User Interface**
+</td>
+<td>
+Declarative
+</td>
+<td>
+Declarative
+</td>
+<td>
+Functional
+</td>
+<td>
+Declarative
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Plot System**
+</td>
+<td>
+ggplot2 (Advanced plot system built on grid system)
+</td>
+<td>
+Matplotlib
+</td>
+<td>
+grid
+</td>
+<td>
+ggplot2 (Advanced plot system built on grid system)
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Focus**
+</td>
+<td>
+Composable Visualization
+</td>
+<td>
+Composable Visualization
+</td>
+<td>
+Heatmap
+</td>
+<td>
+tree Data
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Quad Layout**
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+Heatmap Only (discrete variables)
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Stack Layout**
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Circle Layout**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+✅
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Cross Layout**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td rowspan="4">
+**Alignment**
+</td>
+<td>
+**One-to-One**
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+</tr>
+<tr>
+<td>
+**One-to-Many**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td>
+**Many-to-One**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td>
+**Cross**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Ease of Use**
+</td>
+<td>
+Easy for ggplot2 users
+</td>
+<td>
+Easy for python user
+</td>
+<td>
+Easy for for grid user
+</td>
+<td>
+Easy for ggplot2 users
+</td>
+</tr>
+<tr>
+<td colspan="2">
+**Fully Compatible with ggplot2**
+</td>
+<td>
+✅
+</td>
+<td>
+❌
+</td>
+<td>
+❌
+</td>
+<td>
+Limited Geometric layers support
+</td>
+</tr>
+</tbody>
+</table>
 
 ------------------------------------------------------------------------
 
