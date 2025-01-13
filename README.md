@@ -158,23 +158,6 @@ tree Data
 </tr>
 <tr>
 <td colspan="2">
-<strong>Quad Layout</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-Heatmap Only (discrete variables)
-</td>
-<td>
-❌
-</td>
-</tr>
-<tr>
-<td colspan="2">
 <strong>Stack Layout</strong>
 </td>
 <td>
@@ -185,6 +168,23 @@ Heatmap Only (discrete variables)
 </td>
 <td>
 ✅
+</td>
+<td>
+❌
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<strong>Quad Layout</strong>
+</td>
+<td>
+✅
+</td>
+<td>
+✅
+</td>
+<td>
+Heatmap Only (discrete variables)
 </td>
 <td>
 ❌
