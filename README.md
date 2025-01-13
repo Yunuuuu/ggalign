@@ -74,23 +74,23 @@ remotes::install_github("Yunuuuu/ggalign")
 <th colspan="2">
 </th>
 <th>
-`ggalign`
+<code>ggalign</code>
 </th>
 <th>
-`marsilea`
+<code>marsilea</code>
 </th>
 <th>
-`ComplexHeatmap`
+<code>ComplexHeatmap</code>
 </th>
 <th>
-`ggtree`
+<code>ggtree</code>
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td colspan="2">
-**Language**
+<strong>Language</strong>
 </td>
 <td>
 R
@@ -107,7 +107,7 @@ R
 </tr>
 <tr>
 <td colspan="2">
-**User Interface**
+<strong>User Interface</strong>
 </td>
 <td>
 Declarative
@@ -124,7 +124,7 @@ Declarative
 </tr>
 <tr>
 <td colspan="2">
-**Plot System**
+<strong>Plot System</strong>
 </td>
 <td>
 ggplot2 (Advanced plot system built on grid system)
@@ -141,7 +141,7 @@ ggplot2 (Advanced plot system built on grid system)
 </tr>
 <tr>
 <td colspan="2">
-**Focus**
+<strong>Focus</strong>
 </td>
 <td>
 Composable Visualization
@@ -158,7 +158,7 @@ tree Data
 </tr>
 <tr>
 <td colspan="2">
-**Quad Layout**
+<strong>Quad Layout</strong>
 </td>
 <td>
 ✅
@@ -175,7 +175,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td colspan="2">
-**Stack Layout**
+<strong>Stack Layout</strong>
 </td>
 <td>
 ✅
@@ -192,7 +192,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td colspan="2">
-**Circle Layout**
+<strong>Circle Layout</strong>
 </td>
 <td>
 ✅
@@ -209,7 +209,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td colspan="2">
-**Cross Layout**
+<strong>Cross Layout</strong>
 </td>
 <td>
 ✅
@@ -226,10 +226,10 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td rowspan="4">
-**Alignment**
+<strong>Alignment</strong>
 </td>
 <td>
-**One-to-One**
+<strong>One-to-One</strong>
 </td>
 <td>
 ✅
@@ -246,7 +246,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td>
-**One-to-Many**
+<strong>One-to-Many</strong>
 </td>
 <td>
 ✅
@@ -263,7 +263,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td>
-**Many-to-One**
+<strong>Many-to-One</strong>
 </td>
 <td>
 ✅
@@ -280,7 +280,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td>
-**Cross**
+<strong>Cross</strong>
 </td>
 <td>
 ✅
@@ -297,7 +297,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td colspan="2">
-**Ease of Use**
+<strong>Ease of Use</strong>
 </td>
 <td>
 Easy for ggplot2 users
@@ -314,7 +314,7 @@ Easy for ggplot2 users
 </tr>
 <tr>
 <td colspan="2">
-**Fully Compatible with ggplot2**
+<strong>Fully Compatible with ggplot2</strong>
 </td>
 <td>
 ✅

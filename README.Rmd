@@ -78,106 +78,106 @@ remotes::install_github("Yunuuuu/ggalign")
 <table class="table"><thead>
     <tr>
         <th colspan="2"></th>
-        <th>`ggalign`</th>
-        <th>`marsilea`</th>
-        <th>`ComplexHeatmap`</th>
-        <th>`ggtree`</th>
+        <th> <code>ggalign</code> </th>
+        <th> <code>marsilea</code> </th>
+        <th> <code>ComplexHeatmap</code> </th>
+        <th> <code>ggtree</code> </th>
     </tr></thead>
 <tbody>
     <tr>
-        <td colspan="2">**Language**</td>
+        <td colspan="2"> <strong>Language</strong> </td>
         <td>R</td>
         <td>Python</td>
         <td>R</td>
         <td>R</td>
     </tr>
     <tr>
-        <td colspan="2">**User Interface**</td>
+        <td colspan="2"> <strong>User Interface</strong> </td>
         <td>Declarative</td>
         <td>Declarative</td>
         <td>Functional</td>
         <td>Declarative</td>
     </tr>
     <tr>
-        <td colspan="2">**Plot System**</td>
+        <td colspan="2"> <strong>Plot System</strong> </td>
         <td>ggplot2 (Advanced plot system built on grid system)</td>
         <td>Matplotlib</td>
         <td>grid</td>
         <td>ggplot2 (Advanced plot system built on grid system)</td>
     </tr>
     <tr>
-        <td colspan="2">**Focus**</td>
+        <td colspan="2"> <strong>Focus</strong> </td>
         <td>Composable Visualization</td>
         <td>Composable Visualization</td>
         <td>Heatmap</td>
         <td>tree Data</td>
     </tr>
     <tr>
-        <td colspan="2">**Quad Layout**</td>
+        <td colspan="2"> <strong>Quad Layout</strong> </td>
         <td>✅</td>
         <td>✅</td>
         <td>Heatmap Only (discrete variables)</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td colspan="2">**Stack Layout**</td>
+        <td colspan="2"> <strong>Stack Layout</strong> </td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td colspan="2">**Circle Layout**</td>
+        <td colspan="2"> <strong>Circle Layout</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td colspan="2">**Cross Layout**</td>
+        <td colspan="2"> <strong>Cross Layout</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td rowspan="4"> **Alignment** </td>
-        <td>**One-to-One**</td>
+        <td rowspan="4"> <strong>Alignment</strong> </td>
+        <td> <strong>One-to-One</strong> </td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
     </tr>
     <tr>
-        <td>**One-to-Many**</td>
+        <td> <strong>One-to-Many</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td>**Many-to-One**</td>
+        <td> <strong>Many-to-One</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td>**Cross**</td>
+        <td> <strong>Cross</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
         <td>❌</td>
     </tr>
     <tr>
-        <td colspan="2">**Ease of Use**</td>
+        <td colspan="2"> <strong>Ease of Use</strong> </td>
         <td>Easy for ggplot2 users</td>
         <td>Easy for python user</td>
         <td>Easy for for grid user</td>
         <td>Easy for ggplot2 users</td>
     </tr>
     <tr>
-        <td colspan="2">**Fully Compatible with ggplot2**</td>
+        <td colspan="2"> <strong>Fully Compatible with ggplot2</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
