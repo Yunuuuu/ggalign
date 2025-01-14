@@ -195,7 +195,7 @@ Cannot arrange multiple QuadLayouts
 <strong>CircleLayout</strong>
 </td>
 <td>
-Arc with angle \>= 90
+Arc with angle <code> \>= 90 </code>
 </td>
 <td>
 ❌
