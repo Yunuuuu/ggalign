@@ -68,269 +68,115 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Compare with other similar tools
 
-<table class="table">
-<thead>
-<tr>
-<th colspan="2">
-</th>
-<th>
-<code>ggalign</code>
-</th>
-<th>
-<code>marsilea</code>
-</th>
-<th>
-<code>ComplexHeatmap</code>
-</th>
-<th>
-<code>ggtree+aplot</code>
-</th>
-</tr>
-</thead>
+<table class="table"><thead>
+    <tr>
+        <th colspan="2"></th>
+        <th> <code>ggalign</code> </th>
+        <th> <code>marsilea</code> </th>
+        <th> <code>ComplexHeatmap</code> </th>
+        <th> <code>ggtree+aplot</code> </th>
+    </tr></thead>
 <tbody>
-<tr>
-<td colspan="2">
-<strong>Language</strong>
-</td>
-<td>
-R
-</td>
-<td>
-Python
-</td>
-<td>
-R
-</td>
-<td>
-R
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>User Interface</strong>
-</td>
-<td>
-Declarative
-</td>
-<td>
-Declarative
-</td>
-<td>
-Functional
-</td>
-<td>
-Declarative
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>Plot System</strong>
-</td>
-<td>
-ggplot2 (Advanced plot system built on grid system)
-</td>
-<td>
-Matplotlib
-</td>
-<td>
-grid
-</td>
-<td>
-ggplot2 (Advanced plot system built on grid system)
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>Focus</strong>
-</td>
-<td>
-Composable Visualization
-</td>
-<td>
-Composable Visualization
-</td>
-<td>
-Heatmap
-</td>
-<td>
-tree Data
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>StackLayout</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>QuadLayout</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-Heatmap Only (discrete variables)
-</td>
-<td>
-Cannot arrange multiple QuadLayouts
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>CircleLayout</strong>
-</td>
-<td>
-Arc with angle <code> \>= 90 </code>
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-✅
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>CrossLayout</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-</tr>
-<tr>
-<td rowspan="4">
-<strong>Alignment</strong>
-</td>
-<td>
-<strong>One-to-One</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-<td>
-✅
-</td>
-</tr>
-<tr>
-<td>
-<strong>One-to-Many</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-</tr>
-<tr>
-<td>
-<strong>Many-to-One</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cross</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>Ease of Use</strong>
-</td>
-<td>
-Easy for ggplot2 users
-</td>
-<td>
-Easy for python user
-</td>
-<td>
-Easy for for grid user
-</td>
-<td>
-Easy for ggplot2 users
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<strong>Fully Compatible with ggplot2</strong>
-</td>
-<td>
-✅
-</td>
-<td>
-❌
-</td>
-<td>
-❌
-</td>
-<td>
-Limited Geometric layers support in <code>CircleLayout</code>
-</td>
-</tr>
-</tbody>
-</table>
+    <tr>
+        <td colspan="2"> <strong>Language</strong> </td>
+        <td>R</td>
+        <td>Python</td>
+        <td>R</td>
+        <td>R</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>User Interface</strong> </td>
+        <td>Declarative</td>
+        <td>Declarative</td>
+        <td>Functional</td>
+        <td>Declarative</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>Plot System</strong> </td>
+        <td>ggplot2 (Advanced plot system built on grid system)</td>
+        <td>Matplotlib</td>
+        <td>grid</td>
+        <td>ggplot2 (Advanced plot system built on grid system)</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>Focus</strong> </td>
+        <td>Composable Visualization</td>
+        <td>Composable Visualization</td>
+        <td>Heatmap</td>
+        <td>tree Data</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>StackLayout</strong> </td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>QuadLayout</strong> </td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>Heatmap Only (discrete variables)</td>
+        <td>Cannot arrange multiple QuadLayouts</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>CircleLayout</strong> </td>
+        <td>Arc with angle <code> &gt;= 90 </code> </td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>CrossLayout</strong> </td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td rowspan="4"> <strong>Alignment</strong> </td>
+        <td> <strong>One-to-One</strong> </td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td> <strong>One-to-Many</strong> </td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td> <strong>Many-to-One</strong> </td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td> <strong>Cross</strong> </td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>Ease of Use</strong> </td>
+        <td>Easy for ggplot2 users</td>
+        <td>Easy for python user</td>
+        <td>Easy for for grid user</td>
+        <td>Easy for ggplot2 users</td>
+    </tr>
+    <tr>
+        <td colspan="2"> <strong>Fully Compatible with ggplot2</strong> </td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>Limited Geometric layers support in <code>CircleLayout</code></td>
+    </tr>
+</tbody></table>
 
 ------------------------------------------------------------------------
 

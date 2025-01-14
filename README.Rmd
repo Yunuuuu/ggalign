@@ -74,7 +74,7 @@ remotes::install_github("Yunuuuu/ggalign")
  2. For the full reference documentation, visit: <https://yunuuuu.github.io/ggalign/>
 
 ## Compare with other similar tools
-
+```{=html}
 <table class="table"><thead>
     <tr>
         <th colspan="2"></th>
@@ -184,6 +184,7 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>Limited Geometric layers support in <code>CircleLayout</code></td>
     </tr>
 </tbody></table>
+```
 
 -------------------------------------------------------------------------------
 
