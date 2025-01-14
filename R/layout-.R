@@ -102,13 +102,13 @@ inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
     # parent theme, set the global panel spacing,
     # so that every panel aligns well
     if (is.null(layout@theme)) return(theme) # styler: off
-    theme <- theme + layout@theme
-    if (is.null(spacing)) return(theme) # styler: off
+    ans <- theme + layout@theme
+    if (is.null(spacing)) return(ans) # styler: off
     switch(spacing,
-        x = theme + theme(
+        x = ans + theme(
             panel.spacing.x = calc_element("panel.spacing.x", theme)
         ),
-        y = theme + theme(
+        y = ans + theme(
             panel.spacing.y = calc_element("panel.spacing.y", theme)
         )
     )
