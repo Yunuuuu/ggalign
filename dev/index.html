@@ -127,7 +127,7 @@
 <code>ComplexHeatmap</code>
 </th>
 <th>
-<code>ggtree</code>
+<code>ggtree+aplot</code>
 </th>
 </tr></thead>
 <tbody>
@@ -201,7 +201,7 @@ tree Data
 </tr>
 <tr>
 <td colspan="2">
-<strong>Stack Layout</strong>
+<strong>StackLayout</strong>
 </td>
 <td>
 ✅
@@ -213,12 +213,12 @@ tree Data
 ✅
 </td>
 <td>
-❌
+✅
 </td>
 </tr>
 <tr>
 <td colspan="2">
-<strong>Quad Layout</strong>
+<strong>QuadLayout</strong>
 </td>
 <td>
 ✅
@@ -230,15 +230,15 @@ tree Data
 Heatmap Only (discrete variables)
 </td>
 <td>
-❌
+Cannot arrange multiple QuadLayouts
 </td>
 </tr>
 <tr>
 <td colspan="2">
-<strong>Circle Layout</strong>
+<strong>CircleLayout</strong>
 </td>
 <td>
-✅
+Arc with angle &gt;= 90
 </td>
 <td>
 ❌
@@ -252,7 +252,7 @@ Heatmap Only (discrete variables)
 </tr>
 <tr>
 <td colspan="2">
-<strong>Cross Layout</strong>
+<strong>CrossLayout</strong>
 </td>
 <td>
 ✅
@@ -369,7 +369,7 @@ Easy for ggplot2 users
 ❌
 </td>
 <td>
-Limited Geometric layers support
+Limited Geometric layers support in <code>CircleLayout</code>
 </td>
 </tr>
 </tbody>
@@ -377,18 +377,18 @@ Limited Geometric layers support
 <hr>
 <table class="table">
 <colgroup>
-<col width="19%">
-<col width="23%">
-<col width="8%">
-<col width="32%">
-<col width="15%">
+<col width="18%">
+<col width="22%">
+<col width="7%">
+<col width="30%">
+<col width="21%">
 </colgroup>
 <thead><tr class="header">
 <th>Specification</th>
 <th><code>ggalign</code></th>
 <th><code>marsilea</code></th>
 <th><code>ComplexHeatmap</code></th>
-<th><code>ggtree</code></th>
+<th><code>ggtree+aplot</code></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -403,7 +403,8 @@ Limited Geometric layers support
 <td>Wide variety, provided by ggplot2</td>
 <td>Many, but limited</td>
 <td>Many, but limited</td>
-<td>Limited Geometric layers support</td>
+<td>Limited Geometric layers support in <code>CircleLayout</code>
+</td>
 </tr>
 <tr class="odd">
 <td><strong>Reorder observations</strong></td>
@@ -454,7 +455,7 @@ Limited Geometric layers support
 <td>
 <code>hclust</code> only</td>
 <td>
-<code>hclust</code> only (Cannot be used in Stack Layout)</td>
+<code>hclust</code> only (Cannot be used in StackLayout)</td>
 <td>Tree from Both <code>hclust</code> or <code>ape</code>
 </td>
 </tr>
