@@ -93,7 +93,9 @@ check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
 #' @importFrom rlang arg_match0
 check_direction <- function(direction, arg = caller_arg(direction),
                             call = caller_call()) {
-    direction <- arg_match0(direction, c("h", "v"), error_call = call)
+    direction <- arg_match0(direction, c("h", "v"),
+        arg_nm = arg, error_call = call
+    )
     switch(direction,
         h = "horizontal",
         v = "vertical"
