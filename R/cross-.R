@@ -10,7 +10,7 @@ cross <- function(cross = NULL, data = waiver(),
         call <- current_call()
     }
     new_ggalign_plot(
-        align = cross %||% NULL,
+        align = cross %||% Cross,
         data = allow_lambda(data), data_params = data_params,
         ...,
         inherit_nobs = inherit_nobs,
