@@ -54,14 +54,15 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # For each plot track, relative to the total radius:
     # `0.4` is coord_radial used for scale size, I don't know what it means
-    plot_track <- sizes / sum(sizes) * (1 - radial$inner_radius[1L] / 0.4)
+    inner_radius <- radial$inner_radius[1L] / 0.4
+    plot_track <- sizes / sum(sizes) * (1 - inner_radius)
 
     # For each plot, the plot size is calculated by adding the space for the
     # inner radius of each track.
     index <- seq_along(plot_list)
     direction <- circle@direction
     if (identical(direction, "outward")) {
-        plot_sizes <- radial$inner_radius[1L] / 0.4 + cumsum(plot_track)
+        plot_sizes <- inner_radius + cumsum(plot_track)
     } else {
         plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
         # The plots are always build outward, so the order is reversed.
@@ -88,7 +89,9 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot <- gguse_radial_coord(
             plot,
             coord = radial,
-            inner_radius = c(plot_inner[[i]] / plot_size, 1) * 0.4,
+            # https://github.com/tidyverse/ggplot2/issues/6284
+            # Use `0.5` to remove the extra spaces for axis label
+            inner_radius = c(plot_inner[[i]] / plot_size, 1) * 0.5,
             layout_name = align$layout_name
         )
 
