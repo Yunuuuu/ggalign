@@ -20,7 +20,7 @@ navbar:
       href: articles/FAQ.html
 
 reference:
-- title: Layout initialize
+- title: Initialize Layout
   desc: A `Layout` object defines how to place the plots.
   contents:
   - stack_discrete
@@ -37,7 +37,7 @@ reference:
   - ggoncoplot
   - ggupset
 
-- title: Layout Building
+- title: Build Layout
   desc: >
     All plots begin with a call to `ggheatmap()`/`quad_layout()` or
     `stack_layout()`, supplying default data. You then reorder the observations,
@@ -55,7 +55,7 @@ reference:
   - continuous_limits
   - layout-operator
 
-- title: Layout Customization
+- title: Customize Layout
   desc: >
     Fine-tune the arrangement of plots by reordering or splitting axes into separate panels. 
     These functions allow for more detailed customization of plot layouts.
@@ -68,7 +68,7 @@ reference:
   - cross_none
   - memo_order
 
-- title: Plot initialize
+- title: Initialize Plot
   desc: >
     This section covers essential functions to add individual plots to the layout, 
     ensuring they align and interact correctly within the defined structure.
