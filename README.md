@@ -121,7 +121,7 @@ remotes::install_github("Yunuuuu/ggalign")
     </tr>
     <tr>
         <td colspan="2"> <strong>CircleLayout</strong> </td>
-        <td>Arc with angle <code> &gt;= 90 </code> </td>
+        <td>Arc with angle <code>&gt;= 90</code> </td>
         <td>❌</td>
         <td>❌</td>
         <td>✅</td>
