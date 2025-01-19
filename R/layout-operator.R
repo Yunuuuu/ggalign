@@ -60,13 +60,6 @@
 #'     # layout
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
-#' @aliases +.QuadLayout &.QuadLayout -.QuadLayout
-#' @aliases +.HeatmapLayout &.HeatmapLayout -.HeatmapLayout
-#' @aliases +.ggheatmap &.ggheatmap -.ggheatmap
-#' @aliases +.ggside &.ggside -.ggside
-#' @aliases +.StackLayout &.StackLayout -.StackLayout
-#' @aliases +.StackCross &.StackCross -.StackCross
-#' @aliases +.CircleLayout &.CircleLayout -.CircleLayout
 #' @name layout-operator
 NULL
 

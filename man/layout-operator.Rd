@@ -2,27 +2,6 @@
 % Please edit documentation in R/layout-operator.R
 \name{layout-operator}
 \alias{layout-operator}
-\alias{+.QuadLayout}
-\alias{&.QuadLayout}
-\alias{-.QuadLayout}
-\alias{+.HeatmapLayout}
-\alias{&.HeatmapLayout}
-\alias{-.HeatmapLayout}
-\alias{+.ggheatmap}
-\alias{&.ggheatmap}
-\alias{-.ggheatmap}
-\alias{+.ggside}
-\alias{&.ggside}
-\alias{-.ggside}
-\alias{+.StackLayout}
-\alias{&.StackLayout}
-\alias{-.StackLayout}
-\alias{+.StackCross}
-\alias{&.StackCross}
-\alias{-.StackCross}
-\alias{+.CircleLayout}
-\alias{&.CircleLayout}
-\alias{-.CircleLayout}
 \title{Layout operator}
 \arguments{
 \item{e1}{A \code{\link[=quad_layout]{quad_layout()}}/\code{\link[=ggheatmap]{ggheatmap()}} or \code{\link[=stack_layout]{stack_layout()}} object.}
