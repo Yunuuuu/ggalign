@@ -66,6 +66,10 @@ remotes::install_github("Yunuuuu/ggalign")
 2.  For the full reference documentation, visit:
     <https://yunuuuu.github.io/ggalign/>
 
+## Examples
+
+![](man/figures/overview.png)
+
 ## Compare with other similar tools
 
 <table class="table"><thead>
