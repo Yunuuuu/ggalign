@@ -35,9 +35,7 @@
 #'  - If `limits` is not provided, [`fortify_matrix()`] will be used to get a
 #'    matrix.
 #'  - If `limits` is specified, [`fortify_data_frame()`] will be used to get a
-#'    data frame. Note that if the data is a `matrix`, it will be automatically
-#'    converted to a long-formatted data frame, which differs from `ggplot2`'s
-#'    behavior.
+#'    data frame.
 #'
 #' @param ... Additional arguments passed to [`fortify_data_frame()`] or
 #' [`fortify_matrix()`].

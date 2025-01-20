@@ -38,9 +38,7 @@ circle_continuous(
 \item If \code{limits} is not provided, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to get a
 matrix.
 \item If \code{limits} is specified, \code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to get a
-data frame. Note that if the data is a \code{matrix}, it will be automatically
-converted to a long-formatted data frame, which differs from \code{ggplot2}'s
-behavior.
+data frame.
 }}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
