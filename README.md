@@ -156,7 +156,7 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>❌</td>
     </tr>
     <tr>
-        <td> <strong>Annotate observations</strong> </td>
+        <td colspan="2"> <strong>Annotate observations</strong> </td>
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
