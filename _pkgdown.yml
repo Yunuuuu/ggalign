@@ -23,14 +23,8 @@ reference:
 - title: Initialize Layout
   desc: A `Layout` object defines how to place the plots.
   contents:
-  - stack_discrete
-  - stack_continuous
   - stack_layout
-  - quad_continuous
-  - quad_discrete
   - quad_layout
-  - circle_discrete
-  - circle_continuous
   - circle_layout
   - stack_cross
   - ggheatmap

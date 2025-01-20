@@ -2,9 +2,35 @@
 % Please edit documentation in R/layout-circle-.R
 \name{circle_layout}
 \alias{circle_layout}
+\alias{circle_discrete}
+\alias{circle_continuous}
 \title{Arrange plots in a circular layout}
 \usage{
-circle_layout(data = NULL, ..., limits = waiver())
+circle_layout(
+  data = NULL,
+  ...,
+  radial = NULL,
+  direction = "outward",
+  limits = waiver(),
+  theme = NULL
+)
+
+circle_discrete(
+  data = NULL,
+  ...,
+  radial = NULL,
+  direction = "outward",
+  theme = NULL
+)
+
+circle_continuous(
+  data = NULL,
+  ...,
+  radial = NULL,
+  direction = "outward",
+  limits = NULL,
+  theme = NULL
+)
 }
 \arguments{
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout:
@@ -17,11 +43,32 @@ converted to a long-formatted data frame, which differs from \code{ggplot2}'s
 behavior.
 }}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
+
+\item{radial}{A \code{\link[ggplot2:coord_polar]{coord_radial()}} object that defines
+the global parameters for \code{coord_radial} across all plots in the layout.
+The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} will be inherited
+and applied uniformly to all plots within the layout. The parameters
+\code{theta} and \code{r.axis.inside} will always be ignored and will be set to
+\code{"x"} and \code{TRUE}, respectively, for all plots.}
+
+\item{direction}{A single string of \code{"inward"} or \code{"outward"},
+indicating the direction in which the plot is added.
+\itemize{
+\item \code{outward}: The plot is added from the inner to the outer.
+\item \code{inward}: The plot is added from the outer to the inner.
+}}
 
 \item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous
 axis.}
+
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
+elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
+\code{margins}, \code{panel.border}, and \code{background}. By default, the theme will
+inherit from the parent \code{layout}. It also controls the panel spacing for all
+plots in the layout.}
 }
 \value{
 A \code{CircleLayout} object.
@@ -29,16 +76,19 @@ A \code{CircleLayout} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-This function integrates the functionalities of \code{circle_discrete()} and
-\code{circle_continuous()} into a single interface.
+If \code{limits} is provided, a continuous variable will be required and aligned
+in the direction specified (\code{circle_continuous}). Otherwise, a discrete
+variable will be required and aligned (\code{circle_discrete}).
 }
 \examples{
 set.seed(123)
 
-# circle_discrete
 small_mat <- matrix(rnorm(56), nrow = 7)
 rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+# circle_layout
+# same for circle_discrete()
 circle_layout(small_mat) +
     ggalign() +
     geom_tile(aes(y = .column_index, fill = value)) +
@@ -46,7 +96,7 @@ circle_layout(small_mat) +
     align_dendro(aes(color = branch), k = 3L) +
     scale_color_brewer(palette = "Dark2")
 
-# circle_continuous
+# same for circle_continuous()
 circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
     ggalign(mapping = aes(displ, hwy, colour = class)) +
     geom_point(size = 2) +
@@ -54,10 +104,30 @@ circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
     geom_point(size = 2) &
     scale_color_brewer(palette = "Dark2") &
     theme_bw()
-}
-\seealso{
-\itemize{
-\item \code{\link[=circle_discrete]{circle_discrete()}}
-\item \code{\link[=circle_continuous]{circle_continuous()}}
-}
+
+# circle_discrete()
+# direction outward
+circle_discrete(small_mat) +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2") +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c()
+
+# direction inward
+circle_discrete(small_mat, direction = "inward") +
+    ggalign() +
+    geom_tile(aes(y = .column_index, fill = value)) +
+    scale_fill_viridis_c() +
+    align_dendro(aes(color = branch), k = 3L) +
+    scale_color_brewer(palette = "Dark2")
+
+# circle_continuous()
+circle_continuous(mpg, limits = continuous_limits(c(3, 5))) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) +
+    ggalign(mapping = aes(displ, hwy, colour = class)) +
+    geom_point(size = 2) &
+    scale_color_brewer(palette = "Dark2") &
+    theme_bw()
 }

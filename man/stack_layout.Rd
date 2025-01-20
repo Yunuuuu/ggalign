@@ -4,13 +4,51 @@
 \alias{stack_layout}
 \alias{stack_horizontal}
 \alias{stack_vertical}
+\alias{stack_discrete}
+\alias{stack_align}
+\alias{stack_discretev}
+\alias{stack_alignv}
+\alias{stack_discreteh}
+\alias{stack_alignh}
+\alias{stack_continuous}
+\alias{stack_free}
+\alias{stack_continuousv}
+\alias{stack_freev}
+\alias{stack_continuoush}
+\alias{stack_freeh}
 \title{Arrange plots horizontally or vertically}
 \usage{
-stack_layout(direction, data = NULL, ..., limits = waiver())
+stack_layout(
+  direction,
+  data = NULL,
+  ...,
+  theme = NULL,
+  sizes = NA,
+  limits = waiver()
+)
 
 stack_horizontal(data = NULL, ..., limits = waiver())
 
 stack_vertical(data = NULL, ..., limits = waiver())
+
+stack_discrete(direction, data = NULL, ..., theme = NULL, sizes = NA)
+
+stack_discretev(data = NULL, ...)
+
+stack_discreteh(data = NULL, ...)
+
+stack_continuous(
+  direction,
+  data = NULL,
+  ...,
+  limits = NULL,
+  theme = NULL,
+  sizes = NA
+)
+
+stack_continuousv(data = NULL, ...)
+
+stack_continuoush(data = NULL, ...)
 }
 \arguments{
 \item{direction}{A string indicating the direction of the stack layout,
@@ -26,7 +64,20 @@ converted to a long-formatted data frame, which differs from \code{ggplot2}'s
 behavior.
 }}
 
-\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
+\item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
+\code{\link[=fortify_matrix]{fortify_matrix()}}.}
+
+\item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
+elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
+\code{margins}, \code{panel.border}, and \code{background}. By default, the theme will
+inherit from the parent \code{layout}. It also controls the panel spacing for all
+plots in the layout.}
+
+\item{sizes}{A numeric value or a \code{\link[grid:unit]{unit}} object. When used for
+the \code{\link[=quad_layout]{quad_layout()}} annotation, it must be of length \code{1}. When used in the
+\code{\link[=stack_layout]{stack_layout()}} with a nested \code{\link[=quad_layout]{quad_layout()}}, it should be of length
+\code{3}, specifying the relative heights (for \code{direction = "h"}) or widths (for
+\code{direction = "v"}) to be applied to the layout.}
 
 \item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous
@@ -38,8 +89,29 @@ A \code{StackLayout} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This function integrates the functionalities of \code{stack_discrete()} and
-\code{stack_continuous()} into a single interface.
+If \code{limits} is provided, a continuous variable will be required and aligned
+in the direction specified (\code{stack_continuous}). Otherwise, a discrete
+variable will be required and aligned (\code{stack_discrete}).
+
+Several aliases are provided for convenience:
+\itemize{
+\item \code{stack_vertical}: A special case of \code{stack_layout} that sets \code{direction = "v"}.
+\item \code{stack_horizontal}: A special case of \code{stack_layout} that sets \code{direction = "h"}.
+\item \code{stack_discretev}: A special case of \code{stack_discrete} that sets \code{direction = "v"}.
+\item \code{stack_discreteh}: A special case of \code{stack_discrete} that sets \code{direction = "h"}.
+\item \code{stack_continuousv()}: A special case of \code{stack_free} that sets \code{direction = "v"}.
+\item \code{stack_continuoush()}: A special case of \code{stack_free} that sets \code{direction = "h"}.
+}
+
+For historical reasons, the following aliases are available:
+\itemize{
+\item \code{stack_align} is an alias for \code{stack_discrete}.
+\item \code{stack_alignv} is an alias for \code{stack_discretev}.
+\item \code{stack_alignh} is an alias for \code{stack_discreteh}.
+\item \code{stack_free} is an alias for \code{stack_continuous}.
+\item \code{stack_freev} is an alias for \code{stack_continuousv}.
+\item \code{stack_freeh} is an alias for \code{stack_continuoush}.
+}
 }
 \examples{
 set.seed(123)
@@ -48,15 +120,11 @@ small_mat <- matrix(rnorm(56), nrow = 7L)
 stack_horizontal(small_mat) + align_dendro()
 
 # this is the same with:
+stack_discrete("h", small_mat) + align_dendro()
+
 stack_discreteh(small_mat) + align_dendro()
 
 # For vertical layout:
 stack_vertical(small_mat) + align_dendro()
 
-}
-\seealso{
-\itemize{
-\item \code{\link[=stack_discrete]{stack_discrete()}}
-\item \code{\link[=stack_continuous]{stack_continuous()}}
-}
 }

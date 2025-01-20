@@ -1,12 +1,12 @@
-#' Arrange plots in a circular layout by aligning discrete axis
+#' Arrange plots in a circular layout
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `circle_discrete` function arranges plots by aligning discrete variables
-#' in a circular layout.
+#' If `limits` is provided, a continuous variable will be required and aligned
+#' in the direction specified (`circle_continuous`). Otherwise, a discrete
+#' variable will be required and aligned (`circle_discrete`).
 #'
-#' @inheritParams stack_discrete
 #' @param radial A [`coord_radial()`][ggplot2::coord_radial] object that defines
 #' the global parameters for `coord_radial` across all plots in the layout.
 #' The parameters `start`, `end`, `direction`, and `expand` will be inherited
@@ -17,12 +17,53 @@
 #' indicating the direction in which the plot is added.
 #' - `outward`: The plot is added from the inner to the outer.
 #' - `inward`: The plot is added from the outer to the inner.
+#' @inheritParams stack_layout
+#' @return A `CircleLayout` object.
 #' @examples
 #' set.seed(123)
+#'
 #' small_mat <- matrix(rnorm(56), nrow = 7)
 #' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 #' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 #'
+#' # circle_layout
+#' # same for circle_discrete()
+#' circle_layout(small_mat) +
+#'     ggalign() +
+#'     geom_tile(aes(y = .column_index, fill = value)) +
+#'     scale_fill_viridis_c() +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     scale_color_brewer(palette = "Dark2")
+#'
+#' # same for circle_continuous()
+#' circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) +
+#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
+#'     geom_point(size = 2) &
+#'     scale_color_brewer(palette = "Dark2") &
+#'     theme_bw()
+#'
+#' @export
+circle_layout <- function(data = NULL, ..., radial = NULL,
+                          direction = "outward", limits = waiver(),
+                          theme = NULL) {
+    if (is.waive(limits)) {
+        circle_discrete(
+            data = data, ..., radial = radial,
+            direction = direction, theme = theme
+        )
+    } else {
+        circle_continuous(
+            data = data, ..., radial = radial,
+            direction = direction, theme = theme, limits = limits
+        )
+    }
+}
+
+############################################################
+#' @examples
+#' # circle_discrete()
 #' # direction outward
 #' circle_discrete(small_mat) +
 #'     align_dendro(aes(color = branch), k = 3L) +
@@ -38,7 +79,9 @@
 #'     scale_fill_viridis_c() +
 #'     align_dendro(aes(color = branch), k = 3L) +
 #'     scale_color_brewer(palette = "Dark2")
+#'
 #' @export
+#' @rdname circle_layout
 circle_discrete <- function(data = NULL, ..., radial = NULL,
                             direction = "outward", theme = NULL) {
     UseMethod("circle_discrete", data)
@@ -81,17 +124,8 @@ circle_discrete.function <- function(data = NULL, ...) {
 circle_discrete.formula <- circle_discrete.function
 
 ################################################################
-#' Arrange plots in a circular layout by aligning continuous axis
-#'
-#' @description
-#' `r lifecycle::badge('experimental')`
-#'
-#' The `circle_continuous` function arranges plots by aligning continuous
-#' variables in a circular layout.
-#'
-#' @inheritParams circle_discrete
-#' @inheritParams stack_continuous
 #' @examples
+#' # circle_continuous()
 #' circle_continuous(mpg, limits = continuous_limits(c(3, 5))) +
 #'     ggalign(mapping = aes(displ, hwy, colour = class)) +
 #'     geom_point(size = 2) +
@@ -100,6 +134,7 @@ circle_discrete.formula <- circle_discrete.function
 #'     scale_color_brewer(palette = "Dark2") &
 #'     theme_bw()
 #' @export
+#' @rdname circle_layout
 circle_continuous <- function(data = NULL, ..., radial = NULL,
                               direction = "outward", limits = NULL,
                               theme = NULL) {
@@ -159,50 +194,6 @@ new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
         design = design, theme = theme,
         radial = radial, direction = direction
     )
-}
-
-#' Arrange plots in a circular layout
-#'
-#' @description
-#' `r lifecycle::badge('experimental')`
-#'
-#' This function integrates the functionalities of `circle_discrete()` and
-#' `circle_continuous()` into a single interface.
-#'
-#' @inheritParams stack_layout
-#' @return A `CircleLayout` object.
-#' @seealso
-#'  - [`circle_discrete()`]
-#'  - [`circle_continuous()`]
-#' @examples
-#' set.seed(123)
-#'
-#' # circle_discrete
-#' small_mat <- matrix(rnorm(56), nrow = 7)
-#' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-#' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-#' circle_layout(small_mat) +
-#'     ggalign() +
-#'     geom_tile(aes(y = .column_index, fill = value)) +
-#'     scale_fill_viridis_c() +
-#'     align_dendro(aes(color = branch), k = 3L) +
-#'     scale_color_brewer(palette = "Dark2")
-#'
-#' # circle_continuous
-#' circle_layout(mpg, limits = continuous_limits(c(3, 5))) +
-#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
-#'     geom_point(size = 2) +
-#'     ggalign(mapping = aes(displ, hwy, colour = class)) +
-#'     geom_point(size = 2) &
-#'     scale_color_brewer(palette = "Dark2") &
-#'     theme_bw()
-#' @export
-circle_layout <- function(data = NULL, ..., limits = waiver()) {
-    if (is.waive(limits)) {
-        circle_discrete(data = data, ...)
-    } else {
-        circle_continuous(data = data, limits = limits, ...)
-    }
 }
 
 ############################################################

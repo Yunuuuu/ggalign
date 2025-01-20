@@ -4,6 +4,11 @@
 \alias{quad_layout}
 \alias{quad_alignh}
 \alias{quad_alignv}
+\alias{quad_discrete}
+\alias{quad_alignb}
+\alias{quad_continuous}
+\alias{ggside}
+\alias{quad_free}
 \title{Arrange plots in the quad-side of a main plot}
 \usage{
 quad_layout(
@@ -18,15 +23,43 @@ quad_layout(
   height = NA
 )
 
-quad_alignh(...)
+quad_alignh(..., ylim = waiver())
 
-quad_alignv(...)
+quad_alignv(..., xlim = waiver())
+
+quad_discrete(
+  data = waiver(),
+  mapping = aes(),
+  ...,
+  theme = NULL,
+  active = NULL,
+  width = NA,
+  height = NA
+)
+
+quad_continuous(
+  data = waiver(),
+  mapping = aes(),
+  xlim = NULL,
+  ylim = NULL,
+  ...,
+  theme = NULL,
+  active = NULL,
+  width = NA,
+  height = NA
+)
 }
 \arguments{
-\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, this will attempt to inherit
-from the parent layout. If both \code{xlim} and \code{ylim} are provided, a \verb{data frame} is required. When inherited from the annotation stack, no
-transposition will be applied. Otherwise, a \code{matrix} is required. When
-inherited from the column annotation stack, the data will be transposed.}
+\item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout. By default, this will attempt
+to inherit from the parent layout.
+
+If both \code{xlim} and \code{ylim} are provided, a \verb{data frame} is required, and
+\code{\link[=fortify_data_frame]{fortify_data_frame()}} will be used to convert the data to a data frame.
+When inherited by an annotation stack, no transposition will be applied.
+
+Otherwise, a \code{matrix} is required, and \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to
+convert the data to a matrix. When inherited by the column annotation
+stack, the data will be transposed.}
 
 \item{mapping}{Default list of aesthetic mappings to use for main plot in the
 layout. If not specified, must be supplied in each layer added to the main
@@ -69,19 +102,27 @@ in the horizontal direction. Otherwise, a discrete variable will be
 required and aligned.
 }
 
+The \code{quad_discrete} is a special case where both \code{xlim} and \code{ylim} are not
+provided.
+
+The \code{quad_continuous} is a special case where both \code{xlim} and \code{ylim} are
+provided.
+
 For historical reasons, the following aliases are available:
 \itemize{
 \item \code{quad_alignh}: Align discrete variables in the horizontal direction and
 continuous variables in vertical direction.
 \item \code{quad_alignv}: Align discrete variables in the vertical direction and
-continuous variables in horizontal direction..
+continuous variables in horizontal direction.
+\item \code{quad_alignb} is an alias for \code{quad_discrete}.
+\item \code{quad_free} is an alias for \code{quad_continuous}.
 }
 }
 \section{ggplot2 specification}{
 
-If either \code{xlim} or \code{ylim} is not provided, the data will be converted to a
-matrix using \code{\link[=fortify_matrix]{fortify_matrix()}}, and the data in the underlying main plot
-will contain the following columns:
+If either \code{xlim} or \code{ylim} is not provided, the data input will be converted
+to a matrix using \code{\link[=fortify_matrix]{fortify_matrix()}}, and the data in the underlying main
+plot will contain the following columns:
 \itemize{
 \item \code{.panel_x} and \code{.panel_y}: the column and row panel groups.
 \item \code{.x} and \code{.y}: an integer index of \code{x} and \code{y} coordinates
@@ -93,5 +134,7 @@ of the original matrix (only applicable when names exist).
 matrix.
 \item \code{value}: the actual matrix value.
 }
+
+Otherwise, the data input will be used for the main plot.
 }
 

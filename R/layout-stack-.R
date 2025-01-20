@@ -1,22 +1,46 @@
-#' Arrange plots horizontally or vertically by aligning discrete axis
+#' Arrange plots horizontally or vertically
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' The `stack_discrete` function arranges plots by aligning discrete variables.
-#' `stack_align` is an alias for `stack_discrete` for historical reasons.
+#' If `limits` is provided, a continuous variable will be required and aligned
+#' in the direction specified (`stack_continuous`). Otherwise, a discrete
+#' variable will be required and aligned (`stack_discrete`).
 #'
 #' Several aliases are provided for convenience:
-#' - `stack_discretev` and `stack_alignv`: A special case of `stack_discrete`
-#'   that sets `direction = "v"`.
-#' - `stack_discreteh` and `stack_alignh`: A special case of `stack_discrete`
-#'   that sets `direction = "h"`.
+#' - `stack_vertical`: A special case of `stack_layout` that sets `direction
+#'   = "v"`.
+#' - `stack_horizontal`: A special case of `stack_layout` that sets `direction
+#'   = "h"`.
+#' - `stack_discretev`: A special case of `stack_discrete` that sets `direction
+#'   = "v"`.
+#' - `stack_discreteh`: A special case of `stack_discrete` that sets `direction
+#'   = "h"`.
+#' - `stack_continuousv()`: A special case of `stack_free` that sets `direction
+#'   = "v"`.
+#' - `stack_continuoush()`: A special case of `stack_free` that sets `direction
+#'   = "h"`.
+#'
+#' For historical reasons, the following aliases are available:
+#' - `stack_align` is an alias for `stack_discrete`.
+#' - `stack_alignv` is an alias for `stack_discretev`.
+#' - `stack_alignh` is an alias for `stack_discreteh`.
+#' - `stack_free` is an alias for `stack_continuous`.
+#' - `stack_freev` is an alias for `stack_continuousv`.
+#' - `stack_freeh` is an alias for `stack_continuoush`.
 #'
 #' @param direction A string indicating the direction of the stack layout,
 #' either `"h"`(`horizontal`) or `"v"`(`vertical`).
-#' @param data `r rd_layout_data()`, [`fortify_matrix()`] will be used to
-#'    convert data to a matrix.
-#' @param ... Additional arguments passed to [`fortify_matrix()`].
+#' @param data `r rd_layout_data()`:
+#'  - If `limits` is not provided, [`fortify_matrix()`] will be used to get a
+#'    matrix.
+#'  - If `limits` is specified, [`fortify_data_frame()`] will be used to get a
+#'    data frame. Note that if the data is a `matrix`, it will be automatically
+#'    converted to a long-formatted data frame, which differs from `ggplot2`'s
+#'    behavior.
+#'
+#' @param ... Additional arguments passed to [`fortify_data_frame()`] or
+#' [`fortify_matrix()`].
 #' @param theme A [`theme()`][ggplot2::theme] object used to customize various
 #' elements of the layout, including `guides`, `title`, `subtitle`, `caption`,
 #' `margins`, `panel.border`, and `background`. By default, the theme will
@@ -28,39 +52,85 @@
 #' [`stack_layout()`] with a nested [`quad_layout()`], it should be of length
 #' `3`, specifying the relative heights (for `direction = "h"`) or widths (for
 #' `direction = "v"`) to be applied to the layout.
-#'
+#' @param limits A [`continuous_limits()`] object specifying the left/lower
+#' limit and the right/upper limit of the scale. Used to align the continuous
+#' axis.
+#' @return A `StackLayout` object.
 #' @examples
 #' set.seed(123)
-#' stack_discrete("h", matrix(rnorm(56), nrow = 7L)) +
-#'     align_dendro()
+#' small_mat <- matrix(rnorm(56), nrow = 7L)
+#'
+#' stack_horizontal(small_mat) + align_dendro()
+#'
+#' # this is the same with:
+#' stack_discrete("h", small_mat) + align_dendro()
+#'
+#' stack_discreteh(small_mat) + align_dendro()
+#'
+#' # For vertical layout:
+#' stack_vertical(small_mat) + align_dendro()
+#'
 #' @export
+stack_layout <- function(direction, data = NULL, ...,
+                         theme = NULL, sizes = NA, limits = waiver()) {
+    if (is.waive(limits)) {
+        stack_discrete(
+            data = data, direction = direction, ...,
+            theme = theme, sizes = sizes
+        )
+    } else {
+        stack_continuous(
+            data = data, direction = direction, ...,
+            theme = theme, sizes = sizes, limits = limits
+        )
+    }
+}
+
+#' @export
+#' @rdname stack_layout
+stack_horizontal <- function(data = NULL, ..., limits = waiver()) {
+    stack_layout(data = data, direction = "h", limits = limits, ...)
+}
+
+#' @export
+#' @rdname stack_layout
+stack_vertical <- function(data = NULL, ..., limits = waiver()) {
+    stack_layout(data = data, direction = "v", limits = limits, ...)
+}
+
+###################################################################
+#' @export
+#' @rdname stack_layout
 stack_discrete <- function(direction, data = NULL, ...,
                            theme = NULL, sizes = NA) {
     UseMethod("stack_discrete", data)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_discrete
+#' @rdname stack_layout
 stack_align <- stack_discrete
 
 #' @export
-#' @rdname stack_discrete
+#' @rdname stack_layout
 stack_discretev <- function(data = NULL, ...) {
     stack_discrete(data = data, direction = "v", ...)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_discrete
+#' @rdname stack_layout
 stack_alignv <- stack_discretev
 
 #' @export
-#' @rdname stack_discrete
+#' @rdname stack_layout
 stack_discreteh <- function(data = NULL, ...) {
     stack_discrete(data = data, direction = "h", ...)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_discrete
+#' @rdname stack_layout
 stack_alignh <- stack_discreteh
 
 #' @export
@@ -107,56 +177,38 @@ stack_discrete.function <- function(direction, data = NULL, ...) {
 stack_discrete.formula <- stack_discrete.function
 
 ################################################################
-#' Arrange plots horizontally or vertically by aligning continuous axis
-#'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
-#' The `stack_continuous` function arranges plots by aligning continuous
-#' variables. The alias `stack_free` is retained for historical reasons.
-#'
-#' - `stack_continuousv()`/`stack_freev`: A special case of `stack_free` that
-#'   sets `direction = "v"`.
-#' - `stack_continuoush()`/`stack_freeh`: A special case of `stack_free` that
-#'   sets `direction = "h"`.
-#'
-#' @param data `r rd_layout_data()`, [`fortify_data_frame()`] will be used to
-#'    convert data to a data frame. Note that if the data is a `matrix`, it will
-#'    be automatically converted to a long-formatted data frame, which differs
-#'    from `ggplot2`'s behavior.
-#' @param limits A [`continuous_limits()`] object specifying the left/lower
-#' limit and the right/upper limit of the scale. Used to align the continuous
-#' axis.
-#' @inheritParams stack_discrete
-#' @param ... Additional arguments passed to [`fortify_data_frame()`].
 #' @export
+#' @rdname stack_layout
 stack_continuous <- function(direction, data = NULL, ..., limits = NULL,
                              theme = NULL, sizes = NA) {
     UseMethod("stack_continuous", data)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_continuous
+#' @rdname stack_layout
 stack_free <- stack_continuous
 
 #' @export
-#' @rdname stack_continuous
+#' @rdname stack_layout
 stack_continuousv <- function(data = NULL, ...) {
     stack_continuous(data = data, direction = "v", ...)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_continuous
+#' @rdname stack_layout
 stack_freev <- stack_continuousv
 
 #' @export
-#' @rdname stack_continuous
+#' @rdname stack_layout
 stack_continuoush <- function(data = NULL, ...) {
     stack_continuous(data = data, direction = "h", ...)
 }
 
+#' @usage NULL
 #' @export
-#' @rdname stack_continuous
+#' @rdname stack_layout
 stack_freeh <- stack_continuoush
 
 #' @export
@@ -206,65 +258,6 @@ new_stack_layout <- function(data, direction, design,
         theme = theme, schemes = schemes, # used by the layout
         sizes = sizes, design = design
     )
-}
-
-#' Arrange plots horizontally or vertically
-#'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
-#' This function integrates the functionalities of `stack_discrete()` and
-#' `stack_continuous()` into a single interface.
-#'
-#' @param data `r rd_layout_data()`:
-#'  - If `limits` is not provided, [`fortify_matrix()`] will be used to get a
-#'    matrix.
-#'  - If `limits` is specified, [`fortify_data_frame()`] will be used to get a
-#'    data frame. Note that if the data is a `matrix`, it will be automatically
-#'    converted to a long-formatted data frame, which differs from `ggplot2`'s
-#'    behavior.
-#'
-#' @inheritParams stack_continuous
-#'
-#' @return A `StackLayout` object.
-#' @seealso
-#'  - [`stack_discrete()`]
-#'  - [`stack_continuous()`]
-#' @examples
-#' set.seed(123)
-#' small_mat <- matrix(rnorm(56), nrow = 7L)
-#'
-#' stack_horizontal(small_mat) + align_dendro()
-#'
-#' # this is the same with:
-#' stack_discreteh(small_mat) + align_dendro()
-#'
-#' # For vertical layout:
-#' stack_vertical(small_mat) + align_dendro()
-#'
-#' @export
-stack_layout <- function(direction, data = NULL, ...,
-                         limits = waiver()) {
-    if (is.waive(limits)) {
-        stack_discrete(data = data, direction = direction, ...)
-    } else {
-        stack_continuous(
-            data = data, direction = direction,
-            limits = limits, ...
-        )
-    }
-}
-
-#' @export
-#' @rdname stack_layout
-stack_horizontal <- function(data = NULL, ..., limits = waiver()) {
-    stack_layout(data = data, direction = "h", limits = limits, ...)
-}
-
-#' @export
-#' @rdname stack_layout
-stack_vertical <- function(data = NULL, ..., limits = waiver()) {
-    stack_layout(data = data, direction = "v", limits = limits, ...)
 }
 
 ############################################################

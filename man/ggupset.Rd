@@ -66,7 +66,8 @@ the creation of Upset plot.
 }
 \section{ggplot2 specification}{
 
-The data in the underlying main plot contains following columns:
+The data input will be converted to a matrix using \code{\link[=fortify_matrix]{fortify_matrix()}}, and
+the data in the underlying main plot will contain the following columns:
 \itemize{
 \item \code{.panel_x} and \code{.panel_y}: the column and row panel groups.
 \item \code{.x} and \code{.y}: an integer index of \code{x} and \code{y} coordinates

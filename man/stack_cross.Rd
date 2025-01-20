@@ -17,7 +17,7 @@ stack_crossh(data = NULL, ...)
 either \code{"h"}(\code{horizontal}) or \code{"v"}(\code{vertical}).}
 
 \item{data}{Default dataset to use for the layout. If not specified, it must be supplied in each plot added to the layout, \code{\link[=fortify_matrix]{fortify_matrix()}} will be used to
-convert data to a matrix.}
+convert the data to a matrix.}
 
 \item{...}{Additional arguments passed to \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
@@ -36,8 +36,8 @@ the \code{\link[=quad_layout]{quad_layout()}} annotation, it must be of length \
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-The \code{stack_cross} function is derived from \code{stack_discrete} and allows for
-different layout ordering indices within a single layout.
+The \code{stack_cross} function is derived from \code{\link[=stack_discrete]{stack_discrete()}} and allows
+for different layout ordering indices within a single layout.
 
 Two aliases are provided for convenience:
 \itemize{

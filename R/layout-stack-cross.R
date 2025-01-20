@@ -3,8 +3,8 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `stack_cross` function is derived from `stack_discrete` and allows for
-#' different layout ordering indices within a single layout.
+#' The `stack_cross` function is derived from [`stack_discrete()`] and allows
+#' for different layout ordering indices within a single layout.
 #'
 #' Two aliases are provided for convenience:
 #' - `stack_crossv`: A special case of `stack_cross` that sets
@@ -12,7 +12,10 @@
 #' - `stack_crossh`: A special case of `stack_cross` that sets
 #'   `direction = "h"` for horizontal alignment.
 #'
-#' @inheritParams stack_discrete
+#' @param data `r rd_layout_data()`, [`fortify_matrix()`] will be used to
+#' convert the data to a matrix.
+#' @param ... Additional arguments passed to [`fortify_matrix()`].
+#' @inheritParams stack_layout
 #' @seealso [`ggcross()`]
 #' @export
 stack_cross <- function(direction, data = NULL, ...,

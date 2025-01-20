@@ -1,139 +1,3 @@
-#' Arrange plots in the quad-side of a main plot by aligning discrete axis
-#'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
-#' The `quad_discrete` function arranges plots in the quad-side of a main plot
-#' by aligning discrete variables along two axes. `quad_alignb` is an alias for
-#' `quad_discrete` for historical reasons.
-#'
-#' @param data `r rd_layout_data()`. By default, it will try to inherit from
-#' parent layout. [`fortify_matrix()`] will be used to convert data to a
-#' matrix.
-#' @param mapping Default list of aesthetic mappings to use for main plot in the
-#' layout. If not specified, must be supplied in each layer added to the main
-#' plot.
-#' @param ... Additional arguments passed to [`fortify_matrix()`].
-#' @param width,height The relative width/height of the main plot, can be a
-#' [`unit`][grid::unit] object.
-#' @inheritParams stack_discrete
-#' @inheritParams align
-#' @section ggplot2 specification:
-#' The data in the underlying main plot contains following columns:
-#'
-#'  - `.panel_x` and `.panel_y`: the column and row panel groups.
-#'
-#'  - `.x` and `.y`: an integer index of `x` and `y` coordinates
-#'
-#'  - `.discrete_x` and `.discrete_y`: a factor of the data labels (only
-#'    applicable when `.row_names` and `.column_names` exists).
-#'
-#'  - `.row_names` and `.column_names`: A character of the row and column names
-#'    of the original matrix (only applicable when names exist).
-#'
-#'  - `.row_index` and `.column_index`: the row and column index of the original
-#'    matrix.
-#'
-#'  - `value`: the actual matrix value.
-#'
-#' @return A `QuadLayout` object.
-#' @export
-quad_discrete <- function(data = waiver(), mapping = aes(),
-                          ...,
-                          theme = NULL, active = NULL,
-                          width = NA, height = NA) {
-    UseMethod("quad_discrete")
-}
-
-#' @export
-#' @rdname quad_discrete
-quad_alignb <- quad_discrete
-
-#' @export
-quad_discrete.default <- function(data = waiver(), mapping = aes(),
-                                  ...,
-                                  theme = NULL, active = NULL,
-                                  width = NA, height = NA) {
-    data <- fortify_matrix(data = data, ...)
-    new_quad_layout(
-        name = "quad_discrete", data = data, xlim = waiver(), ylim = waiver(),
-        mapping = mapping, active = active, theme = theme,
-        width = width, height = height
-    )
-}
-
-#' @export
-quad_discrete.uneval <- function(data, ...) {
-    cli_abort(c(
-        "{.arg data} cannot be {.obj_type_friendly {data}}",
-        "i" = "Have you misspelled the {.arg data} argument in {.fn quad_discrete}"
-    ))
-}
-
-#############################################################
-#' Arrange plots in the quad-side of a main plot by aligning continuous axis
-#'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
-#' These functions arrange plots around a main plot by aligning two continuous
-#' axes. `ggside` is simply an alias for `quad_continuous`. `quad_free` is an
-#' alias for `quad_continuous` for historical reasons.
-#'
-#' @param data `r rd_layout_data()`. By default, it will try to inherit from
-#' parent layout. [`fortify_data_frame()`] will be used to convert data to a
-#' data frame.
-#' @param xlim,ylim A [`continuous_limits()`] object specifying the left/lower
-#' limit and the right/upper limit of the scale. Used to align the continuous
-#' axis.
-#' @param ... Additional arguments passed to [`fortify_data_frame()`].
-#' @inheritParams quad_discrete
-#' @inherit quad_discrete return
-#' @export
-quad_continuous <- function(data = waiver(), mapping = aes(),
-                            xlim = NULL, ylim = NULL,
-                            ...,
-                            theme = NULL, active = NULL,
-                            width = NA, height = NA) {
-    UseMethod("quad_continuous")
-}
-
-#' @usage NULL
-#' @export
-#' @rdname quad_continuous
-ggside <- quad_continuous
-
-#' @usage NULL
-#' @export
-#' @rdname quad_continuous
-quad_free <- quad_continuous
-
-#' @export
-quad_continuous.default <- function(data = waiver(), mapping = aes(),
-                                    xlim = NULL, ylim = NULL,
-                                    ...,
-                                    theme = NULL, active = NULL,
-                                    width = NA, height = NA) {
-    xlim <- xlim %|w|% NULL
-    ylim <- ylim %|w|% NULL
-    data <- fortify_data_frame(data = data, ...)
-    new_quad_layout(
-        name = "quad_continuous",
-        data = data, xlim = xlim, ylim = ylim,
-        mapping = mapping, active = active, theme = theme,
-        width = width, height = height
-    )
-}
-
-#' @export
-quad_continuous.uneval <- function(data, ...) {
-    cli_abort(c(
-        "{.arg data} cannot be {.obj_type_friendly {data}}",
-        "i" = "Have you misspelled the {.arg data} argument in {.fn quad_free}"
-    ))
-}
-
-##########################################################
 #' Arrange plots in the quad-side of a main plot
 #'
 #' @description
@@ -150,25 +14,45 @@ quad_continuous.uneval <- function(data, ...) {
 #'   in the horizontal direction. Otherwise, a discrete variable will be
 #'   required and aligned.
 #'
+#' The `quad_discrete` is a special case where both `xlim` and `ylim` are not
+#' provided.
+#'
+#' The `quad_continuous` is a special case where both `xlim` and `ylim` are
+#' provided.
+#'
 #' For historical reasons, the following aliases are available:
 #' - `quad_alignh`: Align discrete variables in the horizontal direction and
 #'   continuous variables in vertical direction.
 #' - `quad_alignv`: Align discrete variables in the vertical direction and
-#'   continuous variables in horizontal direction..
+#'   continuous variables in horizontal direction.
+#' - `quad_alignb` is an alias for `quad_discrete`.
+#' - `quad_free` is an alias for `quad_continuous`.
 #'
-#' @param data `r rd_layout_data()`. By default, this will attempt to inherit
-#'   from the parent layout. If both `xlim` and `ylim` are provided, a `data
-#'   frame` is required. When inherited from the annotation stack, no
-#'   transposition will be applied. Otherwise, a `matrix` is required. When
-#'   inherited from the column annotation stack, the data will be transposed.
-#' @param ... Additional arguments passed to [`fortify_data_frame()`] or
-#' [`fortify_matrix()`].
-#' @inheritParams quad_continuous
-#' @inherit quad_discrete return
+#' @param data `r rd_layout_data()`. By default, this will attempt
+#'   to inherit from the parent layout.
+#'
+#' If both `xlim` and `ylim` are provided, a `data frame` is required, and
+#'   [`fortify_data_frame()`] will be used to convert the data to a data frame.
+#'   When inherited by an annotation stack, no transposition will be applied.
+#'
+#' Otherwise, a `matrix` is required, and [`fortify_matrix()`] will be used to
+#'   convert the data to a matrix. When inherited by the column annotation
+#'   stack, the data will be transposed.
+#' @param mapping Default list of aesthetic mappings to use for main plot in the
+#' layout. If not specified, must be supplied in each layer added to the main
+#' plot.
+#' @param xlim,ylim A [`continuous_limits()`] object specifying the left/lower
+#' limit and the right/upper limit of the scale. Used to align the continuous
+#' axis.
+#' @param width,height The relative width/height of the main plot, can be a
+#' [`unit`][grid::unit] object.
+#' @inheritParams stack_layout
+#' @inheritParams align
+#' @return A `QuadLayout` object.
 #' @section ggplot2 specification:
-#' If either `xlim` or `ylim` is not provided, the data will be converted to a
-#' matrix using [`fortify_matrix()`], and the data in the underlying main plot
-#' will contain the following columns:
+#' If either `xlim` or `ylim` is not provided, the data input will be converted
+#' to a matrix using [`fortify_matrix()`], and the data in the underlying main
+#' plot will contain the following columns:
 #'
 #'  - `.panel_x` and `.panel_y`: the column and row panel groups.
 #'
@@ -184,6 +68,8 @@ quad_continuous.uneval <- function(data, ...) {
 #'    matrix.
 #'
 #'  - `value`: the actual matrix value.
+#'
+#' Otherwise, the data input will be used for the main plot.
 #'
 #' @export
 quad_layout <- function(data = waiver(), mapping = aes(),
@@ -216,14 +102,96 @@ quad_layout <- function(data = waiver(), mapping = aes(),
 
 #' @export
 #' @rdname quad_layout
-quad_alignh <- function(...) {
-    quad_layout(..., xlim = NULL, ylim = waiver())
+quad_alignh <- function(..., ylim = waiver()) {
+    quad_layout(..., xlim = NULL, ylim = ylim)
 }
 
 #' @export
 #' @rdname quad_layout
-quad_alignv <- function(...) {
-    quad_layout(..., xlim = waiver(), ylim = NULL)
+quad_alignv <- function(..., xlim = waiver()) {
+    quad_layout(..., xlim = xlim, ylim = NULL)
+}
+
+##########################################################
+#' @export
+#' @rdname quad_layout
+quad_discrete <- function(data = waiver(), mapping = aes(),
+                          ...,
+                          theme = NULL, active = NULL,
+                          width = NA, height = NA) {
+    UseMethod("quad_discrete")
+}
+
+#' @export
+#' @rdname quad_layout
+#' @usage NULL
+quad_alignb <- quad_discrete
+
+#' @export
+quad_discrete.default <- function(data = waiver(), mapping = aes(),
+                                  ...,
+                                  theme = NULL, active = NULL,
+                                  width = NA, height = NA) {
+    data <- fortify_matrix(data = data, ...)
+    new_quad_layout(
+        name = "quad_discrete", data = data, xlim = waiver(), ylim = waiver(),
+        mapping = mapping, active = active, theme = theme,
+        width = width, height = height
+    )
+}
+
+#' @export
+quad_discrete.uneval <- function(data, ...) {
+    cli_abort(c(
+        "{.arg data} cannot be {.obj_type_friendly {data}}",
+        "i" = "Have you misspelled the {.arg data} argument in {.fn quad_discrete}"
+    ))
+}
+
+#############################################################
+#' @export
+#' @rdname quad_layout
+quad_continuous <- function(data = waiver(), mapping = aes(),
+                            xlim = NULL, ylim = NULL,
+                            ...,
+                            theme = NULL, active = NULL,
+                            width = NA, height = NA) {
+    UseMethod("quad_continuous")
+}
+
+#' @usage NULL
+#' @export
+#' @rdname quad_layout
+ggside <- quad_continuous
+
+#' @usage NULL
+#' @export
+#' @rdname quad_layout
+quad_free <- quad_continuous
+
+#' @export
+quad_continuous.default <- function(data = waiver(), mapping = aes(),
+                                    xlim = NULL, ylim = NULL,
+                                    ...,
+                                    theme = NULL, active = NULL,
+                                    width = NA, height = NA) {
+    xlim <- xlim %|w|% NULL
+    ylim <- ylim %|w|% NULL
+    data <- fortify_data_frame(data = data, ...)
+    new_quad_layout(
+        name = "quad_continuous",
+        data = data, xlim = xlim, ylim = ylim,
+        mapping = mapping, active = active, theme = theme,
+        width = width, height = height
+    )
+}
+
+#' @export
+quad_continuous.uneval <- function(data, ...) {
+    cli_abort(c(
+        "{.arg data} cannot be {.obj_type_friendly {data}}",
+        "i" = "Have you misspelled the {.arg data} argument in {.fn quad_free}"
+    ))
 }
 
 #####################################################

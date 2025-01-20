@@ -11,7 +11,7 @@
 #' [`fortify_matrix.list_upset`] and [`fortify_matrix.matrix_upset`] are
 #' suitable for creating an UpSet plot.
 #' @param ... Additional arguments passed to [`fortify_matrix()`].
-#' @inheritParams quad_discrete
+#' @inheritParams quad_layout
 #' @param direction A string indicating the direction of the UpSet plot,
 #' `"h"`(`horizontal`) or `"v"`(`vertical`). In a vertical UpSet plot, the
 #' columns of the matrix correspond to the sets, and the rows correspond to the
@@ -24,7 +24,8 @@
 #' [`geom_line()`][ggplot2::geom_line()].
 #' @param rect A list of parameters passed to
 #' [`geom_rect()`][ggplot2::geom_rect()].
-#' @inheritSection quad_discrete ggplot2 specification
+#'
+#' @inheritSection heatmap_layout ggplot2 specification
 #' @examples
 #' set.seed(123)
 #' lt <- list(

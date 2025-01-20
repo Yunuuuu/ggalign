@@ -9,7 +9,11 @@
 #' visualization layers are automatically applied. `ggheatmap` is an alias for
 #' `heatmap_layout`.
 #'
-#' @inheritParams quad_discrete
+#' @param data `r rd_layout_data()`. By default, it will try to inherit from
+#' parent layout. [`fortify_matrix()`] will be used to convert data to a
+#' matrix.
+#' @param ... Additional arguments passed to [`fortify_matrix()`].
+#' @inheritParams quad_layout
 #' @param filling A single string of `r oxford_or(c("raster", "tile"))` to
 #' indicate the filling style. By default, `waiver()` is used, which means that
 #' if the input matrix has more than 20,000 cells (`nrow * ncol > 20000`),
@@ -32,7 +36,25 @@
 #' [`scale_fill_discrete()`][ggplot2::scale_fill_discrete] for details on
 #' option settings.
 #'
-#' @inheritSection quad_discrete ggplot2 specification
+#' @section ggplot2 specification:
+#' The data input will be converted to a matrix using [`fortify_matrix()`], and
+#' the data in the underlying main plot will contain the following columns:
+#'
+#'  - `.panel_x` and `.panel_y`: the column and row panel groups.
+#'
+#'  - `.x` and `.y`: an integer index of `x` and `y` coordinates
+#'
+#'  - `.discrete_x` and `.discrete_y`: a factor of the data labels (only
+#'    applicable when `.row_names` and `.column_names` exists).
+#'
+#'  - `.row_names` and `.column_names`: A character of the row and column names
+#'    of the original matrix (only applicable when names exist).
+#'
+#'  - `.row_index` and `.column_index`: the row and column index of the original
+#'    matrix.
+#'
+#'  - `value`: the actual matrix value.
+#'
 #' @return A `HeatmapLayout` object.
 #' @examples
 #' ggheatmap(1:10)
