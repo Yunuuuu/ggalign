@@ -23,8 +23,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/alignpatch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/area.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cash-LayoutProto-method.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/circle_continuous.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/circle_discrete.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/circle_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/circle_switch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/continuous_limits.html</loc></url>
@@ -108,8 +106,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/patch_titles.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/plus-ggalign_plot-ANY-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_active.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_continuous.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_discrete.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_init.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/quad_switch.html</loc></url>
@@ -123,9 +119,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_theme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/show-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/show-ggalign_plot-method.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_continuous.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_cross.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_discrete.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/stack_switch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/theme_no_axes.html</loc></url>

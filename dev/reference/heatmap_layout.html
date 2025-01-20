@@ -57,7 +57,7 @@ heatmap_layout."><meta property="og:image" content="https://yunuuuu.github.io/gg
 
     <div class="ref-description section level2">
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="figures/lifecycle-stable.svg" alt="[Stable]"></a></p>
-<p><code>heatmap_layout</code> is a specialized version of <code><a href="quad_discrete.html">quad_discrete()</a></code>, which
+<p><code>heatmap_layout</code> is a specialized version of <code><a href="quad_layout.html">quad_discrete()</a></code>, which
 simplifies the creation of heatmap plots by integrating essential elements
 for a standard heatmap layout, ensuring that the appropriate data mapping and
 visualization layers are automatically applied. <code>ggheatmap</code> is an alias for
@@ -145,7 +145,8 @@ added to a layout.</p></dd>
     <h2 id="ggplot-specification">ggplot2 specification<a class="anchor" aria-label="anchor" href="#ggplot-specification"></a></h2>
 
 
-<p>The data in the underlying main plot contains following columns:</p><ul><li><p><code>.panel_x</code> and <code>.panel_y</code>: the column and row panel groups.</p></li>
+<p>The data input will be converted to a matrix using <code><a href="fortify_matrix.html">fortify_matrix()</a></code>, and
+the data in the underlying main plot will contain the following columns:</p><ul><li><p><code>.panel_x</code> and <code>.panel_y</code>: the column and row panel groups.</p></li>
 <li><p><code>.x</code> and <code>.y</code>: an integer index of <code>x</code> and <code>y</code> coordinates</p></li>
 <li><p><code>.discrete_x</code> and <code>.discrete_y</code>: a factor of the data labels (only
 applicable when <code>.row_names</code> and <code>.column_names</code> exists).</p></li>
