@@ -92,7 +92,7 @@ reference:
 
 - title: Schemes
   desc: >
-    Schemes control the actions of plots in the layout. Scheme can be applied
+    Schemes control the specific behaviour of plots in the layout and can be applied
     either globally to the layout or individually to specific plots.
   contents:
   - scheme_align
