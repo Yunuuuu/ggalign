@@ -184,21 +184,21 @@ remotes::install_github("Yunuuuu/ggalign")
 
 -------------------------------------------------------------------------------
 
-| Specification                                | `ggalign`                                             | `marsilea`        | `aplot`                             | `ComplexHeatmap`                                                          |
-| -------------------------------------------- | ----------------------------------------------------- | ----------------- | ----------------------------------- | ------------------------------------------------------------------------- |
-| **Data input**                               | Various, and can be easily extended                   | fixed             | Various, and can be easily extended | fixed                                                                     |
-| **Plot Type**                                | Wide variety, provided by ggplot2                     | Many, but limited | ✅                                  | Many, but limited                                                         |
-| **Reorder observations**                     | ✅                                                    | ✅                | ✅                                  | Heatmap Only                                                              |
-| **Group observations into different panels** | ✅                                                    | ✅                | ❌                                  | Heatmap Only                                                              |
-| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌                | ❌                                  | Kmeans,Hierarchical Clustering, but can provide clustering group directly |
-| **Legends Creation**                         | Automatic                                             | Manual            | Automatic                           | Limited automatic, requires manual add                                    |
-| **Legends Position**                         | Anywhere, can be controlled for a single plot         | ?                 | Anywhere                            | Four sides, can only be placed on one side at a time                      |
-| **Scientific Color Palettes**                | Many                                                  | Limited           | Many                                | Limited                                                                   |
-| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only     | ❌                                  | `hclust` only                                                             |
-| **Tanglegram**                               | ✅                                                    | ❌                | ❌                                  | ❌                                                                        |
-| **3D Heatmap**                               | ✅                                                    | ❌                | ❌                                  | ✅                                                                        |
-| **Oncoplot**                                 | ✅                                                    | ✅                | ❌                                  | ✅                                                                        |
-| **UpSet plot**                               | ✅                                                    | ✅                | ❌                                  | ✅                                                                        |
+| Specification                                | `ggalign`                                             | `marsilea`        | `aplot`                             | `ComplexHeatmap`                                      |
+| -------------------------------------------- | ----------------------------------------------------- | ----------------- | ----------------------------------- | ----------------------------------------------------- |
+| **Data input**                               | Various, and can be easily extended                   | fixed             | Various, and can be easily extended | fixed                                                 |
+| **Plot Type**                                | Wide variety, provided by ggplot2                     | Many, but limited | ✅                                  | Many, but limited                                     |
+| **Reorder observations**                     | ✅                                                    | ✅                | ✅                                  | Heatmap Only                                          |
+| **Group observations into different panels** | ✅                                                    | ✅                | ❌                                  | Heatmap Only                                          |
+| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌                | ❌                                  | Kmeans,Hierarchical Clustering and arbitary algorithm |
+| **Legends Creation**                         | Automatic                                             | Manual            | Automatic                           | Limited automatic, requires manual add                |
+| **Legends Position**                         | Anywhere, can be controlled for a single plot         | ?                 | Anywhere                            | Four sides, can only be placed on one side at a time  |
+| **Scientific Color Palettes**                | Many                                                  | Limited           | Many                                | Limited                                               |
+| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only     | ❌                                  | `hclust` only                                         |
+| **Tanglegram**                               | ✅                                                    | ❌                | ❌                                  | ❌                                                    |
+| **3D Heatmap**                               | ✅                                                    | ❌                | ❌                                  | ✅                                                    |
+| **Oncoplot**                                 | ✅                                                    | ✅                | ❌                                  | ✅                                                    |
+| **UpSet plot**                               | ✅                                                    | ✅                | ❌                                  | ✅                                                    |
 
 ## Acknowledgements
 I would like to express my sincere gratitude to the contributors of the
