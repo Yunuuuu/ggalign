@@ -77,7 +77,7 @@
 <div class="section level3">
 <h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
 <ul><li><p>Now, <code><a href="../reference/with_quad.html">with_quad()</a></code> wraps the object into a list with the class <code>with_quad</code>. This approach offers greater flexibility in defining the actions associated with <code>with_quad</code>, allowing for more customizable behavior (<a href="https://github.com/Yunuuuu/ggalign/issues/26" class="external-link">#26</a>, <a href="https://github.com/Yunuuuu" class="external-link">@Yunuuuu</a>).</p></li>
-<li><p>Now, <code>panel</code> will be reordered when initializing the layout parameters, we don’t need to reorder the <code>panel</code> when drawing.</p></li>
+<li><p>Now, we always set as.table = FALSE when using ggplot2 <code>facet_*()</code> functions, we don’t need to reorder the <code>panel</code> when drawing.</p></li>
 <li><p><code>free_gg</code>, <code>align</code> and the new <code>cross_link</code> objects have been collapsed to one class <code>ggalign_plot</code></p></li>
 </ul></div>
 </div>
