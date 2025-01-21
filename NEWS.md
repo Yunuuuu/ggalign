@@ -54,7 +54,8 @@
 
 * Now, `with_quad()` wraps the object into a list with the class `with_quad`. This approach offers greater flexibility in defining the actions associated with `with_quad`, allowing for more customizable behavior (#26, @Yunuuuu).
 
-* Now, `panel` will be reordered when initializing the layout parameters, we don't need to reorder the `panel` when drawing.
+* Now, we always set as.table = FALSE when using ggplot2 `facet_*()` functions,
+  we don't need to reorder the `panel` when drawing.
 
 * `free_gg`, `align` and the new `cross_link` objects have been collapsed to one class `ggalign_plot`
 
