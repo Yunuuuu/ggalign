@@ -3,7 +3,8 @@ Title: A 'ggplot2' Extension for Consistent Axis Alignment
 Version: 0.0.5.9000
 Authors@R: c(
         person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2801-3332")),
-        person("Shixiang", "Wang", , "w_shixiang@163.com", role = c("aut"), comment = c(ORCID = "0000-0001-9855-7357"))
+        person("Shixiang", "Wang", , "w_shixiang@163.com", role = "aut", comment = c(ORCID = "0000-0001-9855-7357")),
+        person("Guangchuang", "Yu", email = "guangchuangyu@gmail.com", role = "aut", comment = c(ORCID = "0000-0002-6485-8781"))
     )
 Description: A 'ggplot2' extension offers various tools for organizing and arranging plots. 
     It is designed to consistently align a specific axis across multiple 'ggplot' objects, 
