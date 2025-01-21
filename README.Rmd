@@ -190,7 +190,7 @@ remotes::install_github("Yunuuuu/ggalign")
 | **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌            | ❌                               | Kmeans,Hierarchical Clustering and arbitary algorithm |
 | **Legends Creation**                         | Automatic                                             | Manual        | Automatic                        | Limited automatic, requires manual add                |
 | **Legends Position**                         | Anywhere, can be controlled for a single plot         | Anywhere      | Anywhere                         | Four sides, can only be placed on one side at a time  |
-| **Dendrogram**                               | Tree from Both `hclust` or `ape`                      | `hclust` only | Tree from Both `hclust` or `ape` | `hclust` only                                         |
+| **Dendrogram**                               | Tree from both `hclust` or `ape`                      | `hclust` only | Tree from both `hclust` or `ape` | `hclust` only                                         |
 | **Tanglegram**                               | ✅                                                    | ❌            | ❌                               | ❌                                                    |
 | **3D Heatmap**                               | ✅                                                    | ❌            | ❌                               | ✅                                                    |
 | **Oncoplot**                                 | ✅                                                    | ✅            | ✅                               | ✅                                                    |
