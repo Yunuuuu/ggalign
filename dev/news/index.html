@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.5.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,15 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="ggalign-010">ggalign 0.1.0<a class="anchor" aria-label="anchor" href="#ggalign-010"></a></h2><p class="text-muted">CRAN release: 2025-02-06</p>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-1-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-1-0"></a></h3>
 <ul><li>Now, all <code>*_free()</code> layouts have been removed, all layout has been splitted into two type: align discrete or continous vairables.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-1-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-0"></a></h3>
 <ul><li><p>new helper function <code><a href="../reference/memo_order.html">memo_order()</a></code> to reorder the oncoplot samples.</p></li>
 <li><p>new <code><a href="../reference/geom_subrect.html">geom_subrect()</a></code> and <code><a href="../reference/geom_subrect.html">geom_subtile()</a></code> to subdivide rectangles with shared borders into a grid.</p></li>
 <li><p>new <code>cross_link</code> function to reset the layout ordering index or layout panel group, and add plot to connect selected observations.</p></li>
@@ -70,12 +73,12 @@
 <li><p>new <code><a href="../reference/geom_draw.html">geom_draw()</a></code> function to draw ggplot2 layer with customized draw function.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-1-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0"></a></h3>
 <ul><li><p>fix breaks and labels not work well in discrete scale (<a href="https://github.com/Yunuuuu/ggalign/issues/30" class="external-link">#30</a>, <a href="https://github.com/Yunuuuu/ggalign/issues/32" class="external-link">#32</a>)</p></li>
 <li><p>fix wrong results of <code><a href="../reference/fortify_matrix.MAF.html">fortify_matrix.MAF()</a></code> method</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
+<h3 id="improvements-0-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0"></a></h3>
 <ul><li><p>Now, <code><a href="../reference/with_quad.html">with_quad()</a></code> wraps the object into a list with the class <code>with_quad</code>. This approach offers greater flexibility in defining the actions associated with <code>with_quad</code>, allowing for more customizable behavior (<a href="https://github.com/Yunuuuu/ggalign/issues/26" class="external-link">#26</a>, <a href="https://github.com/Yunuuuu" class="external-link">@Yunuuuu</a>).</p></li>
 <li><p>Now, we always set as.table = FALSE when using ggplot2 <code>facet_*()</code> functions, we don’t need to reorder the <code>panel</code> when drawing.</p></li>
 <li><p><code>free_gg</code>, <code>align</code> and the new <code>cross_link</code> objects have been collapsed to one class <code>ggalign_plot</code></p></li>
