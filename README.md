@@ -131,7 +131,7 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>❌</td>
     </tr>
     <tr>
-        <td rowspan="4"> <strong>Alignment</strong> </td>
+        <td rowspan="4"> <strong>Relationship</strong> </td>
         <td> <strong>One-to-One</strong> </td>
         <td>✅</td>
         <td>✅</td>
