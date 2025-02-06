@@ -21,7 +21,7 @@ data, or a \code{range_link()} object defining the linked observations. Use
 wrapping them into a single \code{list()}. If only the left-hand side of the
 formula exists, you can input it directly. For integer indices, wrap them
 with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
-\code{\link[=waiver]{waiver()}} to inherit values from the other group.}
+\code{\link[ggplot2:waiver]{waiver()}} to inherit values from the other group.}
 }
 \description{
 A base version of \code{\link{mark_draw}}, designed for performance optimization. This

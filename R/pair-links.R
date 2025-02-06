@@ -16,7 +16,7 @@
 #'   wrapping them into a single `list()`. If only the left-hand side of the
 #'   formula exists, you can input it directly. For integer indices, wrap them
 #'   with [`I()`] to use the ordering from the layout. You can also use
-#'   [`waiver()`] to inherit values from the other group.
+#'   [`waiver()`][ggplot2::waiver()] to inherit values from the other group.
 #' @param .handle_missing A string of `r oxford_or(c("error", "remove"))`
 #' indicates the action for handling missing observations.
 #' @param .reorder A string of `r oxford_or(c("hand1", "hand2"))` indicating
