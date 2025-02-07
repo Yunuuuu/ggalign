@@ -11,6 +11,7 @@ coverage](https://codecov.io/gh/Yunuuuu/ggalign/branch/main/graph/badge.svg)](ht
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.org/package=ggalign)
 [![](https://cranlogs.r-pkg.org/badges/ggalign)](https://cran.r-project.org/package=ggalign)
+[![DOI](https://zenodo.org/badge/828195668.svg)](https://doi.org/10.5281/zenodo.14825328)
 <!-- badges: end -->
 
 This package extends ggplot2 by providing advanced tools for aligning
