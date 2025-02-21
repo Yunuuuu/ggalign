@@ -17,7 +17,7 @@
   branch_gap = NULL,
   root = NULL,
   double = TRUE,
-  data_arg = caller_arg(data),
+  data_arg = NULL,
   call = NULL
 )
 

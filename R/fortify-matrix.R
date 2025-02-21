@@ -21,7 +21,7 @@
 #' - [`fortify_matrix.list_upset()`]
 #' - [`fortify_matrix.matrix_upset()`]
 #' @export
-fortify_matrix <- function(data, ..., data_arg = caller_arg(data),
+fortify_matrix <- function(data, ..., data_arg = NULL,
                            call = NULL) {
     UseMethod("fortify_matrix")
 }
@@ -34,9 +34,10 @@ fortify_matrix <- function(data, ..., data_arg = caller_arg(data),
 #' @family fortify_matrix methods
 #' @importFrom rlang try_fetch
 #' @export
-fortify_matrix.default <- function(data, ..., data_arg = caller_arg(data),
+fortify_matrix.default <- function(data, ..., data_arg = NULL,
                                    call = NULL) {
     call <- call %||% current_call()
+    data_arg <- data_arg %||% "data"
     rlang::check_dots_empty(call = call)
     try_fetch(
         as.matrix(data),
@@ -54,7 +55,7 @@ fortify_matrix.default <- function(data, ..., data_arg = caller_arg(data),
 }
 
 #' @export
-fortify_matrix.waiver <- function(data, ..., data_arg = caller_arg(data),
+fortify_matrix.waiver <- function(data, ..., data_arg = NULL,
                                   call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -68,7 +69,7 @@ fortify_matrix.NULL <- fortify_matrix.waiver
 fortify_matrix.function <- fortify_matrix.waiver
 
 #' @export
-fortify_matrix.formula <- function(data, ..., data_arg = caller_arg(data),
+fortify_matrix.formula <- function(data, ..., data_arg = NULL,
                                    call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -99,7 +100,7 @@ fortify_matrix.matrix <- fortify_matrix.waiver
 #' @seealso [`tune.matrix()`]
 #' @family fortify_matrix methods
 #' @export
-fortify_matrix.matrix_upset <- function(data, ..., data_arg = caller_arg(data),
+fortify_matrix.matrix_upset <- function(data, ..., data_arg = NULL,
                                         call = NULL) {
     call <- call %||% current_call()
     data <- !is.na(tune_data(data))
@@ -153,8 +154,7 @@ tune.matrix <- function(data, shape = NULL) {
 #' @aliases fortify_matrix.list
 #' @export
 fortify_matrix.list_upset <- function(data, mode = "distinct", ...,
-                                      data_arg = caller_arg(data),
-                                      call = NULL) {
+                                      data_arg = NULL, call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
     mode <- arg_match0(mode, c("distinct", "intersect", "union"),

@@ -5,13 +5,7 @@
 \alias{fortify_matrix.list}
 \title{Build a Matrix for UpSet plot}
 \usage{
-\method{fortify_matrix}{list_upset}(
-  data,
-  mode = "distinct",
-  ...,
-  data_arg = caller_arg(data),
-  call = NULL
-)
+\method{fortify_matrix}{list_upset}(data, mode = "distinct", ..., data_arg = NULL, call = NULL)
 }
 \arguments{
 \item{data}{A list of sets.}

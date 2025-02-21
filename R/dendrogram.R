@@ -180,9 +180,9 @@ fortify_data_frame.dendrogram <- function(data, ...,
                                           branch_gap = NULL,
                                           root = NULL,
                                           double = TRUE,
-                                          data_arg = caller_arg(data),
-                                          call = NULL) {
+                                          data_arg = NULL, call = NULL) {
     call <- call %||% current_call()
+    data_arg <- data_arg %||% "data"
     rlang::check_dots_empty(call = call)
     assert_bool(center, call = call)
     assert_bool(reorder_branches, call = call)

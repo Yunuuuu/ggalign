@@ -16,8 +16,7 @@
 #' - [`fortify_data_frame.dendrogram()`]
 #' - [`fortify_data_frame.phylo()`]
 #' @export
-fortify_data_frame <- function(data, ..., data_arg = caller_arg(data),
-                               call = NULL) {
+fortify_data_frame <- function(data, ..., data_arg = NULL, call = NULL) {
     UseMethod("fortify_data_frame")
 }
 
@@ -29,7 +28,7 @@ fortify_data_frame <- function(data, ..., data_arg = caller_arg(data),
 #' data frame.
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.default <- function(data, ..., data_arg = caller_arg(data),
+fortify_data_frame.default <- function(data, ..., data_arg = NULL,
                                        call = NULL) {
     ggplot2::fortify(model = data, ...)
 }
@@ -45,7 +44,7 @@ fortify_data_frame.default <- function(data, ..., data_arg = caller_arg(data),
 #'
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.character <- function(data, ..., data_arg = caller_arg(data),
+fortify_data_frame.character <- function(data, ..., data_arg = NULL,
                                          call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -67,7 +66,7 @@ fortify_data_frame.logical <- fortify_data_frame.character
 fortify_data_frame.complex <- fortify_data_frame.character
 
 #' @export
-fortify_data_frame.waiver <- function(data, ..., data_arg = caller_arg(data),
+fortify_data_frame.waiver <- function(data, ..., data_arg = NULL,
                                       call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -96,7 +95,7 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 #'
 #' @family fortify_data_frame methods
 #' @export
-fortify_data_frame.matrix <- function(data, ..., data_arg = caller_arg(data),
+fortify_data_frame.matrix <- function(data, ..., data_arg = NULL,
                                       call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)

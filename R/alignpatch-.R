@@ -62,12 +62,14 @@ RIGHT_BORDER <- 7L + 1L
 .TLBR <- c("top", "left", "bottom", "right")
 .tlbr <- c("t", "l", "b", "r")
 
+# position is a single string contains `.tlbr`
 setdiff_position <- function(x, y) gsub(sprintf("[%s]", y), "", x)
 union_position <- function(x, y) paste0(x, gsub(sprintf("[%s]", x), "", y))
 split_position <- function(x) {
     vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 
+# pos is an atomic character 
 setup_pos <- function(x) complete_pos(split_position(x))
 
 complete_pos <- function(x) {

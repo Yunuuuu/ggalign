@@ -6,7 +6,7 @@
 \alias{fortify_data_frame.Matrix}
 \title{Build a data frame}
 \usage{
-\method{fortify_data_frame}{matrix}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_data_frame}{matrix}(data, ..., data_arg = NULL, call = NULL)
 
 \method{fortify_data_frame}{DelayedMatrix}(data, ...)
 

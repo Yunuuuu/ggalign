@@ -4,7 +4,7 @@
 \alias{fortify_matrix.default}
 \title{Build a Matrix}
 \usage{
-\method{fortify_matrix}{default}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_matrix}{default}(data, ..., data_arg = NULL, call = NULL)
 }
 \arguments{
 \item{data}{An object to be converted into a matrix.}

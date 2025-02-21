@@ -11,7 +11,7 @@
   center = FALSE,
   tree_type = NULL,
   tip_pos = NULL,
-  data_arg = caller_arg(data),
+  data_arg = NULL,
   call = NULL
 )
 }

@@ -12,7 +12,7 @@
   ignored_bands = NULL,
   sample_anno = NULL,
   remove_empty_samples = TRUE,
-  data_arg = caller_arg(data),
+  data_arg = NULL,
   call = NULL
 )
 }

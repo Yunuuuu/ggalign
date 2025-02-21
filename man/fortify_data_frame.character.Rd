@@ -7,13 +7,13 @@
 \alias{fortify_data_frame.complex}
 \title{Build a data frame}
 \usage{
-\method{fortify_data_frame}{character}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_data_frame}{character}(data, ..., data_arg = NULL, call = NULL)
 
-\method{fortify_data_frame}{numeric}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_data_frame}{numeric}(data, ..., data_arg = NULL, call = NULL)
 
-\method{fortify_data_frame}{logical}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_data_frame}{logical}(data, ..., data_arg = NULL, call = NULL)
 
-\method{fortify_data_frame}{complex}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_data_frame}{complex}(data, ..., data_arg = NULL, call = NULL)
 }
 \arguments{
 \item{data}{An object to be converted to a data frame.}

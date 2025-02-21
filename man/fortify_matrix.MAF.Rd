@@ -15,7 +15,7 @@
   collapse_vars = TRUE,
   use_syn = TRUE,
   missing_genes = "error",
-  data_arg = caller_arg(data),
+  data_arg = NULL,
   call = NULL
 )
 
@@ -25,7 +25,7 @@
   pathdb = "smgbp",
   remove_empty_pathways = TRUE,
   remove_empty_samples = TRUE,
-  data_arg = caller_arg(data),
+  data_arg = NULL,
   call = NULL
 )
 }

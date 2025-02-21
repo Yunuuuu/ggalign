@@ -45,7 +45,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_samples = TRUE,
                                collapse_vars = TRUE,
                                use_syn = TRUE, missing_genes = "error",
-                               data_arg = caller_arg(data),
+                               data_arg = NULL,
                                call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -285,7 +285,7 @@ tune.MAF <- function(data, shape = NULL) {
 fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
                                         remove_empty_pathways = TRUE,
                                         remove_empty_samples = TRUE,
-                                        data_arg = caller_arg(data),
+                                        data_arg = NULL,
                                         call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
@@ -438,7 +438,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
 fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                                   ignored_bands = NULL, sample_anno = NULL,
                                   remove_empty_samples = TRUE,
-                                  data_arg = caller_arg(data),
+                                  data_arg = NULL,
                                   call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)

@@ -4,7 +4,7 @@
 \alias{fortify_matrix.matrix}
 \title{Build a matrix from a matrix}
 \usage{
-\method{fortify_matrix}{matrix}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_matrix}{matrix}(data, ..., data_arg = NULL, call = NULL)
 }
 \arguments{
 \item{data}{A matrix object.}

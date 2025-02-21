@@ -238,9 +238,9 @@ fortify_matrix.phylo <- function(data, ..., data_arg = caller_arg(data),
 fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                                      center = FALSE,
                                      tree_type = NULL, tip_pos = NULL,
-                                     data_arg = caller_arg(data),
-                                     call = NULL) {
+                                     data_arg = NULL, call = NULL) {
     call <- call %||% current_call()
+    data_arg <- data_arg %||% "data"
     rlang::check_dots_empty(call = call)
     type <- arg_match0(type, c("rectangle", "triangle"))
     rectangle <- type == "rectangle"

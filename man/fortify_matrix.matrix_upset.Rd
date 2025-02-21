@@ -4,7 +4,7 @@
 \alias{fortify_matrix.matrix_upset}
 \title{Build a Matrix for UpSet plot}
 \usage{
-\method{fortify_matrix}{matrix_upset}(data, ..., data_arg = caller_arg(data), call = NULL)
+\method{fortify_matrix}{matrix_upset}(data, ..., data_arg = NULL, call = NULL)
 }
 \arguments{
 \item{data}{A matrix where each row represents an element, and each column
