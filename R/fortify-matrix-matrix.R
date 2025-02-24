@@ -145,14 +145,14 @@ fortify_matrix.matrix_oncoplot <- function(data, ...,
         gene_summary <- vec_slice(gene_summary, index)
     }
 
-    # convert data into a matrix
+    # filter empty genes
     if (remove_empty_genes) {
         keep <- rowSums(alt) > 0L
         data <- vec_slice(data, keep)
         gene_summary <- vec_slice(gene_summary, keep)
     }
 
-    # filter samples when necessary
+    # filter empty samples
     if (remove_empty_samples) {
         keep <- colSums(alt) > 0L
         data <- data[, keep, drop = FALSE]
