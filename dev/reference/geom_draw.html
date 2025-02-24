@@ -71,12 +71,8 @@
 
 <dl><dt id="arg-draw">draw<a class="anchor" aria-label="anchor" href="#arg-draw"></a></dt>
 <dd><p>Either a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a> object or a function (can be
-purrr-style) that accepts at least three arguments (<code>data</code>, <code>panel_params</code>
-and <code>coord</code>) and returns a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a>.</p>
-<p>When <code>draw</code> is a function, it is used as the <code>draw_group</code>/<code>draw_panel</code>
-function in a <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">Geom</a> <code>ggproto</code> object. You should always
-call <code>coord$transform(data, panel_params)</code> inside the function <code>draw</code> to
-obtain transformed data in the plot scales.</p></dd>
+purrr-style) that accepts at least one argument (a data frame of
+transformed coordinates) and returns a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a>.</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
