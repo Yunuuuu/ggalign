@@ -16,6 +16,7 @@
 #' @return A matrix.
 #' @seealso
 #' - [`fortify_matrix.default()`]
+#' - [`fortify_matrix.matrix_oncoplot()`]
 #' - [`fortify_matrix.MAF()`]
 #' - [`fortify_matrix.GISTIC()`]
 #' - [`fortify_matrix.list_upset()`]
