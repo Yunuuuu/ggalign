@@ -146,7 +146,6 @@ reference:
   - layer_order
   - raster_magick
   - geom_draw
-  - draw_key_draw
   - geom_draw2
   - scale_draw_manual
   - draw_key_draw2
