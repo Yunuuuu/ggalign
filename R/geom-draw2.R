@@ -75,6 +75,7 @@ geom_draw2 <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
+#' @importFrom methods formalArgs
 call_draw2 <- function(draw, data, params) {
     args <- formalArgs(draw)
     if (any(args == "...")) {
@@ -132,38 +133,37 @@ draw_key_draw2 <- function(data, params, size) {
     }
 }
 
-combine_aes <- function(...) {
-    ans <- ...elt(1L)
-    for (i in 2:...length()) {
-        mapping <- ...elt(i)
-        for (nm in names(mapping)) {
-            ans[[nm]] <- .subset2(mapping, nm)
-        }
-    }
-    ans
-}
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
 #' @importFrom grid gList
 GeomDraw2 <- ggproto(
     "GeomDraw2",
-    ggplot2::GeomTile, # will respect width and height
+    ggplot2::Geom, # will respect width and height
     required_aes = "draw",
-    default_aes = combine_aes(
-        aes(x = 0.5, y = 0.5),
-        ggplot2::GeomPoint$default_aes,
-        ggplot2::GeomSegment$default_aes
+    default_aes = aes(
+        x = 0.5, y = 0.5, shape = 19, size = 1.5,
+        colour = "black", fill = NA, alpha = NA,
+        stroke = 0.5, linewidth = 0.5, linetype = 1
     ),
+    setup_data = ggplot2::GeomTile$setup_data,
     draw_panel = function(data, panel_params, coord, params) {
         coords <- coord$transform(data, panel_params)
 
-        # restore width and height
-        coords$width <- coords$xmax - coords$xmin
-        coords$height <- coords$ymax - coords$ymin
-        coords$color <- coords$colour
+        if (!is.null(coords$colour) && is.null(coords$color)) {
+            coords$color <- coords$colour
+        }
+        if (!is.null(coords$color) && is.null(coords$colour)) {
+            coords$colour <- coords$color
+        }
 
         # restore width and height
+        if (!is.null(coords$xmin) && !is.null(coords$xmax)) {
+            coords$width <- coords$xmax - coords$xmin
+        }
+        if (!is.null(coords$ymin) && !is.null(coords$ymax)) {
+            coords$height <- coords$ymax - coords$ymin
+        }
+
         indices <- vec_group_loc(.subset2(coords, "draw"))
 
         # reordering by drawing order
@@ -222,7 +222,8 @@ scale_draw_manual <- function(..., values, aesthetics = "draw",
 
 # `draw` should be provided manually
 scale_draw_discrete <- function(name = waiver(), ...) {
-    cli_abort(
-        "You must provide {.fn scale_draw_manual} to use {.fn geom_draw2}"
-    )
+    cli_abort(paste(
+        "You must provide {.fn scale_draw_manual}",
+        "to use {.field draw} aesthetic"
+    ))
 }

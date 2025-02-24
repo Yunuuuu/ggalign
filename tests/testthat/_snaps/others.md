@@ -20,5 +20,5 @@
     Problem while computing aesthetics.
     i Error occurred in the 1st layer.
     Caused by error in `scale_f()`:
-    ! You must provide `scale_draw_manual()` to use `geom_draw2()`
+    ! You must provide `scale_draw_manual()` to use draw aesthetic
 
