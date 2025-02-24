@@ -19,13 +19,8 @@ geom_draw(
 }
 \arguments{
 \item{draw}{Either a \link[grid:grid.grob]{grob} object or a function (can be
-purrr-style) that accepts at least three arguments (\code{data}, \code{panel_params}
-and \code{coord}) and returns a \link[grid:grid.grob]{grob}.
-
-When \code{draw} is a function, it is used as the \code{draw_group}/\code{draw_panel}
-function in a \link[ggplot2:ggplot2-ggproto]{Geom} \code{ggproto} object. You should always
-call \code{coord$transform(data, panel_params)} inside the function \code{draw} to
-obtain transformed data in the plot scales.}
+purrr-style) that accepts at least one argument (a data frame of
+transformed coordinates) and returns a \link[grid:grid.grob]{grob}.}
 
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping

@@ -3,13 +3,8 @@
 #' Draw a ggplot2 layer using a grob or a function.
 #'
 #' @param draw Either a [grob][grid::grob] object or a function (can be
-#'   purrr-style) that accepts at least three arguments (`data`, `panel_params`
-#'   and `coord`) and returns a [grob][grid::grob].
-#'
-#'   When `draw` is a function, it is used as the `draw_group`/`draw_panel`
-#'   function in a [Geom][ggplot2::Geom] `ggproto` object. You should always
-#'   call `coord$transform(data, panel_params)` inside the function `draw` to
-#'   obtain transformed data in the plot scales.
+#'   purrr-style) that accepts at least one argument (a data frame of
+#'   transformed coordinates) and returns a [grob][grid::grob].
 #'
 #' @param type A single string of `r oxford_or(c("group", "panel"))`, `"group"`
 #'   draws geoms with `draw_group`, which displays multiple observations as one
@@ -37,7 +32,7 @@
 #' ggplot(data.frame(x = 1, y = 2)) +
 #'     geom_draw(text)
 #' @importFrom rlang list2 arg_match0
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto aes
 #' @export
 geom_draw <- function(draw, mapping = NULL, data = NULL,
                       type = "group", stat = "identity",
@@ -45,20 +40,40 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
                       na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
     type <- arg_match0(type, c("group", "panel"))
     draw <- allow_lambda(draw)
+    if (!is.grob(draw) && !is.gList(draw)) draw <- rlang::as_function(draw)
+    default_aes <- aes(
+        x = 0.5, y = 0.5,
+        shape = 19, colour = "black",
+        size = 1.5, fill = NA, alpha = NA,
+        stroke = 0.5, linewidth = 0.5, linetype = 1
+    )
+    setup_data <- function(self, data, params) {
+        data$x <- data$x %||% default_aes$x
+        data$y <- data$y %||% default_aes$y
+        ggplot2::GeomTile$setup_data(data, params)
+    }
     ggplot2::layer(
         data = data,
         mapping = mapping,
         stat = stat,
         geom = switch(type,
-            panel = ggproto("GeomDraw",
+            panel = ggproto(
+                "GeomDraw",
                 ggplot2::Geom,
+                default_aes = default_aes,
+                # GeomTile will respect width and height
+                setup_data = setup_data,
                 draw_panel = draw_fn,
-                draw_key = draw_key_draw
+                draw_key = ggplot2::draw_key_blank
             ),
-            group = ggproto("GeomDraw",
+            group = ggproto(
+                "GeomDraw",
                 ggplot2::Geom,
+                default_aes = default_aes,
+                # GeomTile will respect width and height
+                setup_data = setup_data,
                 draw_group = draw_fn,
-                draw_key = draw_key_draw
+                draw_key = ggplot2::draw_key_blank
             )
         ),
         position = position,
@@ -69,41 +84,28 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
 }
 
 draw_fn <- function(data, panel_params, coord, draw, params) {
-    if (is.grob(draw) || is.gList(draw)) {
-        draw
-    } else {
-        draw <- rlang::as_function(draw)
+    if (is.function(draw)) {
+        data <- coord$transform(data, panel_params)
+        # restore colour
+        if (!is.null(data$colour) && is.null(data$color)) {
+            data$color <- data$colour
+        }
+        if (!is.null(data$color) && is.null(data$colour)) {
+            data$colour <- data$color
+        }
 
         # restore width and height
-        data$color <- data$colour
-        inject(draw(data, panel_params, coord, !!!params))
+        if (!is.null(data$xmin) && !is.null(data$xmax)) {
+            data$width <- data$xmax - data$xmin
+        }
+        if (!is.null(data$ymin) && !is.null(data$ymax)) {
+            data$height <- data$ymax - data$ymin
+        }
+        draw <- inject(draw(data, !!!params))
     }
-}
-
-#' @inherit ggplot2::draw_key_point
-#' @description
-#' Each geom has an associated function that draws the key when the geom needs
-#' to be displayed in a legend. These functions are called `draw_key_*()`,
-#' where `*` stands for the name of the respective key glyph. The key glyphs can
-#' be customized for individual geoms by providing a geom with the `key_glyph`
-#' argument. The `draw_key_draw` function provides this interface for custom key
-#' glyphs used with [`geom_draw()`].
-#'
-#' @importFrom ggplot2 zeroGrob
-#' @importFrom grid gTree
-#' @export
-draw_key_draw <- function(data, params, size) {
-    ans <- try_fetch(
-        draw_fn(data,
-            panel_params = NULL, coord = NULL,
-            draw = .subset2(params, "draw"),
-            params = .subset2(params, "params")
-        ),
-        error = function(cnd) NULL
-    )
-    if (is.gList(ans)) ans <- gTree(children = ans)
-    if (is.grob(ans)) {
-        ans
+    if (is.gList(draw)) draw <- gTree(children = draw)
+    if (is.grob(draw)) {
+        draw
     } else {
         zeroGrob()
     }
