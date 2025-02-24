@@ -15,8 +15,8 @@
 improve messages. Not used by the user.}
 
 \item{call}{The execution environment where \code{data} and other arguments for
-the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
-Developers can use it to improve messages. Not used by the user.}
+the method are collected. Developers can use it to improve messages. Not
+used by the user.}
 }
 \value{
 A one-column matrix where the tip labels are the values, and the row
@@ -35,6 +35,7 @@ Other fortify_matrix methods:
 \code{\link{fortify_matrix.default}()},
 \code{\link{fortify_matrix.list_upset}()},
 \code{\link{fortify_matrix.matrix}()},
+\code{\link{fortify_matrix.matrix_oncoplot}()},
 \code{\link{fortify_matrix.matrix_upset}()}
 }
 \concept{fortify_matrix methods}

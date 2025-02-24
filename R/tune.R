@@ -9,9 +9,9 @@
 #' completely different approaches to be fortified. The `tune` function acts as
 #' a helper to create a new class tailored for these objects.
 #' @seealso
-#' - [`tune.MAF()`]
-#' - [`tune.list()`]
 #' - [`tune.matrix()`]
+#' - [`tune.list()`]
+#' - [`tune.MAF()`]
 #' @export
 tune <- function(data, shape = NULL) UseMethod("tune")
 

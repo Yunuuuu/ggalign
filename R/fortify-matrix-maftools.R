@@ -1,4 +1,4 @@
-#' Build a matrix from a maftools object
+#' Build a Matrix for OncoPrint
 #'
 #' @description
 #' Convert `MAF` object to a matrix:
@@ -31,8 +31,8 @@
 #'    `maftools::getSampleSummary()` for details.
 #'  - `sample_anno`: sample clinical informations. See
 #'    `maftools::getClinicalData()` for details.
-#'  - `n_genes`: Total of genes.
-#'  - `n_samples`: Total of samples.
+#'  - `n_genes`: Total number of genes.
+#'  - `n_samples`: Total number of samples.
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
 #'    summary. See `maftools::titv()` for details.
 #'

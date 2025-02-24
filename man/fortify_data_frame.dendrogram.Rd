@@ -65,8 +65,8 @@ horizontal lines will be repeated for each branch that the segment spans. If
 improve messages. Not used by the user.}
 
 \item{call}{The execution environment where \code{data} and other arguments for
-the method are collected, e.g., \code{\link[rlang:stack]{caller_env()}}.
-Developers can use it to improve messages. Not used by the user.}
+the method are collected. Developers can use it to improve messages. Not
+used by the user.}
 }
 \value{
 A \verb{data frame} with the node coordinates:

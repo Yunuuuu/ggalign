@@ -23,8 +23,8 @@ a helper to create a new class tailored for these objects.
 }
 \seealso{
 \itemize{
-\item \code{\link[=tune.MAF]{tune.MAF()}}
-\item \code{\link[=tune.list]{tune.list()}}
 \item \code{\link[=tune.matrix]{tune.matrix()}}
+\item \code{\link[=tune.list]{tune.list()}}
+\item \code{\link[=tune.MAF]{tune.MAF()}}
 }
 }
