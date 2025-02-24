@@ -41,7 +41,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Convert the shape of a matrix for fortify method</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-matrix.R" class="external-link"><code>R/fortify-matrix.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-matrix-matrix.R" class="external-link"><code>R/fortify-matrix-matrix.R</code></a></small>
       <div class="d-none name"><code>tune.matrix.Rd</code></div>
     </div>
 
@@ -52,7 +52,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'matrix'</span></span>
-<span><span class="fu"><a href="tune.html">tune</a></span><span class="op">(</span><span class="va">data</span>, shape <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="tune.html">tune</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">shape</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,7 +64,7 @@
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
-<dd><p>Not used currently.</p></dd>
+<dd><p>A string of <code>"upset"</code> or <code>"oncoplot"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -72,6 +72,7 @@
     <div class="dont-index">
 <ul><li><p><code><a href="fortify_matrix.matrix.html">fortify_matrix.matrix()</a></code></p></li>
 <li><p><code><a href="fortify_matrix.matrix_upset.html">fortify_matrix.matrix_upset()</a></code></p></li>
+<li><p><code><a href="fortify_matrix.matrix_oncoplot.html">fortify_matrix.matrix_oncoplot()</a></code></p></li>
 </ul><p>Other tune methods:
 <code><a href="tune.MAF.html">tune.MAF</a>()</code>,
 <code><a href="tune.list.html">tune.list</a>()</code></p></div>
