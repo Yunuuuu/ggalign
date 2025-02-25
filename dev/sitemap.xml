@@ -31,7 +31,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/cross_none.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/dot-link_draw.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/dot-mark_draw.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/draw_key_draw2.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/draw_key_gshape.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/element_curve.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/element_polygon.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/element_vec.html</loc></url>
@@ -52,7 +52,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/fortify_matrix.phylo.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/free.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_draw.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_draw2.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_gshape.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_pie.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_rect3d.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/geom_subrect.html</loc></url>
@@ -113,7 +113,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/raster_magick_interal.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/read_example.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/reexports.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scale_draw_manual.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scale_gshape_manual.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_data.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/dev/reference/scheme_theme.html</loc></url>
