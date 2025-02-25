@@ -97,6 +97,7 @@ Collate:
     'ggplot-utils.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'
+    'import-standalone-pkg.R'
     'import-standalone-purrr.R'
     'import-standalone-tibble.R'
     'layer-order.R'

@@ -112,9 +112,6 @@ override_call <- function(call = NULL) {
     )
 }
 
-#' @importFrom utils packageName
-pkg_nm <- function() packageName(topenv(environment()))
-
 # library(data.table)
 # library(vctrs)
 # `%nest_unique%` <- function(x, y) {
