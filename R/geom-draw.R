@@ -41,17 +41,7 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
     type <- arg_match0(type, c("group", "panel"))
     draw <- allow_lambda(draw)
     if (!is.grob(draw) && !is.gList(draw)) draw <- rlang::as_function(draw)
-    default_aes <- aes(
-        x = 0.5, y = 0.5,
-        shape = 19, colour = "black",
-        size = 1.5, fill = NA, alpha = NA,
-        stroke = 0.5, linewidth = 0.5, linetype = 1
-    )
-    setup_data <- function(self, data, params) {
-        data$x <- data$x %||% default_aes$x
-        data$y <- data$y %||% default_aes$y
-        ggplot2::GeomTile$setup_data(data, params)
-    }
+    dots <- list2(...)
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -60,30 +50,35 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
             panel = ggproto(
                 "GeomDraw",
                 ggplot2::Geom,
-                default_aes = default_aes,
-                # GeomTile will respect width and height
-                setup_data = setup_data,
-                draw_panel = draw_fn,
+                default_aes = GeomGshape$default_aes,
+                setup_data = draw_setup_data,
+                draw_panel = draw_geom_draw,
                 draw_key = ggplot2::draw_key_blank
             ),
             group = ggproto(
                 "GeomDraw",
                 ggplot2::Geom,
-                default_aes = default_aes,
-                # GeomTile will respect width and height
-                setup_data = setup_data,
-                draw_group = draw_fn,
+                default_aes = GeomGshape$default_aes,
+                setup_data = draw_setup_data,
+                draw_group = draw_geom_draw,
                 draw_key = ggplot2::draw_key_blank
             )
         ),
         position = position,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, draw = draw, params = list2(...))
+        params = c(list(na.rm = na.rm, draw = draw, .__draw_dots = dots), dots)
     )
 }
 
-draw_fn <- function(data, panel_params, coord, draw, params) {
+# GeomTile will respect width and height
+draw_setup_data <- function(self, data, params) {
+    data$x <- data$x %||% 0.5
+    data$y <- data$y %||% 0.5
+    ggplot2::GeomTile$setup_data(data, params)
+}
+
+draw_geom_draw <- function(data, panel_params, coord, draw, .__draw_dots) {
     if (is.function(draw)) {
         data <- coord$transform(data, panel_params)
         # restore colour
@@ -101,12 +96,6 @@ draw_fn <- function(data, panel_params, coord, draw, params) {
         if (!is.null(data$ymin) && !is.null(data$ymax)) {
             data$height <- data$ymax - data$ymin
         }
-        draw <- inject(draw(data, !!!params))
     }
-    if (is.gList(draw)) draw <- gTree(children = draw)
-    if (is.grob(draw)) {
-        draw
-    } else {
-        zeroGrob()
-    }
+    make_gshape(draw, data, .__draw_dots)
 }

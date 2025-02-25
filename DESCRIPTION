@@ -83,7 +83,7 @@ Collate:
     'fortify-matrix-maftools.R'
     'fortify-matrix-matrix.R'
     'geom-draw.R'
-    'geom-draw2.R'
+    'geom-gshape.R'
     'geom-pie.R'
     'geom-subrect.R'
     'geom-tile3d.R'
