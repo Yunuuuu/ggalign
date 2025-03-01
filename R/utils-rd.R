@@ -34,14 +34,14 @@ rd_gg_aesthetics <- function(...) {
 rd_collect_family <- function(family,
                               section_title = paste(family, "family"),
                               code_style = TRUE) {
-    # get blocks objects from the draw function
+    # get blocks objects from the roxygenize function
     blocks <- NULL
     pos <- sys.nframe()
     while (pos > 0L) {
         if (!is.null(call <- sys.call(-pos))) {
             fn <- eval(.subset2(call, 1L), sys.frame(-(pos + 1L)))
             env <- sys.frame(-pos)
-            if (identical(fn, getFromNamespace("roxygenise", "roxygen2")) &&
+            if (identical(fn, getFromNamespace("roxygenize", "roxygen2")) &&
                 exists("blocks", envir = env, inherits = FALSE)) {
                 blocks <- get("blocks", envir = env, inherits = FALSE)
                 break
