@@ -26,12 +26,14 @@ A data frame.
 
 This function converts various objects to a data frame.
 }
-\seealso{
+\section{\code{fortify_data_frame} method collections}{
+
 \itemize{
-\item \code{\link[=fortify_data_frame.default]{fortify_data_frame.default()}}
-\item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}/\code{\link[=fortify_data_frame.numeric]{fortify_data_frame.numeric()}}
-\item \code{\link[=fortify_data_frame.matrix]{fortify_data_frame.matrix()}}
-\item \code{\link[=fortify_data_frame.dendrogram]{fortify_data_frame.dendrogram()}}
 \item \code{\link[=fortify_data_frame.phylo]{fortify_data_frame.phylo()}}
+\item \code{\link[=fortify_data_frame.dendrogram]{fortify_data_frame.dendrogram()}}
+\item \code{\link[=fortify_data_frame.default]{fortify_data_frame.default()}}
+\item \code{\link[=fortify_data_frame.character]{fortify_data_frame.character()}}
+\item \code{\link[=fortify_data_frame.matrix]{fortify_data_frame.matrix()}}
 }
 }
+

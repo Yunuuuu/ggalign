@@ -8,10 +8,7 @@
 #' support for transforming objects. However, some objects may require two
 #' completely different approaches to be fortified. The `tune` function acts as
 #' a helper to create a new class tailored for these objects.
-#' @seealso
-#' - [`tune.matrix()`]
-#' - [`tune.list()`]
-#' - [`tune.MAF()`]
+#' @eval rd_collect_family("tune", "`tune` method collections")
 #' @export
 tune <- function(data, shape = NULL) UseMethod("tune")
 

@@ -18,20 +18,21 @@ A \code{\link[grid:grid.grob]{grob}} object.
 The \code{patch()} function is used by \code{\link[=ggwrap]{ggwrap()}} and \code{\link[=inset]{inset()}} to convert
 objects into a \code{\link[grid:grid.grob]{grob}}.
 }
-\seealso{
+\section{\code{patch} method collections}{
+
 \itemize{
-\item \code{\link[=patch.grob]{patch.grob()}} / \code{\link[=patch.gList]{patch.gList()}}
+\item \code{\link[=patch.grob]{patch.grob()}}
 \item \code{\link[=patch.ggplot]{patch.ggplot()}}
 \item \code{\link[=patch.patch_ggplot]{patch.patch_ggplot()}}
+\item \code{\link[=patch.alignpatches]{patch.alignpatches()}}
 \item \code{\link[=patch.patchwork]{patch.patchwork()}}
 \item \code{\link[=patch.patch]{patch.patch()}}
-\item \code{\link[=patch.trellis]{patch.trellis()}}
-\item \code{\link[=patch.formula]{patch.formula()}} / \code{\link[=patch.function]{patch.function()}}
+\item \code{\link[=patch.formula]{patch.formula()}}
 \item \code{\link[=patch.recordedplot]{patch.recordedplot()}}
+\item \code{\link[=patch.trellis]{patch.trellis()}}
 \item \code{\link[=patch.Heatmap]{patch.Heatmap()}}
-\item \code{\link[=patch.HeatmapList]{patch.HeatmapList()}}
-\item \code{\link[=patch.HeatmapAnnotation]{patch.HeatmapAnnotation()}}
 \item \code{\link[=patch.pheatmap]{patch.pheatmap()}}
 }
 }
+
 \keyword{internal}

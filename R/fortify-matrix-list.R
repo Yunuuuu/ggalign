@@ -3,7 +3,7 @@
 #' @param data A list
 #' @param shape Not used currently.
 #' @seealso [`fortify_matrix.list_upset()`]
-#' @family tune methods
+#' @family tune
 #' @export
 tune.list <- function(data, shape = NULL) {
     if (!is.null(shape)) {

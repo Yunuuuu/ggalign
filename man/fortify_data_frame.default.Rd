@@ -18,9 +18,6 @@ improve messages. Not used by the user.}
 the method are collected. Developers can use it to improve messages. Not
 used by the user.}
 }
-\value{
-A data frame.
-}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

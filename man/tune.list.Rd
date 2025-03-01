@@ -17,8 +17,8 @@ Convert the shape of a list for fortify method
 \seealso{
 \code{\link[=fortify_matrix.list_upset]{fortify_matrix.list_upset()}}
 
-Other tune methods: 
+Other tune: 
 \code{\link{tune.MAF}()},
 \code{\link{tune.matrix}()}
 }
-\concept{tune methods}
+\concept{tune}

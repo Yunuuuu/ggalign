@@ -66,19 +66,7 @@ ggplot_add.patch_inset <- function(object, plot, object_name) {
 #' @param x An object to be converted into a [`grob`][grid::grob].
 #' @param ... Additional arguments passed to specific methods.
 #' @return A [`grob`][grid::grob] object.
-#' @seealso
-#' - [`patch.grob()`] / [`patch.gList()`]
-#' - [`patch.ggplot()`]
-#' - [`patch.patch_ggplot()`]
-#' - [`patch.patchwork()`]
-#' - [`patch.patch()`]
-#' - [`patch.trellis()`]
-#' - [`patch.formula()`] / [`patch.function()`]
-#' - [`patch.recordedplot()`]
-#' - [`patch.Heatmap()`]
-#' - [`patch.HeatmapList()`]
-#' - [`patch.HeatmapAnnotation()`]
-#' - [`patch.pheatmap()`]
+#' @eval rd_collect_family("patch", "`patch` method collections")
 #' @export
 #' @keywords internal
 patch <- function(x, ...) {
@@ -94,7 +82,7 @@ patch.default <- function(x, ...) {
 #' @inherit patch title description return
 #' @inheritParams patch
 #' @param ... Not used currently.
-#' @family patch methods
+#' @family patch
 #' @export
 patch.grob <- function(x, ...) {
     rlang::check_dots_empty()
@@ -112,7 +100,7 @@ patch.gList <- function(x, ...) {
 #' @importFrom ggplot2 ggplotGrob
 #' @inherit patch.grob
 #' @seealso [ggplot][ggplot2::ggplot]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.ggplot <- function(x, ...) {
     ggplotGrob(x, ...)
@@ -123,7 +111,7 @@ patch.ggplot <- function(x, ...) {
 #' - [`patch_titles()`]
 #' - [`inset()`]
 #' - [`ggwrap()`]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.patch_ggplot <- function(x, ...) {
     ggalignGrob(x, ...)
@@ -131,7 +119,7 @@ patch.patch_ggplot <- function(x, ...) {
 
 #' @inherit patch.grob
 #' @seealso [`alignpatches`][align_plots]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.alignpatches <- function(x, ...) {
     ggalignGrob(x, ...)
@@ -139,7 +127,7 @@ patch.alignpatches <- function(x, ...) {
 
 #' @inherit patch.grob
 #' @seealso [`patchwork`][patchwork::patchworkGrob]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.patchwork <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patchwork")
@@ -148,7 +136,7 @@ patch.patchwork <- function(x, ...) {
 
 #' @inherit patch.grob
 #' @seealso [`patch`][patchwork::patchGrob]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.patch <- function(x, ...) {
     rlang::check_installed("patchwork", "to make grob from patch")
@@ -159,7 +147,7 @@ patch.patch <- function(x, ...) {
 #' @param ... Graphical Parameters passed on to [par()][graphics::par].
 #' @inheritParams gridGraphics::echoGrob
 #' @seealso [`plot()`]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.formula <- function(x, ..., device = NULL, name = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from base plot")
@@ -198,7 +186,7 @@ patch.function <- function(x, ..., device = NULL, name = NULL) {
 #' @inherit patch.grob
 #' @inheritParams gridGraphics::echoGrob
 #' @seealso [`recordPlot()`][grDevices::recordPlot]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.recordedplot <- function(x, ..., device = NULL) {
     rlang::check_installed("gridGraphics", "to make grob from recordedplot")
@@ -220,7 +208,7 @@ offscreen <- function(width, height) {
 #' @inheritDotParams grid::grid.grabExpr -expr -device
 #' @inheritParams grid::grid.grabExpr
 #' @seealso [`trellis`][lattice::trellis.object]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.trellis <- function(x, ..., device = NULL) {
     grid::grid.grabExpr(expr = print(x), ..., device = device %||% offscreen)
@@ -232,7 +220,7 @@ patch.trellis <- function(x, ..., device = NULL) {
 #' @seealso
 #'  - [`Heatmap()`][ComplexHeatmap::Heatmap]
 #'  - [`HeatmapAnnotation()`][ComplexHeatmap::HeatmapAnnotation]
-#' @family patch methods
+#' @family patch
 #' @importFrom utils getFromNamespace
 #' @export
 patch.Heatmap <- function(x, ..., device = NULL) {
@@ -257,7 +245,7 @@ patch.HeatmapAnnotation <- patch.HeatmapList
 
 #' @inherit patch.grob
 #' @seealso [`pheatmap()`][pheatmap::pheatmap]
-#' @family patch methods
+#' @family patch
 #' @export
 patch.pheatmap <- function(x, ...) {
     rlang::check_dots_empty()

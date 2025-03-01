@@ -17,8 +17,8 @@ Convert the shape of a MAF for fortify method
 \seealso{
 \code{\link[=fortify_matrix.MAF_pathways]{fortify_matrix.MAF_pathways()}}
 
-Other tune methods: 
+Other tune: 
 \code{\link{tune.list}()},
 \code{\link{tune.matrix}()}
 }
-\concept{tune methods}
+\concept{tune}

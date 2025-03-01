@@ -14,13 +14,8 @@
 #' the method are collected. Developers can use it to improve messages. Not
 #' used by the user.
 #' @return A matrix.
-#' @seealso
-#' - [`fortify_matrix.default()`]
-#' - [`fortify_matrix.matrix_oncoplot()`]
-#' - [`fortify_matrix.MAF()`]
-#' - [`fortify_matrix.GISTIC()`]
-#' - [`fortify_matrix.list_upset()`]
-#' - [`fortify_matrix.matrix_upset()`]
+#' @eval
+#' rd_collect_family("fortify_matrix", "`fortify_matrix` method collections")
 #' @export
 fortify_matrix <- function(data, ..., data_arg = NULL,
                            call = NULL) {

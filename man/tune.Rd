@@ -21,10 +21,12 @@ support for transforming objects. However, some objects may require two
 completely different approaches to be fortified. The \code{tune} function acts as
 a helper to create a new class tailored for these objects.
 }
-\seealso{
+\section{\code{tune} method collections}{
+
 \itemize{
-\item \code{\link[=tune.matrix]{tune.matrix()}}
 \item \code{\link[=tune.list]{tune.list()}}
 \item \code{\link[=tune.MAF]{tune.MAF()}}
+\item \code{\link[=tune.matrix]{tune.matrix()}}
 }
 }
+

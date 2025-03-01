@@ -9,18 +9,16 @@
 #' @param ... Arguments passed to methods.
 #' @inheritParams fortify_matrix
 #' @return A data frame.
-#' @seealso
-#' - [`fortify_data_frame.default()`]
-#' - [`fortify_data_frame.character()`]/[`fortify_data_frame.numeric()`]
-#' - [`fortify_data_frame.matrix()`]
-#' - [`fortify_data_frame.dendrogram()`]
-#' - [`fortify_data_frame.phylo()`]
+#' @eval
+#' rd_collect_family("fortify_data_frame",
+#'     "`fortify_data_frame` method collections"
+#' )
 #' @export
 fortify_data_frame <- function(data, ..., data_arg = NULL, call = NULL) {
     UseMethod("fortify_data_frame")
 }
 
-#' @inherit fortify_data_frame
+#' @inherit fortify_data_frame title description
 #' @param ... Additional arguments passed to [`fortify()`][ggplot2::fortify].
 #' @inheritParams fortify_data_frame
 #' @details

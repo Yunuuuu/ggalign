@@ -21,8 +21,8 @@ Convert the shape of a matrix for fortify method
 \item \code{\link[=fortify_matrix.matrix_oncoplot]{fortify_matrix.matrix_oncoplot()}}
 }
 
-Other tune methods: 
+Other tune: 
 \code{\link{tune.MAF}()},
 \code{\link{tune.list}()}
 }
-\concept{tune methods}
+\concept{tune}

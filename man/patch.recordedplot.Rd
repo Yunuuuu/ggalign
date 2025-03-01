@@ -28,7 +28,7 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \seealso{
 \code{\link[grDevices:recordplot]{recordPlot()}}
 
-Other patch methods: 
+Other \code{\link[=patch]{patch()}} methods:
 \code{\link{patch.Heatmap}()},
 \code{\link{patch.alignpatches}()},
 \code{\link{patch.formula}()},
@@ -40,4 +40,4 @@ Other patch methods:
 \code{\link{patch.pheatmap}()},
 \code{\link{patch.trellis}()}
 }
-\concept{patch methods}
+\concept{patch}

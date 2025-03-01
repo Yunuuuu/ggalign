@@ -258,7 +258,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 #' @param data A [`MAF`][maftools::read.maf] object.
 #' @param shape Not used currently.
 #' @seealso [`fortify_matrix.MAF_pathways()`]
-#' @family tune methods
+#' @family tune
 #' @export
 tune.MAF <- function(data, shape = NULL) {
     if (!is.null(shape)) {
