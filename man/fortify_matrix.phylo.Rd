@@ -29,7 +29,7 @@ possible to add \code{\link[=align_phylo]{align_phylo()}} to the stack independe
 \code{\link[=align_phylo]{align_phylo()}} requires the layout to have labels.
 }
 \seealso{
-Other fortify_matrix methods: 
+Other \code{\link[=fortify_matrix]{fortify_matrix()}} methods:
 \code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.MAF}()},
 \code{\link{fortify_matrix.default}()},
@@ -38,4 +38,4 @@ Other fortify_matrix methods:
 \code{\link{fortify_matrix.matrix_oncoplot}()},
 \code{\link{fortify_matrix.matrix_upset}()}
 }
-\concept{fortify_matrix methods}
+\concept{fortify_matrix}

@@ -60,7 +60,7 @@ helps convert \code{matrix} object to a \code{matrix_oncoplot} object.
 \seealso{
 \code{\link[=tune.matrix]{tune.matrix()}}
 
-Other fortify_matrix methods: 
+Other \code{\link[=fortify_matrix]{fortify_matrix()}} methods:
 \code{\link{fortify_matrix.GISTIC}()},
 \code{\link{fortify_matrix.MAF}()},
 \code{\link{fortify_matrix.default}()},
@@ -69,4 +69,4 @@ Other fortify_matrix methods:
 \code{\link{fortify_matrix.matrix_upset}()},
 \code{\link{fortify_matrix.phylo}()}
 }
-\concept{fortify_matrix methods}
+\concept{fortify_matrix}

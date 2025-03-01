@@ -26,7 +26,7 @@ fortify_data_frame <- function(data, ..., data_arg = NULL, call = NULL) {
 #' @details
 #' By default, it calls [`fortify()`][ggplot2::fortify] to build the
 #' data frame.
-#' @family fortify_data_frame methods
+#' @family fortify_data_frame
 #' @export
 fortify_data_frame.default <- function(data, ..., data_arg = NULL,
                                        call = NULL) {
@@ -42,7 +42,7 @@ fortify_data_frame.default <- function(data, ..., data_arg = NULL,
 #'  - `.names`: the names for the vector (only applicable if names exist).
 #'  - `value`: the actual value of the vector.
 #'
-#' @family fortify_data_frame methods
+#' @family fortify_data_frame
 #' @export
 fortify_data_frame.character <- function(data, ..., data_arg = NULL,
                                          call = NULL) {
@@ -93,7 +93,7 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 #'
 #'  - `value`: the actual value.
 #'
-#' @family fortify_data_frame methods
+#' @family fortify_data_frame
 #' @export
 fortify_data_frame.matrix <- function(data, ..., data_arg = NULL,
                                       call = NULL) {

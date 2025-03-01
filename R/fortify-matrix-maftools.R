@@ -36,7 +36,7 @@
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
 #'    summary. See `maftools::titv()` for details.
 #'
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @importFrom utils getFromNamespace
 #' @importFrom rlang is_string
 #' @export
@@ -433,7 +433,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
 #'    `data@@gene.summary` for details.
 #'  - `summary`: A data frame of summary information. See `data@@summary` for
 #'    details.
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @export
 fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
                                   ignored_bands = NULL, sample_anno = NULL,

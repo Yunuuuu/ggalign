@@ -32,7 +32,7 @@ fortify_matrix <- function(data, ..., data_arg = NULL,
 #' @description
 #' By default, it calls [`as.matrix()`] to build a matrix.
 #' @inheritParams fortify_matrix
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @importFrom rlang try_fetch
 #' @export
 fortify_matrix.default <- function(data, ..., data_arg = NULL,

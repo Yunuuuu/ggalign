@@ -6,7 +6,7 @@
 #' @section shape:
 #'  - `upset`: [`fortify_matrix.matrix_upset()`]
 #'  - `oncoplot`: [`fortify_matrix.matrix_oncoplot()`]
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @export
 fortify_matrix.matrix <- fortify_matrix.waiver
 
@@ -44,7 +44,7 @@ tune.matrix <- function(data, shape) {
 #' @inheritDotParams fortify_matrix.list_upset
 #' @inheritSection fortify_matrix.list_upset ggalign attributes
 #' @seealso [`tune.matrix()`]
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @export
 fortify_matrix.matrix_upset <- function(data, ..., data_arg = NULL,
                                         call = NULL) {
@@ -78,7 +78,7 @@ fortify_matrix.matrix_upset <- function(data, ..., data_arg = NULL,
 #'  - `n_samples`: Total number of samples.
 #'
 #' @seealso [`tune.matrix()`]
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @export
 fortify_matrix.matrix_oncoplot <- function(data, ...,
                                            genes = NULL, n_top = NULL,

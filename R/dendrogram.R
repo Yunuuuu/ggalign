@@ -168,7 +168,7 @@ make_dist <- function(matrix, distance, use_missing,
 #' @importFrom grid is.unit
 #' @importFrom stats order.dendrogram
 #' @importFrom rlang arg_match0
-#' @family fortify_data_frame methods
+#' @family fortify_data_frame
 #' @export
 fortify_data_frame.dendrogram <- function(data, ...,
                                           priority = "right",

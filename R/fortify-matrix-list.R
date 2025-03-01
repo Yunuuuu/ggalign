@@ -31,7 +31,7 @@ tune.list <- function(data, shape = NULL) {
 #'    intersection.
 #'  - `set_sizes`: An integer vector indicating the size of each set.
 #' @seealso [`tune.list()`]
-#' @family fortify_matrix methods
+#' @family fortify_matrix
 #' @aliases fortify_matrix.list
 #' @export
 fortify_matrix.list_upset <- function(data, mode = "distinct", ...,
