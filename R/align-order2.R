@@ -3,13 +3,13 @@
 #' @details
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `align_reorder()` function differs from `align_order()` in that the
+#' The `align_order2()` function differs from `align_order()` in that the
 #' `weights` argument in `align_order()` must return atomic weights for each
-#' observation. In contrast, the `stat` argument in `align_reorder()` can
+#' observation. In contrast, the `stat` argument in `align_order2()` can
 #' return more complex structures, such as [hclust][stats::hclust] or
 #' [dendrogram][stats::as.dendrogram], among others.
 #'
-#' Typically, you can achieve the functionality of `align_reorder()` using
+#' Typically, you can achieve the functionality of `align_order2()` using
 #' `align_order()` by manually extracting the ordering information from
 #' the statistic.
 #'
@@ -27,21 +27,21 @@
 #' @examples
 #' ggheatmap(matrix(rnorm(81), nrow = 9)) +
 #'     anno_left() +
-#'     align_reorder(hclust2)
+#'     align_order2(hclust2)
 #' @seealso [order2()]
 #' @importFrom ggplot2 waiver
 #' @importFrom rlang list2
 #' @export
-align_reorder <- function(stat, ..., reverse = FALSE,
-                          strict = TRUE, data = NULL,
-                          active = NULL) {
+align_order2 <- function(stat, ..., reverse = FALSE,
+                         strict = TRUE, data = NULL,
+                         active = NULL) {
     stat <- rlang::as_function(stat)
     assert_bool(strict)
     assert_bool(reverse)
     assert_active(active)
     active <- update_active(active, new_active(use = FALSE))
     align(
-        align = AlignReorder,
+        align = AlignOrder2,
         stat = stat,
         params = list2(...),
         reverse = reverse,
@@ -53,7 +53,7 @@ align_reorder <- function(stat, ..., reverse = FALSE,
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
-AlignReorder <- ggproto("AlignReorder", Align,
+AlignOrder2 <- ggproto("AlignOrder2", Align,
     interact_layout = function(self, layout) {
         layout <- ggproto_parent(Align, self)$interact_layout(layout)
         layout_data <- layout@data

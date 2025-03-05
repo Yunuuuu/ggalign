@@ -151,7 +151,7 @@ AlignHclust <- ggproto("AlignHclust", Align,
                 assert_mismatch_nobs(self, layout_nobs, nobs, arg = "method")
             }
         } else {
-            layout <- ggproto_parent(AlignReorder, self)$interact_layout(layout)
+            layout <- ggproto_parent(AlignOrder2, self)$interact_layout(layout)
         }
 
         # initialize the internal parameters

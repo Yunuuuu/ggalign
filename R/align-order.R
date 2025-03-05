@@ -78,7 +78,7 @@ align_order <- function(weights = rowMeans, ...,
 AlignOrder <- ggproto("AlignOrder", Align,
     interact_layout = function(self, layout) {
         if (is.function(self$weights)) {
-            layout <- ggproto_parent(AlignReorder, self)$interact_layout(layout)
+            layout <- ggproto_parent(AlignOrder2, self)$interact_layout(layout)
         } else {
             layout <- ggproto_parent(Align, self)$interact_layout(layout)
             if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {

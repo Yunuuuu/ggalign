@@ -56,8 +56,8 @@ there are already groups.}
 
 \item{reorder_column}{A boolean value indicating whether to reorder the
 columns based on the characteristics of the alterations. You can set this to
-\code{FALSE}, then add \code{align_reorder(memo_order)} to achieve the same result. You
-may also need to set \code{strit = FALSE} in \code{\link[=align_reorder]{align_reorder()}} if there are
+\code{FALSE}, then add \code{align_order2(memo_order)} to achieve the same result. You
+may also need to set \code{strit = FALSE} in \code{\link[=align_order2]{align_order2()}} if there are
 already groups.}
 
 \item{width, height}{The relative width/height of the main plot, can be a

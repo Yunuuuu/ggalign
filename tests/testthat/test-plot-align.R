@@ -94,7 +94,7 @@ testthat::test_that("`align_order` works well", {
     )
 })
 
-testthat::test_that("`align_reorder` works well", {
+testthat::test_that("`align_order2` works well", {
     set.seed(1L)
     mat <- matrix(stats::rnorm(72L), nrow = 9L)
     rownames(mat) <- paste0("row", seq_len(nrow(mat)))
@@ -102,36 +102,36 @@ testthat::test_that("`align_reorder` works well", {
     p <- ggheatmap(mat)
     row_group <- sample(letters[1:3], 9, replace = TRUE)
     column_group <- sample(letters[1:3], 8, replace = TRUE)
-    # align_reorder cannot do sub-split
+    # align_order2 cannot do sub-split
     expect_snapshot_error(p + anno_top() + align_group(column_group) +
-        align_reorder(hclust2))
+        align_order2(hclust2))
 
     # adding plot gave error
     expect_snapshot_error(p + anno_top() +
-        align_reorder(hclust2, active = active(use = TRUE)) +
+        align_order2(hclust2, active = active(use = TRUE)) +
         geom_point())
 
     # reorder plot
     expect_doppelganger(
         "order_top",
-        p + anno_top() + align_reorder(hclust2),
+        p + anno_top() + align_order2(hclust2),
     )
     expect_doppelganger(
         "order_bottom",
-        p + anno_bottom() + align_reorder(hclust2),
+        p + anno_bottom() + align_order2(hclust2),
     )
     expect_doppelganger(
         "order_left",
-        p + anno_left() + align_reorder(hclust2),
+        p + anno_left() + align_order2(hclust2),
     )
     expect_doppelganger(
         "order_right",
-        p + anno_right() + align_reorder(hclust2),
+        p + anno_right() + align_order2(hclust2),
     )
     expect_doppelganger(
         "order_top_within_group",
         p + anno_top() + align_group(column_group) +
-            align_reorder(hclust2, strict = FALSE),
+            align_order2(hclust2, strict = FALSE),
     )
 })
 

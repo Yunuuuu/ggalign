@@ -14,6 +14,6 @@ A vector of ordering weights.
 }
 \description{
 Helper function used to order the Oncoplot samples. Typically, you would use
-this in combination with \code{\link[=align_reorder]{align_reorder()}}, e.g.,
-\code{align_reorder(memo_order)}.
+this in combination with \code{\link[=align_order2]{align_order2()}}, e.g.,
+\code{align_order2(memo_order)}.
 }

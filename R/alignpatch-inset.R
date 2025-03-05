@@ -13,18 +13,35 @@
 #'     just = c(0, 0), width = 0.4, height = 0.4
 #' ))
 #' @export
-inset <- function(plot, ..., align = "panel", on_top = TRUE,
-                  clip = TRUE, vp = NULL) {
+inset <- function(
+    plot,
+    ...,
+    align = "panel",
+    on_top = TRUE,
+    clip = TRUE,
+    vp = NULL
+) {
     make_inset(
-        plot = plot, ..., align = align, on_top = on_top,
-        clip = clip, vp = vp
+        plot = plot,
+        ...,
+        align = align,
+        on_top = on_top,
+        clip = clip,
+        vp = vp
     )
 }
 
 #' @importFrom grid editGrob
 #' @importFrom rlang arg_match0
-make_inset <- function(plot, ..., align, on_top, clip, vp,
-                       call = caller_call()) {
+make_inset <- function(
+    plot,
+    ...,
+    align,
+    on_top,
+    clip,
+    vp,
+    call = caller_call()
+) {
     assert_bool(on_top, call = call)
     align <- arg_match0(align, c("panel", "plot", "full"), error_call = call)
     assert_bool(clip, call = call)
@@ -221,14 +238,13 @@ patch.trellis <- function(x, ..., device = NULL) {
 #'  - [`Heatmap()`][ComplexHeatmap::Heatmap]
 #'  - [`HeatmapAnnotation()`][ComplexHeatmap::HeatmapAnnotation]
 #' @family patch
-#' @importFrom utils getFromNamespace
 #' @export
 patch.Heatmap <- function(x, ..., device = NULL) {
     rlang::check_installed(
         "ComplexHeatmap",
         sprintf("to make grob from %s plot", obj_type_friendly(x))
     )
-    draw <- getFromNamespace("draw", "ComplexHeatmap")
+    draw <- getExportedValue("ComplexHeatmap", "draw")
     grid::grid.grabExpr(
         expr = draw(object = x, ...),
         device = device %||% offscreen

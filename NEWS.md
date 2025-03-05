@@ -151,7 +151,7 @@
 
 * `align_dendro()` gain a new argument `reorder_dendrogram` to control whether to reorder the generated dendrogram based on the mean values.
 
-* `align_reorder()` now splitted into two function `align_order()` and `align_reorder()`
+* `align_order2()` now splitted into two function `align_order()` and `align_order2()`
 
 * `dendrogram_data()` gain a new argument `reorder_branches` to control whether to reorder the input `leaf_braches` based on the tree.
 
@@ -179,13 +179,13 @@
 
 * `align_()*`: now `order` argument only control the plot area.
 
-* `align_reorder()` now can accept an ordering character names.
+* `align_order2()` now can accept an ordering character names.
 
 * export `order2()` function
 
-* `align_reorder()`: fun argument has been renamed to `order` argument, and it can now accept the ordering integer index directly
+* `align_order2()`: fun argument has been renamed to `order` argument, and it can now accept the ordering integer index directly
 
-* `fun` in `align_reorder()` now can return any statistics which can be handled by `order2()`
+* `fun` in `align_order2()` now can return any statistics which can be handled by `order2()`
 
 * fix `ggheatmap()` order not work when put in a stack layout
 
@@ -245,7 +245,7 @@ To further customize these layouts, we offer following functions:
 
   - `align_group()`: Group layout axis into panel with a group variable.
   - `align_kmeans()`: Group layout axis into panel by kmeans
-  - `align_reorder()`: Reorders layout observations based on weights or summary
+  - `align_order2()`: Reorders layout observations based on weights or summary
   statistics. 
   - `align_dendro()`: Reorder or Group layout based on hierarchical clustering
 

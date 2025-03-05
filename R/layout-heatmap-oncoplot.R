@@ -29,8 +29,8 @@
 #'
 #' @param reorder_column A boolean value indicating whether to reorder the
 #' columns based on the characteristics of the alterations. You can set this to
-#' `FALSE`, then add `align_reorder(memo_order)` to achieve the same result. You
-#' may also need to set `strit = FALSE` in [`align_reorder()`] if there are
+#' `FALSE`, then add `align_order2(memo_order)` to achieve the same result. You
+#' may also need to set `strit = FALSE` in [`align_order2()`] if there are
 #' already groups.
 #'
 #' @param filling Same as [`ggheatmap()`], but only `"tile"` can be used.
@@ -198,14 +198,14 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
 #' Sort matrix for better visualization
 #'
 #' Helper function used to order the Oncoplot samples. Typically, you would use
-#' this in combination with [`align_reorder()`], e.g.,
-#' `align_reorder(memo_order)`.
+#' this in combination with [`align_order2()`], e.g.,
+#' `align_order2(memo_order)`.
 #'
 #' @param x A matrix, where `NA` values will be treated as empty.
 #' @return A vector of ordering weights.
 #' @export
 memo_order <- function(x) {
-    # For `align_reorder()`, rows are considered as the observations
+    # For `align_order2()`, rows are considered as the observations
     # `.memo_order` will regard the columns as the observations
     .memo_order(t(x), counts = FALSE, reorder_rows = TRUE)
 }

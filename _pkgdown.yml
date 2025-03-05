@@ -58,7 +58,7 @@ reference:
   - align_group
   - align_kmeans
   - align_order
-  - align_reorder
+  - align_order2
   - cross_none
   - memo_order
 

@@ -31,16 +31,16 @@
     Cannot add `geom_point()` to `align_order()`
     i no plot found for `align_order()`
 
-# `align_reorder` works well
+# `align_order2` works well
 
-    Cannot add `align_reorder()` to the top annotation `stack_discrete()`
-    i Group of the top annotation `stack_discrete()` will disrupt the ordering index of `align_reorder()`
+    Cannot add `align_order2()` to the top annotation `stack_discrete()`
+    i Group of the top annotation `stack_discrete()` will disrupt the ordering index of `align_order2()`
     i try to set `strict = FALSE` to reorder within each group
 
 ---
 
-    Cannot add `geom_point()` to `align_reorder()`
-    i no plot found for `align_reorder()`
+    Cannot add `geom_point()` to `align_order2()`
+    i no plot found for `align_order2()`
 
 # `align_kmeans` works well
 

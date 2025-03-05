@@ -32,7 +32,7 @@ align_kmeans <- function(..., data = NULL, active = NULL) {
 #' @importFrom rlang inject
 AlignKmeans <- ggproto("AlignKmeans", Align,
     interact_layout = function(self, layout) {
-        ggproto_parent(AlignReorder, self)$interact_layout(layout)
+        ggproto_parent(AlignOrder2, self)$interact_layout(layout)
     },
     compute = function(self, panel, index) {
         inject(stats::kmeans(x = self$data, !!!self$params))

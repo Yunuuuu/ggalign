@@ -247,7 +247,7 @@ Align <- ggproto("Align", AlignProto,
     #
     #    For `Align` object reordering the heatmap rows/columns.
     #    usually we provide a `strict` argument, to allow reorder heatmap within
-    #    group only. See `AlignReorder`.
+    #    group only. See `AlignOrder2`.
     #
     # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
