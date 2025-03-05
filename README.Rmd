@@ -28,11 +28,14 @@ url <- params[["book"]]
 [![DOI](https://zenodo.org/badge/828195668.svg)](https://doi.org/10.5281/zenodo.14825328)
 <!-- badges: end -->
 
-This package extends ggplot2 by providing advanced tools for aligning and
-organizing multiple plots, particularly those that automatically reorder
-observations, such as dendrogram. It offers fine control over layout adjustment
-and plot annotations, enabling you to create complex, publication-quality
-visualizations while still using the familiar grammar of ggplot2. 
+The `ggalign` package extends `ggplot2` to simplify the creation of complex,
+multi-plot visualizations, especially for biomedical research. Built on the
+familiar grammar of graphics, it provides intuitive tools to align and organize
+plots—such as heatmaps, dendrograms, or circular layouts—while handling
+intricate relationships in multi-omics data, like genomics or microbiomes.
+Whether you need to stack plots, arrange them around a central figure, or link
+diverse datasets (e.g., genes to pathways), `ggalign` offers flexibility and
+precision with minimal effort.
 
 ## Why use `ggalign`?
 `ggalign` focuses on aligning observations across multiple plots. If you've ever
