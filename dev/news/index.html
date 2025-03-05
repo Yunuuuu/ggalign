@@ -140,7 +140,7 @@
 <li><p>add <code><a href="https://rdrr.io/pkg/ggrastr/man/rasterize.html" class="external-link">ggrastr::rasterize</a></code> method for both <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> and <code>ggstack()</code></p></li>
 <li><p><code>set_context</code> argument in <code><a href="../reference/align_dendro.html">align_dendro()</a></code> now depends on <code>plot_dendrogram</code> by default</p></li>
 <li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain a new argument <code>reorder_dendrogram</code> to control whether to reorder the generated dendrogram based on the mean values.</p></li>
-<li><p><code><a href="../reference/align_reorder.html">align_reorder()</a></code> now splitted into two function <code><a href="../reference/align_order.html">align_order()</a></code> and <code><a href="../reference/align_reorder.html">align_reorder()</a></code></p></li>
+<li><p><code><a href="../reference/align_order2.html">align_order2()</a></code> now splitted into two function <code><a href="../reference/align_order.html">align_order()</a></code> and <code><a href="../reference/align_order2.html">align_order2()</a></code></p></li>
 <li><p><code>dendrogram_data()</code> gain a new argument <code>reorder_branches</code> to control whether to reorder the input <code>leaf_braches</code> based on the tree.</p></li>
 <li><p><code><a href="../reference/align_dendro.html">align_dendro()</a></code> gain new argument <code>merge_dendrogram</code> to control whether the dendrograms in multiple groups should be merged</p></li>
 <li><p>dendrogram height axis will be automatically reversed in bottom and left annotation stack</p></li>
@@ -154,10 +154,10 @@
 <li><p>internal changes: all vectors have been operated with <code>vctrs</code> package</p></li>
 <li><p><code><a href="../reference/stack_layout.html">stack_layout()</a></code>: gain <code>sizes</code> argument to control the relative sizes of the stack</p></li>
 <li><p><code>align_()*</code>: now <code>order</code> argument only control the plot area.</p></li>
-<li><p><code><a href="../reference/align_reorder.html">align_reorder()</a></code> now can accept an ordering character names.</p></li>
+<li><p><code><a href="../reference/align_order2.html">align_order2()</a></code> now can accept an ordering character names.</p></li>
 <li><p>export <code><a href="../reference/order2.html">order2()</a></code> function</p></li>
-<li><p><code><a href="../reference/align_reorder.html">align_reorder()</a></code>: fun argument has been renamed to <code>order</code> argument, and it can now accept the ordering integer index directly</p></li>
-<li><p><code>fun</code> in <code><a href="../reference/align_reorder.html">align_reorder()</a></code> now can return any statistics which can be handled by <code><a href="../reference/order2.html">order2()</a></code></p></li>
+<li><p><code><a href="../reference/align_order2.html">align_order2()</a></code>: fun argument has been renamed to <code>order</code> argument, and it can now accept the ordering integer index directly</p></li>
+<li><p><code>fun</code> in <code><a href="../reference/align_order2.html">align_order2()</a></code> now can return any statistics which can be handled by <code><a href="../reference/order2.html">order2()</a></code></p></li>
 <li><p>fix <code><a href="../reference/heatmap_layout.html">ggheatmap()</a></code> order not work when put in a stack layout</p></li>
 <li><p><code>method</code> in <code><a href="../reference/hclust2.html">hclust2()</a></code> can now return any objects which can be coerced into hclust, or you can provide such object directly in <code>method</code>.</p></li>
 <li><p><code><a href="../reference/hclust2.html">hclust2()</a></code> now can accept <code>distance = NULL</code></p></li>
@@ -197,7 +197,7 @@
 <li>
 <code><a href="../reference/align_kmeans.html">align_kmeans()</a></code>: Group layout axis into panel by kmeans</li>
 <li>
-<code><a href="../reference/align_reorder.html">align_reorder()</a></code>: Reorders layout observations based on weights or summary statistics.</li>
+<code><a href="../reference/align_order2.html">align_order2()</a></code>: Reorders layout observations based on weights or summary statistics.</li>
 <li>
 <code><a href="../reference/align_dendro.html">align_dendro()</a></code>: Reorder or Group layout based on hierarchical clustering</li>
 </ul><p>For more detailed instructions on customizing layouts, see the vignette: <code>vignette("layout-customize")</code>.</p>
