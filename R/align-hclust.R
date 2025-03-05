@@ -314,3 +314,127 @@ AlignHclust <- ggproto("AlignHclust", Align,
         c(TRUE, !is.null(self$k) || !is.null(self$h) || !is.null(self$cutree))
     }
 )
+
+#' Generate Tree Structures with Hierarchical Clustering
+#'
+#' @param matrix A numeric matrix, or data frame.
+#' @param distance A string of distance measure to be used. This must be one of
+#' `"euclidean"`, `"maximum"`, `"manhattan"`, `"canberra"`, `"binary"` or
+#' `"minkowski"`.  Correlation coefficient can be also used, including
+#' `"pearson"`, `"spearman"` or `"kendall"`. In this way, `1 - cor` will be used
+#' as the distance. In addition, you can also provide a [`dist`][stats::dist]
+#' object directly or a function return a [`dist`][stats::dist] object. Use
+#' `NULL`, if you don't want to calculate the distance.
+#' @param method A string of the agglomeration method to be used. This should be
+#' (an unambiguous abbreviation of) one of `"ward.D"`, `"ward.D2"`, `"single"`,
+#' `"complete"`, `"average"` (= UPGMA), `"mcquitty"` (= WPGMA), `"median"` (=
+#' WPGMC) or `"centroid"` (= UPGMC). You can also provide a function which
+#' accepts the calculated distance (or the input matrix if `distance` is `NULL`)
+#' and returns a [`hclust`][stats::hclust] object. Alternative, you can supply
+#' an object which can be coerced to [`hclust`][stats::hclust].
+#' @param use_missing An optional character string giving a method for computing
+#' covariances in the presence of missing values. This must be (an abbreviation
+#' of) one of the strings `"everything"`, `"all.obs"`, `"complete.obs"`,
+#' `"na.or.complete"`, or `"pairwise.complete.obs"`. Only used when `distance`
+#' is a correlation coefficient string.
+#' @seealso
+#'  - [cor()][stats::cor]
+#'  - [dist()][stats::dist]
+#'  - [hclust()][stats::hclust]
+#' @examples
+#' hclust2(dist(USArrests), method = "ward.D")
+#' @return A [hclust][stats::hclust] object.
+#' @importFrom rlang is_string try_fetch
+#' @export
+hclust2 <- function(matrix, distance = "euclidean", method = "complete",
+                    use_missing = "pairwise.complete.obs") {
+    method <- allow_lambda(method)
+    if (!is_string(method) && !is.function(method)) {
+        ans <- try_fetch(
+            stats::as.hclust(method),
+            error = function(cnd) {
+                cli_abort(paste(
+                    "{.arg method} can only be a {.cls string},",
+                    "{.cls function} or an object which can be coerced to",
+                    "{.cls hclust}."
+                ), parent = cnd)
+            }
+        )
+        return(ans)
+    }
+    if (is.null(distance)) {
+        d <- matrix
+    } else {
+        d <- make_dist(matrix, distance, use_missing)
+    }
+    if (is_string(method)) {
+        ans <- stats::hclust(d, method = method)
+    } else if (is.function(method)) {
+        ans <- method(d)
+        ans <- try_fetch(
+            stats::as.hclust(ans),
+            error = function(cnd) {
+                cli_abort(paste(
+                    "{.arg method} must return an object which",
+                    "can be coerced to {.cls hclust}"
+                ), parent = cnd)
+            }
+        )
+    }
+    if (!is.null(distance)) attr(ans, "distance") <- d
+    ans
+}
+
+#' @importFrom rlang arg_match0
+make_dist <- function(matrix, distance, use_missing,
+                      arg = caller_arg(distance), call = caller_call()) {
+    distance <- allow_lambda(distance)
+    if (is_string(distance)) {
+        distance <- arg_match0(distance, c(
+            "euclidean", "maximum", "manhattan", "canberra",
+            "binary", "minkowski", "pearson", "spearman", "kendall"
+        ), arg_nm = arg, error_call = call)
+        d <- switch(distance,
+            euclidean = ,
+            maximum = ,
+            manhattan = ,
+            canberra = ,
+            binary = ,
+            minkowski = stats::dist(matrix, method = distance),
+            pearson = ,
+            spearman = ,
+            kendall = stats::as.dist(
+                1 - stats::cor(t(matrix), use = use_missing, method = distance)
+            ),
+            cli_abort("Unsupported {.arg {arg}} specified", call = call)
+        )
+    } else if (is.function(distance)) {
+        if (!inherits(d <- distance(matrix), "dist")) {
+            cli_abort(
+                "{.arg {arg}} must return a {.cls dist} object",
+                call = call
+            )
+        }
+    } else if (inherits(distance, "dist")) {
+        d <- distance
+    } else {
+        cli_abort(paste(
+            "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
+            "object, or a {.cls function} return {.cls dist}"
+        ), call = call)
+    }
+    d
+}
+
+cutree_k_to_h <- function(tree, k) {
+    if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
+        cli_abort("invalid {.arg tree} ({.field merge} component)")
+    }
+    n <- n1 + 1
+    if (is.unsorted(tree$height)) {
+        cli_abort(
+            "the 'height' component of 'tree' is not sorted (increasingly)"
+        )
+    }
+    mean(tree$height[c(n - k, n - k + 1L)])
+}

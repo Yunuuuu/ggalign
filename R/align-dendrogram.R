@@ -237,3 +237,59 @@ tree_one_node <- function(index, label) {
         members = 1L
     )
 }
+
+# this function won't set the right `midpoint`, but `dendrogram_data` function
+# won't use it, so, it has no hurt to use.
+merge_dendrogram <- function(parent, children) {
+    if (is.null(parent)) { # if no parent, call the merge function from `stats`
+        return(Reduce(function(x, y) {
+            merge(x, y, adjust = "none")
+        }, children))
+    }
+    children_heights <- vapply(
+        children, attr, numeric(1L), "height",
+        USE.NAMES = FALSE
+    )
+    parent_branch_heights <- tree_branch_heights(parent)
+    cutoff_height <- max(children_heights) + min(parent_branch_heights) * 0.5
+    .merge_dendrogram <- function(dend) {
+        if (stats::is.leaf(dend)) { # base version, leaf should be the index
+            .subset2(children, dend)
+        } else { # for a branch, we should update the members, height
+            attrs <- attributes(dend)
+            # we recursively run for each node of current branch
+            dend <- lapply(dend, .merge_dendrogram)
+            heights <- vapply(dend, attr, numeric(1L), "height",
+                USE.NAMES = FALSE
+            )
+            n_members <- vapply(dend, attr, integer(1L), "members",
+                USE.NAMES = FALSE
+            )
+            # we update height and members
+            attrs$height <- .subset2(attrs, "height") + max(heights)
+            attrs$members <- sum(n_members)
+            attributes(dend) <- attrs
+            dend
+        }
+    }
+    ans <- .merge_dendrogram(parent)
+    attr(ans, "cutoff_height") <- cutoff_height
+    ans
+}
+
+#' @importFrom stats reorder
+reorder_dendrogram <- function(dend, wts) {
+    if (inherits(dend, "hclust")) dend <- stats::as.dendrogram(dend)
+    reorder(x = dend, wts = wts, agglo.FUN = mean)
+}
+
+tree_branch_heights <- function(dend) {
+    if (stats::is.leaf(dend)) {
+        return(NULL)
+    } else {
+        c(
+            attr(dend, "height"),
+            unlist(lapply(dend, tree_branch_heights), FALSE, FALSE)
+        )
+    }
+}

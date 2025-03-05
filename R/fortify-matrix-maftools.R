@@ -77,14 +77,14 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         )
     }
 
-    getSampleSummary <- getFromNamespace("getSampleSummary", "maftools")
-    getGeneSummary <- getFromNamespace("getGeneSummary", "maftools")
-    getClinicalData <- getFromNamespace("getClinicalData", "maftools")
+    getSampleSummary <- getExportedValue("maftools", "getSampleSummary")
+    getGeneSummary <- getExportedValue("maftools", "getGeneSummary")
+    getClinicalData <- getExportedValue("maftools", "getClinicalData")
     sample_summary <- new_data_frame(getSampleSummary(data))
     gene_summary <- new_data_frame(getGeneSummary(data))
     sample_anno <- new_data_frame(getClinicalData(data))
 
-    titv <- getFromNamespace("titv", "maftools")
+    titv <- getExportedValue("maftools", "titv")
     titv <- titv(data, useSyn = use_syn, plot = FALSE)
     titv <- lapply(titv, new_data_frame)
 
@@ -171,9 +171,9 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 
     # if `maftools` is installed, `data.table` must have been installed
     # No need to check if `data.table` is installed
-    dcast <- getFromNamespace("dcast", "data.table")
-    setDT <- getFromNamespace("setDT", "data.table")
-    setDF <- getFromNamespace("setDF", "data.table")
+    dcast <- getExportedValue("data.table", "dcast")
+    setDT <- getExportedValue("data.table", "setDT")
+    setDF <- getExportedValue("data.table", "setDF")
     setDT(ans)
     ans <- dcast(ans, Hugo_Symbol ~ Tumor_Sample_Barcode,
         value.var = "Variant_Classification"
@@ -316,8 +316,8 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
         pathdb <- vec_unique(pathdb)
         pathway_summary <- get_pw_summary(maf, pathways = pathdb)
     }
-    getSampleSummary <- getFromNamespace("getSampleSummary", "maftools")
-    getClinicalData <- getFromNamespace("getClinicalData", "maftools")
+    getSampleSummary <- getExportedValue("maftools", "getSampleSummary")
+    getClinicalData <- getExportedValue("maftools", "getClinicalData")
     sample_summary <- new_data_frame(getSampleSummary(maf))
     sample_anno <- new_data_frame(getClinicalData(maf))
 
@@ -340,9 +340,9 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
 
     # if `maftools` is installed, `data.table` must have been installed
     # No need to check if `data.table` is installed
-    dcast <- getFromNamespace("dcast", "data.table")
-    setDT <- getFromNamespace("setDT", "data.table")
-    setDF <- getFromNamespace("setDF", "data.table")
+    dcast <- getExportedValue("data.table", "dcast")
+    setDT <- getExportedValue("data.table", "setDT")
+    setDF <- getExportedValue("data.table", "setDF")
     setDT(ans)
     ans <- dcast(ans, pathways ~ Tumor_Sample_Barcode,
         value.var = "Alt", fill = NA_character_

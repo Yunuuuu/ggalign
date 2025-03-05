@@ -146,24 +146,22 @@ order2.hclust <- function(x) x$order
 #' @rdname order2
 order2.dendrogram <- function(x) order.dendrogram(x)
 
-#' @importFrom utils getFromNamespace
 #' @export
 #' @rdname order2
 order2.ser_permutation_vector <- function(x) {
     rlang::check_installed(
         "seriation", "to extract order from `ser_permutation_vector`"
     )
-    getFromNamespace("get_order", "seriation")(x)
+    getExportedValue("seriation", "get_order")(x)
 }
 
-#' @importFrom utils getFromNamespace
 #' @export
 #' @rdname order2
 order2.ser_permutation <- function(x) {
     rlang::check_installed(
         "seriation", "to extract order from `ser_permutation`"
     )
-    getFromNamespace("get_order", "seriation")(x)
+    getExportedValue("seriation", "get_order")(x)
 }
 
 #' @export

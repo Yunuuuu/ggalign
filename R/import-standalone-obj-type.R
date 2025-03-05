@@ -61,6 +61,7 @@
 # - Added changelog.
 #
 # nocov start
+# Following codes were modified from `rlang` package
 
 #' @param x The object type which does not conform to `what`. Its
 #'   `obj_type_friendly()` is taken and mentioned in the error message.
@@ -333,15 +334,13 @@ obj_type_oo <- function(x) {
     }
 }
 
-.standalone_oxford_comma <- function(chr, sep = ", ", final = "and") {
-    n <- length(chr)
+.standalone_oxford_comma <- function(x, sep = ", ", final = "and") {
+    n <- length(x)
 
-    if (n < 2L) {
-        return(chr)
-    }
+    if (n < 2L) return(x) # styler: off
 
-    head <- chr[seq_len(n - 1L)]
-    last <- chr[n]
+    head <- x[seq_len(n - 1L)]
+    last <- x[n]
 
     head <- paste(head, collapse = sep)
 

@@ -16,6 +16,7 @@
 # - Added support for S3 object
 #
 # nocov start
+# Following codes were modified from `rlang` package
 
 #' Report if an argument is a specific class
 #'
