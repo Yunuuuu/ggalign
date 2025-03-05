@@ -23,17 +23,13 @@ grammar of ggplot2.
 
 ## Why use `ggalign`?
 
-`ggalign` focuses on aligning observations across multiple plots. It
-leverages the `"number of observations"` in the
-[vctrs](https://vctrs.r-lib.org/reference/vec_size.html) package or
-`NROW()` function to maintain consistency in plot organization.
-
-If you’ve ever struggled with aligning plots with self-contained
-ordering (like dendrogram), or applying consistent grouping or ordering
-across multiple plots (e.g., with k-means clustering), `ggalign` is
-designed to make this easier. The package integrates seamlessly with
-ggplot2, providing the flexibility to use its geoms, scales, and other
-components for complex visualizations.
+`ggalign` focuses on aligning observations across multiple plots. If
+you’ve ever struggled with aligning plots with self-contained ordering
+(like dendrogram), or applying consistent grouping or ordering across
+multiple plots (e.g., with k-means clustering), `ggalign` is designed to
+make this easier. The package integrates seamlessly with ggplot2,
+providing the flexibility to use its geoms, scales, and other components
+for complex visualizations.
 
 ## Installation
 
