@@ -15,14 +15,13 @@ status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.or
 <!-- badges: end -->
 
 The `ggalign` package extends `ggplot2` to simplify the creation of
-complex, multi-plot visualizations, especially for biomedical research.
-Built on the familiar grammar of graphics, it provides intuitive tools
-to align and organize plots—such as heatmaps, dendrograms, or circular
-layouts—while handling intricate relationships in multi-omics data, like
-genomics or microbiomes. Whether you need to stack plots, arrange them
-around a central figure, or link diverse datasets (e.g., genes to
-pathways), `ggalign` offers flexibility and precision with minimal
-effort.
+complex, multi-plot visualizations. Built on the familiar grammar of
+graphics, it provides intuitive tools to align and organize plots—such
+as heatmaps, dendrograms, or circular layouts—while handling intricate
+relationships in multi-omics data, like genomics or microbiomes. Whether
+you need to stack plots, arrange them around a central figure, or link
+diverse datasets (e.g., genes to pathways), `ggalign` offers flexibility
+and precision with minimal effort.
 
 ## Why use `ggalign`?
 
