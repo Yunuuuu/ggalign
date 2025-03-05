@@ -35,7 +35,7 @@ stack_crossh <- function(data = NULL, ...) {
     stack_cross(data = data, direction = "h", ...)
 }
 
-#' @include layout-stack-.R
+#' @include layout-chain-stack-.R
 methods::setClass(
     "StackCross",
     contains = "StackLayout",
