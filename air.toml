@@ -1,0 +1,6 @@
+[format]
+line-width = 80
+indent-width = 4
+indent-style = "space"
+line-ending = "lf"
+persistent-line-breaks = true
