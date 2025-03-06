@@ -69,6 +69,7 @@ Collate:
     'alignpatch-ggplot2.R'
     'alignpatch-guides.R'
     'alignpatch-inset.R'
+    'alignpatch-patch.R'
     'alignpatch-patchwork.R'
     'alignpatch-title.R'
     'alignpatch-wrap.R'
