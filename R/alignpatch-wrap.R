@@ -55,20 +55,7 @@ ggwrap <- function(plot, ..., align = "panel", on_top = FALSE,
 
 make_wrap <- function(patch, inset) UseMethod("make_wrap")
 
-#' @export
-make_wrap.patch_ggplot <- function(patch, inset) {
-    patch <- add_class(patch, "wrapped_plot")
-    make_wrap(patch, inset)
-}
-
-#' @export
-make_wrap.ggplot <- function(patch, inset) {
-    patch <- add_class(patch, "patch_ggplot")
-    make_wrap(patch, inset)
-}
-
-#' @export
-make_wrap.wrapped_plot <- function(patch, inset) {
+make_wrapped_plot <- function(patch, inset) {
     if (.subset2(inset, "on_top")) {
         patch$ggalign_wrapped_insets_above <- c(
             patch$ggalign_wrapped_insets_above, list(inset)
@@ -78,14 +65,20 @@ make_wrap.wrapped_plot <- function(patch, inset) {
             patch$ggalign_wrapped_insets_under, list(inset)
         )
     }
-    patch
+    add_class(patch, "wrapped_plot")
 }
 
 #' @export
-make_wrap.alignpatches <- function(patch, inset) {
-    patch <- add_class(patch, "wrapped_plot")
+make_wrap.ggplot <- function(patch, inset) {
+    patch <- add_class(patch, "patch_ggplot")
     make_wrap(patch, inset)
 }
+
+#' @export
+make_wrap.patch_ggplot <- make_wrapped_plot
+
+#' @export
+make_wrap.alignpatches <- make_wrapped_plot
 
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
