@@ -76,7 +76,6 @@ remotes::install_github("Yunuuuu/ggalign")
         <th colspan="2"></th>
         <th> <code>ggalign</code> </th>
         <th> <code>marsilea</code> </th>
-        <th> <code>aplot</code> </th>
         <th> <code>ComplexHeatmap</code> </th>
     </tr></thead>
 <tbody>
@@ -85,25 +84,21 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>R</td>
         <td>Python</td>
         <td>R</td>
-        <td>R</td>
     </tr>
     <tr>
         <td colspan="2"> <strong>User Interface</strong> </td>
         <td>Declarative</td>
         <td>Declarative</td>
-        <td>Declarative+Functional</td>
         <td>Functional</td>
     </tr>
     <tr>
         <td colspan="2"> <strong>Plot System</strong> </td>
         <td>ggplot2 (Advanced plot system built on grid system)</td>
         <td>Matplotlib</td>
-        <td>ggplot2 (Advanced plot system built on grid system)</td>
         <td>grid</td>
     </tr>
     <tr>
         <td colspan="2"> <strong>Focus</strong> </td>
-        <td>Composable Visualization</td>
         <td>Composable Visualization</td>
         <td>Composable Visualization</td>
         <td>Heatmap</td>
@@ -113,11 +108,9 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
-        <td>✅</td>
     </tr>
     <tr>
         <td colspan="2"> <strong>QuadLayout</strong> </td>
-        <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>Heatmap Only (discrete variables)</td>
@@ -127,12 +120,10 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
-        <td>❌</td>
     </tr>
     <tr>
         <td rowspan="4"> <strong>Relationship</strong> </td>
         <td> <strong>One-to-One</strong> </td>
-        <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -142,12 +133,10 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
-        <td>❌</td>
     </tr>
     <tr>
         <td> <strong>Many-to-Many</strong> </td>
         <td>✅</td>
-        <td>❌</td>
         <td>❌</td>
         <td>❌</td>
     </tr>
@@ -156,12 +145,10 @@ remotes::install_github("Yunuuuu/ggalign")
         <td>✅</td>
         <td>❌</td>
         <td>❌</td>
-        <td>❌</td>
     </tr>
     <tr>
         <td colspan="2"> <strong>Annotate observations</strong> </td>
         <td>✅</td>
-        <td>❌</td>
         <td>❌</td>
         <td>✅</td>
     </tr>
@@ -169,25 +156,24 @@ remotes::install_github("Yunuuuu/ggalign")
         <td colspan="2"> <strong>Fully Compatible with ggplot2</strong> </td>
         <td>✅</td>
         <td>❌</td>
-        <td>✅</td>
         <td>❌</td>
     </tr>
 </tbody></table>
 
 ## Comparison of specifications with other similar tools
 
-| Specification                                | `ggalign`                                             | `marsilea`    | `aplot`                          | `ComplexHeatmap`                                      |
-|----------------------------------------------|-------------------------------------------------------|---------------|----------------------------------|-------------------------------------------------------|
-| **Reorder observations**                     | ✅                                                    | ✅            | ❌                               | Heatmap Only                                          |
-| **Group observations into different panels** | ✅                                                    | ✅            | ❌                               | Heatmap Only                                          |
-| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌            | ❌                               | Kmeans,Hierarchical Clustering and arbitary algorithm |
-| **Legends Creation**                         | Automatic                                             | Automatic     | Automatic                        | Limited automatic, requires manual add                |
-| **Legends Position**                         | Anywhere, can be controlled for a single plot         | Anywhere      | Anywhere                         | Four sides, can only be placed on one side at a time  |
-| **Dendrogram**                               | Tree from both `hclust` or `ape`                      | `hclust` only | Tree from both `hclust` or `ape` | `hclust` only                                         |
-| **Tanglegram**                               | ✅                                                    | ❌            | ❌                               | ❌                                                    |
-| **3D Heatmap**                               | ✅                                                    | ❌            | ❌                               | ✅                                                    |
-| **Oncoplot**                                 | ✅                                                    | ✅            | ✅                               | ✅                                                    |
-| **UpSet plot**                               | ✅                                                    | ✅            | ❌                               | ✅                                                    |
+| Specification                                | `ggalign`                                             | `marsilea`    | `ComplexHeatmap`                                      |
+|----------------------------------------------|-------------------------------------------------------|---------------|-------------------------------------------------------|
+| **Reorder observations**                     | ✅                                                    | ✅            | Heatmap Only                                          |
+| **Group observations into different panels** | ✅                                                    | ✅            | Heatmap Only                                          |
+| **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌            | Kmeans,Hierarchical Clustering and arbitary algorithm |
+| **Legends Creation**                         | Automatic                                             | Automatic     | Limited automatic, requires manual add                |
+| **Legends Position**                         | Anywhere, can be controlled for a single plot         | Anywhere      | Four sides, can only be placed on one side at a time  |
+| **Dendrogram**                               | Tree from both `hclust` or `ape`                      | `hclust` only | `hclust` only                                         |
+| **Tanglegram**                               | ✅                                                    | ❌            | ❌                                                    |
+| **3D Heatmap**                               | ✅                                                    | ❌            | ✅                                                    |
+| **Oncoplot**                                 | ✅                                                    | ✅            | ✅                                                    |
+| **UpSet plot**                               | ✅                                                    | ✅            | ✅                                                    |
 
 ## Acknowledgements
 
