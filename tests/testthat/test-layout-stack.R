@@ -4,16 +4,22 @@ testthat::test_that("`stack_align` works well", {
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
     expect_identical(x@design, discrete_design(nobs = 10L))
+    # str method works well
+    expect_no_error(str(x))
 
     x <- stack_alignh(letters)
     expect_true(is.matrix(x@data))
     expect_identical(ncol(x@data), 1L)
     expect_identical(x@design, discrete_design(nobs = length(letters)))
+    # str method works well
+    expect_no_error(str(x))
 
     # stack with no data
     x <- stack_alignh()
     expect_s3_class(x@sizes, "unit")
     expect_identical(x@design, discrete_design())
+    # str method works well
+    expect_no_error(str(x))
 })
 
 testthat::test_that("`stack_free` works well", {
@@ -22,16 +28,22 @@ testthat::test_that("`stack_free` works well", {
     expect_true(is.data.frame(x@data))
     expect_identical(names(x@data), "value")
     expect_identical(x@design, NULL)
+    # str method works well
+    expect_no_error(str(x))
 
     x <- stack_freeh(letters)
     expect_true(is.data.frame(x@data))
     expect_identical(names(x@data), "value")
     expect_identical(x@design, NULL)
+    # str method works well
+    expect_no_error(str(x))
 
     # stack with no data
     x <- stack_freeh()
     expect_s3_class(x@sizes, "unit")
     expect_identical(x@design, NULL)
+    # str method works well
+    expect_no_error(str(x))
 })
 
 testthat::test_that("`stack_align` add `align-` object builds well", {

@@ -16,6 +16,51 @@ is_absolute_unit <- function(x) {
 #' @importFrom grid unitType
 is_null_unit <- function(x) unitType(x) == "null"
 
+# # allow the missing value in the unit for `str` method
+# ggalign_unit <- function(x, ...) UseMethod("ggalign_unit")
+# #' @export
+# ggalign_unit.default <- function(x, ...) ggalign_unit(as.numeric(x), ...)
+# #' @export
+# ggalign_unit.numeric <- function(x, units = "null", data = NULL, ...) {
+#     add_class(unit(x, units, data = data), "ggalign_unit")
+# }
+# #' @export
+# ggalign_unit.unit <- function(x, ...) add_class(x, "ggalign_unit")
+# is_ggalign_unit <- function(x) inherits(x, "ggalign_unit")
+
+# # allow the missing value in the unit for `str` method
+#' @importFrom utils str
+#' @export
+str.unit <- function(object, ...) obj_str(object, ...)
+
+#' @export
+vec_ptype_abbr.unit <- function(x, ...) fclass(x)
+
+#' @export
+obj_str_footer.unit <- function(x, ..., indent.str = " ", nest.lev = 0,
+                                give.attr = TRUE) {
+    if (!isTRUE(give.attr)) {
+        return(invisible(x))
+    }
+    attr <- attributes(x)
+    attr[["class"]] <- NULL
+    attr[["names"]] <- NULL
+    if (length(attr) == 0) {
+        return(invisible(x))
+    }
+    indent.str <- paste0(" ", indent.str)
+    for (nm in names(attr)) {
+        cat(indent.str, paste0("- attr(*, \"", nm, "\"):"), sep = "")
+        utils::str(
+            attr[[nm]],
+            no.list = TRUE, ...,
+            nest.lev = nest.lev + 1L,
+            indent.str = indent.str
+        )
+    }
+    invisible(x)
+}
+
 #' @importFrom gtable gtable_trim
 subset_gt <- function(gt, index, trim = TRUE) {
     gt$layout <- vec_slice(.subset2(gt, "layout"), index)
@@ -53,8 +98,15 @@ gtable_trim_heights <- function(gt) {
     gt
 }
 
-liberate_area <- function(gt, top, left, bottom, right,
-                          clip = "inherit", name = NULL, vp = NULL) {
+liberate_area <- function(
+    gt,
+    top,
+    left,
+    bottom,
+    right,
+    clip = "inherit",
+    name = NULL,
+    vp = NULL) {
     if (any(remove <- grob_in_area(gt, top, right, bottom, left))) {
         liberated <- gt[top:bottom, left:right]
         if (is.function(vp <- allow_lambda(vp))) {
@@ -63,15 +115,22 @@ liberate_area <- function(gt, top, left, bottom, right,
             liberated$vp <- vp
         }
         liberated$respect <- FALSE
-        name <- name %||% paste(
-            .subset2(.subset2(liberated, "layout"), "name"),
-            collapse = "; "
-        )
+        name <- name %||%
+            paste(
+                .subset2(.subset2(liberated, "layout"), "name"),
+                collapse = "; "
+            )
         gt <- subset_gt(gt, !remove, trim = FALSE)
         gt <- gtable_add_grob(
-            gt, list(liberated), top, left, bottom, right,
+            gt,
+            list(liberated),
+            top,
+            left,
+            bottom,
+            right,
             z = max(.subset2(.subset2(liberated, "layout"), "z")),
-            clip = clip, name = name
+            clip = clip,
+            name = name
         )
     }
     gt
@@ -93,18 +152,21 @@ compute_null_height <- function(x, unitTo = "mm", valueOnly = FALSE) {
 }
 
 #' @importFrom grid unit convertHeight convertWidth
-compute_null_unit <- function(x, type = c("width", "height"), unitTo = "mm",
-                              valueOnly = FALSE) {
+compute_null_unit <- function(
+    x,
+    type = c("width", "height"),
+    unitTo = "mm",
+    valueOnly = FALSE) {
     null <- is_null_unit(x) # null unit
     if (type == "width") {
         ans <- convertWidth(x, unitTo, valueOnly = TRUE)
-        total <- convertWidth(unit(1, "npc"),
-            unitTo = unitTo, valueOnly = TRUE
-        )
+        total <- convertWidth(unit(1, "npc"), unitTo = unitTo, valueOnly = TRUE)
     } else {
         ans <- convertHeight(x, unitTo, valueOnly = TRUE)
-        total <- convertHeight(unit(1, "npc"),
-            unitTo = unitTo, valueOnly = TRUE
+        total <- convertHeight(
+            unit(1, "npc"),
+            unitTo = unitTo,
+            valueOnly = TRUE
         )
     }
     if (any(null)) {
