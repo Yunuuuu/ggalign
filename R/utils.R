@@ -43,14 +43,10 @@ names_or_index <- function(x) {
 #' @export
 read_example <- function(file = NULL) {
     if (is.null(file)) {
-        dir(example_file())
+        dir(pkg_extdata())
     } else {
-        readRDS(example_file(file, mustWork = TRUE))
+        readRDS(pkg_extdata(file, mustWork = TRUE))
     }
-}
-
-example_file <- function(..., base = "extdata") {
-    system.file(base, ..., package = pkg_nm())
 }
 
 with_options <- function(code, ...) {
