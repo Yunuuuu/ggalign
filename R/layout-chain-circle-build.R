@@ -52,8 +52,12 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         size
     }, numeric(1L), USE.NAMES = FALSE)
 
-    # For each plot track, relative to the total radius:
-    # `0.4` is coord_radial used for scale size, I don't know what it means
+    # For each plot track, relative to the total radius (1):
+    # 1. total radius: 1
+    # 2. total radius for the plot area (for each plot track): 1 - inner_radius
+    # `0.4` is coord_radial used for scale size in ggplot2 to add extra spaces
+    # for axis labels
+    # https://github.com/tidyverse/ggplot2/issues/6284
     inner_radius <- radial$inner_radius[1L] / 0.4
     plot_track <- sizes / sum(sizes) * (1 - inner_radius)
 
@@ -73,7 +77,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # the plot size and its track size.
     plot_inner <- plot_sizes - plot_track
     guides <- vector("list", length(plot_list))
-    plot_table <- origin <- NULL
+    plot_table <- NULL
     design <- setup_design(circle@design)
     for (i in index) {
         plot_size <- plot_sizes[[i]]
@@ -126,14 +130,9 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # for each inner gtable, we insert it to the panel area of the
         # outter gtable
         #
-        # how to get the coordinate origin from the `coord_radial()` ?
-        # origin <- layout$coord$transform(
-        #     data.frame(x = 0.5, y = 0.5),
-        #     panel_params = layout$panel_params[[1L]]
-        # )
         # For bbox, `ggplot2::polar_bbox` always take (0.5, 0.5) as origin
         bbox <- plot_layout$panel_params[[1L]]$bbox
-        just <- c(
+        origin <- c(
             scales::rescale(0.5, from = bbox$x),
             scales::rescale(0.5, from = bbox$y)
         )
@@ -212,7 +211,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 )
             }
         }
-        origin <- just
+        just <- origin
         last_plot_size <- plot_size # the last plot panel size
         last_spacing <- spacing
     }

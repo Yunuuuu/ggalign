@@ -16,6 +16,9 @@
 # other packages that are not listed in Imports, so use them with caution.
 
 # ## Changelog
+# 2025-03-12
+# - Add `from_namespace`
+#
 # 2025-03-10:
 # - Add `on_exit`
 #
@@ -77,12 +80,51 @@ pkg_extdata <- function(..., mustWork = TRUE) {
     system.file("extdata", ..., package = pkg_nm(), mustWork = mustWork)
 }
 
+#' @param ... The last argument must be a string representing the variable name.
+#' For all others, provide a list of formulas where:
+#' - The left-hand side should return a single boolean value and may reference a
+#'   variable named `"version"`, which represents the current package version.
+#' - The right-hand side should be a string specifying the variable name.
+#' @examples
+#' from_namespace(
+#'     "ggplot2",
+#'      version < "3.5.1" ~ "complete_theme",
+#'     "plot_theme"
+#' )
+#' @noRd
+from_namespace <- local({
+    namespace <- NULL
+    function(package, ..., mode = "any") {
+        if (is.null(namespace)) {
+            namespace <<- getNamespace(package)
+        }
+        envir <- parent.frame()
+        dots <- as.list(substitute(...()))
+        # The last one should be a string
+        name <- eval(.subset2(dots, length(dots)), envir = envir)
+        if (length(dots) > 1L) {
+            version_envir <- new.env(parent = envir)
+            version_envir$version <- utils::packageVersion(package)
+            for (dot in dots[-length(dots)]) {
+                # evaluate in the version environemnt
+                if (eval(.subset2(dot, 2L), envir = version_envir)) {
+                    name <- eval(.subset2(dot, 3L), envir = envir)
+                    break
+                }
+            }
+        }
+        get(name, envir = namespace, inherits = FALSE, mode = mode)
+    }
+})
+
 # Need `rlang` package, can support `quosure`
 on_exit <- function(expr, envir = parent.frame(), after = TRUE, add = TRUE) {
     expr <- getExportedValue("rlang", "enquo")(expr)
     defer(
         getExportedValue("rlang", "eval_tidy")(expr),
-        envir = envir, after = after, add
+        envir = envir,
+        after = after,
+        add
     )
 }
 
@@ -134,9 +176,11 @@ oxford_comma <- function(x, sep = ", ", final = "and") {
 #' @param code_style A boolean indicating whether to apply code formatting
 #' to function names.
 #' @noRd
-rd_collect_family <- function(family,
-                              section_title = paste(family, "family"),
-                              code_style = TRUE) {
+rd_collect_family <- function(
+    family,
+    section_title = paste(family, "family"),
+    code_style = TRUE
+) {
     # get blocks objects from the roxygenize function
     blocks <- NULL
     pos <- sys.nframe()
@@ -144,8 +188,10 @@ rd_collect_family <- function(family,
         if (!is.null(call <- sys.call(-pos))) {
             fn <- eval(.subset2(call, 1L), sys.frame(-(pos + 1L)))
             env <- sys.frame(-pos)
-            if (identical(fn, getExportedValue("roxygen2", "roxygenize")) &&
-                exists("blocks", envir = env, inherits = FALSE)) {
+            if (
+                identical(fn, getExportedValue("roxygen2", "roxygenize")) &&
+                    exists("blocks", envir = env, inherits = FALSE)
+            ) {
                 blocks <- get("blocks", envir = env, inherits = FALSE)
                 break
             }
@@ -155,22 +201,36 @@ rd_collect_family <- function(family,
 
     # identify the blocks with family of the same tag specified in `family`
     blocks <- blocks[
-        vapply(blocks, function(block) {
-            getExportedValue("roxygen2", "block_has_tags")(block, "family") &&
-                identical(
-                    getExportedValue("roxygen2", "block_get_tag_value")(
-                        block, "family"
-                    ),
-                    family
-                )
-        }, logical(1L), USE.NAMES = FALSE)
+        vapply(
+            blocks,
+            function(block) {
+                getExportedValue("roxygen2", "block_has_tags")(
+                    block,
+                    "family"
+                ) &&
+                    identical(
+                        getExportedValue("roxygen2", "block_get_tag_value")(
+                            block,
+                            "family"
+                        ),
+                        family
+                    )
+            },
+            logical(1L),
+            USE.NAMES = FALSE
+        )
     ]
     if (length(blocks) == 0L) return(character()) # styler: off
 
     # extracted the function name
-    funs <- vapply(blocks, function(block) {
-        as.character(.subset2(block$call, 2L))
-    }, character(1L), USE.NAMES = FALSE)
+    funs <- vapply(
+        blocks,
+        function(block) {
+            as.character(.subset2(block$call, 2L))
+        },
+        character(1L),
+        USE.NAMES = FALSE
+    )
     if (code_style) {
         items <- sprintf("\\code{\\link[=%s]{%s()}}", funs, funs)
     } else {
