@@ -172,7 +172,11 @@ circle_continuous.formula <- circle_continuous.function
 new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
                               theme = NULL, name = NULL, call = caller_call()) {
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    assert_s3_class(radial, "CoordRadial", allow_null = TRUE)
+    if (!is.null(radial) && !inherits(radial, c("CoordRadial"))) {
+        cli_abort("{.arg radial} must be created with {.fn coord_circle}",
+            call = call
+        )
+    }
     if (!is.null(radial) && abs(diff(radial$arc)) < pi / 2L) {
         cli_abort(
             "Cannot use circle of acute angle < 90 in {.arg radial}",

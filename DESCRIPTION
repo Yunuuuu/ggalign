@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
-    ggplot2 (>= 3.3.0)
+    ggplot2 (>= 3.5.0)
 Imports: 
     cli,
     grDevices,
@@ -94,6 +94,8 @@ Collate:
     'ggcross.R'
     'ggfree.R'
     'ggmark.R'
+    'ggplot-coord-circle.R'
+    'ggplot-facet-sector.R'
     'ggplot-helper.R'
     'ggplot-theme.R'
     'ggplot-utils.R'

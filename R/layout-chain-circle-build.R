@@ -40,6 +40,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # plot coordinate
     if (is.null(input_radial <- circle@radial)) {
         radial <- ggplot2::coord_radial(theta = "x", r.axis.inside = TRUE)
+        # radial <- coord_circle(theta = "x", r.axis.inside = TRUE)
     } else {
         radial <- ggproto(NULL, input_radial, theta = "x", r_axis_inside = TRUE)
     }
@@ -55,11 +56,18 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # For each plot track, relative to the total radius (1):
     # 1. total radius: 1
     # 2. total radius for the plot area (for each plot track): 1 - inner_radius
-    # `0.4` is coord_radial used for scale size in ggplot2 to add extra spaces
-    # for axis labels
-    # https://github.com/tidyverse/ggplot2/issues/6284
-    inner_radius <- radial$inner_radius[1L] / 0.4
-    plot_track <- sizes / sum(sizes) * (1 - inner_radius)
+    if (inherits(radial, "CoordCircle")) {
+        inner_radius <- radial$inner_radius[1L] / 0.5
+        outer_radius <- radial$inner_radius[2L] / 0.5
+    } else {
+        # For `CoordRadial`
+        # `0.4` is coord_radial used for scale size in ggplot2 to add extra
+        # spaces for axis labels
+        # https://github.com/tidyverse/ggplot2/issues/6284
+        inner_radius <- radial$inner_radius[1L] / 0.4
+        outer_radius <- radial$inner_radius[2L] / 0.4
+    }
+    plot_track <- sizes / sum(sizes) * (outer_radius - inner_radius)
 
     # For each plot, the plot size is calculated by adding the space for the
     # inner radius of each track.
@@ -67,10 +75,11 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     direction <- circle@direction
     if (identical(direction, "outward")) {
         plot_sizes <- inner_radius + cumsum(plot_track)
-    } else {
-        plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
-        # The plots are always build outward, so the order is reversed.
+        # The plots are always build inward, so the order is reversed.
         index <- rev(index)
+    } else {
+        plot_sizes <- outer_radius -
+            cumsum(c(0, plot_track[-length(plot_track)]))
     }
 
     # For each plot, the inner radius is calculated as the difference between
@@ -90,12 +99,18 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # we always use `null` facet
         # we won't respect `free_facet` and `free_coord`
         plot <- gguse_facet(plot, ggplot2::facet_null())
-        plot <- gguse_radial_coord(
+        plot <- gguse_circle_coord(
             plot,
             coord = radial,
             # https://github.com/tidyverse/ggplot2/issues/6284
             # Use `0.5` to remove the extra spaces for axis label
-            inner_radius = c(plot_inner[[i]] / plot_size, 1) * 0.5,
+            inner_radius = c(
+                plot_inner[[i]] / plot_size,
+                # for the outmost plot, we respect the outer radius defined by
+                # the users, for others, we alway use 1 to remove any spacing
+                # between two tracks
+                if (is.null(plot_table)) outer_radius else 1
+            ) * 0.5,
             layout_name = align$layout_name
         )
 
@@ -132,7 +147,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         #
         # For bbox, `ggplot2::polar_bbox` always take (0.5, 0.5) as origin
         bbox <- plot_layout$panel_params[[1L]]$bbox
-        origin <- c(
+        just <- c(
             scales::rescale(0.5, from = bbox$x),
             scales::rescale(0.5, from = bbox$y)
         )
@@ -142,18 +157,18 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             plot_table <- gt
         } else {
             # define the panel size of the inner track
-            rescale_factor <- last_plot_size / plot_size
+            rescale_factor <- plot_size / last_plot_size
 
             # the spacer between two plots
             if (identical(direction, "outward")) {
-                spacer <- last_spacing
-            } else {
                 spacer <- spacing
+            } else {
+                spacer <- last_spacing
             }
             if (inherits(spacer, "element_blank") || is.null(spacer)) {
                 spacer <- unit(0, "mm")
             }
-            plot_table <- editGrob(plot_table, vp = viewport(
+            gt <- editGrob(gt, vp = viewport(
                 width = unit(rescale_factor, "npc") - spacer,
                 height = unit(rescale_factor, "npc") - spacer,
                 x = origin[1L], y = origin[2L], just = just,
@@ -163,7 +178,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             # add the inner track to the panel area of the outter track
             panel_loc <- find_panel(gt)
             plot_table <- gtable_add_grob(
-                gt, plot_table,
+                plot_table, gt,
                 t = .subset2(panel_loc, "t"),
                 l = .subset2(panel_loc, "l"),
                 b = .subset2(panel_loc, "b"),
@@ -211,7 +226,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 )
             }
         }
-        just <- origin
+        origin <- just
         last_plot_size <- plot_size # the last plot panel size
         last_spacing <- spacing
     }

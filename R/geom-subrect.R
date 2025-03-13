@@ -44,9 +44,7 @@ geom_subrect <- function(mapping = NULL, data = NULL,
                          lineend = "butt", linejoin = "mitre",
                          na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
     assert_bool(byrow)
-    if (!is.null(direction)) {
-        direction <- check_direction(direction)
-    }
+    if (!is.null(direction)) direction <- check_direction(direction)
     ggplot2::layer(
         data = data,
         mapping = mapping,
