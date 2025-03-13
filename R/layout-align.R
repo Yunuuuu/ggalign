@@ -675,7 +675,7 @@ gguse_linear_coord <- function(plot, layout_name) {
 
 gguse_circle_coord <- function(plot, coord, ..., layout_name) {
     if (inherits(plot_coord <- plot$coordinates, "CoordRadial")) {
-        plot$coordinates <- ggproto(
+        out <- ggproto(
             NULL, plot_coord,
             theta = coord$theta,
             r = coord$r,
@@ -697,14 +697,14 @@ gguse_circle_coord <- function(plot, coord, ..., layout_name) {
             ))
         }
         if (!inherits(coord, "CoordCircle")) {
-            plot$coordinates <- ggproto(NULL, coord, ...,
+            out <- ggproto(NULL, coord, ...,
                 setup_panel_params = circle_panel_params
             )
         } else {
-            plot$coordinates <- ggproto(NULL, coord)
+            out <- ggproto(NULL, coord, ...)
         }
     }
-    plot
+    out
 }
 
 ######################################################

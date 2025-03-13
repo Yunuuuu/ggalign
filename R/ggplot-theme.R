@@ -107,7 +107,9 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
             coord <- ggproto(NULL, ParentCoord,
                 # `align_scales` will attach the `.__plot_index__`
                 render_axis_h = function(self, panel_params, theme) {
-                    scale <- .subset2(panel_params, "x")$scale
+                    scale <- (.subset2(panel_params, "x") %||%
+                        .subset2(panel_params, "theta")
+                    )$scale
                     h_tick1 <- h_tick0 + length(scale$get_breaks())
                     h_text1 <- h_text0 + length(scale$get_labels())
                     theme <- subset_theme_axis(
@@ -120,7 +122,9 @@ ggplot_add.theme_recycle <- function(object, plot, object_name) {
                     )
                 },
                 render_axis_v = function(self, panel_params, theme) {
-                    scale <- .subset2(panel_params, "y")$scale
+                    scale <- (.subset2(panel_params, "y") %||%
+                        .subset2(panel_params, "r")
+                    )$scale
                     v_tick1 <- v_tick0 + length(scale$get_breaks())
                     v_text1 <- v_text0 + length(scale$get_labels())
                     theme <- subset_theme_axis(

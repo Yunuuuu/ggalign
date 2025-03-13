@@ -7,12 +7,12 @@
 #' in the direction specified (`circle_continuous`). Otherwise, a discrete
 #' variable will be required and aligned (`circle_discrete`).
 #'
-#' @param radial A [`coord_radial()`][ggplot2::coord_radial] object that defines
-#' the global parameters for `coord_radial` across all plots in the layout.
-#' The parameters `start`, `end`, `direction`, and `expand` will be inherited
-#' and applied uniformly to all plots within the layout. The parameters
-#' `theta` and `r.axis.inside` will always be ignored and will be set to
-#' `"x"` and `TRUE`, respectively, for all plots.
+#' @param radial A [`coord_circle()`]/[`coord_radial()`][ggplot2::coord_radial]
+#' object that defines the global parameters for coordinate across all plots
+#' in the layout. The parameters `start`, `end`, `direction`, and `expand` will
+#' be inherited and applied uniformly to all plots within the layout. The
+#' parameters `theta` and `r.axis.inside` will always be ignored and will be set
+#' to `"x"` and `TRUE`, respectively, for all plots.
 #' @param direction A single string of `r oxford_or(c("inward", "outward"))`,
 #' indicating the direction in which the plot is added.
 #' - `outward`: The plot is added from the inner to the outer.
@@ -62,6 +62,7 @@ circle_layout <- function(data = NULL, ..., radial = NULL,
 }
 
 ############################################################
+#' @inheritParams facet_sector
 #' @examples
 #' # circle_discrete()
 #' # direction outward
@@ -83,13 +84,15 @@ circle_layout <- function(data = NULL, ..., radial = NULL,
 #' @export
 #' @rdname circle_layout
 circle_discrete <- function(data = NULL, ..., radial = NULL,
-                            direction = "outward", theme = NULL) {
+                            direction = "outward", spacing_theta = NULL,
+                            theme = NULL) {
     UseMethod("circle_discrete", data)
 }
 
 #' @export
 circle_discrete.default <- function(data = NULL, ..., radial = NULL,
-                                    direction = "outward", theme = NULL) {
+                                    direction = "outward", spacing_theta = NULL,
+                                    theme = NULL) {
     # the observations are rows, we use matrix to easily
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
@@ -106,7 +109,7 @@ circle_discrete.default <- function(data = NULL, ..., radial = NULL,
     new_circle_layout(
         data = data,
         design = discrete_design(nobs = nobs),
-        radial = radial, direction = direction,
+        radial = radial, direction = direction, spacing_theta = spacing_theta,
         schemes = schemes, theme = theme
     )
 }
@@ -169,7 +172,8 @@ circle_continuous.function <- function(data = NULL, ...) {
 circle_continuous.formula <- circle_continuous.function
 
 #' @importFrom methods new
-new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
+new_circle_layout <- function(data, design, radial, direction,
+                              spacing_theta = NULL, schemes = NULL,
                               theme = NULL, name = NULL, call = caller_call()) {
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (!is.null(radial) && !inherits(radial, c("CoordRadial"))) {
@@ -195,7 +199,9 @@ new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
         "CircleLayout",
         name = name, data = data,
         schemes = schemes, # used by the layout
-        design = design, theme = theme,
+        design = design,
+        spacing_theta = spacing_theta,
+        theme = theme,
         radial = radial, direction = direction
     )
 }
@@ -208,5 +214,5 @@ new_circle_layout <- function(data, design, radial, direction, schemes = NULL,
 #' @include layout-chain-.R
 methods::setClass("CircleLayout",
     contains = "ChainLayout",
-    list(radial = "ANY", direction = "character")
+    list(radial = "ANY", spacing_theta = "ANY", direction = "character")
 )
