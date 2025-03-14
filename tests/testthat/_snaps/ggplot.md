@@ -15,7 +15,7 @@
     Can't convert from `order` <double> to <integer> due to loss of precision.
     * Locations: 1
 
-# geom_gshape() workds well
+# `geom_gshape()` works well
 
     Problem while computing aesthetics.
     i Error occurred in the 1st layer.

@@ -4,7 +4,7 @@
 \alias{facet_sector}
 \title{Polar coordinates with Facet support}
 \usage{
-facet_sector(facets, radial, spacing_theta = pi/180, drop = TRUE)
+facet_sector(facets, radial = NULL, spacing_theta = pi/180, drop = TRUE)
 }
 \arguments{
 \item{facets}{A set of variables or expressions quoted by \code{\link[ggplot2:vars]{vars()}}

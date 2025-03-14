@@ -91,7 +91,7 @@ test_that("geom_pie works well", {
     )
 })
 
-test_that("geom_gshape() workds well", {
+test_that("`geom_gshape()` works well", {
     library(grid)
     expect_snapshot_error(ggplot2::ggsave(
         tempfile(fileext = ".png"),
@@ -157,5 +157,41 @@ test_that("geom_gshape() workds well", {
             geom_gshape(aes(x = 1, y = y, gshape = value, fill = value)) +
             scale_gshape_manual(values = gshape_mapping) +
             scale_fill_brewer(palette = "Dark2")
+    )
+})
+
+test_that("`coord_circle()` works well", {
+    expect_doppelganger(
+        "coord_circle() default",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            coord_circle()
+    )
+    expect_doppelganger(
+        "coord_circle() start and end",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            coord_circle(start = -0.4 * pi, end = 0.4 * pi)
+    )
+    expect_doppelganger(
+        "coord_circle() inner.radius and outer.radius",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            coord_circle(inner.radius = 0.3, outer.radius = 0.5)
+    )
+})
+
+test_that("`facet_sector()` works well", {
+    expect_doppelganger(
+        "facet_sector() default",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            facet_sector(vars(cyl))
+    )
+    expect_doppelganger(
+        "facet_sector() spacing_theta rel()",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            facet_sector(vars(cyl), spacing_theta = rel(0.01))
     )
 })

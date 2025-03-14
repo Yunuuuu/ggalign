@@ -18,7 +18,8 @@
 #'     )
 #' @importFrom ggplot2 ggproto
 #' @export
-facet_sector <- function(facets, radial, spacing_theta = pi / 180, drop = TRUE) {
+facet_sector <- function(facets, radial = NULL,
+                         spacing_theta = pi / 180, drop = TRUE) {
     # For FacetCircle
     facets <- ggfun(
         version <= "3.5.1" ~ "wrap_as_facets_list",
@@ -43,7 +44,8 @@ facet_sector <- function(facets, radial, spacing_theta = pi / 180, drop = TRUE) 
     } else {
         dir <- "lt"
     }
-    if (!inherits(radial, c("CoordRadial"))) {
+    radial <- radial %||% coord_circle()
+    if (!inherits(radial, "CoordRadial")) {
         cli_abort("{.arg radial} must be created with {.fn coord_circle}")
     }
     structure(
@@ -103,7 +105,7 @@ FacetSector <- ggproto(
         }
 
         # total theta for panel area and panel spacing
-        arc_theta <- diff(coord$arc)
+        arc_theta <- abs(diff(coord$arc))
         spacing_theta <- self$params$spacing_theta
         if (inherits(spacing_theta, "rel")) {
             spacing_theta <- spacing_theta * arc_theta
@@ -115,10 +117,18 @@ FacetSector <- ggproto(
         # total theta for panel area
         panel_theta <- arc_theta -
             # substract the number of spacing between panels
-            spacing_theta * (length(panel_weights) - 1L)
+            spacing_theta *
+                # for the whole circle, arc_theta == 2 * pi
+                # there should be as many panels as the number of panel spacing
+                if (abs(arc_theta - 2 * pi) < .Machine$double.eps^0.5) {
+                    length(panel_weights)
+                } else {
+                    length(panel_weights) - 1L
+                }
         if (panel_theta <= 0L) {
             cli_abort("No panel area, try to reduce {.arg spacing_theta}")
         }
+
         # re-distribute the arc for each panel
         panel_point <- vec_interleave(
             panel_theta * panel_weights / sum(panel_weights),
