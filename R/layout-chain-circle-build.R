@@ -112,15 +112,18 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             ) * 0.5,
             layout_name = align$layout_name
         )
-        if (!align$free_facet && is_discrete_design(design) &&
-            nlevels(.subset2(design, "panel")) > 1L) {
-            plot <- plot + facet_sector(
-                ggplot2::vars(.data$.panel), plot_coord,
-                spacing_theta = circle@spacing_theta %||% pi / 180,
-                drop = FALSE
-            )
+        if (!align$free_facet && is_discrete_design(design)) {
+            if (nlevels(.subset2(design, "panel")) > 1L) {
+                plot <- plot + facet_sector(
+                    ggplot2::vars(.data$.panel), plot_coord,
+                    spacing_theta = circle@spacing_theta %||% pi / 180,
+                    drop = FALSE
+                )
+            } else {
+                plot <- gguse_facet(plot, ggplot2::facet_null())
+                plot$coordinates <- plot_coord
+            }
         } else {
-            plot <- gguse_facet(plot, ggplot2::facet_null())
             plot$coordinates <- plot_coord
         }
 
