@@ -1,5 +1,9 @@
 # ggalign (development version)
 
+## Breaking changes
+
+* align_reorder() has been renamed to align_order2().
+
 ## New features
 
 * Now `circle_layout()` support multiple facets.
@@ -12,8 +16,7 @@
 
 ## Breaking changes
 
-* Now, all `*_free()` layouts have been removed, all layout has been splitted into two type: align 
-  discrete or continous vairables.
+* Now, all `*_free()` layouts have been removed, all layout has been splitted into two type: align discrete or continous vairables.
 
 ## New features
 
