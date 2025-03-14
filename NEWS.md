@@ -1,5 +1,11 @@
 # ggalign (development version)
 
+## New features
+
+* new `facet_sector()` function to add Facet support for polar coordinates
+
+* new `coord_circle()` function to provide additional customization options for coord_radial()
+
 # ggalign 0.1.0
 
 ## Breaking changes

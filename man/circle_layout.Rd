@@ -20,6 +20,7 @@ circle_discrete(
   ...,
   radial = NULL,
   direction = "outward",
+  spacing_theta = NULL,
   theme = NULL
 )
 
@@ -44,12 +45,12 @@ data frame.
 \item{...}{Additional arguments passed to \code{\link[=fortify_data_frame]{fortify_data_frame()}} or
 \code{\link[=fortify_matrix]{fortify_matrix()}}.}
 
-\item{radial}{A \code{\link[ggplot2:coord_polar]{coord_radial()}} object that defines
-the global parameters for \code{coord_radial} across all plots in the layout.
-The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} will be inherited
-and applied uniformly to all plots within the layout. The parameters
-\code{theta} and \code{r.axis.inside} will always be ignored and will be set to
-\code{"x"} and \code{TRUE}, respectively, for all plots.}
+\item{radial}{A \code{\link[=coord_circle]{coord_circle()}}/\code{\link[ggplot2:coord_polar]{coord_radial()}}
+object that defines the global parameters for coordinate across all plots
+in the layout. The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} will
+be inherited and applied uniformly to all plots within the layout. The
+parameters \code{theta} and \code{r.axis.inside} will always be ignored and will be set
+to \code{"x"} and \code{TRUE}, respectively, for all plots.}
 
 \item{direction}{A single string of \code{"inward"} or \code{"outward"},
 indicating the direction in which the plot is added.
@@ -67,6 +68,9 @@ elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, 
 \code{margins}, \code{panel.border}, and \code{background}. By default, the theme will
 inherit from the parent \code{layout}. It also controls the panel spacing for all
 plots in the layout.}
+
+\item{spacing_theta}{The size of spacing between different panel. A numeric
+of the radians or a \code{\link[ggplot2:element]{rel()}} object.}
 }
 \value{
 A \code{CircleLayout} object.

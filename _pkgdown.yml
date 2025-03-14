@@ -147,6 +147,8 @@ reference:
   - raster_magick
   - geom_draw
   - geom_gshape
+  - coord_circle
+  - facet_sector
   - scale_gshape_manual
   - draw_key_gshape
   - element_polygon

@@ -39,7 +39,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # plot coordinate
     if (is.null(input_radial <- circle@radial)) {
-        radial <- ggplot2::coord_radial(theta = "x", r.axis.inside = TRUE)
+        radial <- coord_circle(theta = "x", r.axis.inside = TRUE)
     } else {
         radial <- ggproto(NULL, input_radial, theta = "x", r_axis_inside = TRUE)
     }
@@ -55,20 +55,29 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # For each plot track, relative to the total radius (1):
     # 1. total radius: 1
     # 2. total radius for the plot area (for each plot track): 1 - inner_radius
-    # `0.4` is coord_radial used for scale size in ggplot2 to add extra spaces
-    # for axis labels
-    # https://github.com/tidyverse/ggplot2/issues/6284
-    inner_radius <- radial$inner_radius[1L] / 0.4
-    plot_track <- sizes / sum(sizes) * (1 - inner_radius)
+    if (inherits(radial, "CoordCircle")) {
+        inner_radius <- radial$inner_radius[1L] / 0.5
+        outer_radius <- radial$inner_radius[2L] / 0.5
+    } else {
+        # For `CoordRadial`
+        # `0.4` is coord_radial used for scale size in ggplot2 to add extra
+        # spaces for axis labels
+        # https://github.com/tidyverse/ggplot2/issues/6284
+        inner_radius <- radial$inner_radius[1L] / 0.4
+        outer_radius <- radial$inner_radius[2L] / 0.4
+    }
+    plot_track <- sizes / sum(sizes) * (outer_radius - inner_radius)
 
     # For each plot, the plot size is calculated by adding the space for the
     # inner radius of each track.
-    index <- seq_along(plot_list)
+    N <- length(plot_list)
+    index <- seq_len(N)
     direction <- circle@direction
     if (identical(direction, "outward")) {
         plot_sizes <- inner_radius + cumsum(plot_track)
     } else {
-        plot_sizes <- 1 - cumsum(c(0, plot_track[-length(plot_track)]))
+        plot_sizes <- outer_radius -
+            cumsum(c(0, utils::head(plot_track, -1L)))
         # The plots are always build outward, so the order is reversed.
         index <- rev(index)
     }
@@ -76,7 +85,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # For each plot, the inner radius is calculated as the difference between
     # the plot size and its track size.
     plot_inner <- plot_sizes - plot_track
-    guides <- vector("list", length(plot_list))
+    guides <- vector("list", N)
     plot_table <- NULL
     design <- setup_design(circle@design)
     for (i in index) {
@@ -89,15 +98,31 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
         # we always use `null` facet
         # we won't respect `free_facet` and `free_coord`
-        plot <- gguse_facet(plot, ggplot2::facet_null())
-        plot <- gguse_radial_coord(
+        plot_coord <- gguse_circle_coord(
             plot,
             coord = radial,
             # https://github.com/tidyverse/ggplot2/issues/6284
             # Use `0.5` to remove the extra spaces for axis label
-            inner_radius = c(plot_inner[[i]] / plot_size, 1) * 0.5,
+            inner_radius = c(
+                plot_inner[[i]] / plot_size,
+                # for the outmost plot, we respect the outer radius defined by
+                # the users, for others, we alway use 1 to remove any spacing
+                # between two tracks
+                if (i == N) outer_radius else 1
+            ) * 0.5,
             layout_name = align$layout_name
         )
+        if (!align$free_facet && is_discrete_design(design) &&
+            nlevels(.subset2(design, "panel")) > 1L) {
+            plot <- plot + facet_sector(
+                ggplot2::vars(.data$.panel), plot_coord,
+                spacing_theta = circle@spacing_theta %||% pi / 180,
+                drop = FALSE
+            )
+        } else {
+            plot <- gguse_facet(plot, ggplot2::facet_null())
+            plot$coordinates <- plot_coord
+        }
 
         # set limits and default scales
         if (!align$free_limits) {
@@ -131,7 +156,10 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # outter gtable
         #
         # For bbox, `ggplot2::polar_bbox` always take (0.5, 0.5) as origin
-        bbox <- plot_layout$panel_params[[1L]]$bbox
+        bbox <- ggfun("polar_bbox")(
+            plot_layout$coord$arc, margin = c(0, 0, 0, 0),
+            inner_radius = plot_layout$coord$inner_radius
+        )
         origin <- c(
             scales::rescale(0.5, from = bbox$x),
             scales::rescale(0.5, from = bbox$y)

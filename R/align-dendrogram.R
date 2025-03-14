@@ -137,7 +137,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                     leaf_braches = rep_len(.subset(branches, i), n),
                     reorder_branches = FALSE,
                     root = root,
-                    double = self$in_linear,
+                    double = TRUE,
                     call = self$call
                 )
                 start <- end
@@ -172,7 +172,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
                 # panel has been reordered by the dendrogram index
                 reorder_branches = FALSE,
                 root = root,
-                double = self$in_linear,
+                double = TRUE,
                 call = self$call
             )
             edge <- ggalign_attr(data, "edge")
