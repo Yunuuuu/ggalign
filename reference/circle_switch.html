@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Determine the active context of circle layout</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.1.0/R/layout-circle-switch.R" class="external-link"><code>R/layout-circle-switch.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/layout-chain-circle-switch.R" class="external-link"><code>R/layout-chain-circle-switch.R</code></a></small>
       <div class="d-none name"><code>circle_switch.Rd</code></div>
     </div>
 
@@ -59,12 +59,12 @@
 
 
 <dl><dt id="arg-radial">radial<a class="anchor" aria-label="anchor" href="#arg-radial"></a></dt>
-<dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code> object that defines
-the global parameters for <code>coord_radial</code> across all plots in the layout.
-The parameters <code>start</code>, <code>end</code>, <code>direction</code>, and <code>expand</code> will be inherited
-and applied uniformly to all plots within the layout. The parameters
-<code>theta</code> and <code>r.axis.inside</code> will always be ignored and will be set to
-<code>"x"</code> and <code>TRUE</code>, respectively, for all plots.</p></dd>
+<dd><p>A <code><a href="coord_circle.html">coord_circle()</a></code>/<code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code>
+object that defines the global parameters for coordinate across all plots
+in the layout. The parameters <code>start</code>, <code>end</code>, <code>direction</code>, and <code>expand</code> will
+be inherited and applied uniformly to all plots within the layout. The
+parameters <code>theta</code> and <code>r.axis.inside</code> will always be ignored and will be set
+to <code>"x"</code> and <code>TRUE</code>, respectively, for all plots.</p></dd>
 
 
 <dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
@@ -108,7 +108,7 @@ A single number or string of the plot elements in the layout. If <code>NULL</cod
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yun Peng, Shixiang Wang, Guangchuang Yu.</p>
+  <p>Developed by Yun Peng, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

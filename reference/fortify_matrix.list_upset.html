@@ -11,7 +11,7 @@ UpSet plot. It always returns a matrix for a horizontal UpSet plot."><meta prope
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ UpSet plot. It always returns a matrix for a horizontal UpSet plot."><meta prope
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Build a Matrix for UpSet plot</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.1.0/R/fortify-matrix.R" class="external-link"><code>R/fortify-matrix.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-matrix-list.R" class="external-link"><code>R/fortify-matrix-list.R</code></a></small>
       <div class="d-none name"><code>fortify_matrix.list_upset.Rd</code></div>
     </div>
 
@@ -58,13 +58,7 @@ UpSet plot. It always returns a matrix for a <code>horizontal</code> UpSet plot.
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'list_upset'</span></span>
-<span><span class="fu"><a href="fortify_matrix.html">fortify_matrix</a></span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
-<span>  mode <span class="op">=</span> <span class="st">"distinct"</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  data_arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
-<span>  call <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="fortify_matrix.html">fortify_matrix</a></span><span class="op">(</span><span class="va">data</span>, mode <span class="op">=</span> <span class="st">"distinct"</span>, <span class="va">...</span>, data_arg <span class="op">=</span> <span class="cn">NULL</span>, call <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -93,8 +87,8 @@ improve messages. Not used by the user.</p></dd>
 
 <dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
 <dd><p>The execution environment where <code>data</code> and other arguments for
-the method are collected, e.g., <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env()</a></code>.
-Developers can use it to improve messages. Not used by the user.</p></dd>
+the method are collected. Developers can use it to improve messages. Not
+used by the user.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -108,11 +102,12 @@ intersection.</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="tune.list.html">tune.list()</a></code></p>
-<p>Other fortify_matrix methods:
+<p>Other <code><a href="fortify_matrix.html">fortify_matrix()</a></code> methods:
 <code><a href="fortify_matrix.GISTIC.html">fortify_matrix.GISTIC</a>()</code>,
 <code><a href="fortify_matrix.MAF.html">fortify_matrix.MAF</a>()</code>,
 <code><a href="fortify_matrix.default.html">fortify_matrix.default</a>()</code>,
 <code><a href="fortify_matrix.matrix.html">fortify_matrix.matrix</a>()</code>,
+<code><a href="fortify_matrix.matrix_oncoplot.html">fortify_matrix.matrix_oncoplot</a>()</code>,
 <code><a href="fortify_matrix.matrix_upset.html">fortify_matrix.matrix_upset</a>()</code>,
 <code><a href="fortify_matrix.phylo.html">fortify_matrix.phylo</a>()</code></p></div>
     </div>
@@ -122,7 +117,7 @@ intersection.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yun Peng, Shixiang Wang, Guangchuang Yu.</p>
+  <p>Developed by Yun Peng, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

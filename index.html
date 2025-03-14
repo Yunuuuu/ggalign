@@ -17,8 +17,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="A ggplot2 Extension for Consistent Axis Alignment">
-<meta name="description" content="A ggplot2 extension offers various tools for organizing and arranging plots. It is designed to consistently align a specific axis across multiple ggplot objects, making it especially useful for plots requiring data order manipulation. A typical use case includes organizing combinations like a dendrogram and a heatmap.">
-<meta property="og:description" content="A ggplot2 extension offers various tools for organizing and arranging plots. It is designed to consistently align a specific axis across multiple ggplot objects, making it especially useful for plots requiring data order manipulation. A typical use case includes organizing combinations like a dendrogram and a heatmap.">
+<meta name="description" content="A ggplot2 extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or use a circular layout, ggalign delivers flexibility and accuracy with minimal effort.">
+<meta property="og:description" content="A ggplot2 extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or use a circular layout, ggalign delivers flexibility and accuracy with minimal effort.">
 <meta property="og:image" content="https://yunuuuu.github.io/ggalign/logo.png">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,12 +78,11 @@
 </div>
 <!-- badges: start -->
 
-<p>This package extends ggplot2 by providing advanced tools for aligning and organizing multiple plots, particularly those that automatically reorder observations, such as dendrogram. It offers fine control over layout adjustment and plot annotations, enabling you to create complex, publication-quality visualizations while still using the familiar grammar of ggplot2.</p>
+<p>The <code>ggalign</code> package extends <code>ggplot2</code> to simplify the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots—such as heatmaps, dendrograms, or circular layouts—while handling intricate relationships in multi-omics data, like genomics or microbiomes. Whether you need to stack plots, arrange them around a central figure, or link diverse datasets (e.g., genes to pathways), <code>ggalign</code> offers flexibility and precision with minimal effort.</p>
 <div class="section level2">
 <h2 id="why-use-ggalign">Why use <code>ggalign</code>?<a class="anchor" aria-label="anchor" href="#why-use-ggalign"></a>
 </h2>
-<p><code>ggalign</code> focuses on aligning observations across multiple plots. It leverages the <code>"number of observations"</code> in the <a href="https://vctrs.r-lib.org/reference/vec_size.html" class="external-link">vctrs</a> package or <code><a href="https://rdrr.io/r/base/nrow.html" class="external-link">NROW()</a></code> function to maintain consistency in plot organization.</p>
-<p>If you’ve ever struggled with aligning plots with self-contained ordering (like dendrogram), or applying consistent grouping or ordering across multiple plots (e.g., with k-means clustering), <code>ggalign</code> is designed to make this easier. The package integrates seamlessly with ggplot2, providing the flexibility to use its geoms, scales, and other components for complex visualizations.</p>
+<p><code>ggalign</code> focuses on aligning observations across multiple plots. If you’ve ever struggled with aligning plots with self-contained ordering (like dendrogram), or applying consistent grouping or ordering across multiple plots (e.g., with k-means clustering), <code>ggalign</code> is designed to make this easier. The package integrates seamlessly with ggplot2, providing the flexibility to use its geoms, scales, and other components for complex visualizations.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -128,9 +127,6 @@
 <code>marsilea</code>
 </th>
 <th>
-<code>aplot</code>
-</th>
-<th>
 <code>ComplexHeatmap</code>
 </th>
 </tr></thead>
@@ -148,9 +144,6 @@ Python
 <td>
 R
 </td>
-<td>
-R
-</td>
 </tr>
 <tr>
 <td colspan="2">
@@ -161,9 +154,6 @@ Declarative
 </td>
 <td>
 Declarative
-</td>
-<td>
-Declarative+Functional
 </td>
 <td>
 Functional
@@ -180,18 +170,12 @@ ggplot2 (Advanced plot system built on grid system)
 Matplotlib
 </td>
 <td>
-ggplot2 (Advanced plot system built on grid system)
-</td>
-<td>
 grid
 </td>
 </tr>
 <tr>
 <td colspan="2">
 <strong>Focus</strong>
-</td>
-<td>
-Composable Visualization
 </td>
 <td>
 Composable Visualization
@@ -216,16 +200,10 @@ Heatmap
 <td>
 ✅
 </td>
-<td>
-✅
-</td>
 </tr>
 <tr>
 <td colspan="2">
 <strong>QuadLayout</strong>
-</td>
-<td>
-✅
 </td>
 <td>
 ✅
@@ -250,19 +228,13 @@ Heatmap Only (discrete variables)
 <td>
 ❌
 </td>
-<td>
-❌
-</td>
 </tr>
 <tr>
 <td rowspan="4">
-<strong>Alignment</strong>
+<strong>Relationship</strong>
 </td>
 <td>
 <strong>One-to-One</strong>
-</td>
-<td>
-✅
 </td>
 <td>
 ✅
@@ -287,9 +259,6 @@ Heatmap Only (discrete variables)
 <td>
 ❌
 </td>
-<td>
-❌
-</td>
 </tr>
 <tr>
 <td>
@@ -297,9 +266,6 @@ Heatmap Only (discrete variables)
 </td>
 <td>
 ✅
-</td>
-<td>
-❌
 </td>
 <td>
 ❌
@@ -321,9 +287,6 @@ Heatmap Only (discrete variables)
 <td>
 ❌
 </td>
-<td>
-❌
-</td>
 </tr>
 <tr>
 <td colspan="2">
@@ -331,9 +294,6 @@ Heatmap Only (discrete variables)
 </td>
 <td>
 ✅
-</td>
-<td>
-❌
 </td>
 <td>
 ❌
@@ -353,9 +313,6 @@ Heatmap Only (discrete variables)
 ❌
 </td>
 <td>
-✅
-</td>
-<td>
 ❌
 </td>
 </tr>
@@ -367,17 +324,15 @@ Heatmap Only (discrete variables)
 </h2>
 <table class="table">
 <colgroup>
-<col width="22%">
 <col width="26%">
-<col width="7%">
-<col width="16%">
-<col width="26%">
+<col width="32%">
+<col width="8%">
+<col width="32%">
 </colgroup>
 <thead><tr class="header">
 <th>Specification</th>
 <th><code>ggalign</code></th>
 <th><code>marsilea</code></th>
-<th><code>aplot</code></th>
 <th><code>ComplexHeatmap</code></th>
 </tr></thead>
 <tbody>
@@ -385,34 +340,29 @@ Heatmap Only (discrete variables)
 <td><strong>Reorder observations</strong></td>
 <td>✅</td>
 <td>✅</td>
-<td>❌</td>
 <td>Heatmap Only</td>
 </tr>
 <tr class="even">
 <td><strong>Group observations into different panels</strong></td>
 <td>✅</td>
 <td>✅</td>
-<td>❌</td>
 <td>Heatmap Only</td>
 </tr>
 <tr class="odd">
 <td><strong>Clustering algorithm</strong></td>
 <td>Kmeans,Hierarchical Clustering and arbitary algorithm</td>
 <td>❌</td>
-<td>❌</td>
 <td>Kmeans,Hierarchical Clustering and arbitary algorithm</td>
 </tr>
 <tr class="even">
 <td><strong>Legends Creation</strong></td>
 <td>Automatic</td>
-<td>Manual</td>
 <td>Automatic</td>
 <td>Limited automatic, requires manual add</td>
 </tr>
 <tr class="odd">
 <td><strong>Legends Position</strong></td>
 <td>Anywhere, can be controlled for a single plot</td>
-<td>Anywhere</td>
 <td>Anywhere</td>
 <td>Four sides, can only be placed on one side at a time</td>
 </tr>
@@ -422,8 +372,6 @@ Heatmap Only (discrete variables)
 </td>
 <td>
 <code>hclust</code> only</td>
-<td>Tree from both <code>hclust</code> or <code>ape</code>
-</td>
 <td>
 <code>hclust</code> only</td>
 </tr>
@@ -432,12 +380,10 @@ Heatmap Only (discrete variables)
 <td>✅</td>
 <td>❌</td>
 <td>❌</td>
-<td>❌</td>
 </tr>
 <tr class="even">
 <td><strong>3D Heatmap</strong></td>
 <td>✅</td>
-<td>❌</td>
 <td>❌</td>
 <td>✅</td>
 </tr>
@@ -446,13 +392,11 @@ Heatmap Only (discrete variables)
 <td>✅</td>
 <td>✅</td>
 <td>✅</td>
-<td>✅</td>
 </tr>
 <tr class="even">
 <td><strong>UpSet plot</strong></td>
 <td>✅</td>
 <td>✅</td>
-<td>❌</td>
 <td>✅</td>
 </tr>
 </tbody>
@@ -501,7 +445,7 @@ Heatmap Only (discrete variables)
 <ul class="list-unstyled">
 <li>Yun Peng <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2801-3332" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Shixiang Wang <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9855-7357" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Guangchuang Yu <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-6485-8781" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
@@ -512,7 +456,7 @@ Heatmap Only (discrete variables)
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yun Peng, Shixiang Wang, Guangchuang Yu.</p>
+  <p>Developed by Yun Peng, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

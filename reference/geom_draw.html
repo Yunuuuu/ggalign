@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Layer with Grid or Function</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.1.0/R/geom-draw.R" class="external-link"><code>R/geom-draw.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/geom-draw.R" class="external-link"><code>R/geom-draw.R</code></a></small>
       <div class="d-none name"><code>geom_draw.Rd</code></div>
     </div>
 
@@ -71,12 +71,8 @@
 
 <dl><dt id="arg-draw">draw<a class="anchor" aria-label="anchor" href="#arg-draw"></a></dt>
 <dd><p>Either a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a> object or a function (can be
-purrr-style) that accepts at least three arguments (<code>data</code>, <code>panel_params</code>
-and <code>coord</code>) and returns a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a>.</p>
-<p>When <code>draw</code> is a function, it is used as the <code>draw_group</code>/<code>draw_panel</code>
-function in a <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">Geom</a> <code>ggproto</code> object. You should always
-call <code>coord$transform(data, panel_params)</code> inside the function <code>draw</code> to
-obtain transformed data in the plot scales.</p></dd>
+purrr-style) that accepts at least one argument (a data frame of
+transformed coordinates) and returns a <a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a>.</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
@@ -215,7 +211,7 @@ output in a <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="exte
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yun Peng, Shixiang Wang, Guangchuang Yu.</p>
+  <p>Developed by Yun Peng, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

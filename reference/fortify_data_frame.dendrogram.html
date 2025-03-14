@@ -9,7 +9,7 @@ This function converts various objects to a data frame."><meta property="og:imag
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ This function converts various objects to a data frame."><meta property="og:imag
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Build a data frame</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v0.1.0/R/dendrogram.R" class="external-link"><code>R/dendrogram.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-data-frame-dendrogram.R" class="external-link"><code>R/fortify-data-frame-dendrogram.R</code></a></small>
       <div class="d-none name"><code>fortify_data_frame.dendrogram.Rd</code></div>
     </div>
 
@@ -67,7 +67,7 @@ This function converts various objects to a data frame."><meta property="og:imag
 <span>  branch_gap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  double <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  data_arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>  data_arg <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  call <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -145,8 +145,8 @@ improve messages. Not used by the user.</p></dd>
 
 <dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
 <dd><p>The execution environment where <code>data</code> and other arguments for
-the method are collected, e.g., <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env()</a></code>.
-Developers can use it to improve messages. Not used by the user.</p></dd>
+the method are collected. Developers can use it to improve messages. Not
+used by the user.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -182,7 +182,7 @@ and correspond to both nodes of each edge.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Other fortify_data_frame methods:
+    <div class="dont-index"><p>Other <code><a href="fortify_data_frame.html">fortify_data_frame()</a></code> methods:
 <code><a href="fortify_data_frame.character.html">fortify_data_frame.character</a>()</code>,
 <code><a href="fortify_data_frame.default.html">fortify_data_frame.default</a>()</code>,
 <code><a href="fortify_data_frame.matrix.html">fortify_data_frame.matrix</a>()</code>,
@@ -298,7 +298,7 @@ and correspond to both nodes of each edge.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yun Peng, Shixiang Wang, Guangchuang Yu.</p>
+  <p>Developed by Yun Peng, Shixiang Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">
