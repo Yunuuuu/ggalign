@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A 'ggplot2' extension offers various tools the creation of complex, multi-plot visualizations. It is designed to consistently align a specific axis across multiple 'ggplot' objects, making it especially useful for plots requiring data order manipulation. A typical use case includes organizing combinations like a dendrogram and a heatmap.
+A 'ggplot2' extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or use a circular layout, 'ggalign' delivers flexibility and accuracy with minimal effort.
 }
 \seealso{
 Useful links:

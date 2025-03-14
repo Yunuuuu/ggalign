@@ -2,6 +2,8 @@
 
 ## New features
 
+* Now `circle_layout()` support multiple facets.
+
 * new `facet_sector()` function to add Facet support for polar coordinates
 
 * new `coord_circle()` function to provide additional customization options for coord_radial()
