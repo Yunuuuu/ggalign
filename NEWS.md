@@ -1,8 +1,12 @@
-# ggalign (development version)
+# ggalign 1.0.0
+
+This is a major release. While not many new features have been added, this marks the first release where the entire layout system has been completed.
 
 ## Breaking changes
 
 * align_reorder() has been renamed to align_order2().
+
+* geom_draw2() has been renamed to geom_gshape().
 
 ## New features
 
@@ -11,6 +15,8 @@
 * new `facet_sector()` function to add Facet support for polar coordinates
 
 * new `coord_circle()` function to provide additional customization options for coord_radial()
+
+* new `tune()` method shape ("oncoplot") for matrix
 
 # ggalign 0.1.0
 

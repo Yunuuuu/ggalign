@@ -1,4 +1,4 @@
-This release is a major update that includes lots of new features (some will break the old behaviour) and bug fix. Since this package is new to CRAN, no reverse dependencies exist yet.
+This major update introduces new features, some of which modify previous behavior, along with bug fixes. Since there are no reverse dependencies yet, these changes should not affect other packages.
 
 ## R CMD check results
 0 errors | 0 warnings | 0 note
