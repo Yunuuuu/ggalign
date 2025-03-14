@@ -178,15 +178,6 @@ remotes::install_github("Yunuuuu/ggalign")
 | **Oncoplot**                                 | ✅                                                    | ✅            | ✅                                                    |
 | **UpSet plot**                               | ✅                                                    | ✅            | ✅                                                    |
 
-## Altmetric scores
-
-<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-
-<div class="altmetric-embed" align="left" height="139"
-data-badge-type="donut" data-altmetric-id="173956809">
-
-</div>
-
 ## Acknowledgements
 
 I would like to express my sincere gratitude to the contributors of the
