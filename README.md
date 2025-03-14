@@ -4,14 +4,23 @@
 # ggalign <a href="https://yunuuuu.github.io/ggalign/"><img src="man/figures/logo.png" align="right" height="139" alt="ggalign website" /></a>
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/Yunuuuu/ggalign/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Yunuuuu/ggalign/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Yunuuuu/ggalign/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Yunuuuu/ggalign?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggalign)](https://CRAN.R-project.org/package=ggalign)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://cranlogs.r-pkg.org/badges/ggalign)](https://cran.r-project.org/package=ggalign)
 [![DOI](https://zenodo.org/badge/828195668.svg)](https://doi.org/10.5281/zenodo.14825328)
+<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+
+<div class="altmetric-embed" data-badge-type="donut"
+data-altmetric-id="173956809">
+
+</div>
+
 <!-- badges: end -->
 
 The `ggalign` package extends `ggplot2` to simplify the creation of
