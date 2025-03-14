@@ -26,13 +26,7 @@ you need to stack plots, arrange them around a central figure, or link
 diverse datasets (e.g., genes to pathways), `ggalign` offers flexibility
 and precision with minimal effort.
 
-\## Why use `ggalign`?
-<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-
-<div class="altmetric-embed" align="right" height="139"
-data-badge-type="donut" data-altmetric-id="173956809">
-
-</div>
+## Why use `ggalign`?
 
 `ggalign` focuses on aligning observations across multiple plots. If
 you’ve ever struggled with aligning plots with self-contained ordering
