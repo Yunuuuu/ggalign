@@ -1,0 +1,9 @@
+---
+output: github_document
+params: 
+  altmetric: true
+---
+
+```{r child="README.Rmd"}
+
+```
