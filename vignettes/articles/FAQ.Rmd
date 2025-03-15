@@ -18,12 +18,18 @@ knitr::opts_chunk$set(
 library(ggalign)
 ```
 
-```{r setup_data}
-set.seed(123)
-small_mat <- matrix(rnorm(81), nrow = 9)
-rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-```
+## How to arrange ggalign objects with other ggplot2 or grid objects?
+`align_plots()` function can arrange the ggplot2 objects, and it can also accept
+objects from `ggalign`, `ComplexHeatmap`, `pheatmap` directly. It behaves
+similar with `pathwork::wrap_plots()`, but it cannot add tags (the "A", "B",
+"C", "D" in the top-left corner) — I prefer to add tags manually using Inkscape
+or Illustrator.
+
+If you wish to use other packages to arrange your plots, you can use the
+`ggalignGrob()` function to convert `ggalign` objects into a grob. This allows
+you to arrange them alongside other plots or annotations using `patchwork`,
+`cowplot`, or `ggpubr`. However, note that in this case, the plot panels of the
+`ggalign` **Layout** object won't be aligned with the ggplot2 plot panel.
 
 ## How to customize the gene ordering in ggoncoplot function?
 To manually define the row (gene) and column (sample) order in `ggoncoplot()`,
@@ -121,6 +127,14 @@ are likely due to:
 
 You can resolve this by removing the scale expansion and adjusting the margins
 in the theme: 
+
+```{r}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
+
 ```{r}
 ggheatmap(small_mat) +
     anno_top() +
@@ -136,6 +150,13 @@ ggheatmap(small_mat) +
 When `reorder_group = FALSE` is used, reordering of the heatmap occurs within
 each group. As long as the ordering within each group remains consistent, these
 two dendrograms can be placed on the same axis of the heatmap. 
+
+```{r}
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+```
 
 Let's assume that panels represents the group for each observation and index
 represents the ordered index of the observations. 
