@@ -36,13 +36,10 @@ Suggests:
     magick,
     patchwork,
     ragg,
-    knitr,
-    rmarkdown,
     scales,
-    testthat (>= 3.0.0)
-ByteCompile: true
-Config/Needs/check: 
+    testthat (>= 3.0.0),
     vdiffr
+ByteCompile: true
 Config/Needs/website: 
     ggh4x,
     R.utils,
