@@ -19,10 +19,11 @@ navbar:
       aria-label: Tutorial
     benchmarks:
       text: Benchmarks
+      icon: fa-solid fa-chart-line
       href: articles/benchmarks.html
     faq:
       text: FAQ
-      icon: fa-solid fa-comments-question-check
+      icon: fa-solid fa-clipboard-question
       href: articles/FAQ.html
 
 reference:
