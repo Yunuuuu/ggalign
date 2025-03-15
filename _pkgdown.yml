@@ -13,7 +13,8 @@ navbar:
     right: [search, github, lightswitch]
   components:
     tutorial:
-      icon: fa-book
+      text: Tutorial
+      icon: fa-solid fa-book
       href: https://yunuuuu.github.io/ggalign-book/
       aria-label: Tutorial
     benchmarks:
@@ -21,6 +22,7 @@ navbar:
       href: articles/benchmarks.html
     faq:
       text: FAQ
+      icon: fa-solid fa-comments-question-check
       href: articles/FAQ.html
 
 reference:
