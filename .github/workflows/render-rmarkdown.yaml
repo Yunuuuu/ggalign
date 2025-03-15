@@ -31,6 +31,13 @@ jobs:
         with:
           use-public-rspm: true
 
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::rmarkdown
+            local::.
+          needs: website
+
       - name: Render Rmarkdown files and Commit Results
         run: |
           RMD_PATH=($(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '[.]Rmd$'))

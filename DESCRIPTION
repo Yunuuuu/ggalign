@@ -42,6 +42,17 @@ Suggests:
     testthat (>= 3.0.0),
     vdiffr
 ByteCompile: true
+Config/Needs/website: 
+    ggh4x,
+    R.utils,
+    dplyr,
+    tidyr,
+    bench,
+    pheatmap,
+    gplots,
+    maftools,
+    ComplexHeatmap,
+    seriation
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

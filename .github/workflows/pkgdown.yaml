@@ -42,17 +42,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
-            any::pkgdown 
-            any::bench 
-            any::pheatmap 
-            any::gplots 
-            any::ComplexHeatmap
-            any::seriation, 
-            any::ggh4x, 
-            any::maftools, 
-            any::R.utils, 
-            any::dplyr, 
-            any::tidyr, 
+            any::pkgdown
             local::.
           needs: website
 
