@@ -19,7 +19,7 @@ navbar:
       aria-label: Tutorial
     benchmarks:
       text: Benchmarks
-      icon: fa-solid fa-chart-line
+      icon: fa-solid fa-bolt
       href: articles/benchmarks.html
     faq:
       text: FAQ
