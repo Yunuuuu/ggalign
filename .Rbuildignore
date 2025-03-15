@@ -5,6 +5,9 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^README\.html$
+^index\.Rmd$
+^index\.md$
+^index\.html$
 ^\.github$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
