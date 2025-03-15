@@ -25,6 +25,85 @@ rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
 colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 ```
 
+## How to customize the gene ordering in ggoncoplot function?
+To manually define the row (gene) and column (sample) order in `ggoncoplot()`,
+you first need to disable the automatic ordering applied by `ggoncoplot()`.
+Then, you can use the `align_order()` function to specify the desired
+arrangement.
+
+```{r}
+# Sample data
+mut_mat <- read.table(
+    textConnection(
+        "s1,s2,s3
+         snv;indel,snv,indel
+         ,snv;indel,snv
+         snv,,indel;snv"
+    ),
+    row.names = NULL,
+    header = TRUE,
+    sep = ",",
+    stringsAsFactors = FALSE
+)
+rownames(mut_mat) <- c("g1", "g2", "g3")
+mut_mat <- as.matrix(mut_mat)
+
+# Example 1: Manually order rows using numeric indices
+ggoncoplot(
+    mut_mat,
+    map_width = c(snv = 0.5),
+    map_height = c(indel = 0.9),
+    reorder_row = FALSE
+) +
+    scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+    # Use anno_left() or anno_right() for row ordering; for columns, use anno_top() or anno_bottom()
+    anno_left() +
+    align_order(c(2, 3, 1)) # Orders rows as g2, g3, g1
+```
+
+```{r}
+# Example 2: Manually order rows using row names
+ggoncoplot(
+    mut_mat,
+    map_width = c(snv = 0.5),
+    map_height = c(indel = 0.9),
+    reorder_row = FALSE
+) +
+    scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+    anno_left() +
+    align_order(c("g2", "g1", "g3")) # Orders rows as g2, g1, g3
+```
+
+For row ordering, you can use either numeric indices (e.g., c(2, 3, 1)) or
+character names (e.g., c("g2", "g1", "g3")) if your matrix has row names. For
+column ordering, simply replace `anno_left()` with `anno_top()` or
+`anno_bottom()` and specify the sample order in `align_order()`. Note the
+ordering specified is from bottom to the top or from left to the right which
+following the ggplot2 coordinates.
+
+For certain objects related to `ggoncoplot()`, the `fortify_matrix()` method
+includes a `genes` argument that allows manual specification of gene order
+(character only). You can define this argument directly within `ggoncoplot()`,
+Currently, the supported objects for oncoplot-specific usage include:
+
+ - `maftools`
+ - a matrix wrapped with `tune(matrix, "oncoplot")`
+
+The primary reason we must wrap a standard matrix with `tune()` is that
+`fortify_matrix()` cannot distinguish between the default matrix method and the
+one specifically intended for `ggoncoplot()`.
+
+```{r}
+ggoncoplot(
+    tune(mut_mat, "oncoplot"),
+    genes = c("g2", "g1", "g3"), # Orders rows as g2, g1, g3
+    map_width = c(snv = 0.5),
+    map_height = c(indel = 0.9),
+    reorder_row = FALSE
+) +
+    scale_fill_brewer(palette = "Dark2", na.translate = FALSE) 
+```
+
 ## Can I change the default data for all geoms?
 All function in `ggalign` requires specific data formats for its operations. If
 you need to transform or filter data for individual `geoms`, you can use the
