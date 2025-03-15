@@ -9,7 +9,7 @@ development:
 
 navbar:
   structure:
-    left:  [intro, reference, tutorial, news, benchmarks, faq]
+    left:  [intro, reference, tutorial, benchmarks, faq, news]
     right: [search, github, lightswitch]
   components:
     tutorial:
@@ -19,7 +19,7 @@ navbar:
       aria-label: Tutorial
     benchmarks:
       text: Benchmarks
-      icon: fa-solid fa-bolt
+      icon: fa-solid fa-chart-line
       href: articles/benchmarks.html
     faq:
       text: FAQ
