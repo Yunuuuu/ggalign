@@ -9,9 +9,13 @@ development:
 
 navbar:
   structure:
-    left:  [intro, reference, vignettes, articles, news, benchmarks, faq]
+    left:  [intro, reference, tutorial, news, benchmarks, faq]
     right: [search, github, lightswitch]
   components:
+    tutorial:
+      icon: fa-book
+      href: https://yunuuuu.github.io/ggalign-book/
+      aria-label: Tutorial
     benchmarks:
       text: Benchmarks
       href: articles/benchmarks.html
