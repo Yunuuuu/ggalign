@@ -39,9 +39,10 @@ Suggests:
     knitr,
     rmarkdown,
     scales,
-    testthat (>= 3.0.0),
-    vdiffr
+    testthat (>= 3.0.0)
 ByteCompile: true
+Config/Needs/check: 
+    vdiffr
 Config/Needs/website: 
     ggh4x,
     R.utils,
