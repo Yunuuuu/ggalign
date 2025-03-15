@@ -35,7 +35,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
-            any::pkgdown
+            r-lib/pkgdown
           needs: website
 
       - name: Render pkgdown home file
