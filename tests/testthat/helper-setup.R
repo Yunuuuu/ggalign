@@ -3,17 +3,16 @@
 #     version of R)
 #   - CI is not set (on CRAN)
 
-if (requireNamespace("vdiffr", quietly = TRUE)) {
-    expect_doppelganger <- vdiffr::expect_doppelganger
-} else {
-    # If vdiffr is not available and visual tests are not explicitly disabled,
-    # raise error.
-    if (!identical(Sys.getenv("VDIFFR_RUN_TESTS"), "false")) {
-        stop("vdiffr is not installed")
-    }
+expect_doppelganger <- tryCatch(
+    getExportedValue("vdiffr", "expect_doppelganger"),
+    error = function(cnd) {
+        # If vdiffr is not available and visual tests are not explicitly
+        # disabled, raise error.
+        if (!identical(Sys.getenv("VDIFFR_RUN_TESTS"), "false")) {
+            cli::cli_abort("{.pkg vdiffr} is not installed")
+        }
 
-    # Otherwise, assign a dummy function
-    expect_doppelganger <- function(...) {
-        testthat::skip("vdiffr is not installed.")
+        # Otherwise, assign a dummy function
+        function(...) testthat::skip("vdiffr is not installed.")
     }
-}
+)

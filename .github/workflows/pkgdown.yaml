@@ -1,10 +1,12 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
-  workflow_run:
-    workflows: ["render-rmarkdown.yaml"]
-    types:
-      - completed
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  release:
+    types: [published]
   workflow_dispatch:
 
 name: pkgdown.yaml
@@ -30,25 +32,28 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Render Rmarkdown files and Commit Results
-        run: |
-          RMD_PATH=($(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '[.]Rmd$'))
-          Rscript -e 'for (f in commandArgs(TRUE)) if (file.exists(f)) rmarkdown::render(f)' ${RMD_PATH[*]}
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git commit ${RMD_PATH[*]/.Rmd/.md} -m 'Re-build Rmarkdown files' || echo "No changes to commit"
-          git push origin || echo "No changes to commit"
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
             any::pkgdown
-            local::.
           needs: website
+
+      - name: Render pkgdown home file
+        if: github.event_name != 'pull_request'
+        run: |
+          Rscript -e 'rmarkdown::render("index.Rmd")'
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
+
+      - name: Commit to Github
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git commit index.md -m 'Re-build index.Rmd' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
