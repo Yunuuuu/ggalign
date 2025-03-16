@@ -1,0 +1,10 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1.9000
+pkgdown_sha: a64ae31b86fe3a75d3353407d9b10f4df98b69bd
+articles:
+  articles/benchmarks: benchmarks.html
+  articles/FAQ: FAQ.html
+last_built: 2025-03-16T02:26Z
+urls:
+  reference: https://yunuuuu.github.io/ggalign/reference
+  article: https://yunuuuu.github.io/ggalign/articles
