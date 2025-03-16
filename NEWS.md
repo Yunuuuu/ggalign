@@ -1,3 +1,5 @@
+# ggalign (development version)
+
 # ggalign 1.0.0
 
 This is a major release. While not many new features have been added, this marks the first release where the entire layout system has been completed.
