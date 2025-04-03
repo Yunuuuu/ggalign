@@ -69,8 +69,15 @@ split_position <- function(x) {
     vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 
-# pos is an atomic character 
+# pos is an atomic character
 setup_pos <- function(x) complete_pos(split_position(x))
+
+setup_guides <- function(x) {
+    .subset(
+        c(t = "top", l = "left", b = "bottom", r = "right", i = "inside"),
+        split_position(x)
+    )
+}
 
 complete_pos <- function(x) {
     .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
@@ -186,26 +193,29 @@ Patch <- ggproto(
         guides_loc <- vec_slice(layout, guides_ind)
         collected_guides <- vector("list", length(guides))
         names(collected_guides) <- guides
-        panel_pos <- find_panel(gt)
+        panel_loc <- find_panel(gt)
         remove_grobs <- NULL
         for (guide_pos in guides) {
             guide_ind <- switch(guide_pos,
-                top = .subset2(guides_loc, "b") < .subset2(panel_pos, "t"),
-                left = .subset2(guides_loc, "r") < .subset2(panel_pos, "l"),
-                bottom = .subset2(guides_loc, "t") > .subset2(panel_pos, "b"),
-                right = .subset2(guides_loc, "l") > .subset2(panel_pos, "r")
+                top = .subset2(guides_loc, "b") < .subset2(panel_loc, "t"),
+                left = .subset2(guides_loc, "r") < .subset2(panel_loc, "l"),
+                bottom = .subset2(guides_loc, "t") > .subset2(panel_loc, "b"),
+                right = .subset2(guides_loc, "l") > .subset2(panel_loc, "r"),
+                inside = .subset2(guides_loc, "t") >= .subset2(panel_loc, "t") &
+                    .subset2(guides_loc, "b") <= .subset2(panel_loc, "b") &
+                    .subset2(guides_loc, "l") >= .subset2(panel_loc, "l") &
+                    .subset2(guides_loc, "r") <= .subset2(panel_loc, "r")
             )
             if (!any(guide_ind)) next
             guide_loc <- vec_slice(guides_loc, guide_ind)
             guide_ind <- .subset(guides_ind, guide_ind)
             remove_grobs <- c(guide_ind, remove_grobs)
-            guide_box <- .subset2(grobs, guide_ind)
-            collected_guides[[guide_pos]] <- .subset(
-                .subset2(guide_box, "grobs"),
-                grepl("guides", .subset2(.subset2(guide_box, "layout"), "name"))
-            )
+            collected_guides[[guide_pos]] <- .subset2(grobs, guide_ind)
 
-            # remove the guide from the original gtable
+            # remove the guide spaces from the original gtable
+            # for inside guide, no need to remove the spaces
+            if (guide_pos == "inside") next
+
             space_pos <- switch(guide_pos,
                 top = ,
                 left = 1L,

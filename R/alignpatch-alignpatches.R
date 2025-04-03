@@ -4,12 +4,13 @@ alignpatch.alignpatches <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
+#' @noRd
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     # We by default won't collect any guides
-    guides = NULL, theme = NULL,
+    guides = NULL,
+    theme = NULL,
     set_guides = function(self, guides, plot = self$plot) guides,
     set_theme = function(self, theme, plot = self$plot) {
-        # theme is from parent layout
         if (is.null(t <- .subset2(plot, "theme"))) return(theme) # styler: off
         # we'll always initialize the parent layout theme
         # so it won't be NULL
@@ -88,13 +89,14 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # by default, we use ggplot2 default theme
         theme <- self$theme %||% self$set_theme(theme_get(), plot = plot)
 
-        # Let each patch to determine whether to collect guides and the theme
+        # Let each patch to determine whether to collect guides or inherit
+        # the theme
         for (patch in patches) {
             patch$guides <- patch$set_guides(guides)
             patch$theme <- patch$set_theme(theme)
         }
 
-        # save patches, patches won't be copy -------------------
+        # save patches, patches isnot copyable -------------------
         self$patches <- patches
 
         #######################################################
@@ -210,28 +212,45 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
     collect_guides = function(self, guides = self$guides, gt = self$gt) {
         collected_guides <- self$collected_guides
-        # for guides not collected by the top-level, we attach the guides
+        # for guides not collected by the top-level alignpatches, we attach the
+        # guides
         self$gt <- self$attach_guide_list(
-            .subset(
-                collected_guides,
+            collected_guides[
                 vec_set_difference(names(collected_guides), guides)
-            ),
+            ],
             gt = gt
         )
         # return guides to be collected
         .subset(collected_guides, guides)
     },
     collect_guides_list = function(self, patches) {
-        ans <- lapply(patches, function(patch) patch$collect_guides())
-        # collapse the guides in the same guide position
-        ans <- lapply(.TLBR, function(guide_pos) {
-            unlist(lapply(ans, .subset2, guide_pos), FALSE, FALSE)
+        guides_list <- lapply(patches, function(patch) patch$collect_guides())
+        ans <- lapply(c(.TLBR, "inside"), function(guide_pos) {
+            guides <- lapply(guides_list, function(guides) {
+                o <- .subset2(guides, guide_pos)
+                # A guide-box should be a `zeroGrob()` or a `gtable` object
+                if (inherits(o, "zeroGrob") || is.gtable(o)) {
+                    return(list(o))
+                }
+                # For other grobs, we just removed them silently
+                if (is.grob(o)) {
+                    list(NULL)
+                } else if (is.list(o)) {
+                    o[vapply(o, function(guide) {
+                        inherits(guide, "zeroGrob") || is.gtable(guide)
+                    }, logical(1L), USE.NAMES = FALSE)]
+                } else {
+                    list(NULL)
+                }
+            })
+            guides <- unlist(guides, FALSE, FALSE)
+            guides <- guides[
+                !vapply(guides, is.null, logical(1L), USE.NAMES = FALSE)
+            ]
+            if (is_empty(guides)) NULL else guides
         })
-        names(ans) <- .TLBR
-        ans <- list_drop_empty(ans)
-        # remove duplicated guides
-        ans <- lapply(ans, collapse_guides)
-        list_drop_empty(ans)
+        names(ans) <- c(.TLBR, "inside")
+        ans[!vapply(ans, is.null, logical(1L), USE.NAMES = FALSE)]
     },
     #' @importFrom grid is.unit unit
     set_sizes = function(self, design, dims,
@@ -398,7 +417,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                     guide_pos = guide_pos,
                     guides = .subset2(guide_list, guide_pos),
                     theme = theme, panel_pos = panel_pos,
-                    name = sprintf("guide-box-collected-%s", guide_pos),
                     clip = "off", z = 4L, gt = gt
                 )
             }
@@ -406,74 +424,167 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt
     },
     #' @importFrom gtable gtable_width gtable_height
-    #' @importFrom grid unit.c
-    #' @importFrom ggplot2 find_panel
+    #' @importFrom grid unit.c grobWidth grobHeight
+    #' @importFrom ggplot2 find_panel zeroGrob
     attach_guides = function(self, guide_pos, guides, theme,
                              panel_pos = find_panel(gt), ...,
                              gt = self$gt) {
-        guides <- assemble_guides(guides, guide_pos, theme = theme)
+        # for inside legends, they'll be grouped by the actual inside
+        # position and justification
+        if (guide_pos == "inside") {
+            name <- sprintf("guide-box-collected-%s", guide_pos)
+            # for `zeroGrob()`, it doesn't record the `viewport` information
+            # used to identify the inside guide groups, we just removed them
+            guides <- guides[!vapply(guides, function(box) {
+                inherits(box, "zeroGrob")
+            }, logical(1L), USE.NAMES = FALSE)]
+            if (is_empty(guides)) {
+                index <- 1L
+            } else {
+                positions <- justs <- vector("list", length(guides))
+                for (i in seq_along(guides)) {
+                    guide <- .subset2(guides, i)
+                    # for inside guides, it may contain multiple guide-box
+                    is_box <- grepl("guide-box-inside", guide$layout$name)
+                    if (any(is_box)) {
+                        guides[[i]] <- guide$grobs[is_box]
+                    } else {
+                        guides[[i]] <- list(guide)
+                    }
+                    positions[[i]] <- lapply(guides[[i]], function(guide_box) {
+                        unit.c(guide_box$vp$x, guide_box$vp$y)
+                    })
+                    justs[[i]] <- lapply(guides[[i]], function(guide_box) {
+                        guide_box$vp$justification
+                    })
+                }
+                guides <- unlist(guides, FALSE, FALSE)
+                groups <- data_frame0(
+                    positions = unlist(positions, FALSE, FALSE),
+                    justs = unlist(justs, FALSE, FALSE)
+                )
+                groups <- vec_group_loc(groups)
+                index <- vec_seq_along(groups)
+                if (vec_size(groups) > 1L) {
+                    name <- paste(name, index, sep = "-")
+                }
+            }
+
+            # pakcage each group into a guide-box and add it into the `gt`
+            for (i in index) {
+                if (is_empty(guides)) {
+                    guide_box <- zeroGrob()
+                } else {
+                    adjust <- theme(
+                        legend.position.inside = groups$key$positions[[i]],
+                        legend.justification.inside = groups$key$justs[[i]]
+                    )
+                    guide_box <- assemble_guides(
+                        guides[groups$loc[[i]]], guide_pos,
+                        theme = theme + adjust
+                    )
+                }
+                gt <- gtable_add_grob(
+                    x = gt,
+                    grobs = guide_box,
+                    t = panel_pos$t,
+                    l = panel_pos$l,
+                    b = panel_pos$b,
+                    r = panel_pos$r,
+                    name = name[[i]],
+                    ...
+                )
+            }
+            return(gt)
+        }
+
+        guide_box <- assemble_guides(guides, guide_pos, theme = theme)
+
+        # global parameters
         spacing <- .subset2(theme, "legend.box.spacing")
+        name <- sprintf("guide-box-collected-%s", guide_pos)
         if (guide_pos == "left") {
-            legend_width <- gtable_width(guides)
+            if (inherits(guide_box, "zeroGrob")) {
+                legend_width <- grobWidth(guide_box)
+                widths <- unit(c(0, 0), "mm")
+            } else {
+                legend_width <- gtable_width(guide_box)
+                widths <- unit.c(spacing, legend_width)
+            }
             gt <- gtable_add_grob(
                 x = gt,
-                grobs = guides,
+                grobs = guide_box,
                 t = panel_pos$t,
                 l = panel_pos$l - 6L,
                 b = panel_pos$b,
+                name = name,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "l") - 5:6] <- unit.c(
-                spacing, legend_width
-            )
+            gt$widths[.subset2(panel_pos, "l") - 5:6] <- widths
         } else if (guide_pos == "right") {
-            legend_width <- gtable_width(guides)
+            if (inherits(guide_box, "zeroGrob")) {
+                legend_width <- grobWidth(guide_box)
+                widths <- unit(c(0, 0), "mm")
+            } else {
+                legend_width <- gtable_width(guide_box)
+                widths <- unit.c(spacing, legend_width)
+            }
             gt <- gtable_add_grob(
-                x = gt, grobs = guides,
+                x = gt,
+                grobs = guide_box,
                 t = panel_pos$t,
                 l = panel_pos$r + 6L,
                 b = panel_pos$b,
+                name = name,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "r") + 5:6] <- unit.c(
-                spacing, legend_width
-            )
+            gt$widths[.subset2(panel_pos, "r") + 5:6] <- widths
         } else if (guide_pos == "bottom") {
             location <- .subset2(theme, "legend.location") %||% "panel"
             place <- switch(location,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))
             )
-            legend_height <- gtable_height(guides)
+            if (inherits(guide_box, "zeroGrob")) {
+                legend_height <- grobHeight(guide_box)
+                heights <- unit(c(0, 0), "mm")
+            } else {
+                legend_height <- gtable_height(guide_box)
+                heights <- unit.c(spacing, legend_height)
+            }
             gt <- gtable_add_grob(
                 x = gt,
-                grobs = guides,
+                grobs = guide_box,
                 t = panel_pos$b + 6L,
                 l = place$l,
                 r = place$r,
+                name = name,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "b") + 5:6] <- unit.c(
-                spacing, legend_height
-            )
+            gt$heights[.subset2(panel_pos, "b") + 5:6] <- heights
         } else if (guide_pos == "top") {
             location <- .subset2(theme, "legend.location") %||% "panel"
             place <- switch(location,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))
             )
-            legend_height <- gtable_height(guides)
+            if (inherits(guide_box, "zeroGrob")) {
+                legend_height <- grobHeight(guide_box)
+                heights <- unit(c(0, 0), "mm")
+            } else {
+                legend_height <- gtable_height(guide_box)
+                heights <- unit.c(spacing, legend_height)
+            }
             gt <- gtable_add_grob(
                 x = gt,
-                grobs = guides,
+                grobs = guide_box,
                 t = panel_pos$t - 6L,
                 l = place$l,
                 r = place$r,
+                name = name,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "t") - 5:6] <- unit.c(
-                spacing, legend_height
-            )
+            gt$heights[.subset2(panel_pos, "t") - 5:6] <- heights
         }
         gt
     },
@@ -543,9 +654,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             paste0("plot-", patch_index),
             .subset2(.subset2(gt, "layout"), "name")
         )
-        # For each grob, we reuse the method from the patch to apply with the
-        # plot gtable. We always apply function to the plot border in the
-        # alignpatches
+        # For each grob, we reuse the method from the patch
         gt$grobs[layout_index] <- .mapply(function(layout_idx, patch_idx) {
             patch <- .subset2(patches, patch_idx)
             borders <- .subset2(patch, "borders")

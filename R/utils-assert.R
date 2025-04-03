@@ -63,10 +63,28 @@ assert_position <- function(position, arg = caller_arg(position),
     }
 }
 
+assert_guides <- function(guides, arg = caller_arg(guides),
+                          call = caller_call()) {
+    assert_string(guides, empty_ok = FALSE, arg = arg, call = call)
+    if (grepl("[^tlbri]", guides)) {
+        cli_abort(sprintf(
+            "{.arg {arg}} can only contain the %s characters",
+            oxford_and(c(.tlbr, "i"))
+        ), call = call)
+    }
+}
+
 assert_layout_position <- function(position, arg = caller_arg(position),
                                    call = caller_call()) {
     if (!is.waive(position) && !is.null(position)) {
         assert_position(position, arg = arg, call = call)
+    }
+}
+
+assert_layout_guides <- function(guides, arg = caller_arg(guides),
+                                 call = caller_call()) {
+    if (!is.waive(guides) && !is.null(guides)) {
+        assert_guides(guides, arg = arg, call = call)
     }
 }
 

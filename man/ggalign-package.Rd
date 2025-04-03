@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A 'ggplot2' extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or use a circular layout, 'ggalign' delivers flexibility and accuracy with minimal effort.
+A 'ggplot2' extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or create a circular layout, 'ggalign' delivers flexibility and accuracy with minimal effort.
 }
 \seealso{
 Useful links:

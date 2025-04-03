@@ -14,8 +14,8 @@
 #' @param design Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [area()] together.
-#' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
-#' which side of guide legends should be collected. Defaults to
+#' @param guides A string with one or more of `r oxford_and(c(.tlbr, "i"))`
+#' indicating which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
 #' there is no parent layout, or if `NULL` is provided, no guides will be
 #' collected.
@@ -79,8 +79,8 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     assert_bool(byrow)
     design <- as_areas(design)
     if (!is.waive(guides) && !is.null(guides)) {
-        assert_position(guides)
-        guides <- setup_pos(guides)
+        assert_guides(guides)
+        guides <- setup_guides(guides)
     }
     if (!is.null(theme)) assert_s3_class(theme, "theme")
     layout <- list(
@@ -165,7 +165,7 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     if (!is.waive(byrow)) assert_bool(byrow)
     if (!is.waive(design)) design <- as_areas(design)
     if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
-        assert_position(guides)
+        assert_guides(guides)
     }
     structure(list(
         ncol = ncol,
@@ -185,7 +185,7 @@ update_layout_design <- function(old, new) {
     if (is.null(guides) || is.waive(guides)) {
         old["guides"] <- list(guides)
     } else if (!identical(guides, NA)) {
-        old["guides"] <- list(setup_pos(guides))
+        old["guides"] <- list(setup_guides(guides))
     }
     old
 }

@@ -1,6 +1,6 @@
-#' @param guides A string containing one or more of `r oxford_and(.tlbr)`
-#' indicates which side of guide legends should be collected for the plot. If
-#' `NULL`, no guide legends will be collected.
+#' @param guides A string containing one or more of
+#' `r oxford_and(c(.tlbr, "i"))` indicates which side of guide legends should be
+#' collected for the plot. If `NULL`, no guide legends will be collected.
 #' @return
 #' - `free_guide`: A modified version of `plot` with a `free_guide` class.
 #' @export
@@ -11,7 +11,7 @@ free_guide <- function(plot, guides = "tlbr") {
 
 #' @export
 free_guide.ggplot <- function(plot, guides = "tlbr") {
-    if (!is.null(guides)) assert_position(guides)
+    if (!is.null(guides)) assert_guides(guides)
     attr(plot, "free_guides") <- guides
     add_class(plot, "free_guide")
 }
@@ -24,11 +24,11 @@ free_guide.free_guide <- function(plot, guides = "tlbr") {
     if (is.null(guides)) {
         attr(plot, "free_guides") <- NULL
     } else {
-        assert_position(guides)
-        if (!is.null(old <- attr(plot, "free_guides"))) {
-            attr(plot, "free_guides") <- union_position(old, guides)
-        } else {
+        assert_guides(guides)
+        if (is.null(old <- attr(plot, "free_guides", exact = TRUE))) {
             attr(plot, "free_guides") <- guides
+        } else {
+            attr(plot, "free_guides") <- union_position(old, guides)
         }
     }
     plot
@@ -39,8 +39,8 @@ free_guide.free_guide <- function(plot, guides = "tlbr") {
 #' @export
 alignpatch.free_guide <- function(x) {
     Parent <- NextMethod()
-    if (!is.null(free_guides <- attr(x, "free_guides"))) {
-        free_guides <- setup_pos(free_guides)
+    if (!is.null(free_guides <- attr(x, "free_guides", exact = TRUE))) {
+        free_guides <- setup_guides(free_guides)
     }
     ggproto(
         "PatchFreeGuide", Parent,

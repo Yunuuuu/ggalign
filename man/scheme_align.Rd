@@ -7,8 +7,8 @@
 scheme_align(guides = NA, free_spaces = NA, free_labs = NA)
 }
 \arguments{
-\item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"} indicating
-which side of guide legends should be collected. Defaults to
+\item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}, and \code{"i"}
+indicating which side of guide legends should be collected. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If no
 parent layout, all guides will be collected. If \code{NULL}, no guides will be
 collected.}

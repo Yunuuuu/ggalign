@@ -5,8 +5,8 @@
 #'
 #' The `scheme_align()` function defines the align Specifications for plots.
 #'
-#' @param guides A string with one or more of `r oxford_and(.tlbr)` indicating
-#' which side of guide legends should be collected. Defaults to
+#' @param guides A string with one or more of `r oxford_and(c(.tlbr, "i"))`
+#' indicating which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If no
 #' parent layout, all guides will be collected. If `NULL`, no guides will be
 #' collected.
@@ -56,7 +56,7 @@
 #'     scheme_align(guides = "r")
 #' @export
 scheme_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
-    if (!identical(guides, NA)) assert_layout_position(guides)
+    if (!identical(guides, NA)) assert_layout_guides(guides)
     if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
     if (!identical(free_labs, NA)) assert_layout_position(free_labs)
     new_scheme_align(

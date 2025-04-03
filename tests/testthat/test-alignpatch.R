@@ -118,18 +118,39 @@ test_that("collect guides works well", {
         "collect normal guides",
         align_plots(p1, p3, guides = "tlbr")
     )
-    p_guides <- p3 + scale_color_continuous(guide = guide_colorbar(
+    p_guide_null_unit <- p3 + scale_color_continuous(guide = guide_colorbar(
         theme = theme(legend.key.height = unit(1, "null"))
     ))
     expect_doppelganger(
         "collect guides with null unit",
-        align_plots(p1, p_guides, guides = "tlbr")
+        align_plots(p1, p_guide_null_unit, guides = "tlbr")
     )
     expect_doppelganger(
         "collect guides from multiple plots with null unit",
-        align_plots(p1, p_guides,
-            p_guides + labs(color = "another"),
+        align_plots(
+            p1, p_guide_null_unit,
+            p_guide_null_unit + labs(color = "another"),
             guides = "tlbr"
+        )
+    )
+    expect_doppelganger(
+        "collect inside guides",
+        align_plots(
+            p3 +
+                labs(color = "Plot 1", title = "Plot 1") +
+                theme(
+                    legend.position = "inside",
+                    legend.position.inside = c(1, 0),
+                    legend.justification.inside = c(1, 0)
+                ),
+            p3 +
+                labs(color = "Plot 2", title = "Plot 2") +
+                theme(
+                    legend.position = "inside",
+                    legend.position.inside = c(0, 1),
+                    legend.justification.inside = c(0, 1)
+                ),
+            guides = "tlbri"
         )
     )
 })

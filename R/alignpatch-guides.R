@@ -1,12 +1,35 @@
+#' @param guides A list of guide-box
 #' @importFrom rlang try_fetch
+#' @importFrom ggplot2 zeroGrob
+#' @noRd
 assemble_guides <- function(guides, guide_pos, theme) {
-    # for every position, collect all individual guides and arrange them
-    # into a guide box which will be inserted into the main gtable
-    package_box <- try_fetch(
-        .subset2(ggfun("Guides"), "package_box"),
-        error = function(cnd) package_box
-    )
-    package_box(guides, guide_pos, theme)
+    guides <- guides[
+        !vapply(guides, function(box) {
+            inherits(box, "zeroGrob")
+        }, logical(1L), USE.NAMES = FALSE)
+    ]
+    if (is_empty(guides)) {
+        zeroGrob()
+    } else {
+        grobs <- lapply(guides, function(box) {
+            box$grobs[grepl("guides", box$layout$name)]
+        })
+        grobs <- unlist(grobs, FALSE, FALSE)
+
+        # remove duplicated guides
+        grobs <- collapse_guides(grobs)
+        if (is_empty(grobs)) {
+            return(zeroGrob())
+        }
+
+        # for every position, collect all individual guides and arrange them
+        # into a guide box which will be inserted into the main gtable
+        package_box <- try_fetch(
+            .subset2(ggfun("Guides"), "package_box"),
+            error = function(cnd) package_box
+        )
+        package_box(grobs, guide_pos, theme)
+    }
 }
 
 #' @importFrom gtable gtable_add_rows gtable_add_cols

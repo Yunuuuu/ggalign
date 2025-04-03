@@ -261,11 +261,6 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     ) %||% unit(0.2, "cm")
     legend_box <- .mapply(
         function(guides, guide_pos) {
-            # remove duplicated guides
-            guides <- collapse_guides(guides)
-            if (is_empty(guides)) {
-                return(zeroGrob())
-            }
             assemble_guides(guides, guide_pos, theme)
         },
         list(guides = guides, guide_pos = names(guides)),
