@@ -106,16 +106,18 @@ image.</p></dd>
 <span class="r-in"><span><span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.y</span><span class="op">)</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">raster_magick</span><span class="op">(</span><span class="fu">geom_tile</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>, res <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="raster_magick-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.y</span><span class="op">)</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="co"># Use `magick::filter_types()` to check available `filter` arguments</span></span></span>
-<span class="r-in"><span>    <span class="fu">raster_magick</span><span class="op">(</span><span class="fu">geom_tile</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        magick <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>            <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/transform.html" class="external-link">image_resize</a></span><span class="op">(</span><span class="va">image</span>,</span></span>
-<span class="r-in"><span>                geometry <span class="op">=</span> <span class="st">"50%x"</span>, filter <span class="op">=</span> <span class="st">"Lanczos"</span></span></span>
-<span class="r-in"><span>            <span class="op">)</span></span></span>
-<span class="r-in"><span>        <span class="op">}</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Currently, magick package require R &gt;= 4.1.0</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric_version.html" class="external-link">getRversion</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="st">"4.1.0"</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="heatmap_layout.html">ggheatmap</a></span><span class="op">(</span><span class="va">small_mat</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.y</span><span class="op">)</span>, filling <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>        <span class="co"># Use `magick::filter_types()` to check available `filter` arguments</span></span></span>
+<span class="r-in"><span>        <span class="fu">raster_magick</span><span class="op">(</span><span class="fu">geom_tile</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>            magick <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>                <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/transform.html" class="external-link">image_resize</a></span><span class="op">(</span><span class="va">image</span>,</span></span>
+<span class="r-in"><span>                    geometry <span class="op">=</span> <span class="st">"50%x"</span>, filter <span class="op">=</span> <span class="st">"Lanczos"</span></span></span>
+<span class="r-in"><span>                <span class="op">)</span></span></span>
+<span class="r-in"><span>            <span class="op">}</span></span></span>
+<span class="r-in"><span>        <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="raster_magick-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
