@@ -35,8 +35,8 @@ jobs:
         with:
           extra-packages: 
             any::pkgdown
-            patchwork
             magick=?ignore-before-r=4.1.0
+            patchwork
             ggrastr
             local::.
           needs: website

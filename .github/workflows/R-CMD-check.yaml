@@ -63,8 +63,8 @@ jobs:
         with:
           extra-packages:
             any::rcmdcheck
-            patchwork
             magick=?ignore-before-r=4.1.0
+            patchwork
             ggrastr
           needs: check
 

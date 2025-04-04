@@ -34,12 +34,12 @@ Suggests:
     gridGraphics,
     ragg,
     scales,
+    magick,
     testthat (>= 3.0.0),
     vdiffr
 Enhances:
     patchwork,
-    ggrastr,
-    magick
+    ggrastr
 ByteCompile: true
 Config/Needs/website: 
     ggh4x,
