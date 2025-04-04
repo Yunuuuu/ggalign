@@ -26,16 +26,18 @@
 #' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
 #' ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
 #'     raster_magick(geom_tile(aes(fill = value)), res = 20)
-#'
-#' ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
-#'     # Use `magick::filter_types()` to check available `filter` arguments
-#'     raster_magick(geom_tile(aes(fill = value)),
-#'         magick = function(image) {
-#'             magick::image_resize(image,
-#'                 geometry = "50%x", filter = "Lanczos"
-#'             )
-#'         }
-#'     )
+#' # Currently, magick package require R >= 4.1.0
+#' if (getRversion() >= "4.1.0") {
+#'     ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
+#'         # Use `magick::filter_types()` to check available `filter` arguments
+#'         raster_magick(geom_tile(aes(fill = value)),
+#'             magick = function(image) {
+#'                 magick::image_resize(image,
+#'                     geometry = "50%x", filter = "Lanczos"
+#'                 )
+#'             }
+#'         )
+#' }
 #' @return An object with the same class of the input.
 #' @export
 raster_magick <- function(x, magick = NULL, ...,
