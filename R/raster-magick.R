@@ -43,6 +43,9 @@
 #' @export
 raster_magick <- function(x, magick = NULL, ...,
                           res = NULL, interpolate = FALSE) {
+    # it's better to add `magick` in Suggests Field,
+    # but it require R >= 4.1.0, so we add it in the Enhances Field to
+    # avoid the R CMD Check github action error
     rlang::check_installed("magick", "to use `raster_magick()`")
     if (!is.null(magick) && !is.function(magick <- allow_lambda(magick))) {
         cli_abort("{.arg magick} must be a function")
