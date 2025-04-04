@@ -19,15 +19,16 @@
 #' @param res An integer sets the desired resolution in pixels.
 #' @inheritParams grid::rasterGrob
 #' @examples
-#' # data generated code was copied from `ComplexHeatmap`
-#' set.seed(123)
-#' small_mat <- matrix(rnorm(56), nrow = 7)
-#' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-#' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-#' ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
-#'     raster_magick(geom_tile(aes(fill = value)), res = 20)
-#' # Currently, magick package require R >= 4.1.0
-#' if (getRversion() >= "4.1.0") {
+#' # Currently, `magick` package require R >= 4.1.0
+#' if (requireNamespace("magick")) {
+#'     # data generated code was copied from `ComplexHeatmap`
+#'     set.seed(123)
+#'     small_mat <- matrix(rnorm(56), nrow = 7)
+#'     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+#'     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+#'     ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
+#'         raster_magick(geom_tile(aes(fill = value)), res = 20)
+#'
 #'     ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
 #'         # Use `magick::filter_types()` to check available `filter` arguments
 #'         raster_magick(geom_tile(aes(fill = value)),
@@ -172,7 +173,7 @@ makeContent.ggalignRasterMagick <- function(x) {
     on.exit(grDevices::dev.set(old_dev), add = TRUE)
 
     # open the magick raster device
-    image <- magick::image_graph(
+    image <- getExportedValue("magick", "image_graph")(
         width = width * res / plot_res,
         height = height * res / plot_res,
         bg = NA_character_, res = res,
@@ -186,7 +187,7 @@ makeContent.ggalignRasterMagick <- function(x) {
     grid::grid.draw(.subset2(x, "grob")) # should respect the viewport of `x`
     grid::popViewport()
     grDevices::dev.off()
-    on.exit(magick::image_destroy(image), add = TRUE)
+    on.exit(getExportedValue("magick", "image_destroy")(image), add = TRUE)
 
     # run `magick` when necessary
     if (!is.null(magick)) image <- magick(image)

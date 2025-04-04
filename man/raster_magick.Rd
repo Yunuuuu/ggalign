@@ -37,15 +37,16 @@ manipulation library. This allows for advanced graphical transformations
 directly within the plotting pipeline.
 }
 \examples{
-# data generated code was copied from `ComplexHeatmap`
-set.seed(123)
-small_mat <- matrix(rnorm(56), nrow = 7)
-rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
-colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
-ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
-    raster_magick(geom_tile(aes(fill = value)), res = 20)
-# Currently, magick package require R >= 4.1.0
-if (getRversion() >= "4.1.0") {
+# Currently, `magick` package require R >= 4.1.0
+if (requireNamespace("magick")) {
+    # data generated code was copied from `ComplexHeatmap`
+    set.seed(123)
+    small_mat <- matrix(rnorm(56), nrow = 7)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+    ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
+        raster_magick(geom_tile(aes(fill = value)), res = 20)
+
     ggheatmap(small_mat, aes(.x, .y), filling = NULL) +
         # Use `magick::filter_types()` to check available `filter` arguments
         raster_magick(geom_tile(aes(fill = value)),
