@@ -72,6 +72,7 @@ str.unit <- function(object, ...) obj_str(object, ...)
 #' @export
 vec_ptype_abbr.unit <- function(x, ...) fclass(x)
 
+#' @importFrom utils str
 #' @export
 obj_str_footer.unit <- function(x, ..., indent.str = " ", nest.lev = 0,
                                 give.attr = TRUE) {
@@ -87,7 +88,7 @@ obj_str_footer.unit <- function(x, ..., indent.str = " ", nest.lev = 0,
     indent.str <- paste0(" ", indent.str)
     for (nm in names(attr)) {
         cat(indent.str, paste0("- attr(*, \"", nm, "\"):"), sep = "")
-        utils::str(
+        str(
             attr[[nm]],
             no.list = TRUE, ...,
             nest.lev = nest.lev + 1L,
