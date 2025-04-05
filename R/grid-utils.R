@@ -135,15 +135,8 @@ gtable_trim_heights <- function(gt) {
     gt
 }
 
-liberate_area <- function(
-    gt,
-    top,
-    left,
-    bottom,
-    right,
-    clip = "inherit",
-    name = NULL,
-    vp = NULL) {
+liberate_area <- function(gt, top, left, bottom, right,
+                          clip = "inherit", name = NULL, vp = NULL) {
     if (any(remove <- grob_in_area(gt, top, right, bottom, left))) {
         liberated <- gt[top:bottom, left:right]
         if (is.function(vp <- allow_lambda(vp))) {
@@ -189,11 +182,8 @@ compute_null_height <- function(x, unitTo = "mm", valueOnly = FALSE) {
 }
 
 #' @importFrom grid unit convertHeight convertWidth
-compute_null_unit <- function(
-    x,
-    type = c("width", "height"),
-    unitTo = "mm",
-    valueOnly = FALSE) {
+compute_null_unit <- function(x, type = c("width", "height"), unitTo = "mm",
+                              valueOnly = FALSE) {
     null <- is_null_unit(x) # null unit
     if (type == "width") {
         ans <- convertWidth(x, unitTo, valueOnly = TRUE)
@@ -212,8 +202,6 @@ compute_null_unit <- function(
         coef <- as.numeric(x[null])
         ans[null] <- (null_size / sum(coef)) * coef
     }
-    if (isTRUE(valueOnly)) {
-        return(ans)
-    }
-    unit(ans, unitTo)
+    if (!valueOnly) ans <- unit(ans, unitTo)
+    ans
 }
