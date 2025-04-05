@@ -174,6 +174,7 @@ makeContent.channelGrob <- function(x) {
 drawDetails.channelGrob <- function(x, recording) {
 }
 
+#' @importFrom grid grid.draw
 #' @export
 drawDetails.channelReceiverGrob <- function(x, recording) {
     # we always reset the locations after drawing
@@ -193,5 +194,5 @@ drawDetails.channelReceiverGrob <- function(x, recording) {
     }
     grob <- rlang::inject(channel$make_content(locations, !!!channel$dots))
     if (is.gList(grob)) grob <- gTree(children = grob)
-    if (is.grob(grob)) grid::grid.draw(grob, recording = recording)
+    if (is.grob(grob)) grid.draw(grob, recording = recording)
 }
