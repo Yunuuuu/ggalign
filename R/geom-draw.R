@@ -39,7 +39,6 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
                       position = "identity", ...,
                       na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
     type <- arg_match0(type, c("group", "panel"))
-    draw <- allow_lambda(draw)
     if (!is.grob(draw) && !is.gList(draw)) draw <- rlang::as_function(draw)
     dots <- list2(...)
     ggplot2::layer(
@@ -67,7 +66,9 @@ geom_draw <- function(draw, mapping = NULL, data = NULL,
         position = position,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
-        params = c(list(na.rm = na.rm, draw = draw, .__draw_dots = dots), dots)
+        params = c(
+            list(na.rm = na.rm, draw = draw, .__draw_dots__ = dots), dots
+        )
     )
 }
 
@@ -78,7 +79,7 @@ draw_setup_data <- function(self, data, params) {
     ggplot2::GeomTile$setup_data(data, params)
 }
 
-draw_geom_draw <- function(data, panel_params, coord, draw, .__draw_dots) {
+draw_geom_draw <- function(data, panel_params, coord, draw, .__draw_dots__) {
     if (is.function(draw)) {
         data <- coord$transform(data, panel_params)
         # restore colour
@@ -97,5 +98,5 @@ draw_geom_draw <- function(data, panel_params, coord, draw, .__draw_dots) {
             data$height <- data$ymax - data$ymin
         }
     }
-    make_gshape(draw, data, .__draw_dots)
+    make_gshape(draw, data, .__draw_dots__)
 }
