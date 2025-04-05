@@ -16,6 +16,42 @@ is_absolute_unit <- function(x) {
 #' @importFrom grid unitType
 is_null_unit <- function(x) unitType(x) == "null"
 
+# `current.transform()` transforms from *inches* within the current viewport to
+# *inches* on the overall device.
+grid_solve_loc <- function(loc, trans, valueOnly = FALSE) {
+    x <- grid::convertX(loc$x, "inches", valueOnly = TRUE)
+    y <- grid::convertY(loc$y, "inches", valueOnly = TRUE)
+    out <- matrix(c(x, y, rep_len(1, length(x))), ncol = 3L) %*%
+        trans
+    out <- list(x = out[, 1L, drop = TRUE], y = out[, 2L, drop = TRUE])
+    if (!valueOnly) out <- lapply(out, unit, "inches")
+    out
+}
+
+loc_device2vp <- function(x, y, valueOnly = FALSE) {
+    assert_s3_class(x, "unit")
+    assert_s3_class(y, "unit")
+    if (length(x) != length(y)) {
+        cli_abort("{.arg x} and {.arg y} must have the same length")
+    }
+    assert_bool(valueOnly)
+    grid_solve_loc(
+        list(x = x, y = y),
+        solve(grid::current.transform()),
+        valueOnly = valueOnly
+    )
+}
+
+loc_vp2device <- function(x, y, valueOnly = FALSE) {
+    assert_s3_class(x, "unit")
+    assert_s3_class(y, "unit")
+    if (length(x) != length(y)) {
+        cli_abort("{.arg x} and {.arg y} must have the same length")
+    }
+    assert_bool(valueOnly)
+    grid::deviceLoc(x, y, valueOnly = valueOnly)
+}
+
 # # allow the missing value in the unit for `str` method
 # ggalign_unit <- function(x, ...) UseMethod("ggalign_unit")
 # #' @export

@@ -112,6 +112,7 @@ Collate:
     'ggplot-helper.R'
     'ggplot-theme.R'
     'ggplot-utils.R'
+    'grob-channel.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'
     'import-standalone-pkg.R'
