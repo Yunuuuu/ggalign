@@ -6,7 +6,7 @@ ggalign_build.CircleLayout <- function(x) {
 
 #' @importFrom utils packageVersion
 #' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob theme
-#' @importFrom gtable gtable_add_grob gtable_add_padding
+#' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty arg_match0
 circle_build <- function(circle, schemes = NULL, theme = NULL) {
@@ -209,14 +209,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             guide_list <- plot$guides$assemble(plot_theme)
             if (!inherits(guide_list, "zeroGrob")) {
                 guides[[i]] <- lapply(guide_list, function(guide_box) {
-                    if (!inherits(guide_box, "zeroGrob")) {
-                        .subset(
-                            .subset2(guide_box, "grobs"),
-                            grepl(
-                                "guides",
-                                .subset2(.subset2(guide_box, "layout"), "name")
-                            )
-                        )
+                    if (is.gtable(guide_box)) {
+                        guide_box$grobs[grepl("guides", guide_box$layout$name)]
                     }
                 })
             }
