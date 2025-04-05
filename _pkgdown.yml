@@ -167,6 +167,7 @@ reference:
   contents:
   - ggalignGrob
   - ggalign_stat
+  - channelGrob
   - is_layout
   - hclust2
   - read_example
