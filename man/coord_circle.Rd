@@ -8,8 +8,8 @@ coord_circle(
   theta = "x",
   start = 0,
   end = NULL,
-  xlim = NULL,
-  ylim = NULL,
+  thetalim = NULL,
+  rlim = NULL,
   expand = FALSE,
   direction = 1,
   clip = "off",
@@ -29,7 +29,7 @@ is applied clockwise or anticlockwise depending on value of \code{direction}.}
 for partial polar coordinates. The default, \code{NULL}, is set to
 \code{start + 2 * pi}.}
 
-\item{xlim, ylim}{Limits for the x and y axes.}
+\item{thetalim, rlim}{Limits for the \code{theta} and \code{r} axes.}
 
 \item{expand}{If \code{TRUE}, the default, adds a small expansion factor the
 the limits to prevent overlap between data and axes. If \code{FALSE}, limits

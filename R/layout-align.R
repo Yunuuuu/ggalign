@@ -59,6 +59,14 @@ continuous_limits <- function(..., x = waiver(), y = waiver()) {
     structure(ans, class = c("continuous_limits", "layout_design"))
 }
 
+# layout params are used to align the observations
+discrete_design <- function(panel = NULL, index = NULL, nobs = NULL) {
+    structure(
+        list(panel = panel, index = index, nobs = nobs),
+        class = c("discrete_design", "layout_design")
+    )
+}
+
 ################################################################
 is_continuous_design <- function(x) {
     is.null(x) || inherits(x, "continuous_limits")
@@ -75,14 +83,6 @@ is_layout_discrete <- function(x, ...) UseMethod("is_layout_discrete")
 is_layout_continuous <- function(x, ...) UseMethod("is_layout_continuous")
 
 ################################################################
-# layout params are used to align the observations
-discrete_design <- function(panel = NULL, index = NULL, nobs = NULL) {
-    structure(
-        list(panel = panel, index = index, nobs = nobs),
-        class = c("discrete_design", "layout_design")
-    )
-}
-
 # Initialize the index and panel
 # Reorder the panel based the ordering index and
 setup_design <- function(design) {
@@ -430,7 +430,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
         },
         setup_panel_params = function(self, scale_x, scale_y, params = list()) {
             # `setup_panel_params()` will utilize the `limits`
-            # set limits here, in this way, each plot will have the same limits
+            # set limits here to ensure each plot will have the same limits
             cur_panel <- self$panel_counter + 1L
             if (!is.null(self$xlim_list)) {
                 xlim <- .subset2(
@@ -443,7 +443,11 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                     # panel
                     xlim <- xlim - (min(xlim) - 0.5)
                 }
-                self$limits$x <- xlim
+                if (inherits(self, "CoordRadial")) {
+                    self$limits$theta <- xlim
+                } else {
+                    self$limits$x <- xlim
+                }
             }
             if (!is.null(self$ylim_list)) {
                 ylim <- .subset2(
@@ -456,7 +460,11 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
                     # panel
                     ylim <- ylim - (min(ylim) - 0.5)
                 }
-                self$limits$y <- ylim
+                if (inherits(self, "CoordRadial")) {
+                    self$limits$r <- ylim
+                } else {
+                    self$limits$y <- ylim
+                }
             }
             self$panel_counter <- cur_panel
             ggproto_parent(ParentCoord, self)$setup_panel_params(
