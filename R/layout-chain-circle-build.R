@@ -207,7 +207,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         if (packageVersion("ggplot2") > "3.5.1") {
             # ggplot2 development version > 3.5.1
             guide_list <- plot$guides$assemble(plot_theme)
-            if (!inherits(guide_list, "zeroGrob")) {
+            if (!is_empty_grob(guide_list)) {
                 guides[[i]] <- lapply(guide_list, function(guide_box) {
                     if (is.gtable(guide_box)) {
                         guide_box$grobs[grepl("guides", guide_box$layout$name)]

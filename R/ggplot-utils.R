@@ -35,6 +35,10 @@ is_palette_unset <- function(type, aes) {
     is.null(getOption(sprintf("ggplot2.%s.%s", type, aes)))
 }
 
+# A guide-box should be a `zeroGrob()` or a `gtable` object
+#' @importFrom gtable is.gtable
+maybe_guide_box <- function(x) inherits(x, "zeroGrob") || is.gtable(x)
+
 ######################################################
 gguse_data <- function(plot, data) {
     # ggplot use waiver() to indicate no data
@@ -68,13 +72,11 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
     plot$facet <- ggproto(
         NULL,
         ParentFacet,
-        init_scales = function(
-            self,
-            layout,
-            x_scale = NULL,
-            y_scale = NULL,
-            params
-        ) {
+        init_scales = function(self,
+                               layout,
+                               x_scale = NULL,
+                               y_scale = NULL,
+                               params) {
             if (!is.null(x_scale) && !is.null(.subset2(object, "x"))) {
                 x_scale$expand <- x_scale$expand %|w|% .subset2(object, "x")
             }
@@ -106,8 +108,7 @@ reverse_continuous_scale <- function(plot, axis) {
         }
     } else {
         plot <- plot +
-            switch(
-                axis,
+            switch(axis,
                 x = ggplot2::scale_x_reverse(),
                 y = ggplot2::scale_y_reverse()
             )

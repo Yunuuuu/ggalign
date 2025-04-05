@@ -4,9 +4,7 @@
 #' @noRd
 assemble_guides <- function(guides, guide_pos, theme) {
     guides <- guides[
-        !vapply(guides, function(box) {
-            inherits(box, "zeroGrob")
-        }, logical(1L), USE.NAMES = FALSE)
+        !vapply(guides, is_empty_grob, logical(1L), USE.NAMES = FALSE)
     ]
     if (is_empty(guides)) {
         zeroGrob()

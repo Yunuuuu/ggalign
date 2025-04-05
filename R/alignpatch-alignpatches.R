@@ -229,16 +229,17 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             guides <- lapply(guides_list, function(guides) {
                 o <- .subset2(guides, guide_pos)
                 # A guide-box should be a `zeroGrob()` or a `gtable` object
-                if (inherits(o, "zeroGrob") || is.gtable(o)) {
+                if (maybe_guide_box(o)) {
                     return(list(o))
                 }
                 # For other grobs, we just removed them silently
                 if (is.grob(o)) {
                     list(NULL)
                 } else if (is.list(o)) {
-                    o[vapply(o, function(guide) {
-                        inherits(guide, "zeroGrob") || is.gtable(guide)
-                    }, logical(1L), USE.NAMES = FALSE)]
+                    o[vapply(o, maybe_guide_box,
+                        logical(1L),
+                        USE.NAMES = FALSE
+                    )]
                 } else {
                     list(NULL)
                 }
@@ -435,9 +436,10 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             name <- sprintf("guide-box-collected-%s", guide_pos)
             # for `zeroGrob()`, it doesn't record the `viewport` information
             # used to identify the inside guide groups, we just removed them
-            guides <- guides[!vapply(guides, function(box) {
-                inherits(box, "zeroGrob")
-            }, logical(1L), USE.NAMES = FALSE)]
+            guides <- guides[!vapply(guides, is_empty_grob,
+                logical(1L),
+                USE.NAMES = FALSE
+            )]
             if (is_empty(guides)) {
                 index <- 1L
             } else {
@@ -504,12 +506,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         spacing <- .subset2(theme, "legend.box.spacing")
         name <- sprintf("guide-box-collected-%s", guide_pos)
         if (guide_pos == "left") {
-            if (inherits(guide_box, "zeroGrob")) {
-                legend_width <- grobWidth(guide_box)
-                widths <- unit(c(0, 0), "mm")
-            } else {
+            if (is.gtable(guide_box)) {
                 legend_width <- gtable_width(guide_box)
                 widths <- unit.c(spacing, legend_width)
+            } else {
+                legend_width <- grobWidth(guide_box)
+                widths <- unit(c(0, 0), "mm")
             }
             gt <- gtable_add_grob(
                 x = gt,
@@ -522,12 +524,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             )
             gt$widths[.subset2(panel_pos, "l") - 5:6] <- widths
         } else if (guide_pos == "right") {
-            if (inherits(guide_box, "zeroGrob")) {
-                legend_width <- grobWidth(guide_box)
-                widths <- unit(c(0, 0), "mm")
-            } else {
+            if (is.gtable(guide_box)) {
                 legend_width <- gtable_width(guide_box)
                 widths <- unit.c(spacing, legend_width)
+            } else {
+                legend_width <- grobWidth(guide_box)
+                widths <- unit(c(0, 0), "mm")
             }
             gt <- gtable_add_grob(
                 x = gt,
@@ -545,12 +547,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))
             )
-            if (inherits(guide_box, "zeroGrob")) {
-                legend_height <- grobHeight(guide_box)
-                heights <- unit(c(0, 0), "mm")
-            } else {
+            if (is.gtable(guide_box)) {
                 legend_height <- gtable_height(guide_box)
                 heights <- unit.c(spacing, legend_height)
+            } else {
+                legend_height <- grobHeight(guide_box)
+                heights <- unit(c(0, 0), "mm")
             }
             gt <- gtable_add_grob(
                 x = gt,
@@ -568,12 +570,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))
             )
-            if (inherits(guide_box, "zeroGrob")) {
-                legend_height <- grobHeight(guide_box)
-                heights <- unit(c(0, 0), "mm")
-            } else {
+            if (is.gtable(guide_box)) {
                 legend_height <- gtable_height(guide_box)
                 heights <- unit.c(spacing, legend_height)
+            } else {
+                legend_height <- grobHeight(guide_box)
+                heights <- unit(c(0, 0), "mm")
             }
             gt <- gtable_add_grob(
                 x = gt,
