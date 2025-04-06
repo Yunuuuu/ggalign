@@ -226,7 +226,7 @@ Align <- ggproto("Align", AlignProto,
     #  - the second one should be the heatmap row/column order index, and will
     #    determine the order in each grouped panel.
     #
-    # See `align_initialize_layout` function for details
+    # See `$setup_design()` method for details
     # There will have following situations (the input is old index and old
     # panel):
     #
@@ -251,7 +251,7 @@ Align <- ggproto("Align", AlignProto,
     #
     # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
-    #    index, this will be checked in `align_initialize_layout` function.
+    #    index, this will be checked in `$setup_design()` method.
     align = function(self, panel, index) list(panel, index),
 
     # let AlignProto to add schemes and theme acoordingly
