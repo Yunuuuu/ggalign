@@ -160,7 +160,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
         # unlock the object
         self$unlock()
         self$mark$links <- vec_c(extra_links, links)
-        on.exit(self$mark <- mark) # restore the original `mark`
+        on.exit(self$mark <- mark, add = TRUE) # restore the original `mark`
         on.exit(self$lock(), add = TRUE)
 
         # setup the plot

@@ -286,10 +286,10 @@ Patch <- ggproto(
         gt
     },
     split_gt = function(self, gt = self$gt) {
-        index <- .subset2(.subset2(gt, "layout"), "name") == "background"
-        if (any(index)) {
-            bg <- .subset(.subset2(gt, "grobs"), index) # a list of background
-            plot <- subset_gt(gt, !index, trim = FALSE)
+        isbg <- .subset2(.subset2(gt, "layout"), "name") == "background"
+        if (any(isbg)) {
+            bg <- .subset(.subset2(gt, "grobs"), isbg) # a list of background
+            plot <- subset_gt(gt, !isbg, trim = FALSE)
         } else {
             bg <- NULL
             plot <- gt
