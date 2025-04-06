@@ -326,7 +326,7 @@ PatchAlignMark <- ggproto(
         )
     },
     get_sizes = function(self, free = NULL, gt = self$gt) {
-        PatchGgplot$get_sizes(.tlbr, gt = gt)
+        ggproto_parent(PatchGgplot, self)$get_sizes(.tlbr, gt = gt)
     },
     align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
                             gt = self$gt) {
