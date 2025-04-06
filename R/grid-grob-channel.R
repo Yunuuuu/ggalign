@@ -127,6 +127,7 @@ channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
 #' @export
 `[[.channelGrob` <- `$.channelGrob`
 
+# https://www.stat.auckland.ac.nz/~paul/Reports/CustomGrobs/custom-grob.html
 # preDraw:
 #  - makeContext
 #  - pushvpgp
