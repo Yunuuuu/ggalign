@@ -19,9 +19,10 @@ fortify_matrix.matrix <- fortify_matrix.waiver
 #' - [`fortify_matrix.matrix_upset()`]
 #' - [`fortify_matrix.matrix_oncoplot()`]
 #' @family tune
+#' @importFrom rlang arg_match0
 #' @export
 tune.matrix <- function(data, shape) {
-    shape <- rlang::arg_match0(shape, c("upset", "oncoplot"))
+    shape <- arg_match0(shape, c("upset", "oncoplot"))
     if (identical(shape, "oncoplot")) {
         if (!is.character(data)) {
             cli_abort(

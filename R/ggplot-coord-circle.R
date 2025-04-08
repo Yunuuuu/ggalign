@@ -22,19 +22,20 @@
 #'         inner.radius = 0.3, outer.radius = 0.5
 #'     )
 #' @importFrom ggplot2 ggproto
+#' @importFrom rlang arg_match0
 #' @export
 coord_circle <- function(theta = "x", start = 0, end = NULL,
                          thetalim = NULL, rlim = NULL, expand = FALSE,
                          direction = 1, clip = "off",
                          r.axis.inside = NULL, rotate.angle = FALSE,
                          inner.radius = 0, outer.radius = 0.95) {
-    theta <- rlang::arg_match0(theta, c("x", "y"))
+    theta <- arg_match0(theta, c("x", "y"))
     assert_number_decimal(start, allow_infinite = FALSE)
     assert_number_decimal(end, allow_infinite = FALSE, allow_null = TRUE)
     if (packageVersion("ggplot2") <= "3.5.1") {
         assert_bool(expand)
     }
-    clip <- rlang::arg_match0(clip, c("off", "on"))
+    clip <- arg_match0(clip, c("off", "on"))
     valid_inside_axis <- .standalone_types_check_assert_call(
         ffi_standalone_is_bool_1.0.7,
         r.axis.inside,

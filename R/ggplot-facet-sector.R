@@ -29,7 +29,7 @@ facet_sector <- function(facets, radial = NULL,
     # @param strip.position By default, the labels are displayed on the
     # `"outer"` of the plot. Allowed values are `r oxford_or(c("outer",
     # "inner"))`
-    # strip.position <- rlang::arg_match0(strip.position, c("outer", "inner"))
+    # strip.position <- arg_match0(strip.position, c("outer", "inner"))
     # strip.position <- switch(strip.position,
     #     outer = "top",
     #     inner = "bottom"
