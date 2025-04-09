@@ -8,13 +8,15 @@ grid::unit
 
 is.gList <- function(x) inherits(x, "gList")
 
+is.gTree <- function(x) inherits(x, "gTree")
+
 #' @importFrom grid unitType absolute.size
 is_absolute_unit <- function(x) unitType(absolute.size(x)) != "null"
 
 #' @importFrom grid unitType
 is_null_unit <- function(x) unitType(x) == "null"
 
-is_empty_grob <- function(x) inherits(x, c("zeroGrob", "null"))
+is_null_grob <- function(x) inherits(x, c("zeroGrob", "null"))
 
 # `current.transform()` transforms from *inches* within the current viewport to
 # *inches* on the overall device.

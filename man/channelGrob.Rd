@@ -44,7 +44,7 @@ The \verb{$signal} method returns a \code{channelSignalGrob}.
 }
 
 \examples{
-# here we create a new channel, we will emit two singals
+# we create a new channel, we will emit two singals
 # here: we just add a line between the two signals
 channel <- channelGrob(function(locations) {
     # you can also use `tag` to identify the locations

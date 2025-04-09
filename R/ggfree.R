@@ -62,7 +62,7 @@ ggfree.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
     rlang::check_dots_empty()
     plot <- data
     # In ggplot2, `waiver()` was regard to no data
-    data <- .subset2(plot, "data") %|w|% NULL
+    data <- plot$data %|w|% NULL
     plot <- gguse_data(plot, waiver())
     new_free_gg(plot, data, size = size, active = active)
 }
