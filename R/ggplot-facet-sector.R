@@ -82,7 +82,7 @@ ggplot_add.ggalign_facet_sector <- function(object, plot, object_name) {
             ggproto_parent(ParentLayout, self)$setup_panel_params()
             if (!is.null(self$facet$setup_panel_params)) {
                 self$panel_params <- self$facet$setup_panel_params(
-                    self$coord, self$panel_params
+                    self$panel_params, self$coord
                 )
             }
             invisible()
@@ -95,7 +95,7 @@ ggplot_add.ggalign_facet_sector <- function(object, plot, object_name) {
 #' @importFrom ggplot2 ggproto ggproto_parent
 FacetSector <- ggproto(
     "FacetSector", ggplot2::FacetWrap,
-    setup_panel_params = function(self, coord, panel_params) {
+    setup_panel_params = function(self, panel_params, coord, ...) {
         # Ensure the CoordCircle is not changed by the users
         if (!inherits(coord, "CoordRadial")) {
             cli_abort(c(
