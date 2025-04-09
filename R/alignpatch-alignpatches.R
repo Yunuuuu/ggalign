@@ -436,7 +436,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             name <- sprintf("guide-box-collected-%s", guide_pos)
             # for `zeroGrob()`, it doesn't record the `viewport` information
             # used to identify the inside guide groups, we just removed them
-            guides <- guides[!vapply(guides, is_empty_grob,
+            guides <- guides[!vapply(guides, is_null_grob,
                 logical(1L),
                 USE.NAMES = FALSE
             )]
