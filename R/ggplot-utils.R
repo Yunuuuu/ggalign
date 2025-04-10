@@ -47,7 +47,7 @@ gguse_data <- function(plot, data) {
 }
 
 ggremove_margin <- function(plot, direction) {
-    if (!is.null(direction) && packageVersion("ggplot2") > "3.5.1") {
+    if (!is.null(direction) && packageVersion("ggplot2") > "3.5.2") {
         plot <- plot + switch_direction(
             direction,
             theme(plot.margin = margin(t = 0, r = NA, b = 0, l = NA)),

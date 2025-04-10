@@ -32,7 +32,7 @@ coord_circle <- function(theta = "x", start = 0, end = NULL,
     theta <- arg_match0(theta, c("x", "y"))
     assert_number_decimal(start, allow_infinite = FALSE)
     assert_number_decimal(end, allow_infinite = FALSE, allow_null = TRUE)
-    if (packageVersion("ggplot2") <= "3.5.1") {
+    if (packageVersion("ggplot2") <= "3.5.2") {
         assert_bool(expand)
     }
     clip <- arg_match0(clip, c("off", "on"))

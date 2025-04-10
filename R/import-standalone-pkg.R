@@ -88,7 +88,7 @@ pkg_extdata <- function(..., mustWork = TRUE) {
 #' @examples
 #' from_namespace(
 #'     "ggplot2",
-#'      version < "3.5.1" ~ "complete_theme",
+#'      version < "3.5.2" ~ "complete_theme",
 #'     "plot_theme"
 #' )
 #' @noRd

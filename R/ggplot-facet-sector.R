@@ -22,7 +22,7 @@ facet_sector <- function(facets, radial = NULL,
                          spacing_theta = pi / 180, drop = TRUE) {
     # For FacetCircle
     facets <- ggfun(
-        version <= "3.5.1" ~ "wrap_as_facets_list",
+        version <= "3.5.2" ~ "wrap_as_facets_list",
         "compact_facets"
     )(facets)
 
@@ -38,8 +38,8 @@ facet_sector <- function(facets, radial = NULL,
     assert_bool(drop)
 
     # TO-DO: remove this line and update to
-    # the next version of ggplot2 (> 3.5.1)
-    if (packageVersion("ggplot2") <= "3.5.1") {
+    # the next version of ggplot2 (> 3.5.2)
+    if (packageVersion("ggplot2") <= "3.5.2") {
         dir <- "h"
     } else {
         dir <- "lt"

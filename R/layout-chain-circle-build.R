@@ -204,8 +204,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         }
 
         # build legends
-        if (packageVersion("ggplot2") > "3.5.1") {
-            # ggplot2 development version > 3.5.1
+        if (packageVersion("ggplot2") > "3.5.2") {
+            # ggplot2 development version > 3.5.2
             guide_list <- plot$guides$assemble(plot_theme)
             if (!is_null_grob(guide_list)) {
                 guides[[i]] <- lapply(guide_list, function(guide_box) {
