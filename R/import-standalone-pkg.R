@@ -6,7 +6,7 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-pkg.R
-# last-updated: 2025-03-10
+# last-updated: 2025-04-10
 # license: https://unlicense.org
 # imports: [utils]
 # ---
@@ -16,6 +16,12 @@
 # other packages that are not listed in Imports, so use them with caution.
 
 # ## Changelog
+# 2025-04-10
+# - simplify `from_namespace`
+#
+# 2025-03-30
+# - Add `use_github_release`
+#
 # 2025-03-12
 # - Add `from_namespace`
 #
@@ -80,40 +86,57 @@ pkg_extdata <- function(..., mustWork = TRUE) {
     system.file("extdata", ..., package = pkg_nm(), mustWork = mustWork)
 }
 
-#' @param ... The last argument must be a string representing the variable name.
-#' For all others, provide a list of formulas where:
-#' - The left-hand side should return a single boolean value and may reference a
-#'   variable named `"version"`, which represents the current package version.
-#' - The right-hand side should be a string specifying the variable name.
-#' @examples
-#' from_namespace(
-#'     "ggplot2",
-#'      version < "3.5.2" ~ "complete_theme",
-#'     "plot_theme"
-#' )
-#' @noRd
+############################################################
+# I’m having trouble connecting to GitHub, and it seems that `gert` does not
+# respect the proxy settings in my Git config. To work around this, I modified
+# `usethis::use_github_release()` to skip the check that relies on the `gert`
+# package.
+use_github_release <- function(publish = TRUE) {
+    usethis_ns <- getNamespace("usethis")
+    usethis <- function(fun, ...) {
+        get(x = fun, envir = usethis_ns, inherits = FALSE, ...)
+    }
+    usethis("check_is_package")("use_github_release()")
+    tr <- usethis("target_repo")(
+        github_get = TRUE,
+        ok_configs = c("ours", "fork")
+    )
+    usethis("check_can_push")(tr = tr, "to create a release")
+    dat <- usethis("get_release_data")(tr)
+    release_name <- paste(dat$Package, dat$Version)
+    tag_name <- sprintf("v%s", dat$Version)
+    usethis("kv_line")("Release name", release_name)
+    usethis("kv_line")("Tag name", tag_name)
+    usethis("kv_line")("SHA", dat$SHA)
+    usethis("check_github_has_SHA")(SHA = dat$SHA, tr = tr)
+    on_cran <- !is.null(usethis("cran_version")())
+    news <- usethis("get_release_news")(
+        SHA = dat$SHA, tr = tr, on_cran = on_cran
+    )
+    gh <- usethis("gh_tr")(tr)
+    usethis("ui_bullets")("Publishing {tag_name} release to GitHub")
+    release <- gh( # nolint
+        "POST /repos/{owner}/{repo}/releases",
+        name = release_name,
+        tag_name = tag_name,
+        target_commitish = dat$SHA,
+        body = news,
+        draft = !publish
+    )
+    usethis("ui_bullets")("Release at {.url {release$html_url}}")
+    if (!is.null(dat$file)) {
+        usethis("ui_bullets")("Deleting {.path {dat$file}}")
+        getExportedValue("fs", "file_delete")(dat$file)
+    }
+    invisible()
+}
+
+############################################################
 from_namespace <- local({
     namespace <- NULL
-    function(package, ..., mode = "any") {
-        if (is.null(namespace)) {
-            namespace <<- getNamespace(package)
-        }
-        envir <- parent.frame()
-        dots <- as.list(substitute(...()))
-        # The last one should be a string
-        name <- eval(.subset2(dots, length(dots)), envir = envir)
-        if (length(dots) > 1L) {
-            version_envir <- new.env(parent = envir)
-            version_envir$version <- utils::packageVersion(package)
-            for (dot in dots[-length(dots)]) {
-                # evaluate in the version environemnt
-                if (eval(.subset2(dot, 2L), envir = version_envir)) {
-                    name <- eval(.subset2(dot, 3L), envir = envir)
-                    break
-                }
-            }
-        }
-        get(name, envir = namespace, inherits = FALSE, mode = mode)
+    function(package, name, mode = "any") {
+        if (is.null(namespace)) namespace <<- getNamespace(package)
+        get(x = name, envir = namespace, inherits = FALSE, mode = mode)
     }
 })
 
@@ -179,8 +202,7 @@ oxford_comma <- function(x, sep = ", ", final = "and") {
 rd_collect_family <- function(
     family,
     section_title = paste(family, "family"),
-    code_style = TRUE
-) {
+    code_style = TRUE) {
     # get blocks objects from the roxygenize function
     blocks <- NULL
     pos <- sys.nframe()

@@ -1,5 +1,5 @@
 #' @importFrom ggplot2 .pt
-ggfun <- function(..., mode = "any") from_namespace("ggplot2", ..., mode = mode)
+ggfun <- function(fn, mode = "any") from_namespace("ggplot2", fn, mode = mode)
 
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x

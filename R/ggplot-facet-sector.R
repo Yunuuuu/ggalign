@@ -20,11 +20,11 @@
 #' @export
 facet_sector <- function(facets, radial = NULL,
                          spacing_theta = pi / 180, drop = TRUE) {
-    # For FacetCircle
-    facets <- ggfun(
-        version <= "3.5.2" ~ "wrap_as_facets_list",
-        "compact_facets"
-    )(facets)
+    if (packageVersion("ggplot2") > "3.5.2") {
+        facets <- ggfun("compact_facets")(facets)
+    } else {
+        facets <- ggfun("wrap_as_facets_list")(facets)
+    }
 
     # @param strip.position By default, the labels are displayed on the
     # `"outer"` of the plot. Allowed values are `r oxford_or(c("outer",
@@ -39,10 +39,10 @@ facet_sector <- function(facets, radial = NULL,
 
     # TO-DO: remove this line and update to
     # the next version of ggplot2 (> 3.5.2)
-    if (packageVersion("ggplot2") <= "3.5.2") {
-        dir <- "h"
-    } else {
+    if (packageVersion("ggplot2") > "3.5.2") {
         dir <- "lt"
+    } else {
+        dir <- "h"
     }
     radial <- radial %||% coord_circle()
     if (!inherits(radial, "CoordRadial")) {

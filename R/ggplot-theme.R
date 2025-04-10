@@ -13,7 +13,7 @@ default_theme <- function() {
 # Check if user has set the theme
 is_theme_unset <- function() {
     isTRUE(all.equal(
-        complete_theme(.subset2(ggfun("ggplot_global"), "theme_default")),
+        complete_theme(ggfun("ggplot_global")$theme_default),
         complete_theme(theme_get())
     ))
 }

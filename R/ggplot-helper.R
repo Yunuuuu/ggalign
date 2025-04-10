@@ -386,12 +386,21 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
                                               params = list()) {
                     if (!is.null(scale_x)) {
                         expansion <- scale_x$expand %|w|%
-                            ggfun("default_expansion")(
-                                scale_x,
-                                # for ggplot2 > 3.5.2, expand was passed by
-                                # params
-                                expand = self$expand %||% params$expand[c(4, 2)]
-                            )
+                            if (packageVersion("ggplot2") > "3.5.2") {
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    # for ggplot2 > 3.5.2, expand was passed by
+                                    # params
+                                    expand = params$expand[c(4, 2)]
+                                )
+                            } else {
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    # for ggplot2 > 3.5.2, expand was passed by
+                                    # params
+                                    expand = self$expand
+                                )
+                            }
                         if (any(borders == "left")) {
                             expansion[1:2] <- 0
                         }
@@ -402,12 +411,21 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
                     }
                     if (!is.null(scale_y)) {
                         expansion <- scale_y$expand %|w|%
-                            ggfun("default_expansion")(
-                                scale_y,
-                                # for ggplot2 > 3.5.2, expand was passed by
-                                # params
-                                expand = self$expand %||% params$expand[c(3, 1)]
-                            )
+                            if (packageVersion("ggplot2") > "3.5.2") {
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    # for ggplot2 > 3.5.2, expand was passed by
+                                    # params
+                                    expand = params$expand[c(3, 1)]
+                                )
+                            } else {
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    # for ggplot2 > 3.5.2, expand was passed by
+                                    # params
+                                    expand = self$expand
+                                )
+                            }
                         if (any(borders == "bottom")) {
                             expansion[1:2] <- 0
                         }
