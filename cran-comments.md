@@ -1,4 +1,6 @@
-This major update introduces new features, some of which modify previous behavior, along with bug fixes. Since there are no reverse dependencies yet, these changes should not affect other packages.
+This patch update introduces a few features and primarily addresses the CRAN
+check error. Since there are currently no reverse dependencies, these changes
+should not impact any other packages.
 
 ## R CMD check results
 0 errors | 0 warnings | 0 note

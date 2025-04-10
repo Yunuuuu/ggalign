@@ -1,5 +1,11 @@
 # ggalign (development version)
 
+* fix R CMD check error for the updated version of ggplot2 3.5.2.
+
+* new grob `channelGrob()` used to create grobs across different facet.
+
+* fix `patch.gList` method.
+
 # ggalign 1.0.0
 
 This is a major release. While not many new features have been added, this marks the first release where the entire layout system has been completed.
