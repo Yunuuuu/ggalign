@@ -1,3 +1,5 @@
+# ggalign (development version)
+
 # ggalign 1.0.1
 
 * fix R CMD check error for the updated version of ggplot2 3.5.2.
