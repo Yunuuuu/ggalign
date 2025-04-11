@@ -49,7 +49,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         # sizes should be of length 3
         sizes <- stack@sizes
         # recycle the sizes when necessary
-        if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
+        if (length(sizes) == 1L) sizes <- rep_len(sizes, 3L)
         sizes <- sizes[
             c(
                 .subset2(composer, "left_or_top"),
@@ -223,7 +223,7 @@ make_order <- function(order) {
     need_action <- is.na(order)
     if (all(need_action)) { # shorthand for the usual way, we don't set any
         return(index)
-    } else if (all(!need_action)) { # we won't need do something special
+    } else if (!any(need_action)) { # we won't need do something special
         return(order(order))
     }
 

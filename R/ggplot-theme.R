@@ -164,8 +164,8 @@ recycle_theme_axis <- function(axis, theme, scales) {
     breaks <- unlist(lapply(scales, function(s) s$get_breaks()), FALSE, FALSE)
     labels <- unlist(lapply(scales, function(x) x$get_labels()), FALSE, FALSE)
     align_theme_axis(axis, theme,
-        tick_fn = function(v, arg) rep(v, length.out = length(breaks)),
-        text_fn = function(v, arg) rep(v, length.out = length(labels))
+        tick_fn = function(v, arg) rep_len(v, length(breaks)),
+        text_fn = function(v, arg) rep_len(v, length(labels))
     )
 }
 

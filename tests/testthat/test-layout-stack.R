@@ -26,22 +26,22 @@ testthat::test_that("`stack_free` works well", {
     # atomic was converted to one-column data frame
     x <- stack_freeh(1:10)
     expect_true(is.data.frame(x@data))
-    expect_identical(names(x@data), "value")
-    expect_identical(x@design, NULL)
+    expect_named(x@data, "value")
+    expect_null(x@design)
     # str method works well
     expect_no_error(str(x))
 
     x <- stack_freeh(letters)
     expect_true(is.data.frame(x@data))
-    expect_identical(names(x@data), "value")
-    expect_identical(x@design, NULL)
+    expect_named(x@data, "value")
+    expect_null(x@design)
     # str method works well
     expect_no_error(str(x))
 
     # stack with no data
     x <- stack_freeh()
     expect_s3_class(x@sizes, "unit")
-    expect_identical(x@design, NULL)
+    expect_null(x@design)
     # str method works well
     expect_no_error(str(x))
 })
