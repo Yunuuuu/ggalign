@@ -157,7 +157,7 @@ makeContent.channelGrob <- function(x) {
         i <- .subset2(x, "i")
         signal <- .subset2(channel$signals, i)
         channel$locations[[i]] <- grid::deviceLoc(signal$x, signal$y)
-        if (all(!vapply(channel$locations, is.null, logical(1L), # styler: off
+        if (!any(vapply(channel$locations, is.null, logical(1L), # styler: off
                         USE.NAMES = FALSE))) {                   # styler: off
             # When all locations have been prepared
             # we output the grob with all device locations

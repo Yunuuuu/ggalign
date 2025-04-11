@@ -257,8 +257,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     set_sizes = function(self, design, dims,
                          panel_widths, panel_heights,
                          patches, gt = self$gt) {
-        panel_widths <- rep(panel_widths, length.out = dims[2L])
-        panel_heights <- rep(panel_heights, length.out = dims[1L])
+        panel_widths <- rep_len(panel_widths, dims[2L])
+        panel_heights <- rep_len(panel_heights, dims[1L])
         if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
         if (!is.unit(panel_heights)) {
             panel_heights <- unit(panel_heights, "null")

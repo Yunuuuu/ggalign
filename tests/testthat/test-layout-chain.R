@@ -19,7 +19,7 @@ test_that("is_layout_continuous function", {
 test_that("`chain_layout_add()` with layout_title", {
     layout <- new("ChainLayout")
     layout <- chain_layout_add(layout_title("my title"), layout, "title")
-    expect_equal(layout@titles, list(title = "my title"))
+    expect_identical(layout@titles, list(title = "my title"))
 })
 
 test_that("`chain_layout_add()` function with NULL", {
