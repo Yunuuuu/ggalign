@@ -67,3 +67,6 @@ if (requireNamespace("magick")) {
         )
 }
 }
+\seealso{
+\code{\link[=magickGrob]{magickGrob()}}
+}

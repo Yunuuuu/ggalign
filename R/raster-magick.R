@@ -33,6 +33,7 @@
 #'         )
 #' }
 #' @return An object with the same class of the input.
+#' @seealso [`magickGrob()`]
 #' @export
 raster_magick <- function(x, magick = NULL, ...,
                           res = NULL, interpolate = FALSE,

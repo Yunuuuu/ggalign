@@ -7,11 +7,13 @@
 #' compatible with [`as.raster()`][grDevices::as.raster]. You can use any of
 #' the `image_*()` functions from the **magick** package to process the raster
 #' image.
+#' @param ... Not used currently.
 #' @param res An integer sets the desired resolution in pixels.
 #' @inheritParams grid::rasterGrob
 #' @return A `magickGrob` object.
 #' @export
-magickGrob <- function(grob, magick = NULL, res = NULL, interpolate = FALSE,
+magickGrob <- function(grob, magick = NULL, ...,
+                       res = NULL, interpolate = FALSE,
                        name = NULL, vp = NULL) {
     rlang::check_installed("magick", "to use `magickGrob()`")
     if (!is.null(magick) && !is.function(magick <- allow_lambda(magick))) {
@@ -20,7 +22,7 @@ magickGrob <- function(grob, magick = NULL, res = NULL, interpolate = FALSE,
     assert_number_whole(res, min = 1, allow_null = TRUE)
     assert_bool(interpolate)
     .magickGrob(
-        grob = grob, magick = magick, res = res,
+        grob = grob, magick = magick, ..., res = res,
         interpolate = interpolate, name = name, vp = vp
     )
 }

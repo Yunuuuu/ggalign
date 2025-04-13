@@ -7,6 +7,7 @@
 magickGrob(
   grob,
   magick = NULL,
+  ...,
   res = NULL,
   interpolate = FALSE,
   name = NULL,
@@ -22,6 +23,8 @@ into a \code{grob}.}
 compatible with \code{\link[grDevices:as.raster]{as.raster()}}. You can use any of
 the \verb{image_*()} functions from the \strong{magick} package to process the raster
 image.}
+
+\item{...}{Not used currently.}
 
 \item{res}{An integer sets the desired resolution in pixels.}
 
