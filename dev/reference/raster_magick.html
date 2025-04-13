@@ -56,7 +56,14 @@ directly within the plotting pipeline.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">raster_magick</span><span class="op">(</span><span class="va">x</span>, magick <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, res <span class="op">=</span> <span class="cn">NULL</span>, interpolate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">raster_magick</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  magick <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  res <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  interpolate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  vp <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -90,6 +97,10 @@ image.</p></dd>
     image (the alternative is to use nearest-neighbour interpolation,
     which gives a more blocky result).</p></dd>
 
+
+<dt id="arg-vp">vp<a class="anchor" aria-label="anchor" href="#arg-vp"></a></dt>
+<dd><p>A Grid viewport object (or NULL).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -118,7 +129,6 @@ image.</p></dd>
 <span class="r-in"><span>            <span class="op">}</span></span></span>
 <span class="r-in"><span>        <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: magick</span>
 <span class="r-plt img"><img src="raster_magick-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
