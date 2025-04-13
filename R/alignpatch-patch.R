@@ -29,12 +29,13 @@ patch.grob <- function(x, ...) {
     x
 }
 
+#' @importFrom grid gTree
 #' @export
 #' @rdname patch.grob
 patch.gList <- function(x, ...) {
     rlang::check_dots_empty()
     # gLists need to be wrapped in a gTree
-    grid::gTree(children = x)
+    gTree(children = x)
 }
 
 #' @importFrom ggplot2 ggplotGrob

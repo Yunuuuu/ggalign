@@ -54,7 +54,7 @@
 #' )
 #' grid::grid.newpage()
 #' grid::grid.draw(gt)
-#' @importFrom grid unit is.unit
+#' @importFrom grid unit is.unit grob
 #' @importFrom rlang list2
 #' @export
 channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
@@ -67,7 +67,7 @@ channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
     channel$make_content <- make_content
     channel$dots <- list2(...)
     channel$n <- 0L # total number of signals
-    grid::grob(
+    grob(
         channel = channel,
         name = name,
         vp = vp,
@@ -75,12 +75,8 @@ channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
         # method used to release signal and retutn a new grob
         signal = function(self, x, y, default.units = "native",
                           tag = NULL, name = NULL, vp = NULL) {
-            if (!is.unit(x)) {
-                x <- unit(x, default.units)
-            }
-            if (!is.unit(y)) {
-                y <- unit(y, default.units)
-            }
+            if (!is.unit(x)) x <- unit(x, default.units)
+            if (!is.unit(y)) y <- unit(y, default.units)
             if (length(x) != length(y)) {
                 cli_abort("{.arg x} and {.arg y} must have the same length")
             }
@@ -90,7 +86,7 @@ channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
             channel <- .subset2(self, "channel")
             channel$signals <- c(channel$signals, signal)
             i <- channel$n <- channel$n + 1L
-            grid::grob(
+            grob(
                 channel = channel,
                 i = i,
                 name = name,
@@ -137,7 +133,7 @@ channelGrob <- function(make_content, ..., name = NULL, vp = NULL) {
 # postDraw:
 #  - postDrawDetails: by default, do noting
 #  - popgrobvp
-#' @importFrom grid makeContent drawDetails viewport is.grob gTree
+#' @importFrom grid makeContent drawDetails viewport is.grob gTree grob
 #' @export
 makeContent.channelGrob <- function(x) {
     channel <- .subset2(x, "channel")
@@ -161,7 +157,7 @@ makeContent.channelGrob <- function(x) {
                         USE.NAMES = FALSE))) {                   # styler: off
             # When all locations have been prepared
             # we output the grob with all device locations
-            x <- grid::grob(
+            x <- grob(
                 channel = channel,
                 vp = .subset2(x, "vp"), # Don't change the viewport
                 cl = c("channelReceiverGrob", "channelGrob")
@@ -175,7 +171,7 @@ makeContent.channelGrob <- function(x) {
 drawDetails.channelGrob <- function(x, recording) {
 }
 
-#' @importFrom grid grid.draw
+#' @importFrom grid grid.draw viewport gTree is.grob
 #' @export
 drawDetails.channelReceiverGrob <- function(x, recording) {
     # we always reset the locations after drawing
@@ -191,7 +187,7 @@ drawDetails.channelReceiverGrob <- function(x, recording) {
         locations <- lapply(locations, grid_solve_loc, trans = trans)
     } else { # If no viewport, we use the `ROOT` viewport
         grid::upViewport(0)
-        grid::pushViewport(grid::viewport())
+        grid::pushViewport(viewport())
     }
     grob <- rlang::inject(channel$make_content(locations, !!!channel$dots))
     if (is.gList(grob)) grob <- gTree(children = grob)
