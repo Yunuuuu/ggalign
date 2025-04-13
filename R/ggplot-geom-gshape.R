@@ -131,12 +131,7 @@ make_gshape <- function(gshape, data, dots) {
             ))
         }
     }
-    if (is.gList(gshape)) gshape <- gTree(children = gshape)
-    if (is.grob(gshape)) {
-        gshape
-    } else {
-        zeroGrob()
-    }
+    ensure_grob(gshape, zeroGrob())
 }
 
 #' @importFrom ggplot2 ggproto zeroGrob

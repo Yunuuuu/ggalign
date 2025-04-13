@@ -22,25 +22,25 @@ rasterise.ggalign_plot <- function(input, ...) {
 
 ##########################################################
 #' @export
-.raster_magick.QuadLayout <- function(x, magick = NULL, ...) {
+.raster_magick.QuadLayout <- function(x, ...) {
     x@plot <- .raster_magick(x = x@plot, ...)
     for (position in .TLBR) {
         stack <- slot(x, position)
         if (is.null(stack)) next
-        slot(x, position) <- .raster_magick(x = stack, magick = magick, ...)
+        slot(x, position) <- .raster_magick(x = stack, ...)
     }
     x
 }
 
 #' @export
-.raster_magick.StackLayout <- function(x, magick = NULL, ...) {
-    x@plot_list <- lapply(x@plot_list, .raster_magick, magick = magick, ...)
+.raster_magick.StackLayout <- function(x, ...) {
+    x@plot_list <- lapply(x@plot_list, .raster_magick, ...)
     x
 }
 
 
 #' @export
-.raster_magick.ggalign_plot <- function(x, magick = NULL, ...) {
+.raster_magick.ggalign_plot <- function(x, ...) {
     if (!is.null(plot <- input@plot)) {
         input@plot <- .raster_magick(x = plot, ...)
     }

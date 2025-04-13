@@ -4,7 +4,14 @@
 \alias{raster_magick}
 \title{Rasterize the input object}
 \usage{
-raster_magick(x, magick = NULL, ..., res = NULL, interpolate = FALSE)
+raster_magick(
+  x,
+  magick = NULL,
+  ...,
+  res = NULL,
+  interpolate = FALSE,
+  vp = NULL
+)
 }
 \arguments{
 \item{x}{An object to rasterize, can be a \code{\link[grid:grid.grob]{grob()}},
@@ -26,6 +33,8 @@ image.}
     image (the alternative is to use nearest-neighbour interpolation,
     which gives a more blocky result).
   }
+
+\item{vp}{A Grid viewport object (or NULL).}
 }
 \value{
 An object with the same class of the input.

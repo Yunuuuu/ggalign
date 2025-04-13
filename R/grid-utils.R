@@ -18,6 +18,12 @@ is_null_unit <- function(x) unitType(x) == "null"
 
 is_null_grob <- function(x) inherits(x, c("zeroGrob", "null"))
 
+#' @importFrom grid is.grob nullGrob
+ensure_grob <- function(x, default = nullGrob()) {
+    if (is.gList(x)) x <- gTree(children = x)
+    if (is.grob(x)) x else default
+}
+
 # `current.transform()` transforms from *inches* within the current viewport to
 # *inches* on the overall device.
 grid_solve_loc <- function(loc, trans, valueOnly = FALSE) {

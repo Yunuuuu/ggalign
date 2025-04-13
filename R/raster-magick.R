@@ -9,15 +9,8 @@
 #' [`layer()`][ggplot2::layer], [`ggplot()`][ggplot2::ggplot], or a list of such
 #' objects.
 #'
-#' @param magick A function (purrr-style formula is accepted) that takes an
-#' [`image_read()`][magick::image_read] object as input and returns an object
-#' compatible with [`as.raster()`][grDevices::as.raster]. You can use any of
-#' the `image_*()` functions from the **magick** package to process the raster
-#' image.
-#'
 #' @param ... Not used currently.
-#' @param res An integer sets the desired resolution in pixels.
-#' @inheritParams grid::rasterGrob
+#' @inheritParams magickGrob
 #' @examples
 #' # Currently, `magick` package require R >= 4.1.0
 #' if (requireNamespace("magick")) {
@@ -42,8 +35,10 @@
 #' @return An object with the same class of the input.
 #' @export
 raster_magick <- function(x, magick = NULL, ...,
-                          res = NULL, interpolate = FALSE) {
+                          res = NULL, interpolate = FALSE,
+                          vp = NULL) {
     rlang::check_installed("magick", "to use `raster_magick()`")
+    rlang::check_dots_empty()
     if (!is.null(magick) && !is.function(magick <- allow_lambda(magick))) {
         cli_abort("{.arg magick} must be a function")
     }
@@ -51,32 +46,22 @@ raster_magick <- function(x, magick = NULL, ...,
     assert_bool(interpolate)
     .raster_magick(
         x = x, ..., magick = magick,
-        res = res, interpolate = interpolate
+        res = res, interpolate = interpolate,
+        vp = vp
     )
 }
 
-# modified from `ggrastr::rasterize`
 # Used to do the actual process, but won't check the arguments
-#' @inherit raster_magick title return
-#' @description
-#' An internal function designed to implement the functionality of
-#' `raster_magick()`. It assumes the input arguments are valid and does not
-#' perform any additional checks.
-#' @inheritParams raster_magick
-#' @name raster_magick_interal
 #' @keywords internal
 .raster_magick <- function(x, ...) {
     UseMethod(".raster_magick")
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @importFrom rlang list2
 #' @export
-#' @rdname raster_magick_interal
 .raster_magick.Layer <- function(x, ...) {
     ggproto(
         NULL, x,
-        .ggalign_raster_magick = list2(...),
         draw_geom = function(self, data, layout) {
             grobs <- ggproto_parent(x, self)$draw_geom(data, layout)
             if (!inherits(layout$coord, "CoordCartesian")) {
@@ -85,124 +70,27 @@ raster_magick <- function(x, magick = NULL, ...,
                 )
                 return(grobs)
             }
-            inject(.raster_magick(grobs, !!!self$.ggalign_raster_magick))
+            .raster_magick(grobs, ...)
         }
     )
 }
 
 #' @export
-#' @rdname raster_magick_interal
-.raster_magick.list <- function(x, ...) {
-    lapply(x, .raster_magick, ...)
-}
-
-#' @export
-#' @rdname raster_magick_interal
 .raster_magick.ggplot <- function(x, ...) {
     x$layers <- lapply(x$layers, .raster_magick, ...)
     x
 }
 
-#' @importFrom grid grob
 #' @export
-#' @rdname raster_magick_interal
-.raster_magick.grob <- function(x, magick = NULL, ...,
-                                res = NULL, interpolate = FALSE) {
-    rlang::check_dots_empty()
-    grob(
-        grob = x,
-        magick = magick,
-        res = res,
-        interpolate = interpolate,
-        cl = "ggalignRasterMagick"
-    )
-}
-
-#' @importFrom grid grob
-#' @export
-#' @rdname raster_magick_interal
-.raster_magick.gList <- .raster_magick.grob
-
-#' @importFrom grid editGrob
-#' @export
-#' @rdname raster_magick_interal
-.raster_magick.ggalignRasterMagick <- function(x, magick = NULL, ...,
-                                               res = NULL,
-                                               interpolate = FALSE) {
-    rlang::check_dots_empty()
-    editGrob(x, magick = magick, res = res, interpolate = interpolate)
-}
-
-# there methods won't check arguments, all arguments passed will be just ignored
-# directly
-#' @export
-#' @rdname raster_magick_interal
-.raster_magick.zeroGrob <- function(x, ...) x
+.raster_magick.list <- function(x, ...) lapply(x, .raster_magick, ...)
 
 #' @export
-#' @rdname raster_magick_interal
-.raster_magick.default <- function(x, ...) x
+.raster_magick.grob <- function(x, ...) .magickGrob(x, ...)
 
-# preDraw:
-#  - makeContext
-#  - pushvpgp
-#  - preDrawDetails: by default, do noting
-# makeContent:
-# drawDetails:
-# postDraw:
-#  - postDrawDetails: by default, do noting
-#  - popgrobvp
-#' @importFrom grid makeContent unit convertHeight convertWidth viewport
 #' @export
-makeContent.ggalignRasterMagick <- function(x) {
-    # Grab viewport information
-    width <- convertWidth(unit(1, "npc"), "pt", valueOnly = TRUE)
-    height <- convertHeight(unit(1, "npc"), "pt", valueOnly = TRUE)
+.raster_magick.gList <- function(x, ...) .magickGrob(x, ...)
 
-    # Grab grob metadata
-    plot_res <- convertWidth(unit(1, "inch"), "pt", valueOnly = TRUE)
-    res <- .subset2(x, "res") %||% plot_res
-
-    magick <- .subset2(x, "magick")
-    interpolate <- .subset2(x, "interpolate")
-
-    # Track current device
-    old_dev <- grDevices::dev.cur()
-
-    # Reset current device upon function exit
-    on.exit(grDevices::dev.set(old_dev), add = TRUE)
-
-    # open the magick raster device
-    image <- getExportedValue("magick", "image_graph")(
-        width = width * res / plot_res,
-        height = height * res / plot_res,
-        bg = NA_character_, res = res,
-        clip = FALSE, antialias = FALSE
-    )
-
-    # Render the grob
-    grid::pushViewport(viewport())
-
-    # Clean up the grob for rendering
-    grid::grid.draw(.subset2(x, "grob")) # should respect the viewport of `x`
-    grid::popViewport()
-    grDevices::dev.off()
-    on.exit(getExportedValue("magick", "image_destroy")(image), add = TRUE)
-
-    # run `magick` when necessary
-    if (!is.null(magick)) image <- magick(image)
-
-    # Use native raster instead
-    raster <- grDevices::as.raster(image, native = TRUE)
-
-    # Forward raster grob
-    grid::rasterGrob(
-        raster, # should contain current area of full viewport
-        x = 0.5, y = 0.5,
-        height = unit(height, "pt"),
-        width = unit(width, "pt"),
-        default.units = "npc",
-        just = "center",
-        interpolate = interpolate
-    )
+#' @export
+.raster_magick.default <- function(x, ...) {
+    cli_abort("Cannot rasterize {.obj_type_friendly {x}}")
 }
