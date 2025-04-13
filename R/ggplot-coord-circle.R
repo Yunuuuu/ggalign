@@ -36,21 +36,13 @@ coord_circle <- function(theta = "x", start = 0, end = NULL,
         assert_bool(expand)
     }
     clip <- arg_match0(clip, c("off", "on"))
-    valid_inside_axis <- .standalone_types_check_assert_call(
-        ffi_standalone_is_bool_1.0.7,
-        r.axis.inside,
-        FALSE,
-        TRUE
-    ) || .standalone_types_check_assert_call(
-        ffi_standalone_check_number_1.0.7,
-        r.axis.inside,
-        allow_decimal = TRUE,
-        NULL,
-        NULL,
-        FALSE,
-        FALSE,
-        TRUE
-    ) == 0L
+
+    valid_inside_axis <- .rlang_check_bool(r.axis.inside,
+        allow_null = TRUE
+    ) ||
+        .rlang_check_number(r.axis.inside,
+            allow_decimal = TRUE, allow_infinite = FALSE
+        ) == 0L
     if (!valid_inside_axis) {
         cli_abort(
             "{.arg r.axis.inside} must be a single boolean value or a number"

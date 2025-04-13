@@ -1,31 +1,39 @@
 #' Polar coordinates with Facet support
 #'
-#' Draw each panel in a sector of the polar coordinate.
+#' Draw each panel in a sector of the polar coordinate system. If
+#' `facet_sector()` is used in a ggplot, the coordinate system must be created
+#' with [`coord_circle()`] or [`coord_radial()`][ggplot2::coord_radial].
 #'
 #' @inheritParams ggplot2::facet_wrap
-#' @param radial A Polar [Coord][ggplot2::Coord] created by [`coord_circle()`].
 #' @param spacing_theta The size of spacing between different panel. A numeric
 #' of the radians or a [`rel()`][ggplot2::rel] object.
+#' @param radial `r lifecycle::badge("deprecated")` Please add the coordinate
+#' system directly to the ggplot instead.
 #' @examples
 #' ggplot(mtcars, aes(disp, mpg)) +
 #'     geom_point() +
-#'     facet_sector(
-#'         vars(cyl),
-#'         coord_circle(
-#'             start = -0.4 * pi, end = 0.4 * pi, inner.radius = 0.3,
-#'             outer.radius = 0.8, expand = TRUE
-#'         )
+#'     facet_sector(vars(cyl)) +
+#'     coord_circle(
+#'         start = -0.4 * pi, end = 0.4 * pi, inner.radius = 0.3,
+#'         outer.radius = 0.8, expand = TRUE
 #'     )
 #' @importFrom ggplot2 ggproto
 #' @export
-facet_sector <- function(facets, radial = NULL,
-                         spacing_theta = pi / 180, drop = TRUE) {
+facet_sector <- function(facets, spacing_theta = pi / 180, drop = TRUE,
+                         radial = deprecated()) {
     if (packageVersion("ggplot2") > "3.5.2") {
         facets <- ggfun("compact_facets")(facets)
     } else {
         facets <- ggfun("wrap_as_facets_list")(facets)
     }
-
+    if (inherits(spacing_theta, "CoordRadial") ||
+        lifecycle::is_present(radial)) {
+        lifecycle::deprecate_stop(
+            "1.0.2",
+            "facet_sector(radial = )",
+            details = "Please add the coordinate to the ggplot instead"
+        )
+    }
     # @param strip.position By default, the labels are displayed on the
     # `"outer"` of the plot. Allowed values are `r oxford_or(c("outer",
     # "inner"))`
@@ -44,66 +52,74 @@ facet_sector <- function(facets, radial = NULL,
     } else {
         dir <- "h"
     }
-    radial <- radial %||% coord_circle()
-    if (!inherits(radial, "CoordRadial")) {
-        cli_abort("{.arg radial} must be created with {.fn coord_circle}")
-    }
-    structure(
-        list(
-            facet = ggproto(
-                NULL,
-                FacetSector,
-                params = list(
-                    facets = facets,
-                    spacing_theta = spacing_theta,
-                    free = list(x = TRUE, y = FALSE),
-                    strip.position = "top",
-                    drop = drop, ncol = NULL, nrow = 1L,
-                    space_free = list(x = TRUE, y = FALSE),
-                    labeller = ggplot2::label_value, dir = dir,
-                    draw_axes = list(x = TRUE, y = FALSE),
-                    axis_labels = list(x = TRUE, y = FALSE),
-                    as.table = TRUE
-                )
-            ),
-            coord = radial
-        ),
-        class = "ggalign_facet_sector"
+    ggproto(
+        NULL,
+        FacetSector,
+        params = list(
+            facets = facets,
+            spacing_theta = spacing_theta,
+            free = list(x = TRUE, y = FALSE),
+            strip.position = "top",
+            drop = drop, ncol = NULL, nrow = 1L,
+            space_free = list(x = TRUE, y = FALSE),
+            labeller = ggplot2::label_value, dir = dir,
+            draw_axes = list(x = TRUE, y = FALSE),
+            axis_labels = list(x = TRUE, y = FALSE),
+            as.table = TRUE
+        )
     )
 }
 
-#' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
+#' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.ggalign_facet_sector <- function(object, plot, object_name) {
-    ParentLayout <- .subset2(plot, "layout")
-    plot$layout <- ggproto(
-        NULL, ParentLayout,
-        setup_panel_params = function(self) {
-            ggproto_parent(ParentLayout, self)$setup_panel_params()
-            if (!is.null(self$facet$setup_panel_params)) {
-                self$panel_params <- self$facet$setup_panel_params(
-                    self$panel_params, self$coord
-                )
-            }
-            invisible()
-        }
-    )
-    ggplot_add(unclass(object), plot, object_name)
+ggplot_add.FacetSector <- function(object, plot, object_name) {
+    plot <- NextMethod()
+    if (!inherits(plot, "ggalign_facet_sector_plot")) {
+        plot <- add_class(plot, "ggalign_facet_sector_plot")
+    }
+    plot
 }
 
+#' @importFrom ggplot2 ggplot_build ggproto ggproto_parent
+#' @export
+ggplot_build.ggalign_facet_sector_plot <- function(plot) {
+    if (inherits(plot$facet, "FacetSector")) {
+        if (!inherits(plot$coordinates, "CoordRadial")) {
+            if (!isTRUE(plot$coordinates$default)) {
+                cli_abort(c(
+                    paste(
+                        "Cannot use {.fn {snake_class(plot$coordinates)}}",
+                        "coordinate with {.fn facet_sector}"
+                    ),
+                    i = "Please use {.fn coord_circle} instead"
+                ))
+            }
+            plot$coordinates <- coord_circle()
+        }
+        ParentLayout <- plot$layout
+        plot$layout <- ggproto(
+            "FacetSectorLayout", ParentLayout,
+            setup_panel_params = function(self) {
+                ggproto_parent(ParentLayout, self)$setup_panel_params()
+                if (is.null(ggplot2::Facet$setup_panel_params) &&
+                    !is.null(self$facet$setup_panel_params)) {
+                    self$panel_params <- self$facet$setup_panel_params(
+                        self$panel_params, self$coord
+                    )
+                }
+                invisible()
+            }
+        )
+    }
+    NextMethod()
+}
+
+#' @importFrom rlang inject
 #' @importFrom grid gTree editGrob viewport
 #' @importFrom ggplot2 ggproto ggproto_parent
 FacetSector <- ggproto(
     "FacetSector", ggplot2::FacetWrap,
     setup_panel_params = function(self, panel_params, coord, ...) {
-        # Ensure the CoordCircle is not changed by the users
-        if (!inherits(coord, "CoordRadial")) {
-            cli_abort(c(
-                "Cannot use {.fn {snake_class(self)}}",
-                "coordinate must be created with {.fn coord_circle}"
-            ))
-        }
-
         # total theta for panel area and panel spacing
         arc_theta <- abs(diff(coord$arc))
         spacing_theta <- self$params$spacing_theta
@@ -134,9 +150,7 @@ FacetSector <- ggproto(
             panel_theta * panel_weights / sum(panel_weights),
             rep_len(spacing_theta, length(panel_weights))
         )
-        panel_point <- cumsum(
-            c(coord$arc[1L], utils::head(panel_point, -1L))
-        )
+        panel_point <- cumsum(c(coord$arc[1L], utils::head(panel_point, -1L)))
         for (i in seq_along(panel_params)) {
             panel_param <- .subset2(panel_params, i)
             panel_param$arc <- panel_point[i * 2L - 1:0]
@@ -150,12 +164,6 @@ FacetSector <- ggproto(
     },
     draw_panels = function(self, panels, layout, x_scales, y_scales, ranges,
                            coord, data, theme, params) {
-        if (!inherits(coord, "CoordRadial")) {
-            cli_abort(c(
-                "Cannot use {.fn {snake_class(self)}}",
-                "coordinate must be created with {.fn coord_circle}"
-            ))
-        }
         # merge different sector into one panel
         bbox <- ggfun("polar_bbox")(
             coord$arc, margin = c(0, 0, 0, 0),
@@ -179,7 +187,7 @@ FacetSector <- ggproto(
                 )
             )
         }
-        panels <- gTree(children = rlang::inject(gList(!!!panels)))
+        panels <- gTree(children = inject(gList(!!!panels)))
         ranges <- lapply(ranges, function(panel_param) {
             panel_param$arc <- coord$arc
             panel_param$bbox <- bbox
