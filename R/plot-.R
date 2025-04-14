@@ -22,8 +22,7 @@ methods::setMethod("show", "ggalign_plot", function(object) {
 #' @importFrom methods new
 new_ggalign_plot <- function(align = NULL, ...,
                              plot = NULL, active = NULL, size = NULL,
-                             schemes = NULL, class = "ggalign_plot",
-                             call = caller_call()) {
+                             schemes = NULL, call = caller_call()) {
     assert_active(active, allow_null = FALSE, call = call)
     if (is.null(size)) {
         size <- unit(NA, "null")
@@ -31,7 +30,7 @@ new_ggalign_plot <- function(align = NULL, ...,
         size <- check_size(size, call = call)
     }
     new(
-        class,
+        "ggalign_plot",
         # `call`: used to provide error message
         align = ggproto(NULL, align %||% AlignProto, ..., call = call),
         schemes = schemes %||% default_schemes(),
