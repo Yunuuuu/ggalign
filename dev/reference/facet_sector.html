@@ -55,9 +55,10 @@ with <code><a href="coord_circle.html">coord_circle()</a></code> or <code><a hre
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">facet_sector</span><span class="op">(</span></span>
 <span>  <span class="va">facets</span>,</span>
-<span>  spacing_theta <span class="op">=</span> <span class="va">pi</span><span class="op">/</span><span class="fl">180</span>,</span>
+<span>  sector_spacing <span class="op">=</span> <span class="va">pi</span><span class="op">/</span><span class="fl">180</span>,</span>
 <span>  drop <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  radial <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
+<span>  radial <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  spacing_theta <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -74,7 +75,7 @@ formula or character vector. Use either a one sided formula, <code>~a + b</code>
 or a character vector, <code>c("a", "b")</code>.</p></dd>
 
 
-<dt id="arg-spacing-theta">spacing_theta<a class="anchor" aria-label="anchor" href="#arg-spacing-theta"></a></dt>
+<dt id="arg-sector-spacing">sector_spacing<a class="anchor" aria-label="anchor" href="#arg-sector-spacing"></a></dt>
 <dd><p>The size of spacing between different panel. A numeric
 of the radians or a <code>rel()</code> object.</p></dd>
 
@@ -88,6 +89,11 @@ will be shown, regardless of whether or not they appear in the data.</p></dd>
 <dt id="arg-radial">radial<a class="anchor" aria-label="anchor" href="#arg-radial"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please add the coordinate
 system directly to the ggplot instead.</p></dd>
+
+
+<dt id="arg-spacing-theta">spacing_theta<a class="anchor" aria-label="anchor" href="#arg-spacing-theta"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
+<code>sector_spacing</code> instead.</p></dd>
 
 </dl></div>
 
