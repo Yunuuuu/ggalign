@@ -5,10 +5,12 @@
 #' with [`coord_circle()`] or [`coord_radial()`][ggplot2::coord_radial].
 #'
 #' @inheritParams ggplot2::facet_wrap
-#' @param spacing_theta The size of spacing between different panel. A numeric
+#' @param sector_spacing The size of spacing between different panel. A numeric
 #' of the radians or a [`rel()`][ggplot2::rel] object.
 #' @param radial `r lifecycle::badge("deprecated")` Please add the coordinate
 #' system directly to the ggplot instead.
+#' @param spacing_theta `r lifecycle::badge("deprecated")` Please use
+#' `sector_spacing` instead.
 #' @examples
 #' ggplot(mtcars, aes(disp, mpg)) +
 #'     geom_point() +
@@ -19,14 +21,14 @@
 #'     )
 #' @importFrom ggplot2 ggproto
 #' @export
-facet_sector <- function(facets, spacing_theta = pi / 180, drop = TRUE,
-                         radial = deprecated()) {
+facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
+                         radial = deprecated(), spacing_theta = deprecated()) {
     if (packageVersion("ggplot2") > "3.5.2") {
         facets <- ggfun("compact_facets")(facets)
     } else {
         facets <- ggfun("wrap_as_facets_list")(facets)
     }
-    if (inherits(spacing_theta, "CoordRadial") ||
+    if (inherits(sector_spacing, "CoordRadial") ||
         lifecycle::is_present(radial)) {
         lifecycle::deprecate_stop(
             "1.0.2",
@@ -34,6 +36,15 @@ facet_sector <- function(facets, spacing_theta = pi / 180, drop = TRUE,
             details = "Please add the coordinate to the ggplot instead"
         )
     }
+    if (lifecycle::is_present(spacing_theta)) {
+        lifecycle::deprecate_warn(
+            "1.0.2",
+            "facet_sector(spacing_theta = )",
+            "facet_sector(sector_spacing = )"
+        )
+        sector_spacing <- spacing_theta
+    }
+
     # @param strip.position By default, the labels are displayed on the
     # `"outer"` of the plot. Allowed values are `r oxford_or(c("outer",
     # "inner"))`
@@ -55,9 +66,9 @@ facet_sector <- function(facets, spacing_theta = pi / 180, drop = TRUE,
     ggproto(
         NULL,
         FacetSector,
+        sector_spacing = sector_spacing,
         params = list(
             facets = facets,
-            spacing_theta = spacing_theta,
             free = list(x = TRUE, y = FALSE),
             strip.position = "top",
             drop = drop, ncol = NULL, nrow = 1L,
@@ -122,9 +133,9 @@ FacetSector <- ggproto(
     setup_panel_params = function(self, panel_params, coord, ...) {
         # total theta for panel area and panel spacing
         arc_theta <- abs(diff(coord$arc))
-        spacing_theta <- self$params$spacing_theta
-        if (inherits(spacing_theta, "rel")) {
-            spacing_theta <- spacing_theta * arc_theta
+        sector_spacing <- self$sector_spacing
+        if (inherits(sector_spacing, "rel")) {
+            sector_spacing <- sector_spacing * arc_theta
         }
         panel_weights <- vapply(panel_params, function(panel_param) {
             abs(diff(.subset2(panel_param, "theta.range")))
@@ -133,7 +144,7 @@ FacetSector <- ggproto(
         # total theta for panel area
         panel_theta <- arc_theta -
             # substract the number of spacing between panels
-            spacing_theta *
+            sector_spacing *
                 # for the whole circle, arc_theta == 2 * pi
                 # there should be as many panels as the number of panel spacing
                 if (abs(arc_theta - 2 * pi) < .Machine$double.eps^0.5) {
@@ -142,13 +153,13 @@ FacetSector <- ggproto(
                     length(panel_weights) - 1L
                 }
         if (panel_theta <= 0L) {
-            cli_abort("No panel area, try to reduce {.arg spacing_theta}")
+            cli_abort("No panel area, try to reduce {.arg sector_spacing}")
         }
 
         # re-distribute the arc for each panel
         panel_point <- vec_interleave(
             panel_theta * panel_weights / sum(panel_weights),
-            rep_len(spacing_theta, length(panel_weights))
+            rep_len(sector_spacing, length(panel_weights))
         )
         panel_point <- cumsum(c(coord$arc[1L], utils::head(panel_point, -1L)))
         for (i in seq_along(panel_params)) {

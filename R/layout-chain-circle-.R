@@ -46,18 +46,20 @@
 #'
 #' @export
 circle_layout <- function(data = NULL, ..., radial = NULL,
-                          direction = "outward", spacing_theta = NULL,
-                          limits = waiver(), theme = NULL) {
+                          direction = "outward", sector_spacing = NULL,
+                          limits = waiver(), theme = NULL,
+                          spacing_theta = deprecated()) {
     if (is.waive(limits)) {
         circle_discrete(
             data = data, ..., radial = radial,
-            direction = direction, spacing_theta = spacing_theta,
-            theme = theme
+            direction = direction, sector_spacing = sector_spacing,
+            theme = theme, spacing_theta = spacing_theta
         )
     } else {
         circle_continuous(
             data = data, ..., radial = radial,
-            direction = direction, theme = theme, limits = limits
+            direction = direction, theme = theme, limits = limits,
+            spacing_theta = spacing_theta
         )
     }
 }
@@ -85,15 +87,17 @@ circle_layout <- function(data = NULL, ..., radial = NULL,
 #' @export
 #' @rdname circle_layout
 circle_discrete <- function(data = NULL, ..., radial = NULL,
-                            direction = "outward", spacing_theta = NULL,
-                            theme = NULL) {
+                            direction = "outward", sector_spacing = NULL,
+                            theme = NULL, spacing_theta = deprecated()) {
     UseMethod("circle_discrete", data)
 }
 
 #' @export
 circle_discrete.default <- function(data = NULL, ..., radial = NULL,
-                                    direction = "outward", spacing_theta = NULL,
-                                    theme = NULL) {
+                                    direction = "outward",
+                                    sector_spacing = NULL,
+                                    theme = NULL,
+                                    spacing_theta = deprecated()) {
     # the observations are rows, we use matrix to easily
     # reshape it into a long formated data frame for ggplot,
     # and we can easily determine the number of observations
@@ -110,8 +114,8 @@ circle_discrete.default <- function(data = NULL, ..., radial = NULL,
     new_circle_layout(
         data = data,
         design = discrete_design(nobs = nobs),
-        radial = radial, direction = direction, spacing_theta = spacing_theta,
-        schemes = schemes, theme = theme
+        radial = radial, direction = direction, sector_spacing = sector_spacing,
+        schemes = schemes, theme = theme, spacing_theta = spacing_theta
     )
 }
 
@@ -140,24 +144,26 @@ circle_discrete.formula <- circle_discrete.function
 #' @export
 #' @rdname circle_layout
 circle_continuous <- function(data = NULL, ..., radial = NULL,
-                              direction = "outward", spacing_theta = NULL,
-                              limits = NULL, theme = NULL) {
+                              direction = "outward", sector_spacing = NULL,
+                              limits = NULL, theme = NULL,
+                              spacing_theta = deprecated()) {
     UseMethod("circle_continuous", data)
 }
 
 #' @export
 circle_continuous.default <- function(data = NULL, ..., radial = NULL,
                                       direction = "outward",
-                                      spacing_theta = NULL,
-                                      limits = NULL, theme = NULL) {
+                                      sector_spacing = NULL,
+                                      limits = NULL, theme = NULL,
+                                      spacing_theta = deprecated()) {
     assert_limits(limits)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_circle_layout(
         data = data, design = limits,
-        radial = radial, direction = direction, spacing_theta = spacing_theta,
-        schemes = schemes, theme = theme
+        radial = radial, direction = direction, sector_spacing = sector_spacing,
+        schemes = schemes, theme = theme, spacing_theta = spacing_theta
     )
 }
 
@@ -175,8 +181,10 @@ circle_continuous.formula <- circle_continuous.function
 
 #' @importFrom methods new
 new_circle_layout <- function(data, design, radial, direction,
-                              spacing_theta = NULL, schemes = NULL,
-                              theme = NULL, name = NULL, call = caller_call()) {
+                              sector_spacing = NULL, schemes = NULL,
+                              theme = NULL, name = NULL,
+                              spacing_theta = deprecated(),
+                              call = caller_call()) {
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (!is.null(radial) && !inherits(radial, c("CoordRadial"))) {
         cli_abort("{.arg radial} must be created with {.fn coord_circle}",
@@ -197,12 +205,20 @@ new_circle_layout <- function(data, design, radial, direction,
             name <- "circle_discrete"
         }
     }
+    if (lifecycle::is_present(spacing_theta)) {
+        lifecycle::deprecate_warn(
+            "1.0.2",
+            "facet_sector(spacing_theta = )",
+            "facet_sector(sector_spacing = )"
+        )
+        if (is.null(sector_spacing)) sector_spacing <- spacing_theta
+    }
     new(
         "CircleLayout",
         name = name, data = data,
         schemes = schemes, # used by the layout
         design = design,
-        spacing_theta = spacing_theta,
+        sector_spacing = sector_spacing,
         theme = theme,
         radial = radial, direction = direction
     )
@@ -216,5 +232,5 @@ new_circle_layout <- function(data, design, radial, direction,
 #' @include layout-chain-.R
 methods::setClass("CircleLayout",
     contains = "ChainLayout",
-    list(radial = "ANY", spacing_theta = "ANY", direction = "character")
+    list(radial = "ANY", sector_spacing = "ANY", direction = "character")
 )

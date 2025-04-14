@@ -6,9 +6,10 @@
 \usage{
 facet_sector(
   facets,
-  spacing_theta = pi/180,
+  sector_spacing = pi/180,
   drop = TRUE,
-  radial = deprecated()
+  radial = deprecated(),
+  spacing_theta = deprecated()
 )
 }
 \arguments{
@@ -20,7 +21,7 @@ For compatibility with the classic interface, can also be a
 formula or character vector. Use either a one sided formula, \code{~a + b},
 or a character vector, \code{c("a", "b")}.}
 
-\item{spacing_theta}{The size of spacing between different panel. A numeric
+\item{sector_spacing}{The size of spacing between different panel. A numeric
 of the radians or a \code{\link[ggplot2:element]{rel()}} object.}
 
 \item{drop}{If \code{TRUE}, the default, all factor levels not used in the
@@ -29,6 +30,9 @@ will be shown, regardless of whether or not they appear in the data.}
 
 \item{radial}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please add the coordinate
 system directly to the ggplot instead.}
+
+\item{spacing_theta}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{sector_spacing} instead.}
 }
 \description{
 Draw each panel in a sector of the polar coordinate system. If
