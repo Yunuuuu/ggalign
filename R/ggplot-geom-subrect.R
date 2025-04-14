@@ -64,8 +64,6 @@ geom_subrect <- function(mapping = NULL, data = NULL,
     )
 }
 
-#' @importFrom rlang inject
-#' @importFrom methods formalArgs
 #' @importFrom ggplot2 ggproto ggproto_parent wrap_dims
 GeomSubrect <- ggproto(
     "GeomSubrect",

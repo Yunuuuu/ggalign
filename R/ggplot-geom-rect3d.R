@@ -162,7 +162,7 @@ GeomTile3d <- ggproto(
     },
     draw_panel = function(self, data, panel_params, coord, lineend = "butt",
                           linejoin = "round", linemitre = 10) {
-        GeomRect3d$draw_panel(
+        ggproto_parent(GeomRect3d, self)$draw_panel(
             data = data, panel_params = panel_params, coord = coord,
             lineend = lineend, linejoin = linejoin, linemitre = linemitre
         )
