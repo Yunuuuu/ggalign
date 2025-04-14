@@ -117,7 +117,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 if (nlevels(.subset2(design, "panel")) > 1L) {
                     plot <- plot + facet_sector(
                         ggplot2::vars(.data$.panel),
-                        sector_spacing = circle@sector_spacing %||% pi / 180,
+                        sector_spacing = circle@sector_spacing %||% (pi / 180),
                         drop = FALSE
                     )
                 } else {
@@ -126,7 +126,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             } else {
                 if (inherits(plot$facet, "FacetSector")) {
                     plot <- ggfacet_modify(plot,
-                        sector_spacing = circle@sector_spacing %||% pi / 180,
+                        sector_spacing = circle@sector_spacing %||% (pi / 180),
                         drop = FALSE
                     )
                 } else {
