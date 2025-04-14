@@ -23,9 +23,9 @@ snake_class <- function(x) ggfun("snake_class")(x)
 
 ggadd_default <- function(plot, mapping = NULL, theme = NULL) {
     if (!is.null(mapping)) {
-        plot <- plot + mapping + .subset2(plot, "mapping")
+        plot <- plot + mapping + plot$mapping
     }
-    if (!is.null(theme)) plot$theme <- theme + .subset2(plot, "theme")
+    if (!is.null(theme)) plot$theme <- theme + plot$theme
     plot
 }
 
@@ -114,28 +114,4 @@ reverse_continuous_scale <- function(plot, axis) {
             )
     }
     plot
-}
-
-remove_scales <- function(plot, scale_aesthetics) {
-    scales <- .subset2(plot, "scales")$clone()
-    if (any(prev_aes <- scales$find(scale_aesthetics))) {
-        scales$scales <- scales$scales[!prev_aes]
-    }
-    plot$scales <- scales
-    plot
-}
-
-#' @importFrom rlang is_empty
-extract_scales <- function(plot, axis, n_panel, facet_scales) {
-    # if no facets, or if no facet scales, we replicate the single scale
-    # object to match the panel numbers
-    if (
-        n_panel > 1L &&
-            !is.null(facet_scales) &&
-            !is_empty(ans <- .subset2(facet_scales, axis))
-    ) {
-    } else {
-        ans <- rep_len(list(plot$scales$get_scales(axis)), n_panel)
-    }
-    ans
 }
