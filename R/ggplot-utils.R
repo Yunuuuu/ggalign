@@ -72,10 +72,7 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
     plot$facet <- ggproto(
         NULL,
         ParentFacet,
-        init_scales = function(self,
-                               layout,
-                               x_scale = NULL,
-                               y_scale = NULL,
+        init_scales = function(self, layout, x_scale = NULL, y_scale = NULL,
                                params) {
             if (!is.null(x_scale) && !is.null(.subset2(object, "x"))) {
                 x_scale$expand <- x_scale$expand %|w|% .subset2(object, "x")
@@ -95,7 +92,7 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
 }
 
 ######################################################
-reverse_continuous_scale <- function(plot, axis) {
+reverse_continuous_axis <- function(plot, axis) {
     if (plot$scales$has_scale(axis)) {
         # modify scale in place
         scale <- plot$scales$get_scales(axis)

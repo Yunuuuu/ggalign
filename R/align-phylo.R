@@ -165,10 +165,10 @@ AlignPhylo <- ggproto("AlignPhylo", Align,
         if (!self$in_linear || # for circular layout
             # for bottom annotation, reverse y-axis
             (!is.null(position) && position == "bottom")) {
-            plot <- reverse_continuous_scale(plot, "y")
+            plot <- reverse_continuous_axis(plot, "y")
         } else if (!is.null(position) && position == "left") {
             # for left annotation, reverse x-axis
-            plot <- reverse_continuous_scale(plot, "x")
+            plot <- reverse_continuous_axis(plot, "x")
         }
 
         # always turn off clip, this is what dendrogram dependends on
