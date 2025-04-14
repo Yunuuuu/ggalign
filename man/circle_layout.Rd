@@ -11,6 +11,7 @@ circle_layout(
   ...,
   radial = NULL,
   direction = "outward",
+  spacing_theta = NULL,
   limits = waiver(),
   theme = NULL
 )
@@ -29,6 +30,7 @@ circle_continuous(
   ...,
   radial = NULL,
   direction = "outward",
+  spacing_theta = NULL,
   limits = NULL,
   theme = NULL
 )
@@ -59,6 +61,9 @@ indicating the direction in which the plot is added.
 \item \code{inward}: The plot is added from the outer to the inner.
 }}
 
+\item{spacing_theta}{The size of spacing between different panel. A numeric
+of the radians or a \code{\link[ggplot2:element]{rel()}} object.}
+
 \item{limits}{A \code{\link[=continuous_limits]{continuous_limits()}} object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous
 axis.}
@@ -68,9 +73,6 @@ elements of the layout, including \code{guides}, \code{title}, \code{subtitle}, 
 \code{margins}, \code{panel.border}, and \code{background}. By default, the theme will
 inherit from the parent \code{layout}. It also controls the panel spacing for all
 plots in the layout.}
-
-\item{spacing_theta}{The size of spacing between different panel. A numeric
-of the radians or a \code{\link[ggplot2:element]{rel()}} object.}
 }
 \value{
 A \code{CircleLayout} object.

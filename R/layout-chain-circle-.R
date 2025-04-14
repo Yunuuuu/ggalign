@@ -46,12 +46,13 @@
 #'
 #' @export
 circle_layout <- function(data = NULL, ..., radial = NULL,
-                          direction = "outward", limits = waiver(),
-                          theme = NULL) {
+                          direction = "outward", spacing_theta = NULL,
+                          limits = waiver(), theme = NULL) {
     if (is.waive(limits)) {
         circle_discrete(
             data = data, ..., radial = radial,
-            direction = direction, theme = theme
+            direction = direction, spacing_theta = spacing_theta,
+            theme = theme
         )
     } else {
         circle_continuous(
@@ -139,22 +140,23 @@ circle_discrete.formula <- circle_discrete.function
 #' @export
 #' @rdname circle_layout
 circle_continuous <- function(data = NULL, ..., radial = NULL,
-                              direction = "outward", limits = NULL,
-                              theme = NULL) {
+                              direction = "outward", spacing_theta = NULL,
+                              limits = NULL, theme = NULL) {
     UseMethod("circle_continuous", data)
 }
 
 #' @export
 circle_continuous.default <- function(data = NULL, ..., radial = NULL,
-                                      direction = "outward", limits = NULL,
-                                      theme = NULL) {
+                                      direction = "outward",
+                                      spacing_theta = NULL,
+                                      limits = NULL, theme = NULL) {
     assert_limits(limits)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_circle_layout(
         data = data, design = limits,
-        radial = radial, direction = direction,
+        radial = radial, direction = direction, spacing_theta = spacing_theta,
         schemes = schemes, theme = theme
     )
 }

@@ -716,6 +716,13 @@ gguse_circle_coord <- function(plot, coord, ..., layout_name) {
 }
 
 ######################################################
+#' @importFrom ggplot2 ggproto
+ggfacet_modify <- function(plot, ...) {
+    ParentFacet <- plot$facet
+    plot$facet <- ggproto(NULL, ParentFacet, ...)
+    plot
+}
+
 gguse_facet <- function(plot, facet, ...) {
     plot$facet <- align_melt_facet(facet, plot$facet, ...)
     plot
