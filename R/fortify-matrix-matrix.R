@@ -109,12 +109,14 @@ fortify_matrix.matrix_oncoplot <- function(data, ...,
     if (!is.null(genes)) {
         genes <- vec_cast(genes, character())
         if (vec_any_missing(genes)) {
-            cli_abort("{.arg genes} cannot contain missing values",
+            cli_abort(
+                "{.arg genes} cannot contain missing values",
                 call = call
             )
         }
         if (vec_duplicate_any(genes)) {
-            cli_abort("{.arg genes} cannot contain duplicated values",
+            cli_abort(
+                "{.arg genes} cannot contain duplicated values",
                 call = call
             )
         }
@@ -122,7 +124,10 @@ fortify_matrix.matrix_oncoplot <- function(data, ...,
             genes <- genes[genes %in% rownames(data)]
         }
         if (is_empty(genes)) {
-            cli_abort("No {.arg genes} remain", call = call)
+            cli_abort(
+                "No {.arg genes} remain after removing missing genes",
+                call = call
+            )
         }
         index <- vec_as_location(
             genes,

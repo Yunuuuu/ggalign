@@ -1,5 +1,7 @@
 # ggalign (development version)
 
+* `ggoncoplot()` gains a new argument `remove_duplicates` to control whether to remove duplicated variants within the same cell.
+
 * `fortify_data_frame.matrix()` gains a new argument `lvls`, allowing matrix values to be converted into a factor.
 
 * `circle_layout()`: fix wrong `sector_spacing` due to the operator precedence when building.

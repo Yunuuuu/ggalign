@@ -13,6 +13,7 @@ ggoncoplot(
   map_height = NULL,
   reorder_row = reorder_column,
   reorder_column = TRUE,
+  remove_duplicates = FALSE,
   width = NA,
   height = NA,
   filling = waiver(),
@@ -28,6 +29,7 @@ ggoncoplot(
   map_height = NULL,
   reorder_row = reorder_column,
   reorder_column = TRUE,
+  remove_duplicates = FALSE,
   width = NA,
   height = NA,
   filling = waiver(),
@@ -59,6 +61,9 @@ columns based on the characteristics of the alterations. You can set this to
 \code{FALSE}, then add \code{align_order2(memo_order)} to achieve the same result. You
 may also need to set \code{strit = FALSE} in \code{\link[=align_order2]{align_order2()}} if there are
 already groups.}
+
+\item{remove_duplicates}{A logical value indicating whether to remove
+duplicated variants within the same cell.}
 
 \item{width, height}{The relative width/height of the main plot, can be a
 \code{\link[grid:unit]{unit}} object.}
@@ -102,10 +107,6 @@ g3,snv,,indel;snv"
 ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
-    # Note that guide legends from `geom_tile` and `geom_bar` are different.
-    # Although they appear similar, the internal mechanisms won't collapse
-    # the guide legends. Therefore, we remove the guide legends from
-    # `geom_tile`.
     guides(fill = "none") +
     anno_top(size = 0.5) +
     ggalign() +

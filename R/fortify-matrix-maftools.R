@@ -31,12 +31,15 @@
 #'    `maftools::getSampleSummary()` for details.
 #'  - `sample_anno`: sample clinical informations. See
 #'    `maftools::getClinicalData()` for details.
+#'  - `variant_weights`: Each gene in a sample is assigned a total weight of
+#'    `1`. When multiple variants occur in the same gene-sample pair, the weight
+#'    for each variant reflects its proportion of the total.
 #'  - `n_genes`: Total number of genes.
 #'  - `n_samples`: Total number of samples.
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
 #'    summary. See `maftools::titv()` for details.
 #'
-#' The levels of `Variant_Classification` will be stored in [`ggalign_lvls()`]. 
+#' The levels of `Variant_Classification` will be stored in [`ggalign_lvls()`].
 #' If they do not exist, alphabetical ordering will be used.
 #'
 #' @family fortify_matrix
@@ -82,6 +85,13 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     getSampleSummary <- getExportedValue("maftools", "getSampleSummary")
     getGeneSummary <- getExportedValue("maftools", "getGeneSummary")
     getClinicalData <- getExportedValue("maftools", "getClinicalData")
+
+    # if `maftools` is installed, `data.table` must have been installed
+    # No need to check if `data.table` is installed
+    dcast <- getExportedValue("data.table", "dcast")
+    setDT <- getExportedValue("data.table", "setDT")
+    setDF <- getExportedValue("data.table", "setDF")
+
     sample_summary <- new_data_frame(getSampleSummary(data))
     gene_summary <- new_data_frame(getGeneSummary(data))
     sample_anno <- new_data_frame(getClinicalData(data))
@@ -102,17 +112,25 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         # reorder the gene annotation based on the provided genes
         genes <- vec_cast(genes, character())
         if (vec_any_missing(genes)) {
-            cli_abort("{.arg genes} cannot contain missing values",
+            cli_abort(
+                "{.arg genes} cannot contain missing values",
                 call = call
             )
         }
         if (vec_duplicate_any(genes)) {
-            cli_abort("{.arg genes} cannot contain duplicated values",
+            cli_abort(
+                "{.arg genes} cannot contain duplicated values",
                 call = call
             )
         }
         if (identical(missing_genes, "remove")) {
             genes <- genes[genes %in% .subset2(gene_summary, "Hugo_Symbol")]
+        }
+        if (is_empty(genes)) {
+            cli_abort(
+                "No {.arg genes} remain after removing missing genes",
+                call = call
+            )
         }
         gene_summary <- vec_slice(
             gene_summary,
@@ -137,13 +155,39 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     }
     data <- vec_slice(data, .subset2(data, "Hugo_Symbol") %in% genes)
 
+    # Group variants --------------------------------------
     indices <- vec_group_loc(data[c("Tumor_Sample_Barcode", "Hugo_Symbol")])
     vars <- .subset2(data, "Variant_Classification")
     lvls <- levels(vars) %||% sort(vec_unique(vars))
+    nlvls <- vec_size(lvls)
     var_list <- vec_chop(as.character(vars), indices = .subset2(indices, "loc"))
+
+    # calcualte the variant weights -----------------------
+    variant_weights <- lapply(var_list, function(var) {
+        o <- numeric(nlvls)
+        names(o) <- lvls
+        counts <- vec_count(var)
+        o[.subset2(counts, "key")] <- .subset2(counts, "count") /
+            sum(.subset2(counts, "count"))
+        o
+    })
+    variant_weights <- inject(rbind(!!!variant_weights))
+    var_list[rowSums(variant_weights) != 1]
+    gene_indices <- vec_group_loc(
+        .subset2(.subset2(indices, "key"), "Hugo_Symbol")
+    )
+    variant_weights <- lapply(
+        vec_chop(variant_weights, indices = .subset2(gene_indices, "loc")),
+        colSums
+    )
+    variant_weights <- vec_cbind(
+        Hugo_Symbol = .subset2(gene_indices, "key"),
+        vec_rbind(!!!variant_weights)
+    )
+
+    # collapse the vars ------------------------------------
     if (is.null(collapse_vars)) {
         vars <- vapply(var_list, function(var) {
-            var <- vec_unique(var)
             if (length(var) > 1L) {
                 paste(var, collapse = ";")
             } else {
@@ -152,9 +196,10 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         }, character(1L), USE.NAMES = FALSE)
     } else {
         vars <- vapply(var_list, function(var) {
-            var <- vec_unique(var)
-            if (length(var) > 1L) {
-                return(collapse_vars)
+            if (vec_unique_count(var) > 1L) {
+                collapse_vars
+            } else if (length(var) > 1L) {
+                paste(var, collapse = ";")
             } else {
                 var
             }
@@ -170,12 +215,6 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     ans <- right_join(ans, data_frame0(
         Tumor_Sample_Barcode = vec_unique(sample_summary$Tumor_Sample_Barcode)
     ))
-
-    # if `maftools` is installed, `data.table` must have been installed
-    # No need to check if `data.table` is installed
-    dcast <- getExportedValue("data.table", "dcast")
-    setDT <- getExportedValue("data.table", "setDT")
-    setDF <- getExportedValue("data.table", "setDF")
     setDT(ans)
     ans <- dcast(ans, Hugo_Symbol ~ Tumor_Sample_Barcode,
         value.var = "Variant_Classification"
@@ -208,13 +247,21 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         ans <- ans[, keep, drop = FALSE]
     }
 
-    # reorder the rows based on the pathways ordering
+    # reorder the rows based on the gene ordering
     gene_summary <- vec_slice(
         gene_summary,
         vec_as_location(
             rownames(ans),
             n = vec_size(gene_summary),
             names = vec_cast(gene_summary$Hugo_Symbol, character())
+        )
+    )
+    variant_weights <- vec_slice(
+        variant_weights,
+        vec_as_location(
+            rownames(ans),
+            n = vec_size(variant_weights),
+            names = variant_weights$Hugo_Symbol
         )
     )
 
@@ -250,6 +297,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         sample_summary = sample_summary,
         gene_summary = gene_summary,
         sample_anno = sample_anno,
+        variant_weights = variant_weights,
         n_samples = n_samples, n_genes = n_genes, titv = titv,
         .lvls = lvls
     )

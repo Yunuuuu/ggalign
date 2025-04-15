@@ -33,6 +33,9 @@
 #' may also need to set `strit = FALSE` in [`align_order2()`] if there are
 #' already groups.
 #'
+#' @param remove_duplicates A logical value indicating whether to remove
+#' duplicated variants within the same cell.
+#'
 #' @param filling Same as [`ggheatmap()`], but only `"tile"` can be used.
 #' @examples
 #' # A simple example from `ComplexHeatmap`
@@ -44,10 +47,6 @@
 #' ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 #'
 #' ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
-#'     # Note that guide legends from `geom_tile` and `geom_bar` are different.
-#'     # Although they appear similar, the internal mechanisms won't collapse
-#'     # the guide legends. Therefore, we remove the guide legends from
-#'     # `geom_tile`.
 #'     guides(fill = "none") +
 #'     anno_top(size = 0.5) +
 #'     ggalign() +
@@ -67,6 +66,7 @@ ggoncoplot <- function(data = NULL, mapping = aes(), ...,
                        map_width = NULL, map_height = NULL,
                        reorder_row = reorder_column,
                        reorder_column = TRUE,
+                       remove_duplicates = FALSE,
                        width = NA, height = NA, filling = waiver(),
                        theme = NULL, active = NULL) {
     UseMethod("ggoncoplot")
@@ -91,6 +91,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
                                map_width = NULL, map_height = NULL,
                                reorder_row = reorder_column,
                                reorder_column = TRUE,
+                               remove_duplicates = FALSE,
                                width = NA, height = NA, filling = waiver(),
                                theme = NULL, active = NULL) {
     # prepare the matrix
@@ -101,6 +102,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
 
     assert_bool(reorder_column)
     assert_bool(reorder_row)
+    assert_bool(remove_duplicates)
 
     # convert empty string into NA
     data <- trimws(data, whitespace = "[\\h\\v]")
@@ -121,12 +123,11 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
 
     # prepare the plot data action
     pdata <- function(data) {
-        value_list <- strsplit(data$value,
-            split = "\\s*[;:,|]\\s*", perl = TRUE
-        )
+        vars <- strsplit(data$value, split = "\\s*[;:,|]\\s*", perl = TRUE)
+        if (remove_duplicates) vars <- lapply(vars, vec_unique)
         lvls <- ggalign_lvls_get(data)
-        data <- vec_rep_each(data, list_sizes(value_list))
-        value <- unlist(value_list, recursive = FALSE, use.names = FALSE)
+        data <- vec_rep_each(data, list_sizes(vars))
+        value <- unlist(vars, recursive = FALSE, use.names = FALSE)
         if (!is.null(lvls)) value <- factor(value, levels = lvls)
         data$value <- value
         data

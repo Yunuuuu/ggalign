@@ -38,9 +38,9 @@ Suggests:
     testthat (>= 3.0.0),
     vdiffr
 Enhances:
-    maftools,
     patchwork,
-    ggrastr
+    ggrastr,
+    maftools
 ByteCompile: true
 Config/Needs/website: 
     ggh4x,

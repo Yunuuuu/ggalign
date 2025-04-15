@@ -86,6 +86,9 @@ For \code{fortify_matrix.MAF}:
 \code{maftools::getSampleSummary()} for details.
 \item \code{sample_anno}: sample clinical informations. See
 \code{maftools::getClinicalData()} for details.
+\item \code{variant_weights}: Each gene in a sample is assigned a total weight of
+\code{1}. When multiple variants occur in the same gene-sample pair, the weight
+for each variant reflects its proportion of the total.
 \item \code{n_genes}: Total number of genes.
 \item \code{n_samples}: Total number of samples.
 \item \code{titv}: A list of \code{data.frames} with Transitions and Transversions

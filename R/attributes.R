@@ -49,15 +49,16 @@ ggalign_lvls <- function(x) ggalign_lvls_get(x)
 #' Attach supplementary data and levels for ggalign
 #'
 #' @param .data Input data for the layout.
-#' @param ... A list of data to be attached.
+#' @param ... <[dyn-dots][rlang::dyn-dots]> A list of data to be attached.
 #' @param .lvls A character vector representing the attached levels.
 #' @note Used by developers in [`fortify_matrix()`], [`fortify_data_frame()`],
 #'   and other related methods.
 #' @seealso [`ggalign_attr()`]/[`ggalign_lvls()`]
+#' @importFrom rlang list2
 #' @export
 ggalign_data_set <- function(.data, ..., .lvls = NULL) {
     if (...length() > 0L) {
-        .data <- ggalign_attr_set(.data, list(...))
+        .data <- ggalign_attr_set(.data, list2(...))
     }
     if (!is.null(.lvls)) {
         .data <- ggalign_lvls_set(.data, .lvls)

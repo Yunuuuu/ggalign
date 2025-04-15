@@ -9,7 +9,7 @@ ggalign_data_set(.data, ..., .lvls = NULL)
 \arguments{
 \item{.data}{Input data for the layout.}
 
-\item{...}{A list of data to be attached.}
+\item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of data to be attached.}
 
 \item{.lvls}{A character vector representing the attached levels.}
 }
