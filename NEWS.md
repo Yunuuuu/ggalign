@@ -1,5 +1,17 @@
 # ggalign (development version)
 
+* `fortify_data_frame.matrix()` gains a new argument `lvls`, allowing matrix values to be converted into a factor.
+
+* `circle_layout()`: fix wrong `sector_spacing` due to the operator precedence when building.
+
+* `circle_layout()`: rename `spacing_theta` argument to `sector_spacing` argument, and deprecate `spacing_theta` argument.
+
+* `circle_continous`: gains `spacing_theta` argument to control the sector spacing for all plots.
+
+* `facet_sector()`: deprecate `radial` argument, user should add the `coord_radial()` or `coord_circle()` directly to the plot.
+
+* new `magickGrob()` to construct grob with `magick` processing.
+
 # ggalign 1.0.1
 
 * fix R CMD check error for the updated version of ggplot2 3.5.2.

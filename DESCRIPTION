@@ -38,6 +38,7 @@ Suggests:
     testthat (>= 3.0.0),
     vdiffr
 Enhances:
+    maftools,
     patchwork,
     ggrastr
 ByteCompile: true
