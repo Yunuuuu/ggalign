@@ -42,7 +42,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
-</div>
+<ul><li><p><code><a href="../reference/fortify_data_frame.matrix.html">fortify_data_frame.matrix()</a></code> gains a new argument <code>lvls</code>, allowing matrix values to be converted into a factor.</p></li>
+<li><p><code><a href="../reference/circle_layout.html">circle_layout()</a></code>: fix wrong <code>sector_spacing</code> due to the operator precedence when building.</p></li>
+<li><p><code><a href="../reference/circle_layout.html">circle_layout()</a></code>: rename <code>spacing_theta</code> argument to <code>sector_spacing</code> argument, and deprecate <code>spacing_theta</code> argument.</p></li>
+<li><p><code>circle_continous</code>: gains <code>spacing_theta</code> argument to control the sector spacing for all plots.</p></li>
+<li><p><code><a href="../reference/facet_sector.html">facet_sector()</a></code>: deprecate <code>radial</code> argument, user should add the <code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code> or <code><a href="../reference/coord_circle.html">coord_circle()</a></code> directly to the plot.</p></li>
+<li><p>new <code><a href="../reference/magickGrob.html">magickGrob()</a></code> to construct grob with <code>magick</code> processing.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.1" id="ggalign-101">ggalign 1.0.1<a class="anchor" aria-label="anchor" href="#ggalign-101"></a></h2><p class="text-muted">CRAN release: 2025-04-10</p>
 <ul><li><p>fix R CMD check error for the updated version of ggplot2 3.5.2.</p></li>
