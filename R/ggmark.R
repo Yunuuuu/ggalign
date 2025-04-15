@@ -66,7 +66,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
     active <- update_active(active, new_active(use = TRUE))
     assert_bool(group1, allow_null = TRUE)
     assert_bool(group2, allow_null = TRUE)
-    new_ggalign_plot(
+    new_craftbox(
         MarkGg,
         # fields added to `MarkGg`
         input_data = allow_lambda(data), # used by AlignGg
@@ -84,7 +84,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
 }
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
-MarkGg <- ggproto("MarkGg", AlignProto,
+MarkGg <- ggproto("MarkGg", Craftsman,
     free_facet = TRUE,
     free_limits = TRUE,
     interact_layout = function(self, layout) {
@@ -182,7 +182,7 @@ MarkGg <- ggproto("MarkGg", AlignProto,
         ggproto_parent(CrossMark, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        header <- ggproto_parent(Craftsman, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )

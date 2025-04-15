@@ -110,8 +110,8 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
         # we remove the plot without actual plot area
         keep <- vapply(plots, function(plot) {
             # we remove objects without plot area
-            # Now, only `ggalign_plot` will contain `NULL`
-            !is_ggalign_plot(plot) || !is.null(plot@plot)
+            # Now, only `CraftBox` will contain `NULL`
+            !is_craftbox(plot) || !is.null(plot@plot)
         }, logical(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, keep)
 
@@ -125,7 +125,7 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
             # always keep cross() in the start
             if (is_cross_plot(plot)) {
                 1L
-            } else if (is_ggalign_plot(plot)) {
+            } else if (is_craftbox(plot)) {
                 .subset2(plot@active, "order")
             } else {
                 .subset2(plot@plot_active, "order")

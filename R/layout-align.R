@@ -148,7 +148,7 @@ update_design.QuadLayout <- function(layout, ..., direction, design,
 update_design.StackLayout <- function(layout, ..., design, object_name) {
     layout@design <- design
     layout@plot_list <- lapply(layout@plot_list, function(plot) {
-        if (is_ggalign_plot(plot)) return(plot) # styler: off
+        if (is_craftbox(plot)) return(plot) # styler: off
         update_design(plot,
             direction = layout@direction,
             design = design
@@ -222,7 +222,7 @@ update_design.StackCross <- function(layout, ..., design, object_name,
 
         layout@plot_list[subset] <- lapply(
             plot_list[subset], function(plot) {
-                if (is_ggalign_plot(plot)) {
+                if (is_craftbox(plot)) {
                     return(plot)
                 }
                 update_design(plot,

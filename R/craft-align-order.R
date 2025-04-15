@@ -75,12 +75,12 @@ align_order <- function(weights = rowMeans, ...,
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject is_atomic
-AlignOrder <- ggproto("AlignOrder", Align,
+AlignOrder <- ggproto("AlignOrder", CraftAlign,
     interact_layout = function(self, layout) {
         if (is.function(self$weights)) {
             layout <- ggproto_parent(AlignOrder2, self)$interact_layout(layout)
         } else {
-            layout <- ggproto_parent(Align, self)$interact_layout(layout)
+            layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
             if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
                 layout@design["nobs"] <- list(vec_size(self$weights))
             } else {

@@ -90,7 +90,7 @@ align_dendro <- function(mapping = aes(), ...,
 
 #' @importFrom ggplot2 aes ggplot
 #' @importFrom rlang inject
-#' @include align-hclust.R
+#' @include craft-align-hclust.R
 AlignDendro <- ggproto("AlignDendro", AlignHclust,
     setup_plot = function(self, plot) {
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(

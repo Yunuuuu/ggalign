@@ -30,5 +30,5 @@ cross_none <- function(data = waiver(), ...,
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include cross-.R
-CrossNone <- ggproto("CrossNone", Cross)
+#' @include craft-cross-.R
+CrossNone <- ggproto("CrossNone", CraftCross)

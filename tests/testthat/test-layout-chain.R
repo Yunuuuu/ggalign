@@ -28,7 +28,7 @@ test_that("`chain_layout_add()` function with NULL", {
     expect_identical(old, new)
 })
 
-test_that("`chain_layout_add()` function with `ggalign_plot`", {
+test_that("`chain_layout_add()` function with `CraftBox`", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -52,12 +52,12 @@ test_that("`chain_layout_add()` function with `ggalign_plot`", {
     stack <- stack_discrete("h", small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@design$panel,
-        .subset2(stack@plot_list, 1L)@align$panel
+        .subset2(stack@plot_list, 1L)@craftsman$panel
     )
     expect_identical(
         stack@design$index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)@align$panel,
+            .subset2(stack@plot_list, 1L)@craftsman$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )
@@ -77,12 +77,12 @@ test_that("`chain_layout_add()` function with `ggalign_plot`", {
     stack <- stack_discrete("v", small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@design$panel,
-        .subset2(stack@plot_list, 1L)@align$panel
+        .subset2(stack@plot_list, 1L)@craftsman$panel
     )
     expect_identical(
         stack@design$index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)@align$panel,
+            .subset2(stack@plot_list, 1L)@craftsman$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )

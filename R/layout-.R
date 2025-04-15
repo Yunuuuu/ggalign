@@ -148,12 +148,12 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 }
 
 #' @export
-ggalign_stat.ggalign_plot <- function(x, ...) {
-    ggalign_stat(x@align, ...)
+ggalign_stat.CraftBox <- function(x, ...) {
+    ggalign_stat(x@craftsman, ...)
 }
 
 #' @export
-ggalign_stat.Align <- function(x, ...) {
+ggalign_stat.CraftAlign <- function(x, ...) {
     rlang::check_dots_empty()
     .subset2(x, "statistics")
 }
@@ -162,9 +162,6 @@ ggalign_stat.Align <- function(x, ...) {
 ggalign_stat.default <- function(x, ...) {
     cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
-
-#' @export
-ggalign_stat.AlignGg <- ggalign_stat.default
 
 #############################################################
 #' Reports whether `x` is layout object

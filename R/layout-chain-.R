@@ -47,40 +47,40 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
 }
 
 #' @export
-chain_layout_add.ggalign_plot <- function(object, layout, object_name) {
-    align <- object@align
+chain_layout_add.CraftBox <- function(object, layout, object_name) {
+    craftsman <- object@craftsman
     # To-Do: Use S7 and double dispatch
     if (is.null(active_index <- layout@active) ||
-        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
+        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
         # unlock the object
-        align$unlock()
+        craftsman$unlock()
 
-        # we lock the Align object to prevent user from modifying this object in
-        # `$build_plot` method, we shouldn't do any calculations in
-        # `$build_plot` method
-        on.exit(align$lock())
+        # we lock the `Craftsman` object to prevent user from modifying this
+        # object in `$build_plot()` method, we shouldn't do any calculations in
+        # `$build_plot()` method
+        on.exit(craftsman$lock())
 
-        # initialize the necessary parameters for `AlignProto` object
+        # initialize the necessary parameters for `Craftsman` object
         if (is_stack_layout(layout)) {
-            align$direction <- layout@direction
-            align$position <- .subset2(layout@heatmap, "position")
+            craftsman$direction <- layout@direction
+            craftsman$position <- .subset2(layout@heatmap, "position")
         } else if (is_circle_layout(layout)) {
             # we treat circle layout as a vertical stack layout
-            align$direction <- "vertical"
+            craftsman$direction <- "vertical"
         }
-        align$in_linear <- is_linear(layout)
-        align$layout_name <- object_name(layout)
+        craftsman$in_linear <- is_linear(layout)
+        craftsman$layout_name <- object_name(layout)
 
         # firstly, we let the object do some changes in the layout
-        layout <- align$interact_layout(layout)
+        layout <- craftsman$interact_layout(layout)
 
         # this step, the object will act with the stack layout
         # group rows into panel or reorder rows, we can also
         # initialize object data
-        new_design <- align$setup_design(layout@design)
+        new_design <- craftsman$setup_design(layout@design)
 
         # initialize the plot object
-        object@plot <- align$setup_plot(object@plot)
+        object@plot <- craftsman$setup_plot(object@plot)
 
         layout <- chain_add_plot(layout, object, object@active, object_name)
     } else { # should be a QuadLayout object
@@ -130,7 +130,7 @@ chain_layout_add.default <- function(object, layout, object_name) {
         ))
     }
     plot <- .subset2(layout@plot_list, active_index)
-    if (is_ggalign_plot(plot)) {
+    if (is_craftbox(plot)) {
         plot <- chain_plot_add(plot, object, object_name, TRUE)
     } else {
         plot <- quad_layout_add(object, plot, object_name)
@@ -142,7 +142,7 @@ chain_layout_add.default <- function(object, layout, object_name) {
 #' @export
 chain_layout_add.layout_annotation <- function(object, layout, object_name) {
     if (is.null(active_index <- layout@active) ||
-        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
+        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
         layout <- update_layout_annotation(object, layout, object_name)
     } else {
         layout@plot_list[[active_index]] <- quad_layout_add(
@@ -213,7 +213,7 @@ chain_layout_add.ggalign_with_quad <- function(object, layout, object_name) {
         ))
     }
     if (is.null(active_index <- layout@active) ||
-        is_ggalign_plot(plot <- .subset2(layout@plot_list, active_index))) {
+        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s",

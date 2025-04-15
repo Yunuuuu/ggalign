@@ -30,7 +30,7 @@ align_kmeans <- function(..., data = NULL, active = NULL) {
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
-AlignKmeans <- ggproto("AlignKmeans", Align,
+AlignKmeans <- ggproto("AlignKmeans", CraftAlign,
     interact_layout = function(self, layout) {
         ggproto_parent(AlignOrder2, self)$interact_layout(layout)
     },

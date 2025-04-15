@@ -42,9 +42,9 @@ align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
     )
 }
 
-AlignPhylo <- ggproto("AlignPhylo", Align,
+AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
     interact_layout = function(self, layout) {
-        layout <- ggproto_parent(Align, self)$interact_layout(layout)
+        layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
 
         # we keep the names from the layout data for usage
         tip_labels <- self$phylo$tip.label

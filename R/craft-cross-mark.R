@@ -46,8 +46,8 @@ cross_mark <- function(mark, data = waiver(), ...,
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include cross-.R
-CrossMark <- ggproto("CrossMark", Cross,
+#' @include craft-cross-.R
+CrossMark <- ggproto("CrossMark", CraftCross,
     interact_layout = function(self, layout) {
         if (!self$in_linear) { # only used for linear coordinate
             cli_abort(c(
@@ -61,7 +61,7 @@ CrossMark <- ggproto("CrossMark", Cross,
                 )
             ))
         }
-        ggproto_parent(Cross, self)$interact_layout(layout)
+        ggproto_parent(CraftCross, self)$interact_layout(layout)
     },
     build_plot = function(self, plot, design, extra_design = NULL,
                           previous_design = NULL) {
@@ -214,7 +214,7 @@ CrossMark <- ggproto("CrossMark", Cross,
         plot + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Cross, self)$summary(plot)
+        header <- ggproto_parent(CraftCross, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )

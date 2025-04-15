@@ -152,7 +152,7 @@ lapply(
         )
         # styler: off
         for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_annotation", "ggalign_plot", "ChainLayout",
+                        "layout_annotation", "CraftBox", "ChainLayout",
                         "QuadLayout", "continuous_limits")) {
             # styler: on
             registerS3method(
@@ -169,7 +169,7 @@ lapply(
                     },
                     list(
                         name = switch(class,
-                            ggalign_plot = ,
+                            CraftBox = ,
                             ChainLayout = ,
                             QuadLayout = quote(object_name(object)),
                             # for all others

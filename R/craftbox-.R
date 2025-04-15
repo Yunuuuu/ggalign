@@ -1,28 +1,28 @@
 # Use S4 to override the double dispatch problem of ggplot2
 # And it's easy to convert a S4 Class to a S7 Class
 methods::setClass(
-    "ggalign_plot",
+    "CraftBox",
     list(
         plot = "ANY", # To avoid modify in place, we put plot in a slot
         active = "ANY",
         size = "ANY",
         schemes = "ANY",
-        align = "ANY" # `AlignProto` object
+        craftsman = "ANY" # `Craftsman` object
     )
 )
 
-#' Show `ggalign_plot` information
-#' @param object A `ggalign_plot` object.
+#' Show `CraftBox` information
+#' @param object A `CraftBox` object.
 #' @return The input invisiblely.
 #' @keywords internal
-methods::setMethod("show", "ggalign_plot", function(object) {
+methods::setMethod("show", "CraftBox", function(object) {
     print(object)
 })
 
 #' @importFrom methods new
-new_ggalign_plot <- function(align = NULL, ...,
-                             plot = NULL, active = NULL, size = NULL,
-                             schemes = NULL, call = caller_call()) {
+new_craftbox <- function(craftsman = NULL, ...,
+                         plot = NULL, active = NULL, size = NULL,
+                         schemes = NULL, call = caller_call()) {
     assert_active(active, allow_null = FALSE, call = call)
     if (is.null(size)) {
         size <- unit(NA, "null")
@@ -30,26 +30,32 @@ new_ggalign_plot <- function(align = NULL, ...,
         size <- check_size(size, call = call)
     }
     new(
-        "ggalign_plot",
+        "CraftBox",
         # `call`: used to provide error message
-        align = ggproto(NULL, align %||% AlignProto, ..., call = call),
+        craftsman = ggproto(NULL, craftsman %||% Craftsman, ..., call = call),
         schemes = schemes %||% default_schemes(),
         plot = plot, active = active, size = size
     )
 }
 
 #' @export
-plot.ggalign_plot <- function(x, ...) {
+print.CraftBox <- function(x, ...) {
+    cat(x@craftsman$summary(x@plot), sep = "\n")
+    invisible(x)
+}
+
+#' @export
+plot.CraftBox <- function(x, ...) {
     cli_abort(sprintf("Cannot plot %s object directly", object_name(x)))
 }
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.ggalign_plot <- plot.ggalign_plot
+grid.draw.CraftBox <- plot.CraftBox
 
 #' Add custom objects to ggalign plot
 #' @keywords internal
-methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
+methods::setMethod("+", c("CraftBox", "ANY"), function(e1, e2) {
     if (missing(e2)) {
         cli_abort(c(
             "Cannot use {.code {.Generic}} with a single argument.",
@@ -69,15 +75,15 @@ methods::setMethod("+", c("ggalign_plot", "ANY"), function(e1, e2) {
 })
 
 #' @importFrom methods is
-is_ggalign_plot <- function(x) is(x, "ggalign_plot")
+is_craftbox <- function(x) is(x, "CraftBox")
 
-is_cross_plot <- function(x) is_ggalign_plot(x) && is_cross(x@align)
+is_cross_plot <- function(x) is_craftbox(x) && is_cross(x@craftsman)
 
-is_cross <- function(x) inherits(x, "Cross")
+is_cross <- function(x) inherits(x, "CraftCross")
 
 #######################################################
 #' @importFrom ggplot2 ggproto
-AlignProto <- ggproto("AlignProto",
+Craftsman <- ggproto("Craftsman",
     call = NULL,
 
     # following fields will be added when added to the layout
@@ -127,33 +133,14 @@ AlignProto <- ggproto("AlignProto",
     # utils method to print the object, should return a character vector
     summary = function(self, plot) {
         cls <- class(self)
-        cls <- cls[seq_len(which(cls == "AlignProto"))]
+        cls <- cls[seq_len(which(cls == "Craftsman"))]
         sprintf("<Class: %s>", paste(cls, collapse = " "))
     }
 )
 
+# Used to lock the `Craftsman` object
 #' @export
-print.ggalign_plot <- function(x, ...) {
-    cat(x@align$summary(x@plot), sep = "\n")
-    invisible(x)
-}
-
-#' @importFrom rlang inject
-align_inject <- function(method, params) {
-    inject(method(
-        !!!params[intersect(align_method_params(method), names(params))]
-    ))
-}
-
-ggproto_formals <- function(x) formals(environment(x)$f)
-
-align_method_params <- function(f, remove = character()) {
-    vec_set_difference(names(ggproto_formals(f)), c("self", remove))
-}
-
-# Used to lock the `AlignProto` object
-#' @export
-`$<-.AlignProto` <- function(x, name, value) {
+`$<-.Craftsman` <- function(x, name, value) {
     if (x$locked) {
         cli_abort(c(
             sprintf("Cannot modify %s", object_name(x)),

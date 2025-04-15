@@ -29,9 +29,9 @@ align_group <- function(group, active = NULL) {
 }
 
 #' @importFrom ggplot2 ggproto
-AlignGroup <- ggproto("AlignGroup", Align,
+AlignGroup <- ggproto("AlignGroup", CraftAlign,
     interact_layout = function(self, layout) {
-        layout <- ggproto_parent(Align, self)$interact_layout(layout)
+        layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
         if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
             layout@design["nobs"] <- list(vec_size(self$group))
         } else {

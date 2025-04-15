@@ -44,7 +44,7 @@ ggcross <- function(mapping = aes(), size = NULL,
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     cross(
-        cross = CrossGg,
+        CrossGg,
         plot = ggplot(mapping = mapping),
         schemes = default_schemes(th = theme_no_strip()),
         size = size, no_axes = no_axes, active = active
@@ -52,7 +52,8 @@ ggcross <- function(mapping = aes(), size = NULL,
 }
 
 #' @importFrom ggplot2 ggproto
-CrossGg <- ggproto("CrossGg", AlignProto,
+CrossGg <- ggproto("CrossGg", 
+    CraftCross,
     interact_layout = function(self, layout) {
         if (!is_cross_layout(layout)) {
             cli_abort(c(
@@ -173,7 +174,7 @@ CrossGg <- ggproto("CrossGg", AlignProto,
         ggremove_margin(plot, direction) + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        header <- ggproto_parent(Craftsman, self)$summary(plot)
         c(header, "  Reset the ordering index and Add plot")
     }
 )

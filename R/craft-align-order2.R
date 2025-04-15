@@ -53,9 +53,9 @@ align_order2 <- function(stat, ..., reverse = FALSE,
 
 #' @importFrom ggplot2 ggproto
 #' @importFrom rlang inject
-AlignOrder2 <- ggproto("AlignOrder2", Align,
+AlignOrder2 <- ggproto("AlignOrder2", CraftAlign,
     interact_layout = function(self, layout) {
-        layout <- ggproto_parent(Align, self)$interact_layout(layout)
+        layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
         layout_data <- layout@data
         if (is.null(input_data <- self$input_data) ||
             is.waive(input_data)) { # inherit from the layout

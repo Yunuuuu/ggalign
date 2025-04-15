@@ -30,12 +30,12 @@ object_name.QuadLayout <- function(object, format = "fn") {
 }
 
 #' @export
-object_name.ggalign_plot <- function(object, format = "fn") {
-    object_name(object@align, format)
+object_name.CraftBox <- function(object, format = "fn") {
+    object_name(object@craftsman, format)
 }
 
 #' @export
-object_name.AlignProto <- function(object, format = "fn") {
+object_name.Craftsman <- function(object, format = "fn") {
     format_object_name(snake_class(object), format)
 }
 

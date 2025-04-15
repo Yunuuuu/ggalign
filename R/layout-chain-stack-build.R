@@ -137,8 +137,8 @@ stack_build_composer.StackLayout <- function(stack, schemes, theme,
     # we remove the plot without actual plot area
     keep <- vapply(plot_list, function(plot) {
         # we remove objects without plot area
-        # Now, only `ggalign_plot` will contain `NULL`
-        !is_ggalign_plot(plot) || !is.null(plot@plot)
+        # Now, only `CraftBox` will contain `NULL`
+        !is_craftbox(plot) || !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
     if (is_empty(plot_list)) return(NULL) # styler: off

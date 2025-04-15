@@ -13,7 +13,7 @@ rasterise.StackLayout <- function(input, ...) {
     input
 }
 
-rasterise.ggalign_plot <- function(input, ...) {
+rasterise.CraftBox <- function(input, ...) {
     if (!is.null(plot <- input@plot)) {
         input@plot <- ggrastr::rasterise(input = plot, ...)
     }
@@ -40,7 +40,7 @@ rasterise.ggalign_plot <- function(input, ...) {
 
 
 #' @export
-.raster_magick.ggalign_plot <- function(x, ...) {
+.raster_magick.CraftBox <- function(x, ...) {
     if (!is.null(plot <- input@plot)) {
         input@plot <- .raster_magick(x = plot, ...)
     }

@@ -9,8 +9,8 @@ cross <- function(cross = NULL, data = waiver(),
     if (override_call(call)) {
         call <- current_call()
     }
-    new_ggalign_plot(
-        align = cross %||% Cross,
+    new_craftbox(
+        craftsman = cross %||% CraftCross,
         data = allow_lambda(data), data_params = data_params,
         ...,
         inherit_nobs = inherit_nobs,
@@ -22,8 +22,9 @@ cross <- function(cross = NULL, data = waiver(),
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include cross-.R
-Cross <- ggproto("Cross", AlignProto,
+#' @include craftbox-.R
+CraftCross <- ggproto(
+    "CraftCross", Craftsman,
     free_facet = TRUE,
     free_limits = TRUE,
     data_params = NULL,

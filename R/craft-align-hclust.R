@@ -134,11 +134,11 @@ align_hclust <- function(distance = "euclidean",
 }
 
 #' @importFrom ggplot2 ggproto aes
-AlignHclust <- ggproto("AlignHclust", Align,
+AlignHclust <- ggproto("AlignHclust", CraftAlign,
     interact_layout = function(self, layout) {
         if (inherits(self$method, "hclust") ||
             inherits(self$method, "dendrogram")) {
-            layout <- ggproto_parent(Align, self)$interact_layout(layout)
+            layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
             if (inherits(self$method, "hclust")) {
                 nobs <- vec_size(.subset2(self$method, "order"))
             } else {
@@ -273,8 +273,8 @@ AlignHclust <- ggproto("AlignHclust", Align,
                 statistics <- self$reorder_dendrogram(statistics, self$data)
             }
             if (!is.null(self$k) || !is.null(self$h) || !is.null(self$cutree)) {
-                if (is.null(self$cutree)) {
-                    self$cutree <- function(tree, dist, k, h) {
+                if (is.null(cutree <- self$cutree)) {
+                    cutree <- function(tree, dist, k, h) {
                         if (!is.null(k)) {
                             stats::cutree(tree, k = k)
                         } else {
@@ -284,7 +284,7 @@ AlignHclust <- ggproto("AlignHclust", Align,
                 }
                 # we need `hclust` object to cutree
                 statistics <- stats::as.hclust(statistics)
-                panel <- self$cutree(statistics, distance, self$k, self$h)
+                panel <- cutree(statistics, distance, self$k, self$h)
                 # For `cutree`, we always respect the height user specified
                 # For user defined function, we always calculate
                 # height from the number of `panels`

@@ -55,10 +55,10 @@ stack_composer_add <- function(plot, composer, ...) {
 
 #' @importFrom utils packageVersion
 #' @export
-stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
-                                            schemes, theme,
-                                            released_spaces,
-                                            direction, position) {
+stack_composer_add.CraftBox <- function(plot, composer, design, ...,
+                                        schemes, theme,
+                                        released_spaces,
+                                        direction, position) {
     size <- plot@size
 
     # for `released_spaces`, release the `free_spaces` in a single plot
@@ -75,9 +75,9 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
     }
 
     # let `Align` to determine how to build the plot
-    align <- plot@align # `AlignProto` object
+    craftsman <- plot@craftsman # `Craftsman` object
     plot <- plot@plot
-    if (!align$free_facet && is_discrete_design(design)) {
+    if (!craftsman$free_facet && is_discrete_design(design)) {
         if (nlevels(.subset2(design, "panel")) > 1L) {
             facet <- switch_direction(
                 direction,
@@ -93,32 +93,32 @@ stack_composer_add.ggalign_plot <- function(plot, composer, design, ...,
                 )
             )
         } else {
-            facet <- facet_stack(direction, align$layout_name)
+            facet <- facet_stack(direction, craftsman$layout_name)
         }
         plot <- gguse_facet(plot, facet)
     }
-    if (!align$free_coord) {
-        plot <- gguse_linear_coord(plot, layout_name = align$layout_name)
+    if (!craftsman$free_coord) {
+        plot <- gguse_linear_coord(plot, layout_name = craftsman$layout_name)
     }
 
     # set limits and default scales
-    if (!align$free_limits) {
+    if (!craftsman$free_limits) {
         if (is_horizontal(direction)) {
             plot <- plot + ggalign_design(
                 y = design,
-                ylabels = .subset(align$labels, .subset2(design, "index"))
+                ylabels = .subset(craftsman$labels, .subset2(design, "index"))
             )
         } else {
             plot <- plot + ggalign_design(
                 x = design,
-                xlabels = .subset(align$labels, .subset2(design, "index"))
+                xlabels = .subset(craftsman$labels, .subset2(design, "index"))
             )
         }
     }
 
-    # let `align` add other components
-    plot <- align$build_plot(plot, design = design, ...)
-    plot <- align$finish_plot(plot, plot_schemes, theme)
+    # let `Craftsman` add other components
+    plot <- craftsman$build_plot(plot, design = design, ...)
+    plot <- craftsman$finish_plot(plot, plot_schemes, theme)
     stack_composer_align_plot(composer, plot, size)
 }
 

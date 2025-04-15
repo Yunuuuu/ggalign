@@ -1,4 +1,4 @@
-testthat::test_that("`cross_align` add `align-` object works well", {
+testthat::test_that("`stack_cross` add `align-` object works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))

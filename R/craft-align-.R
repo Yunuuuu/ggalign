@@ -1,20 +1,20 @@
-#' Create a New `align` Object
+#' Create a New `CraftBox` Object with `CraftAlign` craftsman
 #'
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
-#' An `Align` object interacts with the `Layout` object to reorder or
-#' split observations and, in some cases, add plot components to the `Layout`.
+#' An `CraftAlign` object interacts with the `Layout` object to reorder or split
+#' observations and, in some cases, add plot components to the `Layout`.
 #'
-#' @param align An `Align` object.
+#' @param align An `CraftAlign` object.
 #' @param ... Additional fields passed to the `align` object.
 #' @param plot A ggplot object.
 #' @inheritParams ggalign
 #' @param schemes Options for `schemes`:
 #'  - `NULL`: Used when `align` do not add a plot.
 #'  - [`waiver()`][ggplot2::waiver]: Try to infer `schemes` based on `data`.
-#' @param call The `call` used to construct the `Align` object, for reporting
-#'   messages.
+#' @param call The `call` used to construct the `align` object, for
+#'   reporting messages.
 #'
 #' @section Discrete Axis Alignment:
 #' It is important to note that we consider rows as observations, meaning
@@ -22,7 +22,7 @@
 #' axis used for alignment (x-axis for a vertical stack layout, y-axis for a
 #' horizontal stack layout).
 #'
-#' @return A new `ggalign_plot` object.
+#' @return A new `CraftBox` object.
 #' @examples
 #' align_dendro()
 #' @importFrom rlang caller_call current_call
@@ -42,8 +42,8 @@ align <- function(align, data = NULL, ..., plot = NULL,
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     schemes <- schemes %|w|% default_schemes(data)
 
-    new_ggalign_plot(
-        align = align,
+    new_craftbox(
+        craftsman = align,
 
         # additional field for `align` object
         no_axes = no_axes,
@@ -73,7 +73,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
 
 #' @details
 #' Each of the `Align*` objects is just a [`ggproto()`][ggplot2::ggproto]
-#' object, descended from the top-level `Align`, and each implements
+#' object, descended from the top-level `CraftAlign`, and each implements
 #' various methods and fields.
 #'
 #' To create a new type of `Align*` object, you typically will want to
@@ -89,13 +89,13 @@ align <- function(align, data = NULL, ..., plot = NULL,
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-#' @include plot-.R
-Align <- ggproto("Align", AlignProto,
+#' @include craftbox-.R
+CraftAlign <- ggproto("CraftAlign", Craftsman,
     interact_layout = function(self, layout) {
         # check plot is compatible with the layout
         if (is_layout_continuous(layout)) {
             layout_name <- self$layout_name
-            # `Align` object is special for discrete variables
+            # `CraftAlign` object is special for discrete variables
             cli_abort(c(
                 sprintf("Cannot add %s to %s", object_name(self), layout_name),
                 i = sprintf("%s cannot align discrete variables", layout_name)
@@ -214,7 +214,7 @@ Align <- ggproto("Align", AlignProto,
         discrete_design(panel, index, nobs)
     },
 
-    # Following fields should be defined for the new `Align` object.
+    # Following fields should be defined for the new `CraftAlign` object.
     # argument name in these function doesn't matter.
     compute = function(self, panel, index) NULL,
 
@@ -235,17 +235,17 @@ Align <- ggproto("Align", AlignProto,
     # 2. old index is `NULL` and old panel is not `NULL`, in this way, new
     #    index must follow the old panel.
     #
-    #    For new `Align` object, which can do clustering, we must
+    #    For new `CraftAlign` object, which can do clustering, we must
     #    abort, if it can not do sub-clustering, if it can do sub-clustering, we
     #    should know if we want to change the order between the groups (panel
     #    levels).
     #
-    #    Please check `AlignGroup` object and `Align` object
+    #    Please check `AlignGroup` object and `CraftAlign` object
     #    For dendrogram, it can do sub-clustering within each group, it also
     #    allows reordering between groups (it provide `reorder_group` argument),
     #    so the new panel levels may be not the same with old panel
     #
-    #    For `Align` object reordering the heatmap rows/columns.
+    #    For `CraftAlign` object reordering the heatmap rows/columns.
     #    usually we provide a `strict` argument, to allow reorder heatmap within
     #    group only. See `AlignOrder2`.
     #
@@ -254,12 +254,12 @@ Align <- ggproto("Align", AlignProto,
     #    index, this will be checked in `$setup_design()` method.
     align = function(self, panel, index) list(panel, index),
 
-    # let AlignProto to add schemes and theme acoordingly
+    # let Craftsman to add schemes and theme acoordingly
     finish_plot = function(self, plot, schemes, theme) {
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        header <- ggproto_parent(Craftsman, self)$summary(plot)
         oo <- self$summary_align()
         nms <- c("plot", "reorder", "split")
         content <- c(

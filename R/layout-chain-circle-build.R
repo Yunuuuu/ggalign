@@ -91,7 +91,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
-        align <- plot@align # `AlignProto` object
+        craftsman <- plot@craftsman # `Craftsman` object
         plot_schemes <- inherit_schemes(plot@schemes, schemes)
         # the actual plot
         plot <- plot@plot
@@ -110,9 +110,9 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 # between two tracks
                 if (i == N) outer_radius else 1
             ) * 0.5,
-            layout_name = align$layout_name
+            layout_name = craftsman$layout_name
         )
-        if (!align$free_facet) {
+        if (!craftsman$free_facet) {
             if (is_discrete_design(design)) {
                 if (nlevels(.subset2(design, "panel")) > 1L) {
                     plot <- plot + facet_sector(
@@ -137,16 +137,19 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot$coordinates <- plot_coord
 
         # set limits and default scales
-        if (!align$free_limits) {
+        if (!craftsman$free_limits) {
             plot <- plot + ggalign_design(
                 x = design,
-                xlabels = .subset(align$labels, .subset2(design, "index"))
+                xlabels = .subset(craftsman$labels, .subset2(design, "index"))
             )
         }
 
-        # let `align` add other components
-        plot <- align$build_plot(plot, design = design)
-        plot <- align$finish_plot(plot, schemes = plot_schemes, theme = theme)
+        # let `Craftsman` add other components
+        plot <- craftsman$build_plot(plot, design = design)
+        plot <- craftsman$finish_plot(
+            plot,
+            schemes = plot_schemes, theme = theme
+        )
         plot <- plot + ggplot2::labs(x = NULL, y = NULL) +
             theme(panel.border = element_blank())
 

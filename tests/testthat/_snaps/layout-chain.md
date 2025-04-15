@@ -1,4 +1,4 @@
-# `chain_layout_add()` function with `ggalign_plot`
+# `chain_layout_add()` function with `CraftBox`
 
     Cannot add `align_dendro()` to the horizontal `stack_continuous()`
     i the horizontal `stack_continuous()` cannot align discrete variables

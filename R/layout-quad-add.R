@@ -191,7 +191,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     # cannot contain nested layout
-    if (!all(vapply(object@plot_list, is_ggalign_plot, logical(1L),
+    if (!all(vapply(object@plot_list, is_craftbox, logical(1L),
                     USE.NAMES = FALSE))) { # styler: off
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
@@ -263,7 +263,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
 
 #' @importFrom methods slot slot<-
 #' @export
-quad_layout_add.ggalign_plot <- function(object, quad, object_name) {
+quad_layout_add.CraftBox <- function(object, quad, object_name) {
     if (is.null(position <- quad@active)) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),

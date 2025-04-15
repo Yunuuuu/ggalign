@@ -71,7 +71,7 @@ new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
     assert_active(active, allow_null = TRUE, call = call)
     active <- update_active(active, new_active(use = TRUE))
-    new_ggalign_plot(
+    new_craftbox(
         FreeGg,
         # new field for FreeGg
         input_data = data,
@@ -85,7 +85,7 @@ new_free_gg <- function(plot, data, size, active,
 }
 
 #' @importFrom ggplot2 ggproto
-FreeGg <- ggproto("FreeGg", AlignProto,
+FreeGg <- ggproto("FreeGg", Craftsman,
     free_facet = TRUE,
     free_limits = TRUE,
     interact_layout = function(self, layout) {
@@ -168,7 +168,7 @@ FreeGg <- ggproto("FreeGg", AlignProto,
         gguse_data(plot, data)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(AlignProto, self)$summary(plot)
+        header <- ggproto_parent(Craftsman, self)$summary(plot)
         c(header, "  Add plot without alignment")
     }
 )
