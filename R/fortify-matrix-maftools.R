@@ -172,7 +172,6 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         o
     })
     variant_weights <- inject(rbind(!!!variant_weights))
-    var_list[rowSums(variant_weights) != 1]
     gene_indices <- vec_group_loc(
         .subset2(.subset2(indices, "key"), "Hugo_Symbol")
     )
