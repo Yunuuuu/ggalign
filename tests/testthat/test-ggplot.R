@@ -189,9 +189,9 @@ test_that("`facet_sector()` works well", {
             facet_sector(vars(cyl))
     )
     expect_doppelganger(
-        "facet_sector() spacing_theta rel()",
+        "facet_sector() sector_spacing rel()",
         ggplot(mtcars, aes(disp, mpg)) +
             geom_point() +
-            facet_sector(vars(cyl), spacing_theta = rel(0.01))
+            facet_sector(vars(cyl), sector_spacing = rel(0.01))
     )
 })
