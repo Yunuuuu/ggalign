@@ -168,7 +168,10 @@ pathways without any genomic alterations.</p></dd>
 <li><p><code>n_samples</code>: Total number of samples.</p></li>
 <li><p><code>titv</code>: A list of <code>data.frames</code> with Transitions and Transversions
 summary. See <code><a href="https://rdrr.io/pkg/maftools/man/titv.html" class="external-link">maftools::titv()</a></code> for details.</p></li>
-</ul><p>For <code>fortify_matrix.MAF_pathways</code>:</p><ul><li><p><code>gene_list</code>: the pathway contents.</p></li>
+</ul><p>The levels of <code>Variant_Classification</code> will be stored in <code><a href="ggalign_attr.html">ggalign_lvls()</a></code>.
+If they do not exist, alphabetical ordering will be used.</p>
+
+<p>For <code>fortify_matrix.MAF_pathways</code>:</p><ul><li><p><code>gene_list</code>: the pathway contents.</p></li>
 <li><p><code>pathway_summary</code>: pathway summary informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/pathways.html" class="external-link">maftools::pathways()</a></code> for details.</p></li>
 <li><p><code>sample_summary</code>: sample summary informations. See
