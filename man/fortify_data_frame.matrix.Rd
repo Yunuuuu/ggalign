@@ -6,7 +6,7 @@
 \alias{fortify_data_frame.Matrix}
 \title{Build a data frame}
 \usage{
-\method{fortify_data_frame}{matrix}(data, ..., data_arg = NULL, call = NULL)
+\method{fortify_data_frame}{matrix}(data, lvls = NULL, ..., data_arg = NULL, call = NULL)
 
 \method{fortify_data_frame}{DelayedMatrix}(data, ...)
 
@@ -14,6 +14,11 @@
 }
 \arguments{
 \item{data}{A matrix-like object.}
+
+\item{lvls}{A logical value indicating whether to restore factor levels using
+those stored in \code{\link[=ggalign_lvls]{ggalign_lvls()}}, or a character vector specifying custom
+levels for the \code{value} column. If levels are provided or restored, the
+\code{value} column will be returned as a factor.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 
@@ -33,7 +38,8 @@ values. The resulting data frame will contain the following columns:
 exist) and an integer representing the row index of the original matrix.
 \item \code{.column_names} and \code{.column_index}: the column names (only applicable
 when names exist) and column index of the original matrix.
-\item \code{value}: the actual value.
+\item \code{value}: the matrix value, returned as a factor if levels are specified or
+restored.
 }
 }
 \description{

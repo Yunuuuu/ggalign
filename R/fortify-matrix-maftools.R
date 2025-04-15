@@ -36,6 +36,9 @@
 #'  - `titv`: A list of `data.frames` with Transitions and Transversions
 #'    summary. See `maftools::titv()` for details.
 #'
+#' The levels of `Variant_Classification` will be stored in [`ggalign_lvls()`]. 
+#' If they do not exist, alphabetical ordering will be used.
+#'
 #' @family fortify_matrix
 #' @importFrom utils getFromNamespace
 #' @importFrom rlang is_string
@@ -43,10 +46,9 @@
 fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                                remove_empty_genes = TRUE,
                                remove_empty_samples = TRUE,
-                               collapse_vars = TRUE,
-                               use_syn = TRUE, missing_genes = "error",
-                               data_arg = NULL,
-                               call = NULL) {
+                               collapse_vars = TRUE, use_syn = TRUE,
+                               missing_genes = "error",
+                               data_arg = NULL, call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
     rlang::check_installed(

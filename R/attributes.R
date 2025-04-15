@@ -1,13 +1,13 @@
 #' Get Data from the Attribute Attached by ggalign
 #'
 #' @description
-#' `ggalign_attr` provides access to supplementary information stored as
-#' attributes during the layout rendering process. These attributes, commonly
-#' attached during data transformation by functions like [`fortify_matrix()`] or
-#' [`fortify_data_frame()`], can include essential details such as filtered or
-#' supplementary data that inform downstream operations.
+#' `ggalign_attr` retrieves supplementary information stored as attributes
+#' during the layout rendering process. These attributes—typically added during
+#' data transformation by functions such as [`fortify_matrix()`] or
+#' [`fortify_data_frame()`]—may contain filtered data, auxiliary metadata, or
+#' other context essential for downstream operations.
 #'
-#' An additional attribute, which stores the factor levels, can be accessed with
+#' Factor level information, stored as a separate attribute, can be accessed via
 #' `ggalign_lvls`.
 #'
 #' @details
@@ -32,7 +32,7 @@
 #'
 #' @export
 ggalign_attr <- function(x, field = NULL, check = TRUE) {
-    assert_string(field, allow_null = TRUE)
+    assert_string(field, allow_empty = FALSE, allow_null = TRUE)
     if (is.null(x <- ggalign_attr_get(x)) || is.null(field)) {
         return(x)
     }

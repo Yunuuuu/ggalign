@@ -92,6 +92,9 @@ For \code{fortify_matrix.MAF}:
 summary. See \code{maftools::titv()} for details.
 }
 
+The levels of \code{Variant_Classification} will be stored in \code{\link[=ggalign_lvls]{ggalign_lvls()}}.
+If they do not exist, alphabetical ordering will be used.
+
 
 For \code{fortify_matrix.MAF_pathways}:
 \itemize{

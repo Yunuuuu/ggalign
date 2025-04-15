@@ -76,6 +76,10 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 
 #' @inherit fortify_data_frame.default title description
 #' @param data A matrix-like object.
+#' @param lvls A logical value indicating whether to restore factor levels using
+#' those stored in [`ggalign_lvls()`], or a character vector specifying custom
+#' levels for the `value` column. If levels are provided or restored, the
+#' `value` column will be returned as a factor.
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams fortify_data_frame
 #' @return
@@ -89,16 +93,27 @@ fortify_data_frame.NULL <- fortify_data_frame.waiver
 #'  - `.column_names` and `.column_index`: the column names (only applicable
 #'  when names exist) and column index of the original matrix.
 #'
-#'  - `value`: the actual value.
+#'  - `value`: the matrix value, returned as a factor if levels are specified or
+#'  restored.
 #'
 #' @family fortify_data_frame
 #' @export
-fortify_data_frame.matrix <- function(data, ..., data_arg = NULL,
-                                      call = NULL) {
+fortify_data_frame.matrix <- function(data, lvls = NULL, ...,
+                                      data_arg = NULL, call = NULL) {
     call <- call %||% current_call()
     rlang::check_dots_empty(call = call)
     row_nms <- vec_names(data)
     col_nms <- colnames(data)
+    if (isFALSE(lvls)) {
+        lvls <- NULL
+    } else if (isTRUE(lvls)) {
+        lvls <- ggalign_lvls_get(lvls)
+    } else if (!is.null(lvls) && !is.character(lvls)) {
+        cli_abort(
+            "{.arg lvls} must be a single boolean value or a character",
+            call = call
+        )
+    }
     data <- new_data_frame(list(
         .row_index = vec_rep(seq_len(nrow(data)), ncol(data)),
         .column_index = vec_rep_each(seq_len(ncol(data)), nrow(data)),
@@ -106,6 +121,7 @@ fortify_data_frame.matrix <- function(data, ..., data_arg = NULL,
     ))
     if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
     if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    if (!is.null(lvls)) data$value <- factor(data$value, levels = lvls)
     data
 }
 
