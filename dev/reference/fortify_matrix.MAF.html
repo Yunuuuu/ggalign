@@ -164,6 +164,9 @@ pathways without any genomic alterations.</p></dd>
 <code><a href="https://rdrr.io/pkg/maftools/man/getSampleSummary.html" class="external-link">maftools::getSampleSummary()</a></code> for details.</p></li>
 <li><p><code>sample_anno</code>: sample clinical informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/getClinicalData.html" class="external-link">maftools::getClinicalData()</a></code> for details.</p></li>
+<li><p><code>variant_weights</code>: Each gene in a sample is assigned a total weight of
+<code>1</code>. When multiple variants occur in the same gene-sample pair, the weight
+for each variant reflects its proportion of the total.</p></li>
 <li><p><code>n_genes</code>: Total number of genes.</p></li>
 <li><p><code>n_samples</code>: Total number of samples.</p></li>
 <li><p><code>titv</code>: A list of <code>data.frames</code> with Transitions and Transversions
