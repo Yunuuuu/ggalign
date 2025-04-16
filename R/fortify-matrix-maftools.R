@@ -25,18 +25,19 @@
 #' @inheritParams fortify_matrix
 #' @section ggalign attributes:
 #'  For `fortify_matrix.MAF`:
-#'  - `gene_summary`: gene summary informations. See
+#'  - `gene_summary`: A data frame of gene summary informations. See
 #'    `maftools::getGeneSummary()` for details.
-#'  - `sample_summary`: sample summary informations. See
+#'  - `sample_summary`: A data frame of sample summary informations. See
 #'    `maftools::getSampleSummary()` for details.
-#'  - `sample_anno`: sample clinical informations. See
+#'  - `sample_anno`: A data frame of sample clinical informations. See
 #'    `maftools::getClinicalData()` for details.
-#'  - `variant_weights`: Each gene in a sample is assigned a total weight of
-#'    `1`. When multiple variants occur in the same gene-sample pair, the weight
-#'    for each variant reflects its proportion of the total.
+#'  - `variant_weights`: A data frame of variant weights. Each gene in a sample
+#'    is assigned a total weight of `1`. When multiple variants occur in the
+#'    same gene-sample pair, the weight for each variant reflects its proportion
+#'    of the total.
 #'  - `n_genes`: Total number of genes.
 #'  - `n_samples`: Total number of samples.
-#'  - `titv`: A list of `data.frames` with Transitions and Transversions
+#'  - `titv`: A list of data frame with Transitions and Transversions
 #'    summary. See `maftools::titv()` for details.
 #'
 #' The levels of `Variant_Classification` will be stored in [`ggalign_lvls()`].
