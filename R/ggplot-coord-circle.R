@@ -89,27 +89,29 @@ coord_circle <- function(theta = "x", start = 0, end = NULL,
 
 #' @importFrom ggplot2 ggproto_parent
 circle_panel_params <- function(self, scale_x, scale_y, params = list()) {
-    if (self$theta == "x") {
-        xlimits <- self$limits$theta
-        ylimits <- self$limits$r
-    } else {
-        xlimits <- self$limits$r
-        ylimits <- self$limits$theta
-    }
-    new <- c(
-        view_scales_polar(
-            scale_x, self$theta, xlimits,
-            expand = params$expand[c(4, 2)] %||% self$expand
-        ),
-        view_scales_polar(
-            scale_y, self$theta, ylimits,
-            expand = params$expand[c(3, 1)] %||% self$expand
-        )
-    )
     out <- ggproto_parent(ggplot2::CoordRadial, self)$setup_panel_params(
         scale_x, scale_y, params
     )
-    out[names(new)] <- new
+    if (packageVersion("ggplot2") <= "3.5.2") {
+        if (self$theta == "x") {
+            xlimits <- self$limits$theta
+            ylimits <- self$limits$r
+        } else {
+            xlimits <- self$limits$r
+            ylimits <- self$limits$theta
+        }
+        new <- c(
+            view_scales_polar(
+                scale_x, self$theta, xlimits,
+                expand = params$expand[c(4, 2)] %||% self$expand
+            ),
+            view_scales_polar(
+                scale_y, self$theta, ylimits,
+                expand = params$expand[c(3, 1)] %||% self$expand
+            )
+        )
+        out[names(new)] <- new
+    }
     out$bbox <- ggfun("polar_bbox")(
         self$arc, margin = c(0, 0, 0, 0),
         inner_radius = self$inner_radius
