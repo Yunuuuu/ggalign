@@ -6,13 +6,16 @@
 # ---
 # repo: Yunuuuu/standalone
 # file: standalone-assert.R
-# last-updated: 2024-11-10
+# last-updated: 2025-04-16
 # license: https://unlicense.org
 # dependencies: [standalone-obj-type.R]
 # imports: rlang
 # ---
 
 # ## Changelog
+# 2025-04-16:
+# - `assert_number_whole` gains `allow_infinite` argument
+#
 # 2025-04-11:
 # - new `.rlang_allow_number`
 # - new `.rlang_check_number`
@@ -70,7 +73,7 @@ IS_NUMBER_oob <- 2
 .rlang_check_number <- function(x, allow_decimal,
                                 min = NULL,
                                 max = NULL,
-                                allow_infinite = TRUE,
+                                allow_infinite = allow_decimal,
                                 allow_na = FALSE,
                                 allow_null = FALSE) {
     .standalone_types_check_assert_call(
@@ -247,6 +250,7 @@ assert_number_whole <- function(x,
                                 ...,
                                 min = NULL,
                                 max = NULL,
+                                allow_infinite = FALSE,
                                 allow_na = FALSE,
                                 allow_null = FALSE,
                                 arg = caller_arg(x),
@@ -258,7 +262,7 @@ assert_number_whole <- function(x,
         allow_decimal = FALSE,
         min = min,
         max = max,
-        allow_infinite = FALSE,
+        allow_infinite = allow_infinite,
         allow_na = allow_na,
         allow_null = allow_null
     ))) {

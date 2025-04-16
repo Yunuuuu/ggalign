@@ -1,15 +1,14 @@
 # `active()` works well
 
-    `order` must be a single number
+    `order` must be single integer number
 
 ---
 
-    `order` must be a single number
+    `order` must be single integer number
 
 ---
 
-    Can't convert from `order` <double> to <integer> due to loss of precision.
-    * Locations: 1
+    `order` must be single integer number
 
 ---
 
