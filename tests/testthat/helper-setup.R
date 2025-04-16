@@ -4,7 +4,7 @@
 #   - CI is not set (on CRAN)
 
 expect_doppelganger <- tryCatch(
-    getExportedValue("vdiffr", "expect_doppelganger"),
+    vdiffr::expect_doppelganger,
     error = function(cnd) {
         # If vdiffr is not available and visual tests are not explicitly
         # disabled, raise error.

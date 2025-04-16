@@ -25,3 +25,7 @@ test_that("`channelGrob()` works well", {
     )
     expect_doppelganger("channelGrob", gt)
 })
+
+test_that("`str()` method for NA unit works well", {
+    expect_snapshot_output(str(unit(NA, "mm")))
+})
