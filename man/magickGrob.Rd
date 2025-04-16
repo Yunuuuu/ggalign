@@ -24,7 +24,7 @@ compatible with \code{\link[grDevices:as.raster]{as.raster()}}. You can use any 
 the \verb{image_*()} functions from the \strong{magick} package to process the raster
 image.}
 
-\item{...}{Not used currently.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{res}{An integer sets the desired resolution in pixels.}
 
