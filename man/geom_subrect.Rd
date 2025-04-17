@@ -11,13 +11,15 @@ geom_subrect(
   stat = "identity",
   position = "identity",
   ...,
-  byrow = TRUE,
-  direction = NULL,
+  byrow = FALSE,
+  nrow = NULL,
+  ncol = NULL,
   lineend = "butt",
   linejoin = "mitre",
   na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  direction = deprecated()
 )
 
 geom_subtile(
@@ -27,12 +29,14 @@ geom_subtile(
   position = "identity",
   ...,
   byrow = TRUE,
-  direction = NULL,
+  nrow = NULL,
+  ncol = NULL,
   lineend = "butt",
   linejoin = "mitre",
   na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  direction = deprecated()
 )
 }
 \arguments{
@@ -113,13 +117,10 @@ lists which parameters it can accept.
 \item{byrow}{A single boolean value indicates whether we should arrange the
 divided rectangles in the row-major order.}
 
-\item{direction}{A string specifying the arrangement direction:
-\itemize{
-\item \code{"h"}(\code{horizontal}): Creates a single row (one-row layout).
-\item \code{"v"}(\code{vertical}): Creates a single column (one-column layout).
-\item \code{NULL}: Automatically determines the layout dimensions using logic similar
-to \code{\link[ggplot2:facet_wrap]{facet_wrap()}}.
-}}
+\item{nrow, ncol}{A single positive integer specifying the number of rows or
+columns in the layout of the subdivided cell. By default, the layout
+dimensions are determined automatically using logic similar to
+\code{\link[ggplot2:facet_wrap]{facet_wrap()}}.}
 
 \item{lineend}{Line end style (round, butt, square).}
 
@@ -138,6 +139,13 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{direction}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} A string specifying the
+arrangement direction:
+\itemize{
+\item \code{"h"}(\code{horizontal}): Creates a single row (one-row layout).
+\item \code{"v"}(\code{vertical}): Creates a single column (one-column layout).
+}}
 }
 \description{
 These geoms subdivide rectangles with shared borders into a grid. Both geoms
@@ -186,18 +194,18 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", pac
 \examples{
 # arranges by row
 ggplot(data.frame(value = letters[seq_len(5)])) +
-    geom_subtile(aes(x = 1, y = 1, fill = value))
+    geom_subtile(aes(x = 1, y = 1, fill = value), byrow = TRUE)
 
 # arranges by column
 ggplot(data.frame(value = letters[seq_len(9)])) +
-    geom_subtile(aes(x = 1, y = 1, fill = value), byrow = FALSE)
+    geom_subtile(aes(x = 1, y = 1, fill = value))
 
 # one-row
 ggplot(data.frame(value = letters[seq_len(4)])) +
-    geom_subtile(aes(x = 1, y = 1, fill = value), direction = "h")
+    geom_subtile(aes(x = 1, y = 1, fill = value), nrow = 1)
 
 # one-column
 ggplot(data.frame(value = letters[seq_len(4)])) +
-    geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
+    geom_subtile(aes(x = 1, y = 1, fill = value), ncol = 1)
 
 }

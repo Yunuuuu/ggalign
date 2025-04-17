@@ -62,14 +62,20 @@ as output
 \item{na.value}{The aesthetic value to use for missing (\code{NA}) values}
 }
 \description{
-Scale for \code{gshape} aesthetic
-}
-\details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#questioning}{\figure{lifecycle-questioning.svg}{options: alt='[Questioning]'}}}{\strong{[Questioning]}}
+
 \code{geom_gshape} depends on the new aesthetics \code{gshape} (shape with grid
 functions), which should always be provided with \code{\link[=scale_gshape_manual]{scale_gshape_manual()}},
 in which, we can provide a list of grobs or functions that define how each
 value should be drawn. Any ggplot2 aesthetics can be used as the arguments.
 }
+\section{Life cycle}{
+
+We're unsure whether this function is truly necessary, which is why it is
+marked as questioning. So far, we've found that \code{\link[=geom_subrect]{geom_subrect()}} and
+\code{\link[=geom_subtile]{geom_subtile()}} handle most use cases effectively.
+}
+
 \section{Aesthetics}{
 
 \code{geom_gshape()} understands the following aesthetics (required aesthetics are in bold):

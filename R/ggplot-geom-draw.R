@@ -98,5 +98,28 @@ draw_geom_draw <- function(data, panel_params, coord, draw, .__draw_dots__) {
             data$height <- data$ymax - data$ymin
         }
     }
-    make_gshape(draw, data, .__draw_dots__)
+    make_draw_grob(draw, data, .__draw_dots__)
+}
+
+#' @return A [grob][grid::grob] object.
+#' @importFrom rlang inject
+#' @importFrom methods formalArgs
+#' @importFrom ggplot2 zeroGrob
+#' @keywords internal
+#' @noRd
+make_draw_grob <- function(draw, data, dots) {
+    if (is.function(draw)) {
+        args <- formalArgs(draw)
+        if (any(args == "...")) {
+            draw <- inject(draw(!!!data, !!!dots))
+        } else {
+            draw <- inject(draw(
+                !!!.subset(data, intersect(names(data), args)),
+                !!!.subset(dots, intersect(
+                    setdiff(names(dots), names(data)), args
+                ))
+            ))
+        }
+    }
+    ensure_grob(draw, zeroGrob())
 }

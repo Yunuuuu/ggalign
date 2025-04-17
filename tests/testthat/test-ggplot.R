@@ -19,57 +19,68 @@ test_that("`layer_order()` works well", {
 
 test_that("`geom_subrect()` works well", {
     expect_doppelganger(
-        "geom_subrect_by_row",
+        "geom_subrect() `byrow = TRUE`",
         ggplot(data.frame(value = letters[seq_len(5)])) +
             geom_subrect(
-                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value)
+                aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value),
+                byrow = TRUE
             )
     )
     expect_doppelganger(
-        "geom_subrect_by_column",
+        "geom_subrect() `byrow = FALSE`",
         ggplot(data.frame(value = letters[seq_len(9)])) +
             geom_subrect(
                 aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value)
             )
     )
     expect_doppelganger(
-        "geom_subrect_horizontal",
+        "geom_subrect() set nrow",
         ggplot(data.frame(value = letters[seq_len(4)])) +
             geom_subrect(
                 aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value),
-                direction = "h"
+                nrow = 1
             )
     )
     expect_doppelganger(
-        "geom_subrect_vertical",
+        "geom_subrect() set ncol",
         ggplot(data.frame(value = letters[seq_len(4)])) +
             geom_subrect(
                 aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value),
-                direction = "v"
+                ncol = 1
             )
+    )
+    expect_doppelganger(
+        "geom_subrect() set both nrow and ncol",
+        ggplot(data.frame(value = letters[seq_len(4)])) +
+            geom_subrect(aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = value), ncol = 1)
     )
 })
 
 test_that("`geom_subtile()` works well", {
     expect_doppelganger(
-        "geom_subtile_by_row",
+        "geom_subtile() `byrow = TRUE`",
         ggplot(data.frame(value = letters[seq_len(5)])) +
-            geom_subtile(aes(x = 1, y = 1, fill = value))
+            geom_subtile(aes(x = 1, y = 1, fill = value), byrow = TRUE)
     )
     expect_doppelganger(
-        "geom_subtile_by_column",
+        "geom_subtile() `byrow = FALSE`",
         ggplot(data.frame(value = letters[seq_len(9)])) +
             geom_subtile(aes(x = 1, y = 1, fill = value))
     )
     expect_doppelganger(
-        "geom_subtile_horizontal",
+        "geom_subtile() set nrow",
         ggplot(data.frame(value = letters[seq_len(4)])) +
-            geom_subtile(aes(x = 1, y = 1, fill = value), direction = "h")
+            geom_subtile(aes(x = 1, y = 1, fill = value), nrow = 1)
     )
     expect_doppelganger(
-        "geom_subtile_vertical",
+        "geom_subtile() set ncol",
         ggplot(data.frame(value = letters[seq_len(4)])) +
-            geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
+            geom_subtile(aes(x = 1, y = 1, fill = value), ncol = 1)
+    )
+    expect_doppelganger(
+        "geom_subtile() set both nrow and ncol",
+        ggplot(data.frame(value = letters[seq_len(4)])) +
+            geom_subtile(aes(x = 1, y = 1, fill = value), ncol = 1)
     )
 })
 

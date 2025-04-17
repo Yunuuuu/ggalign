@@ -4,9 +4,6 @@ template:
   bootstrap: 5
   light-switch: true
 
-development:
-  mode: auto
-
 navbar:
   structure:
     left:  [intro, reference, tutorial, benchmarks, faq, news]
@@ -82,6 +79,11 @@ reference:
   - ggcross
   - cross_mark
   - cross_link
+
+- title: Style Links
+  desc: >
+    Functions to control the appearance and geometry of visual links between elements.
+  contents:
   - mark_line
   - mark_tetragon
   - mark_triangle
@@ -141,7 +143,7 @@ reference:
   - alignpatch
   - patch
 
-- title: Extension of ggplot2
+- title: Extending ggplot2
   desc: >
     Extending ggplot2 with additional geoms, scales, and other functionalities.
   contents:

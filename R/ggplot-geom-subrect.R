@@ -8,43 +8,62 @@
 #' - **`geom_subtile()`**: Defines rectangles using the center (`x`, `y`) and
 #'   dimensions (`width`, `height`).
 #'
-#' @param direction A string specifying the arrangement direction:
-#' - `"h"`(`horizontal`): Creates a single row (one-row layout).
-#' - `"v"`(`vertical`): Creates a single column (one-column layout).
-#' - `NULL`: Automatically determines the layout dimensions using logic similar
-#'   to [`facet_wrap()`][ggplot2::facet_wrap].
 #' @param byrow A single boolean value indicates whether we should arrange the
 #' divided rectangles in the row-major order.
+#' @param nrow,ncol A single positive integer specifying the number of rows or
+#' columns in the layout of the subdivided cell. By default, the layout
+#' dimensions are determined automatically using logic similar to
+#' [`facet_wrap()`][ggplot2::facet_wrap].
+#' @param direction `r lifecycle::badge("deprecated")` A string specifying the
+#' arrangement direction:
+#' - `"h"`(`horizontal`): Creates a single row (one-row layout).
+#' - `"v"`(`vertical`): Creates a single column (one-column layout).
 #' @inheritParams ggplot2::geom_rect
 #' @inheritParams ggplot2::geom_segment
 #' @eval rd_gg_aesthetics("geom", "subrect")
 #' @examples
 #' # arranges by row
 #' ggplot(data.frame(value = letters[seq_len(5)])) +
-#'     geom_subtile(aes(x = 1, y = 1, fill = value))
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), byrow = TRUE)
 #'
 #' # arranges by column
 #' ggplot(data.frame(value = letters[seq_len(9)])) +
-#'     geom_subtile(aes(x = 1, y = 1, fill = value), byrow = FALSE)
+#'     geom_subtile(aes(x = 1, y = 1, fill = value))
 #'
 #' # one-row
 #' ggplot(data.frame(value = letters[seq_len(4)])) +
-#'     geom_subtile(aes(x = 1, y = 1, fill = value), direction = "h")
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), nrow = 1)
 #'
 #' # one-column
 #' ggplot(data.frame(value = letters[seq_len(4)])) +
-#'     geom_subtile(aes(x = 1, y = 1, fill = value), direction = "v")
+#'     geom_subtile(aes(x = 1, y = 1, fill = value), ncol = 1)
 #'
 #' @importFrom rlang list2
 #' @export
 geom_subrect <- function(mapping = NULL, data = NULL,
                          stat = "identity", position = "identity",
                          ...,
-                         byrow = TRUE, direction = NULL,
+                         byrow = FALSE, nrow = NULL, ncol = NULL,
                          lineend = "butt", linejoin = "mitre",
-                         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+                         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE,
+                         direction = deprecated()) {
     assert_bool(byrow)
-    if (!is.null(direction)) direction <- check_direction(direction)
+    assert_number_whole(nrow, min = 1, allow_null = TRUE)
+    assert_number_whole(ncol, min = 1, allow_null = TRUE)
+    if (lifecycle::is_present(direction)) {
+        lifecycle::deprecate_warn(
+            "1.0.2",
+            "geom_subtile(direction = )",
+            "geom_subtile(nrow = , ncol = )"
+        )
+        if (is_horizontal(direction)) {
+            nrow <- 1L
+            ncol <- NULL
+        } else {
+            nrow <- NULL
+            ncol <- 1L
+        }
+    }
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -55,7 +74,8 @@ geom_subrect <- function(mapping = NULL, data = NULL,
         inherit.aes = inherit.aes,
         params = list2(
             byrow = byrow,
-            direction = direction,
+            nrow = nrow,
+            ncol = ncol,
             lineend = lineend,
             linejoin = linejoin,
             na.rm = na.rm,
@@ -68,7 +88,7 @@ geom_subrect <- function(mapping = NULL, data = NULL,
 GeomSubrect <- ggproto(
     "GeomSubrect",
     ggplot2::GeomRect,
-    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "direction"),
+    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "nrow", "ncol"),
     setup_data = function(self, data, params) {
         data <- ggproto_parent(ggplot2::GeomRect, self)$setup_data(data, params)
         indices <- vec_group_loc(data[c("xmin", "xmax", "ymin", "ymax")])
@@ -79,19 +99,12 @@ GeomSubrect <- ggproto(
             "{.fn {snake_class(self)}} subdivide tile into a maximal",
             "of {max_n_tiles} rectangles"
         ))
+        nrow <- .subset2(params, "nrow")
+        ncol <- .subset2(params, "ncol")
         vec_rbind(!!!lapply(data_list, function(data) {
             n <- vec_size(data)
             if (n == 1L) return(data) # styler: off
-            if (is.null(direction <- .subset2(params, "direction"))) {
-                n_rows <- n_cols <- NULL
-            } else if (is_horizontal(direction)) {
-                n_rows <- 1L
-                n_cols <- NULL
-            } else {
-                n_rows <- NULL
-                n_cols <- 1L
-            }
-            dims <- wrap_dims(n, nrow = n_rows, ncol = n_cols)
+            dims <- wrap_dims(n, nrow = nrow, ncol = ncol)
             n_rows <- dims[1L]
             n_cols <- dims[2L]
             one_row <- vec_slice(data, 1L)
@@ -152,12 +165,26 @@ GeomSubrect <- ggproto(
 geom_subtile <- function(mapping = NULL, data = NULL,
                          stat = "identity", position = "identity",
                          ...,
-                         byrow = TRUE, direction = NULL,
+                         byrow = TRUE, nrow = NULL, ncol = NULL,
                          lineend = "butt", linejoin = "mitre",
-                         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+                         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE,
+                         direction = deprecated()) {
     assert_bool(byrow)
-    if (!is.null(direction)) {
-        direction <- check_direction(direction)
+    assert_number_whole(nrow, min = 1, allow_null = TRUE)
+    assert_number_whole(ncol, min = 1, allow_null = TRUE)
+    if (lifecycle::is_present(direction)) {
+        lifecycle::deprecate_warn(
+            "1.0.2",
+            "geom_subtile(direction = )",
+            "geom_subtile(nrow = , ncol = )"
+        )
+        if (is_horizontal(direction)) {
+            nrow <- 1L
+            ncol <- NULL
+        } else {
+            nrow <- NULL
+            ncol <- 1L
+        }
     }
     ggplot2::layer(
         data = data,
@@ -169,7 +196,8 @@ geom_subtile <- function(mapping = NULL, data = NULL,
         inherit.aes = inherit.aes,
         params = list2(
             byrow = byrow,
-            direction = direction,
+            nrow = nrow,
+            ncol = ncol,
             lineend = lineend,
             linejoin = linejoin,
             na.rm = na.rm,
@@ -182,7 +210,7 @@ geom_subtile <- function(mapping = NULL, data = NULL,
 GeomSubtile <- ggproto(
     "GeomSubtile",
     ggplot2::GeomTile,
-    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "direction"),
+    extra_params = c(ggplot2::GeomRect$extra_params, "byrow", "nrow", "ncol"),
     setup_data = function(self, data, params) {
         data <- ggproto_parent(ggplot2::GeomTile, self)$setup_data(data, params)
         ggproto_parent(GeomSubrect, self)$setup_data(data, params)

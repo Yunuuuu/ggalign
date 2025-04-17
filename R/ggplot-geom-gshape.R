@@ -1,12 +1,19 @@
 #' Layer with a customized shape graphic using grid functions.
 #'
-#' @inheritParams ggplot2::layer
-#' @inheritParams ggplot2::geom_point
-#' @details
+#' @description
+#' `r lifecycle::badge('questioning')`
+#'
 #' `geom_gshape` depends on the new aesthetics `gshape` (shape with grid
 #' functions), which should always be provided with [`scale_gshape_manual()`],
 #' in which, we can provide a list of grobs or functions that define how each
 #' value should be drawn. Any ggplot2 aesthetics can be used as the arguments.
+#'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
+#' @section Life cycle:
+#' We're unsure whether this function is truly necessary, which is why it is
+#' marked as questioning. So far, we've found that [`geom_subrect()`] and
+#' [`geom_subtile()`] handle most use cases effectively.
 #'
 #' @eval rd_gg_aesthetics("geom", "gshape")
 #' @examples
@@ -110,28 +117,7 @@ draw_key_gshape <- function(data, params, size) {
             }
         }
     }
-    make_gshape(gshape, data, .subset2(params, ".__gshape_dots__"))
-}
-
-#' @return A [grob][grid::grob] object.
-#' @importFrom rlang inject
-#' @importFrom methods formalArgs
-#' @importFrom ggplot2 zeroGrob
-#' @keywords internal
-#' @noRd
-make_gshape <- function(gshape, data, dots) {
-    if (is.function(gshape)) {
-        args <- formalArgs(gshape)
-        if (any(args == "...")) {
-            gshape <- inject(gshape(!!!data, !!!dots))
-        } else {
-            gshape <- inject(gshape(
-                !!!.subset(data, intersect(names(data), args)),
-                !!!.subset(dots, intersect(names(dots), args))
-            ))
-        }
-    }
-    ensure_grob(gshape, zeroGrob())
+    make_draw_grob(gshape, data, .subset2(params, ".__gshape_dots__"))
 }
 
 #' @importFrom ggplot2 ggproto zeroGrob
@@ -186,8 +172,8 @@ GeomGshape <- ggproto(
         coords <- vec_chop(coords, indices = .subset2(groups, "loc"))
 
         grobs <- .mapply(
-            make_gshape,
-            list(gshape = .subset2(groups, "key"), data = coords),
+            make_draw_grob,
+            list(draw = .subset2(groups, "key"), data = coords),
             list(dots = .__gshape_dots__)
         )
         grobs <- grobs[vapply(grobs, is.grob, logical(1L), USE.NAMES = FALSE)]
