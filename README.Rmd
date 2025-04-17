@@ -78,7 +78,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 ## Examples
 ![](man/figures/overview.png)
 
-## Compare with other similar tools
+## Compare with other tools
 ```{=html}
 <table class="table"><thead>
     <tr>
@@ -170,7 +170,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 </tbody></table>
 ```
 
-## Comparison of specifications with other similar tools
+## Comparison of the specifications with other tools
 | Specification                                | `ggalign`                                             | `marsilea`    | `ComplexHeatmap`                                      |
 | -------------------------------------------- | ----------------------------------------------------- | ------------- | ----------------------------------------------------- |
 | **Reorder observations**                     | ✅                                                    | ✅            | Heatmap Only                                          |

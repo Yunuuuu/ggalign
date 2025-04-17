@@ -71,7 +71,7 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ![](man/figures/overview.png)
 
-## Compare with other similar tools
+## Compare with other tools
 
 <table class="table"><thead>
     <tr>
@@ -162,7 +162,7 @@ remotes::install_github("Yunuuuu/ggalign")
     </tr>
 </tbody></table>
 
-## Comparison of specifications with other similar tools
+## Comparison of the specifications with other tools
 
 | Specification                                | `ggalign`                                             | `marsilea`    | `ComplexHeatmap`                                      |
 |----------------------------------------------|-------------------------------------------------------|---------------|-------------------------------------------------------|
