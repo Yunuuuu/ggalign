@@ -66,7 +66,7 @@ jobs:
             magick=?ignore-before-r=4.1.0
             patchwork
             ggrastr
-            github::PoisonAlien/maftools
+            maftools=?ignore-unavailable
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
