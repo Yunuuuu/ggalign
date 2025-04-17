@@ -9,7 +9,7 @@ This function converts various objects to a data frame."><meta property="og:imag
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@ This function converts various objects to a data frame."><meta property="og:imag
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Build a data frame</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v1.0.1/R/fortify-data-frame-.R" class="external-link"><code>R/fortify-data-frame-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-data-frame-.R" class="external-link"><code>R/fortify-data-frame-.R</code></a></small>
       <div class="d-none name"><code>fortify_data_frame.matrix.Rd</code></div>
     </div>
 
@@ -51,7 +51,7 @@ This function converts various objects to a data frame."><meta property="og:imag
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'matrix'</span></span>
-<span><span class="fu"><a href="fortify_data_frame.html">fortify_data_frame</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, data_arg <span class="op">=</span> <span class="cn">NULL</span>, call <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="fortify_data_frame.html">fortify_data_frame</a></span><span class="op">(</span><span class="va">data</span>, lvls <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, data_arg <span class="op">=</span> <span class="cn">NULL</span>, call <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'DelayedMatrix'</span></span>
 <span><span class="fu"><a href="fortify_data_frame.html">fortify_data_frame</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -66,6 +66,13 @@ This function converts various objects to a data frame."><meta property="og:imag
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A matrix-like object.</p></dd>
+
+
+<dt id="arg-lvls">lvls<a class="anchor" aria-label="anchor" href="#arg-lvls"></a></dt>
+<dd><p>A logical value indicating whether to restore factor levels using
+those stored in <code><a href="ggalign_attr.html">ggalign_lvls()</a></code>, or a character vector specifying custom
+levels for the <code>value</code> column. If levels are provided or restored, the
+<code>value</code> column will be returned as a factor.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -91,7 +98,8 @@ values. The resulting data frame will contain the following columns:</p><ul><li>
 exist) and an integer representing the row index of the original matrix.</p></li>
 <li><p><code>.column_names</code> and <code>.column_index</code>: the column names (only applicable
 when names exist) and column index of the original matrix.</p></li>
-<li><p><code>value</code>: the actual value.</p></li>
+<li><p><code>value</code>: the matrix value, returned as a factor if levels are specified or
+restored.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

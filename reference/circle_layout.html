@@ -13,7 +13,7 @@ variable will be required and aligned (circle_discrete)."><meta property="og:ima
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ variable will be required and aligned (circle_discrete)."><meta property="og:ima
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Arrange plots in a circular layout</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v1.0.1/R/layout-chain-circle-.R" class="external-link"><code>R/layout-chain-circle-.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/layout-chain-circle-.R" class="external-link"><code>R/layout-chain-circle-.R</code></a></small>
       <div class="d-none name"><code>circle_layout.Rd</code></div>
     </div>
 
@@ -61,8 +61,10 @@ variable will be required and aligned (<code>circle_discrete</code>).</p>
 <span>  <span class="va">...</span>,</span>
 <span>  radial <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  direction <span class="op">=</span> <span class="st">"outward"</span>,</span>
+<span>  sector_spacing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  spacing_theta <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">circle_discrete</span><span class="op">(</span></span>
@@ -70,8 +72,9 @@ variable will be required and aligned (<code>circle_discrete</code>).</p>
 <span>  <span class="va">...</span>,</span>
 <span>  radial <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  direction <span class="op">=</span> <span class="st">"outward"</span>,</span>
-<span>  spacing_theta <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  sector_spacing <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  spacing_theta <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">circle_continuous</span><span class="op">(</span></span>
@@ -79,8 +82,10 @@ variable will be required and aligned (<code>circle_discrete</code>).</p>
 <span>  <span class="va">...</span>,</span>
 <span>  radial <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  direction <span class="op">=</span> <span class="st">"outward"</span>,</span>
+<span>  sector_spacing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  spacing_theta <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,6 +122,11 @@ indicating the direction in which the plot is added.</p><ul><li><p><code>outward
 </ul></dd>
 
 
+<dt id="arg-sector-spacing">sector_spacing<a class="anchor" aria-label="anchor" href="#arg-sector-spacing"></a></dt>
+<dd><p>The size of spacing between different panel. A numeric
+of the radians or a <code>rel()</code> object.</p></dd>
+
+
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
 <dd><p>A <code><a href="continuous_limits.html">continuous_limits()</a></code> object specifying the left/lower
 limit and the right/upper limit of the scale. Used to align the continuous
@@ -132,8 +142,8 @@ plots in the layout.</p></dd>
 
 
 <dt id="arg-spacing-theta">spacing_theta<a class="anchor" aria-label="anchor" href="#arg-spacing-theta"></a></dt>
-<dd><p>The size of spacing between different panel. A numeric
-of the radians or a <code>rel()</code> object.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use
+<code>sector_spacing</code> instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -17,7 +17,7 @@ tune.MAF() helps convert MAF object to a MAF_pathways object.
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@ tune.MAF() helps convert MAF object to a MAF_pathways object.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Build a Matrix for OncoPrint</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v1.0.1/R/fortify-matrix-maftools.R" class="external-link"><code>R/fortify-matrix-maftools.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/R/fortify-matrix-maftools.R" class="external-link"><code>R/fortify-matrix-maftools.R</code></a></small>
       <div class="d-none name"><code>fortify_matrix.MAF.Rd</code></div>
     </div>
 
@@ -158,17 +158,24 @@ pathways without any genomic alterations.</p></dd>
     <h2 id="ggalign-attributes">ggalign attributes<a class="anchor" aria-label="anchor" href="#ggalign-attributes"></a></h2>
 
 
-<p>For <code>fortify_matrix.MAF</code>:</p><ul><li><p><code>gene_summary</code>: gene summary informations. See
+<p>For <code>fortify_matrix.MAF</code>:</p><ul><li><p><code>gene_summary</code>: A data frame of gene summary informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/getGeneSummary.html" class="external-link">maftools::getGeneSummary()</a></code> for details.</p></li>
-<li><p><code>sample_summary</code>: sample summary informations. See
+<li><p><code>sample_summary</code>: A data frame of sample summary informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/getSampleSummary.html" class="external-link">maftools::getSampleSummary()</a></code> for details.</p></li>
-<li><p><code>sample_anno</code>: sample clinical informations. See
+<li><p><code>sample_anno</code>: A data frame of sample clinical informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/getClinicalData.html" class="external-link">maftools::getClinicalData()</a></code> for details.</p></li>
+<li><p><code>variant_weights</code>: A data frame of variant weights. Each gene in a sample
+is assigned a total weight of <code>1</code>. When multiple variants occur in the
+same gene-sample pair, the weight for each variant reflects its proportion
+of the total.</p></li>
 <li><p><code>n_genes</code>: Total number of genes.</p></li>
 <li><p><code>n_samples</code>: Total number of samples.</p></li>
-<li><p><code>titv</code>: A list of <code>data.frames</code> with Transitions and Transversions
+<li><p><code>titv</code>: A list of data frame with Transitions and Transversions
 summary. See <code><a href="https://rdrr.io/pkg/maftools/man/titv.html" class="external-link">maftools::titv()</a></code> for details.</p></li>
-</ul><p>For <code>fortify_matrix.MAF_pathways</code>:</p><ul><li><p><code>gene_list</code>: the pathway contents.</p></li>
+</ul><p>The levels of <code>Variant_Classification</code> will be stored in <code><a href="ggalign_attr.html">ggalign_lvls()</a></code>.
+If they do not exist, alphabetical ordering will be used.</p>
+
+<p>For <code>fortify_matrix.MAF_pathways</code>:</p><ul><li><p><code>gene_list</code>: the pathway contents.</p></li>
 <li><p><code>pathway_summary</code>: pathway summary informations. See
 <code><a href="https://rdrr.io/pkg/maftools/man/pathways.html" class="external-link">maftools::pathways()</a></code> for details.</p></li>
 <li><p><code>sample_summary</code>: sample summary informations. See
