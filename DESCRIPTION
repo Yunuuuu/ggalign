@@ -20,20 +20,20 @@ BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
     ggplot2 (>= 3.5.0)
 Imports:
+    vctrs (>= 0.5.0),
+    rlang,
     cli,
     grDevices,
     grid,
     gtable,
-    lifecycle,
+    scales,
     methods,
-    rlang,
     stats,
     utils,
-    vctrs (>= 0.5.0)
+    lifecycle
 Suggests:
     gridGraphics,
     ragg,
-    scales,
     magick,
     testthat (>= 3.0.0),
     vdiffr
