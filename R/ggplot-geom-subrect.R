@@ -54,7 +54,7 @@ geom_subrect <- function(mapping = NULL, data = NULL,
         lifecycle::deprecate_warn(
             "1.0.2",
             "geom_subtile(direction = )",
-            "geom_subtile(nrow = , ncol = )"
+            details = "Please use the `nrow`/`ncol` argument instead."
         )
         if (is_horizontal(direction)) {
             nrow <- 1L
@@ -176,7 +176,7 @@ geom_subtile <- function(mapping = NULL, data = NULL,
         lifecycle::deprecate_warn(
             "1.0.2",
             "geom_subtile(direction = )",
-            "geom_subtile(nrow = , ncol = )"
+            details = "Please use the `nrow`/`ncol` argument instead."
         )
         if (is_horizontal(direction)) {
             nrow <- 1L
