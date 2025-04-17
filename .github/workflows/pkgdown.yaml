@@ -42,7 +42,6 @@ jobs:
           needs: website
 
       - name: Render pkgdown home file
-        if: github.event_name != 'pull_request'
         run: |
           Rscript -e 'rmarkdown::render("index.Rmd")'
 
