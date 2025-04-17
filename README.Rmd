@@ -4,6 +4,7 @@ output:
     html_preview: FALSE
 params:
   readme: true
+  learning_link: true
 ---
 
 ```{r, include = FALSE}
@@ -68,11 +69,11 @@ or from [GitHub](https://github.com/Yunuuuu/ggalign) with:
 remotes::install_github("Yunuuuu/ggalign")
 ```
 
-## Learning ggalign
-
- 1. The complete tutorial is available at: <https://yunuuuu.github.io/ggalign-book/>
-
- 2. For the full reference documentation, visit: <https://yunuuuu.github.io/ggalign/>
+```{r, results="asis", echo=FALSE, eval=isTRUE(params$learning_link)}
+cat("## Learning ggalign", sep = "\n\n")
+cat(" 1. For the full reference documentation, visit: <https://yunuuuu.github.io/ggalign/>", sep = "\n")
+cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggalign-book/>", sep = "\n\n")
+```
 
 ## Examples
 ![](man/figures/overview.png)
