@@ -1,5 +1,7 @@
 # ggalign (development version)
 
+* `geom_subrect()` and `geom_subtile()` gain `nrow` and `ncol` arguments to control the layout, and deprecate `direction` argument
+
 * `ggoncoplot()` gains a new argument `remove_duplicates` to control whether to remove duplicated variants within the same cell.
 
 * `fortify_data_frame.matrix()` gains a new argument `lvls`, allowing matrix values to be converted into a factor.
