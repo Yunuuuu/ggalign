@@ -37,11 +37,12 @@ reference:
 
 - title: Build Layout
   desc: >
-    All plots begin with a call to `ggheatmap()`/`quad_layout()` or
-    `stack_layout()`, supplying default data. You then reorder the observations,
-    or split the observations into groups, and add plots, layers, scales, coords
-    with `+`. Use `quad_switch()`/`hmanno()` or `stack_switch()` to switch the
-    active context. To save a plot to disk, use `ggsave()`.
+    All plots begin with a call to `circle_layout`, `stack_layout()`, or
+    `ggheatmap()`/`quad_layout()`, supplying default data. You then reorder
+    the observations, or split the observations into groups, and add plots,
+    layers, scales, coords with `+`. Use `quad_switch()`/`hmanno()` or
+    `stack_switch()` to switch the active context. To save a plot to disk, use
+    `ggsave()`.
   contents:
   - quad_switch
   - quad_anno
