@@ -102,7 +102,7 @@ ggplot_build.ggalign_facet_sector_plot <- function(plot) {
                         "Cannot use {.fn {snake_class(plot$coordinates)}}",
                         "coordinate with {.fn facet_sector}"
                     ),
-                    i = "Please use {.fn coord_circle} instead"
+                    i = "Please use {.fn coord_circle}/{.fn coord_radial} instead"
                 ))
             }
             plot$coordinates <- coord_circle()
