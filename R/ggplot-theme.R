@@ -1,10 +1,13 @@
 #' @importFrom ggplot2 theme_bw element_blank
 default_theme <- function() {
     if (is_theme_unset()) {
-        theme_bw() + theme(
-            panel.border = element_blank(),
-            panel.grid = element_blank()
-        )
+        theme_bw() +
+            theme(
+                axis.text = ggplot2::element_text(color = "black"),
+                strip.text = ggplot2::element_text(color = "black"),
+                panel.border = element_blank(),
+                panel.grid = element_blank()
+            )
     } else {
         theme_get()
     }
