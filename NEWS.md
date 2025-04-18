@@ -1,5 +1,7 @@
 # ggalign (development version)
 
+* new scale for z aesthetic: scale_z_continuous, scale_z_binned, scale_z_discrete, scale_z_ordinal, scale_z_datetime, scale_z_date 
+
 * `geom_subrect()` and `geom_subtile()` gain `nrow` and `ncol` arguments to control the layout, and deprecate `direction` argument
 
 * `ggoncoplot()` gains a new argument `remove_duplicates` to control whether to remove duplicated variants within the same cell.

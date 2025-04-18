@@ -134,7 +134,8 @@ Add z-aesthetic for geom_tile
 \section{new aesthetics}{
 
 \itemize{
-\item \code{z}: the third dimention (in the z direction).
+\item \code{z}: the third dimention (in the z direction), use
+\code{\link[=scale_z_continuous]{scale_z_continuous()}} to control the ranges.
 \item \code{theta}: Angle between x-axis and z-axis.
 }
 }
@@ -175,3 +176,26 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", pac
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
+\examples{
+set.seed(123)
+small_mat <- matrix(rnorm(81), nrow = 9)
+rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+ggheatmap(small_mat,
+    filling = FALSE,
+    theme = theme(
+        legend.box.spacing = unit(10, "mm"),
+        plot.margin = margin(t = 15, unit = "mm")
+    )
+) +
+    geom_tile3d(
+        aes(fill = value, z = value, width = 0.8, height = 0.8),
+        color = "black"
+    ) +
+    scale_fill_viridis_c(
+        option = "plasma",
+        breaks = scales::breaks_pretty(3L)
+    ) +
+    coord_cartesian(clip = "off")
+
+}

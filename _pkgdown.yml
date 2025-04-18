@@ -151,6 +151,7 @@ reference:
   - geom_pie
   - geom_subrect
   - geom_tile3d
+  - scale_z_continuous
   - theme_no_axes
   - no_expansion
   - layer_order
