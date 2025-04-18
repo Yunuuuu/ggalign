@@ -225,7 +225,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     }
 
     # attach the guide legends
-    guides <- collect_guides_list(guides)
+    guides <- collect_guides_list(guides, zeroGrob())
     theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
     theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
     theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)

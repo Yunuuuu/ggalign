@@ -2,7 +2,7 @@
 #' Each element in the list corresponds to a specific position, containing a
 #' sub-list of guide boxes, where each guide box represents a single plot.
 #' @noRd
-collect_guides_list <- function(guides_list) {
+collect_guides_list <- function(guides_list, empty = NULL) {
     ans <- lapply(c(.TLBR, "inside"), function(guide_pos) {
         guides <- lapply(guides_list, function(guides) {
             # IF no guide-box, a single `zeroGrob()` will be given
@@ -30,7 +30,7 @@ collect_guides_list <- function(guides_list) {
         guides <- guides[
             !vapply(guides, is.null, logical(1L), USE.NAMES = FALSE)
         ]
-        if (is_empty(guides)) NULL else guides
+        if (is_empty(guides)) empty else guides
     })
     names(ans) <- c(.TLBR, "inside")
     ans[!vapply(ans, is.null, logical(1L), USE.NAMES = FALSE)]
