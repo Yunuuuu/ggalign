@@ -225,33 +225,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
     collect_guides_list = function(self, patches) {
         guides_list <- lapply(patches, function(patch) patch$collect_guides())
-        ans <- lapply(c(.TLBR, "inside"), function(guide_pos) {
-            guides <- lapply(guides_list, function(guides) {
-                o <- .subset2(guides, guide_pos)
-                # A guide-box should be a `zeroGrob()` or a `gtable` object
-                if (maybe_guide_box(o)) {
-                    return(list(o))
-                }
-                # For other grobs, we just removed them silently
-                if (is.grob(o)) {
-                    list(NULL)
-                } else if (is.list(o)) {
-                    o[vapply(o, maybe_guide_box,
-                        logical(1L),
-                        USE.NAMES = FALSE
-                    )]
-                } else {
-                    list(NULL)
-                }
-            })
-            guides <- unlist(guides, FALSE, FALSE)
-            guides <- guides[
-                !vapply(guides, is.null, logical(1L), USE.NAMES = FALSE)
-            ]
-            if (is_empty(guides)) NULL else guides
-        })
-        names(ans) <- c(.TLBR, "inside")
-        ans[!vapply(ans, is.null, logical(1L), USE.NAMES = FALSE)]
+        collect_guides_list(guides_list)
     },
     #' @importFrom grid is.unit unit
     set_sizes = function(self, design, dims,
@@ -430,81 +404,22 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     attach_guides = function(self, guide_pos, guides, theme,
                              panel_pos = find_panel(gt), ...,
                              gt = self$gt) {
-        # for inside legends, they'll be grouped by the actual inside
-        # position and justification
+        guide_box <- assemble_guides(guides, guide_pos, theme = theme)
+        name <- sprintf("guide-box-collected-%s", guide_pos)
         if (guide_pos == "inside") {
-            name <- sprintf("guide-box-collected-%s", guide_pos)
-            # for `zeroGrob()`, it doesn't record the `viewport` information
-            # used to identify the inside guide groups, we just removed them
-            guides <- guides[!vapply(guides, is_null_grob,
-                logical(1L),
-                USE.NAMES = FALSE
-            )]
-            if (is_empty(guides)) {
-                index <- 1L
-            } else {
-                positions <- justs <- vector("list", length(guides))
-                for (i in seq_along(guides)) {
-                    guide <- .subset2(guides, i)
-                    # for inside guides, it may contain multiple guide-box
-                    is_box <- grepl("guide-box-inside", guide$layout$name)
-                    if (any(is_box)) {
-                        guides[[i]] <- guide$grobs[is_box]
-                    } else {
-                        guides[[i]] <- list(guide)
-                    }
-                    positions[[i]] <- lapply(guides[[i]], function(guide_box) {
-                        unit.c(guide_box$vp$x, guide_box$vp$y)
-                    })
-                    justs[[i]] <- lapply(guides[[i]], function(guide_box) {
-                        guide_box$vp$justification
-                    })
-                }
-                guides <- unlist(guides, FALSE, FALSE)
-                groups <- data_frame0(
-                    positions = unlist(positions, FALSE, FALSE),
-                    justs = unlist(justs, FALSE, FALSE)
-                )
-                groups <- vec_group_loc(groups)
-                index <- vec_seq_along(groups)
-                if (vec_size(groups) > 1L) {
-                    name <- paste(name, index, sep = "-")
-                }
-            }
-
-            # pakcage each group into a guide-box and add it into the `gt`
-            for (i in index) {
-                if (is_empty(guides)) {
-                    guide_box <- zeroGrob()
-                } else {
-                    adjust <- theme(
-                        legend.position.inside = groups$key$positions[[i]],
-                        legend.justification.inside = groups$key$justs[[i]]
-                    )
-                    guide_box <- assemble_guides(
-                        guides[groups$loc[[i]]], guide_pos,
-                        theme = theme + adjust
-                    )
-                }
-                gt <- gtable_add_grob(
-                    x = gt,
-                    grobs = guide_box,
-                    t = panel_pos$t,
-                    l = panel_pos$l,
-                    b = panel_pos$b,
-                    r = panel_pos$r,
-                    name = name[[i]],
-                    ...
-                )
-            }
+            gt <- gtable_add_grob(
+                x = gt,
+                grobs = guide_box,
+                t = panel_pos$t,
+                l = panel_pos$l,
+                b = panel_pos$b,
+                r = panel_pos$r,
+                name = name,
+                ...
+            )
             return(gt)
         }
-
-        guide_box <- assemble_guides(guides, guide_pos, theme = theme)
-
-        # global parameters
         spacing <- .subset2(theme, "legend.box.spacing")
-        name <- sprintf("guide-box-collected-%s", guide_pos)
         if (guide_pos == "left") {
             if (is.gtable(guide_box)) {
                 legend_width <- gtable_width(guide_box)

@@ -216,49 +216,16 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         }
 
         # build legends
-        if (packageVersion("ggplot2") > "3.5.2") {
-            # ggplot2 development version > 3.5.2
-            guide_list <- plot$guides$assemble(plot_theme)
-            if (!is_null_grob(guide_list)) {
-                guides[[i]] <- lapply(guide_list, function(guide_box) {
-                    if (is.gtable(guide_box)) {
-                        guide_box$grobs[grepl("guides", guide_box$layout$name)]
-                    }
-                })
-            }
-        } else {
-            default_position <- plot_theme$legend.position %||% "right"
-            if (length(default_position) == 2L) {
-                default_position <- "inside"
-            }
-            if (!identical(default_position, "none")) {
-                plot_theme$legend.key.width <- calc_element(
-                    "legend.key.width",
-                    plot_theme
-                )
-                plot_theme$legend.key.height <- calc_element(
-                    "legend.key.height",
-                    plot_theme
-                )
-                # A list of list
-                guides[[i]] <- plot$guides$draw(
-                    plot_theme,
-                    default_position,
-                    plot_theme$legend.direction
-                )
-            }
-        }
+        guides[i] <- list(plot$guides$assemble(plot_theme))
+
+        # assign value for next loop
         just <- origin
         last_plot_size <- plot_size # the last plot panel size
         last_spacing <- spacing
     }
 
     # attach the guide legends
-    guides <- lapply(c(.TLBR, "inside"), function(guide_pos) {
-        unlist(lapply(guides, .subset2, guide_pos), FALSE, FALSE)
-    })
-    names(guides) <- c(.TLBR, "inside")
-
+    guides <- collect_guides_list(guides)
     theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
     theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
     theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)
@@ -266,9 +233,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         "legend.box.spacing", theme
     ) %||% unit(0.2, "cm")
     legend_box <- .mapply(
-        function(guides, guide_pos) {
-            assemble_guides(guides, guide_pos, theme)
-        },
+        function(guides, guide_pos) assemble_guides(guides, guide_pos, theme),
         list(guides = guides, guide_pos = names(guides)),
         NULL
     )

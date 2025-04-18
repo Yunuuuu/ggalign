@@ -1,14 +1,117 @@
+#' Returns a list of guide boxes collected from all plots.
+#' Each element in the list corresponds to a specific position, containing a
+#' sub-list of guide boxes, where each guide box represents a single plot.
+#' @noRd
+collect_guides_list <- function(guides_list) {
+    ans <- lapply(c(.TLBR, "inside"), function(guide_pos) {
+        guides <- lapply(guides_list, function(guides) {
+            o <- .subset2(guides, guide_pos)
+            # A guide-box should be a `zeroGrob()` or a `gtable` object
+            if (maybe_guide_box(o)) {
+                return(list(o))
+            }
+            # For other grobs, we just removed them silently
+            if (is.grob(o)) {
+                list(NULL)
+            } else if (is.list(o)) {
+                o[
+                    vapply(o, maybe_guide_box,              # styler: off
+                        logical(1L), USE.NAMES = FALSE      # styler: off
+                    )
+                ]
+            } else {
+                list(NULL)
+            }
+        })
+        guides <- unlist(guides, FALSE, FALSE)
+        guides <- guides[
+            !vapply(guides, is.null, logical(1L), USE.NAMES = FALSE)
+        ]
+        if (is_empty(guides)) NULL else guides
+    })
+    names(ans) <- c(.TLBR, "inside")
+    ans[!vapply(ans, is.null, logical(1L), USE.NAMES = FALSE)]
+}
+
+#' @param guides A list of guide-box
+#' @importFrom ggplot2 zeroGrob
+#' @importFrom gtable gtable gtable_add_grob
+#' @noRd
+assemble_guides <- function(guides, guide_pos, theme) {
+    if (guide_pos == "inside") {
+        # for `zeroGrob()`, it doesn't record the `viewport` information
+        # used to identify the inside guide groups, we just removed them
+        guides <- guides[
+            !vapply(guides, is_null_grob, logical(1L), USE.NAMES = FALSE)
+        ]
+        if (is_empty(guides)) {
+            guide_box <- zeroGrob()
+        } else {
+            positions <- justs <- vector("list", length(guides))
+            for (i in seq_along(guides)) {
+                guide <- .subset2(guides, i)
+                # for inside guides, it may contain multiple guide-box
+                is_box <- grepl("guide-box-inside", guide$layout$name)
+                if (any(is_box)) {
+                    guides[[i]] <- guide$grobs[is_box]
+                } else {
+                    guides[[i]] <- list(guide)
+                }
+                positions[[i]] <- lapply(guides[[i]], function(guide_box) {
+                    unit.c(guide_box$vp$x, guide_box$vp$y)
+                })
+                justs[[i]] <- lapply(guides[[i]], function(guide_box) {
+                    guide_box$vp$justification
+                })
+            }
+            guides <- unlist(guides, FALSE, FALSE)
+            groups <- data_frame0(
+                positions = unlist(positions, FALSE, FALSE),
+                justs = unlist(justs, FALSE, FALSE)
+            )
+            groups <- vec_group_loc(groups)
+            index <- vec_seq_along(groups)
+
+            # pakcage each group into a guide-box
+            box_list <- vector("list", vec_size(index))
+            for (i in index) {
+                box_list[[i]] <- assemble_box(
+                    guides[groups$loc[[i]]], guide_pos,
+                    theme = theme + theme(
+                        legend.position.inside = groups$key$positions[[i]],
+                        legend.justification.inside = groups$key$justs[[i]]
+                    )
+                )
+            }
+            if (vec_size(box_list) > 1L) {
+                guide_box <- gtable(unit(1L, "npc"), unit(1L, "npc"))
+                guide_box <- gtable_add_grob(
+                    guide_box, box_list,
+                    t = 1L, l = 1L, clip = "off",
+                    name = paste("guide-box-collected-inside", index, sep = "-")
+                )
+            } else {
+                guide_box <- box_list[[1L]]
+            }
+        }
+    } else {
+        guide_box <- assemble_box(guides, guide_pos, theme = theme)
+    }
+    guide_box
+}
+
 #' @param guides A list of guide-box
 #' @importFrom rlang try_fetch
 #' @importFrom ggplot2 zeroGrob
 #' @noRd
-assemble_guides <- function(guides, guide_pos, theme) {
+assemble_box <- function(guides, guide_pos, theme) {
     guides <- guides[
         !vapply(guides, is_null_grob, logical(1L), USE.NAMES = FALSE)
     ]
     if (is_empty(guides)) {
         zeroGrob()
     } else {
+        # Remove the guide box background
         grobs <- lapply(guides, function(box) {
             box$grobs[grepl("guides", box$layout$name)]
         })
@@ -16,10 +119,7 @@ assemble_guides <- function(guides, guide_pos, theme) {
 
         # remove duplicated guides
         grobs <- collapse_guides(grobs)
-        if (is_empty(grobs)) {
-            return(zeroGrob())
-        }
-
+        if (is_empty(grobs)) return(zeroGrob()) # styler: off
         # for every position, collect all individual guides and arrange them
         # into a guide box which will be inserted into the main gtable
         package_box <- try_fetch(
