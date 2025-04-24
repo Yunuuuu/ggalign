@@ -73,7 +73,7 @@ PatchPatchworkPatch <- ggproto(
     # `patch` from `patchwork`: patchwork::plot_spacer
     #' @importFrom gtable gtable_add_rows gtable_add_cols
     #' @importFrom ggplot2 find_panel
-    patch_gtable = function(self, guides, plot = self$plot) {
+    patch_gtable = function(self, theme, guides, plot = self$plot) {
         guides <- if (length(guides)) "collect" else "keep"
         ans <- patchwork::patchGrob(patch, guides = guides)
         for (border in .TLBR) {

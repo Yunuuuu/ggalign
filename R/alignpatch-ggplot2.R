@@ -31,13 +31,12 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_guides = function(guides) guides,
-    set_theme = function(theme) NULL,
-    patch_gtable = function(self, plot = self$plot) {
+    patch_gtable = function(self, theme, guides, plot = self$plot) {
         # extract patch titles --------------------------------
-        patch_titles <- .subset2(plot, "ggalign_patch_labels")
+        patch_titles <- plot$ggalign_patch_labels
 
         # complete_theme() will ensure elements exist --------
-        theme <- complete_theme(.subset2(plot, "theme"))
+        theme <- complete_theme(plot$theme)
         # here: we remove tick length when the tick is blank
         theme <- setup_tick_length_element(theme)
         plot$theme <- theme

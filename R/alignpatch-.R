@@ -164,9 +164,9 @@ path_no_method <- function(plot, method) {
 Patch <- ggproto(
     "Patch", NULL,
     # following fields will be added by `alignpatch()`
-    # plot = NULL,
+    plot = NULL,
     # following fields will be added in `alignpatches$patch_gtable()`
-    # borders = NULL, guides = NULL, theme = NULL, gt = NULL,
+    # borders = NULL, gt = NULL,
 
     #' @param guides `guides` argument from the parent alignpatches
     #' @return Which side of guide legends should be collected by the parent
@@ -175,17 +175,10 @@ Patch <- ggproto(
     set_guides = function(self, guides) {
         path_no_method(self$plot, "set_guides")
     },
-
-    #' @param theme `theme` from the parent alignpatches
-    #' @return theme for current `alignpatches`.
-    #' @noRd
-    set_theme = function(self, theme) {
-        path_no_method(self$plot, "set_theme")
-    },
-    patch_gtable = function(self, plot = self$plot) {
+    patch_gtable = function(self, theme, guides, plot = self$plot) {
         path_no_method(self$plot, "patch_gtable")
     },
-    collect_guides = function(self, guides = self$guides, gt = self$gt) {
+    collect_guides = function(self, guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")

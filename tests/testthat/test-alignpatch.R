@@ -1,31 +1,20 @@
-p1 <- ggplot(mtcars) +
-    geom_point(aes(mpg, disp)) +
-    ggtitle("Plot 1")
-
-p2 <- ggplot(mtcars) +
-    geom_boxplot(aes(gear, disp, group = gear)) +
-    ggtitle("Plot 2")
-
-p3 <- ggplot(mtcars) +
-    geom_point(aes(hp, wt, colour = mpg)) +
-    ggtitle("Plot 3")
-
-p4 <- ggplot(mtcars) +
-    geom_bar(aes(gear)) +
-    facet_wrap(~cyl) +
-    ggtitle("Plot 4")
-
-p5 <- ggplot(mpg, aes(class)) +
-    geom_bar() +
-    ylim(0, 65) +
-    coord_flip()
-
-p_f <- ggplot(mtcars) +
-    geom_point(aes(hp, disp)) +
-    coord_fixed() +
-    ggtitle("Fixed Aspect")
-
 test_that("The grid can be controlled", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
     expect_doppelganger("Setting ncol", {
         align_plots(p1, p2, p3, p4, ncol = 3L)
     })
@@ -109,26 +98,49 @@ test_that("The grid can be controlled", {
 })
 
 test_that("`ggsave()` works well", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
     p <- align_plots(p1, p2, p3, p4, widths = c(1, 2))
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
 })
 
 test_that("collect guides works well", {
+    p <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot without guide")
+    p_color <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot with color")
     expect_doppelganger(
         "collect normal guides",
-        align_plots(p1, p3, guides = "tlbr")
+        align_plots(p, p_color, guides = "tlbr")
     )
-    p_guide_null_unit <- p3 + scale_color_continuous(guide = guide_colorbar(
-        theme = theme(legend.key.height = unit(1, "null"))
-    ))
+    p_guide_null_unit <- p_color +
+        scale_color_continuous(guide = guide_colorbar(
+            theme = theme(legend.key.height = unit(1, "null"))
+        ))
     expect_doppelganger(
         "collect guides with null unit",
-        align_plots(p1, p_guide_null_unit, guides = "tlbr")
+        align_plots(p, p_guide_null_unit, guides = "tlbr")
     )
     expect_doppelganger(
         "collect guides from multiple plots with null unit",
         align_plots(
-            p1, p_guide_null_unit,
+            p, p_guide_null_unit,
             p_guide_null_unit + labs(color = "another"),
             guides = "tlbr"
         )
@@ -136,14 +148,14 @@ test_that("collect guides works well", {
     expect_doppelganger(
         "collect inside guides",
         align_plots(
-            p3 +
+            p_color +
                 labs(color = "Plot 1", title = "Plot 1") +
                 theme(
                     legend.position = "inside",
                     legend.position.inside = c(1, 0),
                     legend.justification.inside = c(1, 0)
                 ),
-            p3 +
+            p_color +
                 labs(color = "Plot 2", title = "Plot 2") +
                 theme(
                     legend.position = "inside",
@@ -156,6 +168,27 @@ test_that("collect guides works well", {
 })
 
 test_that("Fixed aspect plots behave", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
+
+    p_f <- ggplot(mtcars) +
+        geom_point(aes(hp, disp)) +
+        coord_fixed() +
+        ggtitle("Fixed Aspect")
     expect_doppelganger("FAR optimise space by default 1", {
         align_plots(p1, p_f, p3, p4)
     })
@@ -194,6 +227,30 @@ test_that("Fixed aspect plots behave", {
 })
 
 test_that("`free_align()` works well", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
+    p5 <- ggplot(mpg, aes(class)) +
+        geom_bar() +
+        ylim(0, 65) +
+        coord_flip()
+    p_f <- ggplot(mtcars) +
+        geom_point(aes(hp, disp)) +
+        coord_fixed() +
+        ggtitle("Fixed Aspect")
     expect_doppelganger("free_align() with ggplot", {
         align_plots(free_align(p3, "l"), p5, ncol = 1L)
     })
@@ -212,6 +269,30 @@ test_that("`free_align()` works well", {
 })
 
 test_that("`free_border()` works well", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
+    p5 <- ggplot(mpg, aes(class)) +
+        geom_bar() +
+        ylim(0, 65) +
+        coord_flip()
+    p_f <- ggplot(mtcars) +
+        geom_point(aes(hp, disp)) +
+        coord_fixed() +
+        ggtitle("Fixed Aspect")
     expect_doppelganger("free_border() with ggplot", {
         align_plots(free_border(p3, "l"), p5, ncol = 1L)
     })
@@ -243,6 +324,30 @@ test_that("`free_border()` works well", {
 
 test_that("`free_space()` works well", {
     p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
+    p5 <- ggplot(mpg, aes(class)) +
+        geom_bar() +
+        ylim(0, 65) +
+        coord_flip()
+    p_f <- ggplot(mtcars) +
+        geom_point(aes(hp, disp)) +
+        coord_fixed() +
+        ggtitle("Fixed Aspect")
+    p1 <- ggplot(mtcars) +
         geom_bar(aes(y = factor(gear), fill = factor(gear))) +
         scale_y_discrete(
             "",
@@ -264,36 +369,47 @@ test_that("`free_space()` works well", {
 })
 
 test_that("`free_guide()` works well", {
-    p_right <- p3 + ggtitle(NULL) + labs(color = "right")
-    p_top <- p_right +
+    p_no_guide <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    p_color <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg))
+    p_top <- p_color +
         scale_color_continuous(
             name = "top",
             guide = guide_colorbar(position = "top")
         )
-    p_left <- p_right +
+    p_left <- p_color +
         scale_color_continuous(
             name = "left",
             guide = guide_colorbar(position = "left")
         )
-    p_bottom <- p_right +
+    p_bottom <- p_color +
         scale_color_continuous(
             name = "bottom",
             guide = guide_colorbar(position = "bottom")
         )
+    p_right <- p_color +
+        scale_color_continuous(
+            name = "right",
+            guide = guide_colorbar(position = "right")
+        )
     p_guides <- align_plots(
-        p_right + scale_color_continuous(
+        p_color + scale_color_continuous(
             name = "patches_top",
             guide = guide_colorbar(position = "top")
         ),
-        p_right + scale_color_continuous(
+        p_color + scale_color_continuous(
             name = "patches_left",
             guide = guide_colorbar(position = "left")
         ),
-        p_right + scale_color_continuous(
+        p_color + scale_color_continuous(
             name = "patches_bottom",
             guide = guide_colorbar(position = "bottom")
         ),
-        p_right + scale_color_continuous(name = "patches_right"),
+        p_color + scale_color_continuous(
+            name = "patches_right",
+            guide = guide_colorbar(position = "right")
+        ),
         guides = "tlbr"
     )
     expect_doppelganger(
@@ -308,9 +424,13 @@ test_that("`free_guide()` works well", {
         )
     )
     expect_doppelganger(
+        "free_guide() with ggplot of NULL guides",
+        align_plots(p_no_guide, free_guide(p_right, NULL), guides = "tlbr")
+    )
+    expect_doppelganger(
         "free_guide() with alignpatches",
         align_plots(
-            free_guide(p_guides, "tlbr"),
+            p_guides,
             p_top, p_left, p_bottom, p_right,
             guides = "tlbr"
         )

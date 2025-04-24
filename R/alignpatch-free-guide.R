@@ -42,9 +42,7 @@ alignpatch.free_guide <- function(x) {
     if (!is.null(free_guides <- attr(x, "free_guides", exact = TRUE))) {
         free_guides <- setup_guides(free_guides)
     }
-    ggproto(
-        "PatchFreeGuide", Parent,
-        free_guides = free_guides,
-        set_guides = function(self, guides) self$free_guides
+    ggproto("PatchFreeGuide", Parent,
+        set_guides = function(self, guides) free_guides
     )
 }

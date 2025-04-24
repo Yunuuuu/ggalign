@@ -6,20 +6,12 @@ alignpatch.alignpatches <- function(x) {
 
 #' @noRd
 PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
-    # We by default won't collect any guides
-    guides = NULL,
-    theme = NULL,
-    set_guides = function(self, guides, plot = self$plot) guides,
-    set_theme = function(self, theme, plot = self$plot) {
-        if (is.null(t <- .subset2(plot, "theme"))) return(theme) # styler: off
-        # we'll always initialize the parent layout theme
-        # so it won't be NULL
-        theme + t
-    },
+    set_guides = function(self, guides) guides,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
-    #' @importFrom ggplot2 wrap_dims calc_element zeroGrob
-    patch_gtable = function(self, top_level = FALSE, plot = self$plot) {
+    #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
+    patch_gtable = function(self, theme = theme_get(), guides = NULL,
+                            top_level = FALSE, plot = self$plot) {
         patches <- lapply(.subset2(plot, "plots"), alignpatch)
         layout <- .subset2(plot, "layout")
 
@@ -62,6 +54,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # if no plots, we return empty gtable -----------------
         if (is_empty(patches)) return(make_patch_table()) # styler: off
+        self$patches <- patches
 
         # add borders to patch --------------------------------
         design <- vec_slice(design, keep)
@@ -84,26 +77,16 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # we inherit parameters from the parent --------------------
         # by default, we won't collect any guide legends
-        guides <- .subset2(layout, "guides") %|w|% self$guides
+        guides <- .subset2(layout, "guides") %|w|% guides
 
         # by default, we use ggplot2 default theme
-        theme <- self$theme %||% self$set_theme(theme_get(), plot = plot)
-
-        # Let each patch to determine whether to collect guides or inherit
-        # the theme
-        for (patch in patches) {
-            patch$guides <- patch$set_guides(guides)
-            patch$theme <- patch$set_theme(theme)
-        }
-
-        # save patches, patches isnot copyable -------------------
-        self$patches <- patches
+        if (!is.null(plot$theme)) theme <- theme + plot$theme
+        self$theme <- theme
 
         #######################################################
         # 1. patch_gtable: create the gtable for the patch, will set internal
         #    `gt`
-        # 2. collect_guides_list: call `collect_guides`, can change the internal
-        #    `gt`
+        # 2. `collect_guides`, can change the internal `gt`
         # 3. set_sizes:
         #     - (To-Do) align_panel_spaces: can change the internal `gt`
         #     - align_panel_sizes, can change the internal `gt`
@@ -111,12 +94,25 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 4. set_grobs: will call `align_border` and `split_gt`, return the
         #    final gtable
         # setup gtable list ----------------------------------
-        for (patch in patches) {
-            patch$gt <- patch$patch_gtable()
+        # Let each patch to determine whether to collect guides
+        collected <- lapply(patches, function(patch) patch$set_guides(guides))
+
+        all_guides <- unique(unlist(collected, FALSE, FALSE))
+        collected_guides <- vector("list", length(patches))
+        for (i in seq_along(patches)) {
+            patch <- .subset2(patches, i)
+            # for any guides be collected, we always ensure the plot in the
+            # border will always collected the guides to avoid the overlapping
+            g <- union(
+                .subset2(collected, i),
+                intersect(all_guides, patch$borders)
+            )
+            patch$gt <- patch$patch_gtable(theme = theme, guides = g)
+            collected_guides[i] <- list(patch$collect_guides(g))
         }
 
         # collect guides  ---------------------------------------
-        collected_guides <- self$collect_guides_list(patches)
+        self$collected_guides <- collect_guides_list(collected_guides)
 
         # prepare the output ----------------------------------
         gt <- gtable(
@@ -141,15 +137,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # add guides into the final gtable ----------------------
         if (top_level) {
             gt <- self$attach_guide_list(
-                guide_list = collected_guides,
+                guide_list = self$collected_guides,
                 theme = theme,
                 panel_pos = panel_pos,
                 gt = gt
             )
-        } else {
-            # used by `$collect_guides() method`
-            self$collected_guides <- collected_guides
-            self$panel_pos <- panel_pos
         }
 
         # setup grobs -------------------------------------------
@@ -210,7 +202,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             patch$align_border(t = t, l = l, b = b, r = r, gt = grob)
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
-    collect_guides = function(self, guides = self$guides, gt = self$gt) {
+    collect_guides = function(self, guides, gt = self$gt) {
         collected_guides <- self$collected_guides
         # for guides not collected by the top-level alignpatches, we attach the
         # guides
@@ -222,10 +214,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         )
         # return guides to be collected
         .subset(collected_guides, guides)
-    },
-    collect_guides_list = function(self, patches) {
-        guides_list <- lapply(patches, function(patch) patch$collect_guides())
-        collect_guides_list(guides_list)
     },
     #' @importFrom grid is.unit unit
     set_sizes = function(self, design, dims,
@@ -377,7 +365,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         gt
     },
     attach_guide_list = function(self, guide_list, theme = self$theme,
-                                 panel_pos = self$panel_pos,
+                                 panel_pos = find_panel(gt),
                                  gt = self$gt) {
         if (length(guide_list)) {
             # https://github.com/tidyverse/ggplot2/blob/57ba97fa04dadc6fd73db1904e39a09d57a4fcbe/R/guides-.R#L512
