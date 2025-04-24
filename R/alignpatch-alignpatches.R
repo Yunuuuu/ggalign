@@ -432,12 +432,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 x = gt,
                 grobs = guide_box,
                 t = panel_pos$t,
-                l = panel_pos$l - 6L,
+                l = panel_pos$l - 8L,
                 b = panel_pos$b,
                 name = name,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "l") - 5:6] <- widths
+            gt$widths[.subset2(panel_pos, "l") - 7:8] <- widths
         } else if (guide_pos == "right") {
             if (is.gtable(guide_box)) {
                 legend_width <- gtable_width(guide_box)
@@ -450,12 +450,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 x = gt,
                 grobs = guide_box,
                 t = panel_pos$t,
-                l = panel_pos$r + 6L,
+                l = panel_pos$r + 8L,
                 b = panel_pos$b,
                 name = name,
                 ...
             )
-            gt$widths[.subset2(panel_pos, "r") + 5:6] <- widths
+            gt$widths[.subset2(panel_pos, "r") + 7:8] <- widths
         } else if (guide_pos == "bottom") {
             location <- .subset2(theme, "legend.location") %||% "panel"
             place <- switch(location,
@@ -472,13 +472,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$b + 6L,
+                t = panel_pos$b + 8L,
                 l = place$l,
                 r = place$r,
                 name = name,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "b") + 5:6] <- heights
+            gt$heights[.subset2(panel_pos, "b") + 7:8] <- heights
         } else if (guide_pos == "top") {
             location <- .subset2(theme, "legend.location") %||% "panel"
             place <- switch(location,
@@ -495,13 +495,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$t - 6L,
+                t = panel_pos$t - 8L,
                 l = place$l,
                 r = place$r,
                 name = name,
                 ...
             )
-            gt$heights[.subset2(panel_pos, "t") - 5:6] <- heights
+            gt$heights[.subset2(panel_pos, "t") - 7:8] <- heights
         }
         gt
     },

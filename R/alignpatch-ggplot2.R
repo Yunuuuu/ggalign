@@ -43,13 +43,44 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         plot$theme <- theme
 
         # build the grob -------------------------------------
-        ans <- ggplotGrob(plot)
-        strip_pos <- find_strip_pos(ans)
+        gt <- ggplotGrob(plot)
+        strip_pos <- find_strip_pos(gt)
         # always add strips columns and/or rows
-        ans <- add_strips(ans, strip_pos)
+        gt <- add_strips(gt, strip_pos)
         # add guides columns and/or rows for ggplot2 < 3.5.0
-        ans <- add_guides(ans)
-        setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
+        gt <- add_guides(gt)
+        gt <- setup_patch_titles(
+            gt,
+            patch_titles = patch_titles,
+            theme = theme
+        )
+
+        # add rows and cols for collected-guides -----------
+        for (border in .TLBR) {
+            panel_pos <- find_panel(gt)
+            if (border == "top") {
+                height <- unit(c(0, 0), "mm")
+                # above the original guide-box-top
+                h <- .subset2(panel_pos, "t") - 7L
+                gt <- gtable_add_rows(gt, height, pos = h)
+            } else if (border == "left") {
+                width <- unit(c(0, 0), "mm")
+                # left of the original guide-box-left
+                v <- .subset2(panel_pos, "l") - 7L
+                gt <- gtable_add_cols(gt, width, pos = v)
+            } else if (border == "bottom") {
+                height <- unit(c(0, 0), "mm")
+                # below the original guide-box-bottom
+                h <- .subset2(panel_pos, "b") + 6L
+                gt <- gtable_add_rows(gt, height, pos = h)
+            } else if (border == "right") {
+                width <- unit(c(0, 0), "mm")
+                # right of the original guide-box-right
+                v <- .subset2(panel_pos, "r") + 6L
+                gt <- gtable_add_cols(gt, width, pos = v)
+            }
+        }
+        gt
     },
     respect = function(self, gt = self$gt) .subset2(gt, "respect"),
 

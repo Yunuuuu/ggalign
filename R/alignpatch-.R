@@ -10,54 +10,64 @@
 #     - `free_vp()`: not added
 # 3. Added titles around the plot top, left, bottom, and right
 #    (`patch_titles()`)
-TABLE_ROWS <- 18L + 2L
-TABLE_COLS <- 15L + 2L
+TABLE_ROWS <- 18L + 2L + 4L
+TABLE_COLS <- 15L + 2L + 4L
 
-TOP_BORDER <- 9L + 1L
-LEFT_BORDER <- 7L + 1L
-BOTTOM_BORDER <- 8L + 1L
-RIGHT_BORDER <- 7L + 1L
+TOP_BORDER <- 9L + 1L + 2L
+LEFT_BORDER <- 7L + 1L + 2L
+BOTTOM_BORDER <- 8L + 1L + 2L
+RIGHT_BORDER <- 7L + 1L + 2L
 
 # top-bottom
 # 1: margin
 # 2: tag
 # 3: title
 # 4: subtitle
-# 5: guide-box-top
-# 6: legend.box.spacing
-# feature: insert patch title
-# 7: xlab-t
+# 5. * feature: guide-box-collected-top
+# 6. * feature: legend.box.spacing for guide-box-collected-top
+# 7: guide-box-top
+# 8: legend.box.spacing
+# 9. * feature: insert patch title
+# 10. xlab-t
 # strip.placement = "inside"/"outside"
-# 8: axis-t/strip-t
-# 9: strip-t/axis-t
-# 10: panel
-# 11: strip-b
-# 12: axis-b
-# 13: xlab-b
-# feature: insert patch title
-# 14: legend.box.spacing
-# 15: guide-box-bottom
-# 16: caption
-# 17: tag
-# 18: margin
+# 11: axis-t/strip-t
+# 12: strip-t/axis-t
+# 13: panel
+# 14: strip-b
+# 15: axis-b
+# 16: xlab-b
+# 17. * feature: insert patch title
+# 18: legend.box.spacing
+# 19: guide-box-bottom
+# 20. * feature: legend.box.spacing for guide-box-collected-bottom
+# 21. * feature: guide-box-collected-bottom
+# 22: caption
+# 23: tag
+# 24: margin
 
 # left-right
 #
 # 1: margin
 # 2: tag
-# 3: guide-box-left
-# 4: legend.box.spacing
-# feature: insert patch title
-# 5: ylab-l
-# 6: axis-l
-# 8: panel
-# 10: axis-r
-# 11: ylab-r
-# feature: insert patch title
-# 12: legend.box.spacing
-# 13: guide-box-right
-# 14: tag
-# 15: margin
+# 3. * feature: guide-box-collected-left
+# 4. * feature: legend.box.spacing for guide-box-collected-left
+# 5: guide-box-left
+# 6: legend.box.spacing
+# 7. * feature: insert patch title
+# 8: ylab-l
+# 9: axis-l/strip-l
+# 10: strip-l/axis-l
+# 11: panel
+# 12: axis-r/strip-r
+# 13: strip-r/axis-r
+# 14: ylab-r
+# 15. * feature: insert patch title
+# 16: legend.box.spacing
+# 17: guide-box-right
+# 18. * feature: legend.box.spacing for guide-box-collected-right
+# 19. * feature: guide-box-collected-right
+# 20: tag
+# 21: margin
 
 .TLBR <- c("top", "left", "bottom", "right")
 .tlbr <- c("t", "l", "b", "r")
