@@ -177,7 +177,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 | **Group observations into different panels** | ✅                                                    | ✅            | Heatmap Only                                          |
 | **Clustering algorithm**                     | Kmeans,Hierarchical Clustering and arbitary algorithm | ❌            | Kmeans,Hierarchical Clustering and arbitary algorithm |
 | **Legends Creation**                         | Automatic                                             | Automatic     | Limited automatic, requires manual add                |
-| **Legends Position**                         | Anywhere, can be controlled for a single plot         | Anywhere      | Four sides, can only be placed on one side at a time  |
+| **Legends Position**                         | Anywhere; independently controllable per plot         | Anywhere      | Fixed to one of four sides                            |
 | **Dendrogram**                               | Tree from both `hclust` or `ape`                      | `hclust` only | `hclust` only                                         |
 | **Tanglegram**                               | ✅                                                    | ❌            | ❌                                                    |
 | **3D Heatmap**                               | ✅                                                    | ❌            | ✅                                                    |
