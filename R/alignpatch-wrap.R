@@ -162,13 +162,7 @@ add_wrapped_inset <- function(gt, inset, on_top, i) {
             clip = clip, name = sprintf("wrap-full-%d", i), z = z
         )
     } else {
-        panels <- vec_slice(layout, grep("^panel", .subset2(layout, "name")))
-        panel_loc <- list(
-            t = min(.subset2(panels, "t")),
-            l = min(.subset2(panels, "l")),
-            b = max(.subset2(panels, "b")),
-            r = max(.subset2(panels, "r"))
-        )
+        panel_loc <- find_panel(gt)
         gt <- switch(align,
             plot = gtable_add_grob(gt,
                 list(grob),

@@ -103,8 +103,8 @@ setup_patch_titles <- function(table, patch_titles, theme) {
         if (border == "top") {
             height <- grobHeight(title)
             if (pos == "panel") {
-                l <- min(panel_pos$l)
-                r <- max(panel_pos$r)
+                l <- panel_pos$l
+                r <- panel_pos$r
             } else {
                 l <- 1L
                 r <- ncol(table)
@@ -119,8 +119,8 @@ setup_patch_titles <- function(table, patch_titles, theme) {
         } else if (border == "left") {
             width <- grobWidth(title)
             if (pos == "panel") {
-                t <- min(panel_pos$t)
-                b <- max(panel_pos$b)
+                t <- panel_pos$t
+                b <- panel_pos$b
             } else {
                 t <- 1L
                 b <- nrow(table)
@@ -135,8 +135,8 @@ setup_patch_titles <- function(table, patch_titles, theme) {
         } else if (border == "bottom") {
             height <- grobHeight(title)
             if (pos == "panel") {
-                l <- min(panel_pos$l)
-                r <- max(panel_pos$r)
+                l <- panel_pos$l
+                r <- panel_pos$r
             } else {
                 l <- 1L
                 r <- ncol(table)
@@ -151,8 +151,8 @@ setup_patch_titles <- function(table, patch_titles, theme) {
         } else if (border == "right") {
             width <- grobWidth(title)
             if (pos == "panel") {
-                t <- min(panel_pos$t)
-                b <- max(panel_pos$b)
+                t <- panel_pos$t
+                b <- panel_pos$b
             } else {
                 t <- 1L
                 b <- nrow(table)

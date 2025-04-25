@@ -104,15 +104,15 @@ ggalign_gtable.alignpatches <- function(x) {
         error_call = quote(theme())
     )
     if (title_pos == "panel") {
-        title_l <- min(panel_pos$l)
-        title_r <- max(panel_pos$r)
+        title_l <- panel_pos$l
+        title_r <- panel_pos$r
     } else {
         title_l <- 1L
         title_r <- ncol(table)
     }
     if (caption_pos == "panel") {
-        caption_l <- min(panel_pos$l)
-        caption_r <- max(panel_pos$r)
+        caption_l <- panel_pos$l
+        caption_r <- panel_pos$r
     } else {
         caption_l <- 1L
         caption_r <- ncol(table)
