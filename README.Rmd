@@ -78,7 +78,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 ## Examples
 ![](man/figures/overview.png)
 
-## Compare with other tools
+## Comparison with other composable visualization tools
 ```{=html}
 <table class="table"><thead>
     <tr>
@@ -108,8 +108,8 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
     </tr>
     <tr>
         <td colspan="2"> <strong>Focus</strong> </td>
-        <td>Composable Visualization</td>
-        <td>Composable Visualization</td>
+        <td>General-purpose composable visualization</td>
+        <td>Grid-based composable visualization</td>
         <td>Heatmap</td>
     </tr>
     <tr>
@@ -170,7 +170,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 </tbody></table>
 ```
 
-## Comparison of the specifications with other tools
+## Feature and specification comparison
 | Specification                                | `ggalign`                                             | `marsilea`    | `ComplexHeatmap`                                      |
 | -------------------------------------------- | ----------------------------------------------------- | ------------- | ----------------------------------------------------- |
 | **Reorder observations**                     | ✅                                                    | ✅            | Heatmap Only                                          |

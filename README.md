@@ -71,7 +71,7 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ![](man/figures/overview.png)
 
-## Compare with other tools
+## Comparison with other composable visualization tools
 
 <table class="table"><thead>
     <tr>
@@ -101,8 +101,8 @@ remotes::install_github("Yunuuuu/ggalign")
     </tr>
     <tr>
         <td colspan="2"> <strong>Focus</strong> </td>
-        <td>Composable Visualization</td>
-        <td>Composable Visualization</td>
+        <td>General-purpose composable visualization</td>
+        <td>Grid-based composable visualization</td>
         <td>Heatmap</td>
     </tr>
     <tr>
@@ -162,7 +162,7 @@ remotes::install_github("Yunuuuu/ggalign")
     </tr>
 </tbody></table>
 
-## Comparison of the specifications with other tools
+## Feature and specification comparison
 
 | Specification                                | `ggalign`                                             | `marsilea`    | `ComplexHeatmap`                                      |
 |----------------------------------------------|-------------------------------------------------------|---------------|-------------------------------------------------------|
