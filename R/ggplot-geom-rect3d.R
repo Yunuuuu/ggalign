@@ -262,7 +262,7 @@ scale_z_binned <- function(name = waiver(), ..., range = c(0.1, 1),
 #' @rdname scale_z_continuous
 #' @export
 scale_z_discrete <- function(...) {
-    cli::cli_warn("Using {z} for a discrete variable is not advised.")
+    cli_warn("Using {z} for a discrete variable is not advised.")
     args <- list2(...)
     args$call <- args$call %||% current_call()
     rlang::exec(scale_z_ordinal, !!!args)

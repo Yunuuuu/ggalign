@@ -524,7 +524,7 @@ align_discrete_scales <- function(axis, scales, design, labels, n_panels,
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
-        #     cli::cli_warn(sprintf(
+        #     cli_warn(sprintf(
         #         "{.arg trans} must be {.field identity} in {.code %s}",
         #         deparse(scale$call)
         #     ))

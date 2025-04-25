@@ -9,7 +9,7 @@ expect_doppelganger <- tryCatch(
         # If vdiffr is not available and visual tests are not explicitly
         # disabled, raise error.
         if (!identical(Sys.getenv("VDIFFR_RUN_TESTS"), "false")) {
-            cli::cli_abort("{.pkg vdiffr} is not installed")
+            cli_abort("{.pkg vdiffr} is not installed")
         }
 
         # Otherwise, assign a dummy function
