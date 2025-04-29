@@ -75,7 +75,7 @@ cat(" 1. For the full reference documentation, visit: <https://yunuuuu.github.io
 cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggalign-book/>", sep = "\n")
 ```
 
-## Novel design features implemented in ggalign
+## Design features
 ![](man/figures/design.png)
 
 ## Examples

@@ -67,7 +67,7 @@ remotes::install_github("Yunuuuu/ggalign")
 2.  The complete tutorial is available at:
     <https://yunuuuu.github.io/ggalign-book/>
 
-## Novel design features implemented in ggalign
+## Design features
 
 ![](man/figures/design.png)
 
