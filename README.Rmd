@@ -76,7 +76,7 @@ cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggali
 ```
 
 ## Examples
-![](man/figures/overview.png)
+![](man/figures/gallery.png)
 
 ## Comparison with other composable visualization tools
 ```{=html}

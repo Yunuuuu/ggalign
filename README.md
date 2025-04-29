@@ -69,7 +69,7 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Examples
 
-![](man/figures/overview.png)
+![](man/figures/gallery.png)
 
 ## Comparison with other composable visualization tools
 
