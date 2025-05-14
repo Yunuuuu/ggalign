@@ -1,3 +1,5 @@
+# ggalign (development version)
+
 # ggalign 1.0.2
 
 * `align_plots()`: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.
