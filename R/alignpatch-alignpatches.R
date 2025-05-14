@@ -77,7 +77,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # we inherit parameters from the parent --------------------
         # by default, we won't collect any guide legends
-        guides <- .subset2(layout, "guides") %|w|% guides
+        parent_guides <- guides
+        guides <- .subset2(layout, "guides") %|w|% parent_guides
 
         # by default, we use ggplot2 default theme
         if (!is.null(plot$theme)) theme <- theme + plot$theme
@@ -96,16 +97,18 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # setup gtable list ----------------------------------
         # Let each patch to determine whether to collect guides
         collected <- lapply(patches, function(patch) patch$set_guides(guides))
-
-        all_guides <- unique(unlist(collected, FALSE, FALSE))
         collected_guides <- vector("list", length(patches))
+
+        # Always ensure that plots placed in a border collect their guides, if
+        # any guides are to be collected in that border. This prevents overlap,
+        # unless the guides will be collected by the parent layout.
+        border_with_guides <- unique(unlist(collected, FALSE, FALSE))
+        border_with_guides <- setdiff(border_with_guides, parent_guides)
         for (i in seq_along(patches)) {
             patch <- .subset2(patches, i)
-            # for any guides be collected, we always ensure the plot in the
-            # border will always collected the guides to avoid the overlapping
             g <- union(
                 .subset2(collected, i),
-                intersect(all_guides, patch$borders)
+                intersect(border_with_guides, patch$borders)
             )
             patch$gt <- patch$patch_gtable(theme = theme, guides = g)
             collected_guides[i] <- list(patch$collect_guides(g))
