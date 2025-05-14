@@ -1,5 +1,7 @@
 # ggalign (development version)
 
+* `align_plots()`: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.
+
 * new scale for z aesthetic: scale_z_continuous, scale_z_binned, scale_z_discrete, scale_z_ordinal, scale_z_datetime, scale_z_date 
 
 * `geom_subrect()` and `geom_subtile()` gain `nrow` and `ncol` arguments to control the layout, and deprecate `direction` argument
