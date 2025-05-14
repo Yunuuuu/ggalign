@@ -158,11 +158,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   149.85ms 157.41ms     4.38   138.85MB    4.38 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.26s    2.26s     0.443  224.22MB    0.886</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.31s    4.31s     0.232  792.74MB    2.55 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  585.27ms 585.27ms     1.71   112.58MB    3.42 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()       1.7s     1.7s     0.588    2.48GB   10.6</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()   150.04ms 152.15ms     4.35   138.85MB    4.35 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.25s    2.25s     0.443  224.22MB    0.887</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      4.25s    4.25s     0.235  792.74MB    2.59 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()  580.46ms 580.46ms     1.72   112.58MB    3.45 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      1.75s    1.75s     0.570    2.48GB   10.3</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -207,11 +207,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression       min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.99s    2.99s     0.335  173.72MB    2.34 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.78s    2.78s     0.359  223.41MB    2.16 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()      5.56s    5.56s     0.180    1.51GB    2.16 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.28s    2.28s     0.438  166.08MB    0.876</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      4.63s    4.63s     0.216    2.55GB    4.75</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()      2.72s    2.72s     0.368  173.72MB    2.58 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> heatmap.2()    2.84s    2.84s     0.352  223.41MB    2.46 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Heatmap()       5.8s     5.8s     0.172    1.51GB    1.90 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap()     2.19s    2.19s     0.456  166.08MB    0.456</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()      4.62s    4.62s     0.216    2.55GB    4.76</span></span></code></pre></div>
 </div>
   </main>
 </div>
