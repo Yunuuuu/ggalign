@@ -42,6 +42,8 @@ Enhances:
     ggrastr,
     maftools
 ByteCompile: true
+Config/Needs/check:
+    R.utils
 Config/Needs/website:
     bench,
     pheatmap,
