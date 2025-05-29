@@ -750,13 +750,17 @@ melt_facet.FacetGrid <- function(use, facet, ...,
     if (inherits(facet, "FacetGrid")) {
         # re-dispatch parameters
         params <- facet$params
-        if (!free_row) { # Don't allow user change the rows
+        if (length(use$params$rows)) {
             params$rows <- use$params$rows
+        }
+        if (length(use$params$cols)) {
+            params$cols <- use$params$cols
+        }
+        if (!free_row) { # Don't allow user change the rows
             params$free$y <- use$params$free$y
             params$space_free$y <- use$params$space_free$y
         }
         if (!free_column) { # Don't allow user change the cols
-            params$cols <- use$params$cols
             params$free$x <- use$params$free$x
             params$space_free$x <- use$params$space_free$x
         }
