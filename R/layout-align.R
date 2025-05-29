@@ -723,92 +723,92 @@ ggfacet_modify <- function(plot, ...) {
     plot
 }
 
-gguse_facet <- function(plot, facet, ...) {
-    plot$facet <- align_melt_facet(facet, plot$facet, ...)
+gguse_facet <- function(plot, facet) {
+    plot$facet <- facet
     plot
 }
 
-align_melt_facet <- function(default, facet, ...) UseMethod("align_melt_facet")
+ggmelt_facet <- function(plot, facet, ...) {
+    gguse_facet(plot, melt_facet(facet, plot$facet, ...))
+}
+
+#' @param use A template facet object which will be used.
+#' @param facet User provided facet object.
+#' @noRd
+melt_facet <- function(use, facet, ...) UseMethod("melt_facet")
 
 #' @export
-align_melt_facet.NULL <- function(default, facet, ...) {
+melt_facet.NULL <- function(use, facet, ...) {
     facet
 }
 
 #' @importFrom ggplot2 ggproto
 #' @export
-align_melt_facet.FacetGrid <- function(default, facet, ...,
-                                       free_row = FALSE,
-                                       free_column = FALSE) {
+melt_facet.FacetGrid <- function(use, facet, ...,
+                                 free_row = FALSE,
+                                 free_column = FALSE) {
     if (inherits(facet, "FacetGrid")) {
         # re-dispatch parameters
         params <- facet$params
-        # we always fix the grid rows and cols
-        if (free_row) {
-            params$rows <- default$params$rows %||% params$rows
-        } else { # Don't allow user change the rows
-            params$rows <- default$params$rows
+        if (!free_row) { # Don't allow user change the rows
+            params$rows <- use$params$rows
+            params$free$y <- use$params$free$y
+            params$space_free$y <- use$params$space_free$y
         }
-        if (free_column) {
-            params$cols <- default$params$cols %||% params$cols
-        } else { # Don't allow user change the cols
-            params$cols <- default$params$cols
+        if (!free_column) { # Don't allow user change the cols
+            params$cols <- use$params$cols
+            params$free$x <- use$params$free$x
+            params$space_free$x <- use$params$space_free$x
         }
 
-        params$drop <- default$params$drop
-        params$as.table <- default$params$as.table
+        params$drop <- use$params$drop
+        params$as.table <- use$params$as.table
 
-        # if the default is free, it must be free
-        params$free$x <- params$free$x || default$params$free$x
-        params$space_free$x <- params$space_free$x ||
-            default$params$space_free$x
-        params$free$y <- params$free$y || default$params$free$y
-        params$space_free$y <- params$space_free$x ||
-            default$params$space_free$y
+        # if the use is free, it must be free
         ggproto(NULL, facet, params = params)
     } else {
-        default
+        use
     }
 }
 
 #' @importFrom ggplot2 ggproto
 #' @export
-align_melt_facet.FacetWrap <- function(default, facet, ...) {
+melt_facet.FacetWrap <- function(use, facet, ...) {
     if (inherits(facet, "FacetWrap")) {
         # re-dispatch parameters
         params <- facet$params
 
         # we always fix the grid rows and cols
-        params$facets <- default$params$facets
-        params$nrow <- default$params$nrow
-        params$ncol <- default$params$ncol
-        params$drop <- default$params$drop
-        params$as.table <- default$params$as.table
+        params$facets <- use$params$facets
+        params$nrow <- use$params$nrow
+        params$ncol <- use$params$ncol
+        params$drop <- use$params$drop
+        params$as.table <- use$params$as.table
         ggproto(NULL, facet, params = params)
     } else {
-        default
+        use
     }
 }
 
 #' @export
-align_melt_facet.FacetNull <- function(default, facet, ...) {
+melt_facet.FacetNull <- function(use, facet, ...) {
     if (inherits(facet, "FacetNull")) {
         facet
     } else {
-        default
+        use
     }
 }
 
 #' @export
-align_melt_facet.FacetStack <- function(default, facet, ...) {
+melt_facet.FacetStack <- function(use, facet, ...) {
     if (inherits(facet, "FacetGrid")) {
         params <- facet$params
-        if (is_horizontal(.subset2(default, "direction"))) {
+        if (is_horizontal(.subset2(use, "direction"))) {
             # for horizontal stack, we cannot facet by rows
             if (!is.null(params$rows)) {
                 cli_warn(sprintf(
                     "Cannot facet by rows in %s",
-                    .subset2(default, "object_name")
+                    .subset2(use, "object_name")
                 ))
                 params$rows <- NULL
             }
@@ -816,11 +816,36 @@ align_melt_facet.FacetStack <- function(default, facet, ...) {
             # for vertical stack, we cannot facet by cols
             cli_warn(sprintf(
                 "Cannot facet by cols in %s",
-                .subset2(default, "object_name")
+                .subset2(use, "object_name")
             ))
             params$cols <- NULL
         }
         ggproto(NULL, facet, params = params)
+    } else if (inherits(facet, "FacetWrap")) {
+        params <- facet$params
+        if (is_horizontal(.subset2(use, "direction"))) {
+            # for horizontal stack, we cannot facet by rows
+            if (is.null(params$nrow)) {
+                params$nrow <- 1L
+            } else if (params$nrow > 1L) {
+                cli_warn(sprintf(
+                    "Cannot wrap facet by rows in %s",
+                    .subset2(use, "object_name")
+                ))
+                params$nrow <- 1L
+            }
+        } else if (!is.null(params$cols)) {
+            # for vertical stack, we cannot facet by cols
+            if (is.null(params$ncol)) {
+                params$ncol <- 1L
+            } else if (params$ncol > 1L) {
+                cli_warn(sprintf(
+                    "Cannot wrap facet by cols in %s",
+                    .subset2(use, "object_name")
+                ))
+                params$ncol <- 1L
+            }
+        }
     } else if (inherits(facet, "FacetNull")) {
         facet
     } else {
@@ -836,16 +861,16 @@ facet_stack <- function(direction, object_name) {
 }
 
 #' @export
-align_melt_facet.FacetQuad <- function(default, facet, ...,
-                                       free_row = FALSE,
-                                       free_column = FALSE) {
+melt_facet.FacetQuad <- function(use, facet, ...,
+                                 free_row = FALSE,
+                                 free_column = FALSE) {
     if (inherits(facet, "FacetGrid")) {
         if (free_row || free_column) {
             params <- facet$params
             if (!free_row && !is.null(params$rows)) {
                 cli_warn(sprintf(
                     "Cannot facet by rows in %s",
-                    .subset2(default, "layout_name")
+                    .subset2(use, "layout_name")
                 ))
                 params$rows <- NULL
                 # for horizontal stack, we cannot facet by rows
@@ -853,7 +878,7 @@ align_melt_facet.FacetQuad <- function(default, facet, ...,
             if (!free_column && !is.null(params$cols)) {
                 cli_warn(sprintf(
                     "Cannot facet by cols in %s",
-                    .subset2(default, "layout_name")
+                    .subset2(use, "layout_name")
                 ))
                 params$cols <- NULL
             }

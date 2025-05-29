@@ -180,9 +180,9 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         } else {
             facet <- facet_stack(direction, object_name(self))
         }
-        # free_row and free_column have nothing with `facet_stack`
+        # `free_row` and `free_column` have nothing with `facet_stack`
         # it's safe to use it directly
-        plot <- gguse_facet(plot, facet, free_row = TRUE, free_column = TRUE)
+        plot <- ggmelt_facet(plot, facet, free_row = TRUE, free_column = TRUE)
         plot$ggalign_link_data <- list(
             full_data1 = full_data1,
             full_data2 = full_data2,
@@ -218,3 +218,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         c(header, "  Add plot to annotate observations")
     }
 )
+
+mark_use_facet <- function(plot, facet) {
+
+}

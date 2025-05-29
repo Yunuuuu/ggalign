@@ -121,7 +121,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                         drop = FALSE
                     )
                 } else {
-                    plot <- gguse_facet(plot, ggplot2::facet_null())
+                    plot <- ggmelt_facet(plot, ggplot2::facet_null())
                 }
             } else {
                 if (inherits(plot$facet, "FacetSector")) {
@@ -130,7 +130,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                         drop = FALSE
                     )
                 } else {
-                    plot <- gguse_facet(plot, ggplot2::facet_null())
+                    plot <- ggmelt_facet(plot, ggplot2::facet_null())
                 }
             }
         }

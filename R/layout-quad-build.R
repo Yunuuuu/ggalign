@@ -197,7 +197,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     # add default data ----------------------------------
     p <- gguse_data(p, quad_build_data(data, row_design, column_design))
     p <- gguse_linear_coord(p, object_name(quad))
-    p <- gguse_facet(p, default_facet,
+    p <- ggmelt_facet(p, default_facet,
         free_row = free_row, free_column = free_column
     )
     p <- p +

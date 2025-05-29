@@ -79,23 +79,29 @@ stack_composer_add.CraftBox <- function(plot, composer, design, ...,
     plot <- plot@plot
     if (!craftsman$free_facet && is_discrete_design(design)) {
         if (nlevels(.subset2(design, "panel")) > 1L) {
-            facet <- switch_direction(
-                direction,
-                ggplot2::facet_grid(
+            if (is_horizontal(direction)) {
+                facet <- ggplot2::facet_grid(
                     rows = ggplot2::vars(.data$.panel),
                     scales = "free_y", space = "free",
                     drop = FALSE, as.table = FALSE
-                ),
-                ggplot2::facet_grid(
+                )
+                free_row <- FALSE
+                free_column <- TRUE
+            } else {
+                facet <- ggplot2::facet_grid(
                     cols = ggplot2::vars(.data$.panel),
                     scales = "free_x", space = "free",
                     drop = FALSE, as.table = FALSE
                 )
-            )
+                free_row <- TRUE
+                free_column <- FALSE
+            }
         } else {
             facet <- facet_stack(direction, craftsman$layout_name)
         }
-        plot <- gguse_facet(plot, facet)
+        plot <- ggmelt_facet(plot, facet,
+            free_row = free_row, free_column = free_column
+        )
     }
     if (!craftsman$free_coord) {
         plot <- gguse_linear_coord(plot, layout_name = craftsman$layout_name)
