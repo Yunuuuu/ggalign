@@ -155,7 +155,7 @@ chain_layout_add.layout_annotation <- function(object, layout, object_name) {
 chain_plot_add <- function(plot, object, object_name, force) {
     # if `align` has plot, we added the object
     if (force || !is.null(plot@plot)) {
-        plot <- plot_add(object, plot, object_name)
+        plot <- craftbox_add(object, plot, object_name)
     }
     plot
 }

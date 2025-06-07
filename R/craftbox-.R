@@ -69,7 +69,7 @@ methods::setMethod("+", c("CraftBox", "ANY"), function(e1, e2) {
     # can be displayed in error messages
     e2name <- paste(deparse(substitute(e2)), collapse = " ")
     switch(.Generic, # nolint
-        `+` = plot_add(e2, e1, e2name),
+        `+` = craftbox_add(e2, e1, e2name),
         stop_incompatible_op(.Generic, e1, e2)
     )
 })
@@ -151,30 +151,37 @@ Craftsman <- ggproto("Craftsman",
 }
 
 #################################################################
-plot_add <- function(object, plot, object_name) {
-    if (is.null(plot@plot)) {
+craftbox_add <- function(object, craftbox, object_name) {
+    if (is.null(craftbox@plot)) {
         cli_abort(c(
-            sprintf("Cannot add {.var {object_name}} to %s", object_name(plot)),
-            i = sprintf("no plot found for %s", object_name(plot))
+            sprintf(
+                "Cannot add {.var {object_name}} to %s",
+                object_name(craftbox)
+            ),
+            i = sprintf("no plot found for %s", object_name(craftbox))
         ))
     }
-    UseMethod("plot_add")
+    UseMethod("craftbox_add")
 }
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-plot_add.default <- function(object, plot, object_name) {
-    plot@plot <- ggplot_add(object, ggfun("plot_clone")(plot@plot), object_name)
-    plot
+craftbox_add.default <- function(object, craftbox, object_name) {
+    craftbox@plot <- ggplot_add(
+        object,
+        ggfun("plot_clone")(craftbox@plot),
+        object_name
+    )
+    craftbox
 }
 
 #' @export
-plot_add.ggalign_scheme <- function(object, plot, object_name) {
+craftbox_add.ggalign_scheme <- function(object, craftbox, object_name) {
     name <- ggalign_scheme_name(object)
-    plot@schemes[name] <- list(update_scheme(
-        object, .subset2(plot@schemes, name), object_name
+    craftbox@schemes[name] <- list(update_scheme(
+        object, .subset2(craftbox@schemes, name), object_name
     ))
-    plot
+    craftbox
 }
 
 ######################################################################
