@@ -159,38 +159,6 @@ achieve the same result but differ in how the rectangles are parameterized:
 dimensions (\code{width}, \code{height}).
 }
 }
-\section{Aesthetics}{
-
-\code{geom_subrect()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{x}} \emph{or} \code{width} \emph{or} \code{\link[=ggplot2::aes_position]{xmin}} \emph{or} \code{\link[=ggplot2::aes_position]{xmax}}} \tab   \cr
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{y}} \emph{or} \code{height} \emph{or} \code{\link[=ggplot2::aes_position]{ymin}} \emph{or} \code{\link[=ggplot2::aes_position]{ymax}}} \tab   \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_group_order]{group}} \tab → inferred \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
-
-
-\code{geom_subtile()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{x}}} \tab   \cr
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{y}}} \tab   \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_group_order]{group}} \tab → inferred \cr
-• \tab \code{height} \tab → \code{1} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
-• \tab \code{width} \tab → \code{1} \cr
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
-}
-
 \examples{
 # arranges by row
 ggplot(data.frame(value = letters[seq_len(5)])) +
@@ -208,4 +176,34 @@ ggplot(data.frame(value = letters[seq_len(4)])) +
 ggplot(data.frame(value = letters[seq_len(4)])) +
     geom_subtile(aes(x = 1, y = 1, fill = value), ncol = 1)
 
+}
+\section{Aesthetics}{
+
+\code{geom_subrect()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}} \emph{or} \code{width} \emph{or} \code{\link[ggplot2:aes_position]{xmin}} \emph{or} \code{\link[ggplot2:aes_position]{xmax}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}} \emph{or} \code{height} \emph{or} \code{\link[ggplot2:aes_position]{ymin}} \emph{or} \code{\link[ggplot2:aes_position]{ymax}}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+}
+
+\code{geom_subtile()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{height} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+ • \tab \code{width} \tab → \code{1} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

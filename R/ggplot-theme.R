@@ -50,7 +50,8 @@ theme_elements <- function() {
             color = "black",
             linewidth = 0.5,
             linetype = 1,
-            lineend = "butt"
+            lineend = "butt",
+            linejoin = "round"
         ),
         ggalign.polygon = element_polygon(
             fill = NA,
@@ -89,7 +90,7 @@ theme_recycle <- function() structure(list(), class = "theme_recycle")
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
-ggplot_add.theme_recycle <- function(object, plot, object_name) {
+ggplot_add.theme_recycle <- function(object, plot, object_name, ...) {
     ParentFacet <- plot$facet
     if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
         return(plot)

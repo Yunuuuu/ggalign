@@ -367,7 +367,7 @@ setup_discrete_limits <- function(axis, design, n_panels) {
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
-ggplot_add.ggalign_design <- function(object, plot, object_name) {
+ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
     x_design <- .subset2(object, "x")
     y_design <- .subset2(object, "y")
     if (is.null(x_design) && is.null(y_design)) {

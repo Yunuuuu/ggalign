@@ -134,26 +134,26 @@ Pie charts
 }
 }
 
+\examples{
+ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
+    geom_pie(aes(x, y, angle = value * 360))
+}
 \section{Aesthetics}{
 
 \code{geom_pie()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
 \tabular{rll}{
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{x}}} \tab   \cr
-• \tab \strong{\code{\link[ggplot2:ggplot2::aes_position]{y}}} \tab   \cr
-• \tab \strong{\code{angle}} \tab   \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
-• \tab \code{angle0} \tab → \code{0} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_group_order]{group}} \tab → inferred \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
-• \tab \code{\link[ggplot2:ggplot2::aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
-• \tab \code{radius} \tab → \code{NULL} \cr
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{angle}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle0} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+ • \tab \code{radius} \tab → \code{NULL} \cr
 }
 
-\examples{
-ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
-    geom_pie(aes(x, y, angle = value * 360))
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

@@ -83,7 +83,7 @@ facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.FacetSector <- function(object, plot, object_name) {
+ggplot_add.FacetSector <- function(object, plot, object_name, ...) {
     plot <- NextMethod()
     if (!inherits(plot, "ggalign_facet_sector_plot")) {
         plot <- add_class(plot, "ggalign_facet_sector_plot")
@@ -93,7 +93,7 @@ ggplot_add.FacetSector <- function(object, plot, object_name) {
 
 #' @importFrom ggplot2 ggplot_build ggproto ggproto_parent
 #' @export
-ggplot_build.ggalign_facet_sector_plot <- function(plot) {
+ggplot_build.ggalign_facet_sector_plot <- function(plot, ...) {
     if (inherits(plot$facet, "FacetSector")) {
         if (!inherits(plot$coordinates, "CoordRadial")) {
             if (!isTRUE(plot$coordinates$default)) {
