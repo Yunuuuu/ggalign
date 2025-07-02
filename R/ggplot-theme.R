@@ -50,8 +50,7 @@ theme_elements <- function() {
             color = "black",
             linewidth = 0.5,
             linetype = 1,
-            lineend = "butt",
-            linejoin = "round"
+            lineend = "butt"
         ),
         ggalign.polygon = element_polygon(
             fill = NA,
