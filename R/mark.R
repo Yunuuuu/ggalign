@@ -304,7 +304,7 @@ PatchAlignMark <- ggproto(
         ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(plot = plot)
         # re-define the draw method, we assign new class
         ans <- add_class(ans, "ggalignMarkGtable")
-        ans$ggalign_link_data <- .subset2(plot, "ggalign_link_data")
+        ans$ggalign_link_data <- plot$ggalign_link_data
         ans
     },
     add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {

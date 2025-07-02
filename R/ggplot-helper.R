@@ -65,6 +65,11 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
 #' @inheritParams ggplot2::element_rect
 #' @inheritParams geom_rect3d
 #' @inheritParams ggplot2::fill_alpha
+#' @param linewidth Line size in `mm`.
+#' @param linetype Line type for lines. An integer (0:8), a name (blank, solid,
+#' dashed, dotted, dotdash, longdash, twodash), or a string with an even number
+#' (up to eight) of hexadecimal digits which give the lengths in consecutive
+#' positions in the string.
 #' @seealso [`element_rect`][ggplot2::element_rect]
 #' @return A `element_polygon` object
 #' @export
