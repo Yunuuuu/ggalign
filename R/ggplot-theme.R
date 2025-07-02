@@ -90,7 +90,7 @@ theme_recycle <- function() structure(list(), class = "theme_recycle")
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.theme_recycle <- function(object, plot, object_name) {
-    ParentFacet <- .subset2(plot, "facet")
+    ParentFacet <- plot$facet
     if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
         return(plot)
     }

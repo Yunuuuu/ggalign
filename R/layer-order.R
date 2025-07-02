@@ -57,7 +57,7 @@ ggplot_add.ggalign_layer_order <- function(object, plot, object_name) {
         .subset2(object, "object"),
         plot, .subset2(object, "object_name")
     )
-    if ((cur <- length(layers <- .subset2(ans, "layers"))) == 1L) {
+    if ((cur <- length(layers <- ans$layers)) == 1L) {
         return(ans)
     }
     order <- .subset2(object, "order")
