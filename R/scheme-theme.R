@@ -89,6 +89,6 @@ inherit_scheme.scheme_theme <- function(scheme, pscheme) {
 #' @export
 plot_add_scheme.scheme_theme <- function(plot, scheme) {
     # setup plot theme
-    plot$theme <- scheme + .subset2(plot, "theme")
+    plot$theme <- scheme + plot$theme
     plot
 }

@@ -68,7 +68,7 @@ ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
     if (is.null(.subset2(object, "x")) && is.null(.subset2(object, "y"))) {
         return(plot)
     }
-    ParentFacet <- .subset2(plot, "facet")
+    ParentFacet <- plot$facet
     plot$facet <- ggproto(
         NULL,
         ParentFacet,

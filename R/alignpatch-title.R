@@ -173,8 +173,7 @@ setup_patch_titles <- function(table, patch_titles, theme) {
 #' @export
 ggplot_add.ggalign_patch_labels <- function(object, plot, object_name) {
     plot$ggalign_patch_labels <- update_non_waive(
-        .subset2(plot, "ggalign_patch_labels") %||% list(),
-        object
+        plot$ggalign_patch_labels %||% list(), object
     )
     if (!inherits(plot, "patch_ggplot")) {
         plot <- add_class(plot, "patch_ggplot")

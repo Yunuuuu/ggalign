@@ -373,7 +373,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name) {
     if (is.null(x_design) && is.null(y_design)) {
         return(plot)
     }
-    ParentCoord <- .subset2(plot, "coordinates")
+    ParentCoord <- plot$coordinates
     plot$coordinates <- ggproto(
         NULL, ParentCoord,
         num_of_panels = NULL,

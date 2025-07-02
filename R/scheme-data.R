@@ -69,7 +69,7 @@ inherit_scheme.scheme_data <- function(scheme, pscheme) {
 plot_add_scheme.scheme_data <- function(plot, scheme) {
     # by default, we won't change the data
     if (!is.null(scheme_data <- .subset2(scheme, "data") %|w|% NULL) &&
-        !is.null(raw_data <- .subset2(plot, "data"))) {
+        !is.null(raw_data <- plot$data)) {
         # To be compatible with ggplot2, it must be a data frame
         if (!is.null(data <- scheme_data(raw_data)) &&
             !is.waive(data) &&
