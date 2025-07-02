@@ -378,7 +378,7 @@ no_expansion <- function(borders = "tlbr") {
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
-ggplot_add.ggalign_no_expansion <- function(object, plot, object_name) {
+ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
     borders <- .subset2(object, "borders")
     ParentLayout <- .subset2(plot, "layout")
 

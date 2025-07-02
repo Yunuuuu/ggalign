@@ -14,7 +14,20 @@ scale_gshape_manual(..., values, breaks = waiver(), na.value = NA)
 \code{waiver()}, the default, the name of the scale is taken from the first
 mapping used for that aesthetic. If \code{NULL}, the legend title will be
 omitted.}
-    \item{\code{labels}}{One of:
+    \item{\code{minor_breaks}}{One of:
+\itemize{
+\item \code{NULL} for no minor breaks
+\item \code{waiver()} for the default breaks (none for discrete, one minor break
+between each major break for continuous)
+\item A numeric vector of positions
+\item A function that given the limits returns a vector of minor breaks. Also
+accepts rlang \link[rlang:as_function]{lambda} function notation. When
+the function has two arguments, it will be given the limits and major
+break positions.
+}}
+    \item{\code{labels}}{One of the options below. Please note that when \code{labels} is a
+vector, it is highly recommended to also set the \code{breaks} argument as a
+vector to protect against unintended mismatches.
 \itemize{
 \item \code{NULL} for no labels
 \item \code{waiver()} for the default labels computed by the
@@ -74,26 +87,6 @@ value should be drawn. Any ggplot2 aesthetics can be used as the arguments.
 We're unsure whether this function is truly necessary, which is why it is
 marked as questioning. So far, we've found that \code{\link[=geom_subrect]{geom_subrect()}} and
 \code{\link[=geom_subtile]{geom_subtile()}} handle most use cases effectively.
-}
-
-\section{Aesthetics}{
-
-\code{geom_gshape()} understands the following aesthetics (required aesthetics are in bold):
-\itemize{
-\item \strong{\code{\link[ggplot2:aes_position]{x}}}
-\item \strong{\code{\link[ggplot2:aes_position]{y}}}
-\item \strong{\code{gshape}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
-\item \code{\link[ggplot2:aes_group_order]{group}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
-\item \code{stroke}
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
 \examples{

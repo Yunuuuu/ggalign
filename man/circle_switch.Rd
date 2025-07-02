@@ -7,7 +7,7 @@
 circle_switch(radial = waiver(), direction = NULL, what = waiver(), ...)
 }
 \arguments{
-\item{radial}{A \code{\link[=coord_circle]{coord_circle()}}/\code{\link[ggplot2:coord_polar]{coord_radial()}}
+\item{radial}{A \code{\link[=coord_circle]{coord_circle()}}/\code{\link[ggplot2:coord_radial]{coord_radial()}}
 object that defines the global parameters for coordinate across all plots
 in the layout. The parameters \code{start}, \code{end}, \code{direction}, and \code{expand} will
 be inherited and applied uniformly to all plots within the layout. The

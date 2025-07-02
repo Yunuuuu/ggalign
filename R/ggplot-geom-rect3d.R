@@ -7,7 +7,7 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_polygon
 #' @inheritParams ggplot2::geom_path
-#' @eval rd_gg_aesthetics("geom", "rect3d")
+#' @aesthetics GeomRect3d
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(81), nrow = 9)
@@ -157,7 +157,7 @@ setup_3d_data <- function(data) {
     )
 }
 
-#' @eval rd_gg_aesthetics("geom", "tile3d")
+#' @aesthetics GeomTile3d
 #' @importFrom rlang list2
 #' @export
 #' @rdname geom_rect3d

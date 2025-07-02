@@ -166,7 +166,7 @@ quad_operated_context <- function(with, active, operator) {
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.ggalign_with_quad <- function(object, plot, object_name) {
+ggplot_add.ggalign_with_quad <- function(object, plot, object_name, ...) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
     ggplot_add(object, plot, object_name)

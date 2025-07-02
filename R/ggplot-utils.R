@@ -64,7 +64,8 @@ default_expansion <- function(x = NULL, y = NULL) {
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
-ggplot_add.ggalign_default_expansion <- function(object, plot, object_name) {
+ggplot_add.ggalign_default_expansion <- function(object, plot, object_name,
+                                                 ...) {
     if (is.null(.subset2(object, "x")) && is.null(.subset2(object, "y"))) {
         return(plot)
     }

@@ -15,7 +15,7 @@
 #' marked as questioning. So far, we've found that [`geom_subrect()`] and
 #' [`geom_subtile()`] handle most use cases effectively.
 #'
-#' @eval rd_gg_aesthetics("geom", "gshape")
+#' @aesthetics GeomGshape
 #' @examples
 #' library(grid)
 #' ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
