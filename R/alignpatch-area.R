@@ -209,7 +209,7 @@ plot.ggalign_area <- function(x, ...) {
         ggplot2::labs(fill = "Patch") +
         ggplot2::theme_void() +
         theme(
-            panel.grid.minor = if (getRversion() >= "3.4.0") {
+            panel.grid.minor = if (packageVersion("ggplot2") >= "3.4.0") {
                 ggplot2::element_line(linewidth = 0.5, colour = "grey")
             } else {
                 ggplot2::element_line(size = 0.5, colour = "grey")
