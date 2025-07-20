@@ -67,7 +67,6 @@ jobs:
             patchwork
             ggrastr
             maftools=?ignore-unavailable
-            tidyverse/ggplot2
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

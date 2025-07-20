@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
-    ggplot2 (>= 3.5.0)
+    ggplot2 (>= 3.5.2.9000)
 Imports:
     vctrs (>= 0.5.0),
     rlang,
@@ -41,6 +41,8 @@ Enhances:
     patchwork,
     ggrastr,
     maftools
+Remote:
+    tidyverse/ggplot2
 ByteCompile: true
 Config/Needs/check:
     R.utils
