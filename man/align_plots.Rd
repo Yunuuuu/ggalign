@@ -44,14 +44,13 @@ there is no parent layout, or if \code{NULL} is provided, no guides will be
 collected.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
-elements of the plot, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
-\code{margins}, \code{panel.border}, and \code{background}. By default, the
-theme will inherit from the parent \code{layout}.}
+elements of the layout. By default, the theme will inherit from the parent
+\code{layout}.}
 
 \item{design}{An alias for \code{area}, retained for backward compatibility.}
 }
 \value{
-An \code{alignpatches} object.
+An \code{AlignPatches} object.
 }
 \description{
 Arrange multiple plots into a grid
@@ -88,6 +87,6 @@ align_plots(p1, p2, area = area)
 \itemize{
 \item \code{\link[=layout_design]{layout_design()}}
 \item \code{\link[=layout_title]{layout_title()}}
-\item \code{\link[=layout_annotation]{layout_annotation()}}
+\item \code{\link[=layout_theme]{layout_theme()}}
 }
 }

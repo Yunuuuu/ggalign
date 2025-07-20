@@ -12,8 +12,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     patch_gtable = function(self, theme = theme_get(), guides = NULL,
                             top_level = FALSE, plot = self$plot) {
-        patches <- lapply(.subset2(plot, "plots"), alignpatch)
-        layout <- .subset2(plot, "layout")
+        patches <- lapply(plot@plots, alignpatch)
+        layout <- plot@layout
 
         # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
@@ -81,7 +81,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         guides <- .subset2(layout, "guides") %|w|% parent_guides
 
         # by default, we use ggplot2 default theme
-        if (!is.null(plot$theme)) theme <- theme + plot$theme
+        if (!is.null(plot@theme)) theme <- theme + plot@theme
         self$theme <- theme
 
         #######################################################

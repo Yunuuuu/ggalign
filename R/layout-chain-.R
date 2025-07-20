@@ -31,7 +31,7 @@ chain_layout_add <- function(object, layout, object_name) {
 
 #' @export
 chain_layout_add.layout_title <- function(object, layout, object_name) {
-    layout@titles <- update_layout_title(layout@titles, object)
+    layout@titles <- update_non_waive(layout@titles, object)
     layout
 }
 
@@ -140,10 +140,10 @@ chain_layout_add.default <- function(object, layout, object_name) {
 }
 
 #' @export
-chain_layout_add.layout_annotation <- function(object, layout, object_name) {
+chain_layout_add.layout_theme <- function(object, layout, object_name) {
     if (is.null(active_index <- layout@active) ||
         is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        layout <- update_layout_annotation(object, layout, object_name)
+        layout@theme <- update_layout_theme(layout@theme, object)
     } else {
         layout@plot_list[[active_index]] <- quad_layout_add(
             object, plot, object_name

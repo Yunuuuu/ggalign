@@ -2,45 +2,20 @@
 % Please edit documentation in R/alignpatch-align_plots.R
 \name{layout_annotation}
 \alias{layout_annotation}
-\title{Modify components of the layout}
+\title{Add layout annotation (internal use)}
 \usage{
-layout_annotation(theme = waiver(), ...)
+layout_annotation(..., theme = waiver())
 }
 \arguments{
-\item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
-elements of the plot, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
-\code{margins}, \code{panel.border}, and \code{background}. By default, the
-theme will inherit from the parent \code{layout}.}
+\item{...}{Currently unused. May accept a theme in the future.}
 
-\item{...}{These dots are for future extensions and must be empty.}
+\item{theme}{A theme object. If not \code{waiver()}, an error will be raised.}
+}
+\value{
+None. This function is used for input validation.
 }
 \description{
-\itemize{
-\item modify the theme of the layout
+This function is a placeholder for future extensions.
+If you're trying to apply a theme, use \code{\link[=layout_theme]{layout_theme()}} instead.
 }
-}
-\details{
-\itemize{
-\item \code{guides}, \code{panel.border}, and \code{background} will always be used even for the
-nested \code{alignpatches} object.
-\item \code{title}, \code{subtitle}, \code{caption}, and \code{margins} will be added for the
-top-level \code{alignpatches} object only.
-}
-}
-\examples{
-p1 <- ggplot(mtcars) +
-    geom_point(aes(mpg, disp))
-p2 <- ggplot(mtcars) +
-    geom_boxplot(aes(gear, disp, group = gear))
-p3 <- ggplot(mtcars) +
-    geom_bar(aes(gear)) +
-    facet_wrap(~cyl)
-align_plots(
-    p1 + theme(plot.background = element_blank()),
-    p2 + theme(plot.background = element_blank()),
-    p3 + theme(plot.background = element_blank())
-) +
-    layout_annotation(
-        theme = theme(plot.background = element_rect(fill = "red"))
-    )
-}
+\keyword{internal}

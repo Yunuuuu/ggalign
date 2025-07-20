@@ -135,7 +135,7 @@ reference:
   - ggwrap
   - layout_design
   - layout_title
-  - layout_annotation
+  - layout_theme
 
 - title: Extending Plot Composer
   desc: >

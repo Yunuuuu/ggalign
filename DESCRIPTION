@@ -20,6 +20,7 @@ BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
     ggplot2 (>= 3.5.2.9000)
 Imports:
+    S7,
     vctrs (>= 0.5.0),
     rlang,
     cli,

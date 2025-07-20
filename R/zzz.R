@@ -1,3 +1,4 @@
+#' @importFrom S7 methods_register
 .onLoad <- function(libname, pkgname) {
     # register ggplot2 theme elements
     theme_elements()
@@ -6,5 +7,7 @@
     s3_register("ggrastr::rasterise", "CraftBox")
     s3_register("ggrastr::rasterise", "QuadLayout")
     s3_register("ggrastr::rasterise", "ChainLayout")
+
+    methods_register()
     invisible()
 }

@@ -51,14 +51,14 @@ ggalign_build.alignpatches <- function(x) x
 #' @importFrom rlang arg_match0
 #' @export
 ggalign_gtable.alignpatches <- function(x) {
-    titles <- .subset2(x, "titles")
+    titles <- x@titles
 
     # ensure theme has no missing value
-    theme <- .subset2(x, "theme") %||% theme_get()
+    theme <- x@theme %||% theme_get()
 
     # `TO-DO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
-    x$theme <- theme
+    x@theme <- theme
     table <- alignpatch(x)$patch_gtable(top_level = TRUE)
 
     fix_respect <- is.matrix(.subset2(table, "respect"))

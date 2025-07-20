@@ -6,7 +6,7 @@ quad_layout_add <- function(object, quad, object_name) {
 #############################################################
 #' @export
 quad_layout_add.layout_title <- function(object, quad, object_name) {
-    quad@titles <- update_layout_title(quad@titles, object)
+    quad@titles <- update_non_waive(quad@titles, object)
     quad
 }
 
@@ -328,8 +328,9 @@ quad_body_add.Coord <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.layout_annotation <- function(object, quad, object_name) {
-    update_layout_annotation(object, quad, object_name)
+quad_body_add.layout_theme <- function(object, quad, object_name) {
+    quad@theme <- update_layout_theme(quad@theme, object)
+    quad
 }
 
 #' @export

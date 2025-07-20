@@ -14,18 +14,20 @@
 #' @param area Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
 #' [`area()`] together.
-#' @param design An alias for `area`, retained for backward compatibility.
 #' @param guides A string with one or more of `r oxford_and(c(.tlbr, "i"))`
 #' indicating which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
 #' there is no parent layout, or if `NULL` is provided, no guides will be
 #' collected.
-#' @inheritParams layout_annotation
-#' @return An `alignpatches` object.
+#' @param theme A [`theme()`][ggplot2::theme] object used to customize various
+#' elements of the layout. By default, the theme will inherit from the parent
+#' `layout`.
+#' @param design An alias for `area`, retained for backward compatibility.
+#' @return An `AlignPatches` object.
 #' @seealso
 #'  - [layout_design()]
 #'  - [layout_title()]
-#'  - [layout_annotation()]
+#'  - [layout_theme()]
 #' @examples
 #' # directly copied from patchwork
 #' p1 <- ggplot(mtcars) +
@@ -60,8 +62,8 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     nms <- names(plots)
     area <- area %||% design
-    if (!is.null(nms) && is.character(design)) {
-        area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
+    if (!is.null(nms) && is.character(area)) {
+        area_names <- unique(trimws(.subset2(strsplit(area, ""), 1L)))
         area_names <- sort(vec_set_difference(area_names, c("", "#")))
         if (all(nms %in% area_names)) {
             plot_list <- vector("list", length(area_names))
@@ -70,6 +72,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     }
+
     for (plot in plots) {
         if (!has_method(plot, "alignpatch", default = FALSE)) {
             cli_abort("Cannot align {.obj_type_friendly {plot}}")
@@ -77,65 +80,109 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
 
     # setup layout parameters
-    assert_bool(byrow)
-    area <- as_areas(area)
-    if (!is.waive(guides) && !is.null(guides)) {
-        assert_guides(guides)
-        guides <- setup_guides(guides)
-    }
-    if (!is.null(theme)) assert_s3_class(theme, "theme")
-    layout <- list(
+    layout <- layout_design(
         ncol = ncol, nrow = nrow, byrow = byrow,
         widths = widths, heights = heights, area = area,
         guides = guides
     )
-    new_alignpatches(plots, layout = layout, theme = theme)
+    AlignPatches(plots = plots, layout = layout, theme = theme)
 }
 
-new_alignpatches <- function(plots, layout = NULL,
-                             titles = NULL, annotation = NULL,
-                             theme = NULL) {
-    layout <- layout %||% list(
-        ncol = NULL, nrow = NULL, byrow = TRUE,
-        widths = NA, heights = NA, area = NULL, guides = waiver()
-    )
-    titles <- titles %||% list(title = NULL, subtitle = NULL, caption = NULL)
-    annotation <- annotation %||% list(
-        top = NULL, left = NULL, bottom = NULL, right = NULL
-    )
-    structure(
-        list(
-            plots = plots, # the input plot list
-            layout = layout, # the layout design
-            annotation = annotation,
-            titles = titles,
-            theme = theme
+#' @importFrom ggplot2 is_theme
+#' @importFrom S7 new_object S7_object
+AlignPatches <- S7::new_class("AlignPatches",
+    properties = list(
+        plots = S7::new_property(
+            S7::class_list,
+            setter = function(self, value) {
+                if (!is.null(self@plots)) {
+                    cli_abort("'@plots' is read-only")
+                }
+                self@plots <- value
+                self
+            }
         ),
-        # Will ensure serialisation includes a link to the `ggalign`
-        # namespace
-        `_namespace` = namespace_link,
-        class = "alignpatches"
-    )
-}
-
-#' @export
-`+.alignpatches` <- function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code +} with a single argument.",
-            "i" = "Did you accidentally put {.code +} on a new line?"
-        ))
+        layout = S7::new_property(
+            S7::class_list,
+            setter = function(self, value) {
+                if (!inherits(value, "layout_design")) {
+                    cli_abort("'@layout' must be a {.fn layout_design} object")
+                }
+                old <- self@layout %||% list(
+                    ncol = NULL, nrow = NULL, byrow = TRUE,
+                    widths = NA, heights = NA, area = NULL,
+                    guides = waiver()
+                )
+                guides <- .subset2(value, "guides")
+                value$guides <- NULL # guides need special consideration
+                old <- update_non_waive(old, value)
+                if (is.null(guides) || is.waive(guides)) {
+                    old["guides"] <- list(guides)
+                } else if (!identical(guides, NA)) {
+                    old["guides"] <- list(setup_guides(guides))
+                }
+                self@layout <- old
+                self
+            }
+        ),
+        titles = S7::new_property(
+            S7::class_list,
+            setter = function(self, value) {
+                if (!inherits(value, "layout_title")) {
+                    cli_abort("'@titles' must be a {.fn layout_title} object'")
+                }
+                old <- self@titles %||%
+                    list(title = NULL, subtitle = NULL, caption = NULL)
+                self@titles <- update_non_waive(old, value)
+                self
+            }
+        ),
+        theme = S7::new_property(
+            S7::class_any,
+            setter = function(self, value) {
+                if (!is.null(value) && !is_theme(value)) {
+                    cli_abort("'@theme' must be a {.cls theme} object'")
+                }
+                if (is.null(self@theme) || is.null(value)) {
+                    attr(self, "theme") <- value
+                } else {
+                    attr(self, "theme") <- self@theme + value
+                }
+                self
+            },
+            default = NULL
+        )
+    ),
+    constructor = function(plots = list(), layout = NULL,
+                           titles = NULL, theme = NULL) {
+        out <- new_object(
+            S7_object(),
+            plots = plots,
+            layout = layout %||% layout_design(),
+            titles = titles %||% layout_title(),
+            theme = theme
+        )
+        # for backward compatibility
+        add_class(out, "alignpatches")
     }
+)
 
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- paste(deparse(substitute(e2)), collapse = " ")
-    alignpatches_add(e2, e1, e2name)
-}
-
-alignpatches_add <- function(object, plot, object_name) {
-    UseMethod("alignpatches_add")
-}
+local(
+    S7::method(`+`, list(AlignPatches, S7::class_any)) <-
+        function(e1, e2) {
+            if (missing(e2)) {
+                cli_abort(c(
+                    "Cannot use {.code +} with a single argument.",
+                    "i" = "Did you accidentally put {.code +} on a new line?"
+                ))
+            }
+            if (is.null(e2)) return(e1) # styler: off
+            cli_abort(c(
+                "Cannot add {.obj_type_friendly {e2}}",
+                "x" = "Only other layout elements or compatible objects can be added."
+            ))
+        }
+)
 
 #############################################################
 #' Define the grid to compose plots in
@@ -162,6 +209,12 @@ alignpatches_add <- function(object, plot, object_name) {
 layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
                           widths = waiver(), heights = waiver(),
                           area = waiver(), guides = NA, design = waiver()) {
+    if (!is.waive(ncol)) {
+        assert_number_whole(ncol, min = 1, allow_na = TRUE, allow_null = TRUE)
+    }
+    if (!is.waive(nrow)) {
+        assert_number_whole(nrow, min = 1, allow_na = TRUE, allow_null = TRUE)
+    }
     if (!is.waive(byrow)) assert_bool(byrow)
     area <- area %|w|% design
     if (!is.waive(area)) area <- as_areas(area)
@@ -182,40 +235,30 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     )
 }
 
-update_layout_design <- function(old, new) {
-    guides <- .subset2(new, "guides")
-    new$guides <- NULL # guides need special consideration
-    old <- update_non_waive(old, new)
-    if (is.null(guides) || is.waive(guides)) {
-        old["guides"] <- list(guides)
-    } else if (!identical(guides, NA)) {
-        old["guides"] <- list(setup_guides(guides))
-    }
-    old
-}
+S3_layout_design <- S7::new_S3_class("layout_design")
 
-#' @export
-alignpatches_add.layout_design <- function(object, plot, object_name) {
-    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
-    plot
-}
-
-#' @export
-alignpatches_add.plot_layout <- function(object, plot, object_name) {
-    object$area <- object$design # pathwork use `design`
-    object <- .subset(object, names(layout_design()))
-    if (is.waive(object$guides)) {
-        object$guides <- NA
-    } else if (identical(object$guides, "auto")) {
-        object$guides <- waiver()
-    } else if (identical(object$guides, "collect")) {
-        object$guides <- "tlbr"
-    } else if (identical(object$guides, "keep")) {
-        object["guides"] <- list(NULL)
-    }
-    plot$layout <- update_layout_design(.subset2(plot, "layout"), object)
-    plot
-}
+local({
+    S7::method(`+`, list(AlignPatches, S3_layout_design)) <-
+        function(e1, e2) {
+            e1@layout <- e2
+            e1
+        }
+    S7::method(`+`, list(AlignPatches, S7::new_S3_class("plot_layout"))) <-
+        function(e1, e2) {
+            e2$area <- e2$design # pathwork use `design`
+            object <- .subset(e2, names(layout_design()))
+            if (is.waive(object$guides)) {
+                object$guides <- NA
+            } else if (identical(object$guides, "auto")) {
+                object$guides <- waiver()
+            } else if (identical(object$guides, "collect")) {
+                object$guides <- "tlbr"
+            } else if (identical(object$guides, "keep")) {
+                object["guides"] <- list(NULL)
+            }
+            e1 + add_class(object, "layout_design")
+        }
+})
 
 ##############################################################
 #' Annotate the whole layout
@@ -236,33 +279,40 @@ alignpatches_add.plot_layout <- function(object, plot, object_name) {
 #' @export
 layout_title <- function(title = waiver(), subtitle = waiver(),
                          caption = waiver()) {
+    if (!is.waive(title)) assert_string(title, allow_null = TRUE)
+    if (!is.waive(subtitle)) assert_string(subtitle, allow_null = TRUE)
+    if (!is.waive(caption)) assert_string(caption, allow_null = TRUE)
     structure(
         list(title = title, subtitle = subtitle, caption = caption),
         class = c("layout_title", "plot_annotation")
     )
 }
 
-#' @export
-alignpatches_add.layout_title <- function(object, plot, object_name) {
-    plot$titles <- update_non_waive(.subset2(plot, "titles"), object)
-    plot
-}
+S3_layout_title <- S7::new_S3_class("layout_title")
 
-update_layout_title <- function(old, new) update_non_waive(old, new)
+local({
+    S7::method(`+`, list(AlignPatches, S3_layout_title)) <-
+        function(e1, e2) {
+            e1@titles <- e2
+            e1
+        }
+})
 
 ##############################################################
-#' Modify components of the layout
+#' Modify theme of the layout
 #'
-#' - modify the theme of the layout
-#'
-#' @param theme A [`theme()`][ggplot2::theme] object used to customize various
-#' elements of the plot, including `guides`, `title`, `subtitle`, `caption`,
-#' `margins`, `panel.border`, and `background`. By default, the
-#' theme will inherit from the parent `layout`.
-#'
-#' @inheritParams rlang::args_dots_empty
+#' @inherit ggplot2::theme
+#' @param ... A [`theme()`][ggplot2::theme] object or additional element
+#' specifications not part of base ggplot2. In general, these should also be
+#' defined in the `element tree` argument. [`Splicing`][rlang::splice] a list
+#' is also supported.
 #'
 #' @details
+#' A [`theme()`][ggplot2::theme] object used to customize various elements of
+#' the layout, including `guides`, `title`, `subtitle`, `caption`, `margins`,
+#' `panel.border`, and `background`. By default, the theme will inherit from the
+#' parent `layout`.
+#'
 #' - `guides`, `panel.border`, and `background` will always be used even for the
 #' nested `alignpatches` object.
 #'
@@ -282,59 +332,69 @@ update_layout_title <- function(old, new) update_non_waive(old, new)
 #'     p2 + theme(plot.background = element_blank()),
 #'     p3 + theme(plot.background = element_blank())
 #' ) +
-#'     layout_annotation(
-#'         theme = theme(plot.background = element_rect(fill = "red"))
-#'     )
+#'     layout_theme(plot.background = element_rect(fill = "red"))
 #' @importFrom ggplot2 waiver
 #' @export
-layout_annotation <- function(theme = waiver(), ...) {
-    rlang::check_dots_empty()
-    if (!is.waive(theme)) assert_s3_class(theme, "theme", allow_null = TRUE)
-    structure(
-        list(annotation = list(), theme = theme),
-        class = c("layout_annotation", "plot_annotation")
-    )
-}
+layout_theme <- rlang::new_function(
+    # We utilize editor completion by listing all `theme()` arguments here.
+    # By placing `...` at the beginning, we can check if the first
+    # following argument is a `theme()` object rather than individual theme
+    # elements.
+    c(
+        rlang::exprs(... = ),
+        .subset(
+            rlang::fn_fmls(theme),
+            vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+        )
+    ),
+    quote({
+        elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
+        ans <- inject(theme(!!!elements)) # for ggplot2 version < 3.5.0
+        th <- NULL
+        for (i in seq_len(...length())) {
+            if (inherits(t <- ...elt(i), "theme")) {
+                th <- ggfun("add_theme")(th, t)
+            }
+        }
+        add_class(ggfun("add_theme")(th, ans), "layout_theme")
+    })
+)
 
-update_annotation_theme <- function(old, new) {
-    if (is.waive(new)) return(old) # styler: off
+S3_layout_theme <- S7::new_S3_class("layout_theme")
+
+local({
+    S7::method(`+`, list(AlignPatches, S3_layout_theme)) <-
+        function(e1, e2) {
+            e1@theme <- e2
+            e1
+        }
+    S7::method(`+`, list(AlignPatches, S7::new_S3_class("plot_annotation"))) <-
+        function(e1, e2) {
+            e1@titles <- .subset(e2, names(layout_title()))
+            e1@theme <- .subset2(e2, "theme")
+            e1
+        }
+})
+
+update_layout_theme <- function(old, new) {
     if (is.null(old) || is.null(new)) return(new) # styler: off
     old + new
 }
 
-# Used by add `layout_annotation` to the `Layout` objects
-update_layout_annotation <- function(object, layout, object_name) {
-    layout@annotation <- update_non_waive(
-        layout@annotation, .subset2(object, "annotation")
-    )
-    layout@theme <- update_annotation_theme(
-        layout@theme, .subset2(object, "theme")
-    )
-    layout
-}
-
+#' Add layout annotation (internal use)
+#'
+#' This function is a placeholder for future extensions.
+#' If you're trying to apply a theme, use [layout_theme()] instead.
+#'
+#' @param ... Currently unused. May accept a theme in the future.
+#' @param theme A theme object. If not `waiver()`, an error will be raised.
+#'
+#' @return None. This function is used for input validation.
+#' @importFrom ggplot2 is_theme
 #' @export
-alignpatches_add.layout_annotation <- function(object, plot, object_name) {
-    plot$annotation <- update_non_waive(
-        .subset2(plot, "annotation"),
-        .subset2(object, "annotation")
-    )
-    plot$theme <- update_annotation_theme(
-        .subset2(plot, "theme"),
-        .subset2(object, "theme")
-    )
-    plot
-}
-
-#' @export
-alignpatches_add.plot_annotation <- function(object, plot, object_name) {
-    plot$titles <- update_non_waive(
-        .subset2(plot, "titles"),
-        .subset(object, names(layout_title()))
-    )
-    plot$theme <- update_annotation_theme(
-        .subset2(plot, "theme"),
-        .subset2(object, "theme")
-    )
-    plot
+#' @keywords internal
+layout_annotation <- function(..., theme = waiver()) {
+    if (is_theme(...elt(1)) || !is.waive(theme)) {
+        cli_abort("Please use {.fn layout_theme} instead; {.fn layout_annotation} is reserved for future extensions.")
+    }
 }
