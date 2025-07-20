@@ -11,9 +11,10 @@
 #' special value of `NA` will behave as `1null` unit unless a fixed aspect plot
 #' is inserted in which case it will allow the dimension to expand or contract
 #' to match the aspect ratio of the content.
-#' @param design Specification of the location of areas in the layout. Can
+#' @param area Specification of the location of areas in the layout. Can
 #' either be specified as a text string or by concatenating calls to
-#' [area()] together.
+#' [`area()`] together.
+#' @param design An alias for `area`, retained for backward compatibility.
 #' @param guides A string with one or more of `r oxford_and(c(.tlbr, "i"))`
 #' indicating which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If
@@ -46,18 +47,19 @@
 #' align_plots(!!!list(p1, p2, p3), p4, p5)
 #'
 #' # Match plots to areas by name
-#' design <- "#BB
-#'            AA#"
-#' align_plots(B = p1, A = p2, design = design)
+#' area <- "#BB
+#'           AA#"
+#' align_plots(B = p1, A = p2, area = area)
 #'
 #' # Compare to not using named plot arguments
-#' align_plots(p1, p2, design = design)
+#' align_plots(p1, p2, area = area)
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
-                        widths = NA, heights = NA, design = NULL,
-                        guides = waiver(), theme = NULL) {
+                        widths = NA, heights = NA, area = NULL,
+                        guides = waiver(), theme = NULL, design = NULL) {
     plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     nms <- names(plots)
+    area <- area %||% design
     if (!is.null(nms) && is.character(design)) {
         area_names <- unique(trimws(.subset2(strsplit(design, ""), 1L)))
         area_names <- sort(vec_set_difference(area_names, c("", "#")))
@@ -68,7 +70,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     }
-    design <- as_areas(design)
     for (plot in plots) {
         if (!has_method(plot, "alignpatch", default = FALSE)) {
             cli_abort("Cannot align {.obj_type_friendly {plot}}")
@@ -77,7 +78,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
 
     # setup layout parameters
     assert_bool(byrow)
-    design <- as_areas(design)
+    area <- as_areas(area)
     if (!is.waive(guides) && !is.null(guides)) {
         assert_guides(guides)
         guides <- setup_guides(guides)
@@ -85,7 +86,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     if (!is.null(theme)) assert_s3_class(theme, "theme")
     layout <- list(
         ncol = ncol, nrow = nrow, byrow = byrow,
-        widths = widths, heights = heights, design = design,
+        widths = widths, heights = heights, area = area,
         guides = guides
     )
     new_alignpatches(plots, layout = layout, theme = theme)
@@ -96,8 +97,7 @@ new_alignpatches <- function(plots, layout = NULL,
                              theme = NULL) {
     layout <- layout %||% list(
         ncol = NULL, nrow = NULL, byrow = TRUE,
-        widths = NA, heights = NA,
-        design = NULL, guides = waiver()
+        widths = NA, heights = NA, area = NULL, guides = waiver()
     )
     titles <- titles %||% list(title = NULL, subtitle = NULL, caption = NULL)
     annotation <- annotation %||% list(
@@ -161,21 +161,25 @@ alignpatches_add <- function(object, plot, object_name) {
 #' @export
 layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
                           widths = waiver(), heights = waiver(),
-                          design = waiver(), guides = NA) {
+                          area = waiver(), guides = NA, design = waiver()) {
     if (!is.waive(byrow)) assert_bool(byrow)
-    if (!is.waive(design)) design <- as_areas(design)
+    area <- area %|w|% design
+    if (!is.waive(area)) area <- as_areas(area)
     if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
         assert_guides(guides)
     }
-    structure(list(
-        ncol = ncol,
-        nrow = nrow,
-        byrow = byrow,
-        widths = widths,
-        heights = heights,
-        design = design,
-        guides = guides
-    ), class = c("layout_design", "plot_layout"))
+    structure(
+        list(
+            ncol = ncol,
+            nrow = nrow,
+            byrow = byrow,
+            widths = widths,
+            heights = heights,
+            area = area,
+            guides = guides
+        ),
+        class = c("layout_design", "plot_layout")
+    )
 }
 
 update_layout_design <- function(old, new) {
@@ -198,6 +202,7 @@ alignpatches_add.layout_design <- function(object, plot, object_name) {
 
 #' @export
 alignpatches_add.plot_layout <- function(object, plot, object_name) {
+    object$area <- object$design # pathwork use `design`
     object <- .subset(object, names(layout_design()))
     if (is.waive(object$guides)) {
         object$guides <- NA

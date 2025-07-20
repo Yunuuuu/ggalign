@@ -18,7 +18,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
         panel_heights <- .subset2(layout, "heights")
-        if (is.null(area <- .subset2(layout, "design"))) {
+        if (is.null(area <- .subset2(layout, "area"))) {
             if (is.null(layout$ncol) && length(panel_widths) > 1L) {
                 layout$ncol <- length(panel_widths)
             }
