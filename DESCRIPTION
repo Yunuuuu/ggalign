@@ -41,7 +41,7 @@ Enhances:
     patchwork,
     ggrastr,
     maftools
-Remote:
+Remotes:
     tidyverse/ggplot2
 ByteCompile: true
 Config/Needs/check:
