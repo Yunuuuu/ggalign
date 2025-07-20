@@ -167,22 +167,38 @@ AlignPatches <- S7::new_class("AlignPatches",
     }
 )
 
-local(
-    S7::method(`+`, list(AlignPatches, S7::class_any)) <-
-        function(e1, e2) {
-            if (missing(e2)) {
-                cli_abort(c(
-                    "Cannot use {.code +} with a single argument.",
-                    "i" = "Did you accidentally put {.code +} on a new line?"
-                ))
-            }
-            if (is.null(e2)) return(e1) # styler: off
-            cli_abort(c(
-                "Cannot add {.obj_type_friendly {e2}}",
-                "x" = "Only other layout elements or compatible objects can be added."
-            ))
-        }
+#' @importFrom S7 S7_dispatch
+alignpatches_add <- S7::new_generic(
+    "alignpatches_add", "object",
+    function(object, patches, objectname) S7_dispatch()
 )
+
+alignpatches_add_call <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code +} with a single argument.",
+            "i" = "Did you accidentally put {.code +} on a new line?"
+        ))
+    }
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    alignpatches_add(e2, e1, e2name)
+}
+
+if (getRversion() < "4.3.0") {
+    local(S7::method(`+`, list(AlignPatches, S7::class_any)) <-
+        alignpatches_add_call)
+}
+
+S7::method(alignpatches_add, S7::class_any) <-
+    function(object, patches, objectname) {
+        if (is.null(object)) return(patches) # styler: off
+        cli_abort(c(
+            "Cannot add {objectname}",
+            "x" = "Only other layout elements or compatible objects can be added."
+        ))
+    }
 
 #############################################################
 #' Define the grid to compose plots in
@@ -237,28 +253,27 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
 
 S3_layout_design <- S7::new_S3_class("layout_design")
 
-local({
-    S7::method(`+`, list(AlignPatches, S3_layout_design)) <-
-        function(e1, e2) {
-            e1@layout <- e2
-            e1
+S7::method(alignpatches_add, S3_layout_design) <-
+    function(object, patches, objectname) {
+        patches@layout <- object
+        patches
+    }
+
+S7::method(alignpatches_add, S7::new_S3_class("plot_layout")) <-
+    function(object, patches, objectname) {
+        object$area <- object$design # pathwork use `design`
+        object <- .subset(object, names(layout_design()))
+        if (is.waive(object$guides)) {
+            object$guides <- NA
+        } else if (identical(object$guides, "auto")) {
+            object$guides <- waiver()
+        } else if (identical(object$guides, "collect")) {
+            object$guides <- "tlbr"
+        } else if (identical(object$guides, "keep")) {
+            object["guides"] <- list(NULL)
         }
-    S7::method(`+`, list(AlignPatches, S7::new_S3_class("plot_layout"))) <-
-        function(e1, e2) {
-            e2$area <- e2$design # pathwork use `design`
-            object <- .subset(e2, names(layout_design()))
-            if (is.waive(object$guides)) {
-                object$guides <- NA
-            } else if (identical(object$guides, "auto")) {
-                object$guides <- waiver()
-            } else if (identical(object$guides, "collect")) {
-                object$guides <- "tlbr"
-            } else if (identical(object$guides, "keep")) {
-                object["guides"] <- list(NULL)
-            }
-            e1 + add_class(object, "layout_design")
-        }
-})
+        alignpatches_add(add_class(object, "layout_design"), patches)
+    }
 
 ##############################################################
 #' Annotate the whole layout
@@ -290,13 +305,11 @@ layout_title <- function(title = waiver(), subtitle = waiver(),
 
 S3_layout_title <- S7::new_S3_class("layout_title")
 
-local({
-    S7::method(`+`, list(AlignPatches, S3_layout_title)) <-
-        function(e1, e2) {
-            e1@titles <- e2
-            e1
-        }
-})
+S7::method(alignpatches_add, S3_layout_title) <-
+    function(object, patches, objectname) {
+        patches@titles <- object
+        patches
+    }
 
 ##############################################################
 #' Modify theme of the layout
@@ -362,19 +375,18 @@ layout_theme <- rlang::new_function(
 
 S3_layout_theme <- S7::new_S3_class("layout_theme")
 
-local({
-    S7::method(`+`, list(AlignPatches, S3_layout_theme)) <-
-        function(e1, e2) {
-            e1@theme <- e2
-            e1
-        }
-    S7::method(`+`, list(AlignPatches, S7::new_S3_class("plot_annotation"))) <-
-        function(e1, e2) {
-            e1@titles <- .subset(e2, names(layout_title()))
-            e1@theme <- .subset2(e2, "theme")
-            e1
-        }
-})
+S7::method(alignpatches_add, S3_layout_theme) <-
+    function(object, patches, objectname) {
+        patches@theme <- object
+        patches
+    }
+
+S7::method(alignpatches_add, S7::new_S3_class("plot_annotation")) <-
+    function(object, patches, objectname) {
+        patches@titles <- .subset(object, names(layout_title()))
+        patches@theme <- .subset2(object, "theme")
+        patches
+    }
 
 update_layout_theme <- function(old, new) {
     if (is.null(old) || is.null(new)) return(new) # styler: off
