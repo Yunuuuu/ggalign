@@ -79,7 +79,7 @@ new_free_gg <- function(plot, data, size, active,
         plot = plot,
         size = size,
         active = active,
-        schemes = default_schemes(data),
+        schemes = new_schemes(data),
         call = call
     )
 }

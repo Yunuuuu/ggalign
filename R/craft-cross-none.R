@@ -22,7 +22,7 @@ cross_none <- function(data = waiver(), ...,
     cross(CrossNone,
         data = data, data_params = list2(...), plot = NULL,
         active = new_active(use = FALSE),
-        schemes = default_schemes(),
+        schemes = new_schemes(),
         inherit_index = inherit_index,
         inherit_panel = inherit_panel,
         inherit_nobs = inherit_nobs

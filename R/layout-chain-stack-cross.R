@@ -64,7 +64,7 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
     layout_design <- stack@design
     if (is_discrete_design(layout_design) &&
         is.null(.subset2(layout_design, "nobs")) &&
-        any(vapply(plot_list, is_cross_plot, logical(1L), USE.NAMES = FALSE))) {
+        any(vapply(plot_list, is_cross_craftbox, logical(1L), USE.NAMES = FALSE))) {
         cli_abort(sprintf(
             "You must initialize the layout observations to plot the %s",
             object_name(stack)
@@ -123,7 +123,7 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
         # we reorder the plots based on the `order` slot
         plot_order <- vapply(plots, function(plot) {
             # always keep cross() in the start
-            if (is_cross_plot(plot)) {
+            if (is_cross_craftbox(plot)) {
                 1L
             } else if (is_craftbox(plot)) {
                 .subset2(plot@active, "order")

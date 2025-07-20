@@ -4,7 +4,7 @@
 \alias{active}
 \title{Plot Adding Context Settings}
 \usage{
-active(order = waiver(), use = waiver(), name = waiver())
+active(order = NA_integer_, use = NA, name = NA_character_)
 }
 \arguments{
 \item{order}{An integer specifying the order of the plot area within the

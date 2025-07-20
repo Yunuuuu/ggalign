@@ -45,38 +45,36 @@ new_scheme_data <- function(data = NULL, inherit = FALSE) {
     )
 }
 
-#' @export
-inherit_scheme.scheme_data <- function(scheme, pscheme) {
-    if (is.null(o <- .subset2(scheme, "data"))) return(scheme) # styler: off
-    if (is.waive(o)) return(pscheme) # inherit from parent; styler: off
-    if (!is.function(p_function <- .subset2(pscheme, "data"))) {
-        return(scheme)
+S7::method(inherit_scheme, list(SchemeData, SchemeData)) <- function(e1, e2) {
+    if (is.null(o <- .subset2(e2, "data"))) return(e2) # styler: off
+    if (is.waive(o)) return(e1) # inherit from parent; styler: off
+    if (!is.function(p_function <- .subset2(e1, "data"))) {
+        return(e2)
     }
     # if both are function, we check if we should call parent first then call
     # itself
-    if (.subset2(scheme, "inherit")) {
+    if (.subset2(e2, "inherit")) {
         user_scheme_data <- o # current action data function
-        scheme$data <- function(data) {
+        e2$data <- function(data) {
             # we always restore the attached attribute
             ans <- ggalign_data_restore(p_function(data), data)
             user_scheme_data(ans)
         }
     }
-    scheme
+    e2
 }
 
-#' @export
-plot_add_scheme.scheme_data <- function(plot, scheme) {
-    # by default, we won't change the data
-    if (!is.null(scheme_data <- .subset2(scheme, "data") %|w|% NULL) &&
-        !is.null(raw_data <- plot$data)) {
-        # To be compatible with ggplot2, it must be a data frame
-        if (!is.null(data <- scheme_data(raw_data)) &&
-            !is.waive(data) &&
-            !is.data.frame(data)) {
-            cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
+S7::method(update_ggplot, list(SchemeData, class_ggplot)) <-
+    function(object, plot, ...) {
+        if (!is.null(scheme_data <- .subset2(object, "data") %|w|% NULL) &&
+            !is.null(raw_data <- plot$data)) {
+            # To be compatible with ggplot2, it must be a data frame
+            if (!is.null(data <- scheme_data(raw_data)) &&
+                !is.waive(data) &&
+                !is.data.frame(data)) {
+                cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
+            }
+            plot <- gguse_data(plot, data)
         }
-        plot <- gguse_data(plot, data)
+        plot
     }
-    plot
-}

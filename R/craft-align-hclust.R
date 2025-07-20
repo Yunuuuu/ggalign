@@ -126,7 +126,7 @@ align_hclust <- function(distance = "euclidean",
         k = k, h = h, cutree = cutree,
         active = active,
         ..., # additional fields to be added, used by align_dendro
-        schemes = schemes %||% default_schemes(),
+        schemes = schemes %||% new_schemes(),
         data = data,
         plot = plot,
         call = call

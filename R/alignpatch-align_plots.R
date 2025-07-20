@@ -113,10 +113,12 @@ new_alignpatches <- function(plots, layout = NULL,
         ),
         # Will ensure serialisation includes a link to the `ggalign`
         # namespace
-        `_namespace` = namespace_link,
+        `_namespace` = function() NULL,
         class = "alignpatches"
     )
 }
+
+S3_alignpatches <- S7::new_S3_class("alignpatches")
 
 #' @export
 `+.alignpatches` <- function(e1, e2) {

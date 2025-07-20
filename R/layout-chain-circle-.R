@@ -104,7 +104,7 @@ circle_discrete.default <- function(data = NULL, ..., radial = NULL,
     # from matrix
     data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-    schemes <- default_schemes()
+    schemes <- new_schemes()
     if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
@@ -159,7 +159,7 @@ circle_continuous.default <- function(data = NULL, ..., radial = NULL,
     assert_limits(limits)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    schemes <- default_schemes()
+    schemes <- new_schemes()
     new_circle_layout(
         data = data, design = limits,
         radial = radial, direction = direction, sector_spacing = sector_spacing,

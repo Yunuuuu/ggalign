@@ -1,99 +1,85 @@
 # Used by both `circle_layout()` and `stack_layout()`
 #' @keywords internal
 #' @include layout-.R
-methods::setClass(
-    "ChainLayout",
-    contains = "LayoutProto",
-    list(
-        data = "ANY",
-        name = "character", # used to provide message
-        plot_list = "list", # save the list of plots
-        design = "ANY" # used to align axis
+ChainLayout <- S7::new_class("ChainLayout",
+    parent = LayoutProto,
+    properties = list(
+        data = S7::class_any,
+        name = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
+                }
+            },
+            default = NA_character_
+        ),
+        plot_list = S7::class_list,
+        domain = Domain
     )
 )
 
-#' @export
-is_layout_discrete.ChainLayout <- function(x, ...) {
-    is_discrete_design(x@design)
-}
-
-#' @export
-is_layout_continuous.ChainLayout <- function(x, ...) {
-    is_continuous_design(x@design)
-}
-
 #############################################################
-# To-DO: Use double dispatch
-#' @keywords internal
-chain_layout_add <- function(object, layout, object_name) {
-    UseMethod("chain_layout_add")
-}
-
-#' @export
-chain_layout_add.layout_title <- function(object, layout, object_name) {
-    layout@titles <- update_layout_title(layout@titles, object)
-    layout
-}
-
-#' @export
-chain_layout_add.list <- function(object, layout, object_name) {
-    for (o in object) layout <- chain_layout_add(o, layout, object_name)
-    layout
-}
-
-#' @export
-chain_layout_add.NULL <- function(object, layout, object_name) {
-    layout
-}
-
-#' @export
-chain_layout_add.CraftBox <- function(object, layout, object_name) {
-    craftsman <- object@craftsman
-    # To-Do: Use S7 and double dispatch
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        # unlock the object
-        craftsman$unlock()
-
-        # we lock the `Craftsman` object to prevent user from modifying this
-        # object in `$build_plot()` method, we shouldn't do any calculations in
-        # `$build_plot()` method
-        on.exit(craftsman$lock())
-
-        # initialize the necessary parameters for `Craftsman` object
-        if (is_stack_layout(layout)) {
-            craftsman$direction <- layout@direction
-            craftsman$position <- .subset2(layout@heatmap, "position")
-        } else if (is_circle_layout(layout)) {
-            # we treat circle layout as a vertical stack layout
-            craftsman$direction <- "vertical"
-        }
-        craftsman$in_linear <- is_linear(layout)
-        craftsman$layout_name <- object_name(layout)
-
-        # firstly, we let the object do some changes in the layout
-        layout <- craftsman$interact_layout(layout)
-
-        # this step, the object will act with the stack layout
-        # group rows into panel or reorder rows, we can also
-        # initialize object data
-        new_design <- craftsman$setup_design(layout@design)
-
-        # initialize the plot object
-        object@plot <- craftsman$setup_plot(object@plot)
-
-        layout <- chain_add_plot(layout, object, object@active, object_name)
-    } else { # should be a QuadLayout object
-        plot <- quad_layout_add(object, plot, object_name)
-        layout@plot_list[[active_index]] <- plot
-        new_design <- slot(plot, layout@direction)
+S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
+    function(layout, object, object_name) {
+        for (o in object) layout <- layout_add(layout, o, object_name)
+        layout
     }
-    update_design(layout, design = new_design, object_name = object_name)
-}
 
-#' @export
-chain_layout_add.continuous_limits <- function(object, layout, object_name) {
-    if (is_discrete_design(layout@design)) {
+S7::method(layout_add, list(ChainLayout, S7::new_S3_class("layout_title"))) <-
+    function(layout, object, object_name) {
+        layout@titles <- update_layout_title(layout@titles, object)
+        layout
+    }
+
+S7::method(layout_add, list(ChainLayout, CraftBox)) <-
+    function(layout, object, object_name) {
+        craftsman <- object@craftsman
+        # To-Do: Use S7 and double dispatch
+        if (is.null(active_index <- layout@active) ||
+            is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
+            # unlock the object
+            craftsman$unlock()
+
+            # we lock the `Craftsman` object to prevent user from modifying this
+            # object in `$build_plot()` method, we shouldn't do any calculations in
+            # `$build_plot()` method
+            on.exit(craftsman$lock())
+
+            # initialize the necessary parameters for `Craftsman` object
+            if (is_stack_layout(layout)) {
+                craftsman$direction <- layout@direction
+                craftsman$position <- .subset2(layout@heatmap, "position")
+            } else if (is_circle_layout(layout)) {
+                # we treat circle layout as a vertical stack layout
+                craftsman$direction <- "vertical"
+            }
+            craftsman$in_linear <- is_linear(layout)
+            craftsman$layout_name <- object_name(layout)
+
+            # firstly, we let the object do some changes in the layout
+            layout <- craftsman$interact_layout(layout)
+
+            # this step, the object will act with the stack layout
+            # group rows into panel or reorder rows, we can also
+            # initialize object data
+            new_design <- craftsman$setup_design(layout@design)
+
+            # initialize the plot object
+            object@plot <- craftsman$setup_plot(object@plot)
+
+            layout <- chain_add_plot(layout, object, object@active, object_name)
+        } else { # should be a QuadLayout object
+            plot <- quad_layout_add(object, plot, object_name)
+            layout@plot_list[[active_index]] <- plot
+            new_design <- slot(plot, layout@direction)
+        }
+        update_design(layout, design = new_design, object_name = object_name)
+    }
+
+S7::method(layout_add, list(ChainLayout, ContinuousDomain)) <- function(
+    object, layout, object_name) {
+    if (S7_inherits(layout@domain, DiscreteDomain)) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s",
@@ -105,7 +91,24 @@ chain_layout_add.continuous_limits <- function(object, layout, object_name) {
             )
         ))
     }
-    update_design(layout, design = object, object_name = object_name)
+    update_domain(layout, domain = object, object_name = object_name)
+}
+
+S7::method(layout_add, list(ChainLayout, DiscreteDomain)) <- function(
+    object, layout, object_name) {
+    if (S7_inherits(layout@domain, ContinuousDomain)) {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {object_name}} to %s",
+                object_name(layout)
+            ),
+            i = sprintf(
+                "%s cannot align discrete variables",
+                object_name(layout)
+            )
+        ))
+    }
+    update_domain(layout, domain = object, object_name = object_name)
 }
 
 #' @export

@@ -20,6 +20,7 @@ BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
     ggplot2 (>= 3.5.0)
 Imports:
+    S7,
     vctrs (>= 0.5.0),
     rlang,
     cli,
@@ -76,7 +77,7 @@ Collate:
     'alignpatch-title.R'
     'alignpatch-wrap.R'
     'attributes.R'
-    'craftbox-.R'
+    'crastsman.R'
     'craft-align-.R'
     'craft-align-hclust.R'
     'craft-align-dendrogram.R'
@@ -89,6 +90,10 @@ Collate:
     'craft-cross-link.R'
     'craft-cross-mark.R'
     'craft-cross-none.R'
+    'grid-utils.R'
+    'scheme-.R'
+    'craftbox.R'
+    'domain-.R'
     'fortify-data-frame-.R'
     'fortify-data-frame-dendrogram.R'
     'fortify-matrix-.R'
@@ -112,7 +117,6 @@ Collate:
     'ggplot-utils.R'
     'grid-grob-channel.R'
     'grid-grob-magick.R'
-    'grid-utils.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'
     'import-standalone-pkg.R'
@@ -131,6 +135,7 @@ Collate:
     'layout-chain-stack-composer.R'
     'layout-chain-stack-cross.R'
     'layout-chain-stack-switch.R'
+    'layout-domain.R'
     'layout-quad-.R'
     'layout-heatmap-.R'
     'layout-heatmap-build.R'
@@ -147,7 +152,7 @@ Collate:
     'pair-links.R'
     'raster-magick.R'
     'rasterise.R'
-    'scheme-.R'
+    'utils-S7.R'
     'scheme-align.R'
     'scheme-data.R'
     'scheme-theme.R'

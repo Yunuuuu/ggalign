@@ -11,8 +11,8 @@
 #' @inherit ggplot2::theme
 #' @param ... A [`theme()`][ggplot2::theme] object or additional element
 #' specifications not part of base ggplot2. In general, these should also be
-#' defined in the `element tree` argument. [`Splicing`][rlang::splice] a list
-#' is also supported.
+#' defined in the `element tree`. [`Splicing`][rlang::splice] a list is also
+#' supported.
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(56), nrow = 8)
@@ -59,17 +59,12 @@ new_scheme_theme <- function(th = theme()) {
     UseMethod("new_scheme_theme", th)
 }
 
+class_scheme_theme <- S7::new_class("scheme_theme", ggplot2::class_theme)
+
 #' @importFrom rlang inject
 #' @export
 new_scheme_theme.theme <- function(th = theme()) {
-    attrs <- attributes(th)
-    attrs <- vec_slice(
-        attrs, vec_set_difference(names(attrs), c("names", "class"))
-    )
-    inject(new_scheme(
-        name = "scheme_theme", th, !!!attrs,
-        class = c("scheme_theme", class(th))
-    ))
+    class_scheme_theme(th, complete = th@complete, validate = th@validate)
 }
 
 #' @export

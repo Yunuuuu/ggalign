@@ -157,8 +157,8 @@ scheme_theme(
 \arguments{
 \item{...}{A \code{\link[ggplot2:theme]{theme()}} object or additional element
 specifications not part of base ggplot2. In general, these should also be
-defined in the \verb{element tree} argument. \code{\link[rlang:splice]{Splicing}} a list
-is also supported.}
+defined in the \verb{element tree}. \code{\link[rlang:splice]{Splicing}} a list is also
+supported.}
 
 \item{line}{all line elements (\code{\link[ggplot2:element_line]{element_line()}})}
 

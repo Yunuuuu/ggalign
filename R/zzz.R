@@ -6,5 +6,7 @@
     s3_register("ggrastr::rasterise", "CraftBox")
     s3_register("ggrastr::rasterise", "QuadLayout")
     s3_register("ggrastr::rasterise", "ChainLayout")
+
+    S7::methods_register()
     invisible()
 }

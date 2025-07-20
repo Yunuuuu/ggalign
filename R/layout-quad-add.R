@@ -136,7 +136,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 # the layout parameters should be the same with `quad_layout()`
                 design = layout_design,
                 # we'll inherit the action data function when
-                schemes = default_schemes(if (is.null(data)) NULL else waiver())
+                schemes = new_schemes(if (is.null(data)) NULL else waiver())
             )
             stack@heatmap$position <- position
             stack@heatmap$quad_matrix <- quad_matrix

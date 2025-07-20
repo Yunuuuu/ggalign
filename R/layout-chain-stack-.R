@@ -141,7 +141,7 @@ stack_discrete.default <- function(direction, data = NULL, ...,
     # from matrix
     data <- data %|w|% NULL
     data <- fortify_matrix(data = data, ...)
-    schemes <- default_schemes()
+    schemes <- new_schemes()
     if (!is.null(data) && !is.function(data)) {
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
@@ -216,7 +216,7 @@ stack_continuous.default <- function(direction, data = NULL, ...,
     direction <- check_direction(direction)
     data <- data %|w|% NULL
     data <- fortify_data_frame(data = data, ...)
-    schemes <- default_schemes()
+    schemes <- new_schemes()
     new_stack_layout(
         name = "stack_continuous",
         data = data, direction = direction, design = limits,

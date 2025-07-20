@@ -1,53 +1,43 @@
-# Will ensure serialisation includes a link to the ggalign namespace
-# Copied from patchwork
-namespace_link <- function() NULL
-
-# https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
-# Here we use S4 object to override the double dispatch of `+.gg` method
-# TO-DO: use S7
 #' A `Layout` object
 #'
 #' A `Layout` object defines how to place the plots.
 #'
+#' @importFrom ggplot2 is_theme
+#' @include schemes.R
 #' @keywords internal
-# add suffix "Proto" to avoid conflict with ggplot2
-methods::setClass("LayoutProto",
-    list(
-        active = "ANY", # current active plot
-        schemes = "list", # used to provide global parameters for all plots
-        # control the layout, `theme` will also be used by `ggsave`
-        titles = "list",
-        annotation = "list", # To-Do add `pacth_titles` for layout
-        theme = "ANY",
-        `_namespace` = "ANY"
-    ),
-    prototype = list(
-        active = NULL, titles = list(),
-        annotation = list(), theme = NULL,
-        `_namespace` = namespace_link
+LayoutProto <- S7::new_class("LayoutProto",
+    properties = list(
+        current = S7::new_property(
+            S7::class_integer,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be of length 1")
+                }
+            },
+            default = NA_integer_
+        ),
+        schemes = schemes, # used to provide global parameters for all plots
+        titles = S7::class_list,
+        annotation = S7::class_list,
+        theme = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (!is.null(value) && !is_theme(value)) {
+                    return("must be a 'theme' object")
+                }
+            },
+            default = NULL
+        )
     )
 )
 
-#' @export
-print.LayoutProto <- print.alignpatches
+S7::method(print, LayoutProto) <- print.alignpatches
 
 #' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.LayoutProto <- grid.draw.alignpatches
+S7::method(grid.draw, LayoutProto) <- grid.draw.alignpatches
 
 #' @export
-alignpatch.LayoutProto <- function(x) alignpatch(ggalign_build(x))
-
-#' Print Layout object
-#'
-#' @param object A `r rd_layout()`.
-#' @return The input invisiblely.
-#' @importFrom methods show
-#' @export
-#' @keywords internal
-methods::setMethod("show", "LayoutProto", function(object) {
-    print(object)
-})
+S7::method(alignpatch, LayoutProto) <- function(x) alignpatch(ggalign_build(x))
 
 #' Subset a `Layout` object
 #'
@@ -57,163 +47,147 @@ methods::setMethod("show", "LayoutProto", function(object) {
 #' @param x A `Layout` object
 #' @param name A string of slot name in `Layout` object.
 #' @return The slot value.
-#' @importFrom methods slot
+#' @importFrom S7 prop
 #' @export
 #' @keywords internal
-methods::setMethod("$", "LayoutProto", function(x, name) {
-    slot(x, name)
-})
+S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name)
 
-###########################################################
-default_layout <- function(layout) { # setup default value for the layout
-    layout@theme <- complete_theme(default_theme() + layout@theme)
-
-    # we by default, collect all guides
-    layout@schemes$scheme_align["guides"] <- list(
-        .subset2(.subset2(layout@schemes, "scheme_align"), "guides") %|w|% "tlbr"
-    )
-
-    # we by default, use `default_theme()`
-    layout@schemes$scheme_theme <- update_scheme(
-        .subset2(layout@schemes, "scheme_theme"),
-        new_scheme_theme(complete_theme(default_theme()))
-    )
-    layout
-}
-
-is_linear <- function(layout) UseMethod("is_linear")
-
-#' @export
-is_linear.StackLayout <- function(layout) TRUE
-
-#' @export
-is_linear.CircleLayout <- function(layout) FALSE
-
-###########################################################
-inherit_parent_layout_schemes <- function(layout, schemes) {
-    if (is.null(schemes)) {
-        return(layout@schemes)
+#' Layout operator
+#'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#'  - `+`: Adds elements to the active plot in the active layout.
+#'  - `&`: Applies elements to all plots in the layout.
+#'  - `-`: Adds elements to multiple plots in the layout.
+#'
+#' @details
+#' The `+` operator is straightforward and should be used as needed.
+#'
+#' In order to reduce code repetition `ggalign` provides two operators for
+#' adding ggplot elements (geoms, themes, facets, etc.) to multiple/all plots in
+#' `r rd_layout()`: `-` and `&`.
+#'
+#' @param e1 A `r rd_layout()`.
+#' @param e2 An object to be added to the plot.
+#' @return A modified `Layout` object.
+#' @examples
+#' set.seed(123)
+#' small_mat <- matrix(rnorm(56), nrow = 7)
+#' ggheatmap(small_mat) +
+#'     anno_top() +
+#'     ggalign() +
+#'     geom_point(aes(y = value))
+#'
+#' # `&` operator apply it to all plots
+#' ggheatmap(small_mat) +
+#'     anno_top() +
+#'     align_dendro() &
+#'     theme(panel.border = element_rect(
+#'         colour = "red", fill = NA, linewidth = unit(2, "mm")
+#'     ))
+#'
+#' # If the active layout is the annotation stack, the `-` operator will only
+#' # add the elements to all plots in the active annotation stack:
+#' ggheatmap(small_mat) +
+#'     anno_left(size = 0.2) +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     align_dendro(aes(color = branch), k = 3L) -
+#'     # Modify the the color scales of all plots in the left annotation
+#'     scale_color_brewer(palette = "Dark2")
+#'
+#' # If the active layout is the `stack_layout()` itself, `-`
+#' # applies the elements to all plots in the layout except the nested
+#' # `ggheatmap()`/`quad_layout()`.
+#' stack_alignv(small_mat) +
+#'     align_dendro() +
+#'     ggtitle("I'm from the parent stack") +
+#'     ggheatmap() +
+#'     # remove any active context
+#'     stack_active() +
+#'     align_dendro() +
+#'     ggtitle("I'm from the parent stack") -
+#'     # Modify the the color scales of all plots in the stack layout except the
+#'     # heatmap layout
+#'     scale_color_brewer(palette = "Dark2") -
+#'     # set the background of all plots in the stack layout except the heatmap
+#'     # layout
+#'     theme(plot.background = element_rect(fill = "red"))
+#'
+#' @name layout-operator
+S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code +} with a single argument.",
+            "i" = "Did you accidentally put {.code +} on a new line?"
+        ))
     }
-    inherit_schemes(layout@schemes, schemes)
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_add(e1, e2, e2name)
 }
 
-inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
-    if (is.null(theme)) return(layout@theme) # styler: off
-    # parent theme, set the global panel spacing,
-    # so that every panel aligns well
-    if (is.null(layout@theme)) return(theme) # styler: off
-    ans <- theme + layout@theme
-    if (is.null(spacing)) return(ans) # styler: off
-    switch(spacing,
-        x = ans + theme(
-            panel.spacing.x = calc_element("panel.spacing.x", theme)
-        ),
-        y = ans + theme(
-            panel.spacing.y = calc_element("panel.spacing.y", theme)
-        )
-    )
+S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code -} with a single argument.",
+            "i" = "Did you accidentally put {.code -} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_subtract(e1, e2, e2name)
 }
 
-############################################################
-#' Get the statistics from the layout
-#'
-#' @param x A `r rd_layout()`.
-#' @inheritParams rlang::args_dots_used
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) {
-    UseMethod("ggalign_stat")
+S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code &} with a single argument.",
+            "i" = "Did you accidentally put {.code &} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+    layout_and_add(e1, e2, e2name)
 }
 
-#' @param position A string of `r oxford_or(.TLBR)`.
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.QuadLayout <- function(x, position, ...) {
-    ggalign_stat(x = slot(x, position), ...)
+layout_add <- S7::new_generic(
+    "layout_add", c("layout", "object"),
+    function(layout, object, object_name) S7::S7_dispatch()
+)
+
+layout_subtract <- S7::new_generic(
+    "layout_subtract", c("layout", "object"),
+    function(layout, object, object_name) S7::S7_dispatch()
+)
+
+layout_and_add <- S7::new_generic(
+    "layout_and_add", c("layout", "object"),
+    function(layout, object, object_name) S7::S7_dispatch()
+)
+
+S7::method(layout_subtract, S3_ggplot) <- function(layout, object, object_name) {
+    cli_abort(c(
+        sprintf("Cannot add %s with {.code -}", object_name),
+        i = "Try to use {.code +} instead"
+    ))
 }
 
-#' @param what A single number or string of the plot elements in the stack
-#' layout.
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.StackLayout <- function(x, what, ...) {
-    plot_list <- x@plot_list
-    index <- vec_as_location2(
-        what,
-        n = length(plot_list),
-        names = names(plot_list),
-        missing = "error"
-    )
-    ggalign_stat(x = .subset2(plot_list, index), ...)
+S7::method(layout_and_add, S3_ggplot) <- function(layout, object, object_name) {
+    cli_abort(c(
+        sprintf("Cannot add %s with {.code &}", object_name),
+        i = "Try to use {.code +} instead"
+    ))
 }
-
-#' @export
-ggalign_stat.CraftBox <- function(x, ...) {
-    ggalign_stat(x@craftsman, ...)
-}
-
-#' @export
-ggalign_stat.CraftAlign <- function(x, ...) {
-    rlang::check_dots_empty()
-    .subset2(x, "statistics")
-}
-
-#' @export
-ggalign_stat.default <- function(x, ...) {
-    cli_abort(sprintf("no statistics found for %s", object_name(x)))
-}
-
-#############################################################
-#' Reports whether `x` is layout object
-#'
-#' @param x An object to test.
-#' @return A single boolean value.
-#' @examples
-#' is_layout(ggheatmap(1:10))
-#'
-#' @importFrom methods is
-#' @export
-is_layout <- function(x) is(x, "LayoutProto")
-
-#' @examples
-#' # for quad_layout()
-#' is_quad_layout(quad_alignb(1:10))
-#' is_quad_layout(quad_alignh(1:10))
-#' is_quad_layout(quad_alignv(1:10))
-#' is_quad_layout(quad_free(mtcars))
-#'
-#' @export
-#' @rdname is_layout
-is_quad_layout <- function(x) is(x, "QuadLayout")
-
-#' @examples
-#' # for stack_layout()
-#' is_stack_layout(stack_discrete("h", 1:10))
-#' is_stack_layout(stack_continuous("h", 1:10))
-#'
-#' @export
-#' @rdname is_layout
-is_stack_layout <- function(x) is(x, "StackLayout")
-
-#' @export
-#' @rdname is_layout
-is_stack_cross <- function(x) is(x, "StackCross")
-
-#' @export
-#' @rdname is_layout
-is_circle_layout <- function(x) is(x, "CircleLayout")
-
-#' @examples
-#' # for heatmap_layout()
-#' is_heatmap_layout(ggheatmap(1:10))
-#' @export
-#' @rdname is_layout
-is_heatmap_layout <- function(x) is(x, "HeatmapLayout")
-
-#' @examples
-#' is_ggheatmap(ggheatmap(1:10))
-#' @export
-#' @rdname is_layout
-is_ggheatmap <- is_heatmap_layout
-
-is_cross_layout <- function(x) is_stack_cross(x)

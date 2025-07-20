@@ -40,7 +40,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
     data <- allow_lambda(data)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
-    schemes <- schemes %|w|% default_schemes(data)
+    schemes <- schemes %|w|% new_schemes(data)
 
     new_craftbox(
         craftsman = align,
@@ -89,7 +89,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-#' @include craftbox-.R
+#' @include crastsman.R
 CraftAlign <- ggproto("CraftAlign", Craftsman,
     interact_layout = function(self, layout) {
         # check plot is compatible with the layout

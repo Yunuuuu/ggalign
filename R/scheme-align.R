@@ -55,25 +55,16 @@
 #'     align_dendro(aes(color = branch), k = 3) +
 #'     scheme_align(guides = "r")
 #' @export
-scheme_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
-    if (!identical(guides, NA)) assert_layout_guides(guides)
-    if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
-    if (!identical(free_labs, NA)) assert_layout_position(free_labs)
-    new_scheme_align(
-        free_spaces = free_spaces,
-        free_labs = free_labs,
-        guides = guides
+#' @include utils-S7.R
+scheme_align <- S7::new_class(
+    "scheme_align",
+    parent = scheme,
+    properties = list(
+        guides = position_prop(),
+        free_spaces = position_prop(),
+        free_labs = position_prop()
     )
-}
-
-new_scheme_align <- function(guides = waiver(), free_spaces = waiver(),
-                             free_labs = waiver()) {
-    new_scheme(
-        name = "scheme_align",
-        list(free_spaces = free_spaces, free_labs = free_labs, guides = guides),
-        class = "scheme_align"
-    )
-}
+)
 
 #' @importFrom utils modifyList
 #' @export

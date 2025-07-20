@@ -70,11 +70,27 @@ area <- function(t, l, b = t, r = l) {
     new_areas(one_area)
 }
 
-new_areas <- function(x) new_rcrd(x, class = c("ggalign_area", "patch_area"))
+areas <- S7::new_class(
+    S7::new_S3_class("patch_area"),
+    properties = list(
+        t = S7::class_integer,
+        l = S7::class_integer,
+        b = S7::class_integer,
+        r = S7::class_integer
+    ),
+    validator = function(self) {
+        if (any(self@t > self@b)) {
+            cli_abort("'@t' must be less than '@b'")
+        }
+        if (any(self@l > self@r)) {
+            cli_abort("'@l' must be less than '@r'")
+        }
+    }
+)
 
-#' @export
-format.ggalign_area <- function(x, ...) {
-    x <- vec_data(x)
+#' @importFrom S7 props
+S7::method(format, areas) <- function(x, ...) {
+    x <- props(x)
     x <- vec_set_names(x, paste0(vec_seq_along(x), ": "))
     format(x)
 }
@@ -117,7 +133,6 @@ as_areas.ggalign_area <- function(x) x
 
 #' @export
 as_areas.character <- function(x) {
-    call <- current_call() # used for message only
     # split into rows
     x <- .subset2(strsplit(x, split = "\n"), 1L)
     x <- lapply(x, trimws)
@@ -127,7 +142,7 @@ as_areas.character <- function(x) {
     ncols <- list_sizes(x)
     ncol <- .subset(ncols, 1L)
     if (any(ncols != ncol)) {
-        cli_abort("character layout must be rectangular", call = call)
+        cli_abort("character layout must be rectangular")
     }
     row <- rep(seq_along(x), each = ncol)
     col <- rep(seq_len(ncol), length(x))
@@ -148,7 +163,7 @@ as_areas.character <- function(x) {
         r <- .subset(area_cols, 2L)
         if (!all(x[row >= t & row <= b & col >= l & col <= r] ==
             x[.subset(i, 1L)])) {
-            cli_abort("Patch areas must be rectangular", call = call)
+            cli_abort("Patch areas must be rectangular")
         }
         new_areas(list(t = t, l = l, b = b, r = r))
     })

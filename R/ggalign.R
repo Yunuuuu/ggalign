@@ -102,7 +102,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
         data_params = list2(...),
         plot = ggplot(mapping = mapping),
         size = size,
-        schemes = default_schemes(data, th = theme_no_strip()),
+        schemes = new_schemes(data, th = theme_no_strip()),
         no_axes = no_axes, active = active
     )
 }

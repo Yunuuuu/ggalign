@@ -82,7 +82,7 @@ align_dendro <- function(mapping = aes(), ...,
         type = type, root = root, center = center,
         reorder_dendrogram = reorder_dendrogram,
         reorder_group = reorder_group,
-        schemes = default_schemes(th = theme_no_strip()),
+        schemes = new_schemes(th = theme_no_strip()),
         k = k, h = h, cutree = cutree, data = data, active = active,
         size = size, no_axes = no_axes, plot = plot
     )
