@@ -1,5 +1,11 @@
 # ggalign (development version)
 
+* Added layout_theme() to control layout theming.
+
+* Deprecated the `theme` argument in `layout_annotation()`.
+
+* use S7 class system to implement `alighpatches`
+
 # ggalign 1.0.2
 
 * `align_plots()`: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.
