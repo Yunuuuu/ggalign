@@ -181,6 +181,7 @@ as_areas.patch_area <- function(x) add_class(x, "ggalign_area")
 
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme ggplot
+#' @importFrom utils packageVersion
 #' @export
 plot.ggalign_area <- function(x, ...) {
     data <- vec_data(x)
