@@ -346,7 +346,7 @@ S7::method(alignpatches_add, S3_layout_title) <-
 #'     p3 + theme(plot.background = element_blank())
 #' ) +
 #'     layout_theme(plot.background = element_rect(fill = "red"))
-#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 theme
 #' @export
 layout_theme <- rlang::new_function(
     # We utilize editor completion by listing all `theme()` arguments here.
