@@ -46,7 +46,10 @@ Remotes:
     tidyverse/ggplot2
 ByteCompile: true
 Config/Needs/check:
-    R.utils
+    R.utils,
+    lattice,
+    ComplexHeatmap,
+    pheatmap,
 Config/Needs/website:
     bench,
     pheatmap,
