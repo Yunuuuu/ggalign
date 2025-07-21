@@ -62,8 +62,7 @@ make_inset <- function(
 #' @importFrom grid grid.draw
 #' @export
 grid.draw.patch_inset <- function(x, recording = TRUE) {
-    x <- .subset2(x, "grob")
-    NextMethod()
+    grid.draw(.subset2(x, "grob"))
 }
 
 #' @importFrom ggplot2 ggplot_add
