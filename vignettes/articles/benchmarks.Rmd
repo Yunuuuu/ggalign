@@ -37,13 +37,13 @@ bench::mark(
         dev.off()
         NULL
     },
-    "heatmap.2()" = {
+    "gplots::heatmap.2()" = {
         pdf(NULL)
         heatmap.2(mat, dendrogram = "none", trace = "none")
         dev.off()
         NULL
     },
-    "Heatmap()" = {
+    "ComplexHeatmap::Heatmap()" = {
         pdf(NULL)
         draw(Heatmap(mat,
             cluster_rows = FALSE, cluster_columns = FALSE,
@@ -52,7 +52,7 @@ bench::mark(
         dev.off()
         NULL
     },
-    "pheatmap()" = {
+    "pheatmap::pheatmap()" = {
         pdf(NULL)
         pheatmap(mat, cluster_rows = FALSE, cluster_cols = FALSE)
         dev.off()
@@ -63,7 +63,8 @@ bench::mark(
         print(ggheatmap(mat, filling = "raster"))
         dev.off()
         NULL
-    }
+    },
+    memory = FALSE
 )
 ```
 
@@ -76,13 +77,13 @@ bench::mark(
         dev.off()
         NULL
     },
-    "heatmap.2()" = {
+    "gplots::heatmap.2()" = {
         pdf(NULL)
         heatmap.2(mat, trace = "none")
         dev.off()
         NULL
     },
-    "Heatmap()" = {
+    "ComplexHeatmap::Heatmap()" = {
         pdf(NULL)
         draw(Heatmap(mat,
             row_dend_reorder = FALSE, column_dend_reorder = FALSE,
@@ -91,7 +92,7 @@ bench::mark(
         dev.off()
         NULL
     },
-    "pheatmap()" = {
+    "pheatmap::pheatmap()" = {
         pdf(NULL)
         pheatmap(mat)
         dev.off()
@@ -104,6 +105,7 @@ bench::mark(
             anno_right() + align_dendro())
         dev.off()
         NULL
-    }
+    },
+    memory = FALSE
 )
 ```
