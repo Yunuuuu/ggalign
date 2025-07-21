@@ -17,14 +17,16 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![DOI](https://zenodo.org/badge/828195668.svg)](https://doi.org/10.5281/zenodo.14825328)
 <!-- badges: end -->
 
-The `ggalign` package extends `ggplot2` to simplify the creation of
-complex, multi-plot visualizations. Built on the familiar grammar of
-graphics, it provides intuitive tools to align and organize plots—such
-as heatmaps, dendrograms, or circular layouts—while handling intricate
-relationships in multi-omics data, like genomics or microbiomes. Whether
-you need to stack plots, arrange them around a central figure, or link
-diverse datasets (e.g., genes to pathways), `ggalign` offers flexibility
-and precision with minimal effort.
+The `ggalign` package provides an integrative framework for composable
+visualization, enabling the construction of complex multi-plot
+layouts—including insets, circular arrangements, and multi-panel
+compositions. Built on the grammar of graphics, it introduces intuitive
+tools to align, stack, and nest plots, making it easy to link related
+views, overlay clustering results, or highlight shared patterns.
+Designed for high-dimensional data contexts such as genomics,
+transcriptomics, and microbiome studies, it simplifies the creation of
+richly annotated, publication-ready figures from diverse visual
+components.
 
 ## Why use `ggalign`?
 
