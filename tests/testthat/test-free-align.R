@@ -40,5 +40,5 @@ test_that("free_align removes overlapping axes from free_lab", {
 })
 
 test_that("free_align errors on unsupported types", {
-    expect_snapshot_error(free_align(list(a = 1)), )
+    expect_snapshot_error(free_align(list()))
 })
