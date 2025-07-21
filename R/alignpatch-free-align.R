@@ -101,11 +101,11 @@ free_align.free_lab <- function(plot, axes = "tlbr") {
     assert_position(axes)
     # if axes are free, it's not necessary to free the labs
     free_labs <- setdiff_position(attr(plot, "free_labs"), axes)
-    if (is_empty(free_labs)) {
+    if (nzchar(free_labs)) {
+        attr(plot, "free_labs") <- free_labs
+    } else {
         attr(plot, "free_labs") <- NULL
         plot <- remove_class(plot, "free_lab")
-    } else {
-        attr(plot, "free_labs") <- free_labs
     }
     NextMethod()
 }
@@ -115,11 +115,11 @@ free_align.free_lab <- function(plot, axes = "tlbr") {
 free_align.free_space <- function(plot, axes = "tlbr") {
     assert_position(axes)
     free_spaces <- setdiff_position(attr(plot, "free_spaces"), axes)
-    if (is_empty(free_spaces)) {
+    if (nzchar(free_spaces)) {
+        attr(plot, "free_spaces") <- free_spaces
+    } else {
         attr(plot, "free_spaces") <- NULL
         plot <- remove_class(plot, "free_space")
-    } else {
-        attr(plot, "free_spaces") <- free_spaces
     }
     NextMethod()
 }
@@ -129,11 +129,11 @@ free_align.free_space <- function(plot, axes = "tlbr") {
 free_align.free_border <- function(plot, axes = "tlbr") {
     assert_position(axes)
     free_borders <- setdiff_position(attr(plot, "free_borders"), axes)
-    if (is_empty(free_borders)) {
+    if (nzchar(free_borders)) {
+        attr(plot, "free_borders") <- free_borders
+    } else {
         attr(plot, "free_borders") <- NULL
         plot <- remove_class(plot, "free_border")
-    } else {
-        attr(plot, "free_borders") <- free_borders
     }
     NextMethod()
 }
