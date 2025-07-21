@@ -45,6 +45,12 @@ fortify_matrix.list_upset <- function(data, mode = "distinct", ...,
         vec_unique(vec_slice(x, !vec_detect_missing(x)))
     })
     data <- list_drop_empty(data)
+    if (length(data) == 0L) {
+        cli::cli_abort(
+            "No valid data: All input lists are either empty or contain only missing values.",
+            call = call
+        )
+    }
 
     # Based on the explanation from
     # https://jokergoo.github.io/ComplexHeatmap-reference/book/upset-plot.html
