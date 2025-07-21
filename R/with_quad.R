@@ -124,6 +124,12 @@ with_quad.layout_title <- function(x, position = waiver(), main = NULL) {
 }
 
 #' @export
+with_quad.layout_theme <- with_quad.layout_title
+
+#' @export
+with_quad.layout_annotation <- with_quad.layout_title
+
+#' @export
 with_quad.quad_active <- with_quad.layout_title
 
 #' @export
