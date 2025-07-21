@@ -70,7 +70,7 @@ split_position <- function(x) {
 }
 
 # pos is an atomic character
-setup_pos <- function(x) complete_pos(split_position(x))
+setup_pos <- function(x) unname(complete_pos(split_position(x)))
 
 setup_guides <- function(x) {
     .subset(
