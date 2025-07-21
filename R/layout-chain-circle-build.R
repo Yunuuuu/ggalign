@@ -340,8 +340,6 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # always add strips columns and/or rows
     plot_table <- add_strips(plot_table, strip_pos)
-    # add guides columns and/or rows for ggplot2 < 3.5.0
-    plot_table <- add_guides(plot_table)
     setup_patch_titles(plot_table, patch_titles = list(
         top = NULL, left = NULL, bottom = NULL, right = NULL
     ), theme = theme)

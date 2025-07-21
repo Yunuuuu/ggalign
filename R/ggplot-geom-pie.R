@@ -39,7 +39,7 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
 }
 
 #' @importFrom grid gpar
-#' @importFrom ggplot2 ggproto aes resolution
+#' @importFrom ggplot2 ggproto aes resolution fill_alpha
 #' @importFrom rlang set_names
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,

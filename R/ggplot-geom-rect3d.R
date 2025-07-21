@@ -52,7 +52,7 @@ geom_rect3d <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto fill_alpha
 GeomRect3d <- ggproto(
     "GeomRect3d",
     ggplot2::GeomRect,

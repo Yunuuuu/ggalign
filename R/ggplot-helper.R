@@ -91,7 +91,7 @@ element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
 
 #' @importFrom utils packageVersion
 #' @importFrom grid gpar
-#' @importFrom ggplot2 element_grob
+#' @importFrom ggplot2 element_grob fill_alpha
 #' @export
 element_grob.ggalign_element_polygon <- function(element,
                                                  x = c(0, 0.5, 1, 0.5),

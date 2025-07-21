@@ -42,7 +42,7 @@ scheme_theme <- rlang::new_function(
     ),
     quote({
         elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-        ans <- inject(theme(!!!elements)) # for ggplot2 version < 3.5.0
+        ans <- theme(!!!elements)
         th <- NULL
         for (i in seq_len(...length())) {
             if (inherits(t <- ...elt(i), "theme")) {

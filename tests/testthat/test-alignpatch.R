@@ -21,7 +21,7 @@ test_that("print.alignpatches seeks or pushes viewport when vp is provided", {
 
     # Test with viewport object
     vp_obj <- viewport()
-    expect_silent(print(p, newpage = TRUE, vp = vp_obj))
+    expect_silent(with_empty_dev(p, newpage = TRUE, vp = vp_obj))
 })
 
 test_that("The grid can be controlled", {

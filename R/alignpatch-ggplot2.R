@@ -46,8 +46,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         strip_pos <- find_strip_pos(ans)
         # always add strips columns and/or rows
         ans <- add_strips(ans, strip_pos)
-        # add guides columns and/or rows for ggplot2 < 3.5.0
-        ans <- add_guides(ans)
         setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
     },
     respect = function(self, gt = self$gt) .subset2(gt, "respect"),
@@ -331,49 +329,4 @@ find_strip_pos <- function(gt) {
         return("outside")
     }
     "inside"
-}
-
-#' @importFrom ggplot2 find_panel
-#' @importFrom gtable gtable_add_rows gtable_add_cols
-#' @importFrom grid unit
-add_guides <- function(gt) {
-    layout <- .subset2(gt, "layout")
-    guide_ind <- grep("guide-box", layout$name)
-
-    if (length(guide_ind) == 5L) { # for ggplot2 >= 3.5.0
-        return(gt)
-    }
-    panel_loc <- find_panel(gt)[, c("t", "l", "b", "r"), drop = FALSE]
-    guide_loc <- layout[guide_ind, c("t", "l", "b", "r"), drop = FALSE]
-    guide_pos <- if (nrow(guide_loc) == 0) {
-        "none"
-    } else if (panel_loc$t == guide_loc$t) {
-        if (panel_loc$l > guide_loc$l) {
-            "left"
-        } else if (panel_loc$r < guide_loc$r) {
-            "right"
-        } else {
-            "inside"
-        }
-    } else if (panel_loc$t > guide_loc$t) {
-        "top"
-    } else {
-        "bottom"
-    }
-
-    # https://www.tidyverse.org/blog/2024/02/ggplot2-3-5-0-legends/#spacing-and-margins
-    # add `legend box spacing` and `legend box`
-    if (guide_pos != "right") {
-        gt <- gtable_add_cols(gt, unit(c(0L, 0L), "mm"), panel_loc$r + 3L)
-    }
-    if (guide_pos != "left") {
-        gt <- gtable_add_cols(gt, unit(c(0L, 0L), "mm"), panel_loc$l - 4L)
-    }
-    if (guide_pos != "bottom") {
-        gt <- gtable_add_rows(gt, unit(c(0L, 0L), "mm"), panel_loc$b + 5L)
-    }
-    if (guide_pos != "top") {
-        gt <- gtable_add_rows(gt, unit(c(0L, 0L), "mm"), panel_loc$t - 4L)
-    }
-    gt
 }
