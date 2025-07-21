@@ -39,6 +39,54 @@ test_that("free_align removes overlapping axes from free_lab", {
     expect_null(attr(fa, "free_labs"))
 })
 
+test_that("free_align removes overlapping axes free_space", {
+    p <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    attr(p, "free_spaces") <- "tlbr"
+    class(p) <- c("free_space", class(p))
+
+    p_fa <- free_align(p, axes = "lr")
+
+    expect_equal(attr(p_fa, "free_spaces"), "tb")
+    expect_true(inherits(p_fa, "free_space"))
+})
+
+test_that("free_align removes free_space class if no free spaces remain", {
+    p <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    attr(p, "free_spaces") <- "lr"
+    class(p) <- c("free_space", class(p))
+
+    p_fa <- free_align(p, axes = "tlbr")
+
+    expect_null(attr(p_fa, "free_spaces"))
+    expect_false(inherits(p_fa, "free_space"))
+})
+
+test_that("free_align removes overlapping axes free_border", {
+    p <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    attr(p, "free_borders") <- "tlbr"
+    class(p) <- c("free_border", class(p))
+
+    p_fa <- free_align(p, axes = "tb")
+
+    expect_equal(attr(p_fa, "free_borders"), "lr")
+    expect_true(inherits(p_fa, "free_border"))
+})
+
+test_that("free_align removes free_border class if no free borders remain", {
+    p <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    attr(p, "free_borders") <- "tb"
+    class(p) <- c("free_border", class(p))
+
+    p_fa <- free_align(p, axes = "tlbr")
+
+    expect_null(attr(p_fa, "free_borders"))
+    expect_false(inherits(p_fa, "free_border"))
+})
+
 test_that("free_align errors on unsupported types", {
     expect_snapshot_error(free_align(list()))
 })
