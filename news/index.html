@@ -42,7 +42,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
-</div>
+<ul><li><p>Added layout_theme() to control layout theming.</p></li>
+<li><p>Deprecated the <code>theme</code> argument in <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code>.</p></li>
+<li><p>use S7 class system to implement <code>alighpatches</code></p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.2" id="ggalign-102">ggalign 1.0.2<a class="anchor" aria-label="anchor" href="#ggalign-102"></a></h2><p class="text-muted">CRAN release: 2025-05-14</p>
 <ul><li><p><code><a href="../reference/align_plots.html">align_plots()</a></code>: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.</p></li>
@@ -53,7 +56,7 @@
 <li><p><code><a href="../reference/circle_layout.html">circle_layout()</a></code>: fix wrong <code>sector_spacing</code> due to the operator precedence when building.</p></li>
 <li><p><code><a href="../reference/circle_layout.html">circle_layout()</a></code>: rename <code>spacing_theta</code> argument to <code>sector_spacing</code> argument, and deprecate <code>spacing_theta</code> argument.</p></li>
 <li><p><code>circle_continous</code>: gains <code>spacing_theta</code> argument to control the sector spacing for all plots.</p></li>
-<li><p><code><a href="../reference/facet_sector.html">facet_sector()</a></code>: deprecate <code>radial</code> argument, user should add the <code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code> or <code><a href="../reference/coord_circle.html">coord_circle()</a></code> directly to the plot.</p></li>
+<li><p><code><a href="../reference/facet_sector.html">facet_sector()</a></code>: deprecate <code>radial</code> argument, user should add the <code><a href="https://ggplot2.tidyverse.org/reference/coord_radial.html" class="external-link">coord_radial()</a></code> or <code><a href="../reference/coord_circle.html">coord_circle()</a></code> directly to the plot.</p></li>
 <li><p>new <code><a href="../reference/magickGrob.html">magickGrob()</a></code> to construct grob with <code>magick</code> processing.</p></li>
 </ul></div>
     <div class="section level2">
@@ -193,7 +196,7 @@
 <li><p><code>method</code> in <code><a href="../reference/hclust2.html">hclust2()</a></code> can now return any objects which can be coerced into hclust, or you can provide such object directly in <code>method</code>.</p></li>
 <li><p><code><a href="../reference/hclust2.html">hclust2()</a></code> now can accept <code>distance = NULL</code></p></li>
 <li><p><code><a href="../reference/quad_switch.html">hmanno()</a></code>, <code><a href="../reference/stack_switch.html">stack_active()</a></code>, and <code>align_*()</code> functions gain a new argument <code>theme</code> to control the theme for the plot.</p></li>
-<li><p>new <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> and <code>layout_theme()</code> to modify the layout components</p></li>
+<li><p>new <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code> and <code><a href="../reference/layout_theme.html">layout_theme()</a></code> to modify the layout components</p></li>
 <li><p><code>borders</code> argument in <code><a href="../reference/free.html">free_space()</a></code> has been renamed to <code>spaces</code></p></li>
 <li><p>{tibble} is now removed from the dependency</p></li>
 <li><p><code><a href="../reference/align_plots.html">align_plots()</a></code> now can accept <code>gList</code>, <code>function</code>, <code>recordedplot</code>, <code>trellis</code>, <code>pheatmap</code>, <code>Heatmap</code>, <code>HeatmapAnnotation</code>, and <code>HeatmapList</code>, we have added <code>alignpatch</code> method for these objects.</p></li>

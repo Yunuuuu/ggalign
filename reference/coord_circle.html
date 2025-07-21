@@ -44,7 +44,7 @@ additional customization options."><meta property="og:image" content="https://yu
     </div>
 
     <div class="ref-description section level2">
-    <p>An extended version of <code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code>, providing
+    <p>An extended version of <code><a href="https://ggplot2.tidyverse.org/reference/coord_radial.html" class="external-link">coord_radial()</a></code>, providing
 additional customization options.</p>
     </div>
 
@@ -90,7 +90,7 @@ for partial polar coordinates. The default, <code>NULL</code>, is set to
 
 
 <dt id="arg-expand">expand<a class="anchor" aria-label="anchor" href="#arg-expand"></a></dt>
-<dd><p>If <code>TRUE</code>, the default, adds a small expansion factor the
+<dd><p>If <code>TRUE</code>, the default, adds a small expansion factor to
 the limits to prevent overlap between data and axes. If <code>FALSE</code>, limits
 are taken directly from the scale.</p></dd>
 
@@ -106,10 +106,14 @@ means no. For details, please see <code><a href="https://ggplot2.tidyverse.org/r
 
 
 <dt id="arg-r-axis-inside">r.axis.inside<a class="anchor" aria-label="anchor" href="#arg-r-axis-inside"></a></dt>
-<dd><p>If <code>TRUE</code>, places the radius axis inside the
-panel. If <code>FALSE</code>, places the radius axis next to the panel. The default,
-<code>NULL</code>, places the radius axis outside if the <code>start</code> and <code>end</code> arguments
-form a full circle.</p></dd>
+<dd><p>One of the following:</p><ul><li><p><code>NULL</code> (default) places the axis next to the panel if <code>start</code> and
+<code>end</code> arguments form a full circle and inside the panel otherwise.</p></li>
+<li><p><code>TRUE</code> to place the radius axis inside the panel.</p></li>
+<li><p><code>FALSE</code> to place the radius axis next to the panel.</p></li>
+<li><p>A numeric value, setting a theta axis value at which
+the axis should be placed inside the panel. Can be given as a length 2
+vector to control primary and secondary axis placement separately.</p></li>
+</ul></dd>
 
 
 <dt id="arg-rotate-angle">rotate.angle<a class="anchor" aria-label="anchor" href="#arg-rotate-angle"></a></dt>
@@ -125,7 +129,7 @@ alignment with the coordinates.</p></dd>
 
 <dt id="arg-outer-radius">outer.radius<a class="anchor" aria-label="anchor" href="#arg-outer-radius"></a></dt>
 <dd><p>A numeric in <code>(0, 1]</code> indicates the outer radius.
-<code><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_radial()</a></code> by default uses <code>0.8</code>.</p></dd>
+<code><a href="https://ggplot2.tidyverse.org/reference/coord_radial.html" class="external-link">coord_radial()</a></code> by default uses <code>0.8</code>.</p></dd>
 
 </dl></div>
 

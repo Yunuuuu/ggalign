@@ -59,8 +59,9 @@ nesting level.</p>
 <span>  byrow <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  widths <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  heights <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  design <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  guides <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  area <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  guides <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  design <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,7 +87,7 @@ is inserted in which case it will allow the dimension to expand or contract
 to match the aspect ratio of the content.</p></dd>
 
 
-<dt id="arg-design">design<a class="anchor" aria-label="anchor" href="#arg-design"></a></dt>
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
 <dd><p>Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to
 <code><a href="area.html">area()</a></code> together.</p></dd>
@@ -98,6 +99,10 @@ indicating which side of guide legends should be collected. Defaults to
 <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code>, which inherits from the parent layout. If
 there is no parent layout, or if <code>NULL</code> is provided, no guides will be
 collected.</p></dd>
+
+
+<dt id="arg-design">design<a class="anchor" aria-label="anchor" href="#arg-design"></a></dt>
+<dd><p>An alias for <code>area</code>, retained for backward compatibility.</p></dd>
 
 </dl></div>
     <div class="section level2">

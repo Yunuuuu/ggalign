@@ -54,9 +54,10 @@
 <span>  byrow <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  widths <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  heights <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  design <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  area <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guides <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  design <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -87,7 +88,7 @@ is inserted in which case it will allow the dimension to expand or contract
 to match the aspect ratio of the content.</p></dd>
 
 
-<dt id="arg-design">design<a class="anchor" aria-label="anchor" href="#arg-design"></a></dt>
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
 <dd><p>Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to
 <code><a href="area.html">area()</a></code> together.</p></dd>
@@ -103,21 +104,24 @@ collected.</p></dd>
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
 <dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> object used to customize various
-elements of the plot, including <code>guides</code>, <code>title</code>, <code>subtitle</code>, <code>caption</code>,
-<code>margins</code>, <code>panel.border</code>, and <code>background</code>. By default, the
-theme will inherit from the parent <code>layout</code>.</p></dd>
+elements of the layout. By default, the theme will inherit from the parent
+<code>layout</code>.</p></dd>
+
+
+<dt id="arg-design">design<a class="anchor" aria-label="anchor" href="#arg-design"></a></dt>
+<dd><p>An alias for <code>area</code>, retained for backward compatibility.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>alignpatches</code> object.</p>
+    <p>An <code>AlignPatches</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
 <ul><li><p><code><a href="layout_design.html">layout_design()</a></code></p></li>
 <li><p><code><a href="layout_title.html">layout_title()</a></code></p></li>
-<li><p><code><a href="layout_annotation.html">layout_annotation()</a></code></p></li>
+<li><p><code><a href="layout_theme.html">layout_theme()</a></code></p></li>
 </ul></div>
     </div>
 
@@ -145,13 +149,13 @@ theme will inherit from the parent <code>layout</code>.</p></dd>
 <span class="r-plt img"><img src="align_plots-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Match plots to areas by name</span></span></span>
-<span class="r-in"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="st">"#BB</span></span></span>
-<span class="r-in"><span><span class="st">           AA#"</span></span></span>
-<span class="r-in"><span><span class="fu">align_plots</span><span class="op">(</span>B <span class="op">=</span> <span class="va">p1</span>, A <span class="op">=</span> <span class="va">p2</span>, design <span class="op">=</span> <span class="va">design</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">area</span> <span class="op">&lt;-</span> <span class="st">"#BB</span></span></span>
+<span class="r-in"><span><span class="st">          AA#"</span></span></span>
+<span class="r-in"><span><span class="fu">align_plots</span><span class="op">(</span>B <span class="op">=</span> <span class="va">p1</span>, A <span class="op">=</span> <span class="va">p2</span>, area <span class="op">=</span> <span class="va">area</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="align_plots-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare to not using named plot arguments</span></span></span>
-<span class="r-in"><span><span class="fu">align_plots</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, design <span class="op">=</span> <span class="va">design</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">align_plots</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, area <span class="op">=</span> <span class="va">area</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="align_plots-4.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
