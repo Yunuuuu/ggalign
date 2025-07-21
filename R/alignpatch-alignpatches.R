@@ -10,15 +10,16 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
+    #' @importFrom S7 prop
     patch_gtable = function(self, theme = theme_get(), guides = NULL,
                             top_level = FALSE, plot = self$plot) {
-        patches <- lapply(.subset2(plot, "plots"), alignpatch)
-        layout <- .subset2(plot, "layout")
+        patches <- lapply(prop(plot, "plots"), alignpatch)
+        layout <- prop(plot, "layout")
 
-        # get the design areas and design dims ------------------
+        # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
         panel_heights <- .subset2(layout, "heights")
-        if (is.null(design <- .subset2(layout, "design"))) {
+        if (is.null(area <- .subset2(layout, "area"))) {
             if (is.null(layout$ncol) && length(panel_widths) > 1L) {
                 layout$ncol <- length(panel_widths)
             }
@@ -30,22 +31,22 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 .subset2(layout, "nrow"),
                 .subset2(layout, "ncol")
             )
-            design <- create_design(
+            area <- create_area(
                 dims[2L], dims[1L],
                 .subset2(layout, "byrow")
             )
         } else {
-            dims <- c(max(field(design, "b")), max(field(design, "r")))
+            dims <- c(max(field(area, "b")), max(field(area, "r")))
         }
 
         # filter `plots` based on the design areas --------------------
-        if (vec_size(design) < vec_size(patches)) {
+        if (vec_size(area) < vec_size(patches)) {
             cli_warn(
                 "Too few patch areas to hold all plots. Dropping plots"
             )
-            plots <- vec_slice(patches, vec_seq_along(design))
+            plots <- vec_slice(patches, vec_seq_along(area))
         } else {
-            design <- vec_slice(design, seq_along(patches))
+            area <- vec_slice(area, seq_along(patches))
         }
 
         # remove NULL patch -----------------------------------
@@ -57,17 +58,17 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         self$patches <- patches
 
         # add borders to patch --------------------------------
-        design <- vec_slice(design, keep)
+        area <- vec_slice(area, keep)
         for (i in seq_along(patches)) {
             patches[[i]]$borders <- c(
-                if (field(design, "t")[i] == 1L) "top" else NULL,
-                if (field(design, "l")[i] == 1L) "left" else NULL,
-                if (field(design, "b")[i] == .subset(dims, 1L)) {
+                if (field(area, "t")[i] == 1L) "top" else NULL,
+                if (field(area, "l")[i] == 1L) "left" else NULL,
+                if (field(area, "b")[i] == .subset(dims, 1L)) {
                     "bottom"
                 } else {
                     NULL
                 },
-                if (field(design, "r")[i] == .subset(dims, 2L)) {
+                if (field(area, "r")[i] == .subset(dims, 2L)) {
                     "right"
                 } else {
                     NULL
@@ -81,7 +82,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         guides <- .subset2(layout, "guides") %|w|% parent_guides
 
         # by default, we use ggplot2 default theme
-        if (!is.null(plot$theme)) theme <- theme + plot$theme
+        if (!is.null(prop(plot, "theme"))) theme <- theme + prop(plot, "theme")
         self$theme <- theme
 
         #######################################################
@@ -125,7 +126,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # setup sizes for each row/column -----------------------
         gt <- self$set_sizes(
-            design, dims, panel_widths, panel_heights,
+            area, dims, panel_widths, panel_heights,
             patches = patches, gt = gt
         )
 
@@ -154,7 +155,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # 2L: plot table
         # 3L: foreground of the panel area
         # 4L: legends
-        gt <- self$set_grobs(design, patches = patches, gt = gt)
+        gt <- self$set_grobs(area, patches = patches, gt = gt)
 
         # add panel area ---------------------------------------
         gt <- gtable_add_grob(
@@ -219,7 +220,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         .subset(collected_guides, guides)
     },
     #' @importFrom grid is.unit unit
-    set_sizes = function(self, design, dims,
+    set_sizes = function(self, area, dims,
                          panel_widths, panel_heights,
                          patches, gt = self$gt) {
         panel_widths <- rep(panel_widths, length.out = dims[2L])
@@ -233,8 +234,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # if it cannot be fixed and aligned, the strip, axis and labs will be
         # attached into the panel
         # the plot to be fixed must in only one square of the area
-        need_fix <- field(design, "l") == field(design, "r") &
-            field(design, "t") == field(design, "b") &
+        need_fix <- field(area, "l") == field(area, "r") &
+            field(area, "t") == field(area, "b") &
             vapply(
                 patches,
                 function(patch) patch$respect(),
@@ -247,8 +248,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # heights based on the fixed aspect ratio
         guess_widths <- which(is.na(as.numeric(panel_widths)))
         guess_heights <- which(is.na(as.numeric(panel_heights)))
-        cols <- field(design, "l")
-        rows <- field(design, "t")
+        cols <- field(area, "l")
+        rows <- field(area, "t")
         patch_index <- order(
             # we first set the widths for the fixed plot with heights set by
             # user
@@ -303,7 +304,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # setup sizes for non-panel rows/columns --------------
         sizes <- table_sizes(
             lapply(patches, function(patch) patch$get_sizes()),
-            design, dims[2L], dims[1L]
+            area, dims[2L], dims[1L]
         )
         widths <- .subset2(sizes, "widths")
         heights <- .subset2(sizes, "heights")
@@ -325,11 +326,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
 
     #' @importFrom gtable gtable_add_grob
-    set_grobs = function(self, design, patches, gt = self$gt) {
+    set_grobs = function(self, area, patches, gt = self$gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")
         for (i in seq_along(patches)) {
-            loc <- vec_slice(design, i)
+            loc <- vec_slice(area, i)
             # We must align the borders for the gtable grob with the
             # final plot area sizes
             l <- (field(loc, "l") - 1L) * TABLE_COLS + 1L
@@ -579,17 +580,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     }
 )
 
-create_design <- function(ncol, nrow, byrow) {
-    mat <- matrix(seq_len(ncol * nrow),
-        nrow = nrow, ncol = ncol, byrow = byrow
-    )
-    ind <- as.vector(mat)
-    ind <- match(seq_along(ind), ind)
-    area(t = row(mat)[ind], l = col(mat)[ind])
-}
-
 #' @importFrom grid convertHeight convertWidth unit
-table_sizes <- function(sizes, design, ncol, nrow) {
+table_sizes <- function(sizes, area, ncol, nrow) {
     # `null` unit of the panel area will be converted into 0
     # we'll set the panel width and height afterward
     widths <- lapply(sizes, function(size) {
@@ -600,7 +592,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         col_loc <- i %% TABLE_COLS
         if (col_loc == 0L) col_loc <- TABLE_COLS
         area_side <- if (col_loc <= LEFT_BORDER + 1L) "l" else "r"
-        idx <- field(design, area_side) == area_col
+        idx <- field(area, area_side) == area_col
         if (any(idx)) {
             max(
                 vapply(.subset(widths, idx), .subset, numeric(1L), col_loc),
@@ -617,7 +609,7 @@ table_sizes <- function(sizes, design, ncol, nrow) {
         area_row <- recycle_each(i, TABLE_ROWS)
         row_loc <- recycle_whole(i, TABLE_ROWS)
         area_side <- if (row_loc <= TOP_BORDER + 1L) "t" else "b"
-        idx <- field(design, area_side) == area_row
+        idx <- field(area, area_side) == area_row
         if (any(idx)) {
             max(
                 vapply(

@@ -11,9 +11,10 @@ align_plots(
   byrow = TRUE,
   widths = NA,
   heights = NA,
-  design = NULL,
+  area = NULL,
   guides = waiver(),
-  theme = NULL
+  theme = NULL,
+  design = NULL
 )
 }
 \arguments{
@@ -32,7 +33,7 @@ special value of \code{NA} will behave as \verb{1null} unit unless a fixed aspec
 is inserted in which case it will allow the dimension to expand or contract
 to match the aspect ratio of the content.}
 
-\item{design}{Specification of the location of areas in the layout. Can
+\item{area}{Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
@@ -43,12 +44,13 @@ there is no parent layout, or if \code{NULL} is provided, no guides will be
 collected.}
 
 \item{theme}{A \code{\link[ggplot2:theme]{theme()}} object used to customize various
-elements of the plot, including \code{guides}, \code{title}, \code{subtitle}, \code{caption},
-\code{margins}, \code{panel.border}, and \code{background}. By default, the
-theme will inherit from the parent \code{layout}.}
+elements of the layout. By default, the theme will inherit from the parent
+\code{layout}.}
+
+\item{design}{An alias for \code{area}, retained for backward compatibility.}
 }
 \value{
-An \code{alignpatches} object.
+An \code{AlignPatches} object.
 }
 \description{
 Arrange multiple plots into a grid
@@ -74,17 +76,17 @@ align_plots(p1, p2, p3, p4, p5)
 align_plots(!!!list(p1, p2, p3), p4, p5)
 
 # Match plots to areas by name
-design <- "#BB
-           AA#"
-align_plots(B = p1, A = p2, design = design)
+area <- "#BB
+          AA#"
+align_plots(B = p1, A = p2, area = area)
 
 # Compare to not using named plot arguments
-align_plots(p1, p2, design = design)
+align_plots(p1, p2, area = area)
 }
 \seealso{
 \itemize{
 \item \code{\link[=layout_design]{layout_design()}}
 \item \code{\link[=layout_title]{layout_title()}}
-\item \code{\link[=layout_annotation]{layout_annotation()}}
+\item \code{\link[=layout_theme]{layout_theme()}}
 }
 }

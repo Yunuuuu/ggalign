@@ -19,8 +19,7 @@ inset <- function(
     align = "panel",
     on_top = TRUE,
     clip = TRUE,
-    vp = NULL
-) {
+    vp = NULL) {
     make_inset(
         plot = plot,
         ...,
@@ -40,8 +39,7 @@ make_inset <- function(
     on_top,
     clip,
     vp,
-    call = caller_call()
-) {
+    call = caller_call()) {
     assert_bool(on_top, call = call)
     align <- arg_match0(align, c("panel", "plot", "full"), error_call = call)
     assert_bool(clip, call = call)
@@ -70,6 +68,6 @@ grid.draw.patch_inset <- function(x, recording = TRUE) {
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.patch_inset <- function(object, plot, object_name) {
+ggplot_add.patch_inset <- function(object, plot, object_name, ...) {
     make_wrap(plot, object)
 }

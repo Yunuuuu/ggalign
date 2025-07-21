@@ -155,7 +155,7 @@ alignpatch.default <- function(x) {
 #' @export
 alignpatch.NULL <- function(x) NULL
 
-path_no_method <- function(plot, method) {
+patch_no_method <- function(plot, method) {
     cli_abort("no {.fn {method}} method for {.obj_type_friendly {plot}}")
 }
 
@@ -173,10 +173,10 @@ Patch <- ggproto(
     #' `alignpatches` object?
     #' @noRd
     set_guides = function(self, guides) {
-        path_no_method(self$plot, "set_guides")
+        patch_no_method(self$plot, "set_guides")
     },
     patch_gtable = function(self, theme, guides, plot = self$plot) {
-        path_no_method(self$plot, "patch_gtable")
+        patch_no_method(self$plot, "patch_gtable")
     },
     collect_guides = function(self, guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
@@ -306,14 +306,14 @@ Patch <- ggproto(
         )
     },
     free_border = function(self, borders, gt = self$gt) {
-        path_no_method(self$plot, "free_border")
+        patch_no_method(self$plot, "free_border")
     },
     align_free_border = function(self, borders,
                                  t = NULL, l = NULL, b = NULL, r = NULL,
                                  gt = self$gt) {
-        path_no_method(self$plot, "align_free_border")
+        patch_no_method(self$plot, "align_free_border")
     },
     free_lab = function(self, labs, gt = self$gt) {
-        path_no_method(self$plot, "free_lab")
+        patch_no_method(self$plot, "free_lab")
     }
 )

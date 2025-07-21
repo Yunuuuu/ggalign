@@ -277,7 +277,7 @@ test_that("`chain_layout_add()` function with ggalign_with_quad", {
 test_that("`chain_layout_add()` function with CrossLayout", {
 })
 
-test_that("`chain_layout_add()` function with layout_annotation", {
+test_that("`chain_layout_add()` function with layout_theme", {
 
 })
 

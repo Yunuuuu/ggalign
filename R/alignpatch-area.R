@@ -2,7 +2,9 @@
 # patchwork::area, as some desired features won't be merged (see this
 # https://github.com/thomasp85/patchwork/issues/379). Therefore, ggalign will
 # retain `alignpatch-*` scripts.
+
 #' Define the plotting areas in `align_plots`
+#'
 #' @inherit patchwork::area
 #' @details
 #' The grid that the areas are specified in reference to enumerate rows from top
@@ -70,22 +72,43 @@ area <- function(t, l, b = t, r = l) {
     new_areas(one_area)
 }
 
+# Define a custom S3 class `ggalign_area`, without using S7 directly
+# Patchwork expects traditional S3 classes, and S7 classes are not fully
+# interoperable with patchwork layouts.
+S3_area <- S7::new_S3_class("ggalign_area")
+
 new_areas <- function(x) new_rcrd(x, class = c("ggalign_area", "patch_area"))
 
+create_area <- function(ncol, nrow, byrow) {
+    mat <- matrix(seq_len(ncol * nrow),
+        nrow = nrow, ncol = ncol, byrow = byrow
+    )
+    ind <- as.vector(mat)
+    ind <- match(seq_along(ind), ind)
+    area(t = row(mat)[ind], l = col(mat)[ind])
+}
+
 #' @export
-format.ggalign_area <- function(x, ...) {
+obj_print_data.ggalign_area <- function(x, ...) {
     x <- vec_data(x)
-    x <- vec_set_names(x, paste0(vec_seq_along(x), ": "))
-    format(x)
+    if (vec_size(x) > 0) {
+        x <- vec_set_names(x, paste0(vec_seq_along(x), ": "))
+        print(x = x, ..., quote = FALSE)
+    } else {
+        cat("   ", names(x), "\n", sep = " ")
+    }
 }
 
 #' @export
 obj_print_footer.ggalign_area <- function(x, ...) {
-    cat(
-        "\n<Spanning",
-        max(field(x, "r")), "columns and",
-        max(field(x, "b")), "rows>\n"
-    )
+    if (vec_size(x) == 0) {
+        ncols <- 0
+        nrows <- 0
+    } else {
+        ncols <- max(field(x, "r"))
+        nrows <- max(field(x, "b"))
+    }
+    cat("\n<Spanning", ncols, "columns and", nrows, "rows>\n")
 }
 
 #' @export
@@ -135,10 +158,7 @@ as_areas.character <- function(x) {
     # here, area will be reordered by the levels of `x`
     area_list <- imap(split(seq_along(x), x), function(i, name) {
         if (identical(name, "#")) {
-            return(new_areas(list(
-                t = integer(0L), l = integer(0L),
-                b = integer(0L), r = integer(0L)
-            )))
+            return(area())
         }
         area_rows <- range(row[i])
         area_cols <- range(col[i])
@@ -161,6 +181,7 @@ as_areas.patch_area <- function(x) add_class(x, "ggalign_area")
 
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme ggplot
+#' @importFrom utils packageVersion
 #' @export
 plot.ggalign_area <- function(x, ...) {
     data <- vec_data(x)
@@ -189,9 +210,11 @@ plot.ggalign_area <- function(x, ...) {
         ggplot2::labs(fill = "Patch") +
         ggplot2::theme_void() +
         theme(
-            panel.grid.minor = ggplot2::element_line(
-                size = 0.5, colour = "grey"
-            ),
+            panel.grid.minor = if (packageVersion("ggplot2") >= "3.4.0") {
+                ggplot2::element_line(linewidth = 0.5, colour = "grey")
+            } else {
+                ggplot2::element_line(size = 0.5, colour = "grey")
+            },
             axis.text = ggplot2::element_text(),
             axis.ticks.length = unit(3, "mm"),
             plot.margin = margin(10, 10, 10, 10)

@@ -71,13 +71,11 @@ test_that("The grid can be controlled", {
                 p3 + theme(plot.background = element_blank()),
                 p4 + theme(plot.background = element_blank())
             ) +
-                layout_annotation(
-                    theme = theme(
-                        panel.border = element_rect(colour = "blue"),
-                        plot.background = element_rect(
-                            fill = "yellow", color = "black",
-                            linewidth = unit(1, "cm")
-                        )
+                layout_theme(
+                    panel.border = element_rect(colour = "blue"),
+                    plot.background = element_rect(
+                        fill = "yellow", color = "black",
+                        linewidth = unit(1, "cm")
                     )
                 )
         ) +
@@ -85,13 +83,11 @@ test_that("The grid can be controlled", {
                 title = "I'm layout title",
                 subtitle = "I'm layout subtitle",
                 caption = "I'm layout caption"
-            ) + layout_annotation(
-                theme = theme(
-                    panel.border = element_rect(colour = "red"),
-                    plot.background = element_rect(
-                        fill = "green", color = "black",
-                        linewidth = unit(1, "cm")
-                    )
+            ) + layout_theme(
+                panel.border = element_rect(colour = "red"),
+                plot.background = element_rect(
+                    fill = "green", color = "black",
+                    linewidth = unit(1, "cm")
                 )
             )
     })

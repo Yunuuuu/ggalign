@@ -25,7 +25,7 @@ alignpatch.patchwork <- function(x) {
     } else {
         layout$guides <- NULL
     }
-    alignpatch(new_alignpatches(
+    alignpatch(AlignPatches(
         plots,
         layout = layout,
         titles = .subset(annotation, names(layout_title())),

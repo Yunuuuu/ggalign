@@ -32,7 +32,7 @@ quad_build.HeatmapLayout <- function(quad, schemes = NULL, theme = NULL,
 
 #' @importFrom ggplot2 ggplot_build
 #' @export
-ggplot_build.ggalign_heatmap <- function(plot) {
+ggplot_build.ggalign_heatmap <- function(plot, ...) {
     with_options(
         NextMethod(),
         ggplot2.discrete.fill = heatmap_fill("discrete"),

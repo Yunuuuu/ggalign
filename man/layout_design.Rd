@@ -10,8 +10,9 @@ layout_design(
   byrow = waiver(),
   widths = waiver(),
   heights = waiver(),
-  design = waiver(),
-  guides = NA
+  area = waiver(),
+  guides = NA,
+  design = waiver()
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ special value of \code{NA} will behave as \verb{1null} unit unless a fixed aspec
 is inserted in which case it will allow the dimension to expand or contract
 to match the aspect ratio of the content.}
 
-\item{design}{Specification of the location of areas in the layout. Can
+\item{area}{Specification of the location of areas in the layout. Can
 either be specified as a text string or by concatenating calls to
 \code{\link[=area]{area()}} together.}
 
@@ -36,6 +37,8 @@ indicating which side of guide legends should be collected. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
 there is no parent layout, or if \code{NULL} is provided, no guides will be
 collected.}
+
+\item{design}{An alias for \code{area}, retained for backward compatibility.}
 }
 \value{
 A \code{layout_design} object.

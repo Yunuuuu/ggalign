@@ -50,7 +50,7 @@ layer_order.ggalign_layer_order <- function(layer, order = 0) {
 
 #' @importFrom ggplot2 ggplot_add
 #' @export
-ggplot_add.ggalign_layer_order <- function(object, plot, object_name) {
+ggplot_add.ggalign_layer_order <- function(object, plot, object_name, ...) {
     # ggplot2 will do something special for the layer
     # add layer_name, we re-call the method for the layer
     ans <- ggplot_add(
