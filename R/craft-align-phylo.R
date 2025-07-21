@@ -163,11 +163,11 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
         plot <- gguse_data(plot, ggalign_data_set(node, edge = edge))
         position <- self$position
         if (!self$in_linear || # for circular layout
-            # for bottom annotation, reverse y-axis
-            (!is.null(position) && position == "bottom")) {
+            # for top annotation, reverse y-axis
+            (!is.null(position) && position == "top")) {
             plot <- reverse_continuous_axis(plot, "y")
-        } else if (!is.null(position) && position == "left") {
-            # for left annotation, reverse x-axis
+        } else if (!is.null(position) && position == "right") {
+            # for right annotation, reverse x-axis
             plot <- reverse_continuous_axis(plot, "x")
         }
 
@@ -256,6 +256,7 @@ fortify_data_frame.phylo <- function(data, ..., type = "rectangle",
                 "Cannot use {.code tree_type = 'phylogram'}",
                 "No branch length found in {.arg {data_arg}}"
             ))
+            tree_type <- "cladogram"
         }
     }
     if (identical(tree_type, "cladogram")) {

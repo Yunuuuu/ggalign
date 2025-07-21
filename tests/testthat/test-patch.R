@@ -45,19 +45,19 @@ test_that("patch.recordedplot works with base plot", {
 
 test_that("patch.trellis works for lattice plots", {
     skip_if_not_installed("lattice")
-    p <- getFromNamespace("xyplot", "lattice")(disp ~ mpg, data = mtcars)
+    p <- getExportedValue("lattice", "xyplot")(disp ~ mpg, data = mtcars)
     expect_s3_class(patch(p), "grob")
 })
 
 test_that("patch.Heatmap works with ComplexHeatmap", {
     skip_if_not_installed("ComplexHeatmap")
     m <- matrix(rnorm(100), 10)
-    ht <- getFromNamespace("Heatmap", "ComplexHeatmap")(m)
+    ht <- getExportedValue("ComplexHeatmap", "Heatmap")(m)
     expect_s3_class(patch(ht), "grob")
 })
 
 test_that("patch.pheatmap works with pheatmap", {
     skip_if_not_installed("pheatmap")
-    ht <- getFromNamespace("pheatmap", "pheatmap")(matrix(rnorm(100), 10))
+    ht <- getExportedValue("pheatmap", "pheatmap")(matrix(rnorm(100), 10))
     expect_s3_class(patch(ht), "gtable")
 })

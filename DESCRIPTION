@@ -47,6 +47,7 @@ Remotes:
 ByteCompile: true
 Config/Needs/check:
     R.utils,
+    ape,
     lattice,
     ComplexHeatmap,
     pheatmap,
