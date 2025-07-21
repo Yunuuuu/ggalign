@@ -1,3 +1,29 @@
+with_empty_dev <- function(plot, ...) {
+    grDevices::pdf(NULL)
+    print(plot, ...)
+    dev.off()
+}
+
+test_that("print.alignpatches sets last plot and draws grid", {
+    p <- align_plots()
+    with_empty_dev(p)
+    expect_identical(ggplot2::get_last_plot(), p)
+})
+
+test_that("print.alignpatches seeks or pushes viewport when vp is provided", {
+    p <- align_plots()
+
+    # Errors if vp is character and newpage=TRUE
+    expect_snapshot_error(with_empty_dev(p, newpage = TRUE, vp = "some_vp"))
+
+    # Errors if vp does not exist as a viewport
+    expect_snapshot_error(with_empty_dev(p, newpage = FALSE, vp = "panel-1-1"))
+
+    # Test with viewport object
+    vp_obj <- viewport()
+    expect_silent(print(p, newpage = TRUE, vp = vp_obj))
+})
+
 test_that("The grid can be controlled", {
     p1 <- ggplot(mtcars) +
         geom_point(aes(mpg, disp)) +

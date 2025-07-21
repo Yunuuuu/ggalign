@@ -3,15 +3,26 @@
 #' @export
 print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
     ggplot2::set_last_plot(x)
-    if (newpage) grid::grid.newpage()
+    if (newpage) {
+        grid::grid.newpage()
+        if (is.character(vp)) {
+            cli_abort(c(
+                "{.arg vp} cannot be a character string when {.arg newpage} is TRUE.",
+                i = "Please provide a viewport object or set {.arg newpage} to FALSE."
+            ))
+        }
+    }
     if (!is.null(vp)) {
         if (is.character(vp)) {
+            cur <- grid::current.viewport()$name
             grid::seekViewport(vp)
+            if (!identical(cur, "ROOT")) on.exit(grid::seekViewport(cur))
         } else {
             grid::pushViewport(vp)
+            on.exit(grid::upViewport())
         }
-        on.exit(grid::upViewport())
     }
+
     # render the plot
     try_fetch(
         grid.draw(x, ...),
