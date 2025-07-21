@@ -49,16 +49,17 @@ ggalign_build.alignpatches <- function(x) x
 #' @importFrom ggplot2 find_panel element_render theme theme_get
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom rlang arg_match0
+#' @importFrom S7 prop
 #' @export
 ggalign_gtable.alignpatches <- function(x) {
-    titles <- x@titles
+    titles <- prop(x, "titles")
 
     # ensure theme has no missing value
-    theme <- x@theme %||% theme_get()
+    theme <- prop(x, "theme") %||% theme_get()
 
     # `TO-DO`: use `complete_theme()` from ggplot2 release
     theme <- complete_theme(theme)
-    x@theme <- theme
+    attr(x, "theme") <- theme # bypass the setter function
     table <- alignpatch(x)$patch_gtable(top_level = TRUE)
 
     fix_respect <- is.matrix(.subset2(table, "respect"))

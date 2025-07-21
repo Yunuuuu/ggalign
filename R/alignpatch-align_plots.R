@@ -89,16 +89,16 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
 }
 
 #' @importFrom ggplot2 is_theme
-#' @importFrom S7 new_object S7_object
+#' @importFrom S7 new_object S7_object prop prop<-
 AlignPatches <- S7::new_class("AlignPatches",
     properties = list(
         plots = S7::new_property(
             S7::class_list,
             setter = function(self, value) {
-                if (!is.null(self@plots)) {
+                if (!is.null(prop(self, "plots"))) {
                     cli_abort("'@plots' is read-only")
                 }
-                self@plots <- value
+                prop(self, "plots", check = FALSE) <- value
                 self
             }
         ),
@@ -108,7 +108,7 @@ AlignPatches <- S7::new_class("AlignPatches",
                 if (!inherits(value, "layout_design")) {
                     cli_abort("'@layout' must be a {.fn layout_design} object")
                 }
-                old <- self@layout %||% list(
+                old <- prop(self, "layout") %||% list(
                     ncol = NULL, nrow = NULL, byrow = TRUE,
                     widths = NA, heights = NA, area = NULL,
                     guides = waiver()
@@ -121,7 +121,7 @@ AlignPatches <- S7::new_class("AlignPatches",
                 } else if (!identical(guides, NA)) {
                     old["guides"] <- list(setup_guides(guides))
                 }
-                self@layout <- old
+                prop(self, "layout", check = FALSE) <- old
                 self
             }
         ),
@@ -131,9 +131,11 @@ AlignPatches <- S7::new_class("AlignPatches",
                 if (!inherits(value, "layout_title")) {
                     cli_abort("'@titles' must be a {.fn layout_title} object'")
                 }
-                old <- self@titles %||%
+                old <- prop(self, "titles") %||%
                     list(title = NULL, subtitle = NULL, caption = NULL)
-                self@titles <- update_non_waive(old, value)
+                prop(self, "titles", check = FALSE) <- update_non_waive(
+                    old, value
+                )
                 self
             }
         ),
@@ -143,10 +145,11 @@ AlignPatches <- S7::new_class("AlignPatches",
                 if (!is.null(value) && !is_theme(value)) {
                     cli_abort("'@theme' must be a {.cls theme} object'")
                 }
-                if (is.null(self@theme) || is.null(value)) {
-                    attr(self, "theme") <- value
+                if (is.null(prop(self, "theme")) || is.null(value)) {
+                    prop(self, "theme", check = FALSE) <- value
                 } else {
-                    attr(self, "theme") <- self@theme + value
+                    prop(self, "theme", check = FALSE) <- prop(self, "theme") +
+                        value
                 }
                 self
             },

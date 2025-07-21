@@ -10,10 +10,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
+    #' @importFrom S7 prop
     patch_gtable = function(self, theme = theme_get(), guides = NULL,
                             top_level = FALSE, plot = self$plot) {
-        patches <- lapply(plot@plots, alignpatch)
-        layout <- plot@layout
+        patches <- lapply(prop(plot, "plots"), alignpatch)
+        layout <- prop(plot, "layout")
 
         # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
@@ -81,7 +82,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         guides <- .subset2(layout, "guides") %|w|% parent_guides
 
         # by default, we use ggplot2 default theme
-        if (!is.null(plot@theme)) theme <- theme + plot@theme
+        if (!is.null(prop(plot, "theme"))) theme <- theme + prop(plot, "theme")
         self$theme <- theme
 
         #######################################################
