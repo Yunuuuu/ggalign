@@ -133,6 +133,9 @@ assemble_box <- function(guides, guide_pos, theme) {
     }
 }
 
+# The following code was used in earlier versions of ggplot2; 
+# coverage is not calculated here.
+# nocov start
 #' @importFrom gtable gtable_add_rows gtable_add_cols
 #' @importFrom ggplot2 calc_element
 #' @importFrom grid valid.just editGrob viewport
@@ -230,6 +233,7 @@ complete_guide_theme <- function(guide_pos, theme) {
     }
     theme
 }
+# nocov end
 
 ################################################################ 3
 # Copied from patchwork
