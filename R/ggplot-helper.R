@@ -380,7 +380,7 @@ no_expansion <- function(borders = "tlbr") {
 #' @export
 ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
     borders <- .subset2(object, "borders")
-    ParentLayout <- .subset2(plot, "layout")
+    ParentLayout <- plot$layout
 
     # tricks to ensure remove `coord` won't remove `no_expansion()`
     plot$layout <- ggproto(NULL, ParentLayout,
