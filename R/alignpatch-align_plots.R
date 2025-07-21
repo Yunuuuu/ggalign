@@ -170,29 +170,28 @@ AlignPatches <- S7::new_class("AlignPatches",
     }
 )
 
+#' @importFrom rlang caller_env
+local(
+    S7::method(`+`, list(AlignPatches, S7::class_any)) <-
+        function(e1, e2) {
+            # Get the name of what was passed in as e2, and pass along so that
+            # it can be displayed in error messages
+            if (missing(e2)) {
+                cli_abort(c(
+                    "Cannot use {.code +} with a single argument.",
+                    "i" = "Did you accidentally put {.code +} on a new line?"
+                ))
+            }
+            e2name <- deparse(substitute(e2, env = caller_env(2)))
+            alignpatches_add(e2, e1, e2name)
+        }
+)
+
 #' @importFrom S7 S7_dispatch
 alignpatches_add <- S7::new_generic(
     "alignpatches_add", "object",
     function(object, patches, objectname) S7_dispatch()
 )
-
-alignpatches_add_call <- function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code +} with a single argument.",
-            "i" = "Did you accidentally put {.code +} on a new line?"
-        ))
-    }
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    alignpatches_add(e2, e1, e2name)
-}
-
-if (getRversion() < "4.3.0") {
-    local(S7::method(`+`, list(AlignPatches, S7::class_any)) <-
-        alignpatches_add_call)
-}
 
 S7::method(alignpatches_add, S7::class_any) <-
     function(object, patches, objectname) {
