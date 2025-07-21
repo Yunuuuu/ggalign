@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A 'ggplot2' extension offers various tools the creation of complex, multi-plot visualizations. Built on the familiar grammar of graphics, it provides intuitive tools to align and organize plots, making it ideal for complex visualizations. It excels in multi-omics research—such as genomics and microbiomes—by simplifying the visualization of intricate relationships between datasets, for example, linking genes to pathways. Whether you need to stack plots, arrange them around a central figure, or create a circular layout, 'ggalign' delivers flexibility and accuracy with minimal effort.
+A 'ggplot2' extension providing an integrative framework for composable visualization, enabling the creation of complex multi-plot layouts such as insets, circular arrangements, and multi-panel compositions. Built on the grammar of graphics, it offers intuitive tools to align, stack, and nest plots, simplifying the construction of richly annotated figures for high-dimensional data contexts—such as genomics, transcriptomics, and microbiome studies—by making it easy to link related plots, overlay clustering results, or highlight shared patterns.
 }
 \seealso{
 Useful links:
