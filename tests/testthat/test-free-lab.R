@@ -30,3 +30,11 @@ test_that("free_lab() respects setdiff in free_borders", {
 test_that("free_lab.default() errors on unsupported objects", {
     expect_error(free_lab(1), "Cannot use with")
 })
+
+test_that("alignpatch.free_lab() returns a ggproto object with free_labs", {
+    p <- structure(list(), class = c("free_lab", "ggplot"))
+    attr(p, "free_labs") <- "b"
+    proto <- alignpatch(p)
+    expect_s3_class(proto, "PatchFreeLab")
+    expect_equal(proto$free_labs, "bottom")
+})
