@@ -3,11 +3,12 @@
 following functions romove these restrictions:
 free_align: if we want to compose plots without alignment of some panel
 axes (panel won't be aligned). we can wrap the plot with free_align.
-free_border: If we want to compose plots without alignment of the panel
-borders (but still align the panels themselves), we can wrap the plot with
-free_border.
-free_lab: If we want to compose plots without alignment of the axis
-title, we can wrap the plot with free_lab.
+free_border: attaches borders (e.g., axis titles, tick marks) directly to
+the plot panel. This keeps them visually close to the panel during
+alignment.
+free_lab(): Similar to free_border(), but only attaches axis titles
+and tick labels, not full borders. It’s mainly included for completeness;
+in most cases, combining free_border() and free_space() is sufficient.
 free_space: Removing the ggplot element sizes when aligning.
 free_vp: Customize the viewport when aligning.
 free_guide: If we want to override the behaviour of the overall guides
@@ -17,11 +18,12 @@ behaviour, we can wrap the plot with free_guide.
 following functions romove these restrictions:
 free_align: if we want to compose plots without alignment of some panel
 axes (panel won't be aligned). we can wrap the plot with free_align.
-free_border: If we want to compose plots without alignment of the panel
-borders (but still align the panels themselves), we can wrap the plot with
-free_border.
-free_lab: If we want to compose plots without alignment of the axis
-title, we can wrap the plot with free_lab.
+free_border: attaches borders (e.g., axis titles, tick marks) directly to
+the plot panel. This keeps them visually close to the panel during
+alignment.
+free_lab(): Similar to free_border(), but only attaches axis titles
+and tick labels, not full borders. It’s mainly included for completeness;
+in most cases, combining free_border() and free_space() is sufficient.
 free_space: Removing the ggplot element sizes when aligning.
 free_vp: Customize the viewport when aligning.
 free_guide: If we want to override the behaviour of the overall guides
@@ -73,11 +75,12 @@ behaviour, we can wrap the plot with free_guide.
     <p><a href="align_plots.html">align_plots</a> will try to align plot panels, and every elements of the plot,
 following functions romove these restrictions:</p><ul><li><p><code>free_align</code>: if we want to compose plots without alignment of some panel
 axes (panel won't be aligned). we can wrap the plot with <code>free_align</code>.</p></li>
-<li><p><code>free_border</code>: If we want to compose plots without alignment of the panel
-borders (but still align the panels themselves), we can wrap the plot with
-<code>free_border</code>.</p></li>
-<li><p><code>free_lab</code>: If we want to compose plots without alignment of the axis
-title, we can wrap the plot with <code>free_lab</code>.</p></li>
+<li><p><code>free_border</code>: attaches borders (e.g., axis titles, tick marks) directly to
+the plot panel. This keeps them visually close to the panel during
+alignment.</p></li>
+<li><p><code>free_lab()</code>: Similar to <code>free_border()</code>, but only attaches axis titles
+and tick labels, not full borders. It’s mainly included for completeness;
+in most cases, combining <code>free_border()</code> and <code>free_space()</code> is sufficient.</p></li>
 <li><p><code>free_space</code>: Removing the ggplot element sizes when aligning.</p></li>
 <li><p><code>free_vp</code>: Customize the <a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a> when aligning.</p></li>
 <li><p><code>free_guide</code>: If we want to override the behaviour of the overall guides
