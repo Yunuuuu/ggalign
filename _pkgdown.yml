@@ -6,7 +6,7 @@ template:
 
 navbar:
   structure:
-    left:  [intro, reference, tutorial, benchmarks, faq, news]
+    left:  [intro, reference, tutorial, gallery, benchmarks, faq, news]
     right: [search, github, lightswitch]
   components:
     tutorial:
@@ -14,6 +14,11 @@ navbar:
       icon: fa-solid fa-book
       href: https://yunuuuu.github.io/ggalign-book/
       aria-label: Tutorial
+    gallery:
+      text: Gallery
+      icon: fa-solid fa-grip
+      href: https://yunuuuu.github.io/ggalign-gallery/
+      aria-label: Gallery
     benchmarks:
       text: Benchmarks
       icon: fa-solid fa-chart-line
