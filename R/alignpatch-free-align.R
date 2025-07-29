@@ -4,11 +4,12 @@
 #' following functions romove these restrictions:
 #' - `free_align`: if we want to compose plots without alignment of some panel
 #' axes (panel won't be aligned). we can wrap the plot with `free_align`.
-#' - `free_border`: If we want to compose plots without alignment of the panel
-#' borders (but still align the panels themselves), we can wrap the plot with
-#' `free_border`.
-#' - `free_lab`: If we want to compose plots without alignment of the axis
-#' title, we can wrap the plot with `free_lab`.
+#' - `free_border`: attaches borders (e.g., axis titles, tick marks) directly to
+#'   the plot panel. This keeps them visually close to the panel during
+#'   alignment.
+#' - `free_lab()`: Similar to `free_border()`, but only attaches axis titles
+#'   and tick labels, not full borders. It’s mainly included for completeness;
+#'   in most cases, combining `free_border()` and `free_space()` is sufficient.
 #' - `free_space`: Removing the ggplot element sizes when aligning.
 #' - `free_vp`: Customize the [viewport][grid::viewport] when aligning.
 #' - `free_guide`: If we want to override the behaviour of the overall guides

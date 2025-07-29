@@ -134,11 +134,12 @@ following functions romove these restrictions:
 \itemize{
 \item \code{free_align}: if we want to compose plots without alignment of some panel
 axes (panel won't be aligned). we can wrap the plot with \code{free_align}.
-\item \code{free_border}: If we want to compose plots without alignment of the panel
-borders (but still align the panels themselves), we can wrap the plot with
-\code{free_border}.
-\item \code{free_lab}: If we want to compose plots without alignment of the axis
-title, we can wrap the plot with \code{free_lab}.
+\item \code{free_border}: attaches borders (e.g., axis titles, tick marks) directly to
+the plot panel. This keeps them visually close to the panel during
+alignment.
+\item \code{free_lab()}: Similar to \code{free_border()}, but only attaches axis titles
+and tick labels, not full borders. It’s mainly included for completeness;
+in most cases, combining \code{free_border()} and \code{free_space()} is sufficient.
 \item \code{free_space}: Removing the ggplot element sizes when aligning.
 \item \code{free_vp}: Customize the \link[grid:viewport]{viewport} when aligning.
 \item \code{free_guide}: If we want to override the behaviour of the overall guides
