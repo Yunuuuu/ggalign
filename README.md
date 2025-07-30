@@ -64,10 +64,9 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ## Learning ggalign
 
-1.  For the full reference documentation, visit:
-    <https://yunuuuu.github.io/ggalign/>
-2.  The complete tutorial is available at:
-    <https://yunuuuu.github.io/ggalign-book/>
+1.  Full reference documentation: <https://yunuuuu.github.io/ggalign/>
+2.  Complete tutorial book: <https://yunuuuu.github.io/ggalign-book/>
+3.  Gallery of examples: <https://yunuuuu.github.io/ggalign-gallery/>
 
 ## Design features
 

@@ -71,8 +71,9 @@ remotes::install_github("Yunuuuu/ggalign")
 
 ```{r, results="asis", echo=FALSE, eval=isTRUE(params$learning_link)}
 cat("## Learning ggalign", sep = "\n\n")
-cat(" 1. For the full reference documentation, visit: <https://yunuuuu.github.io/ggalign/>", sep = "\n\n")
-cat(" 2. The complete tutorial is available at: <https://yunuuuu.github.io/ggalign-book/>", sep = "\n")
+cat(" 1. Full reference documentation: <https://yunuuuu.github.io/ggalign/>", sep = "\n\n")
+cat(" 2. Complete tutorial book: <https://yunuuuu.github.io/ggalign-book/>", sep = "\n")
+cat(" 3. Gallery of examples: <https://yunuuuu.github.io/ggalign-gallery/>", sep = "\n\n")
 ```
 
 ## Design features
