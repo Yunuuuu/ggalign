@@ -24,7 +24,9 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/alignpatch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/area.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/cash-LayoutProto-method.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/chain_decorate.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/channelGrob.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/circle_genomic.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/circle_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/circle_switch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/continuous_limits.html</loc></url>
@@ -39,6 +41,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/element_polygon.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/element_vec.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/facet_sector.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_data_frame.GRanges.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_data_frame.character.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_data_frame.default.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_data_frame.dendrogram.html</loc></url>
@@ -55,6 +58,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_matrix.matrix_upset.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/fortify_matrix.phylo.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/free.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/genomic_density.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/genomic_rainfall.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/geom_draw.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/geom_gshape.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/geom_pie.html</loc></url>
