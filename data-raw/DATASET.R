@@ -33,103 +33,37 @@ hexSticker::sticker(
     filename = file.path(logo_dir, "logo.png")
 )
 
-library(ggalign)
-expr <- read_example("gene_expression.rds")
-mat <- as.matrix(expr[, grep("cell", colnames(expr))])
-base_mean <- rowMeans(mat)
-mat_scaled <- t(apply(mat, 1, scale))
-type <- gsub("s\\d+_", "", colnames(mat))
-heat1 <- ggheatmap(mat_scaled) -
-    scheme_align(free_spaces = "l") +
-    scale_y_continuous(breaks = NULL) +
-    scale_fill_viridis_c(name = "Gene expression", option = "magma") +
-    # add dendrogram for this heatmap
-    anno_top() +
-    align_dendro() +
-    # add a block for the heatmap column
-    ggalign(data = type, size = unit(1, "cm")) +
-    geom_tile(aes(y = 1, fill = factor(value))) +
-    scale_y_continuous(breaks = NULL, name = NULL) +
-    scale_fill_brewer(palette = "Set1", name = "type")
-heat2 <- ggheatmap(base_mean, width = unit(2, "cm")) +
-    scale_y_continuous(breaks = NULL) +
-    scale_x_continuous(name = "base mean", breaks = FALSE) +
-    scale_fill_gradientn(
-        name = "base mean",
-        colours = c("#2600D1FF", "white", "#EE3F3FFF")
-    ) +
-    # set the active context of the heatmap to the top
-    # and set the size of the top stack
-    anno_top(size = unit(4, "cm")) +
-    # add box plot in the heatmap top
-    ggalign() +
-    geom_boxplot(aes(y = value, fill = factor(.extra_panel))) +
-    scale_x_continuous(expand = expansion(), breaks = NULL) +
-    scale_fill_brewer(palette = "Dark2", guide = "none") +
-    theme(axis.title.y = element_blank())
+# ** ref_cytoband ---------------------------------------------------------
 
-heat3 <- ggheatmap(expr$type, width = unit(2, "cm")) +
-    scale_fill_brewer(palette = "Set3", name = "gene type") +
-    scale_x_continuous(breaks = NULL, name = "gene type") +
-    # add barplot in the top annotation, and remove the spaces in the y-axis
-    anno_top() -
-    scheme_align(free_spaces = "lr") +
-    ggfree() +
-    geom_bar(
-        aes(.extra_panel, fill = factor(value)),
-        position = position_fill()
-    ) +
-    theme_no_axes("x") +
-    scale_y_continuous(expand = expansion()) +
-    scale_fill_brewer(palette = "Set3", name = "gene type", guide = "none") -
-    scheme_theme(plot.margin = margin())
-
-set.seed(1234L)
-logo <- stack_alignh(data = mat_scaled) +
-    stack_active(sizes = c(0.2, 1, 1)) +
-    # group stack rows into 5 groups
-    align_kmeans(centers = 5L) +
-    # add a block plot for each group in the stack
-    ggalign(size = unit(1, "cm"), data = NULL) +
-    geom_tile(aes(x = 1, fill = factor(.panel))) +
-    scale_fill_brewer(palette = "Dark2", name = "Kmeans group") +
-    scale_x_continuous(breaks = NULL, name = NULL) +
-    # add a heatmap plot in the stack
-    heat1 +
-    # add another heatmap in the stack and set the heatmap body width
-    heat2 +
-    # we move into the stack layout
-    stack_active() +
-    # add a point plot
-    ggalign(data = expr$length, size = unit(2, "cm")) +
-    geom_point(aes(x = value)) +
-    labs(x = "length") +
-    theme(
-        panel.border = element_rect(fill = NA),
-        axis.text.x = element_text(angle = -60, hjust = 0)
-    ) +
-    # add another heatmap and set the heatmap body width
-    heat3 &
-    theme(
-        plot.background = element_blank(),
-        panel.background = element_blank(),
-        legend.background = element_blank()
-    )
-
-logo_tmp <- tempfile(fileext = ".png")
-ggplot2::ggsave(logo_tmp,
-    plot = logo,
-    device = "png", dpi = 1000L,
-    width = 12, height = 9
+anno_hub <- AnnotationHub::AnnotationHub(localHub = FALSE)
+AnnotationHub::query(
+    anno_hub, c("UCSC", "Homo sapiens", "cytoband"),
+    ignore.case = TRUE
 )
-hexSticker::sticker(
-    logo_tmp,
-    s_x = 1.045, s_y = 0.87, s_width = 0.72, s_height = 0.8,
-    package = "ggalign",
-    p_size = 80, p_y = 1.6, p_color = "#741140",
-    h_fill = "white", h_color = "#db5d37", h_size = 0.8,
-    # spotlight  = TRUE,
-    filename = file.path(logo_dir, "logo.png"),
-    dpi = 1200L
+# AH53177 | UCSC cytoBand track for hg19
+# AH53178 | UCSC cytoBand track for hg38
+
+ref_cytoband_hg19 <- anno_hub[["AH53177"]]
+ref_cytoband_hg19 <- GenomeInfoDb::keepSeqlevels(
+    ref_cytoband_hg19,
+    setdiff(standardChromosomes(ref_cytoband_hg19, species = NULL), "chrM"),
+    pruning.mode = "coarse"
 )
-if (file.exists(logo_tmp)) file.remove(logo_tmp)
+
+ref_cytoband_hg19 <- as.data.frame(ref_cytoband_hg19)
+saveRDS(
+    ref_cytoband_hg19, file.path(odir, "ref_cytoband_hg19.rds"),
+    version = 2L
+)
+
+ref_cytoband_hg38 <- anno_hub[["AH53178"]]
+ref_cytoband_hg38 <- GenomeInfoDb::keepSeqlevels(
+    ref_cytoband_hg38,
+    setdiff(standardChromosomes(ref_cytoband_hg38, species = NULL), "chrM"),
+    pruning.mode = "coarse"
+)
+ref_cytoband_hg38 <- as.data.frame(ref_cytoband_hg38)
+saveRDS(
+    ref_cytoband_hg38, file.path(odir, "ref_cytoband_hg38.rds"),
+    version = 2L
+)

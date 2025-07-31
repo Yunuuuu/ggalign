@@ -58,7 +58,7 @@ stack_cross.default <- function(direction, data = NULL, ...) {
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
-stack_build_composer.StackCross <- function(stack, schemes, theme,
+resolve_stack_layout.StackCross <- function(stack, schemes, theme,
                                             extra_design) {
     # check if we should initialize the layout observations
     layout_design <- stack@design
@@ -134,6 +134,7 @@ stack_build_composer.StackCross <- function(stack, schemes, theme,
         plots <- .subset(plots, make_order(plot_order))
         composer <- stack_composer_add(
             plots,
+            stack = stack,
             composer,
             schemes = schemes,
             theme = theme,

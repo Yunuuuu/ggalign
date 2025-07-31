@@ -49,13 +49,13 @@ stack_composer_align_plot <- function(composer, plot, size) {
     stack_composer_add_plot(composer, plot, t, l)
 }
 
-stack_composer_add <- function(plot, composer, ...) {
+stack_composer_add <- function(plot, stack, composer, ...) {
     UseMethod("stack_composer_add")
 }
 
 #' @importFrom utils packageVersion
 #' @export
-stack_composer_add.CraftBox <- function(plot, composer, design, ...,
+stack_composer_add.CraftBox <- function(plot, stack, composer, design, ...,
                                         schemes, theme,
                                         released_spaces,
                                         direction, position) {
@@ -125,11 +125,16 @@ stack_composer_add.CraftBox <- function(plot, composer, design, ...,
     # let `Craftsman` add other components
     plot <- craftsman$build_plot(plot, design = design, ...)
     plot <- craftsman$finish_plot(plot, plot_schemes, theme)
+
+    # Let layout finally modify the plot
+    plot <- chain_decorate(stack, plot)
+
+    # add the plot to the composer
     stack_composer_align_plot(composer, plot, size)
 }
 
 #' @importFrom grid unit.c unit
-stack_composer_add.QuadLayout <- function(plot, composer, schemes, theme,
+stack_composer_add.QuadLayout <- function(plot, stack, composer, schemes, theme,
                                           direction, ...) {
     patches <- quad_build(plot, schemes, theme, direction)
     plots <- .subset2(patches, "plots")
@@ -220,9 +225,11 @@ stack_composer_add.QuadLayout <- function(plot, composer, schemes, theme,
 }
 
 #' @export
-stack_composer_add.list <- function(plot, composer, ...) {
+stack_composer_add.list <- function(plot, stack, composer, ...) {
     for (p in plot) {
-        composer <- stack_composer_add(plot = p, composer = composer, ...)
+        composer <- stack_composer_add(
+            plot = p, stack = stack, composer = composer, ...
+        )
     }
     composer
 }

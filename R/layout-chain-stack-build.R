@@ -39,7 +39,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         # }
     }
     theme <- inherit_parent_layout_theme(stack, theme, spacing = spacing)
-    composer <- stack_build_composer(stack, schemes, theme, extra_design)
+    composer <- resolve_stack_layout(stack, schemes, theme, extra_design)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
@@ -123,12 +123,12 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
 #' @param schemes,theme Parameters for current stack, which have inherited
 #' parameters from the parent.
 #' @noRd
-stack_build_composer <- function(stack, schemes, theme, extra_design) {
-    UseMethod("stack_build_composer")
+resolve_stack_layout <- function(stack, schemes, theme, extra_design) {
+    UseMethod("resolve_stack_layout")
 }
 
 #' @export
-stack_build_composer.StackLayout <- function(stack, schemes, theme,
+resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
                                              extra_design) {
     plot_list <- stack@plot_list
     direction <- stack@direction
@@ -203,6 +203,7 @@ stack_build_composer.StackLayout <- function(stack, schemes, theme,
     design <- setup_design(stack@design)
     stack_composer_add(
         plot_list,
+        stack = stack,
         composer,
         schemes = schemes,
         theme = theme,

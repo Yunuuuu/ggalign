@@ -75,6 +75,23 @@ fortify_data_frame.waiver <- function(data, ..., data_arg = NULL,
 fortify_data_frame.NULL <- fortify_data_frame.waiver
 
 #' @inherit fortify_data_frame.default title description
+#' @param data An object to be converted to a data frame.
+#' @inheritParams fortify_data_frame
+#' @return A data frame with at least following columns:
+#'
+#'   - `seqnames`: The sequence (e.g., chromosome) names.
+#'   - `start`: The start positions of the ranges.
+#'   - `end`: The end positions of the ranges.
+#'   - `width`: The width of each range.
+#'
+#' @family fortify_data_frame
+#' @export
+fortify_data_frame.GRanges <- function(data, ..., data_arg = NULL,
+                                       call = NULL) {
+    as.data.frame(data, ...)
+}
+
+#' @inherit fortify_data_frame.default title description
 #' @param data A matrix-like object.
 #' @param lvls A logical value indicating whether to restore factor levels using
 #' those stored in [`ggalign_lvls()`], or a character vector specifying custom

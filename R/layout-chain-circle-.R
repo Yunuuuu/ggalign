@@ -193,7 +193,7 @@ new_circle_layout <- function(data, design, radial, direction,
     }
     if (!is.null(radial) && abs(diff(radial$arc)) < pi / 2L) {
         cli_abort(
-            "Cannot use circle of acute angle < 90 in {.arg radial}",
+            "Cannot create circle of acute angle < 90 in {.arg radial}",
             call = call
         )
     }

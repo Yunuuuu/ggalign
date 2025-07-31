@@ -74,6 +74,7 @@ for edge.
 
 \seealso{
 Other \code{\link[=fortify_data_frame]{fortify_data_frame()}} methods:
+\code{\link{fortify_data_frame.GRanges}()},
 \code{\link{fortify_data_frame.character}()},
 \code{\link{fortify_data_frame.default}()},
 \code{\link{fortify_data_frame.dendrogram}()},

@@ -12,6 +12,20 @@ methods::setClass(
     )
 )
 
+#' Finalize plot modifications from a ChainLayout object.
+#'
+#' This generic function lets a ChainLayout apply any final transformations
+#' to the composed plot before returning it. It does not extract or store
+#' the plot, but instead allows the layout to inject custom modifications
+#' (e.g., spacing guides, annotations, alignment fixes) at the last step.
+#'
+#' @param layout A ChainLayout object.
+#' @param plot The plot being finalized.
+chain_decorate <- function(layout, plot) UseMethod("chain_decorate")
+
+#' @export
+chain_decorate.ChainLayout <- function(layout, plot) plot
+
 #' @export
 is_layout_discrete.ChainLayout <- function(x, ...) {
     is_discrete_design(x@design)
