@@ -1,4 +1,4 @@
-test_that("genomic_rainfall computes distances correctly", {
+test_that("genomic_dist computes distances correctly", {
   region <- data.frame(
     chr = c("chr1", "chr1", "chr1", "chr1", "chr2"),
     start = c(10, 30, 55, 80, 5),
@@ -12,33 +12,33 @@ test_that("genomic_rainfall computes distances correctly", {
   dist_max <- c(10, 15, 15, 15, NA)
   dist_mean <- c(10, 12.5, 15, 15, NA)
 
-  expect_equal(genomic_rainfall(region, "left")$dist, dist_left)
-  expect_equal(genomic_rainfall(region, "right")$dist, dist_right)
-  expect_equal(genomic_rainfall(region, "min")$dist, dist_min)
-  expect_equal(genomic_rainfall(region, "max")$dist, dist_max)
-  expect_equal(genomic_rainfall(region, "mean")$dist, dist_mean)
+  expect_equal(genomic_dist(region, "left")$dist, dist_left)
+  expect_equal(genomic_dist(region, "right")$dist, dist_right)
+  expect_equal(genomic_dist(region, "min")$dist, dist_min)
+  expect_equal(genomic_dist(region, "max")$dist, dist_max)
+  expect_equal(genomic_dist(region, "mean")$dist, dist_mean)
 })
 
-test_that("genomic_rainfall handles overlapping and adjacent regions as 0", {
+test_that("genomic_dist handles overlapping and adjacent regions as 0", {
   region <- data.frame(
     chr = rep("chr1", 3),
     start = c(10, 15, 20),
     end = c(20, 20, 25)
   )
 
-  result <- genomic_rainfall(region, "right")
+  result <- genomic_dist(region, "right")
   expect_equal(result$dist, c(0, 0, 0))
 })
 
-test_that("genomic_rainfall validates input", {
+test_that("genomic_dist validates input", {
   df_invalid <- data.frame(chr = "chr1", start = 10, end = 5)
-  expect_error(genomic_rainfall(df_invalid), "start.*greater than.*end")
+  expect_error(genomic_dist(df_invalid), "start.*greater than.*end")
 
   df_missing <- data.frame(chr = NA, start = 1, end = 2)
-  expect_error(genomic_rainfall(df_missing), "must not contain missing")
+  expect_error(genomic_dist(df_missing), "must not contain missing")
 
   df_non_numeric <- data.frame(chr = "chr1", start = "a", end = "b")
-  expect_error(genomic_rainfall(df_non_numeric), "must be numeric")
+  expect_error(genomic_dist(df_non_numeric), "must be numeric")
 })
 
 test_that("genomic_density returns expected result in count mode", {
