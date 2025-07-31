@@ -181,7 +181,7 @@ reference:
   - magickGrob
   - is_layout
   - hclust2
-  - genomic_rainfall
+  - genomic_dist
   - genomic_density
   - read_example
 

@@ -22,7 +22,7 @@
 #'
 #' @return A data frame with an additional `dist` column.
 #' @export
-genomic_rainfall <- function(region, mode = NULL) {
+genomic_dist <- function(region, mode = NULL) {
     # Check input validity
     if (is.null(mode)) {
         mode <- "min"
