@@ -142,7 +142,7 @@ CrossLink <- ggproto("CrossLink", CraftCross,
 
         # setup the grob
         grob <- inject(gTree(
-            !!!.subset2(plot, "ggalign_link_data"),
+            !!!plot$ggalign_link_data,
             spacing1 = spacing,
             spacing2 = spacing,
             cl = "ggalignLinkTree"
