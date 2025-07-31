@@ -21,6 +21,7 @@ methods::setClass(
 #'
 #' @param layout A ChainLayout object.
 #' @param plot The plot being finalized.
+#' @keywords internal
 chain_decorate <- function(layout, plot) UseMethod("chain_decorate")
 
 #' @export

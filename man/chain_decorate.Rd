@@ -17,3 +17,4 @@ to the composed plot before returning it. It does not extract or store
 the plot, but instead allows the layout to inject custom modifications
 (e.g., spacing guides, annotations, alignment fixes) at the last step.
 }
+\keyword{internal}

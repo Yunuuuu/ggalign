@@ -39,6 +39,7 @@ reference:
   - ggheatmap
   - ggoncoplot
   - ggupset
+  - circle_genomic
 
 - title: Build Layout
   desc: >
@@ -180,6 +181,8 @@ reference:
   - magickGrob
   - is_layout
   - hclust2
+  - genomic_rainfall
+  - genomic_density
   - read_example
 
 - title: internal
