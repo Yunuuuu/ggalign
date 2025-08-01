@@ -111,8 +111,8 @@ chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) 
             object_name(layout)
         ))
     }
-    object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
+    object <- .subset2(object, "object")
     chain_layout_and_add(object, layout, object_name)
 }
 

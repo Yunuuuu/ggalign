@@ -36,8 +36,8 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 quad_layout_subtract.ggalign_with_quad <- function(object, quad, object_name) {
     old <- quad@active
     context <- quad_operated_context(object, old, "-")
-    object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
+    object <- .subset2(object, "object")
     # `subtract` operates at layout-level
     if (is.null(context)) {
         quad@active <- context
