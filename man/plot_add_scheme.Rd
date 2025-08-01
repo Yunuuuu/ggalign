@@ -25,3 +25,4 @@ the plot's appearance or behavior according to their configuration.
 By default When a \code{\link{Schemes}} object is passed, each individual \code{\link{Scheme}} is
 applied in sequence via its respective \code{plot_add_scheme()} method.
 }
+\keyword{internal}

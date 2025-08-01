@@ -22,6 +22,7 @@
 #' - Use `schemes_set()` to update or add new schemes.
 #'
 #' @seealso [`Scheme`]
+#' @keywords internal
 #' @importFrom S7 S7_inherits
 #' @export
 Schemes <- S7::new_class("Schemes",
@@ -131,6 +132,7 @@ default_schemes <- function(data = NULL, th = theme()) {
 #' - [`plot_add_scheme(plot, scheme, ...)`][plot_add_scheme]: Applies the scheme
 #'   to a plot object (usually a `ggplot`) by modifying the plot components,
 #'   theming, or annotations.
+#' @keywords internal
 #' @export
 Scheme <- S7::new_class(
     "Scheme",
@@ -145,12 +147,13 @@ Scheme <- S7::new_class(
 #' Initialize a scheme object
 #'
 #' `scheme_init()` is a developer-facing generic used to define the initial
-#' state of a `scheme` object. It is typically called during rendering to
+#' state of a [`Scheme`] object. It is typically called during rendering to
 #' initialize layout schemes, allowing plots to inherit layout behavior from the
 #' scheme.
 #'
-#' @param scheme A `scheme` object to initialize.
-#' @return The initialized `scheme` object.
+#' @param scheme A [`scheme`] object to initialize.
+#' @return The initialized [`scheme`] object.
+#' @keywords internal
 #' @export
 scheme_init <- S7::new_generic("scheme_init", "scheme", function(scheme) {
     S7_dispatch()
@@ -172,15 +175,16 @@ S7::method(scheme_init, Scheme) <- function(scheme) scheme
 
 #' Update the scheme
 #'
-#' `scheme_update()` is used by developers to define how two `scheme` objects
+#' `scheme_update()` is used by developers to define how two [`Scheme`] objects
 #' with the same key should be merged. This typically happens when adding or
-#' updating a `scheme` in a collection.
+#' updating a [`Scheme`] in a collection.
 #'
-#' @param e1 The original `scheme` object.
-#' @param e2 The new `scheme` object. Usually should have the same `key` as
+#' @param e1 The original [`Scheme`] object.
+#' @param e2 The new [`Scheme`] object. Usually should have the same `key` as
 #' `e1`.
 #' @param ... Additional arguments passed to methods.
-#' @return A new `scheme` object, resulting from merging `e1` and `e2`.
+#' @return A new [`Scheme`] object, resulting from merging `e1` and `e2`.
+#' @keywords internal
 #' @export
 scheme_update <- S7::new_generic("scheme_update", c("e1", "e2"))
 
@@ -221,14 +225,15 @@ S7::method(scheme_update, list(Scheme, Scheme)) <- function(e1, e2, ...) e2
 
 #' Inherit a scheme from a parent
 #'
-#' This generic is used by developers to define how one `scheme` object inherits
-#' from another (typically the scheme defined in the layout). This is called
-#' when adding a new `scheme` via inheritance.
+#' This generic is used by developers to define how one [`Scheme`] object
+#' inherits from another (typically the scheme defined in the layout). This is
+#' called when adding a new [`Scheme`] via inheritance.
 #'
-#' @param e1 The parent `scheme` object.
-#' @param e2 The child `scheme` object. Usually should have the same `key` as
+#' @param e1 The parent [`Scheme`] object.
+#' @param e2 The child [`Scheme`] object. Usually should have the same `key` as
 #' `e1`.
-#' @return A new `scheme` object.
+#' @return A new [`Scheme`] object.
+#' @keywords internal
 #' @export
 scheme_inherit <- S7::new_generic(
     "scheme_inherit", c("e1", "e2"),
@@ -284,7 +289,7 @@ S7::method(scheme_inherit, list(Scheme, Scheme)) <- function(e1, e2) e2
 #' @param ... Additional arguments passed to specific methods.
 #'
 #' @return The modified `plot` object.
-#'
+#' @keywords internal
 #' @export
 plot_add_scheme <- S7::new_generic("plot_add_scheme", c("plot", "scheme"))
 

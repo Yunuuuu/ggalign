@@ -45,3 +45,4 @@ keys.
 \seealso{
 \code{\link{Scheme}}
 }
+\keyword{internal}

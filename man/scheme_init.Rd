@@ -7,14 +7,15 @@
 scheme_init(scheme)
 }
 \arguments{
-\item{scheme}{A \code{scheme} object to initialize.}
+\item{scheme}{A \code{\link{scheme}} object to initialize.}
 }
 \value{
-The initialized \code{scheme} object.
+The initialized \code{\link{scheme}} object.
 }
 \description{
 \code{scheme_init()} is a developer-facing generic used to define the initial
-state of a \code{scheme} object. It is typically called during rendering to
+state of a \code{\link{Scheme}} object. It is typically called during rendering to
 initialize layout schemes, allowing plots to inherit layout behavior from the
 scheme.
 }
+\keyword{internal}

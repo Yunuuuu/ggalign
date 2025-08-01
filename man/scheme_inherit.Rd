@@ -7,16 +7,17 @@
 scheme_inherit(e1, e2)
 }
 \arguments{
-\item{e1}{The parent \code{scheme} object.}
+\item{e1}{The parent \code{\link{Scheme}} object.}
 
-\item{e2}{The child \code{scheme} object. Usually should have the same \code{key} as
+\item{e2}{The child \code{\link{Scheme}} object. Usually should have the same \code{key} as
 \code{e1}.}
 }
 \value{
-A new \code{scheme} object.
+A new \code{\link{Scheme}} object.
 }
 \description{
-This generic is used by developers to define how one \code{scheme} object inherits
-from another (typically the scheme defined in the layout). This is called
-when adding a new \code{scheme} via inheritance.
+This generic is used by developers to define how one \code{\link{Scheme}} object
+inherits from another (typically the scheme defined in the layout). This is
+called when adding a new \code{\link{Scheme}} via inheritance.
 }
+\keyword{internal}
