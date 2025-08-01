@@ -20,7 +20,7 @@ align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
     }
     assert_s3_class(phylo, "phylo")
     assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
+    active <- active_update(active(use = TRUE), active)
     align(
         align = AlignPhylo,
         phylo = phylo,

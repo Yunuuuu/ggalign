@@ -258,7 +258,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
         # used by the layout
         data = data, theme = theme,
         schemes = schemes,
-        plot_active = update_active(active, new_active(use = TRUE)),
+        plot_active = active_update(active(use = TRUE), active),
         name = name,
         # used by the main body
         body_schemes = default_schemes(waiver()),

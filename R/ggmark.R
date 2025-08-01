@@ -63,7 +63,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
     }
     assert_obs_size(obs_size)
     assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
+    active <- active_update(active(use = TRUE), active)
     assert_bool(group1, allow_null = TRUE)
     assert_bool(group2, allow_null = TRUE)
     new_craftbox(

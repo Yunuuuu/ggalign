@@ -39,7 +39,7 @@ align_order2 <- function(stat, ..., reverse = FALSE,
     assert_bool(strict)
     assert_bool(reverse)
     assert_active(active)
-    active <- update_active(active, new_active(use = FALSE))
+    active <- active_update(active(use = FALSE), active)
     align(
         align = AlignOrder2,
         stat = stat,

@@ -70,7 +70,7 @@ ggfree.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
 new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
     assert_active(active, allow_null = TRUE, call = call)
-    active <- update_active(active, new_active(use = TRUE))
+    active <- active_update(active(use = TRUE), active)
     new_craftbox(
         FreeGg,
         # new field for FreeGg

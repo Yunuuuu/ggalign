@@ -21,7 +21,7 @@ cross_none <- function(data = waiver(), ...,
                        inherit_nobs = NULL) {
     cross(CrossNone,
         data = data, data_params = list2(...), plot = NULL,
-        active = new_active(use = FALSE),
+        active = active(use = FALSE),
         schemes = default_schemes(),
         inherit_index = inherit_index,
         inherit_panel = inherit_panel,

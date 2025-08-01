@@ -134,9 +134,9 @@ resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plot_list, function(plot) {
         if (is_layout(plot)) {
-            .subset2(plot@plot_active, "order")
+            prop(plot@plot_active, "order")
         } else {
-            .subset2(plot@active, "order")
+            prop(plot@active, "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, make_order(plot_order))

@@ -188,7 +188,7 @@ assert_active <- function(x, allow_null = TRUE,
     if (is.null(x) && allow_null) {
         return(invisible(NULL))
     }
-    if (!inherits(x, "ggalign_active")) {
+    if (!is_active(x)) {
         cli_abort(
             "{.arg {arg}} must be created by {.fn active}",
             call = call

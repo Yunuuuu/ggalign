@@ -95,7 +95,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
+    active <- active_update(active(use = TRUE), active)
     new_craftbox(
         AlignGg,
         input_data = allow_lambda(data),

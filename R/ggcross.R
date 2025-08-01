@@ -40,7 +40,8 @@
 #' @export
 ggcross <- function(mapping = aes(), size = NULL,
                     no_axes = NULL, active = NULL) {
-    active <- update_active(active, new_active(use = TRUE))
+    assert_active(active)
+    active <- active_update(active(use = TRUE), active)
     no_axes <- no_axes %||%
         getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
     cross(

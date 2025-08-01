@@ -43,7 +43,7 @@ align_hclust <- function(distance = "euclidean",
                          k = NULL, h = NULL, cutree = NULL,
                          data = NULL, active = NULL) {
     assert_active(active)
-    active <- update_active(active, new_active(use = FALSE))
+    active <- active_update(active(use = FALSE), active)
     .align_hclust(
         align = AlignHclust,
         distance = distance,

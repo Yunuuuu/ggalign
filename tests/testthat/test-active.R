@@ -1,29 +1,49 @@
-test_that("`new_active()` creates an object with correct structure and class", {
-    x <- new_active(use = TRUE, order = 1, name = "main")
-    expect_s3_class(x, "ggalign_active")
-    expect_named(x, c("order", "use", "name"))
-    expect_equal(x$order, 1)
-    expect_true(x$use)
-    expect_equal(x$name, "main")
+test_that("active class instantiation and defaults work", {
+    obj <- active()
+    expect_s7_class(obj, active)
+    expect_true(is_active(obj))
+
+    expect_true(is.na(obj@order))
+    expect_true(is.na(obj@use))
+    expect_true(is.na(obj@name))
 })
 
-test_that("`active()` works well", {
-    expect_identical(active(NULL)$order, NA_integer_)
-    expect_snapshot_error(active(1:2))
-    expect_snapshot_error(active("a"))
-    expect_snapshot_error(active(1.2))
-    expect_identical(active(1)$order, 1L)
+test_that("active property assignment and validation", {
+    obj <- active()
 
-    expect_snapshot_error(active(use = NA)$use)
-    expect_identical(active(use = TRUE)$use, TRUE)
-    expect_identical(active(use = FALSE)$use, FALSE)
+    obj@order <- 1L
+    expect_equal(obj@order, 1L)
 
-    expect_identical(active(name = NA)$name, NA)
-    expect_identical(active(name = "my_name")$name, "my_name")
-    expect_snapshot_error(active(name = FALSE))
+    obj@use <- TRUE
+    expect_true(obj@use)
+
+    obj@name <- "plot1"
+    expect_equal(obj@name, "plot1")
+
+    expect_error(obj@order <- c(1L, 2L), "must be a single integer value")
+    expect_error(obj@use <- c(TRUE, FALSE), "must be a single boolean value")
+    expect_error(obj@name <- c("a", "b"), "must be a single character string")
 })
 
-test_that("`update_active()` works well", {
-    default <- new_active(order = 1, use = TRUE, name = "main")
-    expect_equal(update_active(NULL, default), default)
+test_that("active + active merges non-NA properties", {
+    a1 <- active(order = 1L, use = NA, name = "plot1")
+    a2 <- active(order = NA_integer_, use = TRUE, name = NA_character_)
+
+    result <- a1 + a2
+
+    expect_equal(result@order, 1L)
+    expect_equal(result@use, TRUE)
+    expect_equal(result@name, "plot1")
+})
+
+test_that("active + NULL returns self", {
+    a <- active(order = 2L)
+    expect_identical(a + NULL, a)
+    expect_identical(NULL + a, a)
+})
+
+test_that("active + incompatible throws error", {
+    a <- active()
+    expect_error(a + 1, "is not permitted")
+    expect_error("text" + a, "is not permitted")
 })

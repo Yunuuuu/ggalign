@@ -23,33 +23,95 @@
 #' @param name A string specifying the plot's name, useful for switching active
 #'   contexts through the `what` argument in functions like
 #'   [`quad_anno()`]/[`stack_switch()`].
+#' @importFrom rlang is_na
+#' @importFrom S7 prop prop<-
 #' @export
-active <- function(order = waiver(), use = waiver(), name = waiver()) {
-    if (!is.waive(order)) order <- check_order(order)
-    if (!is.waive(use)) assert_bool(use)
-    if (!is.waive(name)) {
-        assert_string(name,
-            empty_ok = FALSE, allow_na = TRUE,
-            allow_null = FALSE
+active <- S7::new_class("active",
+    properties = list(
+        order = S7::new_property(
+            S7::class_integer,
+            validator = function(value) {
+                # Validator runs *after* the value passes the class check
+                # Ensure it's a single integer value
+                if (length(value) != 1L) {
+                    return("must be a single integer value")
+                }
+            },
+            setter = function(self, value) {
+                if (is.null(value) || is_na(value)) {
+                    prop(self, "order", check = FALSE) <- NA_integer_
+                } else if (.rlang_check_number(value, allow_decimal = FALSE) ==
+                           0L) { # styler: off
+                    prop(self, "order", check = FALSE) <- as.integer(value)
+                } else {
+                    prop(self, "order") <- value
+                }
+                self
+            },
+            default = NA_integer_
+        ),
+        use = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+            },
+            setter = function(self, value) {
+                if (is.null(value) || is_na(value)) {
+                    prop(self, "use", check = FALSE) <- NA
+                } else {
+                    prop(self, "use") <- value
+                }
+                self
+            },
+            default = NA
+        ),
+        name = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
+                }
+            },
+            setter = function(self, value) {
+                if (is.null(value) || is_na(value)) {
+                    prop(self, "name", check = FALSE) <- NA_character_
+                } else {
+                    prop(self, "name") <- value
+                }
+                self
+            },
+            default = NA_character_
         )
+    )
+)
+
+active_update <- function(old, new) old + new
+
+#' @importFrom S7 S7_inherits
+is_active <- function(x) S7_inherits(x, active)
+
+#' @importFrom S7 props props<-
+local(S7::method(`+`, list(active, active)) <- function(e1, e2) {
+    prop_list <- props(e2)
+    # it's safe to use is.na directly, since all properties are scalar.
+    props(e1) <- prop_list[
+        !vapply(prop_list, is.na, logical(1L), USE.NAMES = FALSE)
+    ]
+    e1
+})
+
+local(S7::method(`+`, list(active, S7::class_any)) <- function(e1, e2) {
+    if (is.null(e2)) {
+        return(e1)
     }
-    new_active(order = order, use = use, name = name)
-}
+    stop_incompatible_op("+", e1, e2)
+})
 
-# for internal function, we only adjust to the `use` argument
-# here, we put it in the first
-new_active <- function(use, order = NA_integer_, name = NA_character_) {
-    structure(
-        list(order = order, use = use, name = name),
-        class = "ggalign_active"
-    )
-}
-
-#' @importFrom utils modifyList
-update_active <- function(active, default) {
-    if (is.null(active)) return(default) # styler: off
-    modifyList(default,
-        active[!vapply(active, is.waive, logical(1L), USE.NAMES = FALSE)],
-        keep.null = TRUE
-    )
-}
+local(S7::method(`+`, list(S7::class_any, active)) <- function(e1, e2) {
+    if (is.null(e1)) {
+        return(e2)
+    }
+    stop_incompatible_op("+", e1, e2)
+})

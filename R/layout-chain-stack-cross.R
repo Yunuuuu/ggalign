@@ -126,9 +126,9 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
             if (is_cross_plot(plot)) {
                 1L
             } else if (is_craftbox(plot)) {
-                .subset2(plot@active, "order")
+                prop(plot@active, "order")
             } else {
-                .subset2(plot@plot_active, "order")
+                prop(plot@plot_active, "order")
             }
         }, integer(1L), USE.NAMES = FALSE)
         plots <- .subset(plots, make_order(plot_order))

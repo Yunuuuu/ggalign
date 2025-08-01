@@ -175,16 +175,18 @@ chain_plot_add <- function(plot, object, object_name, force) {
     plot
 }
 
+#' @importFrom S7 prop
 chain_add_plot <- function(layout, plot, active, object_name) {
     # set up context index
     plot_list <- layout@plot_list
-    if (.subset2(active, "use")) {
+    if (prop(active, "use")) {
         active_index <- length(plot_list) + 1L
     } else {
         active_index <- layout@active
     }
+
     # check the name is unique
-    if (!is.na(name <- .subset2(active, "name"))) {
+    if (!is.na(name <- prop(active, "name"))) {
         if (any(names(plot_list) == name)) {
             cli_warn(
                 "Adding {.var {object_name}} will replace existing {.field {name}} plot"

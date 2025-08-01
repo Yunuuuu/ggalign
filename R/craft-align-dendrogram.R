@@ -71,7 +71,7 @@ align_dendro <- function(mapping = aes(), ...,
         )
     }
     assert_active(active)
-    active <- update_active(active, new_active(use = TRUE))
+    active <- active_update(active(use = TRUE), active)
     .align_hclust(
         align = AlignDendro,
         distance = distance,
