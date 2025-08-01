@@ -13,7 +13,7 @@ rasterise.ChainLayout <- function(input, ...) {
     input
 }
 
-rasterise.CraftBox <- function(input, ...) {
+`rasterise.ggalign::CraftBox` <- function(input, ...) {
     if (!is.null(plot <- input@plot)) {
         input@plot <- ggrastr::rasterise(input = plot, ...)
     }
@@ -38,9 +38,8 @@ raster_magick0.ChainLayout <- function(x, ...) {
     x
 }
 
-
 #' @export
-raster_magick0.CraftBox <- function(x, ...) {
+`raster_magick0.ggalign::CraftBox` <- function(x, ...) {
     if (!is.null(plot <- input@plot)) {
         input@plot <- raster_magick0(x = plot, ...)
     }

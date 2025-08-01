@@ -213,3 +213,65 @@ compute_null_unit <- function(x, type = c("width", "height"), unitTo = "mm",
     if (!valueOnly) ans <- unit(ans, unitTo)
     ans
 }
+
+# grid::unit() cannot use `NA` value in sizes when using `str` function, here we
+# use a internal object to represent grid::unit(), will convert to grid::unit
+# when rendering
+S3_unit <- S7::new_S3_class("unit")
+
+#' @importFrom grid unit
+GridUnit <- S7::new_class(
+    "GridUnit",
+    properties = list(
+        inner = S7::new_property(S3_unit, default = unit(NA, "null"))
+    )
+)
+
+local(S7::method(length, GridUnit) <- function(x) length(prop(x, "inner")))
+
+#' @importFrom S7 convert
+S7::method(convert, list(S3_unit, GridUnit)) <- function(from, to) {
+    GridUnit(from)
+}
+
+#' @importFrom S7 convert prop
+S7::method(convert, list(GridUnit, S3_unit)) <- function(from, to) {
+    prop(from, "inner")
+}
+
+#' @importFrom S7 convert prop
+S7::method(convert, list(GridUnit, S7::class_numeric)) <- function(from, to) {
+    as.numeric(from)
+}
+
+#' @importFrom S7 prop
+#' @export
+`as.double.ggalign::GridUnit` <- function(x, ...) {
+    as.numeric(prop(x, "inner"), ...)
+}
+
+#' @importFrom utils str
+#' @importFrom S7 prop
+local(S7::method(str, GridUnit) <- function(object, ..., indent.str = " ",
+                                            nest.lev = 0, give.attr = TRUE) {
+    if (!isTRUE(give.attr)) {
+        return(invisible(object))
+    }
+    attr <- attributes(prop(object, "inner"))
+    attr[["class"]] <- NULL
+    attr[["names"]] <- NULL
+    if (length(attr) == 0) {
+        return(invisible(object))
+    }
+    indent.str <- paste0(" ", indent.str)
+    for (nm in names(attr)) {
+        cat(indent.str, paste0("- attr(*, \"", nm, "\"):"), sep = "")
+        str(
+            attr[[nm]],
+            no.list = TRUE, ...,
+            nest.lev = nest.lev + 1L,
+            indent.str = indent.str
+        )
+    }
+    invisible(object)
+})

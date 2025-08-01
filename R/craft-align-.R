@@ -89,7 +89,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-#' @include craftbox-.R
+#' @include craftsman.R
 CraftAlign <- ggproto("CraftAlign", Craftsman,
     interact_layout = function(self, layout) {
         # check plot is compatible with the layout

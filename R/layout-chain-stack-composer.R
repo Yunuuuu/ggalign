@@ -53,13 +53,14 @@ stack_composer_add <- function(plot, stack, composer, ...) {
     UseMethod("stack_composer_add")
 }
 
-#' @importFrom utils packageVersion
+#' @importFrom S7 convert
 #' @export
-stack_composer_add.CraftBox <- function(plot, stack, composer, design, ...,
-                                        schemes, theme,
-                                        released_spaces,
-                                        direction, position) {
-    size <- plot@size
+`stack_composer_add.ggalign::CraftBox` <- function(plot, stack, composer,
+                                                   design, ...,
+                                                   schemes, theme,
+                                                   released_spaces,
+                                                   direction, position) {
+    size <- convert(prop(plot, "size"), S3_unit)
 
     # for `released_spaces`, release the `free_spaces` in a single plot
     plot_schemes <- scheme_inherit(schemes, plot@schemes)
@@ -75,7 +76,7 @@ stack_composer_add.CraftBox <- function(plot, stack, composer, design, ...,
     }
 
     # let `Align` to determine how to build the plot
-    craftsman <- plot@craftsman # `Craftsman` object
+    craftsman <- prop(plot, "craftsman") # `Craftsman` object
     plot <- plot@plot
     if (!craftsman$free_facet && is_discrete_design(design)) {
         if (nlevels(.subset2(design, "panel")) > 1L) {

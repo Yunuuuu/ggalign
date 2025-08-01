@@ -138,8 +138,8 @@ ggalign_stat.StackLayout <- function(x, what, ...) {
 }
 
 #' @export
-ggalign_stat.CraftBox <- function(x, ...) {
-    ggalign_stat(x@craftsman, ...)
+`ggalign_stat.ggalign::CraftBox` <- function(x, ...) {
+    ggalign_stat(prop(x, "craftsman"), ...)
 }
 
 #' @export

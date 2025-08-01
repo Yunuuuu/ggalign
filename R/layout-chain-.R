@@ -62,8 +62,8 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
 }
 
 #' @export
-chain_layout_add.CraftBox <- function(object, layout, object_name) {
-    craftsman <- object@craftsman
+`chain_layout_add.ggalign::CraftBox` <- function(object, layout, object_name) {
+    craftsman <- prop(object, "craftsman")
     # To-Do: Use S7 and double dispatch
     if (is.null(active_index <- layout@active) ||
         is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
@@ -95,7 +95,8 @@ chain_layout_add.CraftBox <- function(object, layout, object_name) {
         new_design <- craftsman$setup_design(layout@design)
 
         # initialize the plot object
-        object@plot <- craftsman$setup_plot(object@plot)
+        # use attributes to bypass the prop setter checking
+        attr(object, "plot") <- craftsman$setup_plot(object@plot)
 
         layout <- chain_add_plot(layout, object, object@active, object_name)
     } else { # should be a QuadLayout object

@@ -61,6 +61,7 @@ Schemes <- S7::new_class("Schemes",
     constructor = function(...) new_object(S7_object(), value = list2(...))
 )
 
+#' @importFrom utils str
 #' @importFrom S7 props
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")

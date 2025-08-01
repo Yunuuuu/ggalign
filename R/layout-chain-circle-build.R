@@ -46,7 +46,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     sizes <- vapply(plot_list, function(plot) {
         # for circular layout, we only support relative size
-        if (is.na(size <- as.numeric(plot@size))) {
+        if (is.na(size <- as.numeric(prop(plot, "size")))) {
             size <- 1
         }
         size
@@ -91,7 +91,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
-        craftsman <- plot@craftsman # `Craftsman` object
+        craftsman <- prop(plot, "craftsman") # `Craftsman` object
         plot_schemes <- scheme_inherit(schemes, plot@schemes)
         # the actual plot
         plot <- plot@plot

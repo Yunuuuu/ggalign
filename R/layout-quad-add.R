@@ -263,7 +263,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
 
 #' @importFrom methods slot slot<-
 #' @export
-quad_layout_add.CraftBox <- function(object, quad, object_name) {
+`quad_layout_add.ggalign::CraftBox` <- function(object, quad, object_name) {
     if (is.null(position <- quad@active)) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),

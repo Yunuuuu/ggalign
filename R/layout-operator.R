@@ -152,7 +152,7 @@ lapply(
         )
         # styler: off
         for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_theme", "CraftBox", "ChainLayout",
+                        "layout_theme", "ggalign::CraftBox", "ChainLayout",
                         "QuadLayout", "continuous_limits")) {
             # styler: on
             registerS3method(

@@ -114,7 +114,7 @@ print.ggalign_with_quad <- function(x, ...) {
 }
 
 #' @export
-with_quad.CraftBox <- function(x, position = waiver(), main = NULL) {
+`with_quad.ggalign::CraftBox` <- function(x, position = waiver(), main = NULL) {
     cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
 

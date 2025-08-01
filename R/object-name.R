@@ -30,8 +30,8 @@ object_name.QuadLayout <- function(object, format = "fn") {
 }
 
 #' @export
-object_name.CraftBox <- function(object, format = "fn") {
-    object_name(object@craftsman, format)
+`object_name.ggalign::CraftBox` <- function(object, format = "fn") {
+    object_name(prop(object, "craftsman"), format)
 }
 
 #' @export

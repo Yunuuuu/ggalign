@@ -22,7 +22,7 @@ cross <- function(cross = NULL, data = waiver(),
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include craftbox-.R
+#' @include craftsman.R
 CraftCross <- ggproto(
     "CraftCross", Craftsman,
     free_facet = TRUE,
