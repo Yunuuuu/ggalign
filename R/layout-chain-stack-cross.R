@@ -88,7 +88,7 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
     # by the layout will overlap with the axis of the plot in the layout.
     #
     # this occurs in the annotation stack (`position` is not `NULL`).
-    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
+    stack_spaces <- prop(schemes_get(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {

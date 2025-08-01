@@ -126,7 +126,7 @@ Craftsman <- ggproto("Craftsman",
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {
-        plot <- plot_add_schemes(plot, schemes)
+        plot <- plot_add_scheme(plot, schemes)
         ggremove_margin(plot, self$direction) + theme_recycle()
     },
 
@@ -176,11 +176,8 @@ craftbox_add.default <- function(object, craftbox, object_name) {
 }
 
 #' @export
-craftbox_add.ggalign_scheme <- function(object, craftbox, object_name) {
-    name <- ggalign_scheme_name(object)
-    craftbox@schemes[name] <- list(update_scheme(
-        object, .subset2(craftbox@schemes, name), object_name
-    ))
+`craftbox_add.ggalign::Scheme` <- function(object, craftbox, object_name) {
+    craftbox@schemes <- scheme_update(craftbox@schemes, object, object_name)
     craftbox
 }
 

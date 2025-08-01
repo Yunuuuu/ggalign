@@ -182,7 +182,7 @@ local(
                     "i" = "Did you accidentally put {.code +} on a new line?"
                 ))
             }
-            e2name <- deparse(substitute(e2, env = caller_env(2)))
+            e2name <- deparse(substitute(e2, env = caller_env(2L)))
             alignpatches_add(e2, e1, e2name)
         }
 )
@@ -349,31 +349,9 @@ S7::method(alignpatches_add, S3_layout_title) <-
 #' ) +
 #'     layout_theme(plot.background = element_rect(fill = "red"))
 #' @importFrom ggplot2 theme
+#' @include ggplot-theme.R
 #' @export
-layout_theme <- rlang::new_function(
-    # We utilize editor completion by listing all `theme()` arguments here.
-    # By placing `...` at the beginning, we can check if the first
-    # following argument is a `theme()` object rather than individual theme
-    # elements.
-    c(
-        rlang::exprs(... = ),
-        .subset(
-            rlang::fn_fmls(theme),
-            vec_set_difference(names(rlang::fn_fmls(theme)), "...")
-        )
-    ),
-    quote({
-        elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-        ans <- theme(!!!elements)
-        th <- NULL
-        for (i in seq_len(...length())) {
-            if (inherits(t <- ...elt(i), "theme")) {
-                th <- ggfun("add_theme")(th, t)
-            }
-        }
-        add_class(ggfun("add_theme")(th, ans), "layout_theme")
-    })
-)
+layout_theme <- new_theme_class("layout_theme")
 
 S3_layout_theme <- S7::new_S3_class("layout_theme")
 

@@ -24,10 +24,10 @@ chain_layout_subtract.default <- function(object, layout, object_name) {
 
 # for objects can inherit from layout
 #' @export
-chain_layout_subtract.ggalign_scheme <- function(object, layout, object_name) {
+`chain_layout_subtract.ggalign::Scheme` <- function(object, layout, object_name) {
     if (is.null(active_index <- layout@active) ||
         is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        layout <- update_layout_scheme(object, layout, object_name)
+        layout <- update_layout_schemes(object, layout, object_name)
     } else {
         layout@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
@@ -36,6 +36,7 @@ chain_layout_subtract.ggalign_scheme <- function(object, layout, object_name) {
     layout
 }
 
+#' @importFrom S7 S7_inherits
 #' @export
 chain_layout_subtract.ggalign_with_quad <- function(object, layout,
                                                     object_name) {
@@ -52,8 +53,8 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
 
         # subtract set at layout level, if it is a plot option
         # we only apply to current active layout
-        if (inherits(inner, "ggalign_scheme")) {
-            layout <- update_layout_scheme(inner, layout, inner_name)
+        if (S7_inherits(inner, Scheme)) {
+            layout <- update_layout_schemes(inner, layout, inner_name)
             return(layout)
         }
 
@@ -112,7 +113,7 @@ chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) 
     }
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
-    NextMethod()
+    chain_layout_and_add(object, layout, object_name)
 }
 
 #' @export

@@ -4,7 +4,7 @@
 \alias{scheme_data}
 \title{Plot data Specifications}
 \usage{
-scheme_data(data, inherit = FALSE)
+scheme_data(data = NULL, inherit = FALSE)
 }
 \arguments{
 \item{data}{A function to transform the plot data before rendering.

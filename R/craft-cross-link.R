@@ -128,7 +128,7 @@ CrossLink <- ggproto("CrossLink", CraftCross,
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {
-        plot <- plot_add_schemes(plot, schemes)
+        plot <- plot_add_scheme(plot, schemes)
 
         # save spacing for usage
         spacing <- calc_element(

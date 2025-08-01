@@ -275,7 +275,7 @@ methods::setClass(
     "QuadLayout",
     contains = "LayoutProto",
     list(
-        data = "ANY", plot = "ANY", body_schemes = "list", name = "character",
+        data = "ANY", plot = "ANY", body_schemes = "ANY", name = "character",
         # parameters for main body
         width = "ANY", height = "ANY",
         # Used to align axis

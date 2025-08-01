@@ -275,10 +275,12 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         direction <- self$direction
         # remove axis titles, text, ticks used for alignment
         if (isTRUE(self$no_axes)) {
-            schemes$scheme_theme <- .subset2(schemes, "scheme_theme") +
+            schemes <- scheme_update(
+                schemes,
                 theme_no_axes(switch_direction(direction, "y", "x"))
+            )
         }
-        plot <- plot_add_schemes(plot, schemes)
+        plot <- plot_add_scheme(plot, schemes)
         if (is_horizontal(direction)) {
             theme <- theme(
                 panel.spacing.y = calc_element("panel.spacing.y", theme)

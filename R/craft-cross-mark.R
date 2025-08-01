@@ -195,7 +195,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         add_class(plot, "ggalign_mark_plot", "patch_ggplot")
     },
     finish_plot = function(self, plot, schemes, theme) {
-        plot <- plot_add_schemes(plot, schemes)
+        plot <- plot_add_scheme(plot, schemes)
 
         # save spacing for usage
         spacing <- calc_element(

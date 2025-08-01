@@ -13,6 +13,35 @@ default_theme <- function() {
     }
 }
 
+new_theme_class <- function(new_class) {
+    rlang::new_function(
+        # We utilize editor completion by listing all `theme()` arguments here.
+        # By placing `...` at the beginning, we can check if the first
+        # following argument is a `theme()` object rather than individual theme
+        # elements.
+        c(
+            rlang::exprs(... = ),
+            .subset(
+                rlang::fn_fmls(theme),
+                vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+            )
+        ),
+        quote({
+            elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
+            ans <- theme(!!!elements)
+            th <- NULL
+            for (i in seq_len(...length())) {
+                if (inherits(t <- ...elt(i), "theme")) {
+                    th <- ggfun("add_theme")(th, t)
+                }
+            }
+            add_class(ggfun("add_theme")(th, ans), new_class)
+        })
+    )
+}
+
+S3_class_theme <- S7::new_S3_class("theme")
+
 # Check if user has set the theme
 is_theme_unset <- function() {
     isTRUE(all.equal(

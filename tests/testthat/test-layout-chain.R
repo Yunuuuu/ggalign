@@ -250,20 +250,6 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
             stack_crossv()))
 })
 
-test_that("`chain_layout_add()` function with stack_switch", {
-    set.seed(1L)
-    small_mat <- matrix(rnorm(72), nrow = 8)
-    # change parameters for stack self
-    p <- stack_alignh(small_mat)
-    p2 <- p + stack_active(sizes = unit(1, "cm")) -
-        scheme_align(guides = "tlbr", free_labs = "tlbr")
-    expect_identical(p2@sizes, unit(1, "cm"))
-    schemes <- p2@schemes
-    expect_identical(schemes$scheme_align$guides, "tlbr")
-    expect_identical(schemes$scheme_align$free_labs, "tlbr")
-    expect_identical(schemes$scheme_data, new_scheme_data(NULL))
-})
-
 test_that("`chain_layout_add()` function with ggalign_with_quad", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)

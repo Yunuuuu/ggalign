@@ -31,52 +31,68 @@
 #' will not inherit the `scheme_data` by default.
 #'
 #' @export
-scheme_data <- function(data, inherit = FALSE) {
-    data <- check_scheme_data(data)
-    assert_bool(inherit)
-    new_scheme_data(data, inherit)
-}
-
-new_scheme_data <- function(data = NULL, inherit = FALSE) {
-    new_scheme(
-        name = "scheme_data",
-        list(data = data, inherit = inherit),
-        class = "scheme_data"
+scheme_data <- S7::new_class(
+    "scheme_data",
+    parent = Scheme,
+    properties = list(
+        data = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (is.waive(value) || is.null(value) || is.function(value)) {
+                    return(NULL)
+                }
+                sprintf("must be a function, `NULL`, or {.fn waiver}")
+            },
+            setter = function(self, value) {
+                prop(self, "data") <- allow_lambda(value)
+                self
+            },
+            default = NULL
+        ),
+        inherit = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be of length 1")
+                }
+            },
+            default = FALSE
+        )
     )
-}
+)
 
-#' @export
-inherit_scheme.scheme_data <- function(scheme, pscheme) {
-    if (is.null(o <- .subset2(scheme, "data"))) return(scheme) # styler: off
-    if (is.waive(o)) return(pscheme) # inherit from parent; styler: off
-    if (!is.function(p_function <- .subset2(pscheme, "data"))) {
-        return(scheme)
+#' @importFrom S7 prop prop<-
+S7::method(scheme_inherit, list(scheme_data, scheme_data)) <- function(e1, e2) {
+    if (is.null(scheme_data <- prop(e2, "data"))) return(e2) # styler: off
+    if (is.waive(scheme_data)) return(e1) # inherit from parent; styler: off
+    if (!is.function(p_function <- prop(e1, "data"))) {
+        return(e2)
     }
     # if both are function, we check if we should call parent first then call
     # itself
-    if (.subset2(scheme, "inherit")) {
-        user_scheme_data <- o # current action data function
-        scheme$data <- function(data) {
+    if (prop(e2, "inherit")) {
+        prop(e2, "data", check = FALSE) <- function(data) {
             # we always restore the attached attribute
             ans <- ggalign_data_restore(p_function(data), data)
-            user_scheme_data(ans)
+            scheme_data(ans)
         }
     }
-    scheme
+    e2
 }
 
-#' @export
-plot_add_scheme.scheme_data <- function(plot, scheme) {
-    # by default, we won't change the data
-    if (!is.null(scheme_data <- .subset2(scheme, "data") %|w|% NULL) &&
-        !is.null(raw_data <- plot$data)) {
-        # To be compatible with ggplot2, it must be a data frame
-        if (!is.null(data <- scheme_data(raw_data)) &&
-            !is.waive(data) &&
-            !is.data.frame(data)) {
-            cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
+#' @importFrom ggplot2 class_ggplot
+#' @importFrom S7 prop
+S7::method(plot_add_scheme, list(class_ggplot, scheme_data)) <-
+    function(plot, scheme, ...) {
+        if (!is.null(scheme_data <- prop(scheme, "data") %|w|% NULL) &&
+            !is.null(raw_data <- plot$data)) {
+            # To be compatible with ggplot2, it must be a data frame
+            if (!is.null(data <- scheme_data(raw_data)) &&
+                !is.waive(data) &&
+                !is.data.frame(data)) {
+                cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
+            }
+            plot <- gguse_data(plot, data)
         }
-        plot <- gguse_data(plot, data)
+        plot
     }
-    plot
-}

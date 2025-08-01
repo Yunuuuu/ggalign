@@ -32,7 +32,7 @@ ggalign_build.QuadLayout <- function(x) {
         design = design,
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
-        guides = .subset2(.subset2(x@schemes, "scheme_align"), "guides"),
+        guides = prop(schemes_get(x@schemes, "scheme_align"), "guides"),
         theme = x@theme
     ) + layout_title(
         title = .subset2(titles, "title"),
@@ -93,30 +93,30 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     # prepare action for vertical and horizontal stack layout
     vertical_align <- horizontal_align <- the_align <-
-        .subset2(schemes, "scheme_align")
-    if (!is.null(layout_labs <- .subset2(the_align, "free_labs")) &&
+        schemes_get(schemes, "scheme_align")
+    if (!is.null(layout_labs <- prop(the_align, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
-        horizontal_align$free_labs <- gsub("[lr]", "", layout_labs)
-        vertical_align$free_labs <- gsub("[tb]", "", layout_labs)
-        if (!nzchar(horizontal_align$free_labs)) {
-            horizontal_align["free_labs"] <- list(NULL)
+        prop(horizontal_align, "free_labs") <- gsub("[lr]", "", layout_labs)
+        prop(vertical_align, "free_labs") <- gsub("[tb]", "", layout_labs)
+        if (!nzchar(prop(horizontal_align, "free_labs"))) {
+            prop(horizontal_align, "free_labs") <- NULL
         }
-        if (!nzchar(vertical_align$free_labs)) {
-            vertical_align["free_labs"] <- list(NULL)
+        if (!nzchar(prop(vertical_align, "free_labs"))) {
+            prop(vertical_align, "free_labs") <- NULL
         }
     }
 
     # inherit from the parent stack layout
-    if (!is.null(layout_spaces <- .subset2(the_align, "free_spaces")) &&
+    if (!is.null(layout_spaces <- prop(the_align, "free_spaces")) &&
         !is.waive(layout_spaces)) {
-        horizontal_align$free_spaces <- gsub("[lr]", "", layout_spaces)
-        vertical_align$free_spaces <- gsub("[tb]", "", layout_spaces)
-        if (!nzchar(horizontal_align$free_spaces)) {
-            horizontal_align["free_spaces"] <- list(NULL)
+        prop(horizontal_align, "free_spaces") <- gsub("[lr]", "", layout_labs)
+        prop(vertical_align, "free_spaces") <- gsub("[tb]", "", layout_labs)
+        if (!nzchar(prop(horizontal_align, "free_spaces"))) {
+            prop(horizontal_align, "free_spaces") <- NULL
         }
-        if (!nzchar(vertical_align$free_spaces)) {
-            vertical_align["free_spaces"] <- list(NULL)
+        if (!nzchar(prop(vertical_align, "free_spaces"))) {
+            prop(vertical_align, "free_spaces") <- NULL
         }
     }
 
@@ -129,10 +129,10 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
             extra_design <- column_design
-            pschemes$scheme_align <- horizontal_align
+            pschemes <- schemes_set(pschemes, horizontal_align, check = FALSE)
         } else {
             extra_design <- row_design
-            pschemes$scheme_align <- vertical_align
+            pschemes <- schemes_set(pschemes, vertical_align, check = FALSE)
         }
         plot <- stack_build(
             stack,
@@ -214,7 +214,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         )
 
     # add action ----------------------------------------
-    p <- plot_add_schemes(p, inherit_schemes(quad@body_schemes, schemes))
+    p <- plot_add_scheme(p, scheme_inherit(schemes, quad@body_schemes))
     if (do_row_facet) {
         p <- p + theme(panel.spacing.y = calc_element("panel.spacing.y", theme))
     }

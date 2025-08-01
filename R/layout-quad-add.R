@@ -55,8 +55,8 @@ quad_layout_add.ggalign_with_quad <- function(object, quad, object_name) {
     old <- quad@active
     contexts <- quad_operated_context(object, old, "+") %||%
         list(NULL) # we wrap `NULL` to a list for `for loop`.
-    object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
+    object <- .subset2(object, "object")
     for (active in contexts) {
         quad@active <- active
         quad <- quad_layout_add(object, quad, object_name)
@@ -334,10 +334,7 @@ quad_body_add.layout_theme <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_body_add.ggalign_scheme <- function(object, quad, object_name) {
-    name <- ggalign_scheme_name(object)
-    quad@body_schemes[name] <- list(update_scheme(
-        object, .subset2(quad@body_schemes, name), object_name
-    ))
+`quad_body_add.ggalign::Scheme` <- function(object, quad, object_name) {
+    quad@body_schemes <- scheme_update(quad@body_schemes, object, object_name)
     quad
 }

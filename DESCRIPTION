@@ -65,6 +65,7 @@ Language: en-GB
 Collate: 
     'active.R'
     'alignpatch-.R'
+    'ggplot-theme.R'
     'alignpatch-align_plots.R'
     'alignpatch-alignpatches.R'
     'alignpatch-area.R'
@@ -116,7 +117,6 @@ Collate:
     'ggplot-geom-rect3d.R'
     'ggplot-geom-subrect.R'
     'ggplot-helper.R'
-    'ggplot-theme.R'
     'ggplot-utils.R'
     'grid-grob-channel.R'
     'grid-grob-magick.R'

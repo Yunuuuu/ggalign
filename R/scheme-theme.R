@@ -25,70 +25,85 @@
 #'     theme(plot.background = element_rect(fill = "blue")) +
 #'     scheme_theme(plot.background = element_rect(fill = "red"))
 #'
-#' @importFrom ggplot2 theme
-#' @importFrom rlang inject
+#' @importFrom S7 new_object S7_object
+#' @importFrom ggplot2 theme is_theme
 #' @export
-scheme_theme <- rlang::new_function(
-    # We utilize editor completion by listing all `theme()` arguments here.
-    # By placing `...` at the beginning, we can check if the first
-    # following argument is a `theme()` object rather than individual theme
-    # elements.
-    c(
-        rlang::exprs(... = ),
-        .subset(
-            rlang::fn_fmls(theme),
-            vec_set_difference(names(rlang::fn_fmls(theme)), "...")
-        )
-    ),
-    quote({
-        elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-        ans <- theme(!!!elements)
-        th <- NULL
-        for (i in seq_len(...length())) {
-            if (inherits(t <- ...elt(i), "theme")) {
-                th <- ggfun("add_theme")(th, t)
+scheme_theme <- S7::new_class(
+    "scheme_theme", Scheme,
+    properties = list(theme = S3_class_theme),
+    constructor = rlang::new_function(
+        # We utilize editor completion by listing all `theme()` arguments here.
+        # By placing `...` at the beginning, we can check if the first
+        # following argument is a `theme()` object rather than individual theme
+        # elements.
+        c(
+            rlang::exprs(... = ),
+            .subset(
+                rlang::fn_fmls(theme),
+                vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+            )
+        ),
+        quote({
+            elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
+            th_element <- theme(!!!elements)
+            th <- NULL
+            for (i in seq_len(...length())) {
+                if (is_theme(t <- ...elt(i))) {
+                    th <- ggfun("add_theme")(th, t)
+                }
             }
-        }
-        new_scheme_theme(ggfun("add_theme")(th, ans))
-    })
+            theme <- ggfun("add_theme")(th, th_element)
+            new_object(S7_object(), theme = theme)
+        })
+    )
 )
 
-#' @importFrom ggplot2 theme
-new_scheme_theme <- function(th = theme()) {
-    # I don't know why, if I omit the `object = th` argument, it won't work
-    UseMethod("new_scheme_theme", th)
-}
-
-#' @importFrom rlang inject
-#' @export
-new_scheme_theme.theme <- function(th = theme()) {
-    attrs <- attributes(th)
-    attrs <- vec_slice(
-        attrs, vec_set_difference(names(attrs), c("names", "class"))
-    )
-    inject(new_scheme(
-        name = "scheme_theme", th, !!!attrs,
-        class = c("scheme_theme", class(th))
-    ))
-}
-
-#' @export
-new_scheme_theme.scheme_theme <- function(th = theme()) th
-
 ###############################################################
-#' @export
-update_scheme.scheme_theme <- function(new, old, object_name) {
-    ggfun("add_theme")(old, new, object_name)
+#' @importFrom S7 prop prop<-
+S7::method(scheme_init, scheme_theme) <- function(scheme) {
+    prop(scheme, "theme", check = FALSE) <-
+        complete_theme(default_theme()) + prop(scheme, "theme")
+    scheme
 }
 
-#' @export
-inherit_scheme.scheme_theme <- function(scheme, pscheme) {
-    pscheme + scheme
-}
+#' @importFrom S7 S7_inherits prop
+S7::method(scheme_update, list(scheme_theme, scheme_theme)) <-
+    function(e1, e2, e2name) {
+        prop(e1, "theme", check = FALSE) <- ggfun("add_theme")(
+            prop(e1, "theme"), prop(e2, "theme"), e2name
+        )
+        e1
+    }
 
-#' @export
-plot_add_scheme.scheme_theme <- function(plot, scheme) {
-    # setup plot theme
-    plot$theme <- scheme + plot$theme
-    plot
-}
+#' @importFrom S7 S7_inherits prop
+S7::method(scheme_update, list(Schemes, S3_class_theme)) <-
+    function(e1, e2, e2name) {
+        scheme_update(e1, scheme_theme(e2), e2name)
+    }
+
+#' @importFrom S7 S7_inherits prop
+S7::method(scheme_update, list(scheme_theme, S3_class_theme)) <-
+    function(e1, e2, e2name) {
+        prop(e1, "theme", check = FALSE) <- ggfun("add_theme")(
+            prop(e1, "theme"), e2, e2name
+        )
+        e1
+    }
+
+#' @importFrom S7 prop prop<-
+S7::method(scheme_inherit, list(scheme_theme, scheme_theme)) <-
+    function(e1, e2) {
+        # `align_plots` control how to inherit `guides` from the layout
+        # we don't need to inherit it here
+        prop(e2, "theme", check = FALSE) <- prop(e1, "theme") +
+            prop(e2, "theme")
+        e2
+    }
+
+#' @importFrom ggplot2 class_ggplot
+#' @importFrom S7 prop
+local(S7::method(plot_add_scheme, list(class_ggplot, scheme_theme)) <-
+    function(plot, scheme, ...) {
+        plot$theme <- prop(scheme, "theme") + plot$theme
+        plot
+    })

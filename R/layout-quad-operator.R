@@ -21,11 +21,11 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 
 # for object can set at layout level
 #' @export
-quad_layout_subtract.ggalign_scheme <- function(object, quad, object_name) {
+`quad_layout_subtract.ggalign::Scheme` <- function(object, quad, object_name) {
     if (is.null(context <- quad@active)) {
-        quad <- update_layout_scheme(object, quad, object_name)
+        quad <- update_layout_schemes(object, quad, object_name)
     } else {
-        slot(quad, context) <- update_layout_scheme(
+        slot(quad, context) <- update_layout_schemes(
             object, slot(quad, context), object_name
         )
     }
@@ -80,7 +80,7 @@ quad_layout_and_add.default <- function(object, quad, object_name) {
 quad_layout_and_add.ggalign_with_quad <- function(object, quad, object_name) {
     object <- .subset2(object, "object")
     object_name <- .subset2(object, "object_name")
-    NextMethod()
+    quad_layout_and_add(object, quad, object_name)
 }
 
 #' @export

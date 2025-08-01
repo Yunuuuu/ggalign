@@ -50,11 +50,10 @@ testthat::test_that("`ggheatmap` add `quad_switch()` works well", {
     )
     expect_doppelganger(
         "heatmap-hmanno-align-action-guides",
-        ggheatmap(matrix(1:9, nrow = 3L)) -
-            scheme_align(guides = NULL) +
-            quad_anno("r") +
-            align_dendro() +
-            scheme_align(guides = "l")
+        ggheatmap(matrix(1:9, nrow = 3L)) +
+            quad_anno("l") +
+            align_dendro(aes(color = branch)) +
+            scheme_align(guides = "r")
     )
 })
 

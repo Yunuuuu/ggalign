@@ -1,3 +1,24 @@
+#' @importFrom rlang is_na
+prop_position <- function(...) {
+    S7::new_property(
+        S7::class_any,
+        validator = function(value) {
+            if (is_na(value) || is.waive(value) || is.null(value)) {
+                return(NULL)
+            }
+            if (is_string(value) && !grepl("[^tlbr]", value)) {
+                return(NULL)
+            }
+            sprintf(
+                "must be a single string containing only the characters %s",
+                oxford_and(.tlbr)
+            )
+        },
+        ...,
+        default = NA
+    )
+}
+
 #' Align Specifications in the Layout
 #'
 #' @description
@@ -54,60 +75,80 @@
 #'     anno_right() +
 #'     align_dendro(aes(color = branch), k = 3) +
 #'     scheme_align(guides = "r")
+#' @importFrom rlang is_na
 #' @export
-scheme_align <- function(guides = NA, free_spaces = NA, free_labs = NA) {
-    if (!identical(guides, NA)) assert_layout_guides(guides)
-    if (!identical(free_spaces, NA)) assert_layout_position(free_spaces)
-    if (!identical(free_labs, NA)) assert_layout_position(free_labs)
-    new_scheme_align(
-        free_spaces = free_spaces,
-        free_labs = free_labs,
-        guides = guides
+scheme_align <- S7::new_class(
+    "scheme_align",
+    parent = Scheme,
+    properties = list(
+        guides = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (is_na(value) || is.waive(value) || is.null(value)) {
+                    return(NULL)
+                }
+                if (is_string(value) && !grepl("[^tlbri]", value)) {
+                    return(NULL)
+                }
+                sprintf(
+                    "must be a single string containing only the characters %s",
+                    oxford_and(c(.tlbr, "i"))
+                )
+            },
+            default = NA
+        ),
+        free_spaces = prop_position(),
+        free_labs = prop_position()
     )
-}
+)
 
-new_scheme_align <- function(guides = waiver(), free_spaces = waiver(),
-                             free_labs = waiver()) {
-    new_scheme(
-        name = "scheme_align",
-        list(free_spaces = free_spaces, free_labs = free_labs, guides = guides),
-        class = "scheme_align"
-    )
-}
-
-#' @importFrom utils modifyList
-#' @export
-update_scheme.scheme_align <- function(new, old, object_name) {
-    modifyList(old,
-        new[!vapply(new, identical, logical(1L), y = NA, USE.NAMES = FALSE)],
-        keep.null = TRUE
-    )
-}
-
-#' @export
-inherit_scheme.scheme_align <- function(scheme, pscheme) {
-    # `align_plots` control how to inherit `guides` from the layout
-    # we don't need to inherit it here
-    scheme["free_spaces"] <- list(.subset2(scheme, "free_spaces") %|w|%
-        .subset2(pscheme, "free_spaces"))
-    scheme["free_labs"] <- list(.subset2(scheme, "free_labs") %|w|%
-        .subset2(pscheme, "free_labs"))
+#' @importFrom S7 prop prop<-
+S7::method(scheme_init, scheme_align) <- function(scheme) {
+    # By default, we collect all guide legends
+    prop(scheme, "guides", check = FALSE) <- prop(scheme, "guides") %|w|% "tlbr"
     scheme
 }
 
-#' @param theme Additional default theme elements to be added for the plot
-#' @noRd
-plot_add_scheme.scheme_align <- function(plot, scheme) {
-    if (!is.waive(free_guides <- .subset2(scheme, "guides"))) {
-        plot <- free_guide(plot, free_guides)
+#' @importFrom rlang is_na
+#' @importFrom S7 props props<-
+S7::method(scheme_update, list(scheme_align, scheme_align)) <-
+    function(e1, e2, ...) {
+        new <- props(e2)
+        # key is read-only property
+        new$key <- NULL
+        for (nm in names(new)) {
+            if (is_na(.subset2(new, nm))) next
+            prop(e1, nm, check = FALSE) <- .subset2(new, nm)
+        }
+        e1
     }
-    # by default, we'll attach all labs to the axis
-    if (!is.null(free_labs <- .subset2(scheme, "free_labs") %|w|% "tlbr")) {
-        plot <- free_lab(plot, free_labs)
+
+#' @importFrom S7 prop prop<-
+S7::method(scheme_inherit, list(scheme_align, scheme_align)) <-
+    function(e1, e2) {
+        # `align_plots` control how to inherit `guides` from the layout
+        # we don't need to inherit it here
+        prop(e2, "free_spaces", check = FALSE) <- prop(e2, "free_spaces") %|w|%
+            prop(e1, "free_spaces")
+        prop(e2, "free_labs", check = FALSE) <- prop(e2, "free_labs") %|w|%
+            prop(e1, "free_labs")
+        e2
     }
-    # by default, we won't remove any spaces
-    if (!is.null(free_spaces <- .subset2(scheme, "free_spaces") %|w|% NULL)) {
-        plot <- free_space(free_border(plot, free_spaces), free_spaces)
+
+#' @importFrom ggplot2 class_ggplot
+#' @importFrom S7 prop
+S7::method(plot_add_scheme, list(class_ggplot, scheme_align)) <-
+    function(plot, scheme, ...) {
+        if (!is.waive(free_guides <- prop(scheme, "guides"))) {
+            plot <- free_guide(plot, free_guides)
+        }
+        # by default, we'll attach all labs to the axis
+        if (!is.null(free_labs <- prop(scheme, "free_labs") %|w|% "tlbr")) {
+            plot <- free_lab(plot, free_labs)
+        }
+        # by default, we won't remove any spaces
+        if (!is.null(free_spaces <- prop(scheme, "free_spaces") %|w|% NULL)) {
+            plot <- free_space(free_border(plot, free_spaces), free_spaces)
+        }
+        plot
     }
-    plot
-}

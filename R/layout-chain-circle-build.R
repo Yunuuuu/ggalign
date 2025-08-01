@@ -92,7 +92,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
         craftsman <- plot@craftsman # `Craftsman` object
-        plot_schemes <- inherit_schemes(plot@schemes, schemes)
+        plot_schemes <- scheme_inherit(schemes, plot@schemes)
         # the actual plot
         plot <- plot@plot
 

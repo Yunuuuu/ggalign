@@ -62,15 +62,15 @@ stack_composer_add.CraftBox <- function(plot, stack, composer, design, ...,
     size <- plot@size
 
     # for `released_spaces`, release the `free_spaces` in a single plot
-    plot_schemes <- inherit_schemes(plot@schemes, schemes)
+    plot_schemes <- scheme_inherit(schemes, plot@schemes)
     if (!is.null(released_spaces)) {
-        plot_spaces <- .subset2(
-            .subset2(plot_schemes, "scheme_align"), "free_spaces"
-        )
+        align_scheme <- schemes_get(plot_schemes, "scheme_align")
+        plot_spaces <- prop(align_scheme, "free_spaces")
         if (is_string(plot_spaces)) {
             plot_spaces <- setdiff_position(plot_spaces, released_spaces)
             if (!nzchar(plot_spaces)) plot_spaces <- NULL
-            plot_schemes$scheme_align["free_spaces"] <- list(plot_spaces)
+            align_scheme@free_spaces <- plot_spaces
+            plot_schemes <- schemes_set(plot_schemes, align_scheme)
         }
     }
 

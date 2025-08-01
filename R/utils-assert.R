@@ -183,15 +183,6 @@ check_order <- function(order, arg = caller_arg(order), call = caller_call()) {
     }
 }
 
-assert_align <- function(x, arg = caller_arg(x), call = caller_call()) {
-    if (!inherits(x, "scheme_align")) {
-        cli_abort(
-            "{.arg {arg}} must be created by {.fn scheme_align}",
-            call = call
-        )
-    }
-}
-
 assert_active <- function(x, allow_null = TRUE,
                           arg = caller_arg(x), call = caller_call()) {
     if (is.null(x) && allow_null) {

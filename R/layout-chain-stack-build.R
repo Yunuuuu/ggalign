@@ -23,20 +23,8 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
 
     if (is_horizontal(direction)) {
         spacing <- "y"
-        # for horizontal stack, we by default remove top and bottom spaces
-        # if (!is.null(position)) {
-        #     schemes$scheme_align["free_spaces"] <- list(
-        #         .subset2(schemes$scheme_align, "free_spaces") %|w|% "tb"
-        #     )
-        # }
     } else {
         spacing <- "x"
-        # for vertical stack, we by default remove left and right spaces
-        # if (!is.null(position)) {
-        #     schemes$scheme_align["free_spaces"] <- list(
-        #         .subset2(schemes$scheme_align, "free_spaces") %|w|% "lr"
-        #     )
-        # }
     }
     theme <- inherit_parent_layout_theme(stack, theme, spacing = spacing)
     composer <- resolve_stack_layout(stack, schemes, theme, extra_design)
@@ -78,7 +66,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
             sizes,
             do.call(unit.c, .subset2(composer, "sizes"))
         ),
-        guides = .subset2(.subset2(schemes, "scheme_align"), "guides"),
+        guides = prop(schemes_get(schemes, "scheme_align"), "guides"),
         theme = stack@theme
     )
 
@@ -111,8 +99,8 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
     free_guides <- .subset2(stack@heatmap, "free_guides")
     if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
     # we also apply the `free_spaces` for the whole annotation stack
-    free_spaces <- .subset2(
-        .subset2(schemes, "scheme_align"), "free_spaces"
+    free_spaces <- prop(
+        schemes_get(schemes, "scheme_align"), "free_spaces"
     ) %|w|% NULL
     if (!is.null(free_spaces)) {
         plot <- free_space(free_border(plot, free_spaces), free_spaces)
@@ -193,7 +181,9 @@ resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
     #     p3 + theme(plot.margin = margin(l = 5, unit = "cm")),
     #     ncol = 1
     # )
-    stack_spaces <- .subset2(.subset2(schemes, "scheme_align"), "free_spaces")
+    stack_spaces <- prop(
+        schemes_get(schemes, "scheme_align"), "free_spaces"
+    )
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
