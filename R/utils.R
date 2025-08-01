@@ -73,7 +73,7 @@ fn_body_append <- function(fn, ..., ans = FALSE) {
 # `foo.default`.
 #' @importFrom utils getS3method
 #' @importFrom methods extends
-has_method <- function(x, f, inherit = TRUE, default = inherit) {
+has_s3_method <- function(x, f, inherit = TRUE, default = inherit) {
     x_class <- class(x)
     if (inherit) {
         if (isS4(x)) x_class <- extends(x_class)
@@ -239,7 +239,7 @@ fct_rev <- function(x) {
 
 reverse_trans <- function(x) sum(range(x, na.rm = TRUE)) - x
 
-fclass <- function(x) .subset(class(x), 1L)
+main_class <- function(x) .subset(class(x), 1L)
 
 is_scalar <- function(x) length(x) == 1L
 

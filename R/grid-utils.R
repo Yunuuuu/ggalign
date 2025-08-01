@@ -78,7 +78,7 @@ loc_vp2device <- function(x, y, valueOnly = FALSE) {
 str.unit <- function(object, ...) obj_str(object, ...)
 
 #' @export
-vec_ptype_abbr.unit <- function(x, ...) fclass(x)
+vec_ptype_abbr.unit <- function(x, ...) main_class(x)
 
 #' @importFrom utils str
 #' @export

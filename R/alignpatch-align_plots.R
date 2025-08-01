@@ -74,7 +74,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     }
 
     for (plot in plots) {
-        if (!has_method(plot, "alignpatch", default = FALSE)) {
+        if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
             cli_abort("Cannot align {.obj_type_friendly {plot}}")
         }
     }
