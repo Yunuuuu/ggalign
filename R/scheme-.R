@@ -66,11 +66,11 @@ Schemes <- S7::new_class("Schemes",
 )
 
 #' @importFrom S7 props
-S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
+local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")
     cat(paste0("<", main_class(object), ">\n"))
     str_nest(.subset(props(object), c("value")), "@", ..., nest.lev = nest.lev)
-}
+})
 
 #' @importFrom rlang list2
 schemes_set <- function(schemes, ..., check = TRUE) {
