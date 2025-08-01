@@ -7,10 +7,10 @@
 scheme_init(scheme)
 }
 \arguments{
-\item{scheme}{A \code{\link{scheme}} object to initialize.}
+\item{scheme}{A \code{\link{Scheme}} object to initialize.}
 }
 \value{
-The initialized \code{\link{scheme}} object.
+The initialized \code{\link{Scheme}} object.
 }
 \description{
 \code{scheme_init()} is a developer-facing generic used to define the initial

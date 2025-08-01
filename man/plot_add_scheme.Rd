@@ -2,7 +2,7 @@
 % Please edit documentation in R/scheme-.R
 \name{plot_add_scheme}
 \alias{plot_add_scheme}
-\title{Apply a scheme to a plot}
+\title{Apply a Scheme to a plot}
 \usage{
 plot_add_scheme(plot, scheme, ...)
 }

@@ -151,8 +151,8 @@ Scheme <- S7::new_class(
 #' initialize layout schemes, allowing plots to inherit layout behavior from the
 #' scheme.
 #'
-#' @param scheme A [`scheme`] object to initialize.
-#' @return The initialized [`scheme`] object.
+#' @param scheme A [`Scheme`] object to initialize.
+#' @return The initialized [`Scheme`] object.
 #' @keywords internal
 #' @export
 scheme_init <- S7::new_generic("scheme_init", "scheme", function(scheme) {
@@ -275,7 +275,7 @@ S7::method(scheme_inherit, list(S7::class_any, Scheme)) <- function(e1, e2) {
 
 S7::method(scheme_inherit, list(Scheme, Scheme)) <- function(e1, e2) e2
 
-#' Apply a scheme to a plot
+#' Apply a Scheme to a plot
 #'
 #' `plot_add_scheme()` is a generic used to apply a [`Scheme`] (or a [`Schemes`]
 #' container) to a plot object. This allows schemes to update or modify
