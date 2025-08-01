@@ -124,7 +124,7 @@ fortify_data_frame.matrix <- function(data, lvls = NULL, ...,
     if (isFALSE(lvls)) {
         lvls <- NULL
     } else if (isTRUE(lvls)) {
-        lvls <- ggalign_lvls_get(lvls)
+        lvls <- ggalign_lvls_get(data)
     } else if (!is.null(lvls) && !is.character(lvls)) {
         cli_abort(
             "{.arg lvls} must be a single boolean value or a character",
