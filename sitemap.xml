@@ -10,6 +10,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/news/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/LayoutProto-class.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/Scheme.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/Schemes.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/active.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_dendro.html</loc></url>
@@ -115,6 +117,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch.recordedplot.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch.trellis.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch_titles.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/plot_add_scheme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/plus-CraftBox-ANY-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/quad_active.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/quad_init.html</loc></url>
@@ -127,7 +130,10 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scale_z_continuous.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_data.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_inherit.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_init.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_theme.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_update.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/show-CraftBox-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/show-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_cross.html</loc></url>
