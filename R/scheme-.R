@@ -17,10 +17,6 @@
 #'   keys.
 #' - `keys`: A character vector of all scheme keys.
 #'
-#' @section Methods:
-#' - Use `schemes_get()` to retrieve a scheme by key.
-#' - Use `schemes_set()` to update or add new schemes.
-#'
 #' @seealso [`Scheme`]
 #' @keywords internal
 #' @importFrom S7 S7_inherits
@@ -69,7 +65,7 @@ Schemes <- S7::new_class("Schemes",
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")
     cat(paste0("<", main_class(object), ">\n"))
-    str_nest(.subset(props(object), c("value")), "@", ..., nest.lev = nest.lev)
+    str_nest(.subset(props(object), "value"), "@", ..., nest.lev = nest.lev)
 })
 
 #' @importFrom rlang list2

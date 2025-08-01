@@ -34,14 +34,6 @@ keys.
 }
 }
 
-\section{Methods}{
-
-\itemize{
-\item Use \code{schemes_get()} to retrieve a scheme by key.
-\item Use \code{schemes_set()} to update or add new schemes.
-}
-}
-
 \seealso{
 \code{\link{Scheme}}
 }
