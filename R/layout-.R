@@ -228,7 +228,7 @@ HeatmapLayout <- S7::new_class(
 )
 
 ###########################################################
-default_layout <- function(layout) { # setup default value for the layout
+layout_init <- function(layout) { # setup default value for the layout
     layout@theme <- complete_theme(default_theme() + layout@theme)
     layout@schemes <- scheme_init(layout@schemes)
     layout

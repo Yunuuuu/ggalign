@@ -1,6 +1,6 @@
 #' @export
 `ggalign_build.ggalign::StackLayout` <- function(x) {
-    x <- default_layout(x)
+    x <- layout_init(x)
     (stack_build(x) %||% align_plots(theme = x@theme)) +
         layout_title(
             title = .subset2(x@titles, "title"),
