@@ -60,6 +60,7 @@
 #'     # layout
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
+#' @include layout-.R
 #' @name layout-operator
 local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (missing(e2)) {
@@ -111,100 +112,53 @@ local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     layout_and_add(e1, e2, e2name)
 })
 
-#################################################################
-layout_add <- function(layout, object, object_name) {
-    UseMethod("layout_add")
-}
+#' @importFrom S7 S7_dispatch
+layout_add <- S7::new_generic(
+    "layout_add", c("layout", "object"),
+    function(layout, object, objectname) S7_dispatch()
+)
 
-#' @export
-`layout_add.ggalign::QuadLayout` <- function(layout, object, object_name) {
-    quad_layout_add(object, layout, object_name)
-}
+#' @importFrom S7 S7_dispatch
+layout_subtract <- S7::new_generic(
+    "layout_subtract", c("layout", "object"),
+    function(layout, object, objectname) S7_dispatch()
+)
 
-#' @export
-`layout_add.ggalign::ChainLayout` <- function(layout, object, object_name) {
-    chain_layout_add(object, layout, object_name)
-}
 
-#################################################################
-layout_subtract <- function(layout, object, object_name) {
-    UseMethod("layout_subtract")
-}
+#' @importFrom S7 S7_dispatch
+layout_and_add <- S7::new_generic(
+    "layout_and_add", c("layout", "object"),
+    function(layout, object, objectname) S7_dispatch()
+)
 
-#' @export
-`layout_subtract.ggalign::QuadLayout` <- function(layout, object, object_name) {
-    quad_layout_subtract(object, layout, object_name)
-}
-
-#' @export
-`layout_subtract.ggalign::ChainLayout` <- function(layout, object, object_name) {
-    chain_layout_subtract(object, layout, object_name)
-}
-
-#################################################################
-# we use and_add suffix here, since `and` is very similar with `add`.
-layout_and_add <- function(layout, object, object_name) {
-    UseMethod("layout_and_add")
-}
-
-#' @export
-`layout_and_add.ggalign::QuadLayout` <- function(layout, object, object_name) {
-    quad_layout_and_add(object, layout, object_name)
-}
-
-#' @export
-`layout_and_add.ggalign::ChainLayout` <- function(layout, object, object_name) {
-    chain_layout_and_add(object, layout, object_name)
-}
-
-# For objects cannot be used with `-` or `&`
-#' @include layout-quad-operator.R
-#' @include layout-chain-operator.R
-lapply(
-    c(
-        "quad_layout_subtract", "chain_layout_subtract",
-        "quad_layout_and_add", "chain_layout_and_add"
-    ),
-    function(genname) {
-        params <- .subset2(strsplit(genname, "_"), 1L)
-
-        # function argument list
-        pairlist <- rlang::pairlist2(object = , layout = , object_name = )
-        names(pairlist) <- c("object", .subset(params, 1L), "object_name")
-        operator <- switch(.subset(params, 3L),
-            subtract = "-",
-            and = "&"
-        )
-        # styler: off
-        for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_theme", "ggalign::CraftBox", 
-                        "ggalign::ChainLayout",
-                        "ggalign::QuadLayout", "continuous_limits")) {
-            # styler: on
-            registerS3method(
-                genname, class,
-                rlang::new_function(pairlist, substitute(
-                    {
-                        cli_abort(c(
-                            sprintf(
-                                "Cannot add %s with {.code %s}",
-                                name, operator
-                            ),
-                            i = "Try to use {.code +} instead"
-                        ))
-                    },
-                    list(
-                        name = switch(class,
-                            CraftBox = ,
-                            ChainLayout = ,
-                            QuadLayout = quote(object_name(object)),
-                            # for all others
-                            "{.var {object_name}}"
-                        ),
-                        operator = operator
-                    )
-                ))
-            )
+#' @include utils-ggplot.R
+local(
+    for (left in list(QuadLayout, ChainLayout)) {
+        for (right in list(
+            S3_class_ggplot,
+            S7::new_S3_class("quad_active"),
+            S7::new_S3_class("quad_anno"),
+            S7::new_S3_class("layout_title"),
+            S7::new_S3_class("layout_theme"),
+            CraftBox,
+            ChainLayout,
+            QuadLayout,
+            Domain
+        )) {
+            S7::method(layout_subtract, list(left, right)) <-
+                function(layout, object, objectname) {
+                    cli_abort(c(
+                        sprintf("Cannot add %s with {.code -}", objectname),
+                        i = "Try to use {.code +} instead"
+                    ))
+                }
+            S7::method(layout_and_add, list(left, right)) <-
+                function(layout, object, objectname) {
+                    cli_abort(c(
+                        sprintf("Cannot add %s with {.code &}", objectname),
+                        i = "Try to use {.code +} instead"
+                    ))
+                }
         }
     }
 )

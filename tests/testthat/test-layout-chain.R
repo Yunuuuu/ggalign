@@ -71,7 +71,7 @@ test_that("`chain_layout_add()` function with `CraftBox`", {
 })
 
 ###################################################################
-testthat::test_that("`chain_layout_add()` function with QuadLayout", {
+test_that("`chain_layout_add()` function with QuadLayout", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))

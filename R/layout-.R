@@ -20,7 +20,8 @@ LayoutProto <- S7::new_class("LayoutProto",
             },
             default = NA_character_
         )
-    )
+    ),
+    abstract = TRUE
 )
 
 #' Subset a `Layout` object

@@ -138,7 +138,7 @@ quad_switch_anno <- function(position, size, free_guides, initialize, what,
 #' @export
 #' @keywords internal
 quad_init <- function(position, data = waiver(), ...) {
-    lifecycle::deprecate_stop("0.0.6", "quad_init()", "stack_layout()")
+    lifecycle::deprecate_stop("0.0.6", "quad_init()", "+ stack_layout()")
 }
 
 #' @inherit quad_active title return

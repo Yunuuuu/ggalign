@@ -119,8 +119,7 @@ genomic_range <- function(start, end) {
     c(start = s, end = e)
 }
 
-#' @export
-`chain_decorate.ggalign::CircleLayout` <- function(layout, plot) {
+S7::method(chain_decorate, CircleLayout) <- function(layout, plot) {
     if (!identical(layout@name, "circle_genomic")) {
         return(plot)
     }
