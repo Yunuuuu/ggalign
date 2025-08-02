@@ -200,7 +200,7 @@ quad_continuous.uneval <- function(data, ...) {
 new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
                             mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA,
-                            class = "QuadLayout",
+                            Class = QuadLayout,
                             call = caller_call()) {
     if (!is.waive(xlim)) assert_limits(xlim, call = call)
     if (!is.waive(ylim)) assert_limits(ylim, call = call)
@@ -253,8 +253,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
     assert_active(active, call = call)
 
     # Here we use S4 object to override the double dispatch of `+.gg` method
-    new(
-        class,
+    Class(
         # used by the layout
         data = data, theme = theme,
         schemes = schemes,
@@ -268,26 +267,3 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
         plot = plot, horizontal = horizontal, vertical = vertical
     )
 }
-
-# Used to create the QuadLayout
-#' @include layout-.R
-QuadLayout <- methods::setClass(
-    "QuadLayout",
-    contains = "LayoutProto",
-    list(
-        data = "ANY", plot = "ANY", body_schemes = "ANY", name = "character",
-        # parameters for main body
-        width = "ANY", height = "ANY",
-        # Used to align axis
-        horizontal = "ANY", vertical = "ANY",
-        # top, left, bottom, right must be a StackLayout object.
-        top = "ANY", left = "ANY", bottom = "ANY", right = "ANY",
-        # If we regard `QuadLayout` as a plot, and put it into the stack
-        # layout, we need following arguments to control it's behavour
-        plot_active = "ANY"
-    ),
-    prototype = list(
-        # used by QuadLayout
-        top = NULL, left = NULL, bottom = NULL, right = NULL
-    )
-)

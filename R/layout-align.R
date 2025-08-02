@@ -38,6 +38,7 @@
 #'
 #' @param x,y design for the layout.
 #' @keywords internal
+#' @importFrom S7 prop
 #' @noRd
 layout_align <- function(x = NULL, y = NULL,
                          xlabels = NULL, ylabels = NULL,
@@ -58,6 +59,7 @@ layout_align <- function(x = NULL, y = NULL,
     )
 }
 
+#' @importFrom S7 prop
 setup_discrete_limits <- function(axis, domain, n_panels) {
     panel <- prop(domain, "panel")
     index <- prop(domain, "index")
@@ -74,6 +76,7 @@ setup_discrete_limits <- function(axis, domain, n_panels) {
 }
 
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
+#' @importFrom S7 prop
 #' @export
 ggplot_add.layout_align <- function(object, plot, object_name, ...) {
     x_domain <- .subset2(object, "x")

@@ -1,53 +1,50 @@
-# Will ensure serialisation includes a link to the ggalign namespace
-# Copied from patchwork
-namespace_link <- function() NULL
-
-# https://stackoverflow.com/questions/65817557/s3-methods-extending-ggplot2-gg-function
-# Here we use S4 object to override the double dispatch of `+.gg` method
-# TO-DO: use S7
 #' A `Layout` object
 #'
 #' A `Layout` object defines how to place the plots.
 #'
+#' @importFrom ggplot2 is_theme
+#' @include scheme-.R
 #' @keywords internal
-# add suffix "Proto" to avoid conflict with ggplot2
-methods::setClass("LayoutProto",
-    list(
-        active = "ANY", # current active plot
-        schemes = "ANY", # used to provide global parameters for all plots
-        # control the layout, `theme` will also be used by `ggsave`
-        titles = "list",
-        annotation = "list", # To-Do add `pacth_titles` for layout
-        theme = "ANY",
-        `_namespace` = "ANY"
-    ),
-    prototype = list(
-        active = NULL, titles = list(),
-        annotation = list(), theme = NULL,
-        `_namespace` = namespace_link
+LayoutProto <- S7::new_class("LayoutProto",
+    properties = list(
+        data = S7::class_any,
+        current = S7::new_property(
+            S7::class_integer,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be of length 1")
+                }
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "current"))) {
+                    cli_abort("'@current' is read-only.")
+                }
+                prop(self, "current") <- value
+                self
+            },
+            default = NA_integer_
+        ),
+        schemes = prop_schemes("schemes"),
+        titles = prop_layout_title("titles"),
+        theme = prop_layout_theme("theme"),
+        name = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
+                }
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "name"))) {
+                    cli_abort("'@name' is read-only.")
+                }
+                prop(self, "name") <- value
+                self
+            },
+            default = NA_character_
+        )
     )
 )
-
-#' @export
-print.LayoutProto <- print.alignpatches
-
-#' @importFrom grid grid.draw
-#' @exportS3Method
-grid.draw.LayoutProto <- grid.draw.alignpatches
-
-#' @export
-alignpatch.LayoutProto <- function(x) alignpatch(ggalign_build(x))
-
-#' Print Layout object
-#'
-#' @param object A `r rd_layout()`.
-#' @return The input invisiblely.
-#' @importFrom methods show
-#' @export
-#' @keywords internal
-methods::setMethod("show", "LayoutProto", function(object) {
-    print(object)
-})
 
 #' Subset a `Layout` object
 #'
@@ -57,153 +54,193 @@ methods::setMethod("show", "LayoutProto", function(object) {
 #' @param x A `Layout` object
 #' @param name A string of slot name in `Layout` object.
 #' @return The slot value.
-#' @importFrom methods slot
-#' @export
+#' @importFrom S7 prop
 #' @keywords internal
-methods::setMethod("$", "LayoutProto", function(x, name) {
-    slot(x, name)
+local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
+
+local(S7::method(print, LayoutProto) <- print.alignpatches)
+
+#' @importFrom grid grid.draw
+local(S7::method(grid.draw, LayoutProto) <- grid.draw.alignpatches)
+
+local(S7::method(alignpatch, LayoutProto) <- function(x) {
+    alignpatch(ggalign_build(x))
 })
 
-###########################################################
-default_layout <- function(layout) { # setup default value for the layout
-    layout@theme <- complete_theme(default_theme() + layout@theme)
-    layout@schemes <- scheme_init(layout@schemes)
-    layout
-}
-
-is_linear <- function(layout) UseMethod("is_linear")
-
-#' @export
-is_linear.StackLayout <- function(layout) TRUE
-
-#' @export
-is_linear.CircleLayout <- function(layout) FALSE
-
-###########################################################
-inherit_parent_layout_schemes <- function(layout, schemes) {
-    if (is.null(schemes)) {
-        return(layout@schemes)
-    }
-    scheme_inherit(schemes, layout@schemes)
-}
-
-inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
-    if (is.null(theme)) return(layout@theme) # styler: off
-    # parent theme, set the global panel spacing,
-    # so that every panel aligns well
-    if (is.null(layout@theme)) return(theme) # styler: off
-    ans <- theme + layout@theme
-    if (is.null(spacing)) return(ans) # styler: off
-    switch(spacing,
-        x = ans + theme(
-            panel.spacing.x = calc_element("panel.spacing.x", theme)
+# Used by both `circle_layout()` and `stack_layout()`
+#' @keywords internal
+ChainLayout <- S7::new_class("ChainLayout",
+    LayoutProto,
+    properties = list(
+        box_list = S7::new_property(
+            S7::class_list,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
+                }
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "box_list"))) {
+                    cli_abort("'@box_list' is read-only.")
+                }
+                prop(self, "box_list") <- value
+                self
+            },
+            default = list()
         ),
-        y = ans + theme(
-            panel.spacing.y = calc_element("panel.spacing.y", theme)
+        domain = prop_domain("domain"),
+        direction = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
+                }
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "direction"))) {
+                    cli_abort("'@direction' is read-only.")
+                }
+                prop(self, "direction") <- value
+                self
+            }
         )
     )
-}
+)
 
-############################################################
-#' Get the statistics from the layout
-#'
-#' @param x A `r rd_layout()`.
-#' @inheritParams rlang::args_dots_used
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) {
-    UseMethod("ggalign_stat")
-}
-
-#' @param position A string of `r oxford_or(.TLBR)`.
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.QuadLayout <- function(x, position, ...) {
-    ggalign_stat(x = slot(x, position), ...)
-}
-
-#' @param what A single number or string of the plot elements in the stack
-#' layout.
-#' @export
-#' @rdname ggalign_stat
-ggalign_stat.StackLayout <- function(x, what, ...) {
-    plot_list <- x@plot_list
-    index <- vec_as_location2(
-        what,
-        n = length(plot_list),
-        names = names(plot_list),
-        missing = "error"
+#' @importFrom ggplot2 waiver
+#' @keywords internal
+StackLayout <- S7::new_class(
+    "StackLayout", ChainLayout,
+    properties = list(
+        sizes = S7::class_any, # used by stack layout
+        # used by heatmap annotation
+        heatmap = S7::new_property(
+            S7::class_list,
+            setter = function(self, value) {
+                if (!is.null(prop(self, "heatmap"))) {
+                    cli_abort("'@heatmap' is read-only.")
+                }
+                prop(self, "heatmap") <- value
+                self
+            },
+            default = list(
+                position = NULL,
+                free_guides = waiver(),
+                # indicate whether or not the data is from the quad-layout
+                # matrix
+                quad_matrix = FALSE
+            )
+        )
     )
-    ggalign_stat(x = .subset2(plot_list, index), ...)
+)
+
+StackCross <- S7::new_class(
+    "StackCross", StackLayout,
+    # A list of old domain
+    properties = list(
+        odomain = S7::class_list,
+        cross_points = S7::class_integer,
+        break_points = S7::class_integer
+    )
+)
+
+#' @keywords internal
+CircleLayout <- S7::new_class(
+    "CircleLayout", ChainLayout,
+    properties = list(
+        radial = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (!is.null(value) && !inherits(value, "CoordRadial")) {
+                    return("must be created with `coord_circle()`")
+                }
+                if (!is.null(radial) && abs(diff(radial$arc)) < pi / 2L) {
+                    return("circle of acute angle < 90 is not allowed")
+                }
+            }
+        ),
+        sector_spacing = S7::class_any
+    )
+)
+
+#' @importFrom S7 S7_inherits
+prop_stack_layout <- function(property, ...) {
+    force(property)
+    S7::new_property(
+        S7::class_any,
+        validator = function(value) {
+            if (!is.null(value) && !S7_inherits(value, StackLayout)) {
+                return("must be a 'StackLayout' object")
+            }
+        },
+        setter = function(self, value) {
+            prop(self, property) <- value
+            self
+        },
+        ...,
+        default = NULL
+    )
 }
 
-#' @export
-`ggalign_stat.ggalign::CraftBox` <- function(x, ...) {
-    ggalign_stat(prop(x, "craftsman"), ...)
-}
+# Used to create the QuadLayout
+QuadLayout <- S7::new_class(
+    "QuadLayout", LayoutProto,
+    properties = list(
+        plot = S7::new_property(
+            S7::new_union(S7::class_any),
+            validator = function(value) {
+                if (!is.null(value) && !is_ggplot(value)) {
+                    return("must be a 'ggplot' object")
+                }
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "plot"))) {
+                    cli_abort("'@plot' is read-only")
+                }
+                prop(self, "plot") <- value
+                self
+            },
+            default = NULL
+        ),
+        body_schemes = prop_schemes("body_schemes"),
+        # parameters for main body
+        width = prop_grid_unit("width"),
+        height = prop_grid_unit("height"),
+        # Used to align axis
+        horizontal = prop_domain("horizontal"),
+        vertical = prop_domain("vertical"),
+        # top, left, bottom, right must be a StackLayout object.
+        top = prop_stack_layout("top"),
+        left = prop_stack_layout("left"),
+        bottom = prop_stack_layout("bottom"),
+        right = prop_stack_layout("right"),
+        # If we regard `QuadLayout` as a plot, and put it into the stack
+        # layout, we need following arguments to control it's behavour
+        plot_active = S7::new_property(
+            active,
+            setter = function(self, value) {
+                if (!is.null(prop(self, "plot_active"))) {
+                    cli_abort("'@plot_active' is read-only; use the '+' operator to update it.")
+                }
+                prop(self, "plot_active") <- value
+                self
+            }
+        )
+    )
+)
 
-#' @export
-ggalign_stat.CraftAlign <- function(x, ...) {
-    rlang::check_dots_empty()
-    .subset2(x, "statistics")
-}
+# used to create the heatmap layout
+#' @keywords internal
+HeatmapLayout <- S7::new_class(
+    "HeatmapLayout", QuadLayout,
+    properties = list(filling = S7::class_any) # parameters for heatmap body
+)
 
-#' @export
-ggalign_stat.default <- function(x, ...) {
-    cli_abort(sprintf("no statistics found for %s", object_name(x)))
-}
+is_linear <- S7::new_generic(
+    "is_linear", "layout",
+    function(layout) S7::S7_dispatch()
+)
 
-#############################################################
-#' Reports whether `x` is layout object
-#'
-#' @param x An object to test.
-#' @return A single boolean value.
-#' @examples
-#' is_layout(ggheatmap(1:10))
-#'
-#' @importFrom methods is
-#' @export
-is_layout <- function(x) is(x, "LayoutProto")
+S7::method(is_linear, StackLayout) <- function(layout) TRUE
 
-#' @examples
-#' # for quad_layout()
-#' is_quad_layout(quad_alignb(1:10))
-#' is_quad_layout(quad_alignh(1:10))
-#' is_quad_layout(quad_alignv(1:10))
-#' is_quad_layout(quad_free(mtcars))
-#'
-#' @export
-#' @rdname is_layout
-is_quad_layout <- function(x) is(x, "QuadLayout")
-
-#' @examples
-#' # for stack_layout()
-#' is_stack_layout(stack_discrete("h", 1:10))
-#' is_stack_layout(stack_continuous("h", 1:10))
-#'
-#' @export
-#' @rdname is_layout
-is_stack_layout <- function(x) is(x, "StackLayout")
-
-#' @export
-#' @rdname is_layout
-is_stack_cross <- function(x) is(x, "StackCross")
-
-#' @export
-#' @rdname is_layout
-is_circle_layout <- function(x) is(x, "CircleLayout")
-
-#' @examples
-#' # for heatmap_layout()
-#' is_heatmap_layout(ggheatmap(1:10))
-#' @export
-#' @rdname is_layout
-is_heatmap_layout <- function(x) is(x, "HeatmapLayout")
-
-#' @examples
-#' is_ggheatmap(ggheatmap(1:10))
-#' @export
-#' @rdname is_layout
-is_ggheatmap <- is_heatmap_layout
-
-is_cross_layout <- function(x) is_stack_cross(x)
+S7::method(is_linear, CircleLayout) <- function(layout) TRUE

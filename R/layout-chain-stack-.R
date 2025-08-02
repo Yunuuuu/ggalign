@@ -249,8 +249,7 @@ new_stack_layout <- function(data, direction, domain,
             name <- "stack_continuous"
         }
     }
-    new(
-        "StackLayout",
+    StackLayout(
         name = name, data = data,
         direction = direction,
         theme = theme, schemes = schemes, # used by the layout
@@ -259,25 +258,313 @@ new_stack_layout <- function(data, direction, domain,
 }
 
 ############################################################
-# Used to place multiple objects in one axis
-#' @importFrom grid unit
-#' @importFrom ggplot2 waiver
-#' @keywords internal
-#' @include layout-chain-.R
-StackLayout <- methods::setClass(
-    "StackLayout",
-    contains = "ChainLayout",
-    list(
-        direction = "character",
-        heatmap = "list", # used by heatmap annotation
-        sizes = "ANY" # used by stack layout
-    ),
-    prototype = list(
-        heatmap = list(
-            position = NULL,
-            free_guides = waiver(),
-            # indicate whether or not the data is from the quad-layout matrix
-            quad_matrix = FALSE
-        )
+#' Determine the active context of stack layout
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' `stack_active` is an alias for `stack_switch()`, which sets `what = NULL` by
+#' default.
+#'
+#' @inheritParams rlang::args_dots_empty
+#' @inheritParams quad_switch
+#' @inheritParams stack_discrete
+#' @param what What should get activated for the stack layout?
+#' `r rd_chain_what()`, this is useful when the active context is a
+#' [`quad_layout()`] object, where any `align_*()` will be added to the
+#' [`quad_layout()`]. By removing the active context, we can add `align_*()`
+#' into the [`stack_layout()`].
+#' @return A `stack_switch` object which can be added to [stack_layout()].
+#' @examples
+#' stack_discrete("h", matrix(1:9, nrow = 3L)) +
+#'     ggheatmap() +
+#'     # ggheamtap will set the active context, directing following addition
+#'     # into the heatmap plot area. To remove the heatmap active context,
+#'     # we can use `stack_active()` which will direct subsequent addition into
+#'     # the stack
+#'     stack_active() +
+#'     # here we add a dendrogram to the stack.
+#'     align_dendro()
+#' @export
+stack_switch <- function(sizes = NULL, what = waiver(), ...) {
+    rlang::check_dots_empty()
+    if (!is.waive(what)) what <- check_stack_context(what)
+    if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
+    structure(list(what = what, sizes = sizes), class = "stack_switch")
+}
+
+#' @export
+#' @rdname stack_switch
+stack_active <- function(sizes = NULL, ...) {
+    rlang::check_dots_empty()
+    stack_switch(sizes, what = NULL)
+}
+
+#' @include layout-operator.R
+S7::method(
+    layout_add,
+    list(StackLayout, S7::new_S3_class("ggalign_with_quad"))
+) <-
+    S7::method(
+        layout_add,
+        list(StackLayout, S7::new_S3_class("quad_active"))
+    ) <-
+    S7::method(
+        layout_add,
+        list(StackLayout, S7::new_S3_class("quad_anno"))
+    ) <-
+    S7::method(
+        layout_add,
+        list(StackLayout, StackLayout)
+    ) <-
+    function(layout, object, objectname) {
+        if (is.null(current <- layout@current) ||
+            !is_layout(box <- .subset2(layout@box_list, current))) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {objectname}} to %s",
+                    object_name(layout)
+                ),
+                i = "Did you forget to add a {.fn quad_layout}?"
+            ))
+        } else {
+            attr(layout, "box_list")[[current]] <- layout_add(
+                box, object, objectname
+            )
+        }
+        layout
+    }
+
+#' @include layout-operator.R
+S7::method(
+    layout_add,
+    list(StackLayout, S7::new_S3_class("stack_switch"))
+) <- function(layout, object, objectname) {
+    layout <- switch_chain_plot(
+        layout, .subset2(object, "what"),
+        quote(stack_switch())
     )
-)
+    if (!is.null(sizes <- .subset2(object, "sizes"))) {
+        layout@sizes <- sizes
+    }
+    layout
+}
+
+#' @include layout-operator.R
+S7::method(layout_add, list(StackLayout, QuadLayout)) <-
+    function(layout, object, objectname) {
+        # preventing from adding `stack_cross` with the same direction
+        # `cross_link()` cannot be added to the heatmap annotation
+        # parallelly with the `stack_cross()`
+        if (is_horizontal(direction <- layout@direction)) {
+            if (is_cross_layout(object@left) || is_cross_layout(object@right)) {
+                cli_abort(c(
+                    sprintf(
+                        "Cannot add {.var {objectname}} to %s",
+                        object_name(layout)
+                    ),
+                    i = sprintf(
+                        "{.field left} or {.field right} annotation contains %s",
+                        "{.fn stack_cross}"
+                    )
+                ))
+            }
+        } else if (is_cross_layout(object@top) ||
+            is_cross_layout(object@bottom)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {objectname}} to %s",
+                    object_name(layout)
+                ),
+                i = sprintf(
+                    "{.field top} or {.field bottom} annotation contains %s",
+                    "{.fn stack_cross}"
+                )
+            ))
+        }
+
+        # check quad layout is compatible with stack layout
+        quad_data <- object@data
+        stack_domain <- layout@domain
+        quad_domain <- slot(object, direction)
+        if (!is_discrete_domain(quad_domain)) {
+            if (is_discrete_domain(stack_domain)) {
+                cli_abort(c(
+                    sprintf(
+                        "Cannot add %s to %s",
+                        object_name(object), object_name(layout)
+                    ),
+                    i = sprintf(
+                        "%s cannot align continuous variable",
+                        object_name(layout)
+                    )
+                ))
+            }
+            # `quad_layout()` will align continuous variables,
+            # `data` can be `NULL`
+            extra_domain <- slot(object, vec_set_difference(
+                c("vertical", "horizontal"), direction
+            ))
+            allow_null <- !is_discrete_domain(extra_domain)
+            if (is.waive(quad_data) || is.function(quad_data)) {
+                # check if we should initialize the `quad_layout()` data
+                if (is.null(stack_data <- layout@data)) {
+                    if (allow_null) {
+                        quad_data <- NULL
+                    } else {
+                        cli_abort(c(
+                            sprintf(
+                                "you must provide {.arg data} argument in %s",
+                                object_name(object)
+                            ),
+                            i = sprintf(
+                                "no data was found in %s",
+                                object_name(layout)
+                            )
+                        ))
+                    }
+                } else {
+                    data <- stack_data # should be a data frame
+                    if (is.waive(quad_data)) { # inherit from the stack layout
+                        if (!allow_null) { # we need a matrix
+                            cli_abort(c(
+                                sprintf(
+                                    "Cannot add %s to %s",
+                                    object_name(object), object_name(layout)
+                                ),
+                                i = sprintf(
+                                    "{.arg data} in %s is %s, but %s need a {.cls matrix}.",
+                                    object_name(layout),
+                                    "{.obj_type_friendly {data}}",
+                                    object_name(object)
+                                ),
+                                i = sprintf(
+                                    "Try provide {.arg data} in %s",
+                                    object_name(object)
+                                )
+                            ))
+                        }
+                    } else { # `quad_data` is a function
+                        data <- quad_data(data)
+                        # check the data format is correct
+                        if (allow_null) { # we need a data frame
+                            if (!is.data.frame(data)) {
+                                cli_abort(sprintf(
+                                    "{.arg data} in %s must return a {.cls data.frame}",
+                                    object_name(object)
+                                ))
+                            }
+                        } else if (!is.matrix(data)) { # we need a matrix
+                            cli_abort(sprintf(
+                                "{.arg data} in %s must return a {.cls matrix}",
+                                object_name(object)
+                            ))
+                        } else {
+                            if (NROW(data) == 0L || ncol(data) == 0L) {
+                                cli_abort(sprintf(
+                                    "{.arg data} in %s return an empty matrix",
+                                    object_name(object)
+                                ))
+                            }
+                        }
+                    }
+                    # we initialize the `nobs` of the extra_domain for the
+                    # `quad_layout()`
+                    if (is_horizontal(direction)) {
+                        if (is_discrete_domain(slot(object, "vertical"))) {
+                            prop(slot(object, "vertical"), "nobs") <- ncol(data)
+                        }
+                    } else {
+                        if (is_discrete_domain(slot(object, "horizontal"))) {
+                            prop(slot(object, "horizontal"), "nobs") <- nrow(data)
+                        }
+                    }
+                }
+                # restore the ggalign attribute
+                object@data <- ggalign_data_restore(data, stack_data)
+            }
+            layout_domain <- quad_domain
+        } else if (is_discrete_domain(stack_domain)) {
+            # both `quad_layout()` and `stack_layout()` will align discrete
+            # variables
+            if (is.waive(quad_data) || is.function(quad_data)) {
+                if (is.null(stack_data <- layout@data)) {
+                    cli_abort(c(
+                        sprintf(
+                            "you must provide {.arg data} argument in %s",
+                            object_name(object)
+                        ),
+                        i = sprintf(
+                            "no data was found in %s",
+                            object_name(layout)
+                        )
+                    ))
+                }
+                # set `quad_layout()` data
+                data <- switch_direction(direction, stack_data, t(stack_data))
+                if (is.function(quad_data)) {
+                    data <- quad_data(data)
+                    if (!is.matrix(data)) {
+                        cli_abort(sprintf(
+                            "{.arg data} in %s must return a matrix",
+                            object_name(object)
+                        ))
+                    }
+                    if (NROW(data) == 0L || ncol(data) == 0L) {
+                        cli_abort(sprintf(
+                            "{.arg data} in %s return an empty matrix",
+                            object_name(object)
+                        ))
+                    }
+                } else {
+                    if (NROW(data) == 0L || ncol(data) == 0L) {
+                        cli_abort(c(
+                            sprintf(
+                                "Cannot use data from %s in %s",
+                                object_name(layout), object_name(object)
+                            ),
+                            i = sprintf(
+                                "{.arg data} in %s is an empty matrix",
+                                object_name(layout)
+                            )
+                        ))
+                    }
+                }
+                # set the `nobs` for `quad_layout()`
+                if (is_horizontal(direction)) {
+                    prop(quad_domain, "nobs") <- nrow(data)
+                    if (is_discrete_domain(slot(object, "vertical"))) {
+                        prop(slot(object, "vertical"), "nobs") <- ncol(data)
+                    }
+                } else {
+                    prop(quad_domain, "nobs") <- ncol(data)
+                    if (is_discrete_domain(slot(object, "horizontal"))) {
+                        prop(slot(object, "horizontal"), "nobs") <- nrow(data)
+                    }
+                }
+                # restore the ggalign attribute
+                object@data <- ggalign_data_restore(data, stack_data)
+            }
+            layout_domain <- discrete_domain_update(
+                stack_domain, quad_domain,
+                old_name = object_name(layout),
+                new_name = objectname
+            )
+        } else {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add %s to %s",
+                    object_name(object), object_name(layout)
+                ),
+                i = sprintf(
+                    "%s cannot align discrete variable",
+                    object_name(layout)
+                )
+            ))
+        }
+        stack <- chain_add_plot(layout, object, object@plot_active, objectname)
+        layout_update_domain(
+            stack,
+            domain = layout_domain, objectname = objectname
+        )
+    }

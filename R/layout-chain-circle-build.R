@@ -1,6 +1,6 @@
 #' @export
 ggalign_build.CircleLayout <- function(x) {
-    x <- default_layout(x)
+    x <- layout_init(x)
     circle_build(x)
 }
 

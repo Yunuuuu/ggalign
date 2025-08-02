@@ -1,3 +1,5 @@
+S3_class_ggplot <- S7::new_S3_class("ggplot")
+
 #' @importFrom ggplot2 .pt
 ggfun <- function(fn, mode = "any") from_namespace("ggplot2", fn, mode = mode)
 

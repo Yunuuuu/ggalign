@@ -61,6 +61,20 @@ Schemes <- S7::new_class("Schemes",
     constructor = function(...) new_object(S7_object(), value = list2(...))
 )
 
+prop_schemes <- function(property, ...) {
+    force(property)
+    S7::new_property(
+        Schemes,
+        setter = function(self, value) {
+            if (!is.null(prop(self, property))) {
+                cli_abort("{.field @{property}} is read-only; use the '+' operator to update it.")
+            }
+            prop(self, property) <- value
+            self
+        }
+    )
+}
+
 #' @importFrom utils str
 #' @importFrom S7 props
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {

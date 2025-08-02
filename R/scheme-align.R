@@ -1,12 +1,14 @@
 #' @importFrom rlang is_na
-prop_position <- function(...) {
+prop_char_sets <- function(allowed, ...) {
+    allowed <- vec_unique(allowed)
+    pattern <- paste0("[^", paste0(allowed, collapse = ""), "]")
     S7::new_property(
         S7::class_any,
         validator = function(value) {
             if (is_na(value) || is.waive(value) || is.null(value)) {
                 return(NULL)
             }
-            if (is_string(value) && !grepl("[^tlbr]", value)) {
+            if (is_string(value) && !grepl(pattern, value)) {
                 return(NULL)
             }
             sprintf(
@@ -81,24 +83,9 @@ scheme_align <- S7::new_class(
     "scheme_align",
     parent = Scheme,
     properties = list(
-        guides = S7::new_property(
-            S7::class_any,
-            validator = function(value) {
-                if (is_na(value) || is.waive(value) || is.null(value)) {
-                    return(NULL)
-                }
-                if (is_string(value) && !grepl("[^tlbri]", value)) {
-                    return(NULL)
-                }
-                sprintf(
-                    "must be a single string containing only the characters %s",
-                    oxford_and(c(.tlbr, "i"))
-                )
-            },
-            default = NA
-        ),
-        free_spaces = prop_position(),
-        free_labs = prop_position()
+        guides = prop_char_sets(c(.tlbr, "i")),
+        free_spaces = prop_char_sets(.tlbr),
+        free_labs = prop_char_sets(.tlbr)
     )
 )
 

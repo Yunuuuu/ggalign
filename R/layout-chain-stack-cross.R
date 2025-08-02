@@ -35,26 +35,33 @@ stack_crossh <- function(data = NULL, ...) {
     stack_cross(data = data, direction = "h", ...)
 }
 
-#' @include layout-chain-stack-.R
-StackCross <- methods::setClass(
-    "StackCross",
-    contains = "StackLayout",
-    # A list of old domain
-    list(odomain = "list", cross_points = "integer", break_points = "integer"),
-    prototype = list(
-        odomain = list(),
-        cross_points = integer(),
-        break_points = integer()
-    )
-)
-
+#' @importFrom S7 convert
 #' @export
 stack_cross.default <- function(direction, data = NULL, ...) {
     ans <- stack_discrete(data = data, direction = direction, ...)
-    ans <- methods::as(ans, "StackCross")
-    ans@name <- "stack_cross"
+    ans <- convert(ans, StackCross)
+    attr(ans, "name") <- "stack_cross"
     ans
 }
+
+#' @importFrom S7 super
+#' @include layout-operator.R
+S7::method(layout_add, list(StackCross, StackCross)) <-
+    function(layout, object, objectname) {
+        # preventing from adding `stack_cross` with the same direction in this
+        # way, `stack_cross()` cannot be added to the heatmap annotation
+        # parallelly with the `stack_layout()`
+        if (identical(object@direction, layout@direction)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {objectname}} to %s",
+                    object_name(layout)
+                ),
+                i = "Cannot add {.fn stack_cross} with the same direction as {.fn stack_discrete}."
+            ))
+        }
+        layout_add(super(layout, StackCross), object, objectname)
+    }
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string

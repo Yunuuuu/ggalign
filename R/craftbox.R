@@ -12,7 +12,7 @@ new_craftbox <- function(craftsman = NULL, ...,
 
 #' @importFrom ggplot2 is.ggplot
 #' @include scheme-.R
-#' @include grid-utils.R
+#' @include utils-grid.R
 CraftBox <- S7::new_class("CraftBox",
     properties = list(
         craftsman = S7::new_property(
@@ -56,30 +56,8 @@ CraftBox <- S7::new_class("CraftBox",
                 self
             }
         ),
-        size = S7::new_property( # plot size
-            GridUnit,
-            setter = function(self, value) {
-                # make sure it is a `unit` object
-                if (is.null(value)) {
-                    value <- unit(NA, "null")
-                } else {
-                    value <- check_size(value, arg = "@size")
-                }
-                value <- convert(value, GridUnit)
-                prop(self, "size", check = FALSE) <- value
-                self
-            }
-        ),
-        schemes = S7::new_property(
-            Schemes,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "schemes"))) {
-                    cli_abort("'@schemes' is read-only; use the '+' operator to update it.")
-                }
-                prop(self, "schemes") <- value
-                self
-            }
-        )
+        size = prop_grid_unit("size"),
+        schemes = prop_schemes("schemes")
     )
 )
 

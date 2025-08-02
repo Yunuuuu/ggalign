@@ -7,7 +7,7 @@
 chain_decorate(layout, plot)
 }
 \arguments{
-\item{layout}{A ChainLayout object.}
+\item{layout}{A \code{ChainLayout} object.}
 
 \item{plot}{The plot being finalized.}
 }

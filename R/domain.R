@@ -55,6 +55,25 @@ continuous_limits <- function(..., x = waiver(), y = waiver()) {
 
 Domain <- S7::new_class("Domain", abstract = TRUE)
 
+#' @importFrom S7 S7_inherits
+prop_domain <- function(property, ...) {
+    force(property)
+    S7::new_property(
+        S7::class_any,
+        validator = function(value) {
+            if (!is.null(value) && !S7_inherits(value, Domain)) {
+                return("must be a 'Domain' object")
+            }
+        },
+        setter = function(self, value) {
+            prop(self, property) <- value
+            self
+        },
+        ...,
+        default = NULL
+    )
+}
+
 #' @importFrom S7 new_object S7_object
 ContinuousDomain <- S7::new_class(
     "ContinuousDomain",

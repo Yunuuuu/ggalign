@@ -60,16 +60,13 @@
 #'     # layout
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
+#' @include layout-.R
 #' @name layout-operator
-NULL
-
-utils::globalVariables(".Generic")
-
-methods::setMethod("Ops", c("LayoutProto", "ANY"), function(e1, e2) {
+local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (missing(e2)) {
         cli_abort(c(
-            "Cannot use {.code {.Generic}} with a single argument.",
-            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
+            "Cannot use {.code +} with a single argument.",
+            "i" = "Did you accidentally put {.code +} on a new line?"
         ))
     }
 
@@ -77,108 +74,140 @@ methods::setMethod("Ops", c("LayoutProto", "ANY"), function(e1, e2) {
 
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    switch(.Generic, # nolint
-        `+` = layout_add(e1, e2, e2name),
-        `-` = layout_subtract(e1, e2, e2name),
-        `&` = layout_and_add(e1, e2, e2name),
-        stop_incompatible_op(.Generic, e1, e2)
-    )
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_add(e1, e2, e2name)
 })
 
-#################################################################
-layout_add <- function(layout, object, object_name) {
-    UseMethod("layout_add")
-}
+#' @include layout-.R
+local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code -} with a single argument.",
+            "i" = "Did you accidentally put {.code -} on a new line?"
+        ))
+    }
 
-#' @export
-layout_add.QuadLayout <- function(layout, object, object_name) {
-    quad_layout_add(object, layout, object_name)
-}
+    if (is.null(e2)) return(e1) # styler: off
 
-#' @export
-layout_add.ChainLayout <- function(layout, object, object_name) {
-    chain_layout_add(object, layout, object_name)
-}
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_subtract(e1, e2, e2name)
+})
 
-#################################################################
-layout_subtract <- function(layout, object, object_name) {
-    UseMethod("layout_subtract")
-}
+#' @include layout-.R
+local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code &} with a single argument.",
+            "i" = "Did you accidentally put {.code &} on a new line?"
+        ))
+    }
 
-#' @export
-layout_subtract.QuadLayout <- function(layout, object, object_name) {
-    quad_layout_subtract(object, layout, object_name)
-}
+    if (is.null(e2)) return(e1) # styler: off
 
-#' @export
-layout_subtract.ChainLayout <- function(layout, object, object_name) {
-    chain_layout_subtract(object, layout, object_name)
-}
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_and_add(e1, e2, e2name)
+})
 
-#################################################################
-# we use and_add suffix here, since `and` is very similar with `add`.
-layout_and_add <- function(layout, object, object_name) {
-    UseMethod("layout_and_add")
-}
-
-#' @export
-layout_and_add.QuadLayout <- function(layout, object, object_name) {
-    quad_layout_and_add(object, layout, object_name)
-}
-
-#' @export
-layout_and_add.ChainLayout <- function(layout, object, object_name) {
-    chain_layout_and_add(object, layout, object_name)
-}
-
-# For objects cannot be used with `-` or `&`
-#' @include layout-quad-operator.R
-#' @include layout-chain-operator.R
-lapply(
-    c(
-        "quad_layout_subtract", "chain_layout_subtract",
-        "quad_layout_and_add", "chain_layout_and_add"
-    ),
-    function(genname) {
-        params <- .subset2(strsplit(genname, "_"), 1L)
-
-        # function argument list
-        pairlist <- rlang::pairlist2(object = , layout = , object_name = )
-        names(pairlist) <- c("object", .subset(params, 1L), "object_name")
-        operator <- switch(.subset(params, 3L),
-            subtract = "-",
-            and = "&"
-        )
-        # styler: off
-        for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_theme", "ggalign::CraftBox", "ChainLayout",
-                        "QuadLayout", "continuous_limits")) {
-            # styler: on
-            registerS3method(
-                genname, class,
-                rlang::new_function(pairlist, substitute(
-                    {
-                        cli_abort(c(
-                            sprintf(
-                                "Cannot add %s with {.code %s}",
-                                name, operator
-                            ),
-                            i = "Try to use {.code +} instead"
-                        ))
-                    },
-                    list(
-                        name = switch(class,
-                            CraftBox = ,
-                            ChainLayout = ,
-                            QuadLayout = quote(object_name(object)),
-                            # for all others
-                            "{.var {object_name}}"
-                        ),
-                        operator = operator
-                    )
-                ))
-            )
-        }
+layout_add <- S7::new_generic(
+    "layout_add", c("layout", "object"),
+    function(layout, object, objectname) {
+        if (is.null(object)) return(layout) # styler: off
+        S7::S7_dispatch()
     }
 )
+
+#' @include layout-.R
+S7::method(layout_add, list(LayoutProto, S7::class_list)) <-
+    function(layout, object, objectname) {
+        for (o in object) layout <- layout_add(layout, o, objectname)
+        layout
+    }
+
+#' @include layout-.R
+S7::method(layout_add, list(LayoutProto, S3_layout_title)) <-
+    function(layout, object, objectname) {
+        layout@titles <- object
+        layout
+    }
+
+layout_subtract <- S7::new_generic(
+    "layout_subtract", c("layout", "object"),
+    function(layout, object, objectname) S7::S7_dispatch()
+)
+
+#' @include layout-.R
+#' @include utils-ggplot.R
+S7::method(layout_subtract, list(LayoutProto, S3_class_ggplot)) <-
+    function(layout, object, objectname) {
+        cli_abort(c(
+            sprintf("Cannot add %s with {.code -}", objectname),
+            i = "Try to use {.code +} instead"
+        ))
+    }
+
+layout_and_add <- S7::new_generic(
+    "layout_and_add", c("layout", "object"),
+    function(layout, object, objectname) S7::S7_dispatch()
+)
+
+#' @include layout-.R
+#' @include utils-ggplot.R
+S7::method(layout_and_add, list(LayoutProto, S3_class_ggplot)) <-
+    function(layout, object, objectname) {
+        cli_abort(c(
+            sprintf("Cannot add %s with {.code &}", objectname),
+            i = "Try to use {.code +} instead"
+        ))
+    }
+
+# For objects cannot be used with `-` or `&`
+# local({
+#     for (class in c(
+#         "ggplot", "quad_active", "quad_anno", "layout_title",
+#         "layout_theme", "ggalign::CraftBox", "ChainLayout",
+#         "QuadLayout", "continuous_limits"
+#     )) {
+#         S7::method(layout_subtract, S3_ggplot) <- function(layout, object, objectname) {
+#             cli_abort(c(
+#                 sprintf("Cannot add %s with {.code -}", objectname),
+#                 i = "Try to use {.code +} instead"
+#             ))
+#         }
+
+#         S7::method(layout_and_add, S3_ggplot) <- function(layout, object, objectname) {
+#             cli_abort(c(
+#                 sprintf("Cannot add %s with {.code &}", objectname),
+#                 i = "Try to use {.code +} instead"
+#             ))
+#         }
+#         # styler: on
+#         registerS3method(
+#             genname, class,
+#             rlang::new_function(pairlist, substitute(
+#                 {
+#                     cli_abort(c(
+#                         sprintf(
+#                             "Cannot add %s with {.code %s}",
+#                             name, operator
+#                         ),
+#                         i = "Try to use {.code +} instead"
+#                     ))
+#                 },
+#                 list(
+#                     name = switch(class,
+#                         CraftBox = ,
+#                         ChainLayout = ,
+#                         QuadLayout = quote(object_name(object)),
+#                         # for all others
+#                         "{.var {object_name}}"
+#                     ),
+#                     operator = operator
+#                 )
+#             ))
+#         )
+#     }
+# })

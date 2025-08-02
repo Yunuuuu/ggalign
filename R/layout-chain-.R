@@ -1,17 +1,3 @@
-# Used by both `circle_layout()` and `stack_layout()`
-#' @keywords internal
-#' @include layout-.R
-methods::setClass(
-    "ChainLayout",
-    contains = "LayoutProto",
-    list(
-        data = "ANY",
-        name = "character", # used to provide message
-        plot_list = "list", # save the list of plots
-        domain = "ANY" # used to align axis
-    )
-)
-
 #' Finalize plot modifications from a ChainLayout object.
 #'
 #' This generic function lets a ChainLayout apply any final transformations
@@ -19,7 +5,7 @@ methods::setClass(
 #' the plot, but instead allows the layout to inject custom modifications
 #' (e.g., spacing guides, annotations, alignment fixes) at the last step.
 #'
-#' @param layout A ChainLayout object.
+#' @param layout A `ChainLayout` object.
 #' @param plot The plot being finalized.
 #' @keywords internal
 chain_decorate <- function(layout, plot) UseMethod("chain_decorate")
@@ -28,137 +14,113 @@ chain_decorate <- function(layout, plot) UseMethod("chain_decorate")
 chain_decorate.ChainLayout <- function(layout, plot) plot
 
 #############################################################
-# To-DO: Use double dispatch
-#' @keywords internal
-chain_layout_add <- function(object, layout, object_name) {
-    UseMethod("chain_layout_add")
-}
+#' @include layout-operator.R
+S7::method(layout_add, list(ChainLayout, CraftBox)) <-
+    function(layout, object, objectname) {
+        if (is.null(current <- layout@current) ||
+            !is_layout(box <- .subset2(layout@plot_list, current))) {
+            craftsman <- prop(object, "craftsman")
+            # unlock the object
+            craftsman$unlock()
 
-#' @export
-chain_layout_add.layout_title <- function(object, layout, object_name) {
-    layout@titles <- update_non_waive(layout@titles, object)
-    layout
-}
+            # we lock the `Craftsman` object to prevent user from modifying this
+            # object in `$build_plot()` method, we shouldn't do any calculations in
+            # `$build_plot()` method
+            on.exit(craftsman$lock())
 
-#' @export
-chain_layout_add.list <- function(object, layout, object_name) {
-    for (o in object) layout <- chain_layout_add(o, layout, object_name)
-    layout
-}
+            # initialize the necessary parameters for `Craftsman` object
+            if (is_stack_layout(layout)) {
+                craftsman$direction <- layout@direction
+                craftsman$position <- .subset2(layout@heatmap, "position")
+            } else if (is_circle_layout(layout)) {
+                # we treat circle layout as a vertical stack layout
+                craftsman$direction <- "vertical"
+            }
+            craftsman$in_linear <- is_linear(layout)
+            craftsman$layout_name <- object_name(layout)
 
-#' @export
-chain_layout_add.NULL <- function(object, layout, object_name) {
-    layout
-}
+            # firstly, we let the object do some changes in the layout
+            layout <- craftsman$interact_layout(layout)
 
-#' @export
-`chain_layout_add.ggalign::CraftBox` <- function(object, layout, object_name) {
-    craftsman <- prop(object, "craftsman")
-    # To-Do: Use S7 and double dispatch
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        # unlock the object
-        craftsman$unlock()
+            # this step, the object will act with the stack layout
+            # group rows into panel or reorder rows, we can also
+            # initialize object data
+            new_domain <- craftsman$setup_domain(layout@domain)
 
-        # we lock the `Craftsman` object to prevent user from modifying this
-        # object in `$build_plot()` method, we shouldn't do any calculations in
-        # `$build_plot()` method
-        on.exit(craftsman$lock())
+            # initialize the plot object
+            # use attributes to bypass the prop setter checking
+            attr(object, "plot") <- craftsman$setup_plot(object@plot)
 
-        # initialize the necessary parameters for `Craftsman` object
-        if (is_stack_layout(layout)) {
-            craftsman$direction <- layout@direction
-            craftsman$position <- .subset2(layout@heatmap, "position")
-        } else if (is_circle_layout(layout)) {
-            # we treat circle layout as a vertical stack layout
-            craftsman$direction <- "vertical"
+            layout <- chain_add_plot(layout, object, object@active, objectname)
+        } else { # should be a QuadLayout object
+            box <- layout_add(box, object, objectname)
+            # use attributes to bypass the prop setter checking
+            attr(layout, "box_list")[[current]] <- box
+            new_domain <- slot(box, layout@direction)
         }
-        craftsman$in_linear <- is_linear(layout)
-        craftsman$layout_name <- object_name(layout)
-
-        # firstly, we let the object do some changes in the layout
-        layout <- craftsman$interact_layout(layout)
-
-        # this step, the object will act with the stack layout
-        # group rows into panel or reorder rows, we can also
-        # initialize object data
-        new_domain <- craftsman$setup_domain(layout@domain)
-
-        # initialize the plot object
-        # use attributes to bypass the prop setter checking
-        attr(object, "plot") <- craftsman$setup_plot(object@plot)
-
-        layout <- chain_add_plot(layout, object, object@active, object_name)
-    } else { # should be a QuadLayout object
-        plot <- quad_layout_add(object, plot, object_name)
-        layout@plot_list[[active_index]] <- plot
-        new_domain <- slot(plot, layout@direction)
-    }
-    layout_update_domain(layout, domain = new_domain, objectname = object_name)
-}
-
-#' @export
-chain_layout_add.continuous_limits <- function(object, layout, object_name) {
-    if (is_discrete_domain(layout@domain)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = sprintf(
-                "%s cannot align continuous variables",
-                object_name(layout)
-            )
-        ))
-    }
-    layout_update_domain(layout, domain = object, objectname = object_name)
-}
-
-#' @export
-chain_layout_add.ggplot <- function(object, layout, object_name) {
-    chain_layout_add(ggfree(data = object), layout, object_name)
-}
-
-# Add ggplot2 elements
-#' @export
-chain_layout_add.default <- function(object, layout, object_name) {
-    if (is.null(active_index <- layout@active)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = "No active plot component",
-            i = paste(
-                "Did you forget to initialize a {.cls ggplot} object",
-                "with {.fn ggalign} or {.fn ggfree}?"
-            )
-        ))
-    }
-    plot <- .subset2(layout@plot_list, active_index)
-    if (is_craftbox(plot)) {
-        plot <- chain_plot_add(plot, object, object_name, TRUE)
-    } else {
-        plot <- quad_layout_add(object, plot, object_name)
-    }
-    layout@plot_list[[active_index]] <- plot
-    layout
-}
-
-#' @export
-chain_layout_add.layout_theme <- function(object, layout, object_name) {
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        layout@theme <- update_layout_theme(layout@theme, object)
-    } else {
-        layout@plot_list[[active_index]] <- quad_layout_add(
-            object, plot, object_name
+        layout_update_domain(
+            layout,
+            domain = new_domain,
+            objectname = objectname
         )
     }
-    layout
-}
 
-chain_plot_add <- function(plot, object, object_name, force) {
+#' @include layout-operator.R
+S7::method(layout_add, list(ChainLayout, ContinuousDomain)) <-
+    function(layout, object, objectname) {
+        layout_update_domain(layout, domain = object, objectname = objectname)
+    }
+
+#' @include layout-operator.R
+S7::method(layout_add, list(ChainLayout, class_S3_gg)) <-
+    function(layout, object, objectname) {
+        layout_add(layout, ggfree(data = object), objectname = objectname)
+    }
+
+#' @importFrom S7 S7_inherits
+#' @include layout-operator.R
+S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
+    function(layout, object, objectname) {
+        if (is.na(current <- layout@current)) {
+            cli_abort(c(
+                sprintf(
+                    "Cannot add {.var {objectname}} to %s",
+                    object_name(layout)
+                ),
+                i = "No active plot component",
+                i = paste(
+                    "Did you forget to initialize a {.cls ggplot} object",
+                    "with {.fn ggalign} or {.fn ggfree}?"
+                )
+            ))
+        }
+        box <- .subset2(layout@box_list, current)
+        if (S7_inherits(box, LayoutProto)) {
+            box <- layout_add(box, object, objectname)
+        } else {
+            box <- chain_box_add(box, object, objectname, TRUE)
+        }
+        # use attributes to bypass the prop setter checking
+        attr(layout, "box_list")[[current]] <- box
+        layout
+    }
+
+#' @include layout-operator.R
+S7::method(layout_add, list(ChainLayout, S3_layout_theme)) <-
+    function(layout, object, objectname) {
+        if (is.null(current <- layout@current) ||
+            !is_layout(box <- .subset2(layout@box_list, current))) {
+            layout@theme <- object
+        } else {
+            # use attributes to bypass the prop setter checking
+            attr(layout, "box_list")[[current]] <- layout_add(
+                box, object, object_name
+            )
+        }
+        layout
+    }
+
+chain_box_add <- function(plot, object, object_name, force) {
     # if `align` has plot, we added the object
     if (force || !is.null(plot@plot)) {
         plot <- craftbox_add(object, plot, object_name)
@@ -169,28 +131,28 @@ chain_plot_add <- function(plot, object, object_name, force) {
 #' @importFrom S7 prop
 chain_add_plot <- function(layout, plot, active, object_name) {
     # set up context index
-    plot_list <- layout@plot_list
+    box_list <- layout@box_list
     if (prop(active, "use")) {
-        active_index <- length(plot_list) + 1L
+        current <- length(box_list) + 1L
     } else {
-        active_index <- layout@active
+        current <- layout@current
     }
 
     # check the name is unique
     if (!is.na(name <- prop(active, "name"))) {
-        if (any(names(plot_list) == name)) {
+        if (any(names(box_list) == name)) {
             cli_warn(
                 "Adding {.var {object_name}} will replace existing {.field {name}} plot"
             )
         }
-        plot_list[[name]] <- plot
+        box_list[[name]] <- plot
     } else {
-        plot_list <- c(plot_list, list(plot))
+        box_list <- c(box_list, list(plot))
     }
 
-    # add QuadLayout
-    layout@plot_list <- plot_list
-    layout@active <- active_index
+    # use attributes to bypass the prop setter checking
+    attr(layout, "box_list") <- box_list
+    attr(layout, "current") <- current
     layout
 }
 
@@ -205,15 +167,51 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
                 arg = "what", call = call
             )
         }
-        layout@active <- what
+        layout@current <- what
     }
     layout
 }
 
-##############################################################
-# for `stack_layout()` only
+##################################################
+#' @include layout-operator.R
+S7::method(layout_subtract, list(LayoutProto, S7::class_any)) <-
+    function(layout, object, objectname) {
+        if (is.null(current <- layout@current) ||
+            !is_layout(box <- .subset2(layout@box_list, current))) {
+            attr(layout, "box_list") <- lapply(layout@box_list, function(box) {
+                if (!is_layout(box)) {
+                    chain_box_add(box, object, objectname, force = FALSE)
+                } else {
+                    box
+                }
+            })
+        } else {
+            attr(layout, "box_list")[[current]] <- layout_subtract(
+                box, object, objectname
+            )
+        }
+        layout
+    }
+
+# for objects can inherit from layout
+#' @include layout-operator.R
+S7::method(layout_subtract, list(LayoutProto, Scheme)) <-
+    function(layout, object, objectname) {
+        if (is.null(current <- layout@active) ||
+            !is_layout(box <- .subset2(layout@box_list, current))) {
+            layout <- update_layout_schemes(object, layout, objectname)
+        } else {
+            attr(layout, "box_list")[[current]] <- layout_subtract(
+                box, object, objectname
+            )
+        }
+        layout
+    }
+
+#' @importFrom S7 S7_inherits
 #' @export
-chain_layout_add.ggalign_with_quad <- function(object, layout, object_name) {
+chain_layout_subtract.ggalign_with_quad <- function(object, layout,
+                                                    object_name) {
     if (!is_stack_layout(layout)) {
         cli_abort(sprintf(
             "Cannot add {.var {object_name}} to %s",
@@ -222,321 +220,92 @@ chain_layout_add.ggalign_with_quad <- function(object, layout, object_name) {
     }
     if (is.null(active_index <- layout@active) ||
         is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = "Did you forget to add a {.fn quad_layout}?"
-        ))
+        inner <- .subset2(object, "object")
+        inner_name <- .subset2(object, "object_name")
+
+        # subtract set at layout level, if it is a plot option
+        # we only apply to current active layout
+        if (S7_inherits(inner, Scheme)) {
+            layout <- update_layout_schemes(inner, layout, inner_name)
+            return(layout)
+        }
+
+        # otherwise, we apply the object to all plots in the stack layout
+        direction <- layout@direction
+        layout@plot_list <- lapply(layout@plot_list, function(plot) {
+            if (is_craftbox(plot)) {
+                plot <- chain_box_add(plot, inner, inner_name, force = FALSE)
+            } else if (is.waive(.subset2(object, "position"))) {
+                # default behaviour for object wrap with `with_quad()`
+                # we add the object along the stack layout
+                # if means for horizontal stack, we'll add it
+                # to the left and right annotation, and the main plot
+                positions <- switch_direction(
+                    direction,
+                    c("left", "right"),
+                    c("top", "bottom")
+                )
+                for (position in positions) {
+                    if (!is.null(slot(plot, position))) {
+                        slot(plot, position) <- chain_layout_subtract(
+                            inner, slot(plot, position), inner_name
+                        )
+                    }
+                }
+                if (is.null(main <- .subset2(object, "main")) || main) {
+                    plot <- quad_body_add(inner, plot, inner_name)
+                }
+            } else {
+                # we respect the context setting
+                plot <- quad_layout_subtract(object, plot, object_name)
+            }
+            plot
+        })
     } else {
-        layout@plot_list[[active_index]] <- quad_layout_add(
+        layout@plot_list[[active_index]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
     layout
 }
 
-#' @export
-chain_layout_add.quad_active <- chain_layout_add.ggalign_with_quad
+##################################################################
+#' @keywords internal
+chain_layout_and_add <- function(object, layout, object_name) {
+    UseMethod("chain_layout_and_add")
+}
 
 #' @export
-chain_layout_add.quad_anno <- chain_layout_add.quad_active
-
-#' @export
-chain_layout_add.StackLayout <- chain_layout_add.quad_active
-
-#' @export
-chain_layout_add.StackCross <- function(object, layout, object_name) {
+chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) {
     if (!is_stack_layout(layout)) {
         cli_abort(sprintf(
             "Cannot add {.var {object_name}} to %s",
             object_name(layout)
         ))
     }
-
-    # preventing from adding `stack_cross` with the same direction in this way,
-    # `stack_cross()` cannot be added to the heatmap annotation parallelly with
-    # the `stack_layout()`
-    if (identical(object@direction, layout@direction)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = "Cannot add {.fn stack_cross} with the same direction as {.fn stack_discrete}."
-        ))
-    }
-    NextMethod() # call StackLayout method
+    object_name <- .subset2(object, "object_name")
+    object <- .subset2(object, "object")
+    chain_layout_and_add(object, layout, object_name)
 }
 
 #' @export
-chain_layout_add.stack_switch <- function(object, layout, object_name) {
-    if (!is_stack_layout(layout)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = "Did you want to add a {.fn circle_switch}?"
-        ))
-    }
-    layout <- switch_chain_plot(
-        layout, .subset2(object, "what"),
-        quote(stack_switch())
-    )
-    if (!is.null(sizes <- .subset2(object, "sizes"))) {
-        layout@sizes <- sizes
-    }
+chain_layout_and_add.default <- function(object, layout, object_name) {
+    layout@plot_list <- lapply(layout@plot_list, function(plot) {
+        if (is_craftbox(plot)) {
+            plot <- chain_box_add(plot, object, object_name, force = FALSE)
+        } else {
+            plot <- quad_layout_and_add(object, plot, object_name)
+        }
+        plot
+    })
     layout
 }
 
-#' @importFrom methods slot
 #' @export
-chain_layout_add.QuadLayout <- function(object, layout, object_name) {
-    if (!is_stack_layout(layout)) {
-        cli_abort(sprintf(
-            "Cannot add {.var {object_name}} to %s",
-            object_name(layout)
-        ))
-    }
-
-    # preventing from adding `stack_cross` with the same direction
-    # `cross_link()` cannot be added to the heatmap annotation
-    # parallelly with the `stack_cross()`
-    if (is_horizontal(direction <- layout@direction)) {
-        if (is_cross_layout(object@left) || is_cross_layout(object@right)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add {.var {object_name}} to %s",
-                    object_name(layout)
-                ),
-                i = sprintf(
-                    "{.field left} or {.field right} annotation contains %s",
-                    "{.fn stack_cross}"
-                )
-            ))
-        }
-    } else if (is_cross_layout(object@top) || is_cross_layout(object@bottom)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = sprintf(
-                "{.field top} or {.field bottom} annotation contains %s",
-                "{.fn stack_cross}"
-            )
-        ))
-    }
-
-    # check quad layout is compatible with stack layout
-    quad_data <- object@data
-    stack_domain <- layout@domain
-    quad_domain <- slot(object, direction)
-    if (!is_discrete_domain(quad_domain)) {
-        if (is_discrete_domain(stack_domain)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add %s to %s",
-                    object_name(object), object_name(layout)
-                ),
-                i = sprintf(
-                    "%s cannot align continuous variable",
-                    object_name(layout)
-                )
-            ))
-        }
-        # `quad_layout()` will align continuous variables,
-        # `data` can be `NULL`
-        extra_domain <- slot(object, vec_set_difference(
-            c("vertical", "horizontal"), direction
-        ))
-        allow_null <- !is_discrete_domain(extra_domain)
-        if (is.waive(quad_data) || is.function(quad_data)) {
-            # check if we should initialize the `quad_layout()` data
-            if (is.null(stack_data <- layout@data)) {
-                if (allow_null) {
-                    quad_data <- NULL
-                } else {
-                    cli_abort(c(
-                        sprintf(
-                            "you must provide {.arg data} argument in %s",
-                            object_name(object)
-                        ),
-                        i = sprintf(
-                            "no data was found in %s",
-                            object_name(layout)
-                        )
-                    ))
-                }
-            } else {
-                data <- stack_data # should be a data frame
-                if (is.waive(quad_data)) { # inherit from the stack layout
-                    if (!allow_null) { # we need a matrix
-                        cli_abort(c(
-                            sprintf(
-                                "Cannot add %s to %s",
-                                object_name(object), object_name(layout)
-                            ),
-                            i = sprintf(
-                                "{.arg data} in %s is %s, but %s need a {.cls matrix}.",
-                                object_name(layout),
-                                "{.obj_type_friendly {data}}",
-                                object_name(object)
-                            ),
-                            i = sprintf(
-                                "Try provide {.arg data} in %s",
-                                object_name(object)
-                            )
-                        ))
-                    }
-                } else { # `quad_data` is a function
-                    data <- quad_data(data)
-                    # check the data format is correct
-                    if (allow_null) { # we need a data frame
-                        if (!is.data.frame(data)) {
-                            cli_abort(sprintf(
-                                "{.arg data} in %s must return a {.cls data.frame}",
-                                object_name(object)
-                            ))
-                        }
-                    } else if (!is.matrix(data)) { # we need a matrix
-                        cli_abort(sprintf(
-                            "{.arg data} in %s must return a {.cls matrix}",
-                            object_name(object)
-                        ))
-                    } else {
-                        if (NROW(data) == 0L || ncol(data) == 0L) {
-                            cli_abort(sprintf(
-                                "{.arg data} in %s return an empty matrix",
-                                object_name(object)
-                            ))
-                        }
-                    }
-                }
-                # we initialize the `nobs` of the extra_domain for the
-                # `quad_layout()`
-                if (is_horizontal(direction)) {
-                    if (is_discrete_domain(slot(object, "vertical"))) {
-                        prop(slot(object, "vertical"), "nobs") <- ncol(data)
-                    }
-                } else {
-                    if (is_discrete_domain(slot(object, "horizontal"))) {
-                        prop(slot(object, "horizontal"), "nobs") <- nrow(data)
-                    }
-                }
-            }
-            # restore the ggalign attribute
-            object@data <- ggalign_data_restore(data, stack_data)
-        }
-        layout_domain <- quad_domain
-    } else if (is_discrete_domain(stack_domain)) {
-        # both `quad_layout()` and `stack_layout()` will align discrete
-        # variables
-        if (is.waive(quad_data) || is.function(quad_data)) {
-            if (is.null(stack_data <- layout@data)) {
-                cli_abort(c(
-                    sprintf(
-                        "you must provide {.arg data} argument in %s",
-                        object_name(object)
-                    ),
-                    i = sprintf(
-                        "no data was found in %s",
-                        object_name(layout)
-                    )
-                ))
-            }
-            # set `quad_layout()` data
-            data <- switch_direction(direction, stack_data, t(stack_data))
-            if (is.function(quad_data)) {
-                data <- quad_data(data)
-                if (!is.matrix(data)) {
-                    cli_abort(sprintf(
-                        "{.arg data} in %s must return a matrix",
-                        object_name(object)
-                    ))
-                }
-                if (NROW(data) == 0L || ncol(data) == 0L) {
-                    cli_abort(sprintf(
-                        "{.arg data} in %s return an empty matrix",
-                        object_name(object)
-                    ))
-                }
-            } else {
-                if (NROW(data) == 0L || ncol(data) == 0L) {
-                    cli_abort(c(
-                        sprintf(
-                            "Cannot use data from %s in %s",
-                            object_name(layout), object_name(object)
-                        ),
-                        i = sprintf(
-                            "{.arg data} in %s is an empty matrix",
-                            object_name(layout)
-                        )
-                    ))
-                }
-            }
-            # set the `nobs` for `quad_layout()`
-            if (is_horizontal(direction)) {
-                prop(quad_domain, "nobs") <- nrow(data)
-                if (is_discrete_domain(slot(object, "vertical"))) {
-                    prop(slot(object, "vertical"), "nobs") <- ncol(data)
-                }
-            } else {
-                prop(quad_domain, "nobs") <- ncol(data)
-                if (is_discrete_domain(slot(object, "horizontal"))) {
-                    prop(slot(object, "horizontal"), "nobs") <- nrow(data)
-                }
-            }
-            # restore the ggalign attribute
-            object@data <- ggalign_data_restore(data, stack_data)
-        }
-        layout_domain <- discrete_domain_update(
-            stack_domain, quad_domain,
-            old_name = object_name(layout),
-            new_name = object_name
-        )
-    } else {
-        cli_abort(c(
-            sprintf(
-                "Cannot add %s to %s",
-                object_name(object), object_name(layout)
-            ),
-            i = sprintf(
-                "%s cannot align discrete variable",
-                object_name(layout)
-            )
-        ))
-    }
-    stack <- chain_add_plot(layout, object, object@plot_active, object_name)
-    layout_update_domain(
-        stack,
-        domain = layout_domain, objectname = object_name
-    )
-}
-
-##################################################
-#' @export
-chain_layout_add.circle_switch <- function(object, layout, object_name) {
-    if (!is_circle_layout(layout)) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {object_name}} to %s",
-                object_name(layout)
-            ),
-            i = "Did you want to add a {.fn stack_switch}?"
-        ))
-    }
-    if (!is.waive(radial <- .subset2(object, "radial"))) {
-        layout@radial <- radial
-    }
-    if (!is.null(direction <- .subset2(object, "direction"))) {
-        layout@direction <- direction
-    }
-    layout <- switch_chain_plot(
-        layout, .subset2(object, "what"),
-        quote(circle_switch())
-    )
-    layout
+chain_layout_and_add.theme <- function(object, layout, object_name) {
+    ans <- NextMethod()
+    # to align with `patchwork`, we also modify the layout theme
+    # when using `&` to add the theme object.
+    ans@theme <- ggfun("add_theme")(ans@theme, object)
+    ans
 }

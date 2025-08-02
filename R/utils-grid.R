@@ -227,6 +227,26 @@ GridUnit <- S7::new_class(
     )
 )
 
+#' @importFrom S7 convert
+prop_grid_unit <- function(property, ...) {
+    arg <- sprintf("@%s", property)
+    S7::new_property( # plot size
+        GridUnit,
+        setter = function(self, value) {
+            # make sure it is a `unit` object
+            if (is.null(value)) {
+                value <- unit(NA, "null")
+            } else {
+                value <- check_size(value, arg = arg)
+            }
+            value <- convert(value, GridUnit)
+            prop(self, "size", check = FALSE) <- value
+            self
+        },
+        ...
+    )
+}
+
 local(S7::method(length, GridUnit) <- function(x) length(prop(x, "inner")))
 
 #' @importFrom S7 convert

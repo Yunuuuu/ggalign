@@ -183,20 +183,7 @@ circle_continuous.formula <- circle_continuous.function
 new_circle_layout <- function(data, domain, radial, direction,
                               sector_spacing = NULL, schemes = NULL,
                               theme = NULL, name = NULL,
-                              spacing_theta = deprecated(),
-                              call = caller_call()) {
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
-    if (!is.null(radial) && !inherits(radial, c("CoordRadial"))) {
-        cli_abort("{.arg radial} must be created with {.fn coord_circle}",
-            call = call
-        )
-    }
-    if (!is.null(radial) && abs(diff(radial$arc)) < pi / 2L) {
-        cli_abort(
-            "Cannot create circle of acute angle < 90 in {.arg radial}",
-            call = call
-        )
-    }
+                              spacing_theta = deprecated()) {
     direction <- arg_match0(direction, c("inward", "outward"))
     if (is.null(name)) {
         if (is_discrete_domain(domain)) {
@@ -213,24 +200,70 @@ new_circle_layout <- function(data, domain, radial, direction,
         )
         if (is.null(sector_spacing)) sector_spacing <- spacing_theta
     }
-    new(
-        "CircleLayout",
+    CircleLayout(
         name = name, data = data,
-        schemes = schemes, # used by the layout
+        schemes = schemes,
         domain = domain,
         sector_spacing = sector_spacing,
         theme = theme,
-        radial = radial, direction = direction
+        radial = radial,
+        direction = direction
     )
 }
 
 ############################################################
-# Used to place multiple objects in one axis
-#' @importFrom grid unit
-#' @importFrom ggplot2 waiver
-#' @keywords internal
-#' @include layout-chain-.R
-CircleLayout <- methods::setClass("CircleLayout",
-    contains = "ChainLayout",
-    list(radial = "ANY", sector_spacing = "ANY", direction = "character")
-)
+#' Determine the active context of circle layout
+#'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
+#' @inheritParams rlang::args_dots_empty
+#' @inheritParams circle_discrete
+#' @param what What should get activated for the [`circle_layout()`]?
+#' `r rd_chain_what()`.
+#' @return A `circle_switch` object which can be added to [`circle_layout()`].
+#' @examples
+#' set.seed(123)
+#' small_mat <- matrix(rnorm(56), nrow = 7)
+#' rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+#' colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+#' circle_discrete(small_mat) +
+#'     ggalign() +
+#'     geom_tile(aes(y = .column_index, fill = value)) +
+#'     scale_fill_viridis_c() +
+#'     align_dendro(aes(color = branch), k = 3L) +
+#'     scale_color_brewer(palette = "Dark2")
+#' @export
+circle_switch <- function(radial = waiver(), direction = NULL,
+                          what = waiver(), ...) {
+    rlang::check_dots_empty()
+    if (!is.waive(radial) && !is.null(radial)) {
+        assert_s3_class(radial, "CoordRadial")
+        if (abs(diff(radial$arc)) < pi / 2L) {
+            cli_abort("Cannot use circle of acute angle < 90 in {.arg radial}")
+        }
+    }
+    if (!is.null(direction)) {
+        direction <- arg_match0(direction, c("inward", "outward"))
+    }
+    if (!is.waive(what)) what <- check_stack_context(what)
+    structure(
+        list(what = what, radial = radial, direction = direction),
+        class = "circle_switch"
+    )
+}
+
+S7::method(layout_add, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
+    function(layout, object, objectname) {
+        if (!is.waive(radial <- .subset2(object, "radial"))) {
+            layout@radial <- radial
+        }
+        if (!is.null(direction <- .subset2(object, "direction"))) {
+            layout@direction <- direction
+        }
+        layout <- switch_chain_plot(
+            layout, .subset2(object, "what"),
+            quote(circle_switch())
+        )
+        layout
+    }

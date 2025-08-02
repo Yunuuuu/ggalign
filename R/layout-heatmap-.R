@@ -106,12 +106,3 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
     ans@filling <- filling
     ans
 }
-
-# used to create the heatmap layout
-#' @keywords internal
-#' @include layout-quad-.R
-methods::setClass(
-    "HeatmapLayout",
-    contains = "QuadLayout",
-    list(filling = "ANY") # parameters for heatmap body
-)
