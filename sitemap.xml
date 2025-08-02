@@ -9,7 +9,8 @@
 <url><loc>https://yunuuuu.github.io/ggalign/authors.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/index.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/news/index.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/LayoutProto-class.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/Layout-subset.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/LayoutProto.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Scheme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Schemes.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/active.html</loc></url>
@@ -25,7 +26,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/align_plots.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/alignpatch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/area.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/cash-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/chain_decorate.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/channelGrob.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/circle_genomic.html</loc></url>
@@ -133,7 +133,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_init.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_theme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_update.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/show-LayoutProto-method.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_cross.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_switch.html</loc></url>
