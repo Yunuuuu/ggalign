@@ -22,19 +22,18 @@ quad_layout_add.data.frame <- quad_layout_add.matrix
 
 #############################################################
 # Add elements for the main body or the annotation
-#' @importFrom methods slot slot<-
 #' @export
 quad_layout_add.default <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
+    if (is.null(position <- quad@current)) {
         quad <- quad_body_add(object, quad, object_name)
-    } else if (is.null(stack <- slot(quad, position))) {
+    } else if (is.null(stack <- prop(quad, position))) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "the {.field {position}} annotation stack is not initialized",
             i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
         ))
     } else {
-        slot(quad, position) <- chain_layout_add(object, stack, object_name)
+        prop(quad, position) <- chain_layout_add(object, stack, object_name)
     }
     quad
 }
@@ -52,16 +51,16 @@ quad_layout_add.NULL <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_add.ggalign_with_quad <- function(object, quad, object_name) {
-    old <- quad@active
+    old <- quad@current
     contexts <- quad_operated_context(object, old, "+") %||%
         list(NULL) # we wrap `NULL` to a list for `for loop`.
     object_name <- .subset2(object, "object_name")
     object <- .subset2(object, "object")
     for (active in contexts) {
-        quad@active <- active
+        quad@current <- active
         quad <- quad_layout_add(object, quad, object_name)
     }
-    quad@active <- old
+    quad@current <- old
     quad
 }
 
@@ -74,20 +73,19 @@ quad_layout_add.quad_active <- function(object, quad, object_name) {
     if (!is.null(height <- .subset2(object, "height"))) {
         quad@height <- height
     }
-    quad@active <- NULL
+    quad@current <- NULL
     quad
 }
 
-#' @importFrom methods slot
 #' @export
 quad_layout_add.quad_anno <- function(object, quad, object_name) {
     position <- .subset2(object, "position")
     initialize <- .subset2(object, "initialize")
-    stack <- slot(quad, position)
+    stack <- prop(quad, position)
     if (is.null(stack) && !isFALSE(initialize)) {
         # try to initialize the annotation stack with the layout data
         direction <- to_direction(position)
-        layout_domain <- slot(quad, direction)
+        layout_domain <- prop(quad, direction)
         # for the annotation stack, we try to take the data from the
         # quad layout
         quad_data <- quad@data
@@ -159,14 +157,14 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         stack <- switch_chain_plot(
             stack, .subset2(object, "what"), quote(quad_anno())
         )
-        slot(quad, position) <- stack
+        prop(quad, position) <- stack
     }
-    quad@active <- position
+    quad@current <- position
     quad
 }
 
 #' @export
-quad_layout_add.QuadLayout <- function(object, quad, object_name) {
+`quad_layout_add.ggalign::QuadLayout` <- function(object, quad, object_name) {
     cli_abort(c(
         sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
         i = "Did you mean to place multiple {.fn quad_layout} elements inside a {.fn stack_layout}?"
@@ -174,9 +172,9 @@ quad_layout_add.QuadLayout <- function(object, quad, object_name) {
 }
 
 #' @export
-quad_layout_add.StackLayout <- function(object, quad, object_name) {
+`quad_layout_add.ggalign::StackLayout` <- function(object, quad, object_name) {
     # we check if there is an active annotation
-    if (is.null(position <- quad@active)) {
+    if (is.null(position <- quad@current)) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "no active annotation stack",
@@ -184,7 +182,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     # check the annotation stack is not initialized
-    if (!is.null(slot(quad, position))) {
+    if (!is.null(prop(quad, position))) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "{position} annotation stack already exists"
@@ -211,7 +209,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
             i = "{.arg sizes} must be of length one to use the stack as an annotation"
         ))
     }
-    quad_domain <- slot(quad, direction)
+    quad_domain <- prop(quad, direction)
     if (is_cross_layout(object) &&
         any(position == c("bottom", "right")) &&
         !is_empty(object@cross_points)) {
@@ -253,7 +251,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
         ))
     }
     object@heatmap$position <- position
-    slot(quad, position) <- object
+    prop(quad, position) <- object
     layout_update_domain(quad,
         direction = direction,
         domain = layout_domain,
@@ -261,17 +259,16 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     )
 }
 
-#' @importFrom methods slot slot<-
 #' @export
 `quad_layout_add.ggalign::CraftBox` <- function(object, quad, object_name) {
-    if (is.null(position <- quad@active)) {
+    if (is.null(position <- quad@current)) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "no active annotation stack",
             i = "try to activate an annotation stack with {.fn anno_*}"
         ))
     }
-    if (is.null(stack <- slot(quad, position))) {
+    if (is.null(stack <- prop(quad, position))) {
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),
             i = "the {.field {position}} annotation stack is not initialized",
@@ -281,7 +278,7 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
 
     # add annotation -----------------------------
     stack <- chain_layout_add(object, stack, object_name)
-    slot(quad, position) <- stack
+    prop(quad, position) <- stack
 
     # if there are cross points in bottom or right annotation, we use
     # the first domain
@@ -329,7 +326,7 @@ quad_body_add.Coord <- function(object, quad, object_name) {
 
 #' @export
 quad_body_add.layout_theme <- function(object, quad, object_name) {
-    quad@theme <- update_layout_theme(quad@theme, object)
+    attr(quad, "theme") <- layout_theme_update(quad@theme, object)
     quad
 }
 

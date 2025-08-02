@@ -120,7 +120,7 @@ genomic_range <- function(start, end) {
 }
 
 #' @export
-chain_decorate.CircleLayout <- function(layout, plot) {
+`chain_decorate.ggalign::CircleLayout` <- function(layout, plot) {
     if (!identical(layout@name, "circle_genomic")) {
         return(plot)
     }

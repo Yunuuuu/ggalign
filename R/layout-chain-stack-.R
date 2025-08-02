@@ -236,11 +236,9 @@ stack_continuous.function <- function(direction, data = NULL, ...) {
 #' @export
 stack_continuous.formula <- stack_continuous.function
 
-#' @importFrom methods new
 new_stack_layout <- function(data, direction, domain,
                              schemes = NULL, theme = NULL, sizes = NA,
                              name = NULL, call = caller_call()) {
-    sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (is.null(name)) {
         if (is_discrete_domain(domain)) {
@@ -249,35 +247,10 @@ new_stack_layout <- function(data, direction, domain,
             name <- "stack_continuous"
         }
     }
-    new(
-        "StackLayout",
+    StackLayout(
         name = name, data = data,
         direction = direction,
         theme = theme, schemes = schemes, # used by the layout
         sizes = sizes, domain = domain
     )
 }
-
-############################################################
-# Used to place multiple objects in one axis
-#' @importFrom grid unit
-#' @importFrom ggplot2 waiver
-#' @keywords internal
-#' @include layout-chain-.R
-StackLayout <- methods::setClass(
-    "StackLayout",
-    contains = "ChainLayout",
-    list(
-        direction = "character",
-        heatmap = "list", # used by heatmap annotation
-        sizes = "ANY" # used by stack layout
-    ),
-    prototype = list(
-        heatmap = list(
-            position = NULL,
-            free_guides = waiver(),
-            # indicate whether or not the data is from the quad-layout matrix
-            quad_matrix = FALSE
-        )
-    )
-)

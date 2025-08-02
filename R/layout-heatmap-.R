@@ -97,21 +97,12 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         data = data,
         mapping = mapping,
         theme = theme, active = active,
-        width = width, height = height,
-        class = "HeatmapLayout"
+        width = width, height = height
     )
+    ans <- convert(ans, HeatmapLayout)
     # add default mapping
     ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y)) +
         ggplot2::labs(x = NULL, y = NULL)
     ans@filling <- filling
     ans
 }
-
-# used to create the heatmap layout
-#' @keywords internal
-#' @include layout-quad-.R
-methods::setClass(
-    "HeatmapLayout",
-    contains = "QuadLayout",
-    list(filling = "ANY") # parameters for heatmap body
-)

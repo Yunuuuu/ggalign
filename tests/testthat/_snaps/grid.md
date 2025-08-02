@@ -1,5 +1,8 @@
 # `str()` method for NA unit works well
 
-     simplUnt [1:1] NAmm
+    Cannot create zero-length unit vector ("unit" subsetting)
+
+---
+
       - attr(*, "unit"): int 7
 

@@ -5,8 +5,8 @@ chain_layout_subtract <- function(object, layout, object_name) {
 
 #' @export
 chain_layout_subtract.default <- function(object, layout, object_name) {
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
+    if (is.na(current <- layout@current) ||
+        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
         layout@plot_list <- lapply(layout@plot_list, function(plot) {
             if (is_craftbox(plot)) {
                 chain_plot_add(plot, object, object_name, force = FALSE)
@@ -15,7 +15,7 @@ chain_layout_subtract.default <- function(object, layout, object_name) {
             }
         })
     } else {
-        layout@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[current]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
@@ -25,11 +25,11 @@ chain_layout_subtract.default <- function(object, layout, object_name) {
 # for objects can inherit from layout
 #' @export
 `chain_layout_subtract.ggalign::Scheme` <- function(object, layout, object_name) {
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
+    if (is.na(current <- layout@current) ||
+        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
         layout <- update_layout_schemes(object, layout, object_name)
     } else {
-        layout@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[current]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }
@@ -46,8 +46,8 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
             object_name(layout)
         ))
     }
-    if (is.null(active_index <- layout@active) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, active_index))) {
+    if (is.na(current <- layout@current) ||
+        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
         inner <- .subset2(object, "object")
         inner_name <- .subset2(object, "object_name")
 
@@ -74,9 +74,9 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
                     c("top", "bottom")
                 )
                 for (position in positions) {
-                    if (!is.null(slot(plot, position))) {
-                        slot(plot, position) <- chain_layout_subtract(
-                            inner, slot(plot, position), inner_name
+                    if (!is.null(prop(plot, position))) {
+                        prop(plot, position) <- chain_layout_subtract(
+                            inner, prop(plot, position), inner_name
                         )
                     }
                 }
@@ -90,7 +90,7 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
             plot
         })
     } else {
-        layout@plot_list[[active_index]] <- quad_layout_subtract(
+        layout@plot_list[[current]] <- quad_layout_subtract(
             object, plot, object_name
         )
     }

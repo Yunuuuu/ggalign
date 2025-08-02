@@ -27,5 +27,6 @@ test_that("`channelGrob()` works well", {
 })
 
 test_that("`str()` method for NA unit works well", {
-    expect_snapshot_output(str(unit(NA, "mm")))
+    expect_snapshot_error(str(unit(NA, "mm")))
+    expect_snapshot_output(str(GridUnit(unit(NA, "mm"))))
 })

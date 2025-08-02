@@ -103,36 +103,7 @@ check_stack_sizes <- function(sizes, arg = caller_arg(sizes),
             call = call
         )
     }
-    if (!is.unit(sizes)) sizes <- unit(sizes, "null")
     sizes
-}
-
-#' @importFrom rlang arg_match0
-check_direction <- function(direction, arg = caller_arg(direction),
-                            call = caller_call()) {
-    direction <- arg_match0(direction, c("h", "v"),
-        arg_nm = arg, error_call = call
-    )
-    switch(direction, h = "horizontal", v = "vertical") # styler: off
-}
-
-assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
-                          call = caller_call()) {
-    if (is.null(limits) && allow_null) {
-        return(invisible(NULL))
-    }
-    if (!is_continuous_domain(limits)) {
-        cli_abort(
-            "{.arg {arg}} must be specified with {.fn continuous_limits}",
-            call = call
-        )
-    }
-    if (rlang::is_named(limits)) {
-        cli_abort(
-            "{.arg {arg}} shouldn't be created with {.arg x}/{.arg y} argument in {.fn continuous_limits}",
-            call = call
-        )
-    }
 }
 
 #' @importFrom grid is.unit
@@ -144,8 +115,36 @@ check_size <- function(size, arg = caller_arg(size), call = caller_call()) {
             call = call
         )
     }
-    if (!is.unit(size)) size <- unit(size, "null")
     size
+}
+
+#' @importFrom rlang arg_match0
+check_direction <- function(direction, arg = caller_arg(direction),
+                            call = caller_call()) {
+    direction <- arg_match0(direction, c("h", "v"),
+        arg_nm = arg, error_call = call
+    )
+    switch(direction, h = "horizontal", v = "vertical") # styler: off
+}
+
+#' @importFrom rlang is_named
+assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
+                          call = caller_call()) {
+    if (is.null(limits) && allow_null) {
+        return(invisible(NULL))
+    }
+    if (!is_continuous_domain(limits)) {
+        cli_abort(
+            "{.arg {arg}} must be specified with {.fn continuous_limits}",
+            call = call
+        )
+    }
+    if (is_named(prop(limits, "spec"))) {
+        cli_abort(
+            "{.arg {arg}} shouldn't be created with {.arg x}/{.arg y} argument in {.fn continuous_limits}",
+            call = call
+        )
+    }
 }
 
 check_scheme_data <- function(data, arg = caller_arg(data),
@@ -162,7 +161,7 @@ check_scheme_data <- function(data, arg = caller_arg(data),
 
 check_stack_context <- function(what, arg = caller_arg(what),
                                 call = caller_call()) {
-    if (is.null(what)) return(what) # styler: off
+    if (is.null(what)) return(NA_integer_) # styler: off
     if (.rlang_check_number(what, allow_decimal = FALSE, min = 1) != 0L &&
         !is_string(what)) {
         cli_abort(

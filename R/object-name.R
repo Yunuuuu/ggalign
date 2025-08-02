@@ -9,7 +9,7 @@ format_object_name <- function(name, format = NULL) {
 object_name <- function(object, format) UseMethod("object_name")
 
 #' @export
-object_name.StackLayout <- function(object, format = "fn") {
+`object_name.ggalign::StackLayout` <- function(object, format = "fn") {
     ans <- format_object_name(object@name, format)
     if (!is.null(position <- .subset2(object@heatmap, "position"))) {
         ans <- sprintf("the %s annotation %s", position, ans)
@@ -20,12 +20,12 @@ object_name.StackLayout <- function(object, format = "fn") {
 }
 
 #' @export
-object_name.CircleLayout <- function(object, format = "fn") {
+`object_name.ggalign::CircleLayout` <- function(object, format = "fn") {
     format_object_name(object@name, format)
 }
 
 #' @export
-object_name.QuadLayout <- function(object, format = "fn") {
+`object_name.ggalign::QuadLayout` <- function(object, format = "fn") {
     format_object_name(object@name, format)
 }
 

@@ -1,5 +1,5 @@
 #' @export
-ggalign_build.StackLayout <- function(x) {
+`ggalign_build.ggalign::StackLayout` <- function(x) {
     x <- default_layout(x)
     (stack_build(x) %||% align_plots(theme = x@theme)) +
         layout_title(
@@ -35,7 +35,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
     # arrange plots
     if (is.null(position)) { # for stack layout
         # sizes should be of length 3
-        sizes <- stack@sizes
+        sizes <- convert(stack@sizes, S3_unit)
         # recycle the sizes when necessary
         if (length(sizes) == 1L) sizes <- rep(sizes, length.out = 3L)
         sizes <- sizes[
@@ -116,8 +116,8 @@ resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
 }
 
 #' @export
-resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
-                                             extra_domain) {
+`resolve_stack_layout.ggalign::StackLayout` <- function(stack, schemes, theme,
+                                                        extra_domain) {
     plot_list <- stack@plot_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")

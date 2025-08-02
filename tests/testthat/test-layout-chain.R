@@ -1,9 +1,3 @@
-test_that("ChainLayout class creation", {
-    layout <- new("ChainLayout")
-    expect_s4_class(layout, "ChainLayout")
-    expect_true(is.list(layout@plot_list))
-})
-
 test_that("is_layout_discrete function", {
     expect_true(is_layout_discrete(stack_discrete("h")))
     expect_true(is_layout_discrete(stack_discrete("v")))
@@ -14,18 +8,6 @@ test_that("is_layout_continuous function", {
     expect_false(is_layout_continuous(stack_discrete("v")))
     expect_true(is_layout_continuous(stack_continuous("h")))
     expect_true(is_layout_continuous(stack_continuous("v")))
-})
-
-test_that("`chain_layout_add()` with layout_title", {
-    layout <- new("ChainLayout")
-    layout <- chain_layout_add(layout_title("my title"), layout, "title")
-    expect_equal(layout@titles, list(title = "my title"))
-})
-
-test_that("`chain_layout_add()` function with NULL", {
-    old <- new("ChainLayout", plot_list = list())
-    new <- chain_layout_add(NULL, old, "NULL")
-    expect_identical(old, new)
 })
 
 test_that("`chain_layout_add()` function with `CraftBox`", {

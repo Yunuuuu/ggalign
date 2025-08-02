@@ -61,15 +61,11 @@
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
 #' @name layout-operator
-NULL
-
-utils::globalVariables(".Generic")
-
-methods::setMethod("Ops", c("LayoutProto", "ANY"), function(e1, e2) {
+local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (missing(e2)) {
         cli_abort(c(
-            "Cannot use {.code {.Generic}} with a single argument.",
-            "i" = "Did you accidentally put {.code {.Generic}} on a new line?"
+            "Cannot use {.code +} with a single argument.",
+            "i" = "Did you accidentally put {.code +} on a new line?"
         ))
     }
 
@@ -77,13 +73,42 @@ methods::setMethod("Ops", c("LayoutProto", "ANY"), function(e1, e2) {
 
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-    switch(.Generic, # nolint
-        `+` = layout_add(e1, e2, e2name),
-        `-` = layout_subtract(e1, e2, e2name),
-        `&` = layout_and_add(e1, e2, e2name),
-        stop_incompatible_op(.Generic, e1, e2)
-    )
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_add(e1, e2, e2name)
+})
+
+#' @include layout-.R
+local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code -} with a single argument.",
+            "i" = "Did you accidentally put {.code -} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_subtract(e1, e2, e2name)
+})
+
+#' @include layout-.R
+local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
+    if (missing(e2)) {
+        cli_abort(c(
+            "Cannot use {.code &} with a single argument.",
+            "i" = "Did you accidentally put {.code &} on a new line?"
+        ))
+    }
+
+    if (is.null(e2)) return(e1) # styler: off
+
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2, env = caller_env(2L)))
+    layout_and_add(e1, e2, e2name)
 })
 
 #################################################################
@@ -92,12 +117,12 @@ layout_add <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_add.QuadLayout <- function(layout, object, object_name) {
+`layout_add.ggalign::QuadLayout` <- function(layout, object, object_name) {
     quad_layout_add(object, layout, object_name)
 }
 
 #' @export
-layout_add.ChainLayout <- function(layout, object, object_name) {
+`layout_add.ggalign::ChainLayout` <- function(layout, object, object_name) {
     chain_layout_add(object, layout, object_name)
 }
 
@@ -107,12 +132,12 @@ layout_subtract <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_subtract.QuadLayout <- function(layout, object, object_name) {
+`layout_subtract.ggalign::QuadLayout` <- function(layout, object, object_name) {
     quad_layout_subtract(object, layout, object_name)
 }
 
 #' @export
-layout_subtract.ChainLayout <- function(layout, object, object_name) {
+`layout_subtract.ggalign::ChainLayout` <- function(layout, object, object_name) {
     chain_layout_subtract(object, layout, object_name)
 }
 
@@ -123,12 +148,12 @@ layout_and_add <- function(layout, object, object_name) {
 }
 
 #' @export
-layout_and_add.QuadLayout <- function(layout, object, object_name) {
+`layout_and_add.ggalign::QuadLayout` <- function(layout, object, object_name) {
     quad_layout_and_add(object, layout, object_name)
 }
 
 #' @export
-layout_and_add.ChainLayout <- function(layout, object, object_name) {
+`layout_and_add.ggalign::ChainLayout` <- function(layout, object, object_name) {
     chain_layout_and_add(object, layout, object_name)
 }
 
@@ -152,8 +177,9 @@ lapply(
         )
         # styler: off
         for (class in c("ggplot", "quad_active", "quad_anno", "layout_title",
-                        "layout_theme", "ggalign::CraftBox", "ChainLayout",
-                        "QuadLayout", "continuous_limits")) {
+                        "layout_theme", "ggalign::CraftBox", 
+                        "ggalign::ChainLayout",
+                        "ggalign::QuadLayout", "continuous_limits")) {
             # styler: on
             registerS3method(
                 genname, class,

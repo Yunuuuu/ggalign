@@ -12,7 +12,7 @@ testthat::test_that("`stack_align` works well", {
 
     # stack with no data
     x <- stack_alignh()
-    expect_s3_class(x@sizes, "unit")
+    expect_s7_class(x@sizes, GridUnit)
     expect_identical(x@domain, DiscreteDomain())
 })
 
@@ -30,7 +30,7 @@ testthat::test_that("`stack_free` works well", {
 
     # stack with no data
     x <- stack_freeh()
-    expect_s3_class(x@sizes, "unit")
+    expect_s7_class(x@sizes, GridUnit)
     expect_identical(x@domain, NULL)
 })
 

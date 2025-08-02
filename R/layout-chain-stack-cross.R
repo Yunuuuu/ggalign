@@ -35,30 +35,18 @@ stack_crossh <- function(data = NULL, ...) {
     stack_cross(data = data, direction = "h", ...)
 }
 
-#' @include layout-chain-stack-.R
-StackCross <- methods::setClass(
-    "StackCross",
-    contains = "StackLayout",
-    # A list of old domain
-    list(odomain = "list", cross_points = "integer", break_points = "integer"),
-    prototype = list(
-        odomain = list(),
-        cross_points = integer(),
-        break_points = integer()
-    )
-)
-
+#' @importFrom S7 convert
 #' @export
 stack_cross.default <- function(direction, data = NULL, ...) {
     ans <- stack_discrete(data = data, direction = direction, ...)
-    ans <- methods::as(ans, "StackCross")
-    ans@name <- "stack_cross"
+    ans <- convert(ans, StackCross)
+    attr(ans, "name") <- "stack_cross"
     ans
 }
 
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
-resolve_stack_layout.StackCross <- function(stack, schemes, theme,
+`resolve_stack_layout.ggalign::StackCross` <- function(stack, schemes, theme,
                                             extra_domain) {
     # check if we should initialize the layout observations
     layout_domain <- stack@domain

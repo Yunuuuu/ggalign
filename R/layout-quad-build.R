@@ -1,6 +1,6 @@
 #' @importFrom grid unit.c
 #' @export
-ggalign_build.QuadLayout <- function(x) {
+`ggalign_build.ggalign::QuadLayout` <- function(x) {
     x <- default_layout(x)
     patches <- quad_build(x)
     plots <- .subset2(patches, "plots")
@@ -51,10 +51,11 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_empty
 #' @importFrom grid unit is.unit unit.c
+#' @importFrom S7 convert
 #' @export
 #' @noRd
-quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
-                                  direction = NULL) {
+`quad_build.ggalign::QuadLayout` <- function(quad, schemes = NULL, theme = NULL,
+                                             direction = NULL) {
     data <- quad@data
     row_domain <- domain_init(quad@horizontal)
     column_domain <- domain_init(quad@vertical)
@@ -122,7 +123,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 
     # plot annotations ----------------------------
     stack_list <- lapply(.TLBR, function(position) {
-        if (is_empty(stack <- slot(quad, position))) {
+        if (is_empty(stack <- prop(quad, position))) {
             return(list(plot = NULL, size = NULL))
         }
         pschemes <- schemes
@@ -143,7 +144,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         if (is.null(plot)) {
             size <- NULL
         } else {
-            size <- stack@sizes
+            size <- convert(stack@sizes, S3_unit)
         }
         list(plot = plot, size = size)
     })
@@ -220,7 +221,10 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     plots <- append(plots, list(main = p), 2L)
     sizes <- append(
         sizes,
-        list(main = list(width = quad@width, height = quad@height)),
+        list(main = list(
+            width = convert(quad@width, S3_unit),
+            height = convert(quad@height, S3_unit)
+        )),
         3L
     )
     list(plots = plots, sizes = sizes)

@@ -6,8 +6,7 @@ layout_update_domain <- S7::new_generic(
     }
 )
 
-#' @include layout-chain-stack-.R
-#' @include layout-chain-circle-.R
+#' @include layout-.R
 S7::method(layout_update_domain, StackLayout) <-
     S7::method(layout_update_domain, CircleLayout) <-
     function(layout, ..., domain, objectname) {
@@ -24,10 +23,10 @@ S7::method(layout_update_domain, StackLayout) <-
         layout
     }
 
-#' @include layout-quad-.R
+#' @include layout-.R
 S7::method(layout_update_domain, QuadLayout) <-
     function(layout, ..., direction, domain, objectname) {
-        slot(layout, direction) <- domain
+        prop(layout, direction) <- domain
         if (is_horizontal(direction)) {
             if (!is.null(left <- layout@left)) {
                 layout@left <- layout_update_domain(left,
@@ -56,7 +55,7 @@ S7::method(layout_update_domain, QuadLayout) <-
         layout
     }
 
-#' @include layout-chain-stack-cross.R
+#' @include layout-.R
 S7::method(layout_update_domain, StackCross) <-
     function(layout, ..., domain, objectname, from_head = FALSE) {
         # `domain` must be a discrete_domain()
@@ -141,28 +140,28 @@ S7::method(layout_update_domain, StackCross) <-
 #'
 #' @param x A `LayoutProto` object.
 #' @noRd
-is_layout_discrete <- function(x, ...) UseMethod("is_layout_discrete")
+is_layout_discrete <- S7::new_generic("is_layout_discrete", "x")
 
-is_layout_continuous <- function(x, ...) UseMethod("is_layout_continuous")
+is_layout_continuous <- S7::new_generic("is_layout_continuous", "x")
 
-#' @export
-is_layout_discrete.ChainLayout <- function(x, ...) {
+#' @include layout-.R
+S7::method(is_layout_discrete, ChainLayout) <- function(x, ...) {
     is_discrete_domain(x@domain)
 }
 
-#' @export
-is_layout_continuous.ChainLayout <- function(x, ...) {
+#' @include layout-.R
+S7::method(is_layout_continuous, ChainLayout) <- function(x, ...) {
     # `NULL` is a un-defined `ContinuousDomain`
     is.null(x@domain) || is_continuous_domain(x@domain)
 }
 
-#' @export
-is_layout_discrete.QuadLayout <- function(x, direction, ...) {
-    is_discrete_domain(slot(x, direction))
+#' @include layout-.R
+S7::method(is_layout_discrete, QuadLayout) <- function(x, direction, ...) {
+    is_discrete_domain(prop(x, direction))
 }
 
-#' @export
-is_layout_continuous.QuadLayout <- function(x, direction, ...) {
+#' @include layout-.R
+S7::method(is_layout_continuous, QuadLayout) <- function(x, direction, ...) {
     # `NULL` is a un-defined `ContinuousDomain`
-    is.null(slot(x, direction)) || is_continuous_domain(slot(x, direction))
+    is.null(prop(x, direction)) || is_continuous_domain(prop(x, direction))
 }

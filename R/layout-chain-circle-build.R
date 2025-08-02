@@ -1,5 +1,5 @@
 #' @export
-ggalign_build.CircleLayout <- function(x) {
+`ggalign_build.ggalign::CircleLayout` <- function(x) {
     x <- default_layout(x)
     circle_build(x)
 }

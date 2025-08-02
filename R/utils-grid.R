@@ -60,52 +60,6 @@ loc_vp2device <- function(x, y, valueOnly = FALSE) {
     grid::deviceLoc(x, y, valueOnly = valueOnly)
 }
 
-# # allow the missing value in the unit for `str` method
-# ggalign_unit <- function(x, ...) UseMethod("ggalign_unit")
-# #' @export
-# ggalign_unit.default <- function(x, ...) ggalign_unit(as.numeric(x), ...)
-# #' @export
-# ggalign_unit.numeric <- function(x, units = "null", data = NULL, ...) {
-#     add_class(unit(x, units, data = data), "ggalign_unit")
-# }
-# #' @export
-# ggalign_unit.unit <- function(x, ...) add_class(x, "ggalign_unit")
-# is_ggalign_unit <- function(x) inherits(x, "ggalign_unit")
-
-# # allow the missing value in the unit for `str` method
-#' @importFrom utils str
-#' @export
-str.unit <- function(object, ...) obj_str(object, ...)
-
-#' @export
-vec_ptype_abbr.unit <- function(x, ...) main_class(x)
-
-#' @importFrom utils str
-#' @export
-obj_str_footer.unit <- function(x, ..., indent.str = " ", nest.lev = 0,
-                                give.attr = TRUE) {
-    if (!isTRUE(give.attr)) {
-        return(invisible(x))
-    }
-    attr <- attributes(x)
-    attr[["class"]] <- NULL
-    attr[["names"]] <- NULL
-    if (length(attr) == 0) {
-        return(invisible(x))
-    }
-    indent.str <- paste0(" ", indent.str)
-    for (nm in names(attr)) {
-        cat(indent.str, paste0("- attr(*, \"", nm, "\"):"), sep = "")
-        str(
-            attr[[nm]],
-            no.list = TRUE, ...,
-            nest.lev = nest.lev + 1L,
-            indent.str = indent.str
-        )
-    }
-    invisible(x)
-}
-
 #' @importFrom gtable gtable_trim
 subset_gt <- function(gt, index, trim = TRUE) {
     gt$layout <- vec_slice(.subset2(gt, "layout"), index)
@@ -226,6 +180,30 @@ GridUnit <- S7::new_class(
         inner = S7::new_property(S3_unit, default = unit(NA, "null"))
     )
 )
+
+#' @importFrom S7 convert
+prop_grid_unit <- function(property, ...) {
+    force(property)
+    S7::new_property(
+        GridUnit,
+        validator = function(value) {
+            l <- length(value)
+            if (l != 1L) {
+                return(sprintf("must be of length 1, not length %d", l))
+            }
+        },
+        setter = function(self, value) {
+            value <- value %||% NA
+            if ((is_atomic(value) && all(is.na(value))) || is.numeric(value)) {
+                value <- unit(value, "null")
+            }
+            if (is.unit(value)) value <- convert(value, GridUnit)
+            prop(self, property) <- value
+            self
+        },
+        ...
+    )
+}
 
 local(S7::method(length, GridUnit) <- function(x) length(prop(x, "inner")))
 

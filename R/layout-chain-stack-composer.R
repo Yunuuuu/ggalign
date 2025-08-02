@@ -133,8 +133,9 @@ stack_composer_add <- function(plot, stack, composer, ...) {
 }
 
 #' @importFrom grid unit.c unit
-stack_composer_add.QuadLayout <- function(plot, stack, composer, schemes, theme,
-                                          direction, ...) {
+`stack_composer_add.ggalign::QuadLayout` <- function(plot, stack, composer,
+                                                     schemes, theme,
+                                                     direction, ...) {
     patches <- quad_build(plot, schemes, theme, direction)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")

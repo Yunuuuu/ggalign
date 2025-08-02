@@ -179,7 +179,6 @@ circle_continuous.function <- function(data = NULL, ...) {
 #' @export
 circle_continuous.formula <- circle_continuous.function
 
-#' @importFrom methods new
 new_circle_layout <- function(data, domain, radial, direction,
                               sector_spacing = NULL, schemes = NULL,
                               theme = NULL, name = NULL,
@@ -197,7 +196,10 @@ new_circle_layout <- function(data, domain, radial, direction,
             call = call
         )
     }
-    direction <- arg_match0(direction, c("inward", "outward"))
+    direction <- arg_match0(direction,
+        c("inward", "outward"),
+        error_call = call
+    )
     if (is.null(name)) {
         if (is_discrete_domain(domain)) {
             name <- "circle_discrete"
@@ -213,24 +215,13 @@ new_circle_layout <- function(data, domain, radial, direction,
         )
         if (is.null(sector_spacing)) sector_spacing <- spacing_theta
     }
-    new(
-        "CircleLayout",
+    CircleLayout(
         name = name, data = data,
         schemes = schemes, # used by the layout
         domain = domain,
         sector_spacing = sector_spacing,
         theme = theme,
-        radial = radial, direction = direction
+        radial = radial,
+        direction = direction
     )
 }
-
-############################################################
-# Used to place multiple objects in one axis
-#' @importFrom grid unit
-#' @importFrom ggplot2 waiver
-#' @keywords internal
-#' @include layout-chain-.R
-CircleLayout <- methods::setClass("CircleLayout",
-    contains = "ChainLayout",
-    list(radial = "ANY", sector_spacing = "ANY", direction = "character")
-)

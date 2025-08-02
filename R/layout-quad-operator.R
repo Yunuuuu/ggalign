@@ -6,13 +6,13 @@ quad_layout_subtract <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.default <- function(object, quad, object_name) {
-    if (is.null(context <- quad@active)) context <- c(.TLBR, list(NULL))
+    if (is.null(context <- quad@current)) context <- c(.TLBR, list(NULL))
     for (active in context) {
         if (is.null(active)) {
             quad <- quad_body_add(object, quad, object_name)
-        } else if (!is.null(slot(quad, active))) {
-            slot(quad, active) <- chain_layout_subtract(
-                object, slot(quad, active), object_name
+        } else if (!is.null(prop(quad, active))) {
+            prop(quad, active) <- chain_layout_subtract(
+                object, prop(quad, active), object_name
             )
         }
     }
@@ -22,11 +22,11 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 # for object can set at layout level
 #' @export
 `quad_layout_subtract.ggalign::Scheme` <- function(object, quad, object_name) {
-    if (is.null(context <- quad@active)) {
+    if (is.null(context <- quad@current)) {
         quad <- update_layout_schemes(object, quad, object_name)
     } else {
-        slot(quad, context) <- update_layout_schemes(
-            object, slot(quad, context), object_name
+        prop(quad, context) <- update_layout_schemes(
+            object, prop(quad, context), object_name
         )
     }
     quad
@@ -34,26 +34,26 @@ quad_layout_subtract.default <- function(object, quad, object_name) {
 
 #' @export
 quad_layout_subtract.ggalign_with_quad <- function(object, quad, object_name) {
-    old <- quad@active
+    old <- quad@current
     context <- quad_operated_context(object, old, "-")
     object_name <- .subset2(object, "object_name")
     object <- .subset2(object, "object")
     # `subtract` operates at layout-level
     if (is.null(context)) {
-        quad@active <- context
+        quad@current <- context
         quad <- quad_layout_subtract(object, quad, object_name)
     } else {
         for (active in context) {
             if (is.null(active)) {
                 quad <- quad_body_add(object, quad, object_name)
-            } else if (!is.null(slot(quad, active))) {
-                slot(quad, active) <- chain_layout_subtract(
-                    object, slot(quad, active), object_name
+            } else if (!is.null(prop(quad, active))) {
+                prop(quad, active) <- chain_layout_subtract(
+                    object, prop(quad, active), object_name
                 )
             }
         }
     }
-    quad@active <- old
+    quad@current <- old
     quad
 }
 
@@ -67,9 +67,9 @@ quad_layout_and_add <- function(object, quad, object_name) {
 quad_layout_and_add.default <- function(object, quad, object_name) {
     quad <- quad_body_add(object, quad, object_name)
     for (position in .TLBR) {
-        stack <- slot(quad, position)
+        stack <- prop(quad, position)
         if (is.null(stack)) next
-        slot(quad, position) <- chain_layout_and_add(
+        prop(quad, position) <- chain_layout_and_add(
             object, stack, object_name
         )
     }

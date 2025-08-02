@@ -5,8 +5,8 @@
 
     # register method for
     s3_register("ggrastr::rasterise", "ggalign::CraftBox")
-    s3_register("ggrastr::rasterise", "QuadLayout")
-    s3_register("ggrastr::rasterise", "ChainLayout")
+    s3_register("ggrastr::rasterise", "ggalign::QuadLayout")
+    s3_register("ggrastr::rasterise", "ggalign::ChainLayout")
 
     methods_register()
     invisible()
