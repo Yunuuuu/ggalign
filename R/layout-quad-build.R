@@ -201,7 +201,7 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         free_row = free_row, free_column = free_column
     )
     p <- p +
-        ggalign_design(
+        layout_align(
             x = column_domain, y = row_domain,
             xlabels = colnames(data), ylabels = vec_names(data)
         )

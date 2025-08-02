@@ -138,7 +138,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
         # set limits and default scales
         if (!craftsman$free_limits) {
-            plot <- plot + ggalign_design(
+            plot <- plot + layout_align(
                 x = domain, xlabels = craftsman$labels
             )
         }

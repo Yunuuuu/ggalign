@@ -1,5 +1,36 @@
 Domain <- S7::new_class("Domain", abstract = TRUE)
 
+#' Set Expansion for the Layout
+#'
+#' @description
+#' To align axes, it is important to keep the expansion consistent across all
+#' plots in the layout. You can add a `layout_expand` object to the layout. For
+#' the `quad_layout()` function, you must specify `x` and `y` arguments. For
+#' other layouts, you can pass the expansion values using `...` directly.
+#'
+#' @param ... A list of range expansion constants, used to add padding around
+#' the data to ensure they are placed some distance away from the axes. Use the
+#' convenience function [`expansion()`][ggplot2::expansion()] to generate the
+#' values.
+#' @param x,y Same as `...`, but specifically for `quad_layout()`.
+#'
+#' @importFrom rlang list2
+#' @keywords internal
+layout_expand <- function(..., x = waiver(), y = waiver()) {
+    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
+        cli_abort(
+            "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
+        )
+    }
+    if (...length() > 0L) {
+        ans <- list2(...)
+        names(ans) <- NULL
+    } else {
+        ans <- list(x = x, y = y)
+    }
+    structure(ans, class = "ggalign_layout_expand")
+}
+
 #' Set continuous limits for the layout
 #'
 #' @description

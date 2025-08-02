@@ -111,11 +111,11 @@ stack_composer_add <- function(plot, stack, composer, ...) {
     # set limits and default scales
     if (!craftsman$free_limits) {
         if (is_horizontal(direction)) {
-            plot <- plot + ggalign_design(
+            plot <- plot + layout_align(
                 y = domain, ylabels = craftsman$labels
             )
         } else {
-            plot <- plot + ggalign_design(
+            plot <- plot + layout_align(
                 x = domain, xlabels = craftsman$labels
             )
         }
