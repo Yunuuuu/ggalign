@@ -7,6 +7,7 @@ S7::method(layout_add, list(QuadLayout, S7::class_data.frame)) <-
     }
 
 #' @include layout-.R
+#' @include layout-operator.R
 S7::method(layout_add, list(QuadLayout, S3_layout_title)) <-
     function(layout, object, objectname) {
         layout@titles <- layout_title_update(layout@titles, object)
@@ -14,10 +15,18 @@ S7::method(layout_add, list(QuadLayout, S3_layout_title)) <-
     }
 
 #' @include layout-.R
+#' @include layout-operator.R
 S7::method(layout_add, list(QuadLayout, S7::class_list)) <-
     function(layout, object, objectname) {
         for (o in object) layout <- layout_add(layout, o, object_name)
         layout
+    }
+
+#' @include layout-.R
+#' @include layout-operator.R
+S7::method(layout_add, list(QuadLayout, S3_class_ggplot)) <-
+    function(layout, object, objectname) {
+        layout_add(layout, ggfree(data = object), objectname)
     }
 
 # Add elements for the main body or the annotation
