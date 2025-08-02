@@ -220,7 +220,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
             extra_plot_data <- NULL
         }
 
-        if (is_continuous_domain(domain)) {
+        if (!is_discrete_domain(domain)) {
             if (!is.null(data) && !is.null(extra_plot_data)) {
                 data <- full_join(data, extra_plot_data,
                     by.x = ".column_index", by.y = ".extra_index"

@@ -152,7 +152,8 @@ is_layout_discrete.ChainLayout <- function(x, ...) {
 
 #' @export
 is_layout_continuous.ChainLayout <- function(x, ...) {
-    is_continuous_domain(x@domain)
+    # `NULL` is a un-defined `ContinuousDomain`
+    is.null(x@domain) || is_continuous_domain(x@domain)
 }
 
 #' @export
@@ -162,5 +163,6 @@ is_layout_discrete.QuadLayout <- function(x, direction, ...) {
 
 #' @export
 is_layout_continuous.QuadLayout <- function(x, direction, ...) {
-    is_continuous_domain(slot(x, direction))
+    # `NULL` is a un-defined `ContinuousDomain`
+    is.null(slot(x, direction)) || is_continuous_domain(slot(x, direction))
 }

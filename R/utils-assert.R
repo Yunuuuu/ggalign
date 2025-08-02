@@ -121,7 +121,7 @@ assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
     if (is.null(limits) && allow_null) {
         return(invisible(NULL))
     }
-    if (!inherits(limits, "continuous_limits")) {
+    if (!is_continuous_domain(limits)) {
         cli_abort(
             "{.arg {arg}} must be specified with {.fn continuous_limits}",
             call = call

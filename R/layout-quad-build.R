@@ -177,19 +177,19 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
             drop = FALSE, as.table = FALSE
         )
         free_row <- FALSE
-        free_column <- is_continuous_domain(column_domain)
+        free_column <- !is_discrete_domain(column_domain)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.panel_x),
             scales = "free_x", space = "free",
             drop = FALSE, as.table = FALSE
         )
-        free_row <- is_continuous_domain(row_domain)
+        free_row <- !is_discrete_domain(row_domain)
         free_column <- FALSE
     } else {
         default_facet <- facet_quad(object_name(quad))
-        free_row <- is_continuous_domain(row_domain)
-        free_column <- is_continuous_domain(column_domain)
+        free_row <- !is_discrete_domain(row_domain)
+        free_column <- !is_discrete_domain(column_domain)
     }
 
     # set the facets and coord ---------------------------
@@ -229,8 +229,8 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 #' @importFrom stats reorder
 quad_build_data <- function(data, row_domain, column_domain) {
     if (is.null(data) ||
-        (is_continuous_domain(row_domain) &&
-            is_continuous_domain(column_domain))) {
+        (!is_discrete_domain(row_domain) &&
+            !is_discrete_domain(column_domain))) {
         return(data)
     }
     if (is_discrete_domain(row_domain)) {

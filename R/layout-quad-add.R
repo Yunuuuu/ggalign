@@ -93,7 +93,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         quad_data <- quad@data
         data <- waiver() # use waiver() to indicate data is not initialized
         quad_matrix <- FALSE # the default value for `quad_matrix` in the stack
-        if (is_continuous_domain(layout_domain)) { # the stack need a data frame
+        if (!is_discrete_domain(layout_domain)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
                     cli_warn(paste(
@@ -223,8 +223,8 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     }
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
-    if (is_continuous_domain(stack_domain)) {
-        if (!is_continuous_domain(quad_domain)) {
+    if (!is_discrete_domain(stack_domain)) {
+        if (is_discrete_domain(quad_domain)) {
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {object_name}} to %s",

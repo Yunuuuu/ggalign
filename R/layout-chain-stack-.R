@@ -243,10 +243,10 @@ new_stack_layout <- function(data, direction, domain,
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (is.null(name)) {
-        if (is_continuous_domain(domain)) {
-            name <- "stack_continuous"
-        } else {
+        if (is_discrete_domain(domain)) {
             name <- "stack_discrete"
+        } else {
+            name <- "stack_continuous"
         }
     }
     new(

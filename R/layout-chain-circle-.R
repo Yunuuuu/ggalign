@@ -199,10 +199,10 @@ new_circle_layout <- function(data, domain, radial, direction,
     }
     direction <- arg_match0(direction, c("inward", "outward"))
     if (is.null(name)) {
-        if (is_continuous_domain(domain)) {
-            name <- "circle_continuous"
-        } else {
+        if (is_discrete_domain(domain)) {
             name <- "circle_discrete"
+        } else {
+            name <- "circle_continuous"
         }
     }
     if (lifecycle::is_present(spacing_theta)) {

@@ -24,7 +24,7 @@ continuous_limits <- function(..., x = waiver(), y = waiver()) {
     ContinuousDomain(..., x = x, y = y)
 }
 
-#' @importFrom S7 new_object
+#' @importFrom S7 new_object S7_object
 ContinuousDomain <- S7::new_class(
     "ContinuousDomain",
     parent = Domain,
@@ -47,7 +47,7 @@ ContinuousDomain <- S7::new_class(
         } else {
             spec <- list(x = x, y = y)
         }
-        new_object(Domain, spec = spec)
+        new_object(S7_object(), spec = spec)
     }
 )
 
@@ -93,9 +93,7 @@ DiscreteDomain <- S7::new_class(
 )
 
 #' @importFrom S7 S7_inherits
-is_continuous_domain <- function(x) {
-    is.null(x) || S7_inherits(x, ContinuousDomain)
-}
+is_continuous_domain <- function(x) S7_inherits(x, ContinuousDomain)
 
 #' @importFrom S7 S7_inherits
 is_discrete_domain <- function(x) S7_inherits(x, DiscreteDomain)

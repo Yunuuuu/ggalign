@@ -334,7 +334,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
     quad_data <- object@data
     stack_domain <- layout@domain
     quad_domain <- slot(object, direction)
-    if (is_continuous_domain(quad_domain)) {
+    if (!is_discrete_domain(quad_domain)) {
         if (is_discrete_domain(stack_domain)) {
             cli_abort(c(
                 sprintf(
@@ -352,7 +352,7 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         extra_domain <- slot(object, vec_set_difference(
             c("vertical", "horizontal"), direction
         ))
-        allow_null <- is_continuous_domain(extra_domain)
+        allow_null <- !is_discrete_domain(extra_domain)
         if (is.waive(quad_data) || is.function(quad_data)) {
             # check if we should initialize the `quad_layout()` data
             if (is.null(stack_data <- layout@data)) {
