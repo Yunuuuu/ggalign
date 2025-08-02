@@ -34,12 +34,12 @@ test_that("`chain_layout_add()` function with `CraftBox`", {
     stack <- stack_discrete("h", small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@domain@panel,
-        .subset2(stack@plot_list, 1L)@craftsman$panel
+        .subset2(stack@box_list, 1L)@craftsman$panel
     )
     expect_identical(
         stack@domain@index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)@craftsman$panel,
+            .subset2(stack@box_list, 1L)@craftsman$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )
@@ -59,12 +59,12 @@ test_that("`chain_layout_add()` function with `CraftBox`", {
     stack <- stack_discrete("v", small_mat) + align_dendro(k = 3L)
     expect_identical(
         stack@domain@panel,
-        .subset2(stack@plot_list, 1L)@craftsman$panel
+        .subset2(stack@box_list, 1L)@craftsman$panel
     )
     expect_identical(
         stack@domain@index,
         reorder_index(
-            .subset2(stack@plot_list, 1L)@craftsman$panel,
+            .subset2(stack@box_list, 1L)@craftsman$panel,
             order2(ggalign_stat(stack, 1L))
         )
     )
@@ -105,24 +105,24 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
     stack <- stack_discrete("h", small_mat) + quad_alignh()
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     stack <- stack_discrete("h") +
         (quad_alignh(small_mat) + anno_left() + align_dendro())
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     stack <- stack_discrete("h") +
         quad_alignh(small_mat) +
         (quad_alignh(small_mat) + anno_left() + align_dendro())
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 2L)@horizontal
+        .subset2(stack@box_list, 2L)@horizontal
     )
 
     stack <- stack_discrete("h") +
@@ -130,7 +130,7 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
             anno_left() + align_dendro(k = 3L))
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     stack <- stack_discrete("h") +
         quad_alignh(small_mat) +
@@ -138,11 +138,11 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
             anno_left() + align_dendro(k = 3L))
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 2L)@horizontal
+        .subset2(stack@box_list, 2L)@horizontal
     )
 
     stack <- stack_discrete("h", small_mat) +
@@ -152,11 +152,11 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
         align_dendro()
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@horizontal
+        .subset2(stack@box_list, 1L)@horizontal
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@left@domain
+        .subset2(stack@box_list, 1L)@left@domain
     )
     expect_snapshot_error(stack_discrete("h", small_mat) +
         quad_alignh() +
@@ -171,42 +171,42 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
     stack <- stack_alignv(small_mat) + quad_alignv()
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     stack <- stack_alignv() +
         (quad_alignv(small_mat) + anno_top() + align_dendro())
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     stack <- stack_alignv() +
         quad_alignv(small_mat) +
         (quad_alignv(small_mat) + anno_top() + align_dendro())
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 2L)@vertical
+        .subset2(stack@box_list, 2L)@vertical
     )
 
     stack <- stack_alignv() +
         (quad_alignv(small_mat) + anno_top() + align_dendro(k = 3L))
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     stack <- stack_alignv() +
         quad_alignv(small_mat) +
         (quad_alignv(small_mat) + anno_top() + align_dendro(k = 3L))
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 2L)@vertical
+        .subset2(stack@box_list, 2L)@vertical
     )
 
     stack <- stack_alignv(small_mat) +
@@ -216,11 +216,11 @@ testthat::test_that("`chain_layout_add()` function with QuadLayout", {
         align_dendro()
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@vertical
+        .subset2(stack@box_list, 1L)@vertical
     )
     expect_identical(
         stack@domain,
-        .subset2(stack@plot_list, 1L)@top@domain
+        .subset2(stack@box_list, 1L)@top@domain
     )
     expect_snapshot_error(stack_alignv(small_mat) +
         quad_alignv() +

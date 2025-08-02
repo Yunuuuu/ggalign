@@ -70,7 +70,7 @@ CrossGg <- ggproto("CrossGg",
         }
 
         # udpate cross_points
-        layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
+        layout@cross_points <- c(layout@cross_points, length(layout@box_list))
 
         # update old domain list
         layout@odomain <- c(layout@odomain, list(layout@domain))

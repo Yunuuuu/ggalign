@@ -20,7 +20,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             subtitle = .subset2(circle@titles, "subtitle"),
             caption = .subset2(circle@titles, "caption")
         )
-    if (is_empty(plot_list <- circle@plot_list)) {
+    if (is_empty(plot_list <- circle@box_list)) {
         return(ggplotGrob(base))
     }
 

@@ -194,7 +194,7 @@ CraftCross <- ggproto(
         layout@domain <- domain
 
         # udpate break_points
-        layout@break_points <- c(layout@break_points, length(layout@plot_list))
+        layout@break_points <- c(layout@break_points, length(layout@box_list))
         layout
     }
 )

@@ -11,7 +11,7 @@ S7::method(layout_update_domain, StackLayout) <-
     S7::method(layout_update_domain, CircleLayout) <-
     function(layout, ..., domain, objectname) {
         layout@domain <- domain
-        layout@plot_list <- lapply(layout@plot_list, function(plot) {
+        layout@box_list <- lapply(layout@box_list, function(plot) {
             if (is_craftbox(plot)) return(plot) # styler: off
             # StackLayout will contain `QuadLayout`
             layout_update_domain(plot,
@@ -68,7 +68,7 @@ S7::method(layout_update_domain, StackCross) <-
         # the break_points set breaks, updating won't span the break points
         break_points <- layout@break_points
 
-        plot_list <- layout@plot_list
+        plot_list <- layout@box_list
         n <- length(plot_list)
         points <- c(cross_points, n)
         point_index <- seq_along(points)
@@ -115,7 +115,7 @@ S7::method(layout_update_domain, StackCross) <-
                 subset <- (.subset(points, i - 1L) + 1L):cross_point
             }
 
-            layout@plot_list[subset] <- lapply(
+            layout@box_list[subset] <- lapply(
                 plot_list[subset], function(plot) {
                     if (is_craftbox(plot)) {
                         return(plot)

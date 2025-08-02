@@ -9,7 +9,7 @@
 }
 
 `rasterise.ggalign::ChainLayout` <- function(input, ...) {
-    input@plot_list <- lapply(input@plot_list, ggrastr::rasterise, ...)
+    input@box_list <- lapply(input@box_list, ggrastr::rasterise, ...)
     input
 }
 
@@ -34,7 +34,7 @@
 
 #' @export
 `raster_magick0.ggalign::ChainLayout` <- function(x, ...) {
-    x@plot_list <- lapply(x@plot_list, raster_magick0, ...)
+    x@box_list <- lapply(x@box_list, raster_magick0, ...)
     x
 }
 

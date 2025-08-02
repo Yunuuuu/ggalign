@@ -61,7 +61,7 @@ stack_cross.default <- function(direction, data = NULL, ...) {
         ))
     }
     # styler: on
-    plot_list <- stack@plot_list
+    plot_list <- stack@box_list
 
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")

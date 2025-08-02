@@ -189,7 +189,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
         ))
     }
     # cannot contain nested layout
-    if (!all(vapply(object@plot_list, is_craftbox, logical(1L),
+    if (!all(vapply(object@box_list, is_craftbox, logical(1L),
                     USE.NAMES = FALSE))) { # styler: off
         cli_abort(c(
             sprintf("Cannot add {.var {object_name}} to %s", object_name(quad)),

@@ -6,17 +6,17 @@ chain_layout_subtract <- function(object, layout, object_name) {
 #' @export
 chain_layout_subtract.default <- function(object, layout, object_name) {
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
-        layout@plot_list <- lapply(layout@plot_list, function(plot) {
-            if (is_craftbox(plot)) {
-                chain_plot_add(plot, object, object_name, force = FALSE)
+        !is_layout(box <- .subset2(layout@box_list, current))) {
+        layout@box_list <- lapply(layout@box_list, function(box) {
+            if (is_craftbox(box)) {
+                chain_plot_add(box, object, object_name, force = FALSE)
             } else {
-                plot
+                box
             }
         })
     } else {
-        layout@plot_list[[current]] <- quad_layout_subtract(
-            object, plot, object_name
+        layout@box_list[[current]] <- quad_layout_subtract(
+            object, box, object_name
         )
     }
     layout
@@ -26,11 +26,11 @@ chain_layout_subtract.default <- function(object, layout, object_name) {
 #' @export
 `chain_layout_subtract.ggalign::Scheme` <- function(object, layout, object_name) {
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
+        !is_layout(box <- .subset2(layout@box_list, current))) {
         layout <- update_layout_schemes(object, layout, object_name)
     } else {
-        layout@plot_list[[current]] <- quad_layout_subtract(
-            object, plot, object_name
+        layout@box_list[[current]] <- quad_layout_subtract(
+            object, box, object_name
         )
     }
     layout
@@ -47,7 +47,7 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
         ))
     }
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
+        !is_layout(box <- .subset2(layout@box_list, current))) {
         inner <- .subset2(object, "object")
         inner_name <- .subset2(object, "object_name")
 
@@ -60,9 +60,9 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
 
         # otherwise, we apply the object to all plots in the stack layout
         direction <- layout@direction
-        layout@plot_list <- lapply(layout@plot_list, function(plot) {
-            if (is_craftbox(plot)) {
-                plot <- chain_plot_add(plot, inner, inner_name, force = FALSE)
+        layout@box_list <- lapply(layout@box_list, function(box) {
+            if (is_craftbox(box)) {
+                box <- chain_plot_add(box, inner, inner_name, force = FALSE)
             } else if (is.waive(.subset2(object, "position"))) {
                 # default behaviour for object wrap with `with_quad()`
                 # we add the object along the stack layout
@@ -74,24 +74,24 @@ chain_layout_subtract.ggalign_with_quad <- function(object, layout,
                     c("top", "bottom")
                 )
                 for (position in positions) {
-                    if (!is.null(prop(plot, position))) {
-                        prop(plot, position) <- chain_layout_subtract(
-                            inner, prop(plot, position), inner_name
+                    if (!is.null(prop(box, position))) {
+                        prop(box, position) <- chain_layout_subtract(
+                            inner, prop(box, position), inner_name
                         )
                     }
                 }
                 if (is.null(main <- .subset2(object, "main")) || main) {
-                    plot <- quad_body_add(inner, plot, inner_name)
+                    box <- quad_body_add(inner, box, inner_name)
                 }
             } else {
                 # we respect the context setting
-                plot <- quad_layout_subtract(object, plot, object_name)
+                box <- quad_layout_subtract(object, box, object_name)
             }
-            plot
+            box
         })
     } else {
-        layout@plot_list[[current]] <- quad_layout_subtract(
-            object, plot, object_name
+        layout@box_list[[current]] <- quad_layout_subtract(
+            object, box, object_name
         )
     }
     layout
@@ -118,13 +118,13 @@ chain_layout_and_add.ggalign_with_quad <- function(object, layout, object_name) 
 
 #' @export
 chain_layout_and_add.default <- function(object, layout, object_name) {
-    layout@plot_list <- lapply(layout@plot_list, function(plot) {
-        if (is_craftbox(plot)) {
-            plot <- chain_plot_add(plot, object, object_name, force = FALSE)
+    layout@box_list <- lapply(layout@box_list, function(box) {
+        if (is_craftbox(box)) {
+            box <- chain_plot_add(box, object, object_name, force = FALSE)
         } else {
-            plot <- quad_layout_and_add(object, plot, object_name)
+            box <- quad_layout_and_add(object, box, object_name)
         }
-        plot
+        box
     })
     layout
 }

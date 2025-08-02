@@ -63,10 +63,10 @@ ChainLayout <- S7::new_class("ChainLayout",
             },
             default = NA_integer_
         ),
-        plot_list = S7::new_property(
+        box_list = S7::new_property(
             S7::class_list,
             setter = function(self, value) {
-                prop(self, "plot_list") <- value
+                prop(self, "box_list") <- value
                 self
             },
             default = list()
@@ -291,14 +291,14 @@ ggalign_stat <- function(x, ...) {
 #' @export
 #' @rdname ggalign_stat
 `ggalign_stat.ggalign::StackLayout` <- function(x, what, ...) {
-    plot_list <- x@plot_list
+    box_list <- x@box_list
     index <- vec_as_location2(
         what,
-        n = length(plot_list),
-        names = names(plot_list),
+        n = length(box_list),
+        names = names(box_list),
         missing = "error"
     )
-    ggalign_stat(x = .subset2(plot_list, index), ...)
+    ggalign_stat(x = .subset2(box_list, index), ...)
 }
 
 #' @export

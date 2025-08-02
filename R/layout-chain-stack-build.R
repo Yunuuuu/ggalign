@@ -14,7 +14,7 @@
 #' @noRd
 stack_build <- function(stack, schemes = NULL, theme = NULL,
                         extra_domain = NULL) {
-    if (is_empty(stack@plot_list)) {
+    if (is_empty(stack@box_list)) {
         return(NULL)
     }
     direction <- stack@direction
@@ -118,28 +118,28 @@ resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
 #' @export
 `resolve_stack_layout.ggalign::StackLayout` <- function(stack, schemes, theme,
                                                         extra_domain) {
-    plot_list <- stack@plot_list
+    box_list <- stack@box_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
 
     # we remove the plot without actual plot area
-    keep <- vapply(plot_list, function(plot) {
+    keep <- vapply(box_list, function(box) {
         # we remove objects without plot area
         # Now, only `CraftBox` will contain `NULL`
-        !is_craftbox(plot) || !is.null(plot@plot)
+        !is_craftbox(box) || !is.null(box@plot)
     }, logical(1L), USE.NAMES = FALSE)
-    plot_list <- .subset(plot_list, keep)
-    if (is_empty(plot_list)) return(NULL) # styler: off
+    box_list <- .subset(box_list, keep)
+    if (is_empty(box_list)) return(NULL) # styler: off
 
     # we reorder the plots based on the `order` slot
-    plot_order <- vapply(plot_list, function(plot) {
-        if (is_layout(plot)) {
-            prop(plot@plot_active, "order")
+    plot_order <- vapply(box_list, function(box) {
+        if (is_craftbox(box)) {
+            prop(box@active, "order")
         } else {
-            prop(plot@active, "order")
+            prop(box@plot_active, "order")
         }
     }, integer(1L), USE.NAMES = FALSE)
-    plot_list <- .subset(plot_list, make_order(plot_order))
+    box_list <- .subset(box_list, make_order(plot_order))
 
     # build the stack
     composer <- stack_composer(direction)
@@ -192,7 +192,7 @@ resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
 
     domain <- domain_init(stack@domain)
     stack_composer_add(
-        plot_list,
+        box_list,
         stack = stack,
         composer,
         schemes = schemes,

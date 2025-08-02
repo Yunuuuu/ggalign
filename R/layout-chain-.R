@@ -42,7 +42,7 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
     craftsman <- prop(object, "craftsman")
     # To-Do: Use S7 and double dispatch
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
+        !is_layout(box <- .subset2(layout@box_list, current))) {
         # unlock the object
         craftsman$unlock()
 
@@ -74,11 +74,11 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
         # use attributes to bypass the prop setter checking
         attr(object, "plot") <- craftsman$setup_plot(object@plot)
 
-        layout <- chain_add_plot(layout, object, object@active, object_name)
+        layout <- chain_add_box(layout, object, object@active, object_name)
     } else { # should be a QuadLayout object
-        plot <- quad_layout_add(object, plot, object_name)
-        layout@plot_list[[current]] <- plot
-        new_domain <- prop(plot, layout@direction)
+        box <- quad_layout_add(object, box, object_name)
+        layout@box_list[[current]] <- box
+        new_domain <- prop(box, layout@direction)
     }
     layout_update_domain(layout, domain = new_domain, objectname = object_name)
 }
@@ -121,24 +121,24 @@ chain_layout_add.default <- function(object, layout, object_name) {
             )
         ))
     }
-    plot <- .subset2(layout@plot_list, current)
-    if (is_craftbox(plot)) {
-        plot <- chain_plot_add(plot, object, object_name, TRUE)
+    box <- .subset2(layout@box_list, current)
+    if (is_craftbox(box)) {
+        box <- chain_plot_add(box, object, object_name, TRUE)
     } else {
-        plot <- quad_layout_add(object, plot, object_name)
+        box <- quad_layout_add(object, box, object_name)
     }
-    layout@plot_list[[current]] <- plot
+    layout@box_list[[current]] <- box
     layout
 }
 
 #' @export
 chain_layout_add.layout_theme <- function(object, layout, object_name) {
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
+        !is_layout(box <- .subset2(layout@box_list, current))) {
         attr(layout, "theme") <- layout_theme_update(layout@theme, object)
     } else {
-        layout@plot_list[[current]] <- quad_layout_add(
-            object, plot, object_name
+        layout@box_list[[current]] <- quad_layout_add(
+            object, box, object_name
         )
     }
     layout
@@ -153,29 +153,29 @@ chain_plot_add <- function(plot, object, object_name, force) {
 }
 
 #' @importFrom S7 prop
-chain_add_plot <- function(layout, plot, active, object_name) {
+chain_add_box <- function(layout, box, active, object_name) {
     # set up context index
-    plot_list <- layout@plot_list
+    box_list <- layout@box_list
     if (prop(active, "use")) {
-        current <- length(plot_list) + 1L
+        current <- length(box_list) + 1L
     } else {
         current <- layout@current
     }
 
     # check the name is unique
     if (!is.na(name <- prop(active, "name"))) {
-        if (any(names(plot_list) == name)) {
+        if (any(names(box_list) == name)) {
             cli_warn(
                 "Adding {.var {object_name}} will replace existing {.field {name}} plot"
             )
         }
-        plot_list[[name]] <- plot
+        box_list[[name]] <- box
     } else {
-        plot_list <- c(plot_list, list(plot))
+        box_list <- c(box_list, list(box))
     }
 
     # add QuadLayout
-    layout@plot_list <- plot_list
+    layout@box_list <- box_list
     layout@current <- current
     layout
 }
@@ -185,8 +185,8 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
         if (!is.na(what)) {
             what <- vec_as_location2(
                 what,
-                vec_size(layout@plot_list),
-                vec_names(layout@plot_list),
+                vec_size(layout@box_list),
+                vec_names(layout@box_list),
                 missing = "error",
                 arg = "what", call = call
             )
@@ -207,7 +207,7 @@ chain_layout_add.ggalign_with_quad <- function(object, layout, object_name) {
         ))
     }
     if (is.na(current <- layout@current) ||
-        is_craftbox(plot <- .subset2(layout@plot_list, current))) {
+        is_craftbox(plot <- .subset2(layout@box_list, current))) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s",
@@ -216,7 +216,7 @@ chain_layout_add.ggalign_with_quad <- function(object, layout, object_name) {
             i = "Did you forget to add a {.fn quad_layout}?"
         ))
     } else {
-        layout@plot_list[[current]] <- quad_layout_add(
+        layout@box_list[[current]] <- quad_layout_add(
             object, plot, object_name
         )
     }
@@ -494,7 +494,7 @@ chain_layout_add.stack_switch <- function(object, layout, object_name) {
             )
         ))
     }
-    stack <- chain_add_plot(layout, object, object@plot_active, object_name)
+    stack <- chain_add_box(layout, object, object@plot_active, object_name)
     layout_update_domain(
         stack,
         domain = layout_domain, objectname = object_name
