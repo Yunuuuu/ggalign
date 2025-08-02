@@ -32,8 +32,8 @@ align_group <- function(group, active = NULL) {
 AlignGroup <- ggproto("AlignGroup", CraftAlign,
     interact_layout = function(self, layout) {
         layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
-        if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
-            layout@design["nobs"] <- list(vec_size(self$group))
+        if (is.na(layout_nobs <- prop(layout@domain, "nobs"))) {
+            prop(layout@domain, "nobs") <- list(vec_size(self$group))
         } else {
             assert_mismatch_nobs(
                 self, layout_nobs, vec_size(self$group),

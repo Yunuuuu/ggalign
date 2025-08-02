@@ -103,9 +103,9 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
         }
         layout
     },
-    setup_design = function(self, design) {
-        old_panel <- .subset2(design, "panel")
-        old_index <- .subset2(design, "index")
+    setup_domain = function(self, domain) {
+        old_panel <- prop(domain, "panel")
+        old_index <- prop(domain, "index")
         # prepare the data -------------------------------
         # compute statistics ---------------------------------
         self$statistics <- self$compute(panel = old_panel, index = old_index)
@@ -115,7 +115,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
 
         # check panel
         layout_name <- self$layout_name
-        nobs <- .subset2(design, "nobs")
+        nobs <- prop(domain, "nobs")
         new_panel <- .subset2(panel_and_index, 1L)
         if (!is.null(new_panel)) {
             if (!is.atomic(new_panel)) {
@@ -131,7 +131,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
                     "layout panels defined by %s contain `NA`",
                     object_name(self)
                 ))
-            } else if (is.null(nobs)) {
+            } else if (is.na(nobs)) {
                 # we have defined panel, but don't define the `nobs`
                 cli_abort(sprintf(
                     "%s defined the panels but not define {.field nobs}", object_name(self)
@@ -175,7 +175,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
                     "layout ordering index defined by %s contain `NA`",
                     object_name(self)
                 ))
-            } else if (is.null(nobs)) {
+            } else if (is.na(nobs)) {
                 # we have defined panel, but don't define the `nobs`
                 cli_abort(sprintf(
                     "%s defined the ordering index but not define nobs", object_name(self)
@@ -211,7 +211,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
                 object_name(self), layout_name
             ))
         }
-        discrete_design(panel, index, nobs)
+        DiscreteDomain(panel, index, nobs)
     },
 
     # Following fields should be defined for the new `CraftAlign` object.
@@ -226,7 +226,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
     #  - the second one should be the heatmap row/column order index, and will
     #    determine the order in each grouped panel.
     #
-    # See `$setup_design()` method for details
+    # See `$setup_domain()` method for details
     # There will have following situations (the input is old index and old
     # panel):
     #
@@ -251,7 +251,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
     #
     # 3. old index is not `NULL`, no matter whether old panel is `NULL` or not,
     #    in this way, we should always ensure the new index won't change the old
-    #    index, this will be checked in `$setup_design()` method.
+    #    index, this will be checked in `$setup_domain()` method.
     align = function(self, panel, index) list(panel, index),
 
     # let Craftsman to add schemes and theme acoordingly

@@ -152,12 +152,12 @@ stack_discrete.default <- function(direction, data = NULL, ...,
             cli_abort("empty data is no allowed")
         }
     } else {
-        nobs <- NULL
+        nobs <- NA_integer_
     }
     new_stack_layout(
         name = "stack_discrete",
         data = data, direction = direction,
-        design = discrete_design(nobs = nobs),
+        domain = DiscreteDomain(nobs = nobs),
         schemes = schemes, theme = theme, sizes = sizes
     )
 }
@@ -219,7 +219,7 @@ stack_continuous.default <- function(direction, data = NULL, ...,
     schemes <- default_schemes()
     new_stack_layout(
         name = "stack_continuous",
-        data = data, direction = direction, design = limits,
+        data = data, direction = direction, domain = limits,
         schemes = schemes, theme = theme, sizes = sizes
     )
 }
@@ -237,13 +237,13 @@ stack_continuous.function <- function(direction, data = NULL, ...) {
 stack_continuous.formula <- stack_continuous.function
 
 #' @importFrom methods new
-new_stack_layout <- function(data, direction, design,
+new_stack_layout <- function(data, direction, domain,
                              schemes = NULL, theme = NULL, sizes = NA,
                              name = NULL, call = caller_call()) {
     sizes <- check_stack_sizes(sizes, call = call)
     if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (is.null(name)) {
-        if (is_continuous_design(design)) {
+        if (is_continuous_domain(domain)) {
             name <- "stack_continuous"
         } else {
             name <- "stack_discrete"
@@ -254,7 +254,7 @@ new_stack_layout <- function(data, direction, design,
         name = name, data = data,
         direction = direction,
         theme = theme, schemes = schemes, # used by the layout
-        sizes = sizes, design = design
+        sizes = sizes, domain = domain
     )
 }
 
@@ -264,7 +264,7 @@ new_stack_layout <- function(data, direction, design,
 #' @importFrom ggplot2 waiver
 #' @keywords internal
 #' @include layout-chain-.R
-methods::setClass(
+StackLayout <- methods::setClass(
     "StackLayout",
     contains = "ChainLayout",
     list(

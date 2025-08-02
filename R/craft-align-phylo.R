@@ -82,7 +82,7 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
             ))
         }
         assert_mismatch_nobs(
-            self, .subset2(layout@design, "nobs"), vec_size(tip_labels),
+            self, prop(layout@domain, "nobs"), vec_size(tip_labels),
             arg = "phylo"
         )
 
@@ -128,9 +128,9 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
             ggplot2::labs(y = "timing")
         )
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
-        if (!is.null(panel <- .subset2(design, "panel")) &&
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
+        if (!is.null(panel <- prop(domain, "panel")) &&
             nlevels(panel) > 1L) {
             layout_name <- self$layout_name
             object_name <- object_name(self)

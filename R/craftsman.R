@@ -32,14 +32,14 @@ Craftsman <- ggproto("Craftsman",
     # Typically used to define number of observations using layout data
     interact_layout = function(self, layout) layout,
 
-    # we define the `panel` and `index` method in `setup_design` method
-    setup_design = function(self, design) design,
+    # we define the `panel` and `index` method in `setup_domain` method
+    setup_domain = function(self, domain) domain,
     setup_plot = function(self, plot) plot,
 
     ##############################################################
     # Don't change the facet and coord in following methods
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
         plot
     },
     finish_plot = function(self, plot, schemes, theme) {

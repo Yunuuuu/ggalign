@@ -112,9 +112,9 @@ MarkGg <- ggproto("MarkGg", Craftsman,
         self$labels0 <- self$labels # CrossMark uses `labels0`
         ans
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
-        if (is.null(.subset2(design, "nobs"))) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
+        if (is.na(prop(domain, "nobs"))) {
             cli_abort(sprintf(
                 "you must initialize %s before drawing %s",
                 self$layout_name, object_name(self)
@@ -138,8 +138,8 @@ MarkGg <- ggproto("MarkGg", Craftsman,
             }
         }
         full_data <- split(
-            seq_len(.subset2(design, "nobs")),
-            .subset2(design, "panel")
+            seq_len(prop(domain, "nobs")),
+            prop(domain, "panel")
         )
         if (isTRUE(group1) && isTRUE(group2)) {
             extra_links <- mapply(function(l1, l2) {
@@ -166,9 +166,9 @@ MarkGg <- ggproto("MarkGg", Craftsman,
         # setup the plot
         plot <- ggproto_parent(CrossMark, self)$build_plot(
             plot,
-            design,
-            extra_design,
-            previous_design %||% design
+            domain,
+            extra_domain,
+            previous_domain %||% domain
         )
         plot_data <- plot$data
 

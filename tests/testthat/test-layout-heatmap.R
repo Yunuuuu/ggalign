@@ -9,8 +9,8 @@ testthat::test_that("`ggheatmap` works well", {
 
     # heatmap with no data
     p <- ggheatmap()
-    expect_identical(p@horizontal, discrete_design())
-    expect_identical(p@vertical, discrete_design())
+    expect_identical(p@horizontal, DiscreteDomain())
+    expect_identical(p@vertical, DiscreteDomain())
 
     # heatmap with data
     expect_doppelganger("heatmap-numeric", ggheatmap(1:10))

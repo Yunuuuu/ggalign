@@ -141,44 +141,44 @@ local(S7::method(`+`, list(S7::class_any, CraftBox)) <- function(e1, e2) {
 #' @importFrom S7 S7_dispatch
 craftbox_add <- S7::new_generic(
     "craftbox_add", "object",
-    function(object, box, object_name) S7_dispatch()
+    function(object, box, objectname) S7_dispatch()
 )
 
 #' @importFrom ggplot2 ggplot_add
-S7::method(craftbox_add, S7::class_any) <- function(object, box, object_name) {
+S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
     if (is.null(object)) return(box) # styler: off
     if (is.null(prop(box, "plot"))) {
         cli_abort(c(
             sprintf(
-                "Cannot add {.var {object_name}} to %s",
+                "Cannot add {.var {objectname}} to %s",
                 object_name(box)
             ),
             i = sprintf("no plot found for %s", object_name(box))
         ))
     }
     attr(box, "plot") <- ggplot_add(
-        object, ggfun("plot_clone")(prop(box, "plot")), object_name
+        object, ggfun("plot_clone")(prop(box, "plot")), objectname
     )
     box
 }
 
-# use attributes to bypass the prop setter checking
-S7::method(craftbox_add, Schemes) <- function(object, box, object_name) {
+# Bypass S7 setter validation: update internal property via attr() directly
+S7::method(craftbox_add, Schemes) <- function(object, box, objectname) {
     attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
     box
 }
 
-S7::method(craftbox_add, Scheme) <- function(object, box, object_name) {
+S7::method(craftbox_add, Scheme) <- function(object, box, objectname) {
     attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
     box
 }
 
-S7::method(craftbox_add, active) <- function(object, box, object_name) {
+S7::method(craftbox_add, active) <- function(object, box, objectname) {
     attr(box, "active") <- active_update(prop(box, "active"), object)
     box
 }
 
-S7::method(craftbox_add, S3_unit) <- function(object, box, object_name) {
+S7::method(craftbox_add, S3_unit) <- function(object, box, objectname) {
     prop(box, "size", check = FALSE) <- object
     box
 }

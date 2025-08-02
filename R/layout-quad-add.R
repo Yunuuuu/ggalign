@@ -87,13 +87,13 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
     if (is.null(stack) && !isFALSE(initialize)) {
         # try to initialize the annotation stack with the layout data
         direction <- to_direction(position)
-        layout_design <- slot(quad, direction)
+        layout_domain <- slot(quad, direction)
         # for the annotation stack, we try to take the data from the
         # quad layout
         quad_data <- quad@data
         data <- waiver() # use waiver() to indicate data is not initialized
         quad_matrix <- FALSE # the default value for `quad_matrix` in the stack
-        if (is_continuous_design(layout_design)) { # the stack need a data frame
+        if (is_continuous_domain(layout_domain)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
                     cli_warn(paste(
@@ -134,7 +134,7 @@ quad_layout_add.quad_anno <- function(object, quad, object_name) {
                 data = data,
                 direction = direction,
                 # the layout parameters should be the same with `quad_layout()`
-                design = layout_design,
+                domain = layout_domain,
                 # we'll inherit the action data function when
                 schemes = default_schemes(if (is.null(data)) NULL else waiver())
             )
@@ -211,20 +211,20 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
             i = "{.arg sizes} must be of length one to use the stack as an annotation"
         ))
     }
-    quad_design <- slot(quad, direction)
+    quad_domain <- slot(quad, direction)
     if (is_cross_layout(object) &&
         any(position == c("bottom", "right")) &&
         !is_empty(object@cross_points)) {
         # if there are cross points in bottom or right annotation,
-        # use the first design
-        stack_design <- .subset2(object@odesign, 1L)
+        # use the first domain
+        stack_domain <- .subset2(object@odomain, 1L)
     } else {
-        stack_design <- object@design
+        stack_domain <- object@domain
     }
     # check if we can align in this direction
     # `stack_layout()` is free from aligning obervations in this axis
-    if (is_continuous_design(stack_design)) {
-        if (!is_continuous_design(quad_design)) {
+    if (is_continuous_domain(stack_domain)) {
+        if (!is_continuous_domain(quad_domain)) {
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {object_name}} to %s",
@@ -236,10 +236,10 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
                 )
             ))
         }
-        layout_design <- stack_design
-    } else if (is_discrete_design(quad_design)) {
-        layout_design <- melt_discrete_design(
-            quad_design, stack_design,
+        layout_domain <- stack_domain
+    } else if (is_discrete_domain(quad_domain)) {
+        layout_domain <- discrete_domain_update(
+            quad_domain, stack_domain,
             old_name = object_name(quad),
             new_name = object_name
         )
@@ -254,10 +254,10 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     }
     object@heatmap$position <- position
     slot(quad, position) <- object
-    update_design(quad,
+    layout_update_domain(quad,
         direction = direction,
-        design = layout_design,
-        object_name = object_name
+        domain = layout_domain,
+        objectname = object_name
     )
 }
 
@@ -284,20 +284,20 @@ quad_layout_add.StackLayout <- function(object, quad, object_name) {
     slot(quad, position) <- stack
 
     # if there are cross points in bottom or right annotation, we use
-    # the first design
+    # the first domain
     if (is_cross_layout(stack) &&
         any(position == c("bottom", "right")) &&
         !is_empty(stack@cross_points)) {
-        new_design <- .subset2(stack@odesign, 1L)
+        new_domain <- .subset2(stack@odomain, 1L)
     } else {
-        new_design <- stack@design
+        new_domain <- stack@domain
     }
 
-    update_design(
+    layout_update_domain(
         quad,
         direction = to_direction(position),
-        design = new_design,
-        object_name = object_name
+        domain = new_domain,
+        objectname = object_name
     )
 }
 

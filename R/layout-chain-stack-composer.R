@@ -56,7 +56,7 @@ stack_composer_add <- function(plot, stack, composer, ...) {
 #' @importFrom S7 convert
 #' @export
 `stack_composer_add.ggalign::CraftBox` <- function(plot, stack, composer,
-                                                   design, ...,
+                                                   domain, ...,
                                                    schemes, theme,
                                                    released_spaces,
                                                    direction, position) {
@@ -78,8 +78,8 @@ stack_composer_add <- function(plot, stack, composer, ...) {
     # let `Align` to determine how to build the plot
     craftsman <- prop(plot, "craftsman") # `Craftsman` object
     plot <- plot@plot
-    if (!craftsman$free_facet && is_discrete_design(design)) {
-        if (nlevels(.subset2(design, "panel")) > 1L) {
+    if (!craftsman$free_facet && is_discrete_domain(domain)) {
+        if (nlevels(prop(domain, "panel")) > 1L) {
             if (is_horizontal(direction)) {
                 facet <- ggplot2::facet_grid(
                     rows = ggplot2::vars(.data$.panel),
@@ -112,19 +112,17 @@ stack_composer_add <- function(plot, stack, composer, ...) {
     if (!craftsman$free_limits) {
         if (is_horizontal(direction)) {
             plot <- plot + ggalign_design(
-                y = design,
-                ylabels = .subset(craftsman$labels, .subset2(design, "index"))
+                y = domain, ylabels = craftsman$labels
             )
         } else {
             plot <- plot + ggalign_design(
-                x = design,
-                xlabels = .subset(craftsman$labels, .subset2(design, "index"))
+                x = domain, xlabels = craftsman$labels
             )
         }
     }
 
     # let `Craftsman` add other components
-    plot <- craftsman$build_plot(plot, design = design, ...)
+    plot <- craftsman$build_plot(plot, domain = domain, ...)
     plot <- craftsman$finish_plot(plot, plot_schemes, theme)
 
     # Let layout finally modify the plot

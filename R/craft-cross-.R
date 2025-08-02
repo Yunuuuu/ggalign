@@ -34,7 +34,7 @@ CraftCross <- ggproto(
     interact_layout = function(self, layout) {
         #  1. check layout is `*_cross()`
         #  2. add `cross_points`
-        #  3. add `odesign`
+        #  3. add `odomain`
         #  4. define `labels`, we'll rename the `labels` to `labels0`
         layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
@@ -44,7 +44,7 @@ CraftCross <- ggproto(
         # check the previous (between two `break_points`) define has been
         # initialized
         if (length(layout@break_points) &&
-            is.null(.subset2(layout@design, "nobs"))) {
+            is.na(prop(layout@domain, "nobs"))) {
             cli_abort(sprintf(
                 "layout {.field nobs} for %s must be initialized before adding %s",
                 self$layout_name, object_name(self)
@@ -53,18 +53,18 @@ CraftCross <- ggproto(
 
         # setup data
         layout_data <- layout@data
-        design <- layout@design
+        domain <- layout@domain
 
         if (is.waive(input_data <- self$data)) { # inherit from the layout
             data <- layout_data
-            # `data` is NULL, `inherit_nobs` can be `TRUE` or `FALSE`, we by
+            # `data` is `NULL`, `inherit_nobs` can be `TRUE` or `FALSE`, we by
             # default regard `inherit_nobs` as `TRUE`
             if (is.null(data) && isFALSE(self$inherit_nobs)) {
-                design["nobs"] <- list(NULL)
+                prop(domain) <- NA_integer_
             }
 
             # `data` is not `NULL`, the `nobs` will always be the same with
-            # previous design, nothing to do
+            # previous domain, nothing to do
         } else {
             if (is.function(input_data)) {
                 if (is.null(layout_data)) {
@@ -90,8 +90,8 @@ CraftCross <- ggproto(
             if (isTRUE(self$inherit_nobs)) { # we require inherit nobs
                 # we check if the data match original data dimention
                 if (!is.null(data) &&
-                    !is.null(.subset2(design, "nobs")) &&
-                    NROW(data) != .subset2(design, "nobs")) {
+                    !is.na(prop(domain, "nobs")) &&
+                    NROW(data) != prop(domain, "nobs")) {
                     cli_abort(c(
                         sprintf(
                             "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
@@ -102,14 +102,14 @@ CraftCross <- ggproto(
                 }
             } else { # for `FALSE` and `NULL`
                 if (is.null(data)) {
-                    design["nobs"] <- list(NULL)
+                    prop(domain, "nobs") <- NA_integer_
                 } else {
                     if (NROW(data) == 0L) {
                         cli_abort("{.arg data} cannot be empty",
                             call = self$call
                         )
                     }
-                    design["nobs"] <- list(NROW(data))
+                    prop(domain, "nobs") <- NROW(data)
                 }
             }
         }
@@ -138,13 +138,13 @@ CraftCross <- ggproto(
                     i = "Some labels in the current data are not found in the previous layout data"
                 ))
             }
-            if (!is.null(panel <- .subset2(design, "panel"))) {
-                design["panel"] <- list(
-                    droplevels(panel[match(self$labels, self$labels0)])
+            if (!is.null(panel <- prop(domain, "panel"))) {
+                prop(domain, "panel") <- droplevels(
+                    panel[match(self$labels, self$labels0)]
                 )
             }
         } else {
-            design["panel"] <- list(NULL)
+            prop(domain, "panel") <- NULL
         }
 
         # determine if we should inherit panel
@@ -171,27 +171,27 @@ CraftCross <- ggproto(
                 ))
             }
 
-            if (!is.null(index <- .subset2(design, "index"))) {
+            if (!is.null(index <- prop(domain, "index"))) {
                 new_index <- order(match(
                     self$labels,
                     vec_slice(self$labels0, index)
                 ))
 
                 # we always make the index following the panel
-                if (!is.null(panel <- .subset2(design, "panel"))) {
+                if (!is.null(panel <- prop(domain, "panel"))) {
                     new_index <- reorder_index(panel, new_index)
                 }
-                design["index"] <- list(new_index)
+                prop(domain, "index") <- new_index
             }
         } else {
-            design["index"] <- list(NULL)
+            prop(domain, "index") <- NULL
         }
 
         # reset layout data
         layout@data <- data # don't restore the attribute
 
-        # update the design
-        layout@design <- design
+        # update the domain
+        layout@domain <- domain
 
         # udpate break_points
         layout@break_points <- c(layout@break_points, length(layout@plot_list))

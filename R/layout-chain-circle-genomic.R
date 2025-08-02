@@ -85,7 +85,7 @@ circle_genomic.data.frame <- function(data, ..., radial = NULL,
     ranges$seqnames <- factor(ranges$seqnames, levels = lvls)
     new_circle_layout(
         data = ggalign_data_set(data, seqnames = lvls, ranges = ranges),
-        design = limits,
+        domain = limits,
         radial = radial, direction = direction,
         sector_spacing = sector_spacing,
         schemes = default_schemes(data), theme = theme,

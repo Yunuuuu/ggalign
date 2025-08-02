@@ -109,11 +109,11 @@ circle_discrete.default <- function(data = NULL, ..., radial = NULL,
         # if we have provided data, we initialize the `nobs`
         nobs <- vec_size(data)
     } else {
-        nobs <- NULL
+        nobs <- NA_integer_
     }
     new_circle_layout(
         data = data,
-        design = discrete_design(nobs = nobs),
+        domain = DiscreteDomain(nobs = nobs),
         radial = radial, direction = direction, sector_spacing = sector_spacing,
         schemes = schemes, theme = theme, spacing_theta = spacing_theta
     )
@@ -161,7 +161,7 @@ circle_continuous.default <- function(data = NULL, ..., radial = NULL,
     data <- fortify_data_frame(data = data, ...)
     schemes <- default_schemes()
     new_circle_layout(
-        data = data, design = limits,
+        data = data, domain = limits,
         radial = radial, direction = direction, sector_spacing = sector_spacing,
         schemes = schemes, theme = theme, spacing_theta = spacing_theta
     )
@@ -180,7 +180,7 @@ circle_continuous.function <- function(data = NULL, ...) {
 circle_continuous.formula <- circle_continuous.function
 
 #' @importFrom methods new
-new_circle_layout <- function(data, design, radial, direction,
+new_circle_layout <- function(data, domain, radial, direction,
                               sector_spacing = NULL, schemes = NULL,
                               theme = NULL, name = NULL,
                               spacing_theta = deprecated(),
@@ -199,7 +199,7 @@ new_circle_layout <- function(data, design, radial, direction,
     }
     direction <- arg_match0(direction, c("inward", "outward"))
     if (is.null(name)) {
-        if (is_continuous_design(design)) {
+        if (is_continuous_domain(domain)) {
             name <- "circle_continuous"
         } else {
             name <- "circle_discrete"
@@ -217,7 +217,7 @@ new_circle_layout <- function(data, design, radial, direction,
         "CircleLayout",
         name = name, data = data,
         schemes = schemes, # used by the layout
-        design = design,
+        domain = domain,
         sector_spacing = sector_spacing,
         theme = theme,
         radial = radial, direction = direction
@@ -230,7 +230,7 @@ new_circle_layout <- function(data, design, radial, direction,
 #' @importFrom ggplot2 waiver
 #' @keywords internal
 #' @include layout-chain-.R
-methods::setClass("CircleLayout",
+CircleLayout <- methods::setClass("CircleLayout",
     contains = "ChainLayout",
     list(radial = "ANY", sector_spacing = "ANY", direction = "character")
 )

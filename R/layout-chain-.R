@@ -8,7 +8,7 @@ methods::setClass(
         data = "ANY",
         name = "character", # used to provide message
         plot_list = "list", # save the list of plots
-        design = "ANY" # used to align axis
+        domain = "ANY" # used to align axis
     )
 )
 
@@ -26,16 +26,6 @@ chain_decorate <- function(layout, plot) UseMethod("chain_decorate")
 
 #' @export
 chain_decorate.ChainLayout <- function(layout, plot) plot
-
-#' @export
-is_layout_discrete.ChainLayout <- function(x, ...) {
-    is_discrete_design(x@design)
-}
-
-#' @export
-is_layout_continuous.ChainLayout <- function(x, ...) {
-    is_continuous_design(x@design)
-}
 
 #############################################################
 # To-DO: Use double dispatch
@@ -92,7 +82,7 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
         # this step, the object will act with the stack layout
         # group rows into panel or reorder rows, we can also
         # initialize object data
-        new_design <- craftsman$setup_design(layout@design)
+        new_domain <- craftsman$setup_domain(layout@domain)
 
         # initialize the plot object
         # use attributes to bypass the prop setter checking
@@ -102,14 +92,14 @@ chain_layout_add.NULL <- function(object, layout, object_name) {
     } else { # should be a QuadLayout object
         plot <- quad_layout_add(object, plot, object_name)
         layout@plot_list[[active_index]] <- plot
-        new_design <- slot(plot, layout@direction)
+        new_domain <- slot(plot, layout@direction)
     }
-    update_design(layout, design = new_design, object_name = object_name)
+    layout_update_domain(layout, domain = new_domain, objectname = object_name)
 }
 
 #' @export
 chain_layout_add.continuous_limits <- function(object, layout, object_name) {
-    if (is_discrete_design(layout@design)) {
+    if (is_discrete_domain(layout@domain)) {
         cli_abort(c(
             sprintf(
                 "Cannot add {.var {object_name}} to %s",
@@ -121,7 +111,7 @@ chain_layout_add.continuous_limits <- function(object, layout, object_name) {
             )
         ))
     }
-    update_design(layout, design = object, object_name = object_name)
+    layout_update_domain(layout, domain = object, objectname = object_name)
 }
 
 #' @export
@@ -342,10 +332,10 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
 
     # check quad layout is compatible with stack layout
     quad_data <- object@data
-    stack_design <- layout@design
-    quad_design <- slot(object, direction)
-    if (is_continuous_design(quad_design)) {
-        if (is_discrete_design(stack_design)) {
+    stack_domain <- layout@domain
+    quad_domain <- slot(object, direction)
+    if (is_continuous_domain(quad_domain)) {
+        if (is_discrete_domain(stack_domain)) {
             cli_abort(c(
                 sprintf(
                     "Cannot add %s to %s",
@@ -359,10 +349,10 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         }
         # `quad_layout()` will align continuous variables,
         # `data` can be `NULL`
-        extra_design <- slot(object, vec_set_difference(
+        extra_domain <- slot(object, vec_set_difference(
             c("vertical", "horizontal"), direction
         ))
-        allow_null <- is_continuous_design(extra_design)
+        allow_null <- is_continuous_domain(extra_domain)
         if (is.waive(quad_data) || is.function(quad_data)) {
             # check if we should initialize the `quad_layout()` data
             if (is.null(stack_data <- layout@data)) {
@@ -425,23 +415,23 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
                         }
                     }
                 }
-                # we initialize the `nobs` of the extra_design for the
+                # we initialize the `nobs` of the extra_domain for the
                 # `quad_layout()`
                 if (is_horizontal(direction)) {
-                    if (is_discrete_design(slot(object, "vertical"))) {
-                        slot(object, "vertical")$nobs <- ncol(data)
+                    if (is_discrete_domain(slot(object, "vertical"))) {
+                        prop(slot(object, "vertical"), "nobs") <- ncol(data)
                     }
                 } else {
-                    if (is_discrete_design(slot(object, "horizontal"))) {
-                        slot(object, "horizontal")$nobs <- nrow(data)
+                    if (is_discrete_domain(slot(object, "horizontal"))) {
+                        prop(slot(object, "horizontal"), "nobs") <- nrow(data)
                     }
                 }
             }
             # restore the ggalign attribute
             object@data <- ggalign_data_restore(data, stack_data)
         }
-        layout_design <- quad_design
-    } else if (is_discrete_design(stack_design)) {
+        layout_domain <- quad_domain
+    } else if (is_discrete_domain(stack_domain)) {
         # both `quad_layout()` and `stack_layout()` will align discrete
         # variables
         if (is.waive(quad_data) || is.function(quad_data)) {
@@ -489,21 +479,21 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
             }
             # set the `nobs` for `quad_layout()`
             if (is_horizontal(direction)) {
-                quad_design$nobs <- nrow(data)
-                if (is_discrete_design(slot(object, "vertical"))) {
-                    slot(object, "vertical")$nobs <- ncol(data)
+                prop(quad_domain, "nobs") <- nrow(data)
+                if (is_discrete_domain(slot(object, "vertical"))) {
+                    prop(slot(object, "vertical"), "nobs") <- ncol(data)
                 }
             } else {
-                quad_design$nobs <- ncol(data)
-                if (is_discrete_design(slot(object, "horizontal"))) {
-                    slot(object, "horizontal")$nobs <- nrow(data)
+                prop(quad_domain, "nobs") <- ncol(data)
+                if (is_discrete_domain(slot(object, "horizontal"))) {
+                    prop(slot(object, "horizontal"), "nobs") <- nrow(data)
                 }
             }
             # restore the ggalign attribute
             object@data <- ggalign_data_restore(data, stack_data)
         }
-        layout_design <- melt_discrete_design(
-            stack_design, quad_design,
+        layout_domain <- discrete_domain_update(
+            stack_domain, quad_domain,
             old_name = object_name(layout),
             new_name = object_name
         )
@@ -520,10 +510,9 @@ chain_layout_add.QuadLayout <- function(object, layout, object_name) {
         ))
     }
     stack <- chain_add_plot(layout, object, object@plot_active, object_name)
-    update_design(
+    layout_update_domain(
         stack,
-        design = layout_design,
-        object_name = object_name
+        domain = layout_domain, objectname = object_name
     )
 }
 

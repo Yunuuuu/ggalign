@@ -94,13 +94,13 @@ FreeGg <- ggproto("FreeGg", Craftsman,
             data <- layout_data
             self$labels <- vec_names(layout_data)
 
-            # for data inherit from the layout, and the design is for discrete
-            # variable, we'll integrate the design into the plot data
-            self$use_design <- is_stack_layout(layout)
+            # for data inherit from the layout, and the domain is for discrete
+            # variable, we'll integrate the domain into the plot data
+            self$use_domain <- is_stack_layout(layout)
 
             # if the layout data is from the quad-layout, we use the discrete
-            # `design`
-            self$use_extra_design <- is_stack_layout(layout) &&
+            # `domain`
+            self$use_extra_domain <- is_stack_layout(layout) &&
                 isTRUE(layout@heatmap$quad_matrix)
         } else if (is.function(input_data)) {
             if (is.null(layout_data)) {
@@ -121,33 +121,33 @@ FreeGg <- ggproto("FreeGg", Craftsman,
         )
         layout
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
         if (is.function(data <- self$data)) {
             data <- NULL
         }
         if (is.null(data)) {
             return(gguse_data(plot, data))
         }
-        if (isTRUE(self$use_extra_design) &&
-            is_discrete_design(extra_design) &&
-            !is.null(.subset2(extra_design, "nobs"))) {
+        if (isTRUE(self$use_extra_domain) &&
+            is_discrete_domain(extra_domain) &&
+            !is.na(prop(extra_domain, "nobs"))) {
             extra_plot_data <- data_frame0(
-                .extra_panel = .subset2(extra_design, "panel"),
-                .extra_index = .subset2(extra_design, "index")
+                .extra_panel = prop(extra_domain, "panel"),
+                .extra_index = prop(extra_domain, "index")
             )
         } else {
             extra_plot_data <- NULL
         }
 
         # if inherit from the parent layout
-        if (isTRUE(self$use_design) &&
-            is_discrete_design(design) &&
-            !is.null(.subset2(design, "nobs"))) {
+        if (isTRUE(self$use_domain) &&
+            is_discrete_domain(domain) &&
+            !is.na(prop(domain, "nobs"))) {
             plot_data <- data_frame0(
-                .panel = .subset2(design, "panel"),
-                .index = .subset2(design, "index"),
-                .names = .subset(self$labels, .subset2(design, "index"))
+                .panel = prop(domain, "panel"),
+                .index = prop(domain, "index"),
+                .names = .subset(self$labels, prop(domain, "index"))
             )
             if (!is.null(extra_plot_data)) {
                 plot_data <- cross_join(plot_data, extra_plot_data)

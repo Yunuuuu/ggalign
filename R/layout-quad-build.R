@@ -56,8 +56,8 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
 quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
                                   direction = NULL) {
     data <- quad@data
-    row_design <- setup_design(quad@horizontal)
-    column_design <- setup_design(quad@vertical)
+    row_domain <- domain_init(quad@horizontal)
+    column_domain <- domain_init(quad@vertical)
     if (is.function(data)) {
         cli_abort(c(
             "{.arg data} cannot be a {.cls function}",
@@ -67,15 +67,15 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
             )
         ))
     }
-    if (is_discrete_design(row_design) &&
-        is.null(.subset2(row_design, "nobs"))) {
+    if (is_discrete_domain(row_domain) &&
+        is.na(prop(row_domain, "nobs"))) {
         cli_abort(sprintf(
             "you must initialize %s before drawing the main plot",
             object_name(quad),
         ))
     }
-    if (is_discrete_design(column_design) &&
-        is.null(.subset2(column_design, "nobs"))) {
+    if (is_discrete_domain(column_domain) &&
+        is.na(prop(column_domain, "nobs"))) {
         cli_abort(sprintf(
             "you must initialize %s before drawing the main plot",
             object_name(quad),
@@ -128,17 +128,17 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
         pschemes <- schemes
         # inherit from horizontal align or vertical align
         if (is_horizontal(to_direction(position))) {
-            extra_design <- column_design
+            extra_domain <- column_domain
             pschemes <- schemes_set(pschemes, horizontal_align, check = FALSE)
         } else {
-            extra_design <- row_design
+            extra_domain <- row_domain
             pschemes <- schemes_set(pschemes, vertical_align, check = FALSE)
         }
         plot <- stack_build(
             stack,
             schemes = pschemes,
             theme = theme,
-            extra_design = extra_design
+            extra_domain = extra_domain
         )
         if (is.null(plot)) {
             size <- NULL
@@ -156,10 +156,10 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
     p <- quad@plot
 
     # setup the facet -----------------------------------
-    do_row_facet <- is_discrete_design(row_design) &&
-        nlevels(.subset2(row_design, "panel")) > 1L
-    do_column_facet <- is_discrete_design(column_design) &&
-        nlevels(.subset2(column_design, "panel")) > 1L
+    do_row_facet <- is_discrete_domain(row_domain) &&
+        nlevels(prop(row_domain, "panel")) > 1L
+    do_column_facet <- is_discrete_domain(column_domain) &&
+        nlevels(prop(column_domain, "panel")) > 1L
 
     if (do_row_facet && do_column_facet) {
         default_facet <- ggplot2::facet_grid(
@@ -177,40 +177,33 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
             drop = FALSE, as.table = FALSE
         )
         free_row <- FALSE
-        free_column <- is_continuous_design(column_design)
+        free_column <- is_continuous_domain(column_domain)
     } else if (do_column_facet) {
         default_facet <- ggplot2::facet_grid(
             cols = ggplot2::vars(.data$.panel_x),
             scales = "free_x", space = "free",
             drop = FALSE, as.table = FALSE
         )
-        free_row <- is_continuous_design(row_design)
+        free_row <- is_continuous_domain(row_domain)
         free_column <- FALSE
     } else {
         default_facet <- facet_quad(object_name(quad))
-        free_row <- is_continuous_design(row_design)
-        free_column <- is_continuous_design(column_design)
+        free_row <- is_continuous_domain(row_domain)
+        free_column <- is_continuous_domain(column_domain)
     }
 
     # set the facets and coord ---------------------------
     # we don't align observations for `quad_free()`
     # add default data ----------------------------------
-    p <- gguse_data(p, quad_build_data(data, row_design, column_design))
+    p <- gguse_data(p, quad_build_data(data, row_domain, column_domain))
     p <- gguse_linear_coord(p, object_name(quad))
     p <- ggmelt_facet(p, default_facet,
         free_row = free_row, free_column = free_column
     )
     p <- p +
         ggalign_design(
-            x = column_design, y = row_design,
-            xlabels = .subset(
-                colnames(data),
-                .subset2(column_design, "index")
-            ),
-            ylabels = .subset(
-                vec_names(data),
-                .subset2(row_design, "index")
-            )
+            x = column_domain, y = row_domain,
+            xlabels = colnames(data), ylabels = vec_names(data)
         )
 
     # add action ----------------------------------------
@@ -234,35 +227,35 @@ quad_build.QuadLayout <- function(quad, schemes = NULL, theme = NULL,
 }
 
 #' @importFrom stats reorder
-quad_build_data <- function(data, row_design, column_design) {
+quad_build_data <- function(data, row_domain, column_domain) {
     if (is.null(data) ||
-        (is_continuous_design(row_design) &&
-            is_continuous_design(column_design))) {
+        (is_continuous_domain(row_domain) &&
+            is_continuous_domain(column_domain))) {
         return(data)
     }
-    if (is_discrete_design(row_design)) {
-        row_panel <- .subset2(row_design, "panel")
-        row_index <- .subset2(row_design, "index")
+    if (is_discrete_domain(row_domain)) {
+        row_panel <- prop(row_domain, "panel")
+        row_index <- prop(row_domain, "index")
         row_data <- data_frame0(
             .panel_y = row_panel,
             .index_y = row_index,
             .y = seq_along(row_index)
         )
     }
-    if (is_discrete_design(column_design)) {
-        column_panel <- .subset2(column_design, "panel")
-        column_index <- .subset2(column_design, "index")
+    if (is_discrete_domain(column_domain)) {
+        column_panel <- prop(column_domain, "panel")
+        column_index <- prop(column_domain, "index")
         column_data <- data_frame0(
             .panel_x = column_panel,
             .index_x = column_index,
             .x = seq_along(column_index)
         )
     }
-    if (is_discrete_design(row_design) && is_discrete_design(column_design)) {
+    if (is_discrete_domain(row_domain) && is_discrete_domain(column_domain)) {
         panel_data <- cross_join(row_data, column_data)
         by.x <- c(".column_index", ".row_index")
         by.y <- c(".index_x", ".index_y")
-    } else if (is_discrete_design(column_design)) {
+    } else if (is_discrete_domain(column_domain)) {
         panel_data <- column_data
         by.x <- ".column_index"
         by.y <- ".index_x"
@@ -274,7 +267,7 @@ quad_build_data <- function(data, row_design, column_design) {
     ans <- fortify_data_frame.matrix(data)
     ans <- full_join(ans, panel_data, by.x = by.x, by.y = by.y)
     if (!is.null(.subset2(ans, ".row_names")) &&
-        is_discrete_design(row_design)) {
+        is_discrete_domain(row_domain)) {
         ans$.discrete_y <- reorder(
             .subset2(ans, ".row_names"),
             .subset2(ans, ".y"),
@@ -282,7 +275,7 @@ quad_build_data <- function(data, row_design, column_design) {
         )
     }
     if (!is.null(.subset2(ans, ".column_names")) &&
-        is_discrete_design(column_design)) {
+        is_discrete_domain(column_domain)) {
         ans$.discrete_x <- reorder(
             .subset2(ans, ".column_names"),
             .subset2(ans, ".x"),

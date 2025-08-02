@@ -11,11 +11,11 @@ testthat::test_that("`stack_cross` add `align-` object works well", {
         ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
-        stack@design$index,
+        stack@domain@index,
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(
-        .subset2(.subset2(stack@odesign, 1L), "index"),
+        prop(.subset2(stack@odomain, 1L), "index"),
         order2(ggalign_stat(stack, 1L))
     )
 
@@ -26,11 +26,11 @@ testthat::test_that("`stack_cross` add `align-` object works well", {
         ggcross() +
         align_dendro(method = "ward.D2")
     expect_identical(
-        stack@design$index,
+        stack@domain@index,
         order2(ggalign_stat(stack, 3L))
     )
     expect_identical(
-        .subset2(.subset2(stack@odesign, 1L), "index"),
+        prop(.subset2(stack@odomain, 1L), "index"),
         order2(ggalign_stat(stack, 1L))
     )
 })

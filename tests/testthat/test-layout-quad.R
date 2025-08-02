@@ -250,8 +250,8 @@ testthat::test_that("add `stack_layout()` works well", {
         anno_right() +
         anno_left(initialize = FALSE) +
         (stack_alignh(small_mat) + align_dendro(k = 4))
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     expect_identical(quad@left@heatmap$position, "left")
     expect_identical(quad@right@heatmap$position, "right")
 
@@ -259,8 +259,8 @@ testthat::test_that("add `stack_layout()` works well", {
         anno_left() +
         anno_right(initialize = FALSE) +
         (stack_alignh(small_mat) + align_dendro(k = 4))
-    expect_identical(quad@horizontal, quad@right@design)
-    expect_identical(quad@horizontal, quad@left@design)
+    expect_identical(quad@horizontal, quad@right@domain)
+    expect_identical(quad@horizontal, quad@left@domain)
     expect_identical(quad@left@heatmap$position, "left")
     expect_identical(quad@right@heatmap$position, "right")
 
@@ -302,8 +302,8 @@ testthat::test_that("add `stack_layout()` works well", {
         anno_bottom() +
         anno_top(initialize = FALSE) +
         (stack_alignv(t(small_mat)) + align_dendro(k = 4))
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
     expect_identical(quad@bottom@heatmap$position, "bottom")
     expect_identical(quad@top@heatmap$position, "top")
 
@@ -311,8 +311,8 @@ testthat::test_that("add `stack_layout()` works well", {
         anno_top() +
         anno_bottom(initialize = FALSE) +
         (stack_alignv(t(small_mat)) + align_dendro(k = 4))
-    expect_identical(quad@vertical, quad@bottom@design)
-    expect_identical(quad@vertical, quad@top@design)
+    expect_identical(quad@vertical, quad@bottom@domain)
+    expect_identical(quad@vertical, quad@top@domain)
     expect_identical(quad@bottom@heatmap$position, "bottom")
     expect_identical(quad@top@heatmap$position, "top")
 })
@@ -375,27 +375,27 @@ testthat::test_that("add `stack_cross()` builds well", {
         anno_left(initialize = FALSE) +
         stack_crossh(small_mat) +
         align_dendro()
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     cross <- quad + # in the left annotation
         ggcross() +
         align_dendro(method = "ward.D2")
-    expect_identical(cross@horizontal, cross@left@design)
-    expect_identical(cross@horizontal, cross@right@design)
-    expect_identical(cross@left@odesign[[1L]]$index, quad@horizontal$index)
+    expect_identical(cross@horizontal, cross@left@domain)
+    expect_identical(cross@horizontal, cross@right@domain)
+    expect_identical(cross@left@odomain[[1L]]@index, quad@horizontal@index)
 
     quad <- quad_alignh(small_mat) +
         anno_right() +
         anno_left(initialize = FALSE) +
         stack_crossh(small_mat)
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     cross <- quad +
         ggcross() +
         align_dendro(k = 3L, method = "ward.D2")
-    expect_identical(cross@horizontal, cross@left@design)
-    expect_identical(cross@horizontal, cross@right@design)
-    expect_identical(cross@left@odesign[[1L]]$panel, cross@horizontal$panel)
+    expect_identical(cross@horizontal, cross@left@domain)
+    expect_identical(cross@horizontal, cross@right@domain)
+    expect_identical(cross@left@odomain[[1L]]@panel, cross@horizontal@panel)
 
     ## for right annotation, we only update panel and nobs
     quad <- quad_alignh(small_mat) +
@@ -403,21 +403,21 @@ testthat::test_that("add `stack_cross()` builds well", {
         anno_right(initialize = FALSE) +
         stack_crossh(small_mat) +
         align_dendro()
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     cross <- quad +
         ggcross() +
         align_dendro(method = "ward.D2")
-    expect_identical(cross@horizontal, cross@left@design)
-    expect_identical(cross@horizontal, cross@right@odesign[[1L]])
+    expect_identical(cross@horizontal, cross@left@domain)
+    expect_identical(cross@horizontal, cross@right@odomain[[1L]])
 
     quad <- quad_alignh(small_mat) +
         anno_left() +
         anno_right(initialize = FALSE) +
         stack_crossh(small_mat) +
         align_dendro()
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     expect_snapshot_error(quad +
         ggcross() +
         align_dendro(k = 3, method = "ward.D2"))
@@ -427,17 +427,17 @@ testthat::test_that("add `stack_cross()` builds well", {
         anno_right(initialize = FALSE) +
         stack_crossh(small_mat) +
         ggcross()
-    expect_identical(quad@horizontal, quad@left@design)
-    expect_identical(quad@horizontal, quad@right@design)
+    expect_identical(quad@horizontal, quad@left@domain)
+    expect_identical(quad@horizontal, quad@right@domain)
     cross <- quad + align_dendro(k = 3L, method = "ward.D2")
-    expect_identical(cross@horizontal, cross@left@design)
-    expect_identical(cross@horizontal, cross@right@odesign[[1L]])
+    expect_identical(cross@horizontal, cross@left@domain)
+    expect_identical(cross@horizontal, cross@right@odomain[[1L]])
 
-    expect_identical(cross@horizontal$panel, cross@right@design$panel)
-    expect_identical(cross@horizontal$nobs, cross@right@design$nobs)
+    expect_identical(cross@horizontal@panel, cross@right@domain@panel)
+    expect_identical(cross@horizontal@nobs, cross@right@domain@nobs)
     expect_identical(
         order2(ggalign_stat(cross, "right", 2)),
-        cross@right@design$index
+        cross@right@domain@index
     )
 
     # quad_alignv() ---------------------------------------
@@ -447,28 +447,28 @@ testthat::test_that("add `stack_cross()` builds well", {
         anno_top(initialize = FALSE) +
         stack_cross("v", t(small_mat)) +
         align_dendro()
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
     cross <- quad +
         ggcross() +
         align_dendro(method = "ward.D2")
-    expect_identical(cross@vertical, cross@top@design)
-    expect_identical(cross@vertical, cross@bottom@design)
-    expect_identical(cross@top@odesign[[1L]]$index, quad@vertical$index)
+    expect_identical(cross@vertical, cross@top@domain)
+    expect_identical(cross@vertical, cross@bottom@domain)
+    expect_identical(cross@top@odomain[[1L]]@index, quad@vertical@index)
 
     quad <- quad_alignv(small_mat) +
         anno_bottom() +
         anno_top(initialize = FALSE) +
         stack_cross("v", t(small_mat)) +
         align_dendro(k = 3L)
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
     cross <- quad +
         ggcross() +
         align_dendro(method = "ward.D2")
-    expect_identical(cross@vertical, cross@top@design)
-    expect_identical(cross@vertical, cross@bottom@design)
-    expect_identical(quad@vertical$index, cross@top@odesign[[1L]]$index)
+    expect_identical(cross@vertical, cross@top@domain)
+    expect_identical(cross@vertical, cross@bottom@domain)
+    expect_identical(quad@vertical@index, cross@top@odomain[[1L]]@index)
 
     ## for bottom annotation, we only update panel and nobs
     quad <- quad_alignv(small_mat) +
@@ -476,38 +476,38 @@ testthat::test_that("add `stack_cross()` builds well", {
         anno_bottom(initialize = FALSE) +
         stack_crossv(t(small_mat)) +
         align_dendro()
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
     cross <- quad +
         ggcross() +
         align_dendro(method = "ward.D2")
-    expect_identical(cross@vertical, cross@top@design)
-    expect_identical(cross@vertical, cross@bottom@odesign[[1L]])
+    expect_identical(cross@vertical, cross@top@domain)
+    expect_identical(cross@vertical, cross@bottom@odomain[[1L]])
 
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
         stack_crossv(t(small_mat)) +
         align_dendro()
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
 
     quad <- quad_alignv(small_mat) +
         anno_top() +
         anno_bottom(initialize = FALSE) +
         stack_crossv(t(small_mat)) +
         ggcross()
-    expect_identical(quad@vertical, quad@top@design)
-    expect_identical(quad@vertical, quad@bottom@design)
+    expect_identical(quad@vertical, quad@top@domain)
+    expect_identical(quad@vertical, quad@bottom@domain)
     cross <- quad + align_dendro(k = 3L, method = "ward.D2")
-    expect_identical(cross@vertical, cross@top@design)
-    expect_identical(cross@vertical, cross@bottom@odesign[[1L]])
+    expect_identical(cross@vertical, cross@top@domain)
+    expect_identical(cross@vertical, cross@bottom@odomain[[1L]])
 
-    expect_identical(cross@vertical$panel, cross@bottom@design$panel)
-    expect_identical(cross@vertical$nobs, cross@bottom@design$nobs)
+    expect_identical(cross@vertical@panel, cross@bottom@domain@panel)
+    expect_identical(cross@vertical@nobs, cross@bottom@domain@nobs)
     expect_identical(
         order2(ggalign_stat(cross, "bottom", 2)),
-        cross@bottom@design$index
+        cross@bottom@domain@index
     )
 })
 

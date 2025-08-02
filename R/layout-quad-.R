@@ -219,12 +219,12 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
                 cli_abort("empty data is no allowed")
             }
         } else {
-            nrows <- NULL
-            ncols <- NULL
+            nrows <- NA_integer_
+            ncols <- NA_integer_
         }
     }
-    horizontal <- ylim %|w|% discrete_design(nobs = nrows)
-    vertical <- xlim %|w|% discrete_design(nobs = ncols)
+    horizontal <- ylim %|w|% DiscreteDomain(nobs = nrows)
+    vertical <- xlim %|w|% DiscreteDomain(nobs = ncols)
 
     # always remove default axis titles
     # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
@@ -271,7 +271,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
 
 # Used to create the QuadLayout
 #' @include layout-.R
-methods::setClass(
+QuadLayout <- methods::setClass(
     "QuadLayout",
     contains = "LayoutProto",
     list(
@@ -291,13 +291,3 @@ methods::setClass(
         top = NULL, left = NULL, bottom = NULL, right = NULL
     )
 )
-
-#' @export
-is_layout_discrete.QuadLayout <- function(x, direction, ...) {
-    is_discrete_design(slot(x, direction))
-}
-
-#' @export
-is_layout_continuous.QuadLayout <- function(x, direction, ...) {
-    is_continuous_design(slot(x, direction))
-}

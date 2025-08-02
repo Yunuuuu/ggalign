@@ -36,13 +36,13 @@ stack_crossh <- function(data = NULL, ...) {
 }
 
 #' @include layout-chain-stack-.R
-methods::setClass(
+StackCross <- methods::setClass(
     "StackCross",
     contains = "StackLayout",
-    # A list of old design
-    list(odesign = "list", cross_points = "integer", break_points = "integer"),
+    # A list of old domain
+    list(odomain = "list", cross_points = "integer", break_points = "integer"),
     prototype = list(
-        odesign = list(),
+        odomain = list(),
         cross_points = integer(),
         break_points = integer()
     )
@@ -59,12 +59,12 @@ stack_cross.default <- function(direction, data = NULL, ...) {
 #' @importFrom grid unit.c
 #' @importFrom rlang is_empty is_string
 resolve_stack_layout.StackCross <- function(stack, schemes, theme,
-                                            extra_design) {
+                                            extra_domain) {
     # check if we should initialize the layout observations
-    layout_design <- stack@design
+    layout_domain <- stack@domain
     # styler: off
-    if (is_discrete_design(layout_design) &&
-        is.null(.subset2(layout_design, "nobs")) &&
+    if (is_discrete_domain(layout_domain) &&
+        is.na(prop(layout_domain, "nobs")) &&
         any(vapply(plot_list, is_cross_craftbox, logical(1L),
                    USE.NAMES = FALSE))) {
         cli_abort(sprintf(
@@ -73,7 +73,7 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
         ))
     }
     # styler: on
-        plot_list <- stack@plot_list
+    plot_list <- stack@plot_list
 
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
@@ -81,7 +81,7 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
         plot_list,
         sizes = diff(c(0L, stack@cross_points, length(plot_list)))
     )
-    design_list <- c(stack@odesign, list(layout_design))
+    domain_list <- c(stack@odomain, list(layout_domain))
 
     # build the stack
     composer <- stack_composer(direction)
@@ -97,16 +97,15 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
     } else {
         released_spaces <- NULL
     }
-    previous_design <- NULL
+    previous_domain <- NULL
     for (i in seq_along(plot_list)) {
         plots <- .subset2(plot_list, i)
 
-        # prepare design for current group
-        design <- .subset2(design_list, i)
-        design <- setup_design(design)
+        # prepare domain for current group
+        domain <- domain_init(.subset2(domain_list, i))
 
         if (is_empty(plots)) {
-            previous_design <- design
+            previous_domain <- domain
             next
         }
 
@@ -119,7 +118,7 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
         plots <- .subset(plots, keep)
 
         if (is_empty(plots)) {
-            previous_design <- design
+            previous_domain <- domain
             next
         }
 
@@ -141,14 +140,14 @@ resolve_stack_layout.StackCross <- function(stack, schemes, theme,
             composer,
             schemes = schemes,
             theme = theme,
-            design = design,
-            extra_design = extra_design,
+            domain = domain,
+            extra_domain = extra_domain,
             direction = direction,
             position = position,
             released_spaces = released_spaces,
-            previous_design = previous_design
+            previous_domain = previous_domain
         )
-        previous_design <- design
+        previous_domain <- domain
     }
     composer
 }

@@ -552,11 +552,11 @@ deparse_link2.list <- function(x, trunc = 3L, head = trunc - 1L,
 }
 
 ###################################################
-make_links_data <- function(links, design1, design2,
+make_links_data <- function(links, domain1, domain2,
                             labels1, labels2) {
     link_index_list <- lapply(
         links, make_pair_link_index,
-        design1 = design1, design2 = design2,
+        domain1 = domain1, domain2 = domain2,
         labels1 = labels1, labels2 = labels2,
         handle_missing = attr(links, "handle_missing")
     )
@@ -575,19 +575,19 @@ make_links_data <- function(links, design1, design2,
     link_index_list
 }
 
-make_pair_link_index <- function(pair_link, design1, design2,
+make_pair_link_index <- function(pair_link, domain1, domain2,
                                  labels1, labels2, handle_missing) {
     input1 <- .subset2(pair_link, 1L)
     input2 <- .subset2(pair_link, 2L)
 
     # make the data
     hand1 <- make_link_index(input1,
-        design = design1, labels = labels1,
+        domain = domain1, labels = labels1,
         other = input2, data_index = !inherits(pair_link, "AsIs"),
         handle_missing = handle_missing
     )
     hand2 <- make_link_index(input2,
-        design = design2, labels = labels2,
+        domain = domain2, labels = labels2,
         other = input1, data_index = !inherits(pair_link, "AsIs"),
         handle_missing = handle_missing
     )
@@ -597,14 +597,14 @@ make_pair_link_index <- function(pair_link, design1, design2,
     list(hand1 = hand1, hand2 = hand2)
 }
 
-make_link_index <- function(link, design, labels, other, data_index,
+make_link_index <- function(link, domain, labels, other, data_index,
                             handle_missing, arg = caller_arg(link),
                             call = caller_call()) {
     link <- link_to_location(
         link,
-        n = .subset2(design, "nobs"),
+        n = prop(domain, "nobs"),
         labels = labels,
-        index = .subset2(design, "index"),
+        index = prop(domain, "index"),
         other = other,
         data_index = data_index,
         handle_missing = handle_missing,

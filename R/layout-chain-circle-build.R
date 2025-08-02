@@ -87,7 +87,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     plot_inner <- plot_sizes - plot_track
     guides <- vector("list", N)
     plot_table <- NULL
-    design <- setup_design(circle@design)
+    domain <- domain_init(circle@domain)
     for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
@@ -113,8 +113,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             layout_name = craftsman$layout_name
         )
         if (!craftsman$free_facet) {
-            if (is_discrete_design(design)) {
-                if (nlevels(.subset2(design, "panel")) > 1L) {
+            if (is_discrete_domain(domain)) {
+                if (nlevels(prop(domain, "panel")) > 1L) {
                     plot <- plot + facet_sector(
                         ggplot2::vars(.data$.panel),
                         sector_spacing = circle@sector_spacing %||% (pi / 180),
@@ -139,13 +139,12 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # set limits and default scales
         if (!craftsman$free_limits) {
             plot <- plot + ggalign_design(
-                x = design,
-                xlabels = .subset(craftsman$labels, .subset2(design, "index"))
+                x = domain, xlabels = craftsman$labels
             )
         }
 
         # let `Craftsman` add other components
-        plot <- craftsman$build_plot(plot, design = design)
+        plot <- craftsman$build_plot(plot, domain = domain)
         plot <- craftsman$finish_plot(
             plot,
             schemes = plot_schemes, theme = theme

@@ -63,9 +63,9 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         }
         ggproto_parent(CraftCross, self)$interact_layout(layout)
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
-        if (is.null(.subset2(previous_design, "nobs"))) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
+        if (is.na(prop(previous_domain, "nobs"))) {
             cli_abort(
                 sprintf(
                     "layout {.field nobs} for %s before %s is not initialized ",
@@ -73,7 +73,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
                 )
             )
         }
-        if (is.null(.subset2(design, "nobs"))) {
+        if (is.na(prop(domain, "nobs"))) {
             cli_abort(
                 sprintf(
                     "layout {.field nobs} for %s after %s is not initialized ",
@@ -85,19 +85,19 @@ CrossMark <- ggproto("CrossMark", CraftCross,
 
         # parse links --------------------------------------------
         mark <- self$mark
-        design1 <- previous_design
-        design2 <- design
+        domain1 <- previous_domain
+        domain2 <- domain
         full_data1 <- split(
-            seq_len(.subset2(design1, "nobs")),
-            .subset2(design1, "panel")
+            seq_len(prop(domain1, "nobs")),
+            prop(domain1, "panel")
         )
         full_data2 <- split(
-            seq_len(.subset2(design2, "nobs")),
-            .subset2(design2, "panel")
+            seq_len(prop(domain2, "nobs")),
+            prop(domain2, "panel")
         )
         link_index <- make_links_data(
             .subset2(mark, "links"),
-            design1 = design1, design2 = design2,
+            domain1 = domain1, domain2 = domain2,
             labels1 = self$labels0, labels2 = self$labels
         )
         if (vec_duplicate_any(nms <- names(link_index))) { # nolint
@@ -116,8 +116,8 @@ CrossMark <- ggproto("CrossMark", CraftCross,
             hand1 <- .subset2(link, "hand1")
             hand2 <- .subset2(link, "hand2")
             list(
-                hand1 = .subset2(design1, "index")[hand1],
-                hand2 = .subset2(design2, "index")[hand2]
+                hand1 = prop(domain1, "index")[hand1],
+                hand2 = prop(domain2, "index")[hand2]
             )
         })
 

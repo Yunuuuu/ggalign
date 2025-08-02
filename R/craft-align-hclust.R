@@ -145,8 +145,8 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
                 nobs <- stats::nobs(self$method)
             }
 
-            if (is.null(layout_nobs <- .subset2(layout@design, "nobs"))) {
-                layout@design["nobs"] <- list(nobs)
+            if (is.na(layout_nobs <- prop(layout@domain, "nobs"))) {
+                prop(layout@domain, "nobs") <- nobs
             } else {
                 assert_mismatch_nobs(self, layout_nobs, nobs, arg = "method")
             }

@@ -29,272 +29,6 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
     structure(ans, class = "ggalign_layout_expand")
 }
 
-#' Set continuous limits for the layout
-#'
-#' @description
-#' To align continuous axes, it is important to keep the limits consistent
-#' across all plots in the layout. You can set the limits by passing a function
-#' directly to the `limits` or `xlim`/`ylim` argument, using `...` only.
-#' Alternatively, you can add a `continuous_limits()` object to the layout. For
-#' the `quad_layout()` function, you must specify `x`/`y` arguments. For other
-#' layouts, you should pass the limits using `...` directly.
-#'
-#' @param ... A list of two numeric values, specifying the left/lower limit and
-#' the right/upper limit of the scale.
-#' @inheritParams layout_expand
-#' @importFrom rlang list2
-#' @export
-continuous_limits <- function(..., x = waiver(), y = waiver()) {
-    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
-        cli_abort(
-            "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
-        )
-    }
-    if (...length() > 0L) {
-        ans <- list2(...)
-        names(ans) <- NULL
-    } else {
-        ans <- list(x = x, y = y)
-    }
-    structure(ans, class = c("continuous_limits", "layout_design"))
-}
-
-# layout params are used to align the observations
-discrete_design <- function(panel = NULL, index = NULL, nobs = NULL) {
-    structure(
-        list(panel = panel, index = index, nobs = nobs),
-        class = c("discrete_design", "layout_design")
-    )
-}
-
-################################################################
-is_continuous_design <- function(x) {
-    is.null(x) || inherits(x, "continuous_limits")
-}
-
-is_discrete_design <- function(x) inherits(x, "discrete_design")
-
-#' Layout can align ordinal variable or continuous variable
-#'
-#' @param x A `LayoutProto` object.
-#' @noRd
-is_layout_discrete <- function(x, ...) UseMethod("is_layout_discrete")
-
-is_layout_continuous <- function(x, ...) UseMethod("is_layout_continuous")
-
-################################################################
-# Initialize the index and panel
-# Reorder the panel based the ordering index and
-setup_design <- function(design) {
-    # for continuous axis, do noting special
-    if (is_continuous_design(design)) return(design) # styler: off
-    # if `nobs` is not initialized, it means no `Align` object exist
-    # it's not necessary to initialize the `panel` and `index`
-    # this is for `stack_layout` which may have no data
-    if (is.null(nobs <- .subset2(design, "nobs"))) {
-        return(design)
-    }
-    panel <- .subset2(design, "panel") %||% factor(rep_len(1L, nobs))
-    index <- .subset2(design, "index") %||% reorder_index(panel)
-    discrete_design(panel[index], index, nobs)
-}
-
-reorder_index <- function(panel, index = NULL) {
-    index <- index %||% seq_along(panel)
-    unlist(split(index, panel[index]), recursive = FALSE, use.names = FALSE)
-}
-
-############################################################
-#' @keywords internal
-update_design <- function(layout, ..., design, object_name) {
-    UseMethod("update_design")
-}
-
-#' @importFrom methods slot slot<-
-#' @export
-update_design.QuadLayout <- function(layout, ..., direction, design,
-                                     object_name) {
-    slot(layout, direction) <- design
-    if (is_horizontal(direction)) {
-        if (!is.null(left <- layout@left)) {
-            layout@left <- update_design(left,
-                design = design, object_name = object_name
-            )
-        }
-        if (!is.null(right <- layout@right)) {
-            layout@right <- update_design(right,
-                design = design, object_name = object_name,
-                from_head = TRUE
-            )
-        }
-    } else {
-        if (!is.null(top <- layout@top)) {
-            layout@top <- update_design(top,
-                design = design, object_name = object_name
-            )
-        }
-        if (!is.null(bottom <- layout@bottom)) {
-            layout@bottom <- update_design(bottom,
-                design = design, object_name = object_name,
-                from_head = TRUE
-            )
-        }
-    }
-    layout
-}
-
-#' @importFrom methods slot slot<-
-#' @export
-update_design.StackLayout <- function(layout, ..., design, object_name) {
-    layout@design <- design
-    layout@plot_list <- lapply(layout@plot_list, function(plot) {
-        if (is_craftbox(plot)) return(plot) # styler: off
-        update_design(plot,
-            direction = layout@direction,
-            design = design
-        )
-    })
-    layout
-}
-
-#' @export
-update_design.CircleLayout <- update_design.StackLayout
-
-#' @importFrom methods slot slot<-
-#' @export
-update_design.StackCross <- function(layout, ..., design, object_name,
-                                     from_head = FALSE) {
-    # `design` must be a discrete_design()
-    design_list <- c(layout@odesign, list(layout@design))
-
-    # for cross_points, the updating will span it, but only update the panel
-    # information
-    cross_points <- layout@cross_points
-
-    # the break_points set breaks, updating won't span the break points
-    break_points <- layout@break_points
-
-    plot_list <- layout@plot_list
-    n <- length(plot_list)
-    points <- c(cross_points, n)
-    point_index <- seq_along(points)
-    if (!from_head) point_index <- rev(point_index)
-    for (i in point_index) {
-        cross_point <- .subset(points, i)
-
-        # we first update the design in the updated tail
-        # it means the first design when `from_head` is `TRUE`
-        # the last design when `from_head` is `FALSE`
-        if ((from_head && i == 1L) || (!from_head && cross_point == n)) {
-            new_design <- design
-        } else if (!from_head && any(cross_point == break_points)) {
-            break
-        } else {
-            # for design not in updated tail, we'll only update `panel` and
-            # `nobs`, we check the new panel doesn't break the original index
-            new_nobs <- .subset2(design, "nobs")
-            new_panel <- .subset2(design, "panel")
-            new_design <- .subset2(design_list, i)
-            # we check the new panel don't disrupt the ordering index
-            if (!is.null(new_panel) &&
-                !is.null(old_index <- .subset2(new_design, "index"))) {
-                # we always prevent from reordering twice.
-                new_index <- reorder_index(new_panel, old_index)
-                if (!all(old_index == new_index)) {
-                    cli_abort(sprintf(
-                        "%s disrupt the previously established ordering index of %s (%d)",
-                        object_name, object_name(layout), i
-                    ))
-                }
-                new_design["index"] <- list(new_index)
-            }
-            new_design["nobs"] <- list(new_nobs)
-            new_design["panel"] <- list(new_panel)
-        }
-        design_list[i] <- list(new_design)
-
-        # we then update the design for each plot
-        if (i == 1L) {
-            subset <- seq_len(cross_point)
-        } else {
-            subset <- (.subset(points, i - 1L) + 1L):cross_point
-        }
-
-        layout@plot_list[subset] <- lapply(
-            plot_list[subset], function(plot) {
-                if (is_craftbox(plot)) {
-                    return(plot)
-                }
-                update_design(plot,
-                    direction = layout@direction,
-                    design = new_design
-                )
-            }
-        )
-        if (from_head && any(cross_point == break_points)) break
-    }
-    layout@odesign <- vec_slice(design_list, seq_len(length(design_list) - 1L))
-    layout@design <- design_list[[length(design_list)]]
-    layout
-}
-
-############################################################
-melt_discrete_design <- function(old, new, old_name, new_name,
-                                 call = caller_call()) {
-    old_nobs <- .subset2(old, "nobs")
-    new_nobs <- .subset2(new, "nobs")
-    if (is.null(new_nobs)) { # no `nobs` provided
-        nobs <- old_nobs
-    } else if (is.null(old_nobs)) {
-        nobs <- new_nobs
-    } else if (!identical(new_nobs, old_nobs)) {
-        cli_abort(sprintf(
-            "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
-            new_name, new_nobs, old_name, old_nobs
-        ), call = call)
-    } else {
-        nobs <- new_nobs
-    }
-
-    # check panel
-    old_panel <- .subset2(old, "panel")
-    new_panel <- .subset2(new, "panel")
-
-    if (is.null(new_panel)) { # no panel provided
-        panel <- old_panel
-    } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
-        cli_abort(sprintf(
-            "%s disrupt the previously established panel groups of %s",
-            new_name, old_name
-        ), call = call)
-    } else {
-        panel <- new_panel
-    }
-
-    # check index
-    old_index <- .subset2(old, "index")
-    new_index <- .subset2(new, "index")
-    if (is.null(new_index)) {
-        index <- old_index
-    } else {
-        index <- new_index
-    }
-
-    # we always make the index following the panel
-    if (!is.null(panel) && !is.null(index)) {
-        index <- reorder_index(panel, index)
-    }
-
-    # we always prevent from reordering twice.
-    if (!is.null(old_index) && !all(old_index == index)) {
-        cli_abort(sprintf(
-            "%s disrupt the previously established ordering index of %s",
-            new_name, old_name
-        ), call = call)
-    }
-    discrete_design(panel, index, nobs)
-}
-
 #######################################################################
 # ggplot2 add default scales in `compute_aesthetics` process
 # then ggplot2 transform all scales
@@ -340,6 +74,12 @@ melt_discrete_design <- function(old, new, old_name, new_name,
 ggalign_design <- function(x = NULL, y = NULL,
                            xlabels = NULL, ylabels = NULL,
                            xlim = TRUE, ylim = TRUE) {
+    if (!is.null(xlabels) && is_discrete_domain(x)) {
+        xlabels <- .subset(xlabels, prop(x, "index"))
+    }
+    if (!is.null(ylabels) && is_discrete_domain(y)) {
+        ylabels <- .subset(ylabels, prop(y, "index"))
+    }
     structure(
         list(
             x = x, y = y,
@@ -350,9 +90,9 @@ ggalign_design <- function(x = NULL, y = NULL,
     )
 }
 
-setup_discrete_limits <- function(axis, design, n_panels) {
-    panel <- .subset2(design, "panel")
-    index <- .subset2(design, "index")
+setup_discrete_limits <- function(axis, domain, n_panels) {
+    panel <- prop(domain, "panel")
+    index <- prop(domain, "index")
     if (n_panels == 1L) {
         list(range(index) + c(-0.5, 0.5))
     } else {
@@ -368,9 +108,9 @@ setup_discrete_limits <- function(axis, design, n_panels) {
 #' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
 #' @export
 ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
-    x_design <- .subset2(object, "x")
-    y_design <- .subset2(object, "y")
-    if (is.null(x_design) && is.null(y_design)) {
+    x_domain <- .subset2(object, "x")
+    y_domain <- .subset2(object, "y")
+    if (is.null(x_domain) && is.null(y_domain)) {
         return(plot)
     }
     ParentCoord <- plot$coordinates
@@ -386,22 +126,22 @@ ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
             self$panel_counter <- 0L
             self$n_column_panels <- vec_unique_count(.subset2(layout, "COL"))
             self$n_row_panels <- vec_unique_count(.subset2(layout, "ROW"))
-            if (.subset2(object, "xlim") && !is.null(x_design)) {
-                if (is_discrete_design(x_design)) {
+            if (.subset2(object, "xlim") && !is.null(x_domain)) {
+                if (is_discrete_domain(x_domain)) {
                     self$xlim_list <- setup_discrete_limits(
-                        "x", x_design, self$n_column_panels
+                        "x", x_domain, self$n_column_panels
                     )
                 } else {
-                    self$xlim_list <- x_design
+                    self$xlim_list <- x_domain
                 }
             }
-            if (.subset2(object, "ylim") && !is.null(y_design)) {
-                if (is_discrete_design(y_design)) {
+            if (.subset2(object, "ylim") && !is.null(y_domain)) {
+                if (is_discrete_domain(y_domain)) {
                     self$ylim_list <- setup_discrete_limits(
-                        "y", y_design, self$n_row_panels
+                        "y", y_domain, self$n_row_panels
                     )
                 } else {
-                    self$ylim_list <- y_design
+                    self$ylim_list <- y_domain
                 }
             }
             # call the parent method
@@ -410,17 +150,17 @@ ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
             # for each scale, we set the `breaks` and `labels`
-            if (is_discrete_design(x_design)) {
+            if (is_discrete_domain(x_domain)) {
                 align_discrete_scales(
-                    "x", scales_x, x_design,
+                    "x", scales_x, x_domain,
                     labels = .subset2(object, "xlabels"),
                     n_panels = self$n_column_panels,
                     circle_layout = inherits(ParentCoord, "CoordRadial")
                 )
             }
-            if (is_discrete_design(y_design)) {
+            if (is_discrete_domain(y_domain)) {
                 align_discrete_scales(
-                    "y", scales_y, y_design,
+                    "y", scales_y, y_domain,
                     labels = .subset2(object, "ylabels"),
                     n_panels = self$n_row_panels,
                     circle_layout = inherits(ParentCoord, "CoordRadial")
@@ -437,7 +177,8 @@ ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
                     self$xlim_list,
                     recycle_whole(cur_panel, self$n_column_panels)
                 )
-                if (is_discrete_design(x_design) && scale_x$is_discrete() &&
+                if (is_discrete_domain(x_domain) &&
+                    scale_x$is_discrete() &&
                     !is.null(scale_x$range$range)) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
@@ -454,7 +195,7 @@ ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
                     self$ylim_list,
                     recycle_each(cur_panel, self$n_column_panels)
                 )
-                if (is_discrete_design(y_design) && scale_y$is_discrete() &&
+                if (is_discrete_domain(y_domain) && scale_y$is_discrete() &&
                     !is.null(scale_y$range$range)) {
                     # for discrete scale, the limits starts from zero in each
                     # panel
@@ -475,10 +216,10 @@ ggplot_add.ggalign_design <- function(object, plot, object_name, ...) {
     plot
 }
 
-align_discrete_scales <- function(axis, scales, design, labels, n_panels,
+align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
                                   circle_layout) {
-    panel <- .subset2(design, "panel")
-    index <- .subset2(design, "index")
+    panel <- prop(domain, "panel")
+    index <- prop(domain, "index")
 
     if (n_panels == 1L) {
         panel <- factor(vec_rep(1L, length(index)))

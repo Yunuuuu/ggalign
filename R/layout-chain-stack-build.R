@@ -10,10 +10,10 @@ ggalign_build.StackLayout <- function(x) {
 }
 
 #' @param schemes,theme Parameters from parent layout
-#' @param extra_design layout parameters of the axis vertically with the stack.
+#' @param extra_domain layout parameters of the axis vertically with the stack.
 #' @noRd
 stack_build <- function(stack, schemes = NULL, theme = NULL,
-                        extra_design = NULL) {
+                        extra_domain = NULL) {
     if (is_empty(stack@plot_list)) {
         return(NULL)
     }
@@ -27,7 +27,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         spacing <- "x"
     }
     theme <- inherit_parent_layout_theme(stack, theme, spacing = spacing)
-    composer <- resolve_stack_layout(stack, schemes, theme, extra_design)
+    composer <- resolve_stack_layout(stack, schemes, theme, extra_domain)
     if (is_empty(plots <- .subset2(composer, "plots"))) {
         return(NULL)
     }
@@ -111,13 +111,13 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
 #' @param schemes,theme Parameters for current stack, which have inherited
 #' parameters from the parent.
 #' @noRd
-resolve_stack_layout <- function(stack, schemes, theme, extra_design) {
+resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
     UseMethod("resolve_stack_layout")
 }
 
 #' @export
 resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
-                                             extra_design) {
+                                             extra_domain) {
     plot_list <- stack@plot_list
     direction <- stack@direction
     position <- .subset2(stack@heatmap, "position")
@@ -190,19 +190,19 @@ resolve_stack_layout.StackLayout <- function(stack, schemes, theme,
         released_spaces <- NULL
     }
 
-    design <- setup_design(stack@design)
+    domain <- domain_init(stack@domain)
     stack_composer_add(
         plot_list,
         stack = stack,
         composer,
         schemes = schemes,
         theme = theme,
-        design = design,
-        extra_design = extra_design,
+        domain = domain,
+        extra_domain = extra_domain,
         direction = direction,
         position = position,
         released_spaces = released_spaces,
-        previous_design = NULL
+        previous_domain = NULL
     )
 }
 

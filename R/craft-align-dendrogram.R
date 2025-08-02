@@ -99,14 +99,14 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             ggplot2::labs(y = "height")
         )
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
         plot_cut_height <- self$plot_cut_height
         center <- self$center
         type <- self$type
         root <- self$root
-        panel <- .subset2(design, "panel")
-        index <- .subset2(design, "index")
+        panel <- prop(domain, "panel")
+        index <- prop(domain, "index")
 
         statistics <- .subset2(self, "statistics")
         direction <- self$direction

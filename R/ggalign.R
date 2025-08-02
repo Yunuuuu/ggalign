@@ -131,8 +131,8 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         } else if (is.waive(input_data)) {
             data <- layout_data %|w|% NULL
             # for data inherit from the layout, and the layout data is from
-            # the quad-layout, we'll integrate the `extra_design`
-            self$use_extra_design <- is_stack_layout(layout) &&
+            # the quad-layout, we'll integrate the `extra_domain`
+            self$use_extra_domain <- is_stack_layout(layout) &&
                 isTRUE(layout@heatmap$quad_matrix)
         } else {
             data <- input_data
@@ -141,10 +141,10 @@ AlignGg <- ggproto("AlignGg", Craftsman,
             fortify_data_frame(data, !!!self$data_params, call = self$call)
         )
 
-        # for discrete design, # we need ensure the nobs is the same
-        if (is_discrete_design(design <- layout@design)) {
+        # for discrete domain, # we need ensure the nobs is the same
+        if (is_discrete_domain(domain <- layout@domain)) {
             if (!is.null(data)) {
-                if (is.null(layout_nobs <- design$nobs)) {
+                if (is.na(layout_nobs <- prop(domain, "nobs"))) {
                     layout_nobs <- NROW(data)
                     if (layout_nobs == 0L) {
                         cli_abort("{.arg data} cannot be empty",
@@ -157,7 +157,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
                         object_name, NROW(data), layout_name, layout_nobs
                     ))
                 }
-                design["nobs"] <- list(layout_nobs)
+                prop(domain, "nobs") <- layout_nobs
 
                 # we always add `.index` to align the observations
                 # For matrix-like object
@@ -167,7 +167,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
                 } else {
                     plot_data$.index <- seq_len(NROW(data))
                 }
-                layout@design <- design
+                layout@domain <- domain
                 self$labels <- vec_names(data) %||% vec_names(layout_data)
                 # always remove names, we'll add it in `build_plot()`
                 plot_data$.names <- NULL
@@ -202,32 +202,32 @@ AlignGg <- ggproto("AlignGg", Craftsman,
     },
 
     #' @importFrom stats reorder
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
         data <- self$data
 
         # if inherit from the parent layout
-        if (isTRUE(self$use_extra_design) &&
-            is_discrete_design(extra_design) &&
-            !is.null(.subset2(extra_design, "nobs"))) {
+        if (isTRUE(self$use_extra_domain) &&
+            is_discrete_domain(extra_domain) &&
+            !is.na(prop(extra_domain, "nobs"))) {
             # if the data is inherit from the `quad_layout()`
             # the data must be a matrix
             extra_plot_data <- data_frame0(
-                .extra_panel = .subset2(extra_design, "panel"),
-                .extra_index = .subset2(extra_design, "index")
+                .extra_panel = prop(extra_domain, "panel"),
+                .extra_index = prop(extra_domain, "index")
             )
         } else {
             extra_plot_data <- NULL
         }
 
-        if (is_continuous_design(design)) {
+        if (is_continuous_domain(domain)) {
             if (!is.null(data) && !is.null(extra_plot_data)) {
                 data <- full_join(data, extra_plot_data,
                     by.x = ".column_index", by.y = ".extra_index"
                 )
             }
             return(gguse_data(plot, data))
-        } else if (is.null(.subset2(design, "nobs"))) {
+        } else if (is.na(prop(domain, "nobs"))) {
             cli_abort(c(
                 sprintf(
                     "you must initialize %s before drawing %s",
@@ -238,8 +238,8 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         }
         direction <- self$direction
         axis <- to_coord_axis(direction)
-        panel <- .subset2(design, "panel")
-        index <- .subset2(design, "index")
+        panel <- prop(domain, "panel")
+        index <- prop(domain, "index")
         coord_name <- paste0(".", axis)
         plot_data <- data_frame0(
             .panel = panel,

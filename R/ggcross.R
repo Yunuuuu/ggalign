@@ -72,16 +72,16 @@ CrossGg <- ggproto("CrossGg",
         # udpate cross_points
         layout@cross_points <- c(layout@cross_points, length(layout@plot_list))
 
-        # update old design list
-        layout@odesign <- c(layout@odesign, list(layout@design))
+        # update old domain list
+        layout@odomain <- c(layout@odomain, list(layout@domain))
 
         # we keep the names from the layout data for usage
         self$labels <- vec_names(layout@data)
         layout
     },
-    setup_design = function(self, design) {
-        design["index"] <- list(NULL) # always reset the index
-        design
+    setup_domain = function(self, domain) {
+        prop(domain, "index") <- NULL # always reset the index
+        domain
     },
     setup_plot = function(self, plot) {
         ggadd_default(plot, mapping = switch_direction(
@@ -89,9 +89,9 @@ CrossGg <- ggproto("CrossGg",
         ))
     },
     #' @importFrom stats reorder
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
-        if (is.null(.subset2(design, "nobs"))) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
+        if (is.na(prop(domain, "nobs"))) {
             cli_abort(sprintf(
                 "you must initialize %s before drawing %s",
                 self$layout_name, object_name(self)
@@ -99,13 +99,13 @@ CrossGg <- ggproto("CrossGg",
         }
         direction <- self$direction
         index <- vec_c(
-            .subset2(previous_design, "index"),
-            .subset2(design, "index")
+            prop(previous_domain, "index"),
+            prop(domain, "index")
         )
         data <- data_frame0(
             .panel = vec_c(
-                .subset2(previous_design, "panel"),
-                .subset2(design, "panel")
+                prop(previous_domain, "panel"),
+                prop(domain, "panel")
             ),
             .index = index,
             # ggcross() only reset ordering index, labels should be the same
@@ -115,8 +115,8 @@ CrossGg <- ggproto("CrossGg",
                     vec_rep_each(
                         c("left", "right"),
                         c(
-                            .subset2(previous_design, "nobs"),
-                            .subset2(design, "nobs")
+                            prop(previous_domain, "nobs"),
+                            prop(domain, "nobs")
                         )
                     ),
                     c("left", "right")
@@ -126,8 +126,8 @@ CrossGg <- ggproto("CrossGg",
                     vec_rep_each(
                         c("top", "bottom"),
                         c(
-                            .subset2(previous_design, "nobs"),
-                            .subset2(design, "nobs")
+                            prop(previous_domain, "nobs"),
+                            prop(domain, "nobs")
                         )
                     ),
                     c("bottom", "top")
@@ -137,8 +137,8 @@ CrossGg <- ggproto("CrossGg",
         axis <- to_coord_axis(direction)
         coord_name <- paste0(".", axis)
         data[[coord_name]] <- vec_c(
-            seq_len(.subset2(previous_design, "nobs")),
-            seq_len(.subset2(design, "nobs"))
+            seq_len(prop(previous_domain, "nobs")),
+            seq_len(prop(domain, "nobs"))
         )
         if (!is.null(.subset2(data, ".names"))) {
             data[[paste0(".discrete_", axis)]] <- reorder(

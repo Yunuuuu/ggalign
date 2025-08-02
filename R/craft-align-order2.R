@@ -83,17 +83,17 @@ AlignOrder2 <- ggproto("AlignOrder2", CraftAlign,
             data <- input_data
         }
 
-        design <- layout@design
-        layout_nobs <- .subset2(design, "nobs")
+        domain <- layout@domain
+        layout_nobs <- prop(domain, "nobs")
 
         # we always regard rows as the observations
-        if (is.null(layout_nobs)) {
+        if (is.na(layout_nobs)) {
             layout_nobs <- vec_size(data)
             if (layout_nobs == 0L) {
                 cli_abort("{.arg data} cannot be empty", call = self$call)
             }
-            design["nobs"] <- list(layout_nobs)
-            layout@design <- design
+            prop(domain, "nobs") <- list(layout_nobs)
+            layout@domain <- domain
         } else if (vec_size(data) != layout_nobs) {
             cli_abort(sprintf(
                 "%s (nobs: %d) is not compatible with the %s (nobs: %d)",

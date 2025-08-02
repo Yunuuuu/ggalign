@@ -56,9 +56,9 @@ CrossLink <- ggproto("CrossLink", CraftCross,
         }
         ggproto_parent(CraftCross, self)$interact_layout(layout)
     },
-    build_plot = function(self, plot, design, extra_design = NULL,
-                          previous_design = NULL) {
-        if (is.null(.subset2(previous_design, "nobs"))) {
+    build_plot = function(self, plot, domain, extra_domain = NULL,
+                          previous_domain = NULL) {
+        if (is.na(prop(previous_domain, "nobs"))) {
             cli_abort(
                 sprintf(
                     "layout {.field nobs} for %s before %s is not initialized ",
@@ -66,7 +66,7 @@ CrossLink <- ggproto("CrossLink", CraftCross,
                 )
             )
         }
-        if (is.null(.subset2(design, "nobs"))) {
+        if (is.na(prop(domain, "nobs"))) {
             cli_abort(
                 sprintf(
                     "layout {.field nobs} for %s after %s is not initialized ",
@@ -80,29 +80,29 @@ CrossLink <- ggproto("CrossLink", CraftCross,
 
         # parse links --------------------------------------------
         link <- self$link
-        design1 <- previous_design
-        design2 <- design
+        domain1 <- previous_domain
+        domain2 <- domain
         full_data1 <- split(
-            seq_len(.subset2(design1, "nobs")),
-            .subset2(design1, "panel")
+            seq_len(prop(domain1, "nobs")),
+            prop(domain1, "panel")
         )
         full_data2 <- split(
-            seq_len(.subset2(design2, "nobs")),
-            .subset2(design2, "panel")
+            seq_len(prop(domain2, "nobs")),
+            prop(domain2, "panel")
         )
         links <- .subset2(link, "links")
         # set default links for link_line()
         if (is_empty(links) &&
             inherits(link, "ggalign_link_line") &&
-            identical(.subset2(design1, "nobs"), .subset2(design2, "nobs"))) {
-            links <- lapply(seq_len(.subset2(design1, "nobs")), function(i) {
+            identical(prop(domain1, "nobs"), prop(domain2, "nobs"))) {
+            links <- lapply(seq_len(prop(domain1, "nobs")), function(i) {
                 rlang::new_formula(i, i)
             })
             links <- pair_links(!!!links)
         }
         link_index <- make_links_data(
             links,
-            design1 = design1, design2 = design2,
+            domain1 = domain1, domain2 = domain2,
             labels1 = self$labels0, labels2 = self$labels
         )
         data_index <- lapply(link_index, function(index) {
@@ -112,8 +112,8 @@ CrossLink <- ggproto("CrossLink", CraftCross,
             hand1 <- .subset2(index, "hand1")
             hand2 <- .subset2(index, "hand2")
             list(
-                hand1 = .subset2(design1, "index")[hand1],
-                hand2 = .subset2(design2, "index")[hand2]
+                hand1 = prop(domain1, "index")[hand1],
+                hand2 = prop(domain2, "index")[hand2]
             )
         })
         plot$ggalign_link_data <- list(
