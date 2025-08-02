@@ -1,5 +1,3 @@
-Domain <- S7::new_class("Domain", abstract = TRUE)
-
 #' Set Expansion for the Layout
 #'
 #' @description
@@ -54,6 +52,8 @@ continuous_limits <- function(..., x = waiver(), y = waiver()) {
     }
     ContinuousDomain(..., x = x, y = y)
 }
+
+Domain <- S7::new_class("Domain", abstract = TRUE)
 
 #' @importFrom S7 new_object S7_object
 ContinuousDomain <- S7::new_class(
