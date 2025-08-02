@@ -103,7 +103,7 @@ S7::method(layout_add, list(ChainLayout, S3_layout_title)) <-
 #' @include layout-.R
 S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
     function(layout, object, objectname) {
-        for (o in object) layout <- layout_add(o, layout, object_name)
+        for (o in object) layout <- layout_add(layout, o, object_name)
         layout
     }
 
