@@ -98,26 +98,30 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     if (!is.null(layout_labs <- prop(the_align, "free_labs")) &&
         !is.waive(layout_labs)) {
         # prepare labs for child stack layout
-        prop(horizontal_align, "free_labs") <- gsub("[lr]", "", layout_labs)
-        prop(vertical_align, "free_labs") <- gsub("[tb]", "", layout_labs)
+        prop(horizontal_align, "free_labs", check = FALSE) <-
+            gsub("[lr]", "", layout_labs)
+        prop(vertical_align, "free_labs", check = FALSE) <-
+            gsub("[tb]", "", layout_labs)
         if (!nzchar(prop(horizontal_align, "free_labs"))) {
-            prop(horizontal_align, "free_labs") <- NULL
+            prop(horizontal_align, "free_labs", check = FALSE) <- NULL
         }
         if (!nzchar(prop(vertical_align, "free_labs"))) {
-            prop(vertical_align, "free_labs") <- NULL
+            prop(vertical_align, "free_labs", check = FALSE) <- NULL
         }
     }
 
     # inherit from the parent stack layout
     if (!is.null(layout_spaces <- prop(the_align, "free_spaces")) &&
         !is.waive(layout_spaces)) {
-        prop(horizontal_align, "free_spaces") <- gsub("[lr]", "", layout_labs)
-        prop(vertical_align, "free_spaces") <- gsub("[tb]", "", layout_labs)
+        prop(horizontal_align, "free_spaces", check = FALSE) <-
+            gsub("[lr]", "", layout_spaces)
+        prop(vertical_align, "free_spaces", check = FALSE) <-
+            gsub("[tb]", "", layout_spaces)
         if (!nzchar(prop(horizontal_align, "free_spaces"))) {
-            prop(horizontal_align, "free_spaces") <- NULL
+            prop(horizontal_align, "free_spaces", check = FALSE) <- NULL
         }
         if (!nzchar(prop(vertical_align, "free_spaces"))) {
-            prop(vertical_align, "free_spaces") <- NULL
+            prop(vertical_align, "free_spaces", check = FALSE) <- NULL
         }
     }
 
