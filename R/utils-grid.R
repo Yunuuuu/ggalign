@@ -177,7 +177,7 @@ S3_unit <- S7::new_S3_class("unit")
 GridUnit <- S7::new_class(
     "GridUnit",
     properties = list(
-        inner = S7::new_property(S3_unit, default = unit(NA, "null"))
+        inner = S7::new_property(S3_unit, default = quote(unit(NA, "null")))
     )
 )
 
