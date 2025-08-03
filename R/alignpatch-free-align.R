@@ -8,7 +8,7 @@
 #'   the plot panel. This keeps them visually close to the panel during
 #'   alignment.
 #' - `free_lab()`: Similar to `free_border()`, but only attaches axis titles
-#'   and tick labels, not full borders. It’s mainly included for completeness;
+#'   and tick labels, not full borders. It's mainly included for completeness;
 #'   in most cases, combining `free_border()` and `free_space()` is sufficient.
 #' - `free_space`: Removing the ggplot element sizes when aligning.
 #' - `free_vp`: Customize the [viewport][grid::viewport] when aligning.

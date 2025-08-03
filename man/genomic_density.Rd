@@ -18,7 +18,7 @@ genomic_density(
 end.
 \itemize{
 \item Column 1: character or factor, chromosome name.
-\item Column 2: numeric, start position (must be ≤ end).
+\item Column 2: numeric, start position (must be <= end).
 \item Column 3: numeric, end position.
 }}
 

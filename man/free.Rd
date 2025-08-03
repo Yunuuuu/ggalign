@@ -138,7 +138,7 @@ axes (panel won't be aligned). we can wrap the plot with \code{free_align}.
 the plot panel. This keeps them visually close to the panel during
 alignment.
 \item \code{free_lab()}: Similar to \code{free_border()}, but only attaches axis titles
-and tick labels, not full borders. It’s mainly included for completeness;
+and tick labels, not full borders. It's mainly included for completeness;
 in most cases, combining \code{free_border()} and \code{free_space()} is sufficient.
 \item \code{free_space}: Removing the ggplot element sizes when aligning.
 \item \code{free_vp}: Customize the \link[grid:viewport]{viewport} when aligning.

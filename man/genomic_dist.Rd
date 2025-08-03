@@ -25,8 +25,8 @@ features.
 The distance between two adjacent regions is calculated as the number of
 bases between the \strong{end position of the upstream region} and the
 \strong{start position of the downstream region}. If two regions overlap or are
-adjacent (≤1 bp apart), the distance is set to \code{0}. The resulting distance is
-assigned to each region according to the selected \code{mode}:
+adjacent (<=1 bp apart), the distance is set to \code{0}. The resulting distance
+is assigned to each region according to the selected \code{mode}:
 \itemize{
 \item \code{"left"}: assign the distance to the upstream region
 \item \code{"right"}: assign to the downstream region

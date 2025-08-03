@@ -87,7 +87,7 @@ pkg_extdata <- function(..., mustWork = TRUE) {
 }
 
 ############################################################
-# I’m having trouble connecting to GitHub, and it seems that `gert` does not
+# I'm having trouble connecting to GitHub, and it seems that `gert` does not
 # respect the proxy settings in my Git config. To work around this, I modified
 # `usethis::use_github_release()` to skip the check that relies on the `gert`
 # package.

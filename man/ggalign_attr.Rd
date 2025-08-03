@@ -29,9 +29,9 @@ unavailable.
 }
 \description{
 \code{ggalign_attr} retrieves supplementary information stored as attributes
-during the layout rendering process. These attributes—typically added during
+during the layout rendering process. These attributes-typically added during
 data transformation by functions such as \code{\link[=fortify_matrix]{fortify_matrix()}} or
-\code{\link[=fortify_data_frame]{fortify_data_frame()}}—may contain filtered data, auxiliary metadata, or
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}-may contain filtered data, auxiliary metadata, or
 other context essential for downstream operations.
 
 Factor level information, stored as a separate attribute, can be accessed via

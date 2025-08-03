@@ -55,7 +55,7 @@ A \code{circle_layout} object representing the genomic layout.
 \description{
 \code{circle_genomic()} constructs a circular layout specifically for genomic
 data. It is a specialized variant of \code{circle_continuous()} that applies
-default axis limits and coerces the first column of each plot’s data to use
-chromosome (\code{seqname}) identifiers—matching those in the layout data—as
+default axis limits and coerces the first column of each plot's data to use
+chromosome (\code{seqname}) identifiers-matching those in the layout data-as
 factor levels.
 }

@@ -2,8 +2,8 @@
 #'
 #' `circle_genomic()` constructs a circular layout specifically for genomic
 #' data. It is a specialized variant of `circle_continuous()` that applies
-#' default axis limits and coerces the first column of each plot’s data to use
-#' chromosome (`seqname`) identifiers—matching those in the layout data—as
+#' default axis limits and coerces the first column of each plot's data to use
+#' chromosome (`seqname`) identifiers-matching those in the layout data-as
 #' factor levels.
 #'
 #' @param data The input data, which can be:

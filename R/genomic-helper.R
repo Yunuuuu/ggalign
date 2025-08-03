@@ -12,8 +12,8 @@
 #' The distance between two adjacent regions is calculated as the number of
 #' bases between the **end position of the upstream region** and the
 #' **start position of the downstream region**. If two regions overlap or are
-#' adjacent (≤1 bp apart), the distance is set to `0`. The resulting distance is
-#' assigned to each region according to the selected `mode`:
+#' adjacent (<=1 bp apart), the distance is set to `0`. The resulting distance
+#' is assigned to each region according to the selected `mode`:
 #'
 #' - `"left"`: assign the distance to the upstream region
 #' - `"right"`: assign to the downstream region
@@ -59,7 +59,7 @@ genomic_dist <- function(region, mode = NULL) {
             first <- vec_slice(d, ordering[i])
             second <- vec_slice(d, ordering[i + 1])
             out <- .subset2(second, 2L) - .subset2(first, 3L)
-            # If overlapping or adjacent (≤1 bp), treat distance as 0
+            # If overlapping or adjacent (<=1 bp), treat distance as 0
             if (out <= 1L) out <- 0L else out <- as.integer(out)
             out
         }, integer(1L), USE.NAMES = FALSE)
@@ -108,7 +108,7 @@ genomic_dist <- function(region, mode = NULL) {
 #' @param region A data frame with at least 3 columns: chromosome, start, and
 #' end.
 #'   - Column 1: character or factor, chromosome name.
-#'   - Column 2: numeric, start position (must be ≤ end).
+#'   - Column 2: numeric, start position (must be <= end).
 #'   - Column 3: numeric, end position.
 #' @param window_size Numeric, the width of each window (default is `1e+07`).
 #'   Ignored if `n_window` is specified.
