@@ -138,9 +138,9 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         data = data, mapping = mapping,
         width = width, height = height,
         theme = theme, active = active, filling = NULL
-    ) -
-        # set the default `scheme_data()`
-        scheme_data(data = pdata)
+    )
+    # set the default `scheme_data()`
+    ans <- layout_subtract(ans, scheme_data(data = pdata))
 
     # prepare counts matrix to reorder the column or rows
     if (reorder_column || reorder_row) {
@@ -151,20 +151,23 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     }
 
     if (reorder_row) {
-        ans <- ans + anno_left() + align_order(row_index, reverse = TRUE)
+        ans <- layout_add(ans, anno_left())
+        ans <- layout_add(ans, align_order(row_index, reverse = TRUE))
     }
     if (reorder_column) {
         column_scores <- .memo_order(vec_slice(counts, row_index))
-        ans <- ans +
-            anno_top() +
+        ans <- layout_add(ans, anno_top())
+        ans <- layout_add(
+            ans,
             align_order(order(column_scores, decreasing = TRUE))
+        )
     }
 
     # reset the active context
-    ans <- ans + quad_active()
+    ans <- layout_add(ans, quad_active())
     if (!is.null(filling)) {
         # we always make sure heatmap body has such action data
-        ans <- ans + scheme_data(data = pdata)
+        ans <- layout_add(ans, scheme_data(data = pdata))
 
         # set mapping for width and height
         tile_mapping <- aes(
@@ -191,7 +194,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         if (!is.null(.subset2(ans@plot$mapping, "fill"))) {
             tile_mapping$fill <- NULL
         }
-        ans <- ans + ggplot2::geom_tile(tile_mapping)
+        ans <- layout_add(ans, ggplot2::geom_tile(tile_mapping))
     }
     ans
 }
