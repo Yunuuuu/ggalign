@@ -63,7 +63,7 @@ layout or nesting state.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">quad_scope</span><span class="op">(</span><span class="va">x</span>, position <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">quad_scope</span><span class="op">(</span><span class="va">x</span>, position <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -76,9 +76,10 @@ layout or nesting state.</p>
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
 <dd><p>A string or character vector specifying one or more positions
-(<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, <code>"r"</code>, and <code>"i"</code>) that indicate where <code>x</code> should be applied.
-Use <code>'i'</code> to refer to the quad body (main plot). For default behaivours, see
-<code>details</code> section.</p></dd>
+(<code>"t"</code>, <code>"l"</code>, <code>"b"</code>, <code>"r"</code>, and <code>"i"</code>) indicating where <code>x</code> should be applied.
+Use <code>'i'</code> to refer to the quad body (i.e., the main plot). If <code>NULL</code>, the
+active annotation context is cleared, behaving as if no annotation is active.
+See the <strong>Details</strong> section for more information.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -99,10 +100,11 @@ Modifications are applied normally using <code>+</code> or <code>-</code> withou
 <code>quad_scope()</code> ensures the object is also applied to:</p><ul><li><p>The active annotation stack</p></li>
 <li><p>The main plot</p></li>
 </ul></li>
-</ul><p><strong>When <code>position</code> is manually specified</strong>:
-The object is applied only to the specified positions.
-To apply to the main plot, you must explicitly include <code>"i"</code> in <code>position</code>.</p>
-    </div>
+</ul><p><strong>When <code>position</code> is manually specified</strong>:</p><ul><li><p>If <code>NULL</code>, it behaves as if no annotation is active</p></li>
+<li><p>If a string, the object is applied only to the
+specified positions
+(to include the main plot, explicitly add <code>"i"</code> to <code>position</code>)</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
