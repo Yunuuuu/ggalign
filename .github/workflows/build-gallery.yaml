@@ -20,4 +20,4 @@ jobs:
           owner: Yunuuuu
           repo: ggalign-gallery
           github_token: ${{ secrets.GGALIGN_TUTORIAL }}
-          workflow_file_name: publish.yml
+          workflow_file_name: publish.yaml
