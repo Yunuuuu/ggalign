@@ -157,7 +157,7 @@ setup_3d_data <- function(data) {
     )
 }
 
-#' @aesthetics GeomTile3d
+#' @eval rd_gg_aesthetics("geom", "tile3d")
 #' @importFrom rlang list2
 #' @export
 #' @rdname geom_rect3d
