@@ -88,10 +88,12 @@ with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
             "with_quad(main = )",
             details = "with_quad(position = \"i\")"
         )
-        if (is.null(position)) {
-            position <- "i"
-        } else if (is_string(position)) {
-            position <- paste0(position, "i")
+        if (isTRUE(main)) {
+            if (is.null(position)) {
+                position <- "i"
+            } else if (is_string(position)) {
+                position <- paste0(position, "i")
+            }
         }
     }
     quad_scope(x, position, ...)
