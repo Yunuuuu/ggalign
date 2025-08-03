@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues
 Depends:
-    ggplot2 (>= 3.5.2.9000)
+    ggplot2 (>= 3.5.2)
 Imports:
     S7,
     vctrs (>= 0.5.0),
@@ -98,6 +98,7 @@ Collate:
     'craft-cross-mark.R'
     'craft-cross-none.R'
     'utils-grid.R'
+    'utils-ggplot.R'
     'scheme-.R'
     'craftbox.R'
     'domain.R'
@@ -132,7 +133,6 @@ Collate:
     'layout-.R'
     'layout-align.R'
     'layout-quad-scope.R'
-    'utils-ggplot.R'
     'layout-operator.R'
     'layout-chain-.R'
     'layout-chain-circle-.R'

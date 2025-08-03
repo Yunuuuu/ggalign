@@ -34,8 +34,7 @@ layout or nesting state.
 Default behavior when adding objects wrapped with \code{quad_scope()}:
 \itemize{
 \item \strong{When no annotation stack is active}:
-Modifications are applied normally using \code{+} or \code{-} without needing
-\code{quad_scope()}.
+Modifications are applied normally without needing \code{quad_scope()}.
 \item \strong{When an annotation stack is active}:
 \code{quad_scope()} ensures the object is also applied to:
 \itemize{

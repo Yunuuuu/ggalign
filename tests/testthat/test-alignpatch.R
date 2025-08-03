@@ -7,7 +7,7 @@ with_empty_dev <- function(plot, ...) {
 test_that("print.alignpatches sets last plot and draws grid", {
     p <- align_plots()
     with_empty_dev(p)
-    expect_identical(ggplot2::get_last_plot(), p)
+    expect_identical(ggplot2::last_plot(), p)
 })
 
 test_that("print.alignpatches seeks or pushes viewport when vp is provided", {

@@ -399,6 +399,9 @@ AlignPatches <- S7::new_class("AlignPatches",
     )
 )
 
+local(S7::method(`$`, AlignPatches) <- function(x, name) prop(x, name))
+local(S7::method(`[[`, AlignPatches) <- function(x, name) prop(x, name))
+
 #' @importFrom rlang caller_env
 local(
     S7::method(`+`, list(AlignPatches, S7::class_any)) <-

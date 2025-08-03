@@ -122,9 +122,8 @@ S7::method(scheme_inherit, list(scheme_align, scheme_align)) <-
         e2
     }
 
-#' @importFrom ggplot2 class_ggplot
 #' @importFrom S7 prop
-S7::method(plot_add_scheme, list(class_ggplot, scheme_align)) <-
+S7::method(plot_add_scheme, list(S3_class_ggplot, scheme_align)) <-
     function(plot, scheme, ...) {
         if (!is.waive(free_guides <- prop(scheme, "guides"))) {
             plot <- free_guide(plot, free_guides)
