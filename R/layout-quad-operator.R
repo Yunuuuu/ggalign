@@ -149,8 +149,8 @@ S7::method(
                 # we'll inherit the action data function when
                 schemes = default_schemes(if (is.null(data)) NULL else waiver())
             )
-            stack@heatmap$position <- position
-            stack@heatmap$quad_matrix <- quad_matrix
+            stack@heatmap["position"] <- list(position)
+            stack@heatmap["quad_matrix"] <- list(quad_matrix)
         }
     } else if (!is.null(stack) && isTRUE(initialize)) {
         cli_abort(c(

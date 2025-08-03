@@ -116,7 +116,7 @@ QuadScope <- S7::new_class(
                     oxford_and(c(.tlbr, "i"))
                 )
             },
-            default = waiver()
+            default = quote(waiver())
         ),
         object = S7::class_any,
         object_name = S7::class_any

@@ -391,11 +391,11 @@ AlignPatches <- S7::new_class("AlignPatches",
                 prop(self, "layout") <- value
                 self
             },
-            default = list(
+            default = quote(list(
                 ncol = NULL, nrow = NULL, byrow = TRUE,
                 widths = NA, heights = NA, area = NULL,
                 guides = waiver()
-            )
+            ))
         ),
         titles = prop_layout_title("titles"),
         theme = prop_layout_theme("theme")

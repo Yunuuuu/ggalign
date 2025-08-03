@@ -118,13 +118,13 @@ StackLayout <- S7::new_class(
         # used by heatmap annotation
         heatmap = S7::new_property(
             S7::class_list,
-            default = list(
+            default = quote(list(
                 position = NULL,
                 free_guides = waiver(),
                 # indicate whether or not the data is from the quad-layout
                 # matrix
                 quad_matrix = FALSE
-            )
+            ))
         )
     )
 )
