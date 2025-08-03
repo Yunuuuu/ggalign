@@ -68,8 +68,8 @@ inherit from the layout. If a function, it will apply with the layout matrix.
 <span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  no_axes <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  active <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  active <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  no_axes <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,16 +104,14 @@ will be interpreted as relative sizes, as this layout type adjusts based on
 the available space in the circular arrangement.</p></dd>
 
 
-<dt id="arg-no-axes">no_axes<a class="anchor" aria-label="anchor" href="#arg-no-axes"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Logical; if <code>TRUE</code>,
-removes axes elements for the alignment axis using <code><a href="theme_no_axes.html">theme_no_axes()</a></code>. By
-default, will use the option-
-<code>"ggalign.align_no_axes"</code>.</p></dd>
-
-
 <dt id="arg-active">active<a class="anchor" aria-label="anchor" href="#arg-active"></a></dt>
 <dd><p>A <code><a href="active.html">active()</a></code> object that defines the context settings when
 added to a layout.</p></dd>
+
+
+<dt id="arg-no-axes">no_axes<a class="anchor" aria-label="anchor" href="#arg-no-axes"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please add
+<code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> directly to the ggplot instead.</p></dd>
 
 </dl></div>
     <div class="section level2">
