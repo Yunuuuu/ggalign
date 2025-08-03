@@ -149,7 +149,8 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             plot,
             schemes = plot_schemes, theme = theme
         )
-        plot <- plot + ggplot2::labs(x = NULL, y = NULL)
+        plot <- plot + ggplot2::labs(x = NULL, y = NULL) +
+            theme(panel.border = element_blank())
         plot <- chain_decorate(circle, plot)
 
         # copied from `ggplot2:::ggplot_gtable`
