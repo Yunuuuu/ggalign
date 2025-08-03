@@ -80,8 +80,8 @@ end.</p></dd>
     <p>The distance between two adjacent regions is calculated as the number of
 bases between the <strong>end position of the upstream region</strong> and the
 <strong>start position of the downstream region</strong>. If two regions overlap or are
-adjacent (≤1 bp apart), the distance is set to <code>0</code>. The resulting distance is
-assigned to each region according to the selected <code>mode</code>:</p><ul><li><p><code>"left"</code>: assign the distance to the upstream region</p></li>
+adjacent (&lt;=1 bp apart), the distance is set to <code>0</code>. The resulting distance
+is assigned to each region according to the selected <code>mode</code>:</p><ul><li><p><code>"left"</code>: assign the distance to the upstream region</p></li>
 <li><p><code>"right"</code>: assign to the downstream region</p></li>
 <li><p><code>"min"</code> / <code>"max"</code> / <code>"mean"</code>: for intermediate regions, calculate the
 minimum, maximum, or average of the distances to neighboring regions</p></li>
