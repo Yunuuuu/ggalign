@@ -20,7 +20,7 @@
 #' - `"v"`(`vertical`): Creates a single column (one-column layout).
 #' @inheritParams ggplot2::geom_rect
 #' @inheritParams ggplot2::geom_segment
-#' @aesthetics GeomSubrect
+#' @eval rd_gg_aesthetics("geom", "subrect")
 #' @examples
 #' # arranges by row
 #' ggplot(data.frame(value = letters[seq_len(5)])) +
@@ -158,7 +158,7 @@ GeomSubrect <- ggproto(
     }
 )
 
-#' @aesthetics GeomSubtile
+#' @eval rd_gg_aesthetics("geom", "subtile")
 #' @importFrom rlang list2
 #' @export
 #' @rdname geom_subrect

@@ -37,7 +37,7 @@ system directly to the ggplot instead.}
 \description{
 Draw each panel in a sector of the polar coordinate system. If
 \code{facet_sector()} is used in a ggplot, the coordinate system must be created
-with \code{\link[=coord_circle]{coord_circle()}} or \code{\link[ggplot2:coord_radial]{coord_radial()}}.
+with \code{\link[=coord_circle]{coord_circle()}} or \code{\link[ggplot2:coord_polar]{coord_radial()}}.
 }
 \examples{
 ggplot(mtcars, aes(disp, mpg)) +

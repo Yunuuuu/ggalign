@@ -74,23 +74,24 @@ complete_theme <- function(theme) {
 
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
+    line <- if (packageVersion("ggplot2") > "3.5.2") {
+        quote(element_line(
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1,
+            lineend = "butt",
+            linejoin = "round"
+        ))
+    } else {
+        quote(element_line(
+            color = "black",
+            linewidth = 0.5,
+            linetype = 1,
+            lineend = "butt"
+        ))
+    }
     register_theme_elements(
-        ggalign.line = if (packageVersion("ggplot2") > "3.5.2") {
-            element_line(
-                color = "black",
-                linewidth = 0.5,
-                linetype = 1,
-                lineend = "butt",
-                linejoin = "round"
-            )
-        } else {
-            element_line(
-                color = "black",
-                linewidth = 0.5,
-                linetype = 1,
-                lineend = "butt"
-            )
-        },
+        ggalign.line = eval(line),
         ggalign.polygon = element_polygon(
             fill = NA,
             color = "black",

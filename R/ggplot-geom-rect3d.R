@@ -7,7 +7,7 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_polygon
 #' @inheritParams ggplot2::geom_path
-#' @aesthetics GeomRect3d
+#' @eval rd_gg_aesthetics("geom", "rect3d")
 #' @examples
 #' set.seed(123)
 #' small_mat <- matrix(rnorm(81), nrow = 9)

@@ -20,8 +20,7 @@ element_curve(
 )
 }
 \arguments{
-\item{colour, color}{Line/border colour. Color is an alias for colour.
-\code{alpha()} can be used to set the transparency of the colour.}
+\item{colour, color}{Line/border colour. Color is an alias for colour.}
 
 \item{linewidth}{Line size in \code{mm}.}
 
@@ -30,7 +29,7 @@ dashed, dotted, dotdash, longdash, twodash), or a string with an even number
 (up to eight) of hexadecimal digits which give the lengths in consecutive
 positions in the string.}
 
-\item{lineend}{Line end style, one of \code{"round"}, \code{"butt"} or \code{"square"}.}
+\item{lineend}{Line end Line end style (round, butt, square)}
 
 \item{curvature}{A numeric value giving the amount of curvature.
     Negative values produce left-hand curves, positive values

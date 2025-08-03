@@ -43,7 +43,7 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{stat}{The statistical transformation to use on the data for this layer.
 When using a \verb{geom_*()} function to construct a layer, the \code{stat}
-argument can be used to override the default coupling between geoms and
+argument can be used the override the default coupling between geoms and
 stats. The \code{stat} argument accepts the following:
 \itemize{
 \item A \code{Stat} ggproto subclass, for example \code{StatCount}.
@@ -113,14 +113,12 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.
 It can also be a named logical vector to finely select the aesthetics to
-display. To include legend keys for all levels, even
-when no data exists, use \code{TRUE}.  If \code{NA}, all levels are shown in legend,
-but unobserved levels are omitted.}
+display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
 Pie charts
@@ -134,26 +132,26 @@ Pie charts
 }
 }
 
+\section{Aesthetics}{
+
+\code{geom_pie()} understands the following aesthetics (required aesthetics are in bold):
+\itemize{
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
+\item \strong{\code{angle}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
+\item \code{angle0}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
+\item \code{\link[ggplot2:aes_group_order]{group}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
+\item \code{radius}
+}
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
+}
+
 \examples{
 ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
     geom_pie(aes(x, y, angle = value * 360))
-}
-\section{Aesthetics}{
-
-\code{geom_pie()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
- • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
- • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
- • \tab \strong{\code{angle}} \tab   \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
- • \tab \code{angle0} \tab → \code{0} \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
- • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
- • \tab \code{radius} \tab → \code{NULL} \cr
-}
-
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

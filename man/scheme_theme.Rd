@@ -10,11 +10,6 @@ scheme_theme(
   rect,
   text,
   title,
-  point,
-  polygon,
-  geom,
-  spacing,
-  margins,
   aspect.ratio,
   axis.title,
   axis.title.x,
@@ -86,7 +81,6 @@ scheme_theme(
   legend.key.spacing,
   legend.key.spacing.x,
   legend.key.spacing.y,
-  legend.key.justification,
   legend.frame,
   legend.ticks,
   legend.ticks.length,
@@ -124,8 +118,6 @@ scheme_theme(
   panel.grid.minor.x,
   panel.grid.minor.y,
   panel.ontop,
-  panel.widths,
-  panel.heights,
   plot.background,
   plot.title,
   plot.title.position,
@@ -169,16 +161,6 @@ is also supported.}
 \item{title}{all title elements: plot, axes, legends (\code{\link[ggplot2:element_text]{element_text()}};
 inherits from \code{text})}
 
-\item{point}{all point elements (\code{\link[ggplot2:element_point]{element_point()}})}
-
-\item{polygon}{all polygon elements (\code{\link[ggplot2:element_polygon]{element_polygon()}})}
-
-\item{geom}{defaults for geoms (\code{\link[ggplot2:element_geom]{element_geom()}})}
-
-\item{spacing}{all spacings (\code{\link[grid:unit]{unit()}})}
-
-\item{margins}{all margins (\code{\link[ggplot2:margin]{margin()}})}
-
 \item{aspect.ratio}{aspect ratio of the panel}
 
 \item{axis.title, axis.title.x, axis.title.y, axis.title.x.top, axis.title.x.bottom, axis.title.y.left, axis.title.y.right}{labels of axes (\code{\link[ggplot2:element_text]{element_text()}}). Specify all axes' labels (\code{axis.title}),
@@ -205,7 +187,7 @@ from \code{line}}
 \item{axis.minor.ticks.x.top, axis.minor.ticks.x.bottom, axis.minor.ticks.y.left, axis.minor.ticks.y.right, axis.minor.ticks.theta, axis.minor.ticks.r}{minor tick marks along axes (\code{\link[ggplot2:element_line]{element_line()}}). \verb{axis.minor.ticks.*.*}
 inherit from the corresponding major ticks \verb{axis.ticks.*.*}.}
 
-\item{axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.ticks.length.theta, axis.ticks.length.r}{length of tick marks (\code{unit}). \code{axis.ticks.length} inherits from \code{spacing}.}
+\item{axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.ticks.length.theta, axis.ticks.length.r}{length of tick marks (\code{unit})}
 
 \item{axis.minor.ticks.length, axis.minor.ticks.length.x, axis.minor.ticks.length.x.top, axis.minor.ticks.length.x.bottom, axis.minor.ticks.length.y, axis.minor.ticks.length.y.left, axis.minor.ticks.length.y.right, axis.minor.ticks.length.theta, axis.minor.ticks.length.r}{length of minor tick marks (\code{unit}), or relative to \code{axis.ticks.length} when provided with \code{rel()}.}
 
@@ -219,36 +201,27 @@ from \code{line}}
 \item{legend.background}{background of legend (\code{\link[ggplot2:element_rect]{element_rect()}}; inherits
 from \code{rect})}
 
-\item{legend.margin}{the margin around each legend (\code{\link[ggplot2:margin]{margin()}}); inherits
-from \code{margins}.}
+\item{legend.margin}{the margin around each legend (\code{\link[ggplot2:margin]{margin()}})}
 
 \item{legend.spacing, legend.spacing.x, legend.spacing.y}{the spacing between legends (\code{unit}). \code{legend.spacing.x} & \code{legend.spacing.y}
-inherit from \code{legend.spacing} or can be specified separately.
-\code{legend.spacing} inherits from \code{spacing}.}
+inherit from \code{legend.spacing} or can be specified separately}
 
 \item{legend.key}{background underneath legend keys (\code{\link[ggplot2:element_rect]{element_rect()}};
 inherits from \code{rect})}
 
 \item{legend.key.size, legend.key.height, legend.key.width}{size of legend keys (\code{unit}); key background height & width inherit from
-\code{legend.key.size} or can be specified separately. In turn \code{legend.key.size}
-inherits from \code{spacing}.}
+\code{legend.key.size} or can be specified separately}
 
 \item{legend.key.spacing, legend.key.spacing.x, legend.key.spacing.y}{spacing
 between legend keys given as a \code{unit}. Spacing in the horizontal (x) and
 vertical (y) direction inherit from \code{legend.key.spacing} or can be
-specified separately. \code{legend.key.spacing} inherits from \code{spacing}.}
-
-\item{legend.key.justification}{Justification for positioning legend keys
-when more space is available than needed for display. The default, \code{NULL},
-stretches keys into the available space. Can be a location like \code{"center"}
-or \code{"top"}, or a two-element numeric vector.}
+specified separately.}
 
 \item{legend.frame}{frame drawn around the bar (\code{\link[ggplot2:element_rect]{element_rect()}}).}
 
 \item{legend.ticks}{tick marks shown along bars or axes (\code{\link[ggplot2:element_line]{element_line()}})}
 
-\item{legend.ticks.length}{length of tick marks in legend
-(\code{\link[grid:unit]{unit()}}); inherits from \code{legend.key.size}.}
+\item{legend.ticks.length}{length of tick marks in legend (\code{unit})}
 
 \item{legend.axis.line}{lines along axes in legends (\code{\link[ggplot2:element_line]{element_line()}})}
 
@@ -291,17 +264,17 @@ string. Can be \code{"panel"} (default) to align legends to the panels or
 "vertical")}
 
 \item{legend.box.just}{justification of each legend within the overall
-bounding box, when there are multiple legends ("top", "bottom", "left",
-"right", "center" or "centre")}
+bounding box, when there are multiple legends ("top", "bottom", "left", or
+"right")}
 
 \item{legend.box.margin}{margins around the full legend area, as specified
-using \code{\link[ggplot2:margin]{margin()}}; inherits from \code{margins}.}
+using \code{\link[ggplot2:margin]{margin()}}}
 
 \item{legend.box.background}{background of legend area (\code{\link[ggplot2:element_rect]{element_rect()}};
 inherits from \code{rect})}
 
 \item{legend.box.spacing}{The spacing between the plotting area and the
-legend box (\code{unit}); inherits from \code{spacing}.}
+legend box (\code{unit})}
 
 \item{panel.background}{background of plotting area, drawn underneath plot
 (\code{\link[ggplot2:element_rect]{element_rect()}}; inherits from \code{rect})}
@@ -313,7 +286,7 @@ it covers tick marks and grid lines. This should be used with
 
 \item{panel.spacing, panel.spacing.x, panel.spacing.y}{spacing between facet
 panels (\code{unit}). \code{panel.spacing.x} & \code{panel.spacing.y} inherit from \code{panel.spacing}
-or can be specified separately. \code{panel.spacing} inherits from \code{spacing}.}
+or can be specified separately.}
 
 \item{panel.grid, panel.grid.major, panel.grid.minor, panel.grid.major.x, panel.grid.major.y, panel.grid.minor.x, panel.grid.minor.y}{grid lines (\code{\link[ggplot2:element_line]{element_line()}}). Specify major grid lines,
 or minor grid lines separately (using \code{panel.grid.major} or \code{panel.grid.minor})
@@ -326,10 +299,6 @@ from \code{line}}
 \item{panel.ontop}{option to place the panel (background, gridlines) over
 the data layers (\code{logical}). Usually used with a transparent or blank
 \code{panel.background}.}
-
-\item{panel.widths, panel.heights}{Sizes for panels (\code{units}). Can be a
-single unit to set the total size for the panel area, or a unit vector to
-set the size of individual panels.}
 
 \item{plot.background}{background of the entire plot (\code{\link[ggplot2:element_rect]{element_rect()}};
 inherits from \code{rect})}
@@ -365,7 +334,7 @@ inside the panel space, anywhere in the plot as a whole, or in the margin
 around the panel space.}
 
 \item{plot.margin}{margin around entire plot (\code{unit} with the sizes of
-the top, right, bottom, and left margins); inherits from \code{margin}.}
+the top, right, bottom, and left margins)}
 
 \item{strip.background, strip.background.x, strip.background.y}{background of facet labels (\code{\link[ggplot2:element_rect]{element_rect()}};
 inherits from \code{rect}). Horizontal facet background (\code{strip.background.x})
@@ -389,8 +358,11 @@ that inherit from \code{strip.text.x} and \code{strip.text.y}, respectively.
 As a consequence, some theme stylings need to be applied to
 the position-dependent elements rather than to the parent elements}
 
-\item{strip.switch.pad.grid, strip.switch.pad.wrap}{space between strips and
-axes when strips are switched (\code{unit}); inherits from \code{spacing}.}
+\item{strip.switch.pad.grid}{space between strips and axes when strips are
+switched (\code{unit})}
+
+\item{strip.switch.pad.wrap}{space between strips and axes when strips are
+switched (\code{unit})}
 
 \item{complete}{set this to \code{TRUE} if this is a complete theme, such as
 the one returned by \code{\link[ggplot2:theme_grey]{theme_grey()}}. Complete themes behave
@@ -398,7 +370,7 @@ differently when added to a ggplot object. Also, when setting
 \code{complete = TRUE} all elements will be set to inherit from blank
 elements.}
 
-\item{validate}{\code{TRUE} to run \code{check_element()}, \code{FALSE} to bypass checks.}
+\item{validate}{\code{TRUE} to run \code{validate_element()}, \code{FALSE} to bypass checks.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -437,7 +409,7 @@ ggheatmap(small_mat) +
 
 }
 \seealso{
-\code{\link[ggplot2:add_gg]{add_gg()}} and \link[ggplot2]{\%+replace\%},
+\code{\link[ggplot2:+.gg]{+.gg()}} and \link[ggplot2]{\%+replace\%},
 \code{\link[ggplot2:element_blank]{element_blank()}}, \code{\link[ggplot2:element_line]{element_line()}},
 \code{\link[ggplot2:element_rect]{element_rect()}}, and \code{\link[ggplot2:element_text]{element_text()}} for
 details of the specific theme elements.

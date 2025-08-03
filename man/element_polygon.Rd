@@ -18,11 +18,9 @@ element_polygon(
 )
 }
 \arguments{
-\item{fill}{Fill colour. \code{fill_alpha()} can be used to set the transparency
-of the fill.}
+\item{fill}{Fill colour.}
 
-\item{colour, color}{Line/border colour. Color is an alias for colour.
-\code{alpha()} can be used to set the transparency of the colour.}
+\item{colour, color}{Line/border colour. Color is an alias for colour.}
 
 \item{linewidth}{Line size in \code{mm}.}
 
@@ -34,9 +32,9 @@ positions in the string.}
 \item{alpha}{A transparency value between 0 (transparent) and 1 (opaque),
 parallel to \code{fill}.}
 
-\item{lineend}{Line end style, one of \code{"round"}, \code{"butt"} or \code{"square"}.}
+\item{lineend}{Line end Line end style (round, butt, square)}
 
-\item{linejoin}{Line join style, one of \code{"round"}, \code{"mitre"} or \code{"bevel"}.}
+\item{linejoin}{Line join style (round, mitre, bevel).}
 
 \item{linemitre}{Line mitre limit (number greater than 1).}
 

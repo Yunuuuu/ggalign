@@ -9,7 +9,7 @@
 #' @param steps An integer indicating the number of steps to generate the pie
 #' chart radian. Increasing this value results in a smoother pie circular.
 #' @param clockwise A single boolean value indicates clockwise or not.
-#' @aesthetics GeomPie
+#' @eval rd_gg_aesthetics("geom", "pie")
 #' @examples
 #' ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
 #'     geom_pie(aes(x, y, angle = value * 360))

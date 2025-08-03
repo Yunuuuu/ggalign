@@ -38,7 +38,7 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{stat}{The statistical transformation to use on the data for this layer.
 When using a \verb{geom_*()} function to construct a layer, the \code{stat}
-argument can be used to override the default coupling between geoms and
+argument can be used the override the default coupling between geoms and
 stats. The \code{stat} argument accepts the following:
 \itemize{
 \item A \code{Stat} ggproto subclass, for example \code{StatCount}.
@@ -97,14 +97,12 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.
 It can also be a named logical vector to finely select the aesthetics to
-display. To include legend keys for all levels, even
-when no data exists, use \code{TRUE}.  If \code{NA}, all levels are shown in legend,
-but unobserved levels are omitted.}
+display.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#questioning}{\figure{lifecycle-questioning.svg}{options: alt='[Questioning]'}}}{\strong{[Questioning]}}
@@ -119,6 +117,26 @@ value should be drawn. Any ggplot2 aesthetics can be used as the arguments.
 We're unsure whether this function is truly necessary, which is why it is
 marked as questioning. So far, we've found that \code{\link[=geom_subrect]{geom_subrect()}} and
 \code{\link[=geom_subtile]{geom_subtile()}} handle most use cases effectively.
+}
+
+\section{Aesthetics}{
+
+\code{geom_gshape()} understands the following aesthetics (required aesthetics are in bold):
+\itemize{
+\item \strong{\code{\link[ggplot2:aes_position]{x}}}
+\item \strong{\code{\link[ggplot2:aes_position]{y}}}
+\item \strong{\code{gshape}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
+\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
+\item \code{\link[ggplot2:aes_group_order]{group}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
+\item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
+\item \code{stroke}
+}
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
 
 \examples{
@@ -169,24 +187,4 @@ ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
     scale_fill_brewer(palette = "Dark2") +
     theme_void()
 
-}
-\section{Aesthetics}{
-
-\code{geom_gshape()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
- • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
- • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
- • \tab \strong{\code{gshape}} \tab   \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → \code{"black"} \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
- • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → \code{1} \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → \code{0.5} \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{shape}} \tab → \code{19} \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → \code{1.5} \cr
- • \tab \code{stroke} \tab → \code{0.5} \cr
-}
-
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
