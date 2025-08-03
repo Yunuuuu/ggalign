@@ -1,10 +1,14 @@
 # ggalign (development version)
 
+The internal structure has been fully refactored, with more informative and consistent naming.
+
 * Added layout_theme() to control layout theming.
 
 * Deprecated the `theme` argument in `layout_annotation()`.
 
-* use S7 class system to implement `alighpatches`
+* Migrated all internal objects to the S7 class system.
+
+* replace `with_quad()` with `quad_scope()` and deprecate old name
 
 # ggalign 1.0.2
 
