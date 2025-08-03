@@ -11,9 +11,10 @@
 #'
 #' @param x An object which can be added to the ggplot.
 #' @param position A string or character vector specifying one or more positions
-#' (`r oxford_and(c(.tlbr, "i"))`) that indicate where `x` should be applied.
-#' Use `'i'` to refer to the quad body (main plot). For default behaivours, see
-#' `details` section.
+#' (`r oxford_and(c(.tlbr, "i"))`) indicating where `x` should be applied.
+#' Use `'i'` to refer to the quad body (i.e., the main plot). If `NULL`, the
+#' active annotation context is cleared, behaving as if no annotation is active.
+#' See the **Details** section for more information.
 #' @inheritParams rlang::args_dots_empty
 #' @return The original object with an added attribute that sets the specified
 #' context.
@@ -21,8 +22,7 @@
 #' Default behavior when adding objects wrapped with `quad_scope()`:
 #'
 #' - **When no annotation stack is active**:
-#'   Modifications are applied normally using `+` or `-` without needing
-#'   `quad_scope()`.
+#'   Modifications are applied normally without needing `quad_scope()`.
 #'
 #' - **When an annotation stack is active**:
 #'   `quad_scope()` ensures the object is also applied to:
@@ -30,8 +30,10 @@
 #'     - The main plot
 #'
 #' **When `position` is manually specified**:
-#'   The object is applied only to the specified positions.
-#'   To apply to the main plot, you must explicitly include `"i"` in `position`.
+#'   - If `NULL`, it behaves as if no annotation is active
+#'   - If a string, the object is applied only to the
+#'     specified positions
+#'     (to include the main plot, explicitly add `"i"` to `position`)
 #'
 #' @examples
 #' set.seed(123)
@@ -63,7 +65,7 @@
 #' @export
 quad_scope <- S7::new_generic(
     "quad_scope", "x",
-    function(x, position = NULL, ...) S7_dispatch()
+    function(x, position = waiver(), ...) S7_dispatch()
 )
 
 #' Create ggplot object with layout panel data
@@ -74,7 +76,7 @@ quad_scope <- S7::new_generic(
 #' This function was deprecated, please use `quad_scope()` instead.
 #' @export
 #' @keywords internal
-with_quad <- function(x, position = NULL, main = deprecated(), ...) {
+with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
     lifecycle::deprecate_soft(
         "1.0.3",
         "with_quad()",
@@ -101,7 +103,7 @@ QuadScope <- S7::new_class(
         position = S7::new_property(
             S7::class_any,
             validator = function(value) {
-                if (is.null(value)) {
+                if (is.waive(value) || is.null(value)) {
                     return(NULL)
                 }
                 if (is_string(value) && !grepl("[^tlbri]", value)) {
@@ -112,7 +114,7 @@ QuadScope <- S7::new_class(
                     oxford_and(c(.tlbr, "i"))
                 )
             },
-            default = NULL
+            default = waiver()
         ),
         object = S7::class_any,
         object_name = S7::class_any
@@ -121,17 +123,16 @@ QuadScope <- S7::new_class(
 
 quad_scope_contexts <- function(scope, current) {
     contexts <- prop(scope, "position")
-    if (!is.null(contexts)) {
-        contexts <- .subset(
+    if (is.null(contexts)) return(contexts) # styler: off
+    if (is.waive(contexts)) {
+        # have active annotation, we by default add quad body
+        if (is.null(current)) current else list(current, NULL)
+    } else {
+        .subset(
             list(t = "top", l = "left", b = "bottom", r = "right", i = NULL),
             split_position(contexts)
         )
     }
-    if (!is.null(current) && is.null(contexts)) {
-        # have active annotation, we by default add quad body
-        contexts <- list(current, NULL)
-    }
-    contexts
 }
 
 #' @importFrom utils str
@@ -145,7 +146,7 @@ local(S7::method(str, QuadScope) <- function(object, ..., nest.lev = 0) {
     )
 })
 
-S7::method(quad_scope, S7::class_any) <- function(x, position = NULL, ...) {
+S7::method(quad_scope, S7::class_any) <- function(x, position = waiver(), ...) {
     QuadScope(
         position = position,
         object = x,
@@ -153,7 +154,7 @@ S7::method(quad_scope, S7::class_any) <- function(x, position = NULL, ...) {
     )
 }
 
-S7::method(quad_scope, CraftBox) <- function(x, position = NULL, ...) {
+S7::method(quad_scope, CraftBox) <- function(x, position = waiver(), ...) {
     cli_abort(sprintf("Cannot used with %s", object_name(x)))
 }
 
@@ -163,7 +164,7 @@ S7::method(quad_scope, S3_layout_title) <-
     S7::method(quad_scope, S7::new_S3_class("quad_active")) <-
     S7::method(quad_scope, S7::new_S3_class("quad_anno")) <-
     S7::method(quad_scope, S7::new_S3_class("stack_switch")) <-
-    function(x, position = NULL, ...) {
+    function(x, position = waiver(), ...) {
         cli_abort("Cannot used with {.obj_type_friendly {x}}")
     }
 

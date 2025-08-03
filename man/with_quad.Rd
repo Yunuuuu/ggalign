@@ -4,7 +4,7 @@
 \alias{with_quad}
 \title{Create ggplot object with layout panel data}
 \usage{
-with_quad(x, position = NULL, main = deprecated(), ...)
+with_quad(x, position = waiver(), main = deprecated(), ...)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}

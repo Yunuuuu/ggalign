@@ -4,15 +4,16 @@
 \alias{quad_scope}
 \title{Modify operated Context in \code{quad_layout()}}
 \usage{
-quad_scope(x, position = NULL, ...)
+quad_scope(x, position = waiver(), ...)
 }
 \arguments{
 \item{x}{An object which can be added to the ggplot.}
 
 \item{position}{A string or character vector specifying one or more positions
-(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}, and \code{"i"}) that indicate where \code{x} should be applied.
-Use \code{'i'} to refer to the quad body (main plot). For default behaivours, see
-\code{details} section.}
+(\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}, and \code{"i"}) indicating where \code{x} should be applied.
+Use \code{'i'} to refer to the quad body (i.e., the main plot). If \code{NULL}, the
+active annotation context is cleared, behaving as if no annotation is active.
+See the \strong{Details} section for more information.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 }
@@ -44,8 +45,12 @@ Modifications are applied normally using \code{+} or \code{-} without needing
 }
 
 \strong{When \code{position} is manually specified}:
-The object is applied only to the specified positions.
-To apply to the main plot, you must explicitly include \code{"i"} in \code{position}.
+\itemize{
+\item If \code{NULL}, it behaves as if no annotation is active
+\item If a string, the object is applied only to the
+specified positions
+(to include the main plot, explicitly add \code{"i"} to \code{position})
+}
 }
 \examples{
 set.seed(123)

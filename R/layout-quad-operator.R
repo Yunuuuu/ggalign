@@ -58,6 +58,7 @@ S7::method(layout_add, list(QuadLayout, QuadScope)) <-
     function(layout, object, objectname) {
         old <- layout@current
         contexts <- quad_scope_contexts(object, old)
+        if (is.null(contexts)) contexts <- list(NULL)
         object_name <- prop(object, "object_name")
         object <- prop(object, "object")
         for (active in contexts) {
@@ -394,15 +395,14 @@ S7::method(layout_subtract, list(QuadLayout, Scheme)) <-
 #' @include layout-operator.R
 S7::method(layout_subtract, list(QuadLayout, QuadScope)) <-
     function(layout, object, objectname) {
-        old <- layout@current
         inner_name <- prop(object, "object_name")
         inner <- prop(object, "object")
+        contexts <- quad_scope_contexts(object, layout@current)
         # `subtract` operates at layout-level
-        if (is.null(old)) {
-            layout@current <- old
+        if (is.null(contexts)) {
             layout <- layout_subtract(layout, inner, inner_name)
         } else {
-            for (active in quad_scope_contexts(object, old)) {
+            for (active in contexts) {
                 if (is.null(active)) {
                     layout <- quad_body_add(inner, layout, inner_name)
                 } else if (!is.null(prop(layout, active))) {
@@ -412,7 +412,6 @@ S7::method(layout_subtract, list(QuadLayout, QuadScope)) <-
                 }
             }
         }
-        layout@current <- old
         layout
     }
 
