@@ -1,7 +1,8 @@
 #' @importFrom grid grid.draw
 #' @importFrom rlang try_fetch cnd_signal
 #' @export
-print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+`print.ggalign::AlignPatches` <- function(x, newpage = is.null(vp),
+                                          vp = NULL, ...) {
     ggplot2::set_last_plot(x)
     if (newpage) {
         grid::grid.newpage()
@@ -50,19 +51,19 @@ print.alignpatches <- function(x, newpage = is.null(vp), vp = NULL, ...) {
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.alignpatches <- function(x, recording = TRUE) {
+`grid.draw.ggalign::AlignPatches` <- function(x, recording = TRUE) {
     grid.draw(ggalignGrob(x), recording = recording)
 }
 
 #' @export
-ggalign_build.alignpatches <- function(x) x
+`ggalign_build.ggalign::AlignPatches` <- function(x) x
 
 #' @importFrom ggplot2 find_panel element_render theme theme_get
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom rlang arg_match0
 #' @importFrom S7 prop
 #' @export
-ggalign_gtable.alignpatches <- function(x) {
+`ggalign_gtable.ggalign::AlignPatches` <- function(x) {
     titles <- prop(x, "titles")
 
     # ensure theme has no missing value

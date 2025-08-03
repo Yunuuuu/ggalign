@@ -25,7 +25,7 @@ free_vp.ggplot <- function(plot, x = 0.5, y = 0.5,
 }
 
 #' @export
-free_vp.alignpatches <- free_vp.ggplot
+`free_vp.ggalign::AlignPatches` <- free_vp.ggplot
 
 ####################################################
 #' @importFrom gtable gtable_width gtable_height

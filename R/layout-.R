@@ -37,10 +37,10 @@ LayoutProto <- S7::new_class("LayoutProto",
 #' @name Layout-subset
 local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
 
-local(S7::method(print, LayoutProto) <- print.alignpatches)
+local(S7::method(print, LayoutProto) <- `print.ggalign::AlignPatches`)
 
 #' @importFrom grid grid.draw
-local(S7::method(grid.draw, LayoutProto) <- grid.draw.alignpatches)
+local(S7::method(grid.draw, LayoutProto) <- `grid.draw.ggalign::AlignPatches`)
 
 local(S7::method(alignpatch, LayoutProto) <- function(x) {
     alignpatch(ggalign_build(x))

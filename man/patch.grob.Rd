@@ -24,8 +24,8 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \seealso{
 Other \code{\link[=patch]{patch()}} methods:
 \code{\link{patch.Heatmap}()},
-\code{\link{patch.alignpatches}()},
 \code{\link{patch.formula}()},
+\code{\link{patch.ggalign::AlignPatches}()},
 \code{\link{patch.ggplot}()},
 \code{\link{patch.patch}()},
 \code{\link{patch.patch_ggplot}()},
