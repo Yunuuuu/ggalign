@@ -15,6 +15,8 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://cranlogs.r-pkg.org/badges/ggalign)](https://cran.r-project.org/package=ggalign)
 [![DOI](https://zenodo.org/badge/828195668.svg)](https://doi.org/10.5281/zenodo.14825328)
+[![Ask
+DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yunuuuu/ggalign)
 <!-- badges: end -->
 
 The `ggalign` package provides an integrative framework for composable
