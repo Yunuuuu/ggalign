@@ -12,20 +12,25 @@
 #' @export
 align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
                         center = FALSE, tree_type = NULL,
-                        no_axes = NULL, active = NULL,
-                        size = NULL) {
+                        active = NULL, size = NULL, no_axes = deprecated()) {
     if (!is.null(ladderize)) {
         ladderize <- arg_match0(ladderize, c("left", "right"))
         rlang::check_installed("ape", "to ladderize phylogenetics tree")
     }
     assert_s3_class(phylo, "phylo")
     assert_active(active)
+    if (lifecycle::is_present(no_axes)) {
+        lifecycle::deprecate_stop(
+            "1.0.3",
+            "align_phylo(no_axes = )",
+            details = "Please add `theme()` to the ggplot instead"
+        )
+    }
     active <- active_update(active(use = TRUE), active)
     align(
         align = AlignPhylo,
         phylo = phylo,
         ladderize = ladderize,
-        no_axes = no_axes,
         plot = ggplot() +
             ggplot2::geom_segment(
                 mapping = aes(

@@ -23,10 +23,8 @@
 #' [`unit()`][grid::unit]. Note that for [`circle_layout()`], all size values
 #' will be interpreted as relative sizes, as this layout type adjusts based on
 #' the available space in the circular arrangement.
-#' @param no_axes `r lifecycle::badge('experimental')` Logical; if `TRUE`,
-#'   removes axes elements for the alignment axis using [`theme_no_axes()`]. By
-#'   default, will use the option-
-#'   `r code_quote(sprintf("%s.align_no_axes", pkg_nm()))`.
+#' @param no_axes `r lifecycle::badge("deprecated")` Please add
+#' [`theme()`][ggplot2::theme] directly to the ggplot instead.
 #' @param active A [`active()`] object that defines the context settings when
 #'   added to a layout.
 #' @section ggplot2 specification:
@@ -85,15 +83,20 @@
 #' @importFrom rlang list2
 #' @export
 ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
-                    no_axes = NULL, active = NULL) {
+                    active = NULL, no_axes = deprecated()) {
     if (inherits(data, "uneval")) {
         cli_abort(c(
             "{.arg data} cannot be {.obj_type_friendly {data}}",
             "i" = "Have you misspelled the {.arg data} argument in {.fn ggalign}"
         ))
     }
-    no_axes <- no_axes %||%
-        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
+    if (lifecycle::is_present(no_axes)) {
+        lifecycle::deprecate_stop(
+            "1.0.3",
+            "ggalign(no_axes = )",
+            details = "Please add `theme()` to the ggplot instead"
+        )
+    }
     assert_active(active)
     active <- active_update(active(use = TRUE), active)
     new_craftbox(
@@ -103,7 +106,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
         plot = ggplot(mapping = mapping),
         size = size,
         schemes = default_schemes(data, th = theme_no_strip()),
-        no_axes = no_axes, active = active
+        active = active
     )
 }
 
@@ -274,12 +277,10 @@ AlignGg <- ggproto("AlignGg", Craftsman,
     finish_plot = function(self, plot, schemes, theme) {
         direction <- self$direction
         # remove axis titles, text, ticks used for alignment
-        if (isTRUE(self$no_axes)) {
-            schemes <- scheme_update(
-                schemes,
-                theme_no_axes(switch_direction(direction, "y", "x"))
-            )
-        }
+        schemes <- scheme_update(
+            schemes,
+            theme_no_axes(switch_direction(direction, "y", "x"))
+        )
         plot <- plot_add_scheme(plot, schemes)
         if (is_horizontal(direction)) {
             theme <- theme(

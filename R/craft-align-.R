@@ -30,23 +30,27 @@
 #' @export
 #' @keywords internal
 align <- function(align, data = NULL, ..., plot = NULL,
-                  size = NULL, schemes = NULL, no_axes = NULL,
-                  active = NULL, call = caller_call()) {
+                  size = NULL, schemes = NULL,
+                  active = NULL, no_axes = deprecated(), call = caller_call()) {
     if (override_call(call)) {
         call <- current_call()
     }
 
     # check arguments ---------------------------------------------
     data <- allow_lambda(data)
-    no_axes <- no_axes %||%
-        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
+    if (lifecycle::is_present(no_axes)) {
+        lifecycle::deprecate_stop(
+            "1.0.3",
+            "align(no_axes = )",
+            details = "Please add `theme()` to the ggplot instead"
+        )
+    }
     schemes <- schemes %|w|% default_schemes(data)
 
     new_craftbox(
         craftsman = align,
 
         # additional field for `align` object
-        no_axes = no_axes,
         ...,
 
         # Following fields will be initialzed when added into the layout

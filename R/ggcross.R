@@ -38,17 +38,22 @@
 #'
 #' @importFrom ggplot2 ggplot aes
 #' @export
-ggcross <- function(mapping = aes(), size = NULL,
-                    no_axes = NULL, active = NULL) {
+ggcross <- function(mapping = aes(), size = NULL, active = NULL,
+                    no_axes = deprecated()) {
     assert_active(active)
     active <- active_update(active(use = TRUE), active)
-    no_axes <- no_axes %||%
-        getOption(sprintf("%s.align_no_axes", pkg_nm()), default = TRUE)
+    if (lifecycle::is_present(no_axes)) {
+        lifecycle::deprecate_stop(
+            "1.0.3",
+            "ggcross(no_axes = )",
+            details = "Please add `theme()` to the ggplot instead"
+        )
+    }
     cross(
         CrossGg,
         plot = ggplot(mapping = mapping),
         schemes = default_schemes(th = theme_no_strip()),
-        size = size, no_axes = no_axes, active = active
+        size = size, active = active
     )
 }
 

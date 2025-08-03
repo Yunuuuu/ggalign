@@ -48,9 +48,16 @@ align_dendro <- function(mapping = aes(), ...,
                          plot_cut_height = NULL, root = NULL,
                          center = FALSE, type = "rectangle",
                          size = NULL, data = NULL,
-                         no_axes = NULL, active = NULL) {
+                         active = NULL, no_axes = deprecated()) {
     assert_bool(plot_cut_height, allow_null = TRUE)
     assert_bool(merge_dendrogram)
+    if (lifecycle::is_present(no_axes)) {
+        lifecycle::deprecate_stop(
+            "1.0.3",
+            "align_dendro(no_axes = )",
+            details = "Please add `theme()` to the ggplot instead"
+        )
+    }
 
     # setup the default value for `plot_cut_height`
     plot_cut_height <- plot_cut_height %||% (
@@ -84,7 +91,7 @@ align_dendro <- function(mapping = aes(), ...,
         reorder_group = reorder_group,
         schemes = default_schemes(th = theme_no_strip()),
         k = k, h = h, cutree = cutree, data = data, active = active,
-        size = size, no_axes = no_axes, plot = plot
+        size = size, plot = plot
     )
 }
 

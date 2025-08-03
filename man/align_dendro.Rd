@@ -23,8 +23,8 @@ align_dendro(
   type = "rectangle",
   size = NULL,
   data = NULL,
-  no_axes = NULL,
-  active = NULL
+  active = NULL,
+  no_axes = deprecated()
 )
 }
 \arguments{
@@ -102,13 +102,11 @@ the available space in the circular arrangement.}
 \item{data}{A matrix-like object. By default, it inherits from the layout
 \code{matrix}.}
 
-\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Logical; if \code{TRUE},
-removes axes elements for the alignment axis using \code{\link[=theme_no_axes]{theme_no_axes()}}. By
-default, will use the option-
-\code{"ggalign.align_no_axes"}.}
-
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}
+
+\item{no_axes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please add
+\code{\link[ggplot2:theme]{theme()}} directly to the ggplot instead.}
 }
 \description{
 Plot dendrogram tree
