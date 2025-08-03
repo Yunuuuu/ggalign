@@ -208,19 +208,20 @@ prop_grid_unit <- function(property, ...) {
 local(S7::method(length, GridUnit) <- function(x) length(prop(x, "inner")))
 
 #' @importFrom S7 convert
-S7::method(convert, list(S3_unit, GridUnit)) <- function(from, to) {
+local(S7::method(convert, list(S3_unit, GridUnit)) <- function(from, to) {
     GridUnit(from)
-}
+})
 
 #' @importFrom S7 convert prop
-S7::method(convert, list(GridUnit, S3_unit)) <- function(from, to) {
+local(S7::method(convert, list(GridUnit, S3_unit)) <- function(from, to) {
     prop(from, "inner")
-}
+})
 
 #' @importFrom S7 convert prop
-S7::method(convert, list(GridUnit, S7::class_numeric)) <- function(from, to) {
-    as.numeric(from)
-}
+local(S7::method(convert, list(GridUnit, S7::class_numeric)) <-
+    function(from, to) {
+        as.numeric(from)
+    })
 
 #' @importFrom S7 prop
 #' @export
