@@ -232,14 +232,14 @@ test_that("`chain_layout_add()` function with QuadLayout", {
             stack_crossv()))
 })
 
-test_that("`chain_layout_add()` function with ggalign_with_quad", {
+test_that("`chain_layout_add()` function with quad_scope", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
     expect_snapshot_error(stack_discrete("v", small_mat) +
         align_dendro() +
-        with_quad(geom_point()))
+        quad_scope(geom_point()))
 })
 
 test_that("`chain_layout_add()` function with CrossLayout", {

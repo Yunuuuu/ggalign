@@ -53,22 +53,20 @@ S7::method(layout_add, list(QuadLayout, S7::class_any)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_add,
-    list(QuadLayout, S7::new_S3_class("ggalign_with_quad"))
-) <- function(layout, object, objectname) {
-    old <- layout@current
-    contexts <- quad_operated_context(object, old, "+") %||%
-        list(NULL) # we wrap `NULL` to a list for `for loop`.
-    object_name <- .subset2(object, "object_name")
-    object <- .subset2(object, "object")
-    for (active in contexts) {
-        layout@current <- active
-        layout <- layout_add(layout, object, object_name)
+#' @include layout-quad-scope.R
+S7::method(layout_add, list(QuadLayout, QuadScope)) <-
+    function(layout, object, objectname) {
+        old <- layout@current
+        contexts <- quad_scope_contexts(object, old)
+        object_name <- prop(object, "object_name")
+        object <- prop(object, "object")
+        for (active in contexts) {
+            layout@current <- active
+            layout <- layout_add(layout, object, object_name)
+        }
+        layout@current <- old
+        layout
     }
-    layout@current <- old
-    layout
-}
 
 ##################################################################
 #' @include layout-.R
@@ -394,44 +392,40 @@ S7::method(layout_subtract, list(QuadLayout, Scheme)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_subtract,
-    list(QuadLayout, S7::new_S3_class("ggalign_with_quad"))
-) <- function(layout, object, objectname) {
-    old <- layout@current
-    context <- quad_operated_context(object, old, "-")
-    object_name <- .subset2(object, "object_name")
-    object <- .subset2(object, "object")
-    # `subtract` operates at layout-level
-    if (is.null(context)) {
-        layout@current <- context
-        layout <- layout_subtract(layout, object, object_name)
-    } else {
-        for (active in context) {
-            if (is.null(active)) {
-                layout <- quad_body_add(object, layout, object_name)
-            } else if (!is.null(prop(layout, active))) {
-                prop(layout, active) <- layout_subtract(
-                    prop(layout, active), object, object_name
-                )
+S7::method(layout_subtract, list(QuadLayout, QuadScope)) <-
+    function(layout, object, objectname) {
+        old <- layout@current
+        inner_name <- prop(object, "object_name")
+        inner <- prop(object, "object")
+        # `subtract` operates at layout-level
+        if (is.null(old)) {
+            layout@current <- old
+            layout <- layout_subtract(layout, inner, inner_name)
+        } else {
+            for (active in quad_scope_contexts(object, old)) {
+                if (is.null(active)) {
+                    layout <- quad_body_add(inner, layout, inner_name)
+                } else if (!is.null(prop(layout, active))) {
+                    prop(layout, active) <- layout_subtract(
+                        prop(layout, active), inner, inner_name
+                    )
+                }
             }
         }
+        layout@current <- old
+        layout
     }
-    layout@current <- old
-    layout
-}
 
 ###############################################################
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_and_add,
-    list(QuadLayout, S7::new_S3_class("ggalign_with_quad"))
-) <- function(layout, object, objectname) {
-    object <- .subset2(object, "object")
-    object_name <- .subset2(object, "object_name")
-    layout_and_add(object, layout, object_name)
-}
+#' @include layout-quad-scope.R
+S7::method(layout_and_add, list(QuadLayout, QuadScope)) <-
+    function(layout, object, objectname) {
+        object <- prop(object, "object")
+        object_name <- prop(object, "object_name")
+        layout_and_add(object, layout, object_name)
+    }
 
 quad_and_add <- function(layout, object, objectname) {
     layout <- quad_body_add(object, layout, objectname)

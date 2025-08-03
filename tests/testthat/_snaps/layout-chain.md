@@ -110,8 +110,8 @@
     Cannot add `(quad_alignv() + anno_top(initialize = FALSE) + stack_crossv())` to the vertical `stack_discrete()`
     i top or bottom annotation contains `stack_cross()`
 
-# `chain_layout_add()` function with ggalign_with_quad
+# `chain_layout_add()` function with quad_scope
 
-    Cannot add `with_quad(geom_point())` to the vertical `stack_discrete()`
+    Cannot add `quad_scope(geom_point())` to the vertical `stack_discrete()`
     i Did you forget to add a `quad_layout()`?
 

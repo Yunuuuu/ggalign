@@ -110,13 +110,13 @@ testthat::test_that("`stack_align` add `quad_layout()` object builds well", {
     })
 })
 
-testthat::test_that("add `with_quad()` works as expected", {
+testthat::test_that("add `quad_scope()` works as expected", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
     expect_doppelganger(
-        "subtract_with_quad_default",
+        "subtract_quad_scope_default",
         stack_alignv(small_mat) +
             align_dendro() +
             ggtitle("I'm from the parent stack") +
@@ -130,10 +130,10 @@ testthat::test_that("add `with_quad()` works as expected", {
             stack_active() +
             align_dendro() +
             ggtitle("I'm from the parent stack") -
-            with_quad(theme(plot.background = element_rect(fill = "red")))
+            quad_scope(theme(plot.background = element_rect(fill = "red")))
     )
     expect_doppelganger(
-        "subtract_with_quad_set_position_null",
+        "subtract_quad_scope_set_position",
         stack_alignv(small_mat) +
             align_dendro() +
             ggtitle("I'm from the parent stack") +
@@ -147,27 +147,9 @@ testthat::test_that("add `with_quad()` works as expected", {
             stack_active() +
             align_dendro() +
             ggtitle("I'm from the parent stack") -
-            with_quad(
-                theme(plot.background = element_rect(fill = "red")), NULL
-            )
-    )
-    expect_doppelganger(
-        "subtract_with_quad_set_position",
-        stack_alignv(small_mat) +
-            align_dendro() +
-            ggtitle("I'm from the parent stack") +
-            ggheatmap() +
-            anno_top() +
-            align_dendro() +
-            ggtitle("I'm from the nested heatmap") +
-            anno_left() +
-            align_dendro() +
-            ggtitle("I'm from the nested heatmap") +
-            stack_active() +
-            align_dendro() +
-            ggtitle("I'm from the parent stack") -
-            with_quad(
-                theme(plot.background = element_rect(fill = "red")), "l"
+            quad_scope(
+                theme(plot.background = element_rect(fill = "red")),
+                "t"
             )
     )
 })

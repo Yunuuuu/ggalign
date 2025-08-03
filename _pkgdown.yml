@@ -52,7 +52,7 @@ reference:
   contents:
   - quad_switch
   - quad_anno
-  - with_quad
+  - quad_scope
   - stack_switch
   - circle_switch
   - active

@@ -205,10 +205,8 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
 # for `stack_layout()` only
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_add,
-    list(StackLayout, S7::new_S3_class("ggalign_with_quad"))
-) <-
+#' @include layout-quad-scope.R
+S7::method(layout_add, list(StackLayout, QuadScope)) <-
     S7::method(
         layout_add,
         list(StackLayout, S7::new_S3_class("quad_active"))
@@ -574,15 +572,13 @@ S7::method(layout_subtract, list(ChainLayout, Scheme)) <-
 #' @importFrom S7 S7_inherits
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_subtract,
-    list(StackLayout, S7::new_S3_class("ggalign_with_quad"))
-) <-
+#' @include layout-quad-scope.R
+S7::method(layout_subtract, list(StackLayout, QuadScope)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             !is_layout(box <- .subset2(layout@box_list, current))) {
-            inner <- .subset2(object, "object")
-            inner_name <- .subset2(object, "object_name")
+            inner <- prop(object, "object")
+            inner_name <- prop(object, "object_name")
 
             # subtract set at layout level, if it is a Scheme
             # we only apply to current active layout
@@ -591,30 +587,9 @@ S7::method(
                 return(layout)
             }
             # otherwise, we apply the object to all plots in the stack layout
-            direction <- layout@direction
             layout@box_list <- lapply(layout@box_list, function(box) {
                 if (is_craftbox(box)) {
                     box <- chain_box_add(box, inner, inner_name, force = FALSE)
-                } else if (is.waive(.subset2(object, "position"))) {
-                    # default behaviour for object wrap with `with_quad()`
-                    # we add the object along the stack layout
-                    # if means for horizontal stack, we'll add it
-                    # to the left and right annotation, and the main plot
-                    positions <- switch_direction(
-                        direction,
-                        c("left", "right"),
-                        c("top", "bottom")
-                    )
-                    for (position in positions) {
-                        if (!is.null(prop(box, position))) {
-                            prop(box, position) <- layout_subtract(
-                                prop(box, position), inner, inner_name
-                            )
-                        }
-                    }
-                    if (is.null(main <- .subset2(object, "main")) || main) {
-                        box <- quad_body_add(inner, box, inner_name)
-                    }
                 } else {
                     # we respect the context setting
                     box <- layout_subtract(box, object, objectname)
@@ -632,13 +607,11 @@ S7::method(
 ##################################################################
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(
-    layout_and_add,
-    list(ChainLayout, S7::new_S3_class("ggalign_with_quad"))
-) <-
+#' @include layout-quad-scope.R
+S7::method(layout_and_add, list(ChainLayout, QuadScope)) <-
     function(layout, object, objectname) {
-        object_name <- .subset2(object, "object_name")
-        object <- .subset2(object, "object")
+        object_name <- prop(object, "object_name")
+        object <- prop(object, "object")
         layout_and_add(layout, object, object_name)
     }
 

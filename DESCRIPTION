@@ -131,6 +131,7 @@ Collate:
     'layer-order.R'
     'layout-.R'
     'layout-align.R'
+    'layout-quad-scope.R'
     'utils-ggplot.R'
     'layout-operator.R'
     'layout-chain-.R'
@@ -165,5 +166,4 @@ Collate:
     'utils-assert.R'
     'utils-rd.R'
     'utils.R'
-    'with_quad.R'
     'zzz.R'
