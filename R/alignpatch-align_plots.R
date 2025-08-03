@@ -360,9 +360,12 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         widths = widths, heights = heights, area = area,
         guides = guides
     )
-    out <- add_class(AlignPatches(plots = plots), "alignpatches")
-    out <- out + layout
-    if (!is.null(theme)) out <- out + layout_theme(theme)
+    out <- AlignPatches(plots = plots)
+    out <- alignpatches_add(out, layout)
+    objectname <- deparse(substitute(theme))
+    if (!is.null(theme)) {
+        out <- alignpatches_add(out, layout_theme(theme), objectname)
+    }
     out
 }
 
