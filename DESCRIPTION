@@ -42,6 +42,8 @@ Enhances:
     patchwork,
     ggrastr,
     maftools
+Remotes:
+    tidyverse/ggplot2
 ByteCompile: true
 Config/Needs/check:
     R.utils,
