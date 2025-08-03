@@ -98,22 +98,9 @@ local(S7::method(`+`, list(CraftBox, S7::class_missing)) <-
         ))
     })
 
-local(S7::method(`+`, list(S7::class_missing, CraftBox)) <-
-    function(e1, e2) {
-        cli_abort(c(
-            "Cannot apply {.code +} to a single {.cls CraftBox} object.",
-            "i" = "You might have used {.code +} at the end of the previous line"
-        ))
-    })
-
 local(S7::method(`+`, list(CraftBox, S7::class_any)) <- function(e1, e2) {
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
     craftbox_add(e2, e1, e2name)
-})
-
-local(S7::method(`+`, list(S7::class_any, CraftBox)) <- function(e1, e2) {
-    e1name <- deparse(substitute(e1, env = caller_env(2L)))
-    craftbox_add(e1, e2, e1name)
 })
 
 #' @importFrom S7 S7_dispatch
