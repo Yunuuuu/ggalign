@@ -14,7 +14,20 @@ scale_gshape_manual(..., values, breaks = waiver(), na.value = NA)
 \code{waiver()}, the default, the name of the scale is taken from the first
 mapping used for that aesthetic. If \code{NULL}, the legend title will be
 omitted.}
-    \item{\code{labels}}{One of:
+    \item{\code{minor_breaks}}{One of:
+\itemize{
+\item \code{NULL} for no minor breaks
+\item \code{waiver()} for the default breaks (none for discrete, one minor break
+between each major break for continuous)
+\item A numeric vector of positions
+\item A function that given the limits returns a vector of minor breaks. Also
+accepts rlang \link[rlang:as_function]{lambda} function notation. When
+the function has two arguments, it will be given the limits and major
+break positions.
+}}
+    \item{\code{labels}}{One of the options below. Please note that when \code{labels} is a
+vector, it is highly recommended to also set the \code{breaks} argument as a
+vector to protect against unintended mismatches.
 \itemize{
 \item \code{NULL} for no labels
 \item \code{waiver()} for the default labels computed by the
@@ -78,20 +91,20 @@ marked as questioning. So far, we've found that \code{\link[=geom_subrect]{geom_
 
 \section{Aesthetics}{
 
-\code{geom_gshape()} understands the following aesthetics (required aesthetics are in bold):
-\itemize{
-\item \strong{\code{\link[ggplot2:aes_position]{x}}}
-\item \strong{\code{\link[ggplot2:aes_position]{y}}}
-\item \strong{\code{gshape}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{colour}}
-\item \code{\link[ggplot2:aes_colour_fill_alpha]{fill}}
-\item \code{\link[ggplot2:aes_group_order]{group}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linetype}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{shape}}
-\item \code{\link[ggplot2:aes_linetype_size_shape]{size}}
-\item \code{stroke}
+\code{geom_gshape()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+• \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+• \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+• \tab \strong{\code{gshape}} \tab   \cr
+• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → \code{"black"} \cr
+• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
+• \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+• \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → \code{1} \cr
+• \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → \code{0.5} \cr
+• \tab \code{\link[ggplot2:aes_linetype_size_shape]{shape}} \tab → \code{19} \cr
+• \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → \code{1.5} \cr
+• \tab \code{stroke} \tab → \code{0.5} \cr
 }
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
 }
