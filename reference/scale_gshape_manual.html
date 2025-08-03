@@ -74,21 +74,8 @@ value should be drawn. Any ggplot2 aesthetics can be used as the arguments.</p>
 mapping used for that aesthetic. If <code>NULL</code>, the legend title will be
 omitted.</p></dd>
 
-    <dt><code>minor_breaks</code></dt>
-<dd><p>One of:</p><ul><li><p><code>NULL</code> for no minor breaks</p></li>
-<li><p><code>waiver()</code> for the default breaks (none for discrete, one minor break
-between each major break for continuous)</p></li>
-<li><p>A numeric vector of positions</p></li>
-<li><p>A function that given the limits returns a vector of minor breaks. Also
-accepts rlang <a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">lambda</a> function notation. When
-the function has two arguments, it will be given the limits and major
-break positions.</p></li>
-</ul></dd>
-
     <dt><code>labels</code></dt>
-<dd><p>One of the options below. Please note that when <code>labels</code> is a
-vector, it is highly recommended to also set the <code>breaks</code> argument as a
-vector to protect against unintended mismatches.</p><ul><li><p><code>NULL</code> for no labels</p></li>
+<dd><p>One of:</p><ul><li><p><code>NULL</code> for no labels</p></li>
 <li><p><code>waiver()</code> for the default labels computed by the
 transformation object</p></li>
 <li><p>A character vector giving labels (must be same length as <code>breaks</code>)</p></li>
@@ -157,6 +144,24 @@ as output</p></li>
 <p>We're unsure whether this function is truly necessary, which is why it is
 marked as questioning. So far, we've found that <code><a href="geom_subrect.html">geom_subrect()</a></code> and
 <code><a href="geom_subrect.html">geom_subtile()</a></code> handle most use cases effectively.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="aesthetics">Aesthetics<a class="anchor" aria-label="anchor" href="#aesthetics"></a></h2>
+
+
+<p><code><a href="geom_gshape.html">geom_gshape()</a></code> understands the following aesthetics (required aesthetics are in bold):</p><ul><li><p><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">x</a></code></strong></p></li>
+<li><p><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">y</a></code></strong></p></li>
+<li><p><strong><code>gshape</code></strong></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">alpha</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">colour</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">fill</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_group_order.html" class="external-link">group</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html" class="external-link">linetype</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html" class="external-link">linewidth</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html" class="external-link">shape</a></code></p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html" class="external-link">size</a></code></p></li>
+<li><p><code>stroke</code></p></li>
+</ul><p>Learn more about setting these aesthetics in <code><a href="https://ggplot2.tidyverse.org/articles/ggplot2-specs.html" class="external-link">vignette("ggplot2-specs", package = "ggplot2")</a></code>.</p>
     </div>
 
     <div class="section level2">
