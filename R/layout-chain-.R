@@ -111,6 +111,7 @@ S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
 #' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
+        if (is.null(object)) return(layout) # styler: off
         if (is.na(current <- layout@current)) {
             cli_abort(c(
                 sprintf(

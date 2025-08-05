@@ -34,6 +34,7 @@ S7::method(layout_add, list(QuadLayout, S3_class_ggplot)) <-
 #' @include layout-operator.R
 S7::method(layout_add, list(QuadLayout, S7::class_any)) <-
     function(layout, object, objectname) {
+        if (is.null(object)) return(layout) # styler: off
         if (is.matrix(object)) {
             cli_abort(sprintf("Can't change data of %s", object_name(layout)))
         }
