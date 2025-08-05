@@ -23,6 +23,12 @@ mark_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function")
     }
+    args <- names(formals(.draw))
+    if (length(args) < 2L && args != "...") {
+        cli_abort(
+            "{.arg .draw} must be a function that takes at least two arguments"
+        )
+    }
     new_draw <- function(data) {
         ans <- lapply(data, function(dd) {
             draw(.subset2(dd, "panel"), .subset2(dd, "link"))
@@ -55,6 +61,12 @@ mark_draw <- function(.draw, ...) {
 .mark_draw <- function(.draw, ...) {
     if (override_call(call <- caller_call())) {
         call <- current_call()
+    }
+    args <- names(formals(.draw))
+    if (length(args) < 1L && args != "...") {
+        cli_abort(
+            "{.arg .draw} must be a function that takes at least one argument"
+        )
     }
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function", call = call)
