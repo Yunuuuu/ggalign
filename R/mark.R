@@ -23,7 +23,7 @@ mark_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function")
     }
-    args <- names(formals(.draw))
+    args <- names(formals(draw))
     if (length(args) < 2L && args != "...") {
         cli_abort(
             "{.arg .draw} must be a function that takes at least two arguments"
@@ -62,14 +62,14 @@ mark_draw <- function(.draw, ...) {
     if (override_call(call <- caller_call())) {
         call <- current_call()
     }
-    args <- names(formals(.draw))
+    if (!is.function(draw <- allow_lambda(.draw))) {
+        cli_abort("{.arg .draw} must be a function", call = call)
+    }
+    args <- names(formals(draw))
     if (length(args) < 1L && args != "...") {
         cli_abort(
             "{.arg .draw} must be a function that takes at least one argument"
         )
-    }
-    if (!is.function(draw <- allow_lambda(.draw))) {
-        cli_abort("{.arg .draw} must be a function", call = call)
     }
     links <- pair_links(...)
     structure(list(draw = draw, links = links), class = "ggalign_mark_draw")
