@@ -84,7 +84,7 @@ test_that("`geom_subtile()` works well", {
     )
 })
 
-test_that("geom_pie works well", {
+test_that("`geom_pie()` works well", {
     expect_doppelganger(
         "geom_pie_clockwise",
         ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
@@ -99,6 +99,42 @@ test_that("geom_pie works well", {
         "geom_pie_angle0",
         ggplot(data.frame(x = 1:10, y = 1:10, value = 1:10 / sum(1:10))) +
             geom_pie(aes(x, y, angle = value * 360), angle0 = 30)
+    )
+})
+
+test_that("`geom_tile3d()` works well", {
+    set.seed(123)
+    small_mat <- matrix(rnorm(72), nrow = 9)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    expect_doppelganger(
+        "geom_tile3d",
+        ggplot2::ggplot(fortify_data_frame(small_mat)) +
+            geom_tile3d(aes(
+                .column_index, .row_index,
+                fill = value, z = value,
+                width = 0.8, height = 0.8
+            )) +
+            scale_z_continuous()
+    )
+})
+
+test_that("`geom_rect3d()` works well", {
+    set.seed(123)
+    small_mat <- matrix(rnorm(72), nrow = 9)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    expect_doppelganger(
+        "geom_rect3d",
+        ggplot2::ggplot(fortify_data_frame(small_mat)) +
+            geom_rect3d(aes(
+                .column_index, .row_index,
+                fill = value, z = value,
+                width = 0.8, height = 0.8
+            )) +
+            scale_z_continuous()
     )
 })
 
