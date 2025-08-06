@@ -428,7 +428,7 @@ make_dist <- function(matrix, distance, use_missing,
 
 cutree_k_to_h <- function(tree, k) {
     if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
-        cli_abort("invalid {.arg tree} ({.field merge} component)") # nocov start
+        cli_abort("invalid {.arg tree} ({.field merge} component)") # nocov
     }
     n <- n1 + 1
     if (is.unsorted(tree$height)) {
