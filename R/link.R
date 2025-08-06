@@ -6,9 +6,9 @@
 #'
 #' @param .draw A function used to draw the links. The function must return a
 #'   [`grob()`][grid::grob] object. If the function does not return a valid
-#'   `grob`, no drawing will occur. The input data for the function should
-#'   include a data frame with the coordinates of the pair of observations to
-#'   be linked.
+#'   `grob`, no drawing will occur. The input data for the function must contain
+#'   two arguments: a data frame for the left hand coordinates and a data frame
+#'   for the right hand observation coordinates.
 #' @inheritParams .link_draw
 #' @seealso
 #'  - [`link_line()`]
@@ -20,8 +20,16 @@ link_draw <- function(.draw, ...) {
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function")
     }
+    args <- names(formals(draw))
+    if (length(args) < 2L && args != "...") {
+        cli_abort(
+            "{.arg .draw} must be a function that takes at least two arguments"
+        )
+    }
     new_draw <- function(data) {
-        ans <- lapply(data, draw)
+        ans <- lapply(data, function(dd) {
+            draw(.subset2(dd, "hand1"), .subset2(dd, "hand2"))
+        })
         ans <- ans[vapply(ans, is.grob, logical(1L), USE.NAMES = FALSE)]
         if (!is_empty(ans)) inject(gList(!!!ans))
     }
@@ -37,9 +45,10 @@ link_draw <- function(.draw, ...) {
 #'
 #' @param .draw A function used to draw the links. The function must return a
 #'   [`grob()`][grid::grob] object. If the function does not return a valid
-#'   `grob`, no drawing will occur. The input data for the function should be
-#'   a list, where each item is a data frame containing the coordinates of
-#'   the pair of observations.
+#'   `grob`, no drawing will occur. The input data for the function contains a
+#'   list, where each item is a list of two data frames: one for the left hand
+#'   coordinates (`"hand1"`) and one for the right hand observations coordinates
+#'   (`"hand2"`).
 #' @inheritParams pair_links
 #' @seealso [`link_draw()`]
 #' @export
@@ -49,6 +58,12 @@ link_draw <- function(.draw, ...) {
     }
     if (!is.function(draw <- allow_lambda(.draw))) {
         cli_abort("{.arg .draw} must be a function", call = call)
+    }
+    args <- names(formals(draw))
+    if (length(args) < 1L && args != "...") {
+        cli_abort(
+            "{.arg .draw} must be a function that takes at least one argument"
+        )
     }
     links <- pair_links(...)
     structure(list(draw = draw, links = links), class = "ggalign_link_draw")
@@ -84,11 +99,12 @@ link_line <- function(..., .element = NULL) {
     ans <- .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
             # if the link is only in one side, we do nothing
-            if (vec_unique_count(.subset2(d, ".hand")) < 2L) {
+            hand1 <- .subset2(d, "hand1")
+            hand2 <- .subset2(d, "hand2")
+            if (is.null(hand1) || is.null(hand2)) {
                 return(NULL)
             }
-            both <- .subset2(vec_split(d, .subset2(d, ".hand")), "val")
-            data <- cross_join(.subset2(both, 1L), .subset2(both, 2L))
+            data <- cross_join(hand1, hand2)
             data_frame0(
                 x = vec_interleave(
                     (data$x.x + data$xend.x) / 2L,
@@ -138,12 +154,13 @@ link_tetragon <- function(..., .element = NULL) {
     }
     .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
+            hand1 <- .subset2(d, "hand1")
+            hand2 <- .subset2(d, "hand2")
             # if the link is only in one side, we do nothing
-            if (vec_unique_count(.subset2(d, ".hand")) < 2L) {
+            if (is.null(hand1) || is.null(hand2)) {
                 return(NULL)
             }
-            both <- .subset2(vec_split(d, .subset2(d, ".hand")), "val")
-            both <- lapply(both, function(link) {
+            both <- lapply(list(hand1, hand2), function(link) {
                 # find the consecutive groups
                 index <- .subset2(link, "link_index")
                 oindex <- order(index)
@@ -296,16 +313,14 @@ makeContent.ggalignLinkTree <- function(x) {
         )
         nms <- names(link_index)
         link_panels <- vec_rep_each(names(full_breaks), list_sizes(full_breaks))
+        link_panels <- factor(link_panels, names(full_breaks))
         coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
             link$link_id <- nms[i]
-            link$link_panel <- reorder(
-                vec_slice(link_panels, l_index), l_index,
-                order = FALSE
-            )
+            link$link_panel <- vec_slice(link_panels, l_index)
             link$link_index <- l_index
             link$.hand <- hand
             link$.index <- d_index
@@ -314,7 +329,9 @@ makeContent.ggalignLinkTree <- function(x) {
     }
 
     # hand1 - hand2
-    data <- .mapply(vec_rbind, coords, NULL)
+    data <- .mapply(function(hand1, hand2) {
+        list(hand1 = hand1, hand2 = hand2)
+    }, coords, NULL)
     draw <- .subset2(x, "draw")
     if (is.grob(grob <- draw(data))) { # wrap single grob to a gList
         grob <- gList(grob)
