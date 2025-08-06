@@ -29,6 +29,7 @@ test_that("pair_links can create multiple valid link pairs", {
     expect_s3_class(x, "ggalign_pair_links")
     expect_length(x, 8)
     expect_s3_class(x[[1]], "ggalign_pair_link")
+    expect_snapshot_output(print(x))
 })
 
 test_that("pair_links respects modification methods", {
