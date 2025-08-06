@@ -104,7 +104,7 @@ align_hclust <- function(distance = "euclidean",
         user_reorder <- reorder_dendrogram
         reorder_dendrogram <- function(tree, data) {
             # we ensure, what we input for user is a `hclust` object.
-            if (!inherits(tree, "hclust")) tree <- stats::as.hclust(tree) # nocov start
+            if (!inherits(tree, "hclust")) tree <- stats::as.hclust(tree) # nocov
             ans <- user_reorder(tree, data)
             if (!inherits(ans, "hclust") &&
                 !inherits(ans, "dendrogram")) {
