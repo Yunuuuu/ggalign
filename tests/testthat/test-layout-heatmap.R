@@ -65,9 +65,25 @@ testthat::test_that("`ggoncoplot()` with matrix works well", {
          g3,snv,,indel;snv"
     ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
     mat <- as.matrix(mat)
+    rownames(mat) <- trimws(rownames(mat))
+    colnames(mat) <- trimws(colnames(mat))
     expect_doppelganger(
         "matrix-single-oncoplot",
         ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9))
+    )
+    expect_doppelganger(
+        "matrix-tune-single-oncoplot",
+        ggoncoplot(tune(mat, "oncoplot"),
+            map_width = c(snv = 0.5), map_height = c(indel = 0.9)
+        )
+    )
+    expect_doppelganger(
+        "matrix-tune-filter-single-oncoplot",
+        ggoncoplot(tune(mat, "oncoplot"),
+            map_width = c(snv = 0.5),
+            map_height = c(indel = 0.9),
+            genes = c("g1", "g3")
+        )
     )
     expect_doppelganger(
         "matrix-oncoplot-with-annotation",
