@@ -57,20 +57,20 @@ testthat::test_that("`ggheatmap` add `quad_switch()` works well", {
     )
 })
 
-testthat::test_that("`ggoncoplot` works well", {
+testthat::test_that("`ggoncoplot()` with matrix works well", {
     mat <- read.table(textConnection(
         "s1,s2,s3
          g1,snv; indel,snv,indel
          g2,,snv;indel,snv
          g3,snv,,indel;snv"
     ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-
+    mat <- as.matrix(mat)
     expect_doppelganger(
-        "single-oncoplot",
+        "matrix-single-oncoplot",
         ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9))
     )
     expect_doppelganger(
-        "oncoplot-with-annotation",
+        "matrix-oncoplot-with-annotation",
         ggoncoplot(mat, map_width = c(snv = 0.5), map_height = c(indel = 0.9)) +
             # Note that guide legends from `geom_tile` and `geom_bar` are
             # different. Although they appear similar, the internal mechanisms
@@ -88,6 +88,64 @@ testthat::test_that("`ggoncoplot` works well", {
                 subset(x, !is.na(value))
             }) &
             scale_fill_brewer(palette = "Dark2", na.translate = FALSE)
+    )
+})
+
+testthat::test_that("`ggoncoplot()` with maftools works well", {
+    skip_if_not_installed("maftools")
+    laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
+    laml.clin <- system.file("extdata", "tcga_laml_annot.tsv",
+        package = "maftools"
+    )
+    laml <- maftools::read.maf(
+        maf = laml.maf,
+        clinicalData = laml.clin,
+        verbose = FALSE
+    )
+
+    expect_doppelganger(
+        "MAF-oncoplot",
+        ggoncoplot(laml,
+            map_width = c(snv = 0.5),
+            map_height = c(indel = 0.9),
+            n_top = 10
+        ) +
+            scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+            theme(axis.text.x = element_text(angle = -90, hjust = 0))
+    )
+
+    expect_doppelganger(
+        "MAF-filter-oncoplot",
+        ggoncoplot(laml,
+            map_width = c(snv = 0.5),
+            map_height = c(indel = 0.9),
+            genes = laml@gene.summary$Hugo_Symbol[seq_len(10)]
+        ) +
+            scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+            theme(axis.text.x = element_text(angle = -90, hjust = 0))
+    )
+
+    expect_doppelganger(
+        "MAF-pathway-oncoplot",
+        ggoncoplot(tune(laml),
+            map_width = c(snv = 0.5), map_height = c(indel = 0.9)
+        ) +
+            scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+            theme(axis.text.x = element_text(angle = -90, hjust = 0))
+    )
+    gistic_res_folder <- system.file("extdata", package = "maftools")
+    laml.gistic <- maftools::readGistic(
+        gisticDir = gistic_res_folder, isTCGA = TRUE
+    )
+    expect_doppelganger(
+        "GISTIC-oncoplot",
+        ggoncoplot(laml.gistic,
+            map_width = c(snv = 0.5),
+            map_height = c(indel = 0.9),
+            n_top = 10
+        ) +
+            scale_fill_brewer(palette = "Dark2", na.translate = FALSE) +
+            theme(axis.text.x = element_text(angle = -90, hjust = 0))
     )
 })
 
