@@ -13,6 +13,7 @@ default_theme <- function() {
     }
 }
 
+# nocov start
 new_theme_class <- function(new_class) {
     rlang::new_function(
         # We utilize editor completion by listing all `theme()` arguments here.
@@ -39,6 +40,7 @@ new_theme_class <- function(new_class) {
         })
     )
 }
+# nocov end
 
 S3_class_theme <- S7::new_S3_class("theme")
 
@@ -72,6 +74,7 @@ complete_theme <- function(theme) {
     }
 }
 
+# nocov start
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
     line <- if (packageVersion("ggplot2") > "3.5.2") {
@@ -120,6 +123,7 @@ theme_elements <- function() {
         )
     )
 }
+# nocov end
 
 #' Used to match theme
 #'
