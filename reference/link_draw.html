@@ -61,9 +61,9 @@ facilitating the visualization of connections between related data points.</p>
 <dl><dt id="arg--draw">.draw<a class="anchor" aria-label="anchor" href="#arg--draw"></a></dt>
 <dd><p>A function used to draw the links. The function must return a
 <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob()</a></code> object. If the function does not return a valid
-<code>grob</code>, no drawing will occur. The input data for the function should
-include a data frame with the coordinates of the pair of observations to
-be linked.</p></dd>
+<code>grob</code>, no drawing will occur. The input data for the function must contain
+two arguments: a data frame for the left hand coordinates and a data frame
+for the right hand observation coordinates.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
