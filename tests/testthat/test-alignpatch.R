@@ -137,8 +137,24 @@ test_that("accept patchwork", {
         geom_bar(aes(gear)) +
         facet_wrap(~cyl) +
         ggtitle("Plot 4")
-    expect_doppelganger("align_plots() add patchwork", {
+    expect_doppelganger("align_plots() add patchwork wrap_plots", {
         align_plots(patchwork::wrap_plots(p1, p2), p3, p4)
+    })
+    expect_doppelganger("align_plots() add patchwork spacer", {
+        align_plots(patchwork::plot_spacer(), p2, p3, p4)
+    })
+    p1 <- ggplot(mtcars) +
+        geom_bar(aes(y = factor(gear), fill = factor(gear))) +
+        scale_y_discrete(
+            "",
+            labels = c(
+                "3 gears are often enough",
+                "But, you know, 4 is a nice number",
+                "I would def go with 5 gears in a modern car"
+            )
+        )
+    expect_doppelganger("align_plots() add patchwork free", {
+        align_plots(patchwork::free(p1, side = "l"), p2, p3, p4)
     })
 })
 
