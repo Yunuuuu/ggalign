@@ -228,6 +228,15 @@ test_that("`coord_circle()` works well", {
     )
 })
 
+test_that("`no_expansion()` works well", {
+    expect_doppelganger(
+        "no_expansion()",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            no_expansion()
+    )
+})
+
 test_that("`facet_sector()` works well", {
     expect_doppelganger(
         "facet_sector() default",

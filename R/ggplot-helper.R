@@ -136,6 +136,7 @@ element_grob.ggalign_element_polygon <- function(element,
     )
 }
 
+# nocov start
 #' Theme curve elements
 #'
 #' Draw curve.
@@ -224,6 +225,7 @@ element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
     })
     gTree(children = inject(gList(!!!ans)))
 }
+# nocov end
 
 ##########################################################################
 element_lengths <- function(.el, .fn, ...) {
