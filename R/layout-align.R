@@ -425,6 +425,7 @@ gguse_circle_coord <- function(plot, coord, ..., layout_name) {
 }
 
 ######################################################
+# nocov start
 #' @importFrom ggplot2 ggproto
 ggfacet_modify <- function(plot, ...) {
     ParentFacet <- plot$facet
@@ -609,3 +610,4 @@ melt_facet.FacetQuad <- function(use, facet, ...,
 facet_quad <- function(layout_name) {
     structure(list(layout_name = layout_name), class = "FacetQuad")
 }
+# nocov end
