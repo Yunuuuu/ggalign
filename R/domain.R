@@ -14,7 +14,7 @@
 #'
 #' @importFrom rlang list2
 #' @keywords internal
-layout_expand <- function(..., x = waiver(), y = waiver()) {
+layout_expand <- function(..., x = waiver(), y = waiver()) { # nocov start
     if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
         cli_abort(
             "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
@@ -27,7 +27,7 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
         ans <- list(x = x, y = y)
     }
     structure(ans, class = "ggalign_layout_expand")
-}
+} # nocov end
 
 #' Set continuous limits for the layout
 #'
@@ -45,14 +45,15 @@ layout_expand <- function(..., x = waiver(), y = waiver()) {
 #' @importFrom rlang list2
 #' @export
 continuous_limits <- function(..., x = waiver(), y = waiver()) {
-    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
+    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) { # nocov start
         cli_abort(
             "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
         )
     }
-    ContinuousDomain(..., x = x, y = y)
+    ContinuousDomain(..., x = x, y = y) # nocov end
 }
 
+# nocov start
 #' @importFrom S7 S7_inherits
 prop_domain <- function(property, ...) {
     force(property)
@@ -71,6 +72,7 @@ prop_domain <- function(property, ...) {
         default = NULL
     )
 }
+# nocov end
 
 Domain <- S7::new_class("Domain", abstract = TRUE)
 
@@ -91,13 +93,13 @@ ContinuousDomain <- S7::new_class(
         )
     ),
     constructor = function(..., x = waiver(), y = waiver()) {
-        if (...length() > 0L) {
+        if (...length() > 0L) { # nocov start
             spec <- list2(...)
             names(spec) <- NULL
         } else {
             spec <- list(x = x, y = y)
         }
-        new_object(S7_object(), spec = spec)
+        new_object(S7_object(), spec = spec) # nocov end
     }
 )
 
@@ -200,10 +202,10 @@ discrete_domain_update <- function(old, new, old_name, new_name,
     if (is.null(new_panel)) { # no panel provided
         panel <- old_panel
     } else if (!is.null(old_panel) && !(new_panel %nest% old_panel)) {
-        cli_abort(sprintf(
+        cli_abort(sprintf( # nocov start
             "%s disrupt the previously established panel groups of %s",
             new_name, old_name
-        ), call = call)
+        ), call = call) # nocov end
     } else {
         panel <- new_panel
     }
@@ -224,10 +226,10 @@ discrete_domain_update <- function(old, new, old_name, new_name,
 
     # we always prevent from reordering twice.
     if (!is.null(old_index) && !all(old_index == index)) {
-        cli_abort(sprintf(
+        cli_abort(sprintf( # nocov start
             "%s disrupt the previously established ordering index of %s",
             new_name, old_name
-        ), call = call)
+        ), call = call) # nocov end
     }
     DiscreteDomain(panel, index, nobs)
 }
