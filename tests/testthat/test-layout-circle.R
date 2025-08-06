@@ -65,14 +65,16 @@ testthat::test_that("`circle_discrete()` add `align-` object builds well", {
 })
 
 testthat::test_that("`circle_discrete()` error adding", {
+    # The package "ragg" (>= 1.2.6) is required for checking device support for
+    # clipping paths.
+    testthat::skip_if(utils::packageVersion("ragg") < "1.2.6")
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
     colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
     expect_snapshot_error(circle_discrete(small_mat) + quad_alignh())
     expect_snapshot_error(
-        circle_discrete(matrix(seq_len(81), nrow = 9L)) +
-            ggcross()
+        circle_discrete(matrix(seq_len(81), nrow = 9L)) + ggcross()
     )
 })
 
