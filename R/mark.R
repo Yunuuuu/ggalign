@@ -503,16 +503,14 @@ makeContent.ggalignMarkGtable <- function(x) {
         )
         nms <- names(link_index)
         link_panels <- vec_rep_each(names(full_breaks), list_sizes(full_breaks))
+        link_panels <- factor(link_panels, names(full_breaks))
         coords[[link]] <- lapply(seq_along(link_index), function(i) {
             l_index <- .subset2(link_index, i)
             if (is.null(l_index)) return(NULL) # styler: off
             d_index <- .subset2(data_index, i)
             link <- vec_slice(link_coord, l_index)
             link$link_id <- nms[i]
-            link$link_panel <- reorder(
-                vec_slice(link_panels, l_index), l_index,
-                order = FALSE
-            )
+            link$link_panel <- vec_slice(link_panels, l_index)
             link$link_index <- l_index
             link$.hand <- hand
             link$.index <- d_index

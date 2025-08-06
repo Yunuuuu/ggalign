@@ -9,9 +9,9 @@ link_draw(.draw, ...)
 \arguments{
 \item{.draw}{A function used to draw the links. The function must return a
 \code{\link[grid:grid.grob]{grob()}} object. If the function does not return a valid
-\code{grob}, no drawing will occur. The input data for the function should
-include a data frame with the coordinates of the pair of observations to
-be linked.}
+\code{grob}, no drawing will occur. The input data for the function must contain
+two arguments: a data frame for the left hand coordinates and a data frame
+for the right hand observation coordinates.}
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of formulas, where each side
 of the formula should be an \code{integer} or \code{character} index of the original
