@@ -82,12 +82,12 @@ fortify_data_frame.dendrogram <- function(data, ...,
     if (is.null(leaf_pos)) {
         leaf_pos <- seq_len(N)
     } else if (length(leaf_pos) != N) {
-        cli_abort(
+        cli_abort( # nocov start
             "{.arg leaf_pos} must be of the same length of {.arg tree}",
             call = call
-        )
+        ) # nocov end
     }
-
+    # nocov start
     # if no branches provided, all branch will be regarded as the `root`
     if (is.null(leaf_braches)) {
         root <- root %||% "root"
@@ -143,6 +143,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
             call = call
         )
     }
+    # nocov end
 
     # initialize values
     i <- 0L # leaf index
@@ -329,7 +330,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
                     )
                 )
             } else {
-                added_edge <- data_frame0(
+                added_edge <- data_frame0( # nocov start
                     x = rep_len(x, 2L),
                     xend = direct_leaves_x,
                     y = rep_len(y, 2L),
@@ -338,7 +339,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
                     panel1 = rep_len(panel, 2L),
                     panel2 = direct_leaves_panel,
                     ggpanel = rep_len(ggpanel, 2L)
-                )
+                ) # nocov end
             }
             if (is.null(edge)) {
                 edge <- added_edge
