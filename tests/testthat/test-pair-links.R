@@ -24,10 +24,11 @@ test_that("pair_links can create multiple valid link pairs", {
         range_link("a", "c"),
         range_link(1, 5) ~ waiver(),
         waiver() ~ 1:2,
-        ~NULL
+        ~NULL,
+        ~ list(1, I(2))
     )
     expect_s3_class(x, "ggalign_pair_links")
-    expect_length(x, 8)
+    expect_length(x, 9)
     expect_s3_class(x[[1]], "ggalign_pair_link")
     expect_snapshot_output(print(x))
 })
