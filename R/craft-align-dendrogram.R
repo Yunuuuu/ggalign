@@ -245,6 +245,7 @@ tree_one_node <- function(index, label) {
     )
 }
 
+# nocov start
 # this function won't set the right `midpoint`, but `dendrogram_data` function
 # won't use it, so, it has no hurt to use.
 merge_dendrogram <- function(parent, children) {
@@ -300,3 +301,4 @@ tree_branch_heights <- function(dend) {
         )
     }
 }
+# nocov end

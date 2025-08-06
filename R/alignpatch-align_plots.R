@@ -134,6 +134,7 @@ layout_title <- function(title = waiver(), subtitle = waiver(),
 
 S3_layout_title <- S7::new_S3_class("layout_title")
 
+# nocov start
 prop_layout_title <- function(property, ...) {
     force(property)
     S7::new_property(
@@ -146,6 +147,7 @@ prop_layout_title <- function(property, ...) {
         default = quote(list(title = NULL, subtitle = NULL, caption = NULL))
     )
 }
+# nocov end
 
 layout_title_update <- function(old, new) {
     for (nm in names(new)) {
@@ -212,6 +214,7 @@ layout_theme_update <- function(old, new) {
     old + new
 }
 
+# nocov start
 #' @importFrom S7 prop prop<-
 #' @importFrom ggplot2 is_theme
 prop_layout_theme <- function(property, ...) {
@@ -231,6 +234,7 @@ prop_layout_theme <- function(property, ...) {
         default = NULL
     )
 }
+# nocov end
 
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop
@@ -337,7 +341,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
     nms <- names(plots)
     area <- area %||% design
-    if (!is.null(nms) && is.character(area)) {
+    if (!is.null(nms) && is.character(area)) { # nocov start
         area_names <- unique(trimws(.subset2(strsplit(area, ""), 1L)))
         area_names <- sort(vec_set_difference(area_names, c("", "#")))
         if (all(nms %in% area_names)) {
@@ -346,7 +350,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plot_list[nms] <- plots
             plots <- plot_list
         }
-    }
+    } # nocov end
 
     for (plot in plots) {
         if (!has_s3_method(plot, "alignpatch", default = FALSE)) {

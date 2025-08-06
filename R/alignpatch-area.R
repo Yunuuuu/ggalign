@@ -72,6 +72,15 @@ area <- function(t, l, b = t, r = l) {
     new_areas(one_area)
 }
 
+#' @export
+length.ggalign_area <- function(x) vec_size(x)
+
+#' @export
+print.ggalign_area <- function(x, ...) {
+    vctrs::obj_print(x, ...) # skip patch_area method
+    invisible(x)
+}
+
 # Define a custom S3 class `ggalign_area`, without using S7 directly
 # Patchwork expects traditional S3 classes, and S7 classes are not fully
 # interoperable with patchwork layouts.

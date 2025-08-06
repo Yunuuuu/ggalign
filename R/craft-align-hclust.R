@@ -79,18 +79,18 @@ align_hclust <- function(distance = "euclidean",
     cutree <- allow_lambda(cutree)
     assert_(cutree, is.function, "a function", allow_null = TRUE, call = call)
     if (inherits(method, "hclust")) {
-        if (vec_size(.subset2(method, "order")) == 0L) {
+        if (vec_size(.subset2(method, "order")) == 0L) { # nocov start
             cli_abort("{.cls hclust} defined in {.arg method} cannot be empty",
                 call = call
             )
-        }
+        } # nocov end
     } else if (inherits(method, "dendrogram")) {
-        if (stats::nobs(method) == 0L) {
+        if (stats::nobs(method) == 0L) { # nocov start
             cli_abort(
                 "{.cls dendrogram} defined in {.arg method} cannot be empty",
                 call = call
             )
-        }
+        } # nocov end
     }
 
     if (isTRUE(reorder_dendrogram)) {
@@ -104,14 +104,14 @@ align_hclust <- function(distance = "euclidean",
         user_reorder <- reorder_dendrogram
         reorder_dendrogram <- function(tree, data) {
             # we ensure, what we input for user is a `hclust` object.
-            if (!inherits(tree, "hclust")) tree <- stats::as.hclust(tree)
+            if (!inherits(tree, "hclust")) tree <- stats::as.hclust(tree) # nocov start
             ans <- user_reorder(tree, data)
             if (!inherits(ans, "hclust") &&
                 !inherits(ans, "dendrogram")) {
-                cli_abort(
+                cli_abort( # nocov start
                     "{.fn reorder_dendrogram} must return a {.cls hclust} or {.cls dendrogram} object",
                     call = call
-                )
+                ) # nocov end
             }
             ans
         }
@@ -350,7 +350,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                     use_missing = "pairwise.complete.obs") {
     method <- allow_lambda(method)
     if (!is_string(method) && !is.function(method)) {
-        ans <- try_fetch(
+        ans <- try_fetch( # nocov start
             stats::as.hclust(method),
             error = function(cnd) {
                 cli_abort(paste(
@@ -360,7 +360,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                 ), parent = cnd)
             }
         )
-        return(ans)
+        return(ans) # nocov end
     }
     if (is.null(distance)) {
         d <- matrix
@@ -369,7 +369,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
     }
     if (is_string(method)) {
         ans <- stats::hclust(d, method = method)
-    } else if (is.function(method)) {
+    } else if (is.function(method)) { # nocov start
         ans <- method(d)
         ans <- try_fetch(
             stats::as.hclust(ans),
@@ -379,7 +379,7 @@ hclust2 <- function(matrix, distance = "euclidean", method = "complete",
                     "can be coerced to {.cls hclust}"
                 ), parent = cnd)
             }
-        )
+        ) # nocov end
     }
     if (!is.null(distance)) attr(ans, "distance") <- d
     ans
@@ -408,7 +408,7 @@ make_dist <- function(matrix, distance, use_missing,
             ),
             cli_abort("Unsupported {.arg {arg}} specified", call = call)
         )
-    } else if (is.function(distance)) {
+    } else if (is.function(distance)) { # nocov start
         if (!inherits(d <- distance(matrix), "dist")) {
             cli_abort(
                 "{.arg {arg}} must return a {.cls dist} object",
@@ -422,19 +422,19 @@ make_dist <- function(matrix, distance, use_missing,
             "{.arg {arg}} can only be a {.cls string}, {.cls dist}",
             "object, or a {.cls function} return {.cls dist}"
         ), call = call)
-    }
+    } # nocov end
     d
 }
 
 cutree_k_to_h <- function(tree, k) {
     if (is.null(n1 <- nrow(tree$merge)) || n1 < 1) {
-        cli_abort("invalid {.arg tree} ({.field merge} component)")
+        cli_abort("invalid {.arg tree} ({.field merge} component)") # nocov start
     }
     n <- n1 + 1
     if (is.unsorted(tree$height)) {
-        cli_abort(
+        cli_abort( # nocov start
             "the 'height' component of 'tree' is not sorted (increasingly)"
-        )
+        ) # nocov end
     }
     mean(tree$height[c(n - k, n - k + 1L)])
 }

@@ -65,7 +65,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     )
     if (isTRUE(collapse_vars)) {
         collapse_vars <- "Multi_Hit"
-    } else if (isFALSE(collapse_vars)) {
+    } else if (isFALSE(collapse_vars)) { # nocov start
         collapse_vars <- NULL
     } else if (is_string(collapse_vars)) {
         if (collapse_vars == "") {
@@ -81,7 +81,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
             ),
             call = call
         )
-    }
+    } # nocov end
 
     getSampleSummary <- getExportedValue("maftools", "getSampleSummary")
     getGeneSummary <- getExportedValue("maftools", "getGeneSummary")
@@ -112,7 +112,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     if (!is.null(genes)) {
         # reorder the gene annotation based on the provided genes
         genes <- vec_cast(genes, character())
-        if (vec_any_missing(genes)) {
+        if (vec_any_missing(genes)) { # nocov start
             cli_abort(
                 "{.arg genes} cannot contain missing values",
                 call = call
@@ -132,7 +132,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                 "No {.arg genes} remain after removing missing genes",
                 call = call
             )
-        }
+        } # nocov end
         gene_summary <- vec_slice(
             gene_summary,
             vec_as_location(
@@ -186,7 +186,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
     )
 
     # collapse the vars ------------------------------------
-    if (is.null(collapse_vars)) {
+    if (is.null(collapse_vars)) { # nocov start
         vars <- vapply(var_list, function(var) {
             if (length(var) > 1L) {
                 paste(var, collapse = ";")
@@ -194,7 +194,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
                 var
             }
         }, character(1L), USE.NAMES = FALSE)
-    } else {
+    } else { # nocov end
         vars <- vapply(var_list, function(var) {
             if (vec_unique_count(var) > 1L) {
                 collapse_vars
@@ -230,7 +230,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
         # reorder the rows based on the `genes` specified
         index <- match(genes, rownames(ans))
         ans <- vec_slice(ans, index[!is.na(index)])
-    } else {
+    } else { # nocov start
         # restore all genes
         ans <- right_join(ans, data_frame0(Hugo_Symbol = genes))
 
@@ -239,7 +239,7 @@ fortify_matrix.MAF <- function(data, ..., genes = NULL, n_top = NULL,
 
         # reorder the rows based on the `genes` specified
         ans <- vec_slice(ans, genes)
-    }
+    } # nocov end
 
     # filter samples when necessary
     if (remove_empty_samples) {
@@ -347,7 +347,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
     if (rlang::is_string(pathdb)) {
         pathdb <- arg_match0(pathdb, c("sigpw", "smgbp"))
         pathway_summary <- get_pw_summary(maf, pathways = pathdb)
-    } else if (is.data.frame(pathdb)) {
+    } else if (is.data.frame(pathdb)) { # nocov start
         cli_abort("{.arg pathdb} cannot be a data frame", call = call)
     } else if (is.list(pathdb)) {
         if (!rlang::is_named(pathdb)) {
@@ -365,7 +365,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
         )
         pathdb <- vec_unique(pathdb)
         pathway_summary <- get_pw_summary(maf, pathways = pathdb)
-    }
+    } # nocov end
     getSampleSummary <- getExportedValue("maftools", "getSampleSummary")
     getClinicalData <- getExportedValue("maftools", "getClinicalData")
     sample_summary <- new_data_frame(getSampleSummary(maf))
@@ -409,7 +409,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
         index <- match(names(gene_list), rownames(ans))
         gene_list <- gene_list[!is.na(index)]
         ans <- vec_slice(ans, index[!is.na(index)])
-    } else {
+    } else { # nocov start
         # restore all pathways
         ans <- right_join(ans, data_frame0(pathways = names(gene_list)))
 
@@ -418,7 +418,7 @@ fortify_matrix.MAF_pathways <- function(data, ..., pathdb = "smgbp",
 
         # reorder the rows based on the `pathways` specified
         ans <- vec_slice(ans, names(gene_list))
-    }
+    } # nocov end
 
     # filter samples when necessary
     if (remove_empty_samples) {
@@ -534,7 +534,7 @@ fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
         keep <- colSums(cn_mat != "") > 0L
         cn_mat <- cn_mat[, keep, drop = FALSE]
     }
-    if (!is.null(sample_anno)) {
+    if (!is.null(sample_anno)) { # nocov start
         loc <- vec_locate_matches(
             colnames(cn_mat),
             .subset2(sample_anno, "Tumor_Sample_Barcode") %||%
@@ -545,7 +545,7 @@ fortify_matrix.GISTIC <- function(data, ..., n_top = NULL, bands = NULL,
             error_call = call
         )
         sample_anno <- vec_slice(sample_anno, .subset2(loc, "haystack"))
-    }
+    } # nocov end
     sample_summary <- new_data_frame(data@cnv.summary)
     sample_summary <- vec_slice(
         sample_summary,

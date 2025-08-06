@@ -119,6 +119,29 @@ test_that("The grid can be controlled", {
     })
 })
 
+test_that("accept patchwork", {
+    testthat::skip_if_not_installed("patchwork")
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp)) +
+        ggtitle("Plot 1")
+
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear)) +
+        ggtitle("Plot 2")
+
+    p3 <- ggplot(mtcars) +
+        geom_point(aes(hp, wt, colour = mpg)) +
+        ggtitle("Plot 3")
+
+    p4 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl) +
+        ggtitle("Plot 4")
+    expect_doppelganger("align_plots() add patchwork", {
+        align_plots(patchwork::wrap_plots(p1, p2), p3, p4)
+    })
+})
+
 test_that("`ggsave()` works well", {
     p1 <- ggplot(mtcars) +
         geom_point(aes(mpg, disp)) +
