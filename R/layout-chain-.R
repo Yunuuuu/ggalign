@@ -235,6 +235,24 @@ S7::method(layout_add, list(StackLayout, QuadScope)) <-
         layout
     }
 
+S7::method(layout_add, list(CircleLayout, QuadScope)) <-
+    S7::method(layout_add, list(CircleLayout, QuadLayout)) <-
+    S7::method(
+        layout_add,
+        list(CircleLayout, S7::new_S3_class("quad_active"))
+    ) <-
+    S7::method(
+        layout_add,
+        list(CircleLayout, S7::new_S3_class("quad_anno"))
+    ) <-
+    S7::method(layout_add, list(CircleLayout, StackLayout)) <-
+    function(layout, object, objectname) {
+        cli_abort(c(
+            sprintf("Cannot add %s to a {.fn circle_layout}", objectname),
+            i = "Try to use {.fn stack_layout} instead"
+        ))
+    }
+
 #' @include layout-.R
 #' @include layout-operator.R
 #' @importFrom S7 super
