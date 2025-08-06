@@ -22,12 +22,12 @@
 theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
                           title = TRUE, line = FALSE) {
     assert_string(axes, empty_ok = FALSE)
-    if (grepl("[^tlbrxy]", axes)) {
+    if (grepl("[^tlbrxy]", axes)) { # nocov start
         cli_abort(sprintf(
             "{.arg axes} can only contain the %s characters",
             oxford_and(c(.tlbr, "x", "y"))
         ))
-    }
+    } # nocov end
     axes <- split_position(axes)
     el <- list(text = text, ticks = ticks, title = title, line = line)
     el <- names(el)[vapply(el, isTRUE, logical(1L), USE.NAMES = FALSE)]
@@ -113,7 +113,7 @@ element_grob.ggalign_element_polygon <- function(element,
             linejoin = element$linejoin,
             linemitre = element$linemitre
         )
-    } else {
+    } else { # nocov start
         gp <- gpar(
             lwd = ggfun("len0_null")(linewidth * .pt),
             col = colour,
@@ -129,7 +129,7 @@ element_grob.ggalign_element_polygon <- function(element,
             linejoin = element$linejoin,
             linemitre = element$linemitre
         )
-    }
+    } # nocov end
     grid::polygonGrob(
         x = x, y = y,
         gp = ggfun("modify_list")(element_gp, gp), ...
@@ -400,14 +400,14 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
                                     # params
                                     expand = params$expand[c(4, 2)]
                                 )
-                            } else {
+                            } else { # nocov start
                                 ggfun("default_expansion")(
                                     scale_y,
                                     # for ggplot2 > 3.5.2, expand was passed by
                                     # params
                                     expand = self$expand
                                 )
-                            }
+                            } # nocov end
                         if (any(borders == "left")) {
                             expansion[1:2] <- 0
                         }
@@ -425,14 +425,14 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
                                     # params
                                     expand = params$expand[c(3, 1)]
                                 )
-                            } else {
+                            } else { # nocov start
                                 ggfun("default_expansion")(
                                     scale_y,
                                     # for ggplot2 > 3.5.2, expand was passed by
                                     # params
                                     expand = self$expand
                                 )
-                            }
+                            } # nocov end
                         if (any(borders == "bottom")) {
                             expansion[1:2] <- 0
                         }

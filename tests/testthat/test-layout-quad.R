@@ -1,4 +1,4 @@
-testthat::test_that("add `layout_theme()` works well", {
+test_that("add `layout_theme()` works well", {
     expect_doppelganger(
         "heatmap-layout-theme",
         ggheatmap(matrix(1:9, nrow = 3L)) +
@@ -6,7 +6,7 @@ testthat::test_that("add `layout_theme()` works well", {
     )
 })
 
-testthat::test_that("add `layout_title()` works well", {
+test_that("add `layout_title()` works well", {
     expect_doppelganger(
         "heatmap-layout-annotation",
         ggheatmap(matrix(1:9, nrow = 3L)) +
@@ -15,7 +15,7 @@ testthat::test_that("add `layout_title()` works well", {
     )
 })
 
-testthat::test_that("add `quad_anno()` works well", {
+test_that("add `quad_anno()` works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -52,7 +52,7 @@ testthat::test_that("add `quad_anno()` works well", {
         anno_right(initialize = TRUE))
 })
 
-testthat::test_that("add `align` object works well", {
+test_that("add `align` object works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -95,7 +95,7 @@ testthat::test_that("add `align` object works well", {
     )
 })
 
-testthat::test_that("add `align` object builds well", {
+test_that("add `align` object builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -126,7 +126,7 @@ testthat::test_that("add `align` object builds well", {
     )
 })
 
-testthat::test_that("add `quad_scope()` works as expected", {
+test_that("add `quad_scope()` works as expected", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -166,7 +166,7 @@ testthat::test_that("add `quad_scope()` works as expected", {
     )
 })
 
-testthat::test_that("add `stack_layout()` works well", {
+test_that("add `stack_layout()` works well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -297,7 +297,7 @@ testthat::test_that("add `stack_layout()` works well", {
     expect_identical(quad@top@heatmap$position, "top")
 })
 
-testthat::test_that("add `stack_layout()` builds well", {
+test_that("add `stack_layout()` builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -342,7 +342,7 @@ testthat::test_that("add `stack_layout()` builds well", {
     )
 })
 
-testthat::test_that("add `stack_cross()` builds well", {
+test_that("add `stack_cross()` builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -491,7 +491,31 @@ testthat::test_that("add `stack_cross()` builds well", {
     )
 })
 
-testthat::test_that("`ggsave()` works well", {
+test_that("`ggsave()` works well", {
     p <- ggheatmap(1:10)
     expect_no_error(ggplot2::ggsave(tempfile(fileext = ".png"), plot = p))
+})
+
+test_that("ggupset() works well", {
+    set.seed(123)
+    lt <- list(
+        a = sample(letters, 5),
+        b = sample(letters, 10),
+        c = sample(letters, 15)
+    )
+    expect_doppelganger(
+        "ggupset",
+        ggupset(tune(lt)) +
+            scale_fill_manual(values = c("#F0F0F0", "white"), guide = "none") +
+            scale_color_manual(values = c("grey", "black"), guide = "none") +
+            anno_top() +
+            ggalign(data = function(d) ggalign_attr(d, "intersection_sizes")) +
+            ggplot2::geom_bar(aes(y = .data$value), stat = "identity") +
+            anno_right() +
+            ggalign(data = function(d) ggalign_attr(d, "set_sizes")) +
+            ggplot2::geom_bar(aes(x = .data$value),
+                stat = "identity",
+                orientation = "y"
+            )
+    )
 })

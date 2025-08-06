@@ -154,13 +154,12 @@ link_tetragon <- function(..., .element = NULL) {
     }
     .link_draw(.draw = function(data) {
         data <- lapply(data, function(d) {
-            hand1 <- .subset2(d, "hand1")
-            hand2 <- .subset2(d, "hand2")
             # if the link is only in one side, we do nothing
-            if (is.null(hand1) || is.null(hand2)) {
+            if (is.null(.subset2(d, "hand1")) ||
+                is.null(.subset2(d, "hand2"))) {
                 return(NULL)
             }
-            both <- lapply(list(hand1, hand2), function(link) {
+            both <- lapply(d, function(link) {
                 # find the consecutive groups
                 index <- .subset2(link, "link_index")
                 oindex <- order(index)
@@ -172,10 +171,7 @@ link_tetragon <- function(..., .element = NULL) {
                 # split link into groups
                 .subset2(vec_split(link, group), "val")
             })
-            both <- vec_expand_grid(
-                hand1 = .subset2(both, 1L),
-                hand2 = .subset2(both, 2L)
-            )
+            both <- vec_expand_grid(!!!both)
             ans <- .mapply(function(hand1, hand2) {
                 data_frame0(
                     x = vec_c(
