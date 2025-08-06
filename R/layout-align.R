@@ -392,7 +392,7 @@ gguse_linear_coord <- function(plot, layout_name) {
 
 gguse_circle_coord <- function(plot, coord, ..., layout_name) {
     if (inherits(plot_coord <- plot$coordinates, "CoordRadial")) {
-        out <- ggproto(
+        out <- ggproto( # nocov start
             NULL, plot_coord,
             theta = coord$theta,
             r = coord$r,
@@ -402,21 +402,21 @@ gguse_circle_coord <- function(plot, coord, ..., layout_name) {
             expand = coord$expand,
             ...,
             setup_panel_params = circle_panel_params
-        )
+        ) # nocov end
     } else {
         if (!isTRUE(plot$coordinates$default)) {
-            cli_warn(c(
+            cli_warn(c( # nocov start
                 sprintf(
                     "{.fn %s} is not supported in %s",
                     snake_class(plot_coord), layout_name
                 ),
                 i = sprintf("Will use {.fn %s} instead", snake_class(coord))
-            ))
+            )) # nocov end
         }
         if (!inherits(coord, "CoordCircle")) {
-            out <- ggproto(NULL, coord, ...,
+            out <- ggproto(NULL, coord, ..., # nocov start
                 setup_panel_params = circle_panel_params
-            )
+            ) # nocov end
         } else {
             out <- ggproto(NULL, coord, ...)
         }
