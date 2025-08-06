@@ -67,7 +67,6 @@ testthat::test_that("`circle_discrete()` add `align-` object builds well", {
 testthat::test_that("`circle_discrete()` error adding", {
     # The package "ragg" (>= 1.2.6) is required for checking device support for
     # clipping paths.
-    testthat::skip_if(utils::packageVersion("ragg") < "1.2.6")
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
@@ -79,6 +78,7 @@ testthat::test_that("`circle_discrete()` error adding", {
 })
 
 testthat::test_that("`ggsave()` works well", {
+    testthat::skip_if(utils::packageVersion("ragg") < "1.2.6")
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)
     rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
