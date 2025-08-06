@@ -188,6 +188,7 @@ range_link <- function(point1, point2) {
 is_range_link <- function(x) inherits(x, "ggalign_range_link")
 
 ########################################################
+# nocov start
 new_pair_link <- function(hand1 = NULL, hand2 = NULL,
                           ..., class = character()) {
     structure(
@@ -332,6 +333,7 @@ vec_ptype2.ggalign_pair_link.list <- function(x, y, ...) {
 vec_ptype2.list.ggalign_pair_link <- function(x, y, ...) {
     y
 }
+# nocov end
 
 #############################################################
 #' @export
@@ -438,6 +440,7 @@ as_obs_link.list <- function(x, ..., arg = caller_arg(x),
 #' @export
 as_obs_link.ggalign_range_link <- as_obs_link.NULL
 
+# nocov start
 #' @export
 as_obs_link.default <- function(x, ..., arg = caller_arg(x),
                                 call = caller_env()) {
@@ -453,7 +456,7 @@ print.ggalign_range_link <- function(x, ...) {
     cat(deparse_link(x))
     invisible(x)
 }
-
+# nocov end
 ###########################################################
 #' @return A single string
 #' @noRd
@@ -651,6 +654,7 @@ link_to_location.integer <- function(x, ..., n, index, data_index,
     if (isTRUE(data_index)) match(ans, index) else ans
 }
 
+# nocov start
 #' @export
 link_to_location.ggalign_range_link <- function(x, ..., arg = caller_arg(x),
                                                 call = caller_call()) {
@@ -678,6 +682,7 @@ link_to_location.list <- function(x, ...) {
 link_to_location.waiver <- function(x, ..., other) {
     link_to_location(other %|w|% NULL, ...)
 }
+# nocov end
 
 #' @export
 link_to_location.NULL <- function(x, ...) NULL
