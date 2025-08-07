@@ -126,7 +126,7 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
         }
         list(panel, index)
     },
-    setup_plot = function(self, plot) {
+    init_plot = function(self, plot) {
         ggadd_default(plot, aes(x = .data$x, y = .data$y)) + switch_direction(
             self$direction,
             ggplot2::labs(x = "timing"),

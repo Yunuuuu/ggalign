@@ -34,7 +34,7 @@ Craftsman <- ggproto("Craftsman",
 
     # we define the `panel` and `index` method in `setup_domain` method
     setup_domain = function(self, domain) domain,
-    setup_plot = function(self, plot) plot,
+    init_plot = function(self, plot) plot,
 
     ##############################################################
     # Don't change the facet and coord in following methods

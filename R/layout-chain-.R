@@ -54,7 +54,7 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
 
             # initialize the plot object
             # use attributes to bypass the prop setter checking
-            attr(object, "plot") <- craftsman$setup_plot(object@plot)
+            attr(object, "plot") <- craftsman$init_plot(object@plot)
 
             layout <- chain_add_box(layout, object, object@active, objectname)
         } else { # should be a QuadLayout object

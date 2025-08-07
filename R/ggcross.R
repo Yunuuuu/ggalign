@@ -88,7 +88,7 @@ CrossGg <- ggproto("CrossGg",
         prop(domain, "index") <- NULL # always reset the index
         domain
     },
-    setup_plot = function(self, plot) {
+    init_plot = function(self, plot) {
         ggadd_default(plot, mapping = switch_direction(
             self$direction, aes(y = .data$.y), aes(x = .data$.x)
         ))

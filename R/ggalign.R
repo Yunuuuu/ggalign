@@ -182,7 +182,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         self$data <- ggalign_data_restore(plot_data, layout_data)
         layout
     },
-    setup_plot = function(self, plot) {
+    init_plot = function(self, plot) {
         direction <- self$direction
         ggadd_default(
             plot,
