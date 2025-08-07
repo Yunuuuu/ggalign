@@ -65,6 +65,10 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # https://github.com/tidyverse/ggplot2/issues/6284
         inner_radius <- radial$inner_radius[1L] / 0.4
         outer_radius <- radial$inner_radius[2L] / 0.4
+        ParentRadial <- radial
+        radial <- ggproto(NULL, ParentRadial,
+            setup_panel_params = circle_panel_params
+        )
     }
     plot_track <- sizes / sum(sizes) * (outer_radius - inner_radius)
 
@@ -96,11 +100,10 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         # the actual plot
         plot <- plot@plot
 
-        # we always use `null` facet
-        # we won't respect `free_facet` and `free_coord`
-        plot_coord <- gguse_circle_coord(
-            plot,
-            coord = radial,
+        plot <- craftsman$setup_circle_facet(plot, domain,
+            sector_spacing = circle@sector_spacing %||% (pi / 180)
+        )
+        plot <- craftsman$setup_circle_coord(plot, radial,
             # https://github.com/tidyverse/ggplot2/issues/6284
             # Use `0.5` to remove the extra spaces for axis label
             inner_radius = c(
@@ -109,39 +112,9 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 # the users, for others, we alway use 1 to remove any spacing
                 # between two tracks
                 if (i == N) outer_radius else 1
-            ) * 0.5,
-            layout_name = craftsman$layout_name
+            ) * 0.5
         )
-        if (!craftsman$free_facet) {
-            if (is_discrete_domain(domain)) {
-                if (nlevels(prop(domain, "panel")) > 1L) {
-                    plot <- plot + facet_sector(
-                        ggplot2::vars(.data$.panel),
-                        sector_spacing = circle@sector_spacing %||% (pi / 180),
-                        drop = FALSE
-                    )
-                } else {
-                    plot <- ggmelt_facet(plot, ggplot2::facet_null())
-                }
-            } else {
-                if (inherits(plot$facet, "FacetSector")) {
-                    plot <- ggfacet_modify(plot,
-                        sector_spacing = circle@sector_spacing %||% (pi / 180),
-                        drop = FALSE
-                    )
-                } else {
-                    plot <- ggmelt_facet(plot, ggplot2::facet_null())
-                }
-            }
-        }
-        plot$coordinates <- plot_coord
-
-        # set limits and default scales
-        if (!craftsman$free_limits) {
-            plot <- plot + layout_align(
-                x = domain, xlabels = craftsman$labels
-            )
-        }
+        plot <- craftsman$finish_circle_plot(plot, domain)
 
         # let `Craftsman` add other components
         plot <- craftsman$build_plot(plot, domain = domain)

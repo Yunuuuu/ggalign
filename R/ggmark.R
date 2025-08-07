@@ -85,8 +85,6 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
 MarkGg <- ggproto("MarkGg", Craftsman,
-    free_facet = TRUE,
-    free_limits = TRUE,
     interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         if (!self$in_linear) { # only used for linear coordinate
@@ -112,6 +110,10 @@ MarkGg <- ggproto("MarkGg", Craftsman,
         self$labels0 <- self$labels # CrossMark uses `labels0`
         ans
     },
+    setup_stack_facet = function(self, plot, ...) plot,
+    finish_stack_plot = function(self, plot, ...) plot,
+    setup_circle_facet = function(self, plot, ...) plot,
+    finish_circle_plot = function(self, plot, ...) plot,
     build_plot = function(self, plot, domain, extra_domain = NULL,
                           previous_domain = NULL) {
         if (is.na(prop(domain, "nobs"))) {

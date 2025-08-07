@@ -201,7 +201,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     # we don't align observations for `quad_free()`
     # add default data ----------------------------------
     p <- gguse_data(p, quad_build_data(data, row_domain, column_domain))
-    p <- gguse_linear_coord(p, object_name(quad))
+    p <- gguse_linear_coord(p, ggplot2::coord_cartesian(), object_name(quad))
     p <- ggmelt_facet(p, default_facet,
         free_row = free_row, free_column = free_column
     )

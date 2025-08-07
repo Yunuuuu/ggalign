@@ -375,53 +375,19 @@ get_discrete_labels <- function(scale, breaks, pindex, dindex, labels) {
 ######################################################
 # this will remove the old coordinate,
 # so always run firstly
-gguse_linear_coord <- function(plot, layout_name) {
-    coord <- plot$coordinates
-    if (!inherits(coord, "CoordTrans") && !coord$is_linear()) {
+gguse_linear_coord <- function(plot, coord, layout_name) {
+    if (!inherits(plot$coordinates, "CoordTrans") &&
+        !plot$coordinates$is_linear()) {
         cli_warn(c(
             sprintf(
                 "{.fn %s} is not supported in %s",
-                snake_class(coord), layout_name
+                snake_class(plot$coordinates), layout_name
             ),
-            i = "Will use {.fn coord_cartesian} instead"
+            i = sprintf("Will use {.fn %s} instead", snake_class(coord))
         ))
-        plot$coordinates <- ggplot2::coord_cartesian()
+        plot$coordinates <- coord
     }
     plot
-}
-
-gguse_circle_coord <- function(plot, coord, ..., layout_name) {
-    if (inherits(plot_coord <- plot$coordinates, "CoordRadial")) {
-        out <- ggproto( # nocov start
-            NULL, plot_coord,
-            theta = coord$theta,
-            r = coord$r,
-            arc = coord$arc,
-            direction = coord$direction,
-            r_axis_inside = coord$r_axis_inside,
-            expand = coord$expand,
-            ...,
-            setup_panel_params = circle_panel_params
-        ) # nocov end
-    } else {
-        if (!isTRUE(plot$coordinates$default)) {
-            cli_warn(c( # nocov start
-                sprintf(
-                    "{.fn %s} is not supported in %s",
-                    snake_class(plot_coord), layout_name
-                ),
-                i = sprintf("Will use {.fn %s} instead", snake_class(coord))
-            )) # nocov end
-        }
-        if (!inherits(coord, "CoordCircle")) {
-            out <- ggproto(NULL, coord, ..., # nocov start
-                setup_panel_params = circle_panel_params
-            ) # nocov end
-        } else {
-            out <- ggproto(NULL, coord, ...)
-        }
-    }
-    out
 }
 
 ######################################################
@@ -534,6 +500,8 @@ melt_facet.FacetStack <- function(use, facet, ...) {
             ))
             params$cols <- NULL
         }
+        params$drop <- FALSE
+        params$as.table <- FALSE
         ggproto(NULL, facet, params = params)
     } else if (inherits(facet, "FacetWrap")) {
         params <- facet$params
@@ -560,6 +528,9 @@ melt_facet.FacetStack <- function(use, facet, ...) {
                 params$ncol <- 1L
             }
         }
+        params$drop <- FALSE
+        params$as.table <- FALSE
+        ggproto(NULL, facet, params = params)
     } else if (inherits(facet, "FacetNull")) {
         facet
     } else {

@@ -25,8 +25,6 @@ cross <- function(cross = NULL, data = waiver(),
 #' @include craftsman.R
 CraftCross <- ggproto(
     "CraftCross", Craftsman,
-    free_facet = TRUE,
-    free_limits = TRUE,
     data_params = NULL,
     inherit_nobs = NULL,
     inherit_panel = NULL,
@@ -196,5 +194,9 @@ CraftCross <- ggproto(
         # udpate break_points
         layout@break_points <- c(layout@break_points, length(layout@box_list))
         layout
-    }
+    },
+    setup_stack_facet = function(self, plot, ...) plot,
+    finish_stack_plot = function(self, plot, ...) plot,
+    setup_circle_facet = function(self, plot, ...) plot,
+    finish_circle_plot = function(self, plot, ...) plot,
 )

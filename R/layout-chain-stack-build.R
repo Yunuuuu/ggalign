@@ -181,9 +181,7 @@ resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
     #     p3 + theme(plot.margin = margin(l = 5, unit = "cm")),
     #     ncol = 1
     # )
-    stack_spaces <- prop(
-        schemes_get(schemes, "scheme_align"), "free_spaces"
-    )
+    stack_spaces <- prop(schemes_get(schemes, "scheme_align"), "free_spaces")
     if (is_string(stack_spaces) && !is.null(position)) {
         released_spaces <- stack_spaces
     } else {
