@@ -12,8 +12,8 @@ is_craftsman <- function(x) inherits(x, "Craftsman")
 #'
 #' @section Methods:
 #' The following key methods are implemented:
-#' - `setup_stack_facet()` / `setup_stack_coord()` / `finish_stack_plot()`
-#' - `setup_circle_facet()` / `setup_circle_coord()` / `finish_circle_plot()`
+#' - `setup_stack_facet()` / `setup_stack_coord()` / `align_stack_plot()`
+#' - `setup_circle_facet()` / `setup_circle_coord()` / `align_circle_plot()`
 #' - `build_plot()` / `finish_plot()` – finalize plot decorations
 #' - `summary()` – print class info
 #'
@@ -99,7 +99,7 @@ Craftsman <- ggproto("Craftsman",
     },
 
     # Final alignment for stack layout
-    finish_stack_plot = function(self, plot, domain, ...) {
+    align_stack_plot = function(self, plot, domain, ...) {
         if (is_horizontal(self$direction)) {
             plot + layout_align(y = domain, ylabels = self$labels)
         } else {
@@ -169,7 +169,7 @@ Craftsman <- ggproto("Craftsman",
     },
 
     # Final alignment for circle layout
-    finish_circle_plot = function(self, plot, domain, ...) {
+    align_circle_plot = function(self, plot, domain, ...) {
         plot + layout_align(x = domain, xlabels = self$labels)
     },
 
