@@ -2,12 +2,15 @@
 % Please edit documentation in R/fortify-data-frame-.R
 \name{fortify_data_frame.character}
 \alias{fortify_data_frame.character}
+\alias{fortify_data_frame.factor}
 \alias{fortify_data_frame.numeric}
 \alias{fortify_data_frame.logical}
 \alias{fortify_data_frame.complex}
 \title{Build a data frame}
 \usage{
 \method{fortify_data_frame}{character}(data, ..., data_arg = NULL, call = NULL)
+
+\method{fortify_data_frame}{factor}(data, ..., data_arg = NULL, call = NULL)
 
 \method{fortify_data_frame}{numeric}(data, ..., data_arg = NULL, call = NULL)
 

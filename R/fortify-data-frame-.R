@@ -53,6 +53,10 @@ fortify_data_frame.character <- function(data, ..., data_arg = NULL,
 
 #' @rdname fortify_data_frame.character
 #' @export
+fortify_data_frame.factor <- fortify_data_frame.character
+
+#' @rdname fortify_data_frame.character
+#' @export
 fortify_data_frame.numeric <- fortify_data_frame.character
 
 #' @rdname fortify_data_frame.character
