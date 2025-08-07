@@ -24,7 +24,7 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
         craftsman <- prop(object, "craftsman")
         # To-Do: Use S7 and double dispatch
         if (is.na(current <- layout@current) ||
-            !is_layout(box <- .subset2(layout@box_list, current))) {
+            is_craftbox(box <- .subset2(layout@box_list, current))) {
             # unlock the object
             craftsman$unlock()
 
@@ -537,7 +537,7 @@ S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
 S7::method(layout_subtract, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
-            !is_layout(box <- .subset2(layout@box_list, current))) {
+            is_craftbox(box <- .subset2(layout@box_list, current))) {
             layout@box_list <- lapply(layout@box_list, function(box) {
                 if (is_craftbox(box)) {
                     chain_box_add(box, object, objectname, force = FALSE)
@@ -576,16 +576,15 @@ S7::method(layout_subtract, list(ChainLayout, Scheme)) <-
 S7::method(layout_subtract, list(StackLayout, QuadScope)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
-            !is_layout(box <- .subset2(layout@box_list, current))) {
+            is_craftbox(box <- .subset2(layout@box_list, current))) {
             inner <- prop(object, "object")
             inner_name <- prop(object, "object_name")
 
             # subtract set at layout level, if it is a Scheme
-            # we only apply to current active layout
             if (S7_inherits(inner, Scheme)) {
                 layout <- update_layout_schemes(inner, layout, inner_name)
-                return(layout)
             }
+
             # otherwise, we apply the object to all plots in the stack layout
             layout@box_list <- lapply(layout@box_list, function(box) {
                 if (is_craftbox(box)) {
