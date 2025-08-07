@@ -49,21 +49,21 @@ stack_composer_align_plot <- function(composer, plot, size) {
     stack_composer_add_plot(composer, plot, t, l)
 }
 
-stack_composer_add <- function(plot, stack, composer, ...) {
+stack_composer_add <- function(box, stack, composer, ...) {
     UseMethod("stack_composer_add")
 }
 
 #' @importFrom S7 convert
 #' @export
-`stack_composer_add.ggalign::CraftBox` <- function(plot, stack, composer,
+`stack_composer_add.ggalign::CraftBox` <- function(box, stack, composer,
                                                    domain, ...,
                                                    schemes, theme,
                                                    released_spaces,
                                                    direction, position) {
-    size <- convert(prop(plot, "size"), S3_unit)
+    size <- convert(prop(box, "size"), S3_unit)
 
     # for `released_spaces`, release the `free_spaces` in a single plot
-    plot_schemes <- scheme_inherit(schemes, plot@schemes)
+    plot_schemes <- scheme_inherit(schemes, box@schemes)
     if (!is.null(released_spaces)) {
         align_scheme <- schemes_get(plot_schemes, "scheme_align")
         plot_spaces <- prop(align_scheme, "free_spaces")
@@ -76,8 +76,8 @@ stack_composer_add <- function(plot, stack, composer, ...) {
     }
 
     # let `Align` to determine how to build the plot
-    craftsman <- prop(plot, "craftsman") # `Craftsman` object
-    plot <- prop(plot, "plot")
+    craftsman <- prop(box, "craftsman") # `Craftsman` object
+    plot <- prop(box, "plot")
     plot <- craftsman$setup_stack_facet(plot, domain)
     plot <- craftsman$setup_stack_coord(plot, ggplot2::coord_cartesian())
     plot <- craftsman$align_stack_plot(plot, domain)
@@ -94,10 +94,10 @@ stack_composer_add <- function(plot, stack, composer, ...) {
 }
 
 #' @importFrom grid unit.c unit
-`stack_composer_add.ggalign::QuadLayout` <- function(plot, stack, composer,
+`stack_composer_add.ggalign::QuadLayout` <- function(box, stack, composer,
                                                      schemes, theme,
                                                      direction, ...) {
-    patches <- quad_build(plot, schemes, theme, direction)
+    patches <- quad_build(box, schemes, theme, direction)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
 
@@ -186,10 +186,11 @@ stack_composer_add <- function(plot, stack, composer, ...) {
 }
 
 #' @export
-stack_composer_add.list <- function(plot, stack, composer, ...) {
-    for (p in plot) {
+stack_composer_add.list <- function(box, stack, composer, ...) {
+    for (p in box) {
         composer <- stack_composer_add(
-            plot = p, stack = stack, composer = composer, ...
+            box = p, stack = stack,
+            composer = composer, ...
         )
     }
     composer
