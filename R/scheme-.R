@@ -61,18 +61,6 @@ Schemes <- S7::new_class("Schemes",
     constructor = function(...) new_object(S7_object(), value = list2(...))
 )
 
-prop_schemes <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        Schemes,
-        setter = function(self, value) {
-            prop(self, property) <- value
-            self
-        },
-        ...
-    )
-}
-
 #' @importFrom utils str
 #' @importFrom S7 props
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {

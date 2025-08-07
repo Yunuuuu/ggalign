@@ -31,10 +31,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                 .subset2(layout, "nrow"),
                 .subset2(layout, "ncol")
             )
-            area <- create_area(
-                dims[2L], dims[1L],
-                .subset2(layout, "byrow")
-            )
+            area <- create_area(dims[2L], dims[1L], .subset2(layout, "byrow"))
         } else {
             dims <- c(max(field(area, "b")), max(field(area, "r")))
         }

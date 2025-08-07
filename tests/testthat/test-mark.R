@@ -23,7 +23,7 @@ test_that("`ggmark()` horizontal works well", {
             geom_boxplot(aes(.names, value))
     )
     expect_doppelganger(
-        "ggmark horizontal, with mark_triangle() orientation to plot",
+        "ggmark horizontal, with mark_triangle() orientation plot",
         ggheatmap(small_mat) +
             theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
             anno_right() +
@@ -32,7 +32,7 @@ test_that("`ggmark()` horizontal works well", {
             geom_boxplot(aes(.names, value))
     )
     expect_doppelganger(
-        "ggmark horizontal, with mark_triangle() orientation to observation",
+        "ggmark horizontal, with mark_triangle() orientation observation",
         ggheatmap(small_mat) +
             theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
             anno_right() +
@@ -67,7 +67,7 @@ test_that("`ggmark()` vertical works well", {
             geom_boxplot(aes(.names, value))
     )
     expect_doppelganger(
-        "ggmark vertical, with mark_triangle() orientation to plot",
+        "ggmark vertical, with mark_triangle() orientation plot",
         ggheatmap(small_mat) +
             theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
             anno_top() +
@@ -76,7 +76,7 @@ test_that("`ggmark()` vertical works well", {
             geom_boxplot(aes(.names, value))
     )
     expect_doppelganger(
-        "ggmark vertical, with mark_triangle() orientation to observation",
+        "ggmark vertical, with mark_triangle() orientation observation",
         ggheatmap(small_mat) +
             theme(axis.text.x = element_text(hjust = 0, angle = -60)) +
             anno_top() +

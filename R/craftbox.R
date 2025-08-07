@@ -57,7 +57,7 @@ CraftBox <- S7::new_class("CraftBox",
             }
         ),
         size = prop_grid_unit("size"),
-        schemes = prop_schemes("schemes")
+        schemes = Schemes
     )
 )
 

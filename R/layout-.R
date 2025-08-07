@@ -8,7 +8,7 @@
 LayoutProto <- S7::new_class("LayoutProto",
     properties = list(
         data = S7::class_any,
-        schemes = prop_schemes("schemes"),
+        schemes = Schemes,
         titles = prop_layout_title("titles"),
         theme = prop_layout_theme("theme"),
         name = S7::new_property(
@@ -203,7 +203,7 @@ QuadLayout <- S7::new_class(
             },
             default = NULL
         ),
-        body_schemes = prop_schemes("body_schemes"),
+        body_schemes = Schemes,
         # parameters for main body
         width = prop_grid_unit("width"),
         height = prop_grid_unit("height"),
