@@ -99,8 +99,9 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
                     self$xlim_list <- setup_discrete_limits(
                         "x", x_domain, self$n_column_panels
                     )
-                } else if (is_continuous_domain(x_domain)) {
-                    self$xlim_list <- prop(x_domain, "spec")
+                } else if (is_continuous_domain(x_domain) &&
+                    length(limits <- prop(x_domain, "limits"))) {
+                    self$xlim_list <- limits
                 }
             }
             if (.subset2(object, "ylim") && !is.null(y_domain)) {
@@ -108,8 +109,9 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
                     self$ylim_list <- setup_discrete_limits(
                         "y", y_domain, self$n_row_panels
                     )
-                } else if (is_continuous_domain(y_domain)) {
-                    self$ylim_list <- prop(y_domain, "spec")
+                } else if (is_continuous_domain(y_domain) &&
+                    length(limits <- prop(y_domain, "limits"))) {
+                    self$ylim_list <- limits
                 }
             }
             # call the parent method

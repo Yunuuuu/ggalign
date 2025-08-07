@@ -69,25 +69,6 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, ContinuousDomain)) <-
-    function(layout, object, objectname) {
-        if (is_discrete_domain(layout@domain)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
-                ),
-                i = sprintf(
-                    "%s cannot align continuous variables",
-                    object_name(layout)
-                )
-            ))
-        }
-        layout_update_domain(layout, domain = object, objectname = objectname)
-    }
-
-#' @include layout-.R
-#' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, S3_class_ggplot)) <-
     function(layout, object, objectname) {
         layout_add(layout, ggfree(data = object), objectname)

@@ -41,17 +41,9 @@ layout_expand <- function(..., x = waiver(), y = waiver()) { # nocov start
 #'
 #' @param ... A list of two numeric values, specifying the left/lower limit and
 #' the right/upper limit of the scale.
-#' @inheritParams layout_expand
 #' @importFrom rlang list2
 #' @export
-continuous_limits <- function(..., x = waiver(), y = waiver()) {
-    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) { # nocov start
-        cli_abort(
-            "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
-        )
-    }
-    ContinuousDomain(..., x = x, y = y) # nocov end
-}
+continuous_limits <- function(...) ContinuousDomain(...) # nocov
 
 # nocov start
 #' @importFrom S7 S7_inherits
@@ -81,25 +73,44 @@ ContinuousDomain <- S7::new_class(
     "ContinuousDomain",
     parent = Domain,
     properties = list(
-        spec = S7::new_property(
+        # facet = S7::new_property(
+        #     S7::class_any,
+        #     validator = function(value) {
+        #         if (is.null(value) || inherits(value)) {
+        #             return(NULL)
+        #         }
+        #         "must be a 'DiscreteRange' object"
+        #     },
+        #     setter = function(self, value) {
+        #         if (!is.null(prop(self, "facet"))) {
+        #             cli_abort("'@facet' is read-only")
+        #         }
+        #         prop(self, "facet") <- value
+        #         self
+        #     }
+        # ),
+        limits = S7::new_property(
             S7::class_list,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "spec"))) {
-                    cli_abort("'@spec' is read-only")
+            validator = function(value) {
+                for (limits in value) {
+                    if (length(limits) != 2L || !is.numeric(limits)) {
+                        return("must be a list of numeric vectors, each of length 2")
+                    }
                 }
-                prop(self, "spec") <- value
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "limits"))) {
+                    cli_abort("'@limits' is read-only")
+                }
+                prop(self, "limits") <- value
                 self
             }
         )
     ),
-    constructor = function(..., x = waiver(), y = waiver()) {
-        if (...length() > 0L) { # nocov start
-            spec <- list2(...)
-            names(spec) <- NULL
-        } else {
-            spec <- list(x = x, y = y)
-        }
-        new_object(S7_object(), spec = spec) # nocov end
+    constructor = function(...) {
+        limits <- list2(...) # nocov start
+        names(limits) <- NULL
+        new_object(S7_object(), limits = limits) # nocov end
     }
 )
 

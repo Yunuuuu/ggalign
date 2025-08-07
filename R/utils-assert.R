@@ -139,12 +139,6 @@ assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
             call = call
         )
     }
-    if (is_named(prop(limits, "spec"))) {
-        cli_abort(
-            "{.arg {arg}} shouldn't be created with {.arg x}/{.arg y} argument in {.fn continuous_limits}",
-            call = call
-        )
-    }
 }
 
 check_scheme_data <- function(data, arg = caller_arg(data),
