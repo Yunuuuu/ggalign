@@ -540,4 +540,48 @@ test_that("`layout_tags()` works well", {
         ) +
             layout_tags(c("&", "%"))
     )
+
+    expect_warning(
+        with_empty_dev(align_plots(p1, p2, p3, nrow = 1) +
+            layout_tags(c("&", "%")))
+    )
+    expect_doppelganger(
+        "layout_tags, recycled the tags",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A")
+    )
+    expect_doppelganger(
+        "layout_tags, location = plot",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A") +
+            layout_theme(plot.tag.location = "plot")
+    )
+    expect_doppelganger(
+        "layout_tags, location = panel",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A") +
+            layout_theme(plot.tag.location = "panel")
+    )
+    expect_doppelganger(
+        "layout_tags, location = margin",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A") +
+            layout_theme(plot.tag.location = "margin")
+    )
 })
