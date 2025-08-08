@@ -87,6 +87,7 @@ GeomMagick <- ggproto(
             # use same image)
             lapply(vec_seq_along(image_data), function(row) {
                 row_data <- vec_slice(data, row)
+
                 # Extract aesthetics for this point
                 x <- .subset2(row_data, "x")
                 y <- .subset2(row_data, "y")
@@ -96,18 +97,19 @@ GeomMagick <- ggproto(
                 vjust <- .subset2(row_data, "vjust")
                 alpha <- .subset2(row_data, "alpha")
                 fill <- .subset2(row_data, "fill")
-                # Remove all known aesthetics to leave only extra params for
-                # magick
-                row_data$x <- NULL
-                row_data$y <- NULL
-                row_data$size <- NULL
-                row_data$angle <- NULL
-                row_data$hjust <- NULL
-                row_data$vjust <- NULL
-                row_data$alpha <- NULL
-                row_data$fill <- NULL
+
                 # Apply user-supplied magick transformation function if provided
                 if (!is.null(magick)) {
+                    # Remove all known aesthetics to leave only extra params for
+                    # magick
+                    row_data$x <- NULL
+                    row_data$y <- NULL
+                    row_data$size <- NULL
+                    row_data$angle <- NULL
+                    row_data$hjust <- NULL
+                    row_data$vjust <- NULL
+                    row_data$alpha <- NULL
+                    row_data$fill <- NULL
                     image <- rlang::inject(magick(
                         image, !!!row_data, !!!magick_params
                     ))
