@@ -776,8 +776,9 @@ local(S7::method(`&`, list(AlignPatches, S7::class_any)) <- function(e1, e2) {
     # can be displayed in error messages
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
     if (is_theme(e2)) {
-        prop(e1, "theme") <- prop(e1, "theme") + e2
+        prop(e1, "theme") <- ggfun("add_theme")(prop(e1, "theme"), e2, e2name)
     }
+
     alignpatches_and_add(e2, e1, e2name)
 })
 
