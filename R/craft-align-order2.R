@@ -92,7 +92,7 @@ AlignOrder2 <- ggproto("AlignOrder2", CraftAlign,
             if (layout_nobs == 0L) {
                 cli_abort("{.arg data} cannot be empty", call = self$call)
             }
-            prop(domain, "nobs") <- list(layout_nobs)
+            prop(domain, "nobs") <- layout_nobs
             layout@domain <- domain
         } else if (vec_size(data) != layout_nobs) {
             cli_abort(sprintf(
