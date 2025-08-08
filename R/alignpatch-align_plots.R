@@ -280,7 +280,7 @@ S7::method(alignpatches_add, S7::new_S3_class("plot_annotation")) <-
 #'
 #'   If `NULL`, tags are suppressed for this layout.
 #'   In a nested layout, the parent layout's tag is applied to the
-#'   entire nested layout as a single unit.
+#'   the entire layout as a single unit.
 #'
 #'   If not `NULL`, must be one of:
 #'   - A character vector specifying explicit tags for each plot, or

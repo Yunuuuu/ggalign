@@ -38,7 +38,7 @@
         title = .subset2(titles, "title"),
         subtitle = .subset2(titles, "subtitle"),
         caption = .subset2(titles, "caption")
-    )
+    ) + layout_tags(NULL)
 }
 
 quad_build <- function(quad, schemes = NULL, theme = NULL,

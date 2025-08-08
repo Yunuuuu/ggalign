@@ -13,7 +13,7 @@ If there is no parent layout, no tags are applied.
 
 If \code{NULL}, tags are suppressed for this layout.
 In a nested layout, the parent layout's tag is applied to the
-entire nested layout as a single unit.
+the entire layout as a single unit.
 
 If not \code{NULL}, must be one of:
 \itemize{

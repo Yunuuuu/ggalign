@@ -68,7 +68,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
         ),
         guides = prop(schemes_get(schemes, "scheme_align"), "guides"),
         theme = stack@theme
-    )
+    ) + layout_tags(NULL)
 
     # for annotation, we should always make it next to the main body
     if (is.null(position)) {
