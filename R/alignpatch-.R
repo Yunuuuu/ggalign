@@ -175,7 +175,8 @@ Patch <- ggproto(
     set_guides = function(self, guides) {
         patch_no_method(self$plot, "set_guides")
     },
-    patch_gtable = function(self, theme, guides, plot = self$plot) {
+    patch_gtable = function(self, theme, guides, tagger = NULL, 
+                            plot = self$plot) {
         patch_no_method(self$plot, "patch_gtable")
     },
     collect_guides = function(self, guides, gt = self$gt) {

@@ -10,7 +10,6 @@ new_craftbox <- function(craftsman = NULL, ...,
     )
 }
 
-#' @importFrom ggplot2 is.ggplot
 #' @include scheme-.R
 #' @include utils-grid.R
 CraftBox <- S7::new_class("CraftBox",

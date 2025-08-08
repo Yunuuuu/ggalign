@@ -497,3 +497,47 @@ test_that("`free_guide()` works well", {
         )
     )
 })
+
+test_that("`layout_tags()` works well", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear))
+    p3 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl)
+
+    # Add tags to plots
+    expect_doppelganger(
+        "layout_tags, inherits tags by nested layout",
+        align_plots(p1, align_plots(p2, p3), ncol = 1) + layout_tags("A")
+    )
+
+    expect_doppelganger(
+        "layout_tags, disable nested inner tagging",
+        align_plots(p1, align_plots(p2, p3) + layout_tags(NULL), ncol = 1) +
+            layout_tags("A")
+    )
+
+    # Add multilevel tagging to nested layouts
+    expect_doppelganger(
+        "layout_tags, nested layout with multilevel tagging",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A")
+    )
+
+    # Use a custom tag sequence (mixed with a standard one)
+    expect_doppelganger(
+        "layout_tags, custom tag sequence",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags(c("&", "%"))
+    )
+})

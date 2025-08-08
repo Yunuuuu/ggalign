@@ -312,8 +312,10 @@ alignpatch.ggalign_mark_plot <- function(x) {
 #' @include alignpatch-ggplot2.R
 PatchAlignMark <- ggproto(
     "PatchAlignMark", PatchGgplot,
-    patch_gtable = function(self, theme, guides, plot = self$plot) {
-        ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(plot = plot)
+    patch_gtable = function(self, theme, guides, tagger, plot = self$plot) {
+        ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(
+            theme = theme, guides = guides, tagger = tagger, plot = plot
+        )
         # re-define the draw method, we assign new class
         ans <- add_class(ans, "ggalignMarkGtable")
         ans$ggalign_link_data <- plot$ggalign_link_data

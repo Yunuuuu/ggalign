@@ -2,7 +2,7 @@
 % Please edit documentation in R/alignpatch-align_plots.R
 \name{layout_annotation}
 \alias{layout_annotation}
-\title{Add layout annotation (internal use)}
+\title{Add layout annotation}
 \usage{
 layout_annotation(..., theme = waiver())
 }

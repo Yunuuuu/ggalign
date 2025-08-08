@@ -73,9 +73,11 @@ PatchPatchworkPatch <- ggproto(
     # `patch` from `patchwork`: patchwork::plot_spacer
     #' @importFrom gtable gtable_add_rows gtable_add_cols
     #' @importFrom ggplot2 find_panel
-    patch_gtable = function(self, theme, guides, plot = self$plot) {
+    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL,
+                            plot = self$plot) {
         guides <- if (length(guides)) "collect" else "keep"
         ans <- patchwork::patchGrob(patch, guides = guides)
+        # add rows and columns for `patch_titles()`
         for (border in .TLBR) {
             panel_pos <- find_panel(ans)
             if (border == "top") {
@@ -91,6 +93,9 @@ PatchPatchworkPatch <- ggproto(
                 v <- .subset2(panel_pos, "r") + 3L # right of the ylab
                 ans <- gtable_add_cols(ans, unit(0, "mm"), pos = v)
             }
+        }
+        if (!is.null(tagger)) {
+            ans <- tagger$tag_table(ans, theme %||% theme_get())
         }
         ans
     }

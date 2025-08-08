@@ -142,6 +142,7 @@ reference:
   - layout_design
   - layout_title
   - layout_theme
+  - layout_tags
 
 - title: Extending Plot Composer
   desc: >

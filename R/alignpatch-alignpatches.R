@@ -11,10 +11,12 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     #' @importFrom S7 prop
-    patch_gtable = function(self, theme = theme_get(), guides = NULL,
-                            top_level = FALSE, plot = self$plot) {
+    patch_gtable = function(self, theme = NULL, guides = NULL,
+                            tagger = NULL, top_level = FALSE,
+                            plot = self$plot) {
         patches <- lapply(prop(plot, "plots"), alignpatch)
         layout <- prop(plot, "layout")
+        theme <- theme %||% theme_get()
 
         # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
@@ -102,13 +104,31 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # unless the guides will be collected by the parent layout.
         border_with_guides <- unique(unlist(collected, FALSE, FALSE))
         border_with_guides <- setdiff(border_with_guides, parent_guides)
+
+        # A tagger can be:
+        # - A single string representing the tag for the entire layout,
+        # - NULL, meaning no tagging,
+        # - Or a LayoutTagger object used to tag each plot individually.
+        tagger <- create_layout_tagger(prop(plot, "tags"), tagger)
+        if (!is.null(tagger) && !inherits(tagger, "LayoutTagger")) {
+            # If tagger is not a LayoutTagger, treat it as a single tag for the
+            # whole layout
+            tagger <- NULL
+            tag <- tagger
+        } else {
+            # Otherwise, no single tag for the whole layout
+            tag <- NULL
+        }
+
         for (i in seq_along(patches)) {
             patch <- .subset2(patches, i)
+            # we always collect guides in the borders, otherwise, they'll
+            # overlap
             g <- union(
                 .subset2(collected, i),
                 intersect(border_with_guides, patch$borders)
             )
-            patch$gt <- patch$patch_gtable(theme = theme, guides = g)
+            patch$gt <- patch$patch_gtable(theme = theme, guides = g, tagger)
             collected_guides[i] <- list(patch$collect_guides(g))
         }
 
@@ -175,6 +195,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             z = 3L,
             name = "panel-foreground"
         )
+        gt <- table_add_tag(gt, tag, theme)
 
         # add background -----------------------------------
         if (!top_level && inherits(theme$plot.background, "element")) {

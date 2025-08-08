@@ -8,7 +8,11 @@ The internal structure has been fully refactored, with more informative and cons
 
 * Migrated all internal objects to the S7 class system.
 
-* replace `with_quad()` with `quad_scope()` and deprecate old name
+* replace `with_quad()` with `quad_scope()` and deprecate old name.
+
+* new `layout_tags()`: add support for tagging plots and nested layouts.
+
+* `&` operator now can work for `align_plots()`.
 
 # ggalign 1.0.2
 

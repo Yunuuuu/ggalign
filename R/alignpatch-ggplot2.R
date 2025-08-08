@@ -31,12 +31,19 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_guides = function(guides) guides,
-    patch_gtable = function(self, theme, guides, plot = self$plot) {
+    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL,
+                            plot = self$plot) {
         # extract patch titles --------------------------------
         patch_titles <- plot$ggalign_patch_labels
 
+        if (is.null(theme)) {
+            theme <- plot$theme
+        } else {
+            theme <- inherit_tag_theme(plot$theme, theme)
+        }
+
         # complete_theme() will ensure elements exist --------
-        theme <- complete_theme(plot$theme)
+        theme <- complete_theme(theme)
         # here: we remove tick length when the tick is blank
         theme <- setup_tick_length_element(theme)
         plot$theme <- theme
@@ -46,7 +53,12 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         strip_pos <- find_strip_pos(ans)
         # always add strips columns and/or rows
         ans <- add_strips(ans, strip_pos)
-        setup_patch_titles(ans, patch_titles = patch_titles, theme = theme)
+        ans <- setup_patch_titles(ans,
+            patch_titles = patch_titles, theme = theme
+        )
+
+        if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
+        ans
     },
     respect = function(self, gt = self$gt) .subset2(gt, "respect"),
 
