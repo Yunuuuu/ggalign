@@ -541,7 +541,7 @@ test_that("`layout_tags()` works well", {
             layout_tags(c("&", "%"))
     )
 
-    expect_warning(
+    expect_snapshot_warning(
         with_empty_dev(align_plots(p1, p2, p3, nrow = 1) +
             layout_tags(c("&", "%")))
     )
@@ -564,6 +564,20 @@ test_that("`layout_tags()` works well", {
             layout_tags("A") +
             layout_theme(plot.tag.location = "plot")
     )
+    expect_snapshot_error(
+        with_empty_dev(align_plots(p1, p2, p3, nrow = 1) +
+            layout_tags("A") +
+            layout_theme(
+                plot.tag.location = "margin",
+                plot.tag.position = c(0.5, 0.5)
+            ))
+    )
+    expect_snapshot_error(
+        with_empty_dev(align_plots(p1, p2, p3, nrow = 1) +
+            layout_tags("A") +
+            layout_theme(plot.tag.position = c(0.5, 0.5, 0.5)))
+    )
+
     expect_doppelganger(
         "layout_tags, location = panel",
         align_plots(
@@ -574,6 +588,18 @@ test_that("`layout_tags()` works well", {
             layout_tags("A") +
             layout_theme(plot.tag.location = "panel")
     )
+
+    expect_doppelganger(
+        "layout_tags, use plot theme",
+        align_plots(
+            p1,
+            align_plots(p2, p3) + layout_tags(1),
+            ncol = 1
+        ) +
+            layout_tags("A") &
+            theme(plot.tag.location = "panel")
+    )
+
     expect_doppelganger(
         "layout_tags, location = margin",
         align_plots(
