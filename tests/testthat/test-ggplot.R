@@ -266,3 +266,22 @@ test_that("`geom_draw()` works well", {
             geom_draw(text)
     )
 })
+
+test_that("`geom_magick()` works well", {
+    skip_if_not_installed("magick")
+    set.seed(123)
+    d <- data.frame(
+        x = rnorm(10),
+        y = rnorm(10),
+        image = "https://jeroenooms.github.io/images/frink.png",
+        fill = sample(c("A", "B", "C", "D"), 10, replace = TRUE),
+        alpha = rnorm(10, mean = 0.5, sd = 0.1)
+    )
+    d$alpha <- pmax(pmin(d$alpha, 1), 0)
+
+    expect_doppelganger(
+        "geom_magick()",
+        ggplot(d, aes(x, y)) +
+            geom_magick(aes(image = image, fill = fill, alpha = alpha))
+    )
+})

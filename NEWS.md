@@ -14,6 +14,8 @@ The internal structure has been fully refactored, with more informative and cons
 
 * `&` operator now can work for `align_plots()`.
 
+* new `geom_magick()` object to draw images as point shapes using magick
+
 # ggalign 1.0.2
 
 * `align_plots()`: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.

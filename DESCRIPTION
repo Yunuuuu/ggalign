@@ -118,6 +118,7 @@ Collate:
     'ggplot-facet-sector.R'
     'ggplot-geom-draw.R'
     'ggplot-geom-gshape.R'
+    'ggplot-geom-magick.R'
     'ggplot-geom-pie.R'
     'ggplot-geom-rect3d.R'
     'ggplot-geom-subrect.R'

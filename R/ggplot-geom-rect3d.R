@@ -30,6 +30,7 @@
 #'     ) +
 #'     coord_cartesian(clip = "off")
 #'
+#' @importFrom rlang list2
 #' @export
 geom_rect3d <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", ...,
@@ -43,7 +44,7 @@ geom_rect3d <- function(mapping = NULL, data = NULL, stat = "identity",
         position = position,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
-        params = list(
+        params = list2(
             lineend = lineend,
             linejoin = linejoin,
             linemitre = linemitre,

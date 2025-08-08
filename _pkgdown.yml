@@ -158,6 +158,7 @@ reference:
   - geom_pie
   - geom_subrect
   - geom_tile3d
+  - geom_magick
   - scale_z_continuous
   - theme_no_axes
   - no_expansion
