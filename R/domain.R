@@ -43,7 +43,13 @@ layout_expand <- function(..., x = waiver(), y = waiver()) { # nocov start
 #' the right/upper limit of the scale.
 #' @importFrom rlang list2
 #' @export
-continuous_limits <- function(...) ContinuousDomain(...) # nocov
+continuous_limits <- function(...) { # nocov start
+    if (...length() == 0L) {
+        NULL
+    } else {
+        ContinuousDomain(..., facet = NULL)
+    } # nocov end
+}
 
 # nocov start
 #' @importFrom S7 S7_inherits
@@ -73,22 +79,23 @@ ContinuousDomain <- S7::new_class(
     "ContinuousDomain",
     parent = Domain,
     properties = list(
-        # facet = S7::new_property(
-        #     S7::class_any,
-        #     validator = function(value) {
-        #         if (is.null(value) || inherits(value)) {
-        #             return(NULL)
-        #         }
-        #         "must be a 'DiscreteRange' object"
-        #     },
-        #     setter = function(self, value) {
-        #         if (!is.null(prop(self, "facet"))) {
-        #             cli_abort("'@facet' is read-only")
-        #         }
-        #         prop(self, "facet") <- value
-        #         self
-        #     }
-        # ),
+        facet = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (is.null(value) || is.character(value)) {
+                    return(NULL)
+                }
+                "must be a 'character' object"
+            },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "facet"))) {
+                    cli_abort("'@facet' is read-only")
+                }
+                prop(self, "facet") <- value
+                self
+            },
+            default = NULL
+        ),
         limits = S7::new_property(
             S7::class_list,
             validator = function(value) {
@@ -107,10 +114,10 @@ ContinuousDomain <- S7::new_class(
             }
         )
     ),
-    constructor = function(...) {
+    constructor = function(..., facet = NULL) {
         limits <- list2(...) # nocov start
         names(limits) <- NULL
-        new_object(S7_object(), limits = limits) # nocov end
+        new_object(S7_object(), facet = facet, limits = limits) # nocov end
     }
 )
 

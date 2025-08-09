@@ -224,10 +224,23 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         }
 
         if (!is_discrete_domain(domain)) {
-            if (!is.null(data) && !is.null(extra_plot_data)) {
+            if (is.data.frame(data) && is.data.frame(extra_plot_data)) {
                 data <- full_join(data, extra_plot_data,
                     by.x = ".column_index", by.y = ".extra_index"
                 )
+            }
+            # Treat the first column as the facet column
+            # For continuous domains (used by circle_genomic()), ensure valid
+            # facets
+            if (is_continuous_domain(domain) &&
+                !is.null(prop(domain, "facet")) &&
+                is.data.frame(data) && ncol(data) > 0L) {
+                missing <- is.na(data[[1L]])
+                if (any(missing)) {
+                    cli_warn("Removing {.val {sum(missing)}} rows with missing {.field facet}")
+                    data <- vec_slice(data, !missing)
+                }
+                data[[1L]] <- factor(data[[1L]], levels = prop(domain, "facet"))
             }
             return(gguse_data(plot, data))
         } else if (is.na(prop(domain, "nobs"))) {

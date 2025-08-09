@@ -1,22 +1,3 @@
-#' Finalize plot modifications from a ChainLayout object.
-#'
-#' This generic function lets a ChainLayout apply any final transformations
-#' to the composed plot before returning it. It does not extract or store
-#' the plot, but instead allows the layout to inject custom modifications
-#' (e.g., spacing guides, annotations, alignment fixes) at the last step.
-#'
-#' @param layout A ChainLayout object.
-#' @param plot The plot being finalized.
-#' @importFrom S7 S7_dispatch
-#' @keywords internal
-chain_decorate <- S7::new_generic(
-    "chain_decorate", "layout",
-    function(layout, plot) S7_dispatch()
-)
-
-S7::method(chain_decorate, ChainLayout) <- function(layout, plot) plot
-
-#############################################################
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, CraftBox)) <-

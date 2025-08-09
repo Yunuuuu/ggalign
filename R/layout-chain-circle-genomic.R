@@ -80,7 +80,7 @@ circle_genomic.data.frame <- function(data, ..., radial = NULL,
     lvls <- levels(data[[1L]])
     names(ranges) <- .subset2(groups, "key")
     ranges <- ranges[lvls]
-    limits <- continuous_limits(!!!ranges)
+    limits <- ContinuousDomain(!!!ranges, facet = lvls)
     ranges <- vec_rbind(!!!ranges, .names_to = "seqnames")
     ranges$seqnames <- factor(ranges$seqnames, levels = lvls)
     new_circle_layout(
@@ -117,23 +117,4 @@ genomic_range <- function(start, end) {
         e <- end[ordering[i]]
     }
     c(start = s, end = e)
-}
-
-S7::method(chain_decorate, CircleLayout) <- function(layout, plot) {
-    if (!identical(layout@name, "circle_genomic")) {
-        return(plot)
-    }
-    if (is.data.frame(data <- plot$data)) {
-        data[[1L]] <- factor(
-            data[[1L]],
-            levels = ggalign_attr(layout@data, "seqnames")
-        )
-        missing <- is.na(data[[1L]])
-        if (any(missing)) {
-            cli_warn("Removing {.val {sum(missing)}} rows contain missing {.field seqnames}")
-            data <- vec_slice(data, !missing)
-        }
-        plot$data <- data
-    }
-    plot
 }

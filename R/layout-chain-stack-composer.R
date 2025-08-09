@@ -86,9 +86,6 @@ stack_composer_add <- function(box, stack, composer, ...) {
     plot <- craftsman$build_plot(plot, domain = domain, ...)
     plot <- craftsman$finish_plot(plot, plot_schemes, theme)
 
-    # Let layout finally modify the plot
-    plot <- chain_decorate(stack, plot)
-
     # add the plot to the composer
     stack_composer_align_plot(composer, plot, size)
 }
