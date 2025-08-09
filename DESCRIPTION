@@ -158,6 +158,7 @@ Collate:
     'mark.R'
     'object-name.R'
     'pair-links.R'
+    'plot-ideogram.R'
     'raster-magick.R'
     'rasterise.R'
     'scheme-align.R'

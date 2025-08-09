@@ -5,6 +5,22 @@ assert_gp <- function(gp, arg = caller_arg(gp), call = caller_call()) {
     assert_s3_class(gp, "gpar", arg = arg, call = call)
 }
 
+assert_genomic_data <- function(data, arg = caller_arg(data),
+                                call = caller_env()) {
+    if (ncol(data) < 3L) {
+        cli_abort("{.arg {arg}} must have at least 3 columns: chromosome, start, and end", call = call)
+    }
+    if (anyNA(data[[1L]]) || anyNA(data[[2L]]) || anyNA(data[[3L]])) {
+        cli_abort("Columns 1, 2, and 3 of {.arg {arg}} must not contain missing values", call = call)
+    }
+    if (!is.numeric(data[[2L]]) || !is.numeric(data[[3L]])) {
+        cli_abort("Columns 2 and 3 of {.arg {arg}} must be numeric (start and end positions)", call = call)
+    }
+    if (any(data[[2L]] > data[[3L]])) {
+        cli_abort("Column 2 (start) must not be greater than column 3 (end) in any row of {.arg {arg}}", call = call)
+    }
+}
+
 #' @importFrom rlang caller_arg caller_call
 assert_mapping <- function(mapping, arg = caller_arg(mapping),
                            call = caller_call()) {

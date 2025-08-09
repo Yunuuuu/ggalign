@@ -54,18 +54,7 @@ circle_genomic.data.frame <- function(data, ..., radial = NULL,
                                       sector_spacing = NULL,
                                       theme = NULL) {
     rlang::check_dots_empty()
-    if (ncol(data) < 3L) {
-        cli_abort("{.arg data} must have at least 3 columns: chromosome, start, and end")
-    }
-    if (anyNA(data[[1L]]) || anyNA(data[[2L]]) || anyNA(data[[3L]])) {
-        cli_abort("Columns 1, 2, and 3 of {.arg data} must not contain missing values")
-    }
-    if (!is.numeric(data[[2L]]) || !is.numeric(data[[3L]])) {
-        cli_abort("Columns 2 and 3 of {.arg data} must be numeric (start and end positions)")
-    }
-    if (any(data[[2L]] > data[[3L]])) {
-        cli_abort("Column 2 (start) must not be greater than column 3 (end) in any row of {.arg data}")
-    }
+    assert_genomic_data(data)
     data[[1L]] <- as.factor(data[[1L]])
     # seqnames, start, end
     # Special considerations for `data.table`, we cannot use `data[1:2]`

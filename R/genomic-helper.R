@@ -29,18 +29,10 @@ genomic_dist <- function(region, mode = NULL) {
     } else {
         mode <- arg_match0(mode, c("min", "max", "mean", "left", "right"))
     }
-    if (!is.data.frame(region) || ncol(region) < 3L) {
+    if (!is.data.frame(region)) {
         cli_abort("{.arg region} must have at least 3 columns: chromosome, start, and end")
     }
-    if (anyNA(region[[1L]]) || anyNA(region[[2L]]) || anyNA(region[[3L]])) {
-        cli_abort("Columns 1, 2, and 3 of {.arg region} must not contain missing values")
-    }
-    if (!is.numeric(region[[2L]]) || !is.numeric(region[[3L]])) {
-        cli_abort("Columns 2 and 3 of {.arg region} must be numeric (start and end positions)")
-    }
-    if (any(region[[2L]] > region[[3L]])) {
-        cli_abort("Column 2 (start) must not be greater than column 3 (end) in any row of {.arg region}")
-    }
+    assert_genomic_data(region)
 
     # Split the region data frame by chromosome (first column)
     groups <- vec_split(region, .subset2(region, 1L))
@@ -155,18 +147,10 @@ genomic_density <- function(region, window_size = 1e+07, n_window = NULL,
     } else {
         mode <- arg_match0(mode, c("coverage", "count"))
     }
-    if (!is.data.frame(region) || ncol(region) < 3L) {
+    if (!is.data.frame(region)) {
         cli_abort("{.arg region} must have at least 3 columns: chromosome, start, and end")
     }
-    if (anyNA(region[[1L]]) || anyNA(region[[2L]]) || anyNA(region[[3L]])) {
-        cli_abort("Columns 1, 2, and 3 of {.arg region} must not contain missing values")
-    }
-    if (!is.numeric(region[[2L]]) || !is.numeric(region[[3L]])) {
-        cli_abort("Columns 2 and 3 of {.arg region} must be numeric (start and end positions)")
-    }
-    if (any(region[[2L]] > region[[3L]])) {
-        cli_abort("Column 2 (start) must not be greater than column 3 (end) in any row of {.arg region}")
-    }
+    assert_genomic_data(region)
 
     # Split the region data frame by chromosome (first column)
     groups <- vec_split(region, .subset2(region, 1L))
