@@ -52,7 +52,7 @@ test_that("genomic_density returns expected result in count mode", {
   )
 
   expect_s3_class(result, "data.frame")
-  expect_named(result, c("seqnames", "start", "end", "density"))
+  expect_named(result, c(names(region), "density"))
   expect_equal(result$density, c(2, 1)) # regions 1 and 2 in first window, region 3 in second
 })
 
