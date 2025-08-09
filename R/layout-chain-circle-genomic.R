@@ -49,11 +49,11 @@ circle_genomic.character <- function(data, ...) {
 
 #' @export
 #' @keywords internal
-circle_genomic.data.frame <- function(data, ..., radial = NULL,
-                                      direction = "outward",
-                                      sector_spacing = NULL,
-                                      theme = NULL) {
-    rlang::check_dots_empty()
+circle_genomic.default <- function(data, ..., radial = NULL,
+                                   direction = "outward",
+                                   sector_spacing = NULL,
+                                   theme = NULL) {
+    data <- fortify_data_frame(data = data, ...)
     assert_genomic_data(data)
     data[[1L]] <- as.factor(data[[1L]])
     # seqnames, start, end
@@ -73,24 +73,12 @@ circle_genomic.data.frame <- function(data, ..., radial = NULL,
     ranges <- vec_rbind(!!!ranges, .names_to = "seqnames")
     ranges$seqnames <- factor(ranges$seqnames, levels = lvls)
     new_circle_layout(
+        name = "circle_genomic",
         data = ggalign_data_set(data, seqnames = lvls, ranges = ranges),
         domain = limits,
         radial = radial, direction = direction,
         sector_spacing = sector_spacing,
-        schemes = default_schemes(data), theme = theme,
-        name = "circle_genomic"
-    )
-}
-
-#' @export
-circle_genomic.default <- function(data, ..., radial = NULL,
-                                   direction = "outward",
-                                   sector_spacing = NULL,
-                                   theme = NULL) {
-    data <- fortify_data_frame(data = data, ...)
-    circle_genomic(data,
-        radial = radial, direction = direction,
-        sector_spacing = sector_spacing, theme = theme
+        schemes = default_schemes(data), theme = theme
     )
 }
 
