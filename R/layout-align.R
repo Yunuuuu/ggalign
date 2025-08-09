@@ -630,7 +630,7 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
             params$cols <- column_facet
             facet <- ggproto(NULL, user, params = params)
         } else {
-            facet <- ggplot2::facet_null()
+            facet <- user
         }
     } else {
         # ------------------------------------------------------------
@@ -656,10 +656,14 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
                 scales = "free_x", space = "free",
                 drop = FALSE, as.table = FALSE
             )
-        } else if (inherits(user, "FacetNull")) {
+        } else if (free_row && free_column) {
             facet <- user
         } else {
-            facet <- ggplot2::facet_null()
+            if (inherits(user, "FacetNull")) {
+                facet <- user
+            } else {
+                facet <- ggplot2::facet_null()
+            }
         }
     }
     gguse_facet(plot, facet)
