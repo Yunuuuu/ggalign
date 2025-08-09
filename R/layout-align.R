@@ -463,7 +463,7 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
                 params$ncol <- 1L
             }
         }
-        params["facets"] <- list(facets)
+        params["facets"] <- list(compact_facets(facets))
         params$drop <- FALSE
         params$as.table <- FALSE
         ggproto(NULL, user, params = params)
@@ -473,7 +473,7 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
         } else {
             ggplot2::facet_null()
         }
-    } else if (type == "grid") {
+    } else if (type == "grid") { # the default facets
         switch_direction(
             direction,
             ggplot2::facet_grid(
