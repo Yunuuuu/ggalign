@@ -426,16 +426,16 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
         params <- user$params
         if (is_horizontal(direction)) {
             # for horizontal stack, we cannot facet by rows
-            if (!is.null(params$rows)) {
+            if (length(params$rows)) {
                 cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
             }
-            params["rows"] <- list(facets)
+            params["rows"] <- list(compact_facets(facets))
         } else {
-            if (!is.null(params$cols)) {
+            if (length(params$cols)) {
                 # for vertical stack, we cannot facet by cols
                 cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
             }
-            params["cols"] <- list(facets)
+            params["cols"] <- list(compact_facets(facets))
         }
         params$drop <- FALSE
         params$as.table <- FALSE
@@ -601,17 +601,26 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
     if (inherits(user, "FacetGrid")) {
         if (!free_row || !free_column) {
             params <- user$params
-            if (!free_row && !is.null(params$rows)) {
-                cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
-                params["rows"] <- list(row_facet)
+            if (free_row) {
+                row_facet <- params$rows
+            } else {
+                if (length(params$rows)) {
+                    cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
+                }
+                row_facet <- compact_facets(row_facet)
             }
             if (!free_row) { # Don't allow user change the rows
                 params$free$y <- TRUE
                 params$space_free$y <- TRUE
             }
-            if (!free_column && !is.null(params$cols)) {
-                cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
-                params["cols"] <- list(column_facet)
+
+            if (free_column) {
+                column_facet <- params$cols
+            } else {
+                if (length(params$cols)) {
+                    cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
+                }
+                column_facet <- compact_facets(column_facet)
             }
             if (!free_column) { # Don't allow user change the cols
                 params$free$x <- TRUE
@@ -619,6 +628,8 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
             }
             params$drop <- FALSE
             params$as.table <- FALSE
+            params$rows <- row_facet
+            params$cols <- column_facet
             facet <- ggproto(NULL, user, params = params)
         } else {
             facet <- ggplot2::facet_null()

@@ -319,3 +319,23 @@ testthat::test_that("`labels` of `scale_*_()` works well", {
             scale_x_discrete(breaks = c(5, 3), labels = I(c("a", "b")))
     )
 })
+
+testthat::test_that("`labeller` of `facet_grid()` works well", {
+    set.seed(123)
+    small_mat <- matrix(rnorm(56), nrow = 7)
+    rownames(small_mat) <- paste0("row", seq_len(nrow(small_mat)))
+    colnames(small_mat) <- paste0("column", seq_len(ncol(small_mat)))
+
+    expect_doppelganger(
+        "facet_grid, labeller works",
+        ggheatmap(small_mat) +
+            facet_grid(
+                labeller = labeller(.panel_x = function(x) {
+                    letters[as.integer(x)]
+                })
+            ) +
+            theme(strip.text = element_text()) +
+            anno_top() +
+            align_kmeans(centers = 3L)
+    )
+})
