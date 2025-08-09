@@ -637,7 +637,9 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
         # Step 4: Build a new facet_grid if no user facet or non-grid facet
         # ------------------------------------------------------------
         # Build appropriate facet_grid depending on available facets
-        if (!is.null(row_facet) && !is.null(column_facet)) {
+        if (free_row && free_column) {
+            facet <- user
+        } else if (!is.null(row_facet) && !is.null(column_facet)) {
             facet <- ggplot2::facet_grid(
                 rows = row_facet,
                 cols = column_facet,
@@ -656,14 +658,10 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
                 scales = "free_x", space = "free",
                 drop = FALSE, as.table = FALSE
             )
-        } else if (free_row && free_column) {
+        } else if (inherits(user, "FacetNull")) {
             facet <- user
         } else {
-            if (inherits(user, "FacetNull")) {
-                facet <- user
-            } else {
-                facet <- ggplot2::facet_null()
-            }
+            facet <- ggplot2::facet_null()
         }
     }
     gguse_facet(plot, facet)
