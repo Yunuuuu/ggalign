@@ -258,6 +258,29 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
     #    index, this will be checked in `$setup_domain()` method.
     align = function(self, panel, index) list(panel, index),
 
+    # ========== Stack Layout ==========
+    # Setup facet for stack layout
+    # It's important we also set `drop = FALSE`, otherwise, plot is hard to
+    # align, by convention, we always set `as.table = FALSE` to follow usual
+    # ggplot2 coordinate direction
+    setup_stack_facet = function(self, plot, domain, ...) {
+        align_stack_discrete_facet(
+            self$direction, plot, domain,
+            self$layout_name
+        )
+    },
+
+    # ========== Circle Layout ==========
+    # Setup facet for circle layout
+    # It's important we also set `drop = FALSE`, otherwise, plot is hard to
+    # align
+    setup_circle_facet = function(self, plot, domain, sector_spacing, ...) {
+        align_circle_discrete_facet(
+            plot, domain, sector_spacing,
+            self$layout_name
+        )
+    },
+
     # let Craftsman to add schemes and theme acoordingly
     finish_plot = function(self, plot, schemes, theme) {
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)

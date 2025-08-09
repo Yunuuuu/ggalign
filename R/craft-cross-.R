@@ -196,7 +196,7 @@ CraftCross <- ggproto(
         layout
     },
     setup_stack_facet = function(self, plot, ...) plot,
-    align_stack_plot = function(self, plot, ...) plot,
+    setup_stack_plot = function(self, plot, ...) plot,
     setup_circle_facet = function(self, plot, ...) plot,
-    align_circle_plot = function(self, plot, ...) plot,
+    setup_circle_plot = function(self, plot, ...) plot,
 )

@@ -114,7 +114,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
                 if (i == N) outer_radius else 1
             ) * 0.5
         )
-        plot <- craftsman$align_circle_plot(plot, domain)
+        plot <- craftsman$setup_circle_plot(plot, domain)
 
         # let `Craftsman` add other components
         plot <- craftsman$build_plot(plot, domain = domain)

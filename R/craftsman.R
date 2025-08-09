@@ -12,8 +12,8 @@ is_craftsman <- function(x) inherits(x, "Craftsman")
 #'
 #' @section Methods:
 #' The following key methods are implemented:
-#' - `setup_stack_facet()` / `setup_stack_coord()` / `align_stack_plot()`
-#' - `setup_circle_facet()` / `setup_circle_coord()` / `align_circle_plot()`
+#' - `setup_stack_facet()` / `setup_stack_coord()` / `setup_stack_plot()`
+#' - `setup_circle_facet()` / `setup_circle_coord()` / `setup_circle_plot()`
 #' - `build_plot()` / `finish_plot()` – finalize plot decorations
 #' - `summary()` – print class info
 #'
@@ -29,8 +29,8 @@ Craftsman <- ggproto("Craftsman",
     in_linear = NULL,
     layout_name = NULL,
     direction = NULL,
-    position = NULL,    # e.g., used by stack_layout() in quad_layout()
-    labels = NULL,      # for discrete domain, there should be labels
+    position = NULL, # e.g., used by stack_layout() in quad_layout()
+    labels = NULL, # for discrete domain, there should be labels
 
     # we always prevent user from modifying the object in `$build_plot()` and
     # `$finish_plot()` methods
@@ -62,32 +62,16 @@ Craftsman <- ggproto("Craftsman",
     # ggplot2 coordinate direction
     setup_stack_facet = function(self, plot, domain, ...) {
         if (is_discrete_domain(domain)) {
-            if (nlevels(prop(domain, "panel")) > 1L) {
-                if (is_horizontal(self$direction)) {
-                    facet <- ggplot2::facet_grid(
-                        rows = ggplot2::vars(.data$.panel),
-                        scales = "free_y", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    )
-                    free_row <- FALSE
-                    free_column <- TRUE
-                } else {
-                    facet <- ggplot2::facet_grid(
-                        cols = ggplot2::vars(.data$.panel),
-                        scales = "free_x", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    )
-                    free_row <- TRUE
-                    free_column <- FALSE
-                }
-            } else {
-                facet <- facet_stack(self$direction, self$layout_name)
-            }
-            plot <- ggmelt_facet(plot, facet,
-                free_row = free_row, free_column = free_column
+            align_stack_discrete_facet(
+                self$direction, plot, domain,
+                self$layout_name
+            )
+        } else {
+            align_stack_continuous_facet(
+                self$direction, plot, domain,
+                self$layout_name
             )
         }
-        plot
     },
 
     # Setup coordinate system for stack layout
@@ -99,7 +83,7 @@ Craftsman <- ggproto("Craftsman",
     },
 
     # Final alignment for stack layout
-    align_stack_plot = function(self, plot, domain, ...) {
+    setup_stack_plot = function(self, plot, domain, ...) {
         if (is_horizontal(self$direction)) {
             plot + layout_align(y = domain, ylabels = self$labels)
         } else {
@@ -109,33 +93,19 @@ Craftsman <- ggproto("Craftsman",
 
     # ========== Circle Layout ==========
     # Setup facet for circle layout
-    # It's important we also set `drop = FALSE`, otherwise, plot is hard to
-    # align
+    # Use `drop = FALSE` to preserve all facet levels and ensure alignment
     setup_circle_facet = function(self, plot, domain, sector_spacing, ...) {
-        ParentFacet <- plot$facet
         if (is_discrete_domain(domain)) {
-            if (nlevels(prop(domain, "panel")) > 1L) {
-                plot <- plot + facet_sector(
-                    ggplot2::vars(.data$.panel),
-                    sector_spacing = sector_spacing,
-                    drop = FALSE
-                )
-            } else if (!inherits(ParentFacet, "FacetNull")) {
-                plot$facet <- ggplot2::facet_null()
-            }
+            align_circle_discrete_facet(
+                plot, domain, sector_spacing,
+                self$layout_name
+            )
         } else {
-            if (inherits(ParentFacet, "FacetSector")) {
-                params <- ParentFacet$params
-                params$drop <- FALSE
-                plot$facet <- ggproto(NULL, ParentFacet,
-                    sector_spacing = sector_spacing,
-                    params = params
-                )
-            } else if (!inherits(ParentFacet, "FacetNull")) {
-                plot$facet <- ggplot2::facet_null()
-            }
+            align_circle_continuous_facet(
+                plot, domain, sector_spacing,
+                self$layout_name
+            )
         }
-        plot
     },
 
     # Setup coordinate system for circle layout
@@ -169,11 +139,13 @@ Craftsman <- ggproto("Craftsman",
     },
 
     # Final alignment for circle layout
-    align_circle_plot = function(self, plot, domain, ...) {
+    setup_circle_plot = function(self, plot, domain, ...) {
         plot + layout_align(x = domain, xlabels = self$labels)
     },
 
     # ========== General Build/Finish Steps ==========
+    # For continuous domains, we should always treat the first column as the
+    # facet column
     build_plot = function(self, plot, domain, extra_domain = NULL,
                           previous_domain = NULL) {
         plot

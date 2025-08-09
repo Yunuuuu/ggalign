@@ -17,8 +17,8 @@ directly.
 
 The following key methods are implemented:
 \itemize{
-\item \code{setup_stack_facet()} / \code{setup_stack_coord()} / \code{align_stack_plot()}
-\item \code{setup_circle_facet()} / \code{setup_circle_coord()} / \code{align_circle_plot()}
+\item \code{setup_stack_facet()} / \code{setup_stack_coord()} / \code{setup_stack_plot()}
+\item \code{setup_circle_facet()} / \code{setup_circle_coord()} / \code{setup_circle_plot()}
 \item \code{build_plot()} / \code{finish_plot()} – finalize plot decorations
 \item \code{summary()} – print class info
 }

@@ -145,44 +145,20 @@ CrossMark <- ggproto("CrossMark", CraftCross,
             direction, c("left", "right"), c("bottom", "top")
         ))
 
+        # set up facets
+        if (nlevels(plot_data$.panel) > 1L) {
+            facet <- ggplot2::vars(.data$.panel)
+        } else {
+            facet <- NULL
+        }
+        plot <- gguse_facet(plot, align_stack_facet(
+            direction, plot$facet, facet, "wrap",
+            self$layout_name
+        ))
+
         # prepare data for the plot ------------------------------
         plot <- gguse_data(plot, plot_data)
 
-        # set up facets
-        if (nlevels(plot_data$.panel) > 1L) {
-            if (inherits(plot$facet, "FacetGrid")) {
-                facet <- switch_direction(
-                    direction,
-                    ggplot2::facet_grid(
-                        rows = ggplot2::vars(.data$.panel),
-                        scales = "free_y", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    ),
-                    ggplot2::facet_grid(
-                        cols = ggplot2::vars(.data$.panel),
-                        scales = "free_x", space = "free",
-                        drop = FALSE, as.table = FALSE
-                    )
-                )
-            } else {
-                facet <- switch_direction(
-                    direction,
-                    ggplot2::facet_wrap(
-                        facets = ggplot2::vars(.data$.panel),
-                        ncol = 1L, as.table = FALSE
-                    ),
-                    ggplot2::facet_wrap(
-                        facets = ggplot2::vars(.data$.panel),
-                        nrow = 1L, as.table = FALSE
-                    )
-                )
-            }
-        } else {
-            facet <- facet_stack(direction, object_name(self))
-        }
-        # `free_row` and `free_column` have nothing with `facet_stack`
-        # it's safe to use it directly
-        plot <- ggmelt_facet(plot, facet, free_row = TRUE, free_column = TRUE)
         plot$ggalign_link_data <- list(
             full_data1 = full_data1,
             full_data2 = full_data2,

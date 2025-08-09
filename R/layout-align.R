@@ -394,127 +394,62 @@ gguse_linear_coord <- function(plot, coord, layout_name) {
 
 ######################################################
 # nocov start
-#' @importFrom ggplot2 ggproto
-ggfacet_modify <- function(plot, ...) {
-    ParentFacet <- plot$facet
-    plot$facet <- ggproto(NULL, ParentFacet, ...)
-    plot
-}
-
 gguse_facet <- function(plot, facet) {
     plot$facet <- facet
     plot
 }
 
-ggmelt_facet <- function(plot, facet, ...) {
-    gguse_facet(plot, melt_facet(facet, plot$facet, ...))
-}
-
-#' @param use A template facet object which will be used.
-#' @param facet User provided facet object.
-#' @noRd
-melt_facet <- function(use, facet, ...) UseMethod("melt_facet")
-
-#' @export
-melt_facet.NULL <- function(use, facet, ...) {
-    facet
-}
-
-#' @importFrom ggplot2 ggproto
-#' @export
-melt_facet.FacetGrid <- function(use, facet, ...,
-                                 free_row = FALSE,
-                                 free_column = FALSE) {
-    if (inherits(facet, "FacetGrid")) {
-        # re-dispatch parameters
-        params <- facet$params
-        if (length(use$params$rows) || !free_row) {
-            params$rows <- use$params$rows
-        }
-        if (length(use$params$cols) || !free_column) {
-            params$cols <- use$params$cols
-        }
-        if (!free_row) { # Don't allow user change the rows
-            params$free$y <- use$params$free$y
-            params$space_free$y <- use$params$space_free$y
-        }
-        if (!free_column) { # Don't allow user change the cols
-            params$free$x <- use$params$free$x
-            params$space_free$x <- use$params$space_free$x
-        }
-
-        params$drop <- use$params$drop
-        params$as.table <- use$params$as.table
-
-        # if the use is free, it must be free
-        ggproto(NULL, facet, params = params)
+align_stack_discrete_facet <- function(direction, plot, domain, layout_name) {
+    if (nlevels(prop(domain, "panel")) > 1L) {
+        facet <- ggplot2::vars(.data$.panel)
     } else {
-        use
+        facet <- NULL
     }
+    gguse_facet(plot, align_stack_facet(
+        direction, plot$facet, facet, "grid",
+        layout_name
+    ))
 }
 
-#' @importFrom ggplot2 ggproto
-#' @export
-melt_facet.FacetWrap <- function(use, facet, ...) {
-    if (inherits(facet, "FacetWrap")) {
-        # re-dispatch parameters
-        params <- facet$params
-
-        # we always fix the grid rows and cols
-        params$facets <- use$params$facets
-        params$nrow <- use$params$nrow
-        params$ncol <- use$params$ncol
-        params$drop <- use$params$drop
-        params$as.table <- use$params$as.table
-        ggproto(NULL, facet, params = params)
-    } else {
-        use
+align_stack_continuous_facet <- function(direction, plot, domain, layout_name) {
+    if (is.null(domain) || is.null(prop(domain, "facet"))) {
+        return(plot)
     }
+    gguse_facet(plot, align_stack_facet(
+        direction, plot$facet,
+        ggplot2::vars(.data[[1L]]), "grid",
+        layout_name
+    ))
 }
 
-#' @export
-melt_facet.FacetNull <- function(use, facet, ...) {
-    if (inherits(facet, "FacetNull")) {
-        facet
-    } else {
-        use
-    }
-}
-
-#' @export
-melt_facet.FacetStack <- function(use, facet, ...) {
-    if (inherits(facet, "FacetGrid")) {
-        params <- facet$params
-        if (is_horizontal(.subset2(use, "direction"))) {
+align_stack_facet <- function(direction, user, facet, type, layout_name) {
+    if (inherits(user, "FacetGrid")) {
+        params <- user$params
+        if (is_horizontal(direction)) {
             # for horizontal stack, we cannot facet by rows
             if (!is.null(params$rows)) {
-                cli_warn(sprintf(
-                    "Cannot facet by rows in %s",
-                    .subset2(use, "object_name")
-                ))
-                params$rows <- NULL
+                cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
             }
-        } else if (!is.null(params$cols)) {
-            # for vertical stack, we cannot facet by cols
-            cli_warn(sprintf(
-                "Cannot facet by cols in %s",
-                .subset2(use, "object_name")
-            ))
-            params$cols <- NULL
+            params["rows"] <- list(facet)
+        } else {
+            if (!is.null(params$cols)) {
+                # for vertical stack, we cannot facet by cols
+                cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
+            }
+            params["cols"] <- list(facet)
         }
         params$drop <- FALSE
         params$as.table <- FALSE
-        ggproto(NULL, facet, params = params)
-    } else if (inherits(facet, "FacetWrap")) {
-        params <- facet$params
-        if (is_horizontal(.subset2(use, "direction"))) {
+        ggproto(NULL, user, params = params)
+    } else if (inherits(user, "FacetWrap")) {
+        params <- user$params
+        if (is_horizontal(direction)) {
             # for horizontal stack, we cannot facet by rows
             if (is.null(params$nrow)) {
                 params$nrow <- 1L
             } else if (params$nrow > 1L) {
                 cli_warn(sprintf(
-                    "Cannot wrap facet by rows in %s",
-                    .subset2(use, "object_name")
+                    "Cannot wrap facet by rows in %s", layout_name
                 ))
                 params$nrow <- 1L
             }
@@ -524,63 +459,198 @@ melt_facet.FacetStack <- function(use, facet, ...) {
                 params$ncol <- 1L
             } else if (params$ncol > 1L) {
                 cli_warn(sprintf(
-                    "Cannot wrap facet by cols in %s",
-                    .subset2(use, "object_name")
+                    "Cannot wrap facet by cols in %s", layout_name
                 ))
                 params$ncol <- 1L
             }
         }
+        params["facets"] <- list(facet)
         params$drop <- FALSE
         params$as.table <- FALSE
-        ggproto(NULL, facet, params = params)
-    } else if (inherits(facet, "FacetNull")) {
-        facet
-    } else {
-        ggplot2::facet_null()
-    }
-}
-
-facet_stack <- function(direction, object_name) {
-    structure(
-        list(direction = direction, object_name = object_name),
-        class = "FacetStack"
-    )
-}
-
-#' @export
-melt_facet.FacetQuad <- function(use, facet, ...,
-                                 free_row = FALSE,
-                                 free_column = FALSE) {
-    if (inherits(facet, "FacetGrid")) {
-        if (free_row || free_column) {
-            params <- facet$params
-            if (!free_row && !is.null(params$rows)) {
-                cli_warn(sprintf(
-                    "Cannot facet by rows in %s",
-                    .subset2(use, "layout_name")
-                ))
-                params$rows <- NULL
-                # for horizontal stack, we cannot facet by rows
-            }
-            if (!free_column && !is.null(params$cols)) {
-                cli_warn(sprintf(
-                    "Cannot facet by cols in %s",
-                    .subset2(use, "layout_name")
-                ))
-                params$cols <- NULL
-            }
-            ggproto(NULL, facet, params = params)
+        ggproto(NULL, user, params = params)
+    } else if (is.null(facet)) { # No facet
+        if (inherits(user, "FacetNull")) {
+            user
         } else {
             ggplot2::facet_null()
         }
-    } else if (inherits(facet, "FacetNull")) {
-        facet
+    } else if (type == "grid") {
+        switch_direction(
+            direction,
+            ggplot2::facet_grid(
+                rows = facet,
+                scales = "free_y", space = "free",
+                drop = FALSE, as.table = FALSE
+            ),
+            ggplot2::facet_grid(
+                cols = facet,
+                scales = "free_x", space = "free",
+                drop = FALSE, as.table = FALSE
+            )
+        )
+    } else if (type == "wrap") {
+        switch_direction(
+            direction,
+            ggplot2::facet_wrap(
+                facets = facet,
+                ncol = 1L, drop = FALSE, as.table = FALSE
+            ),
+            ggplot2::facet_wrap(
+                facets = facet,
+                nrow = 1L, drop = FALSE, as.table = FALSE
+            )
+        )
     } else {
         ggplot2::facet_null()
     }
 }
 
-facet_quad <- function(layout_name) {
-    structure(list(layout_name = layout_name), class = "FacetQuad")
+align_circle_discrete_facet <- function(plot, domain, sector_spacing,
+                                        layout_name) {
+    if (nlevels(prop(domain, "panel")) > 1L) {
+        facet <- ggplot2::vars(.data$.panel)
+    } else {
+        facet <- NULL
+    }
+    gguse_facet(plot, align_circle_facet(
+        plot$facet, facet, sector_spacing, layout_name
+    ))
+}
+
+align_circle_continuous_facet <- function(plot, domain, sector_spacing,
+                                          layout_name) {
+    if (is.null(domain) || is.null(prop(domain, "facet"))) {
+        return(plot)
+    }
+    gguse_facet(plot, align_circle_facet(
+        plot$facet, ggplot2::vars(.data[[1L]]), sector_spacing, layout_name
+    ))
+}
+
+align_circle_facet <- function(user, facet, sector_spacing, layout_name) {
+    if (inherits(user, "FacetSector")) {
+        params <- user$params
+        params$drop <- FALSE
+        params["facets"] <- list(facet)
+        ggproto(NULL, user,
+            sector_spacing = sector_spacing,
+            params = params
+        )
+    } else if (is.null(facet)) { # No facet
+        if (inherits(user, "FacetNull")) {
+            user
+        } else {
+            ggplot2::facet_null()
+        }
+    } else {
+        facet_sector(facet, sector_spacing, drop = FALSE)
+    }
+}
+
+align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
+    # ------------------------------------------------------------
+    # Step 1: Determine row facet and whether row scaling is free
+    # ------------------------------------------------------------
+    if (is_discrete_domain(row_domain)) {
+        # Discrete: use .panel_y if multiple levels exist
+        if (nlevels(prop(row_domain, "panel")) > 1L) {
+            row_facet <- ggplot2::vars(.data$.panel_y)
+        } else {
+            row_facet <- NULL
+        }
+        free_row <- FALSE
+    } else {
+        # Continuous: allow free rows if domain or facet is missing
+        if (is.null(row_domain) || is.null(prop(row_domain, "facet"))) {
+            row_facet <- NULL
+            free_row <- TRUE
+        } else {
+            row_facet <- ggplot2::vars(.data[[1L]])
+            free_row <- FALSE
+        }
+    }
+
+    # ------------------------------------------------------------
+    # Step 2: Determine column facet and whether column scaling is free
+    # ------------------------------------------------------------
+    if (is_discrete_domain(column_domain)) {
+        # Discrete: use .panel_x if multiple levels exist
+        if (nlevels(prop(column_domain, "panel")) > 1L) {
+            column_facet <- ggplot2::vars(.data$.panel_x)
+        } else {
+            column_facet <- NULL
+        }
+        free_column <- FALSE
+    } else {
+        # Continuous: allow free columns if domain or facet is missing
+        if (is.null(column_domain) || is.null(prop(column_domain, "facet"))) {
+            column_facet <- NULL
+            free_column <- TRUE
+        } else {
+            column_facet <- ggplot2::vars(.data[[1L]])
+            free_column <- FALSE
+        }
+    }
+
+    # ------------------------------------------------------------
+    # Step 3: Merge with user-specified facet if using facet_grid
+    # ------------------------------------------------------------
+    user <- plot$facet
+    if (inherits(user, "FacetGrid")) {
+        if (!free_row || !free_column) {
+            params <- user$params
+            if (!free_row && !is.null(params$rows)) {
+                cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
+                params["rows"] <- list(row_facet)
+            }
+            if (!free_row) { # Don't allow user change the rows
+                params$free$y <- TRUE
+                params$space_free$y <- TRUE
+            }
+            if (!free_column && !is.null(params$cols)) {
+                cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
+                params["cols"] <- list(column_facet)
+            }
+            if (!free_column) { # Don't allow user change the cols
+                params$free$x <- TRUE
+                params$space_free$x <- TRUE
+            }
+            params$drop <- FALSE
+            params$as.table <- FALSE
+            facet <- ggproto(NULL, user, params = params)
+        } else {
+            facet <- ggplot2::facet_null()
+        }
+    } else {
+        # ------------------------------------------------------------
+        # Step 4: Build a new facet_grid if no user facet or non-grid facet
+        # ------------------------------------------------------------
+        # Build appropriate facet_grid depending on available facets
+        if (!is.null(row_facet) && !is.null(column_facet)) {
+            facet <- ggplot2::facet_grid(
+                rows = row_facet,
+                cols = column_facet,
+                scales = "free", space = "free",
+                drop = FALSE, as.table = FALSE
+            )
+        } else if (!is.null(row_facet)) {
+            facet <- ggplot2::facet_grid(
+                rows = row_facet,
+                scales = "free_y", space = "free",
+                drop = FALSE, as.table = FALSE
+            )
+        } else if (!is.null(column_facet)) {
+            facet <- ggplot2::facet_grid(
+                cols = column_facet,
+                scales = "free_x", space = "free",
+                drop = FALSE, as.table = FALSE
+            )
+        } else if (inherits(user, "FacetNull")) {
+            facet <- user
+        } else {
+            facet <- ggplot2::facet_null()
+        }
+    }
+    gguse_facet(plot, facet)
 }
 # nocov end
