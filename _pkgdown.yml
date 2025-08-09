@@ -86,6 +86,7 @@ reference:
   - ggcross
   - cross_mark
   - cross_link
+  - plot_ideogram
 
 - title: Style Links
   desc: >
