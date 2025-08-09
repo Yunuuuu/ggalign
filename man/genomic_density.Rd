@@ -42,13 +42,9 @@ Overlapping windows are spaced by half the window size.}
 the maximum \code{end} value in the input is used as the chromosome length.}
 }
 \value{
-A data frame with columns:
-\itemize{
-\item \code{seqnames}: The sequence (e.g., chromosome) names.
-\item \code{start}: start of each window
-\item \code{end}: end of each window
-\item \code{density}: the region count or covered percent, depending on \code{mode}
-}
+A data frame containing the first three columns from \code{region},
+plus a fourth column \code{density}, which represents either the region count
+or the coverage percentage, depending on \code{mode}.
 }
 \description{
 Computes the density or count of genomic regions in sliding or fixed windows

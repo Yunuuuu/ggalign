@@ -98,7 +98,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         craftsman <- prop(plot, "craftsman") # `Craftsman` object
         plot_schemes <- scheme_inherit(schemes, plot@schemes)
         # the actual plot
-        plot <- plot@plot
+        plot <- craftsman$build_plot(plot@plot, domain = domain)
 
         plot <- craftsman$setup_circle_facet(plot, domain,
             sector_spacing = circle@sector_spacing %||% (pi / 180)
@@ -117,7 +117,6 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot <- craftsman$setup_circle_plot(plot, domain)
 
         # let `Craftsman` add other components
-        plot <- craftsman$build_plot(plot, domain = domain)
         plot <- craftsman$finish_plot(
             plot,
             schemes = plot_schemes, theme = theme

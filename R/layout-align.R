@@ -401,12 +401,12 @@ gguse_facet <- function(plot, facet) {
 
 align_stack_discrete_facet <- function(direction, plot, domain, layout_name) {
     if (nlevels(prop(domain, "panel")) > 1L) {
-        facet <- ggplot2::vars(.data$.panel)
+        facets <- ggplot2::vars(.data$.panel)
     } else {
-        facet <- NULL
+        facets <- NULL
     }
     gguse_facet(plot, align_stack_facet(
-        direction, plot$facet, facet, "grid",
+        direction, plot$facet, facets, "grid",
         layout_name
     ))
 }
@@ -415,14 +415,13 @@ align_stack_continuous_facet <- function(direction, plot, domain, layout_name) {
     if (is.null(domain) || is.null(prop(domain, "facet"))) {
         return(plot)
     }
+    facets <- ggplot2::vars(.data[[!!.subset(names(plot$data), 1L)]])
     gguse_facet(plot, align_stack_facet(
-        direction, plot$facet,
-        ggplot2::vars(.data[[1L]]), "grid",
-        layout_name
+        direction, plot$facet, facets, "grid", layout_name
     ))
 }
 
-align_stack_facet <- function(direction, user, facet, type, layout_name) {
+align_stack_facet <- function(direction, user, facets, type, layout_name) {
     if (inherits(user, "FacetGrid")) {
         params <- user$params
         if (is_horizontal(direction)) {
@@ -430,13 +429,13 @@ align_stack_facet <- function(direction, user, facet, type, layout_name) {
             if (!is.null(params$rows)) {
                 cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
             }
-            params["rows"] <- list(facet)
+            params["rows"] <- list(facets)
         } else {
             if (!is.null(params$cols)) {
                 # for vertical stack, we cannot facet by cols
                 cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
             }
-            params["cols"] <- list(facet)
+            params["cols"] <- list(facets)
         }
         params$drop <- FALSE
         params$as.table <- FALSE
@@ -464,11 +463,11 @@ align_stack_facet <- function(direction, user, facet, type, layout_name) {
                 params$ncol <- 1L
             }
         }
-        params["facets"] <- list(facet)
+        params["facets"] <- list(facets)
         params$drop <- FALSE
         params$as.table <- FALSE
         ggproto(NULL, user, params = params)
-    } else if (is.null(facet)) { # No facet
+    } else if (is.null(facets)) { # No facet
         if (inherits(user, "FacetNull")) {
             user
         } else {
@@ -478,12 +477,12 @@ align_stack_facet <- function(direction, user, facet, type, layout_name) {
         switch_direction(
             direction,
             ggplot2::facet_grid(
-                rows = facet,
+                rows = facets,
                 scales = "free_y", space = "free",
                 drop = FALSE, as.table = FALSE
             ),
             ggplot2::facet_grid(
-                cols = facet,
+                cols = facets,
                 scales = "free_x", space = "free",
                 drop = FALSE, as.table = FALSE
             )
@@ -492,11 +491,11 @@ align_stack_facet <- function(direction, user, facet, type, layout_name) {
         switch_direction(
             direction,
             ggplot2::facet_wrap(
-                facets = facet,
+                facets = facets,
                 ncol = 1L, drop = FALSE, as.table = FALSE
             ),
             ggplot2::facet_wrap(
-                facets = facet,
+                facets = facets,
                 nrow = 1L, drop = FALSE, as.table = FALSE
             )
         )
@@ -508,12 +507,12 @@ align_stack_facet <- function(direction, user, facet, type, layout_name) {
 align_circle_discrete_facet <- function(plot, domain, sector_spacing,
                                         layout_name) {
     if (nlevels(prop(domain, "panel")) > 1L) {
-        facet <- ggplot2::vars(.data$.panel)
+        facets <- ggplot2::vars(.data$.panel)
     } else {
-        facet <- NULL
+        facets <- NULL
     }
     gguse_facet(plot, align_circle_facet(
-        plot$facet, facet, sector_spacing, layout_name
+        plot$facet, facets, sector_spacing, layout_name
     ))
 }
 
@@ -522,28 +521,29 @@ align_circle_continuous_facet <- function(plot, domain, sector_spacing,
     if (is.null(domain) || is.null(prop(domain, "facet"))) {
         return(plot)
     }
+    facets <- ggplot2::vars(.data[[!!.subset(names(plot$data), 1L)]])
     gguse_facet(plot, align_circle_facet(
-        plot$facet, ggplot2::vars(.data[[1L]]), sector_spacing, layout_name
+        plot$facet, facets, sector_spacing, layout_name
     ))
 }
 
-align_circle_facet <- function(user, facet, sector_spacing, layout_name) {
+align_circle_facet <- function(user, facets, sector_spacing, layout_name) {
     if (inherits(user, "FacetSector")) {
         params <- user$params
         params$drop <- FALSE
-        params["facets"] <- list(facet)
+        params["facets"] <- list(compact_facets(facets))
         ggproto(NULL, user,
             sector_spacing = sector_spacing,
             params = params
         )
-    } else if (is.null(facet)) { # No facet
+    } else if (is.null(facets)) { # No facet
         if (inherits(user, "FacetNull")) {
             user
         } else {
             ggplot2::facet_null()
         }
     } else {
-        facet_sector(facet, sector_spacing, drop = FALSE)
+        facet_sector(facets, sector_spacing, drop = FALSE)
     }
 }
 
@@ -565,7 +565,7 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
             row_facet <- NULL
             free_row <- TRUE
         } else {
-            row_facet <- ggplot2::vars(.data[[1L]])
+            row_facet <- ggplot2::vars(.data[[!!.subset(names(plot$data), 1L)]])
             free_row <- FALSE
         }
     }
@@ -587,7 +587,9 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
             column_facet <- NULL
             free_column <- TRUE
         } else {
-            column_facet <- ggplot2::vars(.data[[1L]])
+            column_facet <- ggplot2::vars(
+                .data[[!!.subset(names(plot$data), 1L)]]
+            )
             free_column <- FALSE
         }
     }

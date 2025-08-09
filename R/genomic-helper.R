@@ -123,11 +123,9 @@ genomic_dist <- function(region, mode = NULL) {
 #' @param seqlengths Optional named vector of chromosome lengths. If missing,
 #'   the maximum `end` value in the input is used as the chromosome length.
 #'
-#' @return A data frame with columns:
-#'   - `seqnames`: The sequence (e.g., chromosome) names.
-#'   - `start`: start of each window
-#'   - `end`: end of each window
-#'   - `density`: the region count or covered percent, depending on `mode`
+#' @return A data frame containing the first three columns from `region`,
+#'   plus a fourth column `density`, which represents either the region count
+#'   or the coverage percentage, depending on `mode`.
 #'
 #' @examples
 #' region <- data.frame(
@@ -269,5 +267,7 @@ genomic_density <- function(region, window_size = 1e+07, n_window = NULL,
         }
         data_frame0(seqnames = chr, start = s, end = e, density = density)
     })
-    vec_rbind(!!!density_list)
+    out <- vec_rbind(!!!density_list)
+    names(out)[1:3] <- names(region)[1:3]
+    out
 }

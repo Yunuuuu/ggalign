@@ -223,14 +223,16 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             # for left annotation, reverse x-axis
             plot <- reverse_continuous_axis(plot, "x")
         }
-
+        plot
+    },
+    finish_plot = function(self, plot, schemes, theme) {
         # always turn off clip, this is what dendrogram dependends on
         old_coord <- plot$coordinates
         if (!identical(old_coord$clip, "off")) {
             # to prevent from changing the input of user.
             plot$coordinates <- ggproto(NULL, old_coord, clip = "off")
         }
-        plot
+        ggproto_parent(AlignHclust, self)$finish_plot(plot, schemes, theme)
     }
 )
 

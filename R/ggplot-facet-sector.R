@@ -23,11 +23,7 @@
 #' @export
 facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
                          radial = deprecated(), spacing_theta = deprecated()) {
-    if (packageVersion("ggplot2") > "3.5.2") {
-        facets <- ggfun("compact_facets")(facets)
-    } else {
-        facets <- ggfun("wrap_as_facets_list")(facets)
-    }
+    facets <- compact_facets(facets)
     if (inherits(sector_spacing, "CoordRadial") ||
         lifecycle::is_present(radial)) {
         lifecycle::deprecate_stop(
@@ -69,9 +65,9 @@ facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
         sector_spacing = sector_spacing,
         params = list(
             facets = facets,
-            free = list(x = TRUE, y = FALSE),
             strip.position = "top",
             drop = drop, ncol = NULL, nrow = 1L,
+            free = list(x = TRUE, y = FALSE),
             space_free = list(x = TRUE, y = FALSE),
             labeller = ggplot2::label_value, dir = dir,
             draw_axes = list(x = TRUE, y = FALSE),

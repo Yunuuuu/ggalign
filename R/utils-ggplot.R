@@ -31,6 +31,14 @@ is_palette_unset <- function(type, aes) {
 #' @importFrom gtable is.gtable
 maybe_guide_box <- function(x) inherits(x, "zeroGrob") || is.gtable(x)
 
+compact_facets <- function(facets) {
+    if (packageVersion("ggplot2") > "3.5.2") {
+        facets <- ggfun("compact_facets")(facets)
+    } else {
+        facets <- ggfun("wrap_as_facets_list")(facets)
+    }
+}
+
 ######################################################
 gguse_data <- function(plot, data) {
     # ggplot use waiver() to indicate no data

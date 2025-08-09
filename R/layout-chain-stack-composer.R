@@ -77,13 +77,12 @@ stack_composer_add <- function(box, stack, composer, ...) {
 
     # let `Align` to determine how to build the plot
     craftsman <- prop(box, "craftsman") # `Craftsman` object
-    plot <- prop(box, "plot")
+    plot <- craftsman$build_plot(prop(box, "plot"), domain = domain, ...)
     plot <- craftsman$setup_stack_facet(plot, domain)
     plot <- craftsman$setup_stack_coord(plot, ggplot2::coord_cartesian())
     plot <- craftsman$setup_stack_plot(plot, domain)
 
     # let `Craftsman` add other components
-    plot <- craftsman$build_plot(plot, domain = domain, ...)
     plot <- craftsman$finish_plot(plot, plot_schemes, theme)
 
     # add the plot to the composer
