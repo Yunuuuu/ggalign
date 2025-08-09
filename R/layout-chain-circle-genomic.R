@@ -11,9 +11,9 @@
 #'     reference.
 #'   - A `data.frame` with at least three columns: `chromosome`, `start`, and
 #'     `end` positions.
-#'   - A genomic object convertible via `fortify_data_frame()`.
+#'   - A genomic object convertible via [`fortify_data_frame()`].
 #' @param ... Additional arguments passed to specific methods or
-#' `fortify_data_frame()`.
+#' [`fortify_data_frame()`].
 #' @inheritParams circle_continuous
 #' @return A `circle_layout` object representing the genomic layout.
 #' @export

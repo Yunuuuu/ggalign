@@ -45,6 +45,16 @@ CraftBox <- S7::new_class("CraftBox",
             },
             default = NULL
         ),
+        init_hooks = S7::new_property(
+            S7::class_list,
+            setter = function(self, value) {
+                if (!is.null(prop(self, "init_hooks"))) {
+                    cli_abort("'@init_hooks' is read-only; use the '+' operator to update it.")
+                }
+                prop(self, "init_hooks") <- value
+                self
+            }
+        ),
         active = S7::new_property(
             active,
             setter = function(self, value) {
@@ -127,17 +137,46 @@ S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
     box
 }
 
+#' @importFrom S7 prop
+S7::method(craftbox_add, S7::class_function) <- function(object, box,
+                                                         objectname) {
+    if (is.null(prop(box, "plot"))) {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {objectname}} to %s",
+                object_name(box)
+            ),
+            i = sprintf("no plot found for %s", object_name(box))
+        ))
+    }
+    if (length(formals(object)) < 2L) {
+        cli_abort(c(
+            sprintf(
+                "Cannot add {.var {objectname}} to %s",
+                object_name(box)
+            ),
+            i = "function must accept at least two arguments"
+        ))
+    }
+    # Bypass S7 setter validation: update internal property via attr() directly
+    attr(box, "init_hooks") <- c(prop(box, "init_hooks"), object)
+    box
+}
+
 # Bypass S7 setter validation: update internal property via attr() directly
+#' @importFrom S7 prop
 S7::method(craftbox_add, Schemes) <- function(object, box, objectname) {
     attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
     box
 }
 
+#' @importFrom S7 prop
 S7::method(craftbox_add, Scheme) <- function(object, box, objectname) {
     attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
     box
 }
 
+#' @importFrom S7 prop
 S7::method(craftbox_add, active) <- function(object, box, objectname) {
     attr(box, "active") <- active_update(prop(box, "active"), object)
     box

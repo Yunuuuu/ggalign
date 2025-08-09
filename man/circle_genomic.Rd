@@ -20,11 +20,11 @@ circle_genomic(
 reference.
 \item A \code{data.frame} with at least three columns: \code{chromosome}, \code{start}, and
 \code{end} positions.
-\item A genomic object convertible via \code{fortify_data_frame()}.
+\item A genomic object convertible via \code{\link[=fortify_data_frame]{fortify_data_frame()}}.
 }}
 
 \item{...}{Additional arguments passed to specific methods or
-\code{fortify_data_frame()}.}
+\code{\link[=fortify_data_frame]{fortify_data_frame()}}.}
 
 \item{radial}{A \code{\link[=coord_circle]{coord_circle()}}/\code{\link[ggplot2:coord_radial]{coord_radial()}}
 object that defines the global parameters for coordinate across all plots

@@ -34,6 +34,18 @@ testthat::test_that("`stack_free` works well", {
     expect_identical(x@domain, NULL)
 })
 
+testthat::test_that("`stack_genomic()` works well", {
+    # atomic was converted to one-column data frame
+    expect_doppelganger("stack_genomicv", {
+        stack_genomicv("hg38") +
+            plot_ideogram(size = 20, seqnames = 0)
+    })
+    expect_doppelganger("stack_genomich", {
+        stack_genomich("hg38") +
+            plot_ideogram(size = 20, seqnames = 0)
+    })
+})
+
 testthat::test_that("`stack_align` add `align-` object builds well", {
     set.seed(1L)
     small_mat <- matrix(rnorm(72), nrow = 8)

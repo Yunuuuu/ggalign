@@ -69,20 +69,27 @@ supported by \code{geom_label()}.}
   }}
 
 \item{seqnames}{A single logical or numeric value controlling chromosome
-label display (Default is \code{TRUE}).
+label display. Defaults to \code{TRUE}.
 \itemize{
-\item If \code{TRUE}, labels are added at a default offset of \code{1} above the
-ideogram.
-\item If numeric, specifies the position of labels along the y-axis:
+\item \strong{Logical (\code{TRUE}/\code{FALSE})}:
 \itemize{
-\item Positive values place labels above the ideogram (offset from the upper
-border).
-\item Negative values place labels below the ideogram (offset from the lower
-border).
-\item Zero centers labels vertically.
-Note: the cytoband vertical range is from 0 to 1.
+\item \code{TRUE}: display labels at the default offset:
+\itemize{
+\item \code{1} above the ideogram (vertical layout)
+\item \code{-1} below the ideogram (horizontal layout)
 }
-}}
+\item \code{FALSE}: do not display labels.
+}
+\item \strong{Numeric}: Specifies the vertical position of labels relative to the
+ideogram’s y-axis:
+\itemize{
+\item Positive: above the ideogram (offset from the upper border)
+\item Negative: below the ideogram (offset from the lower border)
+\item \code{0}: centered.
+}
+}
+
+Note: The cytoband vertical range spans from \code{0} to \code{1}.}
 
 \item{size}{The relative size of the plot, can be specified as a
 \code{\link[grid:unit]{unit()}}. Note that for \code{\link[=circle_layout]{circle_layout()}}, all size values

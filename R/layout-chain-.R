@@ -33,9 +33,26 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
             # initialize object data
             new_domain <- craftsman$setup_domain(layout@domain)
 
-            # initialize the plot object
-            # use attributes to bypass the prop setter checking
-            attr(object, "plot") <- craftsman$init_plot(object@plot)
+            # Initialize the plot object by retrieving it via the property
+            # accessor.
+            plot <- prop(object, "plot")
+
+            # Execute all initialization hooks in sequence, passing the current
+            # plot and the craftsman's direction to each hook function. Each
+            # hook may modify and return a new version of the plot.
+            for (hook in prop(object, "init_hooks")) {
+                plot <- hook(plot, craftsman$direction)
+                if (!is_ggplot(plot)) {
+                    cli_abort("{.field init_hooks} must return a {.cls ggplot} object.")
+                }
+            }
+
+            # Finally, initialize the plot using the craftsman-specific
+            # initializer, and update the object's plot attribute directly to
+            # bypass setter checks.
+            # Use 'attr()' to bypass property setter validations when
+            # updating the plot.
+            attr(object, "plot") <- craftsman$init_plot(plot)
 
             layout <- chain_add_box(layout, object, object@active, objectname)
         } else { # should be a QuadLayout object

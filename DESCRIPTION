@@ -144,6 +144,7 @@ Collate:
     'layout-chain-stack-build.R'
     'layout-chain-stack-composer.R'
     'layout-chain-stack-cross.R'
+    'layout-chain-stack-genomic.R'
     'layout-chain-stack-switch.R'
     'layout-domain.R'
     'layout-heatmap-.R'
