@@ -113,8 +113,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         if (!is.null(tagger) && !inherits(tagger, "LayoutTagger")) {
             # If tagger is not a LayoutTagger, treat it as a single tag for the
             # whole layout
-            tagger <- NULL
             tag <- tagger
+            tagger <- NULL
         } else {
             # Otherwise, no single tag for the whole layout
             tag <- NULL
