@@ -608,8 +608,7 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
                     cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
                 }
                 row_facet <- compact_facets(row_facet)
-            }
-            if (!free_row) { # Don't allow user change the rows
+                # Don't allow user change the rows
                 params$free$y <- TRUE
                 params$space_free$y <- TRUE
             }
@@ -621,8 +620,7 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
                     cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
                 }
                 column_facet <- compact_facets(column_facet)
-            }
-            if (!free_column) { # Don't allow user change the cols
+                # Don't allow user change the cols
                 params$free$x <- TRUE
                 params$space_free$x <- TRUE
             }
