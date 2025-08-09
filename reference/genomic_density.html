@@ -105,11 +105,10 @@ the maximum <code>end</code> value in the input is used as the chromosome length
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with columns:</p><ul><li><p><code>seqnames</code>: The sequence (e.g., chromosome) names.</p></li>
-<li><p><code>start</code>: start of each window</p></li>
-<li><p><code>end</code>: end of each window</p></li>
-<li><p><code>density</code>: the region count or covered percent, depending on <code>mode</code></p></li>
-</ul></div>
+    <p>A data frame containing the first three columns from <code>region</code>,
+plus a fourth column <code>density</code>, which represents either the region count
+or the coverage percentage, depending on <code>mode</code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function splits the input by chromosome and tiles the genomic space
@@ -125,14 +124,14 @@ into windows, optionally overlapping. For each window, it calculates:</p><ul><li
 <span class="r-in"><span>    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000000</span>, <span class="fl">7000000</span>, <span class="fl">17000000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">genomic_density</span><span class="op">(</span><span class="va">region</span>, window_size <span class="op">=</span> <span class="fl">1e7</span>, mode <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames   start      end density</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     chr1       1 10000000       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     chr1 5000001 15000000       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    chr   start      end density</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 chr1       1 10000000       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 chr1 5000001 15000000       2</span>
 <span class="r-in"><span><span class="fu">genomic_density</span><span class="op">(</span><span class="va">region</span>, n_window <span class="op">=</span> <span class="fl">3</span>, overlap <span class="op">=</span> <span class="cn">FALSE</span>, mode <span class="op">=</span> <span class="st">"coverage"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames    start      end   density</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     chr1        1  5666667 0.4705710</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     chr1  5666667 11333334 0.2352942</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     chr1 11333334 17000001 0.3529413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    chr    start      end   density</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 chr1        1  5666667 0.4705710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 chr1  5666667 11333334 0.2352942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 chr1 11333334 17000001 0.3529413</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
