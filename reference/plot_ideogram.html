@@ -144,16 +144,17 @@ supported by <code>geom_label()</code>.</p></dd>
 
 <dt id="arg-seqnames">seqnames<a class="anchor" aria-label="anchor" href="#arg-seqnames"></a></dt>
 <dd><p>A single logical or numeric value controlling chromosome
-label display (Default is <code>TRUE</code>).</p><ul><li><p>If <code>TRUE</code>, labels are added at a default offset of <code>1</code> above the
-ideogram.</p></li>
-<li><p>If numeric, specifies the position of labels along the y-axis:</p><ul><li><p>Positive values place labels above the ideogram (offset from the upper
-border).</p></li>
-<li><p>Negative values place labels below the ideogram (offset from the lower
-border).</p></li>
-<li><p>Zero centers labels vertically.
-Note: the cytoband vertical range is from 0 to 1.</p></li>
+label display. Defaults to <code>TRUE</code>.</p><ul><li><p><strong>Logical (<code>TRUE</code>/<code>FALSE</code>)</strong>:</p><ul><li><p><code>TRUE</code>: display labels at the default offset:</p><ul><li><p><code>1</code> above the ideogram (vertical layout)</p></li>
+<li><p><code>-1</code> below the ideogram (horizontal layout)</p></li>
 </ul></li>
-</ul></dd>
+<li><p><code>FALSE</code>: do not display labels.</p></li>
+</ul></li>
+<li><p><strong>Numeric</strong>: Specifies the vertical position of labels relative to the
+ideogram’s y-axis:</p><ul><li><p>Positive: above the ideogram (offset from the upper border)</p></li>
+<li><p>Negative: below the ideogram (offset from the lower border)</p></li>
+<li><p><code>0</code>: centered.</p></li>
+</ul></li>
+</ul><p>Note: The cytoband vertical range spans from <code>0</code> to <code>1</code>.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
