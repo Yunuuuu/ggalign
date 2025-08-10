@@ -248,7 +248,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         } else if (is.na(prop(domain, "nobs"))) {
             cli_abort(c(
                 sprintf(
-                    "you must initialize %s before drawing %s",
+                    "you must initialize {.field nobs} of %s before drawing %s",
                     self$layout_name, object_name(self)
                 ),
                 i = "Or you should use {.fn ggfree}"
