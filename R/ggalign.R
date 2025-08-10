@@ -233,14 +233,16 @@ AlignGg <- ggproto("AlignGg", Craftsman,
             # For continuous domains (used by circle_genomic()), ensure valid
             # facets
             if (is_continuous_domain(domain) &&
-                !is.null(prop(domain, "facet")) &&
+                !is.null(prop(domain, "facet_lvls")) &&
                 is.data.frame(data) && ncol(data) > 0L) {
                 missing <- is.na(data[[1L]])
                 if (any(missing)) {
-                    cli_warn("Removing {.val {sum(missing)}} rows with missing {.field facet}")
+                    cli_warn("Removing {.val {sum(missing)}} rows with missing {.field levels}")
                     data <- vec_slice(data, !missing)
                 }
-                data[[1L]] <- factor(data[[1L]], levels = prop(domain, "facet"))
+                data[[1L]] <- factor(data[[1L]],
+                    levels = prop(domain, "facet_lvls")
+                )
             }
             return(gguse_data(plot, data))
         } else if (is.na(prop(domain, "nobs"))) {

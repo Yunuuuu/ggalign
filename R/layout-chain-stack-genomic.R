@@ -78,7 +78,7 @@ stack_genomic.default <- function(direction, data = NULL, ...,
     lvls <- levels(data[[1L]])
     names(ranges) <- .subset2(groups, "key")
     ranges <- ranges[lvls]
-    limits <- ContinuousDomain(!!!ranges, facet = lvls)
+    limits <- ContinuousDomain(!!!ranges, facet_lvls = lvls)
     ranges <- vec_rbind(!!!ranges, .names_to = "seqnames")
     ranges$seqnames <- factor(ranges$seqnames, levels = lvls)
     new_stack_layout(

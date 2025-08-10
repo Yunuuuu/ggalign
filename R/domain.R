@@ -47,7 +47,7 @@ continuous_limits <- function(...) { # nocov start
     if (...length() == 0L) {
         NULL
     } else {
-        ContinuousDomain(..., facet = NULL)
+        ContinuousDomain(..., facet_lvls = NULL)
     } # nocov end
 }
 
@@ -79,7 +79,7 @@ ContinuousDomain <- S7::new_class(
     "ContinuousDomain",
     parent = Domain,
     properties = list(
-        facet = S7::new_property(
+        facet_lvls = S7::new_property(
             S7::class_any,
             validator = function(value) {
                 if (is.null(value) || is.character(value)) {
@@ -88,10 +88,10 @@ ContinuousDomain <- S7::new_class(
                 "must be a 'character' object"
             },
             setter = function(self, value) {
-                if (!is.null(prop(self, "facet"))) {
-                    cli_abort("'@facet' is read-only")
+                if (!is.null(prop(self, "facet_lvls"))) {
+                    cli_abort("'@facet_lvls' is read-only")
                 }
-                prop(self, "facet") <- value
+                prop(self, "facet_lvls") <- value
                 self
             },
             default = NULL
@@ -114,10 +114,12 @@ ContinuousDomain <- S7::new_class(
             }
         )
     ),
-    constructor = function(..., facet = NULL) {
-        limits <- list2(...) # nocov start
+    constructor = function(..., facet_lvls = NULL) {
+        # nocov start
+        limits <- list2(...)
         names(limits) <- NULL
-        new_object(S7_object(), facet = facet, limits = limits) # nocov end
+        new_object(S7_object(), facet_lvls = facet_lvls, limits = limits)
+        # nocov end
     }
 )
 

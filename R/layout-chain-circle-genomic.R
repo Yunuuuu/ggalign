@@ -69,7 +69,7 @@ circle_genomic.default <- function(data, ..., radial = NULL,
     lvls <- levels(data[[1L]])
     names(ranges) <- .subset2(groups, "key")
     ranges <- ranges[lvls]
-    limits <- ContinuousDomain(!!!ranges, facet = lvls)
+    limits <- ContinuousDomain(!!!ranges, facet_lvls = lvls)
     ranges <- vec_rbind(!!!ranges, .names_to = "seqnames")
     ranges$seqnames <- factor(ranges$seqnames, levels = lvls)
     new_circle_layout(

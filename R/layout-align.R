@@ -412,7 +412,7 @@ align_stack_discrete_facet <- function(direction, plot, domain, layout_name) {
 }
 
 align_stack_continuous_facet <- function(direction, plot, domain, layout_name) {
-    if (is.null(domain) || is.null(prop(domain, "facet"))) {
+    if (is.null(domain) || is.null(prop(domain, "facet_lvls"))) {
         return(plot)
     }
     facets <- ggplot2::vars(.data[[!!.subset(names(plot$data), 1L)]])
@@ -518,7 +518,7 @@ align_circle_discrete_facet <- function(plot, domain, sector_spacing,
 
 align_circle_continuous_facet <- function(plot, domain, sector_spacing,
                                           layout_name) {
-    if (is.null(domain) || is.null(prop(domain, "facet"))) {
+    if (is.null(domain) || is.null(prop(domain, "facet_lvls"))) {
         return(plot)
     }
     facets <- ggplot2::vars(.data[[!!.subset(names(plot$data), 1L)]])
@@ -561,7 +561,7 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
         free_row <- FALSE
     } else {
         # Continuous: allow free rows if domain or facet is missing
-        if (is.null(row_domain) || is.null(prop(row_domain, "facet"))) {
+        if (is.null(row_domain) || is.null(prop(row_domain, "facet_lvls"))) {
             row_facet <- NULL
             free_row <- TRUE
         } else {
@@ -583,7 +583,8 @@ align_quad_facet <- function(plot, row_domain, column_domain, layout_name) {
         free_column <- FALSE
     } else {
         # Continuous: allow free columns if domain or facet is missing
-        if (is.null(column_domain) || is.null(prop(column_domain, "facet"))) {
+        if (is.null(column_domain) ||
+            is.null(prop(column_domain, "facet_lvls"))) {
             column_facet <- NULL
             free_column <- TRUE
         } else {
