@@ -237,7 +237,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
                 is.data.frame(data) && ncol(data) > 0L) {
                 missing <- is.na(data[[1L]])
                 if (any(missing)) {
-                    cli_warn("Removing {.val {sum(missing)}} rows with missing {.field levels}")
+                    cli_warn("Removing {.val {sum(missing)}} rows with missing {.field facet_lvls}")
                     data <- vec_slice(data, !missing)
                 }
                 data[[1L]] <- factor(data[[1L]],
