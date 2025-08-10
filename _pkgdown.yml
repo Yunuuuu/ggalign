@@ -181,7 +181,6 @@ reference:
   contents:
   - ggalignGrob
   - ggalign_stat
-  - channelGrob
   - magickGrob
   - is_layout
   - hclust2

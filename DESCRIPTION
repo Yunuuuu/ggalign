@@ -123,7 +123,6 @@ Collate:
     'ggplot-geom-rect3d.R'
     'ggplot-geom-subrect.R'
     'ggplot-helper.R'
-    'grid-grob-channel.R'
     'grid-grob-magick.R'
     'import-standalone-assert.R'
     'import-standalone-obj-type.R'
