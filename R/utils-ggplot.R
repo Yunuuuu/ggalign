@@ -31,13 +31,7 @@ is_palette_unset <- function(type, aes) {
 #' @importFrom gtable is.gtable
 maybe_guide_box <- function(x) inherits(x, "zeroGrob") || is.gtable(x)
 
-compact_facets <- function(facets) {
-    if (packageVersion("ggplot2") > "3.5.2") {
-        facets <- ggfun("compact_facets")(facets)
-    } else {
-        facets <- ggfun("wrap_as_facets_list")(facets)
-    }
-}
+compact_facets <- function(facets) ggfun("compact_facets")(facets)
 
 ######################################################
 gguse_data <- function(plot, data) {
@@ -47,7 +41,7 @@ gguse_data <- function(plot, data) {
 }
 
 ggremove_margin <- function(plot, direction) {
-    if (!is.null(direction) && packageVersion("ggplot2") > "3.5.2") {
+    if (!is.null(direction)) {
         plot <- plot + switch_direction(
             direction,
             theme(plot.margin = margin(t = 0, r = NA, b = 0, l = NA)),

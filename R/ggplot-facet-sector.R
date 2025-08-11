@@ -51,14 +51,6 @@ facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
     # )
     # labeller <- ggfun("fix_labeller")(labeller)
     assert_bool(drop)
-
-    # TO-DO: remove this line and update to
-    # the next version of ggplot2 (> 3.5.2)
-    if (packageVersion("ggplot2") > "3.5.2") {
-        dir <- "lt"
-    } else {
-        dir <- "h"
-    }
     ggproto(
         NULL,
         FacetSector,
@@ -69,7 +61,7 @@ facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
             drop = drop, ncol = NULL, nrow = 1L,
             free = list(x = TRUE, y = FALSE),
             space_free = list(x = TRUE, y = FALSE),
-            labeller = ggplot2::label_value, dir = dir,
+            labeller = ggplot2::label_value, dir = "lt",
             draw_axes = list(x = TRUE, y = FALSE),
             axis_labels = list(x = TRUE, y = FALSE),
             as.table = TRUE

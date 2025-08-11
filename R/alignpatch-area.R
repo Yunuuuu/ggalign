@@ -219,11 +219,9 @@ plot.ggalign_area <- function(x, ...) {
         ggplot2::labs(fill = "Patch") +
         ggplot2::theme_void() +
         theme(
-            panel.grid.minor = if (packageVersion("ggplot2") >= "3.4.0") {
-                ggplot2::element_line(linewidth = 0.5, colour = "grey")
-            } else {
-                ggplot2::element_line(size = 0.5, colour = "grey")
-            },
+            panel.grid.minor = ggplot2::element_line(
+                linewidth = 0.5, colour = "grey"
+            ),
             axis.text = ggplot2::element_text(),
             axis.ticks.length = unit(3, "mm"),
             plot.margin = margin(10, 10, 10, 10)

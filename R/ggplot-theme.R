@@ -45,6 +45,7 @@ new_theme_class <- function(new_class) {
 S3_class_theme <- S7::new_S3_class("theme")
 
 # Check if user has set the theme
+#' @importFrom ggplot2 complete_theme
 is_theme_unset <- function() {
     isTRUE(all.equal(
         complete_theme(ggfun("ggplot_global")$theme_default),
@@ -64,37 +65,17 @@ theme_no_strip <- function() {
 
 theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
 
-#' @importFrom utils packageVersion
-#' @importFrom rlang try_fetch
-complete_theme <- function(theme) {
-    if (packageVersion("ggplot2") > "3.5.2") {
-        ggfun("complete_theme")(theme)
-    } else {
-        ggfun("plot_theme")(list(theme = theme))
-    }
-}
-
 # nocov start
 #' @importFrom ggplot2 register_theme_elements el_def element_line
 theme_elements <- function() {
-    line <- if (packageVersion("ggplot2") > "3.5.2") {
-        quote(element_line(
+    register_theme_elements(
+        ggalign.line = element_line(
             color = "black",
             linewidth = 0.5,
             linetype = 1,
             lineend = "butt",
             linejoin = "round"
-        ))
-    } else {
-        quote(element_line(
-            color = "black",
-            linewidth = 0.5,
-            linetype = 1,
-            lineend = "butt"
-        ))
-    }
-    register_theme_elements(
-        ggalign.line = eval(line),
+        ),
         ggalign.polygon = element_polygon(
             fill = NA,
             color = "black",

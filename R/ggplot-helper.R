@@ -100,36 +100,18 @@ element_grob.ggalign_element_polygon <- function(element,
                                                  colour = NULL,
                                                  linewidth = NULL,
                                                  linetype = NULL, ...) {
-    if (packageVersion("ggplot2") > "3.5.2") {
-        gp <- ggfun("gg_par")(
-            lwd = linewidth, col = colour, fill = fill, lty = linetype
-        )
-        element_gp <- ggfun("gg_par")(
-            lwd = element$linewidth,
-            col = element$colour,
-            fill = fill_alpha(element$fill, element$alpha %||% NA),
-            lty = element$linetype,
-            lineend = element$lineend,
-            linejoin = element$linejoin,
-            linemitre = element$linemitre
-        )
-    } else { # nocov start
-        gp <- gpar(
-            lwd = ggfun("len0_null")(linewidth * .pt),
-            col = colour,
-            fill = fill,
-            lty = linetype
-        )
-        element_gp <- gpar(
-            lwd = ggfun("len0_null")(element$linewidth * .pt),
-            col = element$colour,
-            fill = fill_alpha(element$fill, element$alpha %||% NA),
-            lty = element$linetype,
-            lineend = element$lineend,
-            linejoin = element$linejoin,
-            linemitre = element$linemitre
-        )
-    } # nocov end
+    gp <- ggfun("gg_par")(
+        lwd = linewidth, col = colour, fill = fill, lty = linetype
+    )
+    element_gp <- ggfun("gg_par")(
+        lwd = element$linewidth,
+        col = element$colour,
+        fill = fill_alpha(element$fill, element$alpha %||% NA),
+        lty = element$linetype,
+        lineend = element$lineend,
+        linejoin = element$linejoin,
+        linemitre = element$linemitre
+    )
     grid::polygonGrob(
         x = x, y = y,
         gp = ggfun("modify_list")(element_gp, gp), ...
@@ -393,21 +375,10 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
                                               params = list()) {
                     if (!is.null(scale_x)) {
                         expansion <- scale_x$expand %|w|%
-                            if (packageVersion("ggplot2") > "3.5.2") {
-                                ggfun("default_expansion")(
-                                    scale_y,
-                                    # for ggplot2 > 3.5.2, expand was passed by
-                                    # params
-                                    expand = params$expand[c(4, 2)]
-                                )
-                            } else { # nocov start
-                                ggfun("default_expansion")(
-                                    scale_y,
-                                    # for ggplot2 > 3.5.2, expand was passed by
-                                    # params
-                                    expand = self$expand
-                                )
-                            } # nocov end
+                            ggfun("default_expansion")(
+                                scale_y,
+                                expand = params$expand[c(4, 2)]
+                            )
                         if (any(borders == "left")) {
                             expansion[1:2] <- 0
                         }
@@ -418,21 +389,10 @@ ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
                     }
                     if (!is.null(scale_y)) {
                         expansion <- scale_y$expand %|w|%
-                            if (packageVersion("ggplot2") > "3.5.2") {
-                                ggfun("default_expansion")(
-                                    scale_y,
-                                    # for ggplot2 > 3.5.2, expand was passed by
-                                    # params
-                                    expand = params$expand[c(3, 1)]
-                                )
-                            } else { # nocov start
-                                ggfun("default_expansion")(
-                                    scale_y,
-                                    # for ggplot2 > 3.5.2, expand was passed by
-                                    # params
-                                    expand = self$expand
-                                )
-                            } # nocov end
+                            ggfun("default_expansion")(
+                                scale_y,
+                                expand = params$expand[c(3, 1)]
+                            )
                         if (any(borders == "bottom")) {
                             expansion[1:2] <- 0
                         }
