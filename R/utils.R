@@ -9,14 +9,6 @@ recycle_each <- function(x, len) {
     (x - 1L) %/% len + 1L
 }
 
-#' @importFrom utils modifyList
-update_non_waive <- function(old, new, keep_null = TRUE) {
-    modifyList(old,
-        new[!vapply(new, is.waive, logical(1L), USE.NAMES = FALSE)],
-        keep.null = keep_null
-    )
-}
-
 is_s3 <- function(x) is.object(x) && !isS4(x) && !inherits(x, "R6")
 
 #' @importFrom rlang names2

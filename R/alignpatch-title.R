@@ -40,7 +40,8 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
     )
 }
 
-#' @importFrom ggplot2 find_panel calc_element zeroGrob element_grob merge_element
+#' @importFrom ggplot2 find_panel zeroGrob
+#' @importFrom ggplot2 calc_element element_grob merge_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch_titles, theme) {
@@ -172,9 +173,10 @@ setup_patch_titles <- function(table, patch_titles, theme) {
 #' @importFrom ggplot2 ggplot_add
 #' @export
 ggplot_add.ggalign_patch_labels <- function(object, plot, object_name, ...) {
-    plot$ggalign_patch_labels <- update_non_waive(
-        plot$ggalign_patch_labels %||% list(), object
-    )
+    for (nm in names(object)) {
+        if (is.waive(.subset2(object, nm))) next
+        plot$ggalign_patch_labels[nm] <- list(.subset2(object, nm))
+    }
     if (!inherits(plot, "patch_ggplot")) {
         plot <- add_class(plot, "patch_ggplot")
     }
