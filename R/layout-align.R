@@ -455,13 +455,13 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
                 ))
                 params["nrow"] <- list(NULL)
             }
-            if (!is.null(params$ncol)) {
-                if (params$ncol != 1L) {
-                    cli_warn(sprintf(
-                        "Cannot wrap facet by multiple cols in %s", layout_name
-                    ))
-                    params$ncol <- 1L
-                }
+            if (is.null(params$ncol)) {
+                params$ncol <- 1L
+            } else if (params$ncol != 1L) {
+                cli_warn(sprintf(
+                    "Cannot wrap facet by multiple cols in %s", layout_name
+                ))
+                params$ncol <- 1L
             }
         } else {
             # In a vertical stack:
@@ -474,13 +474,13 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
                 ))
                 params["ncol"] <- list(NULL)
             }
-            if (!is.null(params$nrow)) {
-                if (params$nrow != 1L) {
-                    cli_warn(sprintf(
-                        "Cannot wrap facet by multiple rows in %s", layout_name
-                    ))
-                    params$nrow <- 1L
-                }
+            if (is.null(params$nrow)) {
+                params$nrow <- 1L
+            } else if (params$nrow != 1L) {
+                cli_warn(sprintf(
+                    "Cannot wrap facet by multiple rows in %s", layout_name
+                ))
+                params$nrow <- 1L
             }
         }
         params["facets"] <- list(compact_facets(facets))
