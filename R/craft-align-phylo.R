@@ -14,8 +14,8 @@ align_phylo <- function(phylo, ..., ladderize = NULL, type = "rectangle",
                         center = FALSE, tree_type = NULL,
                         active = NULL, size = NULL, no_axes = deprecated()) {
     if (!is.null(ladderize)) {
-        ladderize <- arg_match0(ladderize, c("left", "right"))
         rlang::check_installed("ape", "to ladderize phylogenetics tree")
+        ladderize <- arg_match0(ladderize, c("left", "right"))
     }
     assert_s3_class(phylo, "phylo")
     assert_active(active)
