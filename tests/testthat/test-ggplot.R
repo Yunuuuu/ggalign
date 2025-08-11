@@ -239,16 +239,22 @@ test_that("`no_expansion()` works well", {
 
 test_that("`facet_sector()` works well", {
     expect_doppelganger(
-        "facet_sector() default",
+        "facet_sector(), default",
         ggplot(mtcars, aes(disp, mpg)) +
             geom_point() +
             facet_sector(vars(cyl))
     )
     expect_doppelganger(
-        "facet_sector() sector_spacing rel()",
+        "facet_sector(), sector_spacing rel()",
         ggplot(mtcars, aes(disp, mpg)) +
             geom_point() +
             facet_sector(vars(cyl), sector_spacing = rel(0.01))
+    )
+    expect_doppelganger(
+        "facet_sector(), multiple sector_spacing",
+        ggplot(mtcars, aes(disp, mpg)) +
+            geom_point() +
+            facet_sector(vars(cyl), sector_spacing = c(pi / 180, pi / 180 * 5))
     )
 })
 

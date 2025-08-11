@@ -40,7 +40,9 @@ facet_sector <- function(facets, sector_spacing = pi / 180, drop = TRUE,
         )
         sector_spacing <- spacing_theta
     }
-
+    if (!is.numeric(sector_spacing)) {
+        cli_abort("{.arg sector_spacing} must be a {.cls numeric}")
+    }
     # @param strip.position By default, the labels are displayed on the
     # `"outer"` of the plot. Allowed values are `r oxford_or(c("outer",
     # "inner"))`
@@ -121,25 +123,30 @@ FacetSector <- ggproto(
     setup_panel_params = function(self, panel_params, coord, ...) {
         # total theta for panel area and panel spacing
         arc_theta <- abs(diff(coord$arc))
-        sector_spacing <- self$sector_spacing
-        if (inherits(sector_spacing, "rel")) {
-            sector_spacing <- sector_spacing * arc_theta
-        }
         panel_weights <- vapply(panel_params, function(panel_param) {
             abs(diff(.subset2(panel_param, "theta.range")))
         }, numeric(1L), USE.NAMES = FALSE)
 
+        # for the whole circle, arc_theta == 2 * pi
+        # there should be as many panels as the number of panel spacing
+        n_spacing <- if (abs(arc_theta - 2 * pi) < sqrt(.Machine$double.eps)) {
+            length(panel_weights)
+        } else {
+            length(panel_weights) - 1L
+        }
+
+        spacing <- if (inherits(self$sector_spacing, "rel")) {
+            self$sector_spacing * arc_theta
+        } else {
+            self$sector_spacing
+        }
+
+        spacing <- rep_len(spacing, length(panel_weights))
+
         # total theta for panel area
-        panel_theta <- arc_theta -
-            # substract the number of spacing between panels
-            sector_spacing *
-                # for the whole circle, arc_theta == 2 * pi
-                # there should be as many panels as the number of panel spacing
-                if (abs(arc_theta - 2 * pi) < .Machine$double.eps^0.5) {
-                    length(panel_weights)
-                } else {
-                    length(panel_weights) - 1L
-                }
+        # substract the number of spacing between panels
+        panel_theta <- arc_theta - sum(spacing[seq_len(n_spacing)])
+
         if (panel_theta <= 0L) {
             cli_abort("No panel area, try to reduce {.arg sector_spacing}")
         }
@@ -147,7 +154,7 @@ FacetSector <- ggproto(
         # re-distribute the arc for each panel
         panel_point <- vec_interleave(
             panel_theta * panel_weights / sum(panel_weights),
-            rep_len(sector_spacing, length(panel_weights))
+            spacing
         )
         panel_point <- cumsum(c(coord$arc[1L], utils::head(panel_point, -1L)))
         for (i in seq_along(panel_params)) {

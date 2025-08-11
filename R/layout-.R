@@ -154,7 +154,14 @@ CircleLayout <- S7::new_class(
                 }
             }
         ),
-        sector_spacing = S7::class_any
+        sector_spacing = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (!is.null(value) && !is.numeric(value)) {
+                    return("must be a `numeric`")
+                }
+            }
+        )
     )
 )
 

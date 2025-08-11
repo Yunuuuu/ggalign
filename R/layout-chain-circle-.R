@@ -213,7 +213,10 @@ new_circle_layout <- function(data, domain, radial, direction,
             "facet_sector(spacing_theta = )",
             "facet_sector(sector_spacing = )"
         )
-        if (is.null(sector_spacing)) sector_spacing <- spacing_theta
+        sector_spacing <- sector_spacing %||% spacing_theta
+    }
+    if (!is.null(sector_spacing) && !is.numeric(sector_spacing)) {
+        cli_abort("{.arg sector_spacing} must be a {.cls numeric}", call = call)
     }
     CircleLayout(
         name = name, data = data,
