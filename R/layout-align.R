@@ -425,14 +425,17 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
     if (inherits(user, "FacetGrid")) {
         params <- user$params
         if (is_horizontal(direction)) {
+            # In a horizontal stack, faceting by rows is not allowed.
+            # Replace existing rows with compacted facets instead.
             # for horizontal stack, we cannot facet by rows
             if (length(params$rows)) {
                 cli_warn(sprintf("Cannot facet by rows in %s", layout_name))
             }
             params["rows"] <- list(compact_facets(facets))
         } else {
+            # In a vertical stack, faceting by columns is not allowed.
+            # Replace existing columns with compacted facets instead.
             if (length(params$cols)) {
-                # for vertical stack, we cannot facet by cols
                 cli_warn(sprintf("Cannot facet by cols in %s", layout_name))
             }
             params["cols"] <- list(compact_facets(facets))
@@ -443,7 +446,9 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
     } else if (inherits(user, "FacetWrap")) {
         params <- user$params
         if (is_horizontal(direction)) {
-            # for horizontal stack, we cannot facet by rows
+            # In a horizontal stack:
+            # - Disable wrapping by rows
+            # - Allow only a single column (ncol = 1)
             if (!is.null(params$nrow)) {
                 cli_warn(sprintf(
                     "Cannot wrap facet by rows in %s", layout_name
@@ -459,6 +464,9 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
                 }
             }
         } else {
+            # In a vertical stack:
+            # - Disable wrapping by columns
+            # - Allow only a single row (nrow = 1)
             if (!is.null(params$cols)) {
                 # for vertical stack, we cannot facet by cols
                 cli_warn(sprintf(
@@ -479,7 +487,8 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
         params$drop <- FALSE
         params$as.table <- FALSE
         ggproto(NULL, user, params = params)
-    } else if (is.null(facets)) { # No facet
+    } else if (is.null(facets)) { # the default facets
+        # No facets, we by default use `facet_null()`.
         if (inherits(user, "FacetNull")) {
             user
         } else {
