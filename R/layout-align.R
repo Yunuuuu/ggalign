@@ -444,23 +444,35 @@ align_stack_facet <- function(direction, user, facets, type, layout_name) {
         params <- user$params
         if (is_horizontal(direction)) {
             # for horizontal stack, we cannot facet by rows
-            if (is.null(params$nrow)) {
-                params$nrow <- 1L
-            } else if (params$nrow > 1L) {
+            if (!is.null(params$nrow)) {
                 cli_warn(sprintf(
                     "Cannot wrap facet by rows in %s", layout_name
                 ))
-                params$nrow <- 1L
+                params["nrow"] <- list(NULL)
             }
-        } else if (!is.null(params$cols)) {
-            # for vertical stack, we cannot facet by cols
-            if (is.null(params$ncol)) {
+            if (!is.null(params$ncol)) {
+                if (params$ncol != 1L) {
+                    cli_warn(sprintf(
+                        "Cannot wrap facet by multiple cols in %s", layout_name
+                    ))
+                }
                 params$ncol <- 1L
-            } else if (params$ncol > 1L) {
+            }
+        } else {
+            if (!is.null(params$cols)) {
+                # for vertical stack, we cannot facet by cols
                 cli_warn(sprintf(
                     "Cannot wrap facet by cols in %s", layout_name
                 ))
-                params$ncol <- 1L
+                params["ncol"] <- list(NULL)
+            }
+            if (!is.null(params$nrow)) {
+                if (params$nrow != 1L) {
+                    cli_warn(sprintf(
+                        "Cannot wrap facet by multiple rows in %s", layout_name
+                    ))
+                }
+                params$nrow <- 1L
             }
         }
         params["facets"] <- list(compact_facets(facets))
