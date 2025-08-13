@@ -170,7 +170,13 @@ fortify_data_frame.phylo <- function(data, ...,
 
             # integrate the data for each child
             node <- vec_rbind(!!!.subset2(data, "node"))
-            edge <- vec_rbind(!!!.subset2(data, "edge"))
+            edge <- .subset2(data, "edge")
+            edge <- edge[!vapply(edge, is.null, logical(1L), USE.NAMES = FALSE)]
+            if (length(edge)) {
+                edge <- vec_rbind(!!!edge)
+            } else {
+                edge <- NULL
+            }
 
             # all coordinate for direct children nodes -------------
             direct_leaves_x <- unlist(
