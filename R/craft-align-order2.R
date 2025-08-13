@@ -173,5 +173,5 @@ order2.phylo <- function(x) {
         cli_abort("{.arg x} must be a {.cls phylo} object with tip labels")
     }
     ordering <- x$edge[, 2L, drop = TRUE]
-    ordering[ordering <= length(x$tip.label)]
+    as.integer(ordering[ordering <= length(x$tip.label)])
 }
