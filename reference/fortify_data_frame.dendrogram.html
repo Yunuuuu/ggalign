@@ -105,12 +105,13 @@ the middle of the direct child nodes.</p></dd>
 
 <dt id="arg-leaf-pos">leaf_pos<a class="anchor" aria-label="anchor" href="#arg-leaf-pos"></a></dt>
 <dd><p>The x-coordinates of the leaf node. Must be the same length
-of the number of observations in <code>tree</code>.</p></dd>
+of the number of observations in <code>data</code>.</p></dd>
 
 
 <dt id="arg-leaf-braches">leaf_braches<a class="anchor" aria-label="anchor" href="#arg-leaf-braches"></a></dt>
 <dd><p>Branches of the leaf node. Must be the same length of the
-number of observations in <code>tree</code>. Usually come from <a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a>.</p></dd>
+number of observations in <code>data</code>. Usually come from
+<code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></code>.</p></dd>
 
 
 <dt id="arg-reorder-branches">reorder_branches<a class="anchor" aria-label="anchor" href="#arg-reorder-branches"></a></dt>
@@ -149,7 +150,7 @@ used by the user.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>data frame</code> with the node coordinates:</p><ul><li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct
-branch for usage of the ggplot facet.</p></li>
+panel for usage of the ggplot facet.</p></li>
 <li><p><code>.index</code>: the original index in the tree for the the node</p></li>
 <li><p><code>label</code>: node label text</p></li>
 <li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for the node</p></li>
@@ -167,11 +168,11 @@ fall outside panel (between two panels), so there are possible
 
 
 <p><code>edge</code>: A <code>data frame</code> for edge coordinates:</p><ul><li><p><code>.panel</code>: Similar with <code>panel</code> column, but always give the correct
-branch for usage of the ggplot facet.</p></li>
+panel for usage of the ggplot facet.</p></li>
 <li><p><code>x</code> and <code>y</code>: x-axis and y-axis coordinates for the start node of the edge.</p></li>
 <li><p><code>xend</code> and <code>yend</code>: the x-axis and y-axis coordinates of the terminal node
 for edge.</p></li>
-<li><p><code>branch</code>: which branch the edge is. You can use this column to color
+<li><p><code>branch</code>: which panel the edge is. You can use this column to color
 different groups.</p></li>
 <li><p><code>panel1</code> and <code>panel2</code>: The panel1 and panel2 columns have the same
 functionality as <code>panel</code>, but they are specifically for the <code>edge</code> data
@@ -191,104 +192,104 @@ and correspond to both nodes of each edge.</p></li>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="fortify_data_frame.html">fortify_data_frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span>, <span class="st">"ave"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .index          label         x         y branch  leaf panel .panel</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       9        Florida  1.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      33 North Carolina  2.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      NA           &lt;NA&gt;  1.500000 38.527912   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       5     California  3.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      20       Maryland  4.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       3        Arizona  5.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      31     New Mexico  6.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      NA           &lt;NA&gt;  5.500000 13.896043   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      NA           &lt;NA&gt;  4.750000 15.453120   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     NA           &lt;NA&gt;  3.875000 28.012211   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      8       Delaware  7.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      1        Alabama  8.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13     18      Louisiana  9.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14     NA           &lt;NA&gt;  8.500000 15.454449   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15     NA           &lt;NA&gt;  7.750000 16.891499   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16     13       Illinois 10.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17     32       New York 11.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18     NA           &lt;NA&gt; 10.500000  6.236986   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19     22       Michigan 12.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20     28         Nevada 13.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21     NA           &lt;NA&gt; 12.500000 13.297368   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22     NA           &lt;NA&gt; 11.500000 18.417331   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23     NA           &lt;NA&gt;  9.625000 26.363428   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24      2         Alaska 14.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25     24    Mississippi 15.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26     40 South Carolina 16.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27     NA           &lt;NA&gt; 15.500000 21.167192   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28     NA           &lt;NA&gt; 14.750000 28.095803   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29     NA           &lt;NA&gt; 12.187500 39.394633   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30     NA           &lt;NA&gt;  8.031250 44.283922   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31     NA           &lt;NA&gt;  4.765625 77.605024   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32     47     Washington 17.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33     37         Oregon 18.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34     50        Wyoming 19.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35     36       Oklahoma 20.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36     46       Virginia 21.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37     NA           &lt;NA&gt; 20.500000  7.355270   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38     NA           &lt;NA&gt; 19.750000 10.736739   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39     NA           &lt;NA&gt; 18.875000 12.878100   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40     NA           &lt;NA&gt; 17.937500 16.425489   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41     39   Rhode Island 22.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42     21  Massachusetts 23.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43     30     New Jersey 24.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44     NA           &lt;NA&gt; 23.500000 11.456439   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45     NA           &lt;NA&gt; 22.750000 22.595978   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46     NA           &lt;NA&gt; 20.343750 26.713777   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47     25       Missouri 25.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48      4       Arkansas 26.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49     42      Tennessee 27.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50     NA           &lt;NA&gt; 26.500000 12.614278   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51     NA           &lt;NA&gt; 25.750000 20.198479   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52     10        Georgia 28.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53      6       Colorado 29.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54     43          Texas 30.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55     NA           &lt;NA&gt; 29.500000 14.501034   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56     NA           &lt;NA&gt; 28.750000 23.972143   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57     NA           &lt;NA&gt; 27.250000 29.054195   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58     NA           &lt;NA&gt; 23.796875 44.837933   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59     12          Idaho 31.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60     27       Nebraska 32.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61     17       Kentucky 33.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62     26        Montana 34.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63     NA           &lt;NA&gt; 33.500000  3.834058   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64     NA           &lt;NA&gt; 32.750000 12.438692   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65     NA           &lt;NA&gt; 31.875000 15.026107   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66     35           Ohio 35.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67     44           Utah 36.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68     NA           &lt;NA&gt; 35.500000  6.637771   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69     14        Indiana 37.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70     16         Kansas 38.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71     NA           &lt;NA&gt; 37.500000  3.929377   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72      7    Connecticut 39.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73     38   Pennsylvania 40.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74     NA           &lt;NA&gt; 39.500000  8.027453   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75     NA           &lt;NA&gt; 38.500000 13.352260   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76     NA           &lt;NA&gt; 37.000000 15.122897   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77     NA           &lt;NA&gt; 34.437500 20.598507   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78     11         Hawaii 41.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79     48  West Virginia 42.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80     19          Maine 43.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81     41   South Dakota 44.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82     NA           &lt;NA&gt; 43.500000  8.537564   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83     NA           &lt;NA&gt; 42.750000 10.771175   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84     34   North Dakota 45.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85     45        Vermont 46.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86     NA           &lt;NA&gt; 45.500000 13.044922   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87     23      Minnesota 47.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88     49      Wisconsin 48.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89     15           Iowa 49.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90     29  New Hampshire 50.000000  0.000000   root  TRUE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91     NA           &lt;NA&gt; 49.500000  2.291288   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92     NA           &lt;NA&gt; 48.750000 10.184218   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93     NA           &lt;NA&gt; 47.875000 18.993398   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94     NA           &lt;NA&gt; 46.687500 27.779904   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95     NA           &lt;NA&gt; 44.718750 33.117815   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96     NA           &lt;NA&gt; 42.859375 41.094765   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97     NA           &lt;NA&gt; 38.648438 54.746831   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98     NA           &lt;NA&gt; 31.222656 89.232093   root FALSE  &lt;NA&gt;   &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       9        Florida  1.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      33 North Carolina  2.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      NA           &lt;NA&gt;  1.500000 38.527912   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       5     California  3.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      20       Maryland  4.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       3        Arizona  5.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      31     New Mexico  6.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      NA           &lt;NA&gt;  5.500000 13.896043   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      NA           &lt;NA&gt;  4.750000 15.453120   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     NA           &lt;NA&gt;  3.875000 28.012211   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      8       Delaware  7.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      1        Alabama  8.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     18      Louisiana  9.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     NA           &lt;NA&gt;  8.500000 15.454449   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     NA           &lt;NA&gt;  7.750000 16.891499   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     13       Illinois 10.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     32       New York 11.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     NA           &lt;NA&gt; 10.500000  6.236986   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     22       Michigan 12.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     28         Nevada 13.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     NA           &lt;NA&gt; 12.500000 13.297368   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     NA           &lt;NA&gt; 11.500000 18.417331   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     NA           &lt;NA&gt;  9.625000 26.363428   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24      2         Alaska 14.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     24    Mississippi 15.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     40 South Carolina 16.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27     NA           &lt;NA&gt; 15.500000 21.167192   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28     NA           &lt;NA&gt; 14.750000 28.095803   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29     NA           &lt;NA&gt; 12.187500 39.394633   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30     NA           &lt;NA&gt;  8.031250 44.283922   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31     NA           &lt;NA&gt;  4.765625 77.605024   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32     47     Washington 17.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33     37         Oregon 18.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34     50        Wyoming 19.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35     36       Oklahoma 20.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36     46       Virginia 21.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37     NA           &lt;NA&gt; 20.500000  7.355270   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38     NA           &lt;NA&gt; 19.750000 10.736739   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39     NA           &lt;NA&gt; 18.875000 12.878100   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40     NA           &lt;NA&gt; 17.937500 16.425489   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41     39   Rhode Island 22.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42     21  Massachusetts 23.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43     30     New Jersey 24.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44     NA           &lt;NA&gt; 23.500000 11.456439   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45     NA           &lt;NA&gt; 22.750000 22.595978   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46     NA           &lt;NA&gt; 20.343750 26.713777   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47     25       Missouri 25.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48      4       Arkansas 26.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49     42      Tennessee 27.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50     NA           &lt;NA&gt; 26.500000 12.614278   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51     NA           &lt;NA&gt; 25.750000 20.198479   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52     10        Georgia 28.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53      6       Colorado 29.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54     43          Texas 30.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55     NA           &lt;NA&gt; 29.500000 14.501034   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56     NA           &lt;NA&gt; 28.750000 23.972143   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57     NA           &lt;NA&gt; 27.250000 29.054195   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58     NA           &lt;NA&gt; 23.796875 44.837933   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59     12          Idaho 31.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60     27       Nebraska 32.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61     17       Kentucky 33.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62     26        Montana 34.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63     NA           &lt;NA&gt; 33.500000  3.834058   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64     NA           &lt;NA&gt; 32.750000 12.438692   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65     NA           &lt;NA&gt; 31.875000 15.026107   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66     35           Ohio 35.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67     44           Utah 36.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68     NA           &lt;NA&gt; 35.500000  6.637771   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69     14        Indiana 37.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70     16         Kansas 38.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71     NA           &lt;NA&gt; 37.500000  3.929377   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72      7    Connecticut 39.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73     38   Pennsylvania 40.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74     NA           &lt;NA&gt; 39.500000  8.027453   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75     NA           &lt;NA&gt; 38.500000 13.352260   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76     NA           &lt;NA&gt; 37.000000 15.122897   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77     NA           &lt;NA&gt; 34.437500 20.598507   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78     11         Hawaii 41.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79     48  West Virginia 42.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80     19          Maine 43.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81     41   South Dakota 44.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82     NA           &lt;NA&gt; 43.500000  8.537564   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83     NA           &lt;NA&gt; 42.750000 10.771175   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84     34   North Dakota 45.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85     45        Vermont 46.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86     NA           &lt;NA&gt; 45.500000 13.044922   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87     23      Minnesota 47.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88     49      Wisconsin 48.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89     15           Iowa 49.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90     29  New Hampshire 50.000000  0.000000   root  TRUE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91     NA           &lt;NA&gt; 49.500000  2.291288   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92     NA           &lt;NA&gt; 48.750000 10.184218   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93     NA           &lt;NA&gt; 47.875000 18.993398   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94     NA           &lt;NA&gt; 46.687500 27.779904   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95     NA           &lt;NA&gt; 44.718750 33.117815   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96     NA           &lt;NA&gt; 42.859375 41.094765   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97     NA           &lt;NA&gt; 38.648438 54.746831   root FALSE  root   root</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98     NA           &lt;NA&gt; 31.222656 89.232093   root FALSE  root   root</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

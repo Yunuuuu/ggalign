@@ -62,9 +62,9 @@
 <span>  cutree <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_dendrogram <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_cut_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  center <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"rectangle"</span>,</span>
+<span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  active <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -160,10 +160,6 @@ tree.</p></dd>
 <dd><p>A boolean value indicates whether plot the cut height.</p></dd>
 
 
-<dt id="arg-root">root<a class="anchor" aria-label="anchor" href="#arg-root"></a></dt>
-<dd><p>A length one string or numeric indicates the root branch.</p></dd>
-
-
 <dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
 <dd><p>A boolean value. if <code>TRUE</code>, nodes are plotted centered with
 respect to all leaves/tips in the branch. Otherwise (default), plot them in
@@ -172,6 +168,10 @@ the middle of the direct child nodes.</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>A string indicates the plot type, <code>"rectangle"</code> or <code>"triangle"</code>.</p></dd>
+
+
+<dt id="arg-root">root<a class="anchor" aria-label="anchor" href="#arg-root"></a></dt>
+<dd><p>A length one string or numeric indicates the root branch.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>

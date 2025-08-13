@@ -51,10 +51,13 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_phylo</span><span class="op">(</span></span>
 <span>  <span class="va">phylo</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  split <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ladderize <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"rectangle"</span>,</span>
 <span>  center <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tree_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  root <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  active <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  no_axes <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
@@ -72,6 +75,16 @@
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>&lt;<a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dyn-dots</a>&gt; Additional arguments passed to
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment()</a></code>.</p></dd>
+
+
+<dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
+<dd><p>Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.</p></dd>
+
+
+<dt id="arg-split">split<a class="anchor" aria-label="anchor" href="#arg-split"></a></dt>
+<dd><p>A logical scalar indicating whether to split the phylogenetic
+tree into separate subtrees when multiple panel groups are present.</p></dd>
 
 
 <dt id="arg-ladderize">ladderize<a class="anchor" aria-label="anchor" href="#arg-ladderize"></a></dt>
@@ -98,6 +111,10 @@ evolutionary distance or time.</p></li>
 <li><p><code>cladogram</code>: Represents a tree where branch lengths are not used, or the
 branches do not reflect evolutionary time.</p></li>
 </ul><p>Usually, you don't need to modify this.</p></dd>
+
+
+<dt id="arg-root">root<a class="anchor" aria-label="anchor" href="#arg-root"></a></dt>
+<dd><p>A length one string or numeric indicates the root branch.</p></dd>
 
 
 <dt id="arg-active">active<a class="anchor" aria-label="anchor" href="#arg-active"></a></dt>
