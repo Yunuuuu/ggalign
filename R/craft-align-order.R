@@ -82,7 +82,7 @@ AlignOrder <- ggproto("AlignOrder", CraftAlign,
         } else {
             layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
             if (is.na(layout_nobs <- prop(layout@domain, "nobs"))) {
-                prop(layout@domain, "nobs") <- list(vec_size(self$weights))
+                prop(layout@domain, "nobs") <- vec_size(self$weights)
             } else {
                 assert_mismatch_nobs(
                     self, layout_nobs, vec_size(self$weights),
