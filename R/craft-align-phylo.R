@@ -75,6 +75,9 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
             )
         }
         self$labels <- tip_labels
+
+        # initialize the internal parameters
+        self$panel <- NULL
         layout
     },
     compute = function(self, panel, index) {
@@ -159,6 +162,7 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
                 tip_clades = as.character(panel),
                 # panel has been reordered by the index
                 reorder_clades = FALSE,
+                double = TRUE,
                 data_arg = "phylo",
                 call = self$call
             ))
@@ -189,6 +193,7 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
                     tip_pos = seq(start + 1L, end),
                     tip_clades = NULL,
                     reorder_clades = FALSE,
+                    double = TRUE,
                     data_arg = "phylo",
                     call = self$call
                 ))
