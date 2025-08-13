@@ -45,8 +45,8 @@ align_dendro <- function(mapping = aes(), ...,
                          reorder_group = FALSE,
                          k = NULL, h = NULL, cutree = NULL,
                          plot_dendrogram = TRUE,
-                         plot_cut_height = NULL, root = NULL,
-                         center = FALSE, type = "rectangle",
+                         plot_cut_height = NULL,
+                         center = FALSE, type = "rectangle", root = NULL,
                          size = NULL, data = NULL,
                          active = NULL, no_axes = deprecated()) {
     assert_bool(plot_cut_height, allow_null = TRUE)

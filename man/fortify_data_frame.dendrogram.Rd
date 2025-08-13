@@ -42,10 +42,11 @@ the middle of the direct child nodes.}
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
 \item{leaf_pos}{The x-coordinates of the leaf node. Must be the same length
-of the number of observations in \code{tree}.}
+of the number of observations in \code{data}.}
 
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
-number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
+number of observations in \code{data}. Usually come from
+\code{\link[stats:cutree]{cutree}}.}
 
 \item{reorder_branches}{A single boolean value, indicates whether reorder the
 provided \code{leaf_braches} based on the actual index.}

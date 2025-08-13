@@ -7,9 +7,10 @@
 #' the middle of the direct child nodes.
 #' @param type A string indicates the plot type, `"rectangle"` or `"triangle"`.
 #' @param leaf_pos The x-coordinates of the leaf node. Must be the same length
-#' of the number of observations in `tree`.
+#' of the number of observations in `data`.
 #' @param leaf_braches Branches of the leaf node. Must be the same length of the
-#' number of observations in `tree`. Usually come from [cutree][stats::cutree].
+#' number of observations in `data`. Usually come from
+#' [`cutree`][stats::cutree].
 #' @param reorder_branches A single boolean value, indicates whether reorder the
 #' provided `leaf_braches` based on the actual index.
 #' @param branch_gap A single numeric value indicates the gap between different
