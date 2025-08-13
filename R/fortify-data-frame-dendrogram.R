@@ -55,7 +55,6 @@
 #' @examples
 #' fortify_data_frame(hclust(dist(USArrests), "ave"))
 #' @importFrom grid is.unit
-#' @importFrom stats order.dendrogram
 #' @importFrom rlang arg_match0
 #' @family fortify_data_frame
 #' @export
@@ -114,7 +113,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
     }
 
     if (!is.null(leaf_braches) && reorder_branches) {
-        leaf_braches <- .subset(leaf_braches, order.dendrogram(data))
+        leaf_braches <- .subset(leaf_braches, order2(data))
     }
 
     # check `branch_gap`
@@ -139,7 +138,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
         cli_abort("{.arg root} cannot be `NA`", call = call)
     } else if (any(root == leaf_braches)) {
         cli_abort(
-            "{.arg root} cannot contain value in {.arg leaf_braches}",
+            "{.arg root} cannot match any value in {.arg leaf_braches}",
             call = call
         )
     }

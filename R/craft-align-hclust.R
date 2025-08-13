@@ -242,7 +242,7 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
                 # since we'll call `merge_dendrogram()` which requires a
                 # dendrogram
                 parent <- stats::as.dendrogram(parent)
-                panel <- factor(panel, parent_levels[order.dendrogram(parent)])
+                panel <- factor(panel, parent_levels[order2(parent)])
                 # we don't cutree, so we won't draw the height line
                 # self$draw_params$height <- attr(ans, "cutoff_height")
             } else {
