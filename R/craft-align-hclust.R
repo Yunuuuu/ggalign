@@ -136,8 +136,7 @@ align_hclust <- function(distance = "euclidean",
 #' @importFrom ggplot2 ggproto aes
 AlignHclust <- ggproto("AlignHclust", CraftAlign,
     interact_layout = function(self, layout) {
-        if (inherits(self$method, "hclust") ||
-            inherits(self$method, "dendrogram")) {
+        if (inherits(self$method, c("hclust", "dendrogram"))) {
             layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
             if (inherits(self$method, "hclust")) {
                 nobs <- vec_size(.subset2(self$method, "order"))
@@ -150,30 +149,37 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
             } else {
                 assert_mismatch_nobs(self, layout_nobs, nobs, arg = "method")
             }
+            if (inherits(self$method, "dendrogram")) {
+                self$labels <- labels(self$method)
+            } else {
+                self$labels <- .subset2(self$method, "labels")
+            }
         } else {
+            # will add labels
             layout <- ggproto_parent(AlignOrder2, self)$interact_layout(layout)
         }
 
         # initialize the internal parameters
-        self$multiple_tree <- FALSE
         self$height <- NULL
         self$panel <- NULL
         layout
     },
     compute = function(self, panel, index) {
         if (!is.null(self$data) && vec_size(self$data) < 2L) {
-            cli_abort(c(
-                "Cannot do Hierarchical Clustering",
-                i = "must have >= 2 observations to cluster"
-            ), call = self$call)
+            cli_abort(
+                c(
+                    "Cannot do Hierarchical Clustering",
+                    i = "must have >= 2 observations to cluster"
+                ),
+                call = self$call
+            )
         }
 
         # if the old panel exist, we do sub-clustering
         if (!is.null(panel) && is.null(self$k) && is.null(self$h) &&
             is.null(self$cutree)) {
             # in this way, we prevent sub-clustering
-            if (inherits(self$method, "hclust") ||
-                inherits(self$method, "dendrogram")) {
+            if (inherits(self$method, c("hclust", "dendrogram"))) {
                 cli_abort(
                     "{.arg method} cannot be a {.cls hclust} or {.cls dendrogram} when previous layout panel groups exist",
                     call = self$call
@@ -219,54 +225,7 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
     #' @importFrom stats order.dendrogram
     align = function(self, panel, index) {
         statistics <- self$statistics
-        if (!is.null(panel) && is.null(self$k) && is.null(self$h) &&
-            is.null(self$cutree)) {
-            # reordering the dendrogram ------------------------
-            if (nlevels(panel) > 1L && self$reorder_group) {
-                parent_levels <- levels(panel)
-                parent_data <- t(sapply(parent_levels, function(g) {
-                    colMeans(vec_slice(self$data, panel == g), na.rm = TRUE)
-                }))
-                rownames(parent_data) <- parent_levels
-                parent <- hclust2(
-                    parent_data,
-                    distance = self$distance,
-                    method = self$method,
-                    use_missing = self$use_missing
-                )
-                # reorder parent based on the parent tree
-                if (is.function(self$reorder_dendrogram)) {
-                    parent <- self$reorder_dendrogram(parent, parent_data)
-                }
-                # we always ensure the parent is a dendrogram
-                # since we'll call `merge_dendrogram()` which requires a
-                # dendrogram
-                parent <- stats::as.dendrogram(parent)
-                panel <- factor(panel, parent_levels[order.dendrogram(parent)])
-                # we don't cutree, so we won't draw the height line
-                # self$draw_params$height <- attr(ans, "cutoff_height")
-            } else {
-                parent <- NULL
-            }
-
-            # merge children tree ------------------------------
-            if (nlevels(panel) == 1L) {
-                statistics <- .subset2(statistics, 1L)
-            } else if (isTRUE(self$merge_dendro)) {
-                # we have a function named merge_dendrogram(), so we use
-                # `merge_dendro` as the argument name
-                # `merge_dendrogram` will follow the order of the parent
-                statistics <- lapply(statistics, stats::as.dendrogram)
-                statistics <- merge_dendrogram(parent, statistics)
-            } else {
-                # if no parent tree, and we havn't merged the tree
-                # we must manually reorder the dendrogram
-                if (!is.null(parent)) {
-                    statistics <- .subset(statistics, levels(panel))
-                }
-                self$multiple_tree <- TRUE
-            }
-        } else {
+        if (inherits(statistics, c("hclust", "dendrogram"))) {
             # hclust2() will attach the distance used
             distance <- attr(statistics, "distance")
             if (is.function(self$reorder_dendrogram)) {
@@ -294,19 +253,64 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
                     )
                 }
             }
+        } else {
+            # reordering the dendrogram ------------------------
+            if (nlevels(panel) > 1L && self$reorder_group) {
+                parent_levels <- levels(panel)
+                parent_data <- t(sapply(parent_levels, function(g) {
+                    colMeans(vec_slice(self$data, panel == g), na.rm = TRUE)
+                }))
+                rownames(parent_data) <- parent_levels
+                parent <- hclust2(
+                    parent_data,
+                    distance = self$distance,
+                    method = self$method,
+                    use_missing = self$use_missing
+                )
+                # reorder parent based on the parent tree
+                if (is.function(self$reorder_dendrogram)) {
+                    parent <- self$reorder_dendrogram(parent, parent_data)
+                }
+                # we always ensure the parent is a dendrogram, since we'll call
+                # `merge_dendrogram()` which requires a dendrogram
+                parent <- stats::as.dendrogram(parent)
+                panel <- factor(panel, parent_levels[order2(parent)])
+            } else {
+                parent <- NULL
+            }
+
+            # merge children tree ------------------------------
+            if (nlevels(panel) == 1L) {
+                statistics <- .subset2(statistics, 1L)
+            } else if (isTRUE(self$merge_dendro)) {
+                # we have a function named merge_dendrogram(), so we use
+                # `merge_dendro` as the argument name
+                # `merge_dendrogram` will follow the order of the parent
+                statistics <- lapply(statistics, stats::as.dendrogram)
+                statistics <- merge_dendrogram(parent, statistics)
+            } else if (!is.null(parent)) {
+                # if no parent tree, and we havn't merged the tree
+                # we must manually reorder the dendrogram
+                statistics <- .subset(statistics, levels(panel))
+            }
         }
+
         # save the modified `statistics`
         self$statistics <- statistics
-        if (self$multiple_tree) {
-            index <- unlist(lapply(statistics, order2), FALSE, FALSE)
-        } else {
+        if (inherits(statistics, c("hclust", "dendrogram"))) {
             index <- order2(statistics)
+        } else {
+            index <- unlist(lapply(statistics, order2), FALSE, FALSE)
         }
+
         # reorder panel factor levels to following the dendrogram order
         if (!is.null(panel)) {
             panel <- factor(panel, unique(panel[index]))
-            # save panel information, in case of user change it
-            self$panel <- panel
+            # Store the panel used for splitting to ensure consistency in
+            # later steps
+            if (!inherits(statistics, c("hclust", "dendrogram"))) {
+                self$panel <- panel
+            }
         }
         list(panel, index)
     },

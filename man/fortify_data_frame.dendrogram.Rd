@@ -42,10 +42,11 @@ the middle of the direct child nodes.}
 \item{type}{A string indicates the plot type, \code{"rectangle"} or \code{"triangle"}.}
 
 \item{leaf_pos}{The x-coordinates of the leaf node. Must be the same length
-of the number of observations in \code{tree}.}
+of the number of observations in \code{data}.}
 
 \item{leaf_braches}{Branches of the leaf node. Must be the same length of the
-number of observations in \code{tree}. Usually come from \link[stats:cutree]{cutree}.}
+number of observations in \code{data}. Usually come from
+\code{\link[stats:cutree]{cutree}}.}
 
 \item{reorder_branches}{A single boolean value, indicates whether reorder the
 provided \code{leaf_braches} based on the actual index.}
@@ -72,7 +73,7 @@ used by the user.}
 A \verb{data frame} with the node coordinates:
 \itemize{
 \item \code{.panel}: Similar with \code{panel} column, but always give the correct
-branch for usage of the ggplot facet.
+panel for usage of the ggplot facet.
 \item \code{.index}: the original index in the tree for the the node
 \item \code{label}: node label text
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for the node
@@ -96,11 +97,11 @@ This function converts various objects to a data frame.
 \code{edge}: A \verb{data frame} for edge coordinates:
 \itemize{
 \item \code{.panel}: Similar with \code{panel} column, but always give the correct
-branch for usage of the ggplot facet.
+panel for usage of the ggplot facet.
 \item \code{x} and \code{y}: x-axis and y-axis coordinates for the start node of the edge.
 \item \code{xend} and \code{yend}: the x-axis and y-axis coordinates of the terminal node
 for edge.
-\item \code{branch}: which branch the edge is. You can use this column to color
+\item \code{branch}: which panel the edge is. You can use this column to color
 different groups.
 \item \code{panel1} and \code{panel2}: The panel1 and panel2 columns have the same
 functionality as \code{panel}, but they are specifically for the \code{edge} data

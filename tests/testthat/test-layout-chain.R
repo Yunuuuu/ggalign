@@ -32,14 +32,11 @@ test_that("`chain_layout_add()` function with `CraftBox`", {
     )
     # layout `panel` is updated correctly
     stack <- stack_discrete("h", small_mat) + align_dendro(k = 3L)
-    expect_identical(
-        stack@domain@panel,
-        .subset2(stack@box_list, 1L)@craftsman$panel
-    )
+    expect_null(.subset2(stack@box_list, 1L)@craftsman$panel)
     expect_identical(
         stack@domain@index,
         reorder_index(
-            .subset2(stack@box_list, 1L)@craftsman$panel,
+            stack@domain@panel,
             order2(ggalign_stat(stack, 1L))
         )
     )
@@ -57,14 +54,11 @@ test_that("`chain_layout_add()` function with `CraftBox`", {
     )
     # layout `panel` is updated correctly
     stack <- stack_discrete("v", small_mat) + align_dendro(k = 3L)
-    expect_identical(
-        stack@domain@panel,
-        .subset2(stack@box_list, 1L)@craftsman$panel
-    )
+    expect_null(.subset2(stack@box_list, 1L)@craftsman$panel)
     expect_identical(
         stack@domain@index,
         reorder_index(
-            .subset2(stack@box_list, 1L)@craftsman$panel,
+            stack@domain@panel,
             order2(ggalign_stat(stack, 1L))
         )
     )

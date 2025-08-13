@@ -7,10 +7,13 @@
 align_phylo(
   phylo,
   ...,
+  mapping = aes(),
+  split = FALSE,
   ladderize = NULL,
   type = "rectangle",
   center = FALSE,
   tree_type = NULL,
+  root = NULL,
   active = NULL,
   size = NULL,
   no_axes = deprecated()
@@ -21,6 +24,12 @@ align_phylo(
 
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> Additional arguments passed to
 \code{\link[ggplot2:geom_segment]{geom_segment()}}.}
+
+\item{mapping}{Default list of aesthetic mappings to use for plot.
+If not specified, must be supplied in each layer added to the plot.}
+
+\item{split}{A logical scalar indicating whether to split the phylogenetic
+tree into separate subtrees when multiple panel groups are present.}
 
 \item{ladderize}{A single string of \code{"left"} or \code{"right"},
 indicating whether to ladderize the tree. Ladderizing arranges the tree so
@@ -43,6 +52,8 @@ branches do not reflect evolutionary time.
 }
 
 Usually, you don't need to modify this.}
+
+\item{root}{A length one string or numeric indicates the root branch.}
 
 \item{active}{A \code{\link[=active]{active()}} object that defines the context settings when
 added to a layout.}

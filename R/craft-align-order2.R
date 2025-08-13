@@ -114,10 +114,12 @@ AlignOrder2 <- ggproto("AlignOrder2", CraftAlign,
             order2(self$statistics), integer(),
             x_arg = "stat", call = self$call
         )
-        assert_mismatch_nobs(
-            self, vec_size(self$data), vec_size(index),
-            arg = "stat"
-        )
+        if (vec_size(self$data) != vec_size(index)) {
+            cli_abort(
+                "{.arg stat} must return an ordering statistics with the same number of observations (rows) as {.arg data}",
+                call = self$call
+            )
+        }
         if (self$reverse) index <- rev(index)
         assert_reorder(self, panel, index, self$strict)
         list(panel, index)
@@ -167,6 +169,9 @@ order2.ser_permutation <- function(x) {
 #' @export
 #' @rdname order2
 order2.phylo <- function(x) {
-    second <- x$edge[, 2L, drop = TRUE]
-    second[second <= length(x$tip.label)]
+    if (is.null(x$tip.label)) {
+        cli_abort("{.arg x} must be a {.cls phylo} object with tip labels")
+    }
+    ordering <- x$edge[, 2L, drop = TRUE]
+    as.integer(ordering[ordering <= length(x$tip.label)])
 }

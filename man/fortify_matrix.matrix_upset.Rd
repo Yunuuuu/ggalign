@@ -50,7 +50,6 @@ Other \code{\link[=fortify_matrix]{fortify_matrix()}} methods:
 \code{\link{fortify_matrix.default}()},
 \code{\link{fortify_matrix.list_upset}()},
 \code{\link{fortify_matrix.matrix}()},
-\code{\link{fortify_matrix.matrix_oncoplot}()},
-\code{\link{fortify_matrix.phylo}()}
+\code{\link{fortify_matrix.matrix_oncoplot}()}
 }
 \concept{fortify_matrix}
