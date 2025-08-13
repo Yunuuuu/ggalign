@@ -135,7 +135,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
     # the root value shouldn't be the same of leaf branches.
     if (!is_scalar(root)) {
         cli_abort("{.arg root} must be of length 1", call = call)
-    } else if (anyNA(root)) {
+    } else if (is.na(root)) {
         cli_abort("{.arg root} cannot be `NA`", call = call)
     } else if (any(root == leaf_braches)) {
         cli_abort(

@@ -116,8 +116,6 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         index <- prop(domain, "index")
 
         statistics <- .subset2(self, "statistics")
-        direction <- self$direction
-        priority <- switch_direction(direction, "left", "right")
         dendrogram_panel <- self$panel[index]
         if (!is.null(dendrogram_panel) &&
             # we allow to change the panel level name, but we prevent
@@ -126,6 +124,9 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             !all(as.integer(dendrogram_panel) == as.integer(panel))) {
             cli_abort("you cannot do sub-splitting in dendrogram groups")
         }
+
+        direction <- self$direction
+        priority <- switch_direction(direction, "left", "right")
 
         if (self$multiple_tree) {
             branches <- levels(panel)
