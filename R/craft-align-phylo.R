@@ -106,7 +106,8 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
         if (inherits(self$statistics, c("phylo", "multiPhylo"))) {
             # For a single tree
             new_index <- order2(self$statistics)
-            if (!all(new_index == reorder_index(panel, new_index))) {
+            if (!is.null(panel) && nlevels(panel) > 1L &&
+                !all(new_index == reorder_index(panel, new_index))) {
                 layout_name <- self$layout_name
                 object_name <- object_name(self)
                 cli_abort(

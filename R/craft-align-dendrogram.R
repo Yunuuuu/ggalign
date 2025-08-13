@@ -113,62 +113,17 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         type <- self$type
         root <- self$root
         panel <- prop(domain, "panel")
-        index <- prop(domain, "index")
 
-        statistics <- .subset2(self, "statistics")
-        dendrogram_panel <- self$panel[index]
-        if (!is.null(dendrogram_panel) &&
-            # we allow to change the panel level name, but we prevent
-            # from changing the underlying factor level (the underlying
-            # ordering)
-            !all(as.integer(dendrogram_panel) == as.integer(panel))) {
-            cli_abort("you cannot do sub-splitting in dendrogram groups")
-        }
-
+        statistics <- self$statistics
         direction <- self$direction
         priority <- switch_direction(direction, "left", "right")
 
-        if (self$multiple_tree) {
-            branches <- levels(panel)
-            data <- vector("list", length(statistics))
-            start <- 0L
-            for (i in seq_along(data)) {
-                tree <- .subset2(statistics, i)
-                n <- stats::nobs(tree)
-                end <- start + n
-                data[[i]] <- fortify_data_frame(
-                    tree,
-                    priority = priority,
-                    center = center,
-                    type = type,
-                    leaf_pos = seq(start + 1L, end),
-                    leaf_braches = rep_len(.subset(branches, i), n),
-                    reorder_branches = FALSE,
-                    root = root,
-                    double = TRUE,
-                    call = self$call
-                )
-                start <- end
-            }
-            data <- lapply(
-                list(
-                    node = data,
-                    edge = lapply(data, ggalign_attr, "edge")
-                ),
-                function(dat) {
-                    ans <- vec_rbind(!!!dat, .names_to = "parent")
-                    ans$.panel <- factor(.subset2(ans, ".panel"), branches)
-                    ans
-                }
-            )
-            edge <- .subset2(data, "edge")
-            node <- .subset2(data, "node")
-        } else {
+        if (inherits(statistics, c("hclust", "dendrogram"))) {
             if (nlevels(panel) > 1L && type == "triangle") {
-                cli_warn(c(paste(
-                    "{.arg type} of {.arg triangle}",
-                    "is not well support for facet dendrogram"
-                ), i = "will use {.filed rectangle} dendrogram instead"))
+                cli_warn(c(
+                    "{.arg type} = {.val triangle} is not well supported for faceteddendrogram.",
+                    i = "Switching to {.val rectangle} layout."
+                ))
                 type <- "rectangle"
             }
             data <- fortify_data_frame(
@@ -185,6 +140,49 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             )
             edge <- ggalign_attr(data, "edge")
             node <- data
+        } else {
+            dendrogram_panel <- self$panel[prop(domain, "index")]
+            if (!is.null(dendrogram_panel) &&
+                # we allow to change the panel level name, but we prevent
+                # from changing the underlying factor level (the underlying
+                # ordering)
+                !all(as.integer(dendrogram_panel) == as.integer(panel))) {
+                cli_abort("you cannot do sub-grouping in dendrogram tree groups")
+            }
+            branches <- levels(panel)
+            data <- vector("list", length(statistics))
+            start <- 0L
+            for (i in seq_along(data)) {
+                tree <- .subset2(statistics, i)
+                n <- stats::nobs(tree)
+                end <- start + n
+                data[[i]] <- fortify_data_frame(
+                    tree,
+                    priority = priority,
+                    center = center,
+                    type = type,
+                    root = .subset(branches, i),
+                    leaf_pos = seq(start + 1L, end),
+                    leaf_braches = NULL,
+                    reorder_branches = FALSE,
+                    double = TRUE,
+                    call = self$call
+                )
+                start <- end
+            }
+            data <- lapply(
+                list(
+                    node = data,
+                    edge = lapply(data, ggalign_attr, "edge")
+                ),
+                function(dat) {
+                    ans <- vec_rbind(!!!dat, .names_to = NULL)
+                    ans$.panel <- factor(.subset2(ans, ".panel"), branches)
+                    ans
+                }
+            )
+            edge <- .subset2(data, "edge")
+            node <- .subset2(data, "node")
         }
 
         # add names

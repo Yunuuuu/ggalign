@@ -130,7 +130,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
         cli_abort("{.arg root} must be of length 1", call = call)
     } else if (is.na(root)) {
         cli_abort("{.arg root} cannot be `NA`", call = call)
-    } else if (any(root == leaf_braches)) {
+    } else if (!is.null(leaf_braches) && any(root == leaf_braches)) {
         cli_abort(
             "{.arg root} cannot match any value in {.arg leaf_braches}",
             call = call
@@ -141,7 +141,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
     # initialize values
     i <- 0L # leaf index
     branch_levels <- NULL
-    last_branch <- root
+    last_branch <- NULL
     total_gap <- 0
     dendrogram_data <- function(dend, from_root = TRUE) {
         if (stats::is.leaf(dend)) { # base version
@@ -158,7 +158,9 @@ fortify_data_frame.dendrogram <- function(data, ...,
             x <- .subset(leaf_pos, i) + total_gap
             # for every new branch, we saved the branch for later use, in order
             # to order the branch levels, and we add a gap between two branch
-            if (branch != last_branch) {
+            if (is.null(last_branch)) {
+                branch_levels <<- c(branch_levels, branch)
+            } else if (branch != last_branch) {
                 branch_levels <<- c(branch_levels, branch)
                 x <- x + branch_gap
                 total_gap <<- total_gap + branch_gap
@@ -362,7 +364,7 @@ fortify_data_frame.dendrogram <- function(data, ...,
 
     # set factor levels for branch and panel ---------------
     panel_levels <- branch_levels
-    branch_levels <- c(branch_levels, root)
+    branch_levels <- unique(c(branch_levels, root))
     node$panel <- factor(.subset2(node, "panel"), panel_levels)
     node$branch <- factor(.subset2(node, "branch"), branch_levels)
     node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_levels)
