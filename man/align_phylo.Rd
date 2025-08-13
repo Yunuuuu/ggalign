@@ -8,6 +8,7 @@ align_phylo(
   phylo,
   ...,
   mapping = aes(),
+  split = FALSE,
   ladderize = NULL,
   type = "rectangle",
   center = FALSE,
@@ -26,6 +27,9 @@ align_phylo(
 
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
+
+\item{split}{A logical scalar indicating whether to split the phylogenetic
+tree into separate subtrees when multiple panel groups are present.}
 
 \item{ladderize}{A single string of \code{"left"} or \code{"right"},
 indicating whether to ladderize the tree. Ladderizing arranges the tree so

@@ -3,6 +3,8 @@
 #' @param phylo A [`phylo`][ape::as.phylo] object.
 #' @param ... <[dyn-dots][rlang::dyn-dots]> Additional arguments passed to
 #' [`geom_segment()`][ggplot2::geom_segment].
+#' @param split A logical scalar indicating whether to split the phylogenetic
+#'   tree into separate subtrees when multiple panel groups are present.
 #' @param ladderize A single string of `r oxford_or(c("left", "right"))`,
 #' indicating whether to ladderize the tree. Ladderizing arranges the tree so
 #' that the smallest clade is positioned on the `"right"` or the `"left"`. By
@@ -11,7 +13,7 @@
 #' @inheritParams ggalign
 #' @export
 align_phylo <- function(phylo, ..., mapping = aes(),
-                        ladderize = NULL, type = "rectangle",
+                        split = FALSE, ladderize = NULL, type = "rectangle",
                         center = FALSE, tree_type = NULL, root = NULL,
                         active = NULL, size = NULL, no_axes = deprecated()) {
     if (lifecycle::is_present(no_axes)) {
@@ -21,17 +23,24 @@ align_phylo <- function(phylo, ..., mapping = aes(),
             details = "Please add `theme()` to the ggplot instead"
         )
     }
+    assert_s3_class(phylo, c("phylo", "multiPhylo"))
+    if (is.null(phylo$tip.label)) {
+        cli_abort("{.arg phylo} must have tip labels")
+    }
+    assert_bool(split)
+    if (split) {
+        rlang::check_installed("ape", "to split phylogenetic tree")
+    }
     if (!is.null(ladderize)) {
-        rlang::check_installed("ape", "to ladderize phylogenetics tree")
+        rlang::check_installed("ape", "to ladderize phylogenetic tree")
         ladderize <- arg_match0(ladderize, c("left", "right"))
     }
-    assert_s3_class(phylo, "phylo")
     assert_active(active)
     active <- active_update(active(use = TRUE), active)
     align(
         align = AlignPhylo,
         phylo = phylo,
-        ladderize = ladderize,
+        split = split, ladderize = ladderize,
         plot = ggplot(mapping = mapping) +
             ggplot2::geom_segment(
                 mapping = aes(
@@ -57,9 +66,6 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
 
         # we keep the names from the layout data for usage
         tip_labels <- self$phylo$tip.label
-        if (is.null(tip_labels)) {
-            cli_abort("{.arg phylo} must have tip labels", call = self$call)
-        }
         if (is.na(layout_nobs <- prop(layout@domain, "nobs"))) {
             prop(layout@domain, "nobs") <- vec_size(tip_labels)
         } else {
@@ -79,24 +85,46 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
                 right = identical(self$ladderize, "right")
             )
         }
+        # If multiple panel groups exist, handle according to `split` or
+        # ordering rules
+        if (!is.null(panel) && nlevels(panel) > 1L) {
+            if (self$split) {
+                phylo <- lapply(split(phylo$tip.label, panel), function(tips) {
+                    ape::keep.tip(phylo, tips)
+                })
+                # Store the panel used for splitting to ensure consistency in
+                # later steps
+                self$panel <- panel
+            }
+        }
         phylo
     },
     align = function(self, panel, index) {
-        new_index <- order2(self$statistics)
-        if (!is.null(panel) && nlevels(panel) > 1L &&
-            !all(new_index == reorder_index(panel, new_index))) {
-            layout_name <- self$layout_name
-            object_name <- object_name(self)
-            cli_abort(
-                c(
-                    sprintf("Cannot add %s to %s", object_name, layout_name),
-                    i = sprintf(
-                        "Group of %s will disrupt the ordering index of %s",
-                        layout_name, object_name
-                    )
-                ),
-                call = self$call
+        if (inherits(self$statistics, c("phylo", "multiPhylo"))) {
+            # For a single tree
+            new_index <- order2(self$statistics)
+            if (!all(new_index == reorder_index(panel, new_index))) {
+                layout_name <- self$layout_name
+                object_name <- object_name(self)
+                cli_abort(
+                    c(
+                        sprintf("Cannot add %s to %s", object_name, layout_name),
+                        i = sprintf(
+                            "Group of %s will disrupt the ordering index of %s",
+                            layout_name, object_name
+                        ),
+                        i = "If you need to group tips, set {.code split = TRUE} to split the phylogenetic tree into subtrees."
+                    ),
+                    call = self$call
+                )
+            }
+        } else {
+            # for multiple trees
+            tip_labels <- unlist(
+                lapply(self$statistics, function(phylo) phylo$tip.label),
+                recursive = FALSE, use.names = FALSE
             )
+            new_index <- match(tip_labels, self$labels)
         }
         list(panel, new_index)
     },
@@ -110,48 +138,78 @@ AlignPhylo <- ggproto("AlignPhylo", CraftAlign,
     build_plot = function(self, plot, domain, extra_domain = NULL,
                           previous_domain = NULL) {
         phylo <- self$statistics
-        index <- order2(phylo)
         panel <- prop(domain, "panel")
-        # styler: off
-        if (!is.null(panel) && nlevels(panel) > 1L &&
-            !all(index == unlist(split(index, panel),
-                                 recursive = FALSE, use.names = FALSE))) {
-            # styler: on
-            layout_name <- self$layout_name
-            object_name <- object_name(self)
-            cli_abort(
-                sprintf(
-                    "Group of %s will disrupt the ordering index of %s",
-                    layout_name, object_name
-                ),
-                call = self$call
-            )
-        }
-
         data_params <- self$data_params
-        if (nlevels(panel) > 1L && data_params$type == "triangle") {
-            cli_warn(c(paste(
-                "{.arg type} of {.arg triangle}",
-                "is not well support for facet dendrogram"
-            ), i = "will use {.filed rectangle} dendrogram instead"))
-            data_params$type <- "rectangle"
-        }
-
         direction <- self$direction
         priority <- switch_direction(direction, "left", "right")
 
-        data <- inject(fortify_data_frame.phylo(
-            data = phylo,
-            !!!data_params,
-            priority = priority,
-            tip_clades = as.character(panel),
-            # panel has been reordered by the index
-            reorder_clades = FALSE,
-            data_arg = "phylo",
-            call = self$call
-        ))
-        edge <- ggalign_attr(data, "edge")
-        node <- data
+        if (inherits(phylo, c("phylo", "multiPhylo"))) {
+            # For a single tree
+            if (nlevels(panel) > 1L && data_params$type == "triangle") {
+                cli_warn(c(
+                    "{.arg type} = {.val triangle} is not well supported for faceted phylogenetic trees.",
+                    i = "Switching to {.val rectangle} layout."
+                ))
+                data_params$type <- "rectangle"
+            }
+            data <- inject(fortify_data_frame.phylo(
+                data = phylo,
+                !!!data_params,
+                priority = priority,
+                tip_clades = as.character(panel),
+                # panel has been reordered by the index
+                reorder_clades = FALSE,
+                data_arg = "phylo",
+                call = self$call
+            ))
+            edge <- ggalign_attr(data, "edge")
+            node <- data
+        } else {
+            # for multiple trees
+            phylo_panel <- self$panel[prop(domain, "index")]
+            # Allow renaming panel levels, but prevent changing the underlying
+            # ordering
+            if (!is.null(phylo_panel) &&
+                !all(as.integer(phylo_panel) == as.integer(panel))) {
+                cli_abort("you cannot do sub-grouping in phylogenetic tree groups")
+            }
+            groups <- levels(panel)
+            data <- vector("list", length(phylo))
+            start <- 0L
+            data_params$root <- NULL
+            for (i in seq_along(phylo)) {
+                tree <- .subset2(phylo, i)
+                n <- length(tree$tip.label)
+                end <- start + n
+                data[[i]] <- inject(fortify_data_frame.phylo(
+                    data = tree,
+                    !!!data_params,
+                    priority = priority,
+                    root = .subset(groups, i),
+                    tip_pos = seq(start + 1L, end),
+                    tip_clades = NULL,
+                    reorder_clades = FALSE,
+                    data_arg = "phylo",
+                    call = self$call
+                ))
+                start <- end
+            }
+
+            # Combine node and edge data into unified tibbles
+            data <- lapply(
+                list(
+                    node = data,
+                    edge = lapply(data, ggalign_attr, "edge")
+                ),
+                function(dat) {
+                    ans <- vec_rbind(!!!dat, .names_to = NULL)
+                    ans$.panel <- factor(.subset2(ans, ".panel"), groups)
+                    ans
+                }
+            )
+            edge <- .subset2(data, "edge")
+            node <- .subset2(data, "node")
+        }
 
         # add names
         if (!is.null(node$label)) {

@@ -142,7 +142,7 @@ fortify_data_frame.phylo <- function(data, ...,
         cli_abort("{.arg root} must be of length 1", call = call)
     } else if (is.na(root)) {
         cli_abort("{.arg root} cannot be `NA`", call = call)
-    } else if (any(root == tip_clades)) {
+    } else if (!is.null(tip_clades) && any(root == tip_clades)) {
         cli_abort(
             "{.arg root} cannot match any value in {.arg tip_clades}",
             call = call
@@ -151,7 +151,7 @@ fortify_data_frame.phylo <- function(data, ...,
 
     i <- 0L # tip index
     clade_lvls <- NULL
-    last_clade <- root
+    last_clade <- NULL
     total_gap <- 0
     phylo_data <- function(index, level, timing) {
         if (any(select <- parent == index)) {
@@ -369,9 +369,12 @@ fortify_data_frame.phylo <- function(data, ...,
             } else {
                 clade <- .subset(tip_clades, i)
             }
+
             # for every new clade, we saved the clade for later use, in order
             # to order the clade levels, and we add a gap between two clade
-            if (clade != last_clade) {
+            if (is.null(last_clade)) {
+                clade_lvls <<- c(clade_lvls, clade)
+            } else if (clade != last_clade) {
                 clade_lvls <<- c(clade_lvls, clade)
                 x <- x + clade_gap
                 total_gap <<- total_gap + clade_gap
@@ -402,7 +405,7 @@ fortify_data_frame.phylo <- function(data, ...,
 
     # set factor levels for clade and panel ---------------
     panel_lvls <- clade_lvls
-    clade_lvls <- c(clade_lvls, root)
+    clade_lvls <- unique(c(clade_lvls, root))
     node$panel <- factor(.subset2(node, "panel"), panel_lvls)
     node$clade <- factor(.subset2(node, "clade"), clade_lvls)
     node$ggpanel <- factor(.subset2(node, "ggpanel"), panel_lvls)
