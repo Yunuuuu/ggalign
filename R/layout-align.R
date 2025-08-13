@@ -119,11 +119,10 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
         },
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
-            if (inherits(ParentCoord, "CoordRadial")) {
-                default_expand <- ggplot2::expansion(add = 0.6)
-            } else {
-                default_expand <- ggplot2::expansion()
-            }
+            # by default we elways remove any expansion
+            # we don't allow the set of expansion for discrete variables
+            # otherwise, ggmark and `cross_mark` won't work properly
+            default_expand <- ggplot2::expansion()
             # for each scale, we set the `breaks` and `labels`
             if (is_discrete_domain(x_domain)) {
                 align_discrete_scales(
@@ -232,10 +231,14 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
             )
         }
 
-        # by default we elways remove any expansion
-        # we don't allow the set of expansion for discrete variables
-        # otherwise, ggmark and `cross_mark` won't work properly
-        scale$expand <- scale$expand %|w|% expand
+        scale$expand <- ggplot2::expansion()
+        if (i == 1L) {
+            scale$expand[3:4] <- 0
+        }
+
+        if (i == length(scales)) {
+            scale$expand[1:2] <- 0
+        }
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
