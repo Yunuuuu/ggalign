@@ -103,10 +103,12 @@ AlignOrder <- ggproto("AlignOrder", CraftAlign,
                 )
             }
             assert_mismatch_nobs(
-                self, vec_size(ans), vec_size(ans),
+                self, vec_size(self$data), vec_size(ans),
                 arg = "weights"
             )
             ans
+        } else {
+            NULL
         }
     },
     align = function(self, panel, index) {
