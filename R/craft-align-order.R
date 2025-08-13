@@ -96,16 +96,12 @@ AlignOrder <- ggproto("AlignOrder", CraftAlign,
     compute = function(self, panel, index) {
         if (is.function(self$weights)) {
             ans <- inject(self$weights(self$data, !!!self$params))
-            if (!is_atomic(ans)) {
+            if (!is_atomic(ans) || vec_size(self$data) != vec_size(ans)) {
                 cli_abort(
-                    "{.arg weights} must return an atomic weights",
+                    "{.arg weights} must return an atomic vector with the same number of observations (rows) as {.arg data}",
                     call = self$call
                 )
             }
-            assert_mismatch_nobs(
-                self, vec_size(self$data), vec_size(ans),
-                arg = "weights"
-            )
             ans
         } else {
             NULL
