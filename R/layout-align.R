@@ -119,13 +119,18 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
         },
         # take the tricks to modify scales in place
         modify_scales = function(self, scales_x, scales_y) {
+            if (inherits(ParentCoord, "CoordRadial")) {
+                default_expand <- ggplot2::expansion(add = 0.6)
+            } else {
+                default_expand <- ggplot2::expansion()
+            }
             # for each scale, we set the `breaks` and `labels`
             if (is_discrete_domain(x_domain)) {
                 align_discrete_scales(
                     "x", scales_x, x_domain,
                     labels = .subset2(object, "xlabels"),
                     n_panels = self$n_column_panels,
-                    circle_layout = inherits(ParentCoord, "CoordRadial")
+                    expand = default_expand
                 )
             }
             if (is_discrete_domain(y_domain)) {
@@ -133,7 +138,7 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
                     "y", scales_y, y_domain,
                     labels = .subset2(object, "ylabels"),
                     n_panels = self$n_row_panels,
-                    circle_layout = inherits(ParentCoord, "CoordRadial")
+                    expand = default_expand
                 )
             }
             ggproto_parent(ParentCoord, self)$modify_scales(scales_x, scales_y)
@@ -187,7 +192,7 @@ ggplot_add.layout_align <- function(object, plot, object_name, ...) {
 }
 
 align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
-                                  circle_layout) {
+                                  expand) {
     panel <- prop(domain, "panel")
     index <- prop(domain, "index")
 
@@ -205,7 +210,6 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
     }
     data_index <- split(index, panel)
     plot_index <- split(seq_along(index), panel)
-    default_expand <- ggplot2::expansion()
     for (i in seq_along(scales)) {
         scale <- .subset2(scales, i)
         # we always use the discrete scale to determine labels and breaks
@@ -231,7 +235,7 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
         # by default we elways remove any expansion
         # we don't allow the set of expansion for discrete variables
         # otherwise, ggmark and `cross_mark` won't work properly
-        if (!circle_layout) scale$expand <- default_expand
+        scale$expand <- scale$expand %|w|% expand
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
