@@ -150,7 +150,13 @@ AlignHclust <- ggproto("AlignHclust", CraftAlign,
             } else {
                 assert_mismatch_nobs(self, layout_nobs, nobs, arg = "method")
             }
+            if (inherits(self$method, "dendrogram")) {
+                self$labels <- labels(self$method)
+            } else {
+                self$labels <- .subset2(self$method, "labels")
+            }
         } else {
+            # will add labels
             layout <- ggproto_parent(AlignOrder2, self)$interact_layout(layout)
         }
 

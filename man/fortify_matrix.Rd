@@ -30,7 +30,6 @@ calls \code{\link[=as.matrix]{as.matrix()}} to build a matrix.
 \section{\code{fortify_matrix} method collections}{
 
 \itemize{
-\item \code{\link[=fortify_matrix.phylo]{fortify_matrix.phylo()}}
 \item \code{\link[=fortify_matrix.default]{fortify_matrix.default()}}
 \item \code{\link[=fortify_matrix.list_upset]{fortify_matrix.list_upset()}}
 \item \code{\link[=fortify_matrix.MAF]{fortify_matrix.MAF()}}

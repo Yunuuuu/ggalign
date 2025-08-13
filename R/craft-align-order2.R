@@ -170,7 +170,7 @@ order2.ser_permutation <- function(x) {
 #' @rdname order2
 order2.phylo <- function(x) {
     if (is.null(x$tip.label)) {
-        cli_abort("{.cls phylo} object must have tip labels")
+        cli_abort("{.arg x} must be a {.cls phylo} object with tip labels")
     }
     ordering <- x$edge[, 2L, drop = TRUE]
     ordering[ordering <= length(x$tip.label)]

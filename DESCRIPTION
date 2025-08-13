@@ -104,6 +104,7 @@ Collate:
     'domain.R'
     'fortify-data-frame-.R'
     'fortify-data-frame-dendrogram.R'
+    'fortify-data-frame-phylo.R'
     'fortify-matrix-.R'
     'fortify-matrix-list.R'
     'fortify-matrix-maftools.R'

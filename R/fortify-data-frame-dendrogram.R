@@ -29,7 +29,7 @@
 #' @inheritParams fortify_data_frame
 #' @return A `data frame` with the node coordinates:
 #'   - `.panel`: Similar with `panel` column, but always give the correct
-#'              branch for usage of the ggplot facet.
+#'              panel for usage of the ggplot facet.
 #'   - `.index`: the original index in the tree for the the node
 #'   - `label`: node label text
 #'   - `x` and `y`: x-axis and y-axis coordinates for the node
@@ -44,11 +44,11 @@
 #' @section ggalign attributes:
 #'  `edge`: A `data frame` for edge coordinates:
 #'  - `.panel`: Similar with `panel` column, but always give the correct
-#'              branch for usage of the ggplot facet.
+#'              panel for usage of the ggplot facet.
 #'  - `x` and `y`: x-axis and y-axis coordinates for the start node of the edge.
 #'  - `xend` and `yend`: the x-axis and y-axis coordinates of the terminal node
 #'                       for edge.
-#'  - `branch`: which branch the edge is. You can use this column to color
+#'  - `branch`: which panel the edge is. You can use this column to color
 #'              different groups.
 #'  - `panel1` and `panel2`: The panel1 and panel2 columns have the same
 #'     functionality as `panel`, but they are specifically for the `edge` data
@@ -118,19 +118,12 @@ fortify_data_frame.dendrogram <- function(data, ...,
     }
 
     # check `branch_gap`
-    if (is.numeric(branch_gap)) {
-        if (!is_scalar(branch_gap)) {
-            cli_abort("{.arg branch_gap} must be of length 1",
-                call = call
-            )
-        }
-    } else if (is.null(branch_gap)) {
-        branch_gap <- 0
-    } else {
-        cli_abort("{.arg branch_gap} must be numeric value.",
-            call = call
-        )
-    }
+    assert_number_decimal(
+        branch_gap,
+        min = 0, allow_infinite = FALSE,
+        allow_null = TRUE, call = call
+    )
+    branch_gap <- branch_gap %||% 0
 
     # the root value shouldn't be the same of leaf branches.
     if (!is_scalar(root)) {
@@ -188,9 +181,6 @@ fortify_data_frame.dendrogram <- function(data, ...,
                 ggpanel = branch
             )
         } else if (inherits(dend, "dendrogram")) { # recursive version
-            # the parent height  -------------------------------------
-            y <- attr(dend, "height")
-
             # for the children nodes ---------------------------------
             data <- list_transpose(
                 lapply(dend, dendrogram_data, from_root = FALSE)
@@ -223,29 +213,32 @@ fortify_data_frame.dendrogram <- function(data, ...,
                 recursive = FALSE, use.names = FALSE
             )
 
-            # prepare node data ------------------------------------
-
             # all x coordinate for children nodes --------------------
             # used if center is `TRUE`, we'll calculate the center position
             # among all children nodes
             leaves <- vec_slice(node, .subset2(node, "leaf")) # all leaves
 
-            # we assign the `panel` for current branch node
-            ranges <- split(
-                .subset2(leaves, "x"),
-                .subset2(leaves, "panel")
-            )
-            ranges <- ranges[
-                order(vapply(ranges, min, numeric(1L), USE.NAMES = FALSE))
-            ]
-            full_panel <- names(ranges)
-
+            # prepare node data ------------------------------------
             # x coordinate for current branch: the midpoint
             if (center) {
                 x <- sum(range(.subset2(leaves, "x"))) / 2L
             } else {
                 x <- sum(direct_leaves_x) / 2L
             }
+
+            # the parent height
+            y <- attr(dend, "height")
+
+            # we assign the `panel` for current branch node
+            panel_ranges <- split(
+                .subset2(leaves, "x"),
+                .subset2(leaves, "panel")
+            )
+            panel_ranges <- panel_ranges[
+                order(vapply(panel_ranges, min, numeric(1L), USE.NAMES = FALSE))
+            ]
+            full_panel <- names(panel_ranges)
+
             if (is.null(leaf_braches)) { # no branches
                 ggpanel <- panel <- branch <- root
             } else {
@@ -257,11 +250,11 @@ fortify_data_frame.dendrogram <- function(data, ...,
 
                 # we assign the `panel` for current branch node
                 panel <- NA
-                for (i in seq_along(ranges)) {
-                    if (x < min(.subset2(ranges, i))) {
+                for (i in seq_along(panel_ranges)) {
+                    if (x < min(.subset2(panel_ranges, i))) {
                         panel <- NA
                         break
-                    } else if (x <= max(.subset2(ranges, i))) {
+                    } else if (x <= max(.subset2(panel_ranges, i))) {
                         panel <- .subset2(full_panel, i)
                         break
                     }
@@ -307,24 +300,30 @@ fortify_data_frame.dendrogram <- function(data, ...,
                 added_edge <- vec_rbind(
                     vertical_lines,
                     # left horizontal line
-                    make_horizontal(
-                        c(direct_leaves_x[1L], x),
-                        panels = c(direct_leaves_panel[1L], panel),
-                        ggpanels = c(direct_leaves_ggpanel[1L], ggpanel),
+                    make_dendrogram_horizontal(
+                        x0 = direct_leaves_x[1L],
+                        x1 = x,
+                        panel0 = direct_leaves_panel[1L],
+                        panel1 = panel,
+                        ggpanel0 = direct_leaves_ggpanel[1L],
+                        ggpanel1 = ggpanel,
                         y = y,
                         branch = direct_leaves_branch[1L],
-                        ranges = ranges,
+                        panel_ranges = panel_ranges,
                         full_panel = full_panel,
                         double = double
                     ),
                     # right horizontal line
-                    make_horizontal(
-                        c(x, direct_leaves_x[2L]),
-                        panels = c(panel, direct_leaves_panel[2L]),
-                        ggpanels = c(ggpanel, direct_leaves_ggpanel[2L]),
+                    make_dendrogram_horizontal(
+                        x0 = x,
+                        x1 = direct_leaves_x[2L],
+                        panel0 = panel,
+                        panel1 = direct_leaves_panel[2L],
+                        ggpanel0 = ggpanel,
+                        ggpanel1 = direct_leaves_ggpanel[2L],
                         y = y,
                         branch = direct_leaves_branch[2L],
-                        ranges = ranges,
+                        panel_ranges = panel_ranges,
                         full_panel = full_panel,
                         double = double
                     )
@@ -387,52 +386,65 @@ fortify_data_frame.hclust <- function(data, ...) {
 
 #' @param ggpanels Won't be `NA`
 #' @noRd
-make_horizontal <- function(x, panels, ggpanels, y, branch,
-                            ranges, full_panel = names(ranges),
-                            double = TRUE) {
-    if (!isTRUE(double) || identical(ggpanels[1L], ggpanels[2L])) {
-        # in the same panel
+make_dendrogram_horizontal <- function(x0, x1, panel0, panel1,
+                                       ggpanel0, ggpanel1,
+                                       y, branch,
+                                       panel_ranges,
+                                       full_panel = names(panel_ranges),
+                                       double = TRUE) {
+    # Case 1: points are in the same panel or double = FALSE
+    if (!isTRUE(double) || identical(ggpanel0, ggpanel1)) {
+        # Return a single horizontal segment
         data_frame0(
-            x = x[1L],
-            xend = x[2L],
+            x = x0,
+            xend = x1,
             y = y,
             yend = y,
             branch = branch,
-            panel1 = panels[1L],
-            panel2 = panels[2L],
-            ggpanel = ggpanels[1L]
+            panel1 = panel0,
+            panel2 = panel1,
+            ggpanel = ggpanel0
         )
     } else {
-        index <- match(ggpanels, full_panel)
-        ending <- index[2L] # right index
-        panel0 <- panels[1L]
-        ggpanel0 <- ggpanels[1L]
-        point0 <- x[1L] # the left point coordinate x
+        # Case 2: points span multiple panels
+        # indices of the start and end panels
+        index <- match(c(ggpanel0, ggpanel1), full_panel)
+        ending <- index[2L] # index of the rightmost panel
+
+        start_x <- x0 # x-coordinate of left point
+        start_panel <- panel0
+        start_ggpanel <- ggpanel0
+        # Prepare a list to store intermediate segments
         out <- vector("list", diff(index))
-        right_index <- (index[1L] + 1L):ending
-        for (i in seq_along(right_index)) {
-            i1 <- .subset(right_index, i) # right index
-            if (i1 == ending) {
-                point1 <- x[2L]
-                panel1 <- panels[2L]
-                ggpanel1 <- ggpanels[2L]
-            } else {
-                point1 <- mean(range(.subset2(ranges, i1)))
-                ggpanel1 <- panel1 <- .subset(full_panel, i1)
+        # Iterate over panels between start and end
+        end_index <- (index[1L] + 1L):ending
+        for (i in seq_along(end_index)) {
+            i1 <- .subset(end_index, i) # current ending
+            if (i1 == ending) { # last segment ends at the right point
+                end_x <- x1
+                end_panel <- panel1
+                end_ggpanel <- ggpanel1
+            } else { # intermediate panels: use midpoint of panel range
+                end_x <- mean(range(.subset2(panel_ranges, i1)))
+                end_ggpanel <- end_panel <- .subset(full_panel, i1)
             }
+
+            # Double segment between point0 and end_x
             out[[i]] <- data_frame0(
-                x = c(point0, point1),
-                xend = c(point1, point0),
+                x = c(start_x, end_x),
+                xend = c(end_x, start_x),
                 y = y,
                 yend = y,
                 branch = branch,
-                panel1 = c(panel0, panel1),
-                panel2 = c(panel1, panel0),
-                ggpanel = c(ggpanel0, ggpanel1)
+                panel1 = c(start_panel, end_panel),
+                panel2 = c(end_panel, start_panel),
+                ggpanel = c(start_ggpanel, end_ggpanel)
             )
-            point0 <- point1
-            panel0 <- panel1
-            ggpanel0 <- ggpanel1
+
+            # Update starting point for next segment
+            start_x <- end_x
+            start_panel <- end_panel
+            start_ggpanel <- end_ggpanel
         }
         vec_rbind(!!!out)
     }

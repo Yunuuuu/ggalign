@@ -164,7 +164,7 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
             edge <- .subset2(data, "edge")
             node <- .subset2(data, "node")
         } else {
-            if (nlevels(panel) > 1L && type == "triangle" && self$in_linear) {
+            if (nlevels(panel) > 1L && type == "triangle") {
                 cli_warn(c(paste(
                     "{.arg type} of {.arg triangle}",
                     "is not well support for facet dendrogram"
@@ -188,8 +188,11 @@ AlignDendro <- ggproto("AlignDendro", AlignHclust,
         }
 
         # add names
-        if (!is.null(self$labels)) {
-            node$.names <- .subset(self$labels, .subset2(node, ".index"))
+        if (!is.null(node$label)) {
+            node$.names <- node$label
+        }
+        if (!is.null(edge$label)) {
+            edge$.names <- edge$label
         }
         if (is_horizontal(direction)) {
             edge <- rename(
