@@ -16,6 +16,13 @@ The internal structure has been fully refactored, with more informative and cons
 
 * new `geom_magick()` object to draw images as point shapes using magick
 
+* The `sector_spacing` argument in `facet_sector()` can be a multi-value numeric (#73)
+
+* new argumetn `split` in `align_phylo()` to support splitting phylo objects into multiple trees (#74)
+
+* The `fortify_matrix()` method for `phylo` object is removed
+
+
 # ggalign 1.0.2
 
 * `align_plots()`: Always ensure that plots placed in a border collect their guides, if any guides are to be collected in that border. This prevents overlap, unless the guides will be collected by the parent layout.
