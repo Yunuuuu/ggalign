@@ -235,16 +235,17 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
         # by default we elways remove any expansion
         # we don't allow the set of expansion for discrete variables
         # otherwise, ggmark and `cross_mark` won't work properly
-        scale$expand <- ggplot2::expansion()
+        scale_expand <- ggplot2::expansion()
         if (i == 1L) {
-            scale$expand[1:2] <- expand[1:2]
-            scale$expand[3:4] <- 0
+            scale_expand[1:2] <- (scale$expand %|w|% expand)[1:2]
+            scale_expand[3:4] <- 0
         }
 
         if (i == length(scales)) {
-            scale$expand[1:2] <- 0
-            scale$expand[3:4] <- expand[3:4]
+            scale_expand[1:2] <- 0
+            scale_expand[3:4] <- (scale$expand %|w|% expand)[3:4]
         }
+        scale$expand <- scale_expand
 
         # for continuous scale, we don't allow the trans
         # if (!scale$is_discrete() && !identical(scale$trans$name, "identity")) {
