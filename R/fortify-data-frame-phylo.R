@@ -261,7 +261,7 @@ fortify_data_frame.phylo <- function(data, ...,
             }
 
             # there is no node data in dendrogram root
-            if (index <= N) {
+            if (index != N + 1L) {
                 if (is.null(node_labels)) {
                     label <- NA
                 } else {
@@ -270,7 +270,7 @@ fortify_data_frame.phylo <- function(data, ...,
                 node <- vec_rbind(
                     node,
                     data_frame0(
-                        index = NA,
+                        index = index,
                         label = label,
                         x = x, y = y, clade = clade, tip = FALSE,
                         panel = panel, ggpanel = ggpanel
@@ -416,7 +416,8 @@ fortify_data_frame.phylo <- function(data, ...,
         edge$branch <- NULL
         edge$ggpanel <- factor(.subset2(edge, "ggpanel"), panel_lvls)
     }
-    node <- rename(node, c(ggpanel = ".panel", index = ".index"))
+    node <- rename(node, c(ggpanel = ".panel"))
+    node$.index <- vec_assign(node$index, !node$tip, NA)
     edge <- rename(edge, c(ggpanel = ".panel"))
     ggalign_data_set(node, edge = edge)
 }
