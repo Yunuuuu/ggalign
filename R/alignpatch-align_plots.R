@@ -457,9 +457,27 @@ create_layout_tagger <- function(tags, parent) {
 
 inherit_tag_theme <- function(theme, parent) {
     for (el in c("plot.tag", "plot.tag.position", "plot.tag.location")) {
-        theme[[el]] <- calc_element(el, theme) %||% calc_element(el, parent)
+        # This is like doing t1[[item]] <- x, except that it preserves NULLs.
+        # The other form will simply drop NULL values
+        theme[el] <- list(theme[[el]] %||% parent[[el]])
     }
     theme
+}
+
+tag_theme <- function(th) {
+    if (is.null(th)) {
+        theme(
+            plot.tag = NULL,
+            plot.tag.position = NULL,
+            plot.tag.location = NULL
+        )
+    } else {
+        theme(
+            plot.tag = th$plot.tag,
+            plot.tag.position = th$plot.tag.position,
+            plot.tag.location = th$plot.tag.location
+        )
+    }
 }
 
 #' @importFrom ggplot2 is_theme_element calc_element theme
@@ -783,7 +801,8 @@ local(S7::method(`&`, list(AlignPatches, S7::class_any)) <- function(e1, e2) {
 })
 
 #' @importFrom ggplot2 is_ggplot update_ggplot
-#' @importFrom S7 prop
+#' @importFrom S7 prop S7_inherits
+#' @importFrom rlang try_fetch
 alignpatches_and_add <- function(object, patches, objectname) {
     plots <- prop(patches, "plots")
     for (i in seq_along(plots)) {
@@ -792,6 +811,17 @@ alignpatches_and_add <- function(object, patches, objectname) {
         } else if (S7_inherits(.subset2(plots, i), AlignPatches)) {
             plots[[i]] <- alignpatches_and_add(
                 object, .subset2(plots, i), objectname
+            )
+        } else if (S7_inherits(.subset2(plots, i), LayoutProto)) {
+            plots[[i]] <- layout_and_add(.subset2(plots, i), object, objectname)
+        } else {
+            # For other object types, attempt to combine them with `object`
+            # using the `&` operator. This re-dispatches the `&` method so that
+            # any custom patch combination logic defined for the object's class
+            # can be applied. If the operation fails, silently ignore the error.
+            try_fetch(
+                plots[[i]] <- .subset2(plots, i) & object,
+                error = function(cnd) NULL
             )
         }
     }

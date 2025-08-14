@@ -16,7 +16,6 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
                             plot = self$plot) {
         patches <- lapply(prop(plot, "plots"), alignpatch)
         layout <- prop(plot, "layout")
-        theme <- theme %||% theme_get()
 
         # get the design areas and dims ------------------
         panel_widths <- .subset2(layout, "widths")
@@ -76,13 +75,20 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         }
 
         # we inherit parameters from the parent --------------------
+        if (is.null(theme)) {
+            # by default, we use ggplot2 default theme
+            theme <- theme_get() + prop(plot, "theme")
+        } else if (!is.null(prop(plot, "theme"))) {
+            # If a theme is provided, always inherit tag-related theme elements
+            # from the plot's theme to ensure consistent tag styling.
+            theme <- theme + inherit_tag_theme(prop(plot, "theme"), theme)
+        }
+        self$theme <- theme
+
         # by default, we won't collect any guide legends
         parent_guides <- guides
         guides <- .subset2(layout, "guides") %|w|% parent_guides
 
-        # by default, we use ggplot2 default theme
-        if (!is.null(prop(plot, "theme"))) theme <- theme + prop(plot, "theme")
-        self$theme <- theme
 
         #######################################################
         # 1. patch_gtable: create the gtable for the patch, will set internal

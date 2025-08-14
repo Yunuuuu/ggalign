@@ -610,4 +610,25 @@ test_that("`layout_tags()` works well", {
             layout_tags("A") +
             layout_theme(plot.tag.location = "margin")
     )
+
+    # make a matrix for the heatmap
+    set.seed(123)
+    mat <- matrix(
+        rnorm(90, mean = 0, sd = 2),
+        nrow = 9, ncol = 10,
+        dimnames = list(paste0("G", 1:9), paste0("S", 1:10))
+    )
+    final <- align_plots(
+        align_plots(p1, p2, p3, nrow = 1),
+        ggheatmap(mat),
+        ncol = 1
+    )
+    expect_doppelganger("layout_tags, Layout object, layout_theme", {
+        final + layout_tags("A") +
+            layout_theme(plot.tag = element_text(size = 26, color = "red"))
+    })
+    expect_doppelganger("layout_tags, Layout object, theme", {
+        final + layout_tags("A") &
+            theme(plot.tag = element_text(size = 26, color = "red"))
+    })
 })

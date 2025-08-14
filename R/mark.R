@@ -91,7 +91,7 @@ print.ggalign_mark_draw <- function(x, ...) {
 #'   you can wrap the element with [`I()`] to recycle to match the drawing
 #'   groups. The drawing groups typically correspond to the number of
 #'   observations, as each observation will be linked with the plot panel.
-#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_line complete_theme
 #' @export
 mark_line <- function(..., .element = NULL) {
     assert_s3_class(.element, "element_line", allow_null = TRUE)

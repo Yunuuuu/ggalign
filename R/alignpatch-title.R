@@ -45,7 +45,6 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch_titles, theme) {
-    # complete_theme() will ensure `plot_title` exists
     old_text <- calc_element("plot.title", theme)
     # always justification by center for patch title
     old_text$hjust <- 0.5
