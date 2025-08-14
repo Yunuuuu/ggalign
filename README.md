@@ -22,13 +22,12 @@ DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yunuuuu/ggalign)
 The `ggalign` package provides an integrative framework for composable
 visualization, enabling the construction of complex multi-plot
 layouts—including insets, circular arrangements, and multi-panel
-compositions. Built on the grammar of graphics, it introduces intuitive
-tools to align, stack, and nest plots, making it easy to link related
-views, overlay clustering results, or highlight shared patterns.
-Designed for high-dimensional data contexts such as genomics,
-transcriptomics, and microbiome studies, it simplifies the creation of
-richly annotated, publication-ready figures from diverse visual
-components.
+compositions. Built on the grammar of graphics, it introduces tools to
+align, stack, and nest plots, making it easy to link related views,
+overlay clustering results, or highlight shared patterns. Designed for
+high-dimensional data contexts such as genomics, transcriptomics, and
+microbiome studies, it simplifies the creation of richly annotated,
+publication-ready figures from diverse visual components.
 
 ## Why use `ggalign`?
 
