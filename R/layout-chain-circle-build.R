@@ -5,8 +5,9 @@
 }
 
 #' @importFrom utils packageVersion
-#' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob theme
-#' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable
+#' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob
+#' @importFrom ggplot2 theme complete_theme
+#' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable 
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty arg_match0
 circle_build <- function(circle, schemes = NULL, theme = NULL) {

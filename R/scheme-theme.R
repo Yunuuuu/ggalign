@@ -60,6 +60,7 @@ scheme_theme <- S7::new_class(
 
 ###############################################################
 #' @importFrom S7 prop prop<-
+#' @importFrom ggplot2 complete_theme
 S7::method(scheme_init, scheme_theme) <- function(scheme) {
     prop(scheme, "theme", check = FALSE) <-
         complete_theme(default_theme()) + prop(scheme, "theme")

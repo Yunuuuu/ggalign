@@ -27,7 +27,7 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #    title
 #    caption
 #    guide: can be collected or kept
-#' @importFrom ggplot2 ggplotGrob update_labels
+#' @importFrom ggplot2 ggplotGrob update_labels complete_theme
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_guides = function(guides) guides,

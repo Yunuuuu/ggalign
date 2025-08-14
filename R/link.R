@@ -86,7 +86,7 @@ print.ggalign_link_draw <- function(x, ...) {
 #'   groups. The drawing groups typically correspond to the product of the
 #'   number of observations from both sides, as each pair of observations will
 #'   be linked with a single line.
-#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_line complete_theme
 #' @export
 link_line <- function(..., .element = NULL) {
     assert_s3_class(.element, "element_line", allow_null = TRUE)
