@@ -30,17 +30,16 @@ CraftCross <- ggproto(
     inherit_panel = NULL,
     inherit_index = NULL,
     interact_layout = function(self, layout) {
-        #  1. check layout is `*_cross()`
-        #  2. add `cross_points`
-        #  3. add `odomain`
-        #  4. define `labels`, we'll rename the `labels` to `labels0`
+        # Step 1: Preprocess the layout using CrossGg's method
+        #   - Ensures layout is in a *_cross() form
+        #   - Adds cross_points and odomain
+        #   - Define labels -> labels0 for later reference
         layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
-        # will define `labels0`
+        # Keep a copy of the original labels from the layout
         self$labels0 <- self$labels
 
-        # check the previous (between two `break_points`) define has been
-        # initialized
+        # Step 2: Validate that nobs in the layout domain has been initialized
         if (length(layout@break_points) &&
             is.na(prop(layout@domain, "nobs"))) {
             cli_abort(sprintf(
@@ -49,21 +48,21 @@ CraftCross <- ggproto(
             ))
         }
 
-        # setup data
+        # Extract current layout data and domain
         layout_data <- layout@data
         domain <- layout@domain
+        nobs <- prop(domain, "nobs")
 
+        # Step 3: Handle the input data
         if (is.waive(input_data <- self$data)) { # inherit from the layout
+            # No explicit data: inherit from layout
             data <- layout_data
-            # `data` is `NULL`, `inherit_nobs` can be `TRUE` or `FALSE`, we by
-            # default regard `inherit_nobs` as `TRUE`
+            # If no data and inherit_nobs is explicitly FALSE, unset nobs
             if (is.null(data) && isFALSE(self$inherit_nobs)) {
-                prop(domain) <- NA_integer_
+                prop(domain, "nobs") <- NA_integer_
             }
-
-            # `data` is not `NULL`, the `nobs` will always be the same with
-            # previous domain, nothing to do
         } else {
+            # Data is provided explicitly
             if (is.function(input_data)) {
                 if (is.null(layout_data)) {
                     cli_abort(c(
@@ -71,13 +70,14 @@ CraftCross <- ggproto(
                             "{.arg data} in %s cannot be a function",
                             object_name(self)
                         ),
-                        i = sprintf("no data was found in %s", self$layout_name)
+                        i = sprintf("No data was found in %s", self$layout_name)
                     ))
                 }
                 data <- input_data(layout_data)
             } else {
                 data <- input_data
             }
+            # Fortify the data into a consistent matrix-like format
             data <- inject(
                 fortify_matrix(
                     data, !!!self$data_params,
@@ -85,58 +85,62 @@ CraftCross <- ggproto(
                     call = self$call
                 )
             ) %|w|% NULL
-            if (isTRUE(self$inherit_nobs)) { # we require inherit nobs
-                # we check if the data match original data dimention
-                if (!is.null(data) &&
-                    !is.na(prop(domain, "nobs")) &&
-                    NROW(data) != prop(domain, "nobs")) {
+            if (isTRUE(self$inherit_nobs)) {
+                # Check that the number of observations matches the original
+                if (!is.null(data) && !is.na(nobs) && NROW(data) != nobs) {
                     cli_abort(c(
                         sprintf(
                             "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
                             object_name(self), NROW(data), layout_name, layout_nobs
                         ),
-                        i = "try to set {.code inherit_nobs = FALSE}"
+                        i = "Set {.code inherit_nobs = FALSE} if you want to allow a different number of observations."
                     ))
                 }
-            } else { # for `FALSE` and `NULL`
-                if (is.null(data)) {
-                    prop(domain, "nobs") <- NA_integer_
-                } else {
-                    if (NROW(data) == 0L) {
-                        cli_abort("{.arg data} cannot be empty",
-                            call = self$call
-                        )
-                    }
-                    prop(domain, "nobs") <- NROW(data)
+            } else if (is.null(data)) { # inherit_nobs is `FALSE` or `NULL`
+                prop(domain, "nobs") <- NA_integer_
+            } else {
+                if (NROW(data) == 0L) {
+                    cli_abort("{.arg data} cannot be empty", call = self$call)
                 }
+                prop(domain, "nobs") <- NROW(data)
             }
         }
 
-        # we keep the names from the layout data for usage
+        # Store variable names from the data for later matching
         self$labels <- vec_names(data)
 
-        # determine if we should inherit panel
-        # by default, `inherit_panel = FALSE`
-        if (isTRUE(self$inherit_panel)) {
-            if (is.null(self$labels0)) {
-                cli_abort(c(
-                    "Cannot inherit panel from the layout",
-                    i = "No labels found in the layout data"
-                ))
-            }
-            if (is.null(self$labels)) {
-                cli_abort(c(
-                    "Cannot inherit panel from the layout",
-                    i = "No labels found in the current {.arg data}"
-                ))
-            }
-            if (!all(self$labels %in% self$labels0)) {
-                cli_abort(c(
-                    "Cannot inherit panel from the layout",
-                    i = "Some labels in the current data are not found in the previous layout data"
-                ))
-            }
-            if (!is.null(panel <- prop(domain, "panel"))) {
+        # Step 4: Inherit panel if requested
+        if (isTRUE(self$inherit_panel) &&
+            !is.null(panel <- prop(domain, "panel"))) {
+            if (identical(nobs, prop(domain, "nobs"))) { # If nobs matches
+                # If labels match, inherit panel by labels
+                # Otherwise, use original panel directly (no changes needed)
+                if (!is.null(self$labels0) && !is.null(self$labels) &&
+                    all(self$labels %in% self$labels0)) {
+                    prop(domain, "panel") <- droplevels(
+                        panel[match(self$labels, self$labels0)]
+                    )
+                }
+            } else {
+                # nobs differ, validate labels before inheriting `panel`
+                if (is.null(self$labels0)) {
+                    cli_abort(c(
+                        "Cannot inherit panel from the layout",
+                        i = "No labels found in the layout data"
+                    ))
+                }
+                if (is.null(self$labels)) {
+                    cli_abort(c(
+                        "Cannot inherit panel from the layout",
+                        i = "No labels found in the current {.arg data}"
+                    ))
+                }
+                if (!all(self$labels %in% self$labels0)) {
+                    cli_abort(c(
+                        "Cannot inherit panel from the layout.",
+                        i = "Some labels in the current data do not match any labels in the previous layout data."
+                    ))
+                }
                 prop(domain, "panel") <- droplevels(
                     panel[match(self$labels, self$labels0)]
                 )
@@ -145,31 +149,47 @@ CraftCross <- ggproto(
             prop(domain, "panel") <- NULL
         }
 
-        # determine if we should inherit panel
-        # by default, `inherit_index = FALSE`
-        if (isTRUE(self$inherit_index)) {
-            if (is.null(self$labels0)) {
-                cli_abort(c(
-                    "Cannot inherit ordering index from the layout",
-                    i = "No labels found in the previous layout data"
-                ))
-            }
+        # Step 5: Inherit ordering index if requested
+        if (isTRUE(self$inherit_index) &&
+            !is.null(index <- prop(domain, "index"))) {
+            if (identical(nobs, prop(domain, "nobs"))) { # If nobs matches
+                # If labels match, inherit ordering by labels
+                # Otherwise, use original index directly (no changes needed)
+                if (!is.null(self$labels0) && !is.null(self$labels) &&
+                    all(self$labels %in% self$labels0)) {
+                    new_index <- order(match(
+                        self$labels,
+                        vec_slice(self$labels0, index)
+                    ))
 
-            if (is.null(self$labels)) {
-                cli_abort(c(
-                    "Cannot inherit ordering index from the layout",
-                    i = "No labels found in the current {.arg data}"
-                ))
-            }
+                    # Always reorder index according to panel if panel exists
+                    if (!is.null(panel <- prop(domain, "panel"))) {
+                        new_index <- reorder_index(panel, new_index)
+                    }
+                    prop(domain, "index") <- new_index
+                }
+            } else {
+                # nobs differ, validate labels before inheriting `index`
+                if (is.null(self$labels0)) {
+                    cli_abort(c(
+                        "Cannot inherit ordering index from the layout",
+                        i = "No labels found in the previous layout data"
+                    ))
+                }
 
-            if (!all(self$labels %in% self$labels0)) {
-                cli_abort(c(
-                    "Cannot inherit ordering index from the layout",
-                    i = "Some labels in the current data are not found in the previous layout data"
-                ))
-            }
+                if (is.null(self$labels)) {
+                    cli_abort(c(
+                        "Cannot inherit ordering index from the layout",
+                        i = "No labels found in the current {.arg data}"
+                    ))
+                }
 
-            if (!is.null(index <- prop(domain, "index"))) {
+                if (!all(self$labels %in% self$labels0)) {
+                    cli_abort(c(
+                        "Cannot inherit ordering index from the layout",
+                        i = "Some labels in the current data are not found in the previous layout data"
+                    ))
+                }
                 new_index <- order(match(
                     self$labels,
                     vec_slice(self$labels0, index)
