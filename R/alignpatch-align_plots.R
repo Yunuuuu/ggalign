@@ -13,6 +13,12 @@ S7::method(alignpatches_add, S7::class_any) <-
         ))
     }
 
+S7::method(alignpatches_add, S3_class_ggplot) <-
+    function(object, patches, objectname) {
+        prop(patches, "plots") <- c(prop(patches, "plots"), list(object))
+        patches
+    }
+
 #' Define the grid to compose plots in
 #'
 #' To control how different plots are laid out, you need to add a layout design
@@ -134,7 +140,6 @@ layout_title <- function(title = waiver(), subtitle = waiver(),
 
 S3_layout_title <- S7::new_S3_class("layout_title")
 
-# nocov start
 prop_layout_title <- function(...) {
     S7::new_property(
         S7::class_list,
@@ -142,7 +147,6 @@ prop_layout_title <- function(...) {
         default = quote(list(title = NULL, subtitle = NULL, caption = NULL))
     )
 }
-# nocov end
 
 layout_title_update <- function(old, new) {
     for (nm in names(new)) {
@@ -226,11 +230,10 @@ prop_layout_theme <- function(...) {
 }
 # nocov end
 
-# Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop
 S7::method(alignpatches_add, S3_layout_theme) <-
     function(object, patches, objectname) {
-        attr(patches, "theme") <- layout_theme_update(
+        prop(patches, "theme") <- layout_theme_update(
             prop(patches, "theme"), object
         )
         patches
@@ -703,12 +706,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     } # nocov end
-
-    for (plot in plots) {
-        if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
-            cli_abort("Cannot align {.obj_type_friendly {plot}}")
-        }
-    }
+    out <- AlignPatches(plots = plots)
 
     # setup layout parameters
     layout <- layout_design(
@@ -716,7 +714,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         widths = widths, heights = heights, area = area,
         guides = guides
     )
-    out <- AlignPatches(plots = plots)
     out <- alignpatches_add(layout, out)
     objectname <- deparse(substitute(theme))
     if (!is.null(theme)) {
@@ -730,12 +727,19 @@ AlignPatches <- S7::new_class("AlignPatches",
     properties = list(
         plots = S7::new_property(
             S7::class_list,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "plots"))) {
-                    cli_abort("'@plots' is read-only")
+            validator = function(value) {
+                for (plot in value) {
+                    if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
+                        return(paste(
+                            "Each plot to be aligned must implement",
+                            "an 'alignpatch()' method.",
+                            sprintf(
+                                "Object of %s does not.",
+                                obj_type_friendly(plot)
+                            )
+                        ))
+                    }
                 }
-                prop(self, "plots", check = FALSE) <- value
-                self
             }
         ),
         layout = S7::new_property(
@@ -825,7 +829,7 @@ alignpatches_and_add <- function(object, patches, objectname) {
             )
         }
     }
-    attr(patches, "plots") <- plots
+    prop(patches, "plots") <- plots
     patches
 }
 

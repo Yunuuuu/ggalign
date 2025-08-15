@@ -120,7 +120,7 @@ S7::method(layout_add, list(ChainLayout, S3_layout_theme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
-            attr(layout, "theme") <- layout_theme_update(layout@theme, object)
+            prop(layout, "theme") <- layout_theme_update(layout@theme, object)
         } else {
             layout@box_list[[current]] <- layout_add(
                 box, object, objectname
