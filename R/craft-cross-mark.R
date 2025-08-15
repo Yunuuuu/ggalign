@@ -180,7 +180,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
                 "panel.spacing.y",
                 "panel.spacing.x"
             ),
-            theme
+            plot$theme
         ) %||% unit(0, "mm")
 
         # save spacing for usage

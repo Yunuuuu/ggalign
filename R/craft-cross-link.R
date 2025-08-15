@@ -137,7 +137,7 @@ CrossLink <- ggproto("CrossLink", CraftCross,
                 "panel.spacing.y",
                 "panel.spacing.x"
             ),
-            theme
+            plot$theme
         ) %||% unit(0, "mm")
 
         # setup the grob
