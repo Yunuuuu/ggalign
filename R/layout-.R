@@ -238,17 +238,20 @@ HeatmapLayout <- S7::new_class(
 ###########################################################
 #' @importFrom ggplot2 complete_theme
 layout_init <- function(layout) {
-    # Initialize layout defaults.
+    # initialize layout schemes
+    layout@schemes <- scheme_init(layout@schemes)
+
     # Merge the provided layout theme with the default theme.
-    th <- complete_theme(default_theme() + layout@theme)
+    th <- prop(schemes_get(layout@schemes, "scheme_theme"), "theme") +
+        layout@theme
+
     # Preserve tag-related theme settings from the original layout theme.
     # These are intentionally not overridden so that `PatchAlignpatches`
     # retains full control over tag appearance and positioning.
     th <- th + tag_theme(layout@theme)
 
-    # Apply the updated theme and initialize layout schemes.
+    # Apply the updated theme
     layout@theme <- th
-    layout@schemes <- scheme_init(layout@schemes)
     layout
 }
 
