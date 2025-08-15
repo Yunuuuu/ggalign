@@ -251,7 +251,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom grid is.unit unit
     set_sizes = function(self, area, dims,
                          panel_widths, panel_heights,
-                         patches, gt = self$gt) {
+                         patches, gt) {
         panel_widths <- rep(panel_widths, length.out = dims[2L])
         panel_heights <- rep(panel_heights, length.out = dims[1L])
         if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
@@ -355,7 +355,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     },
 
     #' @importFrom gtable gtable_add_grob
-    set_grobs = function(self, area, patches, gt = self$gt) {
+    set_grobs = function(self, area, patches, gt) {
         widths <- .subset2(gt, "widths")
         heights <- .subset2(gt, "heights")
         for (i in seq_along(patches)) {
