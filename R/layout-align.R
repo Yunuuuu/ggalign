@@ -238,11 +238,9 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
         scale_expand <- ggplot2::expansion()
         if (i == 1L) {
             scale_expand[1:2] <- (scale$expand %|w|% expand)[1:2]
-            scale_expand[3:4] <- 0
         }
 
         if (i == length(scales)) {
-            scale_expand[1:2] <- 0
             scale_expand[3:4] <- (scale$expand %|w|% expand)[3:4]
         }
         scale$expand <- scale_expand
