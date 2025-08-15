@@ -186,9 +186,3 @@ S7::method(craftbox_add, S3_unit) <- function(object, box, objectname) {
     prop(box, "size", check = FALSE) <- object
     box
 }
-
-######################################################################
-plot_build <- function(align, ..., schemes, theme) {
-    plot <- align$build_plot(plot@plot, ...)
-    align$finish_plot(plot, schemes, theme)
-}
