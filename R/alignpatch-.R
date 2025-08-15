@@ -163,10 +163,10 @@ patch_no_method <- function(plot, method) {
 #' @importFrom grid unit.c
 Patch <- ggproto(
     "Patch", NULL,
-    # following fields will be added by `alignpatch()`
-    plot = NULL,
-    # following fields will be added in `alignpatches$patch_gtable()`
-    # borders = NULL, gt = NULL,
+
+    # Fields added later in `alignpatches$patch_gtable()`
+    borders = NULL, # Border specifications for the patch
+    gt = NULL, # The patch's gtable representation
 
     #' @param guides `guides` argument from the parent alignpatches
     #' @return Which side of guide legends should be collected by the parent
