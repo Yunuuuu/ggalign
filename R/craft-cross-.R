@@ -91,7 +91,8 @@ CraftCross <- ggproto(
                     cli_abort(c(
                         sprintf(
                             "%s (nobs: %d) is not compatible with the %s (nobs: %d)",
-                            object_name(self), NROW(data), layout_name, layout_nobs
+                            object_name(self), NROW(data),
+                            self$layout_name, nobs
                         ),
                         i = "Set {.code inherit_nobs = FALSE} if you want to allow a different number of observations."
                     ))
@@ -110,7 +111,7 @@ CraftCross <- ggproto(
         self$labels <- vec_names(data)
 
         # Step 4: Inherit panel if requested
-        if (isTRUE(self$inherit_panel) &&
+        if (isTRUE(self$inherit_panel) && !is.na(nobs) &&
             !is.null(panel <- prop(domain, "panel"))) {
             if (identical(nobs, prop(domain, "nobs"))) { # If nobs matches
                 # If labels match, inherit panel by labels
@@ -150,7 +151,7 @@ CraftCross <- ggproto(
         }
 
         # Step 5: Inherit ordering index if requested
-        if (isTRUE(self$inherit_index) &&
+        if (isTRUE(self$inherit_index) && !is.na(nobs) &&
             !is.null(index <- prop(domain, "index"))) {
             if (identical(nobs, prop(domain, "nobs"))) { # If nobs matches
                 # If labels match, inherit ordering by labels
