@@ -32,7 +32,7 @@ CraftCross <- ggproto(
     interact_layout = function(self, layout) {
         # Step 1: Preprocess the layout using CrossGg's method
         #   - Ensures layout is in a *_cross() form
-        #   - Adds cross_points and odomain
+        #   - Adds `cross_points` and `odomain`
         #   - Define labels -> labels0 for later reference
         layout <- ggproto_parent(CrossGg, self)$interact_layout(layout)
 
@@ -188,7 +188,7 @@ CraftCross <- ggproto(
                 if (!all(self$labels %in% self$labels0)) {
                     cli_abort(c(
                         "Cannot inherit ordering index from the layout",
-                        i = "Some labels in the current data are not found in the previous layout data"
+                        i = "Some labels in the current data do not match any labels in the previous layout data."
                     ))
                 }
                 new_index <- order(match(
