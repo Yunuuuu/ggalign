@@ -160,26 +160,7 @@ CrossGg <- ggproto("CrossGg",
         )
     },
     finish_plot = function(self, plot, schemes, theme) {
-        direction <- self$direction
-        # remove axis titles, text, ticks used for alignment
-        if (isTRUE(self$no_axes)) {
-            schemes <- scheme_update(
-                schemes,
-                theme_no_axes(switch_direction(direction, "y", "x"))
-            )
-        }
-        plot <- plot_add_scheme(plot, schemes)
-        if (is_horizontal(direction)) {
-            theme <- theme(
-                panel.spacing.y = calc_element("panel.spacing.y", theme)
-            )
-        } else {
-            theme <- theme(
-                panel.spacing.x = calc_element("panel.spacing.x", theme)
-            )
-        }
-        plot <- plot + theme
-        ggremove_margin(plot, direction) + theme_recycle()
+        ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
         header <- ggproto_parent(Craftsman, self)$summary(plot)
