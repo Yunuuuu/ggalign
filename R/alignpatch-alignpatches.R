@@ -12,8 +12,8 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     #' @importFrom S7 prop
     patch_gtable = function(self, theme = NULL, guides = NULL,
-                            tagger = NULL, top_level = FALSE,
-                            plot = self$plot) {
+                            tagger = NULL) {
+        plot <- self$plot
         patches <- lapply(prop(plot, "plots"), alignpatch)
         layout <- prop(plot, "layout")
 
@@ -76,12 +76,17 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
 
         # we inherit parameters from the parent --------------------
         if (is.null(theme)) {
+            top_level <- TRUE
             # by default, we use ggplot2 default theme
             theme <- theme_get() + prop(plot, "theme")
-        } else if (!is.null(prop(plot, "theme"))) {
-            # If a theme is provided, always inherit tag-related theme elements
-            # from the plot's theme to ensure consistent tag styling.
-            theme <- theme + inherit_tag_theme(prop(plot, "theme"), theme)
+        } else {
+            top_level <- FALSE
+            if (!is.null(prop(plot, "theme"))) {
+                # If a theme is provided, always inherit tag-related theme
+                # elements from the plot's theme to ensure consistent tag
+                # styling.
+                theme <- theme + inherit_tag_theme(prop(plot, "theme"), theme)
+            }
         }
         self$theme <- theme
 

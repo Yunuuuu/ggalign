@@ -173,11 +173,10 @@ Patch <- ggproto(
     #' `alignpatches` object?
     #' @noRd
     set_guides = function(self, guides) {
-        patch_no_method(self$plot, "set_guides")
+        cli_abort("{.fn set_guides} method is not defined")
     },
-    patch_gtable = function(self, theme, guides, tagger = NULL, 
-                            plot = self$plot) {
-        patch_no_method(self$plot, "patch_gtable")
+    patch_gtable = function(self, theme, guides, tagger = NULL) {
+        cli_abort("{.fn patch_gtable} method is not defined")
     },
     collect_guides = function(self, guides, gt = self$gt) {
         if (is.null(guides)) return(list()) # styler: off
@@ -307,14 +306,14 @@ Patch <- ggproto(
         )
     },
     free_border = function(self, borders, gt = self$gt) {
-        patch_no_method(self$plot, "free_border")
+        cli_abort("{.fn free_border} method is not defined")
     },
     align_free_border = function(self, borders,
                                  t = NULL, l = NULL, b = NULL, r = NULL,
                                  gt = self$gt) {
-        patch_no_method(self$plot, "align_free_border")
+        cli_abort("{.fn align_free_border} method is not defined")
     },
     free_lab = function(self, labs, gt = self$gt) {
-        patch_no_method(self$plot, "free_lab")
+        cli_abort("{.fn free_lab} method is not defined")
     }
 )

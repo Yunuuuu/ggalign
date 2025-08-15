@@ -64,14 +64,12 @@
 #' @importFrom S7 prop
 #' @export
 `ggalign_gtable.ggalign::AlignPatches` <- function(x) {
+    table <- alignpatch(x)$patch_gtable()
+
     titles <- prop(x, "titles")
 
     # ensure theme has no missing value
-    theme <- prop(x, "theme") %||% theme_get()
-    theme <- complete_theme(theme)
-    attr(x, "theme") <- theme # bypass the setter function
-    table <- alignpatch(x)$patch_gtable(top_level = TRUE)
-
+    theme <- complete_theme(prop(x, "theme") %||% theme_get())
     fix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------

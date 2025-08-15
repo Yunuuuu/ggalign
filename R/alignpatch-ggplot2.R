@@ -31,8 +31,8 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     set_guides = function(guides) guides,
-    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL,
-                            plot = self$plot) {
+    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+        plot <- self$plot
         # extract patch titles --------------------------------
         patch_titles <- plot$ggalign_patch_labels
 

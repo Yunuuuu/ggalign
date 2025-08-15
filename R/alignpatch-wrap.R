@@ -90,10 +90,9 @@ alignpatch.wrapped_plot <- function(x) {
         ggalign_wrapped_insets_under = x$ggalign_wrapped_insets_under,
         ggalign_wrapped_insets_above = x$ggalign_wrapped_insets_above,
         patch_gtable = function(self, theme = NULL, guides = NULL,
-                                tagger = NULL,
-                                plot = Parent$plot) {
+                                tagger = NULL) {
             ans <- ggproto_parent(Parent, self)$patch_gtable(
-                theme = theme, guides = guides, tagger = tagger, plot = plot
+                theme = theme, guides = guides, tagger = tagger
             )
             ans <- add_wrapped_insets(
                 ans, self$ggalign_wrapped_insets_under, FALSE
