@@ -160,7 +160,7 @@ scheme_init <- S7::new_generic("scheme_init", "scheme", function(scheme) {
 S7::method(scheme_init, Schemes) <- function(scheme) {
     schemes <- lapply(prop(scheme, "value"), function(s) {
         if (!S7_inherits(s <- scheme_init(s), Scheme)) {
-            cli_abort("{.fn scheme_update} method must return a {.cls scheme}")
+            cli_abort("{.fn scheme_init} method must return a {.cls scheme}")
         }
         s
     })
