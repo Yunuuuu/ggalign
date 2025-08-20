@@ -22,6 +22,7 @@ The internal structure has been fully refactored, with more informative and cons
 
 * The `fortify_matrix()` method for `phylo` object is removed
 
+* new `plot_ideogram()` function to add an aligned cytoband ideogram plot
 
 # ggalign 1.0.2
 
