@@ -20,12 +20,17 @@
 #    - `setup_panel_guides`
 #       - call `coord$setup_panel_guides`
 #       - call `coord$train_panel_guides`
+#
 #  in ggplot_gtable
 #    - `layout$render`:
-#         - call `facet$draw_back`
-#         - call `facet$draw_front`
-#         - call `coord$draw_panel` for each panel
-#         - call `facet$draw_panels`: only once
+#         - call `facet$draw_panel_content`:
+#           - call `facet$draw_back`
+#           - call `facet$draw_front`
+#           - call `coord$draw_panel` for each panel
+#             - call `coord$render_fg`:
+#             - call `coord$render_bg`:
+#
+#         - call `facet$draw_panels`:
 #           - call `facet$init_gtable`:
 #           - call `facet$attach_axes`:
 #             - call `coord$render_axis_h`:
@@ -33,7 +38,7 @@
 #             - call `coord$render_axis_v`:
 #               - call `guide$draw`:
 #           - call `facet$attach_strips`:
-
+#
 #' Set `limits`, `breaks`, `labels` for each panel
 #'
 #' @param x,y design for the layout.
