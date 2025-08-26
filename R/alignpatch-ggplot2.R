@@ -339,5 +339,5 @@ find_strip_pos <- function(gt, theme) {
     if (length(ind) != 0L && max(layout$b[ind]) - panel_loc$b != 1L) {
         return("outside")
     }
-    calc_element("strip.placement", theme)
+    calc_element("strip.placement", theme) %||% "inside"
 }
