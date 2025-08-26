@@ -50,7 +50,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
 
         # build the grob -------------------------------------
         ans <- ggplotGrob(plot)
-        strip_pos <- find_strip_pos(ans)
+        strip_pos <- find_strip_pos(ans, theme)
         # always add strips columns and/or rows
         ans <- add_strips(ans, strip_pos)
         ans <- setup_patch_titles(ans,
@@ -318,9 +318,8 @@ add_strips <- function(gt, strip_pos) {
     gt
 }
 
-# theme(strip.placement)
-#' @importFrom ggplot2 find_panel
-find_strip_pos <- function(gt) {
+#' @importFrom ggplot2 find_panel calc_element
+find_strip_pos <- function(gt, theme) {
     panel_loc <- find_panel(gt)
     layout <- .subset2(gt, "layout")
     nms <- .subset2(layout, "name")
@@ -340,5 +339,5 @@ find_strip_pos <- function(gt) {
     if (length(ind) != 0L && max(layout$b[ind]) - panel_loc$b != 1L) {
         return("outside")
     }
-    "inside"
+    calc_element("strip.placement", theme)
 }
