@@ -308,7 +308,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # add alt-text as attribute
     # attr(plot_table, "alt-label") <- plot$labels$alt
-    strip_pos <- find_strip_pos(plot_table)
+    strip_pos <- find_strip_pos(plot_table, theme)
 
     # always add strips columns and/or rows
     plot_table <- add_strips(plot_table, strip_pos)
