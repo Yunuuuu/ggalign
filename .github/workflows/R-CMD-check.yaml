@@ -63,6 +63,9 @@ jobs:
         with:
           extra-packages:
             any::rcmdcheck
+            magick=?ignore-before-r=4.1.0
+            ggrastr=?ignore-before-r=4.2.3
+            maftools=?ignore-unavailable
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

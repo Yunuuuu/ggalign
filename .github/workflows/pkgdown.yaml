@@ -35,6 +35,9 @@ jobs:
         with:
           extra-packages: 
             any::pkgdown
+            magick=?ignore-before-r=4.1.0
+            ggrastr=?ignore-before-r=4.2.3
+            maftools=?ignore-unavailable
             local::.
           needs: website
 
