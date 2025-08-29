@@ -64,7 +64,7 @@ jobs:
           extra-packages:
             any::rcmdcheck
             magick=?ignore-before-r=4.1.0
-            ggrastr=?ignore-before-r=4.2.3
+            ggrastr=?ignore-before-r=4.3.0
             maftools=?ignore-unavailable
           needs: check
 
