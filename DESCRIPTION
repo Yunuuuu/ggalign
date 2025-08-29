@@ -48,16 +48,18 @@ ByteCompile: true
 Config/Needs/check:
     R.utils,
     patchwork,
-    ggrastr,
+    magick=?ignore-before-r=4.1.0,
+    ggrastr=?ignore-before-r=4.2.3,
     ape,
-    maftools,
+    maftools=?ignore-unavailable,
     lattice,
     ComplexHeatmap,
     pheatmap
 Config/Needs/website:
     patchwork,
-    ggrastr,
-    maftools,
+    magick=?ignore-before-r=4.1.0,
+    ggrastr=?ignore-before-r=4.2.3,
+    maftools=?ignore-unavailable,
     bench,
     pheatmap,
     gplots,
