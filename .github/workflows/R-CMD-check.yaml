@@ -64,9 +64,8 @@ jobs:
           extra-packages:
             any::rcmdcheck
             magick=?ignore-before-r=4.1.0
-            patchwork
-            ggrastr
             maftools=?ignore-unavailable
+            ggrastr=?ignore-before-r=4.2.3 # skip on R 4.2.3 due to Cairo installation failure
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

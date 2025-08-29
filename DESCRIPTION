@@ -37,7 +37,7 @@ Suggests:
     ragg,
     magick,
     testthat (>= 3.0.0),
-    vdiffr
+    vdiffr (>= 1.0.6)
 Enhances:
     patchwork,
     ggrastr,
@@ -47,15 +47,20 @@ Remotes:
 ByteCompile: true
 Config/Needs/check:
     R.utils,
+    patchwork,
+    ggrastr,
     ape,
+    maftools,
     lattice,
     ComplexHeatmap,
-    pheatmap,
+    pheatmap
 Config/Needs/website:
+    patchwork
+    ggrastr
+    maftools,
     bench,
     pheatmap,
     gplots,
-    maftools,
     ComplexHeatmap
 Config/testthat/edition: 3
 Encoding: UTF-8
