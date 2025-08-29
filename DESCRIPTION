@@ -55,8 +55,8 @@ Config/Needs/check:
     ComplexHeatmap,
     pheatmap
 Config/Needs/website:
-    patchwork
-    ggrastr
+    patchwork,
+    ggrastr,
     maftools,
     bench,
     pheatmap,
