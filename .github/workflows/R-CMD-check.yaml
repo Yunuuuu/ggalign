@@ -61,11 +61,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          # skip on R 4.2.3 due to Cairo installation failure
           extra-packages:
             any::rcmdcheck
             magick=?ignore-before-r=4.1.0
             maftools=?ignore-unavailable
-            ggrastr=?ignore-before-r=4.2.3 # skip on R 4.2.3 due to Cairo installation failure
+            ggrastr=?ignore-before-r=4.2.3
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

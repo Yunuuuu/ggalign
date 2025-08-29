@@ -33,12 +33,13 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          # skip on R 4.2.3 due to Cairo installation failure
           extra-packages: 
             any::pkgdown
-            local::.
             magick=?ignore-before-r=4.1.0
             maftools=?ignore-unavailable
             ggrastr=?ignore-before-r=4.2.3
+            local::.
           needs: website
 
       - name: Render pkgdown home file
