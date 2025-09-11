@@ -72,9 +72,10 @@ indicating the base of the triangle.</p></dd>
 
 
 <dt id="arg--element">.element<a class="anchor" aria-label="anchor" href="#arg--element"></a></dt>
-<dd><p>An <code>element_polygon()</code> object. Vectorized fields will be
-recycled to match the total number of groups, or you can wrap the element
-with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code> to recycle to match the drawing groups.</p><ul><li><p>When <code>orientation</code> is <code>"plot"</code>, the drawing groups typically correspond
+<dd><p>An <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_polygon()</a></code> object.
+Vectorized fields will be recycled to match the total number of groups, or
+you can wrap the element with <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code> to recycle to match the drawing
+groups.</p><ul><li><p>When <code>orientation</code> is <code>"plot"</code>, the drawing groups typically correspond
 to the number of observations.</p></li>
 <li><p>When <code>orientation</code> is <code>"observation"</code>, the drawing groups usually match
 the defined groups, but will differ if the defined group of observations
