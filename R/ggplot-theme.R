@@ -68,7 +68,7 @@ theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
 
 # nocov start
 #' @importFrom ggplot2 register_theme_elements el_def
-#' @importFrom ggplot2 element_line element_polygon
+#' @importFrom ggplot2 element_line element_polygon element_text
 theme_elements <- function() {
     register_theme_elements(
         ggalign.line = element_line(
@@ -86,20 +86,19 @@ theme_elements <- function() {
             linejoin = "round"
         ),
         element_tree = list(
-            plot.patch_title = el_def("element_text", "text"),
-            plot.patch_title.top = el_def("element_text", "text"),
-            plot.patch_title.left = el_def("element_text", "text"),
-            plot.patch_title.bottom = el_def("element_text", "text"),
-            plot.patch_title.right = el_def("element_text", "text"),
+            plot.patch_title = el_def(element_text, "text"),
+            plot.patch_title.top = el_def(element_text, "text"),
+            plot.patch_title.left = el_def(element_text, "text"),
+            plot.patch_title.bottom = el_def(element_text, "text"),
+            plot.patch_title.right = el_def(element_text, "text"),
             plot.patch_title.position = el_def("character"),
             plot.patch_title.position.top = el_def("character"),
             plot.patch_title.position.left = el_def("character"),
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
             panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing"),
-            ggalign.line = el_def("element_line"),
-            ggalign.curve = el_def("element_curve"),
-            ggalign.polygon = el_def("element_polygon")
+            ggalign.line = el_def(element_line),
+            ggalign.polygon = el_def(element_polygon)
         )
     )
 }

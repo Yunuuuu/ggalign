@@ -86,10 +86,15 @@ print.ggalign_link_draw <- function(x, ...) {
 #'   groups. The drawing groups typically correspond to the product of the
 #'   number of observations from both sides, as each pair of observations will
 #'   be linked with a single line.
-#' @importFrom ggplot2 element_line complete_theme
+#' @importFrom ggplot2 element_line complete_theme is_theme_element
 #' @export
 link_line <- function(..., .element = NULL) {
-    assert_s3_class(.element, "element_line", allow_null = TRUE)
+    assert_s3_class(.element,
+        is_theme_element,
+        "element_line",
+        type = "line",
+        allow_null = TRUE
+    )
     default <- calc_element("ggalign.line", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
@@ -143,9 +148,15 @@ link_line <- function(..., .element = NULL) {
 #'
 #' @inheritParams .link_draw
 #' @inheritParams mark_tetragon
+#' @importFrom ggplot2 is_theme_element
 #' @export
 link_tetragon <- function(..., .element = NULL) {
-    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
+    assert_s3_class(.element,
+        is_theme_element,
+        "element_polygon",
+        type = "polygon",
+        allow_null = TRUE
+    )
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default

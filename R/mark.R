@@ -91,10 +91,15 @@ print.ggalign_mark_draw <- function(x, ...) {
 #'   you can wrap the element with [`I()`] to recycle to match the drawing
 #'   groups. The drawing groups typically correspond to the number of
 #'   observations, as each observation will be linked with the plot panel.
-#' @importFrom ggplot2 element_line complete_theme
+#' @importFrom ggplot2 element_line complete_theme is_theme_element
 #' @export
 mark_line <- function(..., .element = NULL) {
-    assert_s3_class(.element, "element_line", allow_null = TRUE)
+    assert_s3_class(.element,
+        is_theme_element,
+        "element_line",
+        type = "line",
+        allow_null = TRUE
+    )
     default <- calc_element("ggalign.line", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
@@ -148,9 +153,15 @@ mark_line <- function(..., .element = NULL) {
 #'   defined group of observations is separated and cannot be linked with a
 #'   single quadrilateral. In such cases, the number of drawing groups will be
 #'   larger than the number of defined groups.
+#' @importFrom ggplot2 is_theme_element
 #' @export
 mark_tetragon <- function(..., .element = NULL) {
-    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
+    assert_s3_class(.element,
+        is_theme_element,
+        "element_polygon",
+        type = "polygon",
+        allow_null = TRUE
+    )
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
@@ -221,7 +232,12 @@ mark_tetragon <- function(..., .element = NULL) {
 #' @importFrom rlang arg_match0
 #' @export
 mark_triangle <- function(..., orientation = "plot", .element = NULL) {
-    assert_s3_class(.element, "element_polygon", allow_null = TRUE)
+    assert_s3_class(.element,
+        is_theme_element,
+        "element_polygon",
+        type = "polygon",
+        allow_null = TRUE
+    )
     default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
