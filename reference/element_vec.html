@@ -3,6 +3,9 @@
 vectorized, while others are not. This function allows you to apply a
 function to the vectorized fields.
 The following helper functions are available:
+element_vec_fields: Identify which fields are vectorized. Developers
+should implement this when creating new element classes.
+element_vec: Apply a custom function .fn to vectorized fields.
 element_rep: Applies rep().
 element_rep_len: Applies rep_len().
 element_vec_recycle: Applies vec_recycle().
@@ -14,6 +17,9 @@ element_vec_slice: Applies vec_slice().
 vectorized, while others are not. This function allows you to apply a
 function to the vectorized fields.
 The following helper functions are available:
+element_vec_fields: Identify which fields are vectorized. Developers
+should implement this when creating new element classes.
+element_vec: Apply a custom function .fn to vectorized fields.
 element_rep: Applies rep().
 element_rep_len: Applies rep_len().
 element_vec_recycle: Applies vec_recycle().
@@ -68,7 +74,10 @@ element_vec_slice: Applies vec_slice().
     <p>For an <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element</a></code> object, some fields are
 vectorized, while others are not. This function allows you to apply a
 function to the vectorized fields.</p>
-<p>The following helper functions are available:</p><ul><li><p><code>element_rep</code>: Applies <code><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep()</a></code>.</p></li>
+<p>The following helper functions are available:</p><ul><li><p><code>element_vec_fields</code>: Identify which fields are vectorized. Developers
+should implement this when creating new element classes.</p></li>
+<li><p><code>element_vec</code>: Apply a custom function <code>.fn</code> to vectorized fields.</p></li>
+<li><p><code>element_rep</code>: Applies <code><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep()</a></code>.</p></li>
 <li><p><code>element_rep_len</code>: Applies <code><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep_len()</a></code>.</p></li>
 <li><p><code>element_vec_recycle</code>: Applies <code><a href="https://vctrs.r-lib.org/reference/vec_recycle.html" class="external-link">vec_recycle()</a></code>.</p></li>
 <li><p><code>element_vec_rep</code>: Applies <code><a href="https://vctrs.r-lib.org/reference/vec-rep.html" class="external-link">vec_rep()</a></code>.</p></li>
@@ -78,7 +87,9 @@ function to the vectorized fields.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">element_vec</span><span class="op">(</span><span class="va">.el</span>, <span class="va">.fn</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">element_vec_fields</span><span class="op">(</span><span class="va">.el</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">element_vec</span><span class="op">(</span><span class="va">.el</span>, <span class="va">.fn</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">element_rep</span><span class="op">(</span><span class="va">.el</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -101,13 +112,13 @@ function to the vectorized fields.</p>
 <dd><p>An <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element</a></code> object.</p></dd>
 
 
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed on to <code>fn</code>.</p></dd>
+
+
 <dt id="arg--fn">.fn<a class="anchor" aria-label="anchor" href="#arg--fn"></a></dt>
 <dd><p>The function to be applied to the vectorized fields of the element
 object.</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed on to <code>fn</code>.</p></dd>
 
 
 <dt id="arg-length-out">length.out<a class="anchor" aria-label="anchor" href="#arg-length-out"></a></dt>
