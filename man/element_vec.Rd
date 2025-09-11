@@ -2,6 +2,7 @@
 % Please edit documentation in R/ggplot-helper.R
 \name{element_vec}
 \alias{element_vec}
+\alias{element_vec_fields}
 \alias{element_rep}
 \alias{element_rep_len}
 \alias{element_vec_recycle}
@@ -10,6 +11,8 @@
 \alias{element_vec_slice}
 \title{Apply a function to the fields of an element object}
 \usage{
+element_vec_fields(.el, ...)
+
 element_vec(.el, .fn, ...)
 
 element_rep(.el, ...)
@@ -27,10 +30,10 @@ element_vec_slice(.el, i, ...)
 \arguments{
 \item{.el}{An \code{\link[ggplot2:element]{element}} object.}
 
+\item{...}{Additional arguments passed on to \code{fn}.}
+
 \item{.fn}{The function to be applied to the vectorized fields of the element
 object.}
-
-\item{...}{Additional arguments passed on to \code{fn}.}
 
 \item{length.out}{Non-negative integer. The desired length of the output
 vector. Other inputs will be coerced to a double vector and the first element
@@ -57,6 +60,9 @@ function to the vectorized fields.
 
 The following helper functions are available:
 \itemize{
+\item \code{element_vec_fields}: Identify which fields are vectorized. Developers
+should implement this when creating new element classes.
+\item \code{element_vec}: Apply a custom function \code{.fn} to vectorized fields.
 \item \code{element_rep}: Applies \code{\link[=rep]{rep()}}.
 \item \code{element_rep_len}: Applies \code{\link[=rep_len]{rep_len()}}.
 \item \code{element_vec_recycle}: Applies \code{\link[vctrs:vec_recycle]{vec_recycle()}}.

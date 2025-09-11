@@ -70,6 +70,9 @@ element_lengths <- function(.el, .fn, ...) {
 #'
 #' The following helper functions are available:
 #'
+#'  - `element_vec_fields`: Identify which fields are vectorized. Developers
+#'    should implement this when creating new element classes.
+#'  - `element_vec`: Apply a custom function `.fn` to vectorized fields.
 #'  - `element_rep`: Applies [`rep()`].
 #'  - `element_rep_len`: Applies [`rep_len()`].
 #'  - `element_vec_recycle`: Applies [`vec_recycle()`][vctrs::vec_recycle].
@@ -82,6 +85,11 @@ element_lengths <- function(.el, .fn, ...) {
 #' object.
 #' @param ... Additional arguments passed on to `fn`.
 #' @export
+#' @name element_vec
+element_vec_fields <- S7::new_generic("element_vec_fields", ".el")
+
+#' @export
+#' @rdname element_vec
 element_vec <- function(.el, .fn, ...) {
     fields <- element_vec_fields(.el)
     if (is.null(fields)) {
@@ -137,35 +145,33 @@ element_vec_slice <- function(.el, i, ...) {
     })
 }
 
-element_vec_fields <- S7::new_generic("element_vec_fields", "el")
+S7::method(element_vec_fields, ggplot2::element_blank) <- function(.el) NULL
 
-S7::method(element_vec_fields, ggplot2::element_blank) <- function(el) NULL
-
-S7::method(element_vec_fields, ggplot2::element_polygon) <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_polygon) <- function(.el) {
     c("fill", "colour", "linewidth", "linetype")
 }
 
-S7::method(element_vec_fields, ggplot2::element_point) <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_point) <- function(.el) {
     c("colour", "shape", "size", "fill", "stroke")
 }
 
-S7::method(element_vec_fields, ggplot2::element_rect) <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_rect) <- function(.el) {
     c("fill", "colour", "linewidth", "linetype")
 }
 
-S7::method(element_vec_fields, ggplot2::element_line) <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_line) <- function(.el) {
     c("colour", "linewidth", "linetype", "lineend")
 }
 
-S7::method(element_vec_fields, ggplot2::element_text) <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_text) <- function(.el) {
     c(
         "family", "face", "colour", "size", "hjust", "vjust",
         "angle", "lineheight"
     )
 }
 
-S7::method(element_vec_fields, S7::class_any) <- function(el) {
-    stop_input_type(el, "an element")
+S7::method(element_vec_fields, S7::class_any) <- function(.el) {
+    stop_input_type(.el, "an element")
 }
 
 ######################################################
