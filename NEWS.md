@@ -2,7 +2,9 @@
 
 The internal structure has been fully refactored, with more informative and consistent naming.
 
-* Added layout_theme() to control layout theming.
+* remove `element_polygon()`/`element_curve()`, to be implemented upstream in ggplot2
+
+* new `layout_theme()` to control layout theming.
 
 * Deprecated the `theme` argument in `layout_annotation()`.
 
@@ -18,7 +20,7 @@ The internal structure has been fully refactored, with more informative and cons
 
 * The `sector_spacing` argument in `facet_sector()` can be a multi-value numeric (#73)
 
-* new argumetn `split` in `align_phylo()` to support splitting phylo objects into multiple trees (#74)
+* new argument `split` in `align_phylo()` to support splitting phylo objects into multiple trees (#74)
 
 * The `fortify_matrix()` method for `phylo` object is removed
 
