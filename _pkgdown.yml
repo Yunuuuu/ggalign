@@ -172,8 +172,6 @@ reference:
   - facet_sector
   - scale_gshape_manual
   - draw_key_gshape
-  - element_polygon
-  - element_curve
   - element_vec
 
 - title: helpers

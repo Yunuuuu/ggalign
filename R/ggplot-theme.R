@@ -63,10 +63,12 @@ theme_no_strip <- function() {
     )
 }
 
+#' @importFrom ggplot2 element_rect
 theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
 
 # nocov start
-#' @importFrom ggplot2 register_theme_elements el_def element_line
+#' @importFrom ggplot2 register_theme_elements el_def
+#' @importFrom ggplot2 element_line element_polygon
 theme_elements <- function() {
     register_theme_elements(
         ggalign.line = element_line(
@@ -78,13 +80,10 @@ theme_elements <- function() {
         ),
         ggalign.polygon = element_polygon(
             fill = NA,
-            color = "black",
+            colour = "black",
             linewidth = 0.5,
             linetype = 1,
-            alpha = NA,
-            lineend = "butt",
-            linejoin = "round",
-            linemitre = 10
+            linejoin = "round"
         ),
         element_tree = list(
             plot.patch_title = el_def("element_text", "text"),
@@ -178,6 +177,7 @@ ggplot_add.theme_recycle <- function(object, plot, object_name, ...) {
 
 #################################################################
 # Apply a function to the vectorized field of the theme object
+#' @importFrom ggplot2 calc_element
 theme_vec <- function(.th, .el, .fn, ...) {
     element <- calc_element(.el, .th)
     if (inherits(element, "element")) {

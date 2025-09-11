@@ -14,7 +14,7 @@ Description: A 'ggplot2' extension providing an integrative framework for
     high-dimensional data contexts—such as genomics, transcriptomics, and
     microbiome studies—by making it easy to link related plots, overlay
     clustering results, or highlight shared patterns. For more details, see
-    Peng, Y. (2025) <doi:10.1002/advs.202507799>
+    Peng, Y. (2025) <doi:10.1002/advs.202507799>.
 License: MIT + file LICENSE
 URL: https://github.com/Yunuuuu/ggalign, https://yunuuuu.github.io/ggalign/
 BugReports: https://github.com/Yunuuuu/ggalign/issues

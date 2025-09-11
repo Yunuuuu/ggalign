@@ -1,6 +1,3 @@
-# Exported function for ggplot2
-# Usually a quick shortcuts to define something
-#
 #' Remove axis elements
 #'
 #' @param axes Which axes elements should be removed? A string containing
@@ -56,158 +53,6 @@ theme_no_axes <- function(axes = "xy", text = TRUE, ticks = TRUE,
     el <- vec_set_names(vec_rep(list(element_blank()), length(el)), el)
     inject(theme(!!!el, validate = FALSE))
 }
-
-##########################################################################
-#' Theme Polygon elements
-#'
-#' Draw polygon.
-#'
-#' @inheritParams ggplot2::element_rect
-#' @inheritParams geom_rect3d
-#' @inheritParams ggplot2::fill_alpha
-#' @param linewidth Line size in `mm`.
-#' @param linetype Line type for lines. An integer (0:8), a name (blank, solid,
-#' dashed, dotted, dotdash, longdash, twodash), or a string with an even number
-#' (up to eight) of hexadecimal digits which give the lengths in consecutive
-#' positions in the string.
-#' @seealso [`element_rect`][ggplot2::element_rect]
-#' @return A `element_polygon` object
-#' @export
-element_polygon <- function(fill = NULL, colour = NULL, linewidth = NULL,
-                            linetype = NULL, alpha = NULL, lineend = NULL,
-                            linejoin = NULL, linemitre = NULL, color = NULL,
-                            inherit.blank = FALSE) {
-    if (!is.null(color)) colour <- color
-    structure(
-        list(
-            fill = fill, colour = colour, alpha = alpha,
-            linewidth = linewidth, linetype = linetype,
-            lineend = lineend, linejoin = linejoin, linemitre = linemitre,
-            inherit.blank = inherit.blank
-        ),
-        class = c("ggalign_element_polygon", "element_polygon", "element")
-    )
-}
-
-#' @importFrom utils packageVersion
-#' @importFrom grid gpar
-#' @importFrom ggplot2 element_grob fill_alpha
-#' @export
-element_grob.ggalign_element_polygon <- function(element,
-                                                 x = c(0, 0.5, 1, 0.5),
-                                                 y = c(0.5, 1, 0.5, 0),
-                                                 fill = NULL,
-                                                 colour = NULL,
-                                                 linewidth = NULL,
-                                                 linetype = NULL, ...) {
-    gp <- ggfun("gg_par")(
-        lwd = linewidth, col = colour, fill = fill, lty = linetype
-    )
-    element_gp <- ggfun("gg_par")(
-        lwd = element$linewidth,
-        col = element$colour,
-        fill = fill_alpha(element$fill, element$alpha %||% NA),
-        lty = element$linetype,
-        lineend = element$lineend,
-        linejoin = element$linejoin,
-        linemitre = element$linemitre
-    )
-    grid::polygonGrob(
-        x = x, y = y,
-        gp = ggfun("modify_list")(element_gp, gp), ...
-    )
-}
-
-# nocov start
-#' Theme curve elements
-#'
-#' Draw curve.
-#'
-#' @inheritParams element_polygon
-#' @inheritParams grid::curveGrob
-#' @param arrow.fill Fill colour for arrows.
-#' @return A `element_curve` object
-#' @export
-element_curve <- function(colour = NULL, linewidth = NULL, linetype = NULL,
-                          lineend = NULL, color = NULL, curvature = NULL,
-                          angle = NULL, ncp = NULL, shape = NULL,
-                          arrow = NULL, arrow.fill = NULL,
-                          inherit.blank = FALSE) {
-    colour <- color %||% colour
-    arrow.fill <- arrow.fill %||% colour
-    arrow <- arrow %||% FALSE
-    structure(
-        list(
-            colour = colour, linewidth = linewidth, linetype = linetype,
-            lineend = lineend, curvature = curvature, angle = angle,
-            ncp = ncp, shape = shape, arrow = arrow, arrow.fill = arrow.fill,
-            inherit.blank = inherit.blank
-        ),
-        class = c("ggalign_element_curve", "element_curve", "element")
-    )
-}
-
-#' @importFrom grid gpar gTree gList
-#' @importFrom ggplot2 element_grob
-#' @export
-element_grob.ggalign_element_curve <- function(element, x = 0:1, y = 0:1,
-                                               colour = NULL, linewidth = NULL, linetype = NULL, lineend = NULL,
-                                               arrow.fill = NULL,
-                                               default.units = "npc",
-                                               id = NULL,
-                                               id.lengths = NULL, ...) {
-    arrow <- if (is.logical(element$arrow) && !element$arrow) {
-        NULL
-    } else {
-        element$arrow
-    }
-    if (is.null(arrow)) {
-        arrow.fill <- colour
-        element$arrow.fill <- element$colour
-    }
-    # The gp settings can override element_gp
-    gp <- gpar(
-        col = colour,
-        fill = arrow.fill %||% colour,
-        lwd = ggfun("len0_null")(linewidth * .pt),
-        lty = linetype,
-        lineend = lineend
-    )
-    element_gp <- gpar(
-        col = element$colour,
-        fill = element$arrow.fill %||% element$colour,
-        lwd = ggfun("len0_null")(element$linewidth * .pt),
-        lty = element$linetype,
-        lineend = element$lineend
-    )
-    gp <- ggfun("modify_list")(element_gp, gp)
-    if (is.null(id)) {
-        if (is.null(id.lengths)) {
-            id <- vec_rep(1L, length(x))
-        } else {
-            id <- vec_rep_each(seq_along(id.lengths), id.lengths)
-        }
-    }
-    index_list <- .subset2(vec_split(seq_along(x), id), "val")
-    ans <- lapply(index_list, function(index) {
-        grid::curveGrob(
-            vec_slice(x, index),
-            vec_slice(y, index),
-            default.units = default.units,
-            gp = gp[index],
-            curvature = element$curvature,
-            angle = element$angle,
-            ncp = element$ncp,
-            shape = element$shape,
-            arrow = arrow,
-            square = FALSE, squareShape = 1,
-            inflect = FALSE, open = TRUE,
-            ...
-        )
-    })
-    gTree(children = inject(gList(!!!ans)))
-}
-# nocov end
 
 ##########################################################################
 element_lengths <- function(.el, .fn, ...) {
@@ -292,49 +137,36 @@ element_vec_slice <- function(.el, i, ...) {
     })
 }
 
-element_vec_fields <- function(el) UseMethod("element_vec_fields")
+element_vec_fields <- S7::new_generic("element_vec_fields", "el")
 
-#' @export
-element_vec_fields.ggalign_element_polygon <- function(el) {
-    c(
-        "fill", "colour", "linewidth", "linetype",
-        "lineend", "linejoin", "linemitre", "alpha"
-    )
-}
+S7::method(element_vec_fields, ggplot2::element_blank) <- function(el) NULL
 
-#' @export
-element_vec_fields.element_blank <- function(el) NULL
-
-#' @export
-element_vec_fields.element_polygon <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_polygon) <- function(el) {
     c("fill", "colour", "linewidth", "linetype")
 }
 
-#' @export
-element_vec_fields.element_point <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_point) <- function(el) {
     c("colour", "shape", "size", "fill", "stroke")
 }
 
-#' @export
-element_vec_fields.element_rect <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_rect) <- function(el) {
     c("fill", "colour", "linewidth", "linetype")
 }
 
-#' @export
-element_vec_fields.element_line <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_line) <- function(el) {
     c("colour", "linewidth", "linetype", "lineend")
 }
 
-#' @export
-element_vec_fields.element_text <- function(el) {
+S7::method(element_vec_fields, ggplot2::element_text) <- function(el) {
     c(
         "family", "face", "colour", "size", "hjust", "vjust",
         "angle", "lineheight"
     )
 }
 
-#' @export
-element_vec_fields.default <- function(el) stop_input_type(el, "an element")
+S7::method(element_vec_fields, S7::class_any) <- function(el) {
+    stop_input_type(el, "an element")
+}
 
 ######################################################
 #' Remove scale expansion
