@@ -44,7 +44,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggalign-development-version">ggalign (development version)<a class="anchor" aria-label="anchor" href="#ggalign-development-version"></a></h2>
 <p>The internal structure has been fully refactored, with more informative and consistent naming.</p>
-<ul><li><p>Added layout_theme() to control layout theming.</p></li>
+<ul><li><p>remove <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_polygon()</a></code>/<code>element_curve()</code>, to be implemented upstream in ggplot2</p></li>
+<li><p>new <code><a href="../reference/layout_theme.html">layout_theme()</a></code> to control layout theming.</p></li>
 <li><p>Deprecated the <code>theme</code> argument in <code><a href="../reference/layout_annotation.html">layout_annotation()</a></code>.</p></li>
 <li><p>Migrated all internal objects to the S7 class system.</p></li>
 <li><p>replace <code><a href="../reference/with_quad.html">with_quad()</a></code> with <code><a href="../reference/quad_scope.html">quad_scope()</a></code> and deprecate old name.</p></li>
@@ -52,7 +53,7 @@
 <li><p><code>&amp;</code> operator now can work for <code><a href="../reference/align_plots.html">align_plots()</a></code>.</p></li>
 <li><p>new <code><a href="../reference/geom_magick.html">geom_magick()</a></code> object to draw images as point shapes using magick</p></li>
 <li><p>The <code>sector_spacing</code> argument in <code><a href="../reference/facet_sector.html">facet_sector()</a></code> can be a multi-value numeric (<a href="https://github.com/Yunuuuu/ggalign/issues/73" class="external-link">#73</a>)</p></li>
-<li><p>new argumetn <code>split</code> in <code><a href="../reference/align_phylo.html">align_phylo()</a></code> to support splitting phylo objects into multiple trees (<a href="https://github.com/Yunuuuu/ggalign/issues/74" class="external-link">#74</a>)</p></li>
+<li><p>new argument <code>split</code> in <code><a href="../reference/align_phylo.html">align_phylo()</a></code> to support splitting phylo objects into multiple trees (<a href="https://github.com/Yunuuuu/ggalign/issues/74" class="external-link">#74</a>)</p></li>
 <li><p>The <code><a href="../reference/fortify_matrix.html">fortify_matrix()</a></code> method for <code>phylo</code> object is removed</p></li>
 <li><p>new <code><a href="../reference/plot_ideogram.html">plot_ideogram()</a></code> function to add an aligned cytoband ideogram plot</p></li>
 </ul></div>
