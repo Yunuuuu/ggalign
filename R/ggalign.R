@@ -92,7 +92,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     }
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
-            "1.0.3",
+            "1.1.0",
             "ggalign(no_axes = )",
             details = "Please add `theme()` to the ggplot instead"
         )

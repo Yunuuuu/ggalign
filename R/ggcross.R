@@ -44,7 +44,7 @@ ggcross <- function(mapping = aes(), size = NULL, active = NULL,
     active <- active_update(active(use = TRUE), active)
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
-            "1.0.3",
+            "1.1.0",
             "ggcross(no_axes = )",
             details = "Please add `theme()` to the ggplot instead"
         )

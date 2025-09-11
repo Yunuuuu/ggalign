@@ -18,7 +18,7 @@ align_phylo <- function(phylo, ..., mapping = aes(),
                         active = NULL, size = NULL, no_axes = deprecated()) {
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
-            "1.0.3",
+            "1.1.0",
             "align_phylo(no_axes = )",
             details = "Please add `theme()` to the ggplot instead"
         )

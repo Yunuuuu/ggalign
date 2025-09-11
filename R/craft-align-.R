@@ -40,7 +40,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
     data <- allow_lambda(data)
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
-            "1.0.3",
+            "1.1.0",
             "align(no_axes = )",
             details = "Please add `theme()` to the ggplot instead"
         )

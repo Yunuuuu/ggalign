@@ -53,7 +53,7 @@ align_dendro <- function(mapping = aes(), ...,
     assert_bool(merge_dendrogram)
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
-            "1.0.3",
+            "1.1.0",
             "align_dendro(no_axes = )",
             details = "Please add `theme()` to the ggplot instead"
         )

@@ -78,13 +78,13 @@ quad_scope <- S7::new_generic(
 #' @keywords internal
 with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
     lifecycle::deprecate_soft(
-        "1.0.3",
+        "1.1.0",
         "with_quad()",
         details = "quad_scope()"
     )
     if (lifecycle::is_present(main)) {
         lifecycle::deprecate_soft(
-            "1.0.3",
+            "1.1.0",
             "with_quad(main = )",
             details = "with_quad(position = \"i\")"
         )
