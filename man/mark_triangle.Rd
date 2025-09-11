@@ -19,9 +19,10 @@ with \code{\link[=I]{I()}} to use the ordering from the layout. You can also use
 \item{orientation}{A single string, either \code{"plot"} or \code{"observation"},
 indicating the base of the triangle.}
 
-\item{.element}{An \code{\link[=element_polygon]{element_polygon()}} object. Vectorized fields will be
-recycled to match the total number of groups, or you can wrap the element
-with \code{\link[=I]{I()}} to recycle to match the drawing groups.
+\item{.element}{An \code{\link[ggplot2:element]{element_polygon()}} object.
+Vectorized fields will be recycled to match the total number of groups, or
+you can wrap the element with \code{\link[=I]{I()}} to recycle to match the drawing
+groups.
 \itemize{
 \item When \code{orientation} is \code{"plot"}, the drawing groups typically correspond
 to the number of observations.

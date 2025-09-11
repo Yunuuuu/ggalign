@@ -146,13 +146,13 @@ mark_line <- function(..., .element = NULL) {
 #' Link the observations and the panel with a quadrilateral
 #'
 #' @inheritParams .mark_draw
-#' @param .element A [`element_polygon()`] object. Vectorized fields will be
-#'   recycled to match the total number of groups, or you can wrap the element
-#'   with [`I()`] to recycle to match the drawing groups. The drawing groups
-#'   are usually the same as the defined groups, but they will differ when the
-#'   defined group of observations is separated and cannot be linked with a
-#'   single quadrilateral. In such cases, the number of drawing groups will be
-#'   larger than the number of defined groups.
+#' @param .element A [`element_polygon()`][ggplot2::element_polygon] object.
+#'   Vectorized fields will be recycled to match the total number of groups, or
+#'   you can wrap the element with [`I()`] to recycle to match the drawing
+#'   groups. The drawing groups are usually the same as the defined groups, but
+#'   they will differ when the defined group of observations is separated and
+#'   cannot be linked with a single quadrilateral. In such cases, the number of
+#'   drawing groups will be larger than the number of defined groups.
 #' @importFrom ggplot2 is_theme_element
 #' @export
 mark_tetragon <- function(..., .element = NULL) {
@@ -219,9 +219,10 @@ mark_tetragon <- function(..., .element = NULL) {
 #' @inheritParams .mark_draw
 #' @param orientation A single string, either `"plot"` or `"observation"`,
 #'   indicating the base of the triangle.
-#' @param .element An [`element_polygon()`] object. Vectorized fields will be
-#'   recycled to match the total number of groups, or you can wrap the element
-#'   with [`I()`] to recycle to match the drawing groups.
+#' @param .element An [`element_polygon()`][ggplot2::element_polygon] object.
+#'   Vectorized fields will be recycled to match the total number of groups, or
+#'   you can wrap the element with [`I()`] to recycle to match the drawing
+#'   groups.
 #'   - When `orientation` is `"plot"`, the drawing groups typically correspond
 #'     to the number of observations.
 #'   - When `orientation` is `"observation"`, the drawing groups usually match
