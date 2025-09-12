@@ -63,14 +63,14 @@ layout or nesting state.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">quad_scope</span><span class="op">(</span><span class="va">x</span>, position <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">quad_scope</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span>, position <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>An object which can be added to the ggplot.</p></dd>
 
 
@@ -80,10 +80,6 @@ layout or nesting state.</p>
 Use <code>'i'</code> to refer to the quad body (i.e., the main plot). If <code>NULL</code>, the
 active annotation context is cleared, behaving as if no annotation is active.
 See the <strong>Details</strong> section for more information.</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>These dots are for future extensions and must be empty.</p></dd>
 
 </dl></div>
     <div class="section level2">
