@@ -73,12 +73,9 @@ ggalign_data_set <- function(.data, ..., .lvls = NULL) {
 
 #' @export
 print.ggalign_data <- function(x, ...) {
-    print(
-        remove_class(
-            ggalign_lvls_remove(ggalign_attr_remove(x)),
-            "ggalign_data"
-        )
-    )
+    data <- ggalign_lvls_remove(ggalign_attr_remove(x))
+    data <- remove_class(data, "ggalign_data")
+    print(data)
     invisible(x)
 }
 
