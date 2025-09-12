@@ -27,7 +27,7 @@ clipped if they expand outside their designated area.}
 the plot area.}
 }
 \value{
-A \code{patch_inset} object, which can be added in ggplot.
+An \code{inset} object, which can be added to ggplot.
 }
 \description{
 Create a ggplot inset

@@ -5,19 +5,7 @@
 #' adding any graphics that can be converted into a [`grob`][grid::grob] with
 #' the [`patch()`] method.
 #'
-#' @param plot Any graphic that can be converted into a [`grob`][grid::grob]
-#' using [`patch()`].
-#' @param ... Additional arguments passed to the [`patch()`] method.
-#' @param align A string specifying the area to place the plot: `"full"` for the
-#' full area, `"plot"` for the full plotting area (including the axis label), or
-#' `"panel"` for only the actual area where data is drawn.
-#' @param clip A single boolean value indicating whether the grob should be
-#' clipped if they expand outside their designated area.
-#' @param on_top A single boolean value indicates whether the graphic plot
-#' should be put frontmost. Note: the graphic plot will always put above the
-#' background.
-#' @param vp A [`viewport`][grid::viewport] object, you can use this to define
-#' the plot area.
+#' @inheritParams inset
 #' @return A `wrapped_plot` object that can be directly placed into
 #' [`align_plots()`].
 #' @inherit patch seealso
@@ -37,7 +25,6 @@
 #' ))
 #'
 #' @importFrom ggplot2 theme element_blank ggplot
-#' @importFrom grid is.grob
 #' @export
 ggwrap <- function(plot, ..., align = "panel", on_top = FALSE,
                    clip = TRUE, vp = NULL) {
@@ -46,32 +33,33 @@ ggwrap <- function(plot, ..., align = "panel", on_top = FALSE,
             plot.background = element_blank(),
             panel.background = element_blank()
         )
-    inset <- make_inset(
-        plot = plot, ..., align = align, on_top = on_top,
+    patch_inset <- inset(
+        plot = plot, ...,
+        align = align, on_top = on_top,
         clip = clip, vp = vp
     )
-    make_wrap(patch, inset)
+    make_wrap(patch, patch_inset)
 }
 
-make_wrap <- function(patch, inset) UseMethod("make_wrap")
+make_wrap <- function(patch, patch_inset) UseMethod("make_wrap")
 
-make_wrapped_plot <- function(patch, inset) {
-    if (.subset2(inset, "on_top")) {
+make_wrapped_plot <- function(patch, patch_inset) {
+    if (prop(patch_inset, "on_top")) {
         patch$ggalign_wrapped_insets_above <- c(
-            patch$ggalign_wrapped_insets_above, list(inset)
+            patch$ggalign_wrapped_insets_above, list(patch_inset)
         )
     } else {
         patch$ggalign_wrapped_insets_under <- c(
-            patch$ggalign_wrapped_insets_under, list(inset)
+            patch$ggalign_wrapped_insets_under, list(patch_inset)
         )
     }
     add_class(patch, "wrapped_plot")
 }
 
 #' @export
-make_wrap.ggplot <- function(patch, inset) {
+make_wrap.ggplot <- function(patch, patch_inset) {
     patch <- add_class(patch, "patch_ggplot")
-    make_wrap(patch, inset)
+    make_wrap(patch, patch_inset)
 }
 
 #' @export
@@ -142,12 +130,15 @@ add_wrapped_insets <- function(gt, insets, on_top) {
     gt
 }
 
+#' @importFrom S7
+#' @importFrom grid editGrob
 #' @importFrom gtable gtable is.gtable gtable_add_grob
-add_wrapped_inset <- function(gt, inset, on_top, i) {
-    align <- .subset2(inset, "align")
-    clip <- .subset2(inset, "clip")
+add_wrapped_inset <- function(gt, patch_inset, on_top, i) {
+    align <- prop(patch_inset, "align")
+    clip <- prop(patch_inset, "clip")
     layout <- .subset2(gt, "layout")
-    grob <- .subset2(inset, "grob")
+    grob <- prop(patch_inset, "grob")
+    if (!is.null(vp <- prop(patch_inset, "vp"))) grob <- editGrob(grob, vp = vp)
     if (on_top) {
         z <- Inf
     } else {
