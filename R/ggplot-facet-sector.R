@@ -103,7 +103,7 @@ ggplot_build.ggalign_facet_sector_plot <- function(plot, ...) {
 
 #' @importFrom rlang inject
 #' @importFrom grid gTree editGrob viewport
-#' @importFrom ggplot2 ggproto ggproto_parent
+#' @importFrom ggplot2 ggproto ggproto_parent FacetNull
 FacetSector <- ggproto(
     "FacetSector", ggplot2::FacetWrap,
     setup_panel_params = function(self, panel_params, coord, ...) {
@@ -244,7 +244,7 @@ FacetSector <- ggproto(
         })
 
         # Draw as a single null facet
-        ggplot2::FacetNull$draw_panels(
+        ggproto_parent(FacetNull, self)$draw_panels(
             panels = list(panels),
             layout = layout, x_scales = x_scales, y_scales = y_scales,
             ranges = ranges, coord = coord, data = data,
