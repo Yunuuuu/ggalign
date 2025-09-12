@@ -105,24 +105,6 @@ This is useful when you want to replace the usual point symbols
 with arbitrary images while keeping full control over their placement,
 size, and interpolation.
 }
-\section{Aesthetics}{
-
-\code{geom_magick()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
-• \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
-• \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
-• \tab \strong{\code{image}} \tab   \cr
-• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
-• \tab \code{angle} \tab → \code{0} \cr
-• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
-• \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
-• \tab \code{hjust} \tab → \code{0.5} \cr
-• \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
-• \tab \code{vjust} \tab → \code{0.5} \cr
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
-}
-
 \examples{
 set.seed(123)
 d <- data.frame(
@@ -135,4 +117,22 @@ d <- data.frame(
 d$alpha <- pmax(pmin(d$alpha, 1), 0)
 ggplot(d, aes(x, y)) +
     geom_magick(aes(image = image, fill = fill, alpha = alpha))
+}
+\section{Aesthetics}{
+
+\code{geom_magick()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{image}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{0.5} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{0.5} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

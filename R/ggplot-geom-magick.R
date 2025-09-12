@@ -12,7 +12,7 @@
 #' @inheritParams magickGrob
 #' @inheritParams ggplot2::geom_point
 #' @param magick_params Additional arguments passed on to `magick`
-#' @eval rd_gg_aesthetics("geom", "magick")
+#' @aesthetics GeomMagick
 #' @examples
 #' set.seed(123)
 #' d <- data.frame(

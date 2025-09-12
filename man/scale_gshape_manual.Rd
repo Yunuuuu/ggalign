@@ -89,26 +89,6 @@ marked as questioning. So far, we've found that \code{\link[=geom_subrect]{geom_
 \code{\link[=geom_subtile]{geom_subtile()}} handle most use cases effectively.
 }
 
-\section{Aesthetics}{
-
-\code{geom_gshape()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
-• \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
-• \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
-• \tab \strong{\code{gshape}} \tab   \cr
-• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
-• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → \code{"black"} \cr
-• \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
-• \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
-• \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → \code{1} \cr
-• \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → \code{0.5} \cr
-• \tab \code{\link[ggplot2:aes_linetype_size_shape]{shape}} \tab → \code{19} \cr
-• \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → \code{1.5} \cr
-• \tab \code{stroke} \tab → \code{0.5} \cr
-}
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs", package = "ggplot2")}.
-}
-
 \examples{
 library(grid)
 ggplot(data.frame(value = letters[seq_len(5)], y = seq_len(5))) +
