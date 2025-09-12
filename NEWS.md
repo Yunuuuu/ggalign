@@ -1,3 +1,5 @@
+# ggalign (development version)
+
 # ggalign 1.1.0
 
 The internal structure has been fully refactored, with more informative and consistent naming.
