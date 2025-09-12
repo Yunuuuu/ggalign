@@ -38,8 +38,7 @@ geom_pie <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
-#' @importFrom grid gpar
-#' @importFrom ggplot2 ggproto aes resolution fill_alpha
+#' @importFrom ggplot2 ggproto aes resolution fill_alpha gg_par
 #' @importFrom rlang set_names
 GeomPie <- ggproto("GeomPie",
     ggplot2::GeomPolygon,
@@ -124,7 +123,7 @@ GeomPie <- ggproto("GeomPie",
             y = circular_data$y,
             id.lengths = rep_len(steps, nrow(data)),
             default.units = "native",
-            gp = gpar(
+            gp = gg_par(
                 col = data$colour,
                 fill = fill_alpha(data$fill, data$alpha),
                 lwd = data$linewidth,

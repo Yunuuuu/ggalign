@@ -53,7 +53,7 @@ geom_rect3d <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
-#' @importFrom ggplot2 ggproto fill_alpha
+#' @importFrom ggplot2 ggproto fill_alpha gg_par
 GeomRect3d <- ggproto(
     "GeomRect3d",
     ggplot2::GeomRect,
@@ -91,7 +91,7 @@ GeomRect3d <- ggproto(
             y = coords$y,
             id = coords$polygon_id,
             default.units = "native",
-            gp = gpar(
+            gp = gg_par(
                 col = data$colour,
                 fill = fill_alpha(data$fill, data$alpha),
                 lwd = data$linewidth,
