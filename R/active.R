@@ -30,21 +30,15 @@ active <- S7::new_class("active",
     properties = list(
         order = S7::new_property(
             S7::class_integer,
-            validator = function(value) {
-                # Validator runs *after* the value passes the class check
-                # Ensure it's a single integer value
-                if (length(value) != 1L) {
-                    return("must be a single integer value")
-                }
-            },
             setter = function(self, value) {
+                assert_number_whole(value,
+                    allow_na = TRUE, allow_null = TRUE,
+                    arg = "@order"
+                )
                 if (is.null(value) || is_na(value)) {
                     prop(self, "order", check = FALSE) <- NA_integer_
-                } else if (.rlang_check_number(value, allow_decimal = FALSE) ==
-                           0L) { # styler: off
-                    prop(self, "order", check = FALSE) <- as.integer(value)
                 } else {
-                    prop(self, "order") <- value
+                    prop(self, "order", check = FALSE) <- as.integer(value)
                 }
                 self
             },
@@ -52,16 +46,15 @@ active <- S7::new_class("active",
         ),
         use = S7::new_property(
             S7::class_logical,
-            validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single boolean value")
-                }
-            },
             setter = function(self, value) {
+                assert_bool(value,
+                    allow_na = TRUE, allow_null = TRUE,
+                    arg = "@use"
+                )
                 if (is.null(value) || is_na(value)) {
                     prop(self, "use", check = FALSE) <- NA
                 } else {
-                    prop(self, "use") <- value
+                    prop(self, "use", check = FALSE) <- value
                 }
                 self
             },
@@ -69,16 +62,16 @@ active <- S7::new_class("active",
         ),
         name = S7::new_property(
             S7::class_character,
-            validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single character string")
-                }
-            },
             setter = function(self, value) {
+                assert_string(value,
+                    allow_empty = FALSE,
+                    allow_na = TRUE, allow_null = TRUE,
+                    arg = "@name"
+                )
                 if (is.null(value) || is_na(value)) {
                     prop(self, "name", check = FALSE) <- NA_character_
                 } else {
-                    prop(self, "name") <- value
+                    prop(self, "name", check = FALSE) <- value
                 }
                 self
             },

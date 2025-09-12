@@ -110,69 +110,72 @@ theme_elements <- function() {
 #' @noRd
 theme_recycle <- function() structure(list(), class = "theme_recycle")
 
-#' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @export
-ggplot_add.theme_recycle <- function(object, plot, object_name, ...) {
-    ParentFacet <- plot$facet
-    if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
-        return(plot)
-    }
-    # recycle axis theme elements
-    plot$facet <- ggproto(
-        NULL, ParentFacet,
-        draw_panels = function(self, panels, layout,
-                               x_scales = NULL, y_scales = NULL,
-                               ranges, coord, data = NULL, theme, params) {
-            # we recycle the theme elements of the guide axis
-            theme <- recycle_theme_axis("x", theme, x_scales)
-            theme <- recycle_theme_axis("y", theme, y_scales)
-            ParentCoord <- coord
-            h_tick0 <- h_text0 <- 0L
-            v_tick0 <- v_text0 <- 0L
-            # subset theme for each panel
-            coord <- ggproto(NULL, ParentCoord,
-                # `align_scales` will attach the `.__plot_index__`
-                render_axis_h = function(self, panel_params, theme) {
-                    scale <- (.subset2(panel_params, "x") %||%
-                        .subset2(panel_params, "theta")
-                    )$scale
-                    h_tick1 <- h_tick0 + length(scale$get_breaks())
-                    h_text1 <- h_text0 + length(scale$get_labels())
-                    theme <- subset_theme_axis(
-                        "x", theme, h_tick0, h_text0, h_tick1, h_text1
-                    )
-                    h_tick0 <<- h_tick1
-                    h_text0 <<- h_text1
-                    ggproto_parent(ParentCoord, self)$render_axis_h(
-                        panel_params, theme
-                    )
-                },
-                render_axis_v = function(self, panel_params, theme) {
-                    scale <- (.subset2(panel_params, "y") %||%
-                        .subset2(panel_params, "r")
-                    )$scale
-                    v_tick1 <- v_tick0 + length(scale$get_breaks())
-                    v_text1 <- v_text0 + length(scale$get_labels())
-                    theme <- subset_theme_axis(
-                        "y", theme, v_tick0, v_text0, v_tick1, v_text1
-                    )
-                    v_tick0 <<- v_tick1
-                    v_text0 <<- v_text1
-                    ggproto_parent(ParentCoord, self)$render_axis_v(
-                        panel_params, theme
-                    )
-                }
-            )
-            ggproto_parent(ParentFacet, self)$draw_panels(
-                panels = panels, layout = layout,
-                x_scales = x_scales, y_scales = y_scales,
-                ranges = ranges, coord = coord, data = data,
-                theme = theme, params = params
-            )
+#' @importFrom ggplot2 update_ggplot ggproto ggproto_parent
+S7::method(
+    update_ggplot,
+    list(S7::new_S3_class("theme_recycle"), ggplot2::class_ggplot)
+) <-
+    function(object, plot, object_name, ...) {
+        ParentFacet <- plot$facet
+        if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
+            return(plot)
         }
-    )
-    plot
-}
+        # recycle axis theme elements
+        plot$facet <- ggproto(
+            NULL, ParentFacet,
+            draw_panels = function(self, panels, layout,
+                                   x_scales = NULL, y_scales = NULL,
+                                   ranges, coord, data = NULL, theme, params) {
+                # we recycle the theme elements of the guide axis
+                theme <- recycle_theme_axis("x", theme, x_scales)
+                theme <- recycle_theme_axis("y", theme, y_scales)
+                ParentCoord <- coord
+                h_tick0 <- h_text0 <- 0L
+                v_tick0 <- v_text0 <- 0L
+                # subset theme for each panel
+                coord <- ggproto(NULL, ParentCoord,
+                    # `align_scales` will attach the `.__plot_index__`
+                    render_axis_h = function(self, panel_params, theme) {
+                        scale <- (.subset2(panel_params, "x") %||%
+                            .subset2(panel_params, "theta")
+                        )$scale
+                        h_tick1 <- h_tick0 + length(scale$get_breaks())
+                        h_text1 <- h_text0 + length(scale$get_labels())
+                        theme <- subset_theme_axis(
+                            "x", theme, h_tick0, h_text0, h_tick1, h_text1
+                        )
+                        h_tick0 <<- h_tick1
+                        h_text0 <<- h_text1
+                        ggproto_parent(ParentCoord, self)$render_axis_h(
+                            panel_params, theme
+                        )
+                    },
+                    render_axis_v = function(self, panel_params, theme) {
+                        scale <- (.subset2(panel_params, "y") %||%
+                            .subset2(panel_params, "r")
+                        )$scale
+                        v_tick1 <- v_tick0 + length(scale$get_breaks())
+                        v_text1 <- v_text0 + length(scale$get_labels())
+                        theme <- subset_theme_axis(
+                            "y", theme, v_tick0, v_text0, v_tick1, v_text1
+                        )
+                        v_tick0 <<- v_tick1
+                        v_text0 <<- v_text1
+                        ggproto_parent(ParentCoord, self)$render_axis_v(
+                            panel_params, theme
+                        )
+                    }
+                )
+                ggproto_parent(ParentFacet, self)$draw_panels(
+                    panels = panels, layout = layout,
+                    x_scales = x_scales, y_scales = y_scales,
+                    ranges = ranges, coord = coord, data = data,
+                    theme = theme, params = params
+                )
+            }
+        )
+        plot
+    }
 
 #################################################################
 # Apply a function to the vectorized field of the theme object

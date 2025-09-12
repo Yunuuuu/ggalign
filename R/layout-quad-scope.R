@@ -9,13 +9,12 @@
 #' annotation positions or the main plot without altering the currently active
 #' layout or nesting state.
 #'
-#' @param x An object which can be added to the ggplot.
+#' @param object An object which can be added to the ggplot.
 #' @param position A string or character vector specifying one or more positions
 #' (`r oxford_and(c(.tlbr, "i"))`) indicating where `x` should be applied.
 #' Use `'i'` to refer to the quad body (i.e., the main plot). If `NULL`, the
 #' active annotation context is cleared, behaving as if no annotation is active.
 #' See the **Details** section for more information.
-#' @inheritParams rlang::args_dots_empty
 #' @return The original object with an added attribute that sets the specified
 #' context.
 #' @details
@@ -61,11 +60,41 @@
 #'     align_dendro(aes(color = branch), k = 3L) -
 #'     # Modify the background of all plots in the left and top annotation
 #'     quad_scope(theme(plot.background = element_rect(fill = "red")), "tl")
-#' @importFrom S7 S7_dispatch
+#' @importFrom S7 S7_dispatch S7_inherits
 #' @export
-quad_scope <- S7::new_generic(
-    "quad_scope", "x",
-    function(x, position = waiver(), ...) S7_dispatch()
+quad_scope <- S7::new_class(
+    "quad_scope",
+    properties = list(
+        object = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                invalid <- c(
+                    "layout_title", "layout_theme", "layout_annotation",
+                    "quad_active", "quad_anno", "stack_switch"
+                )
+                if (S7_inherits(value, CraftBox) || inherits(value, invalid)) {
+                    cli_abort("Scope cannot be set for {.obj_type_friendly {value}}")
+                }
+                NULL
+            }
+        ),
+        position = S7::new_property(
+            S7::class_any,
+            validator = function(value) {
+                if (is.waive(value) || is.null(value)) {
+                    return(NULL)
+                }
+                if (is_string(value) && !grepl("[^tlbri]", value)) {
+                    return(NULL)
+                }
+                sprintf(
+                    "must be a single string containing only the characters %s",
+                    oxford_and(c(.tlbr, "i"))
+                )
+            },
+            default = quote(waiver())
+        )
+    )
 )
 
 #' Create ggplot object with layout panel data
@@ -89,7 +118,7 @@ with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
             details = "with_quad(position = \"i\")"
         )
         if (isTRUE(main)) {
-            if (is.null(position)) {
+            if (is.null(position) || is.waive(position)) {
                 position <- "i"
             } else if (is_string(position)) {
                 position <- paste0(position, "i")
@@ -98,30 +127,6 @@ with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
     }
     quad_scope(x, position, ...)
 }
-
-QuadScope <- S7::new_class(
-    "QuadScope",
-    properties = list(
-        position = S7::new_property(
-            S7::class_any,
-            validator = function(value) {
-                if (is.waive(value) || is.null(value)) {
-                    return(NULL)
-                }
-                if (is_string(value) && !grepl("[^tlbri]", value)) {
-                    return(NULL)
-                }
-                sprintf(
-                    "must be a single string containing only the characters %s",
-                    oxford_and(c(.tlbr, "i"))
-                )
-            },
-            default = quote(waiver())
-        ),
-        object = S7::class_any,
-        object_name = S7::class_any
-    )
-)
 
 quad_scope_contexts <- function(scope, current) {
     contexts <- prop(scope, "position")
@@ -137,43 +142,9 @@ quad_scope_contexts <- function(scope, current) {
     }
 }
 
-#' @importFrom utils str
-#' @importFrom S7 props
-local(S7::method(str, QuadScope) <- function(object, ..., nest.lev = 0) {
-    cat(if (nest.lev > 0) " ")
-    cat(paste0("<", main_class(object), ">\n"))
-    str_nest(.subset(props(object), c("position", "object")),
-        "@", ...,
-        nest.lev = nest.lev
-    )
-})
-
-S7::method(quad_scope, S7::class_any) <- function(x, position = waiver(), ...) {
-    QuadScope(
-        position = position,
-        object = x,
-        object_name = paste(deparse(substitute(x)), collapse = " ")
-    )
-}
-
-S7::method(quad_scope, CraftBox) <- function(x, position = waiver(), ...) {
-    cli_abort(sprintf("Cannot used with %s", object_name(x)))
-}
-
-S7::method(quad_scope, S3_layout_title) <-
-    S7::method(quad_scope, S3_layout_theme) <-
-    S7::method(quad_scope, S7::new_S3_class("layout_annotation")) <-
-    S7::method(quad_scope, S7::new_S3_class("quad_active")) <-
-    S7::method(quad_scope, S7::new_S3_class("quad_anno")) <-
-    S7::method(quad_scope, S7::new_S3_class("stack_switch")) <-
-    function(x, position = waiver(), ...) {
-        cli_abort("Cannot used with {.obj_type_friendly {x}}")
+#' @importFrom ggplot2 update_ggplot
+S7::method(update_ggplot, list(quad_scope, ggplot2::class_ggplot)) <-
+    function(object, plot, objectname, ...) {
+        object <- prop(object, "object")
+        update_ggplot(object, plot, objectname, ...)
     }
-
-#' @importFrom ggplot2 ggplot_add
-#' @export
-`ggplot_add.ggalign::QuadScope` <- function(object, plot, object_name, ...) {
-    object_name <- prop(object, "object_name")
-    object <- prop(object, "object")
-    ggplot_add(object, plot, object_name)
-}

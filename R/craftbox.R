@@ -118,7 +118,7 @@ craftbox_add <- S7::new_generic(
     function(object, box, objectname) S7_dispatch()
 )
 
-#' @importFrom ggplot2 ggplot_add
+#' @importFrom ggplot2 update_ggplot
 S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
     if (is.null(object)) return(box) # styler: off
     if (is.null(prop(box, "plot"))) {
@@ -131,7 +131,7 @@ S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
         ))
     }
     # Bypass S7 setter validation: update internal property via attr() directly
-    attr(box, "plot") <- ggplot_add(
+    attr(box, "plot") <- update_ggplot(
         object, ggfun("plot_clone")(prop(box, "plot")), objectname
     )
     box

@@ -20,10 +20,11 @@
                 filling <- "tile"
             }
         }
-        ans$plots$main <- ans$plots$main + layer_order(switch(filling,
+        main_layer <- switch(filling,
             raster = ggplot2::geom_raster(mapping = mapping),
             tile = ggplot2::geom_tile(mapping = mapping)
-        ))
+        )
+        ans$plots$main <- ans$plots$main + layer_order(main_layer)
     }
     # add class to set the default color mapping --------
     ans$plots$main <- add_class(ans$plots$main, "ggalign_heatmap")

@@ -78,9 +78,11 @@ setup_discrete_limits <- function(axis, domain, n_panels) {
     }
 }
 
-#' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @export
-ggplot_add.layout_align <- function(object, plot, object_name, ...) {
+#' @importFrom ggplot2 update_ggplot ggproto ggproto_parent
+S7::method(
+    update_ggplot,
+    list(S7::new_S3_class("layout_align"), ggplot2::class_ggplot)
+) <- function(object, plot, object_name, ...) {
     x_domain <- .subset2(object, "x")
     y_domain <- .subset2(object, "y")
     if (is.null(x_domain) && is.null(y_domain)) {

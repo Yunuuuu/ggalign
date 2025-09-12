@@ -16,58 +16,50 @@
 #' ggplot(faithfuld, aes(waiting, eruptions)) +
 #'     geom_raster(aes(fill = density)) +
 #'     layer_order(geom_point(color = "red", size = 1))
+#' @importFrom S7 new_object S7_object S7_inherits prop
 #' @export
-layer_order <- function(layer, order = 0) {
-    assert_number_decimal(order)
-    UseMethod("layer_order")
-}
-
-#' @export
-layer_order.default <- function(layer, order = 0) {
-    cli_abort("{.arg layer} must be a {.fn geom_*} object")
-}
-
-#' @export
-layer_order.Layer <- function(layer, order = 0) {
-    if (!is.infinite(order)) order <- vec_cast(order, integer())
-    structure(
-        list(
-            object = layer,
-            order = order,
-            # used for `ggplot_add`
-            object_name = paste(deparse(substitute(layer)), collapse = " ")
-        ),
-        class = "ggalign_layer_order"
-    )
-}
-
-#' @export
-layer_order.ggalign_layer_order <- function(layer, order = 0) {
-    if (!is.infinite(order)) order <- vec_cast(order, integer())
-    layer$order <- order
-    layer
-}
-
-#' @importFrom ggplot2 ggplot_add
-#' @export
-ggplot_add.ggalign_layer_order <- function(object, plot, object_name, ...) {
-    # ggplot2 will do something special for the layer
-    # add layer_name, we re-call the method for the layer
-    ans <- ggplot_add(
-        .subset2(object, "object"),
-        plot, .subset2(object, "object_name")
-    )
-    if ((cur <- length(layers <- ans$layers)) == 1L) {
-        return(ans)
+layer_order <- S7::new_class(
+    "layer_order",
+    properties = list(
+        layer = ggplot2::class_layer,
+        order = S7::new_property(
+            S7::class_numeric,
+            setter = function(self, value) {
+                assert_number_whole(value,
+                    allow_infinite = TRUE,
+                    arg = "@order"
+                )
+                prop(self, "order", check = FALSE) <- value
+                self
+            }
+        )
+    ),
+    constructor = function(layer, order = 0) {
+        if (S7_inherits(layer, layer_order)) {
+            prop(layer, "order") <- order
+            return(layer)
+        }
+        new_object(S7_object(), layer = layer, order = order)
     }
-    order <- .subset2(object, "order")
-    layer <- .subset2(layers, cur)
-    if (order >= length(layers)) return(ans) # styler: off
-    if (order <= 0L) {
-        layers <- append(vec_slice(layers, -cur), layer, 0L)
-    } else {
-        layers <- append(vec_slice(layers, -cur), layer, order)
+)
+
+#' @importFrom ggplot2 update_ggplot
+S7::method(update_ggplot, list(layer_order, ggplot2::class_ggplot)) <-
+    function(object, plot, objectname, ...) {
+        # ggplot2 will do something special for the layer
+        # add layer_name, we re-call the method for the layer
+        ans <- update_ggplot(prop(object, "layer"), plot, objectname, ...)
+        if ((cur <- length(layers <- ans$layers)) == 1L) {
+            return(ans)
+        }
+        order <- prop(object, "order")
+        layer <- .subset2(layers, cur)
+        if (order >= length(layers)) return(ans) # styler: off
+        if (order <= 0L) {
+            layers <- append(vec_slice(layers, -cur), layer, 0L)
+        } else {
+            layers <- append(vec_slice(layers, -cur), layer, order)
+        }
+        ans$layers <- layers
+        ans
     }
-    ans$layers <- layers
-    ans
-}

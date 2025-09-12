@@ -169,9 +169,11 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     table
 }
 
-#' @importFrom ggplot2 ggplot_add
-#' @export
-ggplot_add.ggalign_patch_labels <- function(object, plot, object_name, ...) {
+#' @importFrom ggplot2 update_ggplot
+S7::method(
+    update_ggplot,
+    list(S7::new_S3_class("ggalign_patch_labels"), ggplot2::class_ggplot)
+) <- function(object, plot, object_name, ...) {
     for (nm in names(object)) {
         if (is.waive(.subset2(object, nm))) next
         plot$ggalign_patch_labels[nm] <- list(.subset2(object, nm))

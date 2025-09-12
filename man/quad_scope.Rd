@@ -4,18 +4,16 @@
 \alias{quad_scope}
 \title{Modify operated Context in \code{quad_layout()}}
 \usage{
-quad_scope(x, position = waiver(), ...)
+quad_scope(object = NULL, position = waiver())
 }
 \arguments{
-\item{x}{An object which can be added to the ggplot.}
+\item{object}{An object which can be added to the ggplot.}
 
 \item{position}{A string or character vector specifying one or more positions
 (\code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}, and \code{"i"}) indicating where \code{x} should be applied.
 Use \code{'i'} to refer to the quad body (i.e., the main plot). If \code{NULL}, the
 active annotation context is cleared, behaving as if no annotation is active.
 See the \strong{Details} section for more information.}
-
-\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 The original object with an added attribute that sets the specified

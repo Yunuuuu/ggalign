@@ -56,35 +56,37 @@ default_expansion <- function(x = NULL, y = NULL) {
     structure(list(x = x, y = y), class = c("ggalign_default_expansion"))
 }
 
-#' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @export
-ggplot_add.ggalign_default_expansion <- function(object, plot, object_name,
-                                                 ...) {
-    if (is.null(.subset2(object, "x")) && is.null(.subset2(object, "y"))) {
-        return(plot)
-    }
-    ParentFacet <- plot$facet
-    plot$facet <- ggproto(
-        NULL,
-        ParentFacet,
-        init_scales = function(self, layout, x_scale = NULL, y_scale = NULL,
-                               params) {
-            if (!is.null(x_scale) && !is.null(.subset2(object, "x"))) {
-                x_scale$expand <- x_scale$expand %|w|% .subset2(object, "x")
-            }
-            if (!is.null(y_scale) && !is.null(.subset2(object, "y"))) {
-                y_scale$expand <- y_scale$expand %|w|% .subset2(object, "y")
-            }
-            ggproto_parent(ParentFacet, self)$init_scales(
-                layout = layout,
-                x_scale = x_scale,
-                y_scale = y_scale,
-                params = params
-            )
+#' @importFrom ggplot2 update_ggplot ggproto ggproto_parent
+S7::method(
+    update_ggplot,
+    list(S7::new_S3_class("ggalign_default_expansion"), ggplot2::class_ggplot)
+) <-
+    function(object, plot, objectname, ...) {
+        if (is.null(.subset2(object, "x")) && is.null(.subset2(object, "y"))) {
+            return(plot)
         }
-    )
-    plot
-}
+        ParentFacet <- plot$facet
+        plot$facet <- ggproto(
+            NULL,
+            ParentFacet,
+            init_scales = function(self, layout, x_scale = NULL, y_scale = NULL,
+                                   params) {
+                if (!is.null(x_scale) && !is.null(.subset2(object, "x"))) {
+                    x_scale$expand <- x_scale$expand %|w|% .subset2(object, "x")
+                }
+                if (!is.null(y_scale) && !is.null(.subset2(object, "y"))) {
+                    y_scale$expand <- y_scale$expand %|w|% .subset2(object, "y")
+                }
+                ggproto_parent(ParentFacet, self)$init_scales(
+                    layout = layout,
+                    x_scale = x_scale,
+                    y_scale = y_scale,
+                    params = params
+                )
+            }
+        )
+        plot
+    }
 
 ######################################################
 reverse_continuous_axis <- function(plot, axis) {

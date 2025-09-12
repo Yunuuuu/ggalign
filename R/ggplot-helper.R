@@ -181,71 +181,84 @@ S7::method(element_vec_fields, S7::class_any) <- function(.el) {
 #' one or more of `r oxford_and(c(.tlbr, "x", "y"))`.
 #' @return An object which can be added to ggplot.
 #' @export
-no_expansion <- function(borders = "tlbr") {
-    assert_string(borders, empty_ok = FALSE)
-    if (grepl("[^tlbrxy]", borders)) {
-        cli_abort(sprintf(
-            "{.arg borders} can only contain the %s characters",
-            oxford_and(c(.tlbr, "x", "y"))
-        ))
-    }
-    borders <- .subset(list(
-        t = "top", l = "left", b = "bottom", r = "right",
-        x = c("left", "right"), y = c("bottom", "top")
-    ), split_position(borders))
-    borders <- vec_unique(unlist(borders, recursive = FALSE, use.names = FALSE))
-    # expansion in x-axis
-    structure(list(borders = borders), class = c("ggalign_no_expansion"))
-}
-
-#' @importFrom ggplot2 ggplot_add ggproto ggproto_parent
-#' @export
-ggplot_add.ggalign_no_expansion <- function(object, plot, object_name, ...) {
-    borders <- .subset2(object, "borders")
-    ParentLayout <- plot$layout
-
-    # tricks to ensure remove `coord` won't remove `no_expansion()`
-    plot$layout <- ggproto(NULL, ParentLayout,
-        setup_panel_params = function(self) {
-            ParentCoord <- self$coord
-            self$coord <- ggproto(NULL, ParentCoord,
-                setup_panel_params = function(self, scale_x, scale_y,
-                                              params = list()) {
-                    if (!is.null(scale_x)) {
-                        expansion <- scale_x$expand %|w|%
-                            ggfun("default_expansion")(
-                                scale_y,
-                                expand = params$expand[c(4, 2)]
-                            )
-                        if (any(borders == "left")) {
-                            expansion[1:2] <- 0
-                        }
-                        if (any(borders == "right")) {
-                            expansion[3:4] <- 0
-                        }
-                        scale_x$expand <- expansion
-                    }
-                    if (!is.null(scale_y)) {
-                        expansion <- scale_y$expand %|w|%
-                            ggfun("default_expansion")(
-                                scale_y,
-                                expand = params$expand[c(3, 1)]
-                            )
-                        if (any(borders == "bottom")) {
-                            expansion[1:2] <- 0
-                        }
-                        if (any(borders == "top")) {
-                            expansion[3:4] <- 0
-                        }
-                        scale_y$expand <- expansion
-                    }
-                    ggproto_parent(ParentCoord, self)$setup_panel_params(
-                        scale_x = scale_x, scale_y = scale_y, params = params
-                    )
+no_expansion <- S7::new_class(
+    "no_expansion",
+    properties = list(
+        borders = S7::new_property(
+            S7::class_character,
+            setter = function(self, value) {
+                if (grepl("[^tlbrxy]", value)) {
+                    cli_abort(sprintf(
+                        "{.arg @borders} can only contain the %s characters",
+                        oxford_and(c(.tlbr, "x", "y"))
+                    ))
                 }
-            )
-            ggproto_parent(ParentLayout, self)$setup_panel_params()
-        }
+                borders <- .subset(
+                    list(
+                        t = "top", l = "left", b = "bottom", r = "right",
+                        x = c("left", "right"), y = c("bottom", "top")
+                    ),
+                    split_position(value)
+                )
+                borders <- unlist(borders, recursive = FALSE, use.names = FALSE)
+                borders <- vec_unique(borders)
+                prop(self, "borders", check = FALSE) <- borders
+                self
+            },
+            default = "tlbr"
+        )
     )
-    plot
-}
+)
+
+#' @importFrom S7 prop
+#' @importFrom ggplot2 update_ggplot ggproto ggproto_parent
+S7::method(update_ggplot, list(no_expansion, ggplot2::class_ggplot)) <-
+    function(object, plot, object_name, ...) {
+        borders <- prop(object, "borders")
+        ParentLayout <- plot$layout
+
+        # tricks to ensure remove `coord` won't remove `no_expansion()`
+        plot$layout <- ggproto(NULL, ParentLayout,
+            setup_panel_params = function(self) {
+                ParentCoord <- self$coord
+                self$coord <- ggproto(NULL, ParentCoord,
+                    setup_panel_params = function(self, scale_x, scale_y,
+                                                  params = list()) {
+                        if (!is.null(scale_x)) {
+                            expansion <- scale_x$expand %|w|%
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    expand = params$expand[c(4, 2)]
+                                )
+                            if (any(borders == "left")) {
+                                expansion[1:2] <- 0
+                            }
+                            if (any(borders == "right")) {
+                                expansion[3:4] <- 0
+                            }
+                            scale_x$expand <- expansion
+                        }
+                        if (!is.null(scale_y)) {
+                            expansion <- scale_y$expand %|w|%
+                                ggfun("default_expansion")(
+                                    scale_y,
+                                    expand = params$expand[c(3, 1)]
+                                )
+                            if (any(borders == "bottom")) {
+                                expansion[1:2] <- 0
+                            }
+                            if (any(borders == "top")) {
+                                expansion[3:4] <- 0
+                            }
+                            scale_y$expand <- expansion
+                        }
+                        ggproto_parent(ParentCoord, self)$setup_panel_params(
+                            scale_x = scale_x, scale_y = scale_y, params = params
+                        )
+                    }
+                )
+                ggproto_parent(ParentLayout, self)$setup_panel_params()
+            }
+        )
+        plot
+    }

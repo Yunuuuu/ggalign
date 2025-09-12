@@ -55,16 +55,15 @@ S7::method(layout_add, list(QuadLayout, S7::class_any)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_add, list(QuadLayout, QuadScope)) <-
+S7::method(layout_add, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
         old <- layout@current
         contexts <- quad_scope_contexts(object, old)
         if (is.null(contexts)) contexts <- list(NULL)
-        object_name <- prop(object, "object_name")
         object <- prop(object, "object")
         for (active in contexts) {
             layout@current <- active
-            layout <- layout_add(layout, object, object_name)
+            layout <- layout_add(layout, object, objectname)
         }
         layout@current <- old
         layout
@@ -326,10 +325,14 @@ quad_body_add <- function(object, quad, objectname) {
     UseMethod("quad_body_add")
 }
 
-#' @importFrom ggplot2 ggplot_add
+#' @importFrom ggplot2 update_ggplot
 #' @export
 quad_body_add.default <- function(object, quad, objectname) {
-    quad@plot <- ggplot_add(object, ggfun("plot_clone")(quad@plot), objectname)
+    quad@plot <- update_ggplot(
+        object,
+        ggfun("plot_clone")(quad@plot),
+        objectname
+    )
     quad
 }
 
@@ -394,21 +397,20 @@ S7::method(layout_subtract, list(QuadLayout, Scheme)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(QuadLayout, QuadScope)) <-
+S7::method(layout_subtract, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
-        inner_name <- prop(object, "object_name")
         inner <- prop(object, "object")
         contexts <- quad_scope_contexts(object, layout@current)
         # `subtract` operates at layout-level
         if (is.null(contexts)) {
-            layout <- layout_subtract(layout, inner, inner_name)
+            layout <- layout_subtract(layout, inner, objectname)
         } else {
             for (active in contexts) {
                 if (is.null(active)) {
-                    layout <- quad_body_add(inner, layout, inner_name)
+                    layout <- quad_body_add(inner, layout, objectname)
                 } else if (!is.null(prop(layout, active))) {
                     prop(layout, active) <- layout_subtract(
-                        prop(layout, active), inner, inner_name
+                        prop(layout, active), inner, objectname
                     )
                 }
             }
@@ -420,11 +422,10 @@ S7::method(layout_subtract, list(QuadLayout, QuadScope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_and_add, list(QuadLayout, QuadScope)) <-
+S7::method(layout_and_add, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        object_name <- prop(object, "object_name")
-        layout_and_add(object, layout, object_name)
+        layout_and_add(object, layout, objectname)
     }
 
 quad_and_add <- function(layout, object, objectname) {
@@ -443,7 +444,6 @@ S7::method(layout_and_add, list(QuadLayout, S7::class_any)) <- quad_and_add
 
 #' @include layout-.R
 #' @include layout-operator.R
-#' @importFrom S7 super
 S7::method(layout_and_add, list(QuadLayout, S3_class_theme)) <-
     function(layout, object, objectname) {
         ans <- quad_and_add(layout, object, objectname)

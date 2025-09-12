@@ -20,9 +20,9 @@ test_that("active property assignment and validation", {
     obj@name <- "plot1"
     expect_equal(obj@name, "plot1")
 
-    expect_error(obj@order <- c(1L, 2L), "must be a single integer value")
-    expect_error(obj@use <- c(TRUE, FALSE), "must be a single boolean value")
-    expect_error(obj@name <- c("a", "b"), "must be a single character string")
+    expect_snapshot_error(obj@order <- c(1L, 2L))
+    expect_snapshot_error(obj@use <- c(TRUE, FALSE))
+    expect_snapshot_error(obj@name <- c("a", "b"))
 })
 
 test_that("active + active merges non-NA properties", {
@@ -44,6 +44,6 @@ test_that("active + NULL returns self", {
 
 test_that("active + incompatible throws error", {
     a <- active()
-    expect_error(a + 1, "is not permitted")
-    expect_error("text" + a, "is not permitted")
+    expect_snapshot_error(a + 1)
+    expect_snapshot_error("text" + a)
 })

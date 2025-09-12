@@ -186,7 +186,7 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_add, list(StackLayout, QuadScope)) <-
+S7::method(layout_add, list(StackLayout, quad_scope)) <-
     S7::method(
         layout_add,
         list(StackLayout, S7::new_S3_class("quad_active"))
@@ -214,7 +214,7 @@ S7::method(layout_add, list(StackLayout, QuadScope)) <-
         layout
     }
 
-S7::method(layout_add, list(CircleLayout, QuadScope)) <-
+S7::method(layout_add, list(CircleLayout, quad_scope)) <-
     S7::method(layout_add, list(CircleLayout, QuadLayout)) <-
     S7::method(
         layout_add,
@@ -571,22 +571,21 @@ S7::method(layout_subtract, list(ChainLayout, Scheme)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_subtract, list(StackLayout, QuadScope)) <-
+S7::method(layout_subtract, list(StackLayout, quad_scope)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
             inner <- prop(object, "object")
-            inner_name <- prop(object, "object_name")
 
             # subtract set at layout level, if it is a Scheme
             if (S7_inherits(inner, Scheme)) {
-                layout <- update_layout_schemes(inner, layout, inner_name)
+                layout <- update_layout_schemes(inner, layout, objectname)
             }
 
             # otherwise, we apply the object to all plots in the stack layout
             layout@box_list <- lapply(layout@box_list, function(box) {
                 if (is_craftbox(box)) {
-                    box <- chain_box_add(box, inner, inner_name, force = FALSE)
+                    box <- chain_box_add(box, inner, objectname, force = FALSE)
                 } else {
                     # we respect the context setting
                     box <- layout_subtract(box, object, objectname)
@@ -605,11 +604,10 @@ S7::method(layout_subtract, list(StackLayout, QuadScope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_and_add, list(ChainLayout, QuadScope)) <-
+S7::method(layout_and_add, list(ChainLayout, quad_scope)) <-
     function(layout, object, objectname) {
-        object_name <- prop(object, "object_name")
         object <- prop(object, "object")
-        layout_and_add(layout, object, object_name)
+        layout_and_add(layout, object, objectname)
     }
 
 chain_and_add <- function(layout, object, objectname) {
@@ -629,7 +627,6 @@ chain_and_add <- function(layout, object, objectname) {
 S7::method(layout_and_add, list(ChainLayout, S7::class_any)) <-
     chain_and_add
 
-#' @importFrom S7 super
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_and_add, list(ChainLayout, S3_class_theme)) <-

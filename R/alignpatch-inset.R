@@ -65,8 +65,10 @@ grid.draw.patch_inset <- function(x, recording = TRUE) {
     grid.draw(.subset2(x, "grob"))
 }
 
-#' @importFrom ggplot2 ggplot_add
-#' @export
-ggplot_add.patch_inset <- function(object, plot, object_name, ...) {
+#' @importFrom ggplot2 update_ggplot
+S7::method(
+    update_ggplot,
+    list(S7::new_S3_class("patch_inset"), ggplot2::class_ggplot)
+) <- function(object, plot, object_name, ...) {
     make_wrap(plot, object)
 }

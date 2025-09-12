@@ -1,19 +1,19 @@
 # `layer_order()` works well
 
-    `layer` must be a `geom_*()` object
+    <ggalign::layer_order> object properties are invalid:
+    - @layer must be S3<Layer>, not S3<ScaleDiscrete/Scale/ggproto/gg>
 
 ---
 
-    `order` must be a number, not the string "a".
+    `@order` must be a whole number, not the string "a".
 
 ---
 
-    `order` must be a number, not `NA`.
+    `@order` must be a whole number, not `NA`.
 
 ---
 
-    Can't convert from `order` <double> to <integer> due to loss of precision.
-    * Locations: 1
+    `@order` must be a whole number, not the number 1.5.
 
 # `geom_gshape()` works well
 
