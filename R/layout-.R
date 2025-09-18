@@ -24,6 +24,12 @@ LayoutProto <- S7::new_class("LayoutProto",
     abstract = TRUE
 )
 
+S7::method(update_ggplot, list(LayoutProto, class_alignpatches)) <-
+    function(object, plot, objectname) {
+        prop(plot, "plots") <- c(prop(plot, "plots"), list(object))
+        plot
+    }
+
 #' Subset a `Layout` object
 #'
 #' Used by [`ggplot_build`][ggplot2::ggplot_build] and
@@ -37,10 +43,10 @@ LayoutProto <- S7::new_class("LayoutProto",
 #' @name Layout-subset
 local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
 
-local(S7::method(print, LayoutProto) <- `print.ggalign::AlignPatches`)
+local(S7::method(print, LayoutProto) <- `print.ggalign::alignpatches`)
 
 #' @importFrom grid grid.draw
-local(S7::method(grid.draw, LayoutProto) <- `grid.draw.ggalign::AlignPatches`)
+local(S7::method(grid.draw, LayoutProto) <- `grid.draw.ggalign::alignpatches`)
 
 local(S7::method(alignpatch, LayoutProto) <- function(x) {
     ggproto(NULL, PatchLayout, layout = x)

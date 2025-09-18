@@ -64,7 +64,6 @@ Language: en-GB
 Collate: 
     'active.R'
     'alignpatch-.R'
-    'utils-ggplot.R'
     'ggplot-theme.R'
     'alignpatch-align_plots.R'
     'alignpatch-alignpatches.R'
@@ -82,6 +81,7 @@ Collate:
     'alignpatch-patch.R'
     'alignpatch-patchwork.R'
     'alignpatch-title.R'
+    'alignpatch-update.R'
     'alignpatch-wrap.R'
     'attributes.R'
     'craftsman.R'
@@ -98,6 +98,7 @@ Collate:
     'craft-cross-mark.R'
     'craft-cross-none.R'
     'utils-grid.R'
+    'utils-ggplot.R'
     'scheme-.R'
     'craftbox.R'
     'domain.R'

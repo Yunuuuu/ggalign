@@ -66,7 +66,7 @@ make_wrap.ggplot <- function(patch, patch_inset) {
 make_wrap.patch_ggplot <- make_wrapped_plot
 
 #' @export
-`make_wrap.ggalign::AlignPatches` <- make_wrapped_plot
+`make_wrap.ggalign::alignpatches` <- make_wrapped_plot
 
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent

@@ -16,7 +16,7 @@ free_lab.ggplot <- function(plot, labs = "tlbr") {
 }
 
 #' @export
-`free_lab.ggalign::AlignPatches` <- free_lab.ggplot
+`free_lab.ggalign::alignpatches` <- free_lab.ggplot
 
 #' @export
 free_lab.free_align <- function(plot, labs = "tlbr") {

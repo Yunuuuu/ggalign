@@ -135,7 +135,7 @@ layout_and_add <- S7::new_generic(
 local(
     for (left in list(QuadLayout, ChainLayout)) {
         for (right in list(
-            S3_class_ggplot,
+            ggplot2::class_ggplot,
             S7::new_S3_class("quad_active"),
             S7::new_S3_class("quad_anno"),
             S3_layout_title,

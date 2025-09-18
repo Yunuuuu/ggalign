@@ -67,7 +67,7 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, S3_class_ggplot)) <-
+S7::method(layout_add, list(ChainLayout, ggplot2::class_ggplot)) <-
     function(layout, object, objectname) {
         layout_add(layout, ggfree(data = object), objectname)
     }

@@ -17,7 +17,7 @@ free_guide.ggplot <- function(plot, guides = "tlbr") {
 }
 
 #' @export
-`free_guide.ggalign::AlignPatches` <- free_guide.ggplot
+`free_guide.ggalign::alignpatches` <- free_guide.ggplot
 
 #' @export
 free_guide.free_guide <- function(plot, guides = "tlbr") {

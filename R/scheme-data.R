@@ -81,7 +81,7 @@ S7::method(scheme_inherit, list(scheme_data, scheme_data)) <- function(e1, e2) {
 }
 
 #' @importFrom S7 prop
-S7::method(plot_add_scheme, list(S3_class_ggplot, scheme_data)) <-
+S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_data)) <-
     function(plot, scheme, ...) {
         if (!is.null(scheme_data <- prop(scheme, "data") %|w|% NULL) &&
             !is.null(raw_data <- plot$data)) {

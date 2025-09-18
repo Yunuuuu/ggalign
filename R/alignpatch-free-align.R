@@ -94,7 +94,7 @@ free_align.ggplot <- function(plot, axes = "tlbr") {
 }
 
 #' @export
-`free_align.ggalign::AlignPatches` <- free_align.ggplot
+`free_align.ggalign::alignpatches` <- free_align.ggplot
 
 #' @importFrom rlang is_empty
 #' @export

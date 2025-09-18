@@ -1,6 +1,6 @@
 #' @importFrom ggplot2 ggproto
 #' @export
-`alignpatch.ggalign::AlignPatches` <- function(x) {
+`alignpatch.ggalign::alignpatches` <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 

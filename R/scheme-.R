@@ -300,7 +300,7 @@ S7::method(plot_add_scheme, list(S7::class_any, Schemes)) <-
     }
 
 #' @include utils-ggplot.R
-S7::method(plot_add_scheme, list(S3_class_ggplot, Scheme)) <-
+S7::method(plot_add_scheme, list(ggplot2::class_ggplot, Scheme)) <-
     function(plot, scheme, ...) {
         cli_abort(
             "No {.fn plot_add_scheme} method for {.obj_type_friendly {plot}} and {.obj_type_friendly {scheme}}"

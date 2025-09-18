@@ -24,7 +24,7 @@ objects into a \code{\link[grid:grid.grob]{grob}}.
 \item \code{\link[=patch.grob]{patch.grob()}}
 \item \code{\link[=patch.ggplot]{patch.ggplot()}}
 \item \code{\link[=patch.patch_ggplot]{patch.patch_ggplot()}}
-\item \code{\link[=patch.ggalign::AlignPatches]{patch.ggalign::AlignPatches()}}
+\item \code{\link[=patch.ggalign::alignpatches]{patch.ggalign::alignpatches()}}
 \item \code{\link[=patch.patchwork]{patch.patchwork()}}
 \item \code{\link[=patch.patch]{patch.patch()}}
 \item \code{\link[=patch.formula]{patch.formula()}}

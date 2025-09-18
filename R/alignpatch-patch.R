@@ -62,7 +62,7 @@ patch.patch_ggplot <- function(x, ...) {
 #' @seealso [`alignpatches`][align_plots]
 #' @family patch
 #' @export
-`patch.ggalign::AlignPatches` <- function(x, ...) {
+`patch.ggalign::alignpatches` <- function(x, ...) {
     ggalignGrob(x, ...)
 }
 

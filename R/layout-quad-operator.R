@@ -24,7 +24,7 @@ S7::method(layout_add, list(QuadLayout, S7::class_list)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S3_class_ggplot)) <-
+S7::method(layout_add, list(QuadLayout, ggplot2::class_ggplot)) <-
     function(layout, object, objectname) {
         layout_add(layout, ggfree(data = object), objectname)
     }
