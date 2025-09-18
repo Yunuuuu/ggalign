@@ -21,7 +21,7 @@ free_space.ggplot <- function(plot, spaces = "tlbr") {
 }
 
 #' @export
-`free_space.ggalign::AlignPatches` <- free_space.ggplot
+`free_space.ggalign::alignpatches` <- free_space.ggplot
 
 #' @export
 free_space.free_align <- function(plot, spaces = "tlbr") {

@@ -1,24 +1,3 @@
-#' @importFrom S7 S7_dispatch
-alignpatches_add <- S7::new_generic(
-    "alignpatches_add", "object",
-    function(object, patches, objectname) S7_dispatch()
-)
-
-S7::method(alignpatches_add, S7::class_any) <-
-    function(object, patches, objectname) {
-        if (is.null(object)) return(patches) # styler: off
-        cli_abort(c(
-            "Cannot add {objectname}",
-            "x" = "Only other layout elements or compatible objects can be added."
-        ))
-    }
-
-S7::method(alignpatches_add, S3_class_ggplot) <-
-    function(object, patches, objectname) {
-        prop(patches, "plots") <- c(prop(patches, "plots"), list(object))
-        patches
-    }
-
 #' Define the grid to compose plots in
 #'
 #' To control how different plots are laid out, you need to add a layout design
@@ -71,45 +50,6 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
 
 S3_layout_design <- S7::new_S3_class("layout_design")
 
-# Bypass S7 setter validation: update internal property via attr() directly
-S7::method(alignpatches_add, S3_layout_design) <-
-    function(object, patches, objectname) {
-        old <- prop(patches, "layout")
-        guides <- .subset2(object, "guides")
-        object$guides <- NULL # guides need special consideration
-        for (nm in names(object)) {
-            if (is.waive(.subset2(object, nm))) next
-            old[nm] <- list(.subset2(object, nm))
-        }
-        if (is.null(guides) || is.waive(guides)) {
-            old["guides"] <- list(guides)
-        } else if (!identical(guides, NA)) {
-            old["guides"] <- list(setup_guides(guides))
-        }
-        attr(patches, "layout") <- old
-        patches
-    }
-
-# plot_layout is from `patchwork` package
-S7::method(alignpatches_add, S7::new_S3_class("plot_layout")) <-
-    function(object, patches, objectname) {
-        object$area <- object$design # pathwork use `design`
-        object <- .subset(object, names(layout_design()))
-        if (is.waive(object$guides)) {
-            object$guides <- NA
-        } else if (identical(object$guides, "auto")) {
-            object$guides <- waiver()
-        } else if (identical(object$guides, "collect")) {
-            object$guides <- "tlbr"
-        } else if (identical(object$guides, "keep")) {
-            object["guides"] <- list(NULL)
-        }
-        alignpatches_add(
-            add_class(object, "layout_design"),
-            patches, objectname
-        )
-    }
-
 ##############################################################
 #' Annotate the whole layout
 #'
@@ -147,24 +87,6 @@ prop_layout_title <- function(...) {
         default = quote(list(title = NULL, subtitle = NULL, caption = NULL))
     )
 }
-
-layout_title_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (is.waive(.subset2(new, nm))) next
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
-# Bypass S7 setter validation: update internal property via attr() directly
-#' @importFrom S7 prop
-S7::method(alignpatches_add, S3_layout_title) <-
-    function(object, patches, objectname) {
-        attr(patches, "titles") <- layout_title_update(
-            prop(patches, "titles"), object
-        )
-        patches
-    }
 
 ##############################################################
 #' Modify theme of the layout
@@ -208,11 +130,6 @@ layout_theme <- new_theme_class("layout_theme")
 
 S3_layout_theme <- S7::new_S3_class("layout_theme")
 
-layout_theme_update <- function(old, new) {
-    if (is.null(old) || is.null(new)) return(new) # styler: off
-    old + new
-}
-
 # nocov start
 #' @importFrom S7 prop prop<-
 #' @importFrom ggplot2 is_theme
@@ -230,41 +147,7 @@ prop_layout_theme <- function(...) {
 }
 # nocov end
 
-#' @importFrom S7 prop
-S7::method(alignpatches_add, S3_layout_theme) <-
-    function(object, patches, objectname) {
-        prop(patches, "theme") <- layout_theme_update(
-            prop(patches, "theme"), object
-        )
-        patches
-    }
-
-#' @importFrom S7 prop
-S7::method(alignpatches_add, S7::new_S3_class("plot_annotation")) <-
-    function(object, patches, objectname) {
-        attr(patches, "titles") <- layout_title_update(
-            prop(patches, "titles"),
-            .subset(object, names(layout_title()))
-        )
-        attr(patches, "theme") <- layout_theme_update(
-            prop(patches, "theme"), .subset2(object, "theme")
-        )
-        # Transform patchwork tag into ggalign style
-        tags <- .subset2(object, "tag_levels") %|w|% NA
-        if (length(tags) == 0L) tags <- NA
-        if (is.list(tags)) tags <- .subset2(tags, length(tags))
-        attr(patches, "tags") <- layout_tags_update(
-            prop(patches, "tags"),
-            layout_tags(
-                tags = tags,
-                sep = .subset2(object, "tag_sep"),
-                prefix = .subset2(object, "tag_prefix"),
-                suffix = .subset2(object, "tag_suffix")
-            )
-        )
-        patches
-    }
-
+##############################################################
 #' Control Plot Tagging in Layouts
 #'
 #' These arguments control how tags (labels) are assigned to plots within a
@@ -364,49 +247,6 @@ layout_tags <- function(tags = NA, sep = waiver(),
 
 S3_layout_tags <- S7::new_S3_class("layout_tags")
 
-# nocov start
-prop_layout_tags <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        S7::class_list,
-        ...,
-        setter = function(self, value) {
-            if (!is.null(prop(self, property))) {
-                cli_abort(sprintf("{.field @%s} is read-only; use the '+' operator to update it.", property))
-            }
-            prop(self, property) <- value
-            self
-        },
-        default = quote(
-            list(tags = waiver(), sep = NULL, prefix = NULL, suffix = NULL)
-        )
-    )
-}
-# nocov end
-
-#' @importFrom rlang is_na
-layout_tags_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (identical(nm, "tags")) {
-            if (is_na(.subset2(new, nm))) next
-        } else if (is.waive(.subset2(new, nm))) {
-            next
-        }
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
-# Bypass S7 setter validation: update internal property via `attr()` directly
-#' @importFrom S7 prop
-S7::method(alignpatches_add, S3_layout_tags) <-
-    function(object, patches, objectname) {
-        attr(patches, "tags") <- layout_tags_update(
-            prop(patches, "tags"), object
-        )
-        patches
-    }
-
 create_layout_tagger <- function(tags, parent) {
     # If no parent and no tags, return NULL
     if (is.null(parent) &&
@@ -483,7 +323,7 @@ tag_theme <- function(th) {
     }
 }
 
-#' @importFrom ggplot2 is_theme_element calc_element theme
+#' @importFrom ggplot2 is_theme_element calc_element theme element_grob
 #' @importFrom gtable gtable_add_grob
 #' @importFrom rlang arg_match0
 table_add_tag <- function(table, label, theme) {
@@ -614,6 +454,7 @@ table_add_tag <- function(table, label, theme) {
     )
 }
 
+##############################################################
 #' Add layout annotation
 #'
 #' This function is a placeholder for future extensions.
@@ -632,6 +473,7 @@ layout_annotation <- function(..., theme = waiver()) {
     }
 }
 
+##############################################################
 #' Arrange multiple plots into a grid
 #'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
@@ -657,7 +499,7 @@ layout_annotation <- function(..., theme = waiver()) {
 #' elements of the layout. By default, the theme will inherit from the parent
 #' `layout`.
 #' @param design An alias for `area`, retained for backward compatibility.
-#' @return An `AlignPatches` object.
+#' @return An [alignpatches][class_alignpatches] object.
 #' @seealso
 #'  - [layout_design()]
 #'  - [layout_title()]
@@ -689,6 +531,7 @@ layout_annotation <- function(..., theme = waiver()) {
 #'
 #' # Compare to not using named plot arguments
 #' align_plots(p1, p2, area = area)
+#' @importFrom ggplot2 update_ggplot
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, area = NULL,
@@ -706,7 +549,15 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     } # nocov end
-    out <- AlignPatches(plots = plots)
+    for (plot in plots) {
+        if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
+            cli_abort(paste(
+                "Each plot to be aligned must implement an 'alignpatch()'",
+                "method. Object of {.obj_type_friendly {plot}} does not."
+            ))
+        }
+    }
+    out <- class_alignpatches(plots = plots)
 
     # setup layout parameters
     layout <- layout_design(
@@ -714,43 +565,43 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
         widths = widths, heights = heights, area = area,
         guides = guides
     )
-    out <- alignpatches_add(layout, out)
+    out <- update_ggplot(layout, out)
     objectname <- deparse(substitute(theme))
     if (!is.null(theme)) {
-        out <- alignpatches_add(layout_theme(theme), out, objectname)
+        out <- update_ggplot(layout_theme(theme), out, objectname)
     }
     out
 }
 
+#' The `alignpatches` class
+#'
+#' An internal S7 class that represents a collection of aligned plots
+#' along with their layout configuration, titles, tags, and theme.
+#' It is primarily used within the `ggalign` system for plot composition
+#' and layout management.
+#'
+#' @section Properties:
+#' - **plots**: A list of plot objects.
+#' - **layout**: A list specifying layout options, including:
+#'   - `ncol`, `nrow`, `byrow`: grid layout parameters.
+#'   - `widths`, `heights`: relative dimensions of rows/columns.
+#'   - `area`: custom area specification.
+#'   - `guides`: guide handling (default: [waiver()]).
+#' - **titles**: A list specifying title options (`title`, `subtitle`,
+#'   `caption`).
+#' - **tags**: A list specifying tag options (`tags`, `sep`, `prefix`,
+#'   `suffix`).
+#' - **theme**: A theme configuration object.
+#'
 #' @importFrom S7 new_object S7_object prop prop<-
-AlignPatches <- S7::new_class("AlignPatches",
+#' @keywords internal
+#' @export
+class_alignpatches <- S7::new_class(
+    "alignpatches",
     properties = list(
-        plots = S7::new_property(
-            S7::class_list,
-            validator = function(value) {
-                for (plot in value) {
-                    if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
-                        return(paste(
-                            "Each plot to be aligned must implement",
-                            "an 'alignpatch()' method.",
-                            sprintf(
-                                "Object of %s does not.",
-                                obj_type_friendly(plot)
-                            )
-                        ))
-                    }
-                }
-            }
-        ),
+        plots = S7::class_list,
         layout = S7::new_property(
             S7::class_list,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "layout"))) {
-                    cli_abort("{.field @layout} is read-only; use the '+' operator to update it.")
-                }
-                prop(self, "layout") <- value
-                self
-            },
             default = quote(list(
                 ncol = NULL, nrow = NULL, byrow = TRUE,
                 widths = NA, heights = NA, area = NULL,
@@ -758,97 +609,15 @@ AlignPatches <- S7::new_class("AlignPatches",
             ))
         ),
         titles = prop_layout_title(),
-        tags = prop_layout_tags("tags"),
+        tags = S7::new_property(
+            S7::class_list,
+            default = quote(list(
+                tags = waiver(), sep = NULL, prefix = NULL, suffix = NULL
+            ))
+        ),
         theme = prop_layout_theme()
     )
 )
 
-local(S7::method(`$`, AlignPatches) <- function(x, name) prop(x, name))
-local(S7::method(`[[`, AlignPatches) <- function(x, name) prop(x, name))
-
-#' @importFrom rlang caller_env
-local(
-    S7::method(`+`, list(AlignPatches, S7::class_any)) <-
-        function(e1, e2) {
-            # Get the name of what was passed in as e2, and pass along so that
-            # it can be displayed in error messages
-            if (missing(e2)) {
-                cli_abort(c(
-                    "Cannot use {.code +} with a single argument.",
-                    "i" = "Did you accidentally put {.code +} on a new line?"
-                ))
-            }
-            e2name <- deparse(substitute(e2, env = caller_env(2L)))
-            alignpatches_add(e2, e1, e2name)
-        }
-)
-
-#' @importFrom rlang caller_env
-local(S7::method(`&`, list(AlignPatches, S7::class_any)) <- function(e1, e2) {
-    if (missing(e2)) {
-        cli_abort(c(
-            "Cannot use {.code &} with a single argument.",
-            "i" = "Did you accidentally put {.code &} on a new line?"
-        ))
-    }
-
-    if (is.null(e2)) return(e1) # styler: off
-
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2, env = caller_env(2L)))
-    if (is_theme(e2)) {
-        prop(e1, "theme") <- ggfun("add_theme")(prop(e1, "theme"), e2, e2name)
-    }
-
-    alignpatches_and_add(e2, e1, e2name)
-})
-
-#' @importFrom ggplot2 is_ggplot update_ggplot
-#' @importFrom S7 prop S7_inherits
-#' @importFrom rlang try_fetch
-alignpatches_and_add <- function(object, patches, objectname) {
-    plots <- prop(patches, "plots")
-    for (i in seq_along(plots)) {
-        if (is_ggplot(.subset2(plots, i))) {
-            plots[[i]] <- update_ggplot(object, .subset2(plots, i), objectname)
-        } else if (S7_inherits(.subset2(plots, i), AlignPatches)) {
-            plots[[i]] <- alignpatches_and_add(
-                object, .subset2(plots, i), objectname
-            )
-        } else if (S7_inherits(.subset2(plots, i), LayoutProto)) {
-            plots[[i]] <- layout_and_add(.subset2(plots, i), object, objectname)
-        } else {
-            # For other object types, attempt to combine them with `object`
-            # using the `&` operator. This re-dispatches the `&` method so that
-            # any custom patch combination logic defined for the object's class
-            # can be applied. If the operation fails, silently ignore the error.
-            try_fetch(
-                plots[[i]] <- .subset2(plots, i) & object,
-                error = function(cnd) NULL
-            )
-        }
-    }
-    prop(patches, "plots") <- plots
-    patches
-}
-
-#' @include utils-ggplot.R
-local(
-    for (right in list(
-        S3_class_ggplot,
-        S3_layout_title,
-        S3_layout_theme,
-        S3_layout_tags,
-        S3_layout_design
-    )) {
-        S7::method(`&`, list(AlignPatches, right)) <-
-            function(e1, e2) {
-                e2name <- deparse(substitute(e2, env = caller_env(2L)))
-                cli_abort(c(
-                    sprintf("Cannot add %s with {.code &}", e2name),
-                    i = "Try to use {.code +} instead"
-                ))
-            }
-    }
-)
+local(S7::method(`$`, class_alignpatches) <- function(x, name) prop(x, name))
+local(S7::method(`[[`, class_alignpatches) <- function(x, name) prop(x, name))

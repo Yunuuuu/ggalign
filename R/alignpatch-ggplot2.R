@@ -7,11 +7,11 @@ ggalign_build.ggplot <- function(x) x
 ##################################################
 #' @export
 #' @include alignpatch-build.R
-print.patch_ggplot <- `print.ggalign::AlignPatches`
+print.patch_ggplot <- `print.ggalign::alignpatches`
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.patch_ggplot <- `grid.draw.ggalign::AlignPatches`
+grid.draw.patch_ggplot <- `grid.draw.ggalign::alignpatches`
 
 #################################################
 #' @importFrom ggplot2 ggproto

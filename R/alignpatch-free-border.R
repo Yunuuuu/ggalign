@@ -16,7 +16,7 @@ free_border.ggplot <- function(plot, borders = "tlbr") {
 }
 
 #' @export
-`free_border.ggalign::AlignPatches` <- free_border.ggplot
+`free_border.ggalign::alignpatches` <- free_border.ggplot
 
 #' @export
 free_border.free_align <- function(plot, borders = "tlbr") {

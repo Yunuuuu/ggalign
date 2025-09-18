@@ -50,7 +50,7 @@ elements of the layout. By default, the theme will inherit from the parent
 \item{design}{An alias for \code{area}, retained for backward compatibility.}
 }
 \value{
-An \code{AlignPatches} object.
+An \link[=class_alignpatches]{alignpatches} object.
 }
 \description{
 Arrange multiple plots into a grid

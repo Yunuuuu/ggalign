@@ -102,7 +102,7 @@ S7::method(scheme_inherit, list(scheme_theme, scheme_theme)) <-
     }
 
 #' @importFrom S7 prop
-local(S7::method(plot_add_scheme, list(S3_class_ggplot, scheme_theme)) <-
+local(S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_theme)) <-
     function(plot, scheme, ...) {
         plot$theme <- prop(scheme, "theme") + plot$theme
         plot
