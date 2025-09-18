@@ -155,10 +155,6 @@ alignpatch.default <- function(x) {
 #' @export
 alignpatch.NULL <- function(x) NULL
 
-patch_no_method <- function(plot, method) {
-    cli_abort("no {.fn {method}} method for {.obj_type_friendly {plot}}")
-}
-
 #' @importFrom ggplot2 ggproto
 #' @importFrom grid unit.c
 Patch <- ggproto(

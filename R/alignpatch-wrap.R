@@ -130,7 +130,7 @@ add_wrapped_insets <- function(gt, insets, on_top) {
     gt
 }
 
-#' @importFrom S7
+#' @importFrom S7 prop
 #' @importFrom grid editGrob
 #' @importFrom gtable gtable is.gtable gtable_add_grob
 add_wrapped_inset <- function(gt, patch_inset, on_top, i) {
