@@ -14,7 +14,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
     patch_gtable = function(self, theme = NULL, guides = NULL,
                             tagger = NULL) {
         plot <- self$plot
-        patches <- lapply(prop(plot, "plots"), alignpatch)
+        patches <- lapply(prop(plot, "plots"), function(plot) {
+            out <- alignpatch(plot)
+            if (!is.null(out) && !inherits(out, "ggalign::Patch")) {
+                cli_abort("{.fn alignpatch} must return a {.cls Patch} object")
+            }
+            out
+        })
         layout <- prop(plot, "layout")
 
         # get the design areas and dims ------------------

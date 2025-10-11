@@ -10,7 +10,7 @@ alignpatch(x)
 \item{x}{A plot object to be prepared for alignment.}
 }
 \value{
-A \code{Patch} object.
+A \code{ggalign::Patch} object.
 }
 \description{
 Prepare plots to be aligned with \code{align_plots}
