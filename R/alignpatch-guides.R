@@ -17,11 +17,7 @@ collect_guides_list <- function(guides_list, empty = NULL) {
             if (is.grob(o)) {
                 list(NULL)
             } else if (is.list(o)) {
-                o[
-                    vapply(o, maybe_guide_box,              # styler: off
-                        logical(1L), USE.NAMES = FALSE      # styler: off
-                    )
-                ]
+                o[vapply(o, maybe_guide_box, logical(1L), USE.NAMES = FALSE)]
             } else {
                 list(NULL)
             }
@@ -133,7 +129,7 @@ assemble_box <- function(guides, guide_pos, theme) {
     }
 }
 
-# The following code was used in earlier versions of ggplot2; 
+# The following code was used in earlier versions of ggplot2;
 # coverage is not calculated here.
 # nocov start
 #' @importFrom gtable gtable_add_rows gtable_add_cols
@@ -160,7 +156,8 @@ package_box <- function(guides, guide_pos, theme) {
 
 #' @importFrom gtable gtable_width gtable_height gtable gtable_add_grob
 #' @importFrom grid editGrob heightDetails widthDetails valid.just unit.c unit
-#' @importFrom ggplot2 margin element_grob element_blank calc_element element_render
+#' @importFrom ggplot2 calc_element element_render element_grob element_blank
+#' @importFrom ggplot2 margin
 guides_build <- function(guides, theme) {
     legend.spacing.y <- .subset2(theme, "legend.spacing.y")
     legend.spacing.x <- .subset2(theme, "legend.spacing.x")

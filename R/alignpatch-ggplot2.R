@@ -253,14 +253,15 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
     }
 )
 
-#' @importFrom ggplot2 calc_element
+#' @importFrom ggplot2 calc_element is_theme_element
 #' @importFrom grid unit
 setup_tick_length_element <- function(theme) {
     for (tick in c("x.top", "y.left", "x.bottom", "y.right")) {
         for (axis in c("axis.minor", "axis")) {
-            blank <- inherits(calc_element(
-                paste(axis, "ticks", tick, sep = "."), theme
-            ), "element_blank")
+            blank <- is_theme_element(
+                calc_element(paste(axis, "ticks", tick, sep = "."), theme),
+                "blank"
+            )
             if (blank) { # No ticks, no length
                 element <- paste(axis, "ticks.length", tick, sep = ".")
                 theme[[element]] <- unit(0, "mm")

@@ -70,7 +70,7 @@ split_position <- function(x) {
 }
 
 # pos is an atomic character
-setup_pos <- function(x) unname(complete_pos(split_position(x)))
+setup_position <- function(x) complete_position(split_position(x))
 
 setup_guides <- function(x) {
     .subset(
@@ -79,17 +79,19 @@ setup_guides <- function(x) {
     )
 }
 
-complete_pos <- function(x) {
-    .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
+complete_position <- function(x) {
+    out <- .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
+    names(out) <- NULL
+    out
 }
 
 opposite_pos <- function(pos) {
-    switch(pos,
-        top = "bottom",
-        bottom = "top",
-        left = "right",
-        right = "left"
+    out <- .subset(
+        c(top = "bottom", left = "right", bottom = "top", right = "left"),
+        pos
     )
+    names(out) <- NULL
+    out
 }
 
 #' @importFrom ggplot2 zeroGrob
@@ -139,7 +141,7 @@ ggalign_gtable.gtable <- function(x) x
 #'   - [`wrapped_patch`][patchwork::wrap_elements]
 #'   - [`spacer`][patchwork::plot_spacer]
 #'
-#' @return A `Patch` object.
+#' @return A `ggalign::Patch` object.
 #' @examples
 #' alignpatch(ggplot())
 #' @seealso [`align_plots()`]
@@ -155,10 +157,10 @@ alignpatch.default <- function(x) {
 #' @export
 alignpatch.NULL <- function(x) NULL
 
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto find_panel
 #' @importFrom grid unit.c
 Patch <- ggproto(
-    "Patch", NULL,
+    "ggalign::Patch", NULL,
 
     # Fields added later in `alignpatches$patch_gtable()`
     borders = NULL, # Border specifications for the patch

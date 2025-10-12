@@ -62,7 +62,7 @@ alignpatch.free_border <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeBorder", Parent,
-        free_borders = setup_pos(attr(x, "free_borders")),
+        free_borders = setup_position(attr(x, "free_borders")),
         collect_guides = function(self, guides, gt = self$gt) {
             ans <- ggproto_parent(Parent, self)$collect_guides(
                 guides = guides, gt = gt

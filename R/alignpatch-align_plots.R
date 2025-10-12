@@ -552,7 +552,7 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
     for (plot in plots) {
         if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
             cli_abort(paste(
-                "Each plot to be aligned must implement an 'alignpatch()'",
+                "Each plot to be aligned must implement an {.fn alignpatch}",
                 "method. Object of {.obj_type_friendly {plot}} does not."
             ))
         }
