@@ -57,14 +57,7 @@ directly within the plotting pipeline.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">raster_magick</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  magick <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  res <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  interpolate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  vp <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">raster_magick</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,30 +70,8 @@ directly within the plotting pipeline.</p>
 objects.</p></dd>
 
 
-<dt id="arg-magick">magick<a class="anchor" aria-label="anchor" href="#arg-magick"></a></dt>
-<dd><p>A function (purrr-style formula is accepted) that takes an
-<code><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read()</a></code> object as input and returns an object
-compatible with <code><a href="https://rdrr.io/r/grDevices/as.raster.html" class="external-link">as.raster()</a></code>. You can use any of
-the <code>image_*()</code> functions from the <strong>magick</strong> package to process the raster
-image.</p></dd>
-
-
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>These dots are for future extensions and must be empty.</p></dd>
-
-
-<dt id="arg-res">res<a class="anchor" aria-label="anchor" href="#arg-res"></a></dt>
-<dd><p>An integer sets the desired resolution in pixels.</p></dd>
-
-
-<dt id="arg-interpolate">interpolate<a class="anchor" aria-label="anchor" href="#arg-interpolate"></a></dt>
-<dd><p>A logical value indicating whether to linearly interpolate the
-    image (the alternative is to use nearest-neighbour interpolation,
-    which gives a more blocky result).</p></dd>
-
-
-<dt id="arg-vp">vp<a class="anchor" aria-label="anchor" href="#arg-vp"></a></dt>
-<dd><p>A Grid viewport object (or NULL).</p></dd>
+<dd><p>Additional arguments passed on to <code><a href="magickGrob.html">magickGrob()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

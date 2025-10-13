@@ -48,7 +48,10 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">magickGrob</span><span class="op">(</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">magickGrob</span><span class="op">(</span><span class="va">grob</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'grob'</span></span>
+<span><span class="fu">magickGrob</span><span class="op">(</span></span>
 <span>  <span class="va">grob</span>,</span>
 <span>  magick <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -56,6 +59,17 @@
 <span>  interpolate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  vp <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'magickGrob'</span></span>
+<span><span class="fu">magickGrob</span><span class="op">(</span></span>
+<span>  <span class="va">grob</span>,</span>
+<span>  magick <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  res <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  interpolate <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  name <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  vp <span class="op">=</span> <span class="fu">waiver</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -64,8 +78,12 @@
 
 
 <dl><dt id="arg-grob">grob<a class="anchor" aria-label="anchor" href="#arg-grob"></a></dt>
-<dd><p>A <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob()</a></code>. Use <code><a href="patch.html">patch()</a></code> to convert any objects
-into a <code>grob</code>.</p></dd>
+<dd><p>A <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob()</a></code>. Use <code><a href="as_grob.html">as_grob()</a></code> to convert any
+objects into a <code>grob</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>These dots are for future extensions and must be empty.</p></dd>
 
 
 <dt id="arg-magick">magick<a class="anchor" aria-label="anchor" href="#arg-magick"></a></dt>
@@ -74,10 +92,6 @@ into a <code>grob</code>.</p></dd>
 compatible with <code><a href="https://rdrr.io/r/grDevices/as.raster.html" class="external-link">as.raster()</a></code>. You can use any of
 the <code>image_*()</code> functions from the <strong>magick</strong> package to process the raster
 image.</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>These dots are for future extensions and must be empty.</p></dd>
 
 
 <dt id="arg-res">res<a class="anchor" aria-label="anchor" href="#arg-res"></a></dt>
