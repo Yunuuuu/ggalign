@@ -188,7 +188,7 @@ reference:
 
 - title: internal
   contents:
-  - starts_with("patch.")
+  - starts_with("as_grob.")
   - starts_with("fortify_matrix.")
   - starts_with("fortify_data_frame.")
   - starts_with("tune.")
