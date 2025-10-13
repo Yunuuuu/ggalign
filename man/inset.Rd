@@ -8,9 +8,9 @@ inset(plot, ..., align = "panel", on_top = TRUE, clip = TRUE, vp = NULL)
 }
 \arguments{
 \item{plot}{Any graphic that can be converted into a \code{\link[grid:grid.grob]{grob}}
-using \code{\link[=patch]{patch()}}.}
+using \code{\link[=as_grob]{as_grob()}}.}
 
-\item{...}{Additional arguments passed to the \code{\link[=patch]{patch()}} method.}
+\item{...}{Additional arguments passed to the \code{\link[=as_grob]{as_grob()}} method.}
 
 \item{align}{A string specifying the area to place the plot: \code{"full"} for the
 full area, \code{"plot"} for the full plotting area (including the axis label), or

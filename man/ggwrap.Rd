@@ -8,9 +8,9 @@ ggwrap(plot, ..., align = "panel", on_top = FALSE, clip = TRUE, vp = NULL)
 }
 \arguments{
 \item{plot}{Any graphic that can be converted into a \code{\link[grid:grid.grob]{grob}}
-using \code{\link[=patch]{patch()}}.}
+using \code{\link[=as_grob]{as_grob()}}.}
 
-\item{...}{Additional arguments passed to the \code{\link[=patch]{patch()}} method.}
+\item{...}{Additional arguments passed to the \code{\link[=as_grob]{as_grob()}} method.}
 
 \item{align}{A string specifying the area to place the plot: \code{"full"} for the
 full area, \code{"plot"} for the full plotting area (including the axis label), or
@@ -34,7 +34,7 @@ A \code{wrapped_plot} object that can be directly placed into
 The \code{ggwrap()} function allows non-ggplot2 elements to be converted into a
 compliant representation for use with \code{\link[=align_plots]{align_plots()}}. This is useful for
 adding any graphics that can be converted into a \code{\link[grid:grid.grob]{grob}} with
-the \code{\link[=patch]{patch()}} method.
+the \code{\link[=as_grob]{as_grob()}} method.
 }
 \examples{
 library(grid)

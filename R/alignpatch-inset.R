@@ -1,8 +1,8 @@
 #' Create a ggplot inset
 #'
 #' @param plot Any graphic that can be converted into a [`grob`][grid::grob]
-#' using [`patch()`].
-#' @param ... Additional arguments passed to the [`patch()`] method.
+#' using [`as_grob()`].
+#' @param ... Additional arguments passed to the [`as_grob()`] method.
 #' @param align A string specifying the area to place the plot: `"full"` for the
 #' full area, `"plot"` for the full plotting area (including the axis label), or
 #' `"panel"` for only the actual area where data is drawn.
@@ -14,7 +14,7 @@
 #' @param vp A [`viewport`][grid::viewport] object, you can use this to define
 #' the plot area.
 #' @return An `inset` object, which can be added to ggplot.
-#' @inherit patch seealso
+#' @inherit as_grob seealso
 #' @examples
 #' library(grid)
 #' p1 <- ggplot(mtcars) +
@@ -63,8 +63,8 @@ inset <- S7::new_class(
     ),
     constructor = function(plot, ..., align = "panel", on_top = TRUE,
                            clip = TRUE, vp = NULL) {
-        if (!is.grob(grob <- patch(x = plot, ...))) {
-            cli_abort("{.fn patch} must return a {.cls grob} for {.obj_type_friendly {plot}}")
+        if (!is.grob(grob <- as_grob(x = plot, ...))) {
+            cli_abort("{.fn as_grob} must return a {.cls grob} for {.obj_type_friendly {plot}}")
         }
         new_object(
             S7_object(),

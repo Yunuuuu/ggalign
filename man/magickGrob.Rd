@@ -15,8 +15,8 @@ magickGrob(
 )
 }
 \arguments{
-\item{grob}{A \code{\link[grid:grid.grob]{grob()}}. Use \code{\link[=patch]{patch()}} to convert any objects
-into a \code{grob}.}
+\item{grob}{A \code{\link[grid:grid.grob]{grob()}}. Use \code{\link[=as_grob]{as_grob()}} to convert any
+objects into a \code{grob}.}
 
 \item{magick}{A function (purrr-style formula is accepted) that takes an
 \code{\link[magick:editing]{image_read()}} object as input and returns an object

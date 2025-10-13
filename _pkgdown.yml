@@ -151,7 +151,7 @@ reference:
     Extending capabilities to align graphics with `align_plots()`.
   contents:
   - alignpatch
-  - patch
+  - as_grob
 
 - title: Extending ggplot2
   desc: >

@@ -1,7 +1,7 @@
 #' Rasterize a grob object with magick
 #'
-#' @param grob A [`grob()`][grid::grob]. Use [`patch()`] to convert any objects
-#' into a `grob`.
+#' @param grob A [`grob()`][grid::grob]. Use [`as_grob()`] to convert any
+#' objects into a `grob`.
 #' @param magick A function (purrr-style formula is accepted) that takes an
 #' [`image_read()`][magick::image_read] object as input and returns an object
 #' compatible with [`as.raster()`][grDevices::as.raster]. You can use any of
