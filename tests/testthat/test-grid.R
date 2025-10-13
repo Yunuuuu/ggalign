@@ -3,14 +3,14 @@ test_that("`str()` method for NA unit works well", {
     expect_snapshot_output(str(GridUnit(unit(NA, "mm"))))
 })
 
-test_that("magickGrob() returns a magickGrob object", {
+test_that("`magickGrob()` returns a magickGrob object", {
     grob <- grid::rectGrob()
     g <- magickGrob(grob)
     expect_s3_class(g, "magickGrob")
     expect_s3_class(g$grob, "rect")
 })
 
-test_that("magickGrob() validates arguments correctly", {
+test_that("`magickGrob()` validates arguments correctly", {
     grob <- grid::rectGrob()
 
     expect_snapshot_error(magickGrob(grob, magick = 123))
@@ -20,32 +20,32 @@ test_that("magickGrob() validates arguments correctly", {
     expect_snapshot_error(magickGrob(grob, interpolate = "yes"))
 })
 
-test_that("magickGrob0.grob() produces a valid magickGrob", {
+test_that("`magickGrob.grob()` produces a valid magickGrob", {
     grob <- circleGrob()
-    m <- magickGrob0(grob)
+    m <- magickGrob(grob)
     expect_s3_class(m, "magickGrob")
     expect_equal(m$grob, grob)
 })
 
-test_that("magickGrob0.gList() wraps into gTree", {
+test_that("`magickGrob.gList()` wraps into gTree", {
     gl <- gList(grid::rectGrob(), grid::textGrob("hello"))
-    m <- magickGrob0(gl)
+    m <- magickGrob(gl)
     expect_s3_class(m, "magickGrob")
     expect_s3_class(m$grob, "gTree")
 })
 
-test_that("magickGrob0.magickGrob() edits fields", {
+test_that("`magickGrob.magickGrob()` edits fields", {
     grob <- magickGrob(grid::rectGrob(), interpolate = FALSE, res = 50)
-    edited <- magickGrob0(grob, interpolate = TRUE)
+    edited <- magickGrob(grob, interpolate = TRUE)
     expect_true(edited$interpolate)
     expect_equal(edited$res, 50) # unchanged
 })
 
-test_that("magickGrob0.default() errors", {
-    expect_snapshot_error(magickGrob0(42))
+test_that("`magickGrob.default()` errors", {
+    expect_snapshot_error(magickGrob(42))
 })
 
-test_that("makeContent.magickGrob() creates rasterGrob", {
+test_that("`makeContent.magickGrob()` creates rasterGrob", {
     skip_if_not_installed("magick")
 
     grob <- magickGrob(grid::circleGrob(), res = 10)

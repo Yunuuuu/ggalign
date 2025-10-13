@@ -22,26 +22,26 @@
 
 ##########################################################
 #' @export
-`raster_magick0.ggalign::QuadLayout` <- function(x, ...) {
-    x@plot <- raster_magick0(x = x@plot, ...)
+`raster_magick.ggalign::QuadLayout` <- function(x, ...) {
+    x@plot <- raster_magick(x = x@plot, ...)
     for (position in .TLBR) {
         stack <- prop(x, position)
         if (is.null(stack)) next
-        prop(x, position) <- raster_magick0(x = stack, ...)
+        prop(x, position) <- raster_magick(x = stack, ...)
     }
     x
 }
 
 #' @export
-`raster_magick0.ggalign::ChainLayout` <- function(x, ...) {
-    x@box_list <- lapply(x@box_list, raster_magick0, ...)
+`raster_magick.ggalign::ChainLayout` <- function(x, ...) {
+    x@box_list <- lapply(x@box_list, raster_magick, ...)
     x
 }
 
 #' @export
-`raster_magick0.ggalign::CraftBox` <- function(x, ...) {
+`raster_magick.ggalign::CraftBox` <- function(x, ...) {
     if (!is.null(plot <- input@plot)) {
-        input@plot <- raster_magick0(x = plot, ...)
+        input@plot <- raster_magick(x = plot, ...)
     }
     input
 }

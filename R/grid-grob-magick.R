@@ -12,29 +12,23 @@
 #' @inheritParams grid::rasterGrob
 #' @return A `magickGrob` object.
 #' @export
-magickGrob <- function(grob, magick = NULL, ...,
-                       res = NULL, interpolate = FALSE,
-                       name = NULL, vp = NULL) {
+magickGrob <- function(grob, ...) {
     rlang::check_installed("magick", "to use `magickGrob()`")
+    UseMethod("magickGrob")
+}
+
+#' @importFrom grid gTree
+#' @export
+#' @rdname magickGrob
+magickGrob.grob <- function(grob, magick = NULL, ...,
+                            res = NULL, interpolate = FALSE,
+                            name = NULL, vp = NULL) {
+    rlang::check_dots_empty()
     if (!is.null(magick) && !is.function(magick <- allow_lambda(magick))) {
         cli_abort("{.arg magick} must be a function")
     }
     assert_number_whole(res, min = 1, allow_null = TRUE)
     assert_bool(interpolate)
-    magickGrob0(
-        grob = grob, magick = magick, ..., res = res,
-        interpolate = interpolate, name = name, vp = vp
-    )
-}
-
-magickGrob0 <- function(grob, ...) UseMethod("magickGrob0")
-
-#' @importFrom grid gTree
-#' @export
-magickGrob0.grob <- function(grob, magick = NULL, ...,
-                             res = NULL, interpolate = FALSE,
-                             name = NULL, vp = NULL) {
-    rlang::check_dots_empty()
     gTree(
         grob = grob, magick = magick, res = res,
         interpolate = interpolate, name = name, vp = vp,
@@ -44,17 +38,25 @@ magickGrob0.grob <- function(grob, magick = NULL, ...,
 
 #' @importFrom grid gTree
 #' @export
-magickGrob0.gList <- function(grob, ...) {
-    magickGrob0(grob = gTree(children = grob), ...)
+magickGrob.gList <- function(grob, ...) {
+    magickGrob(grob = gTree(children = grob), ...)
 }
 
 #' @importFrom grid editGrob
 #' @importFrom rlang inject
 #' @export
-magickGrob0.magickGrob <- function(grob, magick = waiver(), ...,
-                                   res = waiver(), interpolate = waiver(),
-                                   name = waiver(), vp = waiver()) {
+#' @rdname magickGrob
+magickGrob.magickGrob <- function(grob, magick = waiver(), ...,
+                                  res = waiver(), interpolate = waiver(),
+                                  name = waiver(), vp = waiver()) {
     rlang::check_dots_empty()
+    if (!is.waive(magick) &&
+        !is.null(magick) &&
+        !is.function(magick <- allow_lambda(magick))) {
+        cli_abort("{.arg magick} must be a function")
+    }
+    if (!is.waive(magick)) assert_number_whole(res, min = 1, allow_null = TRUE)
+    if (!is.waive(interpolate)) assert_bool(interpolate)
     params <- list(
         magick = magick, res = res,
         interpolate = interpolate, name = name, vp = vp
@@ -64,7 +66,7 @@ magickGrob0.magickGrob <- function(grob, magick = waiver(), ...,
 }
 
 #' @export
-magickGrob0.default <- function(grob, ...) {
+magickGrob.default <- function(grob, ...) {
     cli_abort("{.arg grob} must be a {.cls grob} object")
 }
 

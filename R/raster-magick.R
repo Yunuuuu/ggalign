@@ -9,8 +9,7 @@
 #' [`layer()`][ggplot2::layer], [`ggplot()`][ggplot2::ggplot], or a list of such
 #' objects.
 #'
-#' @inheritParams rlang::args_dots_empty
-#' @inheritParams magickGrob
+#' @param ... Additional arguments passed on to [`magickGrob()`].
 #' @examples
 #' # Currently, `magick` package require R >= 4.1.0
 #' if (requireNamespace("magick")) {
@@ -36,31 +35,14 @@
 #' @return An object with the same class of the input.
 #' @seealso [`magickGrob()`]
 #' @export
-raster_magick <- function(x, magick = NULL, ...,
-                          res = NULL, interpolate = FALSE,
-                          vp = NULL) {
+raster_magick <- function(x, ...) {
     rlang::check_installed("magick", "to use `raster_magick()`")
-    if (!is.null(magick) && !is.function(magick <- allow_lambda(magick))) {
-        cli_abort("{.arg magick} must be a function")
-    }
-    assert_number_whole(res, min = 1, allow_null = TRUE)
-    assert_bool(interpolate)
-    raster_magick0(
-        x = x, ..., magick = magick,
-        res = res, interpolate = interpolate,
-        vp = vp
-    )
-}
-
-# Used to do the actual process, but won't check the arguments
-#' @keywords internal
-raster_magick0 <- function(x, ...) {
-    UseMethod("raster_magick0")
+    UseMethod("raster_magick")
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-raster_magick0.Layer <- function(x, ...) {
+raster_magick.Layer <- function(x, ...) {
     ggproto(
         NULL, x,
         draw_geom = function(self, data, layout) {
@@ -71,35 +53,27 @@ raster_magick0.Layer <- function(x, ...) {
                 )
                 return(grobs)
             }
-            raster_magick0(grobs, ...)
+            raster_magick(grobs, ...)
         }
     )
 }
 
 #' @export
-raster_magick0.ggplot <- function(x, ...) {
-    x$layers <- lapply(x$layers, raster_magick0, ...)
+raster_magick.ggplot <- function(x, ...) {
+    x$layers <- lapply(x$layers, raster_magick, ...)
     x
 }
 
 #' @export
-raster_magick0.list <- function(x, ...) lapply(x, raster_magick0, ...)
+raster_magick.list <- function(x, ...) lapply(x, raster_magick, ...)
 
 #' @export
-raster_magick0.grob <- function(x, magick = NULL, ...,
-                                res = NULL, interpolate = FALSE,
-                                vp = NULL) {
-    rlang::check_dots_empty()
-    magickGrob0(
-        grob = x, magick = magick,
-        res = res, interpolate = interpolate, vp = vp
-    )
-}
+raster_magick.grob <- function(x, ...) magickGrob(grob = x, ...)
 
 #' @export
-raster_magick0.gList <- raster_magick0.grob
+raster_magick.gList <- raster_magick.grob
 
 #' @export
-raster_magick0.default <- function(x, ...) {
+raster_magick.default <- function(x, ...) {
     cli_abort("Cannot rasterize {.obj_type_friendly {x}}")
 }

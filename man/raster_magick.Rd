@@ -4,37 +4,14 @@
 \alias{raster_magick}
 \title{Rasterize the ggplot layers}
 \usage{
-raster_magick(
-  x,
-  magick = NULL,
-  ...,
-  res = NULL,
-  interpolate = FALSE,
-  vp = NULL
-)
+raster_magick(x, ...)
 }
 \arguments{
 \item{x}{An object to rasterize, can be a \code{\link[grid:grid.grob]{grob()}},
 \code{\link[ggplot2:layer]{layer()}}, \code{\link[ggplot2:ggplot]{ggplot()}}, or a list of such
 objects.}
 
-\item{magick}{A function (purrr-style formula is accepted) that takes an
-\code{\link[magick:editing]{image_read()}} object as input and returns an object
-compatible with \code{\link[grDevices:as.raster]{as.raster()}}. You can use any of
-the \verb{image_*()} functions from the \strong{magick} package to process the raster
-image.}
-
-\item{...}{These dots are for future extensions and must be empty.}
-
-\item{res}{An integer sets the desired resolution in pixels.}
-
-\item{interpolate}{
-    A logical value indicating whether to linearly interpolate the
-    image (the alternative is to use nearest-neighbour interpolation,
-    which gives a more blocky result).
-  }
-
-\item{vp}{A Grid viewport object (or NULL).}
+\item{...}{Additional arguments passed on to \code{\link[=magickGrob]{magickGrob()}}.}
 }
 \value{
 An object with the same class of the input.
