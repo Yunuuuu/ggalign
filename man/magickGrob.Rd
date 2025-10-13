@@ -2,9 +2,13 @@
 % Please edit documentation in R/grid-grob-magick.R
 \name{magickGrob}
 \alias{magickGrob}
+\alias{magickGrob.grob}
+\alias{magickGrob.magickGrob}
 \title{Rasterize a grob object with magick}
 \usage{
-magickGrob(
+magickGrob(grob, ...)
+
+\method{magickGrob}{grob}(
   grob,
   magick = NULL,
   ...,
@@ -13,18 +17,28 @@ magickGrob(
   name = NULL,
   vp = NULL
 )
+
+\method{magickGrob}{magickGrob}(
+  grob,
+  magick = waiver(),
+  ...,
+  res = waiver(),
+  interpolate = waiver(),
+  name = waiver(),
+  vp = waiver()
+)
 }
 \arguments{
-\item{grob}{A \code{\link[grid:grid.grob]{grob()}}. Use \code{\link[=patch]{patch()}} to convert any objects
-into a \code{grob}.}
+\item{grob}{A \code{\link[grid:grid.grob]{grob()}}. Use \code{\link[=as_grob]{as_grob()}} to convert any
+objects into a \code{grob}.}
+
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{magick}{A function (purrr-style formula is accepted) that takes an
 \code{\link[magick:editing]{image_read()}} object as input and returns an object
 compatible with \code{\link[grDevices:as.raster]{as.raster()}}. You can use any of
 the \verb{image_*()} functions from the \strong{magick} package to process the raster
 image.}
-
-\item{...}{These dots are for future extensions and must be empty.}
 
 \item{res}{An integer sets the desired resolution in pixels.}
 

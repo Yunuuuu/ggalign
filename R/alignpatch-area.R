@@ -134,15 +134,15 @@ trim_area <- function(area) {
     new_areas(area)
 }
 
+#' Convert object into a design area
+#' @keywords internal
+#' @noRd
 as_areas <- function(x) UseMethod("as_areas")
 
 #' @export
 as_areas.default <- function(x) {
     cli_abort("Cannot convert {.obj_type_friendly {x}} into a design area")
 }
-
-#' @export
-as_areas.NULL <- function(x) NULL
 
 #' @export
 as_areas.ggalign_area <- function(x) x
@@ -177,7 +177,7 @@ as_areas.character <- function(x) {
         r <- .subset(area_cols, 2L)
         if (!all(x[row >= t & row <= b & col >= l & col <= r] ==
             x[.subset(i, 1L)])) {
-            cli_abort("Patch areas must be rectangular", call = call)
+            cli_abort("Design areas must be rectangular", call = call)
         }
         new_areas(list(t = t, l = l, b = b, r = r))
     })
@@ -186,7 +186,7 @@ as_areas.character <- function(x) {
 
 # For area from patchwork
 #' @export
-as_areas.patch_area <- function(x) add_class(x, "ggalign_area")
+as_areas.patch_area <- function(x) new_areas(unclass(x))
 
 #' @importFrom grid unit
 #' @importFrom ggplot2 aes margin theme ggplot
@@ -208,10 +208,14 @@ plot.ggalign_area <- function(x, ...) {
         lim[-c(1, length(lim))]
     }
     ggplot(data) +
-        ggplot2::geom_rect(aes(
-            xmin = .data$l, xmax = .data$r,
-            ymin = .data$t, ymax = .data$b, fill = .data$name
-        ), alpha = 0.3) +
+        ggplot2::geom_rect(
+            aes(
+                xmin = .data$l, xmax = .data$r,
+                ymin = .data$t, ymax = .data$b,
+                fill = .data$name
+            ),
+            alpha = 0.3
+        ) +
         ggplot2::scale_y_reverse(breaks = b_fun, expand = c(0, 0.04)) +
         ggplot2::scale_x_continuous(
             breaks = b_fun, expand = c(0, 0.04), position = "top"

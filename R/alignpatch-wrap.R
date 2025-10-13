@@ -3,12 +3,12 @@
 #' The `ggwrap()` function allows non-ggplot2 elements to be converted into a
 #' compliant representation for use with [`align_plots()`]. This is useful for
 #' adding any graphics that can be converted into a [`grob`][grid::grob] with
-#' the [`patch()`] method.
+#' the [`as_grob()`] method.
 #'
 #' @inheritParams inset
 #' @return A `wrapped_plot` object that can be directly placed into
 #' [`align_plots()`].
-#' @inherit patch seealso
+#' @inherit as_grob seealso
 #' @examples
 #' library(grid)
 #' ggwrap(rectGrob(gp = gpar(fill = "goldenrod")), align = "full") +

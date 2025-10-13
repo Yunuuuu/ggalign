@@ -170,7 +170,8 @@ FacetSector <- ggproto(
                 if (i == 1L || i == length(ranges)) {
                     # For the first panel, drop left guides
                     if (i == 1L) {
-                        idx <- which(vapply(guide_positions, identical,
+                        idx <- which(vapply(
+                            guide_positions, identical,
                             logical(1),
                             y = "left", USE.NAMES = FALSE
                         ))
@@ -180,7 +181,8 @@ FacetSector <- ggproto(
                     }
                     # For the last panel, drop right guides
                     if (i == length(ranges)) {
-                        idx <- which(vapply(guide_positions, identical,
+                        idx <- which(vapply(
+                            guide_positions, identical,
                             logical(1),
                             y = "right", USE.NAMES = FALSE
                         ))

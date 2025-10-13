@@ -30,7 +30,7 @@ layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
     }
     if (!is.waive(byrow)) assert_bool(byrow)
     area <- area %|w|% design
-    if (!is.waive(area)) area <- as_areas(area)
+    if (!is.waive(area) && !is.null(area)) area <- as_areas(area)
     if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
         assert_guides(guides)
     }

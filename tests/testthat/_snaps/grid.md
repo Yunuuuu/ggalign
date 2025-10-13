@@ -6,7 +6,7 @@
 
       - attr(*, "unit"): int 7
 
-# magickGrob() validates arguments correctly
+# `magickGrob()` validates arguments correctly
 
     `magick` must be a function
 
@@ -18,7 +18,7 @@
 
     `interpolate` must be `TRUE` or `FALSE`, not the string "yes".
 
-# magickGrob0.default() errors
+# `magickGrob.default()` errors
 
     `grob` must be a <grob> object
 
