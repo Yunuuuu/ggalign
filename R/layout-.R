@@ -52,22 +52,22 @@ local(S7::method(alignpatch, LayoutProto) <- function(x) {
     ggproto(NULL, PatchLayout, layout = x)
 })
 
+#' @importFrom S7 prop<- prop
 PatchLayout <- ggproto("PatchLayout", PatchAlignpatches,
     layout = NULL,
-    patch_gtable = function(self, theme = NULL, guides = NULL,
-                            tagger = NULL) {
+    gtable = function(self, theme = NULL, guides = NULL,
+                      tagger = NULL) {
         plot <- ggalign_build(self$layout)
         # Preserve tag-related theme settings from the original layout theme.
         # These are intentionally not overridden so that `PatchAlignpatches`
         # retains full control over tag appearance and positioning.
         if (!is.null(theme)) {
-            plot@theme <- plot@theme + tag_theme(self$layout@theme)
+            prop(plot, "theme") <- prop(plot, "theme") +
+                tag_theme(self$layout@theme)
         }
         # store the plot used by `PatchAlignpatches`
         self$plot <- plot
-        ggproto_parent(PatchAlignpatches, self)$patch_gtable(
-            theme, guides, tagger
-        )
+        ggproto_parent(PatchAlignpatches, self)$gtable(theme, guides, tagger)
     }
 )
 

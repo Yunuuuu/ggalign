@@ -1,13 +1,12 @@
 #' @importFrom ggplot2 .pt
 ggfun <- function(fn, mode = "any") from_namespace("ggplot2", fn, mode = mode)
 
-S3_class_ggplot <- S7::new_S3_class("ggplot")
+S3_ggplot <- S7::new_S3_class("ggplot")
+S3_waiver <- S7::new_S3_class("waiver")
 
 allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x
 }
-
-is.waive <- function(x) inherits(x, "waiver")
 
 `%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
 

@@ -166,7 +166,7 @@ chain_add_box <- function(layout, box, active, object_name) {
 }
 
 switch_chain_plot <- function(layout, what, call = caller_call()) {
-    if (!is.waive(what)) {
+    if (!is_waiver(what)) {
         if (!is.na(what)) {
             what <- vec_as_location2(
                 what,
@@ -337,7 +337,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                 c("vertical", "horizontal"), direction
             ))
             allow_null <- !is_discrete_domain(extra_domain)
-            if (is.waive(quad_data) || is.function(quad_data)) {
+            if (is_waiver(quad_data) || is.function(quad_data)) {
                 # check if we should initialize the `quad_layout()` data
                 if (is.null(stack_data <- layout@data)) {
                     if (allow_null) {
@@ -356,7 +356,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                     }
                 } else {
                     data <- stack_data # should be a data frame
-                    if (is.waive(quad_data)) { # inherit from the stack layout
+                    if (is_waiver(quad_data)) { # inherit from the stack layout
                         if (!allow_null) { # we need a matrix
                             cli_abort(c(
                                 sprintf(
@@ -418,7 +418,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
         } else if (is_discrete_domain(stack_domain)) {
             # both `quad_layout()` and `stack_layout()` will align discrete
             # variables
-            if (is.waive(quad_data) || is.function(quad_data)) {
+            if (is_waiver(quad_data) || is.function(quad_data)) {
                 if (is.null(stack_data <- layout@data)) {
                     cli_abort(c(
                         sprintf(
@@ -504,7 +504,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
 #' @include layout-operator.R
 S7::method(layout_add, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
     function(layout, object, objectname) {
-        if (!is.waive(radial <- .subset2(object, "radial"))) {
+        if (!is_waiver(radial <- .subset2(object, "radial"))) {
             layout@radial <- radial
         }
         if (!is.null(direction <- .subset2(object, "direction"))) {

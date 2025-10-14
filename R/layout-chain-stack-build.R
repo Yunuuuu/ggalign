@@ -97,7 +97,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
     # whether we should override the `guides` collection for the whole
     # annotation stack
     free_guides <- .subset2(stack@heatmap, "free_guides")
-    if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
+    if (!is_waiver(free_guides)) plot <- free_guide(plot, free_guides)
     # we also apply the `free_spaces` for the whole annotation stack
     free_spaces <- prop(
         schemes_get(schemes, "scheme_align"), "free_spaces"

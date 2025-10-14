@@ -86,7 +86,7 @@ schemes_get <- function(schemes, scheme) {
 
 #' @importFrom ggplot2 theme waiver
 default_schemes <- function(data = NULL, th = theme()) {
-    if (!is.waive(data)) data <- NULL
+    if (!is_waiver(data)) data <- NULL
     Schemes(
         scheme_data(data),
         scheme_theme(th),

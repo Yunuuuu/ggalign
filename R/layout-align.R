@@ -223,8 +223,8 @@ align_discrete_scales <- function(axis, scales, domain, labels, n_panels,
         # https://github.com/tidyverse/ggplot2/blob/7fb4c382f9ea332844d469663a8047355a88dd7a/R/scale-.R#L927
         # setup breaks and labels --------------------
         if (is.null(data_labels) &&
-            is.waive(scale$labels) &&
-            is.waive(scale$breaks)) {
+            is_waiver(scale$labels) &&
+            is_waiver(scale$breaks)) {
             # special case for data have no labels
             # By default we also remove the breaks
             scale$breaks <- NULL
@@ -276,7 +276,7 @@ get_discrete_breaks <- function(scale, pindex, dindex, labels) {
     if (is.null(breaks)) {
         return(NULL)
     }
-    if (is.waive(breaks)) {
+    if (is_waiver(breaks)) {
         if (scale$is_discrete() &&
             !is.null(labels) &&
             !is.null(scale$range$range) &&
@@ -362,7 +362,7 @@ get_discrete_labels <- function(scale, breaks, pindex, dindex, labels) {
     } else {
         user_breaks <- labels
     }
-    if (is.waive(scale_labels)) { # By default, use the breaks
+    if (is_waiver(scale_labels)) { # By default, use the breaks
         user_breaks
     } else if (is.function(scale_labels)) {
         scale_labels(user_breaks)

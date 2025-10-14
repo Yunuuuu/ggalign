@@ -109,7 +109,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
     data[data == ""] <- NA_character_
 
     # check filling
-    if (isTRUE(filling) || is.waive(filling)) {
+    if (isTRUE(filling) || is_waiver(filling)) {
         filling <- "tile"
     } else if (isFALSE(filling)) {
         filling <- NULL

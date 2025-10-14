@@ -86,7 +86,7 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
         filling <- waiver()
     } else if (isFALSE(filling)) {
         filling <- NULL
-    } else if (!is.waive(filling) && !is.null(filling)) {
+    } else if (!is_waiver(filling) && !is.null(filling)) {
         filling <- arg_match0(filling, c("tile", "raster"))
     }
     data <- data %|w|% NULL

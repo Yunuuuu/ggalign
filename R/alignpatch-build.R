@@ -64,7 +64,7 @@
 #' @importFrom S7 prop
 #' @export
 `ggalign_gtable.ggalign::alignpatches` <- function(x) {
-    table <- alignpatch(x)$patch_gtable()
+    table <- alignpatch(x)$gtable()
 
     titles <- prop(x, "titles")
 

@@ -11,7 +11,7 @@
         } else {
             mapping <- aes(.data$.x, .data$.y)
         }
-        if (is.waive(filling)) {
+        if (is_waiver(filling)) {
             if (nrow(quad@data) * ncol(quad@data) > 20000L) {
                 cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
                 filling <- "raster"

@@ -71,7 +71,7 @@
 #' @export
 stack_layout <- function(direction, data = NULL, ...,
                          theme = NULL, sizes = NA, limits = waiver()) {
-    if (is.waive(limits)) {
+    if (is_waiver(limits)) {
         stack_discrete(
             data = data, direction = direction, ...,
             theme = theme, sizes = sizes

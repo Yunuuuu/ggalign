@@ -41,7 +41,7 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
 }
 
 #' @importFrom ggplot2 find_panel zeroGrob
-#' @importFrom ggplot2 calc_element element_grob merge_element
+#' @importFrom ggplot2 calc_element element_grob merge_element is_theme_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch_titles, theme) {
@@ -50,17 +50,21 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     old_text$hjust <- 0.5
     if (is.null(text <- .subset2(theme, "plot.patch_title"))) {
         text <- old_text
-    } else if (inherits(text, "element_text")) {
+    } else if (is_theme_element(text, "text")) {
         text <- merge_element(text, old_text)
     } else {
-        cli_abort(paste(
-            "Theme element {.var plot.patch_title} must be a",
-            "{.cls element_text}."
-        ), call = quote(theme()))
+        cli_abort(
+            paste(
+                "Theme element {.var plot.patch_title} must be a",
+                "{.cls element_text}."
+            ),
+            call = quote(theme())
+        )
     }
     # inherit from plot.title.position, default use "panel"
     position <- .subset2(theme, "plot.patch_title.position") %||%
         .subset2(theme, "plot.title.position") %||% "panel"
+
     for (border in .TLBR) {
         panel_pos <- find_panel(table)
         patch_title <- .subset2(patch_titles, border)
@@ -169,13 +173,13 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     table
 }
 
-#' @importFrom ggplot2 update_ggplot
+#' @importFrom ggplot2 update_ggplot is_waiver
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("ggalign_patch_labels"), ggplot2::class_ggplot)
 ) <- function(object, plot, object_name, ...) {
     for (nm in names(object)) {
-        if (is.waive(.subset2(object, nm))) next
+        if (is_waiver(.subset2(object, nm))) next
         plot$ggalign_patch_labels[nm] <- list(.subset2(object, nm))
     }
     if (!inherits(plot, "patch_ggplot")) {

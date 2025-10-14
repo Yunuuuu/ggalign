@@ -1,3 +1,5 @@
+init_hook <- S7::new_generic("init_hook", "input")
+
 #' Define the grid to compose plots in
 #'
 #' To control how different plots are laid out, you need to add a layout design
@@ -17,38 +19,126 @@
 #'     layout_design(nrow = 1L)
 #' align_plots(p1, p2, p3) +
 #'     layout_design(ncol = 1L)
-#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 waiver is_waiver
+#' @include utils-grid.R
+#' @include utils-ggplot.R
+#' @include alignpatch-area.R
 #' @export
-layout_design <- function(ncol = waiver(), nrow = waiver(), byrow = waiver(),
-                          widths = waiver(), heights = waiver(),
-                          area = waiver(), guides = NA, design = waiver()) {
-    if (!is.waive(ncol)) {
-        assert_number_whole(ncol, min = 1, allow_na = TRUE, allow_null = TRUE)
-    }
-    if (!is.waive(nrow)) {
-        assert_number_whole(nrow, min = 1, allow_na = TRUE, allow_null = TRUE)
-    }
-    if (!is.waive(byrow)) assert_bool(byrow)
-    area <- area %|w|% design
-    if (!is.waive(area) && !is.null(area)) area <- as_areas(area)
-    if (!identical(guides, NA) && !is.waive(guides) && !is.null(guides)) {
-        assert_guides(guides)
-    }
-    structure(
-        list(
-            ncol = ncol,
-            nrow = nrow,
-            byrow = byrow,
-            widths = widths,
-            heights = heights,
-            area = area,
-            guides = guides
+layout_design <- S7::new_class("layout_design",
+    properties = list(
+        ncol = S7::new_property(
+            S7::new_union(S3_waiver, S7::class_numeric, NULL),
+            setter = function(self, value) {
+                if (!is_waiver(value)) {
+                    assert_number_whole(value,
+                        min = 1, allow_null = TRUE,
+                        arg = "@ncol"
+                    )
+                }
+                prop(self, "ncol", check = FALSE) <- value
+                self
+            },
+            default = quote(waiver())
         ),
-        class = c("layout_design", "plot_layout")
+        nrow = S7::new_property(
+            S7::new_union(S3_waiver, S7::class_numeric, NULL),
+            setter = function(self, value) {
+                if (!is_waiver(value)) {
+                    assert_number_whole(value,
+                        min = 1, allow_null = TRUE,
+                        arg = "@nrow"
+                    )
+                }
+                prop(self, "nrow", check = FALSE) <- value
+                self
+            },
+            default = quote(waiver())
+        ),
+        byrow = S7::new_property(
+            S7::new_union(NULL, S7::class_logical),
+            setter = function(self, value) {
+                if (!is.null(value)) assert_bool(value, arg = "@byrow")
+                prop(self, "byrow", check = FALSE) <- value
+                self
+            }
+        ),
+        widths = S7::new_property(
+            S7::new_union(NULL, S7::class_numeric, S3_unit),
+            setter = function(self, value) {
+                if (is_na(value)) value <- NA_real_
+                prop(self, "widths") <- value
+                self
+            }
+        ),
+        heights = S7::new_property(
+            S7::new_union(NULL, S7::class_numeric, S3_unit),
+            setter = function(self, value) {
+                if (is_na(value)) value <- NA_real_
+                prop(self, "heights") <- value
+                self
+            }
+        ),
+        area = S7::new_property(
+            S7::new_union(S3_waiver, S3_area, NULL),
+            default = quote(waiver())
+        ),
+        guides = S7::new_property(
+            S7::new_union(S7::class_character, NULL, S3_waiver),
+            setter = function(self, value) {
+                if (is_na(value)) {
+                    value <- NA_character_
+                } else if (!is_waiver(value) && !is.null(value)) {
+                    assert_guides(value, arg = "@guides")
+                }
+                prop(self, "guides", check = FALSE) <- value
+                self
+            },
+            default = NA_character_
+        )
     )
+)
+
+S7::method(init_hook, layout_design) <- function(input) {
+    prop(input, "ncol", check = FALSE) <- prop(input, "ncol") %|w|% NULL
+    prop(input, "nrow", check = FALSE) <- prop(input, "nrow") %|w|% NULL
+    prop(input, "byrow", check = FALSE) <- prop(input, "byrow") %||% TRUE
+    prop(input, "widths", check = FALSE) <- prop(input, "widths") %||% NA
+    prop(input, "heights", check = FALSE) <- prop(input, "heights") %||% NA
+    prop(input, "area", check = FALSE) <- prop(input, "area") %|w|% NULL
+    if (identical(prop(input, "guides"), NA_character_)) {
+        prop(input, "guides", check = FALSE) <- waiver()
+    }
+    input
 }
 
-S3_layout_design <- S7::new_S3_class("layout_design")
+#' @importFrom ggplot2 is_waiver
+local(
+    S7::method(`+`, list(layout_design, layout_design)) <-
+        function(e1, e2) {
+            if (!is_waiver(prop(e2, "ncol"))) {
+                prop(e1, "ncol", check = FALSE) <- prop(e2, "ncol")
+            }
+            if (!is_waiver(prop(e2, "nrow"))) {
+                prop(e1, "nrow", check = FALSE) <- prop(e2, "nrow")
+            }
+            if (!is.null(prop(e2, "byrow"))) {
+                prop(e1, "byrow", check = FALSE) <- prop(e2, "byrow")
+            }
+            if (!is.null(prop(e2, "widths"))) {
+                prop(e1, "widths", check = FALSE) <- prop(e2, "widths")
+            }
+            if (!is.null(prop(e2, "heights"))) {
+                prop(e1, "heights", check = FALSE) <- prop(e2, "heights")
+            }
+            if (!is_waiver(prop(e2, "area"))) {
+                prop(e1, "area", check = FALSE) <- prop(e2, "area")
+            }
+            if (!identical(prop(e2, "guides"), NA_character_)) {
+                prop(e1, "guides", check = FALSE) <- prop(e2, "guides")
+            }
+            e1
+        }
+)
 
 ##############################################################
 #' Annotate the whole layout
@@ -69,9 +159,9 @@ S3_layout_design <- S7::new_S3_class("layout_design")
 #' @export
 layout_title <- function(title = waiver(), subtitle = waiver(),
                          caption = waiver()) {
-    if (!is.waive(title)) assert_string(title, allow_null = TRUE)
-    if (!is.waive(subtitle)) assert_string(subtitle, allow_null = TRUE)
-    if (!is.waive(caption)) assert_string(caption, allow_null = TRUE)
+    if (!is_waiver(title)) assert_string(title, allow_null = TRUE)
+    if (!is_waiver(subtitle)) assert_string(subtitle, allow_null = TRUE)
+    if (!is_waiver(caption)) assert_string(caption, allow_null = TRUE)
     structure(
         list(title = title, subtitle = subtitle, caption = caption),
         class = c("layout_title", "plot_annotation")
@@ -220,7 +310,7 @@ prop_layout_theme <- function(...) {
 #' @export
 layout_tags <- function(tags = NA, sep = waiver(),
                         prefix = waiver(), suffix = waiver()) {
-    if (!is_na(tags) && !is.waive(tags) && !is.null(tags)) {
+    if (!is_na(tags) && !is_waiver(tags) && !is.null(tags)) {
         tags <- as.character(tags)
         if (length(tags) == 1L) {
             tags <- switch(tags,
@@ -233,9 +323,9 @@ layout_tags <- function(tags = NA, sep = waiver(),
             )
         }
     }
-    if (!is.waive(sep)) assert_string(sep, allow_null = TRUE)
-    if (!is.waive(prefix)) assert_string(prefix, allow_null = TRUE)
-    if (!is.waive(suffix)) assert_string(suffix, allow_null = TRUE)
+    if (!is_waiver(sep)) assert_string(sep, allow_null = TRUE)
+    if (!is_waiver(prefix)) assert_string(prefix, allow_null = TRUE)
+    if (!is_waiver(suffix)) assert_string(suffix, allow_null = TRUE)
     structure(
         list(
             tags = tags, sep = sep,
@@ -247,15 +337,16 @@ layout_tags <- function(tags = NA, sep = waiver(),
 
 S3_layout_tags <- S7::new_S3_class("layout_tags")
 
+#' @importFrom ggplot2 ggproto is_waiver
 create_layout_tagger <- function(tags, parent) {
     # If no parent and no tags, return NULL
     if (is.null(parent) &&
-        (is.null(.subset2(tags, "tags")) || is.waive(.subset2(tags, "tags")))) {
+        (is.null(.subset2(tags, "tags")) || is_waiver(.subset2(tags, "tags")))) {
         return(NULL)
     }
 
     # If has parent and tags are waived, inherit parent directly
-    if (!is.null(parent) && is.waive(.subset2(tags, "tags"))) {
+    if (!is.null(parent) && is_waiver(.subset2(tags, "tags"))) {
         return(parent)
     }
 
@@ -468,7 +559,7 @@ table_add_tag <- function(table, label, theme) {
 #' @export
 #' @keywords internal
 layout_annotation <- function(..., theme = waiver()) {
-    if (is_theme(...elt(1L)) || !is.waive(theme)) {
+    if (is_theme(...elt(1L)) || !is_waiver(theme)) {
         cli_abort("Please use {.fn layout_theme} instead; {.fn layout_annotation} is reserved for future extensions.")
     }
 }
@@ -549,14 +640,6 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
             plots <- plot_list
         }
     } # nocov end
-    for (plot in plots) {
-        if (!has_s3_method(plot, "alignpatch", default = FALSE)) {
-            cli_abort(paste(
-                "Each plot to be aligned must implement an {.fn alignpatch}",
-                "method. Object of {.obj_type_friendly {plot}} does not."
-            ))
-        }
-    }
     out <- class_alignpatches(plots = plots)
 
     # setup layout parameters
@@ -594,20 +677,14 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
 #' - **theme**: A theme configuration object.
 #'
 #' @importFrom S7 new_object S7_object prop prop<-
+#' @importFrom ggplot2 waiver
 #' @keywords internal
 #' @export
 class_alignpatches <- S7::new_class(
     "alignpatches",
     properties = list(
         plots = S7::class_list,
-        layout = S7::new_property(
-            S7::class_list,
-            default = quote(list(
-                ncol = NULL, nrow = NULL, byrow = TRUE,
-                widths = NA, heights = NA, area = NULL,
-                guides = waiver()
-            ))
-        ),
+        layout = layout_design,
         titles = prop_layout_title(),
         tags = S7::new_property(
             S7::class_list,
@@ -619,5 +696,13 @@ class_alignpatches <- S7::new_class(
     )
 )
 
-local(S7::method(`$`, class_alignpatches) <- function(x, name) prop(x, name))
-local(S7::method(`[[`, class_alignpatches) <- function(x, name) prop(x, name))
+#' @importFrom S7 prop
+local(S7::method(`$`, class_alignpatches) <- function(x, i) prop(x, i))
+
+#' @importFrom S7 prop
+local(S7::method(`[[`, class_alignpatches) <- function(x, i) prop(x, i))
+
+#' @importFrom S7 props
+local(S7::method(`[`, class_alignpatches) <- function(x, i) {
+    .subset(props(x), i)
+})

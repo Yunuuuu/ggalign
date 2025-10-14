@@ -79,7 +79,7 @@ free_align <- function(plot, axes = "tlbr") {
     UseMethod("free_align")
 }
 
-# free_guides: set_guides
+# free_guides: guides
 # free_lab: collect_guides
 # free_border: collect_guides and align_border
 # free_space: get_sizes

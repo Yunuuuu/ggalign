@@ -96,7 +96,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     vertical_align <- horizontal_align <- the_align <-
         schemes_get(schemes, "scheme_align")
     if (!is.null(layout_labs <- prop(the_align, "free_labs")) &&
-        !is.waive(layout_labs)) {
+        !is_waiver(layout_labs)) {
         # prepare labs for child stack layout
         prop(horizontal_align, "free_labs", check = FALSE) <-
             gsub("[lr]", "", layout_labs)
@@ -112,7 +112,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
 
     # inherit from the parent stack layout
     if (!is.null(layout_spaces <- prop(the_align, "free_spaces")) &&
-        !is.waive(layout_spaces)) {
+        !is_waiver(layout_spaces)) {
         prop(horizontal_align, "free_spaces", check = FALSE) <-
             gsub("[lr]", "", layout_spaces)
         prop(vertical_align, "free_spaces", check = FALSE) <-

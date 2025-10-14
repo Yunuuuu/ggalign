@@ -1,15 +1,64 @@
-# here is copied from patchwork
-# we modified the `patchwork` package for following reasons:
-# 1. collect guides for each side (should be merged into patchwork, not allowed
-#    to be merged: https://github.com/thomasp85/patchwork/issues/379).
-# 2. `free_*()` functions: see https://github.com/thomasp85/patchwork/issues/379
-#     - `free_align()`: added
-#     - `free_border()`: not added
-#     - `free_lab()`: added
-#     - `free_space()`: added
-#     - `free_vp()`: not added
-# 3. Added titles around the plot top, left, bottom, and right
-#    (`patch_titles()`)
+#' Normalized gtable Representation
+#'
+#' @description
+#' The normalized gtable representation ensures that all plots share a
+#' consistent row–column structure, facilitating flexible composition,
+#' patch insertion, and alignment across multiple plots.
+#'
+#' This layout provides a fixed-size gtable grid for predictable positioning
+#' of plot components such as titles, axes, legends, captions, and margins.
+#' It is used internally for layout normalization and patch-based alignment.
+#'
+#' @usage NULL
+#' @section Row structure (top -> bottom):
+#' | Index | Component | Description |
+#' |:------|:-----------|:-------------|
+#' | 1 | `margin-top` | External top spacing |
+#' | 2 | `tag-top` | Top tag (e.g., "A", "B") |
+#' | 3 | `title` | Main title |
+#' | 4 | `subtitle` | Subtitle |
+#' | 5 | `guide-box-top` | Legend box at top |
+#' | 6 | `legend.box.spacing` | Space between legend and main area |
+#' | 7 | `patch-title-top`| Top patch title |
+#' | 8 | `xlab-top` | Top x-axis label (rare) |
+#' | 9 | `axis-top` | Top axis ticks and labels |
+#' | 10 | `strip-top` | Top strip (facet label) |
+#' | 11 | `panel` | Main plotting panel |
+#' | 12 | `strip-bottom` | Bottom strip (facet label) |
+#' | 13 | `axis-bottom` | Bottom axis ticks and labels |
+#' | 14 | `xlab-bottom` | Bottom x-axis label |
+#' | 15 | `patch-title-bottom`| Top patch title |
+#' | 16 | `legend.box.spacing` | Space before bottom legend box |
+#' | 17 | `guide-box-bottom` | Bottom legend box |
+#' | 18 | `caption` | Caption or footnote text |
+#' | 19 | `tag-bottom` | Bottom tag (optional) |
+#' | 20 | `margin-bottom` | External bottom spacing |
+#'
+#' @section Column structure (left -> right):
+#' | Index | Component | Description |
+#' |:------|:-----------|:-------------|
+#' | 1 | `margin-left` | External left spacing |
+#' | 2 | `tag-left` | Optional side tag |
+#' | 3 | `guide-box-left` | Left legend box |
+#' | 4 | `legend.box.spacing` | Space between legend and panel |
+#' | 5 | `patch-title-left`| Left patch title |
+#' | 6 | `ylab-left` | Left y-axis label |
+#' | 7 | `axis-left` | Left axis ticks and labels |
+#' | 8 | `strip-left` | Left strip (facet label) |
+#' | 9 | `panel` | Main panel area |
+#' | 10 | `strip-right` | Right strip (facet label) |
+#' | 11 | `axis-right` | Right axis ticks and labels |
+#' | 12 | `ylab-right` | Right y-axis label |
+#' | 13 | `patch-title-right`| Right patch title |
+#' | 14 | `legend.box.spacing` | Space before right legend box |
+#' | 15 | `guide-box-right` | Right legend box |
+#' | 16 | `tag-right` | Optional tag on right side |
+#' | 17 | `margin-right` | External right spacing |
+#'
+#' @name normalized_gtable
+#' @keywords internal
+NULL
+
 TABLE_ROWS <- 18L + 2L
 TABLE_COLS <- 15L + 2L
 
@@ -17,47 +66,6 @@ TOP_BORDER <- 9L + 1L
 LEFT_BORDER <- 7L + 1L
 BOTTOM_BORDER <- 8L + 1L
 RIGHT_BORDER <- 7L + 1L
-
-# top-bottom
-# 1: margin
-# 2: tag
-# 3: title
-# 4: subtitle
-# 5: guide-box-top
-# 6: legend.box.spacing
-# feature: insert patch title
-# 7: xlab-t
-# strip.placement = "inside"/"outside"
-# 8: axis-t/strip-t
-# 9: strip-t/axis-t
-# 10: panel
-# 11: strip-b
-# 12: axis-b
-# 13: xlab-b
-# feature: insert patch title
-# 14: legend.box.spacing
-# 15: guide-box-bottom
-# 16: caption
-# 17: tag
-# 18: margin
-
-# left-right
-#
-# 1: margin
-# 2: tag
-# 3: guide-box-left
-# 4: legend.box.spacing
-# feature: insert patch title
-# 5: ylab-l
-# 6: axis-l
-# 8: panel
-# 10: axis-r
-# 11: ylab-r
-# feature: insert patch title
-# 12: legend.box.spacing
-# 13: guide-box-right
-# 14: tag
-# 15: margin
 
 .TLBR <- c("top", "left", "bottom", "right")
 .tlbr <- c("t", "l", "b", "r")
@@ -69,22 +77,18 @@ split_position <- function(x) {
     vec_unique(.subset2(strsplit(x, "", fixed = TRUE), 1L))
 }
 
-# pos is an atomic character
-setup_position <- function(x) complete_position(split_position(x))
+setup_position <- function(x) setup_guides(x)
 
 setup_guides <- function(x) {
-    .subset(
+    out <- .subset(
         c(t = "top", l = "left", b = "bottom", r = "right", i = "inside"),
         split_position(x)
     )
-}
-
-complete_position <- function(x) {
-    out <- .subset(c(t = "top", l = "left", b = "bottom", r = "right"), x)
     names(out) <- NULL
     out
 }
 
+# pos is an atomic character
 opposite_pos <- function(pos) {
     out <- .subset(
         c(top = "bottom", left = "right", bottom = "top", right = "left"),
@@ -116,9 +120,7 @@ make_patch_table <- function() {
 #' @examples
 #' ggalignGrob(ggplot())
 #' @export
-ggalignGrob <- function(x) {
-    ggalign_gtable(ggalign_build(x))
-}
+ggalignGrob <- function(x) ggalign_gtable(ggalign_build(x))
 
 # Now, we only define `ggalign_gtable` method for `alignpatches` and `ggplot`
 # `ggalign_build` must return these objects
@@ -129,19 +131,20 @@ ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
 #' @export
 ggalign_gtable.gtable <- function(x) x
 
-#' Prepare plots to be aligned with `align_plots`
+#' Get Patch representation
 #'
-#' @param x A plot object to be prepared for alignment.
+#' @param x Any objects has a Patch representation
 #' @details
 #' `ggalign` has implement `alignpatch` method for following objects:
 #'   - [`ggplot`][ggplot2::ggplot]
 #'   - [`alignpatches`][align_plots]
 #'   - [`wrapped_plot`][ggwrap]
-#'   - [`patch`][patchwork::patchGrob]
-#'   - [`wrapped_patch`][patchwork::wrap_elements]
-#'   - [`spacer`][patchwork::plot_spacer]
+#'   - [`patchwork::patchGrob`]
+#'   - [`patchwork::wrap_elements`]
+#'   - [`patchwork::plot_spacer`]
 #'
-#' @return A `ggalign::Patch` object.
+#' @return A `r code_quote(sprintf("%s::Patch", pkg_nm()), quote = FALSE)`
+#' object.
 #' @examples
 #' alignpatch(ggplot())
 #' @seealso [`align_plots()`]
@@ -151,41 +154,64 @@ alignpatch <- function(x) UseMethod("alignpatch")
 
 #' @export
 alignpatch.default <- function(x) {
-    cli_abort("Cannot align {.obj_type_friendly {x}}")
+    cli_abort(paste(
+        "Each plot to be aligned must implement an {.fn alignpatch}",
+        "method. Object of {.obj_type_friendly {x}} does not."
+    ))
 }
 
 #' @export
 alignpatch.NULL <- function(x) NULL
 
 #' @importFrom ggplot2 ggproto find_panel
-#' @importFrom grid unit.c
+#' @importFrom grid unit unit.c
+#' @importFrom gtable is.gtable
 Patch <- ggproto(
     "ggalign::Patch", NULL,
 
-    # Fields added later in `alignpatches$patch_gtable()`
+    # Fields added later in `alignpatches$gtable()`
     borders = NULL, # Border specifications for the patch
     gt = NULL, # The patch's gtable representation
 
-    #' @param guides `guides` argument from the parent alignpatches
+    #' @param guides `guides` argument from the parent `alignpatches` object.
     #' @return Which side of guide legends should be collected by the parent
     #' `alignpatches` object?
     #' @noRd
-    set_guides = function(self, guides) {
-        cli_abort("{.fn set_guides} method is not defined")
+    # we add a single method to let each plot determine which side of guide
+    # legends will be collected before passing to `gtable()` or
+    # `collect_guides()` instead of just one method `collect_guides()`. So that
+    # the internal can modify the guides passed to `gtable()` or
+    # `collect_guides()` and we can easily ensure that plots placed in a border
+    # collect their guides by modifying the `guides` returned by $guides()
+    # method.
+    guides = function(self, guides) guides,
+    #' @param guides Which side of guide legends should be collected by the
+    #' parent `alignpatches` object?
+    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+        cli_abort("{.fn gtable} method is not defined")
     },
-    patch_gtable = function(self, theme, guides, tagger = NULL) {
-        cli_abort("{.fn patch_gtable} method is not defined")
-    },
-    collect_guides = function(self, guides, gt = self$gt) {
+    #' @param guides Which side of guide legends should be collected by the
+    #' parent `alignpatches` object?
+    collect_guides = function(self, guides) {
         if (is.null(guides)) return(list()) # styler: off
+        gt <- self$gt
+
+        # By default we only consider gtable has guide legend box
+        if (!is.gtable(gt)) return(list()) # styler: off
+
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")
         guides_ind <- grep("guide-box", .subset2(layout, "name"))
+
+        # no guide legends to be collected
+        if (length(guides_ind) == 0L) return(list()) # styler: off
+
+        # collect guide legends from the `gt`
         guides_loc <- vec_slice(layout, guides_ind)
         collected_guides <- vector("list", length(guides))
         names(collected_guides) <- guides
         panel_loc <- find_panel(gt)
-        remove_grobs <- NULL
+        removed <- NULL # guide legend grobs which will be removed
         for (guide_pos in guides) {
             guide_ind <- switch(guide_pos,
                 top = .subset2(guides_loc, "b") < .subset2(panel_loc, "t"),
@@ -200,7 +226,7 @@ Patch <- ggproto(
             if (!any(guide_ind)) next
             guide_loc <- vec_slice(guides_loc, guide_ind)
             guide_ind <- .subset(guides_ind, guide_ind)
-            remove_grobs <- c(guide_ind, remove_grobs)
+            removed <- c(guide_ind, removed)
             collected_guides[[guide_pos]] <- .subset2(grobs, guide_ind)
 
             # remove the guide spaces from the original gtable
@@ -223,13 +249,10 @@ Patch <- ggproto(
                 )
             }
         }
-        if (length(remove_grobs)) {
-            gt <- subset_gt(gt, -remove_grobs, trim = FALSE)
-        }
+        if (length(removed)) gt <- subset_gt(gt, -removed, trim = FALSE)
         self$gt <- gt
         collected_guides
     },
-    respect = function(self, gt = self$gt) isTRUE(.subset2(gt, "respect")),
     align_panel_sizes = function(self, panel_width, panel_height,
                                  gt = self$gt) {
         list(width = panel_width, height = panel_height, respect = FALSE)

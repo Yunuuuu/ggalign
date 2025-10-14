@@ -61,7 +61,7 @@ align_order <- function(weights = rowMeans, ...,
     assert_bool(strict)
     assert_bool(reverse)
     assert_active(active)
-    active <- active_update(active(use = FALSE), active)
+    active <- active(use = FALSE) + active
     align(
         align = AlignOrder,
         weights = weights,

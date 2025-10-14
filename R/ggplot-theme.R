@@ -14,6 +14,7 @@ default_theme <- function() {
 }
 
 # nocov start
+#' @importFrom ggplot2 theme
 new_theme_class <- function(new_class) {
     rlang::new_function(
         # We utilize editor completion by listing all `theme()` arguments here.

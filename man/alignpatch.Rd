@@ -2,18 +2,19 @@
 % Please edit documentation in R/alignpatch-.R
 \name{alignpatch}
 \alias{alignpatch}
-\title{Prepare plots to be aligned with \code{align_plots}}
+\title{Get Patch representation}
 \usage{
 alignpatch(x)
 }
 \arguments{
-\item{x}{A plot object to be prepared for alignment.}
+\item{x}{Any objects has a Patch representation}
 }
 \value{
-A \code{ggalign::Patch} object.
+A \code{ggalign::Patch}
+object.
 }
 \description{
-Prepare plots to be aligned with \code{align_plots}
+Get Patch representation
 }
 \details{
 \code{ggalign} has implement \code{alignpatch} method for following objects:
@@ -21,9 +22,9 @@ Prepare plots to be aligned with \code{align_plots}
 \item \code{\link[ggplot2:ggplot]{ggplot}}
 \item \code{\link[=align_plots]{alignpatches}}
 \item \code{\link[=ggwrap]{wrapped_plot}}
-\item \code{\link[patchwork:patchGrob]{patch}}
-\item \code{\link[patchwork:wrap_elements]{wrapped_patch}}
-\item \code{\link[patchwork:plot_spacer]{spacer}}
+\item \code{\link[patchwork:patchGrob]{patchwork::patchGrob}}
+\item \code{\link[patchwork:wrap_elements]{patchwork::wrap_elements}}
+\item \code{\link[patchwork:plot_spacer]{patchwork::plot_spacer}}
 }
 }
 \examples{

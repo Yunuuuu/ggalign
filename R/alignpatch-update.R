@@ -68,34 +68,23 @@ S7::method(update_ggplot, list(ggplot2::class_ggplot, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_design, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_design, class_alignpatches)) <-
     function(object, plot, objectname) {
-        old <- prop(plot, "layout")
-        guides <- .subset2(object, "guides")
-        object$guides <- NULL # guides need special consideration
-        for (nm in names(object)) {
-            if (is.waive(.subset2(object, nm))) next
-            old[nm] <- list(.subset2(object, nm))
-        }
-        if (is.null(guides) || is.waive(guides)) {
-            old["guides"] <- list(guides)
-        } else if (!identical(guides, NA)) {
-            old["guides"] <- list(setup_guides(guides))
-        }
-        prop(plot, "layout") <- old
+        prop(plot, "layout", check = FALSE) <- prop(plot, "layout") + object
         plot
     }
 
 # plot_layout is from `patchwork` package
-#' @importFrom ggplot2 update_ggplot
+#' @importFrom ggplot2 update_ggplot is_waiver
+#' @importFrom rlang inject
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("plot_layout"), class_alignpatches)
 ) <-
     function(object, plot, objectname) {
-        object$area <- object$design # pathwork use `design`
-        object <- .subset(object, names(layout_design()))
-        if (is.waive(object$guides)) {
+        object["area"] <- list(object$design) # pathwork use `design`
+        object <- .subset(object, names(props(layout_design())))
+        if (is_waiver(object$guides)) {
             object$guides <- NA
         } else if (identical(object$guides, "auto")) {
             object$guides <- waiver()
@@ -104,13 +93,14 @@ S7::method(
         } else if (identical(object$guides, "keep")) {
             object["guides"] <- list(NULL)
         }
-        update_ggplot(add_class(object, "layout_design"), plot, objectname)
+        update_ggplot(inject(layout_design(!!!object)), plot, objectname)
     }
 
 ##############################################################
+#' @importFrom ggplot2 is_waiver
 layout_title_update <- function(old, new) {
     for (nm in names(new)) {
-        if (is.waive(.subset2(new, nm))) next
+        if (is_waiver(.subset2(new, nm))) next
         old[nm] <- list(.subset2(new, nm))
     }
     old
@@ -179,7 +169,7 @@ layout_tags_update <- function(old, new) {
     for (nm in names(new)) {
         if (identical(nm, "tags")) {
             if (is_na(.subset2(new, nm))) next
-        } else if (is.waive(.subset2(new, nm))) {
+        } else if (is_waiver(.subset2(new, nm))) {
             next
         }
         old[nm] <- list(.subset2(new, nm))
@@ -254,7 +244,7 @@ local(
         S3_layout_title,
         S3_layout_theme,
         S3_layout_tags,
-        S3_layout_design
+        layout_design
     )) {
         S7::method(`&`, list(class_alignpatches, right)) <-
             function(e1, e2) {

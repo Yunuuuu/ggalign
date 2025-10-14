@@ -36,7 +36,7 @@ align_phylo <- function(phylo, ..., mapping = aes(),
         ladderize <- arg_match0(ladderize, c("left", "right"))
     }
     assert_active(active)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     align(
         align = AlignPhylo,
         phylo = phylo,

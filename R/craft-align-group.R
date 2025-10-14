@@ -19,7 +19,7 @@ align_group <- function(group, active = NULL) {
     if (vec_size(group) == 0L) {
         cli_abort("{.arg group} cannot be empty")
     }
-    active <- active_update(active(use = FALSE), active)
+    active <- active(use = FALSE) + active
     align(
         align = AlignGroup,
         group = group,

@@ -39,7 +39,7 @@ align_order2 <- function(stat, ..., reverse = FALSE,
     assert_bool(strict)
     assert_bool(reverse)
     assert_active(active)
-    active <- active_update(active(use = FALSE), active)
+    active <- active(use = FALSE) + active
     align(
         align = AlignOrder2,
         stat = stat,
@@ -58,7 +58,7 @@ AlignOrder2 <- ggproto("AlignOrder2", CraftAlign,
         layout <- ggproto_parent(CraftAlign, self)$interact_layout(layout)
         layout_data <- layout@data
         if (is.null(input_data <- self$input_data) ||
-            is.waive(input_data)) { # inherit from the layout
+            is_waiver(input_data)) { # inherit from the layout
             if (is.null(data <- layout_data)) {
                 cli_abort(c(
                     sprintf(

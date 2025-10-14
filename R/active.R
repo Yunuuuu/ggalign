@@ -80,15 +80,13 @@ active <- S7::new_class("active",
     )
 )
 
-active_update <- function(old, new) old + new
-
 #' @importFrom S7 S7_inherits
 is_active <- function(x) S7_inherits(x, active)
 
 #' @importFrom S7 props props<-
 local(S7::method(`+`, list(active, active)) <- function(e1, e2) {
     prop_list <- props(e2)
-    # it's safe to use is.na directly, since all properties are scalar.
+    # it's safe to use `is.na` directly, since all properties are scalar.
     props(e1) <- prop_list[
         !vapply(prop_list, is.na, logical(1L), USE.NAMES = FALSE)
     ]

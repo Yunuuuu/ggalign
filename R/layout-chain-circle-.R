@@ -49,7 +49,7 @@ circle_layout <- function(data = NULL, ..., radial = NULL,
                           direction = "outward", sector_spacing = NULL,
                           limits = waiver(), theme = NULL,
                           spacing_theta = deprecated()) {
-    if (is.waive(limits)) {
+    if (is_waiver(limits)) {
         circle_discrete(
             data = data, ..., radial = radial,
             direction = direction, sector_spacing = sector_spacing,

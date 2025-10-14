@@ -7,12 +7,11 @@
 layout_design(
   ncol = waiver(),
   nrow = waiver(),
-  byrow = waiver(),
-  widths = waiver(),
-  heights = waiver(),
+  byrow = NULL,
+  widths = NULL,
+  heights = NULL,
   area = waiver(),
-  guides = NA,
-  design = waiver()
+  guides = NA_character_
 )
 }
 \arguments{
@@ -37,8 +36,6 @@ indicating which side of guide legends should be collected. Defaults to
 \code{\link[ggplot2:waiver]{waiver()}}, which inherits from the parent layout. If
 there is no parent layout, or if \code{NULL} is provided, no guides will be
 collected.}
-
-\item{design}{An alias for \code{area}, retained for backward compatibility.}
 }
 \value{
 A \code{layout_design} object.
