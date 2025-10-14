@@ -7,7 +7,7 @@
 LayoutProto(
   data = NULL,
   schemes = Schemes(),
-  titles = list(title = NULL, subtitle = NULL, caption = NULL),
+  titles = layout_title(),
   theme = NULL,
   name = NA_character_
 )

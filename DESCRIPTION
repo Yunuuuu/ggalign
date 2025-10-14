@@ -64,8 +64,9 @@ Language: en-GB
 Collate: 
     'active.R'
     'alignpatch-.R'
-    'alignpatch-area.R'
     'utils-ggplot.R'
+    'alignpatch-title.R'
+    'alignpatch-area.R'
     'utils-grid.R'
     'alignpatch-design.R'
     'ggplot-theme.R'
@@ -83,7 +84,6 @@ Collate:
     'alignpatch-guides.R'
     'alignpatch-inset.R'
     'alignpatch-patchwork.R'
-    'alignpatch-title.R'
     'alignpatch-update.R'
     'alignpatch-wrap.R'
     'attributes.R'

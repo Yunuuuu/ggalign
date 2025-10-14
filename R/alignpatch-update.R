@@ -97,23 +97,12 @@ S7::method(
     }
 
 ##############################################################
-#' @importFrom ggplot2 is_waiver
-layout_title_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (is_waiver(.subset2(new, nm))) next
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_title, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_title, class_alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "titles") <- layout_title_update(
-            prop(plot, "titles"), object
-        )
+        prop(plot, "titles") <- prop(plot, "titles") + object
         plot
     }
 
@@ -135,15 +124,15 @@ S7::method(update_ggplot, list(S3_layout_theme, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
+#' @importFrom rlang inject
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("plot_annotation"), class_alignpatches)
 ) <-
     function(object, plot, objectname) {
-        prop(plot, "titles") <- layout_title_update(
-            prop(plot, "titles"),
-            .subset(object, names(layout_title()))
-        )
+        titles <- .subset(object, names(layout_title()))
+        titles <- inject(layout_title(!!!titles))
+        prop(plot, "titles") <- prop(plot, "titles") + titles
         prop(plot, "theme") <- layout_theme_update(
             prop(plot, "theme"), .subset2(object, "theme")
         )
@@ -241,7 +230,7 @@ alignpatches_and_add <- function(object, patches, objectname) {
 local(
     for (right in list(
         ggplot2::class_ggplot,
-        S3_layout_title,
+        layout_title,
         S3_layout_theme,
         S3_layout_tags,
         layout_design

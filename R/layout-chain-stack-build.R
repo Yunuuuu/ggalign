@@ -1,12 +1,7 @@
 #' @export
 `ggalign_build.ggalign::StackLayout` <- function(x) {
     x <- layout_init(x)
-    (stack_build(x) %||% align_plots(theme = x@theme)) +
-        layout_title(
-            title = .subset2(x@titles, "title"),
-            subtitle = .subset2(x@titles, "subtitle"),
-            caption = .subset2(x@titles, "caption")
-        )
+    (stack_build(x) %||% align_plots(theme = x@theme)) + prop(x, "titles")
 }
 
 #' @param schemes,theme Parameters from parent layout

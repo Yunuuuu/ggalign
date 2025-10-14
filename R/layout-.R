@@ -9,7 +9,7 @@ LayoutProto <- S7::new_class("LayoutProto",
     properties = list(
         data = S7::class_any,
         schemes = Schemes,
-        titles = prop_layout_title(),
+        titles = layout_title,
         theme = prop_layout_theme(),
         name = S7::new_property(
             S7::class_character,

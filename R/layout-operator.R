@@ -138,7 +138,7 @@ local(
             ggplot2::class_ggplot,
             S7::new_S3_class("quad_active"),
             S7::new_S3_class("quad_anno"),
-            S3_layout_title,
+            layout_title,
             S3_layout_theme,
             S3_layout_tags,
             layout_design,

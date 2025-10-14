@@ -26,7 +26,6 @@
     })
     keep <- !vapply(plots, is.null, logical(1L), USE.NAMES = FALSE)
     design <- trim_area(vec_c(!!!vec_set_names(vec_slice(design, keep), NULL)))
-    titles <- x@titles
     align_plots(
         !!!.subset(plots, keep),
         design = design,
@@ -34,11 +33,7 @@
         widths = .subset2(sizes, "width"),
         guides = prop(schemes_get(x@schemes, "scheme_align"), "guides"),
         theme = x@theme
-    ) + layout_title(
-        title = .subset2(titles, "title"),
-        subtitle = .subset2(titles, "subtitle"),
-        caption = .subset2(titles, "caption")
-    ) + layout_tags(NULL)
+    ) + prop(x, "titles") + layout_tags(NULL)
 }
 
 quad_build <- function(quad, schemes = NULL, theme = NULL,

@@ -73,9 +73,9 @@ S7::method(layout_add, list(ChainLayout, ggplot2::class_ggplot)) <-
     }
 
 #' @include layout-.R
-S7::method(layout_add, list(ChainLayout, S3_layout_title)) <-
+S7::method(layout_add, list(ChainLayout, layout_title)) <-
     function(layout, object, objectname) {
-        layout@titles <- layout_title_update(layout@titles, object)
+        layout@titles <- layout@titles + object
         layout
     }
 

@@ -7,7 +7,7 @@
 class_alignpatches(
   plots = list(),
   layout = layout_design(),
-  titles = list(title = NULL, subtitle = NULL, caption = NULL),
+  titles = layout_title(),
   tags = list(tags = waiver(), sep = NULL, prefix = NULL, suffix = NULL),
   theme = NULL
 )

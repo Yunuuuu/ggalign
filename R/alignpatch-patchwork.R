@@ -14,19 +14,15 @@ alignpatch.patchwork <- function(x) {
         class(x) <- class(x)[-seq_len(sub_patchwork_cls)]
     }
     x <- get_patches(x)
-    plots <- .subset2(x, "plots")
     layout <- .subset2(x, "layout")
     annotation <- .subset2(x, "annotation")
     default <- getFromNamespace("default_layout", "patchwork")
-    plot <- class_alignpatches(
-        plots,
-        titles = .subset(annotation, names(layout_title())),
-        theme = .subset2(annotation, "theme")
-    )
     layout <- modifyList(default, layout[
         !vapply(layout, is.null, logical(1L), USE.NAMES = FALSE)
     ])
-    alignpatch(plot + layout)
+    plots <- .subset2(x, "plots")
+    plot <- class_alignpatches(plots)
+    alignpatch(plot + layout + annotation)
 }
 
 #' @export

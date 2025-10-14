@@ -8,9 +8,9 @@ S7::method(layout_add, list(QuadLayout, S7::class_data.frame)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S3_layout_title)) <-
+S7::method(layout_add, list(QuadLayout, layout_title)) <-
     function(layout, object, objectname) {
-        layout@titles <- layout_title_update(layout@titles, object)
+        layout@titles <- layout@titles + object
         layout
     }
 

@@ -1,41 +1,3 @@
-#' Annotate the whole layout
-#'
-#' @inheritParams ggplot2::labs
-#' @return A `layout_title` object.
-#' @examples
-#' p1 <- ggplot(mtcars) +
-#'     geom_point(aes(mpg, disp))
-#' p2 <- ggplot(mtcars) +
-#'     geom_boxplot(aes(gear, disp, group = gear))
-#' p3 <- ggplot(mtcars) +
-#'     geom_bar(aes(gear)) +
-#'     facet_wrap(~cyl)
-#' align_plots(p1, p2, p3) +
-#'     layout_title(title = "I'm title")
-#' @importFrom ggplot2 waiver
-#' @export
-layout_title <- function(title = waiver(), subtitle = waiver(),
-                         caption = waiver()) {
-    if (!is_waiver(title)) assert_string(title, allow_null = TRUE)
-    if (!is_waiver(subtitle)) assert_string(subtitle, allow_null = TRUE)
-    if (!is_waiver(caption)) assert_string(caption, allow_null = TRUE)
-    structure(
-        list(title = title, subtitle = subtitle, caption = caption),
-        class = c("layout_title", "plot_annotation")
-    )
-}
-
-S3_layout_title <- S7::new_S3_class("layout_title")
-
-prop_layout_title <- function(...) {
-    S7::new_property(
-        S7::class_list,
-        ...,
-        default = quote(list(title = NULL, subtitle = NULL, caption = NULL))
-    )
-}
-
-##############################################################
 #' Modify theme of the layout
 #'
 #' @inherit ggplot2::theme
@@ -480,7 +442,6 @@ layout_annotation <- function(..., theme = waiver()) {
 #' # Compare to not using named plot arguments
 #' align_plots(p1, p2, area = area)
 #' @importFrom ggplot2 update_ggplot
-#' @include alignpatch-design.R
 #' @export
 align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                         widths = NA, heights = NA, area = NULL,
@@ -536,6 +497,8 @@ align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
 #'
 #' @importFrom S7 new_object S7_object prop prop<-
 #' @importFrom ggplot2 waiver
+#' @include alignpatch-design.R
+#' @include alignpatch-title.R
 #' @keywords internal
 #' @export
 class_alignpatches <- S7::new_class(
@@ -543,7 +506,7 @@ class_alignpatches <- S7::new_class(
     properties = list(
         plots = S7::class_list,
         layout = layout_design,
-        titles = prop_layout_title(),
+        titles = layout_title,
         tags = S7::new_property(
             S7::class_list,
             default = quote(list(
