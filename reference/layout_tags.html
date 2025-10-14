@@ -121,28 +121,28 @@ the plot's theme; if not found there, the layout's theme is used.</p>
 <span class="r-in"><span>    <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add tags to plots, by default the plot in nested layout will get own tag</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="layout_tags-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Treat a nested layout as a single plot by disabling its internal tags</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p1</span>, <span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">layout_tags</span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="layout_tags-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Apply multilevel tagging — outer layout uses letters, inner layout uses</span></span></span>
 <span class="r-in"><span><span class="co"># numbers</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">p1</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    ncol <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">layout_tags</span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="layout_tags-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use a custom tag sequence, possibly mixed with standard sequences</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">p1</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="align_plots.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="alignpatches.html">align_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span> <span class="op">+</span> <span class="fu">layout_tags</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    ncol <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">layout_tags</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&amp;"</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span></span>
