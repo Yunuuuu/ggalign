@@ -64,10 +64,11 @@ Language: en-GB
 Collate: 
     'active.R'
     'alignpatch-.R'
-    'ggplot-theme.R'
     'alignpatch-area.R'
     'utils-ggplot.R'
     'utils-grid.R'
+    'alignpatch-design.R'
+    'ggplot-theme.R'
     'alignpatch-align_plots.R'
     'alignpatch-alignpatches.R'
     'alignpatch-build.R'

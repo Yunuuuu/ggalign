@@ -113,6 +113,8 @@ make_patch_table <- function() {
     )
 }
 
+init_hook <- S7::new_generic("init_hook", "input")
+
 #' Generate a plot grob.
 #'
 #' @param x An object to be converted into a [grob][grid::grob].
