@@ -8,7 +8,8 @@ allow_lambda <- function(x) {
     if (rlang::is_formula(x)) rlang::as_function(x) else x
 }
 
-`%|w|%` <- function(x, y) if (inherits(x, "waiver")) y else x
+#' @importFrom ggplot2 is_waiver
+`%|w|%` <- function(x, y) if (is_waiver(x)) y else x
 
 snake_class <- function(x) ggfun("snake_class")(x)
 
