@@ -181,6 +181,7 @@ GridUnit <- S7::new_class(
     )
 )
 
+#' @importFrom grid is.unit unit
 #' @importFrom S7 convert
 prop_grid_unit <- function(property, ...) {
     force(property)

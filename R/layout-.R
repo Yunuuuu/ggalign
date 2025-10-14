@@ -53,7 +53,9 @@ local(S7::method(alignpatch, LayoutProto) <- function(x) {
 })
 
 #' @importFrom S7 prop<- prop
-PatchLayout <- ggproto("PatchLayout", PatchAlignpatches,
+PatchLayout <- ggproto(
+    "PatchLayout",
+    PatchAlignpatches,
     layout = NULL,
     gtable = function(self, theme = NULL, guides = NULL,
                       tagger = NULL) {
@@ -67,6 +69,8 @@ PatchLayout <- ggproto("PatchLayout", PatchAlignpatches,
         }
         # store the plot used by `PatchAlignpatches`
         self$plot <- plot
+        # reset the plot field when function finished
+        on.exit(self$plot <- NULL)
         ggproto_parent(PatchAlignpatches, self)$gtable(theme, guides, tagger)
     }
 )
@@ -80,23 +84,12 @@ ChainLayout <- S7::new_class("ChainLayout",
             S7::class_integer,
             validator = function(value) {
                 if (length(value) != 1L) {
-                    return("must be of length 1")
+                    return("must be a single integer number")
                 }
-            },
-            setter = function(self, value) {
-                prop(self, "current") <- value
-                self
             },
             default = NA_integer_
         ),
-        box_list = S7::new_property(
-            S7::class_list,
-            setter = function(self, value) {
-                prop(self, "box_list") <- value
-                self
-            },
-            default = list()
-        ),
+        box_list = S7::new_property(S7::class_list),
         domain = prop_domain("domain"),
         direction = S7::new_property(
             S7::class_character,
@@ -104,16 +97,13 @@ ChainLayout <- S7::new_class("ChainLayout",
                 if (length(value) != 1L) {
                     return("must be a single character string")
                 }
-            },
-            setter = function(self, value) {
-                prop(self, "direction") <- value
-                self
             }
         )
     )
 )
 
 #' @importFrom ggplot2 waiver
+#' @importFrom grid is.unit
 #' @importFrom S7 convert
 #' @importFrom rlang is_atomic
 #' @keywords internal
