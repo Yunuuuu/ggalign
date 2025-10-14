@@ -15,7 +15,7 @@
 #' @importFrom rlang list2
 #' @keywords internal
 layout_expand <- function(..., x = waiver(), y = waiver()) { # nocov start
-    if (...length() > 0L && (!is.waive(x) || !is.waive(y))) {
+    if (...length() > 0L && (!is_waiver(x) || !is_waiver(y))) {
         cli_abort(
             "Cannot mix the usage of {.arg ...} with {.arg x}/{.arg y} argument"
         )

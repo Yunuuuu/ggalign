@@ -1,12 +1,7 @@
 #' @export
 `ggalign_build.ggalign::StackLayout` <- function(x) {
-    x <- layout_init(x)
-    (stack_build(x) %||% align_plots(theme = x@theme)) +
-        layout_title(
-            title = .subset2(x@titles, "title"),
-            subtitle = .subset2(x@titles, "subtitle"),
-            caption = .subset2(x@titles, "caption")
-        )
+    x <- on_init(x)
+    (stack_build(x) %||% align_plots(theme = x@theme)) + prop(x, "titles")
 }
 
 #' @param schemes,theme Parameters from parent layout
@@ -97,7 +92,7 @@ stack_build <- function(stack, schemes = NULL, theme = NULL,
     # whether we should override the `guides` collection for the whole
     # annotation stack
     free_guides <- .subset2(stack@heatmap, "free_guides")
-    if (!is.waive(free_guides)) plot <- free_guide(plot, free_guides)
+    if (!is_waiver(free_guides)) plot <- free_guide(plot, free_guides)
     # we also apply the `free_spaces` for the whole annotation stack
     free_spaces <- prop(
         schemes_get(schemes, "scheme_align"), "free_spaces"

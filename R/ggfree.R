@@ -70,7 +70,7 @@ ggfree.ggplot <- function(data = waiver(), ..., size = NULL, active = NULL) {
 new_free_gg <- function(plot, data, size, active,
                         call = caller_call()) {
     assert_active(active, allow_null = TRUE, call = call)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     new_craftbox(
         FreeGg,
         # new field for FreeGg
@@ -84,11 +84,11 @@ new_free_gg <- function(plot, data, size, active,
     )
 }
 
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto is_waiver
 FreeGg <- ggproto("FreeGg", Craftsman,
     interact_layout = function(self, layout) {
         layout_data <- layout@data
-        if (is.waive(input_data <- self$input_data)) { # inherit from the layout
+        if (is_waiver(input_data <- self$input_data)) { # inherit from the layout
             data <- layout_data
             self$labels <- vec_names(layout_data)
 

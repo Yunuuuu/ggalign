@@ -19,7 +19,7 @@
 #' @export
 align_kmeans <- function(..., data = NULL, active = NULL) {
     assert_active(active)
-    active <- active_update(active(use = FALSE), active)
+    active <- active(use = FALSE) + active
     align(
         align = AlignKmeans,
         params = list2(...),

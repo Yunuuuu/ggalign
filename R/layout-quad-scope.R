@@ -81,7 +81,7 @@ quad_scope <- S7::new_class(
         position = S7::new_property(
             S7::class_any,
             validator = function(value) {
-                if (is.waive(value) || is.null(value)) {
+                if (is_waiver(value) || is.null(value)) {
                     return(NULL)
                 }
                 if (is_string(value) && !grepl("[^tlbri]", value)) {
@@ -118,7 +118,7 @@ with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
             details = "with_quad(position = \"i\")"
         )
         if (isTRUE(main)) {
-            if (is.null(position) || is.waive(position)) {
+            if (is.null(position) || is_waiver(position)) {
                 position <- "i"
             } else if (is_string(position)) {
                 position <- paste0(position, "i")
@@ -131,7 +131,7 @@ with_quad <- function(x, position = waiver(), main = deprecated(), ...) {
 quad_scope_contexts <- function(scope, current) {
     contexts <- prop(scope, "position")
     if (is.null(contexts)) return(contexts) # styler: off
-    if (is.waive(contexts)) {
+    if (is_waiver(contexts)) {
         # have active annotation, we by default add quad body
         if (is.null(current)) current else list(current, NULL)
     } else {

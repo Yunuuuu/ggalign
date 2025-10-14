@@ -9,7 +9,7 @@ LayoutProto <- S7::new_class("LayoutProto",
     properties = list(
         data = S7::class_any,
         schemes = Schemes,
-        titles = prop_layout_title(),
+        titles = layout_title,
         theme = prop_layout_theme(),
         name = S7::new_property(
             S7::class_character,
@@ -52,22 +52,22 @@ local(S7::method(alignpatch, LayoutProto) <- function(x) {
     ggproto(NULL, PatchLayout, layout = x)
 })
 
+#' @importFrom S7 prop<- prop
 PatchLayout <- ggproto("PatchLayout", PatchAlignpatches,
     layout = NULL,
-    patch_gtable = function(self, theme = NULL, guides = NULL,
-                            tagger = NULL) {
+    gtable = function(self, theme = NULL, guides = NULL,
+                      tagger = NULL) {
         plot <- ggalign_build(self$layout)
         # Preserve tag-related theme settings from the original layout theme.
         # These are intentionally not overridden so that `PatchAlignpatches`
         # retains full control over tag appearance and positioning.
         if (!is.null(theme)) {
-            plot@theme <- plot@theme + tag_theme(self$layout@theme)
+            prop(plot, "theme") <- prop(plot, "theme") +
+                tag_theme(self$layout@theme)
         }
         # store the plot used by `PatchAlignpatches`
         self$plot <- plot
-        ggproto_parent(PatchAlignpatches, self)$patch_gtable(
-            theme, guides, tagger
-        )
+        ggproto_parent(PatchAlignpatches, self)$gtable(theme, guides, tagger)
     }
 )
 
@@ -262,17 +262,17 @@ HeatmapLayout <- S7::new_class(
 
 ###########################################################
 #' @importFrom ggplot2 complete_theme
-layout_init <- function(layout) {
+S7::method(on_init, LayoutProto) <- function(input) {
     # initialize layout schemes
-    layout@schemes <- scheme_init(layout@schemes)
+    input@schemes <- scheme_init(input@schemes)
 
     # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(layout@schemes, "scheme_theme"), "theme") +
-        layout@theme
+    th <- prop(schemes_get(input@schemes, "scheme_theme"), "theme") +
+        input@theme
 
     # Apply the updated theme
-    layout@theme <- th
-    layout
+    input@theme <- th
+    input
 }
 
 #' @importFrom S7 S7_dispatch

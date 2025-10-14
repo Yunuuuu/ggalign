@@ -104,7 +104,7 @@ merge_mapping <- function(x, y) {
 }
 
 merge_data_fn <- function(plot_data, user_data) {
-    if (is.null(user_data) || is.waive(user_data)) {
+    if (is.null(user_data) || is_waiver(user_data)) {
         plot_data
     } else if (is.function(user_data <- allow_lambda(user_data))) {
         force(plot_data)

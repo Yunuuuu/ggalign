@@ -29,7 +29,7 @@
 #' @export
 stack_switch <- function(sizes = NULL, what = waiver(), ...) {
     rlang::check_dots_empty()
-    if (!is.waive(what)) what <- check_stack_context(what)
+    if (!is_waiver(what)) what <- check_stack_context(what)
     if (!is.null(sizes)) sizes <- check_stack_sizes(sizes)
     structure(list(what = what, sizes = sizes), class = "stack_switch")
 }

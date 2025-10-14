@@ -1,3 +1,80 @@
+#' Annotate the whole layout
+#'
+#' @inheritParams ggplot2::labs
+#' @return A `layout_title` object.
+#' @examples
+#' p1 <- ggplot(mtcars) +
+#'     geom_point(aes(mpg, disp))
+#' p2 <- ggplot(mtcars) +
+#'     geom_boxplot(aes(gear, disp, group = gear))
+#' p3 <- ggplot(mtcars) +
+#'     geom_bar(aes(gear)) +
+#'     facet_wrap(~cyl)
+#' align_plots(p1, p2, p3) +
+#'     layout_title(title = "I'm title")
+#' @importFrom ggplot2 waiver
+#' @include utils-ggplot.R
+#' @export
+layout_title <- S7::new_class("layout_title",
+    properties = list(
+        title = S7::new_property(
+            S7::new_union(S3_waiver, S7::class_character, NULL),
+            setter = function(self, value) {
+                if (!is_waiver(value)) {
+                    assert_string(value, allow_null = TRUE, arg = "@title")
+                }
+                prop(self, "title", check = FALSE) <- value
+                self
+            },
+            default = quote(waiver())
+        ),
+        subtitle = S7::new_property(
+            S7::new_union(S3_waiver, S7::class_character, NULL),
+            setter = function(self, value) {
+                if (!is_waiver(value)) {
+                    assert_string(value, allow_null = TRUE, arg = "@subtitle")
+                }
+                prop(self, "subtitle", check = FALSE) <- value
+                self
+            },
+            default = quote(waiver())
+        ),
+        caption = S7::new_property(
+            S7::new_union(S3_waiver, S7::class_character, NULL),
+            setter = function(self, value) {
+                if (!is_waiver(value)) {
+                    assert_string(value, allow_null = TRUE, arg = "@caption")
+                }
+                prop(self, "caption", check = FALSE) <- value
+                self
+            },
+            default = quote(waiver())
+        )
+    )
+)
+
+#' @importFrom S7 prop prop<-
+S7::method(on_init, layout_title) <- function(input) {
+    prop(input, "title", check = FALSE) <- prop(input, "title") %|w|% NULL
+    prop(input, "subtitle", check = FALSE) <- prop(input, "subtitle") %|w|% NULL
+    prop(input, "caption", check = FALSE) <- prop(input, "caption") %|w|% NULL
+    input
+}
+
+#' @importFrom ggplot2 is_waiver
+#' @importFrom S7 props
+local(
+    S7::method(`+`, list(layout_title, layout_title)) <-
+        function(e1, e2) {
+            fields <- props(e2)
+            fields <- fields[
+                !vapply(fields, is_waiver, logical(1L), USE.NAMES = FALSE)
+            ]
+            if (length(fields)) props(e1) <- fields
+            e1
+        }
+)
+
 #' Add patch titles to plot borders
 #'
 #' This function extends ggplot2's title functionality, allowing you to add
@@ -41,7 +118,7 @@ patch_titles <- function(top = waiver(), left = waiver(), bottom = waiver(),
 }
 
 #' @importFrom ggplot2 find_panel zeroGrob
-#' @importFrom ggplot2 calc_element element_grob merge_element
+#' @importFrom ggplot2 calc_element element_grob merge_element is_theme_element
 #' @importFrom rlang arg_match0
 #' @importFrom grid grobName
 setup_patch_titles <- function(table, patch_titles, theme) {
@@ -50,17 +127,21 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     old_text$hjust <- 0.5
     if (is.null(text <- .subset2(theme, "plot.patch_title"))) {
         text <- old_text
-    } else if (inherits(text, "element_text")) {
+    } else if (is_theme_element(text, "text")) {
         text <- merge_element(text, old_text)
     } else {
-        cli_abort(paste(
-            "Theme element {.var plot.patch_title} must be a",
-            "{.cls element_text}."
-        ), call = quote(theme()))
+        cli_abort(
+            paste(
+                "Theme element {.var plot.patch_title} must be a",
+                "{.cls element_text}."
+            ),
+            call = quote(theme())
+        )
     }
     # inherit from plot.title.position, default use "panel"
     position <- .subset2(theme, "plot.patch_title.position") %||%
         .subset2(theme, "plot.title.position") %||% "panel"
+
     for (border in .TLBR) {
         panel_pos <- find_panel(table)
         patch_title <- .subset2(patch_titles, border)
@@ -169,13 +250,13 @@ setup_patch_titles <- function(table, patch_titles, theme) {
     table
 }
 
-#' @importFrom ggplot2 update_ggplot
+#' @importFrom ggplot2 update_ggplot is_waiver
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("ggalign_patch_labels"), ggplot2::class_ggplot)
 ) <- function(object, plot, object_name, ...) {
     for (nm in names(object)) {
-        if (is.waive(.subset2(object, nm))) next
+        if (is_waiver(.subset2(object, nm))) next
         plot$ggalign_patch_labels[nm] <- list(.subset2(object, nm))
     }
     if (!inherits(plot, "patch_ggplot")) {

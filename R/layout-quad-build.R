@@ -1,7 +1,7 @@
 #' @importFrom grid unit.c
 #' @export
 `ggalign_build.ggalign::QuadLayout` <- function(x) {
-    x <- layout_init(x)
+    x <- on_init(x)
     patches <- quad_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")
@@ -26,7 +26,6 @@
     })
     keep <- !vapply(plots, is.null, logical(1L), USE.NAMES = FALSE)
     design <- trim_area(vec_c(!!!vec_set_names(vec_slice(design, keep), NULL)))
-    titles <- x@titles
     align_plots(
         !!!.subset(plots, keep),
         design = design,
@@ -34,11 +33,7 @@
         widths = .subset2(sizes, "width"),
         guides = prop(schemes_get(x@schemes, "scheme_align"), "guides"),
         theme = x@theme
-    ) + layout_title(
-        title = .subset2(titles, "title"),
-        subtitle = .subset2(titles, "subtitle"),
-        caption = .subset2(titles, "caption")
-    ) + layout_tags(NULL)
+    ) + prop(x, "titles") + layout_tags(NULL)
 }
 
 quad_build <- function(quad, schemes = NULL, theme = NULL,
@@ -96,7 +91,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     vertical_align <- horizontal_align <- the_align <-
         schemes_get(schemes, "scheme_align")
     if (!is.null(layout_labs <- prop(the_align, "free_labs")) &&
-        !is.waive(layout_labs)) {
+        !is_waiver(layout_labs)) {
         # prepare labs for child stack layout
         prop(horizontal_align, "free_labs", check = FALSE) <-
             gsub("[lr]", "", layout_labs)
@@ -112,7 +107,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
 
     # inherit from the parent stack layout
     if (!is.null(layout_spaces <- prop(the_align, "free_spaces")) &&
-        !is.waive(layout_spaces)) {
+        !is_waiver(layout_spaces)) {
         prop(horizontal_align, "free_spaces", check = FALSE) <-
             gsub("[lr]", "", layout_spaces)
         prop(vertical_align, "free_spaces", check = FALSE) <-

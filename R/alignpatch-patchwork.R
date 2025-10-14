@@ -1,5 +1,6 @@
 ########################################
 #' @importFrom utils modifyList getFromNamespace
+#' @importFrom S7 convert
 #' @export
 alignpatch.patchwork <- function(x) {
     rlang::check_installed("patchwork", "to align patchwork")
@@ -13,24 +14,15 @@ alignpatch.patchwork <- function(x) {
         class(x) <- class(x)[-seq_len(sub_patchwork_cls)]
     }
     x <- get_patches(x)
-    plots <- .subset2(x, "plots")
     layout <- .subset2(x, "layout")
     annotation <- .subset2(x, "annotation")
     default <- getFromNamespace("default_layout", "patchwork")
     layout <- modifyList(default, layout[
         !vapply(layout, is.null, logical(1L), USE.NAMES = FALSE)
     ])
-    if (identical(.subset2(layout, "guides"), "collect")) {
-        layout$guides <- .TLBR
-    } else {
-        layout$guides <- NULL
-    }
-    alignpatch(class_alignpatches(
-        plots,
-        layout = layout,
-        titles = .subset(annotation, names(layout_title())),
-        theme = .subset2(annotation, "theme")
-    ))
+    plots <- .subset2(x, "plots")
+    plot <- class_alignpatches(plots)
+    alignpatch(plot + layout + annotation)
 }
 
 #' @export
@@ -73,7 +65,7 @@ PatchPatchworkPatch <- ggproto(
     # `patch` from `patchwork`: patchwork::plot_spacer
     #' @importFrom gtable gtable_add_rows gtable_add_cols
     #' @importFrom ggplot2 find_panel
-    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         guides <- if (length(guides)) "collect" else "keep"
         ans <- patchwork::patchGrob(self$patch, guides = guides)
         # add rows and columns for `patch_titles()`

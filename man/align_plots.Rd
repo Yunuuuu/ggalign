@@ -88,5 +88,6 @@ align_plots(p1, p2, area = area)
 \item \code{\link[=layout_design]{layout_design()}}
 \item \code{\link[=layout_title]{layout_title()}}
 \item \code{\link[=layout_theme]{layout_theme()}}
+\item \code{\link[=layout_tags]{layout_tags()}}
 }
 }

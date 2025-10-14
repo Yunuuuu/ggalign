@@ -44,24 +44,25 @@ magickGrob.gList <- function(grob, ...) {
 
 #' @importFrom grid editGrob
 #' @importFrom rlang inject
+#' @importFrom ggplot2 is_waiver
 #' @export
 #' @rdname magickGrob
 magickGrob.magickGrob <- function(grob, magick = waiver(), ...,
                                   res = waiver(), interpolate = waiver(),
                                   name = waiver(), vp = waiver()) {
     rlang::check_dots_empty()
-    if (!is.waive(magick) &&
+    if (!is_waiver(magick) &&
         !is.null(magick) &&
         !is.function(magick <- allow_lambda(magick))) {
         cli_abort("{.arg magick} must be a function")
     }
-    if (!is.waive(magick)) assert_number_whole(res, min = 1, allow_null = TRUE)
-    if (!is.waive(interpolate)) assert_bool(interpolate)
+    if (!is_waiver(magick)) assert_number_whole(res, min = 1, allow_null = TRUE)
+    if (!is_waiver(interpolate)) assert_bool(interpolate)
     params <- list(
         magick = magick, res = res,
         interpolate = interpolate, name = name, vp = vp
     )
-    params <- params[!vapply(params, is.waive, logical(1L), USE.NAMES = FALSE)]
+    params <- params[!vapply(params, is_waiver, logical(1L), USE.NAMES = FALSE)]
     inject(editGrob(grob, !!!params))
 }
 

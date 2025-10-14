@@ -41,7 +41,7 @@
 ggcross <- function(mapping = aes(), size = NULL, active = NULL,
                     no_axes = deprecated()) {
     assert_active(active)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     if (lifecycle::is_present(no_axes)) {
         lifecycle::deprecate_stop(
             "1.1.0",

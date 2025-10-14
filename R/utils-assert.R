@@ -89,16 +89,18 @@ assert_guides <- function(guides, arg = caller_arg(guides),
     }
 }
 
+#' @importFrom ggplot2 is_waiver
 assert_layout_position <- function(position, arg = caller_arg(position),
                                    call = caller_call()) {
-    if (!is.waive(position) && !is.null(position)) {
+    if (!is_waiver(position) && !is.null(position)) {
         assert_position(position, arg = arg, call = call)
     }
 }
 
+#' @importFrom ggplot2 is_waiver
 assert_layout_guides <- function(guides, arg = caller_arg(guides),
                                  call = caller_call()) {
-    if (!is.waive(guides) && !is.null(guides)) {
+    if (!is_waiver(guides) && !is.null(guides)) {
         assert_guides(guides, arg = arg, call = call)
     }
 }
@@ -157,9 +159,10 @@ assert_limits <- function(limits, allow_null = TRUE, arg = caller_arg(limits),
     }
 }
 
+#' @importFrom ggplot2 is_waiver
 check_scheme_data <- function(data, arg = caller_arg(data),
                               call = caller_call()) {
-    if (!is.waive(data) && !is.null(data) &&
+    if (!is_waiver(data) && !is.null(data) &&
         !is.function(data <- allow_lambda(data))) {
         cli_abort(paste(
             "{.arg {arg}} must be a function,",

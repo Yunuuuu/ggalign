@@ -77,13 +77,13 @@ quad_layout <- function(data = waiver(), mapping = aes(),
                         ...,
                         theme = NULL, active = NULL,
                         width = NA, height = NA) {
-    if (is.waive(xlim) && is.waive(ylim)) {
+    if (is_waiver(xlim) && is_waiver(ylim)) {
         quad_discrete(
             data = data, mapping = mapping,
             ..., active = active, theme = theme,
             width = width, height = height
         )
-    } else if (!is.waive(xlim) && !is.waive(ylim)) {
+    } else if (!is_waiver(xlim) && !is_waiver(ylim)) {
         quad_continuous(
             data = data, mapping = mapping, xlim = xlim, ylim = ylim,
             ..., active = active, theme = theme,
@@ -200,14 +200,14 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
                             mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA,
                             call = caller_call()) {
-    if (!is.waive(xlim)) assert_limits(xlim, call = call)
-    if (!is.waive(ylim)) assert_limits(ylim, call = call)
-    if (is.waive(xlim) || is.waive(ylim)) {
+    if (!is_waiver(xlim)) assert_limits(xlim, call = call)
+    if (!is_waiver(ylim)) assert_limits(ylim, call = call)
+    if (is_waiver(xlim) || is_waiver(ylim)) {
         # If we need align discrete variables, data cannot be `NULL` and
         # must be provided, here, we convert it to waiver() to indicate
         # inherit from the parent layout
         data <- data %||% waiver()
-        if (!is.waive(data) && !is.function(data)) {
+        if (!is_waiver(data) && !is.function(data)) {
             nrows <- NROW(data)
             ncols <- ncol(data)
 
@@ -255,7 +255,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
         # used by the layout
         data = data, theme = theme,
         schemes = schemes,
-        plot_active = active_update(active(use = TRUE), active),
+        plot_active = active(use = TRUE) + active,
         name = name,
         # used by the main body
         body_schemes = default_schemes(waiver()),

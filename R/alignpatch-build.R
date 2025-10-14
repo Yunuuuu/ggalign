@@ -64,9 +64,9 @@
 #' @importFrom S7 prop
 #' @export
 `ggalign_gtable.ggalign::alignpatches` <- function(x) {
-    table <- alignpatch(x)$patch_gtable()
+    table <- alignpatch(x)$gtable()
 
-    titles <- prop(x, "titles")
+    titles <- on_init(prop(x, "titles"))
 
     # ensure theme has no missing value
     theme <- complete_theme(prop(x, "theme") %||% theme_get())
@@ -75,21 +75,21 @@
     # Add title, subtitle, and caption -------------------
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
-        theme = theme, "plot.title", .subset2(titles, "title"),
+        theme = theme, "plot.title", prop(titles, "title"),
         margin_y = TRUE, margin_x = TRUE
     )
     title_height <- grobHeight(title)
 
     # Subtitle
     subtitle <- element_render(
-        theme, "plot.subtitle", .subset2(titles, "subtitle"),
+        theme, "plot.subtitle", prop(titles, "subtitle"),
         margin_y = TRUE, margin_x = TRUE
     )
     subtitle_height <- grobHeight(subtitle)
 
     # caption
     caption <- element_render(
-        theme, "plot.caption", .subset2(titles, "caption"),
+        theme, "plot.caption", prop(titles, "caption"),
         margin_y = TRUE, margin_x = TRUE
     )
     caption_height <- grobHeight(caption)

@@ -5,49 +5,49 @@
 }
 
 #' @noRd
-PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
-    set_guides = function(self, guides) guides,
+PatchAlignpatches <- ggproto(
+    "PatchAlignpatches", Patch,
+    theme = NULL,
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     #' @importFrom S7 prop
-    patch_gtable = function(self, theme = NULL, guides = NULL,
-                            tagger = NULL) {
+    gtable = function(self, theme = NULL, guides = NULL,
+                      tagger = NULL) {
         plot <- self$plot
         patches <- lapply(prop(plot, "plots"), function(plot) {
             out <- alignpatch(plot)
-            if (!is.null(out) && !inherits(out, "ggalign::Patch")) {
+            if (!is.null(out) &&
+                !inherits(out, sprintf("%s::Patch", pkg_nm()))) {
                 cli_abort("{.fn alignpatch} must return a {.cls Patch} object")
             }
             out
         })
-        layout <- prop(plot, "layout")
+        layout <- on_init(prop(plot, "layout"))
 
         # get the design areas and dims ------------------
-        panel_widths <- .subset2(layout, "widths")
-        panel_heights <- .subset2(layout, "heights")
-        if (is.null(area <- .subset2(layout, "area"))) {
-            if (is.null(layout$ncol) && length(panel_widths) > 1L) {
-                layout$ncol <- length(panel_widths)
+        panel_widths <- prop(layout, "widths")
+        panel_heights <- prop(layout, "heights")
+        if (is.null(area <- prop(layout, "area"))) {
+            if (is.null(layout@ncol) && length(panel_widths) > 1L) {
+                layout@ncol <- length(panel_widths)
             }
-            if (is.null(layout$nrow) && length(panel_heights) > 1L) {
-                layout$nrow <- length(panel_heights)
+            if (is.null(layout@nrow) && length(panel_heights) > 1L) {
+                layout@nrow <- length(panel_heights)
             }
             dims <- wrap_dims(
-                length(patches),
-                .subset2(layout, "nrow"),
-                .subset2(layout, "ncol")
+                vec_size(patches),
+                prop(layout, "nrow"),
+                prop(layout, "ncol")
             )
-            area <- create_area(dims[2L], dims[1L], .subset2(layout, "byrow"))
+            area <- create_area(dims[2L], dims[1L], prop(layout, "byrow"))
         } else {
             dims <- c(max(field(area, "b")), max(field(area, "r")))
         }
 
         # filter `plots` based on the design areas --------------------
         if (vec_size(area) < vec_size(patches)) {
-            cli_warn(
-                "Too few patch areas to hold all plots. Dropping plots"
-            )
+            cli_warn("Too few patch areas to hold all plots. Dropping plots")
             plots <- vec_slice(patches, vec_seq_along(area))
         } else {
             area <- vec_slice(area, seq_along(patches))
@@ -97,12 +97,13 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         self$theme <- theme
 
         # by default, we won't collect any guide legends
-        parent_guides <- guides
-        guides <- .subset2(layout, "guides") %|w|% parent_guides
-
+        collected <- guides
+        guides <- prop(layout, "guides") 
+        if (is_string(guides)) guides <- setup_guides(guides)
+        guides <- guides %|w|% collected
 
         #######################################################
-        # 1. patch_gtable: create the gtable for the patch, will set internal
+        # 1. gtable: create the gtable for the patch, will set internal
         #    `gt`
         # 2. `collect_guides`, can change the internal `gt`
         # 3. set_sizes:
@@ -113,14 +114,15 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         #    final gtable
         # setup gtable list ----------------------------------
         # Let each patch to determine whether to collect guides
-        collected <- lapply(patches, function(patch) patch$set_guides(guides))
-        collected_guides <- vector("list", length(patches))
+        guides_list <- lapply(patches, function(patch) patch$guides(guides))
 
         # Always ensure that plots placed in a border collect their guides, if
-        # any guides are to be collected in that border. This prevents overlap,
-        # unless the guides will be collected by the parent layout.
-        border_with_guides <- unique(unlist(collected, FALSE, FALSE))
-        border_with_guides <- setdiff(border_with_guides, parent_guides)
+        # any guides are to be collected in that border.
+        border_with_guides <- unique(unlist(guides_list, FALSE, FALSE))
+
+        # This prevents overlap, unless the guides will be collected by the
+        # parent layout.
+        border_with_guides <- setdiff(border_with_guides, collected)
 
         # A tagger can be:
         # - A single string representing the tag for the entire layout,
@@ -137,15 +139,16 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             tag <- NULL
         }
 
+        collected_guides <- vector("list", length(patches))
         for (i in seq_along(patches)) {
             patch <- .subset2(patches, i)
             # we always collect guides in the borders, otherwise, they'll
             # overlap
             g <- union(
-                .subset2(collected, i),
+                .subset2(guides_list, i),
                 intersect(border_with_guides, patch$borders)
             )
-            patch$gt <- patch$patch_gtable(theme = theme, guides = g, tagger)
+            patch$gt <- patch$gtable(theme = theme, guides = g, tagger)
             collected_guides[i] <- list(patch$collect_guides(g))
         }
 
@@ -254,6 +257,7 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
         # return guides to be collected
         .subset(collected_guides, guides)
     },
+
     #' @importFrom grid is.unit unit
     set_sizes = function(self, area, dims,
                          panel_widths, panel_heights,
@@ -273,7 +277,11 @@ PatchAlignpatches <- ggproto("PatchAlignpatches", Patch,
             field(area, "t") == field(area, "b") &
             vapply(
                 patches,
-                function(patch) patch$respect(),
+                function(patch) {
+                    respect <- .subset2(patch$gt, "respect")
+                    isTRUE(respect) ||
+                        (is.matrix(respect) && any(respect == 1L))
+                },
                 logical(1L),
                 USE.NAMES = FALSE
             )

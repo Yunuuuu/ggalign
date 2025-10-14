@@ -98,7 +98,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
         )
     }
     assert_active(active)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     new_craftbox(
         AlignGg,
         input_data = allow_lambda(data),
@@ -131,7 +131,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
                 ))
             }
             data <- input_data(layout_data)
-        } else if (is.waive(input_data)) {
+        } else if (is_waiver(input_data)) {
             data <- layout_data %|w|% NULL
             # for data inherit from the layout, and the layout data is from
             # the quad-layout, we'll integrate the `extra_domain`

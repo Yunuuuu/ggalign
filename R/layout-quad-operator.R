@@ -8,9 +8,9 @@ S7::method(layout_add, list(QuadLayout, S7::class_data.frame)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S3_layout_title)) <-
+S7::method(layout_add, list(QuadLayout, layout_title)) <-
     function(layout, object, objectname) {
-        layout@titles <- layout_title_update(layout@titles, object)
+        layout@titles <- layout@titles + object
         layout
     }
 
@@ -140,7 +140,7 @@ S7::method(
                 data <- NULL
             }
         }
-        if (!is.waive(data)) { # initialize the annotation stack
+        if (!is_waiver(data)) { # initialize the annotation stack
             stack <- new_stack_layout(
                 data = data,
                 direction = direction,
@@ -164,7 +164,7 @@ S7::method(
         if (!is.null(size <- .subset2(object, "size"))) {
             stack@sizes <- size
         }
-        if (!is.waive(free_guides <- .subset2(object, "free_guides"))) {
+        if (!is_waiver(free_guides <- .subset2(object, "free_guides"))) {
             stack@heatmap["free_guides"] <- list(free_guides)
         }
         stack <- switch_chain_plot(

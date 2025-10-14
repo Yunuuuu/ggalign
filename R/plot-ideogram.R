@@ -112,7 +112,7 @@ plot_ideogram <- function(mapping = aes(), ..., seqnames = NULL, size = NULL,
             } else {
                 if (is.null(dots$y)) dots$y <- seqnames
             }
-            if (is.null(input <- allow_lambda(dots$data)) || is.waive(input)) {
+            if (is.null(input <- allow_lambda(dots$data)) || is_waiver(input)) {
                 dots$data <- function(d) {
                     data <- ggalign_attr(d, "ranges")
                     data$middle <- (data$start + data$end) / 2L

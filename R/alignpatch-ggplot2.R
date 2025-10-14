@@ -1,5 +1,5 @@
 #' @export
-ggalign_gtable.ggplot <- function(x) alignpatch(x)$patch_gtable()
+ggalign_gtable.ggplot <- function(x) alignpatch(x)$gtable()
 
 #' @export
 ggalign_build.ggplot <- function(x) x
@@ -30,8 +30,7 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 #' @importFrom ggplot2 ggplotGrob update_labels complete_theme
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
-    set_guides = function(guides) guides,
-    patch_gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         plot <- self$plot
         # extract patch titles --------------------------------
         patch_titles <- plot$ggalign_patch_labels
@@ -60,7 +59,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
     },
-    respect = function(self, gt = self$gt) .subset2(gt, "respect"),
 
     #' @importFrom ggplot2 find_panel
     align_panel_sizes = function(self, panel_width, panel_height,

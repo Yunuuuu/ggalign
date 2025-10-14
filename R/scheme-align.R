@@ -5,7 +5,7 @@ prop_char_sets <- function(allowed, ...) {
     S7::new_property(
         S7::class_any,
         validator = function(value) {
-            if (is_na(value) || is.waive(value) || is.null(value)) {
+            if (is_na(value) || is_waiver(value) || is.null(value)) {
                 return(NULL)
             }
             if (is_string(value) && !grepl(pattern, value)) {
@@ -125,7 +125,7 @@ S7::method(scheme_inherit, list(scheme_align, scheme_align)) <-
 #' @importFrom S7 prop
 S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_align)) <-
     function(plot, scheme, ...) {
-        if (!is.waive(free_guides <- prop(scheme, "guides"))) {
+        if (!is_waiver(free_guides <- prop(scheme, "guides"))) {
             plot <- free_guide(plot, free_guides)
         }
         # by default, we'll attach all labs to the axis

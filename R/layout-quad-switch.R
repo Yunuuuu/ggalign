@@ -116,7 +116,7 @@ quad_switch_anno <- function(position, size, free_guides, initialize, what,
                              call = caller_call()) {
     if (!is.null(size)) size <- check_size(size, call = call)
     assert_layout_position(free_guides, call = call)
-    if (!is.waive(what)) what <- check_stack_context(what, call = call)
+    if (!is_waiver(what)) what <- check_stack_context(what, call = call)
     assert_bool(initialize, allow_null = TRUE)
     structure(
         list(

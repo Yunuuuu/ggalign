@@ -54,7 +54,7 @@ CraftCross <- ggproto(
         nobs <- prop(domain, "nobs")
 
         # Step 3: Handle the input data
-        if (is.waive(input_data <- self$data)) { # inherit from the layout
+        if (is_waiver(input_data <- self$data)) { # inherit from the layout
             # No explicit data: inherit from layout
             data <- layout_data
             # If no data and inherit_nobs is explicitly FALSE, unset nobs

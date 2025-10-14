@@ -23,7 +23,7 @@ cross_link <- function(link, data = waiver(), ...,
     }
     assert_obs_size(obs_size)
     assert_active(active)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     cross(CrossLink,
         data = data, data_params = list2(...),
         link = link, obs_size = obs_size,

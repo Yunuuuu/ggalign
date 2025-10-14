@@ -178,7 +178,7 @@ S7::method(craftbox_add, Scheme) <- function(object, box, objectname) {
 
 #' @importFrom S7 prop
 S7::method(craftbox_add, active) <- function(object, box, objectname) {
-    attr(box, "active") <- active_update(prop(box, "active"), object)
+    attr(box, "active") <- prop(box, "active") + object
     box
 }
 

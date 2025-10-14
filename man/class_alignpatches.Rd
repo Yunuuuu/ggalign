@@ -6,10 +6,9 @@
 \usage{
 class_alignpatches(
   plots = list(),
-  layout = list(ncol = NULL, nrow = NULL, byrow = TRUE, widths = NA, heights = NA, area =
-    NULL, guides = waiver()),
-  titles = list(title = NULL, subtitle = NULL, caption = NULL),
-  tags = list(tags = waiver(), sep = NULL, prefix = NULL, suffix = NULL),
+  layout = layout_design(),
+  titles = layout_title(),
+  tags = layout_tags(),
   theme = NULL
 )
 }

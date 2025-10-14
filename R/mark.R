@@ -59,11 +59,8 @@ mark_draw <- function(.draw, ...) {
 #' @seealso [`mark_draw()`]
 #' @export
 .mark_draw <- function(.draw, ...) {
-    if (override_call(call <- caller_call())) {
-        call <- current_call()
-    }
     if (!is.function(draw <- allow_lambda(.draw))) {
-        cli_abort("{.arg .draw} must be a function", call = call)
+        cli_abort("{.arg .draw} must be a function")
     }
     args <- names(formals(draw))
     if (length(args) < 1L && args != "...") {
@@ -310,39 +307,25 @@ mark_triangle <- function(..., orientation = "plot", .element = NULL) {
 }
 
 #####################################################
-#' @export
-`[.ggalignMarkGtable` <- function(x, i, j) {
-    # subset will violate the `ggalignMarkGtable` `shape`
-    # we always use the next method
-    x <- remove_class(x, "ggalignMarkGtable")
-    x$ggalign_link_data <- NULL
-    NextMethod()
-}
-
 #' @importFrom ggplot2 ggproto
 #' @export
 alignpatch.ggalign_mark_plot <- function(x) {
     ggproto(NULL, PatchAlignMark, plot = x)
 }
 
+#' @importFrom grid gTree
+markGrob <- function(grob, link, ...) {
+    gTree(grob = grob, link = link, ..., cl = "markGrob")
+}
+
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @include alignpatch-ggplot2.R
 PatchAlignMark <- ggproto(
     "PatchAlignMark", PatchGgplot,
-    patch_gtable = function(self, theme, guides, tagger) {
-        plot <- self$plot
-        ans <- ggproto_parent(PatchGgplot, self)$patch_gtable(
-            theme = theme, guides = guides, tagger = tagger
-        )
-        # re-define the draw method, we assign new class
-        ans <- add_class(ans, "ggalignMarkGtable")
-        ans$ggalign_link_data <- plot$ggalign_link_data
-        ans
-    },
     add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {
         gtable_add_grob(
             gt,
-            grobs = plot,
+            grobs = markGrob(plot, self$plot$ggalign_link_data),
             # t = 8, l = 6, b = 14, r = 12
             # t = t + 7L, l = l + 5L, b = b - 6L, r = r - 5L,
             t = t + TOP_BORDER, l = l + LEFT_BORDER,
@@ -375,26 +358,30 @@ PatchAlignMark <- ggproto(
 # postDraw:
 #  - postDrawDetails: by default, do noting
 #  - popgrobvp
-#' @importFrom grid makeContent unit convertHeight convertWidth viewport
+#' @importFrom grid makeContent setChildren gList
+#' @importFrom grid unit convertHeight convertWidth viewport
 #' @importFrom stats reorder
 #' @export
-makeContent.ggalignMarkGtable <- function(x) {
+makeContent.markGrob <- function(x) {
     # Grab viewport information
     width <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE)
     height <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE)
 
-    # Grab grob metadata
-    plot_widths <- compute_null_width(.subset2(x, "widths"),
+    # Grab the inner grob metadata
+    inner <- .subset2(x, "grob")
+    plot_widths <- compute_null_width(
+        .subset2(inner, "widths"),
         valueOnly = TRUE
     )
     plot_widths <- scales::rescale(plot_widths, c(0, 1), from = c(0, width))
-    plot_heights <- compute_null_height(.subset2(x, "heights"),
+    plot_heights <- compute_null_height(
+        .subset2(inner, "heights"),
         valueOnly = TRUE
     )
     plot_heights <- scales::rescale(plot_heights, c(0, 1), from = c(0, height))
 
-    panel_loc <- find_panel(x)
-    data <- .subset2(x, "ggalign_link_data")
+    data <- .subset2(x, "link")
+    panel_loc <- find_panel(inner)
     full_data1 <- .subset2(data, "full_data1")
     full_data2 <- .subset2(data, "full_data2")
     direction <- .subset2(data, "direction")
@@ -466,7 +453,7 @@ makeContent.ggalignMarkGtable <- function(x) {
             # we reverse the heights
             # we have reversed the `plot_cum_heights`, so the ordering index
             # should also be reversed
-            panel_index <- nrow(x) - panel_index + 1L
+            panel_index <- nrow(inner) - panel_index + 1L
             panel_yend <- cumsum(rev(plot_heights))
             panel_x <- switch(link,
                 hand1 = sum(l_border),
@@ -544,23 +531,20 @@ makeContent.ggalignMarkGtable <- function(x) {
     )
     coords <- list_drop_empty(coords)
     draw <- .subset2(data, "draw")
-    if (is.gList(grob <- draw(coords))) {
-        grob <- gTree(children = grob)
-    }
-
-    if (is.grob(grob)) {
-        layout <- .subset2(x, "layout")
+    if (is.gList(mark <- draw(coords))) mark <- gTree(children = mark)
+    if (is.grob(mark)) {
+        layout <- .subset2(inner, "layout")
         panels <- layout[
             grepl("^panel", .subset2(layout, "name")), ,
             drop = FALSE
         ]
-        x <- gtable_add_grob(
-            x,
-            grobs = grob,
+        inner <- gtable_add_grob(
+            inner,
+            grobs = mark,
             t = 1L, l = 1L, b = -1L, r = -1L,
             # always draw with panel area
             z = min(panels$z)
         )
     }
-    NextMethod()
+    setChildren(x, children = gList(inner))
 }

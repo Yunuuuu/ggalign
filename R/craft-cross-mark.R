@@ -32,7 +32,7 @@ cross_mark <- function(mark, data = waiver(), ...,
     }
     assert_obs_size(obs_size)
     assert_active(active)
-    active <- active_update(active(use = TRUE), active)
+    active <- active(use = TRUE) + active
     cross(CrossMark,
         data = data, data_params = list2(...),
         mark = mark, obs_size = obs_size,

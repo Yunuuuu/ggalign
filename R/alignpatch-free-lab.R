@@ -54,10 +54,8 @@ alignpatch.free_lab <- function(x) {
     ggproto(
         "PatchFreeLab", Parent,
         free_labs = setup_position(attr(x, "free_labs")),
-        collect_guides = function(self, guides, gt = self$gt) {
-            ans <- ggproto_parent(Parent, self)$collect_guides(
-                guides = guides, gt = gt
-            )
+        collect_guides = function(self, guides) {
+            ans <- ggproto_parent(Parent, self)$collect_guides(guides = guides)
             self$gt <- ggproto_parent(Parent, self)$free_lab(
                 labs = self$free_labs, gt = self$gt
             )

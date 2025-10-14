@@ -68,34 +68,23 @@ S7::method(update_ggplot, list(ggplot2::class_ggplot, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_design, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_design, class_alignpatches)) <-
     function(object, plot, objectname) {
-        old <- prop(plot, "layout")
-        guides <- .subset2(object, "guides")
-        object$guides <- NULL # guides need special consideration
-        for (nm in names(object)) {
-            if (is.waive(.subset2(object, nm))) next
-            old[nm] <- list(.subset2(object, nm))
-        }
-        if (is.null(guides) || is.waive(guides)) {
-            old["guides"] <- list(guides)
-        } else if (!identical(guides, NA)) {
-            old["guides"] <- list(setup_guides(guides))
-        }
-        prop(plot, "layout") <- old
+        prop(plot, "layout", check = FALSE) <- prop(plot, "layout") + object
         plot
     }
 
 # plot_layout is from `patchwork` package
-#' @importFrom ggplot2 update_ggplot
+#' @importFrom ggplot2 update_ggplot is_waiver
+#' @importFrom rlang inject
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("plot_layout"), class_alignpatches)
 ) <-
     function(object, plot, objectname) {
-        object$area <- object$design # pathwork use `design`
-        object <- .subset(object, names(layout_design()))
-        if (is.waive(object$guides)) {
+        object["area"] <- list(object$design) # pathwork use `design`
+        object <- .subset(object, names(props(layout_design())))
+        if (is_waiver(object$guides)) {
             object$guides <- NA
         } else if (identical(object$guides, "auto")) {
             object$guides <- waiver()
@@ -104,26 +93,16 @@ S7::method(
         } else if (identical(object$guides, "keep")) {
             object["guides"] <- list(NULL)
         }
-        update_ggplot(add_class(object, "layout_design"), plot, objectname)
+        update_ggplot(inject(layout_design(!!!object)), plot, objectname)
     }
 
 ##############################################################
-layout_title_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (is.waive(.subset2(new, nm))) next
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_title, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_title, class_alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "titles") <- layout_title_update(
-            prop(plot, "titles"), object
-        )
+        prop(plot, "titles") <- prop(plot, "titles") + object
         plot
     }
 
@@ -145,15 +124,15 @@ S7::method(update_ggplot, list(S3_layout_theme, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
+#' @importFrom rlang inject
 S7::method(
     update_ggplot,
     list(S7::new_S3_class("plot_annotation"), class_alignpatches)
 ) <-
     function(object, plot, objectname) {
-        prop(plot, "titles") <- layout_title_update(
-            prop(plot, "titles"),
-            .subset(object, names(layout_title()))
-        )
+        titles <- .subset(object, names(layout_title()))
+        titles <- inject(layout_title(!!!titles))
+        prop(plot, "titles") <- prop(plot, "titles") + titles
         prop(plot, "theme") <- layout_theme_update(
             prop(plot, "theme"), .subset2(object, "theme")
         )
@@ -161,38 +140,22 @@ S7::method(
         tags <- .subset2(object, "tag_levels") %|w|% NA
         if (length(tags) == 0L) tags <- NA
         if (is.list(tags)) tags <- .subset2(tags, length(tags))
-        prop(plot, "tags") <- layout_tags_update(
-            prop(plot, "tags"),
-            layout_tags(
-                tags = tags,
-                sep = .subset2(object, "tag_sep"),
-                prefix = .subset2(object, "tag_prefix"),
-                suffix = .subset2(object, "tag_suffix")
-            )
+        prop(plot, "tags") <- prop(plot, "tags") + layout_tags(
+            tags = tags,
+            sep = .subset2(object, "tag_sep"),
+            prefix = .subset2(object, "tag_prefix"),
+            suffix = .subset2(object, "tag_suffix")
         )
         plot
     }
 
 ##############################################################
-#' @importFrom rlang is_na
-layout_tags_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (identical(nm, "tags")) {
-            if (is_na(.subset2(new, nm))) next
-        } else if (is.waive(.subset2(new, nm))) {
-            next
-        }
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
 # Bypass S7 setter validation: update internal property via `attr()` directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_tags, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_tags, class_alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "tags") <- layout_tags_update(prop(plot, "tags"), object)
+        prop(plot, "tags") <- prop(plot, "tags") + object
         plot
     }
 
@@ -251,10 +214,10 @@ alignpatches_and_add <- function(object, patches, objectname) {
 local(
     for (right in list(
         ggplot2::class_ggplot,
-        S3_layout_title,
+        layout_title,
         S3_layout_theme,
-        S3_layout_tags,
-        S3_layout_design
+        layout_tags,
+        layout_design
     )) {
         S7::method(`&`, list(class_alignpatches, right)) <-
             function(e1, e2) {

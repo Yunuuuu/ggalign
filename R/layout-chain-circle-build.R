@@ -1,26 +1,24 @@
 #' @export
 `ggalign_build.ggalign::CircleLayout` <- function(x) {
-    x <- layout_init(x)
+    x <- on_init(x)
     circle_build(x)
 }
 
 #' @importFrom utils packageVersion
 #' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob ggplot_build
 #' @importFrom ggplot2 theme complete_theme
-#' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable 
+#' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty arg_match0
+#' @importFrom S7 prop props
 circle_build <- function(circle, schemes = NULL, theme = NULL) {
     schemes <- inherit_parent_layout_schemes(circle, schemes)
     theme <- inherit_parent_layout_theme(circle, theme)
+    titles <- on_init(prop(circle, "titles"))
     # for empty plot
     base <- ggplot() +
         theme +
-        ggplot2::labs(
-            title = .subset2(circle@titles, "title"),
-            subtitle = .subset2(circle@titles, "subtitle"),
-            caption = .subset2(circle@titles, "caption")
-        )
+        ggplot2::labs(!!!props(titles))
     if (is_empty(plot_list <- circle@box_list)) {
         return(ggplotGrob(base))
     }
@@ -214,21 +212,21 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # Title
     title <- element_render(
-        theme, "plot.title", .subset2(circle@titles, "title"),
+        theme, "plot.title", prop(titles, "title"),
         margin_y = TRUE, margin_x = TRUE
     )
     title_height <- grobHeight(title)
 
     # Subtitle
     subtitle <- element_render(
-        theme, "plot.subtitle", .subset2(circle@titles, "subtitle"),
+        theme, "plot.subtitle", prop(titles, "subtitle"),
         margin_y = TRUE, margin_x = TRUE
     )
     subtitle_height <- grobHeight(subtitle)
 
     # whole plot annotation
     caption <- element_render(
-        theme, "plot.caption", .subset2(circle@titles, "caption"),
+        theme, "plot.caption", prop(titles, "caption"),
         margin_y = TRUE, margin_x = TRUE
     )
     caption_height <- grobHeight(caption)

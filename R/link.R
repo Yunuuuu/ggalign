@@ -53,11 +53,8 @@ link_draw <- function(.draw, ...) {
 #' @seealso [`link_draw()`]
 #' @export
 .link_draw <- function(.draw, ...) {
-    if (override_call(call <- caller_call())) {
-        call <- current_call()
-    }
     if (!is.function(draw <- allow_lambda(.draw))) {
-        cli_abort("{.arg .draw} must be a function", call = call)
+        cli_abort("{.arg .draw} must be a function")
     }
     args <- names(formals(draw))
     if (length(args) < 1L && args != "...") {
