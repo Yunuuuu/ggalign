@@ -1,7 +1,7 @@
 #' @importFrom grid unit.c
 #' @export
 `ggalign_build.ggalign::QuadLayout` <- function(x) {
-    x <- layout_init(x)
+    x <- on_init(x)
     patches <- quad_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")

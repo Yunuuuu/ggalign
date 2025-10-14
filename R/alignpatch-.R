@@ -113,7 +113,7 @@ make_patch_table <- function() {
     )
 }
 
-init_hook <- S7::new_generic("init_hook", "input")
+on_init <- S7::new_generic("on_init", "input")
 
 #' Generate a plot grob.
 #'

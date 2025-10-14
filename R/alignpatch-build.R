@@ -66,7 +66,7 @@
 `ggalign_gtable.ggalign::alignpatches` <- function(x) {
     table <- alignpatch(x)$gtable()
 
-    titles <- init_hook(prop(x, "titles"))
+    titles <- on_init(prop(x, "titles"))
 
     # ensure theme has no missing value
     theme <- complete_theme(prop(x, "theme") %||% theme_get())

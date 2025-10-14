@@ -262,17 +262,17 @@ HeatmapLayout <- S7::new_class(
 
 ###########################################################
 #' @importFrom ggplot2 complete_theme
-layout_init <- function(layout) {
+S7::method(on_init, LayoutProto) <- function(input) {
     # initialize layout schemes
-    layout@schemes <- scheme_init(layout@schemes)
+    input@schemes <- scheme_init(input@schemes)
 
     # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(layout@schemes, "scheme_theme"), "theme") +
-        layout@theme
+    th <- prop(schemes_get(input@schemes, "scheme_theme"), "theme") +
+        input@theme
 
     # Apply the updated theme
-    layout@theme <- th
-    layout
+    input@theme <- th
+    input
 }
 
 #' @importFrom S7 S7_dispatch

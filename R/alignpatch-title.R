@@ -54,7 +54,7 @@ layout_title <- S7::new_class("layout_title",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(init_hook, layout_title) <- function(input) {
+S7::method(on_init, layout_title) <- function(input) {
     prop(input, "title", check = FALSE) <- prop(input, "title") %|w|% NULL
     prop(input, "subtitle", check = FALSE) <- prop(input, "subtitle") %|w|% NULL
     prop(input, "caption", check = FALSE) <- prop(input, "caption") %|w|% NULL

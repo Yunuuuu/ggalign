@@ -104,7 +104,7 @@ layout_design <- S7::new_class("layout_design",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(init_hook, layout_design) <- function(input) {
+S7::method(on_init, layout_design) <- function(input) {
     prop(input, "ncol", check = FALSE) <- prop(input, "ncol") %|w|% NULL
     prop(input, "nrow", check = FALSE) <- prop(input, "nrow") %|w|% NULL
     prop(input, "byrow", check = FALSE) <- prop(input, "byrow") %||% TRUE

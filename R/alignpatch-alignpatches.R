@@ -23,7 +23,7 @@ PatchAlignpatches <- ggproto(
             }
             out
         })
-        layout <- init_hook(prop(plot, "layout"))
+        layout <- on_init(prop(plot, "layout"))
 
         # get the design areas and dims ------------------
         panel_widths <- prop(layout, "widths")
