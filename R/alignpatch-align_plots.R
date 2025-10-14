@@ -78,8 +78,12 @@ layout_annotation <- function(..., theme = waiver()) {
 ##############################################################
 #' Arrange multiple plots into a grid
 #'
+#' An internal S7 class that represents a collection of aligned plots
+#' along with their layout configuration, titles, tags, and theme.
+#'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
-#' ggplot object. Use `NULL` to indicate an empty spacer.
+#' ggplot object. Use `NULL` to indicate an empty spacer. Each input must
+#' implement the [`alignpatch()`] method.
 #' @param ncol,nrow The dimensions of the grid to create - if both are `NULL` it
 #' will use the same logic as [`facet_wrap()`][ggplot2::facet_wrap] to set the
 #' dimensions
@@ -101,12 +105,26 @@ layout_annotation <- function(..., theme = waiver()) {
 #' elements of the layout. By default, the theme will inherit from the parent
 #' `layout`.
 #' @param design An alias for `area`, retained for backward compatibility.
-#' @return An [alignpatches][class_alignpatches] object.
+#' @return An `alignpatches` object.
 #' @seealso
 #'  - [layout_design()]
 #'  - [layout_title()]
 #'  - [layout_theme()]
 #'  - [layout_tags()]
+#'
+#' @section Properties:
+#' - **plots**: A list of plot objects.
+#' - **layout**: A list specifying layout options, including:
+#'   - `ncol`, `nrow`, `byrow`: grid layout parameters.
+#'   - `widths`, `heights`: relative dimensions of rows/columns.
+#'   - `area`: custom area specification.
+#'   - `guides`: guide handling.
+#' - **titles**: A list specifying title options (`title`, `subtitle`,
+#'   `caption`).
+#' - **tags**: A list specifying tag options (`tags`, `sep`, `prefix`,
+#'   `suffix`).
+#' - **theme**: A theme configuration object.
+#'
 #' @examples
 #' # directly copied from patchwork
 #' p1 <- ggplot(mtcars) +
@@ -134,68 +152,14 @@ layout_annotation <- function(..., theme = waiver()) {
 #'
 #' # Compare to not using named plot arguments
 #' align_plots(p1, p2, area = area)
-#' @importFrom ggplot2 update_ggplot
-#' @export
-align_plots <- function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
-                        widths = NA, heights = NA, area = NULL,
-                        guides = waiver(), theme = NULL, design = NULL) {
-    plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
-    nms <- names(plots)
-    area <- area %||% design
-    if (!is.null(nms) && is.character(area)) { # nocov start
-        area_names <- unique(trimws(.subset2(strsplit(area, ""), 1L)))
-        area_names <- sort(vec_set_difference(area_names, c("", "#")))
-        if (all(nms %in% area_names)) {
-            plot_list <- vector("list", length(area_names))
-            names(plot_list) <- area_names
-            plot_list[nms] <- plots
-            plots <- plot_list
-        }
-    } # nocov end
-    out <- class_alignpatches(plots = plots)
-
-    # setup layout parameters
-    layout <- layout_design(
-        ncol = ncol, nrow = nrow, byrow = byrow,
-        widths = widths, heights = heights, area = area,
-        guides = guides
-    )
-    out <- update_ggplot(layout, out)
-    objectname <- deparse(substitute(theme))
-    if (!is.null(theme)) {
-        out <- update_ggplot(layout_theme(theme), out, objectname)
-    }
-    out
-}
-
-#' The `alignpatches` class
-#'
-#' An internal S7 class that represents a collection of aligned plots
-#' along with their layout configuration, titles, tags, and theme.
-#' It is primarily used within the `ggalign` system for plot composition
-#' and layout management.
-#'
-#' @section Properties:
-#' - **plots**: A list of plot objects.
-#' - **layout**: A list specifying layout options, including:
-#'   - `ncol`, `nrow`, `byrow`: grid layout parameters.
-#'   - `widths`, `heights`: relative dimensions of rows/columns.
-#'   - `area`: custom area specification.
-#'   - `guides`: guide handling (default: [waiver()]).
-#' - **titles**: A list specifying title options (`title`, `subtitle`,
-#'   `caption`).
-#' - **tags**: A list specifying tag options (`tags`, `sep`, `prefix`,
-#'   `suffix`).
-#' - **theme**: A theme configuration object.
 #'
 #' @importFrom S7 new_object S7_object prop prop<-
 #' @importFrom ggplot2 waiver
 #' @include alignpatch-design.R
 #' @include alignpatch-title.R
 #' @include alignpatch-tags.R
-#' @keywords internal
 #' @export
-class_alignpatches <- S7::new_class(
+alignpatches <- S7::new_class(
     "alignpatches",
     properties = list(
         plots = S7::class_list,
@@ -203,16 +167,55 @@ class_alignpatches <- S7::new_class(
         titles = layout_title,
         tags = layout_tags,
         theme = prop_layout_theme()
-    )
+    ),
+    constructor = function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
+                           widths = NA, heights = NA, area = NULL,
+                           guides = waiver(), theme = NULL, design = NULL) {
+        plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
+        nms <- names(plots)
+        area <- area %||% design
+        if (!is.null(nms) && is.character(area)) { # nocov start
+            area_names <- unique(trimws(.subset2(strsplit(area, ""), 1L)))
+            area_names <- sort(vec_set_difference(area_names, c("", "#")))
+            if (all(nms %in% area_names)) {
+                plot_list <- vector("list", length(area_names))
+                names(plot_list) <- area_names
+                plot_list[nms] <- plots
+                plots <- plot_list
+            }
+        } # nocov end
+
+        # setup layout parameters
+        layout <- layout_design(
+            ncol = ncol, nrow = nrow, byrow = byrow,
+            widths = widths, heights = heights, area = area,
+            guides = guides
+        )
+        if (is.null(theme)) {
+            theme <- layout_theme()
+        } else {
+            theme <- layout_theme(theme)
+        }
+        new_object(
+            S7_object(),
+            plots = plots, layout = layout,
+            titles = layout_title(), tags = layout_tags(),
+            theme = theme
+        )
+    }
 )
 
-#' @importFrom S7 prop
-local(S7::method(`$`, class_alignpatches) <- function(x, i) prop(x, i))
+#' @export
+#' @rdname alignpatches
+align_plots <- alignpatches
 
 #' @importFrom S7 prop
-local(S7::method(`[[`, class_alignpatches) <- function(x, i) prop(x, i))
+local(S7::method(`$`, alignpatches) <- function(x, i) prop(x, i))
+
+#' @importFrom S7 prop
+local(S7::method(`[[`, alignpatches) <- function(x, i) prop(x, i))
 
 #' @importFrom S7 props
-local(S7::method(`[`, class_alignpatches) <- function(x, i) {
+local(S7::method(`[`, alignpatches) <- function(x, i) {
     .subset(props(x), i)
 })

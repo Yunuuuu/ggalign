@@ -125,14 +125,14 @@ reference:
   - ggalign_data_set
   - order2
 
-- title: Plot composer
+- title: Data-Free Composition
   desc: >
     This section outlines essential functions for composing plots into a grid,
     intended for internal use. The core code is derived from the `patchwork`
     package, with the hope of eventually integrating and merging these functions
     into the `patchwork` project.
   contents:
-  - align_plots
+  - alignpatches
   - patch_titles
   - free_align
   - free_border
@@ -145,11 +145,6 @@ reference:
   - layout_title
   - layout_theme
   - layout_tags
-
-- title: Extending Plot Composer
-  desc: >
-    Extending capabilities to align graphics with `align_plots()`.
-  contents:
   - alignpatch
   - as_grob
 

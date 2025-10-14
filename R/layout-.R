@@ -24,7 +24,7 @@ LayoutProto <- S7::new_class("LayoutProto",
     abstract = TRUE
 )
 
-S7::method(update_ggplot, list(LayoutProto, class_alignpatches)) <-
+S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "plots") <- c(prop(plot, "plots"), list(object))
         plot

@@ -21,7 +21,7 @@ alignpatch.patchwork <- function(x) {
         !vapply(layout, is.null, logical(1L), USE.NAMES = FALSE)
     ])
     plots <- .subset2(x, "plots")
-    plot <- class_alignpatches(plots)
+    plot <- alignpatches(plots)
     alignpatch(plot + layout + annotation)
 }
 

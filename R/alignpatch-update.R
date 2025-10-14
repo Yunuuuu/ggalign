@@ -1,7 +1,7 @@
 #' @importFrom rlang caller_env
 #' @importFrom ggplot2 update_ggplot
 local(
-    S7::method(`+`, list(class_alignpatches, S7::class_any)) <-
+    S7::method(`+`, list(alignpatches, S7::class_any)) <-
         function(e1, e2) {
             # Get the name of what was passed in as e2, and pass along so that
             # it can be displayed in error messages
@@ -17,7 +17,7 @@ local(
 )
 
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S7::class_any, class_alignpatches)) <-
+S7::method(update_ggplot, list(S7::class_any, alignpatches)) <-
     function(object, plot, objectname) {
         if (is.null(object)) return(plot) # styler: off
         cli_abort(c(
@@ -28,38 +28,38 @@ S7::method(update_ggplot, list(S7::class_any, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(ggplot2::class_ggplot, class_alignpatches)) <-
+S7::method(update_ggplot, list(ggplot2::class_ggplot, alignpatches)) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("formula"), class_alignpatches)
+        list(S7::new_S3_class("formula"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("function"), class_alignpatches)
+        list(S7::new_S3_class("function"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("recordedplot"), class_alignpatches)
+        list(S7::new_S3_class("recordedplot"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("trellis"), class_alignpatches)
+        list(S7::new_S3_class("trellis"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("Heatmap"), class_alignpatches)
+        list(S7::new_S3_class("Heatmap"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("HeatmapList"), class_alignpatches)
+        list(S7::new_S3_class("HeatmapList"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("HeatmapAnnotation"), class_alignpatches)
+        list(S7::new_S3_class("HeatmapAnnotation"), alignpatches)
     ) <-
     S7::method(
         update_ggplot,
-        list(S7::new_S3_class("pheatmap"), class_alignpatches)
+        list(S7::new_S3_class("pheatmap"), alignpatches)
     ) <-
     function(object, plot, objectname) {
         prop(plot, "plots") <- c(prop(plot, "plots"), list(object))
@@ -68,7 +68,7 @@ S7::method(update_ggplot, list(ggplot2::class_ggplot, class_alignpatches)) <-
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(layout_design, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_design, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "layout", check = FALSE) <- prop(plot, "layout") + object
         plot
@@ -79,7 +79,7 @@ S7::method(update_ggplot, list(layout_design, class_alignpatches)) <-
 #' @importFrom rlang inject
 S7::method(
     update_ggplot,
-    list(S7::new_S3_class("plot_layout"), class_alignpatches)
+    list(S7::new_S3_class("plot_layout"), alignpatches)
 ) <-
     function(object, plot, objectname) {
         object["area"] <- list(object$design) # pathwork use `design`
@@ -100,7 +100,7 @@ S7::method(
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(layout_title, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_title, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "titles") <- prop(plot, "titles") + object
         plot
@@ -114,7 +114,7 @@ layout_theme_update <- function(old, new) {
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_theme, class_alignpatches)) <-
+S7::method(update_ggplot, list(S3_layout_theme, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "theme") <- layout_theme_update(
             prop(plot, "theme"), object
@@ -127,7 +127,7 @@ S7::method(update_ggplot, list(S3_layout_theme, class_alignpatches)) <-
 #' @importFrom rlang inject
 S7::method(
     update_ggplot,
-    list(S7::new_S3_class("plot_annotation"), class_alignpatches)
+    list(S7::new_S3_class("plot_annotation"), alignpatches)
 ) <-
     function(object, plot, objectname) {
         titles <- .subset(object, names(layout_title()))
@@ -153,7 +153,7 @@ S7::method(
 # Bypass S7 setter validation: update internal property via `attr()` directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(layout_tags, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_tags, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "tags") <- prop(plot, "tags") + object
         plot
@@ -161,7 +161,7 @@ S7::method(update_ggplot, list(layout_tags, class_alignpatches)) <-
 
 ##############################################################
 #' @importFrom rlang caller_env
-local(S7::method(`&`, list(class_alignpatches, S7::class_any)) <-
+local(S7::method(`&`, list(alignpatches, S7::class_any)) <-
     function(e1, e2) {
         if (missing(e2)) {
             cli_abort(c(
@@ -190,7 +190,7 @@ alignpatches_and_add <- function(object, patches, objectname) {
     for (i in seq_along(plots)) {
         if (is_ggplot(.subset2(plots, i))) {
             plots[[i]] <- update_ggplot(object, .subset2(plots, i), objectname)
-        } else if (S7_inherits(.subset2(plots, i), class_alignpatches)) {
+        } else if (S7_inherits(.subset2(plots, i), alignpatches)) {
             plots[[i]] <- alignpatches_and_add(
                 object, .subset2(plots, i), objectname
             )
@@ -219,7 +219,7 @@ local(
         layout_tags,
         layout_design
     )) {
-        S7::method(`&`, list(class_alignpatches, right)) <-
+        S7::method(`&`, list(alignpatches, right)) <-
             function(e1, e2) {
                 e2name <- deparse(substitute(e2, env = caller_env(2L)))
                 cli_abort(c(
