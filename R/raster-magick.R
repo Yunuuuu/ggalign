@@ -75,5 +75,9 @@ raster_magick.gList <- raster_magick.grob
 
 #' @export
 raster_magick.default <- function(x, ...) {
+<<<<<<< HEAD
     cli_abort("Rasterization is not supported for object of {.obj_type_friendly {x}}")
+=======
+    cli_abort("Cannot rasterize {.obj_type_friendly {x}}")
+>>>>>>> main
 }

@@ -2,6 +2,8 @@
 #'
 #' @param grob A [`grob()`][grid::grob]. Use [`as_grob()`] to convert any
 #' objects into a `grob`.
+#' @param grob A [`grob()`][grid::grob]. Use [`as_grob()`] to convert any
+#' objects into a `grob`.
 #' @param magick A function (purrr-style formula is accepted) that takes an
 #' [`image_read()`][magick::image_read] object as input and returns an object
 #' compatible with [`as.raster()`][grDevices::as.raster]. You can use any of
@@ -13,7 +15,18 @@
 #' @return A `magickGrob` object.
 #' @export
 magickGrob <- function(grob, ...) {
+magickGrob <- function(grob, ...) {
     rlang::check_installed("magick", "to use `magickGrob()`")
+    UseMethod("magickGrob")
+}
+
+#' @importFrom grid gTree
+#' @export
+#' @rdname magickGrob
+magickGrob.grob <- function(grob, magick = NULL, ...,
+                            res = NULL, interpolate = FALSE,
+                            name = NULL, vp = NULL) {
+    rlang::check_dots_empty()
     UseMethod("magickGrob")
 }
 
@@ -40,11 +53,17 @@ magickGrob.grob <- function(grob, magick = NULL, ...,
 #' @export
 magickGrob.gList <- function(grob, ...) {
     magickGrob(grob = gTree(children = grob), ...)
+magickGrob.gList <- function(grob, ...) {
+    magickGrob(grob = gTree(children = grob), ...)
 }
 
 #' @importFrom grid editGrob
 #' @importFrom rlang inject
 #' @export
+#' @rdname magickGrob
+magickGrob.magickGrob <- function(grob, magick = waiver(), ...,
+                                  res = waiver(), interpolate = waiver(),
+                                  name = waiver(), vp = waiver()) {
 #' @rdname magickGrob
 magickGrob.magickGrob <- function(grob, magick = waiver(), ...,
                                   res = waiver(), interpolate = waiver(),
@@ -66,6 +85,7 @@ magickGrob.magickGrob <- function(grob, magick = waiver(), ...,
 }
 
 #' @export
+magickGrob.default <- function(grob, ...) {
 magickGrob.default <- function(grob, ...) {
     cli_abort("{.arg grob} must be a {.cls grob} object")
 }
