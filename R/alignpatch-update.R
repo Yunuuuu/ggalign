@@ -140,38 +140,22 @@ S7::method(
         tags <- .subset2(object, "tag_levels") %|w|% NA
         if (length(tags) == 0L) tags <- NA
         if (is.list(tags)) tags <- .subset2(tags, length(tags))
-        prop(plot, "tags") <- layout_tags_update(
-            prop(plot, "tags"),
-            layout_tags(
-                tags = tags,
-                sep = .subset2(object, "tag_sep"),
-                prefix = .subset2(object, "tag_prefix"),
-                suffix = .subset2(object, "tag_suffix")
-            )
+        prop(plot, "tags") <- prop(plot, "tags") + layout_tags(
+            tags = tags,
+            sep = .subset2(object, "tag_sep"),
+            prefix = .subset2(object, "tag_prefix"),
+            suffix = .subset2(object, "tag_suffix")
         )
         plot
     }
 
 ##############################################################
-#' @importFrom rlang is_na
-layout_tags_update <- function(old, new) {
-    for (nm in names(new)) {
-        if (identical(nm, "tags")) {
-            if (is_na(.subset2(new, nm))) next
-        } else if (is_waiver(.subset2(new, nm))) {
-            next
-        }
-        old[nm] <- list(.subset2(new, nm))
-    }
-    old
-}
-
 # Bypass S7 setter validation: update internal property via `attr()` directly
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_tags, class_alignpatches)) <-
+S7::method(update_ggplot, list(layout_tags, class_alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "tags") <- layout_tags_update(prop(plot, "tags"), object)
+        prop(plot, "tags") <- prop(plot, "tags") + object
         plot
     }
 
@@ -232,7 +216,7 @@ local(
         ggplot2::class_ggplot,
         layout_title,
         S3_layout_theme,
-        S3_layout_tags,
+        layout_tags,
         layout_design
     )) {
         S7::method(`&`, list(class_alignpatches, right)) <-

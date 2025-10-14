@@ -65,6 +65,7 @@ Collate:
     'active.R'
     'alignpatch-.R'
     'utils-ggplot.R'
+    'alignpatch-tags.R'
     'alignpatch-title.R'
     'alignpatch-area.R'
     'utils-grid.R'

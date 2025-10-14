@@ -140,7 +140,7 @@ local(
             S7::new_S3_class("quad_anno"),
             layout_title,
             S3_layout_theme,
-            S3_layout_tags,
+            layout_tags,
             layout_design,
             CraftBox,
             ChainLayout,
