@@ -18,12 +18,6 @@ A \code{\link[grid:grid.grob]{grob}} object.
 Convert Object into a Grob
 }
 \seealso{
-\itemize{
-\item \code{\link[=patch_titles]{patch_titles()}}
-\item \code{\link[=inset]{inset()}}
-\item \code{\link[=ggwrap]{ggwrap()}}
-}
-
 Other as_grob: 
 \code{\link{as_grob.Heatmap}()},
 \code{\link{as_grob.formula}()},
@@ -37,3 +31,4 @@ Other as_grob:
 \code{\link{as_grob.trellis}()}
 }
 \concept{as_grob}
+\keyword{internal}

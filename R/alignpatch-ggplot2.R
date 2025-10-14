@@ -55,7 +55,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         ans <- setup_patch_titles(ans,
             patch_titles = patch_titles, theme = theme
         )
-
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
     },

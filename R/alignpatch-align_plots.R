@@ -39,7 +39,6 @@ layout_theme <- new_theme_class("layout_theme")
 
 S3_layout_theme <- S7::new_S3_class("layout_theme")
 
-# nocov start
 #' @importFrom S7 prop prop<-
 #' @importFrom ggplot2 is_theme
 prop_layout_theme <- function(...) {
@@ -54,7 +53,6 @@ prop_layout_theme <- function(...) {
         default = NULL
     )
 }
-# nocov end
 
 ##############################################################
 #' Add layout annotation

@@ -33,21 +33,18 @@ as_grob.gList <- function(x, ...) {
     gTree(children = x)
 }
 
+#' @inherit as_grob.grob
+#' @family as_grob
+#' @export
+#' @keywords internal
+as_grob.patch_ggplot <- function(x, ...) ggalignGrob(x, ...)
+
 #' @importFrom ggplot2 ggplotGrob
 #' @inherit as_grob.grob
 #' @seealso [ggplot][ggplot2::ggplot]
 #' @family as_grob
 #' @export
-as_grob.ggplot <- function(x, ...) ggplotGrob(x, ...)
-
-#' @inherit as_grob.grob
-#' @seealso
-#' - [`patch_titles()`]
-#' - [`inset()`]
-#' - [`ggwrap()`]
-#' @family as_grob
-#' @export
-as_grob.patch_ggplot <- function(x, ...) ggalignGrob(x, ...)
+as_grob.ggplot <- as_grob.patch_ggplot
 
 #' @inherit as_grob.grob
 #' @seealso [`align_plots()`]
