@@ -99,12 +99,12 @@ create_area <- function(ncol, nrow, byrow) {
 
 #' @export
 obj_print_data.ggalign_area <- function(x, ...) {
-    x <- vec_data(x)
     if (vec_size(x) > 0) {
-        x <- vec_set_names(x, paste0(vec_seq_along(x), ": "))
-        print(x = x, ..., quote = FALSE)
+        data <- vec_data(x)
+        data <- vec_set_names(data, paste0(vec_seq_along(data), ": "))
+        print(x = data, ..., quote = FALSE)
     } else {
-        cat("   ", names(x), "\n", sep = " ")
+        cat("   ", "\n", sep = " ")
     }
 }
 
