@@ -113,7 +113,19 @@ make_patch_table <- function() {
     )
 }
 
-on_init <- S7::new_generic("on_init", "input")
+#' Initialize an S7 Object
+#'
+#' Helper generic to initialize an object before use. This may include
+#' setting properties or other elements to their default values, particularly
+#' if the object's internal defaults differ from the defaults required for
+#' normal usage.
+#'
+#' @param input An S7 object to initialize.
+#'
+#' @return The initialized object, ready for use.
+#'
+#' @noRd
+init_object <- S7::new_generic("init_object", "input")
 
 #' Generate a plot grob.
 #'
@@ -139,7 +151,7 @@ ggalign_gtable.gtable <- function(x) x
 #' @details
 #' `ggalign` has implement `alignpatch` method for following objects:
 #'   - [`ggplot`][ggplot2::ggplot]
-#'   - [`alignpatches`][align_plots]
+#'   - [`alignpatches`]
 #'   - [`wrapped_plot`][ggwrap]
 #'   - [`patchwork::patchGrob`]
 #'   - [`patchwork::wrap_elements`]

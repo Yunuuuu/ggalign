@@ -1,6 +1,6 @@
 #' @export
 `ggalign_build.ggalign::CircleLayout` <- function(x) {
-    x <- on_init(x)
+    x <- init_object(x)
     circle_build(x)
 }
 
@@ -14,7 +14,7 @@
 circle_build <- function(circle, schemes = NULL, theme = NULL) {
     schemes <- inherit_parent_layout_schemes(circle, schemes)
     theme <- inherit_parent_layout_theme(circle, theme)
-    titles <- on_init(prop(circle, "titles"))
+    titles <- init_object(prop(circle, "titles"))
     # for empty plot
     base <- ggplot() +
         theme +

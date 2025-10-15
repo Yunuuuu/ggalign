@@ -121,7 +121,7 @@ layout_tags <- S7::new_class("layout_tags",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(on_init, layout_tags) <- function(input) {
+S7::method(init_object, layout_tags) <- function(input) {
     if (identical(prop(input, "tags"), NA_character_)) {
         prop(input, "tags", check = FALSE) <- waiver()
     }
@@ -156,7 +156,7 @@ local(
 #' @importFrom S7 prop
 create_layout_tagger <- function(tags, parent) {
     # initialize the tags
-    tags <- on_init(tags)
+    tags <- init_object(tags)
 
     # If no parent and no tags, return NULL
     if (is.null(parent) &&

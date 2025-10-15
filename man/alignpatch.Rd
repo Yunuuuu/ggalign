@@ -20,7 +20,7 @@ Get Patch representation
 \code{ggalign} has implement \code{alignpatch} method for following objects:
 \itemize{
 \item \code{\link[ggplot2:ggplot]{ggplot}}
-\item \code{\link[=align_plots]{alignpatches}}
+\item \code{\link{alignpatches}}
 \item \code{\link[=ggwrap]{wrapped_plot}}
 \item \code{\link[patchwork:patchGrob]{patchwork::patchGrob}}
 \item \code{\link[patchwork:wrap_elements]{patchwork::wrap_elements}}

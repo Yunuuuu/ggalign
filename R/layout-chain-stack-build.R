@@ -1,6 +1,6 @@
 #' @export
 `ggalign_build.ggalign::StackLayout` <- function(x) {
-    x <- on_init(x)
+    x <- init_object(x)
     (stack_build(x) %||% align_plots(theme = x@theme)) + prop(x, "titles")
 }
 

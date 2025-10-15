@@ -66,13 +66,13 @@
 `ggalign_gtable.ggalign::alignpatches` <- function(x) {
     table <- alignpatch(x)$gtable()
 
-    titles <- on_init(prop(x, "titles"))
 
     # ensure theme has no missing value
     theme <- complete_theme(prop(x, "theme") %||% theme_get())
-    fix_respect <- is.matrix(.subset2(table, "respect"))
+    matrix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------
+    titles <- init_object(prop(x, "titles"))
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
         theme = theme, "plot.title", prop(titles, "title"),
@@ -144,7 +144,7 @@
         name = "caption",
         t = -1, b = -1, l = caption_l, r = caption_r, clip = "off"
     )
-    if (fix_respect) {
+    if (matrix_respect) {
         table$respect <- rbind(0L, 0L, table$respect, 0L)
     }
 
@@ -153,10 +153,10 @@
 
     table <- gtable_add_rows(table, plot_margin[1L], 0L)
     table <- gtable_add_rows(table, plot_margin[3L])
-    if (fix_respect) table$respect <- rbind(0L, table$respect, 0L)
+    if (matrix_respect) table$respect <- rbind(0L, table$respect, 0L)
     table <- gtable_add_cols(table, plot_margin[2L], 0L)
     table <- gtable_add_cols(table, plot_margin[4L])
-    if (fix_respect) table$respect <- cbind(0L, table$respect, 0L)
+    if (matrix_respect) table$respect <- cbind(0L, table$respect, 0L)
 
     # add background -----------------------------------
     if (inherits(theme$plot.background, "element")) {
