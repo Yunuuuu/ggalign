@@ -88,6 +88,9 @@ S3_area <- S7::new_S3_class("ggalign_area")
 
 new_areas <- function(x) new_rcrd(x, class = c("ggalign_area", "patch_area"))
 
+#' @export
+c.ggalign_area <- function(...) vec_c(...)
+
 create_area <- function(ncol, nrow, byrow) {
     mat <- matrix(seq_len(ncol * nrow),
         nrow = nrow, ncol = ncol, byrow = byrow
