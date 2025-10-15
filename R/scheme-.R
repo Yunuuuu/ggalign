@@ -66,7 +66,7 @@ Schemes <- S7::new_class("Schemes",
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")
     cat(paste0("<", main_class(object), ">\n"))
-    str_nest(.subset(props(object), "value"), "@", ..., nest.lev = nest.lev)
+    str_nest(list(prop(object, "value")), "@", ..., nest.lev = nest.lev)
 })
 
 #' @importFrom rlang list2

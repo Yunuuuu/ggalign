@@ -83,7 +83,7 @@ S7::method(
 ) <-
     function(object, plot, objectname) {
         object["area"] <- list(object$design) # pathwork use `design`
-        object <- .subset(object, names(props(layout_design())))
+        object <- .subset(object, names(layout_design@properties))
         if (is_waiver(object$guides)) {
             object$guides <- NA
         } else if (identical(object$guides, "auto")) {

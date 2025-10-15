@@ -215,5 +215,5 @@ local(S7::method(`[[`, alignpatches) <- function(x, i) prop(x, i))
 
 #' @importFrom S7 props
 local(S7::method(`[`, alignpatches) <- function(x, i) {
-    .subset(props(x), i)
+    props(x, names = i)
 })
