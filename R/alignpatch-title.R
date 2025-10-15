@@ -19,18 +19,13 @@ layout_title <- S7::new_class("layout_title",
     properties = lapply(
         rlang::set_names(c("title", "subtitle", "caption")),
         function(type) {
-            force(type)
             S7::new_property(
-                S7::new_union(S3_waiver, S7::class_character, NULL),
-                setter = function(self, value) {
-                    if (!is_waiver(value)) {
-                        assert_string(value,
-                            allow_na = TRUE, allow_null = TRUE,
-                            arg = sprintf("@%s", type)
-                        )
+                S7::new_union(S3_waiver, NULL, S7::class_character),
+                validator = function(value) {
+                    if (!is_waiver(value) && !is.null(value) &&
+                        length(value) != 1L) {
+                        return("must be a single character string")
                     }
-                    prop(self, type, check = FALSE) <- value
-                    self
                 },
                 default = quote(waiver())
             )
@@ -100,18 +95,13 @@ patch_title <- S7::new_class(
     properties = lapply(
         rlang::set_names(c("top", "left", "bottom", "right")),
         function(position) {
-            force(position)
             S7::new_property(
-                S7::new_union(S3_waiver, S7::class_character, NULL),
-                setter = function(self, value) {
-                    if (!is_waiver(value)) {
-                        assert_string(value,
-                            allow_na = TRUE, allow_null = TRUE,
-                            arg = sprintf("@%s", position)
-                        )
+                S7::new_union(S3_waiver, NULL, S7::class_character),
+                validator = function(value) {
+                    if (!is_waiver(value) && !is.null(value) &&
+                        length(value) != 1L) {
+                        return("must be a single character string")
                     }
-                    prop(self, position, check = FALSE) <- value
-                    self
                 },
                 default = quote(waiver())
             )
