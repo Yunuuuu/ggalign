@@ -3,7 +3,7 @@
 # https://github.com/thomasp85/patchwork/issues/379). Therefore, ggalign will
 # retain `alignpatch-*` scripts.
 
-#' Define the plotting areas in `align_plots`
+#' Define the plotting areas
 #'
 #' @inherit patchwork::area
 #' @details

@@ -2,7 +2,7 @@
 % Please edit documentation in R/alignpatch-area.R
 \name{area}
 \alias{area}
-\title{Define the plotting areas in \code{align_plots}}
+\title{Define the plotting areas}
 \usage{
 area(t, l, b = t, r = l)
 }
