@@ -116,9 +116,7 @@ layout_theme_update <- function(old, new) {
 #' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(S3_layout_theme, alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "theme") <- layout_theme_update(
-            prop(plot, "theme"), object
-        )
+        prop(plot, "theme") <- layout_theme_update(prop(plot, "theme"), object)
         plot
     }
 
@@ -130,7 +128,7 @@ S7::method(
     list(S7::new_S3_class("plot_annotation"), alignpatches)
 ) <-
     function(object, plot, objectname) {
-        titles <- .subset(object, names(layout_title()))
+        titles <- .subset(object, names(layout_title@properties))
         titles <- inject(layout_title(!!!titles))
         prop(plot, "titles") <- prop(plot, "titles") + titles
         prop(plot, "theme") <- layout_theme_update(
