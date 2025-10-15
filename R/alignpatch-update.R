@@ -179,53 +179,56 @@ local(S7::method(`&`, list(alignpatches, S7::class_any)) <-
                 prop(e1, "theme"), e2, e2name
             )
         }
-        alignpatches_and_add(e2, e1, e2name)
+        alignpatches_propagate(e2, e1, e2name)
     })
+
+#' @importFrom S7 S7_dispatch
+alignpatches_propagate <- S7::new_generic(
+    "alignpatches_propagate", "object",
+    fun = function(object, patches, objectname) S7_dispatch()
+)
 
 #' @importFrom ggplot2 is_ggplot update_ggplot
 #' @importFrom S7 prop S7_inherits
 #' @importFrom rlang try_fetch
-alignpatches_and_add <- function(object, patches, objectname) {
-    plots <- prop(patches, "plots")
-    for (i in seq_along(plots)) {
-        if (is_ggplot(.subset2(plots, i))) {
-            plots[[i]] <- update_ggplot(object, .subset2(plots, i), objectname)
-        } else if (S7_inherits(.subset2(plots, i), alignpatches)) {
-            plots[[i]] <- alignpatches_and_add(
-                object, .subset2(plots, i), objectname
-            )
-        } else if (S7_inherits(.subset2(plots, i), LayoutProto)) {
-            plots[[i]] <- layout_and_add(.subset2(plots, i), object, objectname)
-        } else {
-            # For other object types, attempt to combine them with `object`
-            # using the `&` operator. This re-dispatches the `&` method so that
-            # any custom patch combination logic defined for the object's class
-            # can be applied. If the operation fails, silently ignore the error.
-            try_fetch(
-                plots[[i]] <- .subset2(plots, i) & object,
-                error = function(cnd) NULL
-            )
-        }
-    }
-    prop(patches, "plots") <- plots
-    patches
-}
-
-local(
-    for (right in list(
-        ggplot2::class_ggplot,
-        layout_title,
-        S3_layout_theme,
-        layout_tags,
-        layout_design
-    )) {
-        S7::method(`&`, list(alignpatches, right)) <-
-            function(e1, e2) {
-                e2name <- deparse(substitute(e2, env = caller_env(2L)))
-                cli_abort(c(
-                    sprintf("Cannot combine {.code alignpatches} with %s using {.code &}.", e2name),
-                    "i" = "Did you mean to use {.code +} instead?"
-                ))
+S7::method(alignpatches_propagate, S7::class_any) <-
+    function(object, patches, objectname) {
+        plots <- prop(patches, "plots")
+        for (i in seq_along(plots)) {
+            plot <- .subset2(plots, i)
+            if (is_ggplot(plot)) {
+                plots[[i]] <- update_ggplot(object, plot, objectname)
+            } else if (S7_inherits(plot, alignpatches)) {
+                plots[[i]] <- alignpatches_propagate(object, plot, objectname)
+            } else if (S7_inherits(plot, LayoutProto)) {
+                plots[[i]] <- layout_propagate(plot, object, objectname)
+            } else {
+                # For other object types, attempt to combine them with `object`
+                # using the `&` operator. This re-dispatches the `&` method so
+                # that any custom patch combination logic defined for the
+                # object's class can be applied. If the operation fails,
+                # silently ignore the error.
+                try_fetch(
+                    plots[[i]] <- .subset2(plots, i) & object,
+                    error = function(cnd) NULL
+                )
             }
+        }
+        prop(patches, "plots", check = FALSE) <- plots
+        patches
     }
-)
+
+S7::method(alignpatches_propagate, ggplot2::class_ggplot) <-
+    S7::method(alignpatches_propagate, layout_title) <-
+    S7::method(alignpatches_propagate, S3_layout_theme) <-
+    S7::method(alignpatches_propagate, layout_tags) <-
+    S7::method(alignpatches_propagate, layout_design) <-
+    function(object, patches, objectname) {
+        cli_abort(c(
+            sprintf(
+                "Cannot use {.code &} to combine {.cls alignpatches} with {.code %s}.",
+                objectname
+            ),
+            "i" = "If your intention was to add or update elements, use {.code +} instead."
+        ))
+    }

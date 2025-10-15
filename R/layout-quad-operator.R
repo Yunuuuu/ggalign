@@ -422,10 +422,10 @@ S7::method(layout_subtract, list(QuadLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_and_add, list(QuadLayout, quad_scope)) <-
+S7::method(layout_propagate, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        layout_and_add(object, layout, objectname)
+        layout_propagate(object, layout, objectname)
     }
 
 quad_and_add <- function(layout, object, objectname) {
@@ -433,18 +433,18 @@ quad_and_add <- function(layout, object, objectname) {
     for (position in .TLBR) {
         stack <- prop(layout, position)
         if (is.null(stack)) next # no annotation
-        prop(layout, position) <- layout_and_add(stack, object, objectname)
+        prop(layout, position) <- layout_propagate(stack, object, objectname)
     }
     layout
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_and_add, list(QuadLayout, S7::class_any)) <- quad_and_add
+S7::method(layout_propagate, list(QuadLayout, S7::class_any)) <- quad_and_add
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_and_add, list(QuadLayout, S3_class_theme)) <-
+S7::method(layout_propagate, list(QuadLayout, S3_class_theme)) <-
     function(layout, object, objectname) {
         ans <- quad_and_add(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme

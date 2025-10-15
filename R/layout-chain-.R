@@ -604,10 +604,10 @@ S7::method(layout_subtract, list(StackLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_and_add, list(ChainLayout, quad_scope)) <-
+S7::method(layout_propagate, list(ChainLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        layout_and_add(layout, object, objectname)
+        layout_propagate(layout, object, objectname)
     }
 
 chain_and_add <- function(layout, object, objectname) {
@@ -615,7 +615,7 @@ chain_and_add <- function(layout, object, objectname) {
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, force = FALSE)
         } else {
-            box <- layout_and_add(box, object, objectname)
+            box <- layout_propagate(box, object, objectname)
         }
         box
     })
@@ -624,12 +624,12 @@ chain_and_add <- function(layout, object, objectname) {
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_and_add, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
     chain_and_add
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_and_add, list(ChainLayout, S3_class_theme)) <-
+S7::method(layout_propagate, list(ChainLayout, S3_class_theme)) <-
     function(layout, object, objectname) {
         ans <- chain_and_add(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme
