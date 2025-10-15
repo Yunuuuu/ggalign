@@ -322,22 +322,25 @@ markGrob <- function(grob, link, ...) {
 #' @include alignpatch-ggplot2.R
 PatchAlignMark <- ggproto(
     "PatchAlignMark", PatchGgplot,
-    add_plot = function(self, gt, plot, t, l, b, r, name, z = 2L) {
+    place_gt = function(self, gtable, t, l, b, r,
+                        bg_name, plot_name, bg_z, plot_z) {
+        gt <- self$gt
+        background <- .subset2(.subset2(gt, "layout"), "name") == "background"
+        if (any(background)) {
+            bg <- .subset(.subset2(gt, "grobs"), background)
+            gt <- subset_gt(gt, !background, trim = FALSE)
+            gtable <- gtable_add_grob(
+                gtable,
+                grobs = bg,
+                t = t + TOP_BORDER, l = l + LEFT_BORDER,
+                name = bg_name, z = bg_z
+            )
+        }
         gtable_add_grob(
-            gt,
-            grobs = markGrob(plot, self$plot$ggalign_link_data),
-            # t = 8, l = 6, b = 14, r = 12
-            # t = t + 7L, l = l + 5L, b = b - 6L, r = r - 5L,
+            gtable,
+            grobs = markGrob(gt, self$plot$ggalign_link_data),
             t = t + TOP_BORDER, l = l + LEFT_BORDER,
-            name = name, z = z
-        )
-    },
-    add_background = function(self, gt, bg, t, l, b, r, name, z = 1L) {
-        gtable_add_grob(
-            gt,
-            grobs = bg,
-            t = t + TOP_BORDER, l = l + LEFT_BORDER,
-            name = name, z = z
+            name = plot_name, z = plot_z
         )
     },
     get_sizes = function(self, free = NULL, gt = self$gt) {

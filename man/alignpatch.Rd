@@ -31,6 +31,9 @@ Get Patch representation
 alignpatch(ggplot())
 }
 \seealso{
-\code{\link[=align_plots]{align_plots()}}
+\itemize{
+\item \code{\link[=alignpatches]{alignpatches()}}/\code{\link[=align_plots]{align_plots()}}
+\item \code{\link{Patch}}
+}
 }
 \keyword{internal}

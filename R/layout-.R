@@ -67,11 +67,9 @@ PatchLayout <- ggproto(
             prop(plot, "theme") <- prop(plot, "theme") +
                 tag_theme(self$layout@theme)
         }
-        # store the plot used by `PatchAlignpatches`
-        self$plot <- plot
-        # reset the plot field when function finished
-        on.exit(self$plot <- NULL)
-        ggproto_parent(PatchAlignpatches, self)$gtable(theme, guides, tagger)
+        ggproto_parent(PatchAlignpatches, self)$gtable(
+            theme, guides, tagger, input = plot
+        )
     }
 )
 

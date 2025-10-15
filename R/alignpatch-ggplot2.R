@@ -54,37 +54,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
     },
-
-    #' @importFrom ggplot2 find_panel
-    align_panel_sizes = function(self, panel_width, panel_height,
-                                 gt = self$gt) {
-        panel_pos <- find_panel(gt)
-        rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
-        cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
-        respect <- .subset2(gt, "respect")
-        if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
-            if (respect) {
-                can_set_width <- is.na(as.numeric(panel_width))
-                can_set_height <- is.na(as.numeric(panel_height))
-                w <- .subset2(gt, "widths")[LEFT_BORDER + 1L]
-                h <- .subset2(gt, "heights")[TOP_BORDER + 1L]
-                if (can_set_width && can_set_height) {
-                    panel_width <- w
-                    panel_height <- h
-                } else if (can_set_width) {
-                    panel_width <- as.numeric(w) / as.numeric(h) * panel_height
-                } else if (can_set_height) {
-                    panel_height <- as.numeric(h) / as.numeric(w) * panel_width
-                } else {
-                    respect <- FALSE
-                }
-            }
-        } else {
-            respect <- FALSE
-        }
-        list(width = panel_width, height = panel_height, respect = respect)
-    },
-
     #' @importFrom gtable gtable_add_grob gtable_height gtable_width
     #' @importFrom grid unit viewport
     #' @importFrom ggplot2 find_panel

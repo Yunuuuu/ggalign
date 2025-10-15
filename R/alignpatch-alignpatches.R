@@ -1,6 +1,5 @@
 #' @importFrom ggplot2 ggproto
-#' @export
-`alignpatch.ggalign::alignpatches` <- function(x) {
+S7::method(alignpatch, alignpatches) <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
@@ -13,9 +12,8 @@ PatchAlignpatches <- ggproto(
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     #' @importFrom S7 prop
     gtable = function(self, theme = NULL, guides = NULL,
-                      tagger = NULL) {
-        plot <- self$plot
-        patches <- lapply(prop(plot, "plots"), function(plot) {
+                      tagger = NULL, input = self$plot) {
+        patches <- lapply(prop(input, "plots"), function(plot) {
             out <- alignpatch(plot)
             if (!is.null(out) &&
                 !inherits(out, sprintf("%s::Patch", pkg_nm()))) {
@@ -23,7 +21,7 @@ PatchAlignpatches <- ggproto(
             }
             out
         })
-        layout <- init_object(prop(plot, "layout"))
+        layout <- init_object(prop(input, "layout"))
 
         # get the design areas and dims ------------------
         panel_widths <- prop(layout, "widths")
@@ -80,21 +78,20 @@ PatchAlignpatches <- ggproto(
             )
         }
 
-        # we inherit parameters from the parent --------------------
-        if (is.null(theme)) {
+        # we define the global theme --------------------------
+        if (is.null(theme)) { # No parent theme provided
             top_level <- TRUE
             # by default, we use ggplot2 default theme
-            theme <- theme_get() + prop(plot, "theme")
+            theme <- theme_get() + prop(input, "theme")
         } else {
             top_level <- FALSE
-            if (!is.null(prop(plot, "theme"))) {
+            if (!is.null(prop(input, "theme"))) {
                 # If a theme is provided, always inherit tag-related theme
                 # elements from the plot's theme to ensure consistent tag
                 # styling.
-                theme <- theme + inherit_tag_theme(prop(plot, "theme"), theme)
+                theme <- theme + inherit_tag_theme(prop(input, "theme"), theme)
             }
         }
-        self$theme <- theme
 
         # by default, we won't collect any guide legends
         collected <- guides
@@ -111,11 +108,26 @@ PatchAlignpatches <- ggproto(
         # 2. `collect_guides`, can change the internal `gt`
         # 3. set_sizes:
         #     - (To-Do) align_panel_spaces: can change the internal `gt`
-        #     - align_panel_sizes, can change the internal `gt`
+        #     - align_panel, can change the internal `gt`
         #     - get_sizes, the widths and heights for the internal `gt`
-        # 4. set_grobs: will call `align_border` and `split_gt`, return the
+        # 4. set_grobs: will call `align_border` and `place_gt`, return the
         #    final gtable
         # setup gtable list ----------------------------------
+        # A tagger can be:
+        # - A single string representing the tag for the entire layout,
+        # - NULL, meaning no tagging,
+        # - Or a `LayoutTagger` object used to tag each plot individually.
+        tagger <- create_layout_tagger(prop(input, "tags"), tagger)
+        if (!is.null(tagger) && !inherits(tagger, "LayoutTagger")) {
+            # If tagger is not a LayoutTagger, treat it as a single tag for the
+            # whole layout
+            tag <- tagger
+            tagger <- NULL
+        } else {
+            # Otherwise, no single tag for the whole layout
+            tag <- NULL
+        }
+
         # Let each patch to determine whether to collect guides
         guides_list <- lapply(patches, function(patch) patch$guides(guides))
 
@@ -126,21 +138,6 @@ PatchAlignpatches <- ggproto(
         # This prevents overlap, unless the guides will be collected by the
         # parent layout.
         border_with_guides <- setdiff(border_with_guides, collected)
-
-        # A tagger can be:
-        # - A single string representing the tag for the entire layout,
-        # - NULL, meaning no tagging,
-        # - Or a LayoutTagger object used to tag each plot individually.
-        tagger <- create_layout_tagger(prop(plot, "tags"), tagger)
-        if (!is.null(tagger) && !inherits(tagger, "LayoutTagger")) {
-            # If tagger is not a LayoutTagger, treat it as a single tag for the
-            # whole layout
-            tag <- tagger
-            tagger <- NULL
-        } else {
-            # Otherwise, no single tag for the whole layout
-            tag <- NULL
-        }
 
         collected_guides <- vector("list", length(patches))
         for (i in seq_along(patches)) {
@@ -154,9 +151,6 @@ PatchAlignpatches <- ggproto(
             patch$gt <- patch$gtable(theme = theme, guides = g, tagger)
             collected_guides[i] <- list(patch$collect_guides(g))
         }
-
-        # collect guides  ---------------------------------------
-        self$collected_guides <- collect_guides_list(collected_guides)
 
         # prepare the output ----------------------------------
         gt <- gtable(
@@ -179,14 +173,29 @@ PatchAlignpatches <- ggproto(
         )
 
         # add guides into the final gtable ----------------------
-        if (top_level) {
-            gt <- self$attach_guide_list(
-                guide_list = self$collected_guides,
-                theme = theme,
-                panel_pos = panel_pos,
-                gt = gt
+        # Guide legends must be attached before calling `$set_grobs()`, because
+        # `$attach_guide_list()` adjusts the gtable sizes based on the guides.
+        # The subsequent `$set_grobs()` call relies on these adjusted sizes.
+        collected_guides <- collect_guides_list(collected_guides)
+        # Separate guide legends between those to be collected by the parent
+        # `alignpatches()` and those that remain attached to this subplot.
+        if (is.null(collected)) {
+            attached <- collected_guides
+            self$collected_guides <- list()
+        } else {
+            attached <- .subset(
+                collected_guides,
+                setdiff(names(collected_guides), collected)
             )
+            # Store guides to be collected by the parent `alignpatches()`
+            self$collected_guides <- .subset(collected_guides, collected)
         }
+        gt <- self$attach_guide_list(
+            gt = gt,
+            guide_list = attached,
+            panel_pos = panel_pos,
+            theme = theme
+        )
 
         # setup grobs -------------------------------------------
         # For z in the gtable layout
@@ -247,18 +256,9 @@ PatchAlignpatches <- ggproto(
             patch$align_border(t = t, l = l, b = b, r = r, gt = grob)
         }, t = t, l = l, b = b, r = r, gt = gt, patches = patches)
     },
-    collect_guides = function(self, guides, gt = self$gt) {
-        collected_guides <- self$collected_guides
-        # for guides not collected by the top-level alignpatches, we attach the
-        # guides
-        self$gt <- self$attach_guide_list(
-            collected_guides[
-                vec_set_difference(names(collected_guides), guides)
-            ],
-            gt = gt
-        )
-        # return guides to be collected
-        .subset(collected_guides, guides)
+    collect_guides = function(self, guides) {
+        on.exit(self$collected_guides <- NULL)
+        self$collected_guides
     },
 
     #' @importFrom grid is.unit unit
@@ -311,26 +311,26 @@ PatchAlignpatches <- ggproto(
         )
         respect_dims <- vector("list", length(patches))
 
-        # For plot cannot be fixed, we always attach strips, axes and labels
-        # into the panel area
         for (i in patch_index) {
             row <- .subset(rows, i)
             col <- .subset(cols, i)
-            # we always build a standard gtable layout from the gtable
-            panel_sizes <- .subset2(patches, i)$align_panel_sizes(
+            panel_sizes <- .subset2(patches, i)$align_panel(
                 panel_width = panel_widths[col],
                 panel_height = panel_heights[row]
             )
             panel_widths[col] <- .subset2(panel_sizes, "width")
             panel_heights[row] <- .subset2(panel_sizes, "height")
-            if (.subset2(panel_sizes, "respect")) {
-                respect_dims[[i]] <- matrix(c(
-                    (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
-                    (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
-                ), nrow = 1L)
+            if (isTRUE(.subset2(panel_sizes, "respect"))) {
+                respect_dims[[i]] <- matrix(
+                    c(
+                        (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
+                        (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
+                    ),
+                    nrow = 1L
+                )
             }
         }
-        if (!is.null(respect_dims <- do.call(base::rbind, respect_dims))) {
+        if (!is.null(respect_dims <- inject(rbind(!!!respect_dims)))) {
             respect <- matrix(
                 0L, TABLE_ROWS * dims[1L],
                 TABLE_COLS * dims[2L]
@@ -388,35 +388,23 @@ PatchAlignpatches <- ggproto(
             b <- field(loc, "b") * TABLE_ROWS
             b_heights <- heights[seq(b - BOTTOM_BORDER + 1L, b)]
             patch <- .subset2(patches, i)
-
-            grobs <- patch$split_gt(patch$align_border(
+            patch$gt <- patch$align_border(
                 t = t_heights, l = l_widths,
                 b = b_heights, r = r_widths
-            ))
-
-            # then we add the plot ---------------------------------
-            gt <- patch$add_plot(
-                gt, .subset2(grobs, "plot"), t, l, b, r,
-                name = paste("plot", i, sep = "-")
             )
-
-            # add background grob ----------------------------------
-            if (!is.null(bg <- .subset2(grobs, "bg"))) {
-                # we always add background in the beginning --------
-                gt <- patch$add_background(
-                    gt, bg, t, l, b, r,
-                    name = paste("plot", i, "background", sep = "-")
-                )
-            }
+            gt <- patch$place_gt(
+                gt, t, l, b, r,
+                bg_name = paste("plot", i, "background", sep = "-"),
+                plot_name = paste("plot", i, sep = "-"),
+                bg_z = 1L, plot_z = 2L
+            )
 
             # remove the grob from the patch, we wont' use it anymore
             patch$gt <- NULL
         }
         gt
     },
-    attach_guide_list = function(self, guide_list, theme = self$theme,
-                                 panel_pos = find_panel(gt),
-                                 gt = self$gt) {
+    attach_guide_list = function(self, gt, guide_list, panel_pos, theme) {
         if (length(guide_list)) {
             # https://github.com/tidyverse/ggplot2/blob/57ba97fa04dadc6fd73db1904e39a09d57a4fcbe/R/guides-.R#L512
             theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
@@ -430,7 +418,9 @@ PatchAlignpatches <- ggproto(
                     guide_pos = guide_pos,
                     guides = .subset2(guide_list, guide_pos),
                     theme = theme, panel_pos = panel_pos,
-                    clip = "off", z = 4L, gt = gt
+                    clip = "off", z = 4L,
+                    name = sprintf("guide-box-collected-%s", guide_pos),
+                    gt = gt
                 )
             }
         }
@@ -440,10 +430,8 @@ PatchAlignpatches <- ggproto(
     #' @importFrom grid unit.c grobWidth grobHeight
     #' @importFrom ggplot2 find_panel zeroGrob
     attach_guides = function(self, guide_pos, guides, theme,
-                             panel_pos = find_panel(gt), ...,
-                             gt = self$gt) {
+                             panel_pos, ..., gt) {
         guide_box <- assemble_guides(guides, guide_pos, theme = theme)
-        name <- sprintf("guide-box-collected-%s", guide_pos)
         if (guide_pos == "inside") {
             gt <- gtable_add_grob(
                 x = gt,
@@ -452,7 +440,6 @@ PatchAlignpatches <- ggproto(
                 l = panel_pos$l,
                 b = panel_pos$b,
                 r = panel_pos$r,
-                name = name,
                 ...
             )
             return(gt)
@@ -472,7 +459,6 @@ PatchAlignpatches <- ggproto(
                 t = panel_pos$t,
                 l = panel_pos$l - 6L,
                 b = panel_pos$b,
-                name = name,
                 ...
             )
             gt$widths[.subset2(panel_pos, "l") - 5:6] <- widths
@@ -490,7 +476,6 @@ PatchAlignpatches <- ggproto(
                 t = panel_pos$t,
                 l = panel_pos$r + 6L,
                 b = panel_pos$b,
-                name = name,
                 ...
             )
             gt$widths[.subset2(panel_pos, "r") + 5:6] <- widths
@@ -513,7 +498,6 @@ PatchAlignpatches <- ggproto(
                 t = panel_pos$b + 6L,
                 l = place$l,
                 r = place$r,
-                name = name,
                 ...
             )
             gt$heights[.subset2(panel_pos, "b") + 5:6] <- heights
@@ -536,7 +520,6 @@ PatchAlignpatches <- ggproto(
                 t = panel_pos$t - 6L,
                 l = place$l,
                 r = place$r,
-                name = name,
                 ...
             )
             gt$heights[.subset2(panel_pos, "t") - 5:6] <- heights
@@ -641,7 +624,9 @@ table_sizes <- function(sizes, area, ncol, nrow) {
         idx <- field(area, area_side) == area_col
         if (any(idx)) {
             max(
-                vapply(.subset(widths, idx), .subset, numeric(1L), col_loc),
+                vapply(.subset(widths, idx), function(width) {
+                    .subset(width, col_loc)
+                }, numeric(1L), USE.NAMES = FALSE),
                 0L
             )
         } else {
