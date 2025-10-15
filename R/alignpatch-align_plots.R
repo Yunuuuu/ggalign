@@ -82,18 +82,20 @@ layout_annotation <- function(..., theme = waiver()) {
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
 #' ggplot object. Use `NULL` to indicate an empty spacer. Each input must
 #' implement the [`alignpatch()`] method.
-#' @param ncol,nrow The dimensions of the grid to create - if both are `NULL` it
-#' will use the same logic as [`facet_wrap()`][ggplot2::facet_wrap] to set the
-#' dimensions
-#' @param byrow If `FALSE` the plots will be filled in in column-major order.
+#' @param ncol,nrow The number of columns and rows in the grid. Defaults to
+#' `NULL`. If both are `NULL`, the layout dimensions are determined
+#' automatically using the same logic as [`facet_wrap()`][ggplot2::facet_wrap].
+#' @param byrow A logical value indicating whether plots should be filled in
+#' row-major order (`TRUE`) or column-major order (`FALSE`). Defaults to
+#' `TRUE`.
 #' @param widths,heights The relative widths and heights of each column and row
-#' in the grid. Will get repeated to match the dimensions of the grid. The
-#' special value of `NA` will behave as `1null` unit unless a fixed aspect plot
-#' is inserted in which case it will allow the dimension to expand or contract
-#' to match the aspect ratio of the content.
-#' @param area Specification of the location of areas in the layout. Can
-#' either be specified as a text string or by concatenating calls to
-#' [`area()`] together.
+#' in the grid. These values are recycled to match the grid dimensions.  The
+#' special value `NA` is treated as a unit of `1null`, unless a fixed-aspect
+#' plot is included — in that case, the affected dimension will expand or
+#' contract to maintain the aspect ratio of the plot. Defaults to `NA`.
+#' @param area A specification of the area layout. Can be defined either as a
+#' character string or as a combination of calls to [`area()`]. Defaults to
+#' `NULL`.
 #' @param guides A string with one or more of `r oxford_and(c(.tlbr, "i"))`
 #' indicating which side of guide legends should be collected. Defaults to
 #' [`waiver()`][ggplot2::waiver()], which inherits from the parent layout. If

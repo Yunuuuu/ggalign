@@ -36,21 +36,23 @@ align_plots(
 ggplot object. Use \code{NULL} to indicate an empty spacer. Each input must
 implement the \code{\link[=alignpatch]{alignpatch()}} method.}
 
-\item{ncol, nrow}{The dimensions of the grid to create - if both are \code{NULL} it
-will use the same logic as \code{\link[ggplot2:facet_wrap]{facet_wrap()}} to set the
-dimensions}
+\item{ncol, nrow}{The number of columns and rows in the grid. Defaults to
+\code{NULL}. If both are \code{NULL}, the layout dimensions are determined
+automatically using the same logic as \code{\link[ggplot2:facet_wrap]{facet_wrap()}}.}
 
-\item{byrow}{If \code{FALSE} the plots will be filled in in column-major order.}
+\item{byrow}{A logical value indicating whether plots should be filled in
+row-major order (\code{TRUE}) or column-major order (\code{FALSE}). Defaults to
+\code{TRUE}.}
 
 \item{widths, heights}{The relative widths and heights of each column and row
-in the grid. Will get repeated to match the dimensions of the grid. The
-special value of \code{NA} will behave as \verb{1null} unit unless a fixed aspect plot
-is inserted in which case it will allow the dimension to expand or contract
-to match the aspect ratio of the content.}
+in the grid. These values are recycled to match the grid dimensions.  The
+special value \code{NA} is treated as a unit of \verb{1null}, unless a fixed-aspect
+plot is included — in that case, the affected dimension will expand or
+contract to maintain the aspect ratio of the plot. Defaults to \code{NA}.}
 
-\item{area}{Specification of the location of areas in the layout. Can
-either be specified as a text string or by concatenating calls to
-\code{\link[=area]{area()}} together.}
+\item{area}{A specification of the area layout. Can be defined either as a
+character string or as a combination of calls to \code{\link[=area]{area()}}. Defaults to
+\code{NULL}.}
 
 \item{guides}{A string with one or more of \code{"t"}, \code{"l"}, \code{"b"}, \code{"r"}, and \code{"i"}
 indicating which side of guide legends should be collected. Defaults to

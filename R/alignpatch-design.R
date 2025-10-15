@@ -3,7 +3,7 @@
 #' To control how different plots are laid out, you need to add a layout design
 #' specification. If you are nesting grids, the layout is scoped to the current
 #' nesting level.
-#' @inheritParams align_plots
+#' @inheritParams alignpatches
 #' @return A `layout_design` object.
 #' @examples
 #' p1 <- ggplot(mtcars) +
@@ -25,40 +25,46 @@
 layout_design <- S7::new_class("layout_design",
     properties = list(
         ncol = S7::new_property(
-            S7::new_union(S3_waiver, S7::class_numeric, NULL),
-            setter = function(self, value) {
-                if (!is_waiver(value)) {
-                    assert_number_whole(value,
-                        min = 1, allow_null = TRUE,
-                        arg = "@ncol"
-                    )
+            S7::new_union(S7::class_numeric, NULL),
+            validator = function(value) {
+                if (!is.null(value) && length(value) != 1L) {
+                    return("must be a single number")
                 }
-                prop(self, "ncol", check = FALSE) <- value
+            },
+            setter = function(self, value) {
+                if (is_na(value)) value <- NA_real_
+                prop(self, "ncol") <- value
                 self
             },
-            default = quote(waiver())
+            default = NA_real_
         ),
         nrow = S7::new_property(
-            S7::new_union(S3_waiver, S7::class_numeric, NULL),
-            setter = function(self, value) {
-                if (!is_waiver(value)) {
-                    assert_number_whole(value,
-                        min = 1, allow_null = TRUE,
-                        arg = "@nrow"
-                    )
+            S7::new_union(S7::class_numeric, NULL),
+            validator = function(value) {
+                if (!is.null(value) && length(value) != 1L) {
+                    return("must be a single number")
                 }
-                prop(self, "nrow", check = FALSE) <- value
+            },
+            setter = function(self, value) {
+                if (is_na(value)) value <- NA_real_
+                prop(self, "nrow") <- value
                 self
             },
-            default = quote(waiver())
+            default = NA_real_
         ),
         byrow = S7::new_property(
-            S7::new_union(NULL, S7::class_logical),
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+            },
             setter = function(self, value) {
-                if (!is.null(value)) assert_bool(value, arg = "@byrow")
-                prop(self, "byrow", check = FALSE) <- value
+                if (is_na(value)) value <- NA
+                prop(self, "byrow") <- value
                 self
-            }
+            },
+            default = NA
         ),
         widths = S7::new_property(
             S7::new_union(NULL, S7::class_numeric, S3_unit),
@@ -105,9 +111,15 @@ layout_design <- S7::new_class("layout_design",
 
 #' @importFrom S7 prop prop<-
 S7::method(init_object, layout_design) <- function(input) {
-    prop(input, "ncol", check = FALSE) <- prop(input, "ncol") %|w|% NULL
-    prop(input, "nrow", check = FALSE) <- prop(input, "nrow") %|w|% NULL
-    prop(input, "byrow", check = FALSE) <- prop(input, "byrow") %||% TRUE
+    if (identical(prop(input, "ncol"), NA_real_)) {
+        prop(input, "ncol", check = FALSE) <- NULL
+    }
+    if (identical(prop(input, "nrow"), NA_real_)) {
+        prop(input, "nrow", check = FALSE) <- NULL
+    }
+    if (identical(prop(input, "byrow"), NA)) {
+        prop(input, "byrow", check = FALSE) <- TRUE
+    }
     prop(input, "widths", check = FALSE) <- prop(input, "widths") %||% NA
     prop(input, "heights", check = FALSE) <- prop(input, "heights") %||% NA
     prop(input, "area", check = FALSE) <- prop(input, "area") %|w|% NULL
@@ -121,13 +133,13 @@ S7::method(init_object, layout_design) <- function(input) {
 local(
     S7::method(`+`, list(layout_design, layout_design)) <-
         function(e1, e2) {
-            if (!is_waiver(prop(e2, "ncol"))) {
+            if (!identical(prop(e2, "ncol"), NA_real_)) {
                 prop(e1, "ncol", check = FALSE) <- prop(e2, "ncol")
             }
-            if (!is_waiver(prop(e2, "nrow"))) {
+            if (!identical(prop(e2, "nrow"), NA_real_)) {
                 prop(e1, "nrow", check = FALSE) <- prop(e2, "nrow")
             }
-            if (!is.null(prop(e2, "byrow"))) {
+            if (!identical(prop(e2, "byrow"), NA)) {
                 prop(e1, "byrow", check = FALSE) <- prop(e2, "byrow")
             }
             if (!is.null(prop(e2, "widths"))) {

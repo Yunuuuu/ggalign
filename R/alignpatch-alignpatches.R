@@ -98,9 +98,12 @@ PatchAlignpatches <- ggproto(
 
         # by default, we won't collect any guide legends
         collected <- guides
-        guides <- prop(layout, "guides") 
-        if (is_string(guides)) guides <- setup_guides(guides)
-        guides <- guides %|w|% collected
+        guides <- prop(layout, "guides")
+        if (is_string(guides)) {
+            guides <- setup_guides(guides)
+        } else if (is_waiver(guides)) {
+            guides <- collected
+        }
 
         #######################################################
         # 1. gtable: create the gtable for the patch, will set internal
