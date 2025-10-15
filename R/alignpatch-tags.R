@@ -70,8 +70,8 @@
 #' @include utils-ggplot.R
 #' @export
 layout_tags <- S7::new_class("layout_tags",
-    properties = list(
-        tags = S7::new_property(
+    properties = c(
+        list(tags = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
             setter = function(self, value) {
                 if (is_na(value)) {
@@ -83,39 +83,21 @@ layout_tags <- S7::new_class("layout_tags",
                 self
             },
             default = NA_character_
-        ),
-        sep = S7::new_property(
-            S7::new_union(S3_waiver, S7::class_character, NULL),
-            setter = function(self, value) {
-                if (!is_waiver(value)) {
-                    assert_string(value, allow_null = TRUE, arg = "@sep")
-                }
-                prop(self, "sep", check = FALSE) <- value
-                self
-            },
-            default = quote(waiver())
-        ),
-        prefix = S7::new_property(
-            S7::new_union(S3_waiver, S7::class_character, NULL),
-            setter = function(self, value) {
-                if (!is_waiver(value)) {
-                    assert_string(value, allow_null = TRUE, arg = "@prefix")
-                }
-                prop(self, "prefix", check = FALSE) <- value
-                self
-            },
-            default = quote(waiver())
-        ),
-        suffix = S7::new_property(
-            S7::new_union(S3_waiver, S7::class_character, NULL),
-            setter = function(self, value) {
-                if (!is_waiver(value)) {
-                    assert_string(value, allow_null = TRUE, arg = "@suffix")
-                }
-                prop(self, "suffix", check = FALSE) <- value
-                self
-            },
-            default = quote(waiver())
+        )),
+        lapply(
+            rlang::set_names(c("sep", "prefix", "suffix")),
+            function(x) {
+                S7::new_property(
+                    S7::new_union(S3_waiver, NULL, S7::class_character),
+                    validator = function(value) {
+                        if (!is_waiver(value) && !is.null(value) &&
+                            length(value) != 1L) {
+                            return("must be a single character string")
+                        }
+                    },
+                    default = quote(waiver())
+                )
+            }
         )
     )
 )
