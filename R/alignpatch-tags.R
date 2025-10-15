@@ -132,7 +132,7 @@ S7::method(init_object, layout_tags) <- function(input) {
 }
 
 #' @importFrom ggplot2 is_waiver
-#' @importFrom S7 props
+#' @importFrom S7 prop prop<-
 local(
     S7::method(`+`, list(layout_tags, layout_tags)) <-
         function(e1, e2) {

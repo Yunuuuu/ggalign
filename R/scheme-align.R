@@ -97,7 +97,7 @@ S7::method(scheme_init, scheme_align) <- function(scheme) {
 }
 
 #' @importFrom rlang is_na
-#' @importFrom S7 props props<-
+#' @importFrom S7 props prop<-
 S7::method(scheme_update, list(scheme_align, scheme_align)) <-
     function(e1, e2, ...) {
         new <- props(e2)

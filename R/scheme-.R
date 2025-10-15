@@ -62,7 +62,7 @@ Schemes <- S7::new_class("Schemes",
 )
 
 #' @importFrom utils str
-#' @importFrom S7 props
+#' @importFrom S7 prop
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")
     cat(paste0("<", main_class(object), ">\n"))
@@ -70,6 +70,7 @@ local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
 })
 
 #' @importFrom rlang list2
+#' @importFrom S7 prop prop<-
 schemes_set <- function(schemes, ..., check = TRUE) {
     entries <- prop(schemes, "entries")
     for (entry in list2(...)) {

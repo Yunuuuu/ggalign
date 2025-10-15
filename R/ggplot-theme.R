@@ -56,12 +56,9 @@ is_theme_unset <- function() {
 
 is_theme_complete <- function(x) isTRUE(attr(x, "complete", exact = TRUE))
 
-#' @importFrom ggplot2 rel element_blank
+#' @importFrom ggplot2 element_blank
 theme_no_strip <- function() {
-    theme(
-        strip.text = element_blank(),
-        strip.background = element_blank()
-    )
+    theme(strip.text = element_blank(), strip.background = element_blank())
 }
 
 #' @importFrom ggplot2 element_rect
@@ -69,23 +66,9 @@ theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
 
 # nocov start
 #' @importFrom ggplot2 register_theme_elements el_def
-#' @importFrom ggplot2 element_line element_polygon element_text
+#' @importFrom ggplot2 element_text
 theme_elements <- function() {
     register_theme_elements(
-        ggalign.line = element_line(
-            color = "black",
-            linewidth = 0.5,
-            linetype = 1,
-            lineend = "butt",
-            linejoin = "round"
-        ),
-        ggalign.polygon = element_polygon(
-            fill = NA,
-            colour = "black",
-            linewidth = 0.5,
-            linetype = 1,
-            linejoin = "round"
-        ),
         element_tree = list(
             plot.patch_title = el_def(element_text, "text"),
             plot.patch_title.top = el_def(element_text, "text"),
@@ -97,9 +80,7 @@ theme_elements <- function() {
             plot.patch_title.position.left = el_def("character"),
             plot.patch_title.position.bottom = el_def("character"),
             plot.patch_title.position.right = el_def("character"),
-            panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing"),
-            ggalign.line = el_def(element_line),
-            ggalign.polygon = el_def(element_polygon)
+            panel.spacing.r = el_def(c("unit", "rel"), "panel.spacing")
         )
     )
 }

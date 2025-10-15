@@ -92,7 +92,7 @@ link_line <- function(..., .element = NULL) {
         type = "line",
         allow_null = TRUE
     )
-    default <- calc_element("ggalign.line", complete_theme(theme_get()))
+    default <- calc_element("line", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
     } else {
@@ -154,7 +154,7 @@ link_tetragon <- function(..., .element = NULL) {
         type = "polygon",
         allow_null = TRUE
     )
-    default <- calc_element("ggalign.polygon", complete_theme(theme_get()))
+    default <- calc_element("polygon", complete_theme(theme_get()))
     if (is.null(.element)) {
         .element <- default
     } else {
