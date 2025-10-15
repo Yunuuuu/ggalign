@@ -133,7 +133,6 @@ reference:
     into the `patchwork` project.
   contents:
   - alignpatches
-  - patch_titles
   - free_align
   - free_border
   - free_lab
@@ -152,6 +151,7 @@ reference:
   desc: >
     Extending ggplot2 with additional geoms, scales, and other functionalities.
   contents:
+  - patch_title
   - geom_pie
   - geom_subrect
   - geom_tile3d

@@ -163,7 +163,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
             } else {
                 spacer <- spacing
             }
-            if (inherits(spacer, "element_blank") || is.null(spacer)) {
+            if (is_theme_element(spacer, "blank") || is.null(spacer)) {
                 spacer <- unit(0, "mm")
             }
             plot_table <- editGrob(plot_table, vp = viewport(
@@ -310,7 +310,5 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
 
     # always add strips columns and/or rows
     plot_table <- add_strips(plot_table, strip_pos)
-    setup_patch_titles(plot_table, patch_titles = list(
-        top = NULL, left = NULL, bottom = NULL, right = NULL
-    ), theme = theme)
+    setup_patch_title(plot_table, NULL, theme = theme)
 }

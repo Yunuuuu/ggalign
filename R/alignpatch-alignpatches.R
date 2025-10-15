@@ -457,7 +457,7 @@ PatchAlignpatches <- ggproto(
             )
             return(gt)
         }
-        spacing <- .subset2(theme, "legend.box.spacing")
+        spacing <- theme$legend.box.spacing
         if (guide_pos == "left") {
             if (is.gtable(guide_box)) {
                 legend_width <- gtable_width(guide_box)
@@ -495,7 +495,7 @@ PatchAlignpatches <- ggproto(
             )
             gt$widths[.subset2(panel_pos, "r") + 5:6] <- widths
         } else if (guide_pos == "bottom") {
-            location <- .subset2(theme, "legend.location") %||% "panel"
+            location <- theme$legend.location %||% "panel"
             place <- switch(location,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))
@@ -518,7 +518,7 @@ PatchAlignpatches <- ggproto(
             )
             gt$heights[.subset2(panel_pos, "b") + 5:6] <- heights
         } else if (guide_pos == "top") {
-            location <- .subset2(theme, "legend.location") %||% "panel"
+            location <- theme$legend.location %||% "panel"
             place <- switch(location,
                 panel = panel_pos,
                 list(l = 1L, r = ncol(gt))

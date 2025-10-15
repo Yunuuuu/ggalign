@@ -109,14 +109,11 @@ theme_elements <- function() {
 #'
 #' @keywords internal
 #' @noRd
-theme_recycle <- function() structure(list(), class = "theme_recycle")
+theme_recycle <- S7::new_class("theme_recycle")
 
 #' @importFrom ggplot2 update_ggplot ggproto ggproto_parent
-S7::method(
-    update_ggplot,
-    list(S7::new_S3_class("theme_recycle"), ggplot2::class_ggplot)
-) <-
-    function(object, plot, object_name, ...) {
+S7::method(update_ggplot, list(theme_recycle, ggplot2::class_ggplot)) <-
+    function(object, plot, objectname, ...) {
         ParentFacet <- plot$facet
         if (!inherits(ParentFacet, c("FacetGrid", "FacetWrap"))) {
             return(plot)

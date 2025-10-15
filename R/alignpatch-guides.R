@@ -159,17 +159,17 @@ package_box <- function(guides, guide_pos, theme) {
 #' @importFrom ggplot2 calc_element element_render element_grob element_blank
 #' @importFrom ggplot2 margin
 guides_build <- function(guides, theme) {
-    legend.spacing.y <- .subset2(theme, "legend.spacing.y")
-    legend.spacing.x <- .subset2(theme, "legend.spacing.x")
+    legend.spacing.y <- theme$legend.spacing.y
+    legend.spacing.x <- theme$legend.spacing.x
     legend.box.margin <- calc_element("legend.box.margin", theme) %||%
         margin()
     widths <- do.call(`unit.c`, lapply(guides, gtable_width))
     heights <- do.call(`unit.c`, lapply(guides, gtable_height))
 
-    just <- valid.just(.subset2(theme, "legend.box.just"))
+    just <- valid.just(theme$legend.box.just)
     xjust <- just[1]
     yjust <- just[2]
-    vert <- identical(.subset2(theme, "legend.box"), "horizontal")
+    vert <- identical(theme$legend.box, "horizontal")
     guides <- lapply(guides, function(g) {
         editGrob(g, vp = viewport(
             x = xjust, y = yjust, just = c(xjust, yjust),

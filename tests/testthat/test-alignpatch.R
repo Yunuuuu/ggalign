@@ -75,17 +75,17 @@ test_that("The grid can be controlled", {
 
     expect_doppelganger("patch titles", {
         align_plots(
-            p1 + patch_titles(top = "I'm top patch title"),
-            p2 + patch_titles(left = "I'm left patch title"),
-            p3 + patch_titles(bottom = "I'm bottom patch title"),
-            p4 + patch_titles(right = "I'm right patch title")
+            p1 + patch_title(top = "I'm top patch title"),
+            p2 + patch_title(left = "I'm left patch title"),
+            p3 + patch_title(bottom = "I'm bottom patch title"),
+            p4 + patch_title(right = "I'm right patch title")
         )
     })
     expect_doppelganger("patch titles theme", {
         align_plots(
-            p1 + patch_titles(top = "I'm top patch title") +
+            p1 + patch_title(top = "I'm top patch title") +
                 theme(plot.patch_title.top = element_text(face = "bold")),
-            p2 + patch_titles(left = "I'm left patch title") +
+            p2 + patch_title(left = "I'm left patch title") +
                 theme(plot.patch_title.left = element_text(face = "bold"))
         )
     })

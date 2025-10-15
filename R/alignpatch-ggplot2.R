@@ -32,8 +32,6 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         plot <- self$plot
-        # extract patch titles --------------------------------
-        patch_titles <- plot$ggalign_patch_labels
 
         if (is.null(theme)) {
             theme <- plot$theme
@@ -52,9 +50,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         strip_pos <- find_strip_pos(ans, theme)
         # always add strips columns and/or rows
         ans <- add_strips(ans, strip_pos)
-        ans <- setup_patch_titles(ans,
-            patch_titles = patch_titles, theme = theme
-        )
+        ans <- setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
     },

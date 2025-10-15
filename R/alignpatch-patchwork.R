@@ -68,7 +68,7 @@ PatchPatchworkPatch <- ggproto(
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         guides <- if (length(guides)) "collect" else "keep"
         ans <- patchwork::patchGrob(self$patch, guides = guides)
-        # add rows and columns for `patch_titles()`
+        # add rows and columns for `patch_title()`
         for (border in .TLBR) {
             panel_pos <- find_panel(ans)
             if (border == "top") {
