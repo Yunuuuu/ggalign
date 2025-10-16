@@ -12,6 +12,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Craftsman.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Layout-subset.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/LayoutProto.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/Patch.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Scheme.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/Schemes.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/active.html</loc></url>
@@ -112,7 +113,6 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/memo_order.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/new_tune.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/no_expansion.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/normalized_gtable.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/order2.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/pair_links.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/patch_title.html</loc></url>
@@ -138,6 +138,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_genomic.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_layout.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_switch.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/standardized_gtable.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/theme_no_axes.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/tune.MAF.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/tune.html</loc></url>
