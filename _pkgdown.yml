@@ -124,6 +124,7 @@ reference:
   - new_tune
   - ggalign_data_set
   - order2
+  - Patch
 
 - title: Data-Free Composition
   desc: >
