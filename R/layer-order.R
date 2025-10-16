@@ -26,7 +26,7 @@ layer_order <- S7::new_class(
             S7::class_numeric,
             validator = function(value) {
                 if (length(value) != 1L) {
-                    return("must be a single boolean value")
+                    return("must be a single number")
                 }
                 if (is.na(value)) {
                     return("cannot be missing (`NA`)")
