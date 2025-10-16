@@ -24,13 +24,13 @@ layer_order <- S7::new_class(
         layer = ggplot2::class_layer,
         order = S7::new_property(
             S7::class_numeric,
-            setter = function(self, value) {
-                assert_number_whole(value,
-                    allow_infinite = TRUE,
-                    arg = "@order"
-                )
-                prop(self, "order", check = FALSE) <- value
-                self
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
             }
         )
     ),
