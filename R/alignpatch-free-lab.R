@@ -1,73 +1,133 @@
 #' @param labs Which axis labs to be free? A string containing one or more of
 #' `r oxford_and(.tlbr)`.
 #' @return
-#' - `free_lab`: A modified version of `plot` with a `free_lab` class.
+#' - `free_lab`: A modified version of `plot` with a `FreeLab` class.
 #' @export
 #' @rdname free
-free_lab <- function(plot, labs = "tlbr") {
-    UseMethod("free_lab")
+free_lab <- S7::new_generic(
+    "free_lab", "plot",
+    function(plot, labs = "tlbr") S7_dispatch()
+)
+
+FreeLab <- S7::new_class(
+    "FreeLab",
+    properties = list(
+        plot = S7::class_any,
+        labs = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single string")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+                if (grepl("[^tlbr]", value)) {
+                    return(sprintf(
+                        "can only contain the %s characters",
+                        oxford_and(.tlbr)
+                    ))
+                }
+            }
+        )
+    )
+)
+
+S7::method(free_lab, S7::class_any) <- function(plot, labs = "tlbr") {
+    FreeLab(plot, labs)
 }
 
-#' @export
-free_lab.ggplot <- function(plot, labs = "tlbr") {
-    assert_position(labs)
-    attr(plot, "free_labs") <- labs
-    add_class(plot, "free_lab")
-}
-
-#' @export
-`free_lab.ggalign::alignpatches` <- free_lab.ggplot
-
-#' @export
-free_lab.free_align <- function(plot, labs = "tlbr") {
-    assert_position(labs)
-    labs <- setdiff_position(labs, attr(plot, "free_axes"))
-    if (!nzchar(labs)) return(plot) # styler: off
-    NextMethod()
-}
-
-#' @export
-free_lab.free_borders <- function(plot, labs = "tlbr") {
-    assert_position(labs)
-    labs <- setdiff_position(labs, attr(plot, "free_borders"))
-    if (!nzchar(labs)) return(plot) # styler: off
-    NextMethod()
-}
-
-#' @export
-free_lab.free_lab <- function(plot, labs = "tlbr") {
-    assert_position(labs)
-    attr(plot, "free_labs") <- union_position(attr(plot, "free_labs"), labs)
+S7::method(free_lab, alignpatches) <- function(plot, labs = "tlbr") {
+    prop(plot, "plots") <- lapply(prop(plot, "plots"), free_lab, labs = labs)
     plot
 }
 
-#' @export
-free_lab.default <- function(plot, labs = "tlbr") {
-    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+#' @importFrom S7 prop
+S7::method(free_lab, FreeLab) <- function(plot, labs = "tlbr") {
+    old <- prop(plot, "labs")
+    prop(plot, "labs") <- labs # will validate the input labs
+    prop(plot, "labs", check = FALSE) <- union_position(old, labs)
+    plot
 }
 
 ####################################################
-#' @importFrom ggplot2 ggproto ggproto_parent
-#' @export
-alignpatch.free_lab <- function(x) {
-    Parent <- NextMethod()
+#' @importFrom ggplot2 ggproto ggproto_parent find_panel
+#' @importFrom gtable gtable_height gtable_width
+S7::method(alignpatch, FreeLab) <- function(x) {
+    Parent <- alignpatch(prop(x, "plot"))
     ggproto(
         "PatchFreeLab", Parent,
-        free_labs = setup_position(attr(x, "free_labs")),
-        collect_guides = function(self, guides) {
-            ans <- ggproto_parent(Parent, self)$collect_guides(guides = guides)
-            self$gt <- ggproto_parent(Parent, self)$free_lab(
-                labs = self$free_labs, gt = self$gt
-            )
-            ans
-        },
-        free_lab = function(self, labs, gt = self$gt) {
-            if (length(labs <- vec_set_difference(labs, self$free_labs))) {
-                gt <- ggproto_parent(Parent, self)$free_lab(
-                    labs = labs, gt = gt
-                )
+        labs = setup_position(prop(x, "labs")),
+        align_border = function(self, gt, t = NULL, l = NULL,
+                                b = NULL, r = NULL) {
+            if (is.gtable(gt)) {
+                panel_pos <- find_panel(gt)
+                for (lab in self$labs) {
+                    name <- paste(
+                        switch_position(lab, "xlab", "ylab"),
+                        "axis", lab,
+                        sep = "-"
+                    )
+                    if (lab == "top") {
+                        panel_border <- .subset2(panel_pos, "t")
+                        gt <- liberate_area(
+                            gt,
+                            panel_border - 3L,
+                            .subset2(panel_pos, "l"),
+                            panel_border - 1L,
+                            .subset2(panel_pos, "r"),
+                            name = name,
+                            vp = ~ viewport(
+                                y = 0L, just = "bottom",
+                                height = gtable_height(.x)
+                            )
+                        )
+                    } else if (lab == "left") {
+                        panel_border <- .subset2(panel_pos, "l")
+                        gt <- liberate_area(
+                            gt,
+                            .subset2(panel_pos, "t"),
+                            panel_border - 3L,
+                            .subset2(panel_pos, "b"),
+                            panel_border - 1L,
+                            name = name,
+                            vp = ~ viewport(
+                                x = 1L, just = "right",
+                                width = gtable_width(.x)
+                            )
+                        )
+                    } else if (lab == "bottom") {
+                        panel_border <- .subset2(panel_pos, "b")
+                        gt <- liberate_area(
+                            gt,
+                            panel_border + 1L,
+                            .subset2(panel_pos, "l"),
+                            panel_border + 3L,
+                            .subset2(panel_pos, "r"),
+                            name = name,
+                            vp = ~ viewport(
+                                y = 1L, just = "top",
+                                height = gtable_height(.x)
+                            )
+                        )
+                    } else if (lab == "right") {
+                        panel_border <- .subset2(panel_pos, "r")
+                        gt <- liberate_area(
+                            gt,
+                            .subset2(panel_pos, "t"),
+                            panel_border + 1L,
+                            .subset2(panel_pos, "b"),
+                            panel_border + 3L,
+                            name = name,
+                            vp = ~ viewport(
+                                x = 0L, just = "left",
+                                width = gtable_width(.x)
+                            )
+                        )
+                    }
+                }
             }
-            gt
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
         }
     )
 }

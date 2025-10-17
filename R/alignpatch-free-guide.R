@@ -2,47 +2,59 @@
 #' `r oxford_and(c(.tlbr, "i"))` indicates which side of guide legends should be
 #' collected for the plot. If `NULL`, no guide legends will be collected.
 #' @return
-#' - `free_guide`: A modified version of `plot` with a `free_guide` class.
+#' - `free_guide`: A modified version of `plot` with a `FreeGuide` class.
 #' @export
 #' @rdname free
-free_guide <- function(plot, guides = "tlbr") {
-    UseMethod("free_guide")
+free_guide <- S7::new_generic(
+    "free_guide", "plot",
+    function(plot, guides = "tlbr") S7_dispatch()
+)
+
+FreeGuide <- S7::new_class(
+    "FreeGuide",
+    properties = list(
+        plot = S7::class_any,
+        guides = S7::new_property(
+            S7::new_union(S7::class_character, NULL),
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single string")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+                if (grepl("[^tlbri]", value)) {
+                    return(sprintf(
+                        "can only contain the %s characters",
+                        oxford_and(c(.tlbr, "i"))
+                    ))
+                }
+            }
+        )
+    )
+)
+
+S7::method(free_guide, S7::class_any) <- function(plot, guides = "tlbr") {
+    FreeGuide(plot, guides)
 }
 
-#' @export
-free_guide.ggplot <- function(plot, guides = "tlbr") {
-    if (!is.null(guides)) assert_guides(guides)
-    attr(plot, "free_guides") <- guides
-    add_class(plot, "free_guide")
-}
-
-#' @export
-`free_guide.ggalign::alignpatches` <- free_guide.ggplot
-
-#' @export
-free_guide.free_guide <- function(plot, guides = "tlbr") {
-    if (is.null(guides)) {
-        attr(plot, "free_guides") <- NULL
-    } else {
-        assert_guides(guides)
-        if (is.null(old <- attr(plot, "free_guides", exact = TRUE))) {
-            attr(plot, "free_guides") <- guides
-        } else {
-            attr(plot, "free_guides") <- union_position(old, guides)
-        }
+#' @importFrom S7 prop
+S7::method(free_guide, FreeGuide) <- function(plot, guides = "tlbr") {
+    old <- prop(plot, "guides")
+    prop(plot, "guides") <- guides # will validate the input guides
+    if (!is.null(guides) && !is.null(old)) {
+        prop(plot, "guides", check = FALSE) <- union_position(old, guides)
     }
     plot
 }
 
 ################################################################
-#' @importFrom ggplot2 ggproto ggproto_parent
-#' @export
-alignpatch.free_guide <- function(x) {
-    Parent <- NextMethod()
-    if (!is.null(free_guides <- attr(x, "free_guides", exact = TRUE))) {
-        free_guides <- setup_guides(free_guides)
-    }
+#' @importFrom ggplot2 ggproto
+S7::method(alignpatch, FreeGuide) <- function(x) {
+    Parent <- alignpatch(prop(x, "plot"))
+    if (!is.null(guides <- prop(x, "guides"))) guides <- setup_guides(guides)
     ggproto("PatchFreeGuide", Parent,
-        guides = function(self, guides) free_guides
+        free_guides = guides,
+        guides = function(self, guides) self$free_guides
     )
 }

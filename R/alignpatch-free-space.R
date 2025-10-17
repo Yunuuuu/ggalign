@@ -1,61 +1,60 @@
 #' @param spaces Which border spaces should be removed? A string containing one
 #' or more of `r oxford_and(.tlbr)`.
 #' @return
-#' - `free_space`: A modified version of `plot` with a `free_space` class.
+#' - `free_space`: A modified version of `plot` with a `FreeSpace` class.
 #' @export
 #' @rdname free
-free_space <- function(plot, spaces = "tlbr") {
-    UseMethod("free_space")
-}
+free_space <- S7::new_generic(
+    "free_space", "plot",
+    function(plot, spaces = "tlbr") S7_dispatch()
+)
 
-#' @export
-free_space.default <- function(plot, spaces = "tlbr") {
-    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
-}
-
-#' @export
-free_space.ggplot <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    attr(plot, "free_spaces") <- spaces
-    add_class(plot, "free_space")
-}
-
-#' @export
-`free_space.ggalign::alignpatches` <- free_space.ggplot
-
-#' @export
-free_space.free_align <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    spaces <- setdiff_position(spaces, attr(plot, "free_axes"))
-    if (!nzchar(spaces)) {
-        return(plot)
-    }
-    NextMethod()
-}
-
-#' @export
-free_space.free_space <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    attr(plot, "free_spaces") <- union_position(
-        attr(plot, "free_spaces"), spaces
+FreeSpace <- S7::new_class(
+    "FreeSpace",
+    properties = list(
+        plot = S7::class_any,
+        spaces = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single string")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+                if (grepl("[^tlbr]", value)) {
+                    return(sprintf(
+                        "can only contain the %s characters",
+                        oxford_and(.tlbr)
+                    ))
+                }
+            }
+        )
     )
+)
+
+S7::method(free_space, S7::class_any) <- function(plot, spaces = "tlbr") {
+    FreeSpace(plot, spaces)
+}
+
+#' @importFrom S7 prop prop<-
+S7::method(free_space, FreeSpace) <- function(plot, spaces = "tlbr") {
+    old <- prop(plot, "spaces")
+    prop(plot, "spaces") <- spaces # will validate the input spaces
+    prop(plot, "spaces", check = FALSE) <- union_position(old, spaces)
     plot
 }
 
 ##########################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid unit
-#' @export
-alignpatch.free_space <- function(x) {
-    Parent <- NextMethod()
+S7::method(alignpatch, FreeSpace) <- function(x) {
+    Parent <- alignpatch(prop(x, "plot"))
     ggproto(
         "PatchFreeSpace", Parent,
-        free_spaces = split_position(attr(x, "free_spaces")),
-        get_sizes = function(self, free = NULL, gt = self$gt) {
-            ggproto_parent(Parent, self)$get_sizes(
-                union(free, self$free_spaces),
-                gt = gt
-            )
+        spaces = split_position(prop(x, "spaces")),
+        get_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$get_sizes(gt, union(free, self$spaces))
         }
     )
 }
