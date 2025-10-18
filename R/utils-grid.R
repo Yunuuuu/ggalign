@@ -245,6 +245,7 @@ local(S7::method(str, GridUnit) <- function(object, ..., indent.str = " ",
 #' @importFrom grid is.unit unit
 #' @importFrom rlang is_atomic
 #' @importFrom S7 convert
+#' @include import-standalone-pkg.R
 prop_grid_unit <- function(property, ..., default = NULL, len = 1L) {
     force(property)
     S7::new_property(
