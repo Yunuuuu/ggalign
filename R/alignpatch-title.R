@@ -114,7 +114,7 @@ patch_title <- S7::new_class(
 #' @rdname patch_title
 patch_titles <- function(...) {
     lifecycle::deprecate_soft(
-        "1.1.0.9000",
+        "1.2.0",
         "patch_titles()",
         details = "Please use `patch_title()` instead"
     )

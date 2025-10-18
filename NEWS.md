@@ -1,4 +1,4 @@
-# ggalign (development version)
+# ggalign 1.2.0
 
 * Fixed alignment of absolute panel dimensions when using `theme(panel.widths, panel.heights)` in ggplot2 v4.0.0.
 
@@ -8,7 +8,7 @@
 
 * Renamed the original `alignpatch()` to `patch()` for clearer and more consistent naming.
 
-* Exported the `Patch` object for external use.
+* The `Patch` object is now exported for external use.
 
 * Refactored `patch_titles` to the new S7-based `patch_title` class (soft-deprecated the old version).
 

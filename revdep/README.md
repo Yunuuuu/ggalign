@@ -1,23 +1,23 @@
 # Platform
 
-|field    |value                             |
-|:--------|:---------------------------------|
-|version  |R version 4.4.2 (2024-10-31)      |
-|os       |Ubuntu 24.04.1 LTS                |
-|system   |x86_64, linux-gnu                 |
-|ui       |X11                               |
-|language |en                                |
-|collate  |C.UTF-8                           |
-|ctype    |C.UTF-8                           |
-|tz       |Asia/Shanghai                     |
-|date     |2025-09-11                        |
-|pandoc   |3.1.3 @ /usr/bin/ (via rmarkdown) |
+|field    |value                        |
+|:--------|:----------------------------|
+|version  |R version 4.4.2 (2024-10-31) |
+|os       |Ubuntu 24.04.1 LTS           |
+|system   |x86_64, linux-gnu            |
+|ui       |X11                          |
+|language |en                           |
+|collate  |C.UTF-8                      |
+|ctype    |C.UTF-8                      |
+|tz       |Asia/Shanghai                |
+|date     |2025-10-18                   |
+|pandoc   |3.1.3 @ /usr/bin/pandoc      |
 
 # Dependencies
 
 |package      |old   |new   |Δ  |
 |:------------|:-----|:-----|:--|
-|ggalign      |1.0.2 |1.1.0 |*  |
+|ggalign      |1.1.0 |1.2.0 |*  |
 |cli          |3.6.5 |3.6.5 |   |
 |farver       |2.1.2 |2.1.2 |   |
 |ggplot2      |4.0.0 |4.0.0 |   |
