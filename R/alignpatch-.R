@@ -369,15 +369,32 @@ Patch <- ggproto(
         panel_pos <- find_panel(gt)
         rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
         cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
+
+        # Determine which dimension(s) can be inferred
+        can_set_width <- is.na(as.numeric(panel_width))
+        can_set_height <- is.na(as.numeric(panel_height))
+
+        # set width/height for fixed size
+        if (can_set_width) {
+            panel_widths <- .subset2(gt, "widths")[cols[1L]:cols[2L]]
+            if (all(!is_null_unit(panel_widths))) {
+                panel_width <- sum(panel_widths)
+                can_set_width <- FALSE
+            }
+        }
+        if (can_set_height) {
+            panel_heights <- .subset2(gt, "heights")[rows[1L]:rows[2L]]
+            if (all(!is_null_unit(panel_heights))) {
+                panel_height <- sum(panel_heights)
+                can_set_height <- FALSE
+            }
+        }
+
         # Only apply aspect-ratio respect when there is a single facet panel
         if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
             respect <- is_respect(gt)
             # Continue only if 'respect' is enabled
             if (respect) {
-                # Determine which dimension(s) can be inferred
-                can_set_width <- is.na(as.numeric(panel_width))
-                can_set_height <- is.na(as.numeric(panel_height))
-
                 # Extract intrinsic panel dimensions from the gtable
                 w <- .subset2(gt, "widths")[cols[1L]]
                 h <- .subset2(gt, "heights")[rows[1L]]
