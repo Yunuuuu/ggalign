@@ -1,6 +1,6 @@
 # ggalign (development version)
 
-* * Fixed alignment of absolute panel dimensions when using `theme(panel.widths, panel.heights)` in ggplot2 v4.0.0.
+* Fixed alignment of absolute panel dimensions when using `theme(panel.widths, panel.heights)` in ggplot2 v4.0.0.
 
 * 'alignpatch-*' scripts have been fully refactored with S7 classes, with more informative and consistent naming.
 
