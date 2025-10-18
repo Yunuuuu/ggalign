@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Benchmarks</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/v1.2.0/vignettes/articles/benchmarks.Rmd" class="external-link"><code>vignettes/articles/benchmarks.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Yunuuuu/ggalign/blob/main/vignettes/articles/benchmarks.Rmd" class="external-link"><code>vignettes/articles/benchmarks.Rmd</code></a></small>
       <div class="d-none name"><code>benchmarks.Rmd</code></div>
     </div>
 
@@ -111,7 +111,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Yunuuuu/ggalign" class="external-link">ggalign</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
 <span><span class="co">#&gt; ========================================</span></span>
-<span><span class="co">#&gt; ggalign version 1.2.0</span></span>
+<span><span class="co">#&gt; ggalign version 1.2.0.9000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; If you use it in published research, please cite: </span></span>
 <span><span class="co">#&gt; Peng, Y.; Jiang, S.; Song, Y.; et al. ggalign: Bridging the Grammar of Graphics and Biological Multilayered Complexity. Advanced Science. 2025. doi:10.1002/advs.202507799</span></span>
@@ -166,11 +166,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                 145.41ms 151.36ms     6.65         NA     6.65</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()          2.29s    2.29s     0.436        NA     1.31</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    4.53s    4.53s     0.221        NA     2.21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()      554.52ms 554.52ms     1.80         NA     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    1.88s    1.88s     0.532        NA     8.51</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                 145.85ms 152.11ms     6.44         NA     6.44</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()          2.26s    2.26s     0.443        NA     1.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    4.54s    4.54s     0.220        NA     2.20</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()      555.58ms 555.58ms     1.80         NA     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    1.95s    1.95s     0.513        NA     8.21</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -216,11 +216,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                    2.66s    2.66s     0.376        NA    1.88 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()          2.81s    2.81s     0.357        NA    1.78 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    5.72s    5.72s     0.175        NA    1.75 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()          2.2s     2.2s     0.454        NA    0.454</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    4.66s    4.66s     0.215        NA    4.08</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                    2.65s    2.65s     0.378        NA    1.89 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()          2.79s    2.79s     0.358        NA    1.79 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()     5.7s     5.7s     0.175        NA    1.75 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()         2.19s    2.19s     0.457        NA    0.457</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    4.58s    4.58s     0.218        NA    4.15</span></span></code></pre></div>
 </div>
   </main>
 </div>
