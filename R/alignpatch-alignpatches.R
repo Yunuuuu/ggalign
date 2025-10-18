@@ -400,41 +400,13 @@ PatchAlignpatches <- ggproto(
     },
     align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
         on.exit(self$area <- NULL)
+        # we only make the final grobs after sizes has been solved
         gt <- ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
-        # we apply function in each plot gtable in `gt`.
-        gt_list <- .mapply(
-            function(patch, gt, borders) {
-                patch$align_border(
-                    gt,
-                    if (any(borders == "top")) t else NULL,
-                    if (any(borders == "left")) l else NULL,
-                    if (any(borders == "bottom")) b else NULL,
-                    if (any(borders == "right")) r else NULL
-                )
-            },
-            list(
-                patch = self$patches,
-                gt = self$gt_list,
-                borders = self$borders_list
-            ),
-            NULL
-        )
-        gt <- self$set_grobs(
+        self$set_grobs(
             patches = self$patches,
-            gt_list = gt_list,
+            gt_list = self$gt_list,
             area = self$area,
             gt = gt
-        )
-        gt
-    },
-    place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
-        on.exit({
-            self$patches <- NULL
-            self$gt_list <- NULL
-            self$borders_list <- NULL
-        })
-        ggproto_parent(Patch, self)$place(
-            gtable, gt, t, l, b, r, i, bg_z, plot_z
         )
     },
 
