@@ -64,6 +64,8 @@ Language: en-GB
 Collate: 
     'active.R'
     'alignpatch-.R'
+    'ggplot-theme.R'
+    'alignpatch-theme.R'
     'utils-ggplot.R'
     'alignpatch-tags.R'
     'alignpatch-title.R'
@@ -71,8 +73,6 @@ Collate:
     'import-standalone-pkg.R'
     'utils-grid.R'
     'alignpatch-design.R'
-    'ggplot-theme.R'
-    'alignpatch-align_plots.R'
     'alignpatch-alignpatches.R'
     'alignpatch-ggplot2.R'
     'alignpatch-build.R'
