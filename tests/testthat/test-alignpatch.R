@@ -134,7 +134,7 @@ test_that("strip handling works well", {
     p0 <- ggplot(mpg, aes(displ, hwy)) +
         geom_point() +
         facet_wrap(~"foo", strip.position = "bottom") +
-        theme(strip.placement = "inside")
+        theme(strip.placement = "inside", strip.text = element_text(size = 20))
     p1 <- p0 + theme(strip.placement = "outside")
     expect_doppelganger(
         "alignpatches() with inside vs outside strip placement",
