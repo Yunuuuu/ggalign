@@ -366,6 +366,8 @@ Patch <- ggproto(
         if (!is.gtable(gt)) {
             return(list(width = panel_width, height = panel_height))
         }
+
+        # Locate the panel within the gtable
         panel_pos <- find_panel(gt)
         rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
         cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
@@ -374,23 +376,34 @@ Patch <- ggproto(
         can_set_width <- is.na(as.numeric(panel_width))
         can_set_height <- is.na(as.numeric(panel_height))
 
-        # set width/height for fixed size
-        if (can_set_width) {
+        # Handle fixed panel dimensions
+        # Use the sum of panel widths/heights or the larger of current
+        if (can_set_width || !is_null_unit(panel_width)) {
             panel_widths <- .subset2(gt, "widths")[cols[1L]:cols[2L]]
-            if (all(!is_null_unit(panel_widths))) {
-                panel_width <- sum(panel_widths)
+            if (!any(is_null_unit(panel_widths))) {
+                if (can_set_width) {
+                    panel_width <- sum(panel_widths)
+                } else {
+                    panel_width <- max(panel_width, sum(panel_widths))
+                }
+                panel_width <- convertWidth(panel_width, "mm")
                 can_set_width <- FALSE
             }
         }
-        if (can_set_height) {
+        if (can_set_height || !is_null_unit(panel_height)) {
             panel_heights <- .subset2(gt, "heights")[rows[1L]:rows[2L]]
-            if (all(!is_null_unit(panel_heights))) {
-                panel_height <- sum(panel_heights)
+            if (!any(is_null_unit(panel_heights))) {
+                if (can_set_height) {
+                    panel_height <- sum(panel_heights)
+                } else {
+                    panel_height <- max(panel_height, sum(panel_heights))
+                }
+                panel_height <- convertHeight(panel_height, "mm")
                 can_set_height <- FALSE
             }
         }
 
-        # Only apply aspect-ratio respect when there is a single facet panel
+        # try to maintain aspect ratio if there is a single facet panel
         if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
             respect <- is_respect(gt)
             # Continue only if 'respect' is enabled
@@ -408,13 +421,18 @@ Patch <- ggproto(
                 } else if (can_set_height) {
                     panel_height <- as.numeric(h) / as.numeric(w) * panel_width
                 } else {
+                    # Both dimensions are already set, no need to adjust
                     respect <- FALSE
                 }
             }
         } else {
             respect <- FALSE
         }
-        list(width = panel_width, height = panel_height, respect = respect)
+        list(
+            width = panel_width, height = panel_height,
+            # guess_width = guess_width, guess_height = guess_height,
+            respect = respect
+        )
     },
 
     #' @field border_sizes

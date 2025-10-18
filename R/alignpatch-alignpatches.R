@@ -449,18 +449,22 @@ PatchAlignpatches <- ggproto(
             decreasing = TRUE
         )
         sizes_list <- respect_dims <- vector("list", length(patches))
+        # guess_widths <- rep_len(FALSE, dims[2L])
+        # guess_heights <- rep_len(FALSE, dims[1L])
         for (i in patch_index) {
             row <- .subset(rows, i)
             col <- .subset(cols, i)
             patch <- .subset2(patches, i)
-            panel_sizes <- patch$align_panel(
+            panel_aligned <- patch$align_panel(
                 gt = .subset2(gt_list, i),
                 panel_width = panel_widths[col],
                 panel_height = panel_heights[row]
+                # guess_width = guess_widths[col],
+                # guess_height = guess_heights[row]
             )
-            panel_widths[col] <- .subset2(panel_sizes, "width")
-            panel_heights[row] <- .subset2(panel_sizes, "height")
-            if (isTRUE(.subset2(panel_sizes, "respect"))) {
+            panel_widths[col] <- .subset2(panel_aligned, "width")
+            panel_heights[row] <- .subset2(panel_aligned, "height")
+            if (isTRUE(.subset2(panel_aligned, "respect"))) {
                 respect_dims[[i]] <- matrix(
                     c(
                         (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
@@ -469,6 +473,12 @@ PatchAlignpatches <- ggproto(
                     nrow = 1L
                 )
             }
+            # guess_widths[col] <- isTRUE(
+            #     .subset2(panel_aligned, "guess_width")
+            # )
+            # guess_heights[row] <- isTRUE(
+            #     .subset2(panel_aligned, "guess_height")
+            # )
             sizes_list[i] <- list(patch$border_sizes(.subset2(gt_list, i)))
         }
         if (!is.null(respect_dims <- inject(rbind(!!!respect_dims)))) {
@@ -493,7 +503,6 @@ PatchAlignpatches <- ggproto(
             sizes_list, panel_widths, panel_heights,
             area, dims[2L], dims[1L]
         )
-
         # setup the widths and heights ------------------------
         gt$widths <- .subset2(sizes, "widths")
         gt$heights <- .subset2(sizes, "heights")
