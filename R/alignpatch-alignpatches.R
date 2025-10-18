@@ -399,12 +399,7 @@ PatchAlignpatches <- ggproto(
         list(gt = gt, guides = self$collected_guides)
     },
     align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
-        on.exit({
-            self$patches <- NULL
-            self$gt_list <- NULL
-            self$borders_list <- NULL
-            self$area <- NULL
-        })
+        on.exit(self$area <- NULL)
         gt <- ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
         # we apply function in each plot gtable in `gt`.
         gt_list <- .mapply(
@@ -431,6 +426,16 @@ PatchAlignpatches <- ggproto(
             gt = gt
         )
         gt
+    },
+    place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
+        on.exit({
+            self$patches <- NULL
+            self$gt_list <- NULL
+            self$borders_list <- NULL
+        })
+        ggproto_parent(Patch, self)$place(
+            gtable, gt, t, l, b, r, i, bg_z, plot_z
+        )
     },
 
     #' @importFrom grid is.unit unit

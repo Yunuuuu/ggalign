@@ -15,11 +15,6 @@ free_lab.default <- function(plot, labs = "tlbr") {
     add_class(plot, "ggalign_free_lab")
 }
 
-S7::method(free_lab, alignpatches) <- function(plot, labs) {
-    prop(plot, "plots") <- lapply(prop(plot, "plots"), free_lab, labs = labs)
-    plot
-}
-
 #' @export
 free_lab.ggalign_free_align <- function(plot, labs = "tlbr") {
     labs <- setdiff_position(
@@ -58,9 +53,23 @@ patch.ggalign_free_lab <- function(x) {
         labs = setup_position(attr(x, "ggalign_free_labs", exact = TRUE)),
         align_border = function(self, gt, t = NULL, l = NULL,
                                 b = NULL, r = NULL) {
-            if (is.gtable(gt)) {
+            if (inherits(Parent, "PatchAlignpatches")) {
+                self$gt_list <- .mapply(
+                    function(gt, borders) {
+                        self$free_lab(gt, intersect(borders, self$labs))
+                    },
+                    list(gt = self$gt_list, borders = self$borders_list),
+                    NULL
+                )
+            } else {
+                gt <- self$free_lab(gt, self$labs)
+            }
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
+        },
+        free_lab = function(self, gt, labs) {
+            if (is.gtable(gt) && length(labs)) {
                 panel_pos <- find_panel(gt)
-                for (lab in self$labs) {
+                for (lab in labs) {
                     name <- paste(
                         switch_position(lab, "xlab", "ylab"),
                         "axis", lab,
@@ -125,7 +134,7 @@ patch.ggalign_free_lab <- function(x) {
                     }
                 }
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
+            gt
         }
     )
 }
