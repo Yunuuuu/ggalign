@@ -24,20 +24,24 @@ as_grob.grob <- function(x, ...) {
     x
 }
 
+#' @inherit as_grob.grob
+#' @param ... Additional arguments passed on to [`gTree`][grid::gTree].
+#' @family as_grob
 #' @importFrom grid gTree
 #' @export
-#' @rdname as_grob.grob
 as_grob.gList <- function(x, ...) {
-    rlang::check_dots_empty()
     # gLists need to be wrapped in a gTree
-    gTree(children = x)
+    gTree(children = x, ...)
 }
 
 #' @inherit as_grob.grob
 #' @family as_grob
 #' @export
 #' @keywords internal
-as_grob.patch_ggplot <- function(x, ...) ggalignGrob(x, ...)
+as_grob.patch_ggplot <- function(x, ...) {
+    rlang::check_dots_empty()
+    ggalignGrob(x)
+}
 
 #' @importFrom ggplot2 ggplotGrob
 #' @inherit as_grob.grob
@@ -50,11 +54,10 @@ as_grob.ggplot <- as_grob.patch_ggplot
 #' @seealso [`align_plots()`]
 #' @family as_grob
 #' @export
-`as_grob.ggalign::alignpatches` <- function(x, ...) {
-    ggalignGrob(x, ...)
-}
+`as_grob.ggalign::alignpatches` <- as_grob.patch_ggplot
 
 #' @inherit as_grob
+#' @inheritDotParams patchwork::patchworkGrob
 #' @seealso [`patchwork`][patchwork::patchworkGrob]
 #' @family as_grob
 #' @export
@@ -64,6 +67,7 @@ as_grob.patchwork <- function(x, ...) {
 }
 
 #' @inherit as_grob
+#' @inheritDotParams patchwork::patchGrob
 #' @seealso [`patch`][patchwork::patchGrob]
 #' @family as_grob
 #' @export

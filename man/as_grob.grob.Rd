@@ -2,12 +2,9 @@
 % Please edit documentation in R/alignpatch-grob.R
 \name{as_grob.grob}
 \alias{as_grob.grob}
-\alias{as_grob.gList}
 \title{Convert Object into a Grob}
 \usage{
 \method{as_grob}{grob}(x, ...)
-
-\method{as_grob}{gList}(x, ...)
 }
 \arguments{
 \item{x}{An object to be converted into a \code{\link[grid:grid.grob]{grob}}.}
@@ -24,6 +21,7 @@ Convert Object into a Grob
 Other as_grob: 
 \code{\link{as_grob.Heatmap}()},
 \code{\link{as_grob.formula}()},
+\code{\link{as_grob.gList}()},
 \code{\link{as_grob.ggalign::alignpatches}()},
 \code{\link{as_grob.ggplot}()},
 \code{\link{as_grob.patch}()},

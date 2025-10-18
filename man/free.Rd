@@ -105,27 +105,31 @@ or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
 }
 \value{
 \itemize{
-\item \code{free_align}: A modified version of \code{plot} with a \code{free_align} class.
+\item \code{free_align}: A modified version of \code{plot} with a \code{ggalign_free_align}
+class.
 }
 
 \itemize{
-\item \code{free_border}: A modified version of \code{plot} with a \code{free_border} class.
+\item \code{free_border}: A modified version of \code{plot} with a \code{ggalign_free_border}
+class.
 }
 
 \itemize{
-\item \code{free_guide}: A modified version of \code{plot} with a \code{free_guide} class.
+\item \code{free_guide}: A modified version of \code{plot} with a \code{ggalign_free_guide}
+class.
 }
 
 \itemize{
-\item \code{free_lab}: A modified version of \code{plot} with a \code{free_lab} class.
+\item \code{free_lab}: A modified version of \code{plot} with a \code{ggalign_free_lab} class.
 }
 
 \itemize{
-\item \code{free_space}: A modified version of \code{plot} with a \code{free_space} class.
+\item \code{free_space}: A modified version of \code{plot} with a \code{ggalign_free_space}
+class.
 }
 
 \itemize{
-\item \code{free_vp}: A modified version of \code{plot} with a \code{free_vp} class.
+\item \code{free_vp}: A modified version of \code{plot} with a \code{ggalign_free_vp} class.
 }
 }
 \description{

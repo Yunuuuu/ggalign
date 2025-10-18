@@ -1,71 +1,18 @@
-#' @importFrom grid grid.draw
-#' @importFrom rlang try_fetch cnd_signal
-#' @export
-`print.ggalign::alignpatches` <- function(x, newpage = is.null(vp),
-                                          vp = NULL, ...) {
-    ggplot2::set_last_plot(x)
-    if (newpage) {
-        grid::grid.newpage()
-        if (is.character(vp)) {
-            cli_abort(c(
-                "{.arg vp} cannot be a character string when {.arg newpage} is TRUE.",
-                i = "Please provide a viewport object or set {.arg newpage} to FALSE."
-            ))
-        }
-    }
-    if (!is.null(vp)) {
-        if (is.character(vp)) {
-            cur <- grid::current.viewport()$name
-            grid::seekViewport(vp)
-            if (!identical(cur, "ROOT")) on.exit(grid::seekViewport(cur))
-        } else {
-            grid::pushViewport(vp)
-            on.exit(grid::upViewport())
-        }
-    }
-
-    # render the plot
-    try_fetch(
-        grid.draw(x, ...),
-        error = function(e) {
-            if (inherits(e, "simpleError") &&
-                deparse(conditionCall(e)[[1L]]) == "grid.Call") {
-                error_name <- obj_type_friendly(x)
-                if (Sys.getenv("RSTUDIO") == "1") {
-                    cli_abort(c(paste(
-                        "The RStudio {.field Plots} window may be",
-                        "too small to show", error_name
-                    ), i = "Please make the window larger."), parent = e)
-                } else {
-                    cli_abort(c(
-                        "The viewport may be too small to show {error_name}.",
-                        i = "Please make the window larger."
-                    ), parent = e)
-                }
-            }
-            cnd_signal(e)
-        }
-    )
-    invisible(x)
-}
+#' @include alignpatch-ggplot2.R
+local(S7::method(print, alignpatches) <- print.patch_ggplot)
 
 #' @importFrom grid grid.draw
-#' @exportS3Method
-`grid.draw.ggalign::alignpatches` <- function(x, recording = TRUE) {
-    grid.draw(ggalignGrob(x), recording = recording)
-}
+#' @include alignpatch-ggplot2.R
+local(S7::method(grid.draw, alignpatches) <- grid.draw.patch_ggplot)
 
-#' @export
-`ggalign_build.ggalign::alignpatches` <- function(x) x
+S7::method(ggalign_build, alignpatches) <- function(x) x
 
 #' @importFrom ggplot2 find_panel element_render theme theme_get complete_theme
 #' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_cols
 #' @importFrom rlang arg_match0
 #' @importFrom S7 prop
-#' @export
-`ggalign_gtable.ggalign::alignpatches` <- function(x) {
+S7::method(ggalign_gtable, alignpatches) <- function(x) {
     table <- alignpatch(x)$gtable()
-
 
     # ensure theme has no missing value
     theme <- complete_theme(prop(x, "theme") %||% theme_get())
@@ -75,7 +22,7 @@
     titles <- init_object(prop(x, "titles"))
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
-        theme = theme, "plot.title", prop(titles, "title"),
+        theme, "plot.title", prop(titles, "title"),
         margin_y = TRUE, margin_x = TRUE
     )
     title_height <- grobHeight(title)
@@ -103,14 +50,14 @@
         theme$plot.title.position %||% "panel",
         c("panel", "plot"),
         arg_nm = "plot.title.position",
-        error_call = quote(theme())
+        error_call = quote(layout_theme())
     )
 
     caption_pos <- arg_match0(
         theme$plot.caption.position %||% "panel",
         values = c("panel", "plot"),
         arg_nm = "plot.caption.position",
-        error_call = quote(theme())
+        error_call = quote(layout_theme())
     )
     if (title_pos == "panel") {
         title_l <- panel_pos$l
@@ -144,9 +91,7 @@
         name = "caption",
         t = -1, b = -1, l = caption_l, r = caption_r, clip = "off"
     )
-    if (matrix_respect) {
-        table$respect <- rbind(0L, 0L, table$respect, 0L)
-    }
+    if (matrix_respect) table$respect <- rbind(0L, 0L, table$respect, 0L)
 
     # add margins --------------------------------------
     plot_margin <- calc_element("plot.margin", theme)
@@ -154,15 +99,17 @@
     table <- gtable_add_rows(table, plot_margin[1L], 0L)
     table <- gtable_add_rows(table, plot_margin[3L])
     if (matrix_respect) table$respect <- rbind(0L, table$respect, 0L)
+
     table <- gtable_add_cols(table, plot_margin[2L], 0L)
     table <- gtable_add_cols(table, plot_margin[4L])
     if (matrix_respect) table$respect <- cbind(0L, table$respect, 0L)
 
     # add background -----------------------------------
-    if (inherits(theme$plot.background, "element")) {
+    if (is_theme_element(theme$plot.background)) {
         table <- gtable_add_grob(table,
             element_render(theme, "plot.background"),
-            t = 1L, l = 1L, b = -1L, r = -1L, name = "background", z = -Inf
+            t = 1L, l = 1L, b = -1L, r = -1L, name = "background",
+            z = 0
         )
         table$layout <- table$layout[
             c(nrow(table$layout), 1:(nrow(table$layout) - 1L)),

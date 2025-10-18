@@ -273,9 +273,8 @@ setup_patch_title <- function(table, patch_title, theme) {
 #' @importFrom ggplot2 update_ggplot is_waiver
 S7::method(update_ggplot, list(patch_title, ggplot2::class_ggplot)) <-
     function(object, plot, objectname, ...) {
-        plot$ggalign_patch_title <- plot$ggalign_patch_title %||%
-            patch_title()
-        plot$ggalign_patch_title <- plot$ggalign_patch_title + object
+        plot$ggalign_patch_title <- (plot$ggalign_patch_title %||%
+            patch_title()) + object
         if (!inherits(plot, "patch_ggplot")) {
             plot <- add_class(plot, "patch_ggplot")
         }

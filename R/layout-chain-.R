@@ -610,7 +610,7 @@ S7::method(layout_propagate, list(ChainLayout, quad_scope)) <-
         layout_propagate(layout, object, objectname)
     }
 
-chain_and_add <- function(layout, object, objectname) {
+chain_propagate <- function(layout, object, objectname) {
     layout@box_list <- lapply(layout@box_list, function(box) {
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, force = FALSE)
@@ -625,13 +625,13 @@ chain_and_add <- function(layout, object, objectname) {
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
-    chain_and_add
+    chain_propagate
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_propagate, list(ChainLayout, S3_class_theme)) <-
     function(layout, object, objectname) {
-        ans <- chain_and_add(layout, object, objectname)
+        ans <- chain_propagate(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme
         # when using `&` to add the theme object.
         ans@theme <- ggfun("add_theme")(ans@theme, object)

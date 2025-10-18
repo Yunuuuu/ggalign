@@ -182,19 +182,20 @@ alignpatch.NULL <- function(x) NULL
 #' Patch object
 #'
 #' @description
-#' Represents a single patch within an [`alignpatches()`] layout. This object
-#' defines operations for aligning plots, managing panel sizes, and handling
-#' guide legends.
+#' Represents the layout manager for a single subplot within a composite plot.
+#' This object defines operations for aligning the subplot, managing panel
+#' sizes, and handling guide legends. The subplot itself is external; the
+#' `Patch` object only provides the interface to manipulate and arrange it
+#' within a larger layout.
 #'
 #' @usage NULL
 #' @format NULL
 #'
 #' @details
-#' `Patch` is a [`ggproto()`][ggplot2::ggproto] object that provides the
-#' core methods used by [`alignpatches()`] for arranging and aligning subplots.
-#' Each patch can manage its own panel dimensions, guides, and gtable layout,
-#' and it can be extended to support additional plot types for alignment within
-#' [`alignpatches()`].
+#' In `alignpatches()`, each subplot is regarded as a `patch`, and **a
+#' corresponding `Patch` object is required** for proper alignment and layout
+#' operations. `Patch` is a [`ggproto()`][ggplot2::ggproto] object that provides
+#' the core methods for arranging and aligning subplots.
 #'
 #' @importFrom ggplot2 ggproto find_panel
 #' @importFrom grid unit unit.c
@@ -203,16 +204,10 @@ alignpatch.NULL <- function(x) NULL
 Patch <- ggproto(
     "ggalign::Patch", NULL,
 
-    # Fields added later in `alignpatches$gtable()`
-
-    #' @field gt
-    #' The gtable representation of the plot
-    gt = NULL,
-
-    #' @field guides
-    #'
-    #' Border specifications of the plot
-    borders = NULL,
+    # @field plot
+    #
+    # The input subplot, stored in the `plot` field by convention.
+    plot = NULL,
 
     #' @field guides
     #' **Description**
@@ -221,10 +216,10 @@ Patch <- ggproto(
     #' collected by the parent [`alignpatches()`] object.
     #'
     #' This per-plot method allows each subplot to modify the `guides` passed to
-    #' the `self$$collect_guides()` method, ensuring that plots along the border
-    #' collect their guide legends correctly. Such fine-grained control cannot
-    #' be achieved when relying on only a single `self$$collect_guides()`
-    #' method.
+    #' the `self$decompose_guides()` method, ensuring that plots along the
+    #' border collect their guide legends correctly. Such fine-grained control
+    #' cannot be achieved when relying on only a single
+    #' `self$decompose_guides()` method.
     #'
     #' **Arguments**
     #' - `guides`: The `guides` argument passed from the parent
@@ -244,35 +239,38 @@ Patch <- ggproto(
     #' [`standardized gtable`][standardized_gtable] object.
     #'
     #' **Arguments**
+    #' - `theme`: The global [`theme`][ggplot2::theme] of the parent
+    #'   [`alignpatches()`] object.
     #' - `guides`: Specifies which sides of guide legends should be collected by
     #'   the parent [`alignpatches()`] object. In most cases, this is the value
     #'   returned by the subplot's `self$guides()` method. For plots along the
     #'   border, any guide legends on that side will always be collected if any
     #'   legends on that side of any subplot are being collected.
-    #' - `theme`: The global [`theme`][ggplot2::theme] of the parent
-    #'   [`alignpatches()`] object.
     #' - `tagger`: Either `NULL` (no tagging) or a `LayoutTagger` object that
     #'   provides a `$tag_table` method (accepting the `gtable` and `theme`)
     #'   used to add tag.
     #'
     #' **Value**
-    #' A standardized `gtable` object representing the plot layout.
+    #' A standardized [`gtable`][gtable::gtable] object representing the plot
+    #' layout.
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         cli_abort("{.fn gtable} method is not defined")
     },
 
-    #' @field collect_guides
+    #' @field decompose_guides
     #' **Description**
     #'
-    #' (Optional method) Collects guide legends from the `self$gt` and
-    #' optionally removes the space they occupy.
+    #' (Optional method) Collects guide legends and optionally removes the space
+    #' they occupy.
     #'
     #' This method extracts guide legends based on the sides specified in the
     #' `guides` argument. After collecting the guides, the corresponding space
-    #' in the the `self$gt` is removed to free up space, except for guides
+    #' in the the `gt` is removed to free up space, except for guides
     #' placed `inside` the panel.
     #'
     #' **Arguments**
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$gtable()`.
     #' - `guides`: Specifies which sides of guide legends should be collected by
     #'   the parent [`alignpatches()`] object. In most cases, this is the value
     #'   returned by the subplot's `self$guides()` method. For plots along the
@@ -280,14 +278,15 @@ Patch <- ggproto(
     #'   legends on that side of any subplot are being collected.
     #'
     #' **Value**
-    #' A named list of collected guide grobs, with names corresponding to the
-    #' sides specified in `guides`.
-    collect_guides = function(self, guides) {
-        if (is.null(guides)) return(list()) # styler: off
-        gt <- self$gt
-
+    #' A list with:
+    #' - `gt`: The updated gtable with guide legends removed (if applicable).
+    #' - `guides`: A named list of collected guide grobs corresponding to the
+    #'   sides specified in `guides` (or `NULL` if absent).
+    decompose_guides = function(self, gt, guides) {
         # By default we only consider gtable has guide legend box
-        if (!is.gtable(gt)) return(list()) # styler: off
+        if (is.null(guides) || !is.gtable(gt)) {
+            return(list(gt = gt, guides = list()))
+        }
 
         layout <- .subset2(gt, "layout")
         grobs <- .subset2(gt, "grobs")
@@ -340,8 +339,7 @@ Patch <- ggproto(
             }
         }
         if (length(removed)) gt <- subset_gt(gt, -removed, trim = FALSE)
-        self$gt <- gt
-        collected_guides
+        list(gt = gt, guides = collected_guides)
     },
 
     #' @field align_panel
@@ -351,7 +349,7 @@ Patch <- ggproto(
     #' adjusted when aligning panels, as long as their border sizes are
     #' consistent. However, for gtables with a fixed aspect ratio, this method
     #' adjusts the panel width and height based on user input and the dimensions
-    #' of the underlying gtable (`self$gt`) to ensure proper alignment.
+    #' of the underlying gtable (`gt`) to ensure proper alignment.
     #'
     #' When the internal *numeric value* of either `panel_width` or
     #' `panel_height` is `NA` (i.e., `is.na(as.numeric(...))`), that dimension
@@ -359,9 +357,11 @@ Patch <- ggproto(
     #' single-panel layouts when `respect = TRUE`.
     #'
     #' **Arguments**
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$decompose_guides()`.
     #' - `panel_width`/`panel_height`: Unit objects specifying the desired panel
     #'   size. If the internal numeric value of either is `NA`, the size is
-    #'   computed from the gtable (`self$gt`).
+    #'   computed from the gtable (`gt`).
     #'
     #' **Value**
     #' A list with components:
@@ -370,26 +370,27 @@ Patch <- ggproto(
     #' - `respect`: If `TRUE`, the aspect ratio was enforced
     #'
     #' @importFrom ggplot2 find_panel
-    align_panel = function(self, panel_width, panel_height) {
-        if (!is.gtable(self$gt)) {
+    #' @importFrom gtable is.gtable
+    align_panel = function(self, gt, panel_width, panel_height) {
+        # By default we only consider gtable has panel area
+        if (!is.gtable(gt)) {
             return(list(width = panel_width, height = panel_height))
         }
-        panel_pos <- find_panel(self$gt)
+        panel_pos <- find_panel(gt)
         rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
         cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
         # Only apply aspect-ratio respect when there is a single facet panel
         if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
-            respect <- .subset2(self$gt, "respect")
-
+            respect <- is_respect(gt)
             # Continue only if 'respect' is enabled
-            if (isTRUE(respect) || (is.matrix(respect) && any(respect == 1L))) {
+            if (respect) {
                 # Determine which dimension(s) can be inferred
                 can_set_width <- is.na(as.numeric(panel_width))
                 can_set_height <- is.na(as.numeric(panel_height))
 
                 # Extract intrinsic panel dimensions from the gtable
-                w <- .subset2(self$gt, "widths")[LEFT_BORDER + 1L]
-                h <- .subset2(self$gt, "heights")[TOP_BORDER + 1L]
+                w <- .subset2(gt, "widths")[cols[1L]]
+                h <- .subset2(gt, "heights")[rows[1L]]
 
                 # Infer dimensions while maintaining aspect ratio
                 if (can_set_width && can_set_height) {
@@ -408,7 +409,37 @@ Patch <- ggproto(
         }
         list(width = panel_width, height = panel_height, respect = respect)
     },
-    get_sizes = function(self, free = NULL, gt = self$gt) {
+
+    #' @field get_sizes
+    #' **Description**
+    #'
+    #' (Optional method) In most cases, panel sizes do not need to be manually
+    #' adjusted when aligning panels, as long as their border sizes are
+    #' consistent. However, for gtables with a fixed aspect ratio, this method
+    #' adjusts the panel width and height based on user input and the dimensions
+    #' of the underlying gtable (`gt`) to ensure proper alignment.
+    #'
+    #' When the internal *numeric value* of either `panel_width` or
+    #' `panel_height` is `NA` (i.e., `is.na(as.numeric(...))`), that dimension
+    #' is inferred from the gtable while maintaining the aspect ratio for
+    #' single-panel layouts when `respect = TRUE`.
+    #'
+    #' **Arguments**
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$decompose_guides()`.
+    #' - `panel_width`/`panel_height`: Unit objects specifying the desired panel
+    #'   size. If the internal numeric value of either is `NA`, the size is
+    #'   computed from the gtable (`gt`).
+    #'
+    #' **Value**
+    #' A list with components:
+    #' - `width`: Final panel width as a unit object
+    #' - `height`: Final panel height as a unit object
+    #' - `respect`: If `TRUE`, the aspect ratio was enforced
+    #'
+    #' @importFrom ggplot2 find_panel
+    #' @importFrom gtable is.gtable
+    get_sizes = function(self, gt, free = NULL) {
         ans <- .subset2(gt, "heights")
         if (any(free == "t")) {
             top <- unit(rep_len(0, TOP_BORDER), "mm")
@@ -436,8 +467,26 @@ Patch <- ggproto(
             heights = unit.c(top, unit(0, "mm"), bottom)
         )
     },
-    align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
-                            gt = self$gt) {
+
+    #' @field align_border
+    #' **Description**
+    #'
+    #' (Optional method) This method modifies the top, left, bottom, and right
+    #' border sizes of the underlying gtable (`gt`) by replacing corresponding
+    #' entries in its `heights` and `widths` vectors..
+    #'
+    #' **Arguments**
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$decompose_guides()`.
+    #' - `t`, `l`, `b`, `r`: Optional numeric vectors specifying new sizes for
+    #'   the top, left, bottom, and right borders, respectively. Each vector
+    #'   replaces the corresponding entries in `gt$heights` or `gt$widths`.
+    #'
+    #' **Value**
+    #' A modified [`gtable`][gtable::gtable] object.
+    #' @importFrom gtable is.gtable
+    align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
+        if (!is.gtable(gt)) return(gt) # styler: off
         if (!is.null(t)) gt$heights[seq_along(t)] <- t
         if (!is.null(l)) gt$widths[seq_along(l)] <- l
         if (!is.null(b)) {
@@ -451,7 +500,7 @@ Patch <- ggproto(
         gt
     },
 
-    #' @field place_gt
+    #' @field place
     #'
     #' **Description**
     #' (Optional method) Inserts the patch's gtable (including optional
@@ -466,53 +515,81 @@ Patch <- ggproto(
     #' **Arguments**
     #' - `gtable`: the target canvas gtable into which the patch will be
     #'   inserted.
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$align_border()`.
     #' - `t`, `l`, `b`, `r`: Integer positions (top, left, bottom, right)
     #'   specifying where to insert the patch in the target gtable.
-    #' - `bg_name`: Name to assign to the background grob, if present.
-    #' - `plot_name`: Name to assign to the plot grob. It is important to use
-    #'   this name consistently when inserting the plot gtable.
+    #' - `i`: Index of the current patch, used to generate unique grob names.
     #' - `bg_z`: Z-order for the background grob (default `1L`).
     #' - `plot_z`: Z-order for the plot grob (default `2L`).
     #'
     #' **Details**
-    #' - If the patch contains a background grob named `"background"`, it is
-    #'   separated from the main plot and inserted first, followed by the plot
-    #'   grob.
+    #' - If the patch includes a grob named `"background"`, it is separated from
+    #'   the main plot and inserted independently from the plot grob.
     #' - If no background is present, the entire gtable is inserted as the plot
     #'   grob.
     #'
     #' **Value**
-    #' - The modified target canvas gtable with the patch's gtable added.
-    place_gt = function(self, gtable, t, l, b, r,
-                        bg_name, plot_name, bg_z, plot_z) {
-        gt <- self$gt
-        background <- .subset2(.subset2(gt, "layout"), "name") == "background"
-        if (any(background)) {
-            bg <- .subset(.subset2(gt, "grobs"), background)
-            gt <- subset_gt(gt, !background, trim = FALSE)
-            gtable <- gtable_add_grob(
-                gtable,
-                grobs = bg,
-                t = t, l = l, b = b, r = r,
-                name = bg_name, z = bg_z
-            )
+    #' The modified target canvas gtable with the patch's gtable added.
+    place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
+        if (is.gtable(gt)) {
+            components <- self$decompose_bg(gt)
+            if (!is.null(.subset2(components, "bg"))) {
+                gtable <- self$place_bg(
+                    gtable, .subset2(components, "bg"),
+                    t, l, b, r, i, bg_z
+                )
+            }
+            gt <- .subset2(components, "gt")
         }
+        self$place_gt(gtable, gt, t, l, b, r, i, plot_z)
+    },
+
+    #' @field decompose_bg
+    #'
+    #' **Description**
+    #' Separates the background grob (if present) from the main gtable.
+    #'
+    #' **Value**
+    #' A list with:
+    #' - `bg`: The background grob (or `NULL` if absent)
+    #' - `gt`: The gtable with background removed
+    decompose_bg = function(self, gt) {
+        layout <- .subset2(gt, "layout")
+        background <- layout$name == "background"
+        if (!any(background)) {
+            return(list(bg = NULL, gt = gt))
+        }
+        bg <- .subset(.subset2(gt, "grobs"), background)
+        gt <- subset_gt(gt, !background, trim = FALSE)
+        list(bg = bg, gt = gt)
+    },
+
+    #' @field place_bg
+    #'
+    #' **Description**
+    #' Adds the background grob into the target gtable.
+    place_bg = function(self, gtable, bg, t, l, b, r, i, z = 1L) {
+        gtable_add_grob(
+            gtable,
+            grobs = bg,
+            t = t, l = l, b = b, r = r,
+            name = paste("plot", i, "background", sep = "-"),
+            z = z
+        )
+    },
+
+    #' @field place_gt
+    #'
+    #' **Description**
+    #' Adds the main plot gtable into the target gtable.
+    place_gt = function(self, gtable, gt, t, l, b, r, i, z = 2L) {
         gtable_add_grob(
             gtable,
             grobs = gt,
             t = t, l = l, b = b, r = r,
-            name = plot_name, z = plot_z
+            name = paste("plot", i, sep = "-"),
+            z = z
         )
-    },
-    free_border = function(self, borders, gt = self$gt) {
-        cli_abort("{.fn free_border} method is not defined")
-    },
-    align_free_border = function(self, borders,
-                                 t = NULL, l = NULL, b = NULL, r = NULL,
-                                 gt = self$gt) {
-        cli_abort("{.fn align_free_border} method is not defined")
-    },
-    free_lab = function(self, labs, gt = self$gt) {
-        cli_abort("{.fn free_lab} method is not defined")
     }
 )

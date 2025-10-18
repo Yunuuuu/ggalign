@@ -5,15 +5,18 @@
 
 ---
 
-    `@order` must be a whole number, not the string "a".
+    <ggalign::layer_order> object properties are invalid:
+    - @order must be <integer> or <double>, not <character>
 
 ---
 
-    `@order` must be a whole number, not `NA`.
+    <ggalign::layer_order> object properties are invalid:
+    - @order must be <integer> or <double>, not <logical>
 
 ---
 
-    `@order` must be a whole number, not the number 1.5.
+    <ggalign::layer_order> object properties are invalid:
+    - @order must be a single integer number
 
 # `geom_gshape()` works well
 

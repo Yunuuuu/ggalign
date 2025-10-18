@@ -159,7 +159,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         # prepare data for the plot ------------------------------
         plot <- gguse_data(plot, plot_data)
 
-        plot$ggalign_link_data <- list(
+        attr(plot, "ggalign_link_data") <- list(
             full_data1 = full_data1,
             full_data2 = full_data2,
             link_index = link_index,
@@ -168,7 +168,7 @@ CrossMark <- ggproto("CrossMark", CraftCross,
             draw = .subset2(mark, "draw"),
             obs_size = self$obs_size
         )
-        add_class(plot, "ggalign_mark_plot", "patch_ggplot")
+        plot
     },
     finish_plot = function(self, plot, schemes, theme) {
         plot <- plot_add_scheme(plot, schemes)
@@ -184,17 +184,14 @@ CrossMark <- ggproto("CrossMark", CraftCross,
         ) %||% unit(0, "mm")
 
         # save spacing for usage
-        plot$ggalign_link_data$spacing1 <-
-            plot$ggalign_link_data$spacing2 <- spacing
+        attr(plot, "ggalign_link_data")$spacing1 <-
+            attr(plot, "ggalign_link_data")$spacing2 <- spacing
 
-        plot + theme_recycle()
+        plot <- plot + theme_recycle()
+        add_class(plot, "ggalign_mark")
     },
     summary = function(self, plot) {
         header <- ggproto_parent(CraftCross, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )
-
-mark_use_facet <- function(plot, facet) {
-
-}

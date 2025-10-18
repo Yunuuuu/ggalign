@@ -307,50 +307,43 @@ mark_triangle <- function(..., orientation = "plot", .element = NULL) {
 }
 
 #####################################################
-#' @importFrom ggplot2 ggproto
+#' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.ggalign_mark_plot <- function(x) {
-    ggproto(NULL, PatchAlignMark, plot = x)
+alignpatch.ggalign_mark <- function(x) {
+    link_data <- attr(x, "ggalign_link_data", exact = TRUE)
+    attr(x, "ggalign_link_data") <- NULL
+    Parent <- NextMethod()
+    ggproto(
+        "PatchAlignMark", Parent,
+        link_data = link_data,
+        get_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$get_sizes(gt, .tlbr)
+        },
+        align_border = function(self, gt, t = NULL, l = NULL,
+                                b = NULL, r = NULL) {
+            gt
+        },
+        place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
+            ggproto_parent(Parent, self)$place(
+                gtable, gt,
+                t + TOP_BORDER, l + LEFT_BORDER,
+                t + TOP_BORDER, l + LEFT_BORDER,
+                i, bg_z, plot_z
+            )
+        },
+        place_gt = function(self, gtable, gt, t, l, b, r, i, z = 2L) {
+            ggproto_parent(Parent, self)$place_gt(
+                gtable, markGrob(gt, self$link_data),
+                t, l, b, r, i, z
+            )
+        }
+    )
 }
 
 #' @importFrom grid gTree
 markGrob <- function(grob, link, ...) {
     gTree(grob = grob, link = link, ..., cl = "markGrob")
 }
-
-#' @importFrom ggplot2 ggproto ggproto_parent
-#' @include alignpatch-ggplot2.R
-PatchAlignMark <- ggproto(
-    "PatchAlignMark", PatchGgplot,
-    place_gt = function(self, gtable, t, l, b, r,
-                        bg_name, plot_name, bg_z, plot_z) {
-        gt <- self$gt
-        background <- .subset2(.subset2(gt, "layout"), "name") == "background"
-        if (any(background)) {
-            bg <- .subset(.subset2(gt, "grobs"), background)
-            gt <- subset_gt(gt, !background, trim = FALSE)
-            gtable <- gtable_add_grob(
-                gtable,
-                grobs = bg,
-                t = t + TOP_BORDER, l = l + LEFT_BORDER,
-                name = bg_name, z = bg_z
-            )
-        }
-        gtable_add_grob(
-            gtable,
-            grobs = markGrob(gt, self$plot$ggalign_link_data),
-            t = t + TOP_BORDER, l = l + LEFT_BORDER,
-            name = plot_name, z = plot_z
-        )
-    },
-    get_sizes = function(self, free = NULL, gt = self$gt) {
-        ggproto_parent(PatchGgplot, self)$get_sizes(.tlbr, gt = gt)
-    },
-    align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
-                            gt = self$gt) {
-        gt # free from alignment
-    }
-)
 
 # preDraw:
 #  - makeContext

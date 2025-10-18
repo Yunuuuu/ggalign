@@ -1,26 +1,23 @@
-#' @export
-`ggalign_build.ggalign::CircleLayout` <- function(x) {
-    x <- init_object(x)
-    circle_build(x)
+S7::method(ggalign_build, CircleLayout) <- function(x) {
+    init_object(x)
 }
 
-#' @importFrom utils packageVersion
-#' @importFrom ggplot2 find_panel calc_element ggproto ggplotGrob ggplot_build
-#' @importFrom ggplot2 theme complete_theme
+#' @importFrom ggplot2 find_panel ggproto ggplot_build
+#' @importFrom ggplot2 theme complete_theme is_theme_element calc_element
 #' @importFrom gtable gtable_add_grob gtable_add_padding is.gtable
 #' @importFrom grid unit viewport editGrob
 #' @importFrom rlang is_empty arg_match0
 #' @importFrom S7 prop props
-circle_build <- function(circle, schemes = NULL, theme = NULL) {
-    schemes <- inherit_parent_layout_schemes(circle, schemes)
-    theme <- inherit_parent_layout_theme(circle, theme)
-    titles <- init_object(prop(circle, "titles"))
+S7::method(ggalign_gtable, CircleLayout) <- function(x) {
+    schemes <- prop(x, "schemes")
+    theme <- prop(x, "theme")
+    titles <- init_object(prop(x, "titles"))
     # for empty plot
     base <- ggplot() +
         theme +
         ggplot2::labs(!!!props(titles))
-    if (is_empty(plot_list <- circle@box_list)) {
-        return(ggplotGrob(base))
+    if (is_empty(plot_list <- x@box_list)) {
+        return(ggalign_gtable(base))
     }
 
     # we remove the plot without actual plot area
@@ -28,7 +25,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
-    if (is_empty(plot_list)) return(ggplotGrob(base)) # styler: off
+    if (is_empty(plot_list)) return(ggalign_gtable(base)) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plot_list, function(plot) {
@@ -37,7 +34,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     plot_list <- .subset(plot_list, make_order(plot_order))
 
     # plot coordinate
-    if (is.null(input_radial <- circle@radial)) {
+    if (is.null(input_radial <- x@radial)) {
         radial <- coord_circle(theta = "x", r.axis.inside = TRUE)
     } else {
         radial <- ggproto(NULL, input_radial, theta = "x", r_axis_inside = TRUE)
@@ -75,7 +72,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # inner radius of each track.
     N <- length(plot_list)
     index <- seq_len(N)
-    direction <- circle@direction
+    direction <- x@direction
     if (identical(direction, "outward")) {
         plot_sizes <- inner_radius + cumsum(plot_track)
     } else {
@@ -90,7 +87,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     plot_inner <- plot_sizes - plot_track
     guides <- vector("list", N)
     plot_table <- NULL
-    domain <- domain_init(circle@domain)
+    domain <- domain_init(x@domain)
     for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
@@ -100,7 +97,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         plot <- craftsman$build_plot(plot@plot, domain = domain)
 
         plot <- craftsman$setup_circle_facet(plot, domain,
-            sector_spacing = circle@sector_spacing %||% (pi / 180)
+            sector_spacing = x@sector_spacing %||% (pi / 180)
         )
         plot <- craftsman$setup_circle_coord(plot, radial,
             # https://github.com/tidyverse/ggplot2/issues/6284
@@ -195,7 +192,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     }
 
     # attach the guide legends
-    guides <- collect_guides_list(guides, zeroGrob())
+    guides <- gather_guides(guides, zeroGrob())
     theme$legend.spacing <- theme$legend.spacing %||% unit(0.5, "lines")
     theme$legend.spacing.y <- calc_element("legend.spacing.y", theme)
     theme$legend.spacing.x <- calc_element("legend.spacing.x", theme)
@@ -239,14 +236,14 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
         theme$plot.title.position %||% "panel",
         c("panel", "plot"),
         arg_nm = "plot.title.position",
-        error_call = quote(theme())
+        error_call = quote(layout_theme())
     )
 
     caption_pos <- arg_match0(
         theme$plot.caption.position %||% "panel",
         values = c("panel", "plot"),
         arg_nm = "plot.caption.position",
-        error_call = quote(theme())
+        error_call = quote(layout_theme())
     )
 
     pans <- plot_table$layout[
@@ -291,7 +288,7 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     plot_margin <- calc_element("plot.margin", theme) %||% margin()
     plot_table <- gtable_add_padding(plot_table, plot_margin)
 
-    if (inherits(theme$plot.background, "element")) {
+    if (is_theme_element(theme$plot.background)) {
         plot_table <- gtable_add_grob(plot_table,
             element_render(theme, "plot.background"),
             t = 1, l = 1, b = -1, r = -1, name = "background", z = -Inf
@@ -311,4 +308,25 @@ circle_build <- function(circle, schemes = NULL, theme = NULL) {
     # always add strips columns and/or rows
     plot_table <- add_strips(plot_table, strip_pos)
     setup_patch_title(plot_table, NULL, theme = theme)
+}
+
+#' @importFrom S7 prop
+#' @importFrom ggplot2 ggproto
+S7::method(alignpatch, CircleLayout) <- function(x) {
+    build <- ggalign_build(x)
+    ggproto(NULL, PatchGgplot,
+        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+            # Preserve tag-related theme settings from the original layout
+            # theme. These are intentionally not overridden so that
+            # `PatchAlignpatches` retains full control over tag appearance and
+            # positioning.
+            if (!is.null(theme)) {
+                theme <- prop(build, "theme") +
+                    (tag_theme(theme) + tag_theme(prop(x, "theme")))
+            }
+            gt <- ggalign_gtable(build)
+            if (!is.null(tagger)) gt <- tagger$tag_table(gt, theme)
+            gt
+        }
+    )
 }

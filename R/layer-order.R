@@ -25,13 +25,17 @@ layer_order <- S7::new_class(
         order = S7::new_property(
             S7::class_numeric,
             validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single number")
+                # styler: off
+                if (.rlang_check_number(value, FALSE, allow_na = TRUE,
+                                        allow_infinite = TRUE) != 0L) {
+                    # styler: on
+                    return("must be a single integer number")
                 }
                 if (is.na(value)) {
                     return("cannot be missing (`NA`)")
                 }
-            }
+            },
+            default = 0
         )
     ),
     constructor = function(layer, order = 0) {

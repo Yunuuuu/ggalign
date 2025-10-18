@@ -43,35 +43,10 @@ S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
 #' @name Layout-subset
 local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
 
-local(S7::method(print, LayoutProto) <- `print.ggalign::alignpatches`)
+local(S7::method(print, LayoutProto) <- print.patch_ggplot)
 
 #' @importFrom grid grid.draw
-local(S7::method(grid.draw, LayoutProto) <- `grid.draw.ggalign::alignpatches`)
-
-local(S7::method(alignpatch, LayoutProto) <- function(x) {
-    ggproto(NULL, PatchLayout, layout = x)
-})
-
-#' @importFrom S7 prop<- prop
-PatchLayout <- ggproto(
-    "PatchLayout",
-    PatchAlignpatches,
-    layout = NULL,
-    gtable = function(self, theme = NULL, guides = NULL,
-                      tagger = NULL) {
-        plot <- ggalign_build(self$layout)
-        # Preserve tag-related theme settings from the original layout theme.
-        # These are intentionally not overridden so that `PatchAlignpatches`
-        # retains full control over tag appearance and positioning.
-        if (!is.null(theme)) {
-            prop(plot, "theme") <- prop(plot, "theme") +
-                tag_theme(self$layout@theme)
-        }
-        ggproto_parent(PatchAlignpatches, self)$gtable(
-            theme, guides, tagger, input = plot
-        )
-    }
-)
+local(S7::method(grid.draw, LayoutProto) <- grid.draw.patch_ggplot)
 
 # Used by both `circle_layout()` and `stack_layout()`
 #' @keywords internal
@@ -108,26 +83,7 @@ ChainLayout <- S7::new_class("ChainLayout",
 StackLayout <- S7::new_class(
     "StackLayout", ChainLayout,
     properties = list(
-        sizes = S7::new_property(
-            GridUnit,
-            validator = function(value) {
-                l <- length(value)
-                if (l != 1L && l != 3L) {
-                    return(sprintf(
-                        "must be of length 1 or 3, not length %d", l
-                    ))
-                }
-            },
-            setter = function(self, value) {
-                if ((is_atomic(value) && all(is.na(value))) ||
-                    is.numeric(value)) {
-                    value <- unit(value, "null")
-                }
-                if (is.unit(value)) value <- convert(value, GridUnit)
-                prop(self, "sizes") <- value
-                self
-            }
-        ),
+        sizes = prop_grid_unit("sizes", len = 3L),
         # used by heatmap annotation
         heatmap = S7::new_property(
             S7::class_list,

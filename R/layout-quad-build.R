@@ -1,6 +1,5 @@
 #' @importFrom grid unit.c
-#' @export
-`ggalign_build.ggalign::QuadLayout` <- function(x) {
+S7::method(ggalign_build, QuadLayout) <- function(x) {
     x <- init_object(x)
     patches <- quad_build(x)
     plots <- .subset2(patches, "plots")
@@ -32,8 +31,28 @@
         heights = .subset2(sizes, "height"),
         widths = .subset2(sizes, "width"),
         guides = prop(schemes_get(x@schemes, "scheme_align"), "guides"),
-        theme = x@theme
+        theme = prop(x, "theme")
     ) + prop(x, "titles") + layout_tags(NULL)
+}
+
+#' @importFrom S7 prop<- prop
+#' @importFrom ggplot2 ggproto_parent ggproto
+S7::method(alignpatch, QuadLayout) <- function(x) {
+    plot <- ggalign_build(x)
+    Parent <- alignpatch(plot)
+    ggproto(NULL, Parent,
+        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+            # Preserve tag-related theme settings from the original layout
+            # theme. These are intentionally not overridden so that
+            # `Parent` retains full control over tag appearance and
+            # positioning.
+            if (!is.null(theme)) {
+                prop(self$plot, "theme") <- prop(self$plot, "theme") +
+                    (tag_theme(theme) + tag_theme(prop(x, "theme")))
+            }
+            ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+        }
+    )
 }
 
 quad_build <- function(quad, schemes = NULL, theme = NULL,

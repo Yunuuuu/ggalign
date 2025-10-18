@@ -45,19 +45,20 @@ make_wrap <- function(patch, patch_inset) UseMethod("make_wrap")
 
 make_wrapped_plot <- function(patch, patch_inset) {
     if (prop(patch_inset, "on_top")) {
-        patch$ggalign_wrapped_insets_above <- c(
-            patch$ggalign_wrapped_insets_above, list(patch_inset)
+        attr(patch, "ggalign_wrapped_insets_above") <- c(
+            attr(patch, "ggalign_wrapped_insets_above", exact = TRUE),
+            list(patch_inset)
         )
     } else {
-        patch$ggalign_wrapped_insets_under <- c(
-            patch$ggalign_wrapped_insets_under, list(patch_inset)
+        attr(patch, "ggalign_wrapped_insets_under") <- c(
+            attr(patch, "ggalign_wrapped_insets_under", exact = TRUE),
+            list(patch_inset)
         )
     }
     add_class(patch, "wrapped_plot")
 }
 
-#' @export
-make_wrap.ggplot <- function(patch, patch_inset) {
+S7::method(make_wrap, ggplot2::class_ggplot) <- function(patch, patch_inset) {
     patch <- add_class(patch, "patch_ggplot")
     make_wrap(patch, patch_inset)
 }
@@ -65,27 +66,26 @@ make_wrap.ggplot <- function(patch, patch_inset) {
 #' @export
 make_wrap.patch_ggplot <- make_wrapped_plot
 
-#' @export
-`make_wrap.ggalign::alignpatches` <- make_wrapped_plot
+S7::method(make_wrap, alignpatches) <- make_wrapped_plot
 
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 alignpatch.wrapped_plot <- function(x) {
+    under <- attr(x, "ggalign_wrapped_insets_under", exact = TRUE)
+    attr(x, "ggalign_wrapped_insets_under") <- NULL
+    above <- attr(x, "ggalign_wrapped_insets_above", exact = TRUE)
+    attr(x, "ggalign_wrapped_insets_above") <- NULL
     Parent <- NextMethod()
     ggproto(
         "PatchWrapped", Parent,
-        ggalign_wrapped_insets_under = x$ggalign_wrapped_insets_under,
-        ggalign_wrapped_insets_above = x$ggalign_wrapped_insets_above,
+        under = under,
+        above = above,
         gtable = function(self, theme = NULL, guides = NULL,
-                                tagger = NULL) {
-            ans <- ggproto_parent(Parent, self)$gtable(
-                theme = theme, guides = guides, tagger = tagger
-            )
-            ans <- add_wrapped_insets(
-                ans, self$ggalign_wrapped_insets_under, FALSE
-            )
-            add_wrapped_insets(ans, self$ggalign_wrapped_insets_above, TRUE)
+                          tagger = NULL) {
+            ans <- ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+            ans <- add_wrapped_insets(ans, self$under, FALSE)
+            add_wrapped_insets(ans, self$above, TRUE)
         }
     )
 }

@@ -2,17 +2,22 @@
 #' Each element in the list corresponds to a specific position, containing a
 #' sub-list of guide boxes, where each guide box represents a single plot.
 #' @noRd
-collect_guides_list <- function(guides_list, empty = NULL) {
+gather_guides <- function(guides_list, empty = NULL) {
     ans <- lapply(c(.TLBR, "inside"), function(guide_pos) {
         guides <- lapply(guides_list, function(guides) {
             # IF no guide-box, a single `zeroGrob()` will be given
             # here, we regard each position is a `zeroGrob()`
-            if (is_null_grob(guides)) return(list(guides)) # styler: off
+            if (is.null(guides) || is_null_grob(guides)) {
+                return(list(guides))
+            }
+
+            # A single guide-box or a list of guide box
             o <- .subset2(guides, guide_pos)
             # A guide-box should be a `zeroGrob()` or a `gtable` object
             if (maybe_guide_box(o)) {
                 return(list(o))
             }
+
             # For other grobs, we just removed them silently
             if (is.grob(o)) {
                 list(NULL)

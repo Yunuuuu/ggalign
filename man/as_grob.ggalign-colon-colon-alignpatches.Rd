@@ -23,6 +23,7 @@ Convert Object into a Grob
 Other as_grob: 
 \code{\link{as_grob.Heatmap}()},
 \code{\link{as_grob.formula}()},
+\code{\link{as_grob.gList}()},
 \code{\link{as_grob.ggplot}()},
 \code{\link{as_grob.grob}()},
 \code{\link{as_grob.patch}()},

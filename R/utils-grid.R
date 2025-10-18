@@ -67,6 +67,11 @@ subset_gt <- function(gt, index, trim = TRUE) {
     if (trim) gtable_trim(gt) else gt
 }
 
+is_respect <- function(gt) {
+    respect <- .subset2(gt, "respect")
+    isTRUE(respect) || (is.matrix(respect) && any(respect == 1L))
+}
+
 gtable_trim_widths <- function(gt) {
     layout <- .subset2(gt, "layout")
     w <- range(.subset2(layout, "l"), .subset2(layout, "r"))
@@ -174,39 +179,22 @@ compute_null_unit <- function(x, type = c("width", "height"), unitTo = "mm",
 S3_unit <- S7::new_S3_class("unit")
 
 #' @importFrom grid unit
+#' @importFrom S7 new_object S7_object
 GridUnit <- S7::new_class(
     "GridUnit",
-    properties = list(
-        inner = S7::new_property(S3_unit, default = quote(unit(NA, "null")))
-    )
+    properties = list(inner = S3_unit),
+    constructor = function(...) {
+        inner <- unit(...)
+        new_object(S7_object(), inner = inner)
+    }
 )
 
-#' @importFrom grid is.unit unit
-#' @importFrom S7 convert
-prop_grid_unit <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        GridUnit,
-        validator = function(value) {
-            l <- length(value)
-            if (l != 1L) {
-                return(sprintf("must be of length 1, not length %d", l))
-            }
-        },
-        setter = function(self, value) {
-            value <- value %||% NA
-            if ((is_atomic(value) && all(is.na(value))) || is.numeric(value)) {
-                value <- unit(value, "null")
-            }
-            if (is.unit(value)) value <- convert(value, GridUnit)
-            prop(self, property) <- value
-            self
-        },
-        ...
-    )
-}
-
+local(S7::method(print, GridUnit) <- function(x, ...) print(prop(x, "inner")))
 local(S7::method(length, GridUnit) <- function(x) length(prop(x, "inner")))
+local(S7::method(rep, GridUnit) <- function(x, ...) {
+    prop(x, "inner") <- rep(prop(x, "inner"), ...)
+    x
+})
 
 #' @importFrom S7 convert
 local(S7::method(convert, list(S3_unit, GridUnit)) <- function(from, to) {
@@ -220,9 +208,7 @@ local(S7::method(convert, list(GridUnit, S3_unit)) <- function(from, to) {
 
 #' @importFrom S7 convert prop
 local(S7::method(convert, list(GridUnit, S7::class_numeric)) <-
-    function(from, to) {
-        as.numeric(from)
-    })
+    function(from, to) as.numeric(from))
 
 #' @importFrom S7 prop
 #' @export
@@ -255,3 +241,40 @@ local(S7::method(str, GridUnit) <- function(object, ..., indent.str = " ",
     }
     invisible(object)
 })
+
+#' @importFrom grid is.unit unit
+#' @importFrom rlang is_atomic
+#' @importFrom S7 convert
+prop_grid_unit <- function(property, ..., default = NULL, len = 1L) {
+    force(property)
+    S7::new_property(
+        GridUnit,
+        validator = if (len > 1L) {
+            function(value) {
+                l <- length(value)
+                if (l != 1L && l != len) {
+                    return(sprintf("must be of length %s, not length %d", oxford_or(len, quote = FALSE), l))
+                }
+            }
+        } else {
+            function(value) {
+                l <- length(value)
+                if (l != 1L) {
+                    return(sprintf("must be of length `1`, not length %d", l))
+                }
+            }
+        },
+        setter = function(self, value) {
+            value <- value %||% NA
+            if (!S7_inherits(value, GridUnit)) {
+                # we by default use null unit
+                if (!is.unit(value)) value <- unit(value, "null")
+                value <- convert(value, GridUnit)
+            }
+            prop(self, property) <- value
+            self
+        },
+        ...,
+        default = default %||% GridUnit(NA, "null")
+    )
+}

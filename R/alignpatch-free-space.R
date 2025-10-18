@@ -1,32 +1,27 @@
 #' @param spaces Which border spaces should be removed? A string containing one
 #' or more of `r oxford_and(.tlbr)`.
 #' @return
-#' - `free_space`: A modified version of `plot` with a `free_space` class.
+#' - `free_space`: A modified version of `plot` with a `ggalign_free_space`
+#'   class.
 #' @export
 #' @rdname free
 free_space <- function(plot, spaces = "tlbr") {
+    assert_position(spaces)
     UseMethod("free_space")
 }
 
 #' @export
 free_space.default <- function(plot, spaces = "tlbr") {
-    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    attr(plot, "ggalign_free_spaces") <- spaces
+    add_class(plot, "ggalign_free_space")
 }
 
 #' @export
-free_space.ggplot <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    attr(plot, "free_spaces") <- spaces
-    add_class(plot, "free_space")
-}
-
-#' @export
-`free_space.ggalign::alignpatches` <- free_space.ggplot
-
-#' @export
-free_space.free_align <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    spaces <- setdiff_position(spaces, attr(plot, "free_axes"))
+free_space.ggalign_free_align <- function(plot, spaces = "tlbr") {
+    spaces <- setdiff_position(
+        spaces,
+        attr(plot, "ggalign_free_axes", exact = TRUE)
+    )
     if (!nzchar(spaces)) {
         return(plot)
     }
@@ -34,10 +29,9 @@ free_space.free_align <- function(plot, spaces = "tlbr") {
 }
 
 #' @export
-free_space.free_space <- function(plot, spaces = "tlbr") {
-    assert_position(spaces)
-    attr(plot, "free_spaces") <- union_position(
-        attr(plot, "free_spaces"), spaces
+free_space.ggalign_free_space <- function(plot, spaces = "tlbr") {
+    attr(plot, "ggalign_free_spaces") <- union_position(
+        attr(plot, "ggalign_free_spaces", exact = TRUE), spaces
     )
     plot
 }
@@ -46,16 +40,13 @@ free_space.free_space <- function(plot, spaces = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid unit
 #' @export
-alignpatch.free_space <- function(x) {
+alignpatch.ggalign_free_space <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeSpace", Parent,
-        free_spaces = split_position(attr(x, "free_spaces")),
-        get_sizes = function(self, free = NULL, gt = self$gt) {
-            ggproto_parent(Parent, self)$get_sizes(
-                union(free, self$free_spaces),
-                gt = gt
-            )
+        spaces = split_position(attr(x, "ggalign_free_spaces", exact = TRUE)),
+        get_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$get_sizes(gt, union(free, self$spaces))
         }
     )
 }

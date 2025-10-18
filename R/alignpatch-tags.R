@@ -201,28 +201,17 @@ create_layout_tagger <- function(tags, parent) {
     )
 }
 
-inherit_tag_theme <- function(theme, parent) {
-    for (el in c("plot.tag", "plot.tag.position", "plot.tag.location")) {
-        # This is like doing t1[[item]] <- x, except that it preserves NULLs.
-        # The other form will simply drop NULL values
-        theme[el] <- list(theme[[el]] %||% parent[[el]])
-    }
-    theme
-}
-
+#' @importFrom S7 S7_data
 tag_theme <- function(th) {
     if (is.null(th)) {
-        theme(
-            plot.tag = NULL,
-            plot.tag.position = NULL,
-            plot.tag.location = NULL
-        )
+        theme()
     } else {
-        theme(
-            plot.tag = th$plot.tag,
-            plot.tag.position = th$plot.tag.position,
-            plot.tag.location = th$plot.tag.location
-        )
+        th <- S7_data(th)
+        th <- .subset(th, intersect(
+            c("plot.tag", "plot.tag.position", "plot.tag.location"),
+            names(th)
+        ))
+        theme(!!!th)
     }
 }
 
@@ -321,7 +310,8 @@ table_add_tag <- function(table, label, theme) {
                 table, tag,
                 name = "tag", clip = "off",
                 t = 2L, b = nrow(table) - 1L,
-                l = 2L, r = ncol(table) - 1L
+                l = 2L, r = ncol(table) - 1L,
+                z = 5L
             )
             return(table)
         }
@@ -353,6 +343,7 @@ table_add_tag <- function(table, label, theme) {
     gtable_add_grob(
         table, tag,
         name = "tag", clip = "off",
-        t = place$t, l = place$l, b = place$b, r = place$r
+        t = place$t, l = place$l, b = place$b, r = place$r,
+        z = 5L
     )
 }

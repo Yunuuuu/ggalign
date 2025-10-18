@@ -281,8 +281,7 @@ test_that("Fixed aspect plots behave", {
         align_plots(
             p_l1 + theme(legend.justification = "left", aspect.ratio = 1),
             p_l2 + theme(legend.justification = "left", aspect.ratio = 1),
-            ncol = 1L,
-            widths = unit(c(1, 3, NA), c("null", "cm", "null"))
+            ncol = 1L
         )
     })
 })

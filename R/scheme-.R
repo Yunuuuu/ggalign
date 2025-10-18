@@ -202,7 +202,7 @@ S7::method(scheme_update, list(Schemes, Scheme)) <- function(e1, e2, e2name) {
         cli_abort("{.fn scheme_update} method must return a {.cls scheme}")
     }
     entries[[prop(new_entry, "key")]] <- new_entry
-    attr(e1, "value") <- entries
+    prop(e1, "value", check = FALSE) <- entries
     e1
 }
 
@@ -293,8 +293,7 @@ plot_add_scheme <- S7::new_generic("plot_add_scheme", c("plot", "scheme"))
 
 S7::method(plot_add_scheme, list(S7::class_any, Schemes)) <-
     function(plot, scheme, ...) {
-        entries <- prop(scheme, "entries")
-        for (entry in entries) {
+        for (entry in prop(scheme, "entries")) {
             plot <- plot_add_scheme(plot, entry, ...)
         }
         plot
@@ -308,7 +307,7 @@ S7::method(plot_add_scheme, list(ggplot2::class_ggplot, Scheme)) <-
         )
     }
 
-update_layout_schemes <- function(object, layout, object_name) {
-    layout@schemes <- scheme_update(layout@schemes, object, object_name)
+update_layout_schemes <- function(object, layout, objectname) {
+    layout@schemes <- scheme_update(layout@schemes, object, objectname)
     layout
 }

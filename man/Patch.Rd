@@ -5,34 +5,31 @@
 \alias{Patch}
 \title{Patch object}
 \description{
-Represents a single patch within an \code{\link[=alignpatches]{alignpatches()}} layout. This object
-defines operations for aligning plots, managing panel sizes, and handling
-guide legends.
+Represents the layout manager for a single subplot within a composite plot.
+This object defines operations for aligning the subplot, managing panel
+sizes, and handling guide legends. The subplot itself is external; the
+\code{Patch} object only provides the interface to manipulate and arrange it
+within a larger layout.
 }
 \details{
-\code{Patch} is a \code{\link[ggplot2:ggproto]{ggproto()}} object that provides the
-core methods used by \code{\link[=alignpatches]{alignpatches()}} for arranging and aligning subplots.
-Each patch can manage its own panel dimensions, guides, and gtable layout,
-and it can be extended to support additional plot types for alignment within
-\code{\link[=alignpatches]{alignpatches()}}.
+In \code{alignpatches()}, each subplot is regarded as a \code{patch}, and \strong{a
+corresponding \code{Patch} object is required} for proper alignment and layout
+operations. \code{Patch} is a \code{\link[ggplot2:ggproto]{ggproto()}} object that provides
+the core methods for arranging and aligning subplots.
 }
 \section{Fields}{
 
 \describe{
-\item{\code{gt}}{The gtable representation of the plot}
-
-\item{\code{guides}}{Border specifications of the plot}
-
 \item{\code{guides}}{\strong{Description}
 
 (Optional method) Determines which sides of the guide legends should be
 collected by the parent \code{\link[=alignpatches]{alignpatches()}} object.
 
 This per-plot method allows each subplot to modify the \code{guides} passed to
-the \verb{self$$collect_guides()} method, ensuring that plots along the border
-collect their guide legends correctly. Such fine-grained control cannot
-be achieved when relying on only a single \verb{self$$collect_guides()}
-method.
+the \code{self$decompose_guides()} method, ensuring that plots along the
+border collect their guide legends correctly. Such fine-grained control
+cannot be achieved when relying on only a single
+\code{self$decompose_guides()} method.
 
 \strong{Arguments}
 \itemize{
@@ -52,33 +49,36 @@ should be collected by the parent \code{\link[=alignpatches]{alignpatches()}} ob
 
 \strong{Arguments}
 \itemize{
+\item \code{theme}: The global \code{\link[ggplot2:theme]{theme}} of the parent
+\code{\link[=alignpatches]{alignpatches()}} object.
 \item \code{guides}: Specifies which sides of guide legends should be collected by
 the parent \code{\link[=alignpatches]{alignpatches()}} object. In most cases, this is the value
 returned by the subplot's \code{self$guides()} method. For plots along the
 border, any guide legends on that side will always be collected if any
 legends on that side of any subplot are being collected.
-\item \code{theme}: The global \code{\link[ggplot2:theme]{theme}} of the parent
-\code{\link[=alignpatches]{alignpatches()}} object.
 \item \code{tagger}: Either \code{NULL} (no tagging) or a \code{LayoutTagger} object that
 provides a \verb{$tag_table} method (accepting the \code{gtable} and \code{theme})
 used to add tag.
 }
 
 \strong{Value}
-A standardized \code{gtable} object representing the plot layout.}
+A standardized \code{\link[gtable:gtable]{gtable}} object representing the plot
+layout.}
 
-\item{\code{collect_guides}}{\strong{Description}
+\item{\code{decompose_guides}}{\strong{Description}
 
-(Optional method) Collects guide legends from the \code{self$gt} and
-optionally removes the space they occupy.
+(Optional method) Collects guide legends and optionally removes the space
+they occupy.
 
 This method extracts guide legends based on the sides specified in the
 \code{guides} argument. After collecting the guides, the corresponding space
-in the the \code{self$gt} is removed to free up space, except for guides
+in the the \code{gt} is removed to free up space, except for guides
 placed \code{inside} the panel.
 
 \strong{Arguments}
 \itemize{
+\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
+\code{self$gtable()}.
 \item \code{guides}: Specifies which sides of guide legends should be collected by
 the parent \code{\link[=alignpatches]{alignpatches()}} object. In most cases, this is the value
 returned by the subplot's \code{self$guides()} method. For plots along the
@@ -87,8 +87,12 @@ legends on that side of any subplot are being collected.
 }
 
 \strong{Value}
-A named list of collected guide grobs, with names corresponding to the
-sides specified in \code{guides}.}
+A list with:
+\itemize{
+\item \code{gt}: The updated gtable with guide legends removed (if applicable).
+\item \code{guides}: A named list of collected guide grobs corresponding to the
+sides specified in \code{guides} (or \code{NULL} if absent).
+}}
 
 \item{\code{align_panel}}{\strong{Description}
 
@@ -96,7 +100,7 @@ sides specified in \code{guides}.}
 adjusted when aligning panels, as long as their border sizes are
 consistent. However, for gtables with a fixed aspect ratio, this method
 adjusts the panel width and height based on user input and the dimensions
-of the underlying gtable (\code{self$gt}) to ensure proper alignment.
+of the underlying gtable (\code{gt}) to ensure proper alignment.
 
 When the internal \emph{numeric value} of either \code{panel_width} or
 \code{panel_height} is \code{NA} (i.e., \code{is.na(as.numeric(...))}), that dimension
@@ -105,9 +109,11 @@ single-panel layouts when \code{respect = TRUE}.
 
 \strong{Arguments}
 \itemize{
+\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
+\code{self$decompose_guides()}.
 \item \code{panel_width}/\code{panel_height}: Unit objects specifying the desired panel
 size. If the internal numeric value of either is \code{NA}, the size is
-computed from the gtable (\code{self$gt}).
+computed from the gtable (\code{gt}).
 }
 
 \strong{Value}
@@ -118,7 +124,55 @@ A list with components:
 \item \code{respect}: If \code{TRUE}, the aspect ratio was enforced
 }}
 
-\item{\code{place_gt}}{\strong{Description}
+\item{\code{get_sizes}}{\strong{Description}
+
+(Optional method) In most cases, panel sizes do not need to be manually
+adjusted when aligning panels, as long as their border sizes are
+consistent. However, for gtables with a fixed aspect ratio, this method
+adjusts the panel width and height based on user input and the dimensions
+of the underlying gtable (\code{gt}) to ensure proper alignment.
+
+When the internal \emph{numeric value} of either \code{panel_width} or
+\code{panel_height} is \code{NA} (i.e., \code{is.na(as.numeric(...))}), that dimension
+is inferred from the gtable while maintaining the aspect ratio for
+single-panel layouts when \code{respect = TRUE}.
+
+\strong{Arguments}
+\itemize{
+\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
+\code{self$decompose_guides()}.
+\item \code{panel_width}/\code{panel_height}: Unit objects specifying the desired panel
+size. If the internal numeric value of either is \code{NA}, the size is
+computed from the gtable (\code{gt}).
+}
+
+\strong{Value}
+A list with components:
+\itemize{
+\item \code{width}: Final panel width as a unit object
+\item \code{height}: Final panel height as a unit object
+\item \code{respect}: If \code{TRUE}, the aspect ratio was enforced
+}}
+
+\item{\code{align_border}}{\strong{Description}
+
+(Optional method) This method modifies the top, left, bottom, and right
+border sizes of the underlying gtable (\code{gt}) by replacing corresponding
+entries in its \code{heights} and \code{widths} vectors..
+
+\strong{Arguments}
+\itemize{
+\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
+\code{self$decompose_guides()}.
+\item \code{t}, \code{l}, \code{b}, \code{r}: Optional numeric vectors specifying new sizes for
+the top, left, bottom, and right borders, respectively. Each vector
+replaces the corresponding entries in \code{gt$heights} or \code{gt$widths}.
+}
+
+\strong{Value}
+A modified \code{\link[gtable:gtable]{gtable}} object.}
+
+\item{\code{place}}{\strong{Description}
 (Optional method) Inserts the patch's gtable (including optional
 background) into the target canvas gtable.
 
@@ -132,28 +186,41 @@ in the target gtable, and \code{bg_z} / \code{plot_z} define the stacking order
 \itemize{
 \item \code{gtable}: the target canvas gtable into which the patch will be
 inserted.
+\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
+\code{self$align_border()}.
 \item \code{t}, \code{l}, \code{b}, \code{r}: Integer positions (top, left, bottom, right)
 specifying where to insert the patch in the target gtable.
-\item \code{bg_name}: Name to assign to the background grob, if present.
-\item \code{plot_name}: Name to assign to the plot grob. It is important to use
-this name consistently when inserting the plot gtable.
+\item \code{i}: Index of the current patch, used to generate unique grob names.
 \item \code{bg_z}: Z-order for the background grob (default \code{1L}).
 \item \code{plot_z}: Z-order for the plot grob (default \code{2L}).
 }
 
 \strong{Details}
 \itemize{
-\item If the patch contains a background grob named \code{"background"}, it is
-separated from the main plot and inserted first, followed by the plot
-grob.
+\item If the patch includes a grob named \code{"background"}, it is separated from
+the main plot and inserted independently from the plot grob.
 \item If no background is present, the entire gtable is inserted as the plot
 grob.
 }
 
 \strong{Value}
+The modified target canvas gtable with the patch's gtable added.}
+
+\item{\code{decompose_bg}}{\strong{Description}
+Separates the background grob (if present) from the main gtable.
+
+\strong{Value}
+A list with:
 \itemize{
-\item The modified target canvas gtable with the patch's gtable added.
+\item \code{bg}: The background grob (or \code{NULL} if absent)
+\item \code{gt}: The gtable with background removed
 }}
+
+\item{\code{place_bg}}{\strong{Description}
+Adds the background grob into the target gtable.}
+
+\item{\code{place_gt}}{\strong{Description}
+Adds the main plot gtable into the target gtable.}
 }}
 
 \keyword{datasets}

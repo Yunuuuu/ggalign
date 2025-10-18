@@ -28,6 +28,7 @@ Convert Object into a Grob
 
 \itemize{
 \item \code{\link[=as_grob.grob]{as_grob.grob()}}
+\item \code{\link[=as_grob.gList]{as_grob.gList()}}
 \item \code{\link[=as_grob.patch_ggplot]{as_grob.patch_ggplot()}}
 \item \code{\link[=as_grob.ggplot]{as_grob.ggplot()}}
 \item \code{\link[=as_grob.ggalign::alignpatches]{as_grob.ggalign::alignpatches()}}
@@ -47,6 +48,7 @@ Convert Object into a Grob
 Other as_grob: 
 \code{\link{as_grob.Heatmap}()},
 \code{\link{as_grob.formula}()},
+\code{\link{as_grob.gList}()},
 \code{\link{as_grob.ggalign::alignpatches}()},
 \code{\link{as_grob.ggplot}()},
 \code{\link{as_grob.grob}()},

@@ -1,22 +1,72 @@
+#' @importFrom grid grid.draw
+#' @importFrom rlang try_fetch cnd_signal
 #' @export
-ggalign_gtable.ggplot <- function(x) alignpatch(x)$gtable()
+print.patch_ggplot <- function(x, newpage = is.null(vp),
+                               vp = NULL, ...) {
+    ggplot2::set_last_plot(x)
+    if (newpage) {
+        grid::grid.newpage()
+        if (is.character(vp)) {
+            cli_abort(c(
+                "{.arg vp} cannot be a character string when {.arg newpage} is TRUE.",
+                i = "Please provide a viewport object or set {.arg newpage} to FALSE."
+            ))
+        }
+    }
+    if (!is.null(vp)) {
+        if (is.character(vp)) {
+            cur <- grid::current.viewport()$name
+            grid::seekViewport(vp)
+            if (!identical(cur, "ROOT")) on.exit(grid::seekViewport(cur))
+        } else {
+            grid::pushViewport(vp)
+            on.exit(grid::upViewport())
+        }
+    }
 
-#' @export
-ggalign_build.ggplot <- function(x) x
-
-##################################################
-#' @export
-#' @include alignpatch-build.R
-print.patch_ggplot <- `print.ggalign::alignpatches`
+    # render the plot
+    try_fetch(
+        grid.draw(x, ...),
+        error = function(e) {
+            if (inherits(e, "simpleError") &&
+                deparse(conditionCall(e)[[1L]]) == "grid.Call") {
+                error_name <- obj_type_friendly(x)
+                if (Sys.getenv("RSTUDIO") == "1") {
+                    cli_abort(c(paste(
+                        "The RStudio {.field Plots} window may be",
+                        "too small to show", error_name
+                    ), i = "Please make the window larger."), parent = e)
+                } else {
+                    cli_abort(c(
+                        "The viewport may be too small to show {error_name}.",
+                        i = "Please make the window larger."
+                    ), parent = e)
+                }
+            }
+            cnd_signal(e)
+        }
+    )
+    invisible(x)
+}
 
 #' @importFrom grid grid.draw
 #' @exportS3Method
-grid.draw.patch_ggplot <- `grid.draw.ggalign::alignpatches`
+grid.draw.patch_ggplot <- function(x, recording = TRUE) {
+    grid.draw(ggalignGrob(x), recording = recording)
+}
+
+##################################################
+S7::method(ggalign_gtable, ggplot2::class_ggplot) <- function(x) {
+    alignpatch(x)$gtable()
+}
+
+S7::method(ggalign_build, ggplot2::class_ggplot) <- function(x) x
 
 #################################################
 #' @importFrom ggplot2 ggproto
-#' @export
-alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
+S7::method(alignpatch, ggplot2::class_ggplot) <- function(x) {
+    ggproto(NULL, PatchGgplot, plot = x)
+}
 
 # ggplot2 has following grobs:
 #    panel
@@ -32,11 +82,10 @@ alignpatch.ggplot <- function(x) ggproto(NULL, PatchGgplot, plot = x)
 PatchGgplot <- ggproto("PatchGgplot", Patch,
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         plot <- self$plot
-
         if (is.null(theme)) {
             theme <- plot$theme
         } else {
-            theme <- inherit_tag_theme(plot$theme, theme)
+            theme <- tag_theme(theme) + plot$theme
         }
 
         # complete_theme() will ensure elements exist --------
@@ -53,165 +102,6 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         ans <- setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
-    },
-    #' @importFrom gtable gtable_add_grob gtable_height gtable_width
-    #' @importFrom grid unit viewport
-    #' @importFrom ggplot2 find_panel
-    free_border = function(self, borders, gt = self$gt) {
-        panel_pos <- find_panel(gt)
-        for (border in borders) {
-            if (border == "top") {
-                gt <- liberate_area(
-                    gt,
-                    1L,
-                    1L,
-                    .subset2(panel_pos, "t") - 1L,
-                    ncol(gt),
-                    clip = "off",
-                    name = "free-border-top",
-                    vp = ~ viewport(
-                        y = 0L, just = "bottom",
-                        height = gtable_height(.x)
-                    )
-                )
-            } else if (border == "left") {
-                gt <- liberate_area(
-                    gt,
-                    1L,
-                    1L,
-                    nrow(gt),
-                    .subset2(panel_pos, "l") - 1L,
-                    clip = "off",
-                    name = "free-border-left",
-                    vp = ~ viewport(
-                        x = 1L, just = "right",
-                        width = gtable_width(.x)
-                    )
-                )
-            } else if (border == "bottom") {
-                gt <- liberate_area(
-                    gt,
-                    .subset2(panel_pos, "b") + 1L,
-                    1L,
-                    nrow(gt),
-                    ncol(gt),
-                    clip = "off",
-                    name = "free-border-bottom",
-                    vp = ~ viewport(
-                        y = 1L, just = "top",
-                        height = gtable_height(.x)
-                    )
-                )
-            } else if (border == "right") {
-                gt <- liberate_area(
-                    gt,
-                    1L,
-                    .subset2(panel_pos, "r") + 1L,
-                    nrow(gt),
-                    ncol(gt),
-                    clip = "off",
-                    name = "free-border-right",
-                    vp = ~ viewport(
-                        x = 0L, just = "left",
-                        width = gtable_width(.x)
-                    )
-                )
-            }
-        }
-        gt
-    },
-    align_free_border = function(self, borders,
-                                 t = NULL, l = NULL, b = NULL, r = NULL,
-                                 gt = self$gt) {
-        if (is.null(t) && is.null(l) && is.null(b) && is.null(r)) {
-            return(gt)
-        }
-        # For free borders, we also align the margins
-        for (border in borders) {
-            i <- .subset2(.subset2(gt, "layout"), "name") ==
-                sprintf("free-border-%s", border)
-            if (any(i)) {
-                i <- which(i)
-                gt$grobs[[i]] <- switch_position(
-                    border,
-                    Patch$align_border(l = l, r = r, gt = gt$grobs[[i]]),
-                    Patch$align_border(t = t, b = b, gt = gt$grobs[[i]])
-                )
-            }
-        }
-        gt
-    },
-
-    #' @importFrom ggplot2 find_panel
-    #' @importFrom gtable is.gtable gtable_height gtable_width gtable_add_grob
-    #' @importFrom grid grobHeight grobWidth viewport
-    free_lab = function(self, labs, gt = self$gt) {
-        panel_pos <- find_panel(gt)
-        for (lab in labs) {
-            name <- paste(
-                switch_position(lab, "xlab", "ylab"),
-                "axis", lab,
-                sep = "-"
-            )
-            if (lab == "top") {
-                panel_border <- .subset2(panel_pos, "t")
-                gt <- liberate_area(
-                    gt,
-                    panel_border - 3L,
-                    .subset2(panel_pos, "l"),
-                    panel_border - 1L,
-                    .subset2(panel_pos, "r"),
-                    name = name,
-                    vp = ~ viewport(
-                        y = 0L, just = "bottom",
-                        height = gtable_height(.x)
-                    )
-                )
-            } else if (lab == "left") {
-                panel_border <- .subset2(panel_pos, "l")
-                gt <- liberate_area(
-                    gt,
-                    .subset2(panel_pos, "t"),
-                    panel_border - 3L,
-                    .subset2(panel_pos, "b"),
-                    panel_border - 1L,
-                    name = name,
-                    vp = ~ viewport(
-                        x = 1L, just = "right",
-                        width = gtable_width(.x)
-                    )
-                )
-            } else if (lab == "bottom") {
-                panel_border <- .subset2(panel_pos, "b")
-                gt <- liberate_area(
-                    gt,
-                    panel_border + 1L,
-                    .subset2(panel_pos, "l"),
-                    panel_border + 3L,
-                    .subset2(panel_pos, "r"),
-                    name = name,
-                    vp = ~ viewport(
-                        y = 1L, just = "top",
-                        height = gtable_height(.x)
-                    )
-                )
-            } else if (lab == "right") {
-                panel_border <- .subset2(panel_pos, "r")
-                gt <- liberate_area(
-                    gt,
-                    .subset2(panel_pos, "t"),
-                    panel_border + 1L,
-                    .subset2(panel_pos, "b"),
-                    panel_border + 3L,
-                    name = name,
-                    vp = ~ viewport(
-                        x = 0L, just = "left",
-                        width = gtable_width(.x)
-                    )
-                )
-            }
-        }
-        gt
     }
 )
 

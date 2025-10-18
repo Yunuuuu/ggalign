@@ -13,7 +13,7 @@ prop_char_sets <- function(allowed, ...) {
             }
             sprintf(
                 "must be a single string containing only the characters %s",
-                oxford_and(.tlbr)
+                oxford_and(allowed)
             )
         },
         ...,
@@ -113,7 +113,7 @@ S7::method(scheme_update, list(scheme_align, scheme_align)) <-
 #' @importFrom S7 prop prop<-
 S7::method(scheme_inherit, list(scheme_align, scheme_align)) <-
     function(e1, e2) {
-        # `align_plots` control how to inherit `guides` from the layout
+        # `alignpatches()` control how to inherit `guides` from the layout
         # we don't need to inherit it here
         prop(e2, "free_spaces", check = FALSE) <- prop(e2, "free_spaces") %|w|%
             prop(e1, "free_spaces")

@@ -1,7 +1,25 @@
-#' @export
-`ggalign_build.ggalign::StackLayout` <- function(x) {
+S7::method(ggalign_build, StackLayout) <- function(x) {
     x <- init_object(x)
-    (stack_build(x) %||% align_plots(theme = x@theme)) + prop(x, "titles")
+    (stack_build(x) %||% align_plots(theme = prop(x, "theme"))) +
+        prop(x, "titles")
+}
+
+#' @importFrom S7 prop<- prop
+#' @importFrom ggplot2 ggproto_parent ggproto
+S7::method(alignpatch, StackLayout) <- function(x) {
+    Parent <- alignpatch(ggalign_build(x))
+    ggproto(NULL, Parent,
+        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+            # Preserve tag-related theme settings from the original layout
+            # theme. These are intentionally not overridden so that `Parent`
+            # retains full control over tag appearance and positioning.
+            if (!is.null(theme)) {
+                prop(self$plot, "theme") <- prop(self$plot, "theme") +
+                    (tag_theme(theme) + tag_theme(prop(x, "theme")))
+            }
+            ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+        }
+    )
 }
 
 #' @param schemes,theme Parameters from parent layout

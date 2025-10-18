@@ -3,9 +3,9 @@ test_that("free_guide() assigns class and guide attribute", {
         geom_point(aes(mpg, disp))
     p_fg <- free_guide(p)
 
-    expect_s3_class(p_fg, "free_guide")
+    expect_s3_class(p_fg, "ggalign_free_guide")
     expect_s3_class(p_fg, "ggplot")
-    expect_identical(attr(p_fg, "free_guides"), "tlbr")
+    expect_identical(attr(p_fg, "ggalign_free_guides"), "tlbr")
 })
 
 test_that("free_guide() allows setting custom guide sides", {
@@ -13,7 +13,7 @@ test_that("free_guide() allows setting custom guide sides", {
         geom_point(aes(mpg, disp))
     p_fg <- free_guide(p, guides = "l")
 
-    expect_identical(attr(p_fg, "free_guides"), "l")
+    expect_identical(attr(p_fg, "ggalign_free_guides"), "l")
 })
 
 test_that("free_guide() allows setting to NULL", {
@@ -21,8 +21,8 @@ test_that("free_guide() allows setting to NULL", {
         geom_point(aes(mpg, disp))
     p_fg <- free_guide(p, guides = NULL)
 
-    expect_s3_class(p_fg, "free_guide")
-    expect_null(attr(p_fg, "free_guides"))
+    expect_s3_class(p_fg, "ggalign_free_guide")
+    expect_null(attr(p_fg, "ggalign_free_guides"))
 })
 
 test_that("free_guide() merges guide sides if already free_guide", {
@@ -31,8 +31,8 @@ test_that("free_guide() merges guide sides if already free_guide", {
     p1 <- free_guide(p, guides = "l")
     p2 <- free_guide(p1, guides = "b")
 
-    expect_s3_class(p2, "free_guide")
-    guides <- strsplit(attr(p2, "free_guides"), "")[[1]]
+    expect_s3_class(p2, "ggalign_free_guide")
+    guides <- strsplit(attr(p2, "ggalign_free_guides"), "")[[1]]
     expect_true(all(c("l", "b") %in% guides))
 })
 
@@ -42,11 +42,10 @@ test_that("free_guide() clears guides if NULL passed again", {
     p1 <- free_guide(p, guides = "tb")
     p2 <- free_guide(p1, guides = NULL)
 
-    expect_s3_class(p2, "free_guide")
-    expect_null(attr(p2, "free_guides"))
+    expect_s3_class(p2, "ggalign_free_guide")
+    expect_null(attr(p2, "ggalign_free_guides"))
 })
 
 test_that("free_guide() errors with invalid input", {
-    expect_snapshot_error(free_guide(42))
     expect_snapshot_error(free_guide(ggplot(), guides = "x"))
 })

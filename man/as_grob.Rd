@@ -21,6 +21,7 @@ Convert Object into a Grob
 
 \itemize{
 \item \code{\link[=as_grob.grob]{as_grob.grob()}}
+\item \code{\link[=as_grob.gList]{as_grob.gList()}}
 \item \code{\link[=as_grob.patch_ggplot]{as_grob.patch_ggplot()}}
 \item \code{\link[=as_grob.ggplot]{as_grob.ggplot()}}
 \item \code{\link[=as_grob.ggalign::alignpatches]{as_grob.ggalign::alignpatches()}}

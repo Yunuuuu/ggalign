@@ -56,8 +56,12 @@ alignpatch.patch <- function(x) {
     rlang::check_installed(
         "patchwork", sprintf("to align %s plot", obj_type_friendly(x))
     )
-    ggproto(NULL, PatchPatchworkPatch, patch = x)
+    ggproto(NULL, PatchPatchworkPatch, plot = x)
 }
+
+# `patch` from `patchwork`: patchwork::wrap_elements
+#' @export
+alignpatch.wrapped_patch <- alignpatch.patch
 
 #' @importFrom ggplot2 ggproto
 PatchPatchworkPatch <- ggproto(
@@ -67,7 +71,7 @@ PatchPatchworkPatch <- ggproto(
     #' @importFrom ggplot2 find_panel
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         guides <- if (length(guides)) "collect" else "keep"
-        ans <- patchwork::patchGrob(self$patch, guides = guides)
+        ans <- patchwork::patchGrob(self$plot, guides = guides)
         # add rows and columns for `patch_title()`
         for (border in .TLBR) {
             panel_pos <- find_panel(ans)
@@ -94,8 +98,3 @@ PatchPatchworkPatch <- ggproto(
 
 #' @export
 alignpatch.spacer <- function(x) NULL
-
-#########################################
-# `patch` from `patchwork`: patchwork::wrap_elements
-#' @export
-alignpatch.wrapped_patch <- alignpatch.patch

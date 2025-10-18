@@ -2,33 +2,30 @@
 #' `r oxford_and(c(.tlbr, "i"))` indicates which side of guide legends should be
 #' collected for the plot. If `NULL`, no guide legends will be collected.
 #' @return
-#' - `free_guide`: A modified version of `plot` with a `free_guide` class.
+#' - `free_guide`: A modified version of `plot` with a `ggalign_free_guide`
+#'   class.
 #' @export
 #' @rdname free
 free_guide <- function(plot, guides = "tlbr") {
+    if (!is.null(guides)) assert_guides(guides)
     UseMethod("free_guide")
 }
 
 #' @export
-free_guide.ggplot <- function(plot, guides = "tlbr") {
-    if (!is.null(guides)) assert_guides(guides)
-    attr(plot, "free_guides") <- guides
-    add_class(plot, "free_guide")
+free_guide.default <- function(plot, guides = "tlbr") {
+    attr(plot, "ggalign_free_guides") <- guides
+    add_class(plot, "ggalign_free_guide")
 }
 
 #' @export
-`free_guide.ggalign::alignpatches` <- free_guide.ggplot
-
-#' @export
-free_guide.free_guide <- function(plot, guides = "tlbr") {
+free_guide.ggalign_free_guide <- function(plot, guides = "tlbr") {
     if (is.null(guides)) {
-        attr(plot, "free_guides") <- NULL
+        attr(plot, "ggalign_free_guides") <- NULL
     } else {
-        assert_guides(guides)
-        if (is.null(old <- attr(plot, "free_guides", exact = TRUE))) {
-            attr(plot, "free_guides") <- guides
+        if (is.null(old <- attr(plot, "ggalign_free_guides", exact = TRUE))) {
+            attr(plot, "ggalign_free_guides") <- guides
         } else {
-            attr(plot, "free_guides") <- union_position(old, guides)
+            attr(plot, "ggalign_free_guides") <- union_position(old, guides)
         }
     }
     plot
@@ -37,12 +34,13 @@ free_guide.free_guide <- function(plot, guides = "tlbr") {
 ################################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.free_guide <- function(x) {
+alignpatch.ggalign_free_guide <- function(x) {
     Parent <- NextMethod()
-    if (!is.null(free_guides <- attr(x, "free_guides", exact = TRUE))) {
-        free_guides <- setup_guides(free_guides)
+    if (!is.null(guides <- attr(x, "ggalign_free_guides", exact = TRUE))) {
+        guides <- setup_guides(guides)
     }
     ggproto("PatchFreeGuide", Parent,
-        guides = function(self, guides) free_guides
+        free_guides = guides,
+        guides = function(self, guides) self$free_guides
     )
 }

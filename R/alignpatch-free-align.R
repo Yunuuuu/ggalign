@@ -20,7 +20,8 @@
 #' @param axes Which axes shouldn't be aligned? A string containing
 #' one or more of `r oxford_and(.tlbr)`.
 #' @return
-#' - `free_align`: A modified version of `plot` with a `free_align` class.
+#' - `free_align`: A modified version of `plot` with a `ggalign_free_align`
+#'   class.
 #' @examples
 #' # directly copied from `patchwork`
 #' # Sometimes you have a plot that defies good composition alginment, e.g. due
@@ -76,102 +77,89 @@
 #' @export
 #' @rdname free
 free_align <- function(plot, axes = "tlbr") {
+    assert_position(axes)
     UseMethod("free_align")
-}
-
-# free_guides: guides
-# free_lab: collect_guides
-# free_border: collect_guides and align_border
-# free_space: get_sizes
-# free_align: get_sizes and align_border
-# free_vp: align_border
-
-#' @export
-free_align.ggplot <- function(plot, axes = "tlbr") {
-    assert_position(axes)
-    attr(plot, "free_axes") <- axes
-    add_class(plot, "free_align")
-}
-
-#' @export
-`free_align.ggalign::alignpatches` <- free_align.ggplot
-
-#' @importFrom rlang is_empty
-#' @export
-free_align.free_lab <- function(plot, axes = "tlbr") {
-    assert_position(axes)
-    # if axes are free, it's not necessary to free the labs
-    free_labs <- setdiff_position(attr(plot, "free_labs"), axes)
-    if (nzchar(free_labs)) {
-        attr(plot, "free_labs") <- free_labs
-    } else {
-        attr(plot, "free_labs") <- NULL
-        plot <- remove_class(plot, "free_lab")
-    }
-    NextMethod()
-}
-
-#' @importFrom rlang is_empty
-#' @export
-free_align.free_space <- function(plot, axes = "tlbr") {
-    assert_position(axes)
-    free_spaces <- setdiff_position(attr(plot, "free_spaces"), axes)
-    if (nzchar(free_spaces)) {
-        attr(plot, "free_spaces") <- free_spaces
-    } else {
-        attr(plot, "free_spaces") <- NULL
-        plot <- remove_class(plot, "free_space")
-    }
-    NextMethod()
-}
-
-#' @importFrom rlang is_empty
-#' @export
-free_align.free_border <- function(plot, axes = "tlbr") {
-    assert_position(axes)
-    free_borders <- setdiff_position(attr(plot, "free_borders"), axes)
-    if (nzchar(free_borders)) {
-        attr(plot, "free_borders") <- free_borders
-    } else {
-        attr(plot, "free_borders") <- NULL
-        plot <- remove_class(plot, "free_border")
-    }
-    NextMethod()
-}
-
-#' @export
-free_align.free_align <- function(plot, axes = "tlbr") {
-    assert_position(axes)
-    attr(plot, "free_axes") <- union_position(attr(plot, "free_axes"), axes)
-    plot
 }
 
 #' @export
 free_align.default <- function(plot, axes = "tlbr") {
-    cli_abort("Cannot use with {.obj_type_friendly {plot}}")
+    attr(plot, "ggalign_free_axes") <- axes
+    add_class(plot, "ggalign_free_align")
+}
+
+#' @importFrom rlang is_empty
+#' @export
+free_align.ggalign_free_lab <- function(plot, axes = "tlbr") {
+    # if axes are free, it's not necessary to free the labs
+    labs <- setdiff_position(
+        attr(plot, "ggalign_free_labs", exact = TRUE),
+        axes
+    )
+    if (nzchar(labs)) {
+        attr(plot, "ggalign_free_labs") <- labs
+    } else {
+        attr(plot, "ggalign_free_labs") <- NULL
+        plot <- remove_class(plot, "ggalign_free_lab")
+    }
+    NextMethod()
+}
+
+#' @importFrom rlang is_empty
+#' @export
+free_align.ggalign_free_space <- function(plot, axes = "tlbr") {
+    spaces <- setdiff_position(
+        attr(plot, "ggalign_free_spaces", exact = TRUE),
+        axes
+    )
+    if (nzchar(spaces)) {
+        attr(plot, "ggalign_free_spaces") <- spaces
+    } else {
+        attr(plot, "ggalign_free_spaces") <- NULL
+        plot <- remove_class(plot, "ggalign_free_space")
+    }
+    NextMethod()
+}
+
+#' @importFrom rlang is_empty
+#' @export
+free_align.ggalign_free_border <- function(plot, axes = "tlbr") {
+    borders <- setdiff_position(
+        attr(plot, "ggalign_free_borders", exact = TRUE),
+        axes
+    )
+    if (nzchar(borders)) {
+        attr(plot, "ggalign_free_borders") <- borders
+    } else {
+        attr(plot, "ggalign_free_borders") <- NULL
+        plot <- remove_class(plot, "ggalign_free_border")
+    }
+    NextMethod()
+}
+
+#' @export
+free_align.ggalign_free_align <- function(plot, axes = "tlbr") {
+    attr(plot, "ggalign_free_axes") <- union_position(
+        attr(plot, "ggalign_free_axes", exact = TRUE), axes
+    )
+    plot
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.free_align <- function(x) {
+alignpatch.ggalign_free_align <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeAlign", Parent,
-        free_axes = split_position(attr(x, "free_axes")),
-        get_sizes = function(self, free = NULL, gt = self$gt) {
-            ggproto_parent(Parent, self)$get_sizes(
-                union(free, self$free_axes),
-                gt = gt
-            )
+        axes = split_position(attr(x, "ggalign_free_axes", exact = TRUE)),
+        get_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$get_sizes(gt, union(free, self$axes))
         },
-        align_border = function(self, t = NULL, l = NULL, b = NULL, r = NULL,
-                                gt = self$gt) {
-            for (axis in self$free_axes) {
+        align_border = function(self, gt, t = NULL, l = NULL,
+                                b = NULL, r = NULL) {
+            for (axis in self$axes) {
                 assign(x = axis, value = NULL, envir = environment())
             }
-            ggproto_parent(Parent, self)$align_border(
-                t = t, l = l, b = b, r = r, gt = gt
-            )
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
         }
     )
 }
