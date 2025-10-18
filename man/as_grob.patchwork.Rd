@@ -9,11 +9,8 @@
 \arguments{
 \item{x}{An object to be converted into a \code{\link[grid:grid.grob]{grob}}.}
 
-\item{...}{
-  Arguments passed on to \code{\link[patchwork:patchworkGrob]{patchwork::patchworkGrob}}
-  \describe{
-    \item{\code{}}{}
-  }}
+\item{...}{Additional arguments passed on to
+\code{\link[patchwork:patchworkGrob]{patchworkGrob}}.}
 }
 \value{
 A \code{\link[grid:grid.grob]{grob}} object.

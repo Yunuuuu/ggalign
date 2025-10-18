@@ -57,7 +57,8 @@ as_grob.ggplot <- as_grob.patch_ggplot
 `as_grob.ggalign::alignpatches` <- as_grob.patch_ggplot
 
 #' @inherit as_grob
-#' @inheritDotParams patchwork::patchworkGrob
+#' @param ... Additional arguments passed on to
+#' [`patchworkGrob`][patchwork::patchworkGrob].
 #' @seealso [`patchwork`][patchwork::patchworkGrob]
 #' @family as_grob
 #' @export
@@ -67,7 +68,8 @@ as_grob.patchwork <- function(x, ...) {
 }
 
 #' @inherit as_grob
-#' @inheritDotParams patchwork::patchGrob
+#' @param ... Additional arguments passed on to
+#' [`patchGrob`][patchwork::patchGrob].
 #' @seealso [`patch`][patchwork::patchGrob]
 #' @family as_grob
 #' @export
