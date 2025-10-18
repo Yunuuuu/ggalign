@@ -119,6 +119,29 @@ test_that("The grid can be controlled", {
     })
 })
 
+test_that("strip handling works well", {
+    p1 <- ggplot(mtcars) +
+        geom_point(aes(mpg, disp))
+    p2 <- ggplot(mtcars) +
+        geom_boxplot(aes(gear, disp, group = gear))
+    p3 <- ggplot(mtcars) +
+        geom_bar(aes(gear)) +
+        facet_wrap(~cyl)
+    expect_doppelganger("align_plots() with mixed faceted and single plots", {
+        align_plots(p1, align_plots(p3, p2, nrow = 1L), ncol = 1)
+    })
+
+    p0 <- ggplot(mpg, aes(displ, hwy)) +
+        geom_point() +
+        facet_wrap(~"foo", strip.position = "bottom") +
+        theme(strip.placement = "inside")
+    p1 <- p0 + theme(strip.placement = "outside")
+    expect_doppelganger(
+        "alignpatches() with inside vs outside strip placement",
+        alignpatches(p0, p1)
+    )
+})
+
 test_that("accept patchwork", {
     testthat::skip_if_not_installed("patchwork")
     p1 <- ggplot(mtcars) +

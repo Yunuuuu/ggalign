@@ -96,12 +96,48 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
 
         # build the grob -------------------------------------
         ans <- ggplotGrob(plot)
-        strip_pos <- find_strip_pos(ans, theme)
+        self$strip_pos <- find_strip_pos(ans, theme)
         # always add strips columns and/or rows
-        ans <- add_strips(ans, strip_pos)
+        ans <- add_strips(ans, self$strip_pos)
         ans <- setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
         if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
         ans
+    },
+    border_sizes = function(self, gt = NULL, free = NULL) {
+        out <- ggproto_parent(Patch, self)$border_sizes(gt, free)
+        if (is.null(out) || self$strip_pos == "inside") {
+            return(out)
+        }
+        if (!is.null(.subset2(out, "top"))) {
+            out$top[length(out$top) - 1:0] <- out$top[length(out$top) - 0:1]
+        }
+        if (!is.null(.subset2(out, "left"))) {
+            out$left[length(out$left) - 1:0] <- out$left[length(out$left) - 0:1]
+        }
+        if (!is.null(.subset2(out, "bottom"))) {
+            out$bottom[1:2] <- out$bottom[2:1]
+        }
+        if (!is.null(.subset2(out, "right"))) {
+            out$right[1:2] <- out$right[2:1]
+        }
+        out
+    },
+    align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
+        if (self$strip_pos == "outside") {
+            if (!is.null(t)) {
+                t[length(t) - 1:0] <- t[length(t) - 0:1]
+            }
+            if (!is.null(l)) {
+                l[length(l) - 1:0] <- l[length(l) - 0:1]
+            }
+            if (!is.null(b)) {
+                b[1:2] <- b[2:1]
+            }
+            if (!is.null(r)) {
+                r[1:2] <- r[2:1]
+            }
+        }
+        ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
     }
 )
 
@@ -128,14 +164,16 @@ setup_tick_length_element <- function(theme) {
 #' @importFrom grid unit
 add_strips <- function(gt, strip_pos) {
     panel_loc <- find_panel(gt)
-    strip_pos <- switch(strip_pos, inside = 0L, outside = 2L) # styler: off
     layout <- .subset2(gt, "layout")
     if (!any(grepl("strip-b", layout$name))) { # No strips
         gt <- gtable_add_rows(
             gt, unit(0L, "mm"),
-            panel_loc$b + strip_pos
+            panel_loc$b + switch(strip_pos,
+                inside = 0L,
+                outside = 1L
+            )
         )
-    } else if (strip_pos == 2L && !any(layout$b == panel_loc$b + 2L)) {
+    } else if (strip_pos == "outside" && !any(layout$b == panel_loc$b + 2L)) {
         # Merge the strip-gap height into the axis and remove it. Only performed
         # if an axis exist
         gt$heights[panel_loc$b + 1L] <- sum(gt$heights[panel_loc$b + 1:2])
@@ -144,27 +182,36 @@ add_strips <- function(gt, strip_pos) {
     if (!any(grepl("strip-t", layout$name))) {
         gt <- gtable_add_rows(
             gt, unit(0L, "mm"),
-            panel_loc$t - 1L - strip_pos
+            panel_loc$t - switch(strip_pos,
+                inside = 1L,
+                outside = 2L
+            )
         )
-    } else if (strip_pos == 2L && !any(layout$t == panel_loc$t - 2L)) {
+    } else if (strip_pos == "outside" && !any(layout$t == panel_loc$t - 2L)) {
         gt$heights[panel_loc$t - 1L] <- sum(gt$heights[panel_loc$t - 1:2])
         gt <- gt[-(panel_loc$t - 2L), ]
     }
     if (!any(grepl("strip-r", layout$name))) {
         gt <- gtable_add_cols(
             gt, unit(0L, "mm"),
-            panel_loc$r + strip_pos
+            panel_loc$r + switch(strip_pos,
+                inside = 0L,
+                outside = 1L
+            )
         )
-    } else if (strip_pos == 2L && !any(layout$r == panel_loc$r + 2L)) {
+    } else if (strip_pos == "outside" && !any(layout$r == panel_loc$r + 2L)) {
         gt$widths[panel_loc$r + 1L] <- sum(gt$widths[panel_loc$r + 1:2])
         gt <- gt[, -(panel_loc$r + 2L)]
     }
     if (!any(grepl("strip-l", layout$name))) {
         gt <- gtable_add_cols(
             gt, unit(0L, "mm"),
-            panel_loc$l - 1L - strip_pos
+            panel_loc$l - switch(strip_pos,
+                inside = 1L,
+                outside = 2L
+            )
         )
-    } else if (strip_pos == 2L && !any(layout$l == panel_loc$l - 2L)) {
+    } else if (strip_pos == "outside" && !any(layout$l == panel_loc$l - 2L)) {
         gt$widths[panel_loc$l - 1L] <- sum(gt$widths[panel_loc$l - 1:2])
         gt <- gt[, -(panel_loc$l - 2L)]
     }
