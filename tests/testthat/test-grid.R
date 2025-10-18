@@ -2,6 +2,8 @@ test_that("GridUnit works well", {
     x <- GridUnit(c(1, 2), c("null", "mm"))
     expect_equal(unit(c(1, 2), c("null", "mm")), prop(x, "inner"))
     expect_equal(convert(x, S3_unit), prop(x, "inner"))
+    expect_equal(length(x), 2L)
+    expect_equal(rep(x, 2), GridUnit(rep(unit(c(1, 2), c("null", "mm")), 2)))
     expect_equal(as.double(x), as.double(prop(x, "inner")))
     expect_snapshot_error(str(unit(NA, "mm")))
     expect_snapshot_output(str(GridUnit(NA, "mm")))

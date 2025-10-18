@@ -213,7 +213,7 @@ local(S7::method(convert, list(GridUnit, S7::class_numeric)) <-
 #' @importFrom S7 prop
 #' @export
 `as.double.ggalign::GridUnit` <- function(x, ...) {
-    as.numeric(prop(x, "inner"), ...)
+    as.double(prop(x, "inner"), ...)
 }
 
 #' @importFrom utils str
