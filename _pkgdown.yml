@@ -124,7 +124,6 @@ reference:
   - new_tune
   - ggalign_data_set
   - order2
-  - Patch
 
 - title: Data-Free Composition
   desc: >
@@ -145,7 +144,7 @@ reference:
   - layout_title
   - layout_theme
   - layout_tags
-  - alignpatch
+  - patch
   - as_grob
 
 - title: Extending ggplot2
