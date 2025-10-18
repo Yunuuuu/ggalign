@@ -1,5 +1,17 @@
 # ggalign (development version)
 
+* 'alignpatch-*' scripts have been fully refactored with S7 classes, with more informative and consistent naming.
+
+* Improved `align_plots()` to properly handle strips with different placements.  
+
+* Renamed the original `alignpatch()` to `patch()` for clearer and more consistent naming.
+
+* Exported the `Patch` object for external use.
+
+* Refactored `patch_titles` to the new S7-based `patch_title` class (soft-deprecated the old version).
+
+* Renamed the original `patch()` to `as_grob()` for clearer.
+
 # ggalign 1.1.0
 
 The internal structure has been fully refactored, with more informative and consistent naming.
