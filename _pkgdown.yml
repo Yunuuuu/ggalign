@@ -111,20 +111,6 @@ reference:
   - scheme_data
   - scheme_theme
 
-- title: Extending ggalign
-  desc: >
-    Functions to enhance and customize the capabilities of ggalign.
-  contents:
-  - .mark_draw
-  - .link_draw
-  - align
-  - fortify_data_frame
-  - fortify_matrix
-  - tune
-  - new_tune
-  - ggalign_data_set
-  - order2
-
 - title: Data-Free Composition
   desc: >
     This section outlines essential functions for composing plots into a grid,
@@ -146,6 +132,20 @@ reference:
   - layout_tags
   - patch
   - as_grob
+
+- title: Extending ggalign
+  desc: >
+    Functions to enhance and customize the capabilities of ggalign.
+  contents:
+  - .mark_draw
+  - .link_draw
+  - align
+  - fortify_data_frame
+  - fortify_matrix
+  - tune
+  - new_tune
+  - ggalign_data_set
+  - order2
 
 - title: Extending ggplot2
   desc: >
