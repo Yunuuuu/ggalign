@@ -38,5 +38,5 @@ test_that("patch.free_space() returns a ggproto object with spaces", {
     p <- free_space(p, "lr")
     proto <- patch(p)
     expect_s3_class(proto, "PatchFreeSpace")
-    expect_equal(proto$spaces, split_position("lr"))
+    expect_equal(proto$spaces, setup_position("lr"))
 })

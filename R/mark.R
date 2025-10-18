@@ -316,8 +316,8 @@ patch.ggalign_mark <- function(x) {
     ggproto(
         "PatchAlignMark", Parent,
         link_data = link_data,
-        get_sizes = function(self, gt, free = NULL) {
-            ggproto_parent(Parent, self)$get_sizes(gt, .tlbr)
+        border_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$border_sizes(gt, .TLBR)
         },
         align_border = function(self, gt, t = NULL, l = NULL,
                                 b = NULL, r = NULL) {

@@ -249,7 +249,7 @@ PatchAlignpatches <- ggproto(
         # 3. set_sizes:
         #     - (To-Do) align_panel_spaces: can change the internal `gt`
         #     - align_panel, can change the internal `gt`
-        #     - get_sizes, the widths and heights for the internal `gt`
+        #     - border_sizes, the widths and heights for the internal `gt`
         # 4. set_grobs: will call `align_border` and `place`, return the
         #    final gtable
         # setup gtable list ----------------------------------
@@ -469,7 +469,7 @@ PatchAlignpatches <- ggproto(
                     nrow = 1L
                 )
             }
-            sizes_list[i] <- list(patch$get_sizes(.subset2(gt_list, i)))
+            sizes_list[i] <- list(patch$border_sizes(.subset2(gt_list, i)))
         }
         if (!is.null(respect_dims <- inject(rbind(!!!respect_dims)))) {
             respect <- matrix(
@@ -489,23 +489,14 @@ PatchAlignpatches <- ggproto(
         }
 
         # setup sizes for non-panel rows/columns --------------
-        sizes <- table_sizes(sizes_list, area, dims[2L], dims[1L])
-        widths <- .subset2(sizes, "widths")
-        heights <- .subset2(sizes, "heights")
-
-        # restore the panel sizes ----------------------------
-        width_ind <- seq(LEFT_BORDER + 1L,
-            by = TABLE_COLS, length.out = dims[2L]
+        sizes <- table_sizes(
+            sizes_list, panel_widths, panel_heights,
+            area, dims[2L], dims[1L]
         )
-        height_ind <- seq(TOP_BORDER + 1L,
-            by = TABLE_ROWS, length.out = dims[1L]
-        )
-        widths[width_ind] <- panel_widths
-        heights[height_ind] <- panel_heights
 
-        # setup the widths and heights -----------------------
-        gt$widths <- widths
-        gt$heights <- heights
+        # setup the widths and heights ------------------------
+        gt$widths <- .subset2(sizes, "widths")
+        gt$heights <- .subset2(sizes, "heights")
         gt
     },
 
@@ -668,17 +659,31 @@ PatchAlignpatches <- ggproto(
 )
 
 #' @importFrom grid convertHeight convertWidth unit
-table_sizes <- function(sizes, area, ncol, nrow) {
+table_sizes <- function(sizes_list, panel_widths, panel_heights,
+                        area, ncol, nrow) {
     # `null` unit of the panel area will be converted into 0
     # we'll set the panel width and height afterward
-    widths <- lapply(sizes, function(size) {
-        convertWidth(.subset2(size, "widths"), "mm", valueOnly = TRUE)
+    widths <- lapply(sizes_list, function(sizes) {
+        if (is.null(sizes)) {
+            left <- right <- NULL
+        } else {
+            left <- .subset2(sizes, "left")
+            right <- .subset2(sizes, "right")
+        }
+        left <- left %||% unit(rep_len(0, LEFT_BORDER), "mm")
+        right <- right %||% unit(rep_len(0, RIGHT_BORDER), "mm")
+        l <- convertWidth(left, "mm", valueOnly = TRUE)
+        r <- convertWidth(right, "mm", valueOnly = TRUE)
+        c(l, 0, r)
     })
     widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
         area_col <- (i - 1L) %/% TABLE_COLS + 1L
         col_loc <- i %% TABLE_COLS
         if (col_loc == 0L) col_loc <- TABLE_COLS
-        area_side <- if (col_loc <= LEFT_BORDER + 1L) "l" else "r"
+        if (col_loc == LEFT_BORDER + 1L) {
+            return(0)
+        }
+        area_side <- if (col_loc <= LEFT_BORDER) "l" else "r"
         idx <- field(area, area_side) == area_col
         if (any(idx)) {
             max(
@@ -691,13 +696,26 @@ table_sizes <- function(sizes, area, ncol, nrow) {
             0L
         }
     }, numeric(1L), USE.NAMES = FALSE)
-    heights <- lapply(sizes, function(size) {
-        convertHeight(.subset2(size, "heights"), "mm", valueOnly = TRUE)
+    heights <- lapply(sizes_list, function(sizes) {
+        if (is.null(sizes)) {
+            top <- bottom <- NULL
+        } else {
+            top <- .subset2(sizes, "top")
+            bottom <- .subset2(sizes, "bottom")
+        }
+        top <- top %||% unit(rep_len(0, TOP_BORDER), "mm")
+        bottom <- bottom %||% unit(rep_len(0, BOTTOM_BORDER), "mm")
+        t <- convertHeight(top, "mm", valueOnly = TRUE)
+        b <- convertHeight(bottom, "mm", valueOnly = TRUE)
+        c(t, 0, b)
     })
     heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
         area_row <- recycle_each(i, TABLE_ROWS)
         row_loc <- recycle_whole(i, TABLE_ROWS)
-        area_side <- if (row_loc <= TOP_BORDER + 1L) "t" else "b"
+        if (row_loc == TOP_BORDER + 1L) {
+            return(0)
+        }
+        area_side <- if (row_loc <= TOP_BORDER) "t" else "b"
         idx <- field(area, area_side) == area_row
         if (any(idx)) {
             max(
@@ -712,5 +730,13 @@ table_sizes <- function(sizes, area, ncol, nrow) {
             0L
         }
     }, numeric(1L), USE.NAMES = FALSE)
-    list(widths = unit(widths, "mm"), heights = unit(heights, "mm"))
+
+    # restore the panel sizes ----------------------------
+    widths <- unit(widths, "mm")
+    heights <- unit(heights, "mm")
+    width_ind <- seq(LEFT_BORDER + 1L, by = TABLE_COLS, length.out = ncol)
+    height_ind <- seq(TOP_BORDER + 1L, by = TABLE_ROWS, length.out = nrow)
+    widths[width_ind] <- panel_widths
+    heights[height_ind] <- panel_heights
+    list(widths = widths, heights = heights)
 }

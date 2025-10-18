@@ -400,62 +400,53 @@ Patch <- ggproto(
         list(width = panel_width, height = panel_height, respect = respect)
     },
 
-    #' @field get_sizes
+    #' @field border_sizes
     #' **Description**
     #'
-    #' (Optional method) In most cases, panel sizes do not need to be manually
-    #' adjusted when aligning panels, as long as their border sizes are
-    #' consistent. However, for gtables with a fixed aspect ratio, this method
-    #' adjusts the panel width and height based on user input and the dimensions
-    #' of the underlying gtable (`gt`) to ensure proper alignment.
-    #'
-    #' When the internal *numeric value* of either `panel_width` or
-    #' `panel_height` is `NA` (i.e., `is.na(as.numeric(...))`), that dimension
-    #' is inferred from the gtable while maintaining the aspect ratio for
-    #' single-panel layouts when `respect = TRUE`.
+    #' (Optional method) retrieve the border sizes of a gtable.
     #'
     #' **Arguments**
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
     #'   `self$decompose_guides()`.
-    #' - `panel_width`/`panel_height`: Unit objects specifying the desired panel
-    #'   size. If the internal numeric value of either is `NA`, the size is
-    #'   computed from the gtable (`gt`).
+    #' - `free`: Optional. Borders to exclude when calculating sizes. Possible
+    #'   values include `r oxford_and(.TLBR)`.
     #'
     #' **Value**
     #' A list with components:
-    #' - `width`: Final panel width as a unit object
-    #' - `height`: Final panel height as a unit object
-    #' - `respect`: If `TRUE`, the aspect ratio was enforced
+    #' - `top`: `unit` values for the top borders.
+    #' - `left`: `unit` values for the left borders.
+    #' - `bottom`: `unit` values for the bottom borders.
+    #' - `right`: `unit` values for the right borders.
     #'
-    #' @importFrom ggplot2 find_panel
     #' @importFrom gtable is.gtable
-    get_sizes = function(self, gt, free = NULL) {
-        ans <- .subset2(gt, "heights")
-        if (any(free == "t")) {
-            top <- unit(rep_len(0, TOP_BORDER), "mm")
+    border_sizes = function(self, gt = NULL, free = NULL) {
+        if (is.gtable(gt)) {
+            ans <- .subset2(gt, "heights")
+            if (any(free == "top")) {
+                top <- unit(rep_len(0, TOP_BORDER), "mm")
+            } else {
+                top <- ans[seq_len(TOP_BORDER)]
+            }
+            if (any(free == "bottom")) {
+                bottom <- unit(rep_len(0, BOTTOM_BORDER), "mm")
+            } else {
+                bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
+            }
+            ans <- .subset2(gt, "widths")
+            if (any(free == "left")) {
+                left <- unit(rep_len(0, LEFT_BORDER), "mm")
+            } else {
+                left <- ans[seq_len(LEFT_BORDER)]
+            }
+            if (any(free == "right")) {
+                right <- unit(rep_len(0, RIGHT_BORDER), "mm")
+            } else {
+                right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
+            }
+            list(top = top, left = left, bottom = bottom, right = right)
         } else {
-            top <- ans[seq_len(TOP_BORDER)]
+            NULL
         }
-        if (any(free == "b")) {
-            bottom <- unit(rep_len(0, BOTTOM_BORDER), "mm")
-        } else {
-            bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
-        }
-        ans <- .subset2(gt, "widths")
-        if (any(free == "l")) {
-            left <- unit(rep_len(0, LEFT_BORDER), "mm")
-        } else {
-            left <- ans[seq_len(LEFT_BORDER)]
-        }
-        if (any(free == "r")) {
-            right <- unit(rep_len(0, RIGHT_BORDER), "mm")
-        } else {
-            right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
-        }
-        list(
-            widths = unit.c(left, unit(0, "mm"), right),
-            heights = unit.c(top, unit(0, "mm"), bottom)
-        )
     },
 
     #' @field align_border
@@ -581,5 +572,22 @@ Patch <- ggproto(
             name = paste("plot", i, sep = "-"),
             z = z
         )
-    }
+    },
+
+    #' @field is_alignpatches
+    #'
+    #' **Description**
+    #'
+    #' Checks whether the object inherits from the [alignpatches()] `Patch`
+    #' representation.
+    #'
+    #' If `TRUE`, the fields `self$patches`, `self$gt_list`, and
+    #' `self$borders_list` are expected to exist in the `$align_border()` and
+    #' `$place()` methods. See the `patch.ggalign_free_lab` function in the
+    #' `alignpatch-free-lab.R` script for an example of usage.
+    #'
+    #' **Value**
+    #' Logical value (`TRUE` or `FALSE`) indicating whether `self` is a
+    #' `PatchAlignpatches` object.
+    is_alignpatches = function(self) inherits(self, "PatchAlignpatches")
 )

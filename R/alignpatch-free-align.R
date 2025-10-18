@@ -150,13 +150,15 @@ patch.ggalign_free_align <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeAlign", Parent,
-        axes = split_position(attr(x, "ggalign_free_axes", exact = TRUE)),
-        get_sizes = function(self, gt, free = NULL) {
-            ggproto_parent(Parent, self)$get_sizes(gt, union(free, self$axes))
+        axes = setup_position(attr(x, "ggalign_free_axes", exact = TRUE)),
+        border_sizes = function(self, gt, free = NULL) {
+            ggproto_parent(Parent, self)$border_sizes(
+                gt, union(free, self$axes)
+            )
         },
         align_border = function(self, gt, t = NULL, l = NULL,
                                 b = NULL, r = NULL) {
-            for (axis in self$axes) {
+            for (axis in substring(self$axes, 1L, 1L)) {
                 assign(x = axis, value = NULL, envir = environment())
             }
             ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)

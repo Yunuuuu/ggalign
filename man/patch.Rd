@@ -134,34 +134,25 @@ A list with components:
 \item \code{respect}: If \code{TRUE}, the aspect ratio was enforced
 }}
 
-\item{\code{get_sizes}}{\strong{Description}
+\item{\code{border_sizes}}{\strong{Description}
 
-(Optional method) In most cases, panel sizes do not need to be manually
-adjusted when aligning panels, as long as their border sizes are
-consistent. However, for gtables with a fixed aspect ratio, this method
-adjusts the panel width and height based on user input and the dimensions
-of the underlying gtable (\code{gt}) to ensure proper alignment.
-
-When the internal \emph{numeric value} of either \code{panel_width} or
-\code{panel_height} is \code{NA} (i.e., \code{is.na(as.numeric(...))}), that dimension
-is inferred from the gtable while maintaining the aspect ratio for
-single-panel layouts when \code{respect = TRUE}.
+(Optional method) retrieve the border sizes of a gtable.
 
 \strong{Arguments}
 \itemize{
 \item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
 \code{self$decompose_guides()}.
-\item \code{panel_width}/\code{panel_height}: Unit objects specifying the desired panel
-size. If the internal numeric value of either is \code{NA}, the size is
-computed from the gtable (\code{gt}).
+\item \code{free}: Optional. Borders to exclude when calculating sizes. Possible
+values include \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.
 }
 
 \strong{Value}
 A list with components:
 \itemize{
-\item \code{width}: Final panel width as a unit object
-\item \code{height}: Final panel height as a unit object
-\item \code{respect}: If \code{TRUE}, the aspect ratio was enforced
+\item \code{top}: \code{unit} values for the top borders.
+\item \code{left}: \code{unit} values for the left borders.
+\item \code{bottom}: \code{unit} values for the bottom borders.
+\item \code{right}: \code{unit} values for the right borders.
 }}
 
 \item{\code{align_border}}{\strong{Description}
@@ -231,6 +222,20 @@ Adds the background grob into the target gtable.}
 
 \item{\code{place_gt}}{\strong{Description}
 Adds the main plot gtable into the target gtable.}
+
+\item{\code{is_alignpatches}}{\strong{Description}
+
+Checks whether the object inherits from the \code{\link[=alignpatches]{alignpatches()}} \code{Patch}
+representation.
+
+If \code{TRUE}, the fields \code{self$patches}, \code{self$gt_list}, and
+\code{self$borders_list} are expected to exist in the \verb{$align_border()} and
+\verb{$place()} methods. See the \code{patch.ggalign_free_lab} function in the
+\code{alignpatch-free-lab.R} script for an example of usage.
+
+\strong{Value}
+Logical value (\code{TRUE} or \code{FALSE}) indicating whether \code{self} is a
+\code{PatchAlignpatches} object.}
 }}
 
 \examples{
