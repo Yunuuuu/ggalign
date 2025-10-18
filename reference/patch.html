@@ -165,26 +165,18 @@ A list with components:</p><ul><li><p><code>width</code>: Final panel width as a
 </ul></dd>
 
 
-<dt><code>get_sizes</code></dt>
+<dt><code>border_sizes</code></dt>
 <dd><p><strong>Description</strong></p>
-<p>(Optional method) In most cases, panel sizes do not need to be manually
-adjusted when aligning panels, as long as their border sizes are
-consistent. However, for gtables with a fixed aspect ratio, this method
-adjusts the panel width and height based on user input and the dimensions
-of the underlying gtable (<code>gt</code>) to ensure proper alignment.</p>
-<p>When the internal <em>numeric value</em> of either <code>panel_width</code> or
-<code>panel_height</code> is <code>NA</code> (i.e., <code>is.na(as.numeric(...))</code>), that dimension
-is inferred from the gtable while maintaining the aspect ratio for
-single-panel layouts when <code>respect = TRUE</code>.</p>
+<p>(Optional method) retrieve the border sizes of a gtable.</p>
 <p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
 <code>self$decompose_guides()</code>.</p></li>
-<li><p><code>panel_width</code>/<code>panel_height</code>: Unit objects specifying the desired panel
-size. If the internal numeric value of either is <code>NA</code>, the size is
-computed from the gtable (<code>gt</code>).</p></li>
+<li><p><code>free</code>: Optional. Borders to exclude when calculating sizes. Possible
+values include <code>"top"</code>, <code>"left"</code>, <code>"bottom"</code>, and <code>"right"</code>.</p></li>
 </ul><p><strong>Value</strong>
-A list with components:</p><ul><li><p><code>width</code>: Final panel width as a unit object</p></li>
-<li><p><code>height</code>: Final panel height as a unit object</p></li>
-<li><p><code>respect</code>: If <code>TRUE</code>, the aspect ratio was enforced</p></li>
+A list with components:</p><ul><li><p><code>top</code>: <code>unit</code> values for the top borders.</p></li>
+<li><p><code>left</code>: <code>unit</code> values for the left borders.</p></li>
+<li><p><code>bottom</code>: <code>unit</code> values for the bottom borders.</p></li>
+<li><p><code>right</code>: <code>unit</code> values for the right borders.</p></li>
 </ul></dd>
 
 
@@ -247,6 +239,19 @@ Adds the background grob into the target gtable.</p></dd>
 Adds the main plot gtable into the target gtable.</p></dd>
 
 
+<dt><code>is_alignpatches</code></dt>
+<dd><p><strong>Description</strong></p>
+<p>Checks whether the object inherits from the <code><a href="alignpatches.html">alignpatches()</a></code> <code>Patch</code>
+representation.</p>
+<p>If <code>TRUE</code>, the fields <code>self$patches</code>, <code>self$gt_list</code>, and
+<code>self$borders_list</code> are expected to exist in the <code>$align_border()</code> and
+<code>$place()</code> methods. See the <code>patch.ggalign_free_lab</code> function in the
+<code>alignpatch-free-lab.R</code> script for an example of usage.</p>
+<p><strong>Value</strong>
+Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code>self</code> is a
+<code>PatchAlignpatches</code> object.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -259,11 +264,12 @@ Adds the main plot gtable into the target gtable.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class PatchGgplot, ggalign::Patch, gg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     align_border: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     align_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     border_sizes: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_guides: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     get_sizes: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     gtable: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     is_alignpatches: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_gt: function</span>
