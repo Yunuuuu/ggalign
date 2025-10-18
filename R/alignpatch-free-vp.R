@@ -33,7 +33,7 @@ free_vp.ggalign_free_vp <- function(plot, x = 0.5, y = 0.5,
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid unit editGrob
 #' @export
-alignpatch.ggalign_free_vp <- function(x) {
+patch.ggalign_free_vp <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeViewport", Parent,

@@ -5,7 +5,7 @@
 #'
 #' @param ... <[dyn-dots][rlang::dyn-dots]> A list of plots, ususally the
 #' ggplot object. Use `NULL` to indicate an empty spacer. Each input must
-#' implement the [`alignpatch()`] method.
+#' implement the [`patch()`] method.
 #' @param ncol,nrow The number of columns and rows in the grid. Defaults to
 #' `NULL`. If both are `NULL`, the layout dimensions are determined
 #' automatically using the same logic as [`facet_wrap()`][ggplot2::facet_wrap].
@@ -144,7 +144,7 @@ local(S7::method(`[[`, alignpatches) <- function(x, i) prop(x, i))
 local(S7::method(`[`, alignpatches) <- function(x, i) props(x, names = i))
 
 #' @importFrom ggplot2 ggproto
-S7::method(alignpatch, alignpatches) <- function(x) {
+S7::method(patch, alignpatches) <- function(x) {
     ggproto(NULL, PatchAlignpatches, plot = x)
 }
 
@@ -159,7 +159,7 @@ PatchAlignpatches <- ggproto(
     #' @importFrom S7 prop
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         patches <- lapply(prop(self$plot, "plots"), function(p) {
-            out <- alignpatch(p)
+            out <- patch(p)
             if (!is.null(out) &&
                 !inherits(out, sprintf("%s::Patch", pkg_nm()))) {
                 cli_abort("{.fn alignpatch} must return a {.cls Patch} object")

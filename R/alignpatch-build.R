@@ -12,7 +12,7 @@ S7::method(ggalign_build, alignpatches) <- function(x) x
 #' @importFrom rlang arg_match0
 #' @importFrom S7 prop
 S7::method(ggalign_gtable, alignpatches) <- function(x) {
-    table <- alignpatch(x)$gtable()
+    table <- patch(x)$gtable()
 
     # ensure theme has no missing value
     theme <- complete_theme(prop(x, "theme") %||% theme_get())

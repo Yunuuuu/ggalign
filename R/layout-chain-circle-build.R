@@ -312,7 +312,7 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
 
 #' @importFrom S7 prop
 #' @importFrom ggplot2 ggproto
-S7::method(alignpatch, CircleLayout) <- function(x) {
+S7::method(patch, CircleLayout) <- function(x) {
     build <- ggalign_build(x)
     ggproto(NULL, PatchGgplot,
         gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {

@@ -37,9 +37,9 @@ S7::method(ggalign_build, QuadLayout) <- function(x) {
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 ggproto_parent ggproto
-S7::method(alignpatch, QuadLayout) <- function(x) {
+S7::method(patch, QuadLayout) <- function(x) {
     plot <- ggalign_build(x)
-    Parent <- alignpatch(plot)
+    Parent <- patch(plot)
     ggproto(NULL, Parent,
         gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
             # Preserve tag-related theme settings from the original layout

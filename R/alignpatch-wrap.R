@@ -71,7 +71,7 @@ S7::method(make_wrap, alignpatches) <- make_wrapped_plot
 #################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.wrapped_plot <- function(x) {
+patch.wrapped_plot <- function(x) {
     under <- attr(x, "ggalign_wrapped_insets_under", exact = TRUE)
     attr(x, "ggalign_wrapped_insets_under") <- NULL
     above <- attr(x, "ggalign_wrapped_insets_above", exact = TRUE)
@@ -92,34 +92,34 @@ alignpatch.wrapped_plot <- function(x) {
 
 # For wrapped plot -------------------
 #' @export
-alignpatch.grob <- function(x) alignpatch(ggwrap(x))
+patch.grob <- function(x) patch(ggwrap(x))
 
 #' @export
-alignpatch.gList <- alignpatch.grob
+patch.gList <- patch.grob
 
 #' @export
-alignpatch.formula <- alignpatch.grob
+patch.formula <- patch.grob
 
 #' @export
-alignpatch.function <- alignpatch.grob
+patch.function <- patch.grob
 
 #' @export
-alignpatch.recordedplot <- alignpatch.grob
+patch.recordedplot <- patch.grob
 
 #' @export
-alignpatch.trellis <- alignpatch.grob
+patch.trellis <- patch.grob
 
 #' @export
-alignpatch.Heatmap <- function(x) alignpatch(ggwrap(x, align = "full"))
+patch.Heatmap <- function(x) patch(ggwrap(x, align = "full"))
 
 #' @export
-alignpatch.HeatmapList <- alignpatch.Heatmap
+patch.HeatmapList <- patch.Heatmap
 
 #' @export
-alignpatch.HeatmapAnnotation <- alignpatch.Heatmap
+patch.HeatmapAnnotation <- patch.Heatmap
 
 #' @export
-alignpatch.pheatmap <- function(x) alignpatch(ggwrap(x, align = "full"))
+patch.pheatmap <- function(x) patch(ggwrap(x, align = "full"))
 
 ################################################## 3
 add_wrapped_insets <- function(gt, insets, on_top) {

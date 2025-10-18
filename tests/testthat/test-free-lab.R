@@ -27,11 +27,11 @@ test_that("free_lab() respects setdiff in free_border", {
     expect_identical(res, obj) # no-op
 })
 
-test_that("alignpatch.free_lab() returns a ggproto object with labs", {
+test_that("patch.free_lab() returns a ggproto object with labs", {
     p <- ggplot(mtcars, aes(mpg, wt)) +
         geom_point()
     p <- free_lab(p, "b")
-    proto <- alignpatch(p)
+    proto <- patch(p)
     expect_s3_class(proto, "PatchFreeLab")
     expect_equal(proto$labs, "bottom")
 })

@@ -309,7 +309,7 @@ mark_triangle <- function(..., orientation = "plot", .element = NULL) {
 #####################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.ggalign_mark <- function(x) {
+patch.ggalign_mark <- function(x) {
     link_data <- attr(x, "ggalign_link_data", exact = TRUE)
     attr(x, "ggalign_link_data") <- NULL
     Parent <- NextMethod()

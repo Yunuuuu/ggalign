@@ -32,11 +32,11 @@ test_that("free_space() works with alignpatch objects", {
     expect_equal(attr(out, "ggalign_free_spaces"), "r")
 })
 
-test_that("alignpatch.free_space() returns a ggproto object with spaces", {
+test_that("patch.free_space() returns a ggproto object with spaces", {
     p <- ggplot(mtcars, aes(mpg, wt)) +
         geom_point()
     p <- free_space(p, "lr")
-    proto <- alignpatch(p)
+    proto <- patch(p)
     expect_s3_class(proto, "PatchFreeSpace")
     expect_equal(proto$spaces, split_position("lr"))
 })

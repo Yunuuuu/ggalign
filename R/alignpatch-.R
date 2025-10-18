@@ -147,46 +147,35 @@ ggalign_gtable.gtable <- function(x) x
 
 #' Get Patch representation
 #'
-#' @param x Any objects has a Patch representation
-#' @details
-#' `ggalign` has implement `alignpatch` method for following objects:
-#'   - [`ggplot`][ggplot2::ggplot]
-#'   - [`alignpatches`]
-#'   - [`wrapped_plot`][ggwrap]
-#'   - [`patchwork::patchGrob`]
-#'   - [`patchwork::wrap_elements`]
-#'   - [`patchwork::plot_spacer`]
+#' @description
+#' `r code_quote(sprintf("%s::Patch", pkg_nm()), quote = FALSE)` represents the
+#' layout manager for a single subplot within a composite plot. The `Patch`
+#' object provides the interface for aligning the subplot, managing panel sizes,
+#' and handling guide legends.
 #'
+#' @param x Any objects has a Patch representation
 #' @return A `r code_quote(sprintf("%s::Patch", pkg_nm()), quote = FALSE)`
 #' object.
 #' @examples
-#' alignpatch(ggplot())
-#' @seealso
-#' - [`alignpatches()`]/[`align_plots()`]
-#' - [`Patch`]
+#' patch(ggplot())
+#' @seealso [`alignpatches()`]/[`align_plots()`]
 #' @export
 #' @keywords internal
-alignpatch <- function(x) UseMethod("alignpatch")
+patch <- function(x) UseMethod("patch")
 
 #' @export
-alignpatch.default <- function(x) {
+patch.default <- function(x) {
     cli_abort(paste(
-        "Each plot to be aligned must implement an {.fn alignpatch}",
+        "Each plot to be aligned must implement an {.fn patch}",
         "method. Object of {.obj_type_friendly {x}} does not."
     ))
 }
 
 #' @export
-alignpatch.NULL <- function(x) NULL
+patch.NULL <- function(x) NULL
 
 #' Patch object
 #'
-#' @description
-#' Represents the layout manager for a single subplot within a composite plot.
-#' This object defines operations for aligning the subplot, managing panel
-#' sizes, and handling guide legends. The subplot itself is external; the
-#' `Patch` object only provides the interface to manipulate and arrange it
-#' within a larger layout.
 #'
 #' @usage NULL
 #' @format NULL
@@ -201,6 +190,7 @@ alignpatch.NULL <- function(x) NULL
 #' @importFrom grid unit unit.c
 #' @importFrom gtable is.gtable
 #' @export
+#' @rdname patch
 Patch <- ggproto(
     "ggalign::Patch", NULL,
 

@@ -34,7 +34,7 @@ free_guide.ggalign_free_guide <- function(plot, guides = "tlbr") {
 ################################################################
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.ggalign_free_guide <- function(x) {
+patch.ggalign_free_guide <- function(x) {
     Parent <- NextMethod()
     if (!is.null(guides <- attr(x, "ggalign_free_guides", exact = TRUE))) {
         guides <- setup_guides(guides)

@@ -6,8 +6,8 @@ S7::method(ggalign_build, StackLayout) <- function(x) {
 
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 ggproto_parent ggproto
-S7::method(alignpatch, StackLayout) <- function(x) {
-    Parent <- alignpatch(ggalign_build(x))
+S7::method(patch, StackLayout) <- function(x) {
+    Parent <- patch(ggalign_build(x))
     ggproto(NULL, Parent,
         gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
             # Preserve tag-related theme settings from the original layout

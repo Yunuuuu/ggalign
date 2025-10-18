@@ -37,11 +37,11 @@ test_that("free_vp() uses defaults when width/height missing", {
     expect_true(is.na(as.numeric(vp$height)))
 })
 
-test_that("alignpatch.free_vp ggproto object overrides align_border", {
+test_that("patch.free_vp ggproto object overrides align_border", {
     p <- ggplot2::ggplot(mtcars, ggplot2::aes(mpg, wt)) +
         ggplot2::geom_point()
     p <- free_vp(p)
-    obj <- alignpatch(p)
+    obj <- patch(p)
 
     expect_s3_class(obj, "PatchFreeViewport")
     expect_true(is.function(obj$align_border))

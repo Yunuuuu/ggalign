@@ -146,7 +146,7 @@ free_align.ggalign_free_align <- function(plot, axes = "tlbr") {
 
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
-alignpatch.ggalign_free_align <- function(x) {
+patch.ggalign_free_align <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeAlign", Parent,

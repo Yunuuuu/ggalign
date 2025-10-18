@@ -55,7 +55,7 @@ free_border.ggalign_free_border <- function(plot, borders = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom gtable is.gtable
 #' @export
-alignpatch.ggalign_free_border <- function(x) {
+patch.ggalign_free_border <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeBorder", Parent,

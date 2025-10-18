@@ -2,7 +2,7 @@
 #' @importFrom utils modifyList getFromNamespace
 #' @importFrom S7 convert
 #' @export
-alignpatch.patchwork <- function(x) {
+patch.patchwork <- function(x) {
     rlang::check_installed("patchwork", "to align patchwork")
     get_patches <- getFromNamespace("get_patches", "patchwork")
     # patchwork will keep the class when extracting patches from it.
@@ -22,11 +22,11 @@ alignpatch.patchwork <- function(x) {
     ])
     plots <- .subset2(x, "plots")
     plot <- alignpatches(!!!plots)
-    alignpatch(plot + layout + annotation)
+    patch(plot + layout + annotation)
 }
 
 #' @export
-alignpatch.free_plot <- function(x) {
+patch.free_plot <- function(x) {
     if (inherits(x, "patchwork")) {
         free_settings <- attr(x, "patchwork_free_settings")
     } else {
@@ -45,14 +45,14 @@ alignpatch.free_plot <- function(x) {
             space = free_space(free_border(x, side), side),
         )
     }
-    alignpatch(x)
+    patch(x)
 }
 
 ######################################
 # `patch` from `patchwork`: patchwork::plot_spacer
 #' @importFrom ggplot2 ggproto
 #' @export
-alignpatch.patch <- function(x) {
+patch.patch <- function(x) {
     rlang::check_installed(
         "patchwork", sprintf("to align %s plot", obj_type_friendly(x))
     )
@@ -61,7 +61,7 @@ alignpatch.patch <- function(x) {
 
 # `patch` from `patchwork`: patchwork::wrap_elements
 #' @export
-alignpatch.wrapped_patch <- alignpatch.patch
+patch.wrapped_patch <- patch.patch
 
 #' @importFrom ggplot2 ggproto
 PatchPatchworkPatch <- ggproto(
@@ -97,4 +97,4 @@ PatchPatchworkPatch <- ggproto(
 )
 
 #' @export
-alignpatch.spacer <- function(x) NULL
+patch.spacer <- function(x) NULL

@@ -34,7 +34,7 @@ align_plots(
 \arguments{
 \item{...}{<\link[rlang:dyn-dots]{dyn-dots}> A list of plots, ususally the
 ggplot object. Use \code{NULL} to indicate an empty spacer. Each input must
-implement the \code{\link[=alignpatch]{alignpatch()}} method.}
+implement the \code{\link[=patch]{patch()}} method.}
 
 \item{ncol, nrow}{The number of columns and rows in the grid. Defaults to
 \code{NULL}. If both are \code{NULL}, the layout dimensions are determined

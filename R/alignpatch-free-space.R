@@ -40,7 +40,7 @@ free_space.ggalign_free_space <- function(plot, spaces = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @importFrom grid unit
 #' @export
-alignpatch.ggalign_free_space <- function(x) {
+patch.ggalign_free_space <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchFreeSpace", Parent,

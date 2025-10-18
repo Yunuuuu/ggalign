@@ -57,14 +57,14 @@ grid.draw.patch_ggplot <- function(x, recording = TRUE) {
 
 ##################################################
 S7::method(ggalign_gtable, ggplot2::class_ggplot) <- function(x) {
-    alignpatch(x)$gtable()
+    patch(x)$gtable()
 }
 
 S7::method(ggalign_build, ggplot2::class_ggplot) <- function(x) x
 
 #################################################
 #' @importFrom ggplot2 ggproto
-S7::method(alignpatch, ggplot2::class_ggplot) <- function(x) {
+S7::method(patch, ggplot2::class_ggplot) <- function(x) {
     ggproto(NULL, PatchGgplot, plot = x)
 }
 
