@@ -378,9 +378,9 @@ Patch <- ggproto(
 
         # Handle fixed panel dimensions
         # Use the sum of panel widths/heights or the larger of current
-        if (can_set_width || !is_null_unit(panel_width)) {
+        if (can_set_width || is_absolute_unit(panel_width)) {
             panel_widths <- .subset2(gt, "widths")[cols[1L]:cols[2L]]
-            if (!any(is_null_unit(panel_widths))) {
+            if (all(is_absolute_unit(panel_widths))) {
                 if (can_set_width) {
                     panel_width <- sum(panel_widths)
                 } else {
@@ -390,9 +390,9 @@ Patch <- ggproto(
                 can_set_width <- FALSE
             }
         }
-        if (can_set_height || !is_null_unit(panel_height)) {
+        if (can_set_height || is_absolute_unit(panel_height)) {
             panel_heights <- .subset2(gt, "heights")[rows[1L]:rows[2L]]
-            if (!any(is_null_unit(panel_heights))) {
+            if (all(is_absolute_unit(panel_heights))) {
                 if (can_set_height) {
                     panel_height <- sum(panel_heights)
                 } else {
