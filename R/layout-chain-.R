@@ -629,7 +629,7 @@ S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(ChainLayout, S3_class_theme)) <-
+S7::method(layout_propagate, list(ChainLayout, ggplot2::class_theme)) <-
     function(layout, object, objectname) {
         ans <- chain_propagate(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme

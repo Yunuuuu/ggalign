@@ -30,7 +30,7 @@
 #' @export
 scheme_theme <- S7::new_class(
     "scheme_theme", Scheme,
-    properties = list(theme = S3_class_theme),
+    properties = list(theme = ggplot2::class_theme),
     constructor = rlang::new_function(
         # We utilize editor completion by listing all `theme()` arguments here.
         # By placing `...` at the beginning, we can check if the first
@@ -77,13 +77,13 @@ S7::method(scheme_update, list(scheme_theme, scheme_theme)) <-
     }
 
 #' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(Schemes, S3_class_theme)) <-
+S7::method(scheme_update, list(Schemes, ggplot2::class_theme)) <-
     function(e1, e2, e2name) {
         scheme_update(e1, scheme_theme(e2), e2name)
     }
 
 #' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(scheme_theme, S3_class_theme)) <-
+S7::method(scheme_update, list(scheme_theme, ggplot2::class_theme)) <-
     function(e1, e2, e2name) {
         prop(e1, "theme", check = FALSE) <- ggfun("add_theme")(
             prop(e1, "theme"), e2, e2name

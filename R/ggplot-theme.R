@@ -43,8 +43,6 @@ new_theme_class <- function(new_class) {
 }
 # nocov end
 
-S3_class_theme <- S7::new_S3_class("theme")
-
 # Check if user has set the theme
 #' @importFrom ggplot2 complete_theme
 is_theme_unset <- function() {

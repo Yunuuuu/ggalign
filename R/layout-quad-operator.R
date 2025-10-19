@@ -444,7 +444,7 @@ S7::method(layout_propagate, list(QuadLayout, S7::class_any)) <- quad_and_add
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(QuadLayout, S3_class_theme)) <-
+S7::method(layout_propagate, list(QuadLayout, ggplot2::class_theme)) <-
     function(layout, object, objectname) {
         ans <- quad_and_add(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme
