@@ -532,7 +532,7 @@ S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -544,7 +544,7 @@ S7::method(layout_subtract, list(ChainLayout, S7::class_any)) <-
                 }
             })
         } else {
-            layout@box_list[[current]] <- layout_subtract(
+            layout@box_list[[current]] <- layout_propagate(
                 box, object, objectname
             )
         }
@@ -554,13 +554,13 @@ S7::method(layout_subtract, list(ChainLayout, S7::class_any)) <-
 # for objects can inherit from layout
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(ChainLayout, Scheme)) <-
+S7::method(layout_propagate, list(ChainLayout, Scheme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
             layout <- update_layout_schemes(object, layout, objectname)
         } else {
-            layout@box_list[[current]] <- layout_subtract(
+            layout@box_list[[current]] <- layout_propagate(
                 box, object, objectname
             )
         }
@@ -571,7 +571,7 @@ S7::method(layout_subtract, list(ChainLayout, Scheme)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_subtract, list(StackLayout, quad_scope)) <-
+S7::method(layout_propagate, list(StackLayout, quad_scope)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -588,12 +588,12 @@ S7::method(layout_subtract, list(StackLayout, quad_scope)) <-
                     box <- chain_box_add(box, inner, objectname, force = FALSE)
                 } else {
                     # we respect the context setting
-                    box <- layout_subtract(box, object, objectname)
+                    box <- layout_propagate(box, object, objectname)
                 }
                 box
             })
         } else {
-            layout@box_list[[current]] <- layout_subtract(
+            layout@box_list[[current]] <- layout_propagate(
                 box, object, objectname
             )
         }
@@ -604,10 +604,10 @@ S7::method(layout_subtract, list(StackLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_propagate, list(ChainLayout, quad_scope)) <-
+S7::method(layout_apply, list(ChainLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        layout_propagate(layout, object, objectname)
+        layout_apply(layout, object, objectname)
     }
 
 chain_propagate <- function(layout, object, objectname) {
@@ -615,7 +615,7 @@ chain_propagate <- function(layout, object, objectname) {
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, force = FALSE)
         } else {
-            box <- layout_propagate(box, object, objectname)
+            box <- layout_apply(box, object, objectname)
         }
         box
     })
@@ -624,12 +624,12 @@ chain_propagate <- function(layout, object, objectname) {
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_apply, list(ChainLayout, S7::class_any)) <-
     chain_propagate
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(ChainLayout, ggplot2::class_theme)) <-
+S7::method(layout_apply, list(ChainLayout, ggplot2::class_theme)) <-
     function(layout, object, objectname) {
         ans <- chain_propagate(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme

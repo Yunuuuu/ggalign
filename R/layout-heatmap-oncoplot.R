@@ -140,7 +140,7 @@ ggoncoplot.default <- function(data = NULL, mapping = aes(), ...,
         theme = theme, active = active, filling = NULL
     )
     # set the default `scheme_data()`
-    ans <- layout_subtract(ans, scheme_data(data = pdata))
+    ans <- layout_propagate(ans, scheme_data(data = pdata))
 
     # prepare counts matrix to reorder the column or rows
     if (reorder_column || reorder_row) {

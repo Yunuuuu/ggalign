@@ -30,6 +30,11 @@ S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
         plot
     }
 
+S7::method(alignpatches_apply, list(LayoutProto, S7::class_any)) <-
+    function(plot, object, objectname) {
+        layout_apply(plot, object, objectname)
+    }
+
 #' Subset a `Layout` object
 #'
 #' Used by [`ggplot_build`][ggplot2::ggplot_build] and

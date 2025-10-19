@@ -365,14 +365,14 @@ quad_body_add.layout_theme <- function(object, quad, objectname) {
 # `subtract` operates at layout-level
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(QuadLayout, S7::class_any)) <-
+S7::method(layout_propagate, list(QuadLayout, S7::class_any)) <-
     function(layout, object, objectname) {
         if (is.null(context <- layout@current)) context <- c(.TLBR, list(NULL))
         for (active in context) {
             if (is.null(active)) {
                 layout <- quad_body_add(object, layout, objectname)
             } else if (!is.null(prop(layout, active))) {
-                prop(layout, active) <- layout_subtract(
+                prop(layout, active) <- layout_propagate(
                     prop(layout, active), object, objectname
                 )
             }
@@ -383,7 +383,7 @@ S7::method(layout_subtract, list(QuadLayout, S7::class_any)) <-
 # for object can set at layout level
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(QuadLayout, Scheme)) <-
+S7::method(layout_propagate, list(QuadLayout, Scheme)) <-
     function(layout, object, objectname) {
         if (is.null(context <- layout@current)) {
             layout <- update_layout_schemes(object, layout, objectname)
@@ -397,19 +397,19 @@ S7::method(layout_subtract, list(QuadLayout, Scheme)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_subtract, list(QuadLayout, quad_scope)) <-
+S7::method(layout_propagate, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
         inner <- prop(object, "object")
         contexts <- quad_scope_contexts(object, layout@current)
         # `subtract` operates at layout-level
         if (is.null(contexts)) {
-            layout <- layout_subtract(layout, inner, objectname)
+            layout <- layout_propagate(layout, inner, objectname)
         } else {
             for (active in contexts) {
                 if (is.null(active)) {
                     layout <- quad_body_add(inner, layout, objectname)
                 } else if (!is.null(prop(layout, active))) {
-                    prop(layout, active) <- layout_subtract(
+                    prop(layout, active) <- layout_propagate(
                         prop(layout, active), inner, objectname
                     )
                 }
@@ -422,10 +422,10 @@ S7::method(layout_subtract, list(QuadLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_propagate, list(QuadLayout, quad_scope)) <-
+S7::method(layout_apply, list(QuadLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        layout_propagate(object, layout, objectname)
+        layout_apply(object, layout, objectname)
     }
 
 quad_and_add <- function(layout, object, objectname) {
@@ -433,18 +433,18 @@ quad_and_add <- function(layout, object, objectname) {
     for (position in .TLBR) {
         stack <- prop(layout, position)
         if (is.null(stack)) next # no annotation
-        prop(layout, position) <- layout_propagate(stack, object, objectname)
+        prop(layout, position) <- layout_apply(stack, object, objectname)
     }
     layout
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(QuadLayout, S7::class_any)) <- quad_and_add
+S7::method(layout_apply, list(QuadLayout, S7::class_any)) <- quad_and_add
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(QuadLayout, ggplot2::class_theme)) <-
+S7::method(layout_apply, list(QuadLayout, ggplot2::class_theme)) <-
     function(layout, object, objectname) {
         ans <- quad_and_add(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme
