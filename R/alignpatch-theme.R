@@ -41,16 +41,16 @@ S3_layout_theme <- S7::new_S3_class("layout_theme")
 
 #' @importFrom S7 prop prop<-
 #' @importFrom ggplot2 is_theme
-prop_layout_theme <- function(...) {
+#' @include import-standalone-pkg.R
+prop_layout_theme <- function(..., default = NULL, allow_null = TRUE) {
     S7::new_property(
-        S7::class_any,
-        validator = function(value) {
-            if (!is.null(value) && !is_theme(value)) {
-                return("must be a 'theme()' object'")
-            }
+        if (allow_null) {
+            S7::new_union(NULL, ggplot2::class_theme)
+        } else {
+            ggplot2::class_theme
         },
         ...,
-        default = NULL
+        default = default %||% if (allow_null) NULL else ggplot2::theme()
     )
 }
 
