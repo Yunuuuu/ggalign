@@ -206,9 +206,9 @@ local(S7::method(convert, list(GridUnit, S3_unit)) <- function(from, to) {
     prop(from, "inner")
 })
 
-#' @importFrom S7 convert prop
+#' @importFrom S7 convert
 local(S7::method(convert, list(GridUnit, S7::class_numeric)) <-
-    function(from, to) as.numeric(from))
+    function(from, to) as.double(from))
 
 #' @importFrom S7 prop
 #' @export
@@ -246,25 +246,10 @@ local(S7::method(str, GridUnit) <- function(object, ..., indent.str = " ",
 #' @importFrom rlang is_atomic
 #' @importFrom S7 convert
 #' @include import-standalone-pkg.R
-prop_grid_unit <- function(property, ..., default = NULL, len = 1L) {
+prop_grid_unit <- function(property, ..., default = NULL) {
     force(property)
     S7::new_property(
         GridUnit,
-        validator = if (len > 1L) {
-            function(value) {
-                l <- length(value)
-                if (l != 1L && l != len) {
-                    return(sprintf("must be of length %s, not length %d", oxford_or(c(1, len), quote = FALSE), l))
-                }
-            }
-        } else {
-            function(value) {
-                l <- length(value)
-                if (l != 1L) {
-                    return(sprintf("must be of length `1`, not length %d", l))
-                }
-            }
-        },
         setter = function(self, value) {
             value <- value %||% NA
             if (!S7_inherits(value, GridUnit)) {

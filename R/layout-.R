@@ -83,7 +83,7 @@ ChainLayout <- S7::new_class("ChainLayout",
 StackLayout <- S7::new_class(
     "StackLayout", ChainLayout,
     properties = list(
-        sizes = prop_grid_unit("sizes", len = 3L),
+        sizes = prop_grid_unit("sizes", validator = validator_size(3L)),
         # used by heatmap annotation
         heatmap = S7::new_property(
             S7::class_list,
@@ -181,8 +181,8 @@ QuadLayout <- S7::new_class(
         ),
         body_schemes = Schemes,
         # parameters for main body
-        width = prop_grid_unit("width"),
-        height = prop_grid_unit("height"),
+        width = prop_grid_unit("width", validator = validator_size(1L)),
+        height = prop_grid_unit("height", validator = validator_size(1L)),
         # Used to align axis
         horizontal = prop_domain("horizontal"),
         vertical = prop_domain("vertical"),

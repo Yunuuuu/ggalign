@@ -12,6 +12,7 @@ new_craftbox <- function(craftsman = NULL, ...,
 
 #' @include scheme-.R
 #' @include utils-grid.R
+#' @include utils-assert.R
 CraftBox <- S7::new_class("CraftBox",
     properties = list(
         craftsman = S7::new_property(
@@ -65,7 +66,7 @@ CraftBox <- S7::new_class("CraftBox",
                 self
             }
         ),
-        size = prop_grid_unit("size"),
+        size = prop_grid_unit("size", validator = validator_size(1L)),
         schemes = Schemes
     )
 )

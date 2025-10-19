@@ -1,10 +1,32 @@
+# validator for S7 classes:
+validator_size <- function(size, allow_scalar = TRUE) {
+    force(size)
+    force(allow_scalar)
+
+    function(value) {
+        l <- length(value)
+
+        if (size == 1L) {
+            if (l != 1L) {
+                return(sprintf("must be of length `1`, not length %d", l))
+            }
+        } else if (allow_scalar && l != 1L && l != size) {
+            return(sprintf(
+                "must be of length %s, not length %d",
+                oxford_or(c(1, size), quote = FALSE),
+                l
+            ))
+        } else if (!allow_scalar && l != size) {
+            return(sprintf("must be of length %d, not length %d", size, l))
+        }
+
+        invisible(NULL)
+    }
+}
+
 # `assert_*()` functions will do the side effects
 # `check_*()` functions will return the arguments
 #' @importFrom rlang caller_arg caller_call
-assert_gp <- function(gp, arg = caller_arg(gp), call = caller_call()) {
-    assert_s3_class(gp, "gpar", arg = arg, call = call)
-}
-
 assert_genomic_data <- function(data, arg = caller_arg(data),
                                 call = caller_env()) {
     if (ncol(data) < 3L) {
@@ -21,34 +43,12 @@ assert_genomic_data <- function(data, arg = caller_arg(data),
     }
 }
 
-#' @importFrom rlang caller_arg caller_call
-assert_mapping <- function(mapping, arg = caller_arg(mapping),
-                           call = caller_call()) {
-    if (!inherits(mapping, "uneval")) {
-        cli_abort(c("{.arg {arg}} must be created with {.fn aes}.",
-            x = "You've supplied {.obj_type_friendly {mapping}}."
-        ), call = call)
-    }
-}
-
 assert_mismatch_nobs <- function(align, n, nobs, arg) {
     if (n != nobs) {
         cli_abort(sprintf(
             "{.arg %s} (nobs: %d) of %s is not compatible with the %s (nobs: %d)",
             arg, nobs, object_name(align), align$layout_name, n
         ))
-    }
-}
-
-assert_sub_split <- function(align, panel) {
-    if (!is.null(panel)) {
-        cli_abort(c(
-            sprintf("%s cannot do sub-split", object_name(align)),
-            i = sprintf(
-                "Group of layout %s-axis already exists",
-                to_coord_axis(align$direction)
-            )
-        ), call = align$call)
     }
 }
 
