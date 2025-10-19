@@ -674,15 +674,16 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
     # we'll set the panel width and height afterward
     widths <- lapply(sizes_list, function(sizes) {
         if (is.null(sizes)) {
-            left <- right <- NULL
+            l <- rep_len(0, LEFT_BORDER)
+            r <- rep_len(0, RIGHT_BORDER)
         } else {
             left <- .subset2(sizes, "left")
             right <- .subset2(sizes, "right")
+            left <- left %||% unit(rep_len(0, LEFT_BORDER), "mm")
+            right <- right %||% unit(rep_len(0, RIGHT_BORDER), "mm")
+            l <- convertWidth(left, "mm", valueOnly = TRUE)
+            r <- convertWidth(right, "mm", valueOnly = TRUE)
         }
-        left <- left %||% unit(rep_len(0, LEFT_BORDER), "mm")
-        right <- right %||% unit(rep_len(0, RIGHT_BORDER), "mm")
-        l <- convertWidth(left, "mm", valueOnly = TRUE)
-        r <- convertWidth(right, "mm", valueOnly = TRUE)
         c(l, 0, r)
     })
     widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
@@ -707,15 +708,16 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
     }, numeric(1L), USE.NAMES = FALSE)
     heights <- lapply(sizes_list, function(sizes) {
         if (is.null(sizes)) {
-            top <- bottom <- NULL
+            t <- rep_len(0, TOP_BORDER)
+            b <- rep_len(0, BOTTOM_BORDER)
         } else {
             top <- .subset2(sizes, "top")
             bottom <- .subset2(sizes, "bottom")
+            top <- top %||% unit(rep_len(0, TOP_BORDER), "mm")
+            bottom <- bottom %||% unit(rep_len(0, BOTTOM_BORDER), "mm")
+            t <- convertHeight(top, "mm", valueOnly = TRUE)
+            b <- convertHeight(bottom, "mm", valueOnly = TRUE)
         }
-        top <- top %||% unit(rep_len(0, TOP_BORDER), "mm")
-        bottom <- bottom %||% unit(rep_len(0, BOTTOM_BORDER), "mm")
-        t <- convertHeight(top, "mm", valueOnly = TRUE)
-        b <- convertHeight(bottom, "mm", valueOnly = TRUE)
         c(t, 0, b)
     })
     heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
