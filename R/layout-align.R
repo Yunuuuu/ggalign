@@ -157,7 +157,9 @@ S7::method(
             if (!is.null(self$xlim_list)) {
                 xlim <- .subset2(
                     self$xlim_list,
-                    recycle_whole(cur_panel, self$n_column_panels)
+                    locate_recycle_which_position(
+                        cur_panel, self$n_column_panels
+                    )
                 )
                 if (is_discrete_domain(x_domain) &&
                     scale_x$is_discrete() &&
@@ -175,7 +177,7 @@ S7::method(
             if (!is.null(self$ylim_list)) {
                 ylim <- .subset2(
                     self$ylim_list,
-                    recycle_each(cur_panel, self$n_column_panels)
+                    locate_recycle_which_block(cur_panel, self$n_column_panels)
                 )
                 if (is_discrete_domain(y_domain) && scale_y$is_discrete() &&
                     !is.null(scale_y$range$range)) {

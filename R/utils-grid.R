@@ -254,7 +254,7 @@ prop_grid_unit <- function(property, ..., default = NULL, len = 1L) {
             function(value) {
                 l <- length(value)
                 if (l != 1L && l != len) {
-                    return(sprintf("must be of length %s, not length %d", oxford_or(len, quote = FALSE), l))
+                    return(sprintf("must be of length %s, not length %d", oxford_or(c(1, len), quote = FALSE), l))
                 }
             }
         } else {

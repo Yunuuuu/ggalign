@@ -1,12 +1,12 @@
 # `vec_rep`
-recycle_whole <- function(x, len) {
-    out <- x %% len
-    if (out == 0L) len else out
+locate_recycle_which_position <- function(x, group_size) {
+    out <- x %% group_size
+    if (out == 0L) group_size else out
 }
 
 # `vec_rep_each`
-recycle_each <- function(x, len) {
-    (x - 1L) %/% len + 1L
+locate_recycle_which_block <- function(x, group_size) {
+    (x - 1L) %/% group_size + 1L
 }
 
 is_s3 <- function(x) is.object(x) && !isS4(x) && !inherits(x, "R6")

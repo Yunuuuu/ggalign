@@ -687,9 +687,8 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         c(l, 0, r)
     })
     widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
-        area_col <- (i - 1L) %/% TABLE_COLS + 1L
-        col_loc <- i %% TABLE_COLS
-        if (col_loc == 0L) col_loc <- TABLE_COLS
+        area_col <- locate_recycle_which_block(i, TABLE_COLS)
+        col_loc <- locate_recycle_which_position(i, TABLE_COLS)
         if (col_loc == LEFT_BORDER + 1L) {
             return(0)
         }
@@ -721,8 +720,8 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         c(t, 0, b)
     })
     heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
-        area_row <- recycle_each(i, TABLE_ROWS)
-        row_loc <- recycle_whole(i, TABLE_ROWS)
+        area_row <- locate_recycle_which_block(i, TABLE_ROWS)
+        row_loc <- locate_recycle_which_position(i, TABLE_ROWS)
         if (row_loc == TOP_BORDER + 1L) {
             return(0)
         }
