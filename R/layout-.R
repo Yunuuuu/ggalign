@@ -2,10 +2,10 @@
 #'
 #' A `Layout` object defines how to place the plots.
 #'
-#' @importFrom ggplot2 is_theme
 #' @include scheme-.R
 #' @keywords internal
-LayoutProto <- S7::new_class("LayoutProto",
+LayoutProto <- S7::new_class(
+    "LayoutProto",
     properties = list(
         data = S7::class_any,
         schemes = Schemes,
@@ -62,8 +62,8 @@ ChainLayout <- S7::new_class("ChainLayout",
             },
             default = NA_integer_
         ),
-        box_list = S7::new_property(S7::class_list),
-        domain = prop_domain("domain"),
+        box_list = S7::class_list,
+        domain = prop_domain(),
         direction = S7::new_property(
             S7::class_character,
             validator = function(value) {
@@ -166,26 +166,14 @@ QuadLayout <- S7::new_class(
             },
             default = NULL
         ),
-        plot = S7::new_property(
-            S7::new_union(S7::class_any),
-            validator = function(value) {
-                if (!is.null(value) && !is_ggplot(value)) {
-                    return("must be a 'ggplot' object")
-                }
-            },
-            setter = function(self, value) {
-                prop(self, "plot") <- value
-                self
-            },
-            default = NULL
-        ),
+        plot = S7::new_union(NULL, ggplot2::class_ggplot),
         body_schemes = Schemes,
         # parameters for main body
         width = prop_grid_unit("width", validator = validator_size(1L)),
         height = prop_grid_unit("height", validator = validator_size(1L)),
         # Used to align axis
-        horizontal = prop_domain("horizontal"),
-        vertical = prop_domain("vertical"),
+        horizontal = prop_domain(),
+        vertical = prop_domain(),
         # top, left, bottom, right must be a StackLayout object.
         top = prop_stack_layout("top"),
         left = prop_stack_layout("left"),

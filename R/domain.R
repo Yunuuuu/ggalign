@@ -53,22 +53,8 @@ continuous_limits <- function(...) { # nocov start
 
 # nocov start
 #' @importFrom S7 S7_inherits
-prop_domain <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        S7::class_any,
-        validator = function(value) {
-            if (!is.null(value) && !S7_inherits(value, Domain)) {
-                return("must be a 'Domain' object")
-            }
-        },
-        setter = function(self, value) {
-            prop(self, property) <- value
-            self
-        },
-        ...,
-        default = NULL
-    )
+prop_domain <- function(...) {
+    S7::new_property(S7::new_union(NULL, Domain), ...)
 }
 # nocov end
 

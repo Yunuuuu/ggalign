@@ -107,11 +107,6 @@ S7::method(update_ggplot, list(layout_title, alignpatches)) <-
     }
 
 ##############################################################
-layout_theme_update <- function(old, new) {
-    if (is.null(old) || is.null(new)) return(new) # styler: off
-    old + new
-}
-
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(S3_layout_theme, alignpatches)) <-

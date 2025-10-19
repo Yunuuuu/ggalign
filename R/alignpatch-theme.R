@@ -54,6 +54,11 @@ prop_layout_theme <- function(..., default = NULL, allow_null = TRUE) {
     )
 }
 
+layout_theme_update <- function(old, new) {
+    if (is.null(old) || is.null(new)) return(new) # styler: off
+    old + new
+}
+
 ##############################################################
 #' Add layout annotation
 #'
