@@ -2,18 +2,9 @@
 #' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, CraftBox)) <-
     function(layout, object, objectname) {
-        craftsman <- prop(object, "craftsman")
-        # To-Do: Use S7 and double dispatch
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
-            # unlock the object
-            craftsman$unlock()
-
-            # we lock the `Craftsman` object to prevent user from modifying this
-            # object in `$build_plot()` method, we shouldn't do any calculations in
-            # `$build_plot()` method
-            on.exit(craftsman$lock())
-
+            craftsman <- prop(object, "craftsman")
             # initialize the necessary parameters for `Craftsman` object
             if (is_stack_layout(layout)) {
                 craftsman$direction <- layout@direction
@@ -50,9 +41,7 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
             # Finally, initialize the plot using the craftsman-specific
             # initializer, and update the object's plot attribute directly to
             # bypass setter checks.
-            # Use 'attr()' to bypass property setter validations when
-            # updating the plot.
-            attr(object, "plot") <- craftsman$init_plot(plot)
+            prop(object, "plot") <- craftsman$init_plot(plot)
 
             layout <- chain_add_box(layout, object, object@active, objectname)
         } else { # should be a QuadLayout object
@@ -531,7 +520,7 @@ S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_apply_selected, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -543,7 +532,7 @@ S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
                 }
             })
         } else {
-            layout@box_list[[current]] <- layout_propagate(
+            layout@box_list[[current]] <- layout_apply_selected(
                 box, object, objectname
             )
         }
@@ -553,13 +542,13 @@ S7::method(layout_propagate, list(ChainLayout, S7::class_any)) <-
 # for objects can inherit from layout
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_propagate, list(ChainLayout, Scheme)) <-
+S7::method(layout_apply_selected, list(ChainLayout, Scheme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
             layout <- update_layout_schemes(object, layout, objectname)
         } else {
-            layout@box_list[[current]] <- layout_propagate(
+            layout@box_list[[current]] <- layout_apply_selected(
                 box, object, objectname
             )
         }
@@ -570,7 +559,7 @@ S7::method(layout_propagate, list(ChainLayout, Scheme)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_propagate, list(StackLayout, quad_scope)) <-
+S7::method(layout_apply_selected, list(StackLayout, quad_scope)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -587,12 +576,12 @@ S7::method(layout_propagate, list(StackLayout, quad_scope)) <-
                     box <- chain_box_add(box, inner, objectname, force = FALSE)
                 } else {
                     # we respect the context setting
-                    box <- layout_propagate(box, object, objectname)
+                    box <- layout_apply_selected(box, object, objectname)
                 }
                 box
             })
         } else {
-            layout@box_list[[current]] <- layout_propagate(
+            layout@box_list[[current]] <- layout_apply_selected(
                 box, object, objectname
             )
         }
@@ -603,10 +592,10 @@ S7::method(layout_propagate, list(StackLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_apply, list(ChainLayout, quad_scope)) <-
+S7::method(layout_apply_all, list(ChainLayout, quad_scope)) <-
     function(layout, object, objectname) {
         object <- prop(object, "object")
-        layout_apply(layout, object, objectname)
+        layout_apply_all(layout, object, objectname)
     }
 
 chain_propagate <- function(layout, object, objectname) {
@@ -614,7 +603,7 @@ chain_propagate <- function(layout, object, objectname) {
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, force = FALSE)
         } else {
-            box <- layout_apply(box, object, objectname)
+            box <- layout_apply_all(box, object, objectname)
         }
         box
     })
@@ -623,12 +612,12 @@ chain_propagate <- function(layout, object, objectname) {
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_apply, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_apply_all, list(ChainLayout, S7::class_any)) <-
     chain_propagate
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_apply, list(ChainLayout, ggplot2::class_theme)) <-
+S7::method(layout_apply_all, list(ChainLayout, ggplot2::class_theme)) <-
     function(layout, object, objectname) {
         ans <- chain_propagate(layout, object, objectname)
         # to align with `patchwork`, we also modify the layout theme

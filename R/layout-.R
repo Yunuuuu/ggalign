@@ -28,6 +28,14 @@ LayoutProto <- S7::new_class(
     abstract = TRUE
 )
 
+local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
+
+local(S7::method(print, LayoutProto) <- print.patch_ggplot)
+
+#' @importFrom grid grid.draw
+local(S7::method(grid.draw, LayoutProto) <- grid.draw.patch_ggplot)
+
+#' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     function(object, plot, objectname) {
         prop(plot, "plots") <- c(prop(plot, "plots"), list(object))
@@ -35,25 +43,9 @@ S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     }
 
 S7::method(alignpatches_apply, list(LayoutProto, S7::class_any)) <-
-    function(plot, object, objectname) layout_apply(plot, object, objectname)
-
-#' Subset a `Layout` object
-#'
-#' Used by [`ggplot_build`][ggplot2::ggplot_build] and
-#' [`ggsave`][ggplot2::ggsave]
-#'
-#' @param x A `Layout` object
-#' @param name A string of property name in `Layout` object.
-#' @return The property value.
-#' @importFrom S7 prop
-#' @keywords internal
-#' @name Layout-subset
-local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
-
-local(S7::method(print, LayoutProto) <- print.patch_ggplot)
-
-#' @importFrom grid grid.draw
-local(S7::method(grid.draw, LayoutProto) <- grid.draw.patch_ggplot)
+    function(plot, object, objectname) {
+        layout_apply_all(plot, object, objectname)
+    }
 
 # Used by both `circle_layout()` and `stack_layout()`
 #' @keywords internal

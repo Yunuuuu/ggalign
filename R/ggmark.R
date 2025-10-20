@@ -158,12 +158,8 @@ MarkGg <- ggproto("MarkGg", Craftsman,
         } else {
             extra_links <- NULL
         }
-
-        # unlock the object
-        self$unlock()
         self$mark$links <- vec_c(extra_links, links)
         on.exit(self$mark <- mark, add = TRUE) # restore the original `mark`
-        on.exit(self$lock(), add = TRUE)
 
         # setup the plot
         plot <- ggproto_parent(CrossMark, self)$build_plot(

@@ -153,14 +153,16 @@ S7::method(update_ggplot, list(layout_tags, alignpatches)) <-
 ##############################################################
 #' @importFrom rlang caller_env
 #' @importFrom ggplot2 is_theme
+local(S7::method(`&`, list(alignpatches, S7::class_missing)) <-
+    function(e1, e2) {
+        cli_abort(c(
+            "Cannot use {.code &} with only one argument.",
+            "i" = "Did you accidentally put {.code &} at the end of a line?"
+        ))
+    })
+
 local(S7::method(`&`, list(alignpatches, S7::class_any)) <-
     function(e1, e2) {
-        if (missing(e2)) {
-            cli_abort(c(
-                "Cannot use {.code &} with only one argument.",
-                "i" = "Did you accidentally put {.code &} at the end of a line?"
-            ))
-        }
         if (is.null(e2)) return(e1) # styler: off
 
         # Get the name of what was passed in as e2, and pass along so that it

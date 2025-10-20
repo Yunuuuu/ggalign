@@ -92,7 +92,7 @@ local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
-    layout_propagate(e1, e2, e2name)
+    layout_apply_selected(e1, e2, e2name)
 })
 
 #' @include layout-.R
@@ -109,7 +109,7 @@ local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
-    layout_apply(e1, e2, e2name)
+    layout_apply_all(e1, e2, e2name)
 })
 
 # `+` operator overload
@@ -121,15 +121,15 @@ layout_add <- S7::new_generic(
 
 # `-` operator overload
 #' @importFrom S7 S7_dispatch
-layout_propagate <- S7::new_generic(
-    "layout_propagate", c("layout", "object"),
+layout_apply_selected <- S7::new_generic(
+    "layout_apply_selected", c("layout", "object"),
     function(layout, object, objectname) S7_dispatch()
 )
 
 # `&` operator overload
 #' @importFrom S7 S7_dispatch
-layout_apply <- S7::new_generic(
-    "layout_apply", c("layout", "object"),
+layout_apply_all <- S7::new_generic(
+    "layout_apply_all", c("layout", "object"),
     function(layout, object, objectname) S7_dispatch()
 )
 
@@ -149,14 +149,14 @@ local(
             QuadLayout,
             Domain
         )) {
-            S7::method(layout_propagate, list(left, right)) <-
+            S7::method(layout_apply_selected, list(left, right)) <-
                 function(layout, object, objectname) {
                     cli_abort(c(
                         sprintf("Cannot add %s with {.code -}", objectname),
                         i = "Try to use {.code +} instead"
                     ))
                 }
-            S7::method(layout_apply, list(left, right)) <-
+            S7::method(layout_apply_all, list(left, right)) <-
                 function(layout, object, objectname) {
                     cli_abort(c(
                         sprintf("Cannot add %s with {.code &}", objectname),

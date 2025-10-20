@@ -30,17 +30,6 @@ Craftsman <- ggproto("Craftsman",
     position = NULL, # e.g., used by stack_layout() in quad_layout()
     labels = NULL, # for discrete domain, there should be labels
 
-    # we always prevent user from modifying the object in `$build_plot()` and
-    # `$finish_plot()` methods
-    # Prevent user modification
-    locked = TRUE,
-    lock = function(self) {
-        assign("locked", value = TRUE, envir = self)
-    },
-    unlock = function(self) {
-        assign("locked", value = FALSE, envir = self)
-    },
-
     ############################################################
     # when added to the `Layout` object, will call following methods
 
@@ -160,21 +149,3 @@ Craftsman <- ggproto("Craftsman",
         sprintf("<Class: %s>", paste(cls, collapse = " "))
     }
 )
-
-# Used to lock the `Craftsman` object
-#' @export
-`$<-.Craftsman` <- function(x, name, value) {
-    if (x$locked) {
-        cli_abort(
-            c(
-                sprintf("Cannot modify %s", object_name(x)),
-                i = sprintf("%s is locked", object_name(x))
-            ),
-            call = x$call
-        )
-    }
-    NextMethod()
-}
-
-#' @export
-`[[<-.Craftsman` <- `$<-.Craftsman`
