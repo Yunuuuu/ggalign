@@ -70,7 +70,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
         MarkGg,
         # fields added to `MarkGg`
         input_data = allow_lambda(data), # used by AlignGg
-        params = list2(...), # used by AlignGg
+        data_params = list2(...), # used by AlignGg
         mark = mark, # used by MarkGg
         group1 = group1, group2 = group2,
         obs_size = obs_size,
