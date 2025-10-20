@@ -1,22 +1,24 @@
-#' Free from alignment
+#' Free plots from alignment constraints
 #'
-#' [align_plots] will try to align plot panels, and every elements of the plot,
-#' following functions romove these restrictions:
-#' - `free_align`: if we want to compose plots without alignment of some panel
-#' axes (panel won't be aligned). we can wrap the plot with `free_align`.
-#' - `free_border`: attaches borders (e.g., axis titles, tick marks) directly to
-#'   the plot panel. This keeps them visually close to the panel during
-#'   alignment.
-#' - `free_lab()`: Similar to `free_border()`, but only attaches axis titles
-#'   and tick labels, not full borders. It's mainly included for completeness;
-#'   in most cases, combining `free_border()` and `free_space()` is sufficient.
-#' - `free_space`: Removing the ggplot element sizes when aligning.
+#' By default, [align_plots()] attempts to align all plot panels and their
+#' elements. The following helper functions can be used to selectively remove
+#' or relax these alignment constraints:
+#'
+#' - `free_align()`: Prevents alignment of specific plot panels along certain
+#'   axes. Wrap the plot with `free_align()` if you want to compose plots
+#'   without forcing axis alignment.
+#' - `free_border()`: Aligns the panel area but not its surrounding borders
+#'   (such as axis titles, tick marks, or labels).
+#' - `free_lab()`: attaches axis titles and tick labels directly to the plot
+#'   panel. It's mainly included for completeness; in most cases, combining
+#'   `free_border()` and `free_space()` is sufficient.
+#' - `free_space()`: Removes border spacing when aligning plots.
 #' - `free_vp`: Customize the [viewport][grid::viewport] when aligning.
 #' - `free_guide`: If we want to override the behaviour of the overall guides
 #'   behaviour, we can wrap the plot with `free_guide`.
 #'
-#' @param plot A [ggplot][ggplot2::ggplot] or [alignpatches][align_plots]
-#' object.
+#' @param plot Any object that can be aligned with [alignpatches()]. In
+#' practice, this means the object must implement the [`patch()`] method.
 #' @param axes Which axes shouldn't be aligned? A string containing
 #' one or more of `r oxford_and(.tlbr)`.
 #' @return

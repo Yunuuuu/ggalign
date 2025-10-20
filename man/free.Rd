@@ -9,7 +9,7 @@
 \alias{free_lab}
 \alias{free_space}
 \alias{free_vp}
-\title{Free from alignment}
+\title{Free plots from alignment constraints}
 \usage{
 free_align(plot, axes = "tlbr")
 
@@ -24,8 +24,8 @@ free_space(plot, spaces = "tlbr")
 free_vp(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...)
 }
 \arguments{
-\item{plot}{A \link[ggplot2:ggplot]{ggplot} or \link[=align_plots]{alignpatches}
-object.}
+\item{plot}{Any object that can be aligned with \code{\link[=alignpatches]{alignpatches()}}. In
+practice, this means the object must implement the \code{\link[=patch]{patch()}} method.}
 
 \item{axes}{Which axes shouldn't be aligned? A string containing
 one or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
@@ -133,18 +133,21 @@ class.
 }
 }
 \description{
-\link{align_plots} will try to align plot panels, and every elements of the plot,
-following functions romove these restrictions:
+By default, \code{\link[=align_plots]{align_plots()}} attempts to align all plot panels and their
+elements. The following helper functions can be used to selectively remove
+or relax these alignment constraints:
+}
+\details{
 \itemize{
-\item \code{free_align}: if we want to compose plots without alignment of some panel
-axes (panel won't be aligned). we can wrap the plot with \code{free_align}.
-\item \code{free_border}: attaches borders (e.g., axis titles, tick marks) directly to
-the plot panel. This keeps them visually close to the panel during
-alignment.
-\item \code{free_lab()}: Similar to \code{free_border()}, but only attaches axis titles
-and tick labels, not full borders. It's mainly included for completeness;
-in most cases, combining \code{free_border()} and \code{free_space()} is sufficient.
-\item \code{free_space}: Removing the ggplot element sizes when aligning.
+\item \code{free_align()}: Prevents alignment of specific plot panels along certain
+axes. Wrap the plot with \code{free_align()} if you want to compose plots
+without forcing axis alignment.
+\item \code{free_border()}: Aligns the panel area but not its surrounding borders
+(such as axis titles, tick marks, or labels).
+\item \code{free_lab()}: attaches axis titles and tick labels directly to the plot
+panel. It's mainly included for completeness; in most cases, combining
+\code{free_border()} and \code{free_space()} is sufficient.
+\item \code{free_space()}: Removes border spacing when aligning plots.
 \item \code{free_vp}: Customize the \link[grid:viewport]{viewport} when aligning.
 \item \code{free_guide}: If we want to override the behaviour of the overall guides
 behaviour, we can wrap the plot with \code{free_guide}.
