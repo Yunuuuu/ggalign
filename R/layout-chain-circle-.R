@@ -184,7 +184,6 @@ new_circle_layout <- function(data, domain, radial, direction,
                               theme = NULL, name = NULL,
                               spacing_theta = deprecated(),
                               call = caller_call()) {
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (!is.null(radial) && !inherits(radial, c("CoordRadial"))) {
         cli_abort("{.arg radial} must be created with {.fn coord_circle}",
             call = call
@@ -223,7 +222,7 @@ new_circle_layout <- function(data, domain, radial, direction,
         schemes = schemes, # used by the layout
         domain = domain,
         sector_spacing = sector_spacing,
-        theme = theme,
+        theme = theme %||% theme(),
         radial = radial,
         direction = direction
     )

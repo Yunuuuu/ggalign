@@ -349,8 +349,8 @@ quad_body_add.Coord <- function(object, quad, objectname) {
 }
 
 #' @export
-quad_body_add.layout_theme <- function(object, quad, objectname) {
-    attr(quad, "theme") <- layout_theme_update(quad@theme, object)
+`quad_body_add.ggalign::layout_theme` <- function(object, quad, objectname) {
+    prop(quad, "theme") <- prop(quad, "theme") + prop(object, "theme")
     quad
 }
 

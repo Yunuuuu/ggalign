@@ -236,10 +236,10 @@ stack_continuous.function <- function(direction, data = NULL, ...) {
 #' @export
 stack_continuous.formula <- stack_continuous.function
 
+#' @importFrom ggplot2 theme
 new_stack_layout <- function(data, direction, domain,
                              schemes = NULL, theme = NULL, sizes = NA,
                              name = NULL, call = caller_call()) {
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     if (is.null(name)) {
         if (is_discrete_domain(domain)) {
             name <- "stack_discrete"
@@ -250,7 +250,7 @@ new_stack_layout <- function(data, direction, domain,
     StackLayout(
         name = name, data = data,
         direction = direction,
-        theme = theme, schemes = schemes, # used by the layout
+        theme = theme %||% theme(), schemes = schemes, # used by the layout
         sizes = sizes, domain = domain
     )
 }

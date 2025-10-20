@@ -8,7 +8,7 @@ LayoutProto(
   data = NULL,
   schemes = Schemes(),
   titles = layout_title(),
-  theme = NULL,
+  theme = theme(),
   name = NA_character_
 )
 }

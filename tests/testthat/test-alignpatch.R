@@ -41,6 +41,7 @@ test_that("The grid can be controlled", {
         geom_bar(aes(gear)) +
         facet_wrap(~cyl) +
         ggtitle("Plot 4")
+
     expect_doppelganger("Setting ncol", {
         align_plots(p1, p2, p3, p4, ncol = 3L)
     })

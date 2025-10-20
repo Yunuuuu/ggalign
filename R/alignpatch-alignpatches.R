@@ -78,7 +78,7 @@
 #' align_plots(p1, p2, area = area)
 #'
 #' @importFrom S7 new_object S7_object prop prop<-
-#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 waiver theme
 #' @include alignpatch-design.R
 #' @include alignpatch-title.R
 #' @include alignpatch-tags.R
@@ -91,7 +91,7 @@ alignpatches <- S7::new_class(
         layout = layout_design,
         titles = layout_title,
         tags = layout_tags,
-        theme = prop_layout_theme()
+        theme = ggplot2::class_theme
     ),
     constructor = function(..., ncol = NULL, nrow = NULL, byrow = TRUE,
                            widths = NA, heights = NA, area = NULL,
@@ -116,16 +116,11 @@ alignpatches <- S7::new_class(
             widths = widths, heights = heights, area = area,
             guides = guides
         )
-        if (is.null(theme)) {
-            theme <- layout_theme()
-        } else {
-            theme <- layout_theme(theme)
-        }
         new_object(
             S7_object(),
             plots = plots, layout = layout,
             titles = layout_title(), tags = layout_tags(),
-            theme = theme
+            theme = theme %||% theme()
         )
     }
 )
@@ -227,11 +222,12 @@ PatchAlignpatches <- ggproto(
         if (is.null(theme)) { # No parent theme provided
             top_level <- TRUE
             # by default, we use ggplot2 default theme
-            theme <- complete_theme(prop(self$plot, "theme") %||% theme_get())
+            theme <- prop(self$plot, "theme")
         } else {
             top_level <- FALSE
             theme <- theme + prop(self$plot, "theme")
         }
+        theme <- complete_theme(theme)
 
         # by default, we won't collect any guide legends
         collected <- guides

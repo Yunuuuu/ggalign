@@ -32,32 +32,68 @@
 #'     p3 + theme(plot.background = element_blank())
 #' ) +
 #'     layout_theme(plot.background = element_rect(fill = "red"))
-#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme is_theme
 #' @include ggplot-theme.R
 #' @export
-layout_theme <- new_theme_class("layout_theme")
-
-S3_layout_theme <- S7::new_S3_class("layout_theme")
-
-#' @importFrom S7 prop prop<-
-#' @importFrom ggplot2 is_theme
-#' @include import-standalone-pkg.R
-prop_layout_theme <- function(..., default = NULL, allow_null = TRUE) {
-    S7::new_property(
-        if (allow_null) {
-            S7::new_union(NULL, ggplot2::class_theme)
-        } else {
-            ggplot2::class_theme
-        },
-        ...,
-        default = default %||% if (allow_null) NULL else ggplot2::theme()
+layout_theme <- S7::new_class(
+    "layout_theme",
+    properties = list(theme = ggplot2::class_theme),
+    constructor = rlang::new_function(
+        # We utilize editor completion by listing all `theme()` arguments here.
+        # By placing `...` at the beginning, we can check if the first
+        # following argument is a `theme()` object rather than individual theme
+        # elements.
+        c(
+            rlang::exprs(... = ),
+            .subset(
+                rlang::fn_fmls(theme),
+                vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+            )
+        ),
+        quote({
+            elements <- ggfun("find_args")(
+                ..., complete = NULL, validate = NULL
+            )
+            th_element <- theme(!!!elements)
+            th <- NULL
+            for (i in seq_len(...length())) {
+                if (is_theme(t <- ...elt(i))) {
+                    th <- ggfun("add_theme")(th, t)
+                }
+            }
+            theme <- ggfun("add_theme")(th, th_element)
+            new_object(S7_object(), theme = theme)
+        })
     )
-}
+)
 
-layout_theme_update <- function(old, new) {
-    if (is.null(old) || is.null(new)) return(new) # styler: off
-    old + new
-}
+#' @importFrom ggplot2 is_waiver
+local({
+    S7::method(`+`, list(layout_theme, layout_theme)) <-
+        function(e1, e2) {
+            prop(e1, "theme") <- prop(e1, "theme") + prop(e2, "theme")
+            e1
+        }
+    S7::method(`+`, list(layout_theme, ggplot2::class_theme)) <-
+        function(e1, e2) {
+            prop(e1, "theme") <- prop(e1, "theme") + e2
+            e1
+        }
+    S7::method(`+`, list(S7::class_any, layout_theme)) <-
+        function(e1, e2) {
+            if (is.null(e1)) {
+                return(e2)
+            }
+            stop_incompatible_op("+", e1, e2)
+        }
+    S7::method(`+`, list(layout_theme, S7::class_any)) <-
+        function(e1, e2) {
+            if (is.null(e2)) {
+                return(e1)
+            }
+            stop_incompatible_op("+", e1, e2)
+        }
+})
 
 ##############################################################
 #' Add layout annotation

@@ -109,9 +109,9 @@ S7::method(update_ggplot, list(layout_title, alignpatches)) <-
 ##############################################################
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 update_ggplot
-S7::method(update_ggplot, list(S3_layout_theme, alignpatches)) <-
+S7::method(update_ggplot, list(layout_theme, alignpatches)) <-
     function(object, plot, objectname) {
-        prop(plot, "theme") <- layout_theme_update(prop(plot, "theme"), object)
+        prop(plot, "theme") <- prop(plot, "theme") + prop(object, "theme")
         plot
     }
 
@@ -126,9 +126,7 @@ S7::method(
         titles <- .subset(object, names(layout_title@properties))
         titles <- inject(layout_title(!!!titles))
         prop(plot, "titles") <- prop(plot, "titles") + titles
-        prop(plot, "theme") <- layout_theme_update(
-            prop(plot, "theme"), .subset2(object, "theme")
-        )
+        prop(plot, "theme") <- prop(plot, "theme") + .subset2(object, "theme")
         # Transform patchwork tag into ggalign style
         tags <- .subset2(object, "tag_levels") %|w|% NA
         if (length(tags) == 0L) tags <- NA
@@ -210,7 +208,7 @@ S7::method(alignpatches_apply, list(ggplot2::class_ggplot, S7::class_any)) <-
 
 S7::method(alignpatches_apply, list(alignpatches, ggplot2::class_ggplot)) <-
     S7::method(alignpatches_apply, list(alignpatches, layout_title)) <-
-    S7::method(alignpatches_apply, list(alignpatches, S3_layout_theme)) <-
+    S7::method(alignpatches_apply, list(alignpatches, layout_theme)) <-
     S7::method(alignpatches_apply, list(alignpatches, layout_tags)) <-
     S7::method(alignpatches_apply, list(alignpatches, layout_design)) <-
     function(plot, object, objectname) {

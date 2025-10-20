@@ -116,15 +116,14 @@ S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, S3_layout_theme)) <-
+S7::method(layout_add, list(ChainLayout, layout_theme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
-            prop(layout, "theme") <- layout_theme_update(layout@theme, object)
+            prop(layout, "theme") <- prop(layout, "theme") +
+                prop(object, "theme")
         } else {
-            layout@box_list[[current]] <- layout_add(
-                box, object, objectname
-            )
+            layout@box_list[[current]] <- layout_add(box, object, objectname)
         }
         layout
     }

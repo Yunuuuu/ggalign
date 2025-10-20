@@ -2,6 +2,7 @@
 #'
 #' A `Layout` object defines how to place the plots.
 #'
+#' @importFrom ggplot2 theme
 #' @include scheme-.R
 #' @keywords internal
 LayoutProto <- S7::new_class(
@@ -10,7 +11,10 @@ LayoutProto <- S7::new_class(
         data = S7::class_any,
         schemes = Schemes,
         titles = layout_title,
-        theme = prop_layout_theme(),
+        theme = S7::new_property(
+            ggplot2::class_theme,
+            default = quote(theme())
+        ),
         name = S7::new_property(
             S7::class_character,
             validator = function(value) {
@@ -31,9 +35,7 @@ S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     }
 
 S7::method(alignpatches_apply, list(LayoutProto, S7::class_any)) <-
-    function(plot, object, objectname) {
-        layout_apply(plot, object, objectname)
-    }
+    function(plot, object, objectname) layout_apply(plot, object, objectname)
 
 #' Subset a `Layout` object
 #'

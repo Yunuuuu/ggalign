@@ -195,7 +195,7 @@ quad_continuous.uneval <- function(data, ...) {
 }
 
 #####################################################
-#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 ggplot theme
 new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
                             mapping = aes(), theme = NULL, active = NULL,
                             width = NA, height = NA,
@@ -235,7 +235,6 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
     plot <- ggplot(mapping = mapping) +
         ggplot2::labs(x = NULL, y = NULL)
 
-    if (!is.null(theme)) assert_s3_class(theme, "theme", call = call)
     # for `QuadLayout`, we use `NULL` to inherit data from parent layout
     # since `QuadLayout` must have data, and won't be waiver()
     # if inherit from the parent layout data, we'll inherit
@@ -253,7 +252,7 @@ new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
     # Here we use S4 object to override the double dispatch of `+.gg` method
     QuadLayout(
         # used by the layout
-        data = data, theme = theme,
+        data = data, theme = theme %||% theme(),
         schemes = schemes,
         plot_active = active(use = TRUE) + active,
         name = name,
