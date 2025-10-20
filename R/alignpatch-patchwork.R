@@ -28,9 +28,9 @@ patch.patchwork <- function(x) {
 #' @export
 patch.free_plot <- function(x) {
     if (inherits(x, "patchwork")) {
-        free_settings <- attr(x, "patchwork_free_settings")
+        free_settings <- attr(x, "patchwork_free_settings", exact = TRUE)
     } else {
-        free_settings <- attr(x, "free_settings")
+        free_settings <- attr(x, "free_settings", exact = TRUE)
     }
     free_settings <- split(
         names(free_settings),
