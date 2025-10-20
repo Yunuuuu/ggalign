@@ -456,27 +456,37 @@ Patch <- ggproto(
     #' @importFrom gtable is.gtable
     border_sizes = function(self, gt = NULL, free = NULL) {
         if (is.gtable(gt)) {
-            ans <- .subset2(gt, "heights")
+            heights <- .subset2(gt, "heights")
+            widths <- .subset2(gt, "widths")
+            # Only compute border sizes for standardized gtables.
+            # Note: When the gtable represents a facetted plot, the number of
+            #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
+            if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+                return(NULL)
+            }
             if (any(free == "top")) {
                 top <- NULL
             } else {
-                top <- ans[seq_len(TOP_BORDER)]
+                top <- heights[seq_len(TOP_BORDER)]
             }
             if (any(free == "bottom")) {
                 bottom <- NULL
             } else {
-                bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
+                bottom <- heights[
+                    (length(heights) - BOTTOM_BORDER + 1L):length(heights)
+                ]
             }
-            ans <- .subset2(gt, "widths")
             if (any(free == "left")) {
                 left <- NULL
             } else {
-                left <- ans[seq_len(LEFT_BORDER)]
+                left <- widths[seq_len(LEFT_BORDER)]
             }
             if (any(free == "right")) {
                 right <- NULL
             } else {
-                right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
+                right <- widths[
+                    (length(widths) - RIGHT_BORDER + 1L):length(widths)
+                ]
             }
             list(top = top, left = left, bottom = bottom, right = right)
         } else {
