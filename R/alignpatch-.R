@@ -448,33 +448,33 @@ Patch <- ggproto(
     #'
     #' **Value**
     #' A list with components:
-    #' - `top`: `unit` values for the top borders.
-    #' - `left`: `unit` values for the left borders.
-    #' - `bottom`: `unit` values for the bottom borders.
-    #' - `right`: `unit` values for the right borders.
+    #' - `top`: `unit` values for the top borders or `NULL`.
+    #' - `left`: `unit` values for the left borders or `NULL`.
+    #' - `bottom`: `unit` values for the bottom borders or `NULL`.
+    #' - `right`: `unit` values for the right borders or `NULL`.
     #'
     #' @importFrom gtable is.gtable
     border_sizes = function(self, gt = NULL, free = NULL) {
         if (is.gtable(gt)) {
             ans <- .subset2(gt, "heights")
             if (any(free == "top")) {
-                top <- unit(rep_len(0, TOP_BORDER), "mm")
+                top <- NULL
             } else {
                 top <- ans[seq_len(TOP_BORDER)]
             }
             if (any(free == "bottom")) {
-                bottom <- unit(rep_len(0, BOTTOM_BORDER), "mm")
+                bottom <- NULL
             } else {
                 bottom <- ans[seq(length(ans) - BOTTOM_BORDER + 1L, length(ans))]
             }
             ans <- .subset2(gt, "widths")
             if (any(free == "left")) {
-                left <- unit(rep_len(0, LEFT_BORDER), "mm")
+                left <- NULL
             } else {
                 left <- ans[seq_len(LEFT_BORDER)]
             }
             if (any(free == "right")) {
-                right <- unit(rep_len(0, RIGHT_BORDER), "mm")
+                right <- NULL
             } else {
                 right <- ans[seq(length(ans) - RIGHT_BORDER + 1L, length(ans))]
             }

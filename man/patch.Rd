@@ -149,10 +149,10 @@ values include \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.
 \strong{Value}
 A list with components:
 \itemize{
-\item \code{top}: \code{unit} values for the top borders.
-\item \code{left}: \code{unit} values for the left borders.
-\item \code{bottom}: \code{unit} values for the bottom borders.
-\item \code{right}: \code{unit} values for the right borders.
+\item \code{top}: \code{unit} values for the top borders or \code{NULL}.
+\item \code{left}: \code{unit} values for the left borders or \code{NULL}.
+\item \code{bottom}: \code{unit} values for the bottom borders or \code{NULL}.
+\item \code{right}: \code{unit} values for the right borders or \code{NULL}.
 }}
 
 \item{\code{align_border}}{\strong{Description}
