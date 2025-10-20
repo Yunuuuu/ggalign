@@ -133,9 +133,9 @@ class.
 }
 }
 \description{
-By default, \code{\link[=align_plots]{align_plots()}} attempts to align all plot panels and their
-elements. The following helper functions can be used to selectively remove
-or relax these alignment constraints:
+By default, \code{\link[=alignpatches]{alignpatches()}}/\code{\link[=align_plots]{align_plots()}} attempts to align all plot
+panels and their elements. The following helper functions can be used to
+selectively remove or relax these alignment constraints:
 }
 \details{
 \itemize{
@@ -145,8 +145,7 @@ without forcing axis alignment.
 \item \code{free_border()}: Aligns the panel area but not its surrounding borders
 (such as axis titles, tick marks, or labels).
 \item \code{free_lab()}: attaches axis titles and tick labels directly to the plot
-panel. It's mainly included for completeness; in most cases, combining
-\code{free_border()} and \code{free_space()} is sufficient.
+panel.
 \item \code{free_space()}: Removes border spacing when aligning plots.
 \item \code{free_vp}: Customize the \link[grid:viewport]{viewport} when aligning.
 \item \code{free_guide}: If we want to override the behaviour of the overall guides
@@ -184,11 +183,11 @@ align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
 # We could use `free_lab` to fix the layout in a different way
 align_plots(p1, free_lab(p2), ncol = 1L)
 
-# `free_border` is similar with `free_lab`, they have a distinction in terms
-# of placement on either the top or bottom side of the panel. Specifically,
-# the top side contains the `title` and `subtitle`, while the bottom side
-# contains the `caption`. free_lab() does not attach these elements in the
-# panel area.
+# `free_border()` is similar with `free_lab`, they have a distinction in 
+# terms of placement on either the top or bottom side of the panel. 
+# Specifically, the top side contains the `title` and `subtitle`, while the 
+# bottom side contains the `caption`. `free_border()` also free these 
+# elements when ligning.
 p3 <- ggplot(mtcars) +
     geom_point(aes(hp, wt, colour = mpg)) +
     ggtitle("Plot 3")
