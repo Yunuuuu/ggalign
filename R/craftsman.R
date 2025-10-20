@@ -1,5 +1,3 @@
-is_craftsman <- function(x) inherits(x, "Craftsman")
-
 #' Craftsman Object for Layout Management
 #'
 #' The `Craftsman` is a virtual object used internally to manage layout-specific

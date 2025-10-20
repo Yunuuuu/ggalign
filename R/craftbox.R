@@ -15,57 +15,22 @@ new_craftbox <- function(craftsman = NULL, ...,
 #' @include utils-assert.R
 CraftBox <- S7::new_class("CraftBox",
     properties = list(
-        craftsman = S7::new_property(
-            S7::class_any,
-            validator = function(value) {
-                if (!is_craftsman(value)) {
-                    return("must be a 'Craftsman' object")
-                }
-            },
-            setter = function(self, value) {
-                if (!is.null(prop(self, "craftsman"))) {
-                    cli_abort("'@craftsman' is read-only")
-                }
-                prop(self, "craftsman") <- value
-                self
-            }
-        ),
-        plot = S7::new_property(
-            S7::new_union(S7::class_any),
-            validator = function(value) {
-                if (!is.null(value) && !is_ggplot(value)) {
-                    return("must be a 'ggplot' object")
-                }
-            },
-            setter = function(self, value) {
-                if (!is.null(prop(self, "plot"))) {
-                    cli_abort("'@plot' is read-only; use the '+' operator to update it.")
-                }
-                prop(self, "plot") <- value
-                self
-            },
-            default = NULL
-        ),
+        craftsman = S7::new_S3_class("Craftsman"),
+        plot = S7::new_union(NULL, ggplot2::class_ggplot),
         init_hooks = S7::new_property(
             S7::class_list,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "init_hooks"))) {
-                    cli_abort("'@init_hooks' is read-only; use the '+' operator to update it.")
+            validator = function(value) {
+                for (fn in value) {
+                    if (!is.function(fn)) {
+                        return("must be a list of functions")
+                    }
+                    if (length(formals(fn)) < 2L) {
+                        return("each function must accept at least two arguments")
+                    }
                 }
-                prop(self, "init_hooks") <- value
-                self
             }
         ),
-        active = S7::new_property(
-            active,
-            setter = function(self, value) {
-                if (!is.null(prop(self, "active"))) {
-                    cli_abort("'@active' is read-only; use the '+' operator to update it.")
-                }
-                prop(self, "active") <- value
-                self
-            }
-        ),
+        active = active,
         size = prop_grid_unit("size", validator = validator_size(1L)),
         schemes = Schemes
     )
@@ -132,7 +97,7 @@ S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
         ))
     }
     # Bypass S7 setter validation: update internal property via attr() directly
-    attr(box, "plot") <- update_ggplot(
+    prop(box, "plot", check = FALSE) <- update_ggplot(
         object, ggfun("plot_clone")(prop(box, "plot")), objectname
     )
     box
@@ -141,15 +106,6 @@ S7::method(craftbox_add, S7::class_any) <- function(object, box, objectname) {
 #' @importFrom S7 prop
 S7::method(craftbox_add, S7::class_function) <- function(object, box,
                                                          objectname) {
-    if (is.null(prop(box, "plot"))) {
-        cli_abort(c(
-            sprintf(
-                "Cannot add {.var {objectname}} to %s",
-                object_name(box)
-            ),
-            i = sprintf("no plot found for %s", object_name(box))
-        ))
-    }
     if (length(formals(object)) < 2L) {
         cli_abort(c(
             sprintf(
@@ -160,26 +116,30 @@ S7::method(craftbox_add, S7::class_function) <- function(object, box,
         ))
     }
     # Bypass S7 setter validation: update internal property via attr() directly
-    attr(box, "init_hooks") <- c(prop(box, "init_hooks"), object)
+    prop(box, "init_hooks", check = FALSE) <- c(prop(box, "init_hooks"), object)
     box
 }
 
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop
 S7::method(craftbox_add, Schemes) <- function(object, box, objectname) {
-    attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
+    prop(box, "schemes", check = FALSE) <- scheme_update(
+        prop(box, "schemes"), object
+    )
     box
 }
 
 #' @importFrom S7 prop
 S7::method(craftbox_add, Scheme) <- function(object, box, objectname) {
-    attr(box, "schemes") <- scheme_update(prop(box, "schemes"), object)
+    prop(box, "schemes", check = FALSE) <- scheme_update(
+        prop(box, "schemes"), object
+    )
     box
 }
 
 #' @importFrom S7 prop
 S7::method(craftbox_add, active) <- function(object, box, objectname) {
-    attr(box, "active") <- prop(box, "active") + object
+    prop(box, "active", check = FALSE) <- prop(box, "active") + object
     box
 }
 
