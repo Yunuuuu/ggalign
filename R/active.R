@@ -23,22 +23,26 @@
 #' @param name A string specifying the plot's name, useful for switching active
 #'   contexts through the `what` argument in functions like
 #'   [`quad_anno()`]/[`stack_switch()`].
-#' @importFrom rlang is_na
 #' @importFrom S7 prop prop<-
 #' @export
 active <- S7::new_class("active",
     properties = list(
         order = S7::new_property(
             S7::class_integer,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single integer number")
+                }
+            },
             setter = function(self, value) {
-                assert_number_whole(value,
-                    allow_na = TRUE, allow_null = TRUE,
-                    arg = "@order"
-                )
-                if (is.null(value) || is_na(value)) {
+                if (identical(value, NA) || identical(value, NA_integer_)) {
                     prop(self, "order", check = FALSE) <- NA_integer_
-                } else {
+                # styler: off
+                } else if (.rlang_check_number(value, FALSE) == 0L) {
+                    # styler: on
                     prop(self, "order", check = FALSE) <- as.integer(value)
+                } else {
+                    prop(self, "order") <- value
                 }
                 self
             },
@@ -46,33 +50,23 @@ active <- S7::new_class("active",
         ),
         use = S7::new_property(
             S7::class_logical,
-            setter = function(self, value) {
-                assert_bool(value,
-                    allow_na = TRUE, allow_null = TRUE,
-                    arg = "@use"
-                )
-                if (is.null(value) || is_na(value)) {
-                    prop(self, "use", check = FALSE) <- NA
-                } else {
-                    prop(self, "use", check = FALSE) <- value
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
                 }
-                self
             },
             default = NA
         ),
         name = S7::new_property(
             S7::class_character,
-            setter = function(self, value) {
-                assert_string(value,
-                    allow_empty = FALSE,
-                    allow_na = TRUE, allow_null = TRUE,
-                    arg = "@name"
-                )
-                if (is.null(value) || is_na(value)) {
-                    prop(self, "name", check = FALSE) <- NA_character_
-                } else {
-                    prop(self, "name", check = FALSE) <- value
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single character string")
                 }
+            },
+            setter = function(self, value) {
+                if (identical(value, NA)) value <- NA_character_
+                prop(self, "name") <- value
                 self
             },
             default = NA_character_
@@ -83,6 +77,7 @@ active <- S7::new_class("active",
 #' @importFrom S7 S7_inherits
 is_active <- function(x) S7_inherits(x, active)
 
+#' @importFrom rlang is_na
 #' @importFrom S7 props props<-
 local(S7::method(`+`, list(active, active)) <- function(e1, e2) {
     prop_list <- props(e2)

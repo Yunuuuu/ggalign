@@ -1,14 +1,14 @@
 # active property assignment and validation
 
-    `@order` must be a whole number, `NA`, or `NULL`, not an integer vector.
+    <ggalign::active>@order must be a single integer number
 
 ---
 
-    `@use` must be `TRUE`, `FALSE`, `NA`, or `NULL`, not a logical vector.
+    <ggalign::active>@use must be a single boolean value
 
 ---
 
-    `@name` must be a single string, `NA`, or `NULL`, not a character vector.
+    <ggalign::active>@name must be a single character string
 
 # active + incompatible throws error
 

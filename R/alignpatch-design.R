@@ -32,7 +32,7 @@ layout_design <- S7::new_class("layout_design",
                 }
             },
             setter = function(self, value) {
-                if (is_na(value)) value <- NA_real_
+                if (identical(value, NA)) value <- NA_real_
                 prop(self, "ncol") <- value
                 self
             },
@@ -46,7 +46,7 @@ layout_design <- S7::new_class("layout_design",
                 }
             },
             setter = function(self, value) {
-                if (is_na(value)) value <- NA_real_
+                if (identical(value, NA)) value <- NA_real_
                 prop(self, "nrow") <- value
                 self
             },
@@ -59,17 +59,12 @@ layout_design <- S7::new_class("layout_design",
                     return("must be a single boolean value")
                 }
             },
-            setter = function(self, value) {
-                if (is_na(value)) value <- NA
-                prop(self, "byrow") <- value
-                self
-            },
             default = NA
         ),
         widths = S7::new_property(
             S7::new_union(NULL, S7::class_numeric, S3_unit),
             setter = function(self, value) {
-                if (is_na(value)) value <- NA_real_
+                if (identical(value, NA)) value <- NA_real_
                 prop(self, "widths") <- value
                 self
             }
@@ -77,7 +72,7 @@ layout_design <- S7::new_class("layout_design",
         heights = S7::new_property(
             S7::new_union(NULL, S7::class_numeric, S3_unit),
             setter = function(self, value) {
-                if (is_na(value)) value <- NA_real_
+                if (identical(value, NA)) value <- NA_real_
                 prop(self, "heights") <- value
                 self
             }
@@ -96,7 +91,7 @@ layout_design <- S7::new_class("layout_design",
         guides = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
             setter = function(self, value) {
-                if (is_na(value)) {
+                if (identical(value, NA)) {
                     value <- NA_character_
                 } else if (!is_waiver(value) && !is.null(value)) {
                     assert_guides(value, arg = "@guides")

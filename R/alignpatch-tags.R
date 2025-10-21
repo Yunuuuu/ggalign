@@ -74,7 +74,7 @@ layout_tags <- S7::new_class("layout_tags",
         list(tags = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
             setter = function(self, value) {
-                if (is_na(value)) {
+                if (identical(value, NA)) {
                     value <- NA_character_
                 } else if (!is_waiver(value) && !is.null(value)) {
                     value <- as.character(value)
