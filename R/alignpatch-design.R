@@ -90,13 +90,22 @@ layout_design <- S7::new_class("layout_design",
         ),
         guides = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
-            setter = function(self, value) {
-                if (identical(value, NA)) {
-                    value <- NA_character_
-                } else if (!is_waiver(value) && !is.null(value)) {
-                    assert_guides(value, arg = "@guides")
+            validator = function(value) {
+                if (is_waiver(value) || is.null(value) ||
+                    identical(value, NA_character_)) {
+                    return(NULL)
                 }
-                prop(self, "guides", check = FALSE) <- value
+                if (length(value) != 1L || !nzchar(value) ||
+                    grepl("[^tlbri]", value)) {
+                    return(sprintf(
+                        "can only be a string contain the %s characters",
+                        oxford_and(c(.tlbr, "i"))
+                    ))
+                }
+            },
+            setter = function(self, value) {
+                if (identical(value, NA)) value <- NA_character_
+                prop(self, "guides") <- value
                 self
             },
             default = NA_character_

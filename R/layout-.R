@@ -35,6 +35,7 @@ local(S7::method(print, LayoutProto) <- print.patch_ggplot)
 #' @importFrom grid grid.draw
 local(S7::method(grid.draw, LayoutProto) <- grid.draw.patch_ggplot)
 
+# Used by both `alignpatches`
 #' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     function(object, plot, objectname) {
@@ -112,24 +113,14 @@ CircleLayout <- S7::new_class(
     "CircleLayout", ChainLayout,
     properties = list(
         radial = S7::new_property(
-            S7::class_any,
+            S7::new_union(NULL, S7::new_S3_class("CoordRadial")),
             validator = function(value) {
-                if (!is.null(value) && !inherits(value, "CoordRadial")) {
-                    return("must be created with `coord_circle()`")
-                }
                 if (!is.null(value) && abs(diff(value$arc)) < pi / 2L) {
                     return("must span at least 90 degrees; smaller arcs are not supported")
                 }
             }
         ),
-        sector_spacing = S7::new_property(
-            S7::class_any,
-            validator = function(value) {
-                if (!is.null(value) && !is.numeric(value)) {
-                    return("must be a `numeric`")
-                }
-            }
-        )
+        sector_spacing = S7::new_union(NULL, S7::class_numeric)
     )
 )
 
@@ -157,13 +148,12 @@ QuadLayout <- S7::new_class(
     "QuadLayout", LayoutProto,
     properties = list(
         current = S7::new_property(
-            S7::class_any,
+            S7::new_union(NULL, S7::class_integer, S7::class_character),
             validator = function(value) {
                 if (!is.null(value) && length(value) != 1L) {
-                    return("must be of length 1")
+                    return("must be a single integer number or single string")
                 }
-            },
-            default = NULL
+            }
         ),
         plot = S7::new_union(NULL, ggplot2::class_ggplot),
         body_schemes = Schemes,
