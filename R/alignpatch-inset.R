@@ -13,7 +13,8 @@
 #' background.
 #' @param vp A [`viewport`][grid::viewport] object, you can use this to define
 #' the plot area.
-#' @return An `inset` object, which can be added to ggplot.
+#' @return An `inset` object that can be added to any object implementing the
+#' [`patch()`] method.
 #' @inherit as_grob seealso
 #' @examples
 #' library(grid)
@@ -35,29 +36,36 @@ inset <- S7::new_class(
         vp = S7::new_union(NULL, S7::new_S3_class("viewport")),
         align = S7::new_property(
             S7::class_character,
-            setter = function(self, value) {
-                value <- arg_match0(
-                    value, c("panel", "plot", "full"),
-                    arg_nm = "@align"
-                )
-                prop(self, "align", check = FALSE) <- value
-                self
+            validator = function(value) {
+                if (length(value) != 1L || is.na(value) ||
+                    !any(value == c("panel", "plot", "full"))) {
+                    return(sprintf(
+                        "can only be a string containing the %s characters",
+                        oxford_and(c("panel", "plot", "full"))
+                    ))
+                }
             }
         ),
         clip = S7::new_property(
-            S7::class_character,
-            setter = function(self, value) {
-                assert_bool(value, arg = "@clip")
-                prop(self, "clip", check = FALSE) <- if (value) "on" else "off"
-                self
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
             }
         ),
         on_top = S7::new_property(
             S7::class_logical,
-            setter = function(self, value) {
-                assert_bool(value, arg = "@on_top")
-                prop(self, "on_top", check = FALSE) <- value
-                self
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
             }
         )
     ),
@@ -77,13 +85,110 @@ inset <- S7::new_class(
     }
 )
 
+add_inset <- function(plot, inset) {
+    attr(plot, "ggalign_insets") <- c(
+        attr(plot, "ggalign_insets", exact = TRUE),
+        list(inset)
+    )
+    if (!inherits(plot, "ggalign_inset")) {
+        plot <- add_class(plot, "ggalign_inset")
+    }
+    plot
+}
+
 #' @importFrom grid grid.draw
 local(S7::method(grid.draw, inset) <- function(x, recording = TRUE) {
     grid.draw(prop(x, "grob"))
 })
 
+#' @export
+print.ggalign_inset <- print.patch_ggplot
+
+#' @importFrom grid grid.draw
+#' @exportS3Method
+grid.draw.ggalign_inset <- grid.draw.patch_ggplot
+
 #' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(inset, ggplot2::class_ggplot)) <-
-    function(object, plot, objectname, ...) {
-        make_wrap(plot, object)
-    }
+    function(object, plot, objectname, ...) add_inset(plot, object)
+
+#' @importFrom ggplot2 update_ggplot
+S7::method(update_ggplot, list(inset, alignpatches)) <-
+    function(object, plot, objectname, ...) add_inset(plot, object)
+
+#################################################
+#' @importFrom ggplot2 ggproto ggproto_parent
+#' @importFrom grid editGrob
+#' @importFrom gtable is.gtable gtable_add_grob
+#' @export
+patch.ggalign_inset <- function(x) {
+    insets <- attr(x, "ggalign_insets", exact = TRUE)
+    attr(x, "ggalign_insets") <- NULL
+    Parent <- NextMethod()
+    if (is.null(insets)) return(Parent) # styler: off
+    ggproto(
+        "PatchWrapped",
+        Parent,
+        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+            gt <- ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+            # Note: When the gtable represents a facetted plot, the number
+            # of rows/columns (heights or widths) will exceed
+            #   TABLE_ROWS/COLS.
+            if (is.gtable(gt) && nrow(gt) >= TABLE_ROWS &&
+                ncol(gt) >= TABLE_COLS) {
+                z <- .subset2(.subset2(gt, "layout"), "z")
+                top_z <- max(z) + 1L
+                bottom_z <- min(z) - 1L
+                for (i in seq_along(insets)) {
+                    inset <- .subset2(insets, i)
+                    align <- prop(inset, "align")
+                    clip <- if (prop(inset, "clip")) "on" else "off"
+                    grob <- prop(inset, "grob")
+                    if (!is.null(vp <- prop(inset, "vp"))) {
+                        grob <- editGrob(grob, vp = vp)
+                    }
+                    if (prop(inset, "on_top")) {
+                        inset_z <- top_z
+                    } else {
+                        inset_z <- bottom_z
+                    }
+
+                    # add the grob to the gtable
+                    if (align == "full") {
+                        gt <- gtable_add_grob(gt,
+                            list(grob), 1L, 1L, nrow(gt), ncol(gt),
+                            clip = clip,
+                            name = sprintf("inset-full-%d", i),
+                            z = inset_z
+                        )
+                    } else {
+                        panel_loc <- find_panel(gt)
+                        gt <- switch(align,
+                            plot = gtable_add_grob(gt,
+                                list(grob),
+                                .subset2(panel_loc, "t") - 3L,
+                                .subset2(panel_loc, "l") - 3L,
+                                .subset2(panel_loc, "b") + 3L,
+                                .subset2(panel_loc, "r") + 3L,
+                                clip = clip,
+                                name = sprintf("inset-plot-%d", i),
+                                z = inset_z
+                            ),
+                            panel = gtable_add_grob(gt,
+                                list(grob),
+                                .subset2(panel_loc, "t"),
+                                .subset2(panel_loc, "l"),
+                                .subset2(panel_loc, "b"),
+                                .subset2(panel_loc, "r"),
+                                clip = clip,
+                                name = sprintf("inset-panel-%d", i),
+                                z = inset_z
+                            )
+                        )
+                    }
+                }
+            }
+            gt
+        }
+    )
+}

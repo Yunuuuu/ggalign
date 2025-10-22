@@ -98,7 +98,7 @@ layout_design <- S7::new_class("layout_design",
                 if (length(value) != 1L || !nzchar(value) ||
                     grepl("[^tlbri]", value)) {
                     return(sprintf(
-                        "can only be a string contain the %s characters",
+                        "can only be a string containing the %s characters",
                         oxford_and(c(.tlbr, "i"))
                     ))
                 }

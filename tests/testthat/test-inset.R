@@ -9,7 +9,7 @@ test_that("inset() creates a patch_inset object with default parameters", {
     expect_s7_class(pi, inset)
     expect_s3_class(pi@grob, "grob")
     expect_equal(pi@align, "panel")
-    expect_equal(pi@clip, "on")
+    expect_true(pi@clip)
     expect_true(pi@on_top)
 })
 
@@ -41,6 +41,6 @@ test_that("ggplot_add inset calls make_wrap", {
     pi <- inset(p2, vp = viewport(width = 0.5, height = 0.5))
     expect_doppelganger(
         "ggplot_add inset produces correct plot output",
-        ggplot_add(pi, p)
+        p + pi
     )
 })
