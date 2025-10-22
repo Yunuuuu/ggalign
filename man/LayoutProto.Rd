@@ -6,8 +6,8 @@
 \usage{
 LayoutProto(
   data = NULL,
-  schemes = Schemes(),
   titles = layout_title(),
+  schemes = Schemes(),
   theme = theme(),
   name = NA_character_
 )

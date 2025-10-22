@@ -9,8 +9,8 @@ LayoutProto <- S7::new_class(
     "LayoutProto",
     properties = list(
         data = S7::class_any,
-        schemes = Schemes,
         titles = layout_title,
+        schemes = Schemes,
         theme = S7::new_property(
             ggplot2::class_theme,
             default = quote(theme())

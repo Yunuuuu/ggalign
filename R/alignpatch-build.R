@@ -109,7 +109,7 @@ S7::method(ggalign_gtable, alignpatches) <- function(x) {
         table <- gtable_add_grob(table,
             element_render(theme, "plot.background"),
             t = 1L, l = 1L, b = -1L, r = -1L, name = "background",
-            z = 0
+            z = LAYOUT_BACKGROUND_Z
         )
         table$layout <- table$layout[
             c(nrow(table$layout), 1:(nrow(table$layout) - 1L)),

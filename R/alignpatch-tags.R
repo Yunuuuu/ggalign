@@ -311,7 +311,7 @@ table_add_tag <- function(table, label, theme) {
                 name = "tag", clip = "off",
                 t = 2L, b = nrow(table) - 1L,
                 l = 2L, r = ncol(table) - 1L,
-                z = 5L
+                z = TAGS_Z
             )
             return(table)
         }
@@ -344,6 +344,6 @@ table_add_tag <- function(table, label, theme) {
         table, tag,
         name = "tag", clip = "off",
         t = place$t, l = place$l, b = place$b, r = place$r,
-        z = 5L
+        z = TAGS_Z
     )
 }

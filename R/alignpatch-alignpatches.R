@@ -144,6 +144,21 @@ S7::method(patch, alignpatches) <- function(x) {
 }
 
 ##############################################################
+# For z in the gtable layout
+LAYOUT_BACKGROUND_Z <- 0L
+PLOT_BACKGROUND_Z <- 1L
+PLOT_TABLE_Z <- 2L
+LAYOUT_FOREGROUND_Z <- 3L
+GUIDE_LEGENDS_Z <- 4L
+TAGS_Z <- 5L
+
+# 0L: layout background
+# 1L: background of the plot
+# 2L: plot table
+# 3L: foreground of the panel area
+# 4L: legends
+# 5L: tags
+
 #' @importFrom ggplot2 ggproto
 #' @noRd
 PatchAlignpatches <- ggproto(
@@ -360,7 +375,7 @@ PatchAlignpatches <- ggproto(
             l = .subset2(panel_pos, "l"),
             b = .subset2(panel_pos, "b"),
             r = .subset2(panel_pos, "r"),
-            z = 3L,
+            z = LAYOUT_FOREGROUND_Z,
             name = "panel-foreground"
         )
         gt <- table_add_tag(gt, tag, theme)
@@ -380,7 +395,7 @@ PatchAlignpatches <- ggproto(
                 gt <- gtable_add_grob(gt,
                     element_render(theme, "plot.background"),
                     t = 1L, l = 1L, b = -1L, r = -1L,
-                    name = "background", z = 0L
+                    name = "background", z = LAYOUT_BACKGROUND_Z
                 )
             }
             self$patches <- patches
@@ -529,8 +544,7 @@ PatchAlignpatches <- ggproto(
                     t_heights, l_widths,
                     b_heights, r_widths
                 ),
-                # bg_z, plot_z
-                t, l, b, r, i, 1L, 2L
+                t, l, b, r, i, PLOT_BACKGROUND_Z, PLOT_TABLE_Z # bg_z, plot_z
             )
         }
         # arrange the grobs
@@ -553,7 +567,7 @@ PatchAlignpatches <- ggproto(
                     guide_pos = guide_pos,
                     guides = .subset2(guide_list, guide_pos),
                     theme = theme, panel_pos = panel_pos,
-                    clip = "off", z = 4L,
+                    clip = "off", z = GUIDE_LEGENDS_Z,
                     name = sprintf("guide-box-collected-%s", guide_pos),
                     gt = gt
                 )
