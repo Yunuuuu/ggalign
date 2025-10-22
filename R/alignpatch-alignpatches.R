@@ -430,6 +430,53 @@ PatchAlignpatches <- ggproto(
         if (!is.unit(panel_heights)) {
             panel_heights <- unit(panel_heights, "null")
         }
+        cols <- field(area, "l")
+        rows <- field(area, "t")
+
+        # For gtable with fixed panel sizes ------------------
+        # Use the sum of panel widths/heights or the larger of current
+        # only set width/heigth when the user provided panel width/height
+        # and all plot panel width/height is absoluted unit size
+        for (i in seq_along(gt_list)) {
+            gt_cur <- .subset2(gt_list, i)
+            if (!is.gtable(gt_cur)) next
+            panel_pos <- find_panel(gt_cur)
+            if (nrow(panel_pos) == 0L) next
+
+            col <- .subset(cols, i)
+            panel_width <- panel_widths[col]
+            can_set_width <- is.na(as.numeric(panel_width))
+            if (can_set_width || is_absolute_unit(panel_width)) {
+                gt_panel_widths <- .subset2(gt_cur, "widths")[
+                    .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
+                ]
+                if (all(is_absolute_unit(gt_panel_widths))) {
+                    if (can_set_width) {
+                        panel_width <- sum(gt_panel_widths)
+                    } else {
+                        panel_width <- max(panel_width, sum(gt_panel_widths))
+                    }
+                    panel_widths[col] <- convertWidth(panel_width, "mm")
+                }
+            }
+
+            row <- .subset(rows, i)
+            panel_height <- panel_heights[row]
+            can_set_height <- is.na(as.numeric(panel_height))
+            if (can_set_height || is_absolute_unit(panel_height)) {
+                gt_panel_heights <- .subset2(gt_cur, "heights")[
+                    .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
+                ]
+                if (all(is_absolute_unit(gt_panel_heights))) {
+                    if (can_set_height) {
+                        panel_height <- sum(gt_panel_heights)
+                    } else {
+                        panel_height <- max(panel_height, sum(gt_panel_heights))
+                    }
+                    panel_heights[row] <- convertHeight(panel_height, "mm")
+                }
+            }
+        }
 
         # For gtable with fixed aspect ratio ------------------
         # if it cannot be fixed and aligned, the strip, axis and labs will be
@@ -444,8 +491,6 @@ PatchAlignpatches <- ggproto(
         # heights based on the fixed aspect ratio
         guess_widths <- which(is.na(as.numeric(panel_widths)))
         guess_heights <- which(is.na(as.numeric(panel_heights)))
-        cols <- field(area, "l")
-        rows <- field(area, "t")
         patch_index <- order(
             # we first set the widths for the fixed plot with heights set by
             # user

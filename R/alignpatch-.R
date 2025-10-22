@@ -376,33 +376,6 @@ Patch <- ggproto(
         can_set_width <- is.na(as.numeric(panel_width))
         can_set_height <- is.na(as.numeric(panel_height))
 
-        # Handle fixed panel dimensions
-        # Use the sum of panel widths/heights or the larger of current
-        if (can_set_width || is_absolute_unit(panel_width)) {
-            panel_widths <- .subset2(gt, "widths")[cols[1L]:cols[2L]]
-            if (all(is_absolute_unit(panel_widths))) {
-                if (can_set_width) {
-                    panel_width <- sum(panel_widths)
-                } else {
-                    panel_width <- max(panel_width, sum(panel_widths))
-                }
-                panel_width <- convertWidth(panel_width, "mm")
-                can_set_width <- FALSE
-            }
-        }
-        if (can_set_height || is_absolute_unit(panel_height)) {
-            panel_heights <- .subset2(gt, "heights")[rows[1L]:rows[2L]]
-            if (all(is_absolute_unit(panel_heights))) {
-                if (can_set_height) {
-                    panel_height <- sum(panel_heights)
-                } else {
-                    panel_height <- max(panel_height, sum(panel_heights))
-                }
-                panel_height <- convertHeight(panel_height, "mm")
-                can_set_height <- FALSE
-            }
-        }
-
         # try to maintain aspect ratio if there is a single facet panel
         if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
             respect <- is_respect(gt)
