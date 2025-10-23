@@ -434,9 +434,9 @@ PatchAlignpatches <- ggproto(
         rows <- field(area, "t")
 
         # For gtable with fixed panel sizes ------------------
-        # Use the sum of panel widths/heights or the larger of current
-        # only set width/heigth when the user provided panel width/height
-        # and all plot panel width/height is absoluted unit size
+        # we must ensure all plot panels fill well, which means we should use
+        # the largest panel sizes. This matters when the panel sizes are all
+        # absolute unit sizes.
         for (i in seq_along(gt_list)) {
             gt_cur <- .subset2(gt_list, i)
             if (!is.gtable(gt_cur)) next
@@ -479,10 +479,7 @@ PatchAlignpatches <- ggproto(
         }
 
         # For gtable with fixed aspect ratio ------------------
-        # if it cannot be fixed and aligned, the strip, axis and labs will be
-        # attached into the panel
-        # the plot to be fixed must in only one square of the area
-        need_fix <- field(area, "l") == field(area, "r") &
+        need_respect <- field(area, "l") == field(area, "r") &
             field(area, "t") == field(area, "b") &
             vapply(gt_list, is_respect, logical(1L), USE.NAMES = FALSE)
 
@@ -500,8 +497,8 @@ PatchAlignpatches <- ggproto(
             # we set widths and heights for remaning plots
             # based on the number of plots in each row/column in the descending
             # order
-            c(table(rows[need_fix]))[as.character(rows)],
-            c(table(cols[need_fix]))[as.character(cols)],
+            c(table(rows[need_respect]))[as.character(rows)],
+            c(table(cols[need_respect]))[as.character(cols)],
             decreasing = TRUE
         )
         sizes_list <- respect_dims <- vector("list", length(patches))

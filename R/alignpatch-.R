@@ -241,8 +241,13 @@ Patch <- ggproto(
     #'   used to add tag.
     #'
     #' **Value**
-    #' A standardized [`gtable`][gtable::gtable] object representing the plot
-    #' layout.
+    #' A standardized [`gtable`][gtable::gtable] object, or a simple
+    #' [`grob`][grid::grob] object.
+    #'
+    #' The returned object represents the graphical structure, which can either
+    #' be a full table-based layout (`gtable`) for more complex arrangements or
+    #' a simpler graphical object (`grob`) when only basic plot elements are
+    #' involved.
     gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
         cli_abort("{.fn gtable} method is not defined")
     },
@@ -255,8 +260,8 @@ Patch <- ggproto(
     #'
     #' This method extracts guide legends based on the sides specified in the
     #' `guides` argument. After collecting the guides, the corresponding space
-    #' in the the `gt` is removed to free up space, except for guides
-    #' placed `inside` the panel.
+    #' in the `gt` is removed to free up space, except for guides placed
+    #' `inside` the panel.
     #'
     #' **Arguments**
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by

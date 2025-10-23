@@ -72,8 +72,13 @@ used to add tag.
 }
 
 \strong{Value}
-A standardized \code{\link[gtable:gtable]{gtable}} object representing the plot
-layout.}
+A standardized \code{\link[gtable:gtable]{gtable}} object, or a simple
+\code{\link[grid:grid.grob]{grob}} object.
+
+The returned object represents the graphical structure, which can either
+be a full table-based layout (\code{gtable}) for more complex arrangements or
+a simpler graphical object (\code{grob}) when only basic plot elements are
+involved.}
 
 \item{\code{decompose_guides}}{\strong{Description}
 
@@ -82,8 +87,8 @@ they occupy.
 
 This method extracts guide legends based on the sides specified in the
 \code{guides} argument. After collecting the guides, the corresponding space
-in the the \code{gt} is removed to free up space, except for guides
-placed \code{inside} the panel.
+in the \code{gt} is removed to free up space, except for guides placed
+\code{inside} the panel.
 
 \strong{Arguments}
 \itemize{
