@@ -32,39 +32,12 @@
 #'     p3 + theme(plot.background = element_blank())
 #' ) +
 #'     layout_theme(plot.background = element_rect(fill = "red"))
-#' @importFrom ggplot2 theme is_theme
 #' @include ggplot-theme.R
 #' @export
 layout_theme <- S7::new_class(
     "layout_theme",
     properties = list(theme = ggplot2::class_theme),
-    constructor = rlang::new_function(
-        # We utilize editor completion by listing all `theme()` arguments here.
-        # By placing `...` at the beginning, we can check if the first
-        # following argument is a `theme()` object rather than individual theme
-        # elements.
-        c(
-            rlang::exprs(... = ),
-            .subset(
-                rlang::fn_fmls(theme),
-                vec_set_difference(names(rlang::fn_fmls(theme)), "...")
-            )
-        ),
-        quote({
-            elements <- ggfun("find_args")(
-                ..., complete = NULL, validate = NULL
-            )
-            th_element <- theme(!!!elements)
-            th <- NULL
-            for (i in seq_len(...length())) {
-                if (is_theme(t <- ...elt(i))) {
-                    th <- ggfun("add_theme")(th, t)
-                }
-            }
-            theme <- ggfun("add_theme")(th, th_element)
-            new_object(S7_object(), theme = theme)
-        })
-    )
+    constructor = S7_theme_constructor
 )
 
 #' @importFrom ggplot2 is_waiver

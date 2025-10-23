@@ -13,6 +13,34 @@ default_theme <- function() {
     }
 }
 
+#' @importFrom ggplot2 theme is_theme
+#' @importFrom S7 new_object S7_object
+S7_theme_constructor <- rlang::new_function(
+    # The ellipsis (...) allows for passing arbitrary arguments to the function.
+    # We use editor completion here to list all `theme()` arguments, which makes
+    # it easier to inspect the arguments when writing the function.  By placing
+    # `...` at the start, we can check if the first argument is a `theme()`
+    # object, which would indicate that the user passed an entire theme.
+    # elements.
+    c(
+        rlang::exprs(... = ),
+        .subset(
+            rlang::fn_fmls(theme),
+            vec_set_difference(names(rlang::fn_fmls(theme)), "...")
+        )
+    ),
+    quote({
+        elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
+        th_element <- theme(!!!elements)
+        th <- NULL
+        for (i in seq_len(...length())) {
+            if (is_theme(t <- ...elt(i))) th <- ggfun("add_theme")(th, t)
+        }
+        theme <- ggfun("add_theme")(th, th_element)
+        new_object(S7_object(), theme = theme)
+    })
+)
+
 # Check if user has set the theme
 #' @importFrom ggplot2 complete_theme
 is_theme_unset <- function() {

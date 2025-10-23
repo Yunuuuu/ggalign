@@ -25,37 +25,12 @@
 #'     theme(plot.background = element_rect(fill = "blue")) +
 #'     scheme_theme(plot.background = element_rect(fill = "red"))
 #'
-#' @importFrom S7 new_object S7_object
-#' @importFrom ggplot2 theme is_theme
+#' @include ggplot-theme.R
 #' @export
 scheme_theme <- S7::new_class(
     "scheme_theme", Scheme,
     properties = list(theme = ggplot2::class_theme),
-    constructor = rlang::new_function(
-        # We utilize editor completion by listing all `theme()` arguments here.
-        # By placing `...` at the beginning, we can check if the first
-        # following argument is a `theme()` object rather than individual theme
-        # elements.
-        c(
-            rlang::exprs(... = ),
-            .subset(
-                rlang::fn_fmls(theme),
-                vec_set_difference(names(rlang::fn_fmls(theme)), "...")
-            )
-        ),
-        quote({
-            elements <- ggfun("find_args")(..., complete = NULL, validate = NULL)
-            th_element <- theme(!!!elements)
-            th <- NULL
-            for (i in seq_len(...length())) {
-                if (is_theme(t <- ...elt(i))) {
-                    th <- ggfun("add_theme")(th, t)
-                }
-            }
-            theme <- ggfun("add_theme")(th, th_element)
-            new_object(S7_object(), theme = theme)
-        })
-    )
+    constructor = S7_theme_constructor
 )
 
 ###############################################################
