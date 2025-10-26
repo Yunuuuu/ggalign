@@ -8,13 +8,6 @@
 LayoutProto <- S7::new_class(
     "LayoutProto",
     properties = list(
-        data = S7::class_any,
-        titles = layout_title,
-        schemes = Schemes,
-        theme = S7::new_property(
-            ggplot2::class_theme,
-            default = quote(theme())
-        ),
         name = S7::new_property(
             S7::class_character,
             validator = function(value) {
@@ -23,10 +16,19 @@ LayoutProto <- S7::new_class(
                 }
             },
             default = NA_character_
+        ),
+        data = S7::class_any,
+        titles = layout_title,
+        schemes = Schemes,
+        theme = S7::new_property(
+            ggplot2::class_theme,
+            default = quote(theme())
         )
     ),
     abstract = TRUE
 )
+
+BoxUnion <- S7::new_union(CraftBox, LayoutProto)
 
 local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
 
@@ -50,20 +52,13 @@ S7::method(alignpatches_apply, list(LayoutProto, S7::class_any)) <-
 
 # Used by both `circle_layout()` and `stack_layout()`
 #' @keywords internal
+#' @include domain.R
+#' @include craft-boxes.R
 ChainLayout <- S7::new_class("ChainLayout",
     LayoutProto,
     properties = list(
-        current = S7::new_property(
-            S7::class_integer,
-            validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single integer number")
-                }
-            },
-            default = NA_integer_
-        ),
-        box_list = S7::class_list,
-        domain = prop_domain(),
+        boxes = CraftBoxes,
+        domain = S7::new_union(NULL, Domain),
         direction = S7::new_property(
             S7::class_character,
             validator = function(value) {
@@ -122,63 +117,6 @@ CircleLayout <- S7::new_class(
         ),
         sector_spacing = S7::new_union(NULL, S7::class_numeric)
     )
-)
-
-#' @importFrom S7 S7_inherits
-prop_stack_layout <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        S7::class_any,
-        validator = function(value) {
-            if (!is.null(value) && !S7_inherits(value, StackLayout)) {
-                return("must be a 'StackLayout' object")
-            }
-        },
-        setter = function(self, value) {
-            prop(self, property) <- value
-            self
-        },
-        ...,
-        default = NULL
-    )
-}
-
-# Used to create the QuadLayout
-QuadLayout <- S7::new_class(
-    "QuadLayout", LayoutProto,
-    properties = list(
-        current = S7::new_property(
-            S7::new_union(NULL, S7::class_integer, S7::class_character),
-            validator = function(value) {
-                if (!is.null(value) && length(value) != 1L) {
-                    return("must be a single integer number or single string")
-                }
-            }
-        ),
-        plot = S7::new_union(NULL, ggplot2::class_ggplot),
-        body_schemes = Schemes,
-        # parameters for main body
-        width = prop_grid_unit("width", validator = validator_size(1L)),
-        height = prop_grid_unit("height", validator = validator_size(1L)),
-        # Used to align axis
-        horizontal = prop_domain(),
-        vertical = prop_domain(),
-        # top, left, bottom, right must be a StackLayout object.
-        top = prop_stack_layout("top"),
-        left = prop_stack_layout("left"),
-        bottom = prop_stack_layout("bottom"),
-        right = prop_stack_layout("right"),
-        # If we regard `QuadLayout` as a plot, and put it into the stack
-        # layout, we need following arguments to control it's behavour
-        plot_active = active
-    )
-)
-
-# used to create the heatmap layout
-#' @keywords internal
-HeatmapLayout <- S7::new_class(
-    "HeatmapLayout", QuadLayout,
-    properties = list(filling = S7::class_any) # parameters for heatmap body
 )
 
 ###########################################################

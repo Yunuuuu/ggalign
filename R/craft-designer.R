@@ -20,7 +20,7 @@
 #' @name Craftsman
 NULL
 
-Craftsman <- ggproto("Craftsman",
+CraftDesigner <- ggproto("ggalign::CraftDesigner",
     call = NULL,
 
     # State used internally after layout insertion
@@ -145,7 +145,7 @@ Craftsman <- ggproto("Craftsman",
     # ========== Utilities ==========
     summary = function(self, plot) {
         cls <- class(self)
-        cls <- cls[seq_len(which(cls == "Craftsman"))]
+        cls <- cls[seq_len(which(cls == "ggalign::CraftDesigner"))]
         sprintf("<Class: %s>", paste(cls, collapse = " "))
     }
 )

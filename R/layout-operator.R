@@ -61,6 +61,8 @@
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
 #' @include layout-.R
+#' @include layout-quad-.R
+#' @include layout-heatmap-.R
 #' @name layout-operator
 local(S7::method(`+`, list(LayoutProto, S7::class_missing)) <-
     function(e1, e2) {
@@ -116,7 +118,7 @@ local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
 #' @importFrom S7 S7_dispatch
 layout_add <- S7::new_generic(
     "layout_add", c("layout", "object"),
-    function(layout, object, objectname) S7_dispatch()
+    function(layout, object, ...) S7_dispatch()
 )
 
 # `-` operator overload

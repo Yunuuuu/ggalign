@@ -112,7 +112,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
 
 #' @importFrom rlang inject
 #' @importFrom ggplot2 ggproto ggplot
-AlignGg <- ggproto("AlignGg", Craftsman,
+AlignGg <- ggproto("AlignGg", CraftDesigner,
     interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         input_data <- self$input_data
@@ -310,7 +310,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         ggremove_margin(plot, direction) + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Craftsman, self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         c(header, "  Add plot by Aligning discrete or continuous variable")
     }
 )

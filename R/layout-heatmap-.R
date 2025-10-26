@@ -64,8 +64,9 @@
 #' @export
 heatmap_layout <- function(data = NULL, mapping = aes(),
                            ...,
-                           width = NA, height = NA, filling = waiver(),
-                           theme = NULL, active = NULL) {
+                           width = deprecated(), height = deprecated(),
+                           filling = waiver(),
+                           theme = NULL, active = deprecated()) {
     UseMethod("heatmap_layout")
 }
 
@@ -79,30 +80,39 @@ ggheatmap <- heatmap_layout
 #' @export
 heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    ...,
-                                   width = NA, height = NA, filling = waiver(),
-                                   theme = NULL, active = NULL) {
-    # A single boolean value for compatible with `version <= 0.0.4`
-    if (isTRUE(filling)) {
-        filling <- waiver()
-    } else if (isFALSE(filling)) {
-        filling <- NULL
-    } else if (!is_waiver(filling) && !is.null(filling)) {
-        filling <- arg_match0(filling, c("tile", "raster"))
-    }
-    data <- data %|w|% NULL
-    # we need a matrix to melted into long formated data frame
-    data <- fortify_matrix(data = data, ...)
-    ans <- new_quad_layout(
+                                   width = deprecated(), height = deprecated(),
+                                   filling = waiver(),
+                                   theme = NULL, active = deprecated()) {
+    HeatmapLayout(
         name = "ggheatmap",
-        data = data,
-        mapping = mapping,
-        theme = theme, active = active,
-        width = width, height = height
+        data = data, mapping = mapping, ...,
+        width = width, height = height,
+        filling = filling,
+        theme = theme,
+        active = active
     )
-    ans <- convert(ans, HeatmapLayout)
-    # add default mapping
-    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y)) +
-        ggplot2::labs(x = NULL, y = NULL)
-    ans@filling <- filling
-    ans
 }
+
+# used to create the heatmap layout
+#' @include layout-quad-.R
+HeatmapLayout <- S7::new_class(
+    "HeatmapLayout", QuadLayout,
+    properties = list(filling = S7::class_any),
+    constructor = function(..., filling = waiver()) {
+        # A single boolean value for compatible with `version <= 0.0.4`
+        if (isTRUE(filling)) {
+            filling <- waiver()
+        } else if (isFALSE(filling)) {
+            filling <- NULL
+        } else if (!is_waiver(filling) && !is.null(filling)) {
+            filling <- arg_match0(filling, c("tile", "raster"))
+        }
+        ans <- new_object(quad_discrete(...), filling = filling)
+        # add default mapping
+        prop(prop(ans, "graph"), "plot", check = FALSE) <- ggadd_default(
+            prop(prop(ans, "graph"), "plot"),
+            mapping = aes(.data$.x, .data$.y)
+        )
+        ans
+    }
+)

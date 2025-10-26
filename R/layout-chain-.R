@@ -2,37 +2,39 @@
 #' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, CraftBox)) <-
     function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
-            craftsman <- prop(object, "craftsman")
+        boxes <- prop(layout, "boxes")
+        if (is.na(active <- prop(boxes, "active")) ||
+            is_craftbox(box <- .subset2(boxes@box_list, active))) {
+            designer <- prop(object, "designer")
             # initialize the necessary parameters for `Craftsman` object
             if (is_stack_layout(layout)) {
-                craftsman$direction <- layout@direction
-                craftsman$position <- .subset2(layout@heatmap, "position")
+                designer$direction <- layout@direction
+                designer$position <- .subset2(layout@heatmap, "position")
             } else if (is_circle_layout(layout)) {
                 # we treat circle layout as a vertical stack layout
-                craftsman$direction <- "vertical"
+                designer$direction <- "vertical"
             }
-            craftsman$in_linear <- is_linear(layout)
-            craftsman$layout_name <- object_name(layout)
+            designer$in_linear <- is_linear(layout)
+            designer$layout_name <- object_name(layout)
 
             # firstly, we let the object do some changes in the layout
-            layout <- craftsman$interact_layout(layout)
+            layout <- designer$interact_layout(layout)
 
             # this step, the object will act with the stack layout
             # group rows into panel or reorder rows, we can also
             # initialize object data
-            new_domain <- craftsman$setup_domain(layout@domain)
+            new_domain <- designer$setup_domain(layout@domain)
 
             # Initialize the plot object by retrieving it via the property
             # accessor.
-            plot <- prop(object, "plot")
+            graph <- prop(object, "graph")
+            plot <- prop(graph, "plot")
 
             # Execute all initialization hooks in sequence, passing the current
             # plot and the craftsman's direction to each hook function. Each
             # hook may modify and return a new version of the plot.
             for (hook in prop(object, "init_hooks")) {
-                plot <- hook(plot, craftsman$direction)
+                plot <- hook(plot, designer$direction)
                 if (!is_ggplot(plot)) {
                     cli_abort("{.field init_hooks} must return a {.cls ggplot} object.")
                 }
@@ -41,14 +43,14 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
             # Finally, initialize the plot using the craftsman-specific
             # initializer, and update the object's plot attribute directly to
             # bypass setter checks.
-            prop(object, "plot") <- craftsman$init_plot(plot)
-
-            layout <- chain_add_box(layout, object, object@active, objectname)
+            prop(graph, "plot") <- designer$init_plot(plot)
+            prop(object, "graph") <- graph
+            boxes <- ggalign_update(boxes, object, objectname)
         } else { # should be a QuadLayout object
-            box <- layout_add(box, object, objectname)
-            layout@box_list[[current]] <- box
+            boxes[[active]] <- layout_add(box, object, objectname)
             new_domain <- prop(box, layout@direction)
         }
+        prop(layout, "boxes") <- boxes
         layout_update_domain(layout,
             domain = new_domain, objectname = objectname
         )
@@ -79,28 +81,7 @@ S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
 #' @include layout-operator.R
 S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
-        if (is.null(object)) return(layout) # styler: off
-        if (is.na(current <- layout@current)) {
-            cli_abort(c(
-                sprintf(
-                    "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
-                ),
-                i = "No active plot component",
-                i = paste(
-                    "Did you forget to initialize a {.cls ggplot} object",
-                    "with {.fn ggalign} or {.fn ggfree}?"
-                )
-            ))
-        }
-        box <- .subset2(layout@box_list, current)
-        if (is_craftbox(box)) {
-            box <- chain_box_add(box, object, objectname, TRUE)
-        } else {
-            box <- layout_add(box, object, objectname)
-        }
-        layout@box_list[[current]] <- box
-        layout
+
     }
 
 #' @include layout-.R

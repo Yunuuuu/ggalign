@@ -51,13 +51,6 @@ continuous_limits <- function(...) { # nocov start
     } # nocov end
 }
 
-# nocov start
-#' @importFrom S7 S7_inherits
-prop_domain <- function(...) {
-    S7::new_property(S7::new_union(NULL, Domain), ...)
-}
-# nocov end
-
 Domain <- S7::new_class("Domain", abstract = TRUE)
 
 #' @importFrom S7 new_object S7_object

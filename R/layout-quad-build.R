@@ -11,18 +11,22 @@ S7::method(ggalign_build, QuadLayout) <- function(x) {
         bottom = area(3, 2),
         right = area(2, 3)
     )
-    sizes <- imap(list(
-        height = c("top", "main", "bottom"),
-        width = c("left", "main", "right")
-    ), function(x, name) {
-        out <- .subset(sizes, x)
-        out$main <- .subset2(.subset2(out, "main"), name)
-        out <- .subset(
-            out,
-            !vapply(.subset(plots, x), is.null, logical(1L), USE.NAMES = FALSE)
-        )
-        do.call(unit.c, out)
-    })
+
+    widths <- .subset(sizes, c("left", "main", "right"))
+    widths$main <- .subset2(widths, "main")[1L]
+    widths <- .subset(widths, !vapply(
+        .subset(plots, names(widths)), is.null, logical(1L),
+        USE.NAMES = FALSE
+    ))
+    widths <- inject(unit.c(!!!widths))
+    heights <- .subset(sizes, c("top", "main", "bottom"))
+    heights$main <- .subset2(heights, "main")[2L]
+    heights <- .subset(heights, !vapply(
+        .subset(plots, names(heights)), is.null, logical(1L),
+        USE.NAMES = FALSE
+    ))
+    heights <- inject(unit.c(!!!heights))
+
     keep <- !vapply(plots, is.null, logical(1L), USE.NAMES = FALSE)
     design <- trim_area(vec_c(!!!vec_set_names(vec_slice(design, keep), NULL)))
     align_plots(
@@ -172,7 +176,9 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     sizes <- .subset2(stack_list, 2L) # annotation size
 
     # read the plot ---------------------------------------
-    p <- quad@plot
+    graph <- quad@graph
+    p <- prop(graph, "plot")
+    control <- prop(graph, "control")
 
     # set the facets and coord ---------------------------
     p <- align_quad_facet(p, row_domain, column_domain, object_name(quad))
@@ -188,7 +194,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     p <- gguse_data(p, quad_build_data(data, row_domain, column_domain))
 
     # add action ----------------------------------------
-    p <- plot_add_scheme(p, ggalign_inherit(quad@body_schemes, schemes))
+    p <- plot_add_scheme(p, ggalign_inherit(graph@schemes, schemes))
     p <- p + theme(
         panel.spacing.x = calc_element("panel.spacing.x", theme),
         panel.spacing.y = calc_element("panel.spacing.y", theme)
@@ -199,10 +205,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     plots <- append(plots, list(main = p), 2L)
     sizes <- append(
         sizes,
-        list(main = list(
-            width = convert(quad@width, S3_unit),
-            height = convert(quad@height, S3_unit)
-        )),
+        list(main = convert(prop(control, "size"), S3_unit)),
         3L
     )
     list(plots = plots, sizes = sizes)

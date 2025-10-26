@@ -47,7 +47,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
     }
     schemes <- schemes %|w|% default_schemes(data)
 
-    new_craftbox(
+    CraftBox(
         craftsman = align,
 
         # additional field for `align` object
@@ -93,8 +93,8 @@ align <- function(align, data = NULL, ..., plot = NULL,
 #' @format NULL
 #' @usage NULL
 #' @rdname align
-#' @include craftsman.R
-CraftAlign <- ggproto("CraftAlign", Craftsman,
+#' @include craft-designer.R
+CraftAlign <- ggproto("CraftAlign", CraftDesigner,
     interact_layout = function(self, layout) {
         # check plot is compatible with the layout
         if (is_layout_continuous(layout)) {
@@ -286,7 +286,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Craftsman, self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         oo <- self$summary_align()
         nms <- c("plot", "reorder", "split")
         content <- c(

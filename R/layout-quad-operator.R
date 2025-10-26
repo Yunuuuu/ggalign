@@ -328,11 +328,7 @@ quad_body_add <- function(object, quad, objectname) {
 #' @importFrom ggplot2 update_ggplot
 #' @export
 quad_body_add.default <- function(object, quad, objectname) {
-    quad@plot <- update_ggplot(
-        object,
-        ggfun("plot_clone")(quad@plot),
-        objectname
-    )
+    quad@graph <- ggalign_update(quad@graph, object, objectname)
     quad
 }
 
