@@ -546,7 +546,7 @@ S7::method(layout_apply_selected, list(ChainLayout, Scheme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
-            layout <- update_layout_schemes(object, layout, objectname)
+            layout <- ggalign_update(layout, object, objectname)
         } else {
             layout@box_list[[current]] <- layout_apply_selected(
                 box, object, objectname
@@ -567,7 +567,7 @@ S7::method(layout_apply_selected, list(StackLayout, quad_scope)) <-
 
             # subtract set at layout level, if it is a Scheme
             if (S7_inherits(inner, Scheme)) {
-                layout <- update_layout_schemes(inner, layout, objectname)
+                layout <- ggalign_update(layout, inner, objectname)
             }
 
             # otherwise, we apply the object to all plots in the stack layout

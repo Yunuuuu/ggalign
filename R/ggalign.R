@@ -292,7 +292,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
     finish_plot = function(self, plot, schemes, theme) {
         direction <- self$direction
         # remove axis titles, text, ticks used for alignment
-        schemes <- scheme_update(
+        schemes <- ggalign_update(
             schemes,
             theme_no_axes(switch_direction(direction, "y", "x"))
         )

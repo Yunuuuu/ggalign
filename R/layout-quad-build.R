@@ -188,7 +188,7 @@ quad_build <- function(quad, schemes = NULL, theme = NULL,
     p <- gguse_data(p, quad_build_data(data, row_domain, column_domain))
 
     # add action ----------------------------------------
-    p <- plot_add_scheme(p, scheme_inherit(schemes, quad@body_schemes))
+    p <- plot_add_scheme(p, ggalign_inherit(quad@body_schemes, schemes))
     p <- p + theme(
         panel.spacing.x = calc_element("panel.spacing.x", theme),
         panel.spacing.y = calc_element("panel.spacing.y", theme)

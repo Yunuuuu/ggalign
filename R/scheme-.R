@@ -19,11 +19,20 @@
 #'
 #' @seealso [`Scheme`]
 #' @keywords internal
+#' @importFrom rlang list2
 #' @importFrom S7 S7_inherits
-#' @export
 Schemes <- S7::new_class("Schemes",
     properties = list(
-        value = S7::new_property(
+        keys = S7::new_property(
+            getter = function(self) {
+                vapply(
+                    prop(self, "sets"),
+                    function(entry) prop(entry, "key"), character(1L),
+                    USE.NAMES = FALSE
+                )
+            }
+        ),
+        sets = S7::new_property(
             S7::class_list,
             validator = function(value) {
                 if (!all(vapply(value, S7_inherits, logical(1L), Scheme,
@@ -32,33 +41,28 @@ Schemes <- S7::new_class("Schemes",
                 }
                 keys <- vapply(
                     value,
-                    function(entry) prop(entry, "key"), character(1L),
+                    function(scheme) prop(scheme, "key"), character(1L),
                     USE.NAMES = FALSE
                 )
                 if (vec_duplicate_any(keys)) {
                     return("must not contain duplicate `key` values")
                 }
-                NULL
+            },
+            setter = function(self, value) {
+                names(value) <- NULL
+                prop(self, "sets") <- value
+                self
             }
         ),
         entries = S7::new_property(
             getter = function(self) {
-                out <- prop(self, "value")
+                out <- prop(self, "sets")
                 names(out) <- prop(self, "keys")
                 out
             }
-        ),
-        keys = S7::new_property(
-            getter = function(self) {
-                vapply(
-                    prop(self, "value"),
-                    function(entry) prop(entry, "key"), character(1L),
-                    USE.NAMES = FALSE
-                )
-            }
         )
     ),
-    constructor = function(...) new_object(S7_object(), value = list2(...))
+    constructor = function(...) new_object(S7_object(), sets = list2(...))
 )
 
 #' @importFrom utils str
@@ -66,7 +70,7 @@ Schemes <- S7::new_class("Schemes",
 local(S7::method(str, Schemes) <- function(object, ..., nest.lev = 0) {
     cat(if (nest.lev > 0) " ")
     cat(paste0("<", main_class(object), ">\n"))
-    str_nest(list(prop(object, "value")), "@", ..., nest.lev = nest.lev)
+    str_nest(props(object, "sets"), "@", ..., nest.lev = nest.lev)
 })
 
 #' @importFrom rlang list2
@@ -76,21 +80,48 @@ schemes_set <- function(schemes, ..., check = TRUE) {
     for (entry in list2(...)) {
         entries[[prop(entry, "key")]] <- entry
     }
-    prop(schemes, "value", check = check) <- entries
+    prop(schemes, "sets", check = check) <- entries
     schemes
 }
 
-schemes_get <- function(schemes, scheme) {
+#' @importFrom S7 prop
+schemes_get <- function(schemes, scheme, pkg) {
     entries <- prop(schemes, "entries")
-    .subset2(entries, sprintf("ggalign::%s", scheme))
+    if (missing(pkg)) pkg <- pkg_nm()
+    if (is.null(pkg)) key <- scheme else key <- sprintf("%s::%s", pkg, scheme)
+    .subset2(entries, key)
+}
+
+#' Complete Plot Schemes
+#'
+#' This method completes the set of schemes for the given input object by
+#' ensuring that the necessary scheme components are included. It checks if
+#' the input object contains keys for `scheme_data`, `scheme_theme`, and
+#' `scheme_align`, and if any of these are missing.
+#'
+#' The function ensures that the input object has all the required schemes
+#' before it can be used for further processing or visualization.
+#' @noRd
+schemes_complete <- function(schemes) {
+    new_sets <- list()
+    keys <- prop(schemes, "keys")
+    if (!any(keys == "ggalign::scheme_data")) {
+        new_sets <- c(new_sets, scheme_data())
+    }
+    if (!any(keys == "ggalign::scheme_theme")) {
+        new_sets <- c(new_sets, scheme_theme())
+    }
+    if (!any(keys == "ggalign::scheme_align")) {
+        new_sets <- c(new_sets, scheme_align(waiver(), waiver(), waiver()))
+    }
+    schemes_set(schemes, !!!new_sets, check = FALSE)
 }
 
 #' @importFrom ggplot2 theme waiver
 default_schemes <- function(data = NULL, th = theme()) {
     if (!is_waiver(data)) data <- NULL
     Schemes(
-        scheme_data(data),
-        scheme_theme(th),
+        scheme_data(data), scheme_theme(th),
         scheme_align(waiver(), waiver(), waiver())
     )
 }
@@ -110,26 +141,25 @@ default_schemes <- function(data = NULL, th = theme()) {
 #' When creating a new subclass of `Scheme`, you may optionally override the
 #' following methods to customize its behavior:
 #'
-#' - [`scheme_init(scheme)`][scheme_init] *(optional)*: Initializes the scheme,
-#'   often by assigning default values or computing derived properties.
+#' - [`ggalign_init()`][ggalign_init] *(optional)*: Initializes the
+#'   scheme, often by assigning default values or computing derived properties.
 #'
 #'   **Default behavior**: Returns the scheme unchanged.
 #'
-#' - [`scheme_update(e1, e2)`][scheme_update] *(optional)*: Defines how to
-#'   update a scheme by merging it with another of the same key (e.g., during
-#'   user overrides).
+#' - [`ggalign_update(x, object, ...)`][ggalign_update] *(optional)*: Defines
+#'   how to update a scheme by merging it with another of the same key.
 #'
-#'   **Default behavior**: Replaces `e1` entirely with `e2`.
+#'   **Default behavior**: Replaces `x` entirely with `object`.
 #'
-#' - [`scheme_inherit(e1, e2)`][scheme_inherit] *(optional)*: Defines how a
+#' - [`ggalign_inherit(x, object)`][ggalign_inherit] *(optional)*: Defines how a
 #'   scheme inherits from a parent scheme (e.g., a layout template), typically
 #'   merging instead of replacing.
 #'
-#'   **Default behavior**: Inheritance is ignored; `e2` is returned unchanged.
+#'   **Default behavior**: Inheritance is ignored; `x` is returned unchanged.
 #'
-#' - [`plot_add_scheme(plot, scheme, ...)`][plot_add_scheme]: Applies the scheme
-#'   to a plot object (usually a `ggplot`) by modifying the plot components,
-#'   theming, or annotations.
+#' - [`ggalign_update(x, object, ...)`][ggalign_update]: Applies the scheme
+#'   (`object`) to a plot (`x`) (usually a `ggplot`) by modifying the `x`
+#'   components, theming, or annotations.
 #' @keywords internal
 #' @export
 Scheme <- S7::new_class(
@@ -142,136 +172,23 @@ Scheme <- S7::new_class(
     abstract = TRUE
 )
 
-#' Initialize a scheme object
-#'
-#' `scheme_init()` is a developer-facing generic used to define the initial
-#' state of a [`Scheme`] object. It is typically called during rendering to
-#' initialize layout schemes, allowing plots to inherit layout behavior from the
-#' scheme.
-#'
-#' @param scheme A [`Scheme`] object to initialize.
-#' @return The initialized [`Scheme`] object.
-#' @keywords internal
-#' @export
-scheme_init <- S7::new_generic("scheme_init", "scheme", function(scheme) {
-    S7_dispatch()
-})
+S7::method(ggalign_init, Scheme) <- function(x) x
 
-#' @importFrom S7 S7_inherits prop prop<-
-S7::method(scheme_init, Schemes) <- function(scheme) {
-    schemes <- lapply(prop(scheme, "value"), function(s) {
-        if (!S7_inherits(s <- scheme_init(s), Scheme)) {
-            cli_abort("{.fn scheme_init} method must return a {.cls scheme}")
-        }
-        s
-    })
-    prop(scheme, "value", check = FALSE) <- schemes
-    scheme
-}
-
-S7::method(scheme_init, Scheme) <- function(scheme) scheme
-
-#' Update the scheme
-#'
-#' `scheme_update()` is used by developers to define how two [`Scheme`] objects
-#' with the same key should be merged. This typically happens when adding or
-#' updating a [`Scheme`] in a collection.
-#'
-#' @param e1 The original [`Scheme`] object.
-#' @param e2 The new [`Scheme`] object. Usually should have the same `key` as
-#' `e1`.
-#' @param ... Additional arguments passed to methods.
-#' @return A new [`Scheme`] object, resulting from merging `e1` and `e2`.
-#' @keywords internal
-#' @export
-scheme_update <- S7::new_generic("scheme_update", c("e1", "e2"))
-
-S7::method(scheme_update, list(Schemes, Schemes)) <- function(e1, e2, e2name) {
-    for (entry in prop(e2, "value")) {
-        e1 <- scheme_update(e1, entry, e2name)
-    }
-    e1
-}
-
-#' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(Schemes, Scheme)) <- function(e1, e2, e2name) {
-    # By default, we remove the original value and set the new one
-    entries <- prop(e1, "entries")
-    new_entry <- scheme_update(.subset2(entries, prop(e2, "key")), e2, e2name)
-    if (!S7_inherits(new_entry, Scheme)) {
-        cli_abort("{.fn scheme_update} method must return a {.cls scheme}")
-    }
-    entries[[prop(new_entry, "key")]] <- new_entry
-    prop(e1, "value", check = FALSE) <- entries
-    e1
-}
-
-S7::method(scheme_update, list(Scheme, S7::class_any)) <-
-    function(e1, e2, ...) {
-        if (is.null(e2)) return(e1) # styler: off
-        cli_abort("No {.fn scheme_update} method for {.obj_type_friendly {e2}}")
+S7::method(ggalign_update, list(Scheme, S7::class_any)) <-
+    function(x, object, ...) {
+        if (is.null(object)) return(x) # styler: off
+        cli_abort(sprintf(
+            "No {.fn ggalign_update} method for %s and %s",
+            "{.obj_type_friendly {x}}",
+            "{.obj_type_friendly {object}}"
+        ))
     }
 
-# No parent scheme
-S7::method(scheme_update, list(S7::class_any, Scheme)) <-
-    function(e1, e2, ...) {
-        if (is.null(e1)) return(e2) # styler: off
-        cli_abort("No {.fn scheme_update} method for {.obj_type_friendly {e1}}")
-    }
-
-S7::method(scheme_update, list(Scheme, Scheme)) <- function(e1, e2, ...) e2
-
-#' Inherit a scheme from a parent
-#'
-#' This generic is used by developers to define how one [`Scheme`] object
-#' inherits from another (typically the scheme defined in the layout). This is
-#' called when adding a new [`Scheme`] via inheritance.
-#'
-#' @param e1 The parent [`Scheme`] object.
-#' @param e2 The child [`Scheme`] object. Usually should have the same `key` as
-#' `e1`.
-#' @return A new [`Scheme`] object.
-#' @keywords internal
-#' @export
-scheme_inherit <- S7::new_generic(
-    "scheme_inherit", c("e1", "e2"),
-    function(e1, e2) S7_dispatch()
-)
-
-#' @importFrom S7 prop
-#' @keywords internal
-S7::method(scheme_inherit, list(Schemes, Schemes)) <- function(e1, e2) {
-    for (entry in prop(e2, "value")) {
-        e1 <- scheme_inherit(e1, entry)
-    }
-    e1
+S7::method(ggalign_update, list(Scheme, Scheme)) <- function(x, object, ...) {
+    object
 }
 
-#' @importFrom S7 S7_inherits prop
-#' @keywords internal
-S7::method(scheme_inherit, list(Schemes, Scheme)) <- function(e1, e2) {
-    entries <- prop(e1, "entries")
-    new_entry <- scheme_inherit(.subset2(entries, prop(e2, "key")), e2)
-    if (!S7_inherits(new_entry, Scheme)) {
-        cli_abort("{.fn scheme_inherit} method must return a {.cls scheme}")
-    }
-    entries[[prop(new_entry, "key")]] <- new_entry
-    attr(e1, "value") <- entries
-    e1
-}
-
-S7::method(scheme_inherit, list(Scheme, S7::class_any)) <- function(e1, e2) {
-    if (is.null(e2)) return(e1) # styler: off
-    cli_abort("No {.fn scheme_inherit} method for {.obj_type_friendly {e2}}")
-}
-
-# No parent scheme
-S7::method(scheme_inherit, list(S7::class_any, Scheme)) <- function(e1, e2) {
-    if (is.null(e1)) return(e2) # styler: off
-    cli_abort("No {.fn scheme_inherit} method for {.obj_type_friendly {e1}}")
-}
-
-S7::method(scheme_inherit, list(Scheme, Scheme)) <- function(e1, e2) e2
+S7::method(ggalign_inherit, list(Scheme, Scheme)) <- function(x, object) x
 
 #' Apply a Scheme to a plot
 #'
@@ -282,32 +199,74 @@ S7::method(scheme_inherit, list(Scheme, Scheme)) <- function(e1, e2) e2
 #' By default When a [`Schemes`] object is passed, each individual [`Scheme`] is
 #' applied in sequence via its respective `plot_add_scheme()` method.
 #'
-#' @param plot A plot object, typically a ggplot.
-#' @param scheme A [`Scheme`] or [`Schemes`] object to apply.
-#' @param ... Additional arguments passed to specific methods.
-#'
-#' @return The modified `plot` object.
+#' @inheritParams ggalign_update
 #' @keywords internal
 #' @export
-plot_add_scheme <- S7::new_generic("plot_add_scheme", c("plot", "scheme"))
+plot_add_scheme <- ggalign_update
 
-S7::method(plot_add_scheme, list(S7::class_any, Schemes)) <-
-    function(plot, scheme, ...) {
-        for (entry in prop(scheme, "entries")) {
-            plot <- plot_add_scheme(plot, entry, ...)
-        }
-        plot
-    }
-
-#' @include utils-ggplot.R
-S7::method(plot_add_scheme, list(ggplot2::class_ggplot, Scheme)) <-
-    function(plot, scheme, ...) {
+S7::method(ggalign_update, list(ggplot2::class_ggplot, Scheme)) <-
+    function(x, object, ...) {
         cli_abort(
-            "No {.fn plot_add_scheme} method for {.obj_type_friendly {plot}} and {.obj_type_friendly {scheme}}"
+            "No {.fn ggalign_update} method for {.obj_type_friendly {x}} and {.obj_type_friendly {object}}"
         )
     }
 
-update_layout_schemes <- function(object, layout, objectname) {
-    layout@schemes <- scheme_update(layout@schemes, object, objectname)
-    layout
+###########################################################################
+#' @importFrom S7 prop prop<-
+S7::method(ggalign_init, Schemes) <- function(x) {
+    prop(x, "sets") <- lapply(prop(x, "sets"), ggalign_init)
+    x
 }
+
+#' @importFrom S7 prop
+#' @keywords internal
+S7::method(ggalign_update, list(Schemes, Schemes)) <- function(x, object, ...) {
+    for (scheme in prop(object, "sets")) {
+        x <- ggalign_update(x, scheme, ...)
+    }
+    x
+}
+
+#' @importFrom S7 prop prop<-
+S7::method(ggalign_update, list(Schemes, Scheme)) <- function(x, object, ...) {
+    entries <- prop(x, "entries")
+    if (is.null(entry <- .subset2(entries, prop(object, "key")))) {
+        entry <- object
+    } else {
+        entry <- ggalign_update(entry, object, ...)
+    }
+    entries[[prop(entry, "key")]] <- entry
+    prop(x, "sets") <- entries
+    x
+}
+
+#' @importFrom S7 prop
+#' @keywords internal
+S7::method(ggalign_inherit, list(Schemes, Schemes)) <- function(x, object, ...) {
+    for (scheme in prop(object, "sets")) {
+        x <- ggalign_inherit(x, scheme, ...)
+    }
+    x
+}
+
+#' @importFrom S7 prop
+#' @keywords internal
+S7::method(ggalign_inherit, list(Schemes, Scheme)) <- function(x, object, ...) {
+    entries <- prop(x, "entries")
+    if (is.null(entry <- .subset2(entries, prop(object, "key")))) {
+        entry <- object
+    } else {
+        entry <- ggalign_inherit(entry, object, ...)
+    }
+    entries[[prop(entry, "key")]] <- entry
+    prop(x, "sets") <- entries
+    x
+}
+
+S7::method(ggalign_update, list(S7::class_any, Schemes)) <-
+    function(x, object, ...) {
+        for (entry in prop(object, "sets")) {
+            x <- ggalign_update(x, entry, ...)
+        }
+        x
+    }

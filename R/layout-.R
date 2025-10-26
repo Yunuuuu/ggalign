@@ -184,17 +184,27 @@ HeatmapLayout <- S7::new_class(
 ###########################################################
 #' @importFrom ggplot2 complete_theme
 S7::method(ggalign_init, LayoutProto) <- function(x) {
-    # initialize layout schemes
-    x@schemes <- scheme_init(x@schemes)
+    # `schemes_complete` ensures that all missing schemes are completed.
+    # `ggalign_init` initializes the schemes property, setting the initial value
+    # for the layout schemes in the `input` object.
+    prop(x, "schemes", check = FALSE) <- ggalign_init(schemes_complete(
+        prop(x, "schemes")
+    ))
 
-    # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(x@schemes, "scheme_theme"), "theme") +
-        x@theme
-
-    # Apply the updated theme
-    x@theme <- th
+    # We take the `scheme_theme` from the schemes and treat it as the default
+    # theme.
+    prop(x, "theme", check = FALSE) <- ggalign_update(
+        prop(schemes_get(prop(x, "schemes"), "scheme_theme"), "theme"),
+        prop(x, "theme")
+    )
     x
 }
+
+S7::method(ggalign_update, list(LayoutProto, S7::new_union(Schemes, Scheme))) <-
+    function(x, object, ...) {
+        prop(x, "schemes") <- ggalign_update(prop(x, "schemes"), object, ...)
+        x
+    }
 
 #' @importFrom S7 S7_dispatch
 is_linear <- S7::new_generic(
@@ -210,7 +220,7 @@ inherit_parent_layout_schemes <- function(layout, schemes) {
     if (is.null(schemes)) {
         return(layout@schemes)
     }
-    scheme_inherit(schemes, layout@schemes)
+    ggalign_inherit(layout@schemes, schemes)
 }
 
 inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {

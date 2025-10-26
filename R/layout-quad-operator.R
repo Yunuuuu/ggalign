@@ -356,7 +356,7 @@ quad_body_add.Coord <- function(object, quad, objectname) {
 
 #' @export
 `quad_body_add.ggalign::Scheme` <- function(object, quad, objectname) {
-    quad@body_schemes <- scheme_update(quad@body_schemes, object, objectname)
+    quad@body_schemes <- ggalign_update(quad@body_schemes, object, objectname)
     quad
 }
 
@@ -386,10 +386,10 @@ S7::method(layout_apply_selected, list(QuadLayout, S7::class_any)) <-
 S7::method(layout_apply_selected, list(QuadLayout, Scheme)) <-
     function(layout, object, objectname) {
         if (is.null(context <- layout@current)) {
-            layout <- update_layout_schemes(object, layout, objectname)
+            layout <- ggalign_update(layout, object, objectname)
         } else {
-            prop(layout, context) <- update_layout_schemes(
-                object, prop(layout, context), objectname
+            prop(layout, context) <- ggalign_update(
+                prop(layout, context), object, objectname
             )
         }
         layout

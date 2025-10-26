@@ -36,49 +36,45 @@ scheme_theme <- S7::new_class(
 ###############################################################
 #' @importFrom S7 prop prop<-
 #' @importFrom ggplot2 complete_theme
-S7::method(scheme_init, scheme_theme) <- function(scheme) {
-    prop(scheme, "theme", check = FALSE) <-
-        complete_theme(default_theme() + prop(scheme, "theme"))
-    scheme
+S7::method(ggalign_init, scheme_theme) <- function(x) {
+    prop(x, "theme", check = FALSE) <-
+        complete_theme(default_theme() + prop(x, "theme"))
+    x
 }
 
-#' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(scheme_theme, scheme_theme)) <-
-    function(e1, e2, e2name) {
-        prop(e1, "theme", check = FALSE) <- ggfun("add_theme")(
-            prop(e1, "theme"), prop(e2, "theme"), e2name
+#' @importFrom S7 prop prop<-
+S7::method(ggalign_update, list(scheme_theme, scheme_theme)) <-
+    function(x, object, ...) {
+        prop(x, "theme", check = FALSE) <- ggalign_update(
+            prop(x, "theme"), prop(object, "theme"), ...
         )
-        e1
-    }
-
-#' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(Schemes, ggplot2::class_theme)) <-
-    function(e1, e2, e2name) {
-        scheme_update(e1, scheme_theme(e2), e2name)
-    }
-
-#' @importFrom S7 S7_inherits prop
-S7::method(scheme_update, list(scheme_theme, ggplot2::class_theme)) <-
-    function(e1, e2, e2name) {
-        prop(e1, "theme", check = FALSE) <- ggfun("add_theme")(
-            prop(e1, "theme"), e2, e2name
-        )
-        e1
+        x
     }
 
 #' @importFrom S7 prop prop<-
-S7::method(scheme_inherit, list(scheme_theme, scheme_theme)) <-
-    function(e1, e2) {
-        # `align_plots` control how to inherit `guides` from the layout
-        # we don't need to inherit it here
-        prop(e2, "theme", check = FALSE) <- prop(e1, "theme") +
-            prop(e2, "theme")
-        e2
+S7::method(ggalign_update, list(scheme_theme, ggplot2::class_theme)) <-
+    function(x, object, ...) {
+        prop(x, "theme", check = FALSE) <- ggalign_update(
+            prop(x, "theme"), object, ...
+        )
+        x
     }
 
+#' @importFrom S7 prop prop<-
+S7::method(ggalign_update, list(ggplot2::class_theme, ggplot2::class_theme)) <-
+    function(x, object, ...) ggfun("add_theme")(x, object, ...)
+
 #' @importFrom S7 prop
-local(S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_theme)) <-
-    function(plot, scheme, ...) {
-        plot$theme <- prop(scheme, "theme") + plot$theme
-        plot
-    })
+S7::method(ggalign_update, list(Schemes, ggplot2::class_theme)) <-
+    function(x, object, ...) ggalign_update(x, scheme_theme(object), ...)
+
+#' @importFrom S7 prop prop<-
+S7::method(ggalign_inherit, list(scheme_theme, scheme_theme)) <-
+    function(x, object, ...) ggalign_update(object, x, ...)
+
+#' @importFrom S7 prop
+S7::method(ggalign_update, list(ggplot2::class_ggplot, scheme_theme)) <-
+    function(x, object, ...) {
+        x$theme <- prop(object, "theme") + x$theme
+        x
+    }

@@ -36,13 +36,7 @@ scheme_data <- S7::new_class(
     parent = Scheme,
     properties = list(
         data = S7::new_property(
-            S7::class_any,
-            validator = function(value) {
-                if (is_waiver(value) || is.null(value) || is.function(value)) {
-                    return(NULL)
-                }
-                sprintf("must be a function, `NULL`, or {.fn waiver}")
-            },
+            S7::new_union(NULL, S3_waiver, S7::class_function),
             setter = function(self, value) {
                 prop(self, "data") <- allow_lambda(value)
                 self
@@ -62,36 +56,40 @@ scheme_data <- S7::new_class(
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(scheme_inherit, list(scheme_data, scheme_data)) <- function(e1, e2) {
-    if (is.null(scheme_data <- prop(e2, "data"))) return(e2) # styler: off
-    if (is_waiver(scheme_data)) return(e1) # inherit from parent; styler: off
-    if (!is.function(p_function <- prop(e1, "data"))) {
-        return(e2)
-    }
-    # if both are function, we check if we should call parent first then call
-    # itself
-    if (prop(e2, "inherit")) {
-        prop(e2, "data", check = FALSE) <- function(data) {
-            # we always restore the attached attribute
-            ans <- ggalign_data_restore(p_function(data), data)
-            scheme_data(ans)
+S7::method(ggalign_inherit, list(scheme_data, scheme_data)) <-
+    function(x, object) {
+        if (is.null(scheme_data <- prop(x, "data"))) return(x) # styler: off
+        if (is_waiver(scheme_data)) { # inherit from parent
+            prop(x, "data", check = FALSE) <- prop(object, "data")
+            return(x)
         }
+        if (!is.function(p_function <- prop(object, "data"))) {
+            return(x)
+        }
+        # if both are function, we check if we should call parent first then
+        # call itself
+        if (prop(x, "inherit")) {
+            prop(x, "data", check = FALSE) <- function(data) {
+                # we always restore the attached attribute
+                ans <- ggalign_data_restore(p_function(data), data)
+                scheme_data(ans)
+            }
+        }
+        x
     }
-    e2
-}
 
 #' @importFrom S7 prop
-S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_data)) <-
-    function(plot, scheme, ...) {
-        if (!is.null(scheme_data <- prop(scheme, "data") %|w|% NULL) &&
-            !is.null(raw_data <- plot$data)) {
+S7::method(ggalign_update, list(ggplot2::class_ggplot, scheme_data)) <-
+    function(x, object, ...) {
+        if (!is.null(scheme_data <- prop(object, "data") %|w|% NULL) &&
+            !is.null(raw_data <- x$data)) {
             # To be compatible with ggplot2, it must be a data frame
             if (!is.null(data <- scheme_data(raw_data)) &&
                 !is_waiver(data) &&
                 !is.data.frame(data)) {
                 cli_abort("{.fn scheme_data} must return a {.cls data.frame}")
             }
-            plot <- gguse_data(plot, data)
+            x <- gguse_data(x, data)
         }
-        plot
+        x
     }

@@ -92,7 +92,7 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
         craftsman <- prop(plot, "craftsman") # `Craftsman` object
-        plot_schemes <- scheme_inherit(schemes, plot@schemes)
+        plot_schemes <- ggalign_inherit(plot@schemes, schemes)
         # the actual plot
         plot <- craftsman$build_plot(plot@plot, domain = domain)
 
