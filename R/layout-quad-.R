@@ -77,27 +77,13 @@ quad_layout <- function(data = waiver(), mapping = aes(),
                         ...,
                         theme = NULL, active = NULL,
                         width = NA, height = NA) {
-    if (is_waiver(xlim) && is_waiver(ylim)) {
-        quad_discrete(
-            data = data, mapping = mapping,
-            ..., active = active, theme = theme,
-            width = width, height = height
-        )
-    } else if (!is_waiver(xlim) && !is_waiver(ylim)) {
-        quad_continuous(
-            data = data, mapping = mapping, xlim = xlim, ylim = ylim,
-            ..., active = active, theme = theme,
-            width = width, height = height
-        )
-    } else {
-        data <- fortify_matrix(data = data, ...)
-        new_quad_layout(
-            name = "quad_layout",
-            data = data, ylim = ylim, xlim = xlim,
-            mapping = mapping, active = active, theme = theme,
-            width = width, height = height
-        )
-    }
+    QuadLayout(
+        name = "quad_layout",
+        ylim = ylim, xlim = xlim,
+        data = data, mapping = mapping,
+        active = active, theme = theme,
+        width = width, height = height
+    )
 }
 
 #' @export
@@ -132,10 +118,11 @@ quad_discrete.default <- function(data = waiver(), mapping = aes(),
                                   ...,
                                   theme = NULL, active = NULL,
                                   width = NA, height = NA) {
-    data <- fortify_matrix(data = data, ...)
-    new_quad_layout(
-        name = "quad_discrete", data = data, xlim = waiver(), ylim = waiver(),
-        mapping = mapping, active = active, theme = theme,
+    QuadLayout(
+        name = "quad_discrete",
+        xlim = waiver(), ylim = waiver(),
+        data = data, mapping = mapping,
+        active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -175,13 +162,11 @@ quad_continuous.default <- function(data = waiver(), mapping = aes(),
                                     ...,
                                     theme = NULL, active = NULL,
                                     width = NA, height = NA) {
-    xlim <- xlim %|w|% NULL
-    ylim <- ylim %|w|% NULL
-    data <- fortify_data_frame(data = data, ...)
-    new_quad_layout(
+    QuadLayout(
         name = "quad_continuous",
-        data = data, xlim = xlim, ylim = ylim,
-        mapping = mapping, active = active, theme = theme,
+        xlim = xlim %|w|% NULL, ylim = ylim %|w|% NULL,
+        data = data, mapping = mapping,
+        active = active, theme = theme,
         width = width, height = height
     )
 }
@@ -195,72 +180,113 @@ quad_continuous.uneval <- function(data, ...) {
 }
 
 #####################################################
+# Used to create the QuadLayout
 #' @importFrom ggplot2 ggplot theme
-new_quad_layout <- function(name, data, xlim = waiver(), ylim = waiver(),
-                            mapping = aes(), theme = NULL, active = NULL,
-                            width = NA, height = NA,
-                            call = caller_call()) {
-    if (!is_waiver(xlim)) assert_limits(xlim, call = call)
-    if (!is_waiver(ylim)) assert_limits(ylim, call = call)
-    if (is_waiver(xlim) || is_waiver(ylim)) {
-        # If we need align discrete variables, data cannot be `NULL` and
-        # must be provided, here, we convert it to waiver() to indicate
-        # inherit from the parent layout
-        data <- data %||% waiver()
-        if (!is_waiver(data) && !is.function(data)) {
-            nrows <- NROW(data)
-            ncols <- ncol(data)
+#' @importFrom grid is.unit unit
+#' @include layout-chain-stack-.R
+QuadLayout <- S7::new_class(
+    "QuadLayout", LayoutProto,
+    properties = list(
+        current = S7::new_property(
+            S7::new_union(NULL, S7::class_integer, S7::class_character),
+            validator = function(value) {
+                if (is.null(value)) return(NULL) # styler: off
+                if (length(value) != 1L) {
+                    return("must be a single integer number or a single string")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            }
+        ),
+        plot = S7::new_property(
+            Graph,
+            validator = function(value) {
+                if (!is.null(value) &&
+                    length(prop(prop(value, "control"), "size")) != 2L) {
+                    return("'size' property must be of length 2")
+                }
+            }
+        ),
+        # Used to align axis
+        horizontal = S7::new_union(NULL, Domain),
+        vertical = S7::new_union(NULL, Domain),
+        # top, left, bottom, right must be a StackLayout object.
+        top = S7::new_union(NULL, StackLayout),
+        left = S7::new_union(NULL, StackLayout),
+        bottom = S7::new_union(NULL, StackLayout),
+        right = S7::new_union(NULL, StackLayout)
+    ),
+    constructor = function(name, xlim = waiver(), ylim = waiver(), ...,
+                           data = waiver(), mapping = aes(),
+                           theme = NULL, active = NULL,
+                           width = NA, height = NA) {
+        if (!is_waiver(xlim)) assert_limits(xlim)
+        if (!is_waiver(ylim)) assert_limits(ylim)
+        if (is_waiver(xlim) || is_waiver(ylim)) {
+            data <- fortify_matrix(data, ...)
+            if (!is.null(data) && !is_waiver(data) && !is.function(data)) {
+                nrows <- NROW(data)
+                ncols <- ncol(data)
 
-            # for data has dimention but one dimention is 0
-            # as.matrix(data.frame(row.names = letters))
-            if (nrows == 0L || ncols == 0L) {
-                cli_abort("empty data is no allowed")
+                # for data has dimention but one dimention is 0
+                # as.matrix(data.frame(row.names = letters))
+                if (nrows == 0L || ncols == 0L) {
+                    cli_abort("empty data is no allowed")
+                }
+            } else {
+                nrows <- NA_integer_
+                ncols <- NA_integer_
             }
         } else {
-            nrows <- NA_integer_
-            ncols <- NA_integer_
+            data <- fortify_data_frame(data, ...)
         }
+        width <- check_size(width)
+        height <- check_size(height)
+        if (!is.unit(width)) width <- unit(width, "null")
+        if (!is.unit(height)) height <- unit(height, "null")
+        horizontal <- ylim %|w|% DiscreteDomain(nobs = nrows)
+        vertical <- xlim %|w|% DiscreteDomain(nobs = ncols)
+
+        # always remove default axis titles
+        # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
+        # There are multiple ways to set labels in a plot, which take different
+        # priorities. Here are the priorities from highest to lowest.
+        # 1. The guide title.
+        # 2. The scale name.
+        # 3. The `labs()` function.
+        # 4. The captured expression in aes().
+        plot <- ggplot(mapping = mapping) +
+            ggplot2::labs(x = NULL, y = NULL)
+        plot_schemes <- Schemes(scheme_data(waiver()))
+        plot_control <- plot_control(unit.c(width, height))
+        plot <- Graph(
+            plot = plot,
+            schemes = plot_schemes,
+            control = plot_control
+        )
+
+        # when no data provided, we inherit the scheme data from the layout for
+        # the main plot
+        layout_schemes <- Schemes(
+            scheme_data(
+                if (is.null(data) || is_waiver(data)) {
+                    waiver()
+                } else {
+                    NULL
+                }
+            ),
+            scheme_theme(theme_no_strip())
+        )
+        layout_context <- layout_context(theme %||% theme(), layout_schemes)
+        new_object(
+            S7_object(),
+            # used by the layout
+            name = name,
+            data = data,
+            context = layout_context,
+            control = layout_control(),
+            plot = plot, horizontal = horizontal, vertical = vertical
+        )
     }
-    horizontal <- ylim %|w|% DiscreteDomain(nobs = nrows)
-    vertical <- xlim %|w|% DiscreteDomain(nobs = ncols)
-
-    # always remove default axis titles
-    # https://stackoverflow.com/questions/72402570/why-doesnt-gplot2labs-overwrite-update-the-name-argument-of-scales-function
-    # There are multiple ways to set labels in a plot, which take different
-    # priorities. Here are the priorities from highest to lowest.
-    # 1. The guide title.
-    # 2. The scale name.
-    # 3. The `labs()` function.
-    # 4. The captured expression in aes().
-    plot <- ggplot(mapping = mapping) +
-        ggplot2::labs(x = NULL, y = NULL)
-
-    # for `QuadLayout`, we use `NULL` to inherit data from parent layout
-    # since `QuadLayout` must have data, and won't be waiver()
-    # if inherit from the parent layout data, we'll inherit
-    # the action data function
-    schemes <- default_schemes(
-        if (is.null(data)) waiver() else NULL,
-        th = theme_no_strip()
-    )
-
-    # check arguments -----------------------------------
-    width <- check_size(width, call = call)
-    height <- check_size(height, call = call)
-    assert_active(active, call = call)
-
-    # Here we use S4 object to override the double dispatch of `+.gg` method
-    QuadLayout(
-        # used by the layout
-        data = data, theme = theme %||% theme(),
-        schemes = schemes,
-        plot_active = active(use = TRUE) + active,
-        name = name,
-        # used by the main body
-        body_schemes = default_schemes(waiver()),
-        # following parameters can be controlled by `quad_switch`
-        width = width, height = height,
-        # following parameters are used internally
-        plot = plot, horizontal = horizontal, vertical = vertical
-    )
-}
+)

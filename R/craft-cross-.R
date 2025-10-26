@@ -9,7 +9,7 @@ cross <- function(cross = NULL, data = waiver(),
     if (override_call(call)) {
         call <- current_call()
     }
-    new_craftbox(
+    CraftBox(
         craftsman = cross %||% CraftCross,
         data = allow_lambda(data), data_params = data_params,
         ...,
@@ -22,9 +22,9 @@ cross <- function(cross = NULL, data = waiver(),
 }
 
 #' @importFrom ggplot2 ggproto ggproto_parent
-#' @include craftsman.R
+#' @include craft-designer.R
 CraftCross <- ggproto(
-    "CraftCross", Craftsman,
+    "CraftCross", CraftDesigner,
     data_params = NULL,
     inherit_nobs = NULL,
     inherit_panel = NULL,

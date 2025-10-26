@@ -1,20 +1,176 @@
-#' A `Layout` object
-#'
-#' A `Layout` object defines how to place the plots.
-#'
-#' @importFrom ggplot2 theme
+#' layout_context class - represents the context for layout properties.
+#' Context will be inherited by child elements, such as child layouts or child
+#' plots.
 #' @include scheme-.R
-#' @keywords internal
-LayoutProto <- S7::new_class(
-    "LayoutProto",
+layout_context <- S7::new_class(
+    "layout_context",
     properties = list(
-        data = S7::class_any,
-        titles = layout_title,
-        schemes = Schemes,
         theme = S7::new_property(
             ggplot2::class_theme,
             default = quote(theme())
         ),
+        schemes = Schemes
+    )
+)
+
+LayoutContextUnion <- rlang::inject(S7::new_union(
+    # theme should be a `layout_theme` object
+    layout_theme,
+    !!!lapply(prop(layout_context, "properties")[
+        setdiff(names(prop(layout_context, "properties")), "theme")
+    ], .subset2, "class")
+))
+
+S7::method(ggalign_init, layout_context) <- function(x) {
+    # `schemes_complete` ensures that all missing schemes are completed.
+    # `ggalign_init` initializes the schemes property, setting the initial value
+    # for the layout schemes in the `input` object.
+    prop(x, "schemes", check = FALSE) <- ggalign_init(schemes_complete(
+        prop(x, "schemes")
+    ))
+
+    # We take the `scheme_theme` from the schemes and treat it as the default
+    # theme.
+    prop(x, "theme", check = FALSE) <- ggalign_update(
+        prop(schemes_get(prop(x, "schemes"), "scheme_theme"), "theme"),
+        prop(x, "theme")
+    )
+    x
+}
+
+#' Prevents the direct update of layout_context properties.
+#'
+#' Direct updates to the layout context could break the inheritance structure,
+#' leading to inconsistent visual results across child elements. By disallowing
+#' this update, we ensure that properties can only be inherited or merged,
+#' preserving the layout's consistency.
+#' @noRd
+S7::method(ggalign_update, list(layout_context, layout_context)) <-
+    function(x, object, ...) {
+        cli_abort(c(
+            "Cannot update the context using {.fn ggalign_update}.",
+            "i" = "Context properties can only be inherited."
+        ))
+    }
+
+S7::method(ggalign_update, list(layout_context, layout_theme)) <-
+    function(x, object, ...) {
+        prop(x, "theme", check = FALSE) <- ggalign_update(
+            prop(x, "theme"), prop(object, "theme"), ...
+        )
+        x
+    }
+
+S7::method(
+    ggalign_update,
+    list(layout_context, S7::new_union(Schemes, Scheme))
+) <-
+    function(x, object, ...) {
+        prop(x, "schemes", check = FALSE) <- ggalign_update(
+            prop(x, "schemes"), object, ...
+        )
+        x
+    }
+
+#' The 'align' argument allows further control over how `spacing` should be
+#' inherited, ensuring uniformity in the layout.
+#' @importFrom ggplot2 theme calc_element
+#' @importFrom S7 prop prop<-
+#' @noRd
+S7::method(ggalign_inherit, list(layout_context, layout_context)) <-
+    function(x, object, ..., align = NULL) {
+        rlang::check_dots_empty()
+        prop(x, "schemes", check = FALSE) <- ggalign_inherit(
+            prop(x, "schemes"), prop(object, "schemes"), ...
+        )
+        prop(x, "theme", check = FALSE) <- prop(object, "theme") +
+            prop(x, "theme")
+        if (is.null(align)) return(x) # styler: off
+
+        # Align panel spacing based on 'align' argument (x, y, or xy)
+        prop(x, "theme", check = FALSE) <- prop(x, "theme") +
+            switch(align,
+                x = theme(
+                    panel.spacing.x = calc_element(
+                        "panel.spacing.x",
+                        prop(object, "theme")
+                    )
+                ),
+                y = theme(
+                    panel.spacing.y = calc_element(
+                        "panel.spacing.y",
+                        prop(object, "theme")
+                    )
+                ),
+                xy = theme(
+                    panel.spacing.x = calc_element(
+                        "panel.spacing.x",
+                        prop(object, "theme")
+                    ),
+                    panel.spacing.y = calc_element(
+                        "panel.spacing.y",
+                        prop(object, "theme")
+                    )
+                ),
+                cli_abort("Invalid {.arg align} provided: {align}")
+            )
+        x
+    }
+
+S7::method(ggalign_update, list(ggplot2::class_ggplot, layout_context)) <-
+    function(x, object, objectname, ..., schemes) {
+        context <- ggalign_inherit(
+            layout_context(x$theme, schemes),
+            object,
+            ...
+        )
+        x <- ggalign_update(x, prop(context, "schemes"))
+        x$theme <- prop(context, "theme")
+        x
+    }
+
+S7::method(ggalign_update, list(Graph, layout_context)) <-
+    function(x, object, objectname, ...) {
+        plot <- prop(x, "plot")
+        context <- ggalign_inherit(
+            layout_context(plot$theme, prop(x, "schemes")),
+            object,
+            ...
+        )
+        prop(x, "schemes") <- prop(context, "schemes")
+        plot$theme <- prop(context, "theme")
+        prop(x, "plot") <- plot
+        x
+    }
+
+###############################################################
+#' layout_control class - integrates properties that cannot be inherited.
+#' Whenever a new property is added to this class, we must ensure
+#' `LayoutControlUnion` is updated. This ensures that the `ggalign_update`
+#' method is automatically implemented for the new property.
+layout_control <- S7::new_class(
+    "layout_control",
+    properties = list(titles = layout_title)
+)
+
+LayoutControlUnion <- rlang::inject(S7::new_union(
+    !!!lapply(prop(layout_control, "properties"), .subset2, "class")
+))
+
+S7::method(ggalign_init, layout_control) <- function(x) x
+S7::method(ggalign_update, list(layout_control, layout_title)) <-
+    function(x, object, ...) {
+        prop(x, "titles", check = FALSE) <- ggalign_update(
+            prop(x, "titles"), object, ...
+        )
+        x
+    }
+
+###############################################################
+#' @importFrom S7 new_object S7_object
+LayoutProto <- S7::new_class(
+    "LayoutProto",
+    properties = list(
         name = S7::new_property(
             S7::class_character,
             validator = function(value) {
@@ -22,12 +178,34 @@ LayoutProto <- S7::new_class(
                     return("must be a single character string")
                 }
             },
+            setter = function(self, value) {
+                if (!is.null(prop(self, "name"))) {
+                    cli_abort("'@name' is read-only")
+                }
+                prop(self, "name") <- value
+                self
+            },
             default = NA_character_
-        )
+        ),
+        # when `data` is modified, the internal domain will need modified too.
+        # so we prevent modify the initial `data`
+        data = S7::new_property(
+            S7::class_any,
+            setter = function(self, value) {
+                if (!is.null(prop(self, "data"))) {
+                    cli_abort("'@data' is read-only")
+                }
+                prop(self, "data") <- value
+                self
+            }
+        ),
+        context = layout_context,
+        control = layout_control
     ),
     abstract = TRUE
 )
 
+###############################################################
 local(S7::method(`$`, LayoutProto) <- function(x, name) prop(x, name))
 
 local(S7::method(print, LayoutProto) <- print.patch_ggplot)
@@ -35,7 +213,7 @@ local(S7::method(print, LayoutProto) <- print.patch_ggplot)
 #' @importFrom grid grid.draw
 local(S7::method(grid.draw, LayoutProto) <- grid.draw.patch_ggplot)
 
-# Used by both `alignpatches`
+# Used by `alignpatches`
 #' @importFrom ggplot2 update_ggplot
 S7::method(update_ggplot, list(LayoutProto, alignpatches)) <-
     function(object, plot, objectname) {
@@ -48,199 +226,30 @@ S7::method(alignpatches_apply, list(LayoutProto, S7::class_any)) <-
         layout_apply_all(plot, object, objectname)
     }
 
-# Used by both `circle_layout()` and `stack_layout()`
-#' @keywords internal
-ChainLayout <- S7::new_class("ChainLayout",
-    LayoutProto,
-    properties = list(
-        current = S7::new_property(
-            S7::class_integer,
-            validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single integer number")
-                }
-            },
-            default = NA_integer_
-        ),
-        box_list = S7::class_list,
-        domain = prop_domain(),
-        direction = S7::new_property(
-            S7::class_character,
-            validator = function(value) {
-                if (length(value) != 1L) {
-                    return("must be a single character string")
-                }
-            }
-        )
-    )
-)
-
-#' @importFrom ggplot2 waiver
-#' @importFrom grid is.unit
-#' @importFrom S7 convert
-#' @importFrom rlang is_atomic
-#' @keywords internal
-StackLayout <- S7::new_class(
-    "StackLayout", ChainLayout,
-    properties = list(
-        sizes = prop_grid_unit("sizes", validator = validator_size(3L)),
-        # used by heatmap annotation
-        heatmap = S7::new_property(
-            S7::class_list,
-            default = quote(list(
-                position = NULL,
-                free_guides = waiver(),
-                # indicate whether or not the data is from the quad-layout
-                # matrix
-                quad_matrix = FALSE
-            ))
-        )
-    )
-)
-
-StackCross <- S7::new_class(
-    "StackCross", StackLayout,
-    # A list of old domain
-    properties = list(
-        odomain = S7::class_list,
-        cross_points = S7::class_integer,
-        break_points = S7::class_integer
-    )
-)
-
-#' @keywords internal
-CircleLayout <- S7::new_class(
-    "CircleLayout", ChainLayout,
-    properties = list(
-        radial = S7::new_property(
-            S7::new_union(NULL, S7::new_S3_class("CoordRadial")),
-            validator = function(value) {
-                if (!is.null(value) && abs(diff(value$arc)) < pi / 2L) {
-                    return("must span at least 90 degrees; smaller arcs are not supported")
-                }
-            }
-        ),
-        sector_spacing = S7::new_union(NULL, S7::class_numeric)
-    )
-)
-
-#' @importFrom S7 S7_inherits
-prop_stack_layout <- function(property, ...) {
-    force(property)
-    S7::new_property(
-        S7::class_any,
-        validator = function(value) {
-            if (!is.null(value) && !S7_inherits(value, StackLayout)) {
-                return("must be a 'StackLayout' object")
-            }
-        },
-        setter = function(self, value) {
-            prop(self, property) <- value
-            self
-        },
-        ...,
-        default = NULL
-    )
+############################################################
+S7::method(ggalign_init, LayoutProto) <- function(x) {
+    prop(x, "context", check = FALSE) <- ggalign_init(prop(x, "context"))
+    prop(x, "control", check = FALSE) <- ggalign_init(prop(x, "control"))
+    x
 }
 
-# Used to create the QuadLayout
-QuadLayout <- S7::new_class(
-    "QuadLayout", LayoutProto,
-    properties = list(
-        current = S7::new_property(
-            S7::new_union(NULL, S7::class_integer, S7::class_character),
-            validator = function(value) {
-                if (!is.null(value) && length(value) != 1L) {
-                    return("must be a single integer number or single string")
-                }
-            }
-        ),
-        plot = S7::new_union(NULL, ggplot2::class_ggplot),
-        body_schemes = Schemes,
-        # parameters for main body
-        width = prop_grid_unit("width", validator = validator_size(1L)),
-        height = prop_grid_unit("height", validator = validator_size(1L)),
-        # Used to align axis
-        horizontal = prop_domain(),
-        vertical = prop_domain(),
-        # top, left, bottom, right must be a StackLayout object.
-        top = prop_stack_layout("top"),
-        left = prop_stack_layout("left"),
-        bottom = prop_stack_layout("bottom"),
-        right = prop_stack_layout("right"),
-        # If we regard `QuadLayout` as a plot, and put it into the stack
-        # layout, we need following arguments to control it's behavour
-        plot_active = active
-    )
-)
-
-# used to create the heatmap layout
-#' @keywords internal
-HeatmapLayout <- S7::new_class(
-    "HeatmapLayout", QuadLayout,
-    properties = list(filling = S7::class_any) # parameters for heatmap body
-)
-
-###########################################################
-#' @importFrom ggplot2 complete_theme
-S7::method(init_object, LayoutProto) <- function(input) {
-    # initialize layout schemes
-    input@schemes <- scheme_init(input@schemes)
-
-    # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(input@schemes, "scheme_theme"), "theme") +
-        input@theme
-
-    # Apply the updated theme
-    input@theme <- th
-    input
-}
-
-#' @importFrom S7 S7_dispatch
-is_linear <- S7::new_generic(
-    "is_linear", "layout",
-    function(layout) S7_dispatch()
-)
-
-S7::method(is_linear, StackLayout) <- function(layout) TRUE
-S7::method(is_linear, CircleLayout) <- function(layout) FALSE
-
-###########################################################
-inherit_parent_layout_schemes <- function(layout, schemes) {
-    if (is.null(schemes)) {
-        return(layout@schemes)
+S7::method(ggalign_update, list(LayoutProto, LayoutContextUnion)) <-
+    function(x, object, ...) {
+        prop(x, "context", check = FALSE) <- ggalign_update(
+            prop(x, "context"), object, ...
+        )
+        x
     }
-    scheme_inherit(schemes, layout@schemes)
-}
 
-inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
-    if (is.null(theme)) return(layout@theme) # styler: off
-    # parent theme, set the global panel spacing,
-    # so that every panel aligns well
-    if (is.null(layout@theme)) return(theme) # styler: off
-    ans <- theme + layout@theme
-    if (is.null(spacing)) return(ans) # styler: off
-    switch(spacing,
-        x = ans + theme(
-            panel.spacing.x = calc_element("panel.spacing.x", theme)
-        ),
-        y = ans + theme(
-            panel.spacing.y = calc_element("panel.spacing.y", theme)
+S7::method(ggalign_update, list(LayoutProto, LayoutControlUnion)) <-
+    function(x, object, ...) {
+        prop(x, "control", check = FALSE) <- ggalign_update(
+            prop(x, "control"), object, ...
         )
-    )
-}
+        x
+    }
 
 ############################################################
-#' Get the statistics from the layout
-#'
-#' @param x A `r rd_layout()`.
-#' @inheritParams rlang::args_dots_used
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) {
-    UseMethod("ggalign_stat")
-}
-
 #' @param position A string of `r oxford_or(.TLBR)`.
 #' @export
 #' @rdname ggalign_stat
@@ -272,11 +281,6 @@ ggalign_stat <- function(x, ...) {
 ggalign_stat.CraftAlign <- function(x, ...) {
     rlang::check_dots_empty()
     .subset2(x, "statistics")
-}
-
-#' @export
-ggalign_stat.default <- function(x, ...) {
-    cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
 
 #############################################################

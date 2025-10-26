@@ -254,3 +254,38 @@ new_stack_layout <- function(data, direction, domain,
         sizes = sizes, domain = domain
     )
 }
+
+#' @importFrom ggplot2 waiver
+#' @importFrom grid is.unit
+#' @importFrom S7 convert
+#' @importFrom rlang is_atomic
+#' @keywords internal
+#' @include layout-chain-.R
+StackLayout <- S7::new_class(
+    "StackLayout", ChainLayout,
+    properties = list(
+        sizes = prop_grid_unit("sizes", validator = validator_size(3L)),
+        # used by heatmap annotation
+        heatmap = S7::new_property(
+            S7::class_list,
+            default = quote(list(
+                position = NULL,
+                free_guides = waiver(),
+                # indicate whether or not the data is from the quad-layout
+                # matrix
+                quad_matrix = FALSE
+            ))
+        ),
+        domain = S7::new_union(NULL, Domain)
+    )
+)
+
+StackCross <- S7::new_class(
+    "StackCross", StackLayout,
+    # A list of old domain
+    properties = list(
+        odomain = S7::class_list,
+        cross_points = S7::class_integer,
+        break_points = S7::class_integer
+    )
+)

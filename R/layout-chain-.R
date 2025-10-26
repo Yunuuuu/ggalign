@@ -1,6 +1,173 @@
+#' box_orientation Class
+#'
+#' The **`box_orientation`** class defines the intrinsic context for aligning
+#' CraftBox objects. It is used to specify layout properties like alignment,
+#' direction, and positioning of boxes within a layout. These properties are
+#' essential for controlling the placement and alignment of the CraftBox
+#' elements.
+#'
+#' @format An S7 class with the following properties:
+#'   - axis: A character string indicating the alignment axis of the box, either
+#'     "x" or "y".
+#'   - is_linear: A logical value indicating whether the box should be arranged
+#'     in a linear fashion.
+#'   - direction: A character string specifying the direction of the box layout.
+#'     Possible values are "horizontal" or "vertical". The default is `NA`,
+#'     indicating no direction specified.
+#'   - is_horizontal: A logical getter indicating whether the direction is
+#'     horizontal. Returns `TRUE` if `direction` is set to "horizontal",
+#'     otherwise `FALSE`.
+#'   - is_vertical: A logical getter indicating whether the direction is
+#'     vertical. Returns `TRUE` if `direction` is set to "vertical", otherwise
+#'     `FALSE`.
+#'   - position: A character string that determines the position of the box.
+#'     Valid values come from the `.TLBR` set (Top, Left, Bottom, Right). The
+#'     default is `NA`, indicating no position.
+#'   - is_annotation: A logical getter that checks if the box is an annotation.
+#'     Returns `TRUE` if `position` is `NA` (i.e., no position is specified).
+#'   - inherit_quad_matrix: A logical value indicating whether the box inherits
+#'     a quad matrix layout. The default is `FALSE`.
+#'
+box_orientation <- S7::new_class(
+    "box_orientation",
+    properties = list(
+        axis = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L || is.na(value) ||
+                    !any(value == c("x", "y"))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(c("x", "y"), code = FALSE)
+                    ))
+                }
+            }
+        ),
+        is_linear = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            }
+        ),
+        direction = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L ||
+                    (!is.na(value) &&
+                        !any(value == c("horizontal", "vertical")))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(c("horizontal", "vertical"), code = FALSE)
+                    ))
+                }
+            },
+            default = NA_character_
+        ),
+        is_horizontal = S7::new_property(
+            getter = function(self) {
+                !is.na(direction <- prop(self, "direction")) &&
+                    is_horizontal(direction)
+            }
+        ),
+        is_vertical = S7::new_property(
+            getter = function(self) {
+                !is.na(direction <- prop(self, "direction")) &&
+                    is_vertical(direction)
+            }
+        ),
+        position = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L ||
+                    (!is.na(value) && !any(value == .TLBR))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(.TLBR, code = FALSE)
+                    ))
+                }
+            },
+            default = NA_character_
+        ),
+        is_annotation = S7::new_property(
+            getter = function(self) is.na(prop(self, "position"))
+        ),
+        inherit_quad_matrix = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            },
+            default = FALSE
+        )
+    )
+)
+
+#' @keywords internal
+ChainLayout <- S7::new_class("ChainLayout",
+    properties = list(
+        # intrincic attribvutes of layout cannot be modified
+        orientation = S7::new_property(
+            BoxOrientation,
+            setter = function(self, value) {
+                if (!is.null(prop(self, "orientation"))) {
+                    cli_abort("'@orientation' is read-only")
+                }
+                prop(self, "orientation") <- value
+                self
+            }
+        ),
+        current = S7::new_property(
+            S7::class_integer,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single integer number")
+                }
+            },
+            default = NA_integer_
+        ),
+        box_list = S7::class_list
+    )
+)
+
+###############################################################
+#' @keywords internal
+CircleLayout <- S7::new_class(
+    "CircleLayout", ChainLayout,
+    properties = list(
+        radial = S7::new_property(
+            S7::new_union(NULL, S7::new_S3_class("CoordRadial")),
+            validator = function(value) {
+                if (!is.null(value) && abs(diff(value$arc)) < pi / 2L) {
+                    return("must span at least 90 degrees; smaller arcs are not supported")
+                }
+            }
+        ),
+        sector_spacing = S7::new_union(NULL, S7::class_numeric),
+        domain = S7::new_union(NULL, Domain)
+    )
+)
+
+#' @importFrom S7 S7_dispatch
+is_linear <- S7::new_generic(
+    "is_linear", "layout",
+    function(layout) S7_dispatch()
+)
+
+S7::method(is_linear, StackLayout) <- function(layout) TRUE
+S7::method(is_linear, CircleLayout) <- function(layout) FALSE
+
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, CraftBox)) <-
+S7::method(layout_update, list(ChainLayout, CraftBox)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -45,7 +212,7 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
 
             layout <- chain_add_box(layout, object, object@active, objectname)
         } else { # should be a QuadLayout object
-            box <- layout_add(box, object, objectname)
+            box <- layout_update(box, object, objectname)
             layout@box_list[[current]] <- box
             new_domain <- prop(box, layout@direction)
         }
@@ -56,28 +223,28 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, ggplot2::class_ggplot)) <-
+S7::method(layout_update, list(ChainLayout, ggplot2::class_ggplot)) <-
     function(layout, object, objectname) {
-        layout_add(layout, ggfree(data = object), objectname)
+        layout_update(layout, ggfree(data = object), objectname)
     }
 
 #' @include layout-.R
-S7::method(layout_add, list(ChainLayout, layout_title)) <-
+S7::method(layout_update, list(ChainLayout, layout_title)) <-
     function(layout, object, objectname) {
         layout@titles <- layout@titles + object
         layout
     }
 
 #' @include layout-.R
-S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
+S7::method(layout_update, list(ChainLayout, S7::class_list)) <-
     function(layout, object, objectname) {
-        for (o in object) layout <- layout_add(layout, o, object_name)
+        for (o in object) layout <- layout_update(layout, o, object_name)
         layout
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
+S7::method(layout_update, list(ChainLayout, S7::class_any)) <-
     function(layout, object, objectname) {
         if (is.null(object)) return(layout) # styler: off
         if (is.na(current <- layout@current)) {
@@ -97,7 +264,7 @@ S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, TRUE)
         } else {
-            box <- layout_add(box, object, objectname)
+            box <- layout_update(box, object, objectname)
         }
         layout@box_list[[current]] <- box
         layout
@@ -105,14 +272,14 @@ S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, layout_theme)) <-
+S7::method(layout_update, list(ChainLayout, layout_theme)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
             prop(layout, "theme") <- prop(layout, "theme") +
                 prop(object, "theme")
         } else {
-            layout@box_list[[current]] <- layout_add(box, object, objectname)
+            layout@box_list[[current]] <- layout_update(box, object, objectname)
         }
         layout
     }
@@ -174,16 +341,16 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_add, list(StackLayout, quad_scope)) <-
+S7::method(layout_update, list(StackLayout, quad_scope)) <-
     S7::method(
-        layout_add,
+        layout_update,
         list(StackLayout, S7::new_S3_class("quad_active"))
     ) <-
     S7::method(
-        layout_add,
+        layout_update,
         list(StackLayout, S7::new_S3_class("quad_anno"))
     ) <-
-    S7::method(layout_add, list(StackLayout, StackLayout)) <-
+    S7::method(layout_update, list(StackLayout, StackLayout)) <-
     function(layout, object, objectname) {
         if (is.na(current <- layout@current) ||
             is_craftbox(box <- .subset2(layout@box_list, current))) {
@@ -195,24 +362,24 @@ S7::method(layout_add, list(StackLayout, quad_scope)) <-
                 i = "Did you forget to add a {.fn quad_layout}?"
             ))
         } else {
-            layout@box_list[[current]] <- layout_add(
+            layout@box_list[[current]] <- layout_update(
                 box, object, objectname
             )
         }
         layout
     }
 
-S7::method(layout_add, list(CircleLayout, quad_scope)) <-
-    S7::method(layout_add, list(CircleLayout, QuadLayout)) <-
+S7::method(layout_update, list(CircleLayout, quad_scope)) <-
+    S7::method(layout_update, list(CircleLayout, QuadLayout)) <-
     S7::method(
-        layout_add,
+        layout_update,
         list(CircleLayout, S7::new_S3_class("quad_active"))
     ) <-
     S7::method(
-        layout_add,
+        layout_update,
         list(CircleLayout, S7::new_S3_class("quad_anno"))
     ) <-
-    S7::method(layout_add, list(CircleLayout, StackLayout)) <-
+    S7::method(layout_update, list(CircleLayout, StackLayout)) <-
     function(layout, object, objectname) {
         cli_abort(c(
             sprintf("Cannot add %s to a {.fn circle_layout}", objectname),
@@ -223,7 +390,7 @@ S7::method(layout_add, list(CircleLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @importFrom S7 super
-S7::method(layout_add, list(StackLayout, StackCross)) <-
+S7::method(layout_update, list(StackLayout, StackCross)) <-
     function(layout, object, objectname) {
         # preventing from adding `stack_cross` with the same direction in this
         # way, `stack_cross()` cannot be added to the heatmap annotation
@@ -238,12 +405,12 @@ S7::method(layout_add, list(StackLayout, StackCross)) <-
             ))
         }
         # call StackLayout method
-        layout_add(layout, super(object, StackLayout), objectname)
+        layout_update(layout, super(object, StackLayout), objectname)
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, S7::new_S3_class("stack_switch"))) <-
+S7::method(layout_update, list(StackLayout, S7::new_S3_class("stack_switch"))) <-
     function(layout, object, objectname) {
         layout <- switch_chain_plot(
             layout, .subset2(object, "what"),
@@ -257,7 +424,7 @@ S7::method(layout_add, list(StackLayout, S7::new_S3_class("stack_switch"))) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(CircleLayout, S7::new_S3_class("stack_switch"))) <-
+S7::method(layout_update, list(CircleLayout, S7::new_S3_class("stack_switch"))) <-
     function(layout, object, objectname) {
         cli_abort(c(
             sprintf(
@@ -270,7 +437,7 @@ S7::method(layout_add, list(CircleLayout, S7::new_S3_class("stack_switch"))) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, QuadLayout)) <-
+S7::method(layout_update, list(StackLayout, QuadLayout)) <-
     function(layout, object, objectname) {
         # preventing from adding `stack_cross` with the same direction
         # `cross_link()` cannot be added to the heatmap annotation
@@ -490,7 +657,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
+S7::method(layout_update, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
     function(layout, object, objectname) {
         if (!is_waiver(radial <- .subset2(object, "radial"))) {
             layout@radial <- radial
@@ -507,7 +674,7 @@ S7::method(layout_add, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
+S7::method(layout_update, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
     function(layout, object, objectname) {
         cli_abort(c(
             sprintf(

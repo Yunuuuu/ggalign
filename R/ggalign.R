@@ -99,7 +99,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
     }
     assert_active(active)
     active <- active(use = TRUE) + active
-    new_craftbox(
+    CraftBox(
         AlignGg,
         input_data = allow_lambda(data),
         data_params = list2(...),
@@ -112,7 +112,7 @@ ggalign <- function(data = waiver(), mapping = aes(), ..., size = NULL,
 
 #' @importFrom rlang inject
 #' @importFrom ggplot2 ggproto ggplot
-AlignGg <- ggproto("AlignGg", Craftsman,
+AlignGg <- ggproto("AlignGg", CraftDesigner,
     interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         input_data <- self$input_data
@@ -292,7 +292,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
     finish_plot = function(self, plot, schemes, theme) {
         direction <- self$direction
         # remove axis titles, text, ticks used for alignment
-        schemes <- scheme_update(
+        schemes <- ggalign_update(
             schemes,
             theme_no_axes(switch_direction(direction, "y", "x"))
         )
@@ -310,7 +310,7 @@ AlignGg <- ggproto("AlignGg", Craftsman,
         ggremove_margin(plot, direction) + theme_recycle()
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Craftsman, self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         c(header, "  Add plot by Aligning discrete or continuous variable")
     }
 )

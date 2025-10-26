@@ -19,7 +19,7 @@ S7::method(ggalign_gtable, alignpatches) <- function(x) {
     matrix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------
-    titles <- init_object(prop(x, "titles"))
+    titles <- ggalign_init(prop(x, "titles"))
     # https://github.com/tidyverse/ggplot2/blob/2e08bba0910c11a46b6de9e375fade78b75d10dc/R/plot-build.R#L219C3-L219C9
     title <- element_render(
         theme, "plot.title", prop(titles, "title"),

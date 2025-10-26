@@ -1,5 +1,5 @@
 S7::method(ggalign_build, StackLayout) <- function(x) {
-    x <- init_object(x)
+    x <- ggalign_init(x)
     (stack_build(x) %||% align_plots(theme = prop(x, "theme"))) +
         prop(x, "titles")
 }
@@ -201,7 +201,7 @@ resolve_stack_layout <- function(stack, schemes, theme, extra_domain) {
         released_spaces <- NULL
     }
 
-    domain <- domain_init(stack@domain)
+    domain <- ggalign_init(stack@domain)
     stack_composer_add(
         box_list,
         stack = stack,

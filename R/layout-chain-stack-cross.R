@@ -90,7 +90,7 @@ stack_cross.default <- function(direction, data = NULL, ...) {
         plots <- .subset2(plot_list, i)
 
         # prepare domain for current group
-        domain <- domain_init(.subset2(domain_list, i))
+        domain <- ggalign_init(.subset2(domain_list, i))
 
         if (is_empty(plots)) {
             previous_domain <- domain

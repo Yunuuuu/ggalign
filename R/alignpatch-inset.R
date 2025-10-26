@@ -127,7 +127,7 @@ patch.ggalign_inset <- function(x) {
     Parent <- NextMethod()
     if (is.null(insets)) return(Parent) # styler: off
     ggproto(
-        "PatchWrapped",
+        "PatchInset",
         Parent,
         gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
             gt <- ggproto_parent(Parent, self)$gtable(theme, guides, tagger)

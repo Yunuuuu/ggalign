@@ -4,17 +4,12 @@
 \alias{plot_add_scheme}
 \title{Apply a Scheme to a plot}
 \usage{
-plot_add_scheme(plot, scheme, ...)
+plot_add_scheme(x, object, ...)
 }
 \arguments{
-\item{plot}{A plot object, typically a ggplot.}
+\item{x}{The object whose properties are being updated.}
 
-\item{scheme}{A \code{\link{Scheme}} or \code{\link{Schemes}} object to apply.}
-
-\item{...}{Additional arguments passed to specific methods.}
-}
-\value{
-The modified \code{plot} object.
+\item{object}{The object from which the properties will be applied to \code{x}.}
 }
 \description{
 \code{plot_add_scheme()} is a generic used to apply a \code{\link{Scheme}} (or a \code{\link{Schemes}}

@@ -61,6 +61,7 @@
 #'     theme(plot.background = element_rect(fill = "red"))
 #'
 #' @include layout-.R
+#' @include layout-quad-.R
 #' @name layout-operator
 local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (missing(e2)) {
@@ -75,7 +76,7 @@ local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
-    layout_add(e1, e2, e2name)
+    layout_update(e1, e2, e2name)
 })
 
 #' @include layout-.R
@@ -114,8 +115,8 @@ local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
 
 # `+` operator overload
 #' @importFrom S7 S7_dispatch
-layout_add <- S7::new_generic(
-    "layout_add", c("layout", "object"),
+layout_update <- S7::new_generic(
+    "layout_update", c("layout", "object"),
     function(layout, object, objectname) S7_dispatch()
 )
 

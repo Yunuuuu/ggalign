@@ -1,5 +1,5 @@
 S7::method(ggalign_build, CircleLayout) <- function(x) {
-    init_object(x)
+    ggalign_init(x)
 }
 
 #' @importFrom ggplot2 find_panel ggproto ggplot_build
@@ -11,13 +11,13 @@ S7::method(ggalign_build, CircleLayout) <- function(x) {
 S7::method(ggalign_gtable, CircleLayout) <- function(x) {
     schemes <- prop(x, "schemes")
     theme <- prop(x, "theme")
-    titles <- init_object(prop(x, "titles"))
+    titles <- ggalign_init(prop(x, "titles"))
     # for empty plot
     base <- ggplot() +
         theme +
         ggplot2::labs(!!!props(titles))
     if (is_empty(plot_list <- x@box_list)) {
-        return(ggalign_gtable(base))
+        return(ggalignGrob(base))
     }
 
     # we remove the plot without actual plot area
@@ -25,7 +25,7 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
         !is.null(plot@plot)
     }, logical(1L), USE.NAMES = FALSE)
     plot_list <- .subset(plot_list, keep)
-    if (is_empty(plot_list)) return(ggalign_gtable(base)) # styler: off
+    if (is_empty(plot_list)) return(ggalignGrob(base)) # styler: off
 
     # we reorder the plots based on the `order` slot
     plot_order <- vapply(plot_list, function(plot) {
@@ -87,12 +87,12 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
     plot_inner <- plot_sizes - plot_track
     guides <- vector("list", N)
     plot_table <- NULL
-    domain <- domain_init(x@domain)
+    domain <- ggalign_init(x@domain)
     for (i in index) {
         plot_size <- plot_sizes[[i]]
         plot <- .subset2(plot_list, i)
         craftsman <- prop(plot, "craftsman") # `Craftsman` object
-        plot_schemes <- scheme_inherit(schemes, plot@schemes)
+        plot_schemes <- ggalign_inherit(plot@schemes, schemes)
         # the actual plot
         plot <- craftsman$build_plot(plot@plot, domain = domain)
 

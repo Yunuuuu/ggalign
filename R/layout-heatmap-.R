@@ -81,28 +81,95 @@ heatmap_layout.default <- function(data = NULL, mapping = aes(),
                                    ...,
                                    width = NA, height = NA, filling = waiver(),
                                    theme = NULL, active = NULL) {
-    # A single boolean value for compatible with `version <= 0.0.4`
-    if (isTRUE(filling)) {
-        filling <- waiver()
-    } else if (isFALSE(filling)) {
-        filling <- NULL
-    } else if (!is_waiver(filling) && !is.null(filling)) {
-        filling <- arg_match0(filling, c("tile", "raster"))
-    }
-    data <- data %|w|% NULL
-    # we need a matrix to melted into long formated data frame
-    data <- fortify_matrix(data = data, ...)
-    ans <- new_quad_layout(
-        name = "ggheatmap",
-        data = data,
-        mapping = mapping,
-        theme = theme, active = active,
-        width = width, height = height
+    HeatmapLayout(
+        data = data, mapping = mapping, ...,
+        width = width, height = height,
+        filling = filling,
+        theme = theme,
+        active = active
     )
-    ans <- convert(ans, HeatmapLayout)
-    # add default mapping
-    ans@plot <- ggadd_default(ans@plot, mapping = aes(.data$.x, .data$.y)) +
-        ggplot2::labs(x = NULL, y = NULL)
-    ans@filling <- filling
+}
+
+#' @include layout-quad-.R
+HeatmapLayout <- S7::new_class(
+    "HeatmapLayout", QuadLayout,
+    properties = list(filling = S7::class_any),
+    constructor = function(..., filling = waiver()) {
+        # A single boolean value for compatible with `version <= 0.0.4`
+        if (isTRUE(filling)) {
+            filling <- waiver()
+        } else if (isFALSE(filling)) {
+            filling <- NULL
+        } else if (!is_waiver(filling) && !is.null(filling)) {
+            filling <- arg_match0(filling, c("tile", "raster"))
+        }
+        ans <- new_object(
+            QuadLayout(name = "ggheatmap", ...),
+            filling = filling
+        )
+        # add default mapping
+        prop(prop(ans, "plot"), "plot", check = FALSE) <- ggadd_default(
+            prop(prop(ans, "plot"), "plot"),
+            mapping = aes(.data$.x, .data$.y)
+        ) +
+            ggplot2::labs(x = NULL, y = NULL)
+        ans
+    }
+)
+
+#' @include layout-quad-build.R
+S7::method(layout_build, HeatmapLayout) <-
+    function(layout, context = NULL, orientation = NULL) {
+        ans <- layout_build(super(layout, QuadLayout), context, orientation)
+
+        # add heatmap filling in the first layer --------------
+        if (!is.null(filling <- layout@filling)) {
+            # we always ensure the filling layer has a fill mapping
+            if (is.null(.subset2(ans$plots$main$mapping, "fill"))) {
+                mapping <- aes(.data$.x, .data$.y, fill = .data$value)
+            } else {
+                mapping <- aes(.data$.x, .data$.y)
+            }
+            if (is_waiver(filling)) {
+                if (nrow(layout@data) * ncol(layout@data) > 20000L) {
+                    cli_inform(c(">" = "heatmap built with {.fn geom_raster}"))
+                    filling <- "raster"
+                } else {
+                    cli_inform(c(">" = "heatmap built with {.fn geom_tile}"))
+                    filling <- "tile"
+                }
+            }
+            main_layer <- switch(filling,
+                raster = ggplot2::geom_raster(mapping = mapping),
+                tile = ggplot2::geom_tile(mapping = mapping)
+            )
+            ans$plots$main <- ans$plots$main + layer_order(main_layer)
+        }
+        # add class to set the default color mapping --------
+        ans$plots$main <- add_class(ans$plots$main, "ggalign_heatmap")
+        ans
+    }
+
+#' @importFrom ggplot2 ggplot_build
+#' @export
+ggplot_build.ggalign_heatmap <- function(plot, ...) {
+    with_options(
+        NextMethod(),
+        ggplot2.discrete.fill = heatmap_fill("discrete"),
+        ggplot2.continuous.fill = heatmap_fill("continuous")
+    )
+}
+
+heatmap_fill <- function(type) {
+    opt <- sprintf("%s.heatmap_%s_fill", pkg_nm(), type)
+    if (is.null(ans <- getOption(opt, default = NULL))) {
+        if (type == "continuous") {
+            ans <- function(...) {
+                ggplot2::scale_fill_gradient2(low = "blue", high = "red")
+            }
+        } else {
+            ans <- getOption("ggplot2.discrete.fill")
+        }
+    }
     ans
 }

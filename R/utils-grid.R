@@ -26,11 +26,11 @@ ensure_grob <- function(x, default = nullGrob()) {
 
 # `current.transform()` transforms from *inches* within the current viewport to
 # *inches* on the overall device.
+#' @importFrom grid unit
 grid_solve_loc <- function(loc, trans, valueOnly = FALSE) {
     x <- grid::convertX(loc$x, "inches", valueOnly = TRUE)
     y <- grid::convertY(loc$y, "inches", valueOnly = TRUE)
-    out <- matrix(c(x, y, rep_len(1, length(x))), ncol = 3L) %*%
-        trans
+    out <- matrix(c(x, y, rep_len(1, length(x))), ncol = 3L) %*% trans
     out <- list(x = out[, 1L, drop = TRUE], y = out[, 2L, drop = TRUE])
     if (!valueOnly) out <- lapply(out, unit, "inches")
     out

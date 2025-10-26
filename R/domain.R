@@ -51,13 +51,6 @@ continuous_limits <- function(...) { # nocov start
     } # nocov end
 }
 
-# nocov start
-#' @importFrom S7 S7_inherits
-prop_domain <- function(...) {
-    S7::new_property(S7::new_union(NULL, Domain), ...)
-}
-# nocov end
-
 Domain <- S7::new_class("Domain", abstract = TRUE)
 
 #' @importFrom S7 new_object S7_object
@@ -161,26 +154,18 @@ reorder_index <- function(panel, index = NULL) {
     unlist(split(index, panel[index]), recursive = FALSE, use.names = FALSE)
 }
 
-domain_init <- S7::new_generic("domain_init", "domain")
+S7::method(ggalign_init, ContinuousDomain) <- function(x) x
 
-S7::method(domain_init, ContinuousDomain) <- function(domain) domain
-
-S7::method(domain_init, DiscreteDomain) <- function(domain) {
+S7::method(ggalign_init, DiscreteDomain) <- function(x) {
     # if `nobs` is not initialized, it means no `Align` object exist
     # it's not necessary to initialize the `panel` and `index`
     # this is for `stack_layout` which may have no data
-    if (is.na(nobs <- domain@nobs)) {
-        return(domain)
+    if (is.na(nobs <- prop(x, "nobs"))) {
+        return(x)
     }
-    panel <- prop(domain, "panel") %||% factor(rep_len(1L, nobs))
-    index <- prop(domain, "index") %||% reorder_index(panel)
+    panel <- prop(x, "panel") %||% factor(rep_len(1L, nobs))
+    index <- prop(x, "index") %||% reorder_index(panel)
     DiscreteDomain(panel[index], index, nobs)
-}
-
-S7::method(domain_init, S7::class_any) <- function(domain) {
-    # `NULL` is a un-defined `ContinuousDomain`
-    if (is.null(domain)) return(domain) # styler: off
-    cli_abort("{.arg domain} must be a valid {.cls Domain} object")
 }
 
 ############################################################

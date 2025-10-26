@@ -1,6 +1,6 @@
-#' Craftsman Object for Layout Management
+#' Designer Object for Layout Management
 #'
-#' The `Craftsman` is a virtual object used internally to manage layout-specific
+#' The `Designer` is a virtual object used internally to manage layout-specific
 #' behavior during the `ggalign` plot composition process. It defines how a
 #' layout interacts with the domain data, sets up facets and coordinates, and
 #' aligns scales or axis labels accordingly.
@@ -17,21 +17,9 @@
 #'
 #' @importFrom ggplot2 ggproto
 #' @keywords internal
-#' @name Craftsman
-NULL
-
-Craftsman <- ggproto("Craftsman",
+CraftDesigner <- ggproto(
+    "ggalign::CraftDesigner",
     call = NULL,
-
-    # State used internally after layout insertion
-    in_linear = NULL,
-    layout_name = NULL,
-    direction = NULL,
-    position = NULL, # e.g., used by stack_layout() in quad_layout()
-    labels = NULL, # for discrete domain, there should be labels
-
-    ############################################################
-    # when added to the `Layout` object, will call following methods
 
     # Typically used to define number of observations using layout data
     interact_layout = function(self, layout) layout,
