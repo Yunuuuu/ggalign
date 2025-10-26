@@ -1,5 +1,5 @@
 S7::method(ggalign_build, CircleLayout) <- function(x) {
-    init_object(x)
+    ggalign_init(x)
 }
 
 #' @importFrom ggplot2 find_panel ggproto ggplot_build
@@ -11,7 +11,7 @@ S7::method(ggalign_build, CircleLayout) <- function(x) {
 S7::method(ggalign_gtable, CircleLayout) <- function(x) {
     schemes <- prop(x, "schemes")
     theme <- prop(x, "theme")
-    titles <- init_object(prop(x, "titles"))
+    titles <- ggalign_init(prop(x, "titles"))
     # for empty plot
     base <- ggplot() +
         theme +

@@ -183,17 +183,17 @@ HeatmapLayout <- S7::new_class(
 
 ###########################################################
 #' @importFrom ggplot2 complete_theme
-S7::method(init_object, LayoutProto) <- function(input) {
+S7::method(ggalign_init, LayoutProto) <- function(x) {
     # initialize layout schemes
-    input@schemes <- scheme_init(input@schemes)
+    x@schemes <- scheme_init(x@schemes)
 
     # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(input@schemes, "scheme_theme"), "theme") +
-        input@theme
+    th <- prop(schemes_get(x@schemes, "scheme_theme"), "theme") +
+        x@theme
 
     # Apply the updated theme
-    input@theme <- th
-    input
+    x@theme <- th
+    x
 }
 
 #' @importFrom S7 S7_dispatch
@@ -231,16 +231,6 @@ inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
 }
 
 ############################################################
-#' Get the statistics from the layout
-#'
-#' @param x A `r rd_layout()`.
-#' @inheritParams rlang::args_dots_used
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) {
-    UseMethod("ggalign_stat")
-}
-
 #' @param position A string of `r oxford_or(.TLBR)`.
 #' @export
 #' @rdname ggalign_stat
@@ -272,11 +262,6 @@ ggalign_stat <- function(x, ...) {
 ggalign_stat.CraftAlign <- function(x, ...) {
     rlang::check_dots_empty()
     .subset2(x, "statistics")
-}
-
-#' @export
-ggalign_stat.default <- function(x, ...) {
-    cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
 
 #############################################################

@@ -114,50 +114,53 @@ layout_design <- S7::new_class("layout_design",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(init_object, layout_design) <- function(input) {
-    if (identical(prop(input, "ncol"), NA_real_)) {
-        prop(input, "ncol", check = FALSE) <- NULL
+S7::method(ggalign_init, layout_design) <- function(x) {
+    if (identical(prop(x, "ncol"), NA_real_)) {
+        prop(x, "ncol", check = FALSE) <- NULL
     }
-    if (identical(prop(input, "nrow"), NA_real_)) {
-        prop(input, "nrow", check = FALSE) <- NULL
+    if (identical(prop(x, "nrow"), NA_real_)) {
+        prop(x, "nrow", check = FALSE) <- NULL
     }
-    if (identical(prop(input, "byrow"), NA)) {
-        prop(input, "byrow", check = FALSE) <- TRUE
+    if (identical(prop(x, "byrow"), NA)) {
+        prop(x, "byrow", check = FALSE) <- TRUE
     }
-    prop(input, "widths", check = FALSE) <- prop(input, "widths") %||% NA
-    prop(input, "heights", check = FALSE) <- prop(input, "heights") %||% NA
-    prop(input, "area", check = FALSE) <- prop(input, "area") %|w|% NULL
-    if (identical(prop(input, "guides"), NA_character_)) {
-        prop(input, "guides", check = FALSE) <- waiver()
+    prop(x, "widths", check = FALSE) <- prop(x, "widths") %||% NA
+    prop(x, "heights", check = FALSE) <- prop(x, "heights") %||% NA
+    prop(x, "area", check = FALSE) <- prop(x, "area") %|w|% NULL
+    if (identical(prop(x, "guides"), NA_character_)) {
+        prop(x, "guides", check = FALSE) <- waiver()
     }
-    input
+    x
 }
 
 #' @importFrom ggplot2 is_waiver
+S7::method(ggalign_update, list(layout_design, layout_design)) <-
+    function(x, object) {
+        if (!identical(prop(object, "ncol"), NA_real_)) {
+            prop(x, "ncol", check = FALSE) <- prop(object, "ncol")
+        }
+        if (!identical(prop(object, "nrow"), NA_real_)) {
+            prop(x, "nrow", check = FALSE) <- prop(object, "nrow")
+        }
+        if (!identical(prop(object, "byrow"), NA)) {
+            prop(x, "byrow", check = FALSE) <- prop(object, "byrow")
+        }
+        if (!is.null(prop(object, "widths"))) {
+            prop(x, "widths", check = FALSE) <- prop(object, "widths")
+        }
+        if (!is.null(prop(object, "heights"))) {
+            prop(x, "heights", check = FALSE) <- prop(object, "heights")
+        }
+        if (!is_waiver(prop(object, "area"))) {
+            prop(x, "area", check = FALSE) <- prop(object, "area")
+        }
+        if (!identical(prop(object, "guides"), NA_character_)) {
+            prop(x, "guides", check = FALSE) <- prop(object, "guides")
+        }
+        x
+    }
+
 local(
     S7::method(`+`, list(layout_design, layout_design)) <-
-        function(e1, e2) {
-            if (!identical(prop(e2, "ncol"), NA_real_)) {
-                prop(e1, "ncol", check = FALSE) <- prop(e2, "ncol")
-            }
-            if (!identical(prop(e2, "nrow"), NA_real_)) {
-                prop(e1, "nrow", check = FALSE) <- prop(e2, "nrow")
-            }
-            if (!identical(prop(e2, "byrow"), NA)) {
-                prop(e1, "byrow", check = FALSE) <- prop(e2, "byrow")
-            }
-            if (!is.null(prop(e2, "widths"))) {
-                prop(e1, "widths", check = FALSE) <- prop(e2, "widths")
-            }
-            if (!is.null(prop(e2, "heights"))) {
-                prop(e1, "heights", check = FALSE) <- prop(e2, "heights")
-            }
-            if (!is_waiver(prop(e2, "area"))) {
-                prop(e1, "area", check = FALSE) <- prop(e2, "area")
-            }
-            if (!identical(prop(e2, "guides"), NA_character_)) {
-                prop(e1, "guides", check = FALSE) <- prop(e2, "guides")
-            }
-            e1
-        }
+        function(e1, e2) ggalign_update(e1, e2)
 )

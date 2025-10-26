@@ -1,6 +1,6 @@
 #' @importFrom grid unit.c
 S7::method(ggalign_build, QuadLayout) <- function(x) {
-    x <- init_object(x)
+    x <- ggalign_init(x)
     patches <- quad_build(x)
     plots <- .subset2(patches, "plots")
     sizes <- .subset2(patches, "sizes")

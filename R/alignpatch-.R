@@ -113,38 +113,6 @@ make_patch_table <- function() {
     )
 }
 
-#' Initialize an S7 Object
-#'
-#' Helper generic to initialize an object before use. This may include
-#' setting properties or other elements to their default values, particularly
-#' if the object's internal defaults differ from the defaults required for
-#' normal usage.
-#'
-#' @param input An S7 object to initialize.
-#'
-#' @return The initialized object, ready for use.
-#'
-#' @noRd
-init_object <- S7::new_generic("init_object", "input")
-
-#' Generate a plot grob.
-#'
-#' @param x An object to be converted into a [grob][grid::grob].
-#' @return A [`grob()`][grid::grob] object.
-#' @examples
-#' ggalignGrob(ggplot())
-#' @export
-ggalignGrob <- function(x) ggalign_gtable(ggalign_build(x))
-
-# Now, we only define `ggalign_gtable` method for `alignpatches` and `ggplot`
-# `ggalign_build` must return these objects
-ggalign_build <- function(x) UseMethod("ggalign_build")
-
-ggalign_gtable <- function(x) UseMethod("ggalign_gtable")
-
-#' @export
-ggalign_gtable.gtable <- function(x) x
-
 #' Get Patch representation
 #'
 #' @description

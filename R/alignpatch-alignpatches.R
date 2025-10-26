@@ -176,7 +176,7 @@ PatchAlignpatches <- ggproto(
             }
             out
         })
-        layout <- init_object(prop(self$plot, "layout"))
+        layout <- ggalign_init(prop(self$plot, "layout"))
 
         # get the design areas and dims ------------------
         panel_widths <- prop(layout, "widths")

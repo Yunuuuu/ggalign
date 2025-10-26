@@ -66,6 +66,7 @@ Collate:
     'alignpatch-.R'
     'ggplot-theme.R'
     'alignpatch-theme.R'
+    'generics.R'
     'utils-ggplot.R'
     'alignpatch-tags.R'
     'alignpatch-title.R'
