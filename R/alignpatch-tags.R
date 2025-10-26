@@ -74,15 +74,13 @@ layout_tags <- S7::new_class("layout_tags",
         list(tags = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
             setter = function(self, value) {
-                if (identical(value, NA)) {
-                    value <- NA_character_
-                } else if (!is_waiver(value) && !is.null(value)) {
+                if (!is_waiver(value) && !is.null(value)) {
                     value <- as.character(value)
                 }
                 prop(self, "tags", check = FALSE) <- value
                 self
             },
-            default = NA_character_
+            default = character()
         )),
         lapply(
             rlang::set_names(c("sep", "prefix", "suffix")),
@@ -105,7 +103,7 @@ layout_tags <- S7::new_class("layout_tags",
 #' @importFrom S7 prop prop<-
 #' @include generics.R
 S7::method(ggalign_init, layout_tags) <- function(x) {
-    if (identical(prop(x, "tags"), NA_character_)) {
+    if (is.character(prop(x, "tags")) && length(prop(x, "tags")) == 0L) {
         prop(x, "tags", check = FALSE) <- waiver()
     }
     prop(x, "sep", check = FALSE) <- prop(x, "sep") %|w|% NULL
@@ -119,7 +117,8 @@ S7::method(ggalign_init, layout_tags) <- function(x) {
 #' @include generics.R
 S7::method(ggalign_update, list(layout_tags, layout_tags)) <-
     function(x, object) {
-        if (!identical(prop(object, "tags"), NA_character_)) {
+        if (!(is.character(prop(object, "tags")) &&  # styler: off
+              length(prop(object, "tags")) == 0L)) { # styler: off
             prop(x, "tags", check = FALSE) <- prop(object, "tags")
         }
         if (!is_waiver(prop(object, "sep"))) {

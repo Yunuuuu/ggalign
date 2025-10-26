@@ -128,8 +128,8 @@ S7::method(
         prop(plot, "titles") <- prop(plot, "titles") + titles
         prop(plot, "theme") <- prop(plot, "theme") + .subset2(object, "theme")
         # Transform patchwork tag into ggalign style
-        tags <- .subset2(object, "tag_levels") %|w|% NA
-        if (length(tags) == 0L) tags <- NA
+        tags <- .subset2(object, "tag_levels") %|w|% character()
+        if (length(tags) == 0L) tags <- character()
         if (is.list(tags)) tags <- .subset2(tags, length(tags))
         prop(plot, "tags") <- prop(plot, "tags") + layout_tags(
             tags = tags,
