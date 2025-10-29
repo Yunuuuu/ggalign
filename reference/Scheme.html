@@ -68,20 +68,19 @@ schemes are initialized, combined, and applied to plots.</p>
 
 
 <p>When creating a new subclass of <code>Scheme</code>, you may optionally override the
-following methods to customize its behavior:</p><ul><li><p><code><a href="scheme_init.html">scheme_init(scheme)</a></code> <em>(optional)</em>: Initializes the scheme,
-often by assigning default values or computing derived properties.</p>
+following methods to customize its behavior:</p><ul><li><p><code><a href="ggalign_init.html">ggalign_init()</a></code> <em>(optional)</em>: Initializes the
+scheme, often by assigning default values or computing derived properties.</p>
 <p><strong>Default behavior</strong>: Returns the scheme unchanged.</p></li>
-<li><p><code><a href="scheme_update.html">scheme_update(e1, e2)</a></code> <em>(optional)</em>: Defines how to
-update a scheme by merging it with another of the same key (e.g., during
-user overrides).</p>
-<p><strong>Default behavior</strong>: Replaces <code>e1</code> entirely with <code>e2</code>.</p></li>
-<li><p><code><a href="scheme_inherit.html">scheme_inherit(e1, e2)</a></code> <em>(optional)</em>: Defines how a
+<li><p><code><a href="ggalign_update.html">ggalign_update(x, object, ...)</a></code> <em>(optional)</em>: Defines
+how to update a scheme by merging it with another of the same key.</p>
+<p><strong>Default behavior</strong>: Replaces <code>x</code> entirely with <code>object</code>.</p></li>
+<li><p><code><a href="ggalign_inherit.html">ggalign_inherit(x, object)</a></code> <em>(optional)</em>: Defines how a
 scheme inherits from a parent scheme (e.g., a layout template), typically
 merging instead of replacing.</p>
-<p><strong>Default behavior</strong>: Inheritance is ignored; <code>e2</code> is returned unchanged.</p></li>
-<li><p><code><a href="plot_add_scheme.html">plot_add_scheme(plot, scheme, ...)</a></code>: Applies the scheme
-to a plot object (usually a <code>ggplot</code>) by modifying the plot components,
-theming, or annotations.</p></li>
+<p><strong>Default behavior</strong>: Inheritance is ignored; <code>x</code> is returned unchanged.</p></li>
+<li><p><code><a href="ggalign_update.html">ggalign_update(x, object, ...)</a></code>: Applies the scheme
+(<code>object</code>) to a plot (<code>x</code>) (usually a <code>ggplot</code>) by modifying the <code>x</code>
+components, theming, or annotations.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

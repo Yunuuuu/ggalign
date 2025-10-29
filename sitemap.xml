@@ -79,8 +79,13 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalignGrob.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_attr.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_build.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_data_set.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_gtable.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_inherit.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_init.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_stat.html</loc></url>
+<url><loc>https://yunuuuu.github.io/ggalign/reference/ggalign_update.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggcross.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggfree.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/ggmark.html</loc></url>
@@ -129,10 +134,7 @@
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scale_z_continuous.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_align.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_data.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_inherit.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_init.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_theme.html</loc></url>
-<url><loc>https://yunuuuu.github.io/ggalign/reference/scheme_update.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_cross.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_genomic.html</loc></url>
 <url><loc>https://yunuuuu.github.io/ggalign/reference/stack_layout.html</loc></url>
