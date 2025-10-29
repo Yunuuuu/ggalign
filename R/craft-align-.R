@@ -27,6 +27,7 @@
 #' align_dendro()
 #' @importFrom rlang caller_call current_call
 #' @importFrom ggplot2 ggproto
+#' @include craft-designer.R
 #' @export
 #' @keywords internal
 align <- function(align, data = NULL, ..., plot = NULL,
@@ -94,7 +95,7 @@ align <- function(align, data = NULL, ..., plot = NULL,
 #' @usage NULL
 #' @rdname align
 #' @include craftsman.R
-CraftAlign <- ggproto("CraftAlign", Craftsman,
+CraftAlign <- ggproto("CraftAlign", CraftDesigner,
     interact_layout = function(self, layout) {
         # check plot is compatible with the layout
         if (is_layout_continuous(layout)) {
@@ -286,7 +287,7 @@ CraftAlign <- ggproto("CraftAlign", Craftsman,
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(Craftsman, self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         oo <- self$summary_align()
         nms <- c("plot", "reorder", "split")
         content <- c(

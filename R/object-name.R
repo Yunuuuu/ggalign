@@ -35,7 +35,7 @@ object_name <- function(object, format) UseMethod("object_name")
 }
 
 #' @export
-object_name.Craftsman <- function(object, format = "fn") {
+`object_name.ggalign::CraftDesigner` <- function(object, format = "fn") {
     format_object_name(snake_class(object), format)
 }
 

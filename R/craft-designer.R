@@ -1,9 +1,122 @@
-#' Craftsman Object for Layout Management
+#' Box orientation
 #'
-#' The `Craftsman` is a virtual object used internally to manage layout-specific
-#' behavior during the `ggalign` plot composition process. It defines how a
-#' layout interacts with the domain data, sets up facets and coordinates, and
-#' aligns scales or axis labels accordingly.
+#' The **`box_orientation`** class defines the intrinsic context for aligning
+#' CraftBox objects. It is used to specify layout properties like alignment,
+#' direction, and positioning of boxes within a layout. These properties are
+#' essential for controlling the placement and alignment of the CraftBox
+#' elements.
+#'
+#' @format An S7 class with the following properties:
+#'   - axis: A character string indicating the alignment axis of the box, either
+#'     "x" or "y".
+#'   - is_linear: A logical value indicating whether the box should be arranged
+#'     in a linear fashion.
+#'   - direction: A character string specifying the direction of the box layout.
+#'     Possible values are "horizontal" or "vertical". The default is `NA`,
+#'     indicating no direction specified.
+#'   - is_horizontal: A logical getter indicating whether the direction is
+#'     horizontal. Returns `TRUE` if `direction` is set to "horizontal",
+#'     otherwise `FALSE`.
+#'   - is_vertical: A logical getter indicating whether the direction is
+#'     vertical. Returns `TRUE` if `direction` is set to "vertical", otherwise
+#'     `FALSE`.
+#'   - position: A character string that determines the position of the box.
+#'     Valid values come from the `.TLBR` set (Top, Left, Bottom, Right). The
+#'     default is `NA`, indicating no position.
+#'   - is_annotation: A logical getter that checks if the box is an annotation.
+#'     Returns `TRUE` if `position` is `NA` (i.e., no position is specified).
+#'   - inherit_quad_matrix: A logical value indicating whether the box inherits
+#'     a quad matrix layout. The default is `FALSE`.
+#' @usage NULL
+box_orientation <- S7::new_class(
+    "box_orientation",
+    properties = list(
+        axis = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L || is.na(value) ||
+                    !any(value == c("x", "y"))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(c("x", "y"), code = FALSE)
+                    ))
+                }
+            }
+        ),
+        is_linear = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            }
+        ),
+        direction = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L ||
+                    (!is.na(value) &&
+                        !any(value == c("horizontal", "vertical")))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(c("horizontal", "vertical"), code = FALSE)
+                    ))
+                }
+            },
+            default = NA_character_
+        ),
+        is_horizontal = S7::new_property(
+            getter = function(self) {
+                !is.na(direction <- prop(self, "direction")) &&
+                    is_horizontal(direction)
+            }
+        ),
+        is_vertical = S7::new_property(
+            getter = function(self) {
+                !is.na(direction <- prop(self, "direction")) &&
+                    is_vertical(direction)
+            }
+        ),
+        position = S7::new_property(
+            S7::class_character,
+            validator = function(value) {
+                if (length(value) != 1L ||
+                    (!is.na(value) && !any(value == .TLBR))) {
+                    return(sprintf(
+                        "can only be a string of %s",
+                        oxford_or(.TLBR, code = FALSE)
+                    ))
+                }
+            },
+            default = NA_character_
+        ),
+        is_annotation = S7::new_property(
+            getter = function(self) is.na(prop(self, "position"))
+        ),
+        inherit_quad_matrix = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            },
+            default = FALSE
+        )
+    )
+)
+
+#' CraftDesigner Object for Layout Management
+#'
+#' The `CraftDesigner` is a virtual object used internally to manage
+#' layout-specific behavior during the `ggalign` plot composition process. It
+#' defines how a layout interacts with the domain data, sets up facets and
+#' coordinates, and aligns scales or axis labels accordingly.
 #'
 #' This object is used by layout constructors and should not be modified
 #' directly.
@@ -17,10 +130,11 @@
 #'
 #' @importFrom ggplot2 ggproto
 #' @keywords internal
-#' @name Craftsman
+#' @name CraftDesigner
 NULL
 
-Craftsman <- ggproto("Craftsman",
+CraftDesigner <- ggproto(
+    "ggalign::CraftDesigner",
     call = NULL,
 
     # State used internally after layout insertion
@@ -145,7 +259,7 @@ Craftsman <- ggproto("Craftsman",
     # ========== Utilities ==========
     summary = function(self, plot) {
         cls <- class(self)
-        cls <- cls[seq_len(which(cls == "Craftsman"))]
+        cls <- cls[seq_len(which(cls == "ggalign::CraftDesigner"))]
         sprintf("<Class: %s>", paste(cls, collapse = " "))
     }
 )

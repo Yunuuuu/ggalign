@@ -89,7 +89,7 @@ Collate:
     'alignpatch-update.R'
     'alignpatch-wrap.R'
     'attributes.R'
-    'craftsman.R'
+    'craft-designer.R'
     'craft-align-.R'
     'craft-align-hclust.R'
     'craft-align-dendrogram.R'

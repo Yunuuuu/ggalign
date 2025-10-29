@@ -4,7 +4,7 @@ new_craftbox <- function(craftsman = NULL, ...,
     assert_active(active, allow_null = FALSE, call = call)
     # `call`: used to provide error message
     CraftBox(
-        craftsman = ggproto(NULL, craftsman %||% Craftsman, ..., call = call),
+        craftsman = ggproto(NULL, craftsman %||% CraftDesigner , ..., call = call),
         schemes = schemes %||% default_schemes(),
         plot = plot, active = active, size = size
     )
@@ -16,7 +16,7 @@ new_craftbox <- function(craftsman = NULL, ...,
 #' @include utils-assert.R
 CraftBox <- S7::new_class("CraftBox",
     properties = list(
-        craftsman = S7::new_S3_class("Craftsman"),
+        craftsman = S7::new_S3_class("ggalign::CraftDesigner"),
         plot = S7::new_union(NULL, ggplot2::class_ggplot),
         init_hooks = S7::new_property(
             S7::class_list,
