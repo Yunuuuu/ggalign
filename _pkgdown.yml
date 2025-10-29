@@ -137,6 +137,11 @@ reference:
   desc: >
     Functions to enhance and customize the capabilities of ggalign.
   contents:
+  - ggalign_init
+  - ggalign_update
+  - ggalign_inherit
+  - ggalign_build
+  - ggalign_gtable
   - .mark_draw
   - .link_draw
   - align

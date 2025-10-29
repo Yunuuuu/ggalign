@@ -62,10 +62,10 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Language: en-GB
 Collate: 
-    'active.R'
     'alignpatch-.R'
     'ggplot-theme.R'
     'alignpatch-theme.R'
+    'generics.R'
     'utils-ggplot.R'
     'alignpatch-tags.R'
     'alignpatch-title.R'
@@ -104,6 +104,7 @@ Collate:
     'craft-cross-none.R'
     'utils-assert.R'
     'scheme-.R'
+    'plot.R'
     'craftbox.R'
     'domain.R'
     'fortify-data-frame-.R'

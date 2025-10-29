@@ -5,7 +5,7 @@
 \title{Control Plot Tagging in Layouts}
 \usage{
 layout_tags(
-  tags = NA_character_,
+  tags = character(0),
   sep = waiver(),
   prefix = waiver(),
   suffix = waiver()

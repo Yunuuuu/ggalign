@@ -1,28 +1,28 @@
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, CraftBox)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
+S7::method(ggalign_update, list(ChainLayout, CraftBox)) <-
+    function(x, object, objectname) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
             craftsman <- prop(object, "craftsman")
             # initialize the necessary parameters for `Craftsman` object
-            if (is_stack_layout(layout)) {
-                craftsman$direction <- layout@direction
-                craftsman$position <- .subset2(layout@heatmap, "position")
-            } else if (is_circle_layout(layout)) {
+            if (is_stack_layout(x)) {
+                craftsman$direction <- x@direction
+                craftsman$position <- .subset2(x@heatmap, "position")
+            } else if (is_circle_layout(x)) {
                 # we treat circle layout as a vertical stack layout
                 craftsman$direction <- "vertical"
             }
-            craftsman$in_linear <- is_linear(layout)
-            craftsman$layout_name <- object_name(layout)
+            craftsman$in_linear <- is_linear(x)
+            craftsman$layout_name <- object_name(x)
 
             # firstly, we let the object do some changes in the layout
-            layout <- craftsman$interact_layout(layout)
+            x <- craftsman$interact_layout(x)
 
             # this step, the object will act with the stack layout
             # group rows into panel or reorder rows, we can also
             # initialize object data
-            new_domain <- craftsman$setup_domain(layout@domain)
+            new_domain <- craftsman$setup_domain(x@domain)
 
             # Initialize the plot object by retrieving it via the property
             # accessor.
@@ -43,48 +43,48 @@ S7::method(layout_add, list(ChainLayout, CraftBox)) <-
             # bypass setter checks.
             prop(object, "plot") <- craftsman$init_plot(plot)
 
-            layout <- chain_add_box(layout, object, object@active, objectname)
+            x <- chain_add_box(x, object, object@active, objectname)
         } else { # should be a QuadLayout object
-            box <- layout_add(box, object, objectname)
-            layout@box_list[[current]] <- box
-            new_domain <- prop(box, layout@direction)
+            box <- ggalign_update(box, object, objectname)
+            x@box_list[[current]] <- box
+            new_domain <- prop(box, x@direction)
         }
-        layout_update_domain(layout,
+        layout_update_domain(x,
             domain = new_domain, objectname = objectname
         )
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, ggplot2::class_ggplot)) <-
-    function(layout, object, objectname) {
-        layout_add(layout, ggfree(data = object), objectname)
+S7::method(ggalign_update, list(ChainLayout, ggplot2::class_ggplot)) <-
+    function(x, object, objectname) {
+        ggalign_update(x, ggfree(data = object), objectname)
     }
 
 #' @include layout-.R
-S7::method(layout_add, list(ChainLayout, layout_title)) <-
-    function(layout, object, objectname) {
-        layout@titles <- layout@titles + object
-        layout
+S7::method(ggalign_update, list(ChainLayout, layout_title)) <-
+    function(x, object, objectname) {
+        x@titles <- x@titles + object
+        x
     }
 
 #' @include layout-.R
-S7::method(layout_add, list(ChainLayout, S7::class_list)) <-
-    function(layout, object, objectname) {
-        for (o in object) layout <- layout_add(layout, o, object_name)
-        layout
+S7::method(ggalign_update, list(ChainLayout, S7::class_list)) <-
+    function(x, object, objectname) {
+        for (o in object) x <- ggalign_update(x, o, object_name)
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
-    function(layout, object, objectname) {
-        if (is.null(object)) return(layout) # styler: off
-        if (is.na(current <- layout@current)) {
+S7::method(ggalign_update, list(ChainLayout, S7::class_any)) <-
+    function(x, object, objectname) {
+        if (is.null(object)) return(x) # styler: off
+        if (is.na(current <- x@current)) {
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
+                    object_name(x)
                 ),
                 i = "No active plot component",
                 i = paste(
@@ -93,28 +93,27 @@ S7::method(layout_add, list(ChainLayout, S7::class_any)) <-
                 )
             ))
         }
-        box <- .subset2(layout@box_list, current)
+        box <- .subset2(x@box_list, current)
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, TRUE)
         } else {
-            box <- layout_add(box, object, objectname)
+            box <- ggalign_update(box, object, objectname)
         }
-        layout@box_list[[current]] <- box
-        layout
+        x@box_list[[current]] <- box
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(ChainLayout, layout_theme)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
-            prop(layout, "theme") <- prop(layout, "theme") +
-                prop(object, "theme")
+S7::method(ggalign_update, list(ChainLayout, layout_theme)) <-
+    function(x, object, objectname) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
+            prop(x, "theme") <- prop(x, "theme") + prop(object, "theme")
         } else {
-            layout@box_list[[current]] <- layout_add(box, object, objectname)
+            x@box_list[[current]] <- ggalign_update(box, object, objectname)
         }
-        layout
+        x
     }
 
 chain_box_add <- function(box, object, object_name, force) {
@@ -174,46 +173,44 @@ switch_chain_plot <- function(layout, what, call = caller_call()) {
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_add, list(StackLayout, quad_scope)) <-
+S7::method(ggalign_update, list(StackLayout, quad_scope)) <-
     S7::method(
-        layout_add,
+        ggalign_update,
         list(StackLayout, S7::new_S3_class("quad_active"))
     ) <-
     S7::method(
-        layout_add,
+        ggalign_update,
         list(StackLayout, S7::new_S3_class("quad_anno"))
     ) <-
-    S7::method(layout_add, list(StackLayout, StackLayout)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
+    S7::method(ggalign_update, list(StackLayout, StackLayout)) <-
+    function(x, object, objectname) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
+                    object_name(x)
                 ),
                 i = "Did you forget to add a {.fn quad_layout}?"
             ))
         } else {
-            layout@box_list[[current]] <- layout_add(
-                box, object, objectname
-            )
+            x@box_list[[current]] <- ggalign_update(box, object, objectname)
         }
-        layout
+        x
     }
 
-S7::method(layout_add, list(CircleLayout, quad_scope)) <-
-    S7::method(layout_add, list(CircleLayout, QuadLayout)) <-
+S7::method(ggalign_update, list(CircleLayout, quad_scope)) <-
+    S7::method(ggalign_update, list(CircleLayout, QuadLayout)) <-
     S7::method(
-        layout_add,
+        ggalign_update,
         list(CircleLayout, S7::new_S3_class("quad_active"))
     ) <-
     S7::method(
-        layout_add,
+        ggalign_update,
         list(CircleLayout, S7::new_S3_class("quad_anno"))
     ) <-
-    S7::method(layout_add, list(CircleLayout, StackLayout)) <-
-    function(layout, object, objectname) {
+    S7::method(ggalign_update, list(CircleLayout, StackLayout)) <-
+    function(x, object, objectname) {
         cli_abort(c(
             sprintf("Cannot add %s to a {.fn circle_layout}", objectname),
             i = "Try to use {.fn stack_layout} instead"
@@ -223,64 +220,58 @@ S7::method(layout_add, list(CircleLayout, quad_scope)) <-
 #' @include layout-.R
 #' @include layout-operator.R
 #' @importFrom S7 super
-S7::method(layout_add, list(StackLayout, StackCross)) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(StackLayout, StackCross)) <-
+    function(x, object, objectname) {
         # preventing from adding `stack_cross` with the same direction in this
         # way, `stack_cross()` cannot be added to the heatmap annotation
         # parallelly with the `stack_layout()`
-        if (identical(object@direction, layout@direction)) {
+        if (identical(object@direction, x@direction)) {
             cli_abort(c(
-                sprintf(
-                    "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
-                ),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "Cannot add {.fn stack_cross} with the same direction as {.fn stack_discrete}."
             ))
         }
         # call StackLayout method
-        layout_add(layout, super(object, StackLayout), objectname)
+        ggalign_update(x, super(object, StackLayout), objectname)
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, S7::new_S3_class("stack_switch"))) <-
-    function(layout, object, objectname) {
-        layout <- switch_chain_plot(
-            layout, .subset2(object, "what"),
+S7::method(ggalign_update, list(StackLayout, S7::new_S3_class("stack_switch"))) <-
+    function(x, object, objectname) {
+        x <- switch_chain_plot(
+            x, .subset2(object, "what"),
             quote(stack_switch())
         )
         if (!is.null(sizes <- .subset2(object, "sizes"))) {
-            layout@sizes <- sizes
+            x@sizes <- sizes
         }
-        layout
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(CircleLayout, S7::new_S3_class("stack_switch"))) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(CircleLayout, S7::new_S3_class("stack_switch"))) <-
+    function(x, object, objectname) {
         cli_abort(c(
-            sprintf(
-                "Cannot add {.var {objectname}} to %s",
-                object_name(layout)
-            ),
+            sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
             i = "Did you want to add a {.fn circle_switch}?"
         ))
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, QuadLayout)) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(StackLayout, QuadLayout)) <-
+    function(x, object, objectname) {
         # preventing from adding `stack_cross` with the same direction
         # `cross_link()` cannot be added to the heatmap annotation
         # parallelly with the `stack_cross()`
-        if (is_horizontal(direction <- layout@direction)) {
+        if (is_horizontal(direction <- x@direction)) {
             if (is_cross_layout(object@left) || is_cross_layout(object@right)) {
                 cli_abort(c(
                     sprintf(
                         "Cannot add {.var {objectname}} to %s",
-                        object_name(layout)
+                        object_name(x)
                     ),
                     i = sprintf(
                         "{.field left} or {.field right} annotation contains %s",
@@ -293,7 +284,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
             cli_abort(c(
                 sprintf(
                     "Cannot add {.var {objectname}} to %s",
-                    object_name(layout)
+                    object_name(x)
                 ),
                 i = sprintf(
                     "{.field top} or {.field bottom} annotation contains %s",
@@ -304,18 +295,18 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
 
         # check quad layout is compatible with stack layout
         quad_data <- object@data
-        stack_domain <- layout@domain
+        stack_domain <- x@domain
         quad_domain <- prop(object, direction)
         if (!is_discrete_domain(quad_domain)) {
             if (is_discrete_domain(stack_domain)) {
                 cli_abort(c(
                     sprintf(
                         "Cannot add %s to %s",
-                        object_name(object), object_name(layout)
+                        object_name(object), object_name(x)
                     ),
                     i = sprintf(
                         "%s cannot align continuous variable",
-                        object_name(layout)
+                        object_name(x)
                     )
                 ))
             }
@@ -327,7 +318,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
             allow_null <- !is_discrete_domain(extra_domain)
             if (is_waiver(quad_data) || is.function(quad_data)) {
                 # check if we should initialize the `quad_layout()` data
-                if (is.null(stack_data <- layout@data)) {
+                if (is.null(stack_data <- x@data)) {
                     if (allow_null) {
                         quad_data <- NULL
                     } else {
@@ -338,7 +329,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                             ),
                             i = sprintf(
                                 "no data was found in %s",
-                                object_name(layout)
+                                object_name(x)
                             )
                         ))
                     }
@@ -349,11 +340,11 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                             cli_abort(c(
                                 sprintf(
                                     "Cannot add %s to %s",
-                                    object_name(object), object_name(layout)
+                                    object_name(object), object_name(x)
                                 ),
                                 i = sprintf(
                                     "{.arg data} in %s is %s, but %s need a {.cls matrix}.",
-                                    object_name(layout),
+                                    object_name(x),
                                     "{.obj_type_friendly {data}}",
                                     object_name(object)
                                 ),
@@ -407,7 +398,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
             # both `quad_layout()` and `stack_layout()` will align discrete
             # variables
             if (is_waiver(quad_data) || is.function(quad_data)) {
-                if (is.null(stack_data <- layout@data)) {
+                if (is.null(stack_data <- x@data)) {
                     cli_abort(c(
                         sprintf(
                             "you must provide {.arg data} argument in %s",
@@ -415,7 +406,7 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                         ),
                         i = sprintf(
                             "no data was found in %s",
-                            object_name(layout)
+                            object_name(x)
                         )
                     ))
                 }
@@ -440,11 +431,11 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
                         cli_abort(c(
                             sprintf(
                                 "Cannot use data from %s in %s",
-                                object_name(layout), object_name(object)
+                                object_name(x), object_name(object)
                             ),
                             i = sprintf(
                                 "{.arg data} in %s is an empty matrix",
-                                object_name(layout)
+                                object_name(x)
                             )
                         ))
                     }
@@ -466,22 +457,22 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
             }
             layout_domain <- discrete_domain_update(
                 stack_domain, quad_domain,
-                old_name = object_name(layout),
+                old_name = object_name(x),
                 new_name = object_name
             )
         } else {
             cli_abort(c(
                 sprintf(
                     "Cannot add %s to %s",
-                    object_name(object), object_name(layout)
+                    object_name(object), object_name(x)
                 ),
                 i = sprintf(
                     "%s cannot align discrete variable",
-                    object_name(layout)
+                    object_name(x)
                 )
             ))
         }
-        stack <- chain_add_box(layout, object, object@plot_active, object_name)
+        stack <- chain_add_box(x, object, object@plot_active, object_name)
         layout_update_domain(
             stack,
             domain = layout_domain, objectname = object_name
@@ -490,30 +481,27 @@ S7::method(layout_add, list(StackLayout, QuadLayout)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(CircleLayout, S7::new_S3_class("circle_switch"))) <-
+    function(x, object, objectname) {
         if (!is_waiver(radial <- .subset2(object, "radial"))) {
-            layout@radial <- radial
+            x@radial <- radial
         }
         if (!is.null(direction <- .subset2(object, "direction"))) {
-            layout@direction <- direction
+            x@direction <- direction
         }
-        layout <- switch_chain_plot(
-            layout, .subset2(object, "what"),
+        x <- switch_chain_plot(
+            x, .subset2(object, "what"),
             quote(circle_switch())
         )
-        layout
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
+    function(x, object, objectname) {
         cli_abort(c(
-            sprintf(
-                "Cannot add {.var {objectname}} to %s",
-                object_name(layout)
-            ),
+            sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
             i = "Did you want to add a {.fn stack_switch}?"
         ))
     }
@@ -521,10 +509,10 @@ S7::method(layout_add, list(StackLayout, S7::new_S3_class("circle_switch"))) <-
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_selected, list(ChainLayout, S7::class_any)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
-            layout@box_list <- lapply(layout@box_list, function(box) {
+    function(x, object, objectname) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
+            x@box_list <- lapply(x@box_list, function(box) {
                 if (is_craftbox(box)) {
                     chain_box_add(box, object, objectname, force = FALSE)
                 } else {
@@ -532,27 +520,29 @@ S7::method(layout_apply_selected, list(ChainLayout, S7::class_any)) <-
                 }
             })
         } else {
-            layout@box_list[[current]] <- layout_apply_selected(
+            x@box_list[[current]] <- layout_apply_selected(
                 box, object, objectname
             )
         }
-        layout
+        x
     }
 
 # for objects can inherit from layout
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_selected, list(ChainLayout, Scheme)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
-            layout <- update_layout_schemes(object, layout, objectname)
+    function(x, object, ...) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
+            prop(x, "schemes") <- ggalign_update(
+                prop(x, "schemes"), object, ...
+            )
         } else {
-            layout@box_list[[current]] <- layout_apply_selected(
-                box, object, objectname
+            x@box_list[[current]] <- layout_apply_selected(
+                box, object, ...
             )
         }
-        layout
+        x
     }
 
 #' @importFrom S7 S7_inherits
@@ -560,32 +550,32 @@ S7::method(layout_apply_selected, list(ChainLayout, Scheme)) <-
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
 S7::method(layout_apply_selected, list(StackLayout, quad_scope)) <-
-    function(layout, object, objectname) {
-        if (is.na(current <- layout@current) ||
-            is_craftbox(box <- .subset2(layout@box_list, current))) {
+    function(x, object, ...) {
+        if (is.na(current <- x@current) ||
+            is_craftbox(box <- .subset2(x@box_list, current))) {
             inner <- prop(object, "object")
 
             # subtract set at layout level, if it is a Scheme
             if (S7_inherits(inner, Scheme)) {
-                layout <- update_layout_schemes(inner, layout, objectname)
+                prop(x, "schemes") <- ggalign_update(
+                    prop(x, "schemes"), inner, ...
+                )
             }
 
             # otherwise, we apply the object to all plots in the stack layout
-            layout@box_list <- lapply(layout@box_list, function(box) {
+            x@box_list <- lapply(x@box_list, function(box) {
                 if (is_craftbox(box)) {
-                    box <- chain_box_add(box, inner, objectname, force = FALSE)
+                    box <- chain_box_add(box, inner, ..., force = FALSE)
                 } else {
                     # we respect the context setting
-                    box <- layout_apply_selected(box, object, objectname)
+                    box <- layout_apply_selected(box, object, ...)
                 }
                 box
             })
         } else {
-            layout@box_list[[current]] <- layout_apply_selected(
-                box, object, objectname
-            )
+            x@box_list[[current]] <- layout_apply_selected(box, object, ...)
         }
-        layout
+        x
     }
 
 ##################################################################
@@ -593,13 +583,12 @@ S7::method(layout_apply_selected, list(StackLayout, quad_scope)) <-
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
 S7::method(layout_apply_all, list(ChainLayout, quad_scope)) <-
-    function(layout, object, objectname) {
-        object <- prop(object, "object")
-        layout_apply_all(layout, object, objectname)
+    function(x, object, ...) {
+        layout_apply_all(x, prop(object, "object"), ...)
     }
 
-chain_propagate <- function(layout, object, objectname) {
-    layout@box_list <- lapply(layout@box_list, function(box) {
+chain_apply_all <- function(x, object, objectname) {
+    x@box_list <- lapply(x@box_list, function(box) {
         if (is_craftbox(box)) {
             box <- chain_box_add(box, object, objectname, force = FALSE)
         } else {
@@ -607,19 +596,19 @@ chain_propagate <- function(layout, object, objectname) {
         }
         box
     })
-    layout
+    x
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_all, list(ChainLayout, S7::class_any)) <-
-    chain_propagate
+    chain_apply_all
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_all, list(ChainLayout, ggplot2::class_theme)) <-
-    function(layout, object, objectname) {
-        ans <- chain_propagate(layout, object, objectname)
+    function(x, object, ...) {
+        ans <- chain_apply_all(x, object, ...)
         # to align with `patchwork`, we also modify the layout theme
         # when using `&` to add the theme object.
         ans@theme <- ggfun("add_theme")(ans@theme, object)

@@ -10,6 +10,7 @@ new_craftbox <- function(craftsman = NULL, ...,
     )
 }
 
+#' @include plot.R
 #' @include scheme-.R
 #' @include utils-grid.R
 #' @include utils-assert.R
@@ -123,7 +124,7 @@ S7::method(craftbox_add, S7::class_function) <- function(object, box,
 # Bypass S7 setter validation: update internal property via attr() directly
 #' @importFrom S7 prop
 S7::method(craftbox_add, Schemes) <- function(object, box, objectname) {
-    prop(box, "schemes", check = FALSE) <- scheme_update(
+    prop(box, "schemes", check = FALSE) <- ggalign_update(
         prop(box, "schemes"), object
     )
     box
@@ -131,7 +132,7 @@ S7::method(craftbox_add, Schemes) <- function(object, box, objectname) {
 
 #' @importFrom S7 prop
 S7::method(craftbox_add, Scheme) <- function(object, box, objectname) {
-    prop(box, "schemes", check = FALSE) <- scheme_update(
+    prop(box, "schemes", check = FALSE) <- ggalign_update(
         prop(box, "schemes"), object
     )
     box

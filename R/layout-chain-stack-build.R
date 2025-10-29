@@ -1,5 +1,5 @@
 S7::method(ggalign_build, StackLayout) <- function(x) {
-    x <- init_object(x)
+    x <- ggalign_init(x)
     (stack_build(x) %||% align_plots(theme = prop(x, "theme"))) +
         prop(x, "titles")
 }

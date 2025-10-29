@@ -21,23 +21,22 @@ schemes are initialized, combined, and applied to plots.
 When creating a new subclass of \code{Scheme}, you may optionally override the
 following methods to customize its behavior:
 \itemize{
-\item \code{\link[=scheme_init]{scheme_init(scheme)}} \emph{(optional)}: Initializes the scheme,
-often by assigning default values or computing derived properties.
+\item \code{\link[=ggalign_init]{ggalign_init()}} \emph{(optional)}: Initializes the
+scheme, often by assigning default values or computing derived properties.
 
 \strong{Default behavior}: Returns the scheme unchanged.
-\item \code{\link[=scheme_update]{scheme_update(e1, e2)}} \emph{(optional)}: Defines how to
-update a scheme by merging it with another of the same key (e.g., during
-user overrides).
+\item \code{\link[=ggalign_update]{ggalign_update(x, object, ...)}} \emph{(optional)}: Defines
+how to update a scheme by merging it with another of the same key.
 
-\strong{Default behavior}: Replaces \code{e1} entirely with \code{e2}.
-\item \code{\link[=scheme_inherit]{scheme_inherit(e1, e2)}} \emph{(optional)}: Defines how a
+\strong{Default behavior}: Replaces \code{x} entirely with \code{object}.
+\item \code{\link[=ggalign_inherit]{ggalign_inherit(x, object)}} \emph{(optional)}: Defines how a
 scheme inherits from a parent scheme (e.g., a layout template), typically
 merging instead of replacing.
 
-\strong{Default behavior}: Inheritance is ignored; \code{e2} is returned unchanged.
-\item \code{\link[=plot_add_scheme]{plot_add_scheme(plot, scheme, ...)}}: Applies the scheme
-to a plot object (usually a \code{ggplot}) by modifying the plot components,
-theming, or annotations.
+\strong{Default behavior}: Inheritance is ignored; \code{x} is returned unchanged.
+\item \code{\link[=ggalign_update]{ggalign_update(x, object, ...)}}: Applies the scheme
+(\code{object}) to a plot (\code{x}) (usually a \code{ggplot}) by modifying the \code{x}
+components, theming, or annotations.
 }
 }
 

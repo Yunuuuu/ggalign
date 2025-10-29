@@ -183,18 +183,28 @@ HeatmapLayout <- S7::new_class(
 
 ###########################################################
 #' @importFrom ggplot2 complete_theme
-S7::method(init_object, LayoutProto) <- function(input) {
-    # initialize layout schemes
-    input@schemes <- scheme_init(input@schemes)
+S7::method(ggalign_init, LayoutProto) <- function(x) {
+    # `schemes_complete` ensures that all missing schemes are completed.
+    # `ggalign_init` initializes the schemes property, setting the initial value
+    # for the layout schemes in the `input` object.
+    prop(x, "schemes", check = FALSE) <- ggalign_init(schemes_complete(
+        prop(x, "schemes")
+    ))
 
-    # Merge the provided layout theme with the default theme.
-    th <- prop(schemes_get(input@schemes, "scheme_theme"), "theme") +
-        input@theme
-
-    # Apply the updated theme
-    input@theme <- th
-    input
+    # We take the `scheme_theme` from the schemes and treat it as the default
+    # theme.
+    prop(x, "theme", check = FALSE) <- ggalign_update(
+        prop(schemes_get(prop(x, "schemes"), "scheme_theme"), "theme"),
+        prop(x, "theme")
+    )
+    x
 }
+
+S7::method(ggalign_update, list(LayoutProto, S7::new_union(Schemes, Scheme))) <-
+    function(x, object, ...) {
+        prop(x, "schemes") <- ggalign_update(prop(x, "schemes"), object, ...)
+        x
+    }
 
 #' @importFrom S7 S7_dispatch
 is_linear <- S7::new_generic(
@@ -210,7 +220,7 @@ inherit_parent_layout_schemes <- function(layout, schemes) {
     if (is.null(schemes)) {
         return(layout@schemes)
     }
-    scheme_inherit(schemes, layout@schemes)
+    ggalign_inherit(layout@schemes, schemes)
 }
 
 inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
@@ -231,16 +241,6 @@ inherit_parent_layout_theme <- function(layout, theme, spacing = NULL) {
 }
 
 ############################################################
-#' Get the statistics from the layout
-#'
-#' @param x A `r rd_layout()`.
-#' @inheritParams rlang::args_dots_used
-#' @return The statistics
-#' @export
-ggalign_stat <- function(x, ...) {
-    UseMethod("ggalign_stat")
-}
-
 #' @param position A string of `r oxford_or(.TLBR)`.
 #' @export
 #' @rdname ggalign_stat
@@ -272,11 +272,6 @@ ggalign_stat <- function(x, ...) {
 ggalign_stat.CraftAlign <- function(x, ...) {
     rlang::check_dots_empty()
     .subset2(x, "statistics")
-}
-
-#' @export
-ggalign_stat.default <- function(x, ...) {
-    cli_abort(sprintf("no statistics found for %s", object_name(x)))
 }
 
 #############################################################

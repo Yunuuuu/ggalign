@@ -34,25 +34,28 @@ layout_title <- S7::new_class("layout_title",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(init_object, layout_title) <- function(input) {
-    prop(input, "title", check = FALSE) <- prop(input, "title") %|w|% NULL
-    prop(input, "subtitle", check = FALSE) <- prop(input, "subtitle") %|w|% NULL
-    prop(input, "caption", check = FALSE) <- prop(input, "caption") %|w|% NULL
-    input
+S7::method(ggalign_init, layout_title) <- function(x) {
+    prop(x, "title", check = FALSE) <- prop(x, "title") %|w|% NULL
+    prop(x, "subtitle", check = FALSE) <- prop(x, "subtitle") %|w|% NULL
+    prop(x, "caption", check = FALSE) <- prop(x, "caption") %|w|% NULL
+    x
 }
 
 #' @importFrom ggplot2 is_waiver
 #' @importFrom S7 props
+S7::method(ggalign_update, list(layout_title, layout_title)) <-
+    function(x, object) {
+        fields <- props(object)
+        fields <- fields[
+            !vapply(fields, is_waiver, logical(1L), USE.NAMES = FALSE)
+        ]
+        if (length(fields)) props(x) <- fields
+        x
+    }
+
 local(
     S7::method(`+`, list(layout_title, layout_title)) <-
-        function(e1, e2) {
-            fields <- props(e2)
-            fields <- fields[
-                !vapply(fields, is_waiver, logical(1L), USE.NAMES = FALSE)
-            ]
-            if (length(fields)) props(e1) <- fields
-            e1
-        }
+        function(e1, e2) ggalign_update(e1, e2)
 )
 
 ##########################################################

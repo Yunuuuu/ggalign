@@ -63,7 +63,7 @@ stack_composer_add <- function(box, stack, composer, ...) {
     size <- convert(prop(box, "size"), S3_unit)
 
     # for `released_spaces`, release the `free_spaces` in a single plot
-    plot_schemes <- scheme_inherit(schemes, box@schemes)
+    plot_schemes <- ggalign_inherit(box@schemes, schemes)
     if (!is.null(released_spaces)) {
         align_scheme <- schemes_get(plot_schemes, "scheme_align")
         plot_spaces <- prop(align_scheme, "free_spaces")

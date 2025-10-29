@@ -90,51 +90,51 @@ scheme_align <- S7::new_class(
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(scheme_init, scheme_align) <- function(scheme) {
+S7::method(ggalign_init, scheme_align) <- function(x) {
     # By default, we collect all guide legends
-    prop(scheme, "guides", check = FALSE) <- prop(scheme, "guides") %|w|% "tlbr"
-    scheme
+    prop(x, "guides", check = FALSE) <- prop(x, "guides") %|w|% "tlbr"
+    x
 }
 
 #' @importFrom rlang is_na
 #' @importFrom S7 props prop<-
-S7::method(scheme_update, list(scheme_align, scheme_align)) <-
-    function(e1, e2, ...) {
-        new <- props(e2)
+S7::method(ggalign_update, list(scheme_align, scheme_align)) <-
+    function(x, object, ...) {
+        new <- props(object)
         # key is read-only property
         new$key <- NULL
         for (nm in names(new)) {
             if (is_na(.subset2(new, nm))) next
-            prop(e1, nm, check = FALSE) <- .subset2(new, nm)
+            prop(x, nm, check = FALSE) <- .subset2(new, nm)
         }
-        e1
+        x
     }
 
 #' @importFrom S7 prop prop<-
-S7::method(scheme_inherit, list(scheme_align, scheme_align)) <-
-    function(e1, e2) {
+S7::method(ggalign_inherit, list(scheme_align, scheme_align)) <-
+    function(x, object) {
         # `alignpatches()` control how to inherit `guides` from the layout
         # we don't need to inherit it here
-        prop(e2, "free_spaces", check = FALSE) <- prop(e2, "free_spaces") %|w|%
-            prop(e1, "free_spaces")
-        prop(e2, "free_labs", check = FALSE) <- prop(e2, "free_labs") %|w|%
-            prop(e1, "free_labs")
-        e2
+        prop(x, "free_spaces", check = FALSE) <- prop(x, "free_spaces") %|w|%
+            prop(object, "free_spaces")
+        prop(x, "free_labs", check = FALSE) <- prop(x, "free_labs") %|w|%
+            prop(object, "free_labs")
+        x
     }
 
 #' @importFrom S7 prop
-S7::method(plot_add_scheme, list(ggplot2::class_ggplot, scheme_align)) <-
-    function(plot, scheme, ...) {
-        if (!is_waiver(free_guides <- prop(scheme, "guides"))) {
-            plot <- free_guide(plot, free_guides)
+S7::method(ggalign_update, list(ggplot2::class_ggplot, scheme_align)) <-
+    function(x, object, ...) {
+        if (!is_waiver(free_guides <- prop(object, "guides"))) {
+            x <- free_guide(x, free_guides)
         }
         # by default, we'll attach all labs to the axis
-        if (!is.null(free_labs <- prop(scheme, "free_labs") %|w|% "tlbr")) {
-            plot <- free_lab(plot, free_labs)
+        if (!is.null(free_labs <- prop(object, "free_labs") %|w|% "tlbr")) {
+            x <- free_lab(x, free_labs)
         }
         # by default, we won't remove any spaces
-        if (!is.null(free_spaces <- prop(scheme, "free_spaces") %|w|% NULL)) {
-            plot <- free_space(free_border(plot, free_spaces), free_spaces)
+        if (!is.null(free_spaces <- prop(object, "free_spaces") %|w|% NULL)) {
+            x <- free_space(free_border(x, free_spaces), free_spaces)
         }
-        plot
+        x
     }

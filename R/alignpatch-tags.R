@@ -74,15 +74,13 @@ layout_tags <- S7::new_class("layout_tags",
         list(tags = S7::new_property(
             S7::new_union(S7::class_character, NULL, S3_waiver),
             setter = function(self, value) {
-                if (identical(value, NA)) {
-                    value <- NA_character_
-                } else if (!is_waiver(value) && !is.null(value)) {
+                if (!is_waiver(value) && !is.null(value)) {
                     value <- as.character(value)
                 }
                 prop(self, "tags", check = FALSE) <- value
                 self
             },
-            default = NA_character_
+            default = character()
         )),
         lapply(
             rlang::set_names(c("sep", "prefix", "suffix")),
@@ -103,42 +101,48 @@ layout_tags <- S7::new_class("layout_tags",
 )
 
 #' @importFrom S7 prop prop<-
-S7::method(init_object, layout_tags) <- function(input) {
-    if (identical(prop(input, "tags"), NA_character_)) {
-        prop(input, "tags", check = FALSE) <- waiver()
+#' @include generics.R
+S7::method(ggalign_init, layout_tags) <- function(x) {
+    if (is.character(prop(x, "tags")) && length(prop(x, "tags")) == 0L) {
+        prop(x, "tags", check = FALSE) <- waiver()
     }
-    prop(input, "sep", check = FALSE) <- prop(input, "sep") %|w|% NULL
-    prop(input, "prefix", check = FALSE) <- prop(input, "prefix") %|w|% NULL
-    prop(input, "suffix", check = FALSE) <- prop(input, "suffix") %|w|% NULL
-    input
+    prop(x, "sep", check = FALSE) <- prop(x, "sep") %|w|% NULL
+    prop(x, "prefix", check = FALSE) <- prop(x, "prefix") %|w|% NULL
+    prop(x, "suffix", check = FALSE) <- prop(x, "suffix") %|w|% NULL
+    x
 }
 
 #' @importFrom ggplot2 is_waiver
 #' @importFrom S7 prop prop<-
+#' @include generics.R
+S7::method(ggalign_update, list(layout_tags, layout_tags)) <-
+    function(x, object) {
+        if (!(is.character(prop(object, "tags")) &&  # styler: off
+              length(prop(object, "tags")) == 0L)) { # styler: off
+            prop(x, "tags", check = FALSE) <- prop(object, "tags")
+        }
+        if (!is_waiver(prop(object, "sep"))) {
+            prop(x, "sep", check = FALSE) <- prop(object, "sep")
+        }
+        if (!is_waiver(prop(object, "prefix"))) {
+            prop(x, "prefix", check = FALSE) <- prop(object, "prefix")
+        }
+        if (!is_waiver(prop(object, "suffix"))) {
+            prop(x, "suffix", check = FALSE) <- prop(object, "suffix")
+        }
+        x
+    }
+
 local(
     S7::method(`+`, list(layout_tags, layout_tags)) <-
-        function(e1, e2) {
-            if (!identical(prop(e2, "tags"), NA_character_)) {
-                prop(e1, "tags", check = FALSE) <- prop(e2, "tags")
-            }
-            if (!is_waiver(prop(e2, "sep"))) {
-                prop(e1, "sep", check = FALSE) <- prop(e2, "sep")
-            }
-            if (!is_waiver(prop(e2, "prefix"))) {
-                prop(e1, "prefix", check = FALSE) <- prop(e2, "prefix")
-            }
-            if (!is_waiver(prop(e2, "suffix"))) {
-                prop(e1, "suffix", check = FALSE) <- prop(e2, "suffix")
-            }
-            e1
-        }
+        function(e1, e2) ggalign_update(e1, e2)
 )
 
 #' @importFrom ggplot2 ggproto is_waiver
 #' @importFrom S7 prop
 create_layout_tagger <- function(tags, parent) {
     # initialize the tags
-    tags <- init_object(tags)
+    tags <- ggalign_init(tags)
 
     # If no parent and no tags, return NULL
     if (is.null(parent) &&
